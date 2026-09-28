@@ -157,7 +157,7 @@
   // The bank gives a plain and a LaTeX form of every option. Where they differ it is a
   // fraction or a radical, and only then is it handed to KaTeX; the plain form shows first.
   function tex(el, plain, latex) {
-    el.textContent = plain ?? '';
+    fracText(el, plain ?? '');
     if (!latex || latex === plain) return el;
     // a thousands comma is part of the number, not punctuation: 1{,}225, never "1, 225"
     latex = String(latex).replace(/(\d),(?=\d{3}(?!\d))/g, '$1{,}');
@@ -175,10 +175,74 @@
         // the punctuation after the math stays on its line
         const p = (parts[i + 1] || '').match(/^[.,;:!?)]+/);
         if (p) { parts[i + 1] = parts[i + 1].slice(p[0].length); el.append(h('span', { style: 'white-space: nowrap' }, m, p[0])); } else el.append(m);
-      } else if (part) el.append(part);
+      } else if (part) el.append(...fracNodes(part));
     });
     return el;
   }
+
+  /* ------------------------------------------------------------ fractions: stacked, in the line */
+  // The user's rule: "8/(x − 14)", "34π/5" and "(2/19)s" draw as a numerator over a bar over a denominator, in the line.
+  // Every character stays in the DOM (the slash and a group's outer brackets are only visually hidden), so textContent
+  // offsets for highlights and notes stay valid and a screen reader still reads the slash. Units and words (km/h, and/or,
+  // 5 m/s, 4.50/hour) are not fractions; neither is a/b/c.
+  const SUP = '⁰¹²³⁴⁵⁶⁷⁸⁹ⁿ';
+  const INT = '(?:\\d{1,3}(?:,\\d{3})+|\\d+)(?:\\.\\d+)?';
+  const NUM_END = new RegExp(`(?:√?${INT}[A-Za-zπθ]*|√?[A-Za-zπθ]+)[${SUP}]*$`);
+  const DEN_START = new RegExp(`^(?:√?${INT}[${SUP}]*|[A-Z]{2,3}(?![A-Za-z])|[A-Za-zπθ][${SUP}]*(?![A-Za-z]))`);
+  function fracNodes(str) {
+    str = String(str ?? '');
+    if (!str.includes('/')) return [doc.createTextNode(str)];
+    const out = [];
+    let at = 0;
+    const hid = t => h('span', { class: 'fh', text: t });
+    const back = i => { let d = 0; for (let j = i; j >= at; j--) { if (str[j] === ')') d++; else if (str[j] === '(' && !--d) return j; } return -1; };
+    const fwd = i => { let d = 0; for (let j = i; j < str.length; j++) { if (str[j] === '(') d++; else if (str[j] === ')' && !--d) return j; } return -1; };
+    const part = (t, group) => (group ? [hid('('), ...fracNodes(t.slice(1, -1)), hid(')')] : fracNodes(t));
+    for (let k = str.indexOf('/'); k > 0; k = str.indexOf('/', k + 1)) {
+      if (k < at || /[\s/]/.test(str[k - 1]) || /[\s/]/.test(str[k + 1] || ' ')) continue;
+      let a, nGroup = false;
+      if (str[k - 1] === ')') {
+        a = back(k - 1);
+        if (a < 0) continue;
+        nGroup = true;
+        // f(x)/2, 2(x + 1)/3, √(x)/2: the brackets belong to the numerator and stay
+        const pre = str.slice(at, a).match(new RegExp(`(?:${INT}|[A-Za-z√]+)$`));
+        if (pre) { a -= pre[0].length; nGroup = false; }
+      } else if (str[k - 1] === '|') {
+        a = str.lastIndexOf('|', k - 2);                                     // |x|/a
+        if (a < at) continue;
+      } else {
+        const m = str.slice(at, k).match(NUM_END);
+        if (!m) continue;
+        a = k - m[0].length;
+      }
+      let b, dGroup = false;
+      if (str[k + 1] === '(') { b = fwd(k + 1); if (b < 0) continue; b += 1; dGroup = true; }
+      else { const m = str.slice(k + 1).match(DEN_START); if (!m) continue; b = k + 1 + m[0].length; }
+      if (str[b] === '/' || str[a - 1] === '/') continue;                    // a/b/c: leave the chain
+      const num0 = str.slice(a, k), den0 = str.slice(k + 1, b);
+      if (/^[A-Za-z]+$/.test(num0) && /\d\s$/.test(str.slice(0, a))) continue;   // 5 m/s
+      // words and units with no number (km/h, lb/ft³, and/or) stay; segment ratios (BC/AB) and cd/3 are fractions
+      const word = t => /^[A-Za-z]{2,}[${SUP}]*$/.test(t), seg = t => /^[A-Z]{2,3}$/.test(t);
+      if ((word(num0) || word(den0)) && !(seg(num0) && seg(den0)) && !/\d/.test(num0 + den0)) continue;
+      if (str[a - 1] === '$') continue;                                        // $4.50/h
+      // a lone fraction in brackets, (2/19)s: the brackets go with the bar
+      let wl = '', wr = '';
+      if (!nGroup && !dGroup && str[a - 1] === '(' && str[b] === ')' && a - 1 >= at && !/[A-Za-z√\d]/.test(str[a - 2] || '')) { a -= 1; b += 1; wl = '('; wr = ')'; }
+      if (a > at) out.push(doc.createTextNode(str.slice(at, a)));
+      out.push(h('span', { class: 'frac' }, wl ? hid(wl) : null, h('span', { class: 'fn' }, part(num0, nGroup)), hid('/'),
+        h('span', { class: 'fd' }, part(den0, dGroup)), wr ? hid(wr) : null));
+      at = b;
+      k = b - 1;
+    }
+    if (at < str.length) out.push(doc.createTextNode(str.slice(at)));
+    return out;
+  }
+  // UI.fracText(el, text) fills el; UI.fracText(text) returns a span to insert (the Review and Results pages call it so)
+  const fracText = (el, str) => {
+    if (!(el instanceof Element)) { const s = h('span'); s.append(...fracNodes(el)); return s; }
+    el.replaceChildren(...fracNodes(str)); return el;
+  };
 
   /* ------------------------------------------------------------ the grid-in rules */
   const num = x => /^(\d+\.?\d*|\.\d+)$/.test(x);
@@ -252,7 +316,13 @@
     if (n !== 15) bad.push(`${n} two-digit cuts, not 15`);
     const sci = sciEval.__test.filter(([src, want]) => { try { return Math.abs(sciEval(src, true, 0) - want) > 1e-9; } catch (_) { return true; } }).map(([s]) => s);
     const diff = stemDiff.__test.filter(([a, b, want]) => JSON.stringify(stemDiff(a, b).map(s => b.slice(s.start, s.end))) !== JSON.stringify(want)).map(([a]) => a);
-    return { ok: !bad.length && !sci.length && !diff.length, spr: bad, sci, diff };
+    // fractions: [text, how many stack]; the text itself never changes (highlight offsets)
+    const frac = [['10x²/(x² − 196) − 5x/(x + 14) = 8/(x − 14)', 3], ['P = (2/19)s − 1/9', 2], ['the ratio BC/AB', 1], ['|x|/a − 6', 1],
+      ['60 km/h and/or more', 0], ['at 5 m/s', 0], ['$4.50/hour', 0], ['a/b/c', 0], ['lb/ft³', 0]].filter(([t, want]) => {
+      const box = h('span', {}, fracNodes(t));
+      return box.textContent !== t || box.querySelectorAll(':scope > .frac').length !== want || fracText(t).textContent !== t;
+    }).map(([t]) => t);
+    return { ok: !bad.length && !sci.length && !diff.length && !frac.length, spr: bad, sci, diff, frac };
   }
 
   const DIRECTIONS = [
@@ -329,7 +399,7 @@
     el.replaceChildren();
     const put = str => str.split(/(_{3,})/).forEach(p => {
       if (!p) return;
-      el.append(/^_{3,}$/.test(p) ? h('span', { class: 'blank', role: 'img', 'aria-label': 'blank' }, p) : doc.createTextNode(p));
+      el.append(...(/^_{3,}$/.test(p) ? [h('span', { class: 'blank', role: 'img', 'aria-label': 'blank' }, p)] : fracNodes(p)));
     });
     let at = 0;
     (spans || []).filter(s => s && s.end > s.start).sort((a, b) => a.start - b.start).forEach(s => {
@@ -451,15 +521,15 @@
         return hd;
       }
       const t = UI.TOPIC && UI.TOPIC[q.topic];
-      const skill = h('span', { class: 'ws-skill' }, UI.glyph && q.topic ? UI.glyph(q.topic) : '',
+      const skill = h('span', { class: 'ws-skill' },
         h('span', { class: 'ws-skill-name', text: o.hideSkill || (t ? t.short : q.topic_name || '') }));
       hd.append(skill);
       if (!o.hideSkill && q.name) hd.append(h('span', { class: 'ws-type', text: q.name }));
       if (q.difficulty) {
         const d = UI.dbars ? UI.dbars(q.difficulty) : h('span', { text: cap1(q.difficulty) });
-        hd.append(h('span', { class: 'ws-diff' }, d, q.level ? h('span', { class: 'ws-level', text: `L${q.level}` }) : null));
+        hd.append(h('span', { class: 'ws-diff' }, d));       // the difficulty only: the internal level stays off screen (the user)
       }
-      if (!mc) hd.append(h('span', { class: 'ws-fmt', text: 'Grid-in' }));
+      if (!mc && o.fmt !== false) hd.append(h('span', { class: 'ws-fmt', text: 'Grid-in' }));   // fmt: false when the page labels the format
       if (q.repair || o.again) hd.append(h('span', { class: 'again', text: 'Again', title: q.repair_of ? `Same trap as question ${q.repair_of}, new numbers` : 'Same trap, new numbers' }));
       return hd;
     }
@@ -730,9 +800,9 @@
       errEl = h('p', { class: 'field-err', id: eid, hidden: true });
       hintEl = h('p', { class: 'help spr-hint', hidden: true, role: 'status' });
       nudgeEl = h('p', { class: 'spr-nudge', hidden: true, role: 'status' });
-      const rulesBtn = h('button', { type: 'button', class: 'qlink spr-all', text: 'All entry rules', 'aria-haspopup': 'dialog' });
+      const rulesBtn = h('button', { type: 'button', class: 'qlink spr-all', text: 'Entry rules', 'aria-haspopup': 'dialog' });
       rulesBtn.addEventListener('click', () => (UI.pop ? UI.pop(rulesBtn, directions(), { label: 'Entering your answer' }) : null));
-      const rule = h('p', { class: 'help spr-rule', id: rid }, spr.RULE + ' ', rulesBtn);
+      const rule = h('p', { class: 'help spr-rule', id: rid }, h('span', { class: 'sr', text: spr.RULE }), rulesBtn);
       if (mode === 'review') {                                   // answers hidden: check here, file nothing
         localCheck = h('button', { type: 'button', class: 'btn', text: 'Check', hidden: true, onclick: () => localPick(spr.clean(field.value)) });
         fieldWrap.append(localCheck);
@@ -1003,9 +1073,12 @@
         hintMsg(`Struck ${LETTERS[r.choice]}`, r.reason ? `that’s what you get if you ${low1(r.reason)}.` : 'a trap, not the answer.');
       } else if (r.kind === 'step') hintMsg('First step', r.step);
       else if (r.kind === 'example') {
-        if (o.onExample) o.onExample(r.example);
-        else if (r.example) exampleSheet(r.example);
-        hintMsg('Worked twin', 'open beside this question. This one still counts as yours.');
+        const open = () => (o.onExample ? o.onExample(r.example) : r.example && exampleSheet(r.example));
+        open();
+        // closing it keeps a way back (the user: closed the auto pop-up and had no way to open it again)
+        hintBox.append(h('p', { class: 'ws-hint-l' }, h('b', { text: 'Worked twin: ' }), quiet('Show it', () => open()),
+          ' · this one still counts as yours.'));
+        hintBox.hidden = false;
       }
       paint(); changed();
       return true;
@@ -1177,7 +1250,8 @@
       v.append(vHead(fb, right, blank));
       if (fb.mastery && UI.masteryWord) v.append(masteryLine(fb.mastery));
       if (!mc) v.append(...gridLines(fb, right, blank));
-      else if (mode === 'review') v.append(answerBoxes(fb, key, g, blank));
+      // the options carry Your answer and Correct answer; the boxes only say what they can't: that nothing was picked
+      else if (mode === 'review' && blank) v.append(answerBoxes(fb, key, g, blank));
 
       // 2. a mistake that closed
       const closed = (fb.closed || []).map(c => (typeof c === 'string' ? { label: c } : c)).filter(c => c && c.label);
@@ -1190,7 +1264,9 @@
       // 3. the named mistake, confidence, traps on offer, causes, habit
       if (!right && !blank) {
         const reason = mc ? (fb.mistake || (fb.reasons && fb.reasons[g])) : null;
-        if (mc && reason) {
+        // the pick's own reason already sits under its option (optionLines): the line would say it twice
+        const onOption = mc && fb.reasons && fb.reasons[g] === reason && !fb.trap && !fb.trap_check && mode !== 'quiz' && !(prefs.option_reasons === false && live);
+        if (mc && reason && !onOption) {
           v.append(h('p', { class: 'mistake' },
             fb.trap ? h('span', { class: 'trap-chip', text: String(fb.trap).replace(/_/g, ' ').toUpperCase() }) : null,
             h('span', { text: cap1(reason) }),
@@ -1215,7 +1291,8 @@
       if (fb.repair_next) v.append(h('p', { class: 'v-line', text: 'Next: one like this, with new numbers' }));
 
       // 4. the next step, then vs now, the formula, everyone, and offers
-      if (fb.next_step) v.append(h('p', { class: 'v-line v-next', text: fb.next_step }));
+      const openedNow = (fb.opened || []).map(x => String((typeof x === 'string' ? x : x && x.label) || '').toLowerCase()).filter(Boolean);
+      if (fb.next_step && !openedNow.some(l => fb.next_step.toLowerCase().startsWith(l))) v.append(h('p', { class: 'v-line v-next', text: fb.next_step }));
       if (fb.then) v.append(h('p', { class: 'v-line v-then', text: fb.then }));
       // V3: a fresh version from the Saved pool brings back the note on the saved one
       const sn = typeof fb.saved_note === 'string' ? { text: fb.saved_note } : fb.saved_note;
@@ -1331,10 +1408,11 @@
       const shown = !(prefs.option_reasons === false && live);
       const letters = list => list.map(i => LETTERS[i]).join(list.length === 2 ? ' and ' : ', ');
       if (named.length && g !== null) {
-        const word = named.length === 1 ? 'it' : named.length === 2 ? 'both' : `all ${named.length}`;
-        if (right || !named.includes(g)) {
+        if (right) {
+          // a right answer dodged every trap by definition (the user: "why do we even say that?")
+        } else if (!named.includes(g)) {
           out.push(h('p', { class: 'v-line v-traps' }, h('b', { text: 'Traps on offer: ' }),
-            shown ? letters(named) : named.map(i => `${LETTERS[i]} ${low1(fb.reasons[i])}`).join(' · '), right ? ` · dodged ${word}` : ''));
+            shown ? letters(named) : named.map(i => `${LETTERS[i]} ${low1(fb.reasons[i])}`).join(' · ')));
         } else {
           const rest = named.filter(i => i !== g);
           out.push(h('p', { class: 'v-line v-traps' }, h('b', { text: `Caught by ${LETTERS[g]}` }), shown ? '' : `: ${low1(fb.reasons[g])}`,
@@ -2330,7 +2408,7 @@
 
   /* ------------------------------------------------------------ export */
   Object.assign(UI, {
-    workspace, question, splitCheck, questionActions, twin, twinSheet, twinInline, stemDiff, pad, calc, tex, katex, spr, readAloud, sciEval, savedToast,
+    workspace, question, splitCheck, questionActions, twin, twinSheet, twinInline, stemDiff, pad, calc, tex, katex, spr, readAloud, sciEval, savedToast, fracText, fracNodes,
     workspaceSelfTest: selfTest, qicon: icon,
   });
   if (location.pathname.startsWith('/dev/')) {

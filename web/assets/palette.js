@@ -227,7 +227,7 @@
         { label: 'Help & FAQ', href: '/help/', icon: 'help', kbd: 'G H' },
         { label: 'Your reports', href: '/me/settings/#reports', icon: 'chat' },
         saved ? null : { label: 'Sign in', href: '/signin/', icon: 'signin' },
-        { label: 'Sign in another device', href: '/link/', icon: 'devices' }]).filter(Boolean);
+        { label: 'Sign in another device', href: '/pair/', icon: 'devices' }]).filter(Boolean);
     return pages.map(p => ({ label: p.label, icon: icon(p.icon, 18), kbd: p.kbd, also: 'page go open',
       run: () => go(p.href, { label: p.label, act: { href: p.href } }) }));
   }

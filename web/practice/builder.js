@@ -102,7 +102,7 @@
     if (p.clock) st.timing = p.clock;
     if (p.clock_minutes) st.minutes = p.clock_minutes;
     ['tiers', 'levels', 'formats'].forEach(k => { if (Array.isArray(p[k]) && p[k].length) st[k] = p[k].slice(); });
-    ['adaptive', 'unmeasured', 'pace_alert'].forEach(k => { if (typeof p[k] === 'boolean') st[k] = p[k]; });
+    ['adaptive', 'pace_alert'].forEach(k => { if (typeof p[k] === 'boolean') st[k] = p[k]; });
     ['feedback', 'repairs', 'order', 'mix', 'confidence'].forEach(k => { if (p[k]) st[k] = p[k]; });
     if (p.pool) st.pool = p.pool === 'checks' ? 'checks' : p.pool;
     const pm = ((p.practice || {}).math) || {};
@@ -152,7 +152,6 @@
     if (!B.st.tiers.includes(d)) return false;
     const L = lv ? lv.level : t.level;
     if (L && !B.st.levels.includes(L)) return false;
-    if (lv && lv.rough && !B.st.unmeasured) return false;
     return true;
   }
   function fits(t) {
@@ -225,7 +224,6 @@
   /* ---------------------------------------------------------------- page header */
   function paintHead() {
     const b = B.bank, t = b.totals || {};
-    $('#meta').textContent = `${t.skills} skills · ${t.types} question types · unlimited questions, never repeated`;
     const pts = $('#points');
     const g = b.gains;
     pts.replaceChildren();
@@ -564,7 +562,6 @@
     const line = $('#sline');
     if (B.search.trim()) return;
     line.replaceChildren();
-    if (ready[0]) line.append(h('span', { class: 'help', text: `Enter starts: ${ready[0].title}${ready[0].meta ? ` · ${ready[0].meta}` : ''}` }));
   }
   function paintSearch(hits) {
     document.querySelectorAll('.trow').forEach(r => { r.hidden = !!hits && !hits.has(r.dataset.t); });
@@ -779,11 +776,9 @@
         h('span', {}, h('span', { class: 'dot', 'aria-hidden': 'true' }), ` ${cap(t.label)} · ${(B.byT.get(t.template) || {}).name || t.template} · ${plural(t.owed ?? 2, 'clean answer')} left`),
         h('button', { type: 'button', class: 'quiet', text: 'Fix', onclick: () => create({ subject: 'math', source: 'mistakes', pool: 'redo', templates: [t.template] }) }))));
     }
+    // one way in from the skill's panel (the user: keep Check my level only; Finish, Mix it up and the College Board link went)
     panel.append(h('div', { class: 'btns' },
-      h('button', { type: 'button', class: 'btn', text: `Finish ${s.short || s.name} · ${Math.min(40, types.length * 2)} questions`, onclick: () => create({ subject: 'math', source: 'finish', topics: [s.slug] }) }),
-      h('button', { type: 'button', class: 'btn', text: 'Check my level · 8 questions', onclick: () => create({ subject: 'math', source: 'probe', topics: [s.slug], count: 8 }) }),
-      h('button', { type: 'button', class: 'btn', text: 'Mix it up · 8', onclick: () => create({ subject: 'math', source: 'mixup', order: 'mixup', topics: [s.slug], count: 8 }) }),
-      s.cb_count ? h('a', { class: 'btn', target: '_blank', rel: 'noopener', href: 'https://satsuitequestionbank.collegeboard.org/digital/search', text: `Official questions on College Board · ${s.cb_count}` }) : null));
+      h('button', { type: 'button', class: 'btn', text: 'Check my level · 8 questions', onclick: () => create({ subject: 'math', source: 'probe', topics: [s.slug], count: 8 }) })));
     const labels = (s.labels || []).length > 1 ? s.labels : [{ label: null, templates: types.map(t => t.template) }];
     const tt = h('div', { class: 'ttypes' });
     labels.forEach(l => {
@@ -802,9 +797,6 @@
   }
   function typeRow(t) {
     const tb = tri(`Select ${t.name}`, on => { on ? B.sel.add(t.template) : B.sel.delete(t.template); markCustom(); paintSel(); preview(); });
-    const lv = Object.values(t.levels || {});
-    const level = lv.length ? lv.map(x => `L${x.level}${x.rough ? ` · rough${x.n ? ` (${x.n})` : ''}` : ''}`).join(' / ') : t.level ? `L${t.level}` : '';
-    const traps = (t.traps || []).length;
     const tiers = t.tiers || [];
     const tryB = h('button', { type: 'button', class: 'quiet', text: 'Try one ▾' });
     UI.menu.bind(tryB, () => [
@@ -817,23 +809,9 @@
       { label: 'See the traps', onClick: () => traps_(t) },
       { label: 'Mix it up with look-alikes', disabled: !(t.lookalikes || []).length, onClick: () => create({ subject: 'math', source: 'mixup', order: 'mixup', templates: [t.template, ...(t.lookalikes || [])].slice(0, 6), count: 8 }) },
     ], { label: t.name });
-    // what sets this type apart; the defaults (all three tiers, multiple choice, not yet tried) go unsaid
-    const chips = [
-      tiers.length < 3 ? h('span', { text: `${tiers.map(d => TIER_WORD[d]).join(' + ')} only` }) : null,
-      t.formats.includes('spr') ? h('span', { text: t.formats.includes('mcq') ? 'MC + grid-in' : 'Grid-in only' }) : null,
-      level ? h('span', { class: 'mono', text: level }) : null,
-      Number.isFinite(t.odds) ? h('span', { text: `your odds ~${Math.round(t.odds * 100)}%` }) : null,
-      t.answered ? h('span', { text: `${t.right} of ${t.answered} right` }) : null,
-      t.crowd && t.crowd.n >= 20 ? h('span', { text: `everyone ${pct(t.crowd.rate)}` }) : null,
-      openBadge(traps),
-      t.marked ? h('span', { text: `Marked ${t.marked}` }) : null,
-      t.state === 'ready' ? h('span', { text: 'Ready' }) : null,
-      t.due ? h('span', { text: 'Due today' }) : t.next_return ? h('span', { text: `Back ${UI.date ? UI.date(t.next_return, 'short') : t.next_return}${t.k ? ` · held ${t.k}` : ''}` }) : null,
-      t.fluent ? h('span', { text: `Fluent${t.best_ms ? ` · best ${mmss(t.best_ms)}` : ''}` }) : t.slow_right ? h('span', { text: `Slow: right but ${mmss(t.median_ms)} median` }) : null,
-      t.desmos ? h('span', { text: 'Desmos way' }) : null,
-      t.official ? h('span', { text: `Built from ${plural(t.official, 'official question')}` }) : null,
-      t.type_note ? tip(h('span', { text: '✎ your rule' }), t.type_note) : null,
-    ].filter(Boolean);
+    // the row's one detail line is its difficulty, only when it isn't all three (the user: keep the difficulty, remove
+    // everything else: format, level, odds, record, everyone, open mistakes, marked, ready, due, fluent, Desmos, official, note)
+    const chips = [tiers.length < 3 ? h('span', { text: `${tiers.map(d => TIER_WORD[d]).join(' + ')} only` }) : null].filter(Boolean);
     const row = h('div', { class: 'trow', 'data-t': t.template }, tb,
       h('div', { class: 'tmain' }, h('span', { class: 'tname', text: t.name }), t.about ? h('span', { class: 'tabout', text: t.about }) : null,
         chips.length ? h('span', { class: 'tchips' }, chips) : null, h('span', { class: 'reason help', 'data-reason': '' })),
@@ -994,27 +972,68 @@
         g1.append(sub);
       }
     });
-    // 2. Questions
+    // 2. Questions: three kinds of set (the user): a number of questions, a number in a time limit, or a time limit alone
     const g2 = group(grid, 'Questions', 'sCount');
-    const cv = st.box ? `b${st.box}` : st.count === null ? 'inf' : [5, 10, 20, 30, 40, 50].includes(st.count) ? st.count : 'other';
-    const opts = [5, 10, 20, 30, 40, 50].map(n => ({ value: n, label: String(n) })).concat([{ value: 'inf', label: '∞' }, { value: 'b15', label: '15 min' }, { value: 'b30', label: '30 min' }, { value: 'other', label: 'Other' }]);
-    ctl.count = UI.seg(g2, opts, { value: cv, label: 'Questions', onChange: v => {
-      if (v === 'other') { other.hidden = false; other.focus(); return; }
-      other.hidden = true;
-      if (v === 'inf') { st.count = null; st.box = null; } else if (v === 'b15' || v === 'b30') { st.box = +v.slice(1); } else { st.count = v; st.box = null; }
-      changed(); paintSettings();
-    } });
-    const other = h('input', { class: 'field', type: 'number', min: 1, max: 120, value: cv === 'other' ? st.count : '', hidden: cv !== 'other', 'aria-label': 'How many questions (1–120)' });
-    other.addEventListener('change', () => { const n = Math.max(1, Math.min(120, Math.round(+other.value || 10))); other.value = n; st.count = n; st.box = null; changed(); });
-    other.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); other.dispatchEvent(new Event('change')); start(); } });
-    tip(ctl.count.btns.find(b => b._opt.value === 'inf'), 'Endless: stop whenever you like.');
-    g2.append(h('div', { class: 'inline' }, other));
+    // an endless set on a clock (the old Sprint) is a time-only set now
+    if (st.count === null && !st.box && st.timing !== 'off') { st.box = Math.max(5, Math.min(60, st.minutes || 15)); st.timing = 'off'; }
+    const kind = st.box ? 'time' : st.timing === 'off' || st.count === null ? 'count' : 'both';
+    UI.seg(g2, [{ value: 'count', label: 'Questions' }, { value: 'both', label: 'Questions in a time' }, { value: 'time', label: 'Time only' }],
+      { value: kind, label: 'Kind of set', onChange: v => {
+        if (v === 'count') { st.box = null; st.timing = 'off'; }
+        else if (v === 'both') { st.box = null; if (st.count === null) st.count = 10; if (st.timing === 'off') st.timing = 'pace'; }
+        else { st.box = st.box || 15; st.timing = 'off'; }
+        changed(); paintSettings();
+      } });
+    const numIn = (min, max, value, label, set) => {
+      const f = h('input', { class: 'field', type: 'number', min, max, value, 'aria-label': label });
+      f.addEventListener('change', () => { const n = Math.max(min, Math.min(max, Math.round(+f.value || value || min))); f.value = n; set(n); changed(); });
+      f.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); f.dispatchEvent(new Event('change')); start(); } });
+      return f;
+    };
+    if (kind !== 'time') {
+      const COUNTS = [5, 10, 20, 30, 40, 50];
+      const cv = st.count === null ? 'inf' : COUNTS.includes(st.count) ? st.count : 'other';
+      const other = numIn(1, 120, cv === 'other' ? st.count : '', 'How many questions (1–120)', n => { st.count = n; });
+      other.hidden = cv !== 'other';
+      ctl.count = UI.seg(g2, COUNTS.map(n => ({ value: n, label: String(n) })).concat(kind === 'count' ? [{ value: 'inf', label: '∞' }] : [], [{ value: 'other', label: 'Other' }]),
+        { value: cv, label: 'How many questions', onChange: v => {
+          if (v === 'other') { other.hidden = false; other.focus(); return; }
+          other.hidden = true; st.count = v === 'inf' ? null : v; changed(); paintSettings();
+        } });
+      const inf = ctl.count.btns.find(x => x._opt.value === 'inf');
+      if (inf) tip(inf, 'Endless: stop whenever you like.');
+      g2.append(h('div', { class: 'inline' }, other));
+    }
+    if (kind === 'both') {
+      const MINS = [5, 10, 15, 20, 30, 45, 60];
+      const tv = st.timing === 'pace' ? 'pace' : MINS.includes(st.minutes) ? st.minutes : 'other';
+      const mins = numIn(1, 180, tv === 'other' ? st.minutes : '', 'Minutes (1–180)', n => { st.timing = 'custom'; st.minutes = n; });
+      mins.hidden = tv !== 'other';
+      const tseg = UI.seg(g2, [{ value: 'pace', label: 'Test pace' }, ...MINS.map(m => ({ value: m, label: `${m} min` })), { value: 'other', label: 'Other' }],
+        { value: tv, label: 'Time limit', onChange: v => {
+          if (v === 'other') { mins.hidden = false; mins.focus(); return; }
+          mins.hidden = true;
+          if (v === 'pace') st.timing = 'pace'; else { st.timing = 'custom'; st.minutes = v; }
+          changed();
+        } });
+      tip(tseg.btns[0], 'Paced to each question’s difficulty, like the test.');
+      g2.append(h('div', { class: 'inline' }, mins));
+    }
+    if (kind === 'time') {
+      const BOX = [5, 10, 15, 20, 30, 45, 60];
+      UI.seg(g2, BOX.map(m => ({ value: m, label: `${m} min` })), { value: st.box, label: 'Time limit: as many as you can', onChange: v => { st.box = v; changed(); } });
+    }
     ctl.countHelp = helpLine(g2, '');
+    ctl.timeHelp = helpLine(g2, '');
+    if (kind !== 'count') {
+      tip(UI.switch(g2, { checked: st.pace_alert, label: 'Pace alert on each question', onChange: v => { st.pace_alert = v; savePrefs(); } }).el, 'The stopwatch turns amber-deep past that question’s budget.');
+      UI.switch(g2, { checked: st.two_passes, label: 'Two passes: offer Skip past 1.5× the budget', onChange: v => { st.two_passes = v; changed(); } });
+    }
     // 3. Difficulty (P11)
     const g3 = group(grid, 'Difficulty', 'sDiff');
     const dz = UI.seg(g3, [{ value: 'forme', label: 'For me' }, { value: 'standard', label: 'Standard' }], { value: standard() ? 'standard' : 'forme', label: 'Difficulty', onChange: v => { st.zone = v === 'standard' ? 'off' : (st._zone || 'stretch'); changed(); paintSettings(); } });
-    tip(dz.btns[0], 'Aimed at your odds: chosen from how you’ve done in each skill and how hard each type has been for everyone.');
-    tip(dz.btns[1], 'Pick the tiers and levels yourself.');
+    tip(dz.btns[0], 'Aimed at you: chosen from how you’ve done in each skill and how hard each type has been for everyone.');
+    tip(dz.btns[1], 'Pick the tiers yourself.');
     if (!standard()) {
       const aim = UI.seg(g3, [{ value: 'warm', label: 'Warm-up' }, { value: 'stretch', label: 'Stretch' }, { value: 'challenge', label: 'Challenge' }], { value: st.zone, label: 'Aim', onChange: v => { st.zone = v; st._zone = v; changed(); paintBar(); } });
       ['80% or more likely right', '60–80% likely right', '35–60% likely right'].forEach((t, i) => tip(aim.btns[i], t));
@@ -1027,22 +1046,6 @@
         st.tiers = v; tierHelp.textContent = ''; changed();
       } });
       const tierHelp = helpLine(g3, '');
-      const lv = h('div', { class: 'lvls', role: 'group', 'aria-label': 'Levels 1 to 7' });
-      const lvCount = L => [...B.sel].filter(t => Object.values((B.byT.get(t) || {}).levels || {}).some(x => x.level === L)).length;
-      LEVELS.forEach(L => {
-        const b = h('button', { type: 'button', 'aria-pressed': String(st.levels.includes(L)), 'data-tier': LEVEL_TIER(L), 'aria-label': `Level ${L}, ${lvCount(L)} types` }, h('span', { text: `L${L}` }), h('small', { text: String(lvCount(L)) }));
-        b.addEventListener('click', () => {
-          const on = st.levels.includes(L);
-          if (on && st.levels.length === 1) { lv.classList.remove('shake'); void lv.offsetWidth; lv.classList.add('shake'); return; }
-          st.levels = on ? st.levels.filter(x => x !== L) : [...st.levels, L].sort();
-          b.setAttribute('aria-pressed', String(!on)); changed();
-        });
-        lv.append(b);
-      });
-      g3.append(lv);
-      const rough = allTypes().filter(t => Object.values(t.levels || {}).some(x => x.rough)).length;
-      tip(UI.triCheck(g3, { label: `Include rough levels · ${rough}`, checked: st.unmeasured, onChange: v => { st.unmeasured = v; changed(); } }).el,
-        'A level is rough until 20 students have answered that type; ratings move with every clean first try.');
       const tmix = UI.seg(g3, [{ value: 'any', label: 'Any' }, { value: 'module1', label: 'Like module 1 (7/8/7)' }, { value: 'module2_upper', label: 'Like the harder module 2 (3/8/11)' }], { value: st.tier_mix, label: 'Mix', onChange: v => { st.tier_mix = v; changed(); } });
       tip(tmix.btns[2], 'Aiming above 580? The harder module 2 is 11 Hard of 22.');
       const ad = UI.switch(g3, { checked: st.adaptive && st.order !== 'ramp', label: 'Adaptive: step up a tier after 2 first-try rights in a skill, down after a miss', disabled: st.order === 'ramp', onChange: v => { st.adaptive = v; changed(); } });
@@ -1063,23 +1066,6 @@
     const hasBox = (key, label) => UI.triCheck(g4, { label, checked: st.has.includes(key), onChange: v => { st.has = v ? [...st.has, key] : st.has.filter(x => x !== key); changed(); } });
     if (B.bank.desmos_way) hasBox('desmos', `Only types with a Desmos way (${selT().filter(t => t.desmos).length})`);
     hasBox('official', `Only types built from official questions (${allTypes().filter(t => t.official).length} of ${B.byT.size})`);
-    // 5. Timing
-    const g5 = group(grid, 'Timing', 'sTiming');
-    const endless = st.count === null || !!st.box;
-    const tm = UI.seg(g5, [{ value: 'off', label: 'Untimed' }, { value: 'pace', label: 'Test pace', disabled: endless, why: endless ? 'An endless set has no length to pace' : null }, { value: 'custom', label: endless && !st.box ? 'Sprint' : 'Custom' }],
-      { value: endless && st.timing === 'pace' ? 'off' : st.timing, label: 'Timing', onChange: v => { st.timing = v; changed(); paintSettings(); } });
-    tip(tm.btns[0], 'A stopwatch counts up.');
-    tip(tm.btns[1], 'Paced to each question’s difficulty, like the test.');
-    if (st.timing === 'custom') {
-      const m = h('input', { class: 'field', type: 'number', min: 1, max: 180, value: st.minutes, 'aria-label': 'Minutes' });
-      m.addEventListener('change', () => { st.minutes = Math.max(1, Math.min(180, Math.round(+m.value || 16))); m.value = st.minutes; changed(); });
-      g5.append(h('div', { class: 'inline' }, m, h('span', { class: 'meta', text: endless && !st.box ? 'minutes: as many as you can' : 'minutes' })));
-    }
-    ctl.timeHelp = helpLine(g5, '');
-    if (st.timing !== 'off' || st.box) {
-      tip(UI.switch(g5, { checked: st.pace_alert, label: 'Pace alert on each question', onChange: v => { st.pace_alert = v; savePrefs(); } }).el, 'The stopwatch turns amber-deep past that question’s budget.');
-      UI.switch(g5, { checked: st.two_passes, label: 'Two passes: offer Skip past 1.5× the budget', onChange: v => { st.two_passes = v; changed(); } });
-    }
     // 6. Answers shown
     const g6 = group(grid, 'Answers shown', 'sFeedback', 'wide');
     [['instant', 'After each question', 'The key, your mistake by name and the explanation, right away.'],
@@ -1252,8 +1238,6 @@
     if (g('marked') === '1') st.pool = 'marked';
     if (g('from')) st.from = g('from');
     if (g('tiers')) { st.tiers = list('tiers').filter(x => TIERS.includes(x)); st.zone = 'off'; }
-    if (g('levels')) { st.levels = list('levels').flatMap(x => { const m = x.split('-').map(Number); return m.length === 2 ? LEVELS.filter(l => l >= m[0] && l <= m[1]) : [m[0]]; }).filter(l => LEVELS.includes(l)); st.zone = 'off'; }
-    if (g('unmeasured')) st.unmeasured = g('unmeasured') !== '0';
     if (g('formats')) st.formats = list('formats').filter(x => x === 'mcq' || x === 'spr');
     if (g('timing')) { const t = g('timing'); if (t.startsWith('custom')) { st.timing = 'custom'; st.minutes = +t.split(':')[1] || 16; } else st.timing = t === 'untimed' ? 'off' : t; }
     if (g('feedback')) st.feedback = g('feedback');
