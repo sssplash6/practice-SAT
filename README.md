@@ -472,3 +472,60 @@ Read `TOPIC-GUIDE.md`. In short: transcribe every question image, group the
 items into families, write the templates and an independent solver for each of
 them, encode every official item in `sources.py`, and get `satbank check
 --topic <slug>` to print PASS.
+
+## Running and operating SAT Freshman
+
+Run these from the repository root with the Python dependencies installed.
+The site and API listen on port 8000; `SATF_DB` can point a worktree or deployment
+at its own SQLite file.
+
+```bash
+PYTHONPATH=. python3 -m uvicorn server.app:app --port 8000
+```
+
+Run the gates before a release. `test_flow.py` uses a scratch database and runs
+the check entry point in every `server/checks/*.py` (apart from `__init__.py`).
+The bank and Words commands check authored content. The bank lint prints review leads
+and can exit successfully with findings.
+
+```bash
+PYTHONPATH=. python3 server/test_flow.py
+PYTHONPATH=. python3 -m satbank check
+PYTHONPATH=. python3 tools/build_words.py
+PYTHONPATH=. python3 tools/lint_bank.py
+```
+
+Environment read by the server (unset unless a default is shown):
+
+| Variable | Effect and default |
+|---|---|
+| `SATF_DB` | SQLite path; `server/satfreshman.db` by default. |
+| `SATF_ADMIN_TOKEN` | Enables and protects `/admin/reports/`; unset makes its API return 404. |
+| `SATF_REPORTS` | Report upload directory; `server/reports/` by default. |
+| `SATF_REPORTS_TO` | Email address for new report notices; unset sends none. |
+| `SATF_WORDS_UNREVIEWED` | `1` allows unreviewed Words frames for development; unset serves only reviewed frames. |
+| `SATF_BASE_URL` | Origin in email links; `http://localhost:8000` by default. |
+| `SATF_MAIL_FROM` | Sender address; `SAT Freshman <no-reply@localhost>` by default. |
+| `SATF_SMTP_HOST` | SMTP host; unset writes mail to `server/outbox/` instead of sending. |
+| `SATF_SMTP_PORT` | SMTP STARTTLS port; `587` by default. |
+| `SATF_SMTP_USER`, `SATF_SMTP_PASS` | SMTP login; unset means no SMTP authentication. |
+| `DESMOS_WAY` | `1`, `on`, or `true` enables the Desmos question filter; unset disables it. |
+
+`SATF_BACKUPS` is read by the backup tool, not the server. Set it to a directory
+outside the repository and set `SATF_DB` to the live database before running
+`python3 tools/backup_db.py`. It takes a consistent SQLite snapshot, verifies
+it, keeps the latest daily copy for each of 14 days and eight weekly copies.
+Use `python3 tools/backup_db.py --verify` for the latest daily copy (or
+`--verify FILE` for one file). With the server stopped, use
+`python3 tools/backup_db.py --restore FILE TARGET`; an existing nonempty target
+requires `--force`.
+
+`python3 tools/load_test.py --seconds 1 --learners 200 --stages 10` starts a
+temporary server and database, then reports request rates, latency and errors.
+`PYTHONPATH=. python3 tools/reports.py list` opens the reports inbox on the
+database selected by `SATF_DB`; `show`, `reply`, `status`, `key`, `stop`,
+`release`, and `labels` are its other operator commands.
+
+Launch still needs an SMTP server for email sign-in and a Desmos production key
+in place of the trial key embedded in the frontend. No server code currently
+reads `SATF_GOOGLE_CLIENT_ID`; setting it does not enable Google sign-in.
