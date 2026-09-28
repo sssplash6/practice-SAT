@@ -586,7 +586,8 @@
     const acts = h('div', { class: 'tc-acts' });
     acts.append(btn(label, { cls: rec ? 'pill' : 'btn', run: b => (status === 'in_progress' && y.live_session ? (location.href = lobby(y.live_session)) : start({ kind: 'paper', paper: p.n }, b)) }));
     acts.append(btn('Options', { cls: 'quiet', run: () => S.open({ kind: 'paper', paper: p.n, step: 1 }) }));
-    acts.append(btn(`Questions & discussion${p.posts ? ' ' + p.posts : ''}${p.gated ? ' · opens after you sit it' : ''}`, { cls: 'quiet tc-talk', run: () => talk(p) }));
+    // before you sit a paper its board is closed: the link waits for posts to tease, and never repeats "opens after you sit it" 8 times
+    if (!p.gated || p.posts) acts.append(btn(`Questions & discussion${p.posts ? ' ' + p.posts : ''}`, { cls: 'quiet tc-talk', run: () => talk(p) }));
     if (status === 'completed' && y.last_session) acts.append(btn('Again, exactly', { cls: 'quiet', aria: 'Again, exactly · tests memory', run: b => start({ kind: 'paper', paper: p.n, exact: true }, b) }));
     acts.append(btn('Race friends', { cls: 'quiet', run: () => race({ paper: p.n, count: 22, minutes: 35, twin: true, open_for: 72 }) }));
     card.append(acts);
