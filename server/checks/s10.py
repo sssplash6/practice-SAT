@@ -9,7 +9,8 @@ import datetime as dt
 
 from fastapi.testclient import TestClient
 
-from server import db, progress
+from satbank.registry import generate
+from server import db, practice, progress
 from server.app import app
 
 
@@ -50,6 +51,23 @@ def main() -> None:
                     json={"key": key, "undo": True})["left"] == 1
         call("POST", "/api/review/snooze", headers=due_h, json={"key": "due:wrong:key"}, want=404)
         print("ok  one frozen due item snoozes and returns for the same learner")
+
+        blank_owner = "a:s10blank" + secrets.token_hex(5)
+        blank_h = {"X-Learner": blank_owner}
+        raw = generate("lin.evaluate", 71)
+        blank_q = practice.to_question(practice.Card.of("lin.evaluate", 71, raw, "linear_functions"), 1)
+        db.run("INSERT INTO sessions(id,kind,learner,started,finished,questions,answers)"
+               " VALUES (?,?,?,?,?,?,'{}')", "s10-blank-" + blank_owner[2:], "module", blank_owner,
+               progress.now(), progress.now(), json.dumps([blank_q]))
+        blank_sid = "s10-blank-" + blank_owner[2:]
+        blank_walk = call("POST", "/api/review/walk", headers=blank_h, json={"session": blank_sid})
+        assert blank_walk["n"] == blank_walk["blanks"] == 1
+        blank_cfg = json.loads(db.one("SELECT cfg FROM sessions WHERE id=?", blank_walk["id"])["cfg"])
+        assert blank_cfg["walk"]["items"][0]["blank"]
+        call("POST", f"/api/review/walk/{blank_walk['id']}/at", headers=blank_h,
+             json={"i": 0, "step": "why", "diag": "skip"})
+        assert db.one("SELECT COUNT(*) AS n FROM attempts WHERE learner=?", blank_owner)["n"] == 0
+        print("ok  a finished test's blank question enters the walk without filing an attempt")
 
         started = call("POST", "/api/drill", json={"templates": ["lin.evaluate"], "formats": ["mcq"], "count": 1})
         sid = started["id"]

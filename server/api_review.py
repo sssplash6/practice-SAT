@@ -1087,12 +1087,19 @@ class Walk(BaseModel):
 @router.post("/api/review/walk")
 def walk(body: Walk, x_learner: str | None = Header(default=None)) -> dict:
     learner = writer_of(x_learner)
+    blanks = []
     if body.session:
         s = _own(body.session, learner)
         if not s["finished"]:
             raise HTTPException(409, "after the test")
         attempts = db.rows("SELECT * FROM attempts WHERE learner=? AND session=? AND correct=0"
                            " AND void IS NULL AND repeat=0 ORDER BY id", learner, body.session)
+        answered = {r["qid"] for r in db.rows("SELECT qid FROM attempts WHERE learner=? AND session=?",
+                                               learner, body.session)}
+        for q in progress._paper(s):
+            if q.get("id") not in answered and q.get("key") is not None and q.get("seed") is not None:
+                blanks.append({"attempt": None, "template": q["key"], "seed": q["seed"],
+                               "try": False, "blank": True, "diag": None})
     elif body.ids is not None:
         if len(body.ids) > 120:
             bad("ids", "at most 120 mistakes")
@@ -1114,6 +1121,8 @@ def walk(body: Walk, x_learner: str | None = Header(default=None)) -> dict:
             continue
         entries.append({"attempt": a["id"], "template": a["template"], "seed": a["seed"],
                         "try": a["revealed_at"] is None, "diag": a["diag"]})
+    if not body.new:
+        entries.extend(x for x in blanks if deps.access(learner, x["template"], x["seed"]) == "reveal")
     if not entries:
         raise HTTPException(409, "no missed questions to walk")
     sid = drill.create(learner, {"source": "review", "pool": "items", "exact": True,
@@ -1124,7 +1133,7 @@ def walk(body: Walk, x_learner: str | None = Header(default=None)) -> dict:
     cfg["inline"] = True
     cfg["walk"] = {"items": entries, "i": 0, "step": "try" if entries[0]["try"] else "why"}
     db.run("UPDATE sessions SET cfg=? WHERE id=? AND learner=?", json.dumps(cfg), sid, learner)
-    return {"id": sid, "n": len(entries), "blanks": 0,
+    return {"id": sid, "n": len(entries), "blanks": sum(bool(x.get("blank")) for x in entries),
             "minutes": round(len(entries) * 1.5, 1)}
 
 
@@ -1148,7 +1157,10 @@ def walk_at(sid: str, body: WalkAt, x_learner: str | None = Header(default=None)
         bad("step")
     if body.diag:
         attempt = data["items"][body.i]["attempt"]
-        why(Why(attempt_id=attempt, diag=body.diag), x_learner)
+        if attempt is None:
+            data["items"][body.i]["diag"] = body.diag
+        else:
+            why(Why(attempt_id=attempt, diag=body.diag), x_learner)
     data.update({"i": body.i, "step": body.step})
     db.run("UPDATE sessions SET cfg=? WHERE id=? AND learner=?", json.dumps(cfg), sid, learner)
     return {"ok": True}
