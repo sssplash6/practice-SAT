@@ -46,6 +46,11 @@
   .hist .xbtn[aria-expanded="true"] { transform: rotate(90deg); }
   .hist td .star svg { width: 14px; height: 14px; vertical-align: -2px; color: var(--amber-deep); }
   .hx-ph { display: none; }
+  .rv-act { display: inline-flex; align-items: center; gap: 16px; }
+  .rv-act .quiet { margin: 0 -4px 0 0; }
+  .rowmenu { flex: none; width: 32px; height: 32px; border: 0; border-radius: 8px; background: none; color: var(--soft); cursor: pointer; }
+  @media (hover: hover) and (pointer: fine) { .rowmenu:hover { background: var(--tile-2); color: var(--ink); } }
+  #ranks td[colspan] { text-align: left; }
   @media (max-width: 759px) { .pace-row { grid-template-columns: 90px minmax(0, 1fr); } .cx .hx-opt { display: none; }
     .hx-ph { display: block; margin-top: 3px; font: 500 12px var(--mono); color: var(--soft); } .hist th.hx-opt { display: none; } }
 </style>
