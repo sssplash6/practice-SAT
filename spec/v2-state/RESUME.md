@@ -81,6 +81,19 @@ v2/satdates, v2/bank-lint, v2/f5, v2/words-content, v2/bank-lint-fix group 6 (df
       For the user to decide: "Practise" (UK verb, sitewide) vs "Practice"; the plan builder on Today (S7's plan-ui) defaults
       the SAT date to the nearest one (5 days out: a Mon-Sat plan ending Eve/Exam) and keeps Use this plan disabled while its
       slider looks set.
+    - 2026-09-28: run wf_e4dc824e-f6c DONE (6 agents, 1.9M tokens). Plan 40 findings (7 high), Words 43 (8), Compete 57 (8);
+      every high and medium fixed on v2/s7 14ddb63, v2/s9 e96f351, v2/s8 cd3e6f7 (web only, rebased on master), saved in
+      followups/<id>-hygiene.json; server asks added to helper Tasks 30 and 22 (levers). The fixers' rebases made add/add
+      conflicts in prev4: resolved with each branch's own version (checked identical to the branch). My inline fixes after
+      the run: v2/s9 7369399 (the Words pages had no shell bar mount: no sidebar at desktop; the Words review missed it) and
+      v2/calm-shared e5fc8e7 (light --soft #6F6A62: AA on every surface). prev4 has all five branches. test_flow on prev4 stops
+      at the known s3.py:200 failure (Task 24); s8.py:519 fails after it (Task 30). WAITING FOR THE USER'S PREVIEW of Today,
+      Plan, Words, Compete on port 8061; merge each only on their "good".
+    - 2026-09-28: the user: "build tests". RUNNING build.js [{id:'S5'}] as run wf_5cbbf5d1-7c9 (task wajkgbyam): 2 page units,
+      one check, one hygiene, one fix. v2/s5 was reset for it: the old v2/s5 (8 server commits from the paused build, all
+      carried into the helper's v2/s5-server) is kept as v2/s5-old-server; the new v2/s5 = v2/s5-server + master (d1c6072),
+      checks/s5.py passes on it. At merge: v2/s5-server first (after the helper says "S5 server done" and its one check),
+      then v2/s5. Resume if cut: Workflow({scriptPath: <scripts>/v2-build.js, resumeFromRunId: 'wf_5cbbf5d1-7c9'}).
     - 2026-09-28: run wf_52a6cb52-1a2 DONE. S3 Today, S7 Plan, S9 Words and S8 Compete pages are built, checked and fixed on
       their branches (verified web diffs: ~2,300 / 3,400 / 3,800 / 3,500 lines); leftovers in followups/<id>-pages.json.
       PREVIEW of all four together on port 8061 (task b8vcjsxuq, worktree scratchpad/prev4, test_flow all good). MERGE EACH
