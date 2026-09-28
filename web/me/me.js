@@ -327,7 +327,8 @@
     const spark = k => (sum(ser[k], 0, 14) ? ser[k] : null);
     const spares = (SHELL && SHELL.spares) || 0;
     const host = h('div', { class: 'stats' });
-    const T = o => UI.tile(host, RO ? { ...o, href: null, fact: null } : o);
+    // decision 7: a tile only once it has a value; a new student saw eight tiles of dashes
+    const T = o => { if (o.value === null || o.value === undefined || o.value === 0) return; UI.tile(host, RO ? { ...o, href: null, fact: null } : o); };
     T({ label: 'Streak', value: st.streak || null, unit: st.streak ? (st.streak === 1 ? 'day' : 'days') : null,
       sub: st.streak ? [`best ${N(st.best_streak)}`, spares ? `${spares} spare banked` : null].filter(Boolean).join(' · ') : null,
       missing: 'Answer one question to start', fact: 'streak' });
@@ -346,7 +347,7 @@
     const w = S.words;
     T({ label: 'Words', value: w && w.known ? w.known : null, sub: w && w.due ? `${N(w.due)} due` : null, missing: w ? 'Start in Words' : null, href: '/words/' });
     T({ label: 'Rating', value: S.challenge && S.challenge.played ? S.challenge.rating : null, missing: 'Play a contest to get one', href: '/compete/' });
-    return host;
+    return host.children.length ? host : null;
   }
 
   /* ================================================================ This week (U14) */
@@ -804,7 +805,7 @@
         fresh.map(s => row(s)[0])));
       if (g.top3 && g.top3.topics && g.top3.topics.length && !RO) kids.push(h('div', { class: 'card-foot' },
         btn('Practise the top 3 · 15', { primary: true, body: { topics: g.top3.topics, count: 15, order: 'mixed', adaptive: true, source: 'skill' } })));
-    } else {
+    } else if (S.stats.answered || RO) {
       S.domains.forEach(d => {
         const weak = d.skills.filter(s => s.answered).sort((a, b) => a.mastery - b.mastery)[0];
         const open = openDoms.has(d.domain);
@@ -869,7 +870,7 @@
     const readyPct = Math.round((cov.readiness || 0) * 100);
     if (!(counts.met + counts.ready)) {
       fill('readiness', h('p', { class: 'soft' }, `Each of the ${N(total)} question types you meet fills in here.`),
-        RO ? null : h('div', { class: 'card-foot' }, btn(`Today’s set · ${setLen()}`, { primary: true, body: { source: 'coach', count: setLen() } })));
+        RO ? null : h('div', { class: 'card-foot' }, btn(`Today’s set · ${setLen()}`, { quiet: true, body: { source: 'coach', count: setLen() } })));
       said('readiness', 'no question types met yet');
       return;
     }
@@ -1045,6 +1046,11 @@
       ACT = ACT || { days: S.days, active_days: S.stats.active_days };
     }
     if (!ready('activity', 'activity')) return;
+    if (!ACT.active_days && !(ACT.days || []).some(d => d && (d.n || d.count || d.q))) {
+      fill('activity', h('p', { class: 'soft', text: 'Every day you study lights up a square here.' }));
+      said('activity', 'No activity yet');
+      return;
+    }
     const host = h('div');
     fill('activity', host);
     UI.heatmap(host, ACT.days, { weeks: phone() ? 20 : weeks, end: ACT.today, range: !RO,
