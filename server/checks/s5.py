@@ -12,6 +12,8 @@ import json
 import os
 import pathlib
 import secrets
+import subprocess
+import sys
 import tempfile
 import time
 from collections import Counter
@@ -1119,7 +1121,19 @@ def shell_resume(c) -> None:
     print("ok  S5 X23: a paused sitting is In progress with its rank line")
 
 
-def check(c) -> None:
+def check(c, *, isolated: bool = False) -> None:
+    if not isolated:
+        # The S5 acceptance run creates hundreds of sittings. Keep them out
+        # of test_flow's shared database so later sections measure their own
+        # warm requests against representative data, not S5's fixtures.
+        root = pathlib.Path(__file__).resolve().parents[2]
+        run = subprocess.run([sys.executable, str(pathlib.Path(__file__).resolve())],
+                             cwd=root, env={**os.environ, "PYTHONPATH": str(root)},
+                             text=True, capture_output=True, check=False)
+        if run.returncode:
+            raise AssertionError(run.stdout + run.stderr)
+        print(run.stdout, end="")
+        return
     WAITING.clear()
     lobby(c)
     per_question(c)
@@ -1153,4 +1167,4 @@ if __name__ == "__main__":
         mail.OUTBOX = pathlib.Path(path) / "outbox"
         from server.app import app
         with TestClient(app) as client:
-            check(client)
+            check(client, isolated=True)
