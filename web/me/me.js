@@ -523,16 +523,44 @@
       rwT.value = rw ? String(rw) : ''; rwN.value = rwNow ? String(rwNow) : '';
       rwT.addEventListener('change', () => { rw = rwT.value ? +rwT.value : null; sync(); });
       rwN.addEventListener('change', () => { rwNow = rwN.value ? +rwN.value : null; sync(); });
+      // what the chosen target takes, live, from Plan's own preview (U4, S7's plan.pace): the module-1
+      // route line, and "40 days · 30 study days · about 30 points a week · Ambitious" with an exam date
+      const takes = h('p', { class: 'help', hidden: true }), paceLine = h('p', { class: 'help', hidden: true });
+      let timer = 0, asked = 0;
+      const preview = () => {
+        clearTimeout(timer);
+        if (!prof.exam_date) return;
+        timer = setTimeout(async () => {
+          const n = ++asked;
+          try {
+            const r = await UI.api('/plan/preview', { method: 'POST', quiet: true,
+              body: { exam_date: prof.exam_date, target: t, minutes: prof.minutes || 30, days: prof.days || '1111111' } });
+            if (n !== asked) return;
+            const tn2 = r.target_note || {};
+            takes.textContent = tn2.route_up && tn2.route_right ? `At least ${tn2.route_right} of ${tn2.route_of || 22} right in module 1 to reach the harder module 2.` : '';
+            takes.hidden = !takes.textContent;
+            const left = Math.round((new Date(prof.exam_date + 'T00:00') - new Date(new Date().toDateString())) / 864e5);
+            const later = r.later_date && (r.later_date.date || r.later_date);
+            paceLine.replaceChildren([pl(left, 'day'), r.study_days && pl(r.study_days, 'study day'),
+              r.pace_per_week && `about ${N(Math.round(r.pace_per_week))} points a week`, r.pace_tag].filter(Boolean).join(' · '));
+            if (typeof later === 'string' && r.pace_tag && r.pace_tag !== 'Steady') paceLine.append(' · ', btn(`${day(later)} makes it Steady`, { quiet: true, onClick: async () => {
+              res.close(); P = await A.saveMe({ exam_date: later }); UI.toast(`Exam: ${UI.date(later, 'long')}`); reloadMe();
+            } }));
+            paceLine.hidden = false;
+          } catch (_) { if (n === asked) { takes.hidden = true; paceLine.hidden = true; } }
+        }, 250);
+      };
       function sync() {
         total.replaceChildren('Total ', h('b', { text: String(t + (rw || 0)) }));
         total.hidden = !rw;                            // the slider already says the Math part
         live.textContent = L ? (t > mid(L) ? `+${t - mid(L)} from your latest band` : 'At or below your latest band') : '';
         save.disabled = t === prof.target && rw === (prof.rw_target || null) && rwNow === (prof.rw_now || null);
+        preview();
       }
       save.addEventListener('click', () => { res.close(); saveTarget({ target: t, rw_target: rw, rw_now: rwNow }); });
       sync();
       return [h('div', { class: 'target-pop' }, total,
-        h('div', { class: 'gap' }, h('span', { class: 'label', text: 'Math' }), math.el, chips.el, live,
+        h('div', { class: 'gap' }, h('span', { class: 'label', text: 'Math' }), math.el, chips.el, live, takes, paceLine,
           h('a', { class: 'link', href: '/help/#routing', text: 'What a Math target takes' })),
         h('div', { class: 'gap' }, h('span', { class: 'label', text: 'Reading and Writing' }),
           h('label', { class: 'gap' }, h('span', { class: 'help', text: 'Your R&W now' }), rwN),
