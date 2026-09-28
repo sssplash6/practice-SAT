@@ -120,6 +120,8 @@
   /* up next */
   #next { background: var(--wash); }
   #next .lead { display: grid; gap: 6px; padding-bottom: 18px; margin-bottom: 18px; border-bottom: 1px solid color-mix(in srgb, var(--amber) 25%, transparent); }
+  #next .lead-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px 16px; }
+  #next .lead-head .lead-t { flex: 1 1 200px; margin: 0; }
   #next .lead-t { font: 700 20px/1.25 var(--font); letter-spacing: -.01em; color: var(--ink); }
   .size { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; }
   /* the streak: flame and number centred on one line, the number in the text font (the user: misaligned) */
@@ -890,7 +892,8 @@
     return null;
   }
   function leadFrom(it) {
-    const el = h('div', { class: 'lead' }, h('p', { class: 'lead-t', text: it.title || 'Up next' }));
+    const head = h('div', { class: 'lead-head' }, h('p', { class: 'lead-t', text: it.title || 'Up next' }));
+    const el = h('div', { class: 'lead' }, head);
     const m = [];
     if (it.kind === 'test' || it.kind === 'resume') {
       if (it.seconds_left !== null && it.seconds_left !== undefined && it.timed) {
@@ -932,12 +935,12 @@
       return go(it.href && !it.start ? it.href : (it.start || it.href));
     }));
     prefetchSession(go_);
-    acts.prepend(go_);
+    head.append(go_);          // Start sits beside the title, in the card's empty right side
     if (it.kind === 'plan' && it.test) acts.append(quiet('I took a Bluebook test instead', () => scoreSheet({ source: 'bluebook', task: it.task_id })));
     if (it.kind === 'resume' && it.more) acts.append(link(`+${pl(it.more, 'more unfinished set')}`, '/practice/#unfinished'));
     if (it.kind === 'after') { if (early) acts.prepend(pill('Pick your next date', (e, b) => examPop(b))); else acts.append(quiet('Pick your next date', (e, b) => examPop(b))); }
     if (it.kind === 'rehearsal') acts.append(btn('Add to calendar', () => rehearsalIcs()));
-    el.append(acts);
+    if (acts.children.length) el.append(acts);
     if (it.then) el.append(line(it.then, 'soft'));
     return el;
   }
