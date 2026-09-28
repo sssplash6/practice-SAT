@@ -742,6 +742,90 @@ def walk(b, base, http, sql) -> None:
         ctx.close()
     print("ok  banners: a retired code, and refused localStorage (sessionStorage keeps a tab only); no figures painted without data")
 
+    # ---- U25: welcome-back once, on a clean load only; the Today card's facts wait for /api/levers
+    W = code()
+    api(W, "GET", "/api/shell")
+    sql.execute("INSERT INTO attempts(learner,template,seed,topic,difficulty,fmt,correct,at) VALUES (?,?,?,?,?,?,?,?)",
+                (W, "lin.evaluate", 5, "linear_functions", "easy", "mcq", 1,
+                 (dt.datetime.now(dt.timezone.utc) - dt.timedelta(days=3)).isoformat()))
+    sql.commit()
+    ctx = context(W)
+    pg = page(ctx)
+    go(pg, "/?next=0")
+    pg.wait_for_timeout(400)
+    assert not pg.locator("dialog.sheet[open]").count(), "a link never opens a sheet"
+    go(pg, "/")
+    pg.wait_for_selector("dialog.sheet[open] >> text=Welcome back", timeout=8000)
+    assert pg.locator("dialog.sheet[open] button", has_text="Pick up:").count() == 1
+    go(pg, "/")
+    pg.wait_for_timeout(400)
+    assert not pg.locator("dialog.sheet[open]").count(), "one sheet a day"
+    levers = api(W, "GET", "/api/shell")["has"]["levers"]
+    tag = pg.eval_on_selector(".side .side-day .streak", "e => [e.tagName, e.getAttribute('href'), e.hasAttribute('data-fact')]")
+    assert tag == (["BUTTON", None, True] if levers else ["A", "/me/#activity", False]), tag
+
+    # ---- G1: the run starts part 1 with run=<day>; the between pane skips (S) and continues (Enter); the rail
+    go(pg, "/me/")
+    assert pg.evaluate("UI.run.label()").startswith("Start today · "), "the label"
+    with pg.expect_navigation(url="**/practice/session/?id=*"):
+        pg.evaluate("UI.run.start()")
+    sid = pg.url.split("id=")[1]
+    state = pg.evaluate("UI.run.state()")
+    assert json.loads(sql.execute("SELECT cfg FROM sessions WHERE id=?", (sid,)).fetchone()[0])["run"] == state["day"]
+    assert len(state["done"]) == 1, state
+    go(pg, "/me/")
+    between = "UI.run.between(document.querySelector('main'), {title: 'First eight', right: 7, total: 11})"
+    pg.evaluate(between)
+    pg.wait_for_selector(".run-between .pill")
+    txt = pg.text_content(".run-between")
+    assert "7 / 11" in txt and "Part 2 of" in txt and "Skip this part" in txt and "Stop for now" in txt, txt
+    pg.keyboard.press("s")
+    pg.wait_for_function("() => UI.run.state().skipped.length === 1 && !document.querySelector('.run-between .skel')")
+    pg.evaluate("UI.run.rail(document.querySelector('main'), {current: false})")
+    pg.wait_for_selector(".run-rail:not([hidden])")
+    assert pg.locator(".run-rail i").count() == len(state["done"]) + pg.evaluate("UI.run.parts().then(p => p.next.length)")
+    pg.evaluate("sessionStorage.setItem('satf.run', JSON.stringify({...UI.run.state(), skipped: []}))")
+    go(pg, "/me/")
+    pg.evaluate(between)
+    pg.wait_for_selector(".run-between .pill")
+    with pg.expect_navigation():
+        pg.keyboard.press("Enter")
+    assert "run=" in pg.url or "/practice/session/" in pg.url, pg.url
+
+    # ---- U28: Send to a friend makes a one-question twin set
+    go(pg, "/mistakes/")
+    link = pg.evaluate("UI.share({template: 'lin.evaluate', seed: 3})")
+    shared = api(W, "GET", f"/api/sets/{link.split('c=')[1]}")
+    assert "/s/?c=" in link and shared["fresh"] and shared["count"] == 1, (link, shared)
+
+    # ---- palette: a skill's Tab sub-row keeps the skill's name in Recent; Start today is an action
+    pg.keyboard.press(mod + "+k")
+    pg.wait_for_selector("dialog.palette[open] input")
+    pg.keyboard.type("start today")
+    pg.wait_for_timeout(300)
+    assert pg.inner_text("dialog.palette [role=option][aria-selected=true]").startswith("Start today")
+    pg.fill("dialog.palette[open] input", "circles")
+    pg.wait_for_timeout(300)
+    pg.keyboard.press("Tab")
+    with pg.expect_navigation(url="**/practice/session/?id=*"):
+        pg.keyboard.press("Enter")
+    recent = pg.evaluate("JSON.parse(localStorage.getItem('satf.palette'))[0].label")
+    assert recent.startswith("Circles · Practise"), recent
+    ctx.close()
+
+    # ---- §2.7: the quick sheet is full screen on the phone
+    ctx = context(W, 390, 844)
+    pg = page(ctx)
+    go(pg, "/mistakes/")
+    pg.evaluate("UI.quick('question')")
+    pg.wait_for_selector("dialog.quick[open]")
+    settle(pg)
+    box = pg.locator("dialog.quick").bounding_box()
+    assert (box["y"], box["width"], box["height"]) == (0, 390, 844), box
+    ctx.close()
+    print("ok  welcome-back once on a clean load; the flame without levers; the run, its between pane and rail;"
+          " a twin link; palette Recent and Start today; the quick sheet full screen at 390")
+
     # ---- every page at 1280 and 390, light and dark, a new and a seeded learner: the chrome is
     # there (or, on the runner, the test and the kit, absent), nothing scrolls sideways, the theme
     # holds, and no console errors

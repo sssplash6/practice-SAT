@@ -126,6 +126,7 @@
     quick: () => UI.quick('question'), mistake: () => UI.quick('mistake'), word: () => UI.quick('word'),
     module: () => mock(false), section: () => mock(true), phone: () => UI.continueOnPhone(),
     feedback: () => UI.feedback(), keys: () => UI.keys.sheet(), signout: () => UI.signOut(),
+    today: () => UI.run.start(),
   };
   function replay(act) {
     if (!act) return;
@@ -239,6 +240,8 @@
     const act = (label, run, o = {}) => ({ label, icon: icon(o.icon || 'arrow', 18), kbd: o.kbd, sub: o.sub, also: o.also,
       run: () => { if (o.id) remember({ label, act: { run: o.id } }); close(); run(); } });
     const rows = [
+      // G1: the day as one run over Up next, part after part
+      UI.run && UI.nextItems().length ? act('Start today', ACTIONS.today, { icon: 'play', id: 'today', also: 'run day all in order' }) : null,
       act('Quick question', ACTIONS.quick, { icon: 'bolt', kbd: 'Q', id: 'quick', also: 'one' }),
       act('Log a mistake', ACTIONS.mistake, { icon: 'plus', id: 'mistake', also: 'bluebook school outside missed bring misses question id' }),
       act('Add a word', ACTIONS.word, { icon: 'words', id: 'word', also: 'vocabulary vocab' }),
