@@ -304,8 +304,8 @@
   }
 
   /* ---------------------------------------------------------- a day
-     Today's practice is the coach's pick. A day ahead gets the next set of
-     the coach's ranking, one set per practice day in order -- a forecast
+     Today's practice is the mentor's pick. A day ahead gets the next set of
+     the mentor's ranking, one set per practice day in order -- a forecast
      from today's results, and the plan is redrawn from each day's. A test day
      long enough for more than its test keeps the rest for practice. */
   let chosen = null;
@@ -531,7 +531,7 @@
         minutes: W.minutes, days: W.days, tests: W.tests, focus } });
       snap.set('plan-draft', null);
       P = r.profile;
-      T = await api('/today');                       // the coach, now steered by the focus
+      T = await api('/today');                       // the mentor, now steered by the focus
       b.removeAttribute('aria-busy');
       paintPlan();
       scrollTo({ top: 0, behavior: 'instant' });

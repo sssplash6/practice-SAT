@@ -1326,25 +1326,10 @@
     // P6: the traps this question set, and how the strikes were graded
     function trapsLines(fb, key, g, right) {
       const out = [];
-      const named = rows.map((_, i) => i).filter(i => i !== key && fb.reasons[i] && !(fb.filler && fb.filler[i]));
-      // with every option's reason on screen the line only counts; without them it names each trap
-      const shown = !(prefs.option_reasons === false && live);
-      const letters = list => list.map(i => LETTERS[i]).join(list.length === 2 ? ' and ' : ', ');
-      if (named.length && g !== null) {
-        const word = named.length === 1 ? 'it' : named.length === 2 ? 'both' : `all ${named.length}`;
-        if (right || !named.includes(g)) {
-          out.push(h('p', { class: 'v-line v-traps' }, h('b', { text: 'Traps on offer: ' }),
-            shown ? letters(named) : named.map(i => `${LETTERS[i]} ${low1(fb.reasons[i])}`).join(' · '), right ? ` · dodged ${word}` : ''));
-        } else {
-          const rest = named.filter(i => i !== g);
-          out.push(h('p', { class: 'v-line v-traps' }, h('b', { text: `Caught by ${LETTERS[g]}` }), shown ? '' : `: ${low1(fb.reasons[g])}`,
-            rest.length ? ` · dodged ${letters(rest)}` : ''));
-        }
-      }
       const struck = fb.struck || [...S.struck];
       struck.forEach(i => {
         if (i === key) out.push(h('p', { class: 'v-line v-struck-key', text: `You struck the key (${LETTERS[i]})` }));
-        else if (fb.reasons[i]) out.push(h('p', { class: 'v-line v-struck', text: `struck ${LETTERS[i]} · dodged: ${low1(fb.reasons[i])}` }));
+        else if (fb.reasons[i]) out.push(h('p', { class: 'v-line v-struck', text: `struck ${LETTERS[i]}: ${low1(fb.reasons[i])}` }));
       });
       return out;
     }

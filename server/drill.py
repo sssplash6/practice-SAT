@@ -10,7 +10,7 @@ student asks for the next one, so it can answer to what just happened:
 
 Everything the student is given is remembered against them, so nothing is
 ever served twice, and every answer is filed through progress.record so the
-map, the coach and the mistakes list move as they go.
+map, the mentor and the mistakes list move as they go.
 """
 
 from __future__ import annotations

@@ -1802,12 +1802,21 @@ figure.chart svg text.q-lab { font: 500 11.5px var(--font); fill: var(--ink); }
 :is(.sb-seg, .sb-sw).top { --sb: var(--amber); color: var(--ink-deep); }
 :is(.sb-seg, .sb-sw).hatch { background: repeating-linear-gradient(-45deg, var(--ink) 0 1.5px, transparent 1.5px 5px), color-mix(in srgb, var(--ink) 12%, var(--surface, var(--paper))); color: var(--ink); }
 .sb-seg.empty { background: var(--track); }
+/* .sb-warm: shades of orange then grey, so the legend's swatches read as colour codes */
+.sb-warm :is(.sb-seg, .sb-sw)[data-shade="0"] { --sb: var(--amber); color: var(--ink-deep); }
+.sb-warm :is(.sb-seg, .sb-sw)[data-shade="1"] { --sb: color-mix(in srgb, var(--amber) 55%, var(--surface, var(--paper))); color: var(--ink-deep); }
+.sb-warm :is(.sb-seg, .sb-sw)[data-shade="2"] { --sb: color-mix(in srgb, var(--ink) 72%, var(--surface, var(--paper))); color: var(--on-ink); }
+.sb-warm :is(.sb-seg, .sb-sw)[data-shade="3"] { --sb: color-mix(in srgb, var(--ink) 30%, var(--surface, var(--paper))); color: var(--ink); }
 .sb-l.hide { visibility: hidden; }
 @media (max-width: 759px) { .sb-l { visibility: hidden; } }
 .sb-hits { position: absolute; inset: 0; display: flex; gap: 2px; }
 .sb-hit { flex: 1 1 0; min-width: 3px; margin: 0; padding: 0; border: 0; border-radius: 6px; background: transparent; cursor: pointer; appearance: none; }
 @media (hover: hover) and (pointer: fine) { .sb-hit:hover { box-shadow: inset 0 0 0 2px var(--ink); } }
 .sb-key { margin-top: 10px; }
+/* the warm bars' legend: one line, the name gives way (ellipsis) before anything wraps */
+.sb-warm .sb-key { flex-wrap: nowrap; gap: 4px 14px; font-size: 12px; }
+.sb-warm .sb-key > li { min-width: 0; gap: 6px; white-space: nowrap; }
+.sb-warm .sb-key > li > span:not(.sb-n) { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
 .sb-sw { --sb: var(--ink); display: inline-block; width: 12px; height: 12px; border-radius: 3px; background: var(--sb); flex: none; }
 .sb-key > li.off .sb-sw { background: var(--track); }
 .sb-n { font: 500 12px var(--mono); color: var(--soft); }
@@ -2237,7 +2246,11 @@ dialog.sheet:focus-visible, .popover:focus-visible, .menu:focus-visible { outlin
 .skill-word { font: 600 13px var(--font); }
 .skill-side { display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: 8px 12px; }
 .skill-open { display: inline-flex; align-items: center; gap: 6px; }
-.skill-row.gain { grid-template-columns: minmax(150px, 1fr) 84px minmax(150px, 1.2fr) auto; }
+/* every column but the two fluid ones is fixed, so the bars start at the same x on every row (the side column was `auto`, so its content moved them) */
+.skill-row.gain { grid-template-columns: minmax(170px, 1fr) 84px minmax(130px, 1.1fr) 168px; min-height: 78px; }
+/* one line per name and the side on one line, so every row is the same height and its bars sit at the same y */
+.skill-row.gain .skill-name > span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.skill-row.gain .skill-side { flex-wrap: nowrap; }
 .skill-row.gain .skill-m { grid-column: 1; }
 .skill-gain { grid-column: 2; grid-row: 1 / span 2; font: 600 18px var(--mono); font-variant-numeric: tabular-nums; white-space: nowrap; }
 .skill-track-wrap { grid-column: 3; display: grid; gap: 5px; }

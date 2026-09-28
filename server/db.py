@@ -61,7 +61,7 @@ CREATE INDEX IF NOT EXISTS users_token    ON users(token);
 CREATE INDEX IF NOT EXISTS seen_learner   ON practice_seen(learner);
 
 -- A learner is whoever holds the token in their browser. Everything below is
--- optional: a student who never opens the profile still gets a map and a coach.
+-- optional: a student who never opens the profile still gets a map and a mentor.
 CREATE TABLE IF NOT EXISTS learners (
   id         TEXT PRIMARY KEY,
   name       TEXT,

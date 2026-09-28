@@ -394,7 +394,7 @@
     paintSearchHelp();
   }
 
-  /* ---------------------------------------------------------------- presets and coach line */
+  /* ---------------------------------------------------------------- presets and mentor line */
   function presets() {
     const b = B.bank, c = b.counts || {}, seen = c.seen || {};
     const sk = [...B.skills.values()];
@@ -405,7 +405,7 @@
     const focusSkills = sk.filter(s => focus.includes(s.domain) || focus.includes(s.slug));
     const untried = sk.filter(s => !s.placed && !s.answered).slice(0, 3);
     const list = [
-      { id: 'coach', label: 'Coach’s pick', about: coachWhy() },
+      { id: 'coach', label: 'Mentor’s pick', about: coachWhy() },
       { id: 'weak', label: 'Weakest 3', why: weak.length < 3 ? 'Needs 5 answers in 3 skills' : null, skills: weak },
       { id: 'focus', label: 'Plan focus', why: focusSkills.length ? null : 'No Focus domain in your plan yet: set one in Plan', skills: focusSkills, href: focusSkills.length ? null : '/plan/' },
       { id: 'full', label: 'Full section mix' },
@@ -454,7 +454,7 @@
       h('button', { type: 'button', class: 'quiet', text: 'Reset', onclick: () => { B.st = fromPrefs(B.prefs); B.fromLink = false; applyPreset('coach'); linkNote(null); } }));
     if (!(B.bank.totals || {}).answered) host.append(tip(h('a', { class: 'quiet', href: '/diagnostic/', text: 'Diagnostic' }), 'A starting score in 20 questions'));
   }
-  // why the coach picked these skills: the Coach's pick chip's tooltip, not a permanent line
+  // why the mentor picked these skills: the Mentor's pick chip's tooltip, not a permanent line
   function coachWhy() {
     const b = B.bank;
     if (!b.coach) return null;

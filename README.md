@@ -188,7 +188,7 @@ plan is `spec/rebuild.md`). The site before it is kept in `archive/site-v1/`.
 
 | page | what it is | API |
 |---|---|---|
-| `/` Today | the coach's next set, the question of the day, score band, countdown, the week, the challenge | `/api/today`, `/api/qotd` |
+| `/` Today | the mentor's next set, the question of the day, score band, countdown, the week, the challenge | `/api/today`, `/api/qotd` |
 | `/practice/` | the map of the 19 skills with mastery and open mistakes; how many (5, 10, 22, endless), difficulty, clock | `/api/map`, `POST /api/drill` |
 | `/practice/session/` | one question at a time: the key, the mistake named, a repair, the rationale, a summary | `/api/drill/{id}/...` |
 | `/tests/` | a new adaptive section or one module for every sitting; the diagnostic | `POST /api/mock/new` |
@@ -256,9 +256,9 @@ who kept missing would never reach the end of the set; the trap stays open and
 comes back later. Two clean answers on the template close it. A grid-in names
 no mistake, so it is filed under the bank's skill for it.
 
-**Mastery and the coach** (`server/progress.py`). A topic's mastery is a
+**Mastery and the mentor** (`server/progress.py`). A topic's mastery is a
 difficulty-weighted average of its last forty answers, each older one counting
-0.93 of the next, and pulled toward zero while there are few. The coach picks
+0.93 of the next, and pulled toward zero while there are few. The mentor picks
 the next set: open mistakes first, then topics never practised weighted by the
 blueprint, then the weakest, then a strong topic unseen for ten days, never
 more than two from one domain. Every screen opens set to its pick, and the
@@ -279,7 +279,7 @@ asked for, against the learner's history, and can be endless
 sitting's misses into fresh questions on the same templates.
 
 **Practice is scheduled, not sampled.** A student picks topics on the map,
-or the coach does, and asks for a number of questions; `server/practice.py`
+or the mentor does, and asks for a number of questions; `server/practice.py`
 fills every slot, one at a time as the set is played, by scoring a handful of
 candidates against what they have just seen and taking the least similar. Never repeating a question is the easy half. The
 hard half is that sixty questions from one subtopic can all be distinct and
@@ -458,7 +458,7 @@ stem as well as by seed, because two seeds can land on the same question.
 **There is no exam blueprint.** The real test weights its domains, and the
 bank alone does not know that. Sections now follow the published weights
 (`server/blueprint.py`) -- the diagnostic is even across domains on purpose,
-as above -- and the coach weights topics a student has not yet practised by
+as above -- and the mentor weights topics a student has not yet practised by
 them, but a set the student picks is whatever mix they picked.
 
 And the one that cannot be coded: **real difficulty comes from real students.**

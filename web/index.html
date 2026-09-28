@@ -51,6 +51,9 @@
     .td-main { grid-column: 1 / span 8; }
     .td-side { grid-column: 9 / -1; }
     .td-col:empty { display: none; }
+    /* one straight line in the gap between the cards above and Questions of the day */
+    #qotd { position: relative; }
+    #qotd::before { content: ""; position: absolute; left: 0; right: 0; top: -11px; height: 1px; background: var(--line); }
   }
 
   .td .card-head { justify-content: space-between; align-items: baseline; margin-bottom: 14px; }
@@ -61,6 +64,10 @@
   .td .line, .td-takes .line { margin: 6px 0 0; font: 400 14.5px/1.45 var(--font); color: var(--ink); text-wrap: pretty; }
   .td .line.soft, .td-takes .line.soft { color: var(--soft); font-size: 13.5px; }
   .td .row, .td-takes .row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; }
+  /* the target sheet sits outside .td, so it carries its own row spacing */
+  #targetSheet .row { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 12px; margin-top: 10px; }
+  #targetSheet .row > .field { flex: 1 1 140px; min-width: 0; }
+  #targetSheet .sub { margin: 18px 0 0; font: 600 11px/1.3 var(--font); letter-spacing: .08em; text-transform: uppercase; color: var(--soft); }
   .td .acts { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; margin-top: 14px; }
   .td .big { font: 600 44px/1 var(--mono); font-variant-numeric: tabular-nums; letter-spacing: -.02em; color: var(--ink); }
   .td .bar4 { display: block; height: 4px; border-radius: 2px; background: var(--track); overflow: hidden; margin-top: 6px; }
@@ -197,7 +204,7 @@
   .mist-fig { display: flex; align-items: baseline; gap: 10px; }
   .mist-fig .k { text-transform: none; letter-spacing: 0; font-size: 14px; }
   #mist .mist-fig + .meta { margin-top: 4px; }
-  #mist .mlist { margin-top: 16px; }
+  #mist .mlist { margin-top: 16px; max-height: 300px; overflow-y: auto; overscroll-behavior: contain; scrollbar-width: thin; }
   /* a mistake row (.mrow: plan-ui.js carries its own .trow): the dot, the label that starts its fix, a chevron;
      under it one quiet line, then the row's actions at one size */
   .mrow { display: grid; grid-template-columns: 10px minmax(0, 1fr) auto; gap: 4px 10px; align-items: first baseline; padding: 9px 0; border-bottom: 1px solid var(--line); }
@@ -219,6 +226,30 @@
   .habit .tell { font-style: italic; }
 
   /* questions of the day */
+  /* the add-a-score sheet sits outside .td: its own spacing */
+  .ss { display: grid; gap: 16px; }
+  .ss-f { display: grid; gap: 6px; }
+  .ss-f .label { margin: 0; font: 600 12px/1.3 var(--font); color: var(--soft); }
+  .ss-two { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+  @media (max-width: 480px) { .ss-two { grid-template-columns: minmax(0, 1fr); } }
+  .ss-acts { display: flex; justify-content: flex-end; align-items: center; gap: 12px; margin-top: 4px; }
+  .ss .blk { margin-top: 4px; }
+  /* two rows: the labels, then the controls; "or" sits on the controls' row so it falls level with the slider and the button */
+  .sp { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); gap: 8px 16px; align-items: center; margin-top: 8px; }
+  .sp-a, .sp-b { display: contents; }
+  .sp .label { display: block; margin: 0; }
+  .sp-a > .label { grid-column: 1; grid-row: 1; }
+  .sp-a > input[type=range] { grid-column: 1; grid-row: 2; display: block; margin: 0; }
+  .sp-or { grid-column: 2; grid-row: 2; font: 600 11px var(--font); letter-spacing: .08em; text-transform: uppercase; color: var(--soft); }
+  .sp-b > .label { grid-column: 3; grid-row: 1; }
+  .sp-b > .btn { grid-column: 3; grid-row: 2; width: 100%; height: auto; min-height: var(--ctl); padding-block: 8px; white-space: normal; text-align: center; line-height: 1.3; }
+  @media (max-width: 620px) { .sp { grid-template-columns: minmax(0, 1fr); gap: 10px; } .sp > *, .sp-a > *, .sp-b > * { grid-column: 1 !important; grid-row: auto !important; } .sp-or { justify-self: center; } }
+  .wk { display: grid; grid-template-columns: repeat(auto-fit, minmax(104px, 1fr)); gap: 10px; }
+  .wk-t { display: grid; gap: 2px; padding: 12px 14px; border-radius: 10px; background: var(--paper); }
+  .wk-n { font: 600 26px/1.1 var(--mono); font-variant-numeric: tabular-nums; letter-spacing: -.02em; }
+  .wk-k { font: 500 12.5px var(--font); color: var(--soft); }
+  .wk-d { min-height: 1.2em; margin-top: 4px; font: 600 12px var(--mono); color: var(--soft); }
+  .wk-d.up { color: var(--amber-deep); }
   .qd-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 12px; }
   .qd-tabs { display: none; gap: 6px; flex-wrap: wrap; margin-bottom: 14px; }
   .qd-tabs button { display: inline-flex; align-items: center; gap: 8px; min-height: var(--ctl); padding: 0 12px; border-radius: 10px; border: 0; background: var(--tile-2);
@@ -230,7 +261,12 @@
   .qd-row { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; align-items: start; }
   .qd-slot.was .verdict { animation: none; }
   .qd-row + .qd-rowk { margin-top: 28px; }
-  .qd-slot { display: grid; align-content: start; gap: 10px; padding: 18px; border-radius: 12px; background: var(--paper); }
+  .qd-slot { position: relative; display: grid; align-content: start; gap: 10px; padding: 18px; border-radius: 12px; background: var(--paper); }
+  .qd-fs { position: absolute; top: 10px; right: 10px; z-index: 1; display: grid; place-items: center; width: 32px; height: 32px; padding: 0; border: 0; border-radius: 8px; background: none; color: var(--soft); cursor: pointer; }
+  .qd-fs svg { width: 18px; height: 18px; }
+  @media (hover: hover) and (pointer: fine) { .qd-fs:hover { background: var(--tile-2); color: var(--ink); } }
+  .qd-slot.full { position: fixed; inset: 0; z-index: 300; height: auto !important; overflow-y: auto !important; border-radius: 0; background: var(--paper); padding: 28px max(20px, calc((100vw - 780px) / 2)); }
+  .qd-slot.full .qd-fs { top: 14px; right: 14px; position: fixed; }
   .qd-lab { display: flex; align-items: center; gap: 8px; }
   .mk { position: relative; display: inline-grid; place-items: center; width: 16px; height: 16px; border-radius: 50%; box-shadow: inset 0 0 0 1.5px var(--faint); flex: none; font: 700 10px/1 var(--font); }
   .mk[data-m="right"] { background: var(--amber); box-shadow: none; color: var(--ink-deep); }
@@ -279,8 +315,11 @@
   .extra-row .line { display: flex; align-items: center; gap: 8px; }
   .extra-row .line .glyph { flex: none; }
   .extra-row .row { gap: 8px 16px; }
-  .dom-row { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr) auto; gap: 6px 14px; align-items: center; padding: 11px 0; border-bottom: 1px solid var(--line); text-decoration: none; color: var(--ink); }
+  /* the text column has a fixed width, so the bars start and end at the same x on every row (it was `auto`, so each row's text length moved them) */
+  .dom-row { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr) 236px; gap: 6px 14px; align-items: center; padding: 11px 0; border-bottom: 1px solid var(--line); text-decoration: none; color: var(--ink); }
   .dom-row .mbar { width: 100%; }
+  .dom-row .meta { white-space: nowrap; }
+  @media (max-width: 759px) { .dom-row { grid-template-columns: minmax(0, 1fr); } .dom-row .meta { white-space: normal; } }
   .score-band { font: 600 48px/1 var(--mono); letter-spacing: -.02em; font-variant-numeric: tabular-nums; }
   .causes-fix { margin-top: 10px; padding: 12px 14px; border-radius: 10px; background: var(--paper); }
   .pace-fig { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 12px; }
@@ -350,6 +389,7 @@
   .wk-day .quiet svg { width: 16px; height: 16px; }
   .draft-ctl { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px 18px; margin-top: 8px; align-items: start; }
   @media (max-width: 759px) { .draft-ctl { grid-template-columns: minmax(0, 1fr); } }
+  .draft-ctl > :first-child { grid-column: 1 / -1; }   /* the starting point takes the full row */
   .draft-ctl label.label { display: block; margin-bottom: 6px; }
   .draft-ctl .field { height: var(--ctl); }
   .days7 { display: flex; flex-wrap: wrap; gap: 4px; }
@@ -710,8 +750,8 @@
       return;
     }
     const aMain = col('tdAm', 'td-main'), aSide = col('tdAs', 'td-side'), bMain = col('tdBm', 'td-main'), bSide = col('tdBs', 'td-side');
-    ensure(grid, [$('hero'), aMain, aSide, $('qotd'), bMain, bSide, $('tests')]);
-    ensure(aMain, [$('next'), $('gain')]);
+    ensure(grid, [$('hero'), aMain, aSide, $('qotd'), bMain, bSide]);
+    ensure(aMain, [$('next'), $('gain'), $('tests')]);   // Recent tests fills the space under Points on the table
     ensure(bMain, [$('study'), $('plan')]);
     // the first wide paint: the usual split, until balance() has measured
     if (!aSide.children.length && !bSide.children.length) {
@@ -721,7 +761,7 @@
     balance();
     if (window.ResizeObserver && !place.ro) {
       place.ro = new ResizeObserver(() => balance());
-      ['next', 'gain', 'mist', 'due', 'exam', 'score', 'pace', 'chal', 'words', 'study', 'plan'].forEach(id => place.ro.observe($(id)));
+      ['next', 'gain', 'tests', 'mist', 'due', 'exam', 'score', 'pace', 'chal', 'words', 'study', 'plan'].forEach(id => place.ro.observe($(id)));
     }
   }
   // the lower side cards float up into the upper side column while it has room beside its main column
@@ -738,8 +778,8 @@
       // over both bands rather than one large one (cards move down as well as up)
       const seq = stretch ? ['exam', 'due', 'mist', 'score', 'pace', 'chal', 'words'] : ['due', 'mist', 'exam', 'score', 'pace', 'chal', 'words'];
       // exam morning keeps only the SAT card up there: Up next is one warm-up, so the rest may wait lower down
-      const fixed = $('today').classList.contains('examday') ? 1 : stretch ? 3 : 2;
-      const Am = hOf('next') + GAP + hOf('gain'), Bm = hOf('study') + GAP + hOf('plan');
+      const fixed = $('today').classList.contains('examday') ? 1 : stretch ? 3 : 1;   // one beside Up next: the tall Mistakes card may drop lower so the left column ends level
+      const Am = hOf('next') + GAP + hOf('gain') + GAP + hOf('tests'), Bm = hOf('study') + GAP + hOf('plan');
       const hs = seq.map(hOf), all = hs.reduce((a, b) => a + b + GAP, -GAP);
       let best = fixed, bestS = Infinity, bestM = Infinity, used = -GAP;
       hs.forEach((x, i) => {
@@ -751,6 +791,15 @@
       });
       ensure(aSide, seq.slice(0, best).map($));
       ensure(bSide, seq.slice(best).map($));
+      // the Mistakes list gives up whatever height its column has over the one beside it and scrolls within itself,
+      // so the two columns end level (no empty strip under the shorter one)
+      const ml = $('mist').querySelector('.mlist'), mc = $('mist').parentElement;
+      if (ml && mc) {
+        ml.style.maxHeight = '';
+        const other = { tdAs: 'tdAm', tdAm: 'tdAs', tdBs: 'tdBm', tdBm: 'tdBs' }[mc.id];
+        const diff = other ? mc.offsetHeight - $(other).offsetHeight : 0;
+        if (diff > 0) ml.style.maxHeight = `${Math.max(160, ml.offsetHeight - diff)}px`;
+      }
     });
   }
   WIDE.addEventListener('change', () => place());
@@ -1103,7 +1152,7 @@
         btn(MODULE, () => go({ path: '/mock/new', body: { full: false, timed: true } }))));
       if (p.plan_note) kids.push(line(p.plan_note, 'soft'));
     } else {
-      // the coach's set: its skills as chips, the estimate from the preview when it has one
+      // the mentor's set: its skills as chips, the estimate from the preview when it has one
       const topics = coach.topics || [];
       const byTopic = {};
       (S.t.domains || []).forEach(d => (d.topics || []).forEach(x => { byTopic[x.topic] = x; }));
@@ -1468,6 +1517,26 @@
     card('qotd', S.qday ? `Questions of the day · ${UI.date(d.day, 'long')}` : 'Questions of the day', qStreak(d), kids);
     QD.panels = panels;
     selectTab(QD.tab, false);
+    fitQd();
+  }
+  // side by side (1080px and up) the two cards of a row share one height, the shorter one's; the taller scrolls within itself
+  const QD_WIDE = matchMedia('(min-width: 1080px)');
+  function fitQd() {
+    document.querySelectorAll('#qotd .qd-row').forEach(row => {
+      const slots = [...row.children];
+      slots.forEach(el => { el.style.height = ''; el.style.overflowY = ''; });
+      if (!QD_WIDE.matches || slots.length < 2) return;
+      const hs = slots.map(el => el.offsetHeight), min = Math.min(...hs);
+      slots.forEach((el, i) => { if (hs[i] > min) { el.style.height = `${min}px`; el.style.overflowY = 'auto'; el.style.overscrollBehavior = 'contain'; } });
+    });
+  }
+  {
+    let raf = 0;
+    const again = () => { cancelAnimationFrame(raf); raf = requestAnimationFrame(fitQd); };
+    QD_WIDE.addEventListener('change', again);
+    addEventListener('resize', again);
+    // an answer, a reveal or a late-rendering fraction changes the content: fit again (style changes are not watched, so no loop)
+    new MutationObserver(again).observe($('qotd'), { childList: true, subtree: true, characterData: true, attributes: true, attributeFilter: ['class', 'hidden'] });
   }
   // the day's-questions streak has its own mark (a calendar tick), so it never reads as the study streak's flame
   const CAL_TICK = 'M4 5.5h16v14.5H4zM4 10h16M8.5 3.5v4M15.5 3.5v4M9 14.8l2 2 4-4';
@@ -1518,6 +1587,12 @@
     const p = h('div', { class: 'qd-slot' + (sl.mine ? ' was' : ''), id: `qd-${sl.slot.replace(':', '-')}`, role: 'tabpanel', 'aria-labelledby': `qt-${sl.slot.replace(':', '-')}` });
     // the slot says its format only (the subject is the row's); under 1080px the tab names it, so the label goes
     const FMT = { mcq: 'Multiple choice', spr: 'Grid-in' };
+    const FS_IN = 'M14 4.5h5.5V10M10 19.5H4.5V14M19.5 4.5L13 11M4.5 19.5L11 13', FS_OUT = 'M19.5 4.5L14 10M14 10V5M14 10h5M4.5 19.5L10 14M10 14v5M10 14H5';
+    const fs = h('button', { type: 'button', class: 'qd-fs', 'aria-label': 'Full screen', title: 'Full screen', html: svgI(FS_IN) });
+    const setFs = on => { p.classList.toggle('full', on); fs.setAttribute('aria-label', on ? 'Exit full screen' : 'Full screen'); fs.title = fs.getAttribute('aria-label'); fs.innerHTML = svgI(on ? FS_OUT : FS_IN); };
+    fs.addEventListener('click', () => setFs(!p.classList.contains('full')));
+    p.addEventListener('keydown', e => { if (e.key === 'Escape' && p.classList.contains('full')) { e.stopPropagation(); setFs(false); fs.focus(); } });
+    p.append(fs);
     p.append(h('div', { class: 'qd-lab' }, markEl(sl), h('span', { class: 'k', text: FMT[sl.slot.split(':')[1]] || String(sl.label || '').replace(/^(Math|Reading & Writing) · /i, '') })));
     const rw = String(sl.slot).startsWith('rw:');
     if (rw && sl.question && sl.question.text) p.append(h('p', { class: 'qd-text', text: sl.question.text }));
@@ -1705,7 +1780,7 @@
       const have = ins.answers || 0;
       card('gain', 'Points on the table', null, line(quietDay ? 'Shows where your points are once you have 30 answers.'
         : join('Shows where your points are after 30 answers', have > 0 && `${Math.min(have, 30)} of 30`), 'soft'),
-        quietDay ? null : h('div', { class: 'acts' }, quiet('Start the coach’s set', () => drill({ source: 'coach', count: 10 }))));
+        quietDay ? null : h('div', { class: 'acts' }, quiet('Start the mentor’s set', () => drill({ source: 'coach', count: 10 }))));
       return;
     }
     const traps = {};
@@ -1803,7 +1878,7 @@
     if (!secs || timedN < 20) {
       // the count only once there is one (decision 7); the timed set stays, it is the one way to fill this card
       card('pace', 'Pace', null, line(join('Shows after 20 timed answers', timedN > 0 && `${timedN} so far`), 'soft'),
-        h('div', { class: 'acts' }, btn('Timed set · 10', () => drill({ count: 10, timing: 'pace', source: 'pace' }))), testsRow());
+        h('div', { class: 'acts' }, btn('Timed set · 10', () => drill({ count: 10, timing: 'pace', source: 'gain' }))), testsRow());
       return;
     }
     kids.push(h('div', { class: 'pace-fig' }, h('span', { class: 'big', text: UI.mmss(secs) }), h('span', { class: 'meta', text: `a module at your pace · the SAT gives ${UI.mmss(limit)}` })));
@@ -1819,10 +1894,10 @@
     else if (secs < limit) kids.push(line(`${UI.mmss(limit - secs)} to spare · use it to check your last 5.`, 'soft'));
     (p.slow_right || []).slice(0, 3).forEach(x => kids.push(h('div', { class: 'pace-row' },
       h('span', { class: 'line', style: 'margin:0', text: join(TOP(x.topic), x.ms && `${UI.mmss(x.ms / 1000)} a question`, x.accuracy !== undefined && `${Math.round(100 * x.accuracy)}% right`) }),
-      (p.guard || []).includes(x.topic) ? btn('Careful set · 8', () => drill({ topics: [x.topic], count: 8, timed: false, source: 'pace' }))
-        : btn('Speed drill · 8 in 12:40', () => drill({ topics: [x.topic], count: 8, timing: 'pace', source: 'pace' })))));
+      (p.guard || []).includes(x.topic) ? btn('Careful set · 8', () => drill({ topics: [x.topic], count: 8, timed: false, source: 'gain' }))
+        : btn('Speed drill · 8 in 12:40', () => drill({ topics: [x.topic], count: 8, timing: 'pace', source: 'gain' })))));
     if (p.rushing && p.rushing.n) kids.push(h('div', { class: 'pace-row' }, h('span', { class: 'line', style: 'margin:0', text: join(`${p.rushing.n} wrong answers under 20 s this week`, p.rushing.topic && `${p.rushing.n_topic} in ${TOP(p.rushing.topic)}`) }),
-      btn('Careful set · 8', () => drill({ topics: p.rushing.topic ? [p.rushing.topic] : undefined, count: 8, timed: false, source: 'pace' }))));
+      btn('Careful set · 8', () => drill({ topics: p.rushing.topic ? [p.rushing.topic] : undefined, count: 8, timed: false, source: 'gain' }))));
     kids.push(testsRow());
     if (p.week_before_ms) kids.push(meta(`Module pace ${UI.mmss(p.week_before_ms / 1000)} → ${UI.mmss(secs)} since last week`));
     kids.push(h('div', { class: 'acts' }, link('Every skill', '/me/#pace')));
@@ -1940,15 +2015,10 @@
     if (!c.total || c.total < 5) { el.append(line('Fewer than 5 misses in 14 days: nothing to sort yet.', 'soft')); return el; }
     const segs = Object.keys(CAUSE).filter(k => c.by[k]).map(k => ({ key: k, label: CAUSE[k], value: c.by[k] }));
     const fix = h('div', {});
-    // the bar labels its parts, so the legend only carries parts too narrow for a label, and the sentence adds the lever,
-    // not the count a third time; one cause alone is just the sentence (the user: one number said three times)
+    // the bar carries only the counts; the legend under it names each colour
     const one = segs.length === 1;
-    if (UI.stackBar && !one) UI.stackBar(el, segs, { largest: true, legend: 'auto', noun: 'misses', label: 'Misses by cause', onPick: sg => { S.causePick = sg.key; fixRow(c, sg.key, fix); } });
+    if (UI.stackBar && !one) UI.stackBar(el, segs, { largest: false, warm: true, barText: 'value', noun: 'misses', label: 'Misses by cause', onPick: sg => { S.causePick = sg.key; fixRow(c, sg.key, fix); } });
     else if (!one) el.append(meta(segs.map(s => `${s.label} ${s.value}`).join(' · ')));
-    const lvWord = c.lever && CAUSE[c.lever] ? CAUSE[c.lever].toLowerCase() : null;
-    const lv = one ? `All ${c.total} misses in 14 days were ${CAUSE[segs[0].key].toLowerCase()}${segs[0].key === 'trap' ? ': fixing them is your fastest gain.' : '.'}`
-      : lvWord && c.by[c.lever] ? `Most of your misses are ${lvWord}${c.lever === 'trap' ? ': fixing them is your fastest gain.' : '.'}` : null;
-    if (lv) el.append(line(lv));
     if (one) fixRow(c, segs[0].key, fix);
     el.append(fix);
     if (S.causePick) fixRow(c, S.causePick, fix);
@@ -1965,7 +2035,7 @@
     else if (key === 'slip') box.append(line('You know these. Reread the last line of the question before Check.', 'soft'),
       h('div', { class: 'acts' }, btn(`See your ${ids.length} slips`, () => drill({ pool: 'history', ids: ids.filter(x => typeof x === 'number'), exact: true, source: 'review' })),
         btn('Careful set · 8', () => drill({ pool: 'history', ids: ids.filter(x => typeof x === 'number'), exact: false, each: 1, count: 8, timed: false, source: 'today' }))));
-    else if (key === 'clock') box.append(btn('Speed drill · 8 in 12:40', () => drill({ count: 8, timing: 'pace', source: 'pace' })), ' ', link('See pace', '#pace'));
+    else if (key === 'clock') box.append(btn('Speed drill · 8 in 12:40', () => drill({ count: 8, timing: 'pace', source: 'gain' })), ' ', link('See pace', '#pace'));
     else if (key === 'entry') box.append(btn('Grid-in entry drill · 5', () => drill({ pool: 'history', ids: ids.filter(x => typeof x === 'number'), exact: false, formats: ['spr'], count: 5, source: 'today' })),
       h('p', { class: 'help', text: 'Up to 5 characters for a positive answer and 6 for a negative one; fractions or decimals; no mixed numbers.' }));
     else if (key === 'gap' && c.top_gap_topic) box.append(btn(`Learn it · ${TOP(c.top_gap_topic)}`, () => drill({ source: 'learn', topics: [c.top_gap_topic], example: true, count: 3 })));
@@ -1980,8 +2050,7 @@
     let rwNow = p.rw_now || null, rwT = p.rw_target || null;
     const start = { v, rwNow, rwT };
     let sheet, later = null;                          // a later exam date that makes the target Steady (T11)
-    const save = h('button', { type: 'button', class: 'pill', text: 'Save', disabled: true });
-    const takes = h('div', { class: 'td-takes', role: 'status' });
+    const save = h('button', { type: 'button', class: 'pill sm', text: 'Save', disabled: true });
     const note = h('p', { class: 'help' });
     const num = h('input', { type: 'number', class: 'field', min: 200, max: 800, step: 10, value: v, 'aria-label': 'Math target' });
     const rng = h('input', { type: 'range', min: 200, max: 800, step: 10, value: v, 'aria-label': 'Math target slider', style: 'width:100%' });
@@ -1990,49 +2059,17 @@
       v = Math.max(200, Math.min(800, Math.round(x / 10) * 10));
       num.value = v; rng.value = v;
       note.textContent = sc && v < sc.low ? 'Below your latest band' : '';
-      changed(); askTakes();
+      changed();
     };
     num.addEventListener('input', () => { if (num.value.length >= 3) set(+num.value); });
     rng.addEventListener('input', () => set(+rng.value));
-    const QUICK = [500, 550, 600, 650, 700, 750, 800];
+    const QUICK = [700, 750, 800];
     const quick = UI.chips(null, QUICK.map(x => ({ value: x, label: String(x) })), { value: v, label: 'Quick targets', onChange: x => set(x) });
-    // with an exam date each quick target carries the pace tag it would ask for
-    if (p.exam_date && !draft) Promise.all(QUICK.map(x => within(previewFor({ target: x })))).then(pvs => pvs.forEach((pv, i) => {
-      if (pv && pv.pace_tag && quick.btns[i]) quick.btns[i].textContent = `${QUICK[i]} · ${pv.pace_tag}`;
-    }));
     const rwA = h('input', { type: 'number', class: 'field', min: 200, max: 800, step: 10, value: rwNow || '', 'aria-label': 'R&W now', placeholder: 'R&W now' });
     const rwB = h('input', { type: 'number', class: 'field', min: 200, max: 800, step: 10, value: rwT || '', 'aria-label': 'R&W target', placeholder: 'R&W target' });
     const total = h('p', { class: 'meta' });
     const rwSync = () => { rwNow = rwA.value ? +rwA.value : null; rwT = rwB.value ? +rwB.value : null; total.textContent = rwT ? `Total target ${v + rwT}` : ''; changed(); };
     rwA.addEventListener('input', rwSync); rwB.addEventListener('input', rwSync);
-    let tk = 0;
-    function askTakes() {
-      clearTimeout(tk);
-      tk = setTimeout(async () => {
-        const w = S.t.workload && S.t.workload.need && S.t.workload.need.target;
-        const kids = [h('p', { class: 'sub', text: 'What it takes' })];
-        if (w && w.target === v && w.right_of_44) kids.push(line(`${v} ≈ ${w.right_of_44} of 44 right · you’re near ${w.now_of_44}`));
-        if (w && w.target === v && w.skills && w.skills.length) kids.push(line(`The ones you’re most likely missing are in ${w.skills.slice(0, 3).map(TOP).join(', ')}`, 'soft'));
-        try {
-          const pv = await previewFor({ target: v });
-          const tn = pv.target_note;
-          if (tn && tn.route_up && v > 580) kids.push(line(`Needs the harder module 2: at least ${tn.route_right} of ${tn.route_of} right in module 1`, 'soft'));
-          if (p.exam_date && pv.pace_per_week) kids.push(line(join(`${pv.study_days} study days`, `about ${Math.round(pv.pace_per_week)} a week`, pv.pace_tag)));
-          if (p.exam_date && !draft && pv.pace_tag === 'Very ambitious') {
-            const dates = (((UI.shellData && UI.shellData()) || {}).dates || []).map(d => d.day).filter(d => d > p.exam_date).slice(0, 6);
-            const tags = await Promise.all(dates.map(d => within(previewFor({ target: v, exam_date: d }))));
-            const k = tags.findIndex(x => x && x.pace_tag === 'Steady');
-            if (k >= 0) {
-              const d = dates[k], chip = h('button', { type: 'button', class: 'chip', 'aria-pressed': String(later === d), text: `${UI.date(d)} makes it Steady` });
-              chip.addEventListener('click', () => { later = later === d ? null : d; chip.setAttribute('aria-pressed', String(later === d)); changed(); });
-              kids.push(h('div', { class: 'row' }, chip));
-            } else if (later) { later = null; changed(); }
-          } else if (later) { later = null; changed(); }
-        } catch (_) {}
-        if (sc && sc.low >= v) kids.push(line(`You’re at ${v} · Raise to ${Math.min(800, v + 50)}?`));
-        takes.replaceChildren(...kids);
-      }, 250);
-    }
     save.addEventListener('click', () => run(save, async () => {
       if (draft) { draft.target = v; sheet.close(); paintPlan(); return; }
       const was = { target: p.target ?? null, rw_now: p.rw_now ?? null, rw_target: p.rw_target ?? null };
@@ -2048,13 +2085,12 @@
     const clear = quiet('Clear target', async () => { await put('/me', { target: null }); S.t.profile.target = null; sheet.close(); paintScore(); refresh(['today']); });
     sheet = UI.sheet({ title: 'Target', label: 'Target', body: b => {
       b.append(h('p', { class: 'meta', text: 'Math, 200 to 800' }), h('div', { class: 'row' }, num), rng, quick.el,
-        meta(join(sc && `Latest ${sc.low}–${sc.high}`, S.t.plan && S.t.plan.current && `Plan start ${S.t.plan.current}`)), note, takes);
+        meta(join(sc && `Latest ${sc.low}–${sc.high}`, S.t.plan && S.t.plan.current && `Plan start ${S.t.plan.current}`)), note);
       if (!draft) b.append(h('p', { class: 'sub', text: 'SAT total (optional)' }), h('div', { class: 'row' }, rwA, rwB), total,
         h('p', { class: 'help', text: 'We only test Math. Add your R&W from Bluebook or a real SAT to see your total.' }));
-      b.append(h('div', { class: 'acts' }, draft ? null : clear, h('span', { style: 'flex:1' }), quiet('Cancel', () => sheet.close()), save));
+      b.append(h('div', { class: 'acts', style: 'display:flex; flex-wrap:wrap; align-items:center; gap:8px 20px; margin-top:20px' }, draft ? null : clear, h('span', { style: 'flex:1' }), quiet('Cancel', () => sheet.close()), save));
     } });
     if (sheet && sheet.el) sheet.el.id = 'targetSheet';
-    askTakes();
   }
 
   /* add a score (§9): the scores added, each with × to delete, under the trend and in the sheet */
@@ -2076,12 +2112,12 @@
     let src = o.source || 'bluebook';
     let sheet;
     const dayF = h('input', { type: 'date', class: 'field', max: today(), value: today(), 'aria-label': 'Date' });
-    const math = h('input', { type: 'number', class: 'field', min: 200, max: 800, step: 10, required: true, 'aria-label': 'Math', placeholder: 'Math' });
-    const rw = h('input', { type: 'number', class: 'field', min: 200, max: 800, step: 10, 'aria-label': 'R&W (optional)', placeholder: 'R&W (optional)' });
+    const math = h('input', { type: 'number', class: 'field', min: 200, max: 800, step: 10, required: true, 'aria-label': 'Math', placeholder: '200 to 800' });
+    const rw = h('input', { type: 'number', class: 'field', min: 200, max: 800, step: 10, 'aria-label': 'R&W (optional)', placeholder: 'Optional' });
     const err = h('p', { class: 'field-err', hidden: true });
     const list = h('div', {});
     const drawList = () => list.replaceChildren(outsideList(drawList));
-    const save = pill('Save', async () => {
+    const save = btn('Save', async () => {
       const m = +math.value, r = rw.value ? +rw.value : null;
       const ok = v => v >= 200 && v <= 800 && v % 10 === 0;
       if (!ok(m) || (r !== null && !ok(r)) || !dayF.value || dayF.value > today()) { err.textContent = 'Scores are 200 to 800 in steps of 10, on or before today.'; err.hidden = false; return; }
@@ -2091,11 +2127,13 @@
       if (r && !S.t.profile.rw_now) UI.toast(`Use ${r} as your R&W now?`, { action: { label: 'Use it', onClick: () => put('/me', { rw_now: r }).then(() => refresh(['today'])) } });
       if (o.task && S.t.plan) patchTask({ task_id: o.task, status: 'todo', key: o.task }, { status: 'done' }, 'Test marked done');
       refresh(['today', 'insights', 'calendar']);
-    });
+    }, 'pill sm');
     sheet = UI.sheet({ title: 'Add a score', body: b => {
-      UI.chips(b, [{ value: 'bluebook', label: 'Bluebook practice test' }, { value: 'official', label: 'Official SAT' }, { value: 'other', label: 'Other' }], { value: src, label: 'Source', onChange: v => { src = v; } });
-      b.append(h('label', { class: 'label', text: 'Date' }), dayF, h('label', { class: 'label', text: 'Math' }), math, h('label', { class: 'label', text: 'R&W' }), rw, err,
-        h('div', { class: 'acts' }, quiet('Cancel', () => sheet.close()), save), list);
+      const fld = (label, input) => h('div', { class: 'ss-f' }, h('label', { class: 'label', text: label }), input);
+      const chips = UI.chips(null, [{ value: 'bluebook', label: 'Bluebook practice test' }, { value: 'official', label: 'Official SAT' }, { value: 'other', label: 'Other' }], { value: src, label: 'Source', onChange: v => { src = v; } });
+      b.append(h('div', { class: 'ss' }, fld('Source', chips.el), fld('Date', dayF),
+        h('div', { class: 'ss-two' }, fld('Math', math), fld('R&W · optional', rw)), err,
+        h('div', { class: 'ss-acts' }, quiet('Cancel', () => sheet.close()), save), list));
       drawList();
     } });
   }
@@ -2205,7 +2243,7 @@
   }
   function needLine(w, p) {
     if (!w.sized) {
-      if (w.unsized === 'answers') return h('div', {}, line(`Answer 30 questions to size the work · ${Math.min(30, (w.answers || {}).have || 0)} of 30`), h('div', { class: 'acts' }, btn('Start the coach’s set', () => drill({ source: 'coach', count: 10 }))));
+      if (w.unsized === 'answers') return h('div', {}, line(`Answer 30 questions to size the work · ${Math.min(30, (w.answers || {}).have || 0)} of 30`), h('div', { class: 'acts' }, btn('Start the mentor’s set', () => drill({ source: 'coach', count: 10 }))));
       return h('div', { class: 'row' }, line('Set a target to size the work'), btn('Set target', (e, b) => targetSheet(b)));
     }
     const nd = w.need || {}, parts = [];
@@ -2312,9 +2350,21 @@
     // this week against last, once this week has answers, the change said in words ("4 (−32) questions" read as a puzzle)
     const wk = t.week;
     if (wk && wk.this.questions) {
-      const vs = (a, b, word, f = x => n(x)) => b === undefined || b === a ? `${f(a)} ${word}` : `${f(a)} ${word}, ${f(Math.abs(a - b))} ${a > b ? 'more' : 'fewer'} than last week`;
-      kids.push(sub('This week vs last'), line(join(vs(wk.this.questions, wk.last.questions, 'questions'),
-        `${Math.round(100 * wk.this.right / wk.this.questions)}% right`, UI.dur(wk.this.minutes), wk.this.fixed && `${wk.this.fixed} fixed`, wk.this.opened && pl(wk.this.opened, 'new mistake'))));
+      // four tiles: the number, what it is, and the change against last week as an arrow (orange when it went the right way)
+      const L = wk.last || {}, T = wk.this;
+      const pctOf = w => (w && w.questions ? Math.round(100 * w.right / w.questions) : undefined);
+      const tile = (num, label, now, before, o = {}) => {
+        const d = before === undefined || now === undefined ? 0 : now - before;
+        const good = o.lowerBetter ? d < 0 : d > 0;
+        return h('div', { class: 'wk-t' }, h('b', { class: 'wk-n', text: num }), h('span', { class: 'wk-k', text: label }),
+          h('span', { class: 'wk-d' + (d && good ? ' up' : ''), text: d ? `${d > 0 ? '▲' : '▼'} ${o.pct ? Math.abs(d) + ' pts' : n(Math.abs(d))}` : before === undefined ? '' : 'same' }));
+      };
+      const tiles = [tile(n(T.questions), 'questions', T.questions, L.questions),
+        tile(`${pctOf(T)}%`, 'right', pctOf(T), pctOf(L), { pct: true }),
+        tile(UI.dur(T.minutes), 'studied', T.minutes, L.minutes)];
+      if (T.fixed) tiles.push(tile(n(T.fixed), 'fixed', T.fixed, L.fixed));
+      if (T.opened) tiles.push(tile(n(T.opened), pl(T.opened, 'new mistake').replace(/^\d+ /, ''), T.opened, L.opened, { lowerBetter: true }));
+      kids.push(sub('This week vs last'), h('div', { class: 'wk' }, tiles));
       if (wk.moved && wk.moved.length) kids.push(h('div', { class: 'row' }, wk.moved.map(m => h('a', { class: 'chip', href: `/practice/?topics=${m.topic}` }, UI.glyph(m.topic), TOP(m.topic), m.now > m.before ? ' ▲' : ' ▼'))));
     }
     // the streak is the hero's; here what the hero doesn't say, and "goal met" only once it has been
@@ -2331,19 +2381,26 @@
     const el = h('div', { style: 'margin-top:18px' });
     el.append(sub('Where the time went · this week'));
     const doms = Object.entries(ts.domains || {}).filter(([, m]) => m > 0).sort((a, b) => b[1] - a[1]);
-    // no orange here (nothing to act on), and no legend repeating the bar's own labels
-    if (UI.stackBar) UI.stackBar(el, doms.map(([d, m]) => ({ key: d, label: DSHORT(d), value: Math.round(m) })), { unit: 'min', label: 'Minutes by domain', noun: 'minutes', largest: false, legend: 'auto' });
+    // the bar carries only the minutes; the legend under it names each colour
+    if (UI.stackBar) UI.stackBar(el, doms.map(([d, m]) => ({ key: d, label: DSHORT(d), value: Math.round(m) })), { unit: 'min', label: 'Minutes by domain', noun: 'minutes', largest: false, warm: true, barText: 'value' });
+    let nudge = null;
     if (doms.length) {
       const [d0, m0] = doms[0];
       el.append(line(join(`${Math.round(100 * m0 / ts.minutes)}% of your time on ${DSHORT(d0)}`, ts.test_share && `${Math.round(100 * (ts.test_share[d0] || 0))}% of the test`, ts.points_share && `${Math.round(100 * (ts.points_share[d0] || 0))}% of your points`)));
       const gap = Object.keys(ts.points_share || {}).map(d => [d, (ts.points_share[d] || 0) - ((ts.domains[d] || 0) / ts.minutes)]).sort((a, b) => b[1] - a[1])[0];
       if (gap && gap[1] > 0.1 && gains) {
         const topics = (gains.skills || []).filter(s => s.domain === gap[0]).sort((a, b) => b.gain - a.gain).slice(0, 3).map(s => s.topic);
-        if (topics.length) el.append(h('div', { class: 'acts' }, btn(`Rebalance · 10 in ${DSHORT(gap[0])}`, () => drill({ topics, count: 10, source: 'gain' }))));
+        if (topics.length) nudge = h('div', { class: 'acts', style: 'margin-top: 18px' }, btn(`Rebalance · 10 in ${DSHORT(gap[0])}`, () => drill({ topics, count: 10, source: 'gain' })));
       }
     }
     const k = ts.kinds || {};
-    el.append(meta(join(k.new && `new ${UI.dur(k.new)}`, k.fix && `fixing ${UI.dur(k.fix)}`, k.review && `review ${UI.dur(k.review)}`, k.test && `tests ${UI.dur(k.test)}`)));
+    // the kind of work, drawn the same way as the domains: minutes in the bar, the name under it
+    const kinds = [['new', 'New'], ['fix', 'Fixing'], ['review', 'Review'], ['test', 'Tests']].filter(([x]) => k[x] > 0).map(([x, label]) => ({ key: x, label, value: Math.round(k[x]) }));
+    if (kinds.length && UI.stackBar) {
+      el.append(h('div', { style: 'margin-top: 18px' }));
+      UI.stackBar(el.lastElementChild, kinds, { unit: 'min', label: 'Minutes by kind of work', noun: 'minutes', largest: false, warm: true, barText: 'value' });
+    }
+    if (nudge) el.append(nudge);
     return el;
   }
   function goalPop(anchor) {
@@ -2636,23 +2693,25 @@
     // where you start (Plan step 1's four variants)
     const srcBox = h('div', {});
     const src = dr.source || {};
-    if (src.value) srcBox.append(h('label', { class: 'label', text: 'Start from' }), line(src.text || join(src.kind === 'mean' ? `Your last ${src.n || 2} tests average ${src.value}`
+    if (src.value) srcBox.append(h('label', { class: 'label', text: 'Starting point' }), line(src.text || join(src.kind === 'mean' ? `Your last ${src.n || 2} tests average ${src.value}`
       : ['Latest', src.sitting_kind && (UI.KIND && UI.KIND.label ? UI.KIND.label({ kind: src.sitting_kind }) : cap(src.sitting_kind)), src.at && UI.date(src.at), src.low && `${src.low}–${src.high}`], `Use ${src.value}`)));
     else {
       // the value shows once the slider has moved; before that the label asks (the user: "not set" beside a thumb at 500)
       const out = h('span', { class: 'mono', text: dr.current ? ` · ${dr.current}` : '' });
-      const r = h('input', { type: 'range', min: 200, max: 800, step: 10, value: dr.current || 500, 'aria-label': 'Start from: your best guess', style: 'width:100%' });
+      const r = h('input', { type: 'range', min: 200, max: 800, step: 10, value: dr.current || 500, 'aria-label': 'Starting point: your best guess', style: 'width:100%' });
       r.addEventListener('input', () => { dr.current = +r.value; out.textContent = ` · ${r.value}`; if (!dr.target_set) dr.target = Math.min(800, dr.current + 100); planPreview(); });
-      srcBox.append(h('label', { class: 'label' }, 'Start from: your best guess', out), r,
-        h('div', { class: 'acts', style: 'margin-top:10px' }, src.kind === 'new'
-          ? btn(DIAG, () => saveDraftThen('/diagnostic/'))
-          : btn(MODULE, () => saveDraftThen({ path: '/mock/new', body: { full: false } }))));
+      // two ways to the same thing, side by side with an "or": guess it on the left, measure it on the right
+      const test = src.kind === 'new' ? btn(DIAG, () => saveDraftThen('/diagnostic/')) : btn(MODULE, () => saveDraftThen({ path: '/mock/new', body: { full: false } }));
+      srcBox.append(h('p', { class: 'sub', text: 'Starting point · pick one' }),
+        h('div', { class: 'sp' },
+          h('div', { class: 'sp-a' }, h('label', { class: 'label' }, 'Guess it', out), r),
+          h('span', { class: 'sp-or', 'aria-hidden': 'true', text: 'or' }),
+          h('div', { class: 'sp-b' }, h('span', { class: 'label', text: 'Measure it' }), test)));
     }
     ctl.append(srcBox);
     const sel = h('select', { class: 'field', 'aria-label': 'SAT date' }, dates.map(d => h('option', { value: d.day, text: UI.date(d.day, 'long'), selected: d.day === dr.exam_date })));
     if (dr.exam_date && !dates.some(d => d.day === dr.exam_date)) sel.prepend(h('option', { value: dr.exam_date, text: UI.date(dr.exam_date, 'long'), selected: true }));
     sel.addEventListener('change', () => { dr.exam_date = sel.value; planPreview(); });
-    ctl.append(h('div', {}, h('label', { class: 'label', text: 'SAT date' }), sel));
     const mins = h('select', { class: 'field', 'aria-label': 'Daily minutes' }, [15, 20, 30, 45, 60, 90, 120, 180, 240].map(m => h('option', { value: m, text: `${m} min`, selected: m === dr.minutes })));
     mins.addEventListener('change', () => { dr.minutes = +mins.value; planPreview(); });
     ctl.append(h('div', {}, h('label', { class: 'label', text: 'Daily' }), mins));
@@ -2664,21 +2723,25 @@
       days.append(b);
     });
     ctl.append(h('div', {}, h('label', { class: 'label', text: 'Days' }), days));
-    kids.push(ctl);
+    ctl.append(h('div', {}, h('label', { class: 'label', text: 'SAT date' }), sel));
     if (!dr.target) dr.target = t.profile.target || (t.score ? Math.min(800, t.score.high + 50) : dr.current ? Math.min(800, dr.current + 100) : null);
     const tchip = h('button', { type: 'button', class: 'btn', text: dr.target ? `Target ${dr.target} ✎` : 'Set a target ✎' });
     tchip.addEventListener('click', () => { dr.target_set = true; targetSheet(tchip, dr); });
-    kids.push(h('div', { class: 'acts' }, tchip));
+    ctl.append(h('div', {}, h('label', { class: 'label', text: 'Target' }), tchip));   // beside the SAT date
+    kids.push(ctl);
     kids.push(h('div', { id: 'planWeek' }, UI.skel(null, 'lines:4')));
     const use = pill('Use this plan', async () => {
+      if (!dr.current) {
+        const e = $('planHelp'); if (e) e.hidden = false;
+        const sl = document.querySelector('#plan .sp input[type=range]'); if (sl) sl.focus();
+        return;
+      }
       await post('/plan', { current: dr.current, target: dr.target, exam_date: dr.exam_date, minutes: dr.minutes, days: dr.days });
       S.draft = null;
       refresh(['today', 'calendar']);
     });
-    use.disabled = !dr.current;
-    if (!dr.current) use.title = 'Pick where you start first';
     // one way to build it here; the full planner and how plans work are one tap away (the user: the card said its message twice)
-    kids.push(h('div', { class: 'go' }, use), h('p', { class: 'help', id: 'planHelp', hidden: !!dr.current, text: 'Pick where you start first' }));
+    kids.push(h('div', { class: 'go' }, use), h('p', { class: 'field-err', id: 'planHelp', role: 'alert', hidden: true, text: 'Pick where you start first' }));
     const howPlans = () => [
       h('ul', {}, ['A set for every study day, picked from your results', 'Rest days you choose, and a test each week or every day', 'Redrawn every day, so a missed day never piles up'].map(x => h('li', { text: x }))),
       h('p', { text: 'About a minute. Change it any time. Free, as many as you like.' }),
@@ -2701,9 +2764,7 @@
     planTimer = setTimeout(async () => {
       const dr = S.draft, host = $('planWeek');
       if (!dr || !host) return;
-      const use = document.querySelector('#plan .go .pill');
-      if (use) use.disabled = !dr.current;
-      if ($('planHelp')) $('planHelp').hidden = !!dr.current;
+      if ($('planHelp') && dr.current) $('planHelp').hidden = true;
       try {
         const body = { target: dr.target || undefined, exam_date: dr.exam_date, minutes: dr.minutes, days: dr.days };
         if (dr.current) body.current = dr.current;

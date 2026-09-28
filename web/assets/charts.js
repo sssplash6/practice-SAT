@@ -1761,10 +1761,15 @@
 
   /* ============================================================ UI.stackBar */
   function stackBar(host, segments, o = {}) {
-    const el = h('figure', { class: 'chart stackbar' + (o.className ? ' ' + o.className : '') });
+    const el = h('figure', { class: 'chart stackbar' + (o.warm ? ' sb-warm' : '') + (o.className ? ' ' + o.className : '') });
     put(host, el);
     const opts = { approx: false, ...o };
     const fmt = v => (opts.format ? opts.format(v) : `${opts.approx ? '≈ ' : ''}${fnum(v)}${opts.unit ? ` ${opts.unit}` : ''}`);
+    // .warm: shades of orange then grey, set inline so the bar and its legend swatches always match, in either theme
+    const P = 'var(--surface, var(--paper))';
+    const WARM = [['var(--amber)', 'var(--ink-deep)'], [`color-mix(in srgb, var(--amber) 50%, ${P})`, 'var(--ink-deep)'],
+      [`color-mix(in srgb, var(--ink) 75%, ${P})`, 'var(--on-ink)'], [`color-mix(in srgb, var(--ink) 38%, ${P})`, 'var(--ink)'], [`color-mix(in srgb, var(--ink) 20%, ${P})`, 'var(--ink)']];
+    const tone = i => (opts.warm && i !== null && WARM[i % WARM.length] ? `--sb:${WARM[i % WARM.length][0]};color:${WARM[i % WARM.length][1]};` : '');
     function draw(list) {
       const segs = (list || []).map((s, i) => ({ ...s, key: s.key ?? i, value: Math.max(0, n0(s.value ?? s.pts)) }));
       const total = opts.total ?? sum(segs.map(s => s.value));
@@ -1774,8 +1779,9 @@
       const tipOf = s => s.tip || [s.label, isNum(+s.n) && s.n !== null && `${fnum(s.n)} ${opts.noun || 'misses'}`, fmt(s.value), total ? `${Math.round(s.value / total * 100)}%` : ''].filter(Boolean).join(' · ');
       let shade = 0;
       const bar = h('div', { class: 'sb-bar', role: 'img' }, on.map(s => {
-        const d = h('span', { class: 'sb-seg' + (s === top ? ' top' : '') + (s.hatch ? ' hatch' : ''), 'data-shade': s === top || s.hatch ? null : String(shade++ % 5), style: `flex-grow:${s.value}` },
-          h('span', { class: 'sb-l', text: lab(s) }));
+        const si = s === top || s.hatch ? null : shade++ % 5;
+        const d = h('span', { class: 'sb-seg' + (s === top ? ' top' : '') + (s.hatch ? ' hatch' : ''), 'data-shade': si === null ? null : String(si), style: `flex-grow:${s.value};${tone(si)}` },
+          h('span', { class: 'sb-l', text: opts.barText === 'value' ? fmt(s.value) : lab(s) }));
         return d;
       }));
       if (!on.length) bar.append(h('span', { class: 'sb-seg empty', style: 'flex-grow:1' }));
@@ -1803,8 +1809,9 @@
       }
       let sh = 0;
       const key = opts.legend === false ? null : h('ul', { class: 'legend chart-key sb-key', 'aria-label': 'Legend' }, segs.map(s => {
-        const sw = h('i', { class: 'sb-sw' + (s === top ? ' top' : '') + (s.hatch ? ' hatch' : ''), 'data-shade': s === top || s.hatch || !s.value ? null : String(sh++ % 5), 'aria-hidden': 'true' });
-        return h('li', { class: s.value ? null : 'off' }, sw, h('span', { text: s.label }), h('b', { text: fmt(s.value) }),
+        const sj = s === top || s.hatch || !s.value ? null : sh++ % 5;
+        const sw = h('i', { class: 'sb-sw' + (s === top ? ' top' : '') + (s.hatch ? ' hatch' : ''), 'data-shade': sj === null ? null : String(sj), style: tone(sj) || null, 'aria-hidden': 'true' });
+        return h('li', { class: s.value ? null : 'off' }, sw, h('span', { text: s.label }), h('b', { text: opts.barText === 'value' ? fnum(s.value) : fmt(s.value) }),
           isNum(+s.n) && s.n !== null ? h('span', { class: 'sb-n', text: `(${fnum(s.n)})` }) : null);
       }));
       el.replaceChildren(wrap, on.length ? '' : emptyBlock(opts.empty, 'Nothing counted yet.'), segs.length ? key || '' : '', dataTable(summary, ['Part', opts.valueLabel || 'Value', opts.noun ? cap1(opts.noun) : 'Count', 'Share'],
