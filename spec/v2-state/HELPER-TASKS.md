@@ -427,6 +427,13 @@ Rules as above (own files only, own port and SATF_DB, commit per part, never pus
 main build is building this section's pages right now and codes against the endpoints your spec lists, so build exactly those
 endpoints and shapes). The requirements are in spec/v2-state/briefs/S1.md (sections 2-5 and 7; the brief says pages-only for the main
 build, but its server items are yours). The branch already has the section's early server commits: continue from them.
+ALSO (from the Me pages, followups/S1-pages.json): the shell's `inbox` is an object, so the phone avatar badge reads "NaN"
+(send the unread count in account.shell_part); /api/health needs mail, google and the Google client ID; endpoints for "End
+the old code now", a target-needs estimate for any target, /api/push/*, /api/mistakes/import; /api/me/summary needs
+subjects.math.pace, score.projection and score.gaps, check-ins passed and due, week history, skills[].last and the default
+board name; /api/shared/{token} needs the name and activity days; PUT /api/me must accept avatar 'initial'; feed rows:
+achievement names (not "Hard Right · Tier 10"), scores as "7 / 10", report links with ?id= (not ?s=), effect counts per
+sitting; lever texts must use skill names, not raw ids ("Practise nonlinear_functions").
 FIRST among them: GET /api/levers?keys= (G6 in spec/v2-upgrades/product.md): every page's "how it's worked out" popovers call
 it, including the streak button in the phone top bar, and today they all show "Couldn't load".
 DONE: checks/s1.py passes and test_flow "all good". Tell the user "S1 server done".
