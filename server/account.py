@@ -241,8 +241,8 @@ def google_nonce(x_learner: str | None = Header(default=None)) -> dict:
 
 
 class GoogleLogin(BaseModel):
-    credential: str
-    nonce: str
+    credential: str = Field(max_length=10000)
+    nonce: str = Field(max_length=200)
     carry: bool = False
     session_only: bool = False
 
@@ -260,6 +260,8 @@ def google_login(body: GoogleLogin, request: Request,
         claims = json.loads(_unb64(parts[1], "Google claims"))
     except (ValueError, UnicodeDecodeError) as exc:
         raise HTTPException(401, "invalid Google token") from exc
+    if not isinstance(header, dict) or not isinstance(claims, dict):
+        raise HTTPException(401, "invalid Google token")
     if header.get("alg") != "RS256" or not isinstance(header.get("kid"), str):
         raise HTTPException(401, "invalid Google signature algorithm")
     key = next((k for k in _jwks() if k.get("kid") == header["kid"]), None)
@@ -274,8 +276,11 @@ def google_login(body: GoogleLogin, request: Request,
                       padding.PKCS1v15(), hashes.SHA256())
     except (InvalidSignature, ValueError, KeyError) as exc:
         raise HTTPException(401, "invalid Google signature") from exc
+    expiry = claims.get("exp")
+    if not isinstance(expiry, (int, float)) or isinstance(expiry, bool):
+        raise HTTPException(401, "invalid Google claims")
     if (claims.get("iss") not in ("accounts.google.com", "https://accounts.google.com") or
-            claims.get("aud") != client_id or int(claims.get("exp") or 0) < time.time() - 60 or
+            claims.get("aud") != client_id or expiry < time.time() - 60 or
             claims.get("email_verified") is not True or claims.get("nonce") != body.nonce or
             not claims.get("sub") or not claims.get("email")):
         raise HTTPException(401, "invalid Google claims")

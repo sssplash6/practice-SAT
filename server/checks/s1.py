@@ -213,6 +213,7 @@ def check(c: TestClient) -> None:
         assert c.post("/api/google", headers={"X-Learner": visitor},
                       json={"credential": jwt, "nonce": nonce}).status_code == 400
         for changed_claim in ({"aud": "wrong"}, {"exp": int(time.time()) - 3600},
+                              {"exp": "not-a-time"},
                               {"email_verified": False}):
             n = c.post("/api/google/nonce", headers={"X-Learner": visitor}).json()["nonce"]
             assert c.post("/api/google", headers={"X-Learner": visitor},
