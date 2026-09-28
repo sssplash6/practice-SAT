@@ -94,6 +94,50 @@ v2/satdates, v2/bank-lint, v2/f5, v2/words-content, v2/bank-lint-fix group 6 (df
       carried into the helper's v2/s5-server) is kept as v2/s5-old-server; the new v2/s5 = v2/s5-server + master (d1c6072),
       checks/s5.py passes on it. At merge: v2/s5-server first (after the helper says "S5 server done" and its one check),
       then v2/s5. Resume if cut: Workflow({scriptPath: <scripts>/v2-build.js, resumeFromRunId: 'wf_5cbbf5d1-7c9'}).
+      THE USER (2026-09-28): "dont go to verify after the build agent is done. pause, i will tell you when". Watcher bj2gvj38m
+      fires when both build units return; then TaskStop wajkgbyam before the check. WAIT for the user's go; then launch
+      build.js [{id:'S5', from:'verify'}] (check, hygiene, one fix; units skipped).
+      DONE: both units built (v2/s5 622c6c1, 9 page commits, ~3,200 lines, reports in followups/S5-pages.json); the run was
+      stopped at "verify S5 r1" seconds after it started. PAUSED until the user says go. The builder rebased v2/s5 onto master
+      (so v2/s5-server is no longer its ancestor: at merge, take v2/s5-server's side for server files). /test/ keeps no shell
+      bar (the spec's no-chrome test window, like the practice session); desktop filter chips dropped (decision 7); 9 papers
+      before Show all. Server asks went to Tasks 26, 20 and 30; the flag endpoint is on v2/s10-server (Task 21).
+      PREVIEW now has Tests too (the user asked): prev4 = master + v2/s3, calm-shared, s7, s9, s8, s5 (297737d); the preview
+      server was restarted for the Tests server code as task bn2sg1616 (same command, port 8061, prev4.db kept; a copy of the
+      db before the restart is scratchpad/prev4-backup.db).
+    - 2026-09-28: the user chose "lighter check + light hygiene review" for Tests instead of the full check (done inline, no agents).
+      A full section sat through the preview (leave and resume at Q5 kept the answer; module 1, Check your work, the break,
+      module 2, hand-in, first estimate and routing all work). FIXED: module 2 opened on Q22 (the runner's one position per
+      sitting; v2/s5 dacc618), the break screen's cut skill names (dacc618), overlapping tap areas and the loud Report / "opens
+      after you sit it" repeats (v2/s5 184964d + sitting rows), Check your work's zeros, triple clock and open entry panel
+      (v2/calm-shared 50a5441), the banner's Dismiss overlap (calm-shared), and sys.graph_solution's unreadable SVG coordinates
+      (new branch v2/bank-figfix a9561d6: satbank/figures.py coordinate_grid writes plain numbers; bank gate passes; only that
+      template's figures changed). The user's UNIVERSAL RULE (memory stacked-fractions): fractions render stacked in the line:
+      UI.fracText/fracNodes in question.js (v2/calm-shared caafe29), 754 of 761 bank texts with a slash stack, textContent
+      unchanged, in the question self-test. Preview server restarted for the bank fix: task beo07zfw1. The full Tests check is
+      still to run later (build.js [{id:'S5', from:'verify'}]) once the helper finishes Task 26.
+    - 2026-09-28 (the user reviewing the preview live), all on v2/calm-shared unless noted, merged into prev4: the worked twin
+      keeps a Show it button; a right answer drops "Traps on offer · dodged all 3"; the next step isn't repeated under a new
+      mistake; drill.py's Then vs now drops times and the repeated trap, and "clean answers close it"; the Practice summary
+      reads right / total with the skills beside it, Fix now in one column, More from this set removed; the builder's skill
+      panel keeps only Check my level; type rows keep only their difficulty; no "rough" and no L1-L7 filter anywhere (levels
+      still count); no Enter starts line or bank-size line; Questions = three kinds of set (a number, a number in a time, a
+      time alone) and the parser reads "10 in 15 min"; the shell strip's Today card is one line; Results puts Sittings first
+      (noted in briefs/S6.md); Compete's par tooltip drops its estimate clause (v2/s8). Preview server now task bt2u0k1k9.
+    - 2026-09-28: Compete's Trap Index removed at the user's word (v2/s8 7bfadc0). The user: "results again no need to run 1m
+      check and verifies. first finish the build, then run light general and hygeine check. then js tell me". v2/s6 = the old
+      v2/s6 page checkpoints + v2/s6-server + master (runtime cache file dropped); checks/s6.py passes on it. LAUNCHING
+      build.js [{id:'S6', inline: true}] (build units only, then it stops by itself); then MY light check (a real walk
+      through the pages, the measured overlap and zero pass, fixes) and tell the user. Resume if cut: resumeFromRunId.
+      DONE: run wf_523dbc31-b86 built both units (v2/s6, 724k tokens); my light check fixed the report's 40 tap overlaps
+      (shared .quiet reach 4px sideways, calm-shared 800b3c4), the report's clock time and phone ⓘ overlap (v2/s6 7f713a1),
+      Math 320-320, repeated tile numbers, the single-cause legend, glyph wraps and two orange starts (v2/s6 cafc17a), and
+      took odds and levels out of the shared player (calm-shared 90f2469). prev4 has v2/s6 (preview server bx2scb467).
+      Results asks for the helper added to Task 20. The old Results swap on calm-shared is reverted (9ea9dff).
+    - 2026-09-28: the user: "build me". Same flow as Results: build.js [{id:'S1', inline: true}] (build units only), then my
+      light check and design review, then tell the user. v2/s1 = v2/s1-server (the helper's, mid-work: his worktree had 2
+      uncommitted files) + master; the old v2/s1 (one mail.py commit, identical in s1-server) is kept as v2/s1-old-server.
+      At merge: v2/s1-server first (after "S1 server done" and its check), then v2/s1. No master commits while it runs.
     - 2026-09-28: run wf_52a6cb52-1a2 DONE. S3 Today, S7 Plan, S9 Words and S8 Compete pages are built, checked and fixed on
       their branches (verified web diffs: ~2,300 / 3,400 / 3,800 / 3,500 lines); leftovers in followups/<id>-pages.json.
       PREVIEW of all four together on port 8061 (task b8vcjsxuq, worktree scratchpad/prev4, test_flow all good). MERGE EACH
