@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>SAT progress · SAT Freshman</title>
+<meta name="description" content="A student's SAT progress, shared read-only.">
+<meta name="robots" content="noindex">
+<link rel="icon" href="/assets/mark.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<link rel="manifest" href="/manifest.webmanifest">
+<meta name="theme-color" content="#FFFFFF">
+<script src="/assets/head.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800;900&family=DM+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="/assets/ui.css">
+<link rel="stylesheet" href="/me/me.css">
+<style>
+  /* The read-only view for a parent or tutor (Shell 6): no nav, no actions, no login */
+  .sh-bar { display: flex; align-items: center; gap: 10px; max-width: var(--max); margin: 0 auto; padding: 16px var(--gutter); }
+  .sh-bar a { display: inline-flex; align-items: center; gap: 10px; color: var(--ink); text-decoration: none; font: 800 15px var(--font); letter-spacing: -.01em; }
+  .sh-head { margin: 8px 0 24px; display: grid; gap: 6px; }
+  .sh-off { max-width: 520px; margin: 40px auto; display: grid; gap: 16px; }
+</style>
+</head>
+<body data-page="share">
+<header class="sh-bar"><a href="/" id="home"><span id="mark"></span>SAT Freshman</a></header>
+<main class="page me" id="main" tabindex="-1">
+  <div class="sh-head" id="head" hidden>
+    <h1 class="h1" id="title">SAT progress</h1>
+    <p class="meta">Shared by the student · live: it updates as they study</p>
+  </div>
+  <div class="me-grid" id="grid">
+    <div class="me-col" id="colL"></div>
+    <div class="me-col" id="colR"></div>
+  </div>
+</main>
+<script src="/assets/ui.js"></script>
+<script src="/assets/kit.js"></script>
+<script src="/assets/charts.js"></script>
+<script src="/me/account.js"></script>
+<script>
+  // no shell here (Shell 6: no nav, no actions); me.js paints its cards read-only
+  document.getElementById('mark').innerHTML = UI.mark(26);
+  window.ME_SHARE = new URLSearchParams(location.search).get('t') || null;
+  window.ME_SHARED = (d, err) => {
+    if (!d) {
+      document.getElementById('grid').replaceWith(UI.h('div', { class: 'sh-off card' },
+        UI.h('h1', { class: 'h2', text: 'This link was turned off.' }),
+        UI.h('p', { class: 'soft', text: 'Ask the student for a new one, or start your own practice: it’s free.' }),
+        UI.h('a', { class: 'pill sm', href: '/', text: 'Open SAT Freshman', style: 'justify-self: start' })));
+      document.title = 'Link turned off · SAT Freshman';
+      return;
+    }
+    const name = d.name || (d.me && d.me.name) || null;
+    document.getElementById('title').textContent = name ? `${name}’s SAT progress` : 'SAT progress';
+    document.title = `${name ? `${name}’s SAT progress` : 'SAT progress'} · SAT Freshman`;
+    document.getElementById('head').hidden = false;
+  };
+  if (!window.ME_SHARE) window.ME_SHARED(null);
+  else document.body.append(Object.assign(document.createElement('script'), { src: '/me/me.js' }));
+</script>
+</body>
+</html>

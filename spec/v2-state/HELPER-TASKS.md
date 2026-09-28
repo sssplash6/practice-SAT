@@ -388,6 +388,12 @@ Rules as above (own files only, own port and SATF_DB, commit per part, never pus
 main build is building this section's pages right now and codes against the endpoints your spec lists, so build exactly those
 endpoints and shapes). The requirements are in spec/v2-state/briefs/S6.md (sections 2-5 and 7; the brief says pages-only for the main
 build, but its server items are yours). The branch already has the section's early server commits: continue from them.
+ALSO (from the Results pages, followups/S6-pages.json): the new owner-only check in api_results.py returns 403 without a
+learner header and stops test_flow at line 212 ("practice results were gated behind signup"): make test_flow send the header
+or narrow the rule; /whatif must work for any reader (the spec), so the sample and shared views get What if; a hidden miss
+must not give away its misconception in cause.evidence.norm; the 403 carries `kind` so a live challenge can say so; share
+links must open for the people they are shared with; the sample sitting should match its spec (misses, named mistakes,
+a second look, recovered points); the first /api/stats after seeding took ~15 s.
 ALSO (from the Tests pages): /api/history?all=1 rows through api_tests.sitting_row (number, M1/M2 scores, miss and blank chips,
 conditions), and GET /api/session/{a}/compare?with={b} for Compare two sittings (slot by slot and by type).
 DONE: checks/s6.py passes and test_flow "all good". Tell the user "S6 server done".

@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Sign in another device · SAT Freshman</title>
+<meta name="description" content="Approve a computer that asked to sign in as you: scan its code or type its six digits.">
+<meta name="robots" content="noindex">
+<link rel="icon" href="/assets/mark.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<link rel="manifest" href="/manifest.webmanifest">
+<meta name="theme-color" content="#FFFFFF">
+<script src="/assets/head.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800;900&family=DM+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="/assets/ui.css">
+<link rel="stylesheet" href="/me/me.css">
+<style>
+  /* The phone's side of U20: it approves the computer in front of you */
+  .pair { max-width: 440px; margin: 8px auto 96px; }
+  .pair .card { display: grid; gap: 16px; }
+  .pair-body { display: grid; gap: 12px; }
+  .pair-body b { font-weight: 700; }
+  @media (max-width: 759px) { .pair { margin-top: 0; } }
+</style>
+</head>
+<body data-page="pair">
+<header id="bar"></header>
+<main class="page me" id="main" tabindex="-1">
+  <div class="pair">
+    <section class="card" aria-labelledby="pair-h">
+      <h1 class="h1" id="pair-h">Sign in another device</h1>
+      <div class="pair-body" id="body"></div>
+    </section>
+  </div>
+</main>
+<nav id="tabs"></nav>
+<script src="/assets/ui.js"></script>
+<script src="/assets/kit.js"></script>
+<script src="/assets/charts.js"></script>
+<script>
+/* /pair/ (Shell 5, shell-me U20): the phone that holds the progress approves a computer.
+   ?c=482913 (typed or from the computer's QR, which also carries ?r=<token>) looks the
+   request up; no name leaves until the owner taps Sign in here. */
+(() => {
+  'use strict';
+  const h = UI.h;
+  UI.shell('pair');
+  const body = document.getElementById('body');
+  const q = new URLSearchParams(location.search);
+  const ERR = { 404: 'No code like that. Check the six digits.', 410: 'That code has expired or was used. Make a new one on the other device.',
+    409: 'That’s this device. Open this page on your phone, or on the device that has your progress.', 429: 'Too many tries. Wait 10 minutes.' };
+  const say = (e, fallback) => (e && e.offline ? 'You’re offline. Try again when you’re back.' : (e && ERR[e.status]) || fallback);
+  const group = c => `${c.slice(0, 3)} ${c.slice(3)}`;
+  const button = (label, primary, fn) => {
+    const b = h('button', { type: 'button', class: primary ? 'pill sm' : 'btn sm', text: label });
+    b.addEventListener('click', async () => { b.setAttribute('aria-busy', 'true'); try { await fn(); } finally { b.removeAttribute('aria-busy'); } });
+    return b;
+  };
+
+  function ask() {
+    const e = h('p', { class: 'field-err', role: 'alert', hidden: true });
+    const host = h('div');
+    const otp = UI.otp(host, code => look(code, e), { length: 6, label: 'The six digits' });
+    body.replaceChildren(h('p', { text: 'On the other device, open Sign in › Use your phone. Type the six digits it shows.' }), host, e);
+    setTimeout(() => otp.focus && otp.focus(), 50);
+  }
+  async function look(code, e) {
+    let r;
+    try { r = await UI.api('/link/code', { method: 'POST', body: { code } }); }
+    catch (x) {
+      if (e) { e.textContent = say(x, 'That didn’t work. Try again.'); e.hidden = false; return; }
+      body.replaceChildren(h('p', { class: 'field-err', text: say(x, 'That didn’t work.') }), button('Type the digits', false, async () => ask()));
+      return;
+    }
+    if (q.get('r') && q.get('r') !== r.token) { body.replaceChildren(h('p', { class: 'field-err', text: ERR[404] }), button('Type the digits', false, async () => ask())); return; }
+    const me = (UI.shellData() || {}).me || {};
+    const name = me.name || me.handle || 'you';
+    const empty = !me.linked && !(UI.shellData() || {}).answered;
+    body.replaceChildren(...[
+      h('p', {}, 'Sign in ', h('b', { text: r.device || 'a browser' }), ` as ${name}?`),
+      h('p', { class: 'help', style: 'margin: 0', text: 'Only do this for a screen in front of you.' }),
+      r.session_only ? h('p', { class: 'help', style: 'margin: 0', text: 'Shared computer: it signs out when the browser closes.' }) : null,
+      empty ? h('p', { class: 'help', style: 'margin: 0', text: `This browser has no progress yet. If yours is in the SAT Freshman app or another browser, open it there, then Menu › Sign in another device, and type ${group(code)}.` }) : null,
+      h('div', { class: 'acts' },
+        button('Sign in', true, async () => {
+          try { await UI.api(`/link/${encodeURIComponent(r.token)}/approve`, { method: 'POST' }); done(`${r.device || 'That browser'} is signing in now. You can close this.`); }
+          catch (x) { UI.toast(say(x, 'That didn’t work. Try again.')); }
+        }),
+        button('Not me', false, async () => {
+          try { await UI.api(`/link/${encodeURIComponent(r.token)}/deny`, { method: 'POST' }); done('Told it no. Nothing was shared.'); }
+          catch (x) { UI.toast(say(x, 'That didn’t work. Try again.')); }
+        }))].filter(Boolean));
+  }
+  function done(text) {
+    body.replaceChildren(h('p', { text }), h('div', { class: 'acts' }, h('a', { class: 'btn sm', href: '/', text: 'Back to Today' })));
+  }
+  UI.refresh().catch(() => null).finally(() => {
+    const c = (q.get('c') || '').replace(/\D/g, '');
+    if (c.length === 6) look(c, null); else ask();
+  });
+})();
+</script>
+</body>
+</html>
