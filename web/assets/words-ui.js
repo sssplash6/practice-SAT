@@ -466,8 +466,6 @@ button.term { appearance: none; border: 0; background: none; padding: 0; font: i
       row.append(line);
       body.append(row);
     }
-    body.append(h('details', {}, h('summary', { text: 'How this is worked out' }),
-      h('p', { text: 'Each word you have studied is likely to hold when p = 2^(−t/h) is at least 0.8: h is the word’s current interval, scaled by how well you recall due words and by 0.8 for every lapse, and t is the days from its last right answer to the exam. The finish dates run your schedule forward at your own lapse rate.' })));
     return el;
   }
 
