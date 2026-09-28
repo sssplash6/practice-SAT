@@ -506,7 +506,8 @@ def usual_start(learner: str, tz: int) -> str | None:
 
 def review_counts(learner: str, tz: int, t: dt.date) -> dict:
     """Review's counts (S10) for the card, or the same four from the tables."""
-    got = _call("api_review", "counts", learner, tz)
+    # Review's model, not its web route: counts(subject, x_learner, x_tz) took the learner as the subject (integration walk)
+    got = _call("review", "counts", learner, tz, "math")
     if isinstance(got, dict):
         return got
     row = db.one("SELECT COUNT(*) AS open, SUM(owed=1) AS half FROM traps WHERE learner=? AND closed IS NULL", learner)
@@ -1142,8 +1143,11 @@ def today_payload(learner: str, tz: int) -> dict:
     qotd = qotd_today(learner, tz)
     chal = challenge_today(learner, tz, t)
     secs = _median_s(learner)
-    due_ = _call("next", "due", learner, tz) or due_fallback(learner, tz, p, open_, plan, warm, words, qotd, chal,
-                                                            secs, st, t)
+    # next.due is Up next's Review reader ({items}), not Today's Due list ({rows}): only a rows-shaped answer replaces
+    # Today's own list (once next.py existed, Due today came back empty for everyone; found in the integration walk)
+    nd = _call("next", "due", learner, tz)
+    due_ = nd if isinstance(nd, dict) and isinstance(nd.get("rows"), list) else due_fallback(
+        learner, tz, p, open_, plan, warm, words, qotd, chal, secs, st, t)
     work = workload(learner, tz, p, t, d, len(open_list), warm, gains, secs, (plan or {}).get("days"))
     review = review_counts(learner, tz, t)
     box = (p.get("prefs") or {}).get("review_minutes", 10)
