@@ -143,7 +143,10 @@
     rule: (it, text) => UI.api('/notes', { method: 'POST', body: { attempt_id: it.attempt_id, scope: 'type', note: text || '' } }),
     save: (it, v) => UI.api('/saved', { method: 'POST', body: { template: it.q.template, seed: it.q.seed, on: v } }),
     again: open => again(open),
-    done: s => { summary = s; },
+    done: s => {
+      summary = s;
+      UI.api(`/review/walk/${enc(sid)}/at`, { method: 'POST', body: { i: entries.length - 1, step: 'done' }, quiet: true }).catch(() => {});
+    },
     close: () => paused(),
   };
   // Prove it: a fresh question of the same type at the tier of the miss, with the same trap on offer
@@ -168,10 +171,7 @@
       const s = summary;
       const line = [`${s.n} reviewed`, s.n - s.blanks ? `you named ${s.named} of ${s.n - s.blanks}` : null, `${s.proven} proven on new numbers`,
         s.open ? `${s.open} still open` : null, s.blanks ? plural(s.blanks, 'blank') : null].filter(Boolean).join(' · ');
-      const openIds = items.filter(x => x && !x._proven && x.trap_id);
-      card('Walk done', line, [
-        s.open && openIds.length ? btn(`Walk the ${s.open} still open`, 'pill', () => again(openIds)) : null,
-        toReview()]);
+      card('Walk done', line, [link('Back to Review', '/review/?tab=redo', 'pill')]);   // Walk the n still open is on the end card
       return;
     }
     const dots = h('div', { class: 'rw-dots', 'aria-hidden': 'true' });
@@ -205,6 +205,7 @@
       return;
     }
     entries = w.items;
+    if (w.step === 'done') { card('Walk done', 'What’s still open waits in Review’s Redo tab.', [link('Back to Review', '/review/?tab=redo', 'pill')]); return; }
     items = new Array(entries.length).fill(null);
     const blanks = entries.filter(e => e.blank).length, misses = entries.length - blanks;
     $('sub').textContent = [misses ? plural(misses, 'miss', 'misses') : null, blanks ? `${blanks} not answered` : null, `about ${Math.max(1, Math.round(entries.length * 1.5))} min`].filter(Boolean).join(' · ');
