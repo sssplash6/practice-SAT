@@ -694,6 +694,14 @@ body.has-rail { padding-left: var(--rail-w); }
 .now-strip > .nextup, .now-strip > .side-day { padding: 16px 18px; border-radius: var(--radius-card); background: var(--tile); box-shadow: none; }
 .now-strip .nextup-t { display: block; overflow: visible; }
 .now-strip .nextup-go .pill { flex: 0 1 auto; min-width: 160px; }
+/* in the page strip the Today card is one thin line, the streak at its end (the user: lots of unused space);
+   the sidebar keeps the stacked card */
+.now-strip > .side-day { display: flex; flex-wrap: wrap; align-items: center; column-gap: 20px; row-gap: 6px; padding: 10px 18px; }
+.now-strip > .side-day > *, .now-strip > .side-day p { margin: 0; }
+.now-strip > .side-day .side-day-head { display: contents; }
+.now-strip > .side-day .streak { order: 9; margin-left: auto; }
+.now-strip > .side-day .meter { flex: 1 1 220px; max-width: 360px; }
+.now-strip > .side-day .ring { display: none; }
 @media (min-width: 1100px) and (min-height: 1100px) { body.has-side .now-strip { display: none; } }
 @media (max-width: 879px) { .now-strip { grid-template-columns: minmax(0, 1fr); } }
 
