@@ -144,7 +144,10 @@
     el.hidden = !fresh || readOnly;
     if (el.hidden) return;
     el.replaceChildren(h('div', { class: 'rs-sample' }, h('div', {}, h('h2', { class: 'h2', text: 'See what a report shows you' }),
-      h('p', { class: 'rs-helper', text: 'A real 44-question section, every region filled in.' })), h('a', { class: 'btn', href: '/results/report/?id=sample-section', text: 'Open the sample report' })));
+      h('p', { class: 'rs-helper', text: 'A real 44-question section, every region filled in.' })),
+      h('div', { class: 'rs-row' }, h('a', { class: 'btn', href: '/results/report/?id=sample-section', text: 'Open the sample report' }),
+        // S3's add-a-score sheet; hidden until it lands, so no button does nothing
+        UI.addScore ? btn('Add a score you already have', () => UI.addScore({ onSaved: () => load() }), 'quiet') : null)));
   }
 
   /* ------------------------------------------------------------ the estimate (2.2, SR21) */

@@ -263,7 +263,7 @@ dialog.sheet.drawer { margin: 0 0 0 auto; height: 100dvh; max-height: 100dvh; wi
       });
       const strips = h('div', { class: 'sc-peek-strips' });
       for (const [mod, marks] of byMod) {
-        strips.append(h('p', { text: mod ? `Module ${mod} · ${marks.filter(m => m.status === 'correct').length}/${marks.length}` : `Questions · ${marks.filter(m => m.status === 'correct').length}/${marks.length}` }));
+        strips.append(h('p', { text: `${mod ? `Module ${mod}` : 'Questions'} · ${marks.filter(m => m.status === 'correct').length} / ${marks.length}` }));
         UI.strip(strips, marks, { fit: true, onPick: (m) => openPlayer(r, rv, m.i), noun: mod ? `M${mod} Q` : 'Q' });
       }
       right.append(strips);

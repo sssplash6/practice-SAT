@@ -389,6 +389,11 @@
     }
     list.push({ label: 'Copy link to this report', onClick: () => UI.copyText(`${location.origin}/results/report/?id=${encodeURIComponent(SID)}`, { toast: 'Link copied' }) });
     list.push({ label: 'Print / Save as PDF', onClick: () => window.print() });
+    if (misses().length) {
+      list.push({ label: PACK.repair, kbd: 'P', onClick: () => packSheet('repair') });
+      list.push({ label: PACK.retry, onClick: () => packSheet('retry') });
+      if (owner) list.push({ label: PACK.tutor, onClick: () => packSheet('tutor') });
+    }
     list.push({ label: 'Download CSV', onClick: csv });
     if (owner && UI.report) list.push({ label: 'Report a problem with this sitting', onClick: () => UI.report({ kind: 'sitting', source: 'report', session: SID, label: R.label }) });
     return list;
@@ -759,7 +764,9 @@
     const L = R.ledger, pv = R.previous;
     const tiles = [];
     const filt = key => ({ onClick: () => setShow(S.show === key ? 'all' : key) });
-    const openTraps = IT.filter(x => x.bucket === 'incorrect' && x.trap && x.trap.open).length;
+    // "n still open" only when some are closed: all open would repeat the tile's own number
+    const openN = IT.filter(x => x.bucket === 'incorrect' && x.trap && x.trap.open).length;
+    const openTraps = openN < (s.incorrect || 0) ? openN : 0;
     if (drillKind || chall) {
       const repairs = IT.filter(x => x.repair).length;
       tiles.push({ label: 'Incorrect', value: s.incorrect, sub: openTraps ? `${n(openTraps)} still open` : '', ...filt('incorrect') });
@@ -1033,11 +1040,26 @@
     tools.append(wiBox);
     el.append(tools);
     reviewBody = h('div', { id: 'rvbody' });
-    el.append(reviewBody);
+    el.append(reviewBody, printTable());
     drawLegend();
     drawBody();
     applyFilter();
     if (WI.on) whatifMode(true, true);
+  }
+  /* §1.17: paper gets every question as a table (your answer, key, mistake, time), whatever the screen shows */
+  function printTable() {
+    const timed = IT.some(x => x.ms);
+    const heads = ['#', 'Skill', 'Your answer', 'Correct', 'Result', 'Mistake', timed && 'Time'].filter(Boolean);
+    return h('table', { class: 'rp-ptable', 'aria-hidden': 'true' },
+      h('thead', {}, h('tr', {}, heads.map(t => h('th', { text: t })))),
+      h('tbody', {}, IT.map(x => h('tr', {}, [
+        labelOf(x), topicName(x.topic, x.topic_name),
+        x.bucket === 'unanswered' ? 'Not answered' : String(letter(x, x.given) ?? ''),
+        x.held ? 'Hidden' : String(x.answer ?? ''),
+        `${(UI.STATES[x.st] || {}).glyph || ''} ${(UI.STATES[x.st] || {}).label || x.st}`,
+        x.miss && !x.held ? cap(x.mistake || (x.diagnosis && x.diagnosis.text) || '') : '',
+        timed && (x.ms ? tm(x.ms) : ''),
+      ].filter(v => v !== false).map(v => h('td', { text: v }))))));
   }
   function passesAct(x) {
     const a = S.act;
@@ -1422,6 +1444,7 @@
     IT.forEach(x => { const k = sectioned ? x.module : 0; if (!groups.has(k)) groups.set(k, []); groups.get(k).push(x); });
     for (const [m, list] of groups) {
       const box = h('div', { class: 'rp-grid-group' }, m ? h('h3', { text: `Module ${m}` }) : null);
+      clockReplay(box, m, list);
       UI.barChart(box, list.map(x => ({ key: labelOf(x), label: String(x.n), value: Math.min(300, (x.ms || 0) / 1000), status: x.st, budget: x.budget_ms ? x.budget_ms / 1000 : null,
         tip: `${labelOf(x)} · ${tm(x.ms)} · ${(UI.STATES[x.st] || {}).label || x.st} · ${TIER[x.difficulty] || ''}` })),
       { unit: 's', pace: { value: ((R.summary || {}).pace_ms || 95455) / 1000, label: `Test pace ${tm((R.summary || {}).pace_ms || 95455)}` }, max: 300, labels: 'label',
@@ -1450,6 +1473,39 @@
       if (stuck.length) acts.append(btn(`Learn it · ${n(new Set(stuck.map(x => x.key)).size)}`, b => drill(fixBody(stuck, { source: 'learn' }), b)));
       if (acts.childNodes.length) el.append(acts);
     }
+  }
+
+  /* SR13's clock replay: one lane per module from the runner's visit log (pace.modules[].visits),
+     with its auto lines; a sitting without visits keeps the bars and the line above */
+  function clockReplay(box, m, list) {
+    const pm = ((R.pace || {}).modules || []).find(p => Number(p.n) === (m || 1));
+    if (!pm || !(pm.visits || []).length || !UI.clockLane) return;
+    const byId = new Map(list.map(x => [x.id, x]));
+    const items = {}, budgets = {};
+    list.forEach(x => {
+      items[x.id] = { label: labelOf(x), status: x.st, flag: !!x.flagged, changed: x.changed ? `${letter(x, x.changed[0])} → ${letter(x, x.changed[1])}` : '' };
+      if (x.budget_ms) budgets[x.id] = x.budget_ms;
+    });
+    const dur = R.clock_ms ? R.clock_ms / Math.max(1, (R.modules || []).length) : 0;
+    const lane = h('div', { class: 'rp-lane' });
+    UI.clockLane(lane, pm.visits, { items, budgets, order: qids(list), duration: dur || undefined, marks: dur ? [{ t: dur, kind: 'end' }] : [],
+      label: m ? `Clock replay, Module ${m}` : 'Clock replay', onPick: q => { const x = byId.get(q); if (x) openPlayer(x.i); } });
+    box.append(lane);
+    const lab = q => (byId.get(q) ? labelOf(byId.get(q)) : '');
+    const lines = [];
+    if (pm.behind_at && pm.behind_ms) {
+      const rest = list.length - list.findIndex(x => x.id === pm.behind_at) - 1;
+      lines.push(`${tm(pm.behind_ms)} behind pace by ${lab(pm.behind_at)}${pm.left_for_rest_ms != null && rest > 0 ? `, with ${tm(pm.left_for_rest_ms)} left for the last ${n(rest)}` : ''}`);
+    }
+    if (pm.returns_worked) lines.push(`Skip and return worked ${pm.returns_worked === 1 ? 'once' : `${n(pm.returns_worked)} times`}`);
+    if ((pm.never_opened || []).length) lines.push(`${plural(pm.never_opened.length, 'blank')} ${pm.never_opened.length === 1 ? 'was' : 'were'} never opened`);
+    (pm.starved || []).forEach(s => {
+      const after = (s.after || []).map(q => byId.get(q)).filter(Boolean);
+      if (!after.length) return;
+      const span = after.length > 1 ? `${labelOf(after[0])}–${after[after.length - 1].n}` : labelOf(after[0]);
+      lines.push(`${lab(s.qid)} took ${tm(s.ms)} and was wrong; ${span} got ${tm(after.reduce((t, x) => t + (x.ms || 0), 0))} between them`);
+    });
+    lines.forEach(t => box.append(h('p', { class: 'rp-line', text: t })));
   }
 
   /* ------------------------------------------------------------ up next */
@@ -1559,6 +1615,69 @@
     setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1000);
   }
 
+  /* ------------------------------------------------------------ SR20: repair pack, retry sheet, tutor packet */
+  const PACK = { repair: 'Print repair pack', retry: 'Print retry sheet', tutor: 'Print tutor packet' };
+  function packSheet(kind) {
+    const pool = kind === 'retry' ? (SEL.size ? IT.filter(x => SEL.has(x.id)) : IT.filter(passes)).filter(x => x.miss) : misses();
+    if (!pool.length) { UI.toast(kind === 'retry' ? 'No misses in this view.' : 'No misses to print.'); return; }
+    const each = h('select', { class: 'field', id: 'packeach' }, [1, 2, 3].map(k => h('option', { value: String(k), text: String(k), selected: k === 2 })));
+    UI.sheet({ title: PACK[kind], size: 's',
+      body: h('div', { class: 'rp-col' }, h('label', { class: 'label', for: 'packeach', text: 'Fresh questions per miss' }), each,
+        h('p', { class: 'meta', text: `${plural(pool.length, 'miss', 'misses')}${kind === 'retry' && SEL.size ? ' selected' : ''}` })),
+      actions: [{ label: 'Print', primary: true, onClick: api => { api.close(); printPack(kind, pool, Number(each.value)); } }, { label: 'Cancel', quiet: true }] });
+  }
+  async function printPack(kind, pool, each) {
+    const s2 = R.second || {};
+    if (kind !== 'retry' && owner && s2.offered && (s2.unseen || []).length) {
+      const go = await UI.confirm({ title: 'Print the answers?', text: `This prints the answers and ends your second look for ${plural(s2.unseen.length, 'question')}.`, confirm: 'Print anyway' });
+      if (!go) return;
+      try { await UI.api(`/session/${encodeURIComponent(SID)}/second/state`, { method: 'POST', body: { state: 'skipped' } }); await refresh(); }
+      catch (_) { UI.toast('Couldn’t end the second look. Try again.'); return; }
+      pool = pool.map(x => IT.find(y => y.id === x.id) || x);
+    }
+    let fresh = null;
+    try { fresh = await UI.api(`/review/worksheet?session=${encodeURIComponent(SID)}&qids=${pool.map(x => encodeURIComponent(x.id)).join(',')}&each=${each}`, { quiet: true }); } catch (_) { fresh = null; }
+    const freshItems = fresh ? (fresh.items || fresh.questions || []) : [];
+    if (kind === 'retry' && !freshItems.length) { UI.toast('Couldn’t build the retry sheet. Try again.'); return; }
+    let briefing = null;
+    if (kind === 'tutor') { try { briefing = await UI.api(`/session/${encodeURIComponent(SID)}/briefing`, { quiet: true }); } catch (_) { briefing = null; } }
+    const pack = $('pack') || doc.body.appendChild(h('div', { id: 'pack', class: 'rp-pack', 'aria-hidden': 'true' }));
+    pack.replaceChildren();
+    const page = (...kids) => pack.appendChild(h('section', { class: 'rp-ppage' }, kids));
+    const ws = (host, q, o) => { try { UI.workspace(host, q, { bar: false, toolbar: false, ...o }); } catch (_) { host.append(h('p', { text: q.stem || '' })); } return host; };
+    if (briefing && ((briefing.rules || []).length || (briefing.pace || []).length || briefing.changes || briefing.route)) {
+      const t = v => (typeof v === 'string' ? v : (v && (v.text || v.note)) || '');
+      page(h('h2', { class: 'h2', text: `Briefing from ${R.label || 'this sitting'}` }),
+        h('ul', {}, [...(briefing.rules || []), ...(briefing.pace || []), briefing.changes, briefing.route].map(t).filter(Boolean).map(x => h('li', { text: x }))));
+    }
+    if (kind !== 'retry') {
+      page(...['hero', 'ledger', 'value'].map(id => $(id)).filter(e => e && !e.hidden).map(e => { const c = e.cloneNode(true); c.removeAttribute('id'); return c; }));
+      if (owner) pool.filter(x => !x.held).forEach(x => {
+        const it = playerItem(x);
+        page(h('h3', { class: 'h3', text: `${labelOf(x)} · ${topicName(x.topic, x.topic_name)}` }), ws(h('div'), it.q, { mode: 'review', fb: it.fb }));
+      });
+    }
+    if (freshItems.length) {
+      page(h('h2', { class: 'h2', text: 'Fresh practice' }), ...freshItems.map((q, k) =>
+        h('div', { class: 'rp-pfresh' }, h('h3', { class: 'h3', text: `Fresh ${k + 1}` }), ws(h('div'), q, { mode: 'exam' }), h('div', { class: 'rp-pwork' }))));
+      if (fresh.code) pack.append(h('p', { class: 'meta', text: `These answers are not filed. Enter them online: ${location.origin}/s/?c=${fresh.code}` }));
+    }
+    const keyRows = [...(kind === 'retry' ? [] : pool.filter(x => !x.held && owner).map(x => ({ label: labelOf(x), q: x }))),
+      ...freshItems.map((q, k) => ({ label: `Fresh ${k + 1}`, q }))];
+    if (keyRows.length) {
+      page(h('h2', { class: 'h2', text: 'Key' }), h('table', { class: 'rp-ptable' },
+        h('thead', {}, h('tr', {}, ['#', 'Answer', 'What each wrong option means'].map(t => h('th', { text: t })))),
+        h('tbody', {}, keyRows.map(({ label, q }) => h('tr', {}, h('td', { text: label }),
+          h('td', { text: q.answer === undefined || q.answer === null ? 'Hidden' : String(letter(q, q.answer) ?? q.answer) }),
+          h('td', {}, (q.reasons || []).map((r, i) => (r ? h('div', { text: `${'ABCD'[i]}: ${r}` }) : null))))))));
+    }
+    doc.body.classList.toggle('rp-packonly', kind !== 'tutor');
+    doc.body.classList.add('rp-packing');
+    const done = () => { doc.body.classList.remove('rp-packing', 'rp-packonly'); window.removeEventListener('afterprint', done); };
+    window.addEventListener('afterprint', done);
+    window.print();
+  }
+
   /* ------------------------------------------------------------ keys (page scope report) */
   if (UI.keys && UI.keys.register) {
     const jump = k => () => { const s = jumpList()[k]; const t = s && $(s.id); if (t) t.scrollIntoView({ block: 'start' }); };
@@ -1567,6 +1686,7 @@
     map.N = { does: 'Open the first miss', run: () => { const m = misses()[0]; if (m) openPlayer(m.i, { filter: 'misses' }); } };
     map.F = { does: 'Open the Fix menu', run: () => { const b = $('fixmore'); if (b) b.click(); } };
     map.W = { does: 'What if mode', run: () => whatifMode(!WI.on) };
+    map.P = { does: 'Print a repair pack', run: () => (misses().length ? packSheet('repair') : false) };
     map.Escape = { does: 'Leave What if or the selection', run: () => { if (WI.on) whatifMode(false); else if (SEL.size) { SEL.clear(); drawCells(); drawSel(); } else return false; } };
     UI.keys.register('report', map, { label: 'Report', when: () => !doc.querySelector('dialog[open]') && !!R });
   }

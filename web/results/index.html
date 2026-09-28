@@ -65,6 +65,10 @@
   .rs-cmp[hidden] { display: none; }
   .rs-cmp .quiet { color: var(--on-ink); }
   .rs-sample { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; }
+  @media (max-width: 759px), (pointer: coarse) {
+    .rs-info { position: relative; }
+    .rs-info::before { content: ""; position: absolute; left: 50%; top: 50%; width: max(100%, 44px); height: max(100%, 44px); transform: translate(-50%, -50%); }
+  }
   @media (max-width: 1099px) {
     #estimate, #overview { grid-column: 1 / -1; }
   }
@@ -81,7 +85,7 @@
     .rs-cmp { bottom: calc(72px + env(safe-area-inset-bottom, 0px)); }
   }
   @media print {
-    .rs-cmp, .rs-sample { display: none !important; }
+    #bar, #tabs, .rs-cmp, .rs-sample { display: none !important; }
     .rs { display: block; }
     .rs > section { break-inside: avoid-page; margin-bottom: 16px; }
   }
