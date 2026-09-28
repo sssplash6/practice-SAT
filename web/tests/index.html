@@ -199,14 +199,103 @@
   .st-sum { margin: 0; font-size: 12.5px; color: var(--soft); }
   .st-go { display: inline-flex; gap: 8px; align-items: center; }
   .st-err { margin: 0; }
-  .tk-box { display: grid; gap: 12px; }
-  .tk-slots { margin: 0; padding: 0; list-style: none; display: grid; }
-  .tk-slots li { display: grid; grid-template-columns: 72px minmax(0, 1fr) minmax(0, 1fr); gap: 2px 12px; padding: 8px 0; border-bottom: 1px solid var(--line); font: 400 14px var(--font); }
-  .tk-slots li > :last-child { grid-column: 2 / -1; }
-  .tk-post { padding: 10px 0; border-bottom: 1px solid var(--line); }
-  .tk-text { margin: 4px 0 0; white-space: pre-wrap; font: 400 14.5px/1.5 var(--font); }
-  .tk-compose { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px; align-items: end; }
+  /* the paper sheet (talk.js): Questions and Discussion */
+  .tk-box { display: grid; gap: 14px; }
+  .tk-panel { display: grid; gap: 14px; align-content: start; outline: none; }
+  .tk-panel[hidden] { display: none; }
+  .tk-gate { max-width: 52ch; }
+  .tk-src { margin: 0; }
+  .tk-tops { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; }
+  .tk-top { display: grid; gap: 8px; align-content: start; padding: 14px 16px; border-radius: var(--radius); background: var(--tile); }
+  .tk-top .k { margin: 0; }
+  .tk-traps { margin: 0; padding-left: 18px; display: grid; gap: 4px; font: 400 14px/1.45 var(--font); }
+  .tk-cheap { display: flex; flex-wrap: wrap; gap: 6px; }
+  .tk-chip { cursor: pointer; border: 0; }
+  .tk-bar { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px; }
+  .tk-group { margin: 6px 0 0; }
+  .tk-rows { margin: 0; padding: 0; list-style: none; display: grid; }
+  .tk-row { padding: 6px 0 10px; border-bottom: 1px solid var(--line); }
+  .tk-head { display: grid; grid-template-columns: 96px minmax(0, 1fr) minmax(0, 200px) 64px; align-items: center; gap: 4px 12px; width: 100%; min-height: 44px;
+    padding: 6px 4px; border: 0; border-radius: 8px; background: none; color: var(--ink); text-align: left; cursor: pointer; font: 400 14px var(--font); }
+  .tk-head:hover { background: var(--tile); }
+  .tk-slot { font-size: 13px; }
+  .tk-topic { display: grid; gap: 3px; }
+  .tk-topic b { font: 600 14.5px/1.3 var(--font); }
+  .tk-tier { display: inline-flex; align-items: center; gap: 6px; font-size: 12.5px; color: var(--soft); }
+  .tk-right { display: grid; gap: 3px; }
+  .tk-rt { font: 600 14px var(--font); }
+  .tk-bar-r { display: block; height: 4px; border-radius: 2px; background: var(--line); overflow: hidden; }
+  .tk-bar-r i { display: block; height: 100%; background: var(--ink); }
+  .tk-you { display: inline-flex; align-items: center; gap: 5px; font: 500 12.5px var(--font); color: var(--soft); }
+  .tk-you b { font: 700 14px var(--font); color: var(--ink); }
+  .tk-lines { display: grid; gap: 2px; padding: 0 4px 0 112px; }
+  .tk-lines p { margin: 0; }
+  .tk-trap { font: 400 13.5px/1.45 var(--font); color: var(--ink); }
+  .tk-trap.soft { color: var(--soft); }
+  .tk-more { display: grid; gap: 10px; padding: 10px 4px 4px 112px; }
+  .tk-acts, .tk-pa { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 14px; }
+  .tk-pa .quiet { font-size: 13px; }
+  .tk-pa [aria-pressed="true"] { color: var(--ink); text-decoration: underline; text-decoration-color: var(--amber); text-underline-offset: 4px; }
+  .tk-posts { display: grid; }
+  .tk-post { display: grid; gap: 4px; padding: 12px 0; border-bottom: 1px solid var(--line); }
+  .tk-post.reply { padding: 8px 0 8px 14px; border-bottom: 0; box-shadow: inset 2px 0 0 var(--line); }
+  .tk-replies { display: grid; gap: 2px; margin-top: 4px; }
+  .tk-ph { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 10px; }
+  .tk-ph b { font: 600 14px var(--font); }
+  .tk-when { font-size: 12px; color: var(--soft); }
+  .tk-text { margin: 0; white-space: pre-wrap; overflow-wrap: anywhere; font: 400 14.5px/1.5 var(--font); }
+  .tk-edit { display: grid; gap: 6px; }
+  .tk-edit-acts { display: flex; align-items: center; justify-content: flex-end; gap: 10px; }
+  .tk-empty { margin: 8px 0; }
+  .tk-compose { position: sticky; bottom: -22px; z-index: 1; display: grid; gap: 8px; margin: 4px -24px -22px; padding: 12px 24px 16px;
+    background: var(--paper); box-shadow: inset 0 1px 0 var(--line); }
+  .tk-comp-row { display: grid; grid-template-columns: minmax(0, 1fr) 44px; gap: 8px; align-items: end; }
+  .tk-comp-row textarea { resize: vertical; min-height: 64px; }
+  .tk-send { width: 44px; height: 44px; padding: 0; justify-content: center; border-radius: 50%; }
+  .tk-comp-meta { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+  .tk-comp-meta select { max-width: 220px; }
+  .tk-name { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+  .tk-name[hidden], .tk-reply[hidden] { display: none; }
+  .tk-name .k { margin: 0; }
+  .tk-name input { width: 180px; }
+  .tk-reply { margin: 0; display: flex; gap: 10px; align-items: center; }
+  /* share (tests.js) and compare (compare.js) */
+  .share-sheet .sheet-body { display: grid; gap: 12px; }
+  .sh-pane { display: grid; gap: 12px; }
+  .sh-pane[hidden], .sh-race[hidden] { display: none; }
+  .sh-pane .help { margin: 0; }
   .sh-link { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px; align-items: center; }
+  .sh-race { display: grid; gap: 10px; }
+  .sh-code { margin: 0; display: flex; flex-wrap: wrap; align-items: center; gap: 6px 12px; }
+  .sh-code b { font-size: 20px; letter-spacing: .08em; }
+  .cmp-sheet .sheet-body { display: grid; gap: 14px; }
+  .cmp-wrap { overflow-x: auto; }
+  .cmp-facts th.k { font-weight: 600; }
+  .cmp-facts tr.diff td, .cmp-slots tr.diff td { font-weight: 600; }
+  .cmp-more { display: grid; gap: 10px; }
+  .cmp-more > .k { margin: 6px 0 0; }
+  .cmp-sum { margin: 0; font: 600 15px var(--font); }
+  .cmp-m { font: 700 14px var(--font); }
+  .cmp-m.blank { color: var(--soft); }
+  .cmp-doms { margin: 0; padding: 0; list-style: none; display: grid; gap: 8px; }
+  .cmp-doms li { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr) minmax(0, 1fr); gap: 4px 12px; align-items: center; font: 400 14px var(--font); }
+  .cmp-dom { display: grid; gap: 3px; font-size: 12.5px; }
+  .cmp-bar { display: block; height: 6px; border-radius: 3px; background: var(--line); overflow: hidden; }
+  .cmp-bar i { display: block; height: 100%; background: var(--ink); }
+  .cmp-group { display: grid; gap: 6px; }
+  .cmp-gh { display: flex; align-items: center; gap: 12px; }
+  .cmp-types { margin: 0; padding-left: 18px; display: grid; gap: 4px; font: 400 14px/1.45 var(--font); }
+  .cmp-types li { display: flex; flex-wrap: wrap; gap: 4px 10px; }
+  .cmp-acts { display: flex; gap: 10px; }
+  /* filters shown as removable chips; the compare checkbox and its bar; habits filters */
+  .ts-chips { display: flex; flex-wrap: wrap; gap: 6px; margin: -6px 0 14px; }
+  .ts-chips[hidden] { display: none; }
+  .fchip { cursor: pointer; border: 0; background: var(--wash); }
+  .fchip::after { content: "×"; margin-left: 6px; font-size: 14px; color: var(--soft); }
+  .sr-cmp { display: inline-flex; align-items: center; gap: 6px; min-height: 28px; font: 500 13px var(--font); color: var(--soft); cursor: pointer; }
+  .sr-cmp input { width: 16px; height: 16px; margin: 0; accent-color: var(--ink); }
+  .st-cmp { margin-top: 12px; }
+  .hb-bar { display: flex; flex-wrap: wrap; gap: 8px 12px; margin: -6px 0 12px; }
   .hs-route { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-bottom: 14px; }
   .hs-split { display: grid; gap: 6px; }
   .hs-box { display: inline-block; padding: 6px 10px; border-radius: 8px; background: var(--tile); font: 600 13px var(--font); }
@@ -249,7 +338,14 @@
     .st-foot { grid-template-columns: auto minmax(0, 1fr); margin: 4px -16px 0; padding: 12px 16px calc(12px + env(safe-area-inset-bottom)); }
     .st-foot > .st-go { grid-column: 1 / -1; justify-content: flex-end; }
     .st-foot > .st-go .pill { flex: 1 1 auto; justify-content: center; }
-    .tk-slots li { grid-template-columns: 64px minmax(0, 1fr); }
+    .tk-head { grid-template-columns: 72px minmax(0, 1fr) auto; }
+    .tk-head > .tk-right { grid-column: 2 / 3; grid-row: 2; }
+    .tk-head > .tk-you { grid-row: 1; grid-column: 3; }
+    .tk-lines, .tk-more { padding-left: 4px; }
+    .tk-compose { bottom: -18px; margin: 4px -16px -18px; padding: 12px 16px calc(12px + env(safe-area-inset-bottom)); }
+    .tk-comp-meta select { max-width: 60%; }
+    .cmp-doms li { grid-template-columns: 1fr 1fr; }
+    .cmp-doms li > b { grid-column: 1 / -1; }
   }
 </style>
 </head>
@@ -276,6 +372,8 @@
 <script src="/assets/kit.js"></script>
 <script src="/assets/charts.js"></script>
 <script src="/tests/start.js"></script>
+<script src="/tests/talk.js"></script>
+<script src="/tests/compare.js"></script>
 <script src="/tests/tests.js"></script>
 </body>
 </html>

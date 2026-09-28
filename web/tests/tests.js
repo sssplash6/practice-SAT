@@ -31,6 +31,8 @@
   let rowsState = 'loading';    // loading | ok | error
   let shown = 20;
   let sitBar = null, paperBar = null, papersAll = false;
+  let picked = [], cmpBar = null, onlyIds = null, sitPaint = null;     // X18's two ticked rows; X17's "Which sittings?"
+  let habitsView = { last: 'all', scope: 'timed' };
 
   UI.shell({ page: 'tests', now: false });
 
@@ -270,6 +272,8 @@
         proveDue ? btn('Prove now', { cls: 'btn sm', run: b => start(prove.body, b) }) : null),
       seg(twin.from ? `Twin (from ${day(twin.from)})` : 'Twin', { text: twinOpen ? 'Ready' : twin.from ? `Opens ${day(twin.from)}` : '' },
         twinOpen ? btn('Retake as twin', { cls: 'btn sm', run: b => start(twin.body, b) }) : null)));
+    const pr = c.proved;
+    if (pr && pr.of) host.append(h('p', { class: 'sc-line', text: `Proved ${pr.n || 0} of ${pr.of}${pr.pts ? ` · worth ≈ +${pr.pts} on ${c.label}${c.number ? ' #' + c.number : ''}` : ''}` }));
   }
 
   /* ---------------- T3: In progress (#live) */
@@ -327,6 +331,13 @@
     const head = h('div', { class: 'card-head' }, h('h2', { class: 'h2', text: 'How you take tests' }));
     if (H.from_n && H.n && H.from_n < H.n) head.append(h('span', { class: 'meta', text: `from ${H.from_n} of ${H.n} tests` }));
     host.append(head);
+    const filtered = habitsView.last !== 'all' || habitsView.scope !== 'timed';
+    if ((H.n || 0) >= 2 || filtered) {
+      const bar = h('div', { class: 'hb-bar' });
+      UI.seg(bar, [{ value: '5', label: 'Last 5' }, { value: '10', label: '10' }, { value: 'all', label: 'All' }], { value: habitsView.last, label: 'Sittings', onChange: v => loadHabits({ last: v }) });
+      UI.seg(bar, [{ value: 'sections', label: 'Sections and papers' }, { value: 'timed', label: 'All timed' }], { value: habitsView.scope, label: 'Which tests', onChange: v => loadHabits({ scope: v }) });
+      host.append(bar);
+    }
     if ((H.n || 0) < 2 || !(H.rows || []).length) {
       host.append(h('p', { class: 'help', text: 'Sit 2 timed tests to see how you take them: pacing, blanks, answer changes, marking and confidence.' }),
         btn('Full section · 70 min', { cls: 'btn sm', run: b => start({ kind: 'section' }, b) }));
@@ -337,17 +348,45 @@
     sorted.forEach(r => {
       const li = h('li', { class: 'hb-row' + (r.verdict === 'costs' ? ' costs' : ' good') },
         h('span', { class: 'hb-g', 'aria-label': r.verdict === 'costs' ? 'Costs points' : 'Good', text: r.verdict === 'costs' ? '!' : '✓' }),
-        h('div', { class: 'hb-t' }, h('b', { text: r.title }), h('span', { class: 'mono hb-ev', text: r.evidence || '' })));
+        h('div', { class: 'hb-t' }, h('b', { text: r.title }), h('span', { class: 'mono hb-ev', text: r.evidence || '' }), r.trend ? h('span', { class: 'meta', text: r.trend }) : null));
       const sp = h('span', { class: 'hb-spark' });
       if (UI.spark && (r.series || []).length > 1) UI.spark(sp, r.series, { label: r.title, w: 60, h: 20 });
       li.append(sp);
       const acts = h('span', { class: 'hb-acts' });
       if (r.action) acts.append(btn(r.action.label || 'Start', { cls: 'btn sm', run: b => action(r.action, b) }));
-      if (r.why) { const w = btn('Why', { cls: 'quiet' }); if (UI.tooltip) UI.tooltip(w, r.why); else w.title = r.why; acts.append(w); }
+      if (r.why) { const w = btn('Why', { cls: 'quiet', aria: `Why: ${r.title}` }); if (UI.tooltip) UI.tooltip(w, r.why); else w.title = r.why; acts.append(w); }
+      if ((r.sittings || []).length) acts.append(btn('Which sittings?', { cls: 'quiet', run: () => showOnly(r.sittings, r.title) }));
       li.append(acts);
       list.append(li);
     });
     host.append(list);
+  }
+
+  async function loadHabits(patch) {
+    Object.assign(habitsView, patch);
+    // GET /api/tests reads habits_last (5 | 10 | all) and habits_scope (sections | timed) for this card
+    try {
+      const r = await api(`/tests?habits_last=${habitsView.last}&habits_scope=${habitsView.scope}`, { quiet: true });
+      if (r && r.habits) D.habits = r.habits;
+      habitsCard();
+    } catch (_) { toast('Couldn’t load those habits. Try again.'); }
+  }
+  function showOnly(ids, label) {
+    onlyIds = { ids: new Set(ids), label };
+    shown = 20;
+    if (sitPaint) sitPaint(); else sittingsCard();
+    $('#sittings').scrollIntoView({ behavior: UI.reduced && UI.reduced() ? 'auto' : 'smooth' });
+  }
+
+  /* ---------------- active filters as removable chips under a bar (X20, T6) */
+  function activeChips(host, bar, filters, v, extra) {
+    host.replaceChildren();
+    filters.filter(f => f.type !== 'sort' && v[f.key]).forEach(f => {
+      const o = (f.options || []).find(x => String(x.value) === String(v[f.key]));
+      host.append(btn(`${f.label}: ${o ? o.label : v[f.key]}`, { cls: 'tag fchip', aria: `Remove the filter ${f.label}: ${o ? o.label : v[f.key]}`, run: () => bar.set(f.key, '') }));
+    });
+    if (extra) host.append(extra);
+    host.hidden = !host.childNodes.length;
   }
 
   /* ---------------- T4: New test (#kinds) */
@@ -462,7 +501,8 @@
     host.append(h('div', { class: 'card-head' }, h('h2', { class: 'h2', text: 'Papers' }), h('span', { class: 'meta', text: String(list.length) })),
       h('p', { class: 'help ts-sub', text: 'The same question types in the same order for everyone, each with their own numbers, so scores compare and answers can’t be passed around. A new paper every Monday.' }));
     const barHost = h('div', { class: 'ts-bar', id: 'paperFilters' });
-    host.append(barHost);
+    const chipHost = h('div', { class: 'ts-chips', hidden: true });
+    host.append(barHost, chipHost);
     const gridHost = h('div', { class: 'ts-grid' });
     const foot = h('div', { class: 'ts-foot' });
     host.append(gridHost, foot);
@@ -481,6 +521,7 @@
       const cur = vals(v);
       const c = counts(cur);
       Object.keys(PF).forEach(k => paperBar && paperBar.counts(`p.${k}`, c[k]));
+      if (paperBar) activeChips(chipHost, paperBar, filters, v);
       const shownList = paperFilter(list, cur).sort(SORTS[v['p.sort']] || SORTS.new);
       gridHost.replaceChildren();
       foot.replaceChildren();
@@ -536,7 +577,7 @@
     if (p.hist && UI.scale) { const sc = h('div', { class: 'tc-hist' }); try { UI.scale(sc, { hist: p.hist, compact: true, band: y.last && y.last.low ? y.last : undefined, target: D.target || undefined }); } catch (_) {} card.append(sc); }
     const line = [p.open_traps ? `Has ${num(p.open_traps)} of your open mistake types` : null, p.types_new ? `${plural(p.types_new, 'type')} you haven’t met under the clock` : null].filter(Boolean);
     if (line.length) card.append(h('p', { class: 'meta tc-line', text: line.join(' · ') }));
-    if (p.hardest) card.append(h('p', { class: 'meta', text: typeof p.hardest === 'string' ? p.hardest : `Hardest: ${p.hardest.slot || ''}${p.hardest.right !== undefined ? ` · ${Math.round(p.hardest.right * 100)}% right` : ''}${p.hardest.you !== undefined ? ` · you ${p.hardest.you ? 'got it' : 'missed it'}` : ''}` }));
+    if (p.hardest) card.append(h('p', { class: 'meta', text: typeof p.hardest === 'string' ? p.hardest : `Hardest: ${String(p.hardest.slot || '').replace(/^m(1|2u|2l):(\d+)$/, (_, m, i) => `${{ 1: 'M1', '2u': 'M2 harder', '2l': 'M2 easier' }[m]} Q${i}`)}${p.hardest.right !== undefined ? ` · ${Math.round(p.hardest.right * 100)}% right` : ''}${p.hardest.you !== undefined ? ` · you ${p.hardest.you ? 'got it' : 'missed it'}` : ''}` }));
     const u = D.up_next || {};
     const rec = u.kind === 'paper' && u.paper === p.n;
     const label = status === 'in_progress' ? 'Resume' : status === 'completed' ? 'Retake' : 'Start';
@@ -549,46 +590,9 @@
     card.append(acts);
     return card;
   }
-  function talk(p) {
-    if (window.TestsTalk && TestsTalk.open) return TestsTalk.open(p, { start: b => start({ kind: 'paper', paper: p.n }, b) });
-    if (!UI.sheet) return null;
-    return UI.sheet({ title: `Paper #${p.n}`, size: 'l', body: async b => {
-      if (p.gated) {
-        b.append(h('p', { class: 'tw-lead', text: `Sit Paper #${p.n} first. The questions and discussion talk about its traps.` }),
-          h('p', { class: 'meta', text: p.posts ? plural(p.posts, 'post') : 'No posts yet' }), btn(`Start Paper #${p.n}`, { cls: 'pill', run: x => start({ kind: 'paper', paper: p.n }, x) }));
-        return;
-      }
-      const box = h('div', { class: 'tk-box' });
-      b.append(box);
-      if (UI.skel) UI.skel(box, 'rows:3');
-      try {
-        const [crowd, posts] = await Promise.all([api(`/papers/${p.n}/crowd`, { quiet: true }), api(`/papers/${p.n}/posts?sort=top`, { quiet: true })]);
-        box.replaceChildren();
-        const slots = (crowd && crowd.slots) || [];
-        box.append(h('h3', { class: 'h2', text: `Questions · ${crowd.n_first ? `from ${plural(crowd.n_first, 'first sitting')}` : 'site-wide data for each type until this paper has 20 first sittings'}` }));
-        const ul = h('ul', { class: 'tk-slots' });
-        slots.slice(0, 66).forEach(s => ul.append(h('li', {}, h('span', { class: 'mono', text: String(s.slot || '').toUpperCase().replace(':', ' Q') }),
-          h('span', { text: s.topic || '' }), h('span', { class: 'meta', text: s.right !== null && s.right !== undefined ? `${Math.round(s.right * 100)}% right · ${num(s.n)} ${s.source === 'paper' ? 'first sittings' : 'site-wide'}` : 'No answers on this type yet' }),
-          h('span', { class: 'meta', text: (s.spread && s.spread[0]) ? `${Math.round(s.spread[0].share * 100)}% · ${s.spread[0].label}` : (s.designed || []).length ? `Built to catch: ${s.designed.slice(0, 2).join(' · ')}` : '' }))));
-        box.append(ul);
-        const threads = (posts && (posts.threads || posts.posts)) || [];
-        box.append(h('h3', { class: 'h2', text: `Discussion${threads.length ? ' · ' + threads.length : ''}` }));
-        if (!threads.length) box.append(h('p', { class: 'help', text: 'No posts yet. Ask about a question, or say how the paper went.' }));
-        threads.forEach(t => box.append(h('div', { class: 'tk-post' }, h('b', { text: t.name || 'Student' }), h('span', { class: 'meta', text: ` ${UI.relTime ? UI.relTime(t.at) : ''}${t.about ? ' · ' + t.about.toUpperCase().replace(':', ' Q') : ''}` }), h('p', { class: 'tk-text', text: t.hidden ? 'Hidden after reports' : t.text }))));
-        const ta = h('textarea', { class: 'field', rows: 2, maxlength: 500, 'aria-label': 'Write a post' });
-        const send = btn('Send', { cls: 'pill sm', run: async x => {
-          if (!ta.value.trim()) return;
-          x.setAttribute('aria-busy', 'true');
-          try { await api(`/papers/${p.n}/posts`, { method: 'POST', body: { text: ta.value.trim() } }); ta.value = ''; toast('Posted'); }
-          catch (e) { toast(e.status === 422 ? 'Set your name on the board in Me first.' : e.status === 429 ? 'You’ve posted 20 times today.' : 'Couldn’t send. Retry'); }
-          finally { x.removeAttribute('aria-busy'); }
-        } });
-        box.append(h('div', { class: 'tk-compose' }, ta, send));
-      } catch (e) {
-        box.replaceChildren();
-        if (UI.cardError) UI.cardError(box, () => talk(p), 'Couldn’t load this paper’s questions and discussion.');
-      }
-    } });
+  function talk(p, o = {}) {
+    if (!window.TestsTalk) return null;
+    return TestsTalk.open(p, Object.assign({ start: b => start({ kind: 'paper', paper: p.n }, b) }, o));
   }
 
   /* ---------------- T6: Your sittings (#sittings) */
@@ -626,7 +630,7 @@
     hard: (a, b) => (b.mean_weight || 0) - (a.mean_weight || 0), easy: (a, b) => (a.mean_weight || 9) - (b.mean_weight || 9),
     missed: (a, b) => (b.misses || 0) - (a.misses || 0),
   };
-  function sitFilter(vals, skip) { return rows.filter(r => Object.keys(SF).every(k => k === skip || !vals[k] || sitTest[k](r, vals[k]))); }
+  function sitFilter(vals, skip) { return rows.filter(r => (!onlyIds || onlyIds.ids.has(r.id)) && Object.keys(SF).every(k => k === skip || !vals[k] || sitTest[k](r, vals[k]))); }
   function sittingsCard() {
     const host = $('#sittings');
     host.replaceChildren();
@@ -635,9 +639,15 @@
     head.append(h('span', { class: 'card-act' }, csv));
     host.append(head);
     const barHost = h('div', { class: 'ts-bar', id: 'filters' });
+    const chipHost = h('div', { class: 'ts-chips', hidden: true });
     const list = h('div', { class: 'st-list', role: 'list', 'aria-label': 'Your sittings' });
     const foot = h('div', { class: 'ts-foot' });
-    host.append(barHost, list, foot);
+    host.append(barHost, chipHost, list, foot);
+    cmpBar = UI.actionBar ? UI.actionBar(host, { actions: [
+      { label: 'Compare', primary: true, onClick: () => compare() },
+      { label: 'Clear', quiet: true, onClick: () => { picked = []; host.querySelectorAll('.sr-cmp input').forEach(x => { x.checked = false; }); pickedBar(); } }] }) : null;
+    if (cmpBar) cmpBar.el.classList.add('st-cmp');
+    sitPaint = null;
     if (rowsState === 'loading') { if (UI.skel) UI.skel(list, 'rows:4'); return; }
     if (rowsState === 'error') { if (UI.cardError) UI.cardError(list, () => loadRows(), 'Couldn’t load your sittings.'); return; }
     if (!rows.length) { csv.hidden = true; list.append(h('div', { class: 'ts-empty' }, h('p', { text: 'Nothing sat yet. Your first full section gives your first score estimate.' }), btn('Full section · 70 min', { cls: 'btn sm', run: b => start({ kind: 'section' }, b) }))); return; }
@@ -652,13 +662,16 @@
       list.replaceChildren();
       foot.replaceChildren();
       csv.hidden = !out.length;
+      activeChips(chipHost, sitBar, filters, v, onlyIds ? btn(`Only: ${onlyIds.label}`, { cls: 'tag fchip', aria: `Show every sitting, not only ${onlyIds.label}`, run: () => { onlyIds = null; paint(sitBar.values()); } }) : null);
       if (!out.length) { list.append(h('div', { class: 'ts-empty' }, h('p', { text: 'No sittings match these filters.' }), btn('Clear filters', { cls: 'btn sm', run: () => sitBar.clear() }))); return; }
       out.slice(0, shown).forEach(r => list.append(sitRow(r)));
       if (out.length > shown) foot.append(btn(`Show ${Math.min(20, out.length - shown)} more`, { cls: 'quiet', run: () => { shown += 20; paint(sitBar.values()); } }));
       list.dataset.count = String(Math.min(out.length, shown));
+      pickedBar();
     };
     sitBar = UI.filterBar(barHost, filters, { url: true, store: 'satf.tests.filters', label: 'Sitting filters', onChange: v => { shown = 20; paint(v); } });
-    paint(sitBar.values());
+    sitPaint = () => paint(sitBar.values());
+    sitPaint();
   }
   function missChips(r) {
     const box = h('span', { class: 'sr-miss' });
@@ -716,6 +729,12 @@
       h('span', { class: 'sr-t mono', text: mins !== null ? `${r.timing === 'untimed' ? 'Untimed · ' : ''}${mins} min` : '' }),
       missChips(r)));
     const acts = h('div', { class: 'sr-acts' });
+    if (!live) {
+      const cb = h('input', { type: 'checkbox', 'aria-label': `Compare ${r.kind_label}${r.number ? ' #' + r.number : ''}` });
+      cb.checked = picked.includes(r.id);
+      cb.addEventListener('change', () => pick(r.id, cb.checked));
+      acts.append(h('label', { class: 'sr-cmp' }, cb, h('span', { text: 'Compare' })));
+    }
     if (live) acts.append(h('a', { class: 'quiet', href: r.href || lobby(r.id), text: r.status === 'not_begun' ? 'Begin' : 'Resume' }));
     else {
       acts.append(h('a', { class: 'quiet', href: report(r.id), text: 'Review' }));
@@ -729,6 +748,28 @@
     acts.append(btn(r.note ? 'Edit note' : 'Note', { cls: 'quiet', run: b => editNote(r, el, noteEl, b) }));
     el.append(h('div', { class: 'sr-l2' }, acts, noteEl));
     return el;
+  }
+  function pick(id, on) {
+    picked = picked.filter(x => x !== id);
+    if (on) picked.push(id);
+    while (picked.length > 2) {
+      const drop = picked.shift();
+      const cb = document.querySelector(`.sr-row[data-id="${CSS.escape(drop)}"] .sr-cmp input`);
+      if (cb) cb.checked = false;
+    }
+    pickedBar();
+  }
+  function pickedBar() {
+    if (!cmpBar) return;
+    picked = picked.filter(id => rows.some(r => r.id === id));
+    const tagOf = id => { const r = rows.find(x => x.id === id); return r && r.number ? `#${r.number}` : r ? r.kind_label : ''; };
+    cmpBar.set(picked.length === 2 ? `Compare ${tagOf(picked[0])} and ${tagOf(picked[1])}` : picked.length === 1 ? `${tagOf(picked[0])} · tick one more to compare` : '', picked.length);
+    const go = cmpBar.el.querySelector('.pill, .primary, button');
+    if (go) go.disabled = picked.length !== 2;
+  }
+  function compare(ids) {
+    const list = ids || picked;
+    if (list.length === 2 && window.TestsCompare) TestsCompare.open(list, { rows, drill, start });
   }
   function editNote(r, el, noteEl, trigger) {
     if (el.querySelector('.sr-ed')) return;
@@ -749,30 +790,56 @@
     ta.focus();
   }
   function share(r) {
-    if (window.TestsShare && TestsShare.open) return TestsShare.open(r);
     if (!UI.sheet) return null;
-    let fresh = true, showScore = true, link = null;
-    return UI.sheet({ title: `Share ${r.kind_label}${r.number ? ' #' + r.number : ''}`, size: 'm', body: b => {
+    let fresh = true, showScore = true, link = null, how = 'link';
+    const who = `${r.kind_label}${r.number ? ' #' + r.number : ''}`;
+    return UI.sheet({ title: `Share ${who}`, size: 'm', className: 'share-sheet', body: b => {
+      const linkBox = h('div', { class: 'sh-pane' }), raceBox = h('div', { class: 'sh-pane', hidden: true });
+      UI.seg(b, [{ value: 'link', label: 'Any time (a link)' }, { value: 'race', label: 'A race with a deadline' }], { value: 'link', label: 'How',
+        onChange: v => { how = v; linkBox.hidden = how !== 'link'; raceBox.hidden = how !== 'race'; } });
+      b.append(linkBox, raceBox);
+      // a link: twins by default, or exactly these questions
       const help = h('p', { class: 'help' });
       const say = () => { help.textContent = fresh ? 'The same kinds of question in the same order, with their own numbers. Answers can’t be passed around, and you still compare question by question.' : 'The same questions as yours.'; };
-      UI.seg(b, [{ value: 'twins', label: 'Twins' }, { value: 'exact', label: 'Exactly these questions' }], { value: 'twins', label: 'What they sit', onChange: v => { fresh = v === 'twins'; say(); link = null; field.value = ''; } });
+      const field = h('input', { class: 'field', readonly: true, 'aria-label': 'Share link', placeholder: 'Copy makes the link' });
+      const reset = () => { link = null; field.value = ''; };
+      UI.seg(linkBox, [{ value: 'twins', label: 'Twins' }, { value: 'exact', label: 'Exactly these questions' }], { value: 'twins', label: 'What they sit', onChange: v => { fresh = v === 'twins'; say(); reset(); } });
       say();
-      b.append(help);
-      UI.switch(b, { label: 'Show my score to people who sit it', checked: true, onChange: v => { showScore = v; link = null; field.value = ''; } });
-      const field = h('input', { class: 'field', readonly: true, 'aria-label': 'Share link', placeholder: 'Make the link' });
+      linkBox.append(help);
+      UI.switch(linkBox, { label: 'Show my score to people who sit it', checked: true, onChange: v => { showScore = v; reset(); } });
       const make = async x => {
         x.setAttribute('aria-busy', 'true');
         try {
-          const s = await api('/sets', { method: 'POST', body: { kind: 'test', session: r.id, show_score: showScore, cfg: { fresh } } });
-          link = new URL(s.url || `/tests/?shared=${encodeURIComponent(s.code)}`, location.origin).href;
+          const s2 = await api('/sets', { method: 'POST', body: { kind: 'test', session: r.id, show_score: showScore, cfg: { fresh } } });
+          link = new URL(s2.url || `/tests/?shared=${encodeURIComponent(s2.code)}`, location.origin).href;
           field.value = link;
           if (UI.copyText) UI.copyText(link, { toast: 'Link copied' });
         } catch (e) { toast(`Couldn’t make the link: ${e.message}`); }
         finally { x.removeAttribute('aria-busy'); }
       };
-      b.append(h('div', { class: 'sh-link' }, field, btn('Copy', { cls: 'pill sm', run: x => (link ? UI.copyText(link, { toast: 'Link copied' }) : make(x)) })));
-      b.append(h('p', { class: 'help', text: 'Anyone with the link sits the same question types in the same order with their own numbers (or these exact questions, if you chose that). They see no answers until they finish, and you’ll see how they did.' }));
-      if (navigator.share) b.append(btn('More ways to share', { cls: 'quiet', run: async x => { if (!link) await make(x); if (link) navigator.share({ url: link, title: 'SAT Freshman test' }).catch(() => {}); } }));
+      linkBox.append(h('div', { class: 'sh-link' }, field, btn('Copy', { cls: 'pill sm', run: x => (link ? UI.copyText(link, { toast: 'Link copied' }) : make(x)) })));
+      linkBox.append(h('p', { class: 'help', text: 'Anyone with the link sits the same question types in the same order with their own numbers (or these exact questions, if you chose that). They see no answers until they finish, and you’ll see how they did.' }));
+      if (navigator.share) linkBox.append(btn('More ways to share', { cls: 'quiet', run: async x => { if (!link) await make(x); if (link) navigator.share({ url: link, title: 'SAT Freshman test' }).catch(() => {}); } }));
+      // a race: Compete's private contest by invite code (decision 5: no classes, no roles)
+      raceBox.append(h('p', { class: 'help', text: 'Module 1’s question types as twins: 22 questions, 35 minutes, open for 3 days. Anyone with the code joins; Compete keeps the board.' }));
+      const out = h('div', { class: 'sh-race', hidden: true });
+      const create = btn('Create the race', { cls: 'pill sm', run: async x => {
+        x.setAttribute('aria-busy', 'true');
+        const body = { from_session: r.id, count: 22, minutes: 35, twin: true, open_for: 72 };
+        try {
+          const c = await api('/contests', { method: 'POST', quiet: true, body });
+          const code = c.code || (c.contest && c.contest.code);
+          if (!code) throw new Error('no code');
+          const url2 = new URL(c.url || `/compete/contest/?code=${encodeURIComponent(code)}`, location.origin).href;
+          const f = h('input', { class: 'field', readonly: true, value: url2, 'aria-label': 'Race link' });
+          out.replaceChildren(h('p', { class: 'sh-code' }, h('span', { class: 'k', text: 'Invite code' }), h('b', { class: 'mono', text: code }),
+            btn('Copy code', { cls: 'quiet', run: () => UI.copyText(code, { toast: 'Code copied' }) })), h('div', { class: 'sh-link' }, f, btn('Copy', { cls: 'pill sm', run: () => UI.copyText(url2, { toast: 'Link copied' }) })));
+          out.hidden = false;
+          create.hidden = true;
+        } catch (_) { race(body); }
+        finally { x.removeAttribute('aria-busy'); }
+      } });
+      raceBox.append(create, out, h('a', { class: 'quiet', href: '/compete/', text: 'Races you made' }));
     } });
   }
   function exportCsv() {
@@ -826,6 +893,7 @@
       Enter: { does: 'Start, or resume a paused row', run: () => { const c = cur(); if (!c) return false; const b = c.querySelector('.tc-acts > :first-child, .sr-acts > a, .sr-acts > button'); if (b) b.click(); return undefined; } },
       O: { does: 'Options', run: () => { const c = cur(); const b = c && [...c.querySelectorAll('button')].find(x => x.textContent === 'Options'); if (b) b.click(); else return false; return undefined; } },
       D: { does: 'Questions & discussion (papers)', run: () => { const c = cur(); const b = c && c.querySelector('.tc-talk'); if (b) b.click(); else return false; return undefined; } },
+      X: { does: 'Compare (rows)', run: () => { const c = cur(); const cb = c && c.querySelector('.sr-cmp input'); if (!cb) return false; cb.checked = !cb.checked; cb.dispatchEvent(new Event('change')); return undefined; } },
       F: { does: 'The first filter', run: () => { const b = document.querySelector('#sittings .filters .dd, #papers .filters .dd'); if (b) b.focus(); } },
     }, { label: 'Tests' });
   }
@@ -892,7 +960,7 @@
   $('#howBtn').addEventListener('click', () => howScored());
   keys();
   load().then(() => {
-    // deep links: ?start=…, ?shared=CODE (the start sheet), ?compare=a,b (X18, when its sheet lands)
+    // deep links: ?start=…, ?shared=CODE (the start sheet), ?compare=a,b (X18)
     const st = url.get('start'), shared = url.get('shared');
     if (shared) S.open({ shared, kind: 'shared', step: 1 });
     else if (st) {
@@ -902,7 +970,7 @@
       S.open(m ? { kind: 'paper', paper: +m[1], step: 1 } : map[st] || {});
     }
     const cmp = url.get('compare');
-    if (cmp && window.TestsCompare) TestsCompare.open(cmp.split(','));
+    if (cmp) compare(cmp.split(',').filter(Boolean).slice(0, 2));
     if (location.hash) { const el = document.getElementById(location.hash.slice(1)); if (el && !el.hidden) el.scrollIntoView(); }
   });
 })();
