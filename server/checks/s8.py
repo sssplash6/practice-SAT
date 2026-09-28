@@ -48,6 +48,16 @@ def answer_of(q: dict):
     return "ABCD".index(q["answer"]) if q["type"] == "mcq" else q["answer"]
 
 
+def final_for_check(today: str) -> tuple[str, str]:
+    """Prepare a real scheduled Final independent of the current week."""
+    sat_day = next((day for day in compete.SAT_DATES if day >= today), compete.SAT_DATES[-1])
+    cid = "final-" + sat_day
+    final_weekend = dt.date.fromisoformat(sat_day) - dt.timedelta(days=7)
+    compete.ensure(at=dt.datetime.combine(final_weekend, dt.time(12), dt.timezone.utc))
+    assert compete.contest(cid)["kind"] == "final"
+    return sat_day, cid
+
+
 def play(c: TestClient, person: str, cid: str = "daily", *, flag_first: bool = False) -> tuple[str, list[dict]]:
     h = head(person)
     start = c.post(f"/api/contest/{cid}/start", headers=h)
@@ -514,9 +524,8 @@ def run() -> None:
             db.run("DELETE FROM contests WHERE kind='words'")
         final_person = learner("final")
         db.ensure_learner(final_person)
-        sat_day = next(day for day in compete.SAT_DATES if day >= today)
-        final_cid = "final-" + sat_day
-        compete.contest(final_cid)
+        sat_day, final_cid = final_for_check(today)
+        print("ok  the check prepares its own Season Final")
         db.run("UPDATE learners SET exam_date=? WHERE id=?", sat_day, final_person)
         circle_name = practice.catalogue()["by_topic"]["circles"][0]
         cards = []
