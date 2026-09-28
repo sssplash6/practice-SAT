@@ -810,6 +810,12 @@ def resolve(learner: str, body: dict, out: dict | None = None) -> dict:
             if resolver is None:
                 raise HTTPException(501, {"reason": f"{module}_resolver_unavailable"})
             body = resolver(learner, body)
+    # Up next's time box (U1): next.resolve_drill lays out its first slots (check-ins, open traps, a weak and a warm
+    # skill); then the coach's pick runs until the box's clock ends
+    if body.get("source") == "next" and body.get("box") is not None:
+        resolver = deps.part("next", "resolve_drill")
+        if resolver is not None:
+            body = resolver(learner, body)
     if body.get("source") == "warmup":
         body["source"] = "due"
         body.setdefault("count", 5)
@@ -1037,7 +1043,8 @@ def resolve(learner: str, body: dict, out: dict | None = None) -> dict:
         cfg["exact"] = True
     if segments:
         cfg["slots"] = segments
-        cfg["count"] = cfg["total"] = len(segments)
+        if not cfg.get("box"):                          # a time box keeps going after its slots, until the clock ends
+            cfg["count"] = cfg["total"] = len(segments)
         cfg["topics"] = list(dict.fromkeys(topics + [topic_of(s["template"]) for s in segments]))
     queue, items, why = _pool(learner, cfg, body)
     if source == "due" and pool == "new" and not cfg["templates"] and not cfg["topics"]:

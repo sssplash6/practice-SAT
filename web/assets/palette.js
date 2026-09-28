@@ -126,6 +126,7 @@
     quick: () => UI.quick('question'), mistake: () => UI.quick('mistake'), word: () => UI.quick('word'),
     module: () => mock(false), section: () => mock(true), phone: () => UI.continueOnPhone(),
     feedback: () => UI.feedback(), keys: () => UI.keys.sheet(), signout: () => UI.signOut(),
+    today: () => UI.run.start(),
   };
   function replay(act) {
     if (!act) return;
@@ -135,7 +136,8 @@
   }
 
   /* ---- rows. {label, sub, meta, icon, run(alt), subs, recent, bold} */
-  const drillRow = (label, body, o = {}) => ({ ...o, label, run: () => drill(body, { label: typeof label === 'string' ? label : o.text, sub: o.sub, act: { drill: body } }) });
+  // o.as: the Recent entry's label when the row's own leaves out its parent ("Circles · Practise · 10 questions")
+  const drillRow = (label, body, o = {}) => ({ ...o, label, run: () => drill(body, { label: o.as || (typeof label === 'string' ? label : o.text), sub: o.sub, act: { drill: body } }) });
 
   const typedCount = toks => toks.some(t => /^\d{1,3}(q|qs)?$/.test(t) && +t.replace(/\D/g, '') >= 1 && +t.replace(/\D/g, '') <= 120);
   function composed(parse, toks) {
@@ -183,9 +185,9 @@
         open ? h('span', { 'aria-label': `${open} open mistakes` }, h('i', { class: 'dot', 'aria-hidden': 'true' }), ` ${fmt(open)}`) : null);
       const body = extra => ({ topics: [t.slug], count: n, source: 'palette', ...extra });
       const subs = [
-        drillRow(`Practise · ${qn(n)}`, body(), {}),
-        drillRow('Practise hard', body({ tiers: ['hard'] }), {}),
-        open ? drillRow(`Fix mistakes (${fmt(open)})`, { pool: 'redo', topics: [t.slug], source: 'palette' }, {}) : null,
+        drillRow(`Practise · ${qn(n)}`, body(), { as: `${t.short} · Practise · ${qn(n)}` }),
+        drillRow('Practise hard', body({ tiers: ['hard'] }), { as: `${t.short} · Practise hard` }),
+        open ? drillRow(`Fix mistakes (${fmt(open)})`, { pool: 'redo', topics: [t.slug], source: 'palette' }, { as: `${t.short} · Fix mistakes (${fmt(open)})` }) : null,
         { label: 'Open stats', run: () => go(`/results/#${t.slug}`) },
       ].filter(Boolean);
       return { ...drillRow(t.short, body(), { sub: t.dshort, icon: UI.glyph(t.slug), meta }), subs };
@@ -214,9 +216,10 @@
     return best(mistakeIndex(), toks, x => x.label, n).map(m => {
       const names = [...m.topics].map(s => (UI.TOPIC[s] || {}).short || s);
       const templates = m.templates.slice(0, 120);
-      const body = { templates, want: Object.fromEntries(templates.map(t => [t, m.norm])), count: setLength() || 10, source: 'palette' };
+      const count = setLength() || 10;
+      const body = { templates, want: Object.fromEntries(templates.map(t => [t, m.norm])), count, source: 'palette' };
       return drillRow(m.label, body, { sub: `${names.slice(0, 2).join(', ')}${names.length > 2 ? ` +${names.length - 2}` : ''} · ${m.templates.length === 1 ? '1 type' : `${m.templates.length} types`}`,
-        icon: icon('review', 18), meta: 'Drill it' });
+        icon: icon('review', 18), meta: `Practise this mistake · ${count}` });
     });
   }
 
@@ -237,6 +240,8 @@
     const act = (label, run, o = {}) => ({ label, icon: icon(o.icon || 'arrow', 18), kbd: o.kbd, sub: o.sub, also: o.also,
       run: () => { if (o.id) remember({ label, act: { run: o.id } }); close(); run(); } });
     const rows = [
+      // G1: the day as one run over Up next, part after part
+      UI.run && UI.nextItems().length ? act('Start today', ACTIONS.today, { icon: 'play', id: 'today', also: 'run day all in order' }) : null,
       act('Quick question', ACTIONS.quick, { icon: 'bolt', kbd: 'Q', id: 'quick', also: 'one' }),
       act('Log a mistake', ACTIONS.mistake, { icon: 'plus', id: 'mistake', also: 'bluebook school outside missed bring misses question id' }),
       act('Add a word', ACTIONS.word, { icon: 'words', id: 'word', also: 'vocabulary vocab' }),

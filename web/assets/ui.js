@@ -32,6 +32,13 @@
                                     map: {'G T': fn | {does, run, id, when}}; UI.keys.sheet()
                                     opens the ? sheet; UI.keys.label(combo)
      UI.ROUTES, UI.start(item), UI.nextItems()   where G-keys go; start an Up next item
+     UI.run.start(), UI.run.between(host, done, next, {onStop}), UI.run.rail(host, {current})
+                                    the day as one run over the Up next queue (G1); ?run=1;
+                                    UI.run.on(cfg.run), .label(), .parts(), .state()
+     UI.autoSheet(open) -> Promise<sheet | null>   a sheet that opens by itself (U25)
+     UI.share(q, {anchor}) -> Promise<url | null>  Send to a friend: a twin by default (U28)
+     UI.notify.on(kinds) / .off() / .sub() / .ok() / .offer(time)   push on this device (U18b):
+                                    registers /sw.js and asks the browser, from a tap only
      UI.skip()                      the skip link, first on every page with a <main>
    The chrome (Shell 2-2.6, R1, U1, U25, U26):
      UI.shell(page | {page, sections, now})   the sidebar, rail and overlay, the phone top bar,
@@ -347,7 +354,11 @@
     shellAt = Date.now();
     // the look follows every fresh copy, changed or not, never a cached one
     shellAsked = cached('/shell', takeShell, { key: 'satf.shell', fresh: !first,
-                                              onFresh: d => { if (d && d.prefs) look(d.prefs, true); } });
+                                              onFresh: d => {
+                                                if (d && d.prefs) look(d.prefs, true);
+                                                // every fresh copy, changed or not, and before the event toasts, so they wait for it
+                                                if (shellOn) whenVisible(() => autoSheets(d));
+                                              } });
     shellAsked.catch(() => {});
     return shellAsked;
   }
@@ -1054,11 +1065,11 @@
   });
 
   /* ------------------------------------------------------------ Up next (U1) */
-  function nextItems() {
+  function nextItems(d = shellData) {
     let snooze = {};
     try { snooze = JSON.parse(sget(LS(), 'satf.next.snooze') || '{}') || {}; } catch (_) {}
     const day = localDay();
-    return ((shellData && shellData.next) || []).filter(x => snooze[x.key] !== day);
+    return ((d && d.next) || []).filter(x => snooze[x.key] !== day);
   }
   async function start(item) {
     if (!item) return;
@@ -1074,6 +1085,298 @@
     if (!item) { if (UI.toast) UI.toast('Nothing is up next right now.'); return; }
     try { await start(item); } catch (e) { if (UI.toast && !e.offline) UI.toast('Couldn’t start it. Try again.'); }
   }
+
+  /* ------------------------------------------------------------ the run (G1)
+     UI.run walks the day's Up next queue as one run, each part its own ordinary sitting
+     started with run: <local day> (in a drill body, or &run= on an href) and chained by the
+     between pane. The queue is the truth (GET /api/next, else /api/shell.next); what this tab
+     started or skipped today is sessionStorage satf.run {day, done: [{key, title}], skipped:
+     [key]}, left out of the next read. Contests and the challenge keep their own lobby.
+     ponytail: per tab, so a second device starts from the queue; read G1's /api/today.due
+     rows (with run {on, part, parts}) once S3 serves them. */
+  const RUN_NEVER = new Set(['contest', 'challenge']);
+  function runState() {
+    let st = null;
+    try { st = JSON.parse(sget(SS(), 'satf.run') || 'null'); } catch (_) {}
+    const day = localDay();
+    return st && st.day === day && Array.isArray(st.done) ? { ...st, skipped: Array.isArray(st.skipped) ? st.skipped : [] }
+      : { day, done: [], skipped: [] };
+  }
+  const runKeep = st => sput(SS(), 'satf.run', JSON.stringify(st));
+  async function runParts() {
+    if (!shellData) await (shellAsked || refresh()).catch(() => null);
+    const st = runState(), out = new Set([...st.done.map(x => x.key), ...st.skipped]);
+    const keys = [...out];
+    while (keys.join(',').length > 400) keys.shift();             // GET /api/next caps exclude at 400
+    let items = null;
+    if (has('next')) {
+      try { items = (await api(`/next?limit=6${keys.length ? '&exclude=' + encodeURIComponent(keys.join(',')) : ''}`, { quiet: true })).items; } catch (_) {}
+    }
+    if (!Array.isArray(items)) items = (shellData && shellData.next) || [];
+    const snoozed = lget('satf.next.snooze', {}) || {};
+    const next = items.flatMap(x => x && !x.start && !x.href && x.warmup ? [{ key: 'warmup:eve', kind: 'warm', ...x.warmup }] : [x])
+      .filter(x => x && !RUN_NEVER.has(x.kind) && (x.start || x.href) && !out.has(x.key) && snoozed[x.key] !== st.day);
+    return { state: st, done: st.done, next, part: st.done.length + 1, parts: st.done.length + next.length,
+      minutes: next.reduce((a, x) => a + (x.minutes || 0), 0) };
+  }
+  function withRun(it, day) {
+    if (it.start) return { ...it, start: { ...it.start, body: { ...(it.start.body || {}), run: day } } };
+    const u = new URL(it.href, location.origin);
+    u.searchParams.set('run', day);
+    return { ...it, href: u.pathname + u.search + u.hash };
+  }
+  async function runGo(it) {
+    const st = runState();
+    await start(withRun(it, st.day));
+    st.done = [...st.done.filter(x => x.key !== it.key), { key: it.key, title: it.title }];
+    runKeep(st);
+  }
+  async function runStart() {
+    const it = (await runParts()).next[0];
+    if (!it) { if (UI.toast) UI.toast('Nothing left for today.'); return null; }
+    try { await runGo(it); } catch (e) { if (UI.toast && !e.offline) UI.toast('Couldn’t start it. Try again.'); }
+    return it;
+  }
+  // "Start today · 4 parts · 38 min", mid-run "Continue today · part 2 of 5"; null when nothing is left
+  async function runLabel() {
+    const p = await runParts();
+    if (!p.next.length) return null;
+    return p.done.length ? `Continue today · part ${fmt(p.part)} of ${fmt(p.parts)}`
+      : `Start today · ${plural(p.parts, 'part')}${p.minutes ? ` · ${fmt(p.minutes)} min` : ''}`;
+  }
+  // L8's interstitial: the finished part on the left, the next on the right. done: {title,
+  // right, total, minutes}; next: an Up next item, or read from the queue; o.onStop
+  let runKeys = null;
+  function runBetween(host, done = {}, next = null, o = {}) {
+    const el = h('section', { class: 'card run-between', 'aria-label': 'Today’s run',
+      style: 'display: grid; gap: 16px 28px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr))' });
+    const col = () => h('div', { style: 'display: grid; gap: 4px; align-content: start; min-width: 0' });
+    const left = col(), right = col();
+    const st = runState(), last = st.done[st.done.length - 1];
+    const title = done.title || (last && last.title) || '';
+    left.append(h('span', { class: 'k', text: 'Done' }), title ? h('span', { class: 'nextup-t', text: title }) : '',
+      done.total ? h('span', { style: 'font: 500 20px var(--mono); font-variant-numeric: tabular-nums', text: `${fmt(done.right || 0)} / ${fmt(done.total)}` }) : '',
+      done.minutes ? h('span', { class: 'nextup-m', text: `${fmt(done.minutes)} min` }) : '');
+    el.append(left, right);
+    let cur = null, contBtn = null;
+    const act = (label, cls, kbd, fn) => h('button', { type: 'button', class: cls, onclick: fn }, label,
+      kbd && !media('(pointer: coarse)') ? keycaps(kbd) : null);             // no key hints on a touch screen
+    const stop = () => { if (o.onStop) o.onStop(); else location.href = '/'; };
+    async function cont() {
+      if (!cur || !contBtn || contBtn.getAttribute('aria-busy') === 'true') return;
+      contBtn.setAttribute('aria-busy', 'true');
+      try { await runGo(cur); }
+      catch (e) { contBtn.removeAttribute('aria-busy'); if (UI.toast && !e.offline) UI.toast('Couldn’t start it. Try again.'); }
+    }
+    function skipPart() {                  // moves on without marking the part; it stays undone on Today
+      if (!cur) return;
+      const s = runState();
+      s.skipped = [...s.skipped, cur.key];
+      runKeep(s);
+      paint(null);
+    }
+    async function paint(given) {
+      cur = null;
+      right.replaceChildren(h('span', { class: 'k', text: 'Up next' }), UI.skel ? UI.skel(null, 'lines:2') : '');
+      const p = await runParts();
+      cur = given && !p.state.skipped.includes(given.key) ? given : p.next[0] || null;
+      if (!cur) {                          // the end: keep going, or today's challenge
+        const ch = shellData && shellData.challenge;
+        right.replaceChildren(h('span', { class: 'k', text: 'Day done' }),
+          h('div', { style: 'display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px' },
+            startBtn({ start: { path: '/drill', body: { source: 'next', box: 15 } } }, 'Keep going · 15 min'),
+            ch && !ch.done ? h('a', { class: 'btn sm', href: '/challenge/', text: 'Today’s challenge' }) : null));
+        return;
+      }
+      const meta = nextMeta(cur);
+      contBtn = act('Continue', 'pill sm', 'Enter', cont);
+      right.replaceChildren(h('span', { class: 'k', text: `Part ${fmt(p.part)} of ${fmt(Math.max(p.parts, p.part))}` }),
+        h('span', { class: 'nextup-t', text: cur.title }), meta ? h('span', { class: 'nextup-m', text: meta }) : '',
+        cur.reason ? h('span', { class: 'nextup-r', text: cur.reason }) : '',
+        h('div', { style: 'display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 10px' },
+          contBtn, act('Skip this part', 'quiet', 'S', skipPart), act('Stop for now', 'quiet', 'Escape', stop)));
+    }
+    if (runKeys) runKeys.unregister();
+    runKeys = register('run', {
+      // Enter on another focused control is that control's own
+      Enter: { does: 'Continue today', run: e => {
+        const t = e && e.target && e.target.closest ? e.target.closest('button, a, input, textarea, select') : null;
+        if (!cur || (t && t !== contBtn)) return false;
+        cont();
+      } },
+      S: { does: 'Skip this part', run: () => { if (!cur) return false; skipPart(); } },
+      Escape: { does: 'Stop for now', run: () => { if (!cur) return false; stop(); } },
+    }, { label: 'Today’s run', when: () => el.isConnected });
+    paint(next);
+    if (host) host.append(el);
+    return { el, refresh: () => paint(null) };
+  }
+  // L8's day rail, one segment per part: "Today 18 of 38 min" (the minutes studied today of
+  // those plus what is left); o.current: false once the last part started is finished
+  function runRail(host, o = {}) {
+    const el = h('div', { class: 'run-rail', hidden: true, style: 'display: flex; align-items: center; gap: 10px; min-width: 0' });
+    async function paint() {
+      const p = await runParts();
+      const n = p.done.length, all = n + p.next.length;
+      el.hidden = !all;
+      if (!all) return;
+      const t = (shellData && shellData.today) || {}, total = (t.minutes || 0) + p.minutes;
+      const at = o.current === false ? -1 : n - 1;
+      el.replaceChildren(h('span', { class: 'nextup-m', style: 'white-space: nowrap',
+        text: total ? `Today ${fmt(t.minutes || 0)} of ${fmt(total)} min` : `Today · part ${fmt(Math.max(1, n))} of ${fmt(all)}` }),
+        h('span', { role: 'img', 'aria-label': `Part ${fmt(Math.max(1, n))} of ${fmt(all)}`, style: 'display: flex; gap: 3px; flex: 1; min-width: 48px' },
+          Array.from({ length: all }, (_, i) => h('i', { style: `flex: 1; height: 6px; border-radius: 3px; background: ${i < n ? 'var(--amber)' : 'var(--line)'}${i === at ? '; opacity: .55' : ''}` }))));
+    }
+    paint();
+    if (host) host.append(el);
+    return { el, update: paint };
+  }
+  const run = { start: runStart, between: runBetween, rail: runRail, parts: runParts, label: runLabel,
+    state: runState, on: r => !!r && r === localDay() };
+
+  /* ------------------------------------------------------------ sheets that open by themselves (U25)
+     UI.autoSheet(open) -> Promise<sheet | null>: open() runs only on a clean load (no query and
+     no hash on arrival, a section root, shown rather than prerendered), and at most one sheet a
+     local day opens by itself on this device (localStorage satf.sheet.day). Toasts that wait
+     (kit's wait) hold until it closes. The shell offers S1's week sheet (UI.week, when it is on
+     the page) and then welcome-back; when both are due the week sheet carries welcome-back. */
+  const LOADED = { path: location.pathname, clean: !location.search && !location.hash };
+  const ROOTS = ['/', '/practice/', '/review/', '/tests/', '/plan/', '/results/', '/me/', '/words/', '/compete/'];
+  let autoOpen = null;
+  function autoSheet(open) {
+    if (doc.prerendering) return whenVisible(() => autoSheet(open));
+    const day = localDay();
+    if (autoOpen || !LOADED.clean || !ROOTS.includes(LOADED.path) || sget(LS(), 'satf.sheet.day') === day || topModal()) return Promise.resolve(null);
+    const s = open() || null;
+    if (s) {
+      autoOpen = s;
+      sput(LS(), 'satf.sheet.day', day);
+      if (s.closed) s.closed.then(() => { autoOpen = null; }, () => { autoOpen = null; });
+    }
+    return Promise.resolve(s);
+  }
+  function welcomeLines(d) {
+    const a = d.away, out = [];
+    if (a.checks) out.push({ text: `${plural(a.checks, 'check-in')} due`, href: '/review/' });
+    out.push(...contestLines(d));
+    if (d.streak) out.push({ text: `Streak ${plural(d.streak, 'day')}${a.spare ? ', kept with a spare' : ''}` });
+    return out;
+  }
+  function weekStart(d) {
+    const t = new Date();
+    t.setDate(t.getDate() - (t.getDay() - (d.prefs && d.prefs.week_start === 'sun' ? 0 : 1) + 7) % 7);
+    return `${t.getFullYear()}-${String(t.getMonth() + 1).padStart(2, '0')}-${String(t.getDate()).padStart(2, '0')}`;
+  }
+  let offered = false;
+  function autoSheets(d) {
+    if (offered || !d || !d.me) return;
+    offered = true;
+    const a = d.away, gap = a && (a.since || 'long');
+    const lines = a && a.days >= 2 && lget('satf.welcome', null) !== gap ? welcomeLines(d) : null;
+    const welcomed = () => lput('satf.welcome', gap);
+    const week = weekStart(d);
+    if (typeof UI.week === 'function' && lget('satf.week.shown', null) !== week) {
+      const block = lines ? h('p', { class: 'run-welcome', style: 'margin: 0 0 12px',
+        text: ['Welcome back', ...lines.map(l => l.text)].join(' · ') }) : null;
+      autoSheet(() => UI.week({ auto: true, welcome: block })).then(s => {
+        if (!s) return;
+        lput('satf.week.shown', week);
+        if (lines) welcomed();
+      });
+      if (autoOpen) return;
+    }
+    if (!lines || !UI.sheet) return;
+    const it = nextItems(d)[0];             // d, not shellData: a fresh copy arrives here before it is taken
+    // nothing else waiting: the body says what Pick up starts
+    if (!lines.length && it) lines.push({ text: [nextMeta(it), it.reason].filter(Boolean).join(' · ') });
+    autoSheet(() => UI.sheet({ title: 'Welcome back', size: 's',
+      body: lines.length ? h('div', { style: 'display: grid; gap: 8px' }, lines.map(l => h('p', { style: 'margin: 0' },
+        l.href ? h('a', { class: 'link', href: l.href, text: l.text }) : l.text))) : null,
+      actions: [{ label: 'Not now', quiet: true },
+        it ? { label: `Pick up: ${it.title}`, primary: true, onClick: async () => {
+          try { await start(it); return false; } catch (e) { if (UI.toast && !e.offline) UI.toast('Couldn’t start it. Try again.'); }
+        } } : { label: 'Practise', primary: true, href: '/practice/' }] })).then(s => { if (s) welcomed(); });
+  }
+
+  /* ------------------------------------------------------------ Send to a friend (U28)
+     UI.share(q, {anchor}) -> Promise<url | null>, q {template, seed}. The default sends a twin:
+     POST /api/sets {kind: 'set', cfg: {templates: [t], count: 1, fresh: true}, show_score:
+     true}, so a friend gets the same kind of question on their own numbers and the sender's
+     results card lists both. With an anchor a menu also offers Exactly this question (the ?q=
+     permalink, for tutors). A touch screen gets the system share sheet, else the clipboard. */
+  async function send(path, toast) {
+    const url = new URL(path, location.origin).href;
+    if (navigator.share && media('(pointer: coarse)')) {
+      try { await navigator.share({ title: 'A question from a friend', url }); return url; }
+      catch (e) { if (e && e.name === 'AbortError') return null; }
+    }
+    if (UI.copyText) UI.copyText(url, { toast });
+    return url;
+  }
+  async function twinLink(q) {
+    const r = await api('/sets', { method: 'POST', body: { kind: 'set', cfg: { templates: [q.template], count: 1, fresh: true }, show_score: true } });
+    return send(r.url || `/s/?c=${encodeURIComponent(r.code)}`, 'Link copied: their own numbers');
+  }
+  function share(q, o = {}) {
+    if (!q || !q.template) return Promise.resolve(null);
+    const fail = e => { if (UI.toast && !(e && e.offline)) UI.toast('Couldn’t make the link. Try again.'); return null; };
+    const exact = q.seed !== undefined && q.seed !== null;
+    if (!o.anchor || !UI.menu || !exact) return twinLink(q).catch(fail);
+    return new Promise(resolve => {
+      let picked = false;
+      const pick = fn => () => { picked = true; fn().then(resolve, e => resolve(fail(e))); };
+      UI.menu(o.anchor, [
+        { label: 'Same kind, their own numbers', sub: 'a twin', onClick: pick(() => twinLink(q)) },
+        { label: 'Exactly this question', sub: 'for tutors', onClick: pick(() => send(`/practice/session/?q=${encodeURIComponent(`${q.template}:${q.seed}`)}`, 'Link copied')) },
+      ], { label: 'Send to a friend', onClose: () => { if (!picked) setTimeout(() => { if (!picked) resolve(null); }); } });
+    });
+  }
+
+  /* ------------------------------------------------------------ notify (U18b)
+     The one way to /sw.js, for Settings › Study and the "Want a nudge at 19:00?" offer right
+     after a study time is set (Plan step 3, Settings). The worker is registered and the browser
+     asked only inside on(), which only a tap calls: a page load never does. Settings' shapes:
+     POST /api/push/subscribe {endpoint, keys, kinds}, DELETE {endpoint}; satf.push.kinds and
+     satf.push.offered hold JSON. */
+  const notify = (() => {
+    const KINDS = { study: true, streak: false, contest: true };
+    const ios = () => /iPhone|iPad|iPod/.test(navigator.userAgent) && !matchMedia('(display-mode: standalone)').matches;
+    const ok = () => !ios() && 'serviceWorker' in navigator && 'PushManager' in window && 'Notification' in window;
+    const b64 = t => Uint8Array.from(atob(t.replace(/-/g, '+').replace(/_/g, '/') + '==='.slice((t.length + 3) % 4)), c => c.charCodeAt(0));
+    const key = () => api('/push/key', { quiet: true }).then(r => (r && r.key) || null, () => null);   // null: push is off here
+    const json = k => { try { return JSON.parse(sget(LS(), k)); } catch (_) { return null; } };
+    async function sub() {
+      const reg = ok() && await navigator.serviceWorker.getRegistration('/').catch(() => null);
+      return reg ? reg.pushManager.getSubscription().catch(() => null) : null;
+    }
+    async function on(kinds) {                 // the prompt comes first, while the tap still counts
+      if (!ok()) throw new Error('unsupported');
+      if (await Notification.requestPermission() !== 'granted') throw Object.assign(new Error('denied'), { denied: true });
+      const k = await key();
+      if (!k) throw new Error('push off');
+      const reg = await navigator.serviceWorker.register('/sw.js');
+      await navigator.serviceWorker.ready;
+      const s = await reg.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: b64(k) });
+      kinds = kinds || json('satf.push.kinds') || KINDS;
+      const j = s.toJSON();
+      await api('/push/subscribe', { method: 'POST', body: { endpoint: j.endpoint, keys: j.keys, kinds } });
+      sput(LS(), 'satf.push.kinds', JSON.stringify(kinds));
+      return s;
+    }
+    async function off() {
+      const s = await sub();
+      if (!s) return;
+      await api('/push/subscribe', { method: 'DELETE', body: { endpoint: s.endpoint }, quiet: true }).catch(() => null);
+      await s.unsubscribe().catch(() => null);
+    }
+    async function offer(time) {                // once ever, and only where push can work
+      if (!time || !ok() || json('satf.push.offered') || Notification.permission === 'denied' || await sub() || !await key()) return;
+      sput(LS(), 'satf.push.offered', '1');
+      const said = e => UI.toast(e && e.denied ? 'Your browser said no. Allow notifications for this site in its settings.' : 'Couldn’t turn them on here. Try again in Settings.');
+      UI.toast(`Want a nudge at ${time}?`, { ms: 8000, action: { label: 'Notify me', onClick: () => on().then(() => UI.toast('Notifications on for this device'), said) } });
+    }
+    return { ok, sub, on, off, offer };
+  })();
 
   /* ------------------------------------------------------------ skip link (Shell 2)
      The first Tab stop on every page with a <main>: "Skip to content", moving focus there. */
@@ -1271,8 +1574,12 @@
       return card;
     }
     const t = d.today || {}, goal = t.goal, streak = d.streak || 0;
-    const st = h('button', { type: 'button', class: 'streak' + (streak > 0 ? ' on' : ''), 'data-fact': 'streak',
-      'data-fact-label': 'Streak', 'data-fact-value': streakText(d) },
+    // how a figure is worked out opens from GET /api/levers (S1); until it is served the
+    // flame goes to the activity heatmap (§2.2.7) and the minutes are plain text
+    const facts = has('levers');
+    const fact = (key, label, value) => facts ? { 'data-fact': key, 'data-fact-label': label, 'data-fact-value': value } : {};
+    const st = h(facts ? 'button' : 'a', { type: facts ? 'button' : null, href: facts ? null : '/me/#activity',
+      class: 'streak' + (streak > 0 ? ' on' : ''), ...fact('streak', 'Streak', streakText(d)) },
       flame(16), h('span', { text: o.compact ? plural(streak, 'day') : streakText(d) }),
       // one small outlined flame per banked spare (U16); the narrow sidebar card says it with these
       Array.from({ length: d.spares || 0 }, () => flame(12, true)),
@@ -1285,10 +1592,10 @@
     } else if (goal && goal.minutes && UI.meter) {
       const m = UI.meter(card, { label: 'Study time', value: t.minutes || 0, max: goal.minutes, unit: 'min' });
       const n = m.el.querySelector('.meter-n');
-      if (n) Object.assign(n.dataset, { fact: 'minutes:today', factLabel: 'Study time today', factValue: n.textContent });
+      if (n && facts) Object.assign(n.dataset, { fact: 'minutes:today', factLabel: 'Study time today', factValue: n.textContent });
     } else {
-      card.append(h('p', {}, h('button', { type: 'button', 'data-fact': 'minutes:today', 'data-fact-label': 'Study time today',
-        text: `${fmt(t.minutes)} min today` })));
+      const mins = `${fmt(t.minutes)} min today`;
+      card.append(h('p', {}, facts ? h('button', { type: 'button', ...fact('minutes:today', 'Study time today', mins), text: mins }) : mins));
       if (!goal) card.append(h('a', { class: 'link', href: '/plan/', text: 'Set a daily goal' }));
     }
     const reg = regLine(d);
@@ -2111,14 +2418,18 @@
       Object.values(refs.tabs).forEach(a => a.querySelectorAll('.dot, .sr').forEach(x => x.remove()));
     };
     (shellAsked || refresh()).then(gone, gone);
+    (shellAsked || refresh()).then(d => whenVisible(() => autoSheets(d)), () => {});    // data asked before the shell
     addEventListener('satf:retired', gone);
     if (doc.prerendering) whenVisible(() => { if (shellData) paintAll(shellData); });
     const qs = new URLSearchParams(location.search);
     if (qs.has('feedback')) whenVisible(feedback);
-    if (qs.get('next') === '1') {         // ?next=1 starts Up next item 1 once (U1, U18)
-      qs.delete('next');
+    // ?next=1 starts Up next item 1 once (U1, U18); ?run=1 starts the day's run (G1)
+    for (const [k, fn] of [['next', startNext], ['run', runStart]]) {
+      if (qs.get(k) !== '1') continue;
+      qs.delete(k);
+      if (qs.get('from') === 'push') qs.delete('from');       // a notification's tap (/sw.js)
       try { history.replaceState(history.state, '', location.pathname + (qs.toString() ? '?' + qs : '') + location.hash); } catch (_) {}
-      whenVisible(startNext);
+      whenVisible(fn);
     }
   }
   shell.toggle = toggle;
@@ -2464,7 +2775,7 @@
   Object.assign(UI, {
     learner, useLearner, freshLearner, shared: () => shared, stored: () => storable, ready,
     api, cached, whenVisible, refresh, onShell, shellData: () => shellData, me, prefs, prefRow, look,
-    keys, ROUTES, start, nextItems, skip, need, has, types, parseSet, ALIASES, boxChips, feedback,
+    keys, ROUTES, start, nextItems, skip, need, has, types, parseSet, ALIASES, boxChips, feedback, run, autoSheet, share, notify,
     NAV, SECTION, shell, nowStrip, sections, menuSheet, accountMenu: accountItems,
     signOut: () => (shellData && shellData.me && shellData.me.linked) || shared ? signOut() : leave(),
     h, s, svg, mark, ICON, TOPICS, TOPIC, DOMAINS, glyph, chip,

@@ -410,6 +410,10 @@ Rules as above (own files only, own port and SATF_DB, commit per part, never pus
 main build is building this section's pages right now and codes against the endpoints your spec lists, so build exactly those
 endpoints and shapes). The requirements are in spec/v2-state/briefs/S10.md (sections 2-5 and 7; the brief says pages-only for the main
 build, but its server items are yours). The branch already has the section's early server commits: continue from them.
+ALSO (from the Review pages, followups/S10-pages.json): GET /api/drill/{id} returns cfg.walk (items, i, step) so
+/review/walk/ works; POST /api/drill/preview with source 'due' returns blocks and honours drop; /api/review/item's story is
+filtered by the item's norm; /api/review/redo returns causes; History's by_difficulty gives {n, right}; Fixed takes
+status/sort; Marked, Saved and History take sort; a GET for type rules (the Your rules view).
 DONE: checks/s10.py passes and test_flow "all good". Tell the user "S10 server done".
 ```
 
@@ -440,6 +444,8 @@ DONE: checks/s1.py passes and test_flow "all good". Tell the user "S1 server don
 ```
 
 ## Task 23: the shell's Up next server (F2B backend)
+
+> TAKEN OVER BY THE MAIN SESSION (2026-09-28, the user: "the other cant do server of up next. you handle it all"). Skip this task.
 
 ```
 SETUP: git worktree add .claude/worktrees/f2b-server -b v2/f2b-server master
@@ -614,6 +620,21 @@ setting the clock the checks already use (or freezegun-style patching inside the
 DONE: on v2/flow-green (and with v2/s6-server merged into a scratch copy for item 3) test_flow prints "all good".
 Tell the user "flow green". These fixes come out of Tasks 24 and 30: skip them there.
 Also commit your Task 29 edits (README.md, .gitignore) on v2/ops-docs if they are finished.
+```
+
+
+## Task 32 (very light): four one-line server fixes the new pages found
+
+```
+Each is a line or two in a file you already own. Do each on the branch of the task that owns the file, one commit each.
+1. v2/s10-server, server/checks/s10.py: check(c) calls main(), which asserts SATF_DB ends in s10.db, so test_flow fails
+   under any other database. Let check(c) skip that assert (keep it for a direct run).
+2. v2/s1-server, PUT /api/me: accept avatar 'initial' (the avatar picker's Initial tile is refused today).
+3. v2/s5-server, server/api_tests.py PUBLIC_FIELDS: add "topic" (the slug), so the test window can name skills without
+   guessing from topic_name.
+4. v2/s10-server, /api/review/due: add each item's `seed`, so the page opens the exact question, not the template's
+   latest miss.
+DONE: each branch's own checks/sN.py still passes. Tell the user "task 32 done".
 ```
 
 ---
