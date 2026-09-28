@@ -151,7 +151,7 @@
       }
       case 'traps': {
         const t = st.traps;
-        const custom = { source: 'traps', traps: t.which === 'session' ? 'all' : t.which, neutral: t.neutral };
+        const custom = { source: 'traps', traps: t.which === 'session' ? 'all' : t.which === 'pick' ? [...t.pick] : t.which, neutral: t.neutral };
         if (t.count) custom.count = t.count;
         if (t.which === 'session' && t.from_session) custom.from_session = t.from_session;
         return Object.assign(b, { kind: 'custom', custom });
@@ -166,6 +166,7 @@
     if (st.kind === 'custom' && st.custom.source === 'misses' && !st.custom.from_session) return 'Pick a sitting';
     if (st.kind === 'custom' && !st.custom.tiers.size) return 'Keep at least one difficulty';
     if (st.kind === 'traps' && st.traps.which === 'session' && !st.traps.from_session) return 'Pick a sitting';
+    if (st.kind === 'traps' && st.traps.which === 'pick' && !(st.traps.pick && st.traps.pick.size)) return 'Pick at least one trap';
     if (st.kind === 'shared' && !st.shared) return 'This link doesn’t lead to a test';
     if (st.kind === 'twin' && !(st.twin && st.twin.source)) return 'Sit a section first';
     return null;
@@ -422,14 +423,37 @@
       sel.addEventListener('change', () => onChange(sel.value));
       return h('label', { class: 'st-field' }, h('span', { class: 'label', text: label }), sel);
     }
+    // Pick: a checklist of the open traps with topic glyph and "hit 3×" (GET /api/mistakes)
+    let trapList = null;
+    function trapPick(t) {
+      t.pick = t.pick || new Set();
+      const box = h('div', { class: 'st-traps', role: 'group', 'aria-label': 'Traps to put on offer' });
+      const fill = list => {
+        box.replaceChildren();
+        if (!list.length) { box.append(h('p', { class: 'help', text: 'No open traps yet. Misses in tests and practice open them.' })); return; }
+        list.forEach(x => {
+          const cb = h('input', { type: 'checkbox', checked: t.pick.has(x.id) ? true : null });
+          cb.addEventListener('change', () => { if (cb.checked) t.pick.add(x.id); else t.pick.delete(x.id); paintFoot(); });
+          box.append(h('label', { class: 'st-trap' }, cb, UI.glyph ? UI.glyph(x.topic) : null, h('span', { text: x.label || x.reason || '' }), h('span', { class: 'meta', text: `hit ${x.hits || 1}×` })));
+        });
+      };
+      if (trapList) fill(trapList);
+      else {
+        if (UI.skel) UI.skel(box, 'lines:3');
+        api('/mistakes', { quiet: true }).then(r => { trapList = (r.traps || []).filter(x => x.norm); fill(trapList); })
+          .catch(() => { box.replaceChildren(); if (UI.cardError) UI.cardError(box, () => { const n = trapPick(t); box.replaceWith(n); }, 'Couldn’t load your traps.'); });
+      }
+      return box;
+    }
     function stepTraps(host) {
       const t = st.traps;
       const ready = (((data && data.kinds) || []).find(r => r.id === 'traps') || {}).ready;
       host.append(h('p', { class: 'help', text: 'Every question offers a wrong answer you’ve fallen for before. Do you still take it?' }));
       host.append(h('h3', { class: 'st-h', text: 'Which traps' }));
-      UI.seg(host, [{ value: 'all', label: ready ? `All ready ${ready}` : 'All ready' }, { value: 'open', label: 'Open' }, { value: 'due', label: 'Check-ins due' }, { value: 'session', label: 'From a sitting' }],
+      UI.seg(host, [{ value: 'all', label: ready ? `All ready ${ready}` : 'All ready' }, { value: 'open', label: 'Open' }, { value: 'due', label: 'Check-ins due' }, { value: 'session', label: 'From a sitting' }, { value: 'pick', label: 'Pick' }],
         { value: t.which, label: 'Which traps', onChange: v => { t.which = v; draw(); } });
       if (t.which === 'session') host.append(sittingPick(t.from_session, v => { t.from_session = v; paintFoot(); }));
+      if (t.which === 'pick') host.append(trapPick(t));
       host.append(h('h3', { class: 'st-h', text: 'Length' }));
       UI.seg(host, [{ value: '10', label: '10' }, { value: '22', label: '22' }, { value: '0', label: 'All' }], { value: String(t.count || 0), label: 'Length', onChange: v => { t.count = +v || null; paintFoot(); } });
       host.append(h('h3', { class: 'st-h', text: 'Neutral questions mixed in' }));

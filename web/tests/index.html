@@ -192,6 +192,11 @@
   .st-dom { justify-self: start; font-weight: 600; }
   .st-dom[aria-pressed="true"] { color: var(--ink); text-decoration: underline; text-decoration-color: var(--amber); text-underline-offset: 4px; }
   .st-swh { margin: -4px 0 4px 52px !important; }
+  .st-traps { display: block; flex: none; max-height: 320px; overflow-y: auto; padding: 4px 0; border-block: 1px solid var(--line); }
+  .st-trap { display: grid; grid-template-columns: 18px 20px minmax(0, 1fr) auto; align-items: center; gap: 10px; min-height: 44px; padding: 6px 2px; font: 400 14px/1.35 var(--font); cursor: pointer; }
+  .st-trap + .st-trap { border-top: 1px solid var(--line); }
+  .st-trap input { margin: 0; accent-color: var(--ink); }
+  .st-trap .glyph { width: 20px; height: 20px; }
   .st-aids { margin: 10px 0 0; padding-top: 12px; border-top: 1px solid var(--line); }
   .st-save { margin-top: 8px; }
   .st-foot { position: sticky; bottom: -1px; z-index: 2; display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 8px 14px;
