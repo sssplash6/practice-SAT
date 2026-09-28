@@ -7,7 +7,8 @@
 .cx-head-act .quiet { margin: 0; }
 .cx-grid { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); gap: 20px; align-items: start; }
 .cx-main, .cx-side { display: grid; gap: 20px; align-content: start; }
-.cx .card-head { margin-bottom: 14px; }
+.cx .card-head { margin-bottom: 14px; align-items: center; }
+.cx .card-head > .k { flex: 1 1 auto; margin-bottom: 0; }   /* an eyebrow shares its row with the card's action */
 .cx .card-head .card-act { margin-left: auto; }
 .cx .card-foot .quiet, .cx .card-head .quiet { margin: 0; }
 .cx .foot-links { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 28px; margin-top: 16px; }
@@ -33,7 +34,8 @@
 /* stat tiles: one-line labels, so every value in a row sits on one baseline; tiles fill the row */
 .cx .stat { display: grid; grid-template-rows: auto 1fr; align-content: start; }
 .cx .stat-k { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.cx :is(.res-tiles, .stat-grid, .sum-tiles) { grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); }
+.cx :is(.res-tiles, .sum-tiles) { grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); }
+.cx .stat-grid { grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); }
 
 /* the ladder: ten cells, each a slot's skill, difficulty and your chance on it (C7) */
 .ladder { display: grid; grid-template-columns: repeat(var(--cols, 10), minmax(0, 1fr)); gap: 6px; }
@@ -51,6 +53,13 @@
 .daily-status { margin-top: 20px; display: grid; gap: 12px; justify-items: start; }
 .daily-status .strip { margin: 2px 0; }
 .daily-res { font: 500 15px var(--mono); color: var(--ink); }
+.daily-top-r { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 6px 14px; }
+.daily-rank { margin-bottom: -6px; }
+.daily-rank .num { font-size: clamp(40px, 5vw, 56px); }
+.daily-rank .of { font-size: 16px; }
+.daily-foot { margin-top: 18px; }
+.qotd-stem { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; }
+.placing { margin: 4px 0 2px; }
 
 /* contest rows (B) */
 .crow { display: grid; grid-template-columns: 28px minmax(0, 1fr) auto auto; align-items: center; gap: 4px 16px; padding: 16px 18px; border-radius: 10px; background: var(--paper); }

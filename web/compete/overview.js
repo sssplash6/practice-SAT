@@ -46,20 +46,33 @@
     const day = String(c.id).slice(6);
     const next = h('span', { class: 'meta' });
     const midnight = new Date(); midnight.setHours(24, 0, 0, 0);
-    const top = h('div', { class: 'daily-top' }, h('span', { class: 'k', text: `DAILY CHALLENGE · ${C.dayLabel(day).toUpperCase()}` }), h('span', { class: 'meta' }, 'Next one in ', next));
+    const streak = S.hub.me && S.hub.me.challenge_streak;
+    const best = S.me && S.me.streak && S.me.streak.best;
+    const chip = streak ? h('span', { class: 'chip-s', text: `${num(streak)}-day streak` }) : null;
+    if (chip) UI.tooltip(chip, `Daily Challenges in a row${best > streak ? ` · best ${num(best)}` : ''}`);
+    const top = h('div', { class: 'daily-top' }, h('span', { class: 'k', text: `DAILY CHALLENGE · ${C.dayLabel(day).toUpperCase()}` }),
+      h('span', { class: 'daily-top-r' }, chip, h('span', { class: 'meta' }, 'Next one in ', next)));
     next.setAttribute('aria-live', 'off');
     if (stopNext) stopNext();
     const cd = UI.countdown(next, midnight.toISOString(), { label: 'Next Daily', onEnd: () => load() });
     stopNext = typeof cd === 'function' ? cd : cd && cd.stop;
     const body = [top];
-    const lad = h('div'); ladder(lad, c); body.push(lad);
-    const lines = h('div', { class: 'daily-lines' },
-      h('p', { class: 'line', text: `${c.count} questions · ${mmss(c.seconds)} answer clock · one sitting · ranked` }),
-      me.status === 'finished' ? null : parLine(c),
-      fieldLine(c),
-      S.hub.me && S.hub.me.challenge_streak ? h('p', { class: 'line' }, `Challenge streak ${num(S.hub.me.challenge_streak)} day${S.hub.me.challenge_streak === 1 ? '' : 's'}`,
-        S.me && S.me.streak && S.me.streak.best > S.hub.me.challenge_streak ? h('span', { class: 'meta', text: ` · best ${num(S.me.streak.best)}` }) : null) : null);
-    body.push(lines);
+    const done = me.status === 'finished';
+    // before a sitting: the questions and the rules; after it, the result leads and the rules belong to the lobby
+    if (!done) {
+      const lad = h('div'); ladder(lad, c); body.push(lad);
+      body.push(h('div', { class: 'daily-lines' },
+        h('p', { class: 'line' }, `${c.count} questions · ${mmss(c.seconds)} answer clock · one sitting · ranked `, C.info('The clock runs only while a question is open. Skipped and voided questions score 0.', 'About the clock')),
+        parLine(c), fieldLine(c)));
+    }
+    // More: the day's quieter jobs in one menu
+    const yday = new Date(); yday.setDate(yday.getDate() - 1);
+    const yid = `daily-${yday.getFullYear()}-${String(yday.getMonth() + 1).padStart(2, '0')}-${String(yday.getDate()).padStart(2, '0')}`;
+    const moreBtn = extra => {
+      const b = h('button', { type: 'button', class: 'quiet', 'aria-haspopup': 'menu', text: 'More ▾' });
+      UI.menu.bind(b, () => [...extra, { label: 'Past days', href: C.href(yid) }, { label: 'Daily reminder', onClick: () => C.reminder() }], { label: 'More' });
+      return b;
+    };
     const st = h('div', { class: 'daily-status' });
     if (me.status === 'new') {
       const go = h('button', { type: 'button', class: 'pill', text: 'Start the challenge' });
@@ -72,19 +85,23 @@
         location.href = `/practice/session/?id=${encodeURIComponent(r.session)}`;
       }));
       UI.tooltip(warm, 'Two questions on each of your three lowest-chance skills, from other question types. Offered only before you start.');
-      st.append(h('div', { class: 'row-act' }, go, warm), h('p', { class: 'help', text: 'The clock runs only while a question is open. Skipped and voided questions score 0.' }));
+      st.append(h('div', { class: 'row-act' }, go, warm, moreBtn([])));
     } else if (me.status === 'progress') {
       const go = h('button', { type: 'button', class: 'pill', text: 'Resume' });
       go.addEventListener('click', () => busy(go, () => C.start(c.id)));
-      st.append(h('div', { class: 'row-act' }, go, h('span', { class: 'meta', text: `${num(me.answered)} of ${num(c.count)} answered${me.clock ? ` · ${mmss(me.clock.left)} on the clock` : ''}` })));
+      st.append(h('div', { class: 'row-act' }, go, h('span', { class: 'meta', text: `${num(me.answered)} of ${num(c.count)} answered${me.clock ? ` · ${mmss(me.clock.left)} on the clock` : ''}` }), moreBtn([])));
     } else {
       const r = me.result || {};
       const place = S.board && S.board.you;
       const players = (S.board && S.board.players) || (c.field && c.field.players);
-      const res = [place ? `#${place.tie ? '=' : ''}${place.rank} of ${num(players)}` : null,
-        place && players >= 10 ? `top ${Math.ceil(place.rank / players * 100)}%` : null,
-        `${num(r.right)}/${num(r.asked || c.count)}`, `${num(r.points)} pts`, me.clock ? mmss(me.clock.used) : null].filter(Boolean).join(' · ');
-      st.append(h('p', { class: 'daily-res', text: res }));
+      // the result is the headline: the contest page's big rank, scaled down, the score beneath
+      const big = h('div', { class: 'big-rank daily-rank' });
+      if (place && place.rank && me.ranked !== false) {
+        big.append(h('span', { class: 'num', text: `${place.tie ? '=' : ''}#${place.rank}` }), h('span', { class: 'of', text: `of ${num(players)}` }));
+        if (players >= 10) big.append(h('span', { class: 'chip-s', text: `Top ${Math.ceil(place.rank / players * 100)}%` }));
+      }
+      st.append(...[big.childElementCount ? big : null,
+        h('p', { class: 'daily-res', text: [`${num(r.right)}/${num(r.asked || c.count)}`, `${num(r.points)} pts`, me.clock ? mmss(me.clock.used) : null].filter(Boolean).join(' · ') })].filter(Boolean));
       if (me.ranked === false) st.append(h('p', { class: 'line' }, h('span', { class: 'chip-s', text: 'Unranked' }), ' ', WHY[me.why] || ''));
       UI.strip(st, C.marks(r), { onPick: i => { location.href = `${C.href(c.id)}#q${i + 1}`; }, label: 'Your answers' });
       const chips = h('div', { class: 'row-act' });
@@ -95,17 +112,17 @@
       const fu = followChip(me.followup);
       if (fu) chips.append(fu);
       if (chips.childElementCount) st.append(chips);
-      const copy = quiet('Copy result', () => UI.copyText(C.copyResult(c, { ...r, secs: me.clock ? me.clock.used : undefined }, { rank: place && place.rank, players })));
+      const copy = { label: 'Copy result', onClick: () => UI.copyText(C.copyResult(c, { ...r, secs: me.clock ? me.clock.used : undefined }, { rank: place && place.rank, players })) };
       st.append(h('div', { class: 'row-act' }, h('a', { class: 'pill', href: `${C.href(c.id)}#board`, text: 'See the board' }),
-        quiet('Review answers', null, { href: `${C.href(c.id)}#review` }), copy));
+        quiet('Review answers', null, { href: `${C.href(c.id)}#review` }), moreBtn([copy])));
     }
     body.push(st);
-    const yday = new Date(); yday.setDate(yday.getDate() - 1);
-    const yid = `daily-${yday.getFullYear()}-${String(yday.getMonth() + 1).padStart(2, '0')}-${String(yday.getDate()).padStart(2, '0')}`;
+    // a make-up shows only when yesterday was missed and there is a streak for it to keep
     const strip = S.me && S.me.streak && S.me.streak.strip;
     const ystate = strip && (strip.find(x => x.day === yid.slice(6)) || {}).state;
-    body.push(h('div', { class: 'foot-links' }, quiet('Past days ›', null, { href: C.href(yid) }), quiet('Daily reminder', () => C.reminder()),
-      ystate === 'missed' ? quiet(`Make up ${C.dayLabel(yid.slice(6), { weekday: false })} · keeps your streak`, null, { href: C.href(yid) }) : null));
+    const keep = ystate === 'missed' ? C.streakBefore(strip, yid.slice(6)) : 0;
+    if (keep >= 1) body.push(h('div', { class: 'row-act' }, h('a', { class: 'chip-s on', href: C.href(yid), text: `Keep your ${num(keep)}-day streak: make up ${C.dayLabel(yid.slice(6), { weekday: false })}` })));
+    if (done) body.push(h('div', { class: 'daily-foot' }, fieldLine(c)));
     el.replaceChildren(...body);
   }
 
@@ -154,9 +171,9 @@
     box.replaceChildren(); UI.skel(box, 'rows:3');
     try {
       const r = await api(`/contests?status=${tab}&limit=${shown}`);
+      // the Daily card owns today's Daily: the Live list leaves every daily out, and its count with it
+      if (tab === 'live') { const n0 = r.contests.length; r.contests = r.contests.filter(c => c.kind !== 'daily'); r.total = Math.max(0, (r.total || 0) - (n0 - r.contests.length)); }
       counts[tab] = r.total; filter.count(tab, r.total);
-      // today's Daily is the hub's (your local day); the list's may be yesterday's, still open elsewhere
-      if (tab === 'live' && S.hub && S.hub.daily) r.contests = r.contests.map(c => (c.kind === 'daily' ? S.hub.daily : c));
       if (tab === 'live') S.live = r.contests;
       const rows = r.contests.map(crow);
       if (!rows.length) {
@@ -181,13 +198,16 @@
     const el = $('#qotd');
     try {
       const q = await api('/qotd');
-      const m = q.mine;
-      let line;
-      if (!m) line = [h('span', { text: 'Not answered yet' }), ' ', quiet('Answer it on Today ›', null, { href: '/' })];
-      else if (m.correct) line = [h('span', { text: ['Right', m.share !== undefined ? `${pct(m.share)} of ${num(m.n)} got it` : null, m.streak ? `${m.streak}-day streak` : null].filter(Boolean).join(' · ') })];
-      else line = [h('span', { text: m.mistake || m.reason ? `Fell for: ${m.mistake || m.reason}` : 'Wrong' })];
-      el.replaceChildren(h('div', { class: 'card-head' }, h('span', { class: 'k', text: 'QUESTION OF THE DAY' }),
-        h('div', { class: 'card-act' }, quiet('This day ›', null, { href: `${C.href('daily')}#qotd` }))), h('p', { class: 'line' }, line));
+      const m = q.mine, qq = q.question || {};
+      // one header row with one way in; before an answer the question itself invites the try
+      const go = quiet(m ? 'See it ›' : 'Answer ›', null, { href: `${C.href('daily')}#qotd` });
+      const kids = [h('div', { class: 'card-head' }, h('span', { class: 'k', text: 'QUESTION OF THE DAY' }), h('div', { class: 'card-act' }, go))];
+      if (!m) {
+        kids.push(h('p', { class: 'line qotd-stem', text: String(qq.stem || '').replace(/\s+/g, ' ').trim() }),
+          h('p', { class: 'meta', text: [qq.topic_name || (qq.topic && C.topicName(qq.topic)), C.TIER[qq.difficulty]].filter(Boolean).join(' · ') }));
+      } else if (m.correct) kids.push(h('p', { class: 'line', text: ['Right', m.share !== undefined ? `${pct(m.share)} of ${num(m.n)} got it` : null, m.streak ? `${m.streak}-day streak` : null].filter(Boolean).join(' · ') }));
+      else kids.push(h('p', { class: 'line', text: m.mistake || m.reason ? `Fell for: ${m.mistake || m.reason}` : 'Wrong' }));
+      el.replaceChildren(...kids);
     } catch (e) { fail('#qotd', renderQotd); }
   }
 
@@ -198,26 +218,36 @@
     const players = hub.board_preview && hub.board_preview.players;
     const rating = me.rating;
     const lin = !me.provisional ? C.levelIn(rating, false) : null;
-    const rate = h('div', { class: 'me-rate' }, UI.level(rating, me.provisional, 48),
-      h('div', {}, me.provisional ? null : h('span', { class: 'num', text: num(Math.round(rating)) }),
-        h('p', { class: 'line', text: me.provisional ? 'Placing · a level after 30 rated answers' : `Contest rating · Level ${me.level}` })));
-    // decision 7: a tile shows only with a value, and nothing but the line before a first rank
+    const kids = [head('Your stats', quiet('Your rankings ›', null, { href: '/compete/rankings/' }))];
+    // one ladder: the level is read from the rating on the spec/rating.md ladder, the ring and the words alike
+    if (!me.provisional) kids.push(h('div', { class: 'me-rate' }, UI.level(rating, false, 48),
+      h('div', {}, h('span', { class: 'num', text: num(Math.round(rating)) }), h('p', { class: 'line', text: `Contest rating · Level ${C.levelOf(rating)}` }))));
+    else {
+      // placing: one line with its progress; answers counted from ranked contests until the server sends its count
+      const n = Math.min(29, me.rated ?? S.rated ?? 0);
+      const m = h('div', { class: 'placing' });
+      UI.meter(m, { label: 'Placing', value: n, max: 30, text: `${num(n)} of 30 answers` });
+      kids.push(m);
+      if (me.rated === undefined && S.rated === undefined) api('/compete/history?limit=50').then(x => { S.rated = (x.history || []).filter(r => r.ranked).reduce((a, r) => a + ((r.result || {}).asked || 0), 0); if (S.rated) renderStats(); }).catch(() => { S.rated = 0; });
+    }
+    // decision 7: a tile shows only with a value that no other tile or card here already says
     const tile = (label, value, sub) => (value == null ? null : h('div', { class: 'stat' }, h('span', { class: 'stat-k', text: label }), h('span', { class: 'stat-v', text: value }), sub ? h('span', { class: 'stat-sub', text: sub }) : null));
     const ranked = me.week || me.all;
     const pass = b => b && b.cheapest ? `${num(b.cheapest)} pts to #${b.rank - 1}` : null;
     const move = b => b && b.move ? `${b.move > 0 ? '▲' : '▼'}${Math.abs(b.move)}` : null;
     const wk = boards.week;
+    const bestD = mine.records && mine.records.bests && mine.records.bests.daily;
+    const today = hub.daily && hub.daily.me;
+    const bestIsToday = bestD && today && today.status === 'finished' && (bestD.session ? bestD.session === today.session : today.result && today.result.points === bestD.value);
     const tiles = ranked && h('div', { class: 'stat-grid' },
       tile('Week rank', me.week ? `#${me.week}${players ? ` of ${num(players)}` : ''}` : null, [move(wk), pass(wk)].filter(Boolean).join(' · ')),
-      tile('All-time rank', me.all ? `#${me.all}` : null, pass(boards.all)),
-      me.country ? tile('Country', `#${me.country}`) : h('a', { class: 'stat', href: '/me/#boards' }, h('span', { class: 'stat-k', text: 'Country' }), h('span', { class: 'stat-sub', text: 'Set a country on Me' })),
-      tile('Points this week', wk ? num(wk.value) : null),
+      me.all && me.all !== me.week ? tile('All-time rank', `#${me.all}`, pass(boards.all)) : null,
+      me.country ? tile('Country', `#${me.country}`) : null,
+      tile('This week', wk ? num(wk.value) : null, wk ? 'points' : null),
       tile('Contests', me.played ? num(me.played) : null),
-      tile('Best Daily', mine.records && mine.records.bests && mine.records.bests.daily ? num(mine.records.bests.daily.value) : null));
-    const kids = [head('Your stats', quiet('Your rankings ›', null, { href: '/compete/rankings/' })), rate];
+      bestIsToday ? null : tile('Best Daily', bestD ? num(bestD.value) : null));
     if (lin) kids.push(h('p', { class: 'meta', text: `Level ${lin.level} in +${num(lin.gap)} ≈ ${lin.rights} hard right${lin.rights === 1 ? '' : 's'}` }));
-    kids.push(tiles);
-    if (!ranked) kids.push(h('p', { class: 'help', text: 'Finish a ranked contest to get a rank.' }));
+    if (tiles) kids.push(tiles);   // before a first rank the Daily card beside it holds the one way in
     if (new Date().getDay() === 1 && hub.week_line && hub.week_line.text && (hub.week_line.daily || hub.week_line.weekly)) kids.push(h('p', { class: 'meta', text: hub.week_line.text }));
     card('#stats', ...kids);
   }
@@ -258,7 +288,8 @@
       const a = new Date(s.opens), b = new Date(`${s.closes}T23:59:59`);
       kids.push(h('div', { class: 'season-bar', role: 'img', 'aria-label': 'Season elapsed' }, h('i', { style: `width:${Math.min(100, Math.max(0, (Date.now() - a) / (b - a) * 100))}%` })));
     }
-    if (mine && mine.rank) kids.push(h('p', { class: 'line mono', text: `#${mine.rank} · ${num(mine.value)} pts` }));
+    const wk = S.me && S.me.boards && S.me.boards.week;
+    if (mine && mine.rank && !(wk && wk.rank === mine.rank && wk.value === mine.value)) kids.push(h('p', { class: 'line mono', text: `#${mine.rank} · ${num(mine.value)} pts` }));
     if (fin) {
       const end = new Date(new Date(fin.closes).getTime() - 864e5);
       kids.push(h('p', { class: 'line' }, `Season Final · ${new Date(fin.opens).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })} – ${end.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })} · full Math section `,
@@ -299,8 +330,8 @@
       });
       // fewer than 5 players: today's par rows fill the empty places (C6)
       if (rows.filter(e => !e.sep).length < 5 && metric === 'points') {
-        const pars = (S.board && S.board.pars) || [];
-        pars.slice(0, 5 - rows.length).forEach(p => ul.append(h('li', { class: 'par' }, h('span', { class: 'mt', text: `Level ${p.level} par (today)` }), h('span', { class: 'ma mono', text: num(p.points) }))));
+        const pars = ((S.board && S.board.pars) || []).filter(p => [3, 5, 7, 9].includes(p.level)).sort((a, b) => b.points - a.points);
+        pars.slice(0, 5 - rows.length).forEach(p => ul.append(h('li', { class: 'par' }, h('span', { class: 'mt', text: `L${p.level} par · today’s Daily` }), h('span', { class: 'ma mono', text: num(p.points) }))));
       }
       if (!rows.length && !ul.childElementCount) ul.append(h('li', {}, h('span', { class: 'mm', text: 'No one has scored this week yet.' })));
       box.replaceChildren(ul, h('div', { class: 'foot-links' }, quiet('Full board ›', null, { href: `/compete/leaderboard/?metric=${metric}&period=week` })));
@@ -448,7 +479,6 @@
   }
   function renderHub() {
     try { renderDaily(); } catch (e) { console.error(e); }
-    if (tab === 'live' && (S.live || []).some(c => c.kind === 'daily' && c.id !== S.hub.daily.id)) loadRows();
     renderStats(); renderSeason(); renderTrapsCard(); renderChamps(); renderBadges(); renderRecap();
   }
   async function load() {
