@@ -11,18 +11,24 @@
            status, answered, total, result, why [{text, href}], start, type, subject)
      o     readonly  no actions at all (the landing, a shared view)
            primary   the action is the orange pill (the day's first undone counted task)
+           led       the page's own Start button starts this row: no second Start, the
+                     row shows as the one up next
+           n         a number in place of the checkbox (a preview's rows, readonly)
            future    a later day: "Start early"      past  a frozen day: Review only
            compact   one line, no why and no receipt (Today's list)
            open      'skip' | 'done': the inline reason chips or Did it elsewhere? form, shown
            on(action, task, arg) -> Promise, the page's handler for:
              start · tick {done} · skip · reason {reason} · done {minutes, where} · undo
              · again {kind: misses | more | harder} · review
-           menu(task) -> [UI.menu items]   the ⋯ items (Move to…, Swap topics, Edit, Remove)
+           menu(task) -> [UI.menu items]   the page's ⋯ items (Move to…, Swap topics, Edit,
+                                             Remove), after the row's own Skip, Mark done and Why
            extra(task) -> Node | null        a page's own line under the row (R&W Log misses)
            drag(task, pointerdown event)     a handle to drag the row onto another day (L12;
                                              a fine pointer only: touch long-presses, keys use M)
      A rejected on() keeps the row as it was and says why inside it.
    UI.taskTag(task) -> 'Focus' | 'Warm-up' | ...      UI.taskQuestion(task) -> bool
+   UI.infoTip(text, label) -> button   an (i) that says a help line on hover and focus, or on a
+                                        tap on a touch screen (help is on demand, decision 7)
    UI.weekPlanner(host, week) -> {el, value()}   next week's plan, hosted by U14's sheet
      week  {plan, monday, days [{date, kind, minutes, topics, test}], swaps [{topic, name, gain}],
             focus [topic], onSaved(reply)}
@@ -47,11 +53,13 @@
   const name = slug => (UI.TOPIC && UI.TOPIC[slug] && UI.TOPIC[slug].short) || String(slug || '').replace(/_/g, ' ');
   const mins = m => (UI.dur ? UI.dur(m) : `${Math.round(m)}m`);
   const plural = (n, w) => `${n} ${w}${n === 1 ? '' : 's'}`;
+  // key hints only where there is a keyboard
+  const fine = () => { try { return matchMedia('(hover: hover) and (pointer: fine)').matches; } catch (_) { return false; } };
 
   const CSS = `
   .trows { display: grid; gap: 0; }
   .trow { display: grid; grid-template-columns: 32px minmax(0, 1fr) auto; gap: 4px 12px; align-items: start;
-    padding: 14px 0; border-top: 1px solid var(--line); }
+    padding: 14px 0; border-top: 1px solid var(--line); position: relative; }
   .trows > .trow:first-child { border-top: 0; }
   .trow-box { appearance: none; width: 28px; height: 28px; margin-top: 1px; border-radius: 50%; border: 1.5px solid var(--faint);
     background: var(--paper); display: grid; place-items: center; cursor: pointer; color: transparent; padding: 0; position: relative; }
@@ -65,9 +73,12 @@
   .trow[data-status="skipped"]:focus-within, .trow[data-status="moved"]:focus-within { opacity: 1; }
   .trow-box:disabled { cursor: default; }
   .trow-main { min-width: 0; display: grid; gap: 4px; }
-  .trow-head { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; }
+  .trow-head { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; min-height: 28px; }
+  .trow-n { width: 28px; height: 28px; border-radius: 50%; display: grid; place-items: center; background: var(--tile-2);
+    font: 500 12.5px var(--mono); color: var(--ink); }
   .trow-title { font: 600 15px/1.3 var(--font); color: var(--ink); }
   .trow[data-next] .trow-title { font-weight: 700; }
+  .trow[data-led]::before { content: ""; position: absolute; left: -12px; top: 14px; bottom: 14px; width: 3px; border-radius: 2px; background: var(--amber); }
   .trow-detail { margin: 0; font: 400 13.5px/1.45 var(--font); color: var(--ink); display: flex; flex-wrap: wrap; gap: 4px 10px; align-items: center; }
   .trow-detail .chip { height: 28px; padding: 0 9px 0 6px; gap: 6px; font-size: 13px; }
   .trow-detail .chip .glyph { width: 16px; height: 16px; }
@@ -76,12 +87,15 @@
   .trow-why { margin: 2px 0 0; padding: 0; list-style: none; display: grid; gap: 3px; font: 400 13px/1.45 var(--font); color: var(--soft); }
   .trow-why a { color: inherit; text-decoration: underline; text-decoration-color: var(--line); text-underline-offset: 3px; }
   .trow-why a:hover { color: var(--ink); }
-  .trow-act { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; justify-content: flex-end; }
-  .trow-act .quiet { min-height: 32px; }
-  .trow-more { width: 32px; height: 32px; }
-  .trow-grip { display: none; width: 18px; height: 22px; margin-left: -4px; place-items: center; color: var(--faint); cursor: grab; touch-action: none; }
-  .trow:hover .trow-grip { color: var(--soft); }
-  @media (hover: hover) and (pointer: fine) { .trow-grip { display: inline-grid; } }
+  .trow-act { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; justify-content: flex-end; margin-top: -2px; }
+  .trow-act .quiet, .trow-sub .quiet, .trow-detail .quiet { margin: 0; padding: 6px 10px; min-height: 32px; font-size: 14px; }
+  .trow-detail .quiet { min-height: 28px; padding: 3px 8px; font-size: 13px; }
+  .trow-more { color: var(--soft); }
+  .trow-more:hover { color: var(--ink); }
+  /* the grip sits in the card's left gutter, shown on hover, so every title starts at the same x */
+  .trow-grip { display: none; position: absolute; left: -21px; top: 17px; width: 18px; height: 22px; place-items: center; color: var(--soft); cursor: grab; touch-action: none; opacity: 0; transition: opacity .12s; }
+  .trow:hover .trow-grip, .trow:focus-within .trow-grip { opacity: 1; }
+  @media (hover: hover) and (pointer: fine) { .trow-grip { display: grid; } }
   .trow-sub { display: flex; flex-wrap: wrap; gap: 6px 8px; align-items: center; margin-top: 4px; }
   .trow-sub .k { margin-right: 2px; }
   .trow-sub .field { width: 76px; height: 34px; font: 500 14px var(--mono); text-align: center; }
@@ -94,9 +108,19 @@
   @media (max-width: 759px) {
     .trow { grid-template-columns: 32px minmax(0, 1fr); }
     .trow-act { grid-column: 2; justify-content: flex-start; }
-    .trow-act .quiet, .trow-act .btn, .trow-more { min-height: var(--touch); }
+    .trow-act .quiet, .trow-act .btn, .trow-act .pill, .trow-more, .trow-sub .quiet, .trow-sub .btn { min-height: var(--touch); }
     .trow-more { width: var(--touch); }
+    .trow-act { margin-top: 0; }
+    /* the ⋯ sits top right; the line under the row holds only Start, Review or Undo */
+    .trow-act .trow-more { position: absolute; top: 6px; right: -6px; }
+    .trow:has(.trow-more) .trow-main { padding-right: 40px; }
+    .trow-act:has(> .trow-more:only-child) { height: 0; }
   }
+  .pl-i { appearance: none; border: 0; padding: 0; width: 20px; height: 20px; flex: none; border-radius: 50%; display: inline-grid; place-items: center;
+    background: none; box-shadow: inset 0 0 0 1.5px var(--soft); color: var(--soft); font: 700 11.5px/1 var(--serif, Georgia, serif); font-style: italic;
+    cursor: help; position: relative; vertical-align: middle; }
+  .pl-i:hover, .pl-i:focus-visible { color: var(--ink); box-shadow: inset 0 0 0 1.5px var(--ink); }
+  .pl-i::before { content: ""; position: absolute; inset: -12px; }
   .wplan { display: grid; gap: 14px; }
   .wplan-days { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 6px; }
   .wplan-day { display: grid; gap: 6px; align-content: start; padding: 10px 8px; border-radius: 10px; background: var(--tile); min-width: 0; }
@@ -126,10 +150,16 @@
   const WHERE = [['bluebook', 'Bluebook'], ['khan', 'Khan Academy'], ['book', 'A book'], ['tutor', 'A tutor'], ['other', 'Other']];
   const WHERE_LABEL = Object.fromEntries(WHERE);
 
+  // the tag says the kind only when the title doesn't already ("Warm-up [Warm-up]" says it twice)
+  const tagOf = t => { const g = taskTag(t), w = g.toLowerCase().replace(/s$/, ''); return String(t.title || '').toLowerCase().includes(w) ? null : g; };
+  // Fix mistakes: how many, the names one tap away (its why list)
+  const fixCount = t => ((t.start && t.start.body && t.start.body.ids) || []).length || String(t.detail || '').split(', ').filter(Boolean).length;
   function detailOf(t, compact) {
     if (t.topics && t.topics.length && TOPIC_KINDS.has(t.kind)) return compact || !UI.chip ? t.topics.map(name).join(', ') : t.topics.map(s => UI.chip(s));
+    if (t.kind === 'fix' && t.detail) return plural(fixCount(t), 'open mistake');
     // a zero is not news (decision 7): "0 due · due first" says nothing
-    const text = String(t.detail || '').split(' · ').filter(x => !/^0 /.test(x) && x !== 'due first').join(' · ');
+    const text = String(t.detail || '').split(' · ').filter(x => !/^0 /.test(x) && x !== 'due first')
+      .map(x => x.replace(/^(\d+) fading$/, (m, n) => `${n} ${+n === 1 ? 'question' : 'questions'} you’re starting to forget`)).join(' · ');
     return text || null;
   }
   function metaOf(t) {
@@ -178,37 +208,50 @@
       el.dataset.status = t.status || 'todo';
       el.dataset.kind = t.kind;
       el.toggleAttribute('data-next', !!o.primary);
-      const box = h('button', { type: 'button', class: 'trow-box', role: 'checkbox', 'aria-checked': String(done),
-        'aria-label': `${t.title}: ${done ? 'mark as not done' : 'mark as done'}`, disabled: o.readonly || o.past || (!t.counted && !own && t.kind !== 'custom') || null });
-      box.innerHTML = CHECK;
-      box.addEventListener('click', () => {
-        if (own) return run('tick', { done: !done });
-        if (t.status === 'marked') return run('undo');
-        if (done) return;
-        open = open === 'done' ? null : 'done';
-        draw();
-      });
+      el.toggleAttribute('data-led', !!(o.primary && o.led));
+      let box;
+      if (o.n) box = h('span', { class: 'trow-n', 'aria-hidden': 'true', text: String(o.n) });
+      else {
+        box = h('button', { type: 'button', class: 'trow-box', role: 'checkbox', 'aria-checked': String(done),
+          'aria-label': `${t.title}: ${done ? 'mark as not done' : 'mark as done'}`, disabled: o.readonly || o.past || (!t.counted && !own && t.kind !== 'custom') || null });
+        box.innerHTML = CHECK;
+        box.addEventListener('click', () => {
+          if (own) return run('tick', { done: !done });
+          if (t.status === 'marked') return run('undo');
+          if (done) return;
+          open = open === 'done' ? null : 'done';
+          draw();
+        });
+      }
       const grip = o.drag && !o.readonly && !o.past && !done && t.status !== 'skipped' && t.status !== 'moved'
         ? h('span', { class: 'trow-grip', 'aria-hidden': 'true', title: 'Drag to another day' }) : null;
       if (grip) { grip.innerHTML = GRIP; grip.addEventListener('pointerdown', e => o.drag(t, e)); }
+      const tag = tagOf(t);
       const head = h('div', { class: 'trow-head' }, grip, h('span', { class: 'trow-title', text: t.title }),
-        h('span', { class: 'badge soft', text: taskTag(t) }),
+        tag && h('span', { class: 'badge soft', text: tag }),
         t.status === 'skipped' && h('span', { class: 'badge line', text: 'Skipped' }),
         t.status === 'moved' && t.moved_to && h('span', { class: 'meta', text: `Moved to ${UI.date ? UI.date(t.moved_to, 'long') : t.moved_to}` }));
       const main = h('div', { class: 'trow-main' }, head);
-      const det = detailOf(t, o.compact);
-      if (det) main.append(h('p', { class: 'trow-detail' }, det));
-      const meta = o.compact ? '' : metaOf(t);
-      const rec = !o.compact && done ? receiptOf(t) : null;
-      if (rec) main.append(h('p', { class: 'trow-meta' }, h('b', { text: rec })));
-      else if (meta) main.append(h('p', { class: 'trow-meta', text: meta }));
       const why = (t.why || []).filter(w => w && (w.text || typeof w === 'string'));
       let whyList = null;
       if (why.length && !o.compact) {
         whyList = h('ul', { class: 'trow-why', id: `why-${String(t.id).replace(/[^\w-]/g, '_')}`, hidden: !o.whyOpen || null },
           why.map(w => typeof w === 'string' ? h('li', { text: w }) : h('li', {}, w.href ? h('a', { href: w.href, text: w.text }) : w.text)));
-        main.append(whyList);
       }
+      const toggleWhy = () => { if (!whyList) return; o.whyOpen = !!whyList.hidden; draw(); };
+      const det = detailOf(t, o.compact);
+      if (det) {
+        const line = h('p', { class: 'trow-detail' }, det);
+        // Fix mistakes names its mistakes one tap away
+        if (t.kind === 'fix' && whyList && !o.readonly) line.append(h('button', { type: 'button', class: 'quiet', text: whyList.hidden ? 'Show' : 'Hide',
+          'aria-expanded': String(!whyList.hidden), 'aria-controls': whyList.id, onclick: toggleWhy }));
+        main.append(line);
+      }
+      const meta = o.compact ? '' : metaOf(t);
+      const rec = !o.compact && done ? receiptOf(t) : null;
+      if (rec) main.append(h('p', { class: 'trow-meta' }, h('b', { text: rec })));
+      else if (meta) main.append(h('p', { class: 'trow-meta', text: meta }));
+      if (whyList) main.append(whyList);
       if (open === 'skip') main.append(h('div', { class: 'trow-sub' }, h('span', { class: 'k', text: 'Why?' }),
         [['no_time', 'No time'], ['too_hard', 'Too hard'], ['know', 'I know this']].map(([r, label]) =>
           h('button', { type: 'button', class: 'btn sm', text: label, onclick: e => { open = null; run('reason', { reason: r }, e.currentTarget); } })),
@@ -227,43 +270,42 @@
       }
       if (o.extra && !o.readonly) { const x = o.extra(t); if (x) main.append(x); }
       main.append(err);
+      // one visible action (Start, Review, Undo), the rest in the ⋯ menu (decision 7)
       const act = h('div', { class: 'trow-act' });
+      const mine = [];
       if (!o.readonly) {
+        const miss = t.result && t.result.asked ? t.result.asked - t.result.right : 0;
         if (o.past) {
           if (t.session && o.on) act.append(h('button', { type: 'button', class: 'quiet', text: 'Review', onclick: () => run('review') }));
         } else if (done) {
           if (t.session) act.append(h('button', { type: 'button', class: 'quiet', text: 'Review', onclick: () => run('review') }));
-          const miss = t.result && t.result.asked ? t.result.asked - t.result.right : 0;
           if (q && t.kind !== 'test' && t.kind !== 'words') {
             if (miss > 0 && t.session) act.append(h('button', { type: 'button', class: 'btn sm', text: `Again · the ${miss} you missed`, onclick: e => run('again', { kind: 'misses' }, e.currentTarget) }));
-            act.append(h('button', { type: 'button', class: 'quiet', text: 'Again · 10 more', onclick: e => run('again', { kind: 'more' }, e.currentTarget) }));
+            mine.push({ label: 'Again · 10 more', onClick: () => run('again', { kind: 'more' }) });
             if (t.result && t.result.asked && t.result.right / t.result.asked >= 0.9 && !(t.difficulty || []).includes('hard'))
-              act.append(h('button', { type: 'button', class: 'quiet', text: 'Again · harder', onclick: e => run('again', { kind: 'harder' }, e.currentTarget) }));
+              mine.push({ label: 'Again · harder', onClick: () => run('again', { kind: 'harder' }) });
           }
-          if (t.status === 'marked' || own) act.append(h('button', { type: 'button', class: 'quiet', text: 'Undo', onclick: e => run('undo', null, e.currentTarget) }));
+          if (t.status === 'marked' || own) mine.push({ label: 'Undo', kbd: fine() ? 'S' : null, onClick: () => run('undo') });
         } else if (t.status === 'skipped' || t.status === 'moved') {
           act.append(h('button', { type: 'button', class: 'quiet', text: 'Undo', onclick: e => run('undo', null, e.currentTarget) }));
         } else if (q) {
           const resume = t.status === 'active' && t.total;
-          const label = o.future ? 'Start early' : resume ? `Resume · ${t.answered} of ${t.total}` : t.kind === 'words' ? 'Start' : 'Start';
-          act.append(h('button', { type: 'button', class: o.primary ? 'pill sm' : o.future ? 'quiet' : 'btn sm', text: label, onclick: e => run('start', null, e.currentTarget) }));
-          act.append(h('button', { type: 'button', class: 'quiet', text: 'Skip', 'aria-expanded': open === 'skip' ? 'true' : null,
-            onclick: e => run('skip', null, e.currentTarget) }));
-          act.append(h('button', { type: 'button', class: 'quiet', text: 'Mark done', 'aria-expanded': String(open === 'done'),
-            onclick: () => { open = open === 'done' ? null : 'done'; draw(); } }));
+          const label = o.future ? 'Start early' : resume ? `Resume · ${t.answered} of ${t.total}` : 'Start';
+          if (!(o.primary && o.led)) act.append(h('button', { type: 'button', class: o.primary ? 'pill sm' : o.future ? 'quiet' : 'btn sm', text: label, onclick: e => run('start', null, e.currentTarget) }));
+          mine.push({ label: 'Skip', kbd: fine() ? 'S' : null, onClick: () => run('skip') });
+          if (!o.future) mine.push({ label: 'Mark done…', sub: 'Did it elsewhere', onClick: () => { open = 'done'; draw(); } });
         } else if (own && t.kind === 'custom' && t.counted !== false) {
-          act.append(h('button', { type: 'button', class: 'quiet', text: 'Skip', onclick: e => run('skip', null, e.currentTarget) }));
+          mine.push({ label: 'Skip', kbd: fine() ? 'S' : null, onClick: () => run('skip') });
         }
-        if (whyList) {
-          const wb = h('button', { type: 'button', class: 'quiet', text: 'Why', 'aria-expanded': String(!whyList.hidden), 'aria-controls': whyList.id });
-          wb.addEventListener('click', () => { whyList.hidden = !whyList.hidden; o.whyOpen = !whyList.hidden; wb.setAttribute('aria-expanded', String(!whyList.hidden)); });
-          act.append(wb);
-        }
-        const items = !o.past && o.menu ? (o.menu(t) || []).filter(Boolean) : [];
-        if (items.length && UI.menu) {
-          const more = h('button', { type: 'button', class: 'quiet trow-more', 'aria-label': `More for ${t.title}`, 'aria-haspopup': 'menu' });
+        if (whyList && t.kind !== 'fix') mine.push({ label: whyList.hidden ? 'Why this task' : 'Hide why', onClick: toggleWhy });
+        const page = () => (!o.past && o.menu ? (o.menu(t) || []).filter(Boolean) : []);
+        if ((mine.length || page().length) && UI.menu) {
+          const more = h('button', { type: 'button', class: 'btn sm icon trow-more', 'aria-label': `More for ${t.title}`, 'aria-haspopup': 'menu' });
           more.innerHTML = DOTS;
-          more.addEventListener('click', () => UI.menu(more, o.menu(t).filter(Boolean), { label: t.title }));
+          more.addEventListener('click', () => {
+            const p = page();
+            UI.menu(more, [...mine, ...(mine.length && p.length ? [{ separator: true }] : []), ...p], { label: t.title });
+          });
           act.append(more);
         }
       } else if (whyList) whyList.hidden = true;
@@ -277,7 +319,21 @@
       busy(on) { if (on) el.setAttribute('aria-busy', 'true'); else el.removeAttribute('aria-busy'); },
       error(text) { err.textContent = text || ''; },
       openSkip() { open = 'skip'; draw(); },
+      // S: skip a task to do, undo a skipped, moved or marked one
+      skip() {
+        if (o.readonly || o.past) return false;
+        if (['skipped', 'moved', 'marked'].includes(t.status) || (t.kind === 'custom' && DONE.has(t.status))) return run('undo');
+        if (!DONE.has(t.status)) return run('skip');
+        return false;
+      },
     };
+  }
+
+  function infoTip(text, label) {
+    const b = h('button', { type: 'button', class: 'pl-i', 'aria-label': label || 'About this', text: 'i' });
+    if (UI.tooltip) UI.tooltip(b, text);
+    b.addEventListener('click', () => { if (!fine() && UI.pop) UI.pop(b, () => h('p', { class: 'line-t', style: 'max-width: 320px', text }), { label: label || 'About this' }); });
+    return b;
   }
 
   function weekPlanner(host, week = {}) {
@@ -341,5 +397,5 @@
     return { el, value };
   }
 
-  Object.assign(UI, { taskRow, taskTag, taskQuestion, weekPlanner });
+  Object.assign(UI, { taskRow, taskTag, taskQuestion, weekPlanner, infoTip });
 })();
