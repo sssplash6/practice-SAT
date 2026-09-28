@@ -1167,7 +1167,7 @@
       { key: 'skill', label: 'Skill', stick: true, value: x => topicName(x.topic, x.topic_name), render: x => h('span', {}, glyph(x.topic), ' ', topicName(x.topic, x.topic_name), x.skill ? h('small', { class: 'meta', text: ` ${x.skill}` }) : '') },
       { key: 'difficulty', label: 'Difficulty', sort: true, value: x => TIERS.indexOf(x.difficulty), render: x => (UI.dbars ? UI.dbars(x.difficulty) : TIER[x.difficulty]) },
       { key: 'format', label: 'Format', value: x => x.type, render: x => (x.type === 'spr' ? 'Grid-in' : 'MC') },
-      { key: 'time', label: 'Time', sort: true, num: true, value: x => x.ms || 0, render: x => (x.ms ? `${tm(x.ms)}${x.budget_ms ? ` / ${tm(x.budget_ms)}` : ''}` : '') },
+      IT.some(x => x.ms) && { key: 'time', label: 'Time', sort: true, num: true, value: x => x.ms || 0, render: x => (x.ms ? `${tm(x.ms)}${x.budget_ms ? ` / ${tm(x.budget_ms)}` : ''}` : '') },
       { key: 'given', label: 'Your answer', value: ans, render: x => h('span', { class: 'ans', title: ans(x), text: ans(x) }) },
       { key: 'key', label: 'Correct', value: key, render: x => h('span', { class: 'ans', title: key(x), text: key(x) }) },
       { key: 'result', label: 'Result', sort: true, value: x => ['correct', 'fixed', 'incorrect', 'unanswered'].indexOf(x.st), render: x => h('span', {}, (UI.STATES[x.st] || {}).glyph || '', ' ', (UI.STATES[x.st] || {}).label || x.st) },

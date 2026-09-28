@@ -142,7 +142,11 @@
   .rp-steps-key i { display: inline-block; width: 14px; height: 14px; border-radius: 4px; vertical-align: -2px; margin-right: 5px; }
   .rp-table .ans { display: block; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .rp-table .mist { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-  .rp-table table { table-layout: fixed; }
+  .rp-table table { table-layout: auto; min-width: 1180px; }
+  .rp-table td { white-space: nowrap; vertical-align: top; }
+  .rp-table td .ans { max-width: 140px; }
+  .rp-table td .mist { white-space: normal; min-width: 220px; max-width: 280px; }
+  .rp-table td small { display: block; margin-top: 2px; }
   .rp-whatif { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; padding: 10px 14px; border-radius: 10px; background: var(--wash); }
 
   /* modules, domains, skills, split, judgement, pace */
