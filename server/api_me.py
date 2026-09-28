@@ -177,8 +177,8 @@ def put_me(body: Me, x_learner: str | None = Header(default=None), x_tz: int = D
             raise HTTPException(422, f"{key} is a Reading and Writing score, 200 to 800 in tens")
     if got.get("board") is not None and got["board"] not in ("name","anon","hidden"):
         raise HTTPException(422, "board is name, anon or hidden")
-    if got.get("avatar") is not None and got["avatar"] not in progress.topics():
-        raise HTTPException(422, "avatar must be a topic slug")
+    if got.get("avatar") is not None and got["avatar"] != "initial" and got["avatar"] not in progress.topics():
+        raise HTTPException(422, "avatar must be initial or a topic slug")
     if got.get("country") is not None:
         if got["country"] and got["country"] not in COUNTRIES:
             raise HTTPException(422, "country must be an ISO alpha-2 code or blank")
