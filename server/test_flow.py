@@ -266,7 +266,7 @@ def main() -> int:
             assert two["seconds"] > 2000, "module 2 did not get its own clock"
             reply(two["questions"], 22)
             c.post(f"/api/session/{sid}/finish")
-            return gate, c.get(f"/api/session/{sid}/results").json()
+            return gate, c.get(f"/api/session/{sid}/results", headers={"X-Learner": "u:mocks"}).json()
 
         gate, res = sit("1.1", 22)
         assert res["estimate"]["route"] == "upper", res["estimate"]
@@ -501,12 +501,17 @@ def check_learner(c) -> None:
             c.post(f"/api/session/{mid}/answer",
                    json={"question_id": q["id"], "answer": keyed_answer(q, False)})
         c.post(f"/api/session/{mid}/finish")
-        res = c.get(f"/api/session/{mid}/results").json()
+        res = c.get(f"/api/session/{mid}/results", headers=H).json()
         return mid, m1 + m2, res
 
     mid1, qs1, res1 = sit_fresh(20)
     assert res1["estimate"]["route"] == "upper" and res1["right"] == 20
-    assert any(r["mistake"] for r in res1["review"]), "the review names no mistakes"
+    if (res1.get("second") or {}).get("offered"):
+        assert any(r.get("hidden") for r in res1["review"]), "the second look did not hold back mistakes"
+        assert c.post(f"/api/session/{mid1}/second/state", headers=H,
+                      json={"state": "skipped"}).status_code == 200
+        res1 = c.get(f"/api/session/{mid1}/results", headers=H).json()
+    assert any(r.get("mistake") for r in res1["review"]), "the review names no mistakes"
     mid2, qs2, res2 = sit_fresh(5)
     assert res2["estimate"]["route"] == "lower" and res2["estimate"]["high"] <= 580, res2["estimate"]
     shared = {q["stem"] for q in qs1} & {q["stem"] for q in qs2}
@@ -790,11 +795,16 @@ def check_integrity(c) -> None:
 
 
 def run_checks(c) -> None:
-    """Every task's own checks, server/checks/<task>.py, each a check(c)."""
+    """Run each section's check with the shared client, or its own client."""
     import importlib
+    import inspect
     for f in sorted((pathlib.Path(__file__).resolve().parent / "checks").glob("*.py")):
         if f.stem != "__init__":
-            importlib.import_module(f"server.checks.{f.stem}").check(c)
+            check = importlib.import_module(f"server.checks.{f.stem}").check
+            if inspect.signature(check).parameters:
+                check(c)
+            else:
+                check()
 
 
 if __name__ == "__main__":
