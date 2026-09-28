@@ -8,8 +8,10 @@ import base64
 import json
 import logging
 import os
+import re
 import secrets
 import time
+import urllib.request
 from collections import defaultdict
 from datetime import datetime, timedelta, timezone
 from urllib.parse import urlsplit
@@ -25,10 +27,13 @@ from . import db, deps, mail, progress
 router = APIRouter()
 log = logging.getLogger("satf.account")
 _limits: dict[tuple[str, str], list[float]] = defaultdict(list)
+_google_keys: tuple[float, list[dict]] = (0, [])
 
 
 def init() -> None:
     db.run("CREATE TABLE IF NOT EXISTS passkey_users (learner TEXT PRIMARY KEY,user_handle TEXT NOT NULL)")
+    db.run("CREATE TABLE IF NOT EXISTS email_changes (user_id TEXT PRIMARY KEY,learner TEXT NOT NULL,"
+           "old_user TEXT NOT NULL,created TEXT NOT NULL)")
 
 
 def _b64(data: bytes) -> str:
@@ -197,6 +202,107 @@ def remove_passkey(cred_id: str, x_learner: str | None = Header(default=None)) -
     return {"ok": True}
 
 
+def _google_enabled() -> str:
+    client_id = os.environ.get("SATF_GOOGLE_CLIENT_ID")
+    if not client_id:
+        raise HTTPException(404, "Google sign-in is not configured")
+    return client_id
+
+
+def _jwks(force: bool = False) -> list[dict]:
+    global _google_keys
+    if not force and _google_keys[0] > time.monotonic():
+        return _google_keys[1]
+    req = urllib.request.Request(os.environ.get("SATF_GOOGLE_JWKS_URL",
+                                        "https://www.googleapis.com/oauth2/v3/certs"))
+    try:
+        with urllib.request.urlopen(req, timeout=5) as response:
+            data = json.load(response)
+            cache = response.headers.get("Cache-Control", "")
+    except (OSError, ValueError) as exc:
+        raise HTTPException(503, "Google keys are unavailable") from exc
+    seconds = int((re.search(r"max-age=(\d+)", cache) or [None, "300"])[1])
+    keys = data.get("keys")
+    if not isinstance(keys, list):
+        raise HTTPException(503, "Google keys are unavailable")
+    _google_keys = (time.monotonic() + min(seconds, 86400), keys)
+    return keys
+
+
+@router.post("/api/google/nonce")
+def google_nonce(x_learner: str | None = Header(default=None)) -> dict:
+    _google_enabled()
+    learner = deps.writer_of(x_learner)
+    nonce = _b64(secrets.token_bytes(24))
+    expires = _expires(5)
+    db.run("INSERT INTO webauthn_challenges(challenge,learner,purpose,expires) VALUES (?,?,?,?)",
+           nonce, learner, "google", expires)
+    return {"nonce": nonce, "expires": expires}
+
+
+class GoogleLogin(BaseModel):
+    credential: str
+    nonce: str
+    carry: bool = False
+    session_only: bool = False
+
+
+@router.post("/api/google")
+def google_login(body: GoogleLogin, request: Request,
+                 x_learner: str | None = Header(default=None)) -> dict:
+    client_id = _google_enabled()
+    source = deps.writer_of(x_learner)
+    parts = body.credential.split(".")
+    if len(parts) != 3:
+        raise HTTPException(401, "invalid Google token")
+    try:
+        header = json.loads(_unb64(parts[0], "Google header"))
+        claims = json.loads(_unb64(parts[1], "Google claims"))
+    except (ValueError, UnicodeDecodeError) as exc:
+        raise HTTPException(401, "invalid Google token") from exc
+    if header.get("alg") != "RS256" or not isinstance(header.get("kid"), str):
+        raise HTTPException(401, "invalid Google signature algorithm")
+    key = next((k for k in _jwks() if k.get("kid") == header["kid"]), None)
+    if key is None:
+        key = next((k for k in _jwks(force=True) if k.get("kid") == header["kid"]), None)
+    if not key or key.get("kty") != "RSA":
+        raise HTTPException(401, "unknown Google signing key")
+    try:
+        public = rsa.RSAPublicNumbers(int.from_bytes(_unb64(key["e"], "exponent"), "big"),
+                                      int.from_bytes(_unb64(key["n"], "modulus"), "big")).public_key()
+        public.verify(_unb64(parts[2], "signature"), f"{parts[0]}.{parts[1]}".encode(),
+                      padding.PKCS1v15(), hashes.SHA256())
+    except (InvalidSignature, ValueError, KeyError) as exc:
+        raise HTTPException(401, "invalid Google signature") from exc
+    if (claims.get("iss") not in ("accounts.google.com", "https://accounts.google.com") or
+            claims.get("aud") != client_id or int(claims.get("exp") or 0) < time.time() - 60 or
+            claims.get("email_verified") is not True or claims.get("nonce") != body.nonce or
+            not claims.get("sub") or not claims.get("email")):
+        raise HTTPException(401, "invalid Google claims")
+    _consume_challenge(body.nonce, "google", source)
+    email = str(claims["email"]).lower()
+    row = db.one("SELECT * FROM users WHERE google_sub=?", str(claims["sub"]))
+    if row is None:
+        row = db.one("SELECT * FROM users WHERE email=?", email)
+    target = row["learner"] if row and row["learner"] else source
+    with db.transaction():
+        if row:
+            if row["google_sub"] and row["google_sub"] != claims["sub"]:
+                raise HTTPException(409, "email is linked to another Google account")
+            db.run("UPDATE users SET google_sub=?,verified=1,learner=?,last_login=? WHERE id=?",
+                   str(claims["sub"]), target, deps.now(), row["id"])
+        else:
+            db.run("INSERT INTO users(id,first,last,email,verified,created,learner,google_sub,last_login)"
+                   " VALUES (?,?,?,?,1,?,?,?,?)", secrets.token_urlsafe(12),
+                   str(claims.get("given_name") or email.split("@")[0])[:60],
+                   str(claims.get("family_name") or "")[:60], email, deps.now(), target,
+                   str(claims["sub"]), deps.now())
+    if not row or row["learner"] is None:
+        start_swap(target)
+    return _credential(target, source, carry=body.carry, session_only=body.session_only,
+                       method="google", request=request)
+
+
 def _expires(minutes: int) -> str:
     return (datetime.now(timezone.utc) + timedelta(minutes=minutes)).isoformat(timespec="seconds")
 
@@ -277,6 +383,38 @@ def link_email(body: LinkEmail, request: Request, x_learner: str | None = Header
     return {"sent": True, "delivery": delivery, "email_masked": _mask(email)}
 
 
+@router.put("/api/account/email")
+def change_email(body: LinkEmail, request: Request,
+                 x_learner: str | None = Header(default=None)) -> dict:
+    learner = deps.writer_of(x_learner)
+    old = db.one("SELECT id,email FROM users WHERE learner=? AND verified=1 ORDER BY created LIMIT 1", learner)
+    if not old:
+        raise HTTPException(409, "save an email account first")
+    email = str(body.email).strip().lower()
+    if email == old["email"]:
+        return {"sent": False, "email_masked": _mask(email)}
+    other = db.one("SELECT id,learner FROM users WHERE email=?", email)
+    if other and other["learner"]:
+        raise HTTPException(409, "that email is linked to another learner")
+    _limit("email", email, 1, 60)
+    _limit("email-learner", learner, 5, 3600)
+    _limit("email-ip", _ip(request), 5, 3600)
+    token = secrets.token_urlsafe(24)
+    code = f"{secrets.randbelow(1_000_000):06d}"
+    with db.transaction():
+        uid = other["id"] if other else secrets.token_urlsafe(12)
+        if not other:
+            db.run("INSERT INTO users(id,first,last,email,created) VALUES (?,?,?,?,?)",
+                   uid, "", "", email, deps.now())
+        db.run("UPDATE users SET login_token=?,login_code=?,login_for=?,login_sent=?,login_tries=0"
+               " WHERE id=?", token, hashlib.sha256(code.encode()).hexdigest(), learner, deps.now(), uid)
+        db.run("DELETE FROM email_changes WHERE learner=?", learner)
+        db.run("INSERT INTO email_changes(user_id,learner,old_user,created) VALUES (?,?,?,?)",
+               uid, learner, old["id"], deps.now())
+    delivery = mail.send_login(email, code, token)
+    return {"sent": True, "delivery": delivery, "email_masked": _mask(email)}
+
+
 class VerifyEmail(BaseModel):
     code: str | None = None
     token: str | None = None
@@ -325,11 +463,15 @@ def verify_email(body: VerifyEmail, request: Request,
         if row["login_sent"] else None
     if _expired(expiry) or int(row["login_tries"] or 0) >= 5:
         raise HTTPException(410, "that code has expired")
-    target = row["learner"] or source
+    change = db.one("SELECT * FROM email_changes WHERE user_id=?", row["id"])
+    target = change["learner"] if change else row["learner"] or source
     with db.transaction():
         db.run("UPDATE users SET verified=1, learner=?, last_login=?,login_token=NULL,"
                "login_code=NULL,login_for=NULL,login_sent=NULL,login_tries=0 WHERE id=?",
                target, deps.now(), row["id"])
+        if change:
+            db.run("UPDATE users SET learner=NULL WHERE id=? AND learner=?", change["old_user"], target)
+            db.run("DELETE FROM email_changes WHERE user_id=?", row["id"])
     if row["learner"] is None:
         start_swap(target)
     return _credential(target, source, carry=body.carry, session_only=body.session_only,

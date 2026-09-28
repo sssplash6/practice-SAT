@@ -10,14 +10,15 @@ import secrets
 import json
 import hashlib
 import datetime as dt
+import time
 from unittest.mock import patch
 
 from cryptography.hazmat.primitives import hashes, serialization
-from cryptography.hazmat.primitives.asymmetric import ec
+from cryptography.hazmat.primitives.asymmetric import ec, rsa, padding
 
 from fastapi.testclient import TestClient
 
-from server.app import app
+from server.app import app, FORMS
 from server import account, db, practice
 
 
@@ -99,6 +100,19 @@ def check(c: TestClient) -> None:
                   json={"code": sent[0][1]}).status_code == 410
     print("ok  email codes are hashed, single use, and mint a separate device credential")
 
+    changed_address = "s1-changed-" + secrets.token_hex(6) + "@example.org"
+    with patch("server.account.mail.send_login", side_effect=capture):
+        changed = c.put("/api/account/email", headers={"X-Learner": key},
+                        json={"email": changed_address})
+    assert changed.status_code == 200 and changed.json()["sent"], changed.text
+    confirmed = c.post("/api/account/verify", headers={"X-Learner": key},
+                       json={"code": sent[-1][1]})
+    assert confirmed.status_code == 200, confirmed.text
+    assert db.one("SELECT learner FROM users WHERE email=?", address)["learner"] is None
+    assert db.one("SELECT learner FROM users WHERE email=?", changed_address)["learner"] == owner
+    assert c.get("/api/account", headers={"X-Learner": key}).json()["email"] == changed_address
+    print("ok  changing email requires a fresh code before the old address detaches")
+
     req = c.post("/api/link/request", headers={"X-Learner": browser},
                  json={"device": "School laptop", "session_only": True})
     assert req.status_code == 200, req.text
@@ -160,7 +174,51 @@ def check(c: TestClient) -> None:
             "origin": "http://localhost:8021"}).encode())}
         assert c.post("/api/passkey/login", headers={"X-Learner": browser},
                       json=invalid).status_code == 401
+        diag_id = secrets.token_urlsafe(12)
+        db.run("INSERT INTO sessions(id,kind,form_id,learner,started,finished,result)"
+               " VALUES (?,?,?,?,?,?,?)", diag_id, "diagnostic", next(iter(FORMS)), p,
+               "2026-09-01T00:00:00+00:00", "2026-09-01T00:30:00+00:00",
+               json.dumps({"right": 0, "asked": 20}))
+        saved_result = c.get(f"/api/session/{diag_id}/results",
+                             headers={"X-Learner": made.json()["credential"]})
+        assert saved_result.status_code == 200 and saved_result.json()["verified"], saved_result.text
+        assert c.get(f"/api/session/{diag_id}/results").status_code == 403
     print("ok  passkeys verify origin, challenge reuse, and cryptographic signatures")
+
+    assert c.post("/api/google/nonce", headers={"X-Learner": browser}).status_code == 404
+    assert c.post("/api/google", headers={"X-Learner": browser},
+                  json={"credential": "x", "nonce": "x"}).status_code == 404
+    google_key = rsa.generate_private_key(public_exponent=65537, key_size=2048)
+    google_public = google_key.public_key().public_numbers()
+    jwk = {"kid": "s1-test", "kty": "RSA",
+           "n": account._b64(google_public.n.to_bytes((google_public.n.bit_length() + 7) // 8, "big")),
+           "e": account._b64(google_public.e.to_bytes(3, "big"))}
+    def token_for(nonce, **changes):
+        claims = {"iss": "https://accounts.google.com", "aud": "satf-s1-test",
+                  "exp": int(time.time()) + 300, "nonce": nonce, "email_verified": True,
+                  "sub": "s1-google-" + browser, "email": "google-" + browser[2:] + "@example.org",
+                  **changes}
+        head = account._b64(json.dumps({"alg": "RS256", "kid": "s1-test"}).encode())
+        body = account._b64(json.dumps(claims).encode())
+        signed = f"{head}.{body}".encode()
+        signature = google_key.sign(signed, padding.PKCS1v15(), hashes.SHA256())
+        return f"{head}.{body}.{account._b64(signature)}"
+    with patch.dict(os.environ, {"SATF_GOOGLE_CLIENT_ID": "satf-s1-test"}), \
+         patch("server.account._jwks", return_value=[jwk]):
+        nonce = c.post("/api/google/nonce", headers={"X-Learner": visitor}).json()["nonce"]
+        jwt = token_for(nonce)
+        google = c.post("/api/google", headers={"X-Learner": visitor},
+                        json={"credential": jwt, "nonce": nonce})
+        assert google.status_code == 200 and google.json()["credential"].startswith("d:"), google.text
+        assert c.post("/api/google", headers={"X-Learner": visitor},
+                      json={"credential": jwt, "nonce": nonce}).status_code == 400
+        for changed_claim in ({"aud": "wrong"}, {"exp": int(time.time()) - 3600},
+                              {"email_verified": False}):
+            n = c.post("/api/google/nonce", headers={"X-Learner": visitor}).json()["nonce"]
+            assert c.post("/api/google", headers={"X-Learner": visitor},
+                          json={"credential": token_for(n, **changed_claim),
+                                "nonce": n}).status_code == 401
+    print("ok  Google sign-in is off by default and validates signature, claims, and nonce")
 
     profile_learner = "a:" + secrets.token_hex(12)
     profile_h = {"X-Learner": profile_learner}

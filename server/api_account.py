@@ -3,15 +3,17 @@
 from __future__ import annotations
 
 import logging
+import json
 import secrets
 from datetime import datetime, timedelta, timezone
 
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, Header, HTTPException
 from fastapi.responses import RedirectResponse
 from pydantic import BaseModel, EmailStr, Field
 
-from . import account, db, mail
-from .deps import NAME_OK, now, session_or_404
+from . import account, api_results, db, mail, practice, scoring
+from .api_tests import marked_questions, public
+from .deps import NAME_OK, learner_of, now, session_or_404
 
 log = logging.getLogger("satf")
 router = APIRouter()
@@ -88,3 +90,35 @@ def verify(token: str):
     if session and session["learner"] and user and user["learner"] is None:
         account.start_swap(session["learner"])
     return RedirectResponse("/diagnostic/verified.html?state=ok", status_code=303)
+
+
+@router.get("/api/session/{sid}/results")
+def saved_diagnostic_results(sid: str, x_learner: str | None = Header(default=None)) -> dict:
+    """Passkey-only and Google-saved learners can see their diagnostic result."""
+    row = session_or_404(sid)
+    if row["kind"] != "diagnostic" or row["user_id"]:
+        return api_results.results(sid)
+    if not row["finished"]:
+        raise HTTPException(409, {"need": "finish"})
+    if not x_learner or learner_of(x_learner) != row["learner"] or not account.saved(row["learner"]):
+        raise HTTPException(403, {"need": "signup"})
+    out = json.loads(row["result"] or "{}")
+    out["mode"] = "diagnostic"
+    out["first"] = (db.one("SELECT name FROM learners WHERE id=?", row["learner"]) or
+                    {"name": None})["name"]
+    out["verified"] = True
+    answers = db.load_answers(row)
+    review = []
+    for q in marked_questions(row):
+        given = answers.get(q["id"])
+        ok = scoring.is_correct(q, given)
+        mistake = None
+        if not ok and q["type"] == "mcq" and isinstance(given, int) and 0 <= given < 4:
+            reason = (q.get("reasons") or [""] * 4)[given]
+            mistake = reason[:1].upper() + reason[1:] if reason else None
+        review.append({**public(q), "topic": q.get("topic"), "skill": practice.skill_of(q),
+                       "given": given, "answer": q["answer"], "rationale": q["rationale"],
+                       "correct": ok, "mistake": mistake})
+    out["review"] = review
+    out["started"], out["finished"] = row["started"], row["finished"]
+    return out
