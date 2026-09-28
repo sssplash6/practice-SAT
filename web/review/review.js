@@ -324,7 +324,7 @@
     }
     if (!S.counts) return { v: null, sub: '' };
     if (id === 'redo') {
-      const delta = c.open_week_delta ? `${c.open_week_delta < 0 ? '▼' : '▲'}${fmtN(Math.abs(c.open_week_delta))} this week` : '';
+      const delta = c.open_week_delta && Math.abs(c.open_week_delta) !== c.open ? `${c.open_week_delta < 0 ? '▼' : '▲'}${fmtN(Math.abs(c.open_week_delta))} this week` : '';
       return { v: c.open || '', sub: bits([c.half && `${fmtN(c.half)} half fixed`, c.relapsed && `${fmtN(c.relapsed)} relapsed`, c.stake_total && `≈ ${fmtN(c.stake_total)} pts at stake`, delta]),
         spark: S.ledger && S.ledger.weeks && S.ledger.weeks.some(w => w.open_end) ? S.ledger.weeks.map(w => w.open_end) : null };
     }
@@ -981,7 +981,7 @@
     const time = r.ms ? h('span', { class: over ? 'over' : null, text: `${mmss(r.ms)}${r.budget_ms ? ` · budget ${mmss(r.budget_ms)}${over ? ' ▲' : ''}` : ''}` }) : null;
     const t = TOPIC(r.topic);
     const bits = [r.domain ? dshort(r.domain) : null, tierBit(r.difficulty), srcWord(r.source),
-      r.given_label || r.answer ? `${r.given_label || '–'} → ${r.answer || ''}`.replace(/ → $/, '') : null, time,
+      r.correct ? (r.given_label ? `picked ${r.given_label}` : null) : r.given_label || r.answer ? `${r.given_label || '–'} → ${r.answer || ''}`.replace(/ → $/, '') : null, time,
       r.conf ? `said ${cap(r.conf)}` : null];
     btn.append(h('span', { class: 'lead' }, UI.cell ? UI.cell(st, '', { static: true, size: 'sm', flag: r.flagged || null }) : null),
       h('div', {}, h('div', { class: 'l1' }, t && UI.glyph ? UI.glyph(r.topic) : null, ' ', r.skill || ''), l2(bits),
@@ -1211,7 +1211,8 @@
         (d.items || []).forEach(x => { const k = x.kind === 'slip' ? 'slip' : x.cause || 'trap'; causes[k] = (causes[k] || 0) + 1; });
       }
       body.replaceChildren();
-      if (causes && Object.keys(causes).length && UI.stackBar) {
+      // one cause alone says nothing the Redo count doesn't: the bar shows once there are two
+      if (causes && Object.keys(causes).filter(k => causes[k]).length > 1 && UI.stackBar) {
         const segs = CAUSES.filter(([k]) => causes[k]).map(([k, l]) => ({ key: k, label: l, value: causes[k] }));
         const fixRow = h('div', { class: 'rh-row2', style: 'margin-top:12px' });
         UI.stackBar(body, segs, { largest: true, legend: false, noun: 'misses', label: 'Why you lose points', onPick: seg => { if (FB) FB.set('cause', seg.key); causeFix(fixRow, seg.key); } });
