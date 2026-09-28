@@ -230,8 +230,8 @@
         const parts = Object.entries(hd.domains).filter(([, v]) => v).map(([k, v]) => `${k} ${v}`);
         if (hd.grid_ins) parts.push(plural(hd.grid_ins, 'grid-in'));
         facts.append(fact(`What it holds: ${parts.join(' · ')}`, 'text'));
-        const nt = [hd.new_types ? `${plural(hd.new_types, 'question type')} you haven’t met under the clock` : null,
-          hd.never ? `${hd.never} you’ve never met at all` : null].filter(Boolean);
+        const nt = hd.never && hd.never === hd.new_types ? [`${plural(hd.never, 'question type')} you’ve never met`]
+          : [hd.new_types ? `${plural(hd.new_types, 'question type')} you haven’t met under the clock` : null, hd.never ? `${hd.never} you’ve never met at all` : null].filter(Boolean);
         if (nt.length) facts.append(fact(nt.join(' · '), 'search'));
       }
       if (/trainer/i.test(S.kind_label)) facts.append(fact(`The line: ${Math.ceil(0.6 * n)} of ${n} right routes you up`, 'trophy'));
@@ -291,7 +291,7 @@
     if (paused) {
       links.append(h('button', { type: 'button', class: 'quiet', text: `Hand in module ${S.module || 1}`, onclick: e => begin(false, e.currentTarget, false, true) }),
         h('button', { type: 'button', class: 'quiet', text: 'Discard this test', onclick: () => discard() }));
-    } else if (fresh && !S.contest) {
+    } else if (fresh && !S.contest && S.kind !== 'diagnostic') {
       links.append(h('button', { type: 'button', class: 'quiet', text: 'Start over with other modules', onclick: () => startOver() }));
     }
     card.append(links);

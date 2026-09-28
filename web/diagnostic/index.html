@@ -19,7 +19,8 @@
           border-radius: 14px; padding: 28px; background: var(--wash); max-width: 760px; }
   .door .num { font-size: clamp(64px, 10vw, 104px); display: block; margin-top: 8px; }
   .door .meta { display: block; margin-top: 10px; color: var(--ink); }
-  @media (max-width: 560px) { .door { grid-template-columns: 1fr; } }
+  .door-facts { margin: 16px 0 0; padding: 0 0 0 18px; display: grid; gap: 6px; font: 400 15px/1.45 var(--font); color: var(--ink); }
+  @media (max-width: 560px) { .door { grid-template-columns: 1fr; padding: 20px 16px; } .door .pill { width: 100%; justify-content: center; } }
 </style>
 </head>
 <body data-page="diagnostic">
@@ -27,8 +28,15 @@
 
 <main class="page">
   <div class="door rise">
-    <div><span class="k">Diagnostic</span><span class="num">20</span><span class="meta">questions · 32 min</span></div>
-    <div><a class="pill" href="/test/">Start</a></div>
+    <div>
+      <span class="k">Diagnostic</span><span class="num">20</span><span class="meta">questions · 32 min · all four domains evenly</span>
+      <ul class="door-facts">
+        <li>A first band, about 200 points wide, and where your points went</li>
+        <li>No answers until you hand in, like a real module</li>
+        <li>Asks for your name and email before the result</li>
+      </ul>
+    </div>
+    <div><a class="pill" href="/tests/?start=diagnostic" id="diagStart">Start</a></div>
   </div>
 </main>
 
