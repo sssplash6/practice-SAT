@@ -10,11 +10,12 @@ from fastapi import APIRouter, HTTPException
 from fastapi.responses import RedirectResponse
 from pydantic import BaseModel, EmailStr, Field
 
-from . import db, mail
+from . import account, db, mail
 from .deps import NAME_OK, now, session_or_404
 
 log = logging.getLogger("satf")
 router = APIRouter()
+router.include_router(account.router)
 
 
 def init() -> None:
@@ -79,5 +80,11 @@ def verify(token: str):
         db.run("UPDATE users SET verified=1, token=NULL WHERE id=?", claim["user_id"])
         db.run("UPDATE sessions SET user_id=? WHERE id=?",
                claim["user_id"], claim["session"])
+        session = db.one("SELECT learner FROM sessions WHERE id=?", claim["session"])
+        user = db.one("SELECT learner FROM users WHERE id=?", claim["user_id"])
+        if session and session["learner"] and user and user["learner"] is None:
+            db.run("UPDATE users SET learner=? WHERE id=?", session["learner"], claim["user_id"])
     log.info("verified diagnostic signup %s", claim["user_id"])
+    if session and session["learner"] and user and user["learner"] is None:
+        account.start_swap(session["learner"])
     return RedirectResponse("/diagnostic/verified.html?state=ok", status_code=303)

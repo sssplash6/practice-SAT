@@ -7,12 +7,17 @@ from __future__ import annotations
 
 import os
 import secrets
+import json
+import hashlib
 from unittest.mock import patch
+
+from cryptography.hazmat.primitives import hashes, serialization
+from cryptography.hazmat.primitives.asymmetric import ec
 
 from fastapi.testclient import TestClient
 
 from server.app import app
-from server import db
+from server import account, db
 
 
 def check(c: TestClient) -> None:
@@ -67,6 +72,94 @@ def check(c: TestClient) -> None:
     assert c.get("/api/verify", params={"token": token}, follow_redirects=False).headers[
         "location"].endswith("state=bad")
     print("ok  SEC-01 signup requires fresh mailbox proof and does not disclose account status")
+
+    account._limits.clear()
+    owner = "a:" + secrets.token_hex(12)
+    browser = "a:" + secrets.token_hex(12)
+    visitor = "a:" + secrets.token_hex(12)
+    address = "s1-login-" + secrets.token_hex(6) + "@example.org"
+    sent = []
+    def capture(email, code, token):
+        sent.append((email, code, token))
+        return "outbox"
+    with patch("server.account.mail.send_login", side_effect=capture):
+        link = c.post("/api/account/link", headers={"X-Learner": owner},
+                      json={"email": address})
+    assert link.status_code == 200, link.text
+    assert link.json()["email_masked"].endswith("@example.org")
+    assert db.one("SELECT login_code FROM users WHERE email=?", address)["login_code"] != sent[0][1]
+    signed = c.post("/api/account/verify", headers={"X-Learner": owner},
+                    json={"code": sent[0][1]})
+    assert signed.status_code == 200, signed.text
+    key = signed.json()["credential"]
+    assert key.startswith("d:") and c.get("/api/account", headers={"X-Learner": key}).json()["saved"]
+    assert db.one("SELECT learner FROM users WHERE email=?", address)["learner"] == owner
+    assert c.post("/api/account/verify", headers={"X-Learner": owner},
+                  json={"code": sent[0][1]}).status_code == 410
+    print("ok  email codes are hashed, single use, and mint a separate device credential")
+
+    req = c.post("/api/link/request", headers={"X-Learner": browser},
+                 json={"device": "School laptop", "session_only": True})
+    assert req.status_code == 200, req.text
+    code, ticket = req.json()["code"], req.json()["token"]
+    seen = c.post("/api/link/code", headers={"X-Learner": key}, json={"code": code})
+    assert seen.status_code == 200 and "name" not in seen.text
+    assert c.post(f"/api/link/{ticket}/approve", headers={"X-Learner": key}).status_code == 200
+    claimed = c.get(f"/api/link/{ticket}", headers={"X-Learner": browser})
+    assert claimed.status_code == 200 and claimed.json()["credential"].startswith("d:")
+    second_key = claimed.json()["credential"]
+    assert c.get(f"/api/link/{ticket}", headers={"X-Learner": browser}).status_code == 410
+    assert c.get("/api/account", headers={"X-Learner": second_key}).json()["saved"]
+    assert c.delete("/api/devices/this", headers={"X-Learner": second_key}).status_code == 200
+    assert c.get("/api/account", headers={"X-Learner": second_key}).status_code == 401
+    print("ok  approved phone link grants one revocable, session-only device key")
+
+    transfer = c.post("/api/transfer", headers={"X-Learner": key}).json()["code"]
+    redeemed = c.post("/api/transfer/redeem", headers={"X-Learner": visitor},
+                      json={"code": transfer})
+    assert redeemed.status_code == 200 and redeemed.json()["credential"].startswith("d:")
+    assert c.post("/api/transfer/redeem", headers={"X-Learner": visitor},
+                  json={"code": transfer}).status_code == 410
+    print("ok  transfer codes are single use")
+
+    with patch.dict(os.environ, {"SATF_BASE_URL": "http://localhost:8021"}):
+        p = "a:" + secrets.token_hex(12)
+        private = ec.generate_private_key(ec.SECP256R1())
+        cred = account._b64(secrets.token_bytes(24))
+        authenticator = hashlib.sha256(b"localhost").digest() + b"\x01" + (1).to_bytes(4, "big")
+        registration = c.post("/api/passkey/register/options", headers={"X-Learner": p}).json()
+        client_data = account._b64(json.dumps({"type": "webauthn.create",
+            "challenge": registration["challenge"], "origin": "http://localhost:8021"}).encode())
+        spki = private.public_key().public_bytes(serialization.Encoding.DER,
+                                                  serialization.PublicFormat.SubjectPublicKeyInfo)
+        made = c.post("/api/passkey/register", headers={"X-Learner": p}, json={
+            "id": cred, "publicKey": account._b64(spki), "algorithm": -7,
+            "authData": account._b64(authenticator), "clientDataJSON": client_data})
+        assert made.status_code == 200, made.text
+        assert c.get("/api/account", headers={"X-Learner": made.json()["credential"]}).json()["saved"]
+        opts = c.post("/api/passkey/login/options", json={"conditional": True}).json()
+        raw = json.dumps({"type": "webauthn.get", "challenge": opts["challenge"],
+                          "origin": "http://localhost:8021"}).encode()
+        assertion = hashlib.sha256(b"localhost").digest() + b"\x01" + (2).to_bytes(4, "big")
+        sig = private.sign(assertion + hashlib.sha256(raw).digest(), ec.ECDSA(hashes.SHA256()))
+        payload = {"id": cred, "authData": account._b64(assertion),
+                   "clientDataJSON": account._b64(raw), "signature": account._b64(sig)}
+        logged = c.post("/api/passkey/login", headers={"X-Learner": browser}, json=payload)
+        assert logged.status_code == 200 and logged.json()["credential"].startswith("d:")
+        assert c.post("/api/passkey/login", headers={"X-Learner": browser}, json=payload).status_code == 400
+        wrong = c.post("/api/passkey/login/options", json={}).json()
+        bad_origin = {**payload, "clientDataJSON": account._b64(json.dumps({
+            "type": "webauthn.get", "challenge": wrong["challenge"],
+            "origin": "https://evil.example"}).encode())}
+        assert c.post("/api/passkey/login", headers={"X-Learner": browser},
+                      json=bad_origin).status_code == 400
+        bad = c.post("/api/passkey/login/options", json={}).json()
+        invalid = {**payload, "clientDataJSON": account._b64(json.dumps({
+            "type": "webauthn.get", "challenge": bad["challenge"],
+            "origin": "http://localhost:8021"}).encode())}
+        assert c.post("/api/passkey/login", headers={"X-Learner": browser},
+                      json=invalid).status_code == 401
+    print("ok  passkeys verify origin, challenge reuse, and cryptographic signatures")
 
 
 def main() -> None:
