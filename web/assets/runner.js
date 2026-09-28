@@ -2938,7 +2938,7 @@
     const prevB = h('button', { type: 'button', class: 'quiet rv-prev', title: 'Previous (← or K)' }, icon('left', 18), h('span', { text: 'Previous' }));
     const posEl = h('span', { class: 'rv-pos meta', 'aria-live': 'polite' });
     const missB = h('button', { type: 'button', class: 'quiet rv-miss', title: 'Next miss (N)', text: o.nKey === 'unseen' ? 'Next not seen' : 'Next miss' });
-    const twinFoot = h('button', { type: 'button', class: 'btn sm rv-twinfoot', title: 'Twin (T)' }, icon('twin', 16), h('span', { text: pane ? 'Fresh one like this' : 'Twin' }));
+    const twinFoot = h('button', { type: 'button', class: 'btn sm rv-twinfoot', title: 'Twin (T)' }, icon('twin', 16), h('span', { text: 'Twin' }));
     const nextB = h('button', { type: 'button', class: 'pill sm rv-next', title: 'Next (→ or J)' }, h('span', { text: 'Next' }), icon('right', 18));
     prevB.addEventListener('click', () => prev());
     nextB.addEventListener('click', () => next());
@@ -3579,7 +3579,7 @@
       if (o.twinBody) return o.twinBody(it);
       if (it.twin_body) return it.twin_body;
       const q = it.q;
-      if (pane) return { list: 'templates', ids: [q.template], count: 1, source: 'review', want: it.norm || undefined };
+      if (pane) return { list: 'templates', ids: [q.template], count: 1, source: 'review', want: it.norm ? { [q.template]: it.norm } : undefined };
       if (it.session || o.session) return { from_session: it.session || o.session, only: [q.id], each: 5, source: 'twin' };
       return { templates: [q.template], source: 'twin' };
     }
@@ -3896,7 +3896,7 @@
         b.ws = UI.workspace(b.qb, q, { mode: 'review', fb: it.fb, bar: false, head: false });
         b.ws.el.classList.add('rv-dim');
         const run = UI.twinInline(b.twinHost, {
-          body: o.proveBody ? o.proveBody(it) : { list: 'templates', ids: [q.template], count: 1, source: 'review', tier: q.difficulty, want: it.norm || undefined },
+          body: o.proveBody ? o.proveBody(it) : { list: 'templates', ids: [q.template], count: 1, source: 'review', tier: q.difficulty, want: it.norm ? { [q.template]: it.norm } : undefined },
           caption: 'Prove it on new numbers', session: false,
           onAnswer: fb => { if (fb.correct) it._proven = true; paintNav(); },
         });
