@@ -132,10 +132,12 @@
   .size > * { margin: 0; }
   .size-picks { display: flex; align-items: center; }
   .size-picks .chips { gap: 6px; align-items: center; margin: 0; }
+  .clock-tog { flex: none; margin-left: 10px; width: var(--ctl); height: var(--ctl); border: 0; border-radius: 50%; display: inline-grid; place-items: center;
+    background: var(--tile-2); color: var(--soft); cursor: pointer; }
+  .clock-tog[aria-pressed="true"] { background: var(--paper); color: var(--ink); box-shadow: inset 0 0 0 1.5px var(--amber); }
   /* one height for the row: the toggle's track, its options and the number chips are all --ctl (the user: misaligned) */
   .td .size-picks .chips > button { min-height: var(--ctl); min-width: var(--ctl); justify-content: center; }
   .size-help { margin: 6px 0 0; }
-  .sess-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; margin-top: 14px; }
   .reason { margin: 16px 0 0; font: 500 15px/1.45 var(--font); color: var(--ink); }
   .blocks { list-style: none; margin: 12px 0 0; padding: 0; display: grid; gap: 2px; transition: opacity .15s; }
   .blocks.stale { opacity: .6; }
@@ -834,7 +836,7 @@
   function sizeValue() { return SZ.sel || { kind: 'box', v: (S.t.next.box || {}).default || 15 }; }
   function sessBody(extra) {
     const s = sizeValue();
-    return Object.assign({ source: 'next', timed: SZ.timed, drop: SZ.drop.slice() }, s.kind === 'box' ? { box: s.v } : { count: s.v }, extra || {});
+    return Object.assign({ source: 'next', timed: s.kind === 'box' ? true : SZ.timed, drop: SZ.drop.slice() }, s.kind === 'box' ? { box: s.v } : { count: s.v }, extra || {});
   }
   function paintNext() {
     const t = S.t, nx = t.next || {}, plan = t.plan;
@@ -996,6 +998,15 @@
       UI.chips(picks, opts, { value: kind === 'box' ? `b${v}` : `c${v === null ? 'x' : v}`,
         label: kind === 'box' ? 'Minutes' : 'Questions',
         onChange: val => choose(val[0] === 'b' ? { kind: 'box', v: +val.slice(1) } : { kind: 'count', v: val.slice(1) === 'x' ? null : +val.slice(1) }) });
+      // minutes are a clock by definition; a number of questions gets one small clock toggle at the row's end (the user)
+      if (kind === 'count') {
+        const clock = h('button', { type: 'button', class: 'clock-tog', 'aria-pressed': String(!!SZ.timed), 'aria-label': 'Timed',
+          html: UI.svg('<circle cx="12" cy="13" r="7.5" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M12 9.5V13l2.5 1.8M10 3.5h4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>', 18) });
+        const say = () => { clock.setAttribute('aria-pressed', String(!!SZ.timed)); clock.title = SZ.timed ? 'Timed: tap for untimed' : 'Untimed: tap to time it'; };
+        say();
+        clock.addEventListener('click', () => { SZ.timed = !SZ.timed; say(); askPreview(); });
+        picks.append(clock);
+      }
     };
     UI.seg(size, [{ value: 'box', label: 'Minutes' }, { value: 'count', label: 'Questions' }], { value: s.kind === 'box' ? 'box' : 'count',
       label: 'Session size', onChange: kind => { paintPicks(kind); choose(kind === 'box' ? { kind: 'box', v: DEF.box } : { kind: 'count', v: DEF.count }); } });
@@ -1003,10 +1014,6 @@
     paintPicks(s.kind === 'box' ? 'box' : 'count');
     const helper = h('p', { class: 'help size-help', text: 'Short on time? 5 minutes keeps your streak and your check-ins.', hidden: !(s.kind === 'box' && s.v === 5) });
     wrap.append(size, helper);
-    // the clock row holds only the clock (the user: a link beside a toggle read as a third option)
-    const ctl = h('div', { class: 'sess-ctl' });
-    UI.seg(ctl, [{ value: false, label: 'Untimed' }, { value: true, label: 'Timed' }], { value: SZ.timed, label: 'Clock', onChange: v => { SZ.timed = v; askPreview(); } });
-    wrap.append(ctl);
     // the reason, the blocks and question 1 (painted by paintBlocks)
     wrap.append(h('div', { id: 'sessBody' }));
     const goRow = h('div', { class: 'go' });
@@ -1029,7 +1036,7 @@
     const more = h('a', { class: 'quiet', text: 'More options' });
     const setMore = () => {
       const sv = sizeValue(), topics = (coach.topics || []).join(',');
-      more.href = `/practice/?topics=${encodeURIComponent(topics)}&timed=${SZ.timed ? 1 : 0}` + (sv.kind === 'box' ? `&box=${sv.v}` : `&count=${sv.v === null ? 0 : sv.v}`);
+      more.href = `/practice/?topics=${encodeURIComponent(topics)}&timed=${sv.kind === 'box' || SZ.timed ? 1 : 0}` + (sv.kind === 'box' ? `&box=${sv.v}` : `&count=${sv.v === null ? 0 : sv.v}`);
     };
     more.addEventListener('pointerdown', setMore); more.addEventListener('focus', setMore); setMore();
     goRow.append(more);
