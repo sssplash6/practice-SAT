@@ -445,6 +445,8 @@ DONE: checks/s1.py passes and test_flow "all good". Tell the user "S1 server don
 
 ## Task 23: the shell's Up next server (F2B backend)
 
+> TAKEN OVER BY THE MAIN SESSION (2026-09-28, the user: "the other cant do server of up next. you handle it all"). Skip this task.
+
 ```
 SETUP: git worktree add .claude/worktrees/f2b-server -b v2/f2b-server master
 OWN ONLY: server/next.py, server/api_shell.py, server/checks/f2.py.
