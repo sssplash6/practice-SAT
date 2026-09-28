@@ -2283,7 +2283,7 @@
         row('Question ID', hidden ? 'Shown after today’s challenge closes' : h('span', {}, h('span', { class: 'mono', text: idText }), ' ', idText ? copy(idText, 'Copied') : null)),
         row('Skill', [t ? t.name || t.short : qq.topic_name || qq.topic || '', qq.skill ? ` · ${qq.skill}` : ''].join('')),
         row('Question type', qq.name ? h('span', {}, h('b', { text: qq.name }), qq.about ? h('span', { class: 'meta', text: ` · ${qq.about}` }) : null) : null),
-        row('Difficulty', d.difficulty || (qq.difficulty ? `${qq.difficulty[0].toUpperCase() + qq.difficulty.slice(1)}${qq.level ? ` · level ${qq.level} of 7` : ''}` : null)),
+        row('Difficulty', d.difficulty || (qq.difficulty ? `${qq.difficulty[0].toUpperCase() + qq.difficulty.slice(1)}` : null)),
         row('Format', qq.type === 'spr' ? 'Grid-in (student-produced response)' : 'Multiple choice'),
         row('Why this one', !challenge ? it.why || qq.why : null),
         row('You and this type', d.you || null),
@@ -3327,15 +3327,12 @@
       if (it.saved) tag('Saved');
       tags.append(h('span', { class: 'rv-tag rv-hidechip', text: 'Answers hidden' }));
       head.append(tags);
-      // SR12: the level, your odds and how students do, working on day one
+      // SR12: how students do on this type; no level and no "your odds" on screen (the user: internal calibration)
       const od = it.odds, cr = it.crowd;
-      const oddsBits = [];
-      if (q.level || (cr && cr.level)) oddsBits.push(`L${q.level || cr.level}`);
-      if (od && od.you !== undefined && od.you !== null) oddsBits.push(`your odds ${od.at === 'now' ? 'now' : 'were'} ${Math.round(od.you * 100)}%`);
       let students = null;
       if (cr && cr.n >= 20 && cr.rate !== undefined && cr.rate !== null) students = `${Math.round(cr.rate * 100)}% of ${fmtN(cr.n)} students get this type right${cr.median_ms_right ? ` · they take ${msx(cr.median_ms_right)}` : ''}${it.ms ? ` · you ${msx(it.ms)}` : ''}`;
       else if (od && od.avg) students = `About ${Math.round(od.avg * 100)}% of students get this type right (estimated)${it.ms ? ` · you ${msx(it.ms)}` : ''}`;
-      if (oddsBits.length || students) head.append(h('p', { class: 'rv-odds' }, oddsBits.join(' · '), oddsBits.length && students ? ' · ' : '', students || ''));
+      if (students) head.append(h('p', { class: 'rv-odds', text: students }));
       // SR8: the cause of a miss, one tap to correct
       if (miss(it) && it.cause && it.cause.cause && !second) {
         const cb = h('button', { type: 'button', class: 'chip rv-cause rv-keyed', 'aria-haspopup': 'menu' },
@@ -3742,7 +3739,7 @@
         row('Question ID', h('span', {}, h('span', { class: 'mono', text: idText }), ' ', idText ? copy(idText, 'Copied') : null)),
         row('Domain', t ? t.domain : null),
         row('Skill', [t ? t.short : q.topic_name || q.topic || '', q.name || q.skill ? ` · ${q.name || q.skill}` : ''].join('')),
-        row('Difficulty', q.difficulty ? `${cap(q.difficulty)}${q.level ? ` · level ${q.level} of 7` : ''}` : null),
+        row('Difficulty', q.difficulty ? cap(q.difficulty) : null),
         row('Format', q.type === 'spr' ? 'Grid-in (student-produced response)' : 'Multiple choice'),
         row('Time on it', it.ms ? `${msx(it.ms)}${it.budget_ms ? ` · budget ${msx(it.budget_ms)}` : ''}` : null),
         row('Sitting', it.sitting ? (it.sitting.href ? h('a', { class: 'qlink', href: it.sitting.href, text: it.sitting.label }) : it.sitting.label) : o.title || null),

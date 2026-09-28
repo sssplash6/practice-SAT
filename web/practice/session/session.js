@@ -86,11 +86,9 @@
     const hist = d.type_history || [];
     const right = hist.filter(x => x.correct).length;
     const tier = TIER[q.difficulty] || cap(q.difficulty || '');
-    const lvl = q.level ? ` · level ${q.level} of 7` : '';
-    const odds = q.odds && Number.isFinite(q.odds.you) ? ` · your odds were ${pct(q.odds.you)}` : '';
     const crowd = fb && fb.crowd;
     return {
-      difficulty: tier ? `${tier}${lvl}${odds}` : null,
+      difficulty: tier || null,
       you: hist.length ? `${hist.length} answered · ${right} right · last ${day(hist[0].at)}` : 'First time',
       everyone: crowd && crowd.n >= 20 && Number.isFinite(crowd.rate) ? `${pct(crowd.rate)} right first try${crowd.top ? ` · most common mistake: ${crowd.top.label || crowd.top}` : ''}` : null,
       formula: fb && Array.isArray(fb.formula) ? fb.formula.map(f => f.text).filter(Boolean).join(' · ') || null : null,
