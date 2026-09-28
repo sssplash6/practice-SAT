@@ -459,7 +459,7 @@
         const d = UI.dbars ? UI.dbars(q.difficulty) : h('span', { text: cap1(q.difficulty) });
         hd.append(h('span', { class: 'ws-diff' }, d, q.level ? h('span', { class: 'ws-level', text: `L${q.level}` }) : null));
       }
-      if (!mc) hd.append(h('span', { class: 'ws-fmt', text: 'Grid-in' }));
+      if (!mc && o.fmt !== false) hd.append(h('span', { class: 'ws-fmt', text: 'Grid-in' }));   // fmt: false when the page labels the format
       if (q.repair || o.again) hd.append(h('span', { class: 'again', text: 'Again', title: q.repair_of ? `Same trap as question ${q.repair_of}, new numbers` : 'Same trap, new numbers' }));
       return hd;
     }
@@ -1177,7 +1177,8 @@
       v.append(vHead(fb, right, blank));
       if (fb.mastery && UI.masteryWord) v.append(masteryLine(fb.mastery));
       if (!mc) v.append(...gridLines(fb, right, blank));
-      else if (mode === 'review') v.append(answerBoxes(fb, key, g, blank));
+      // the options carry Your answer and Correct answer; the boxes only say what they can't: that nothing was picked
+      else if (mode === 'review' && blank) v.append(answerBoxes(fb, key, g, blank));
 
       // 2. a mistake that closed
       const closed = (fb.closed || []).map(c => (typeof c === 'string' ? { label: c } : c)).filter(c => c && c.label);
@@ -1190,7 +1191,9 @@
       // 3. the named mistake, confidence, traps on offer, causes, habit
       if (!right && !blank) {
         const reason = mc ? (fb.mistake || (fb.reasons && fb.reasons[g])) : null;
-        if (mc && reason) {
+        // the pick's own reason already sits under its option (optionLines): the line would say it twice
+        const onOption = mc && fb.reasons && fb.reasons[g] === reason && !fb.trap && !fb.trap_check && mode !== 'quiz' && !(prefs.option_reasons === false && live);
+        if (mc && reason && !onOption) {
           v.append(h('p', { class: 'mistake' },
             fb.trap ? h('span', { class: 'trap-chip', text: String(fb.trap).replace(/_/g, ' ').toUpperCase() }) : null,
             h('span', { text: cap1(reason) }),

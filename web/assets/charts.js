@@ -1774,7 +1774,7 @@
       const tipOf = s => s.tip || [s.label, isNum(+s.n) && s.n !== null && `${fnum(s.n)} ${opts.noun || 'misses'}`, fmt(s.value), total ? `${Math.round(s.value / total * 100)}%` : ''].filter(Boolean).join(' · ');
       let shade = 0;
       const bar = h('div', { class: 'sb-bar', role: 'img' }, on.map(s => {
-        const d = h('span', { class: 'sb-seg' + (s === top ? ' top' : '') + (s.hatch ? ' hatch' : ''), 'data-shade': s === top || s.hatch ? null : String(shade++ % 5), style: `flex-grow:${s.value}` },
+        const d = h('span', { class: 'sb-seg' + (s === top ? ' top' : '') + (s.hatch ? ' hatch' : ''), 'data-shade': s === top || s.hatch ? null : String(shade++ % 5), 'data-k': String(s.key), style: `flex-grow:${s.value}` },
           h('span', { class: 'sb-l', text: lab(s) }));
         return d;
       }));
@@ -1804,7 +1804,7 @@
       let sh = 0;
       const key = opts.legend === false ? null : h('ul', { class: 'legend chart-key sb-key', 'aria-label': 'Legend' }, segs.map(s => {
         const sw = h('i', { class: 'sb-sw' + (s === top ? ' top' : '') + (s.hatch ? ' hatch' : ''), 'data-shade': s === top || s.hatch || !s.value ? null : String(sh++ % 5), 'aria-hidden': 'true' });
-        return h('li', { class: s.value ? null : 'off' }, sw, h('span', { text: s.label }), h('b', { text: fmt(s.value) }),
+        return h('li', { class: s.value ? null : 'off', 'data-k': String(s.key) }, sw, h('span', { text: s.label }), h('b', { text: fmt(s.value) }),
           isNum(+s.n) && s.n !== null ? h('span', { class: 'sb-n', text: `(${fnum(s.n)})` }) : null);
       }));
       el.replaceChildren(wrap, on.length ? '' : emptyBlock(opts.empty, 'Nothing counted yet.'), segs.length ? key || '' : '', dataTable(summary, ['Part', opts.valueLabel || 'Value', opts.noun ? cap1(opts.noun) : 'Count', 'Share'],
@@ -1812,7 +1812,17 @@
       requestAnimationFrame(fit);
     }
     // a label that doesn't fit its segment is left to the legend, never clipped
-    function fit() { el.querySelectorAll('.sb-seg').forEach(s => { const l = s.firstChild; if (l) l.classList.toggle('hide', l.scrollWidth > s.clientWidth - 12); }); }
+    function fit() {
+      el.querySelectorAll('.sb-seg').forEach(s => { const l = s.firstChild; if (l) l.classList.toggle('hide', l.scrollWidth > s.clientWidth - 12); });
+      // legend: 'auto' keeps only the parts whose label doesn't show in the bar (a legend repeating the bar said each number twice)
+      if (opts.legend !== 'auto') return;
+      const key = el.querySelector('.sb-key');
+      if (!key) return;
+      const segs = [...el.querySelectorAll('.sb-seg:not(.empty)')];
+      const lis = [...key.children];
+      lis.forEach(li => { const sg = segs.find(x => x.dataset.k === li.dataset.k); const l = sg && sg.firstChild; li.hidden = !!(l && getComputedStyle(l).visibility !== 'hidden'); });
+      key.hidden = lis.every(li => li.hidden);
+    }
     if (window.ResizeObserver) new ResizeObserver(() => requestAnimationFrame(fit)).observe(el);
     draw(segments);
     return { el, set(list, o2) { if (o2) Object.assign(opts, o2); draw(list); } };
