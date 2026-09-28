@@ -495,6 +495,8 @@ growth and calibration fields (the pages found them null in every test: confirm 
 `proved {n, of, pts}`; the hand-in's gate data gives the positions answered right (the trainer's 22-cell strip);
 /api/papers/{n}/crowd returns the learner's sitting id and each slot's question id; a paper card's "You" is a midpoint score;
 the Custom test's "For me" difficulty in its request model.
+Also send each question's `topic` slug with the test payload (PUBLIC_FIELDS has only topic_name; the break screen maps names
+back to short names by guesswork).
 DONE: checks/s5.py passes and test_flow "all good". Tell the user "S5 server done".
 ```
 
