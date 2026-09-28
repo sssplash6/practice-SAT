@@ -20,7 +20,7 @@
   const pct = (a, b) => (b ? `${Math.round(a / b * 100)}%` : '—');
   const DOMAINS = ['Algebra', 'Advanced Math', 'Problem-Solving and Data Analysis', 'Geometry and Trigonometry'];
   const card = (title, meta, ...kids) => h('section', { class: 'card' }, h('div', { class: 'card-head' }, h('h2', { text: title }), meta ? h('span', { class: 'meta', text: meta }) : null), ...kids);
-  let sortBy = null, domBy = null;
+  let sortBy = null;
 
   function planProgress(host, ctx) {
     const d = ctx.d;
@@ -40,36 +40,52 @@
     // checkpoint (L14)
     const cp = (d.checkpoints || [])[0];
     if (cp) cards.push(checkpointCard(cp, ctx).el);
-    // since the start
+    // since the start: what the tiles above don't already say
+    const openLink = st.mistakes_open ? h('a', { href: '/review/', text: `open ${st.mistakes_open}` }) : null;
     const nums = [
-      st.days_planned ? ['Days done', `${st.days_done}/${st.days_planned}`, pct(st.days_done, st.days_planned)] : null,
       st.minutes_done ? ['Time', UI.dur(st.minutes_done), `of ${UI.dur(st.minutes_planned)}`] : null,
       st.questions ? ['Questions', UI.num(st.questions), `${pct(st.right, st.questions)} right`] : null,
-      st.mistakes_closed || st.mistakes_opened ? ['Mistakes fixed', UI.num(st.mistakes_closed), `opened ${st.mistakes_opened} · open ${st.mistakes_open}`] : null,
+      st.mistakes_closed || st.mistakes_opened ? ['Mistakes fixed', UI.num(st.mistakes_closed), [st.mistakes_opened ? `opened ${st.mistakes_opened}` : null, openLink]] : null,
       st.rechecks_passed ? ['Check-ins held', UI.num(st.rechecks_passed), st.rechecks_due ? `${st.rechecks_due} due` : ''] : null,
       st.tests ? ['Tests', UI.num(st.tests), ''] : null,
-      st.longest ? ['Streak', UI.num(st.streak), `longest ${st.longest}`] : null,
     ].filter(Boolean);
     const since = card(`Since ${D(a.start)}`, null, nums.length
-      ? h('dl', { class: 'pg-nums' }, nums.map(([k, v, s]) => h('div', {}, h('dt', { text: k }), h('dd', {}, v, s ? h('small', { text: ` ${s}` }) : null))))
+      ? h('dl', { class: 'pg-nums' }, nums.map(([k, v, s]) => {
+        const sub = (Array.isArray(s) ? s : [s]).filter(Boolean);
+        return h('div', {}, h('dt', { text: k }), h('dd', {}, v, sub.length ? h('small', {}, ' ', sub.flatMap((x, i) => (i ? [' · ', x] : [x]))) : null));
+      }))
       : h('p', { class: 'line-t', text: 'Day 1. Today’s tasks are on the Plan tab.' }));
-    if (st.mistakes_open) since.append(h('p', { class: 'help' }, h('a', { href: '/review/', text: `${pl(st.mistakes_open, 'open mistake')} in Review` })));
     cards.push(since);
-    // the score path (TrajectoryChart, L13)
-    const traj = card('Score path', d.pace && d.pace.math ? d.pace.math.status : null);
+    // the score path (TrajectoryChart, L13): the empty state and its action in the header
+    const sits = (d.sittings || []).map(s => ({ id: s.id || s.session, at: s.at, low: s.low, high: s.high, kind: s.kind, href: s.id ? `/results/report/?id=${encodeURIComponent(s.id)}` : null }));
+    const nt = nextTest(d);
+    const trajMeta = h('span', { class: 'meta pl-hmeta' }, sits.length ? (d.pace && d.pace.math ? d.pace.math.status : null) : 'No test yet',
+      !sits.length && nt ? h('button', { type: 'button', class: 'quiet', text: nt.date === t ? 'Take today’s test ›' : 'Take this week’s test ›', onclick: e => { e.currentTarget.setAttribute('aria-busy', 'true'); UI.planPage && UI.planPage.startTask(nt.t, nt.date).catch(() => UI.toast('Couldn’t start. Try again.')); } }) : null);
+    const traj = h('section', { class: 'card pg-traj' }, h('div', { class: 'card-head' }, h('h2', { text: 'Score path' }), trajMeta));
     const host2 = h('div');
     traj.append(host2);
-    const sits = (d.sittings || []).map(s => ({ id: s.id || s.session, at: s.at, low: s.low, high: s.high, kind: s.kind, href: s.id ? `/results/report/?id=${encodeURIComponent(s.id)}` : null }));
     const aims = d.days.filter(x => x.kind === 'test').map(x => { const tk = x.tasks.find(k => k.kind === 'test'); return tk && tk.aim ? { day: x.date, value: Math.round(tk.aim / 10) * 10, beaten: tk.result && tk.result.verdict === 'beat' } : null; }).filter(Boolean);
     const proj = d.projection && d.projection.math;
+    const tgt = Math.min(c.target, 780);
+    // the y-axis spans the plan's own range, not 200-800
+    const low = Math.min(tgt, ...(c.current !== null && c.current !== undefined ? [c.current] : []), ...sits.map(s => s.low).filter(v => v > 0), ...aims.map(x => x.value));
+    const high = Math.max(tgt, ...sits.map(s => s.high).filter(v => v > 0));
     UI.bandChart(host2, sits, {
-      height: 220, fit: true, x: 'time', from: a.start, to: c.exam_date, target: Math.min(c.target, 780), exam: c.exam_date,
-      pace: c.current !== null && c.current !== undefined ? { from: { day: a.start, value: c.current }, to: { day: c.exam_date, value: Math.min(c.target, 780) }, aims } : null,
+      height: 220, fit: true, x: 'time', from: a.start, to: c.exam_date, target: tgt, exam: c.exam_date,
+      min: Math.max(200, Math.floor((low - 60) / 50) * 50), max: Math.min(800, Math.ceil((high + 60) / 50) * 50), grid: 50,
+      pace: c.current !== null && c.current !== undefined ? { from: { day: a.start, value: c.current }, to: { day: c.exam_date, value: tgt }, aims } : null,
       projection: proj && proj.low ? { low: proj.low, high: proj.high, mid: proj.mid, to: c.exam_date, label: 'At this pace' } : undefined,
-      empty: { text: 'No test yet', action: nextTest(d) ? { label: 'Start this week’s test', onClick: () => UI.planPage && UI.planPage.startTask(nextTest(d).t, nextTest(d).date) } : null },
       label: 'Math score path',
     });
-    if (sits.length) traj.append(h('p', { class: 'help', text: 'A test reads as a band: ±70 for a module or section, ±100 for the diagnostic. The status uses your last 3 tests.' }));
+    // "Target 680" reads from the left end of its line, clear of the exam day's line
+    const tidy = () => {
+      const svg = host2.querySelector('svg'), ln = svg && svg.querySelector('.ch-target');
+      const lab = svg && [...svg.querySelectorAll('text')].find(x => /^Target /.test(x.textContent));
+      if (ln && lab && lab.getAttribute('text-anchor') !== 'start') { lab.setAttribute('x', String(+ln.getAttribute('x1') + 6)); lab.setAttribute('text-anchor', 'start'); }
+    };
+    tidy();
+    new MutationObserver(tidy).observe(host2, { childList: true, subtree: true });
+    if (sits.length) traj.querySelector('h2').append(' ', UI.infoTip('A test reads as a band: ±70 for a module or section, ±100 for the diagnostic. The status uses your last 3 tests.', 'How the score path reads'));
     cards.push(traj);
     // what your time bought (L18)
     if ((d.bought || []).length) {
@@ -86,6 +102,9 @@
       }
       cards.push(Object.assign(card('What your time bought', null, rows), { className: 'card wide' }));
     }
+    // ready on every skill? (L2), full width; the two short cards share the row under it
+    const cov = d.coverage && d.coverage.math;
+    if (cov && (cov.cells || []).length) cards.push(coverageCard(cov));
     // why you lose points (T7)
     const cz = d.causes;
     if (cz && cz.total) {
@@ -93,25 +112,27 @@
       const segs = Object.entries(cz.by || {}).filter(([, n]) => n).map(([k, n]) => ({ key: k, label: NAME[k] || k, value: n }));
       const box = h('div');
       UI.stackBar(box, segs, { noun: 'misses', label: 'Why you lose points' });
+      legendIfNeeded(box);
       cards.push(card('Why you lose points', `${pl(cz.total, 'miss', 'misses')} since ${D(a.start)}`, box));
     }
-    // ready on every skill? (L2)
-    const cov = d.coverage && d.coverage.math;
-    if (cov && (cov.cells || []).length) cards.push(coverageCard(cov, d));
-    // domains: by points or by accuracy (L18, L21)
-    cards.push(domainCard(d, () => draw(host, ctx)));
-    // the split: time against points (T17)
-    if ((d.split_domain || []).some(x => x.minutes_planned)) {
-      const rows = h('div', { class: 'pg-rows' });
-      for (const x of d.split_domain) rows.append(h('div', { class: 'pg-row' }, h('span', { text: x.domain }),
-        h('span', { class: 'meta', text: `${Math.round(x.time_share * 100)}% of your time${x.points_share ? ` · ${Math.round(x.points_share * 100)}% of your points` : ''}` })));
-      const kinds = Object.entries(st.split_planned || {}).filter(([, m]) => m > 0);
-      const box = h('div', { style: 'margin-top: 12px' });
-      const LBL = { focus: 'Focus', fix: 'Mistakes', recheck: 'Warm-up', test: 'Tests', learn: 'Learn it', check: 'Checks', map: 'Map', words: 'Words', custom: 'Your own', pace: 'Pace', habit: 'Habit', sweep: 'Sweep' };
-      if (kinds.length) UI.stackBar(box, kinds.map(([k, m]) => ({ key: k, label: LBL[k] || k, value: Math.round(m) })), { unit: 'min', label: 'Planned minutes by task' });
-      cards.push(card('How the plan splits your time', null, rows, box));
+    // pace and calibration (U7, P7): how sure you were, as three bars
+    const cal = d.calibration, sp = d.skill_pace;
+    const paceKids = [];
+    if (sp && sp.forecast && sp.forecast.seconds && sp.skills && Object.keys(sp.skills).length) paceKids.push(h('p', { class: 'line-t', text: `A module at your pace takes ${UI.mmss(sp.forecast.seconds)} of ${UI.mmss(sp.forecast.limit)}` }));
+    const slow = sp && sp.quadrants ? (sp.quadrants.slow_right || []).slice(0, 3) : [];
+    slow.forEach(x => paceKids.push(h('div', { class: 'row' }, h('span', { class: 'line-t', text: tn(x.topic || x) }),
+      h('button', { type: 'button', class: 'btn sm', text: 'Speed drill · 8', onclick: e => start(e.currentTarget, { topics: [x.topic || x], count: 8, timing: 'pace', source: 'pace' }) }))));
+    const tagged = cal ? ['sure', 'unsure', 'guess'].reduce((s, k) => s + ((cal[k] || {}).of || 0), 0) : 0;
+    if (tagged >= 20) {
+      const bars = h('div', { class: 'pg-conf', role: 'group', 'aria-label': 'How sure you were, and how often right' });
+      ['sure', 'unsure', 'guess'].filter(k => cal[k] && cal[k].of).forEach(k => UI.meter(bars, { label: { sure: 'Sure', unsure: 'Unsure', guess: 'Guess' }[k],
+        value: Math.round(cal[k].accuracy * 100), max: 100, text: `${Math.round(cal[k].accuracy * 100)}% right · ${cal[k].of}`, ink: true }));
+      paceKids.push(bars);
     }
-    // all 19 skills, open (L18: 19 rows on load)
+    if (paceKids.length) cards.push(card('Pace and how sure you were', null, ...paceKids, h('p', { class: 'help' }, h('a', { class: 'quiet', href: '/me/#pace', text: 'Every skill ›' }))));
+    // domains: accuracy, time and points in one table (L18, L21, T17)
+    cards.push(domainCard(d));
+    // all 19 skills (L18)
     cards.push(skillsCard(d));
     // study time per day (StudyTimeChart)
     const past = d.days.filter(x => x.date <= t && (x.minutes || x.minutes_done));
@@ -133,58 +154,33 @@
         h('span', { class: 'meta', text: `before ${x.before.right}/${x.before.of}${x.after ? ` → after ${x.after.right}/${x.after.of} on the same question types` : ''}${x.recent && x.recent.of ? ` · ${x.recent.right} of your last ${x.recent.of}` : ''}` })));
       cards.push(card('Checks', null, rows));
     }
-    // weeks (L16)
-    const weeks = (d.weeks || []).filter(w => w.to < t && w.tasks_planned);
+    // weeks (L16): days studied and time; tasks once there are some
+    const weeks = (d.weeks || []).filter(w => w.to < t);
     if (weeks.length) {
       const rows = h('div', { class: 'pg-rows' });
       for (const w of weeks.slice().reverse()) {
         const days = d.days.filter(x => x.date >= w.from && x.date <= w.to);
         const study = days.filter(x => ['practice', 'test'].includes(x.kind));
         const done = study.filter(x => ['done', 'partial', 'made_up'].includes(x.status)).length;
-        rows.append(h('div', { class: 'pg-row' }, h('span', { text: `Week ${w.n} · ${D(w.from)}–${D(w.to)}` }), h('span', { class: 'meta', text: `${w.tasks_done}/${w.tasks_planned} tasks` }),
-          h('span', { class: 'meta', text: `days ${done} of ${study.length} · ${UI.dur(days.reduce((s, x) => s + (x.minutes_done || 0), 0))} · ${pl(days.reduce((s, x) => s + (x.questions || 0), 0), 'question')}` })));
+        const q = days.reduce((s, x) => s + (x.questions || 0), 0);
+        rows.append(h('div', { class: 'pg-row' }, h('span', { text: `Week ${w.n} · ${D(w.from)}–${D(w.to)}` }),
+          h('span', { class: 'meta', text: `${done} of ${pl(study.length, 'day')} studied` }),
+          h('span', { class: 'meta', text: [UI.dur(days.reduce((s, x) => s + (x.minutes_done || 0), 0)), q ? pl(q, 'question') : null, w.tasks_done ? `${w.tasks_done} of ${pl(w.tasks_planned, 'task')}` : null].filter(Boolean).join(' · ') })));
       }
       cards.push(card('Weeks', null, rows));
     }
-    // pace and calibration (U7, P7)
-    const cal = d.calibration, sp = d.skill_pace;
-    const paceKids = [];
-    if (sp && sp.forecast && sp.forecast.seconds && sp.skills && Object.keys(sp.skills).length) paceKids.push(h('p', { class: 'line-t', text: `A module at your pace takes ${UI.mmss(sp.forecast.seconds)} of ${UI.mmss(sp.forecast.limit)}` }));
-    const slow = sp && sp.quadrants ? (sp.quadrants.slow_right || []).slice(0, 3) : [];
-    slow.forEach(x => paceKids.push(h('div', { class: 'row' }, h('span', { class: 'line-t', text: tn(x.topic || x) }),
-      h('button', { type: 'button', class: 'btn sm', text: 'Speed drill · 8', onclick: e => start(e.currentTarget, { topics: [x.topic || x], count: 8, timing: 'pace', source: 'pace' }) }))));
-    const tagged = cal ? ['sure', 'unsure', 'guess'].reduce((s, k) => s + ((cal[k] || {}).of || 0), 0) : 0;
-    if (tagged >= 20) paceKids.push(h('p', { class: 'line-t', text: ['sure', 'unsure', 'guess'].filter(k => cal[k] && cal[k].of).map(k => `${{ sure: 'Sure', unsure: 'Unsure', guess: 'Guess' }[k]} ${Math.round(cal[k].accuracy * 100)}% right (${cal[k].of})`).join(' · ') }));
-    if (paceKids.length) cards.push(card('Pace and how sure you were', null, ...paceKids, h('a', { class: 'quiet', href: '/me/#pace', text: 'Every skill ›' })));
-    // changes (L15)
-    const counts = d.changes_counts || (d.changes && d.changes.counts) || {};
-    const total = Object.values(counts).reduce((s, n) => s + n, 0);
-    if (total) {
-      const ch = card('Changes', null, h('p', { class: 'line-t', text: `Your plan changed ${pl(total, 'time')}${[['auto', 'from your answers'], ['mistake', 'from new mistakes'], ['edit', 'from your edits'], ['sitting', 'from tests']].filter(([k]) => counts[k]).map(([k, w]) => ` · ${counts[k]} ${w}`).join('')}` }));
-      ch.id = 'changes';
-      const list = h('div', { class: 'pg-rows' });
-      ch.append(list);
-      const more = h('button', { type: 'button', class: 'btn sm', text: 'Show the list' });
-      let before = null;
-      more.addEventListener('click', async () => {
-        more.setAttribute('aria-busy', 'true');
-        try {
-          const r = await ctx.api(`/plan/${encodeURIComponent(a.id)}/changes${before ? `?before=${before}` : ''}`);
-          const items = r.events || r.items || r.changes || [];
-          items.forEach(e => list.append(h('div', { class: 'pg-row' }, h('span', { text: UI.planPage ? UI.planPage.pretty(e.text) : e.text }), h('span', { class: 'meta', text: D(String(e.at || e.day).slice(0, 10)) }))));
-          before = items.length ? items[items.length - 1].id : null;
-          more.textContent = 'Show 20 more';
-          if (!before || items.length < 20) more.remove();
-        } catch (_) { more.textContent = 'Couldn’t load. Try again'; }
-        finally { more.removeAttribute('aria-busy'); }
-      });
-      ch.append(more);
-      ch.className = 'card wide';
-      cards.push(ch);
-    }
     host.replaceChildren(h('div', { class: 'pg' }, cards));
-    if (location.hash === '#changes') { const el = host.querySelector('#changes'); if (el) el.scrollIntoView(); }
   }
+  // a stack bar's legend only while a segment is too narrow to carry its own label
+  function legendIfNeeded(box) {
+    const sync = () => requestAnimationFrame(() => requestAnimationFrame(() => {
+      const key = box.querySelector('.sb-key');
+      if (key) key.style.display = box.querySelector('.sb-l.hide') ? '' : 'none';
+    }));
+    sync();
+    if (window.ResizeObserver) new ResizeObserver(sync).observe(box);
+  }
+
   // a check's before and after on the same question types (L3)
   function checkText(x) {
     if (!x) return null;
@@ -216,24 +212,27 @@
     c.className = 'card wide';
     return { el: c, ctx };
   }
-  function coverageCard(cov, d) {
+  function coverageCard(cov) {
     const cells = cov.cells;
     const cnt = cov.counts || {};
     const needed = cells.filter(x => x.needed);
     const proven = needed.filter(x => x.state === 'proven').length;
-    const head = [`Proven ${proven} of ${needed.length}`, cnt.shaky ? `shaky ${cnt.shaky}` : null, cnt.untested ? `untested ${cnt.untested}` : null, cnt.unplanned ? `${cnt.unplanned} not planned before Final` : null].filter(Boolean).join(' · ');
+    const WORD = { proven: 'proven', shaky: 'shaky', untested: 'not tried' };
+    const head = [proven ? `${proven} proven` : null, cnt.shaky ? `${cnt.shaky} shaky` : null, cnt.untested ? `${cnt.untested} not tried` : null].filter(Boolean).join(' · ');
     const grid = h('div', { class: 'pg-grid', role: 'grid', 'aria-label': 'Every skill by tier' });
     grid.append(h('span', { role: 'columnheader', class: 'hd', style: 'text-align: left', text: 'Skill' }), ...['Easy', 'Medium', 'Hard'].map(x => h('span', { role: 'columnheader', class: 'hd', text: x })));
-    const GLY = { proven: '✓', shaky: '~', untested: '·', na: '' };
     for (const dn of DOMAINS) {
       grid.append(h('span', { class: 'dm', text: dn }));
       for (const tp of UI.TOPICS.filter(x => x.domain === dn)) {
         grid.append(h('span', { role: 'rowheader', text: tp.short }));
         for (const tier of ['easy', 'medium', 'hard']) {
           const x = cells.find(y => y.topic === tp.slug && y.tier === tier) || { state: 'na' };
-          const label = `${tp.short}, ${tier}: ${x.state}${x.n ? `, ${x.right} of ${x.n}` : ''}${x.needed ? '' : ', not needed'}${x.next ? `, next ${D(x.next)}` : x.needed && x.state !== 'proven' && !x.planned ? ', not planned before Final' : ''}`;
-          const b = h('button', { type: 'button', role: 'gridcell', class: 'pg-cell', 'data-s': x.state, 'data-need': x.needed ? '1' : '0', 'aria-label': label, title: label, text: GLY[x.state] || '', disabled: x.state === 'na' || null });
-          if (x.state !== 'na') b.addEventListener('click', e => start(e.currentTarget, { topics: [tp.slug], tiers: [tier], count: 5, source: 'plan' }));
+          const label = `${tp.short}, ${tier}: ${WORD[x.state] || x.state}${x.n ? `, ${x.right} of ${x.n}` : ''}${x.needed ? '' : ', not needed'}${x.next ? `, next ${D(x.next)}` : x.needed && x.state !== 'proven' && !x.planned ? ', not planned before Final' : ''}`;
+          const b = h('button', { type: 'button', role: 'gridcell', class: 'pg-cell', 'data-s': x.state, 'data-need': x.needed ? '1' : '0', 'aria-label': label, disabled: x.state === 'na' || null });
+          if (x.state !== 'na') {
+            if (UI.tooltip) UI.tooltip(b, `${label}. Starts 5 questions.`);
+            b.addEventListener('click', e => start(e.currentTarget, { topics: [tp.slug], tiers: [tier], count: 5, source: 'plan' }));
+          }
           grid.append(b);
         }
       }
@@ -247,55 +246,77 @@
       const j = Math.max(0, Math.min(all.length - 1, i + k));
       all[j].focus();
     });
-    const c = card('Ready on every skill?', head, grid);
-    if (cov.window_days) c.append(h('p', { class: 'help', text: `Every skill at least once in ${cov.window_days} days at this time. A cell starts 5 questions on that skill and tier.` }));
+    const key = h('div', { class: 'pg-key', 'aria-hidden': 'true' }, [['proven', 'Proven'], ['shaky', 'Shaky'], ['untested', 'Not tried']].map(([s, t]) => h('span', {}, h('i', { class: 'pg-cell', 'data-s': s }), t)));
+    const c = card('Ready on every skill?', head, key, grid);
+    const why = [cov.window_days ? `Every skill at least once in ${cov.window_days} days at this time.` : null, 'A cell starts 5 questions on that skill and tier.',
+      cnt.unplanned ? `${cnt.unplanned} of them aren’t planned before Final.` : null].filter(Boolean).join(' ');
+    c.querySelector('h2').append(' ', UI.infoTip(why, 'About this grid'));
+    c.className = 'card wide';
     return c;
   }
-  function domainCard(d, redraw) {
+  // one table: how you do, where the time goes, where the points are (decision 7: said once)
+  function domainCard(d) {
     const gains = d.points && d.points.math && d.points.math.skills;
-    const by = domBy || (gains ? 'points' : 'accuracy');
-    const seg = h('div');
-    UI.seg(seg, [{ value: 'points', label: 'By points', disabled: !gains, why: 'after 30 answers' }, { value: 'accuracy', label: 'By accuracy' }], { value: by, label: 'Order', onChange: v => { domBy = v; redraw(); } });
     const gainOf = dn => (gains || []).filter(x => (UI.TOPIC[x.topic] || {}).domain === dn).reduce((s, x) => s + Math.max(0, x.gain || 0), 0);
-    const rows = (d.domains || []).slice().sort((x, y) => by === 'points' ? gainOf(y.domain) - gainOf(x.domain) : (x.answered ? x.right / x.answered : 2) - (y.answered ? y.right / y.answered : 2));
-    const list = h('div', { class: 'pg-rows' });
-    for (const x of rows) {
-      const r = h('a', { class: 'pg-row', href: `/practice/?topics=${UI.TOPICS.filter(t => t.domain === x.domain).map(t => t.slug).join(',')}`, style: 'color: inherit; text-decoration: none' },
-        h('span', { class: 'h3' }, x.domain, x.state !== 'normal' ? h('span', { class: x.state === 'focus' ? 'tag or' : 'tag line', style: 'margin-left: 8px', text: x.state === 'focus' ? 'Focus' : 'Strong' }) : null),
-        h('span', { class: 'meta', text: x.answered ? `${Math.round(x.right / x.answered * 100)}% right · ${UI.num(x.answered)} answered` : 'Not started' }));
-      const m = h('div', { style: 'grid-column: 1 / -1' });
-      UI.meter(m, { label: '', value: Math.round((x.mastery || 0) * 100), max: 100, text: [`planned ${Math.round((x.share_planned || 0) * 100)}%`, x.share_done ? `done ${Math.round(x.share_done * 100)}%` : null, gainOf(x.domain) >= 5 ? `≈ +${Math.round(gainOf(x.domain))} on the table` : null].filter(Boolean).join(' · '), ink: true, tick: Math.round((x.start_mastery || 0) * 100) });
-      r.append(m);
-      list.append(r);
+    const split = Object.fromEntries((d.split_domain || []).map(x => [x.domain, x]));
+    const rows = (d.domains || []).map(x => ({ ...x, acc: x.answered ? x.right / x.answered : null, time: split[x.domain] ? split[x.domain].time_share : x.share_planned || 0,
+      pts: split[x.domain] ? split[x.domain].points_share || null : null, gain: gainOf(x.domain) }));
+    const box = h('div');
+    const cols = [
+      { key: 'domain', label: 'Domain', render: r => h('span', { class: 'pg-dn' }, h('a', { href: `/practice/?topics=${UI.TOPICS.filter(t => t.domain === r.domain).map(t => t.slug).join(',')}`, text: r.domain }),
+        r.state && r.state !== 'normal' ? h('span', { class: r.state === 'focus' ? 'tag or' : 'tag line', text: r.state === 'focus' ? 'Focus' : 'Strong' }) : null) },
+      { key: 'acc', label: '% right', num: true, render: r => (r.acc === null ? '' : `${Math.round(r.acc * 100)}% (${UI.num(r.answered)})`) },
+      { key: 'time', label: 'Time share', num: true, render: r => `${Math.round(r.time * 100)}%${r.share_done ? ` · ${Math.round(r.share_done * 100)}% done` : ''}` },
+      { key: 'pts', label: 'Points share', num: true, render: r => (r.pts ? `${Math.round(r.pts * 100)}%` : '') },
+      { key: 'gain', label: 'Points to gain', num: true, render: r => (r.gain >= 5 ? `+${Math.round(r.gain)}` : '') },
+    ];
+    UI.table(box, cols, rows, { sort: gains ? { key: 'gain', dir: 'desc' } : { key: 'acc', dir: 'asc' }, sortable: true, label: 'Domains', compact: true });
+    const c = card('Domains', null, box);
+    // the plan's minutes by task: focus in orange, the rest in three greys, named in the key
+    const kinds = Object.entries(d.stats.split_planned || {}).filter(([, m]) => m > 0);
+    if (kinds.length) {
+      const GROUP = { focus: 'Focus', test: 'Tests', fix: 'Mistakes and warm-up', recheck: 'Mistakes and warm-up', sweep: 'Mistakes and warm-up' };
+      const sum = {};
+      for (const [k, m] of kinds) { const g = GROUP[k] || 'Everything else'; sum[g] = (sum[g] || 0) + m; }
+      const order = ['Focus', 'Mistakes and warm-up', 'Tests', 'Everything else'].filter(g => sum[g]);
+      const total = order.reduce((s, g) => s + sum[g], 0);
+      const say = g => `${g} ${Math.round(sum[g] / total * 100)}%`;
+      c.append(h('p', { class: 'label', style: 'margin: 16px 0 8px', text: 'Planned time by task' }),
+        h('div', { class: 'pg-split', role: 'img', 'aria-label': `Planned time by task: ${order.map(say).join(', ')}` }, order.map((g, i) => h('span', { style: `flex-grow: ${sum[g]}`, 'data-g': g === 'Focus' ? 'focus' : String(i) }))),
+        h('div', { class: 'pg-key' }, order.map((g, i) => h('span', {}, h('i', { class: 'pg-sw', 'data-g': g === 'Focus' ? 'focus' : String(i) }), `${say(g)} · ${UI.dur(Math.round(sum[g]))}`))));
     }
-    const c = card('Accuracy by domain', null, seg, list);
     // the R&W section (L21)
     const rw = (d.rw_domains || []);
     const cfg = d.active.cfg;
     if (rw.some(x => x.of || x.minutes_planned) || (cfg.rw_current !== null && cfg.rw_current !== undefined)) {
-      const box = h('div', { class: 'pg-rows' });
-      for (const x of rw) box.append(h('div', { class: 'pg-row' }, h('span', {}, x.domain, x.state !== 'normal' ? h('span', { class: 'tag', style: 'margin-left: 8px', text: x.state === 'focus' ? 'Focus' : 'Strong' }) : null),
-        h('span', { class: 'meta', text: x.of ? `missed ${x.missed} of ${x.of} · ${Math.round(x.missed / x.of * 100)}%` : 'no results yet' }),
+      const list = h('div', { class: 'pg-rows' });
+      for (const x of rw) list.append(h('div', { class: 'pg-row' }, h('span', {}, x.domain, x.state !== 'normal' ? h('span', { class: 'tag', style: 'margin-left: 8px', text: x.state === 'focus' ? 'Focus' : 'Strong' }) : null),
+        h('span', { class: 'meta', text: x.of ? `missed ${x.missed} of ${x.of} · ${Math.round(x.missed / x.of * 100)}%` : '' }),
         x.minutes_planned ? h('span', { class: 'meta', text: `${Math.round(x.minutes_done)} of ${Math.round(x.minutes_planned)} min` }) : null));
-      c.append(h('p', { class: 'label', style: 'margin: 14px 0 0', text: 'Reading & Writing' }), box);
+      c.append(h('p', { class: 'label', style: 'margin: 16px 0 0', text: 'Reading & Writing' }), rw.some(x => x.of) ? null : h('p', { class: 'help', text: 'No R&W results yet. Log them after a Bluebook test.' }), list);
     }
+    c.className = 'card wide';
     return c;
   }
   function skillsCard(d) {
     const gains = Object.fromEntries(((d.points && d.points.math && d.points.math.skills) || []).map(x => [x.topic, x.gain]));
-    const rows = (d.skills || []).map(s => ({ ...s, name: tn(s.topic), acc: s.answered ? s.right / s.answered : null, gain: gains[s.topic] ?? null }));
+    const all = (d.skills || []).map(s => ({ ...s, name: tn(s.topic), acc: s.answered ? s.right / s.answered : null, gain: gains[s.topic] ?? null }));
+    const rows = all.filter(s => s.answered), untried = all.filter(s => !s.answered);
     const box = h('div');
     const cols = [
       { key: 'name', label: 'Skill', render: r => h('a', { href: `/practice/?topics=${r.topic}`, text: r.name }) },
       { key: 'answered', label: 'Answered', num: true },
-      { key: 'acc', label: '% right', num: true, render: r => (r.acc === null ? '—' : `${Math.round(r.acc * 100)}%`) },
+      { key: 'acc', label: '% right', num: true, render: r => `${Math.round(r.acc * 100)}%` },
       { key: 'traps', label: 'Open', num: true, render: r => (r.traps ? String(r.traps) : '') },
-      { key: 'gain', label: '≈ +', num: true, render: r => (r.gain >= 5 ? `+${Math.round(r.gain)}` : '') },
+      { key: 'gain', label: 'Points to gain', num: true, render: r => (r.gain >= 5 ? `+${Math.round(r.gain)}` : '') },
       { key: 'last', label: 'Last worked', render: r => (r.last ? D(String(r.last).slice(0, 10)) : '') },
     ];
     const def = Object.keys(gains).length ? 'gain' : 'acc';
-    UI.table(box, cols, rows, { sort: sortBy || { key: def, dir: def === 'gain' ? 'desc' : 'asc' }, onSort: s => { sortBy = s; }, sortable: true, label: 'All 19 skills', compact: true });
-    const c = card('All 19 skills', null, box, h('p', { class: 'help' }, h('a', { href: '/results/', text: 'Every result ›' })));
+    if (rows.length) UI.table(box, cols, rows, { sort: sortBy || { key: def, dir: def === 'gain' ? 'desc' : 'asc' }, onSort: s => { sortBy = s; }, sortable: true, label: 'Skills you’ve worked', compact: true });
+    const c = card(`All ${all.length || 19} skills`, null, box);
+    if (untried.length) c.append(h('details', { class: 'pg-untried' }, h('summary', { text: `Not tried yet (${untried.length})` }),
+      h('div', { class: 'pg-utl' }, untried.sort((a, b) => (b.gain || 0) - (a.gain || 0)).map(s => h('a', { href: `/practice/?topics=${s.topic}` }, s.name, s.gain >= 5 ? h('span', { class: 'meta', text: ` +${Math.round(s.gain)}` }) : null)))));
+    c.append(h('p', { class: 'help' }, h('a', { class: 'quiet', href: '/results/', text: 'Every result ›' })));
     c.className = 'card wide';
     return c;
   }

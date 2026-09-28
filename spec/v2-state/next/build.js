@@ -356,6 +356,13 @@ Check, with evidence you ran yourself:
 3. A SAMPLE of 15 requirements from the spec sections above and the upgrades assigned to ${t.id} (pick across the whole list and
    say which), built as written.
 4. Nothing outside the owned files changed (git diff --stat master...HEAD), and nothing contradicts spec/v2-decisions.md.
+5. VISUAL HYGIENE, measured in a headless browser at 1440, 1280, 900 and 390, light and dark, new and seeded learner (the user found
+   all of these by eye on Today and every earlier check missed them): controls in one row share one height and one vertical centre, and
+   their labels match; separate choices are visibly separate; no two equal-weight buttons doing different things side by side; hover and
+   focus boxes never overlap other elements; numbers, not sentences, for counts (0, not "Start a streak"), icons centred with their
+   text; no primary button repeating the header's facts; no zeros or defaults on screen; icons instead of repeated "Why" lines; long
+   cards collapsed by default; no card repeating another card; no empty area over 120px beside or inside a card; detail boxes sit with
+   what they describe; headers are one quiet line; help paragraphs become one link or tooltip. Each violation is a blocker.
 Mark each defect severity "blocker" (a failing check, broken or unsafe behaviour, data loss, a security hole, a contradiction of
 the decisions, or something another task needs now) or "followup" (anything else). pass = no blockers.`,
   { label: `verify ${t.id} r${round}`, phase: 'Verify', schema: VERDICT, isolation: 'worktree' })
@@ -363,10 +370,47 @@ the decisions, or something another task needs now) or "followup" (anything else
 const fix = (t, defects, round) => agent(`${CONTEXT(t)}
 A verifier found defects in ${t.title}. ${typeof defects === 'string' ? `Read them from ${defects}.` : `DEFECTS: ${JSON.stringify(defects)}`}
 An earlier fixer may have been cut off part way: check the branch first and do not redo what is fixed. Fix every blocker, and
-every followup that is small, in the files you own (list any that need another owner). Fix only the listed defects: do
+every followup that is small, in the files you own (list any that need another owner). For design improvements from the hygiene
+reviewer, make them with care and taste: they are part of the job, not extras. Otherwise fix only the listed items: do
 not widen the scope, and if a fix creates new work (content to add, a pattern elsewhere), list it in your return instead of doing it. Then run the task's check file and
 test_flow; both must pass. Commit as you go, and return what you changed and which defects are left.`,
   { label: `fix ${t.id} r${round}`, phase: 'Fix', isolation: 'worktree' })
+
+// One hygiene agent per page (the user, 2026-09-28: "your call, dont fuck up tho"): visual + calm, measured, and it LOOKS at every
+// screenshot card by card. Its high/medium findings join the verifier's blockers in the one fix.
+const HYG = { type: 'object', properties: {
+  findings: { type: 'array', items: { type: 'object', properties: {
+    severity: { type: 'string', enum: ['high', 'medium', 'low'] }, where: { type: 'string' }, what: { type: 'string' }, fix: { type: 'string' } },
+    required: ['severity', 'where', 'what', 'fix'] } },
+}, required: ['findings'] }
+const hygiene = t => agent(`${CONTEXT(t)}
+You are the HYGIENE REVIEWER for ${t.title}: read-only, do not edit or commit. Run git switch --detach v2/${t.id.toLowerCase()}, start your
+server on port ${t.port + 40} with its own SATF_DB, and make a new learner and a seeded one (answers over several days, some wrong, a plan
+and an exam date) through the site's API. For every page of the section at 1440, 1280, 900 and 390, light and dark:
+1. MEASURE (getBoundingClientRect): controls in one row share one height and vertical centre, labels beside them match; hover and focus
+   every interactive element and check its painted box never overlaps another element; empty areas over 120px beside or inside cards;
+   awkward wraps and clipping.
+2. LOOK at each screenshot, card by card, as a demanding designer and as a first-time student: clutter, misalignment, anything not
+   eye-pleasing, anything a student would not understand at a glance.
+3. Decision 7: zeros and defaults on screen, facts said twice, explanatory sentences that should be tooltips, equal-weight buttons doing
+   different things, long cards that should start collapsed, headers that are more than one quiet line.
+THE BAR, not a checklist: on Today the user found, by eye and after every check had passed, misaligned control rows, two choices
+crammed in one row, hover highlights overlapping text, a sentence where a number belongs, icons off-centre, an oversized button repeating
+the header, zeros, a "Why" line under every row, a card repeating another, big empty areas, a detail box floating away from what it
+describes, a cluttered header and help paragraphs. Those show the level of care expected; they are examples, not the limit. Be a
+creative, demanding product designer and go beyond them:
+- Hierarchy and the five-second test: what does a student see first, second, third? Is the one thing they should do today the most
+  obvious thing on the screen? Does the page read top to bottom in the order a student thinks?
+- Grouping and rhythm: related things together, unrelated things apart; one spacing scale; cards that feel like one family.
+- Progressive disclosure: what can start collapsed, move into a sheet, or appear only when it matters?
+- Microcopy: shorter, plainer, friendlier words; labels that say what happens when tapped; no jargon a student would not use.
+- States with character: empty states that invite the first step, loading that matches the final shape, errors that say what to do.
+- Consistency across the site: the same thing looks and behaves the same on every page (compare with Practice, already approved).
+- Comfort: contrast, reading width, touch reach on a phone, motion that is subtle, dark mode that is calm.
+- Delight within calm: small touches that make it feel premium and cared for, never noise.
+Propose improvements, not only defects: for each, say what to change and why it is better for a student. No feature may be removed.
+Return every finding with severity, where (page, card, selector, width, theme), what, and the exact change.`,
+  { label: `hygiene ${t.id}`, phase: 'Verify', schema: HYG, isolation: 'worktree' })
 
 async function run(a) {
   const t = { ...TASKS[a.id], id: a.id }
@@ -379,12 +423,27 @@ async function run(a) {
   // small or data-only tasks (inline: true) skip the check agent: the main session checks them inline (the user, 2026-09-24)
   if (t.inline) { out.result = 'built; inline check by the main session, then merge'; return out }
   if (a.from === 'fix') { out.fixes = [await fix(t, a.issues, round)]; out.result = 'fixed; ready to merge (leftovers in the fix report)'; return out }
+  if (a.from === 'hygiene') {
+    const hy = await hygiene(t)
+    out.hygiene = hy
+    const list = ((hy && hy.findings) || []).filter(f => f.severity !== 'low').map(f => ({ where: f.where, what: f.what, fix: f.fix, severity: 'blocker' }))
+    if (list.length) out.fixes = [await fix(t, list, round)]
+    out.result = list.length ? 'hygiene fixed; ready for the user preview' : 'hygiene clean; ready for the user preview'
+    return out
+  }
   for (;;) {
     const v = await verify(t, round)
     out.rounds.push(v)
     if (!v) { out.result = 'verifier died'; return out }
-    const blockers = (v.defects || []).filter(d => d.severity === 'blocker')
+    let blockers = (v.defects || []).filter(d => d.severity === 'blocker')
     out.followups = (v.defects || []).filter(d => d.severity !== 'blocker')
+    if (t.units === PAGE_UNITS && round === 1) {            // pages get the hygiene review once, and its findings join the one fix
+      const hy = await hygiene(t)
+      out.hygiene = hy
+      const extra = ((hy && hy.findings) || []).filter(f => f.severity !== 'low').map(f => ({ where: f.where, what: f.what, fix: f.fix, severity: 'blocker' }))
+      v.defects = [...(v.defects || []), ...extra]
+      blockers = [...blockers, ...extra]
+    }
     if (!blockers.length) { out.result = 'passed; ready to merge'; return out }
     const r = await fix(t, v.defects, round)
     out.fixes = [...(out.fixes || []), r]
