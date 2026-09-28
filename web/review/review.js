@@ -170,6 +170,9 @@
     box.replaceChildren();
     if (S.dueErr && !S.due) { UI.cardError ? UI.cardError(box, () => loadDue().then(afterDue), 'Today’s review didn’t load.') : null; return; }
     const d = S.due || {};
+    // a new student has one way in, the empty state's start (the user's rule, 2026-09-28)
+    if (S.counts && !S.counts.answers && !d.total) { box.hidden = true; return; }
+    box.hidden = false;
     const segRow = h('div', { class: 'rh-opt' }, h('span', { class: 'k', text: 'Minutes' }));
     UI.seg(segRow, MINUTES.map(v => ({ value: v, label: v ? String(v) : 'All' })), {
       value: S.minutes, label: 'Review minutes',
@@ -205,7 +208,7 @@
     try {
       const p = await UI.api('/drill/preview', { method: 'POST', body: startBody(0), quiet: true });
       const n = p.count ?? p.total ?? (p.blocks ? p.blocks.length : null);
-      const mins = p.minutes ?? (n && S.due ? Math.round(n * S.due.median_s / 60) : null);
+      const mins = p.minutes ? Math.round(p.minutes) : (n && S.due ? Math.round(n * S.due.median_s / 60) : null);
       if (n) btn.firstChild.textContent = `All · ${plural(n, 'question')}${mins ? ` · about ${mins} min` : ''}`;
     } catch (_) {}
   }
@@ -237,12 +240,13 @@
     });
     function draw(b) {
       b.replaceChildren();
-      const blocks = data.blocks || data.items || [];
+      // the server's blocks when it sends them; else today's undone list, which the set serves first
+      const blocks = data.blocks || data.items || ((S.due && S.due.items) || []).filter(x => !x.done && !x.snoozed);
       if (!blocks.length) { b.append(h('p', { class: 'help', text: 'Nothing to serve right now.' })); return; }
       const sum = h('p', { class: 'meta' });
       const list = h('ul', { class: 'rh-list', role: 'list' });
       const total = () => blocks.filter(x => !drop.has(x.key)).length;
-      const paintSum = () => { sum.textContent = `${plural(total(), 'question')}${data.minutes ? ` · about ${data.minutes} min` : ''}`; };
+      const paintSum = () => { sum.textContent = `${plural(total(), 'question')}${data.minutes ? ` · about ${Math.round(data.minutes)} min` : ''}`; };
       blocks.forEach(x => {
         const label = x.label || x.skill || x.name || x.template || '';
         const li = h('li', { class: 'rh-row has-x', style: 'grid-template-columns: 12px minmax(0,1fr)' }, h('span'),
@@ -420,7 +424,7 @@
           { value: 'open', label: 'Open' }, { value: 'half', label: 'Half fixed', n: c.half || null }, { value: 'relapsed', label: 'Relapsed', n: c.relapsed || null }, { value: 'stuck', label: 'Stuck', n: c.stuck || null }] },
         { key: 'cause', label: 'Cause', type: 'select', all: 'Any cause', options: CAUSES.map(([v, l]) => ({ value: v, label: l })) },
         conf,
-        { key: 'sort', label: 'Sort', type: 'sort', options: [...(pts ? [{ value: 'worth', label: 'Most points' }] : []), { value: 'blind', label: 'Blind spots first' }, { value: 'recent', label: 'Most recent' },
+        { key: 'sort', label: 'Sort', type: 'sort', options: [...(pts ? [{ value: 'worth', label: 'Most points' }] : []), { value: 'recent', label: 'Most recent' }, { value: 'blind', label: 'Blind spots first' },
           { value: 'hits', label: 'Most missed' }, { value: 'near', label: 'Closest to fixed' }, { value: 'oldest', label: 'Oldest' }, { value: 'topic', label: 'Topic order' }] },
         { key: 'group', label: 'Group by', type: 'sort', options: [{ value: 'topic', label: 'Topic' }, { value: 'domain', label: 'Domain' }, { value: 'habit', label: 'Habit' }, { value: 'norm', label: 'Mistake type' }, { value: 'none', label: 'None' }] },
         search,
@@ -445,7 +449,10 @@
     host.replaceChildren();
     FB = null;
     const defs = filterDefs(S.tab);
-    if (!defs.length) return;
+    const c = S.counts || {};
+    const whole = { redo: c.open, marked: c.marked, saved: c.saved, history: c.answers, fixed: (c.fixed || 0) + (c.dismissed || 0) }[S.tab];
+    const urlSet = defs.some(f => f.type !== 'sort' && Q().get(f.key));
+    if (!defs.length || (S.counts && !whole && !urlSet)) return;
     FB = UI.filterBar(host, defs, { url: true, label: 'Filter this list', onChange: () => { if (S.tab !== 'due') loadList(S.tab); } });
   }
   function currentFilterValues() { return FB ? FB.values() : {}; }
@@ -1476,19 +1483,19 @@
     if (tab === 'marked') {
       const pick = n ? rows : (S.lists.marked || {}).items || [];
       const answered = pick.filter(r => r.answered).length;
-      out.push(btn(`Again, exactly${answered ? ` · ${plural(answered, 'will be a repeat', 'will be repeats')}` : ''}`, b => start(Object.assign(barBody('marked', true), {}), b)));
+      out.push(btn(`Again, exactly${answered ? ` · ${plural(answered, 'will be a repeat', 'will be repeats')}` : ''}`, b => start(barBody('marked', true, pick.length), b)));
       out.push(btn('Share', () => share(pick.slice(0, 40).map(r => [r.template, r.seed]))));
       if (n) out.push(btn('Unmark', () => unmark(rows), 'quiet'));
     }
     if (tab === 'saved') {
       const pick = n ? rows : (S.lists.saved || {}).items || [];
-      out.push(btn('Again, exactly', b => start(barBody('saved', true), b)));
+      out.push(btn('Again, exactly', b => start(barBody('saved', true, pick.length), b)));
       out.push(btn('Print worksheet', () => worksheet('saved', pick.map(r => [r.template, r.seed]))));
       out.push(btn('Share', () => share(pick.slice(0, 40).map(r => [r.template, r.seed]))));
       if (n) out.push(btn('Unsave', () => unsaveRows(rows), 'quiet'));
     }
     if (tab === 'history' && n) {
-      out.push(btn('Again, exactly', b => start(barBody('history', true), b)));
+      out.push(btn('Again, exactly', b => start(barBody('history', true, n), b)));
       out.push(btn('Share', () => share(rows.slice(0, 40).map(r => [r.template, r.seed]))));
     }
     return out;
@@ -1635,7 +1642,7 @@
     if (s.all && !s.ids.size && L.total > L.items.length && onlyBodyFilters) return null;
     return rows.map(r => (tab === 'redo' || tab === 'fixed' ? r.id : tab === 'marked' ? [r.session, r.qid] : tab === 'saved' ? [r.template, r.seed] : r.id));
   }
-  function barBody(tab, exact) {
+  function barBody(tab, exact, q) {
     const b = barState(tab);
     const n = selCount(tab);
     const pool = { marked: 'marked', saved: 'saved', history: 'history', fixed: 'checks', redo: 'redo' }[tab];
@@ -1645,7 +1652,7 @@
     else if (tab === 'saved' && S.savedCard !== 'all') body.ids = (S.lists.saved.items || []).map(r => [r.template, r.seed]);
     if (tab !== 'fixed') { body.exact = !!exact; if (!exact) body.each = b.each; }
     if (tab === 'fixed') body.level = b.level;
-    if (b.volume) body.count = b.volume;
+    if (b.volume) body.count = q ? Math.min(b.volume, q) : b.volume;
     return body;
   }
   function primaryFor(tab) {
@@ -1666,7 +1673,7 @@
     if (tab === 'fixed') {
       if (!n) return { label: `Select all ${fmtN(L.total)}`, summary: 'None selected', run: () => { const s = sel('fixed'); s.all = true; s.ids.clear(); saveSel('fixed'); paintList(); paintListHead(); paintBar(); } };
       const q = count(tab, new Set(rows.map(r => r.template)).size || n);
-      return { label: `Check these now · ${fmtN(q)}`, body: barBody('fixed'), summary: `${fmtN(n)} selected · ${plural(q, 'question')} · one new one per type` };
+      return { label: `Check these now · ${fmtN(q)}`, body: barBody('fixed', false, q), summary: `${fmtN(n)} selected · ${plural(q, 'question')} · one new one per type` };
     }
     if (tab === 'saved') {
       const c = S.counts || {};
@@ -1677,18 +1684,18 @@
       }
       const k = n || L.total;
       const q = count(tab, k * b.each);
-      return { label: n ? `Twin this set · ${fmtN(n)} selected` : `Twin this set · all ${fmtN(c.saved || L.total)}`, body: barBody('saved'), summary: `${n ? `${fmtN(n)} selected · ` : ''}${plural(q, 'new question')} · about ${mins(q)} min` };
+      return { label: n ? `Twin this set · ${fmtN(n)} selected` : `Twin this set · all ${fmtN(c.saved || L.total)}`, body: barBody('saved', false, q), summary: `${n ? `${fmtN(n)} selected · ` : ''}${plural(q, 'new question')} · about ${mins(q)} min` };
     }
     if (tab === 'marked') {
       const k = n || L.total;
       const q = count(tab, k * b.each);
-      return { label: n ? `Twin this set · ${fmtN(n)} selected` : `Twin this set · all ${fmtN(L.total)}`, body: barBody('marked'), summary: `${n ? `${fmtN(n)} selected · ` : ''}${plural(q, 'new question')} · about ${mins(q)} min` };
+      return { label: n ? `Twin this set · ${fmtN(n)} selected` : `Twin this set · all ${fmtN(L.total)}`, body: barBody('marked', false, q), summary: `${n ? `${fmtN(n)} selected · ` : ''}${plural(q, 'new question')} · about ${mins(q)} min` };
     }
     if (tab === 'history') {
       if (!n) return { label: `Select all ${fmtN(Math.min(L.total, 120))}`, summary: 'Select answers to practise them again', run: () => { const s = sel('history'); s.all = true; s.ids.clear(); saveSel('history'); paintList(); paintListHead(); paintBar(); } };
       const types = new Set(rows.map(r => r.template)).size;
       const q = count(tab, types * b.each);
-      return { label: `Twin this set · ${fmtN(n)} selected`, body: barBody('history'), summary: `${fmtN(n)} selected · ${plural(types, 'question type')} · ${plural(q, 'new question')}${L.total > 120 && sel('history').all ? ' · first 120' : ''}` };
+      return { label: `Twin this set · ${fmtN(n)} selected`, body: barBody('history', false, q), summary: `${fmtN(n)} selected · ${plural(types, 'question type')} · ${plural(q, 'new question')}${L.total > 120 && sel('history').all ? ' · first 120' : ''}` };
     }
     return { label: '', summary: '' };
   }
@@ -1830,7 +1837,8 @@
     else if ((tab === 'fixed' && r.closed_how === 'fixed') || (tab === 'due' && r.kind === 'check')) mistake = { status: 'fixed', fixed_at: r.closed || r.since, label: r.label };
     const src = last ? last.source : r.source;
     const sitting = last && last.session ? { label: `${srcWord(src)} · ${day(last.at)}`, href: src === 'review' ? null : sittingHref(['section', 'module', 'diagnostic', 'test'].includes(src) ? 'test' : 'drill', last.session) } : null;
-    const story = (d.story || []).map(n => ({ at: n.at, event: n.event, source: srcWord(n.source), result: n.result, attempt: n.attempt,
+    const story0 = (d.story || []).length > 7 ? [d.story[0], ...d.story.slice(-5)] : (d.story || []);   // the opening and the latest five
+    const story = story0.map(n => ({ at: n.at, event: n.event, source: srcWord(n.source), result: n.result, attempt: n.attempt,
       label: [n.pick ? `picked ${n.pick}` : null, EVENT[n.event] || n.event].filter(Boolean).join(' · ') }));
     return {
       q, fb, status: res, _row: r, strip: stripOf(tab, r),
@@ -1840,7 +1848,7 @@
       summary: d.summary && d.summary.days_to_fix !== null && d.summary.days_to_fix !== undefined ? d.summary : null,
       elsewhere: (d.elsewhere || []).map(x => ({ skill: cap(x.skill) })), new: !!d.new && !d._revealedHere, diag_choices: d.new ? d.diag_choices : null,
       attempt_id: last ? last.id : null, trap_id: trap ? trap.id : null, norm: trap ? trap.norm : r.norm, session: last ? last.session : null, qid: last ? last.qid : null,
-      ms: last ? last.ms : null, budget_ms: d.budget_ms, worth: d.pts, sitting, mistake,
+      ms: last ? last.ms : null, budget_ms: d.budget_ms, worth: r.pts !== undefined && r.pts !== null ? r.pts : d.pts, sitting, mistake,
       cause: last && !last.correct ? { cause: r.cause || last.diag_kind || 'trap', auto: !last.diag } : null,
       family: d.family ? { seen: d.family.seen, right: d.family.right, repaired: d.family.repaired, recent: (d.family.recent || []).map(x => ({ result: x })) } : null,
       blank: res === 'unanswered',
