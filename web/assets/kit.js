@@ -790,11 +790,13 @@
   function flushWaiting() { waiting.splice(0).forEach(([t, o]) => toast(t, { ...o, wait: false })); }
   function toast(text, o = {}) {
     if (o.wait && topModal()) { waiting.push([text, o]); return null; }
+    // the same words again replace the one on screen instead of stacking (three "Next: one like this" covered the verdict)
+    if (typeof text === 'string' && !o.undo) shown.filter(e => e.text === text).forEach(e => e.close());
     const host = toastRoot();
     const el = h('div', { class: 'toast' }, icon(o.icon, 22), h('span', { class: 'toast-t' }, text instanceof Node ? text : String(text)));
     let timer = 0, left = o.ms ?? (o.undo ? 6000 : 4000), since = 0;
     const entry = {
-      el, undo: o.undo || null,
+      el, undo: o.undo || null, text: typeof text === 'string' ? text : null,
       close() { clearTimeout(timer); const i = shown.indexOf(entry); if (i >= 0) shown.splice(i, 1); el.remove(); },
       async doUndo() { entry.close(); try { await o.undo(); } catch (_) { toast('Couldn’t undo that.'); } },
     };

@@ -1725,7 +1725,7 @@
         const skill = h('span', { class: 'rn-skill' }, !hideSkill ? glyphOf(qq.topic) : null, h('span', { class: 'rn-skill-n', text: hideSkill ? (typeof o.hideSkill === 'string' ? o.hideSkill : 'Mixed') : (t ? t.short : qq.topic_name || '') }));
         infoEl.append(skill);
         if (qq.name && !hideSkill) infoEl.append(h('span', { class: 'rn-type', text: qq.name }));
-        if (qq.difficulty) infoEl.append(h('span', { class: 'rn-diff' }, UI.dbars ? UI.dbars(qq.difficulty) : h('span', { text: qq.difficulty }), qq.level ? h('span', { class: 'rn-level', text: `L${qq.level}` }) : null));
+        if (qq.difficulty) infoEl.append(h('span', { class: 'rn-diff' }, UI.dbars ? UI.dbars(qq.difficulty) : h('span', { text: qq.difficulty })));   // no level badge: internal calibration stays off screen (the user)
         if (qq.type === 'spr') infoEl.append(h('span', { class: 'rn-fmt', text: 'Grid-in' }));
         if (qq.repair) {
           const ag = h('span', { class: 'rn-again', text: 'Again', tabindex: '0' });
