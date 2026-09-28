@@ -166,7 +166,7 @@
     li.append(head);
     const lines = h('div', { class: 'tk-lines' });
     const times = [s.median_right_ms ? `Median right ${mmss(s.median_right_ms)}` : null, you && you.ms ? `you ${mmss(you.ms)}` : null].filter(Boolean);
-    if (times.length) lines.append(h('p', { class: 'meta mono', text: times.join(' · ') }));
+    if (times.length) lines.append(h('p', { class: 'meta mono', text: times.join(' · ').replace(/^you/, 'You') }));
     const top = (s.spread || [])[0];
     if (top) lines.append(h('p', { class: 'tk-trap', text: `${pct(top.share)} · ${top.label}` }));
     else if ((s.designed || []).length) lines.append(h('p', { class: 'tk-trap soft', text: `Built to catch: ${s.designed.slice(0, 2).join(' · ')}` }));
@@ -188,8 +188,8 @@
       UI.spread(host, s.spr_top.map(x => ({ label: x.value, text: `Answered ${x.value}`, share: x.share })), { n: s.n, label: `${slotName(s.slot)}: the top answers`, noun: 'answers' });
     } else if ((s.spread || []).length && UI.spread) {
       UI.spread(host, s.spread.map(x => ({ label: x.label, text: x.label, share: x.share, key: x.norm })), { n: s.n, label: `${slotName(s.slot)}: the wrong answers by mistake`, noun: 'answers' });
-    } else if ((s.designed || []).length) {
-      host.append(h('p', { class: 'help', text: `Too few answers to show a spread yet. Its options are built to catch: ${s.designed.join(' · ')}.` }));
+    } else if ((s.designed || []).length > 2) {
+      host.append(h('p', { class: 'tk-trap soft', text: `Also built to catch: ${s.designed.slice(2).join(' · ')}` }));
     }
     const acts = h('div', { class: 'tk-acts' });
     const you = s.you;

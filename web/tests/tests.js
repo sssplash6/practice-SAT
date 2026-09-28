@@ -378,12 +378,13 @@
     $('#sittings').scrollIntoView({ behavior: UI.reduced && UI.reduced() ? 'auto' : 'smooth' });
   }
 
-  /* ---------------- active filters as removable chips under a bar (X20, T6) */
+  /* ---------------- active filters as removable chips under a bar (X20, T6); on a wide screen the
+     dropdowns already show their values, so only the phone (Filters · n) shows these (decision 7) */
   function activeChips(host, bar, filters, v, extra) {
     host.replaceChildren();
     filters.filter(f => f.type !== 'sort' && v[f.key]).forEach(f => {
       const o = (f.options || []).find(x => String(x.value) === String(v[f.key]));
-      host.append(btn(`${f.label}: ${o ? o.label : v[f.key]}`, { cls: 'tag fchip', aria: `Remove the filter ${f.label}: ${o ? o.label : v[f.key]}`, run: () => bar.set(f.key, '') }));
+      host.append(btn(`${f.label}: ${o ? o.label : v[f.key]}`, { cls: 'tag fchip dup', aria: `Remove the filter ${f.label}: ${o ? o.label : v[f.key]}`, run: () => bar.set(f.key, '') }));
     });
     if (extra) host.append(extra);
     host.hidden = !host.childNodes.length;

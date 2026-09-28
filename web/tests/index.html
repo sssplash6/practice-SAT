@@ -297,6 +297,7 @@
   .ts-chips { display: flex; flex-wrap: wrap; gap: 6px; margin: -6px 0 14px; }
   .ts-chips[hidden] { display: none; }
   .fchip { cursor: pointer; border: 0; background: var(--wash); }
+  @media (min-width: 760px) { .fchip.dup { display: none; } .ts-chips:not(:has(> :not(.dup))) { display: none; } }
   .fchip::after { content: "×"; margin-left: 6px; font-size: 14px; color: var(--soft); }
   .sr-cmp { display: inline-flex; align-items: center; gap: 6px; min-height: 28px; font: 500 13px var(--font); color: var(--soft); cursor: pointer; }
   .sr-cmp input { width: 16px; height: 16px; margin: 0; accent-color: var(--ink); }
