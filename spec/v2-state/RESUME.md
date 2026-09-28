@@ -69,8 +69,10 @@ v2/satdates, v2/bank-lint, v2/f5, v2/words-content, v2/bank-lint-fix group 6 (df
       RUNNING: today-hygiene run `wf_da1586d8-318` (task w0342biml): 4 lens auditors, one fixer (commits on v2/s3 and
       v2/calm-shared), one re-check (the user: stop the workflow once the fix is done; watcher task b6bs40lyi). Every future
       page gets ONE hygiene agent (visual + calm, measured, looks at screenshots) whose findings join the one fix (build.js).
-      Plan, Words, Compete (built): run build.js `[{id:'S7',from:'hygiene'},{id:'S9',from:'hygiene'},{id:'S8',from:'hygiene'}]`
-      when the user says go, then preview.
+      THE USER'S STANDING ORDER (2026-09-28, then left): when the Today fix finishes, (1) TaskStop the today-hygiene workflow
+      (w0342biml) before its re-check, (2) launch build.js `[{id:'S7',from:'hygiene'},{id:'S9',from:'hygiene'},{id:'S8',from:'hygiene'}]`
+      (WORKERS = 1, the designer brief), (3) do my own creative design pass on Today from screenshots and have improvements ready.
+      Merge nothing before the user previews.
     - 2026-09-28: run wf_52a6cb52-1a2 DONE. S3 Today, S7 Plan, S9 Words and S8 Compete pages are built, checked and fixed on
       their branches (verified web diffs: ~2,300 / 3,400 / 3,800 / 3,500 lines); leftovers in followups/<id>-pages.json.
       PREVIEW of all four together on port 8061 (task b8vcjsxuq, worktree scratchpad/prev4, test_flow all good). MERGE EACH
