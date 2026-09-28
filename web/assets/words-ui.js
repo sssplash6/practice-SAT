@@ -141,6 +141,7 @@ button.term { appearance: none; border: 0; background: none; padding: 0; font: i
 .wfin > details > summary::after { content: "▸"; margin-left: auto; color: var(--soft); }
 .wfin > details[open] > summary::after { content: "▾"; }
 .wfin > details[open] > summary { margin-bottom: 10px; }
+.wfin > details[open] > summary .tw-facts { display: none; }
 .wfin-body { display: grid; gap: 10px; }
 .wfin-left { font: 500 13px var(--mono); color: var(--soft); }
 .wfin .chips { margin-top: 8px; }

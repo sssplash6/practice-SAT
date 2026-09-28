@@ -24,6 +24,8 @@
   .st-sec > .k { display: block; }
   .st .seg { width: fit-content; max-width: 100%; }
   .st-more > summary { cursor: pointer; font: 600 14px var(--font); min-height: 44px; display: flex; align-items: center; }
+  .st-more > summary::after, .deck-empty > summary::after { content: "▸"; margin-left: 8px; color: var(--soft); }
+  .st-more[open] > summary::after, .deck-empty[open] > summary::after { content: "▾"; }
   .st-more-in { display: grid; gap: 22px; padding-top: 10px; }
   .deck-empty > summary { cursor: pointer; font: 600 13.5px var(--font); color: var(--soft); min-height: 44px; display: flex; align-items: center; }
   .deck-empty .decks { margin-top: 4px; }

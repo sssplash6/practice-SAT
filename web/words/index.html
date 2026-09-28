@@ -317,7 +317,7 @@
     el.replaceChildren();
     const sel = () => (fbar ? fbar.values().c : (params().get('c') || '').split(',').filter(Boolean));
     const tile = (id, name, rows, o = {}) => {
-      const known = o.known ?? rows.filter(w => W.status(w) === 'known').length, due = rows.filter(w => w.is_due).length, of = o.total ?? rows.length;
+      const known = o.known ?? rows.filter(w => W.status(w) === 'known').length, due = o.noDue ? 0 : rows.filter(w => w.is_due).length, of = o.total ?? rows.length;
       const on = id === '' ? !sel().length : sel().includes(id);
       const b = h('button', { type: 'button', class: 'ctile', 'aria-pressed': String(on), onclick: () => toggleColl(id) },
         h('b', { text: name }), h('span', { class: 'meta', text: o.sub || `${num(rows.length)} ${rows.length === 1 ? 'word' : 'words'}` }),
@@ -329,7 +329,7 @@
     const inColl = (w, c) => w.collection === c.id || (w.lists || []).includes(c.id);
     for (const g of lib.groups || []) {
       const tiles = [];
-      if (g.id === 'rw') tiles.push(tile('', 'All', words.filter(w => !w.own)));
+      if (g.id === 'rw') tiles.push(tile('', 'All', words.filter(w => !w.own), { noDue: true }));   // its due count is the strip's
       if (g.id === 'roots') {
         const rw = words.filter(w => (w.roots || []).length);
         // W4: a root is known when half its family is at box 3 or higher
