@@ -392,9 +392,8 @@
     const move = has(acc) && has(before) ? (P(acc) > P(before) ? `up from ${pct(before)}` : P(acc) < P(before) ? `down from ${pct(before)}` : 'same as before') : null;
     const same = !endless && n && has(acc) && P(acc) === P(r.right / n);
     const lines = [];
-    if (endless) lines.push(h('span', { class: 'acc', text: `answered · ${r.right} right` }));
     if (has(acc) && (move || (!endless && !same))) lines.push(h('span', { class: 'acc' }, `${pct(acc)} first try`, move ? h('span', { class: 'was', text: ` · ${move}` }) : null));
-    head.append(h('div', { class: 'sm-score' }, h('span', { class: 'num', text: endless ? String(answeredN) : `${r.right} / ${n}` }),
+    head.append(h('div', { class: 'sm-score' }, h('span', { class: 'num', text: `${r.right} / ${endless ? answeredN : n}` }),
       lines.length ? h('span', { class: 'accs' }, lines) : null));
     const spent = qs.reduce((s, q) => s + (q.ms || 0), 0);
     const budgetAvg = n ? qs.reduce((s, q) => s + (q.budget_ms || 0), 0) / n : 0;
@@ -405,7 +404,7 @@
     const changed = h('ul', { class: 'sm-changed', 'aria-label': 'What changed' });
     (r.topics || []).forEach(t => {
       const a = UI.masteryWord(t.before, 1), b = UI.masteryWord(t.after, t.asked);
-      changed.append(h('li', {}, UI.glyph ? UI.glyph(t.topic) : h('span'), h('span', { class: 'nm', text: t.name || topicName(t.topic) }),
+      changed.append(h('li', {}, UI.glyph ? UI.glyph(t.topic) : h('span'), h('span', { class: 'nm', text: topicName(t.topic) || t.name }),
         h('span', { class: 'w' }, a === b ? h('b', { text: b }) : [a, ' → ', h('b', { text: b })])));
     });
     const opened = r.opened || [], fixed = r.closed || [];
@@ -423,7 +422,7 @@
     // 4. The breakdowns, each one tap away
     const folds = h('div', { class: 'sm-folds' });
     if (opened.length || fixed.length) folds.append(fold('mistakes', 'Mistakes', b => {
-      if (opened.length) b.append(h('div', { class: 'sm-mist' }, h('h3', { text: 'New' }), h('ul', {}, opened.map(o => h('li', {},
+      if (opened.length) b.append(h('div', { class: 'sm-mist' }, h('h3', { text: 'New' }), h('ul', { class: 'sm-new' }, opened.map(o => h('li', {},
         h('span', { text: cap(o.label) }), h('span', { class: 's', text: topicName(o.topic) }),
         h('button', { type: 'button', class: 'btn sm', text: 'Fix now', onclick: () => create({ pool: 'mistakes', templates: [o.template], source: 'mistakes' }) }))))));
       if (fixed.length) b.append(h('div', { class: 'sm-mist' }, h('h3', { text: 'Fixed' }), h('ul', {}, fixed.map(o => h('li', {},
@@ -485,25 +484,7 @@
       }
     }));
 
-    // what else this set shows (P3 P5 P6 P7 P8 P11 P12 P13 P16 P17), one line each
-    const extra = [];
-    const line = (b, text) => extra.push(h('li', {}, h('b', { text: `${b}: ` }), text));
-    if (r.expected) line('Expected vs got', `expected ${r.expected.expected}, got ${r.expected.got} (${r.expected.above >= 0 ? '+' : ''}${r.expected.above})`);
-    const cal = r.calibration && r.calibration.conf;
-    if (cal && r.calibration.tagged) line('Calibration', Object.entries(cal).filter(([k, v]) => k !== 'untagged' && v.right + v.wrong).map(([k, v]) => `${cap(k)} ${v.right}/${v.right + v.wrong}`).join(' · '));
-    const causes = Object.entries(r.causes || {}).filter(([, c]) => c);
-    if (causes.length) line('Why you missed', causes.map(([k, c]) => `${cap(k)} ${c}`).join(' · '));
-    if (r.dodged && r.dodged.offered) line('Traps on offer', `${r.dodged.dodged} of ${r.dodged.offered} dodged`);
-    if (r.strikes && r.strikes.n) line('Strikes', `${r.strikes.n} struck${r.strikes.struck_key ? ` · the key struck ${r.strikes.struck_key}×` : ''}`);
-    if (r.retrieval && r.retrieval.reviews) line('Reviews', `${r.retrieval.held} of ${r.retrieval.reviews} held${r.retrieval.slipped.length ? ` · slipped: ${r.retrieval.slipped.join(', ')}` : ''}`);
-    if (r.final) line('Final round', `${r.final.right} of ${r.final.n} right${r.final.still_open.length ? ` · still open: ${r.final.still_open.join(', ')}` : ''}`);
-    (r.mixup || []).forEach(m => line(`Mix-up · ${m.name}`, `${m.right}/${m.asked}${m.usual !== null ? ` · usually ${pct(m.usual)}` : ''}`));
-    if (r.calc && r.calc.on) line('Desmos', `${r.calc.right_with}/${r.calc.on} right with it · ${r.calc.right_without}/${r.calc.without} without`);
-    if (r.covered && r.covered.n) line('Solved first', `${r.covered.right} of ${r.covered.n} right with the choices covered`);
-    (r.official || []).forEach(o => line(`Twin of CB ${o.cb_id}`, `${o.right}/${o.twins} right`));
-    if (r.passes) line('Two passes', `first pass ${r.passes.one.right}/${r.passes.one.answered} · second pass ${r.passes.two.right}/${r.passes.two.answered}`);
-    if (r.head && r.head.closed && r.head.closed !== fixed.length) line('Mistakes closed since you started', String(r.head.closed));
-    if (extra.length) folds.append(fold('more', 'More from this set', b => b.append(h('ul', { class: 'sm-lines' }, extra))));
+    // ("More from this set" was removed at the user's word, 2026-09-28: "remove this fully")
     if ((r.slots || []).length) folds.append(fold('then', 'Then → Now', b => b.append(h('ul', { class: 'sm-lines' }, r.slots.map(s => h('li', {}, h('b', { text: `Q${s.n} · ${s.type_name || ''}: ` }),
       `${cap(s.then.status)}${s.then.ms ? ` ${mmss(s.then.ms)}` : ''} → ${cap(s.now.status || '')}${s.now.ms ? ` ${mmss(s.now.ms)}` : ''}${s.change ? ` · ${s.change}` : ''}`))))));
     if (folds.children.length) col.append(folds);

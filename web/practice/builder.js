@@ -779,11 +779,9 @@
         h('span', {}, h('span', { class: 'dot', 'aria-hidden': 'true' }), ` ${cap(t.label)} · ${(B.byT.get(t.template) || {}).name || t.template} · ${plural(t.owed ?? 2, 'clean answer')} left`),
         h('button', { type: 'button', class: 'quiet', text: 'Fix', onclick: () => create({ subject: 'math', source: 'mistakes', pool: 'redo', templates: [t.template] }) }))));
     }
+    // one way in from the skill's panel (the user: keep Check my level only; Finish, Mix it up and the College Board link went)
     panel.append(h('div', { class: 'btns' },
-      h('button', { type: 'button', class: 'btn', text: `Finish ${s.short || s.name} · ${Math.min(40, types.length * 2)} questions`, onclick: () => create({ subject: 'math', source: 'finish', topics: [s.slug] }) }),
-      h('button', { type: 'button', class: 'btn', text: 'Check my level · 8 questions', onclick: () => create({ subject: 'math', source: 'probe', topics: [s.slug], count: 8 }) }),
-      h('button', { type: 'button', class: 'btn', text: 'Mix it up · 8', onclick: () => create({ subject: 'math', source: 'mixup', order: 'mixup', topics: [s.slug], count: 8 }) }),
-      s.cb_count ? h('a', { class: 'btn', target: '_blank', rel: 'noopener', href: 'https://satsuitequestionbank.collegeboard.org/digital/search', text: `Official questions on College Board · ${s.cb_count}` }) : null));
+      h('button', { type: 'button', class: 'btn', text: 'Check my level · 8 questions', onclick: () => create({ subject: 'math', source: 'probe', topics: [s.slug], count: 8 }) })));
     const labels = (s.labels || []).length > 1 ? s.labels : [{ label: null, templates: types.map(t => t.template) }];
     const tt = h('div', { class: 'ttypes' });
     labels.forEach(l => {

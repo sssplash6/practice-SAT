@@ -1841,7 +1841,7 @@ def _make(row, cfg: dict, served: list[dict]) -> tuple[dict | None, object]:
                       " ORDER BY id DESC LIMIT 1", learner, card.key)
         q["why"] = {"kind": "mistake", "detail": (f"You were sure of this one and missed it ({_day_word(sure['at'])})"
                                                   if sure else f"Open mistake · {trap['owed']} clean answer"
-                                                  f"{'s' if trap['owed'] != 1 else ''} closes it")}
+                                                  f"{'s close' if trap['owed'] != 1 else ' closes'} it")}
     slot = cfg.pop("_slot", None)
     if slot:
         if slot.get("of"):
@@ -2866,7 +2866,7 @@ def _next_step(learner: str, q: dict, ok: bool, filed: dict, run: int) -> str | 
     trap = next((t for t in progress.open_traps(learner) if t["template"] == q["key"]), None)
     if trap:
         n = trap["owed"]
-        return f"{trap['label']}: {n} more clean answer{'s' if n != 1 else ''} closes it"
+        return f"{trap['label']}: {n} more clean answer{'s close' if n != 1 else ' closes'} it"
     if (q.get("why") or {}).get("kind") == "due":
         return "Held · back in 12 days if you keep it" if ok else "Slipped · back tomorrow"
     firsts = db.rows(f"SELECT correct FROM attempts WHERE learner=? AND template=? AND {progress.COUNTED}",
@@ -2894,12 +2894,8 @@ def _then(learner: str, q: dict, ok: bool, spent: int, filed: dict) -> str | Non
         return None
     letter = "ABCD"[int(old["given"])] if old["fmt"] == "mcq" and str(old["given"]).isdigit() \
         and int(old["given"]) < 4 else old["given"]
-    bits = [f"{_day_word(old['at'])} on this type: {letter}"]
-    if old["reason"]:
-        bits.append(old["reason"])
-    if old["ms"]:
-        bits.append(_fmt_ms(old["ms"]))
-    return ", ".join(bits) + f" · today: right{', ' + _fmt_ms(spent) if spent else ''}"
+    # the choice then and the result now: no times, and no trap sentence (the next-step line above already names it; the user)
+    return f"{_day_word(old['at'])} on this type: {letter} · today: right"
 
 
 def cause_kind(learner: str, a: dict, q: dict, cfg: dict, medians: dict) -> tuple[str, dict]:
