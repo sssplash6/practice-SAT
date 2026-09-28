@@ -25,6 +25,8 @@
   /* the first frame is the skeleton, never empty card shells */
   #today:not(.ready) { visibility: hidden; }
   @media (max-width: 759px) { #bar:empty { display: block; height: var(--bar); } }
+  /* the phone bar already shows the streak at the top of the same screen */
+  @media (max-width: 759px) { .hero-stats .hs-streak { display: none; } }
 
   /* the grid: below 1080px the DOM order is the phone order and order + span place the two columns;
      from 1080px paintToday moves the cards into bands of a main and a side column (.td-col), so a
@@ -790,7 +792,7 @@
     const chips = h('div', { class: 'hero-stats' });
     // the streak is a flame and its number, as in the day's questions (the user: a sentence where a number belongs)
     const sk = d.streak || 0;
-    chips.append(h('a', { href: '#study', class: sk ? 'on' : '', title: join('Study streak', d.best > sk && `best ${d.best}`), 'aria-label': `Study streak, ${pl(sk, 'day')}${d.best > sk ? `, best ${d.best}` : ''}` },
+    chips.append(h('a', { href: '#study', class: 'hs-streak' + (sk ? ' on' : ''), title: join('Study streak', d.best > sk && `best ${d.best}`), 'aria-label': `Study streak, ${pl(sk, 'day')}${d.best > sk ? `, best ${d.best}` : ''}` },
       flame(sk > 0), String(sk)));
     // minutes only once there are some: "0 min today" is a zero on screen (decision 7)
     const m = Math.round(st.today || 0);
