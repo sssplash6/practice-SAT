@@ -130,11 +130,12 @@ def queue(learner: str, tz: int = 0, limit: int = 6, *, exclude=(), _plan=_UNSET
         saved = deps.part("account", "saved")
         return [
             _item("start", "start:new:math", "Start with 8 questions",
-                  "One from each part of SAT Math, then four that adapt to you · about 10 min · no sign-up",
+                  "One from each part of SAT Math, then four that adapt to you · no sign-up",
                   "Your first eight answers make the rest of Today yours", _minutes(8, seconds),
                   body={"source": "start"}),
-            _item("diagnostic", "diagnostic:new:math", "Take the diagnostic · 20 q · a score range",
-                  "20 questions · a score range", "Your starting band in 20 questions" if saved and saved(learner)
+            # the meta carries the count and the minutes once: "20 q · a score range · 32 min"
+            _item("diagnostic", "diagnostic:new:math", "Take the diagnostic",
+                  "20 q · a score range", "Your starting band in 20 questions" if saved and saved(learner)
                   else "Asks for a name and email to show results",
                   _minutes(20, seconds), href="/diagnostic/")
         ][:limit]
@@ -208,7 +209,7 @@ def queue(learner: str, tz: int = 0, limit: int = 6, *, exclude=(), _plan=_UNSET
     if deps.part("review", "due") and due_list.get("left"):
         count = due_list["left"]
         rows.append(_item("review", "review:due:math", "Review what's due",
-                          f"{count} due · about {_minutes(count, seconds)} min",
+                          f"{count} due",                   # the meta adds the minutes once
                           "Today's check-ins and spaced review" +
                           (" · also in today's plan" if "due" in plan_sources or "checks" in plan_pools else ""),
                           _minutes(count, seconds), body={"source": "due", "box": settings.get("review_minutes", 10)},
