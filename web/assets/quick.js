@@ -498,7 +498,7 @@
         const trap = r.trap || {};
         st.done = { trap, template: body.template, topic: st.picked.topic, reason: body.reason || null };
         UI.refresh();
-        if (UI.toast) UI.toast('Added. Two clean answers on this type close it.', { wait: true, action: { label: 'Practise now · 3',
+        if (UI.toast) UI.toast('Added. Two correct answers on this type close it.', { wait: true, action: { label: 'Practise now · 3',
           onClick: () => startDrill({ pool: 'redo', ids: [trap.id], count: 3, source: 'outside' }).catch(() => UI.toast('Couldn’t start it. Try again.')) } });
         doneView(st.done);
       });

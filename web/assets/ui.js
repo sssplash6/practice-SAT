@@ -1653,10 +1653,10 @@
     const fill = items => {
       list.replaceChildren(h('span', { class: 'k', text: 'Up next' }));
       if (!items.length) list.append(h('p', { class: 'help', text: 'Nothing else is up next right now.' }));
-      items.forEach((it, i) => list.append(h('div', { style: 'display: grid; gap: 2px; padding-top: 8px; border-top: 1px solid var(--line)' },
+      items.forEach((it, i) => list.append(h('div', { class: 'mup-row' },
         h('b', { text: it.title, style: 'font-weight: 600' }), h('span', { class: 'nextup-m', text: nextMeta(it) }),
         it.reason ? h('span', { class: 'nextup-r', text: it.reason }) : null,
-        h('div', { style: 'display: flex; gap: 6px; margin-top: 6px' }, startBtn(it, i ? 'Start' : 'Start now'),
+        h('div', { class: 'mup-acts' }, startBtn(it, 'Start'),
           h('button', { type: 'button', class: 'quiet', text: 'Not today', onclick: () => { snooze(it); pop.close(); } })))));
       list.append(boxChips());
     };

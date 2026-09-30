@@ -1289,7 +1289,7 @@
       (fb.opened || []).map(x => (typeof x === 'string' ? { label: x } : x)).filter(x => x && x.label).forEach(x => {
         const same = named && String(x.label).trim().toLowerCase() === named;
         v.append(h('p', { class: 'v-line v-new' }, h('b', { text: same ? 'New mistake to fix' : 'New mistake to fix: ' }), same ? '' : cap1(x.label),
-          ` · ${x.clean ?? 0} of ${x.of ?? 2} clean answers · `, h('a', { class: 'qlink', href: x.href || '/review/?tab=redo', text: 'See it in Review' })));
+          ` · ${x.clean ?? 0} of ${x.of ?? 2} correct answers · `, h('a', { class: 'qlink', href: x.href || '/review/?tab=redo', text: 'See it in Review' })));
       });
       if (fb.repair_next) v.append(h('p', { class: 'v-line', text: 'Next: one like this, with new numbers' }));
 
@@ -1406,26 +1406,10 @@
     // P6: the traps this question set, and how the strikes were graded
     function trapsLines(fb, key, g, right) {
       const out = [];
-      const named = rows.map((_, i) => i).filter(i => i !== key && fb.reasons[i] && !(fb.filler && fb.filler[i]));
-      // with every option's reason on screen the line only counts; without them it names each trap
-      const shown = !(prefs.option_reasons === false && live);
-      const letters = list => list.map(i => LETTERS[i]).join(list.length === 2 ? ' and ' : ', ');
-      if (named.length && g !== null) {
-        if (right) {
-          // a right answer dodged every trap by definition (the user: "why do we even say that?")
-        } else if (!named.includes(g)) {
-          out.push(h('p', { class: 'v-line v-traps' }, h('b', { text: 'Traps on offer: ' }),
-            shown ? letters(named) : named.map(i => `${LETTERS[i]} ${low1(fb.reasons[i])}`).join(' · ')));
-        } else {
-          const rest = named.filter(i => i !== g);
-          out.push(h('p', { class: 'v-line v-traps' }, h('b', { text: `Caught by ${LETTERS[g]}` }), shown ? '' : `: ${low1(fb.reasons[g])}`,
-            rest.length ? ` · dodged ${letters(rest)}` : ''));
-        }
-      }
       const struck = fb.struck || [...S.struck];
       struck.forEach(i => {
         if (i === key) out.push(h('p', { class: 'v-line v-struck-key', text: `You struck the key (${LETTERS[i]})` }));
-        else if (fb.reasons[i]) out.push(h('p', { class: 'v-line v-struck', text: `struck ${LETTERS[i]} · dodged: ${low1(fb.reasons[i])}` }));
+        else if (fb.reasons[i]) out.push(h('p', { class: 'v-line v-struck', text: `struck ${LETTERS[i]}: ${low1(fb.reasons[i])}` }));
       });
       return out;
     }
@@ -1790,7 +1774,7 @@
         const b = UI.verb ? UI.verb('again', { sm: true, onClick: () => on.again() }) : btn('Again, exactly', 'history', { id: 'again', key: 'E' }, () => on.again());
         put('again', b);
       }
-      if (q.template) put('about', btn('About this type', 'book', { id: 'about' }, null, { href: `/types/?t=${encodeURIComponent(q.template)}` }));
+      // "About this type" pointed at /types/, a page that does not exist (404), so it is gone until that page is built
     }
     const report = () => {
       const f = on.report || UI.report;
@@ -2401,7 +2385,7 @@
     const why = kind => (o.onWhy ? o.onWhy(kind) : api('/saved', { method: 'PATCH', body: Object.assign({ why: kind }, body) }));
     chip('Nice trick', () => why('trick'), 'Noted');
     chip('Hard', () => why('hard'), 'Noted');
-    if (o.revealed !== false) chip('Got lucky', () => (o.onLucky ? o.onLucky() : api('/mistakes/add', { method: 'POST', body })), 'In Redo: one clean answer closes it');
+    if (o.revealed !== false) chip('Got lucky', () => (o.onLucky ? o.onLucky() : api('/mistakes/add', { method: 'POST', body })), 'In Redo: one correct answer closes it');
     if (o.onAsk) chip('Ask a tutor', () => o.onAsk());
     if (o.onNote) chip('Note', () => o.onNote());
     t = toast(row, { ms: 5000 });

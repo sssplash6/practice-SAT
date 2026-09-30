@@ -383,7 +383,7 @@
     ready.forEach(c => {
       const go = h('button', { type: 'button', class: 'pill sm', text: 'Start' });
       go.addEventListener('click', () => create(c.body, go));
-      row.append(h('div', { class: 'pr-card' }, h('b', { text: c.title }), c.meta ? h('span', { class: 'meta', text: c.meta }) : null, c.why ? h('span', { class: 'help', text: c.why }) : null,
+      row.append(h('div', { class: 'pr-card' }, h('b', { text: c.title, title: c.title }), c.meta ? h('span', { class: 'meta', text: c.meta }) : null, c.why ? h('span', { class: 'help', text: c.why }) : null,
         h('div', { class: 'acts' }, c.reason ? h('span', { class: 'help', text: c.reason }) : go,
           c.body && !c.body.again ? h('button', { type: 'button', class: 'quiet', text: 'Edit', onclick: () => { loadBody(c.body); linkNote('Settings from Up next'); } }) : null)));
     });
@@ -392,7 +392,7 @@
     paintSearchHelp();
   }
 
-  /* ---------------------------------------------------------------- presets and coach line */
+  /* ---------------------------------------------------------------- presets and mentor line */
   function presets() {
     const b = B.bank, c = b.counts || {}, seen = c.seen || {};
     const sk = [...B.skills.values()];
@@ -403,7 +403,7 @@
     const focusSkills = sk.filter(s => focus.includes(s.domain) || focus.includes(s.slug));
     const untried = sk.filter(s => !s.placed && !s.answered).slice(0, 3);
     const list = [
-      { id: 'coach', label: 'Coach’s pick', about: coachWhy() },
+      { id: 'coach', label: 'Mentor’s pick', about: coachWhy() },
       { id: 'weak', label: 'Weakest 3', why: weak.length < 3 ? 'Needs 5 answers in 3 skills' : null, skills: weak },
       { id: 'focus', label: 'Plan focus', why: focusSkills.length ? null : 'No Focus domain in your plan yet: set one in Plan', skills: focusSkills, href: focusSkills.length ? null : '/plan/' },
       { id: 'full', label: 'Full section mix' },
@@ -452,7 +452,7 @@
       h('button', { type: 'button', class: 'quiet', text: 'Reset', onclick: () => { B.st = fromPrefs(B.prefs); B.fromLink = false; applyPreset('coach'); linkNote(null); } }));
     if (!(B.bank.totals || {}).answered) host.append(tip(h('a', { class: 'quiet', href: '/diagnostic/', text: 'Diagnostic' }), 'A starting score in 20 questions'));
   }
-  // why the coach picked these skills: the Coach's pick chip's tooltip, not a permanent line
+  // why the mentor picked these skills: the Mentor's pick chip's tooltip, not a permanent line
   function coachWhy() {
     const b = B.bank;
     if (!b.coach) return null;
@@ -773,7 +773,7 @@
     const traps = s.traps || [];
     if (traps.length) {
       panel.append(h('h4', { text: 'Open mistakes in this skill' }), ...traps.map(t => h('div', { class: 'omis' },
-        h('span', {}, h('span', { class: 'dot', 'aria-hidden': 'true' }), ` ${cap(t.label)} · ${(B.byT.get(t.template) || {}).name || t.template} · ${plural(t.owed ?? 2, 'clean answer')} left`),
+        h('span', {}, h('span', { class: 'dot', 'aria-hidden': 'true' }), ` ${cap(t.label)} · ${(B.byT.get(t.template) || {}).name || t.template} · ${plural(t.owed ?? 2, 'correct answer')} left`),
         h('button', { type: 'button', class: 'quiet', text: 'Fix', onclick: () => create({ subject: 'math', source: 'mistakes', pool: 'redo', templates: [t.template] }) }))));
     }
     // one way in from the skill's panel (the user: keep Check my level only; Finish, Mix it up and the College Board link went)
@@ -943,7 +943,7 @@
     const seen = P.seen || {};
     const rows = [
       ['new', `New questions`, 'types', P.new, 'Generated for you now. You have never seen any of them.'],
-      ['redo', 'Fresh numbers on my open mistakes', 'types', P.mistakes, 'Each type you fell for, twice. Two clean answers close a mistake.'],
+      ['redo', 'Fresh numbers on my open mistakes', 'types', P.mistakes, 'Each type you fell for, twice. Two correct answers close a mistake.'],
       ['checks', 'Check-ins on mistakes you fixed', 'due', P.checks, 'A fixed mistake comes back once to prove it stayed fixed.'],
       ['review', 'Fresh numbers on types due for review', 'types', P.review, forecastText()],
       ['untried', 'Fresh numbers on types I’ve never tried', 'types', P.untried, null],
@@ -1100,6 +1100,7 @@
     tip(UI.seg(g7a, [{ value: 'off', label: 'Off' }, { value: 2, label: '2 per set' }, { value: 'all', label: 'All due' }], { value: st.words_mix, label: 'Mix in due SAT words', onChange: v => { st.words_mix = v; changed(); } }).el,
       'Reviewed at set breaks, filed to Words, never counted in Math.');
     // 8. Order
+    const endless = st.count === null;   // a time-only set has no end to ramp to (the Timing group that declared this went in the merge)
     const g8 = group(grid, 'Order', 'sOrder');
     const ord = UI.seg(g8, [{ value: 'mixed', label: 'Mixed' }, { value: 'grouped', label: 'Grouped by skill' }, { value: 'ramp', label: 'Easiest first', disabled: endless, why: endless ? 'An endless set has no end to ramp to' : null }, { value: 'mixup', label: 'Mix-up' }],
       { value: st.order, label: 'Order', onChange: v => { st.order = v; changed(); paintSettings(); } });
@@ -1179,6 +1180,7 @@
     B.setText = [time, FB_WORD[st.feedback], REP_WORD[st.repairs], st.final_round ? 'final round on' : null, st.review_mix !== 'off' ? `${st.review_mix === 2 ? '2 reviews' : '20% reviews'} mixed in` : null,
       { mixed: 'mixed', grouped: 'grouped', ramp: 'easiest first', mixup: 'mix-up' }[st.order]].filter(Boolean).join(' · ');
     $('#openSettings').setAttribute('aria-description', B.setText);
+    $('#l2').textContent = B.setText;
     $('#jump').textContent = `${POOL_WORD[st.pool] || 'Questions'} · ${diff} ↓`;
     const startB = $('#start'), reason = $('#reason');
     if (starting) return;

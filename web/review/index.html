@@ -20,12 +20,14 @@
      The six tiles are the tabs: each number is said once (decision 7). */
   .rh { padding-bottom: 140px; }
   .rh * { min-width: 0; }
-  .rh-head { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 16px 32px; }
+  .rh-head { display: flex; flex-wrap: wrap; align-items: flex-start; justify-content: space-between; gap: 16px 32px; }
   .rh-head .h1 { font-size: 36px; }
   .rh-helper { margin-top: 8px; max-width: 46ch; font: 500 14px/1.45 var(--font); color: var(--soft); }
   .rh-start { display: grid; justify-items: end; gap: 8px; }
   .rh-start .seg { font-size: 13px; }
   .rh-split { display: inline-flex; align-items: stretch; }
+  /* compact: 40px, the same corners as every other Start, so the minutes row sits level with the title */
+  .rh-split > .pill { height: 40px; padding: 0 20px; border-radius: 10px; font-size: 15px; }
   .rh-split > .pill:first-child { border-top-right-radius: 0; border-bottom-right-radius: 0; }
   .rh-split > .pill + .pill { min-width: 44px; padding: 0 12px; border-top-left-radius: 0; border-bottom-left-radius: 0;
     box-shadow: inset 1px 0 0 rgba(0, 0, 0, .18); }
@@ -97,10 +99,10 @@
   .rh-filters .filters { flex: 1 1 auto; margin: 0; }
   .rh-filters:empty { display: none; }
 
-  .rh-body { display: grid; grid-template-columns: minmax(0, 1fr) 460px; gap: 24px; align-items: start; margin-top: 14px; }
-  .rh-body.no-pane { grid-template-columns: minmax(0, 1fr); }
+  /* the list is a strip of cards that scrolls sideways; the open item's page fills the width beneath it */
+  .rh-body { display: block; margin-top: 30px; }
   .rh-body.no-pane .rh-pane { display: none; }
-  .rh-pane { position: sticky; top: 76px; max-height: calc(100vh - 96px); overflow: auto; border-radius: var(--radius-card);
+  .rh-pane { position: static; margin-top: 16px; border-radius: var(--radius-card);
     box-shadow: inset 0 0 0 1px var(--line); background: var(--paper); }
   .rh-pane:empty { display: none; }
   .rh-pane .rv-pane { min-height: 300px; }
@@ -108,9 +110,10 @@
 
   .rh-listhead { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 14px; min-height: 44px; }
   .rh-listhead .meta { margin-left: auto; }
-  .rh-list { display: grid; gap: 6px; }
-  .rh-group { display: grid; gap: 6px; margin-top: 14px; }
-  .rh-group:first-child { margin-top: 4px; }
+  .rh-list { display: flex; align-items: stretch; gap: 10px; overflow-x: auto; overscroll-behavior-x: contain; scroll-snap-type: x proximity; padding-bottom: 8px; scrollbar-width: thin; }
+  .rh-group { display: contents; }
+  .rh-list .rh-row { flex: 0 0 min(400px, 86vw); scroll-snap-align: start; }
+  .rh-list .rh-gh { flex: 0 0 auto; align-self: center; min-width: 220px; }
   .rh-gh { display: grid; grid-template-columns: 44px auto minmax(0, 1fr) auto; align-items: center; column-gap: 8px; min-height: 48px; }
   .rh-gh.plain { grid-template-columns: minmax(0, 1fr) auto; column-gap: 12px; }
   .rh-gh .glyph { width: 18px; height: 18px; flex: none; }
@@ -159,6 +162,10 @@
   .rh-row .l2 .over { color: var(--ink); }
   .rh-row .l3 { margin-top: 4px; font: 400 13px/1.4 var(--font); color: var(--soft); }
   .rh-row .l3.note { font-style: italic; }
+  /* the strip's cards: the title and the date only, short and wide */
+  .rh-list .rh-row > .rh-rb { min-height: 0; padding: 10px 14px 10px 0; align-items: center; }
+  .rh-list .rh-row .l2, .rh-list .rh-row .tags { display: none; }
+  .rh-list .rh-row .l1 { -webkit-line-clamp: 2; }
   .rh-row .tags { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 4px; max-width: 220px; }
   .rh-row .tag { display: inline-flex; align-items: center; gap: 4px; height: 22px; padding: 0 8px; border-radius: 999px; white-space: nowrap;
     background: var(--paper); box-shadow: inset 0 0 0 1px var(--line); font: 600 11.5px var(--font); color: var(--ink); }
@@ -209,11 +216,7 @@
   .rh-optsbox { display: grid; gap: 10px; margin-top: 14px; }
   .rh-optsbox:empty { display: none; }
 
-  @media (max-width: 1099px) {
-    .rh-body { grid-template-columns: minmax(0, 1fr) 380px; }
-  }
   @media (max-width: 959px) {
-    .rh-body { grid-template-columns: minmax(0, 1fr); }
     .rh-pane { display: none; }
     .rh-today { grid-template-columns: auto minmax(0, 1fr); }
     .rh-today .rh-fc { grid-column: 1 / -1; }
@@ -267,7 +270,7 @@
   <header class="rh-head">
     <div>
       <h1 class="h1">Review</h1>
-      <p class="rh-helper">Every miss, named by the mistake behind it. Two clean answers on new numbers close one.</p>
+      <p class="rh-helper">Every miss, named by the mistake behind it. Two correct answers on new numbers close one.</p>
     </div>
     <div class="rh-start" id="start" aria-label="Today's review"></div>
   </header>

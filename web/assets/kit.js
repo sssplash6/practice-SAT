@@ -1792,7 +1792,7 @@
   }
   const pips = (owed, of = 2) => {
     const given = Math.max(0, Math.min(of, of - (owed || 0)));
-    return h('span', { class: 'pips', role: 'img', 'aria-label': `${given} of ${of} clean answers` }, Array.from({ length: of }, (_, i) => h('i', { class: i < given ? 'on' : null })));
+    return h('span', { class: 'pips', role: 'img', 'aria-label': `${given} of ${of} correct answers` }, Array.from({ length: of }, (_, i) => h('i', { class: i < given ? 'on' : null })));
   };
   const dbars = (tier, o = {}) => {
     const t = tierOf(tier) || 'medium';
@@ -1906,7 +1906,7 @@
       h('span', { class: 'mbar', role: 'img', 'aria-label': `Mastery: ${word}` }, h('i', { style: `--m: ${Math.max(0, Math.min(1, s.mastery || 0))}` })),
       h('span', { class: 'skill-word', text: word }),
       h('span', { class: 'meta', text: s.answered ? `${pct(acc)} right of ${fmtN(s.answered)}` : 'no answers yet' }));
-    el.append(m);
+    if (s.gain === undefined) el.append(m);   // a gain row is name, gain, bar, play: the bar already says where the skill stands
     if (s.gain !== undefined) {
       // a figure only when there is one: under 5 is a quiet note, not the row's headline
       const small = s.gain === null || s.gain < 5;
@@ -1916,19 +1916,18 @@
         h('span', { class: 'skill-track', role: 'img', 'aria-label': `First-try accuracy ${pct(acc)}; the gain assumes ${pct(goal)}` },
           h('i', { class: 'you', style: `--t: ${acc || 0}` }), h('i', { class: 'goal', style: `--t: ${goal}` })),
         h('span', { class: 'meta', text: `${pct(acc)} → ${pct(goal)}` })));
-      const meta = [s.per_test !== undefined && `about ${fmtN(s.per_test)} of 44`, s.need_right && `at least ${fmtN(s.need_right)} right`, Math.round(s.minutes || 0) >= 1 && `~${dur(s.minutes)}`].filter(Boolean);
-      if (meta.length) el.append(h('p', { class: 'meta skill-meta', text: meta.join(' · ') }));
-      if (s.tiers) el.append(h('p', { class: 'meta skill-tiers', text: ['easy', 'medium', 'hard'].filter(t => s.tiers[t] && s.tiers[t][1]).map(t => `${t[0].toUpperCase()} ${s.tiers[t][0]}/${s.tiers[t][1]}`).join(' · ') }));
     }
     const side = h('div', { class: 'skill-side' });
     if (s.open) side.append(h('span', { class: 'skill-open', 'aria-label': `${s.open} open mistake${s.open === 1 ? '' : 's'}` },
-      h('span', { class: 'dots', 'aria-hidden': 'true' }, Array.from({ length: Math.min(3, s.open) }, () => h('i'))), h('span', { class: 'meta', text: fmtN(s.open) })));
+      h('span', { class: 'meta', text: fmtN(s.open) })));
     // the answer count is the accuracy line's ("of 6"), so the badge only says the figure is rough
     if (s.pts !== undefined && s.gain === undefined) side.append(pts(null, s.pts, `skill:${topic}`) || '');
     const pr = o.practise;
     if (pr) {
       const count = pr.count ?? 10;
-      const b = button({ label: pr.label || `Practise · ${count}`, href: pr.href, primary: pr.primary }, true);
+      const lbl = pr.label || `Practise · ${count}`;
+      // a gain row carries the label as the tooltip and the accessible name only: a round play button
+      const b = s.gain !== undefined ? button({ icon: 'play', ariaLabel: lbl, title: lbl, href: pr.href, primary: pr.primary, className: 'skill-play' }, true) : button({ label: lbl, href: pr.href, primary: pr.primary }, true);
       if (!pr.href) b.addEventListener('click', async () => {
         b.setAttribute('aria-busy', 'true');
         try { if (pr.onClick) await pr.onClick(s); else await startDrill(pr.body || { topics: [topic], count, adaptive: true, source: pr.source || 'skill' }); }
@@ -2103,7 +2102,7 @@
     twin_set:  { label: 'Twin this set', sub: 'same types, new numbers', helper: 'The same question types, new numbers.', key: null, icon: svgHTML(ICON.twin) },
     twin_test: { label: 'Twin test', sub: 'same slots, new numbers', helper: 'Same question types in the same places, new numbers, scored like any test.', key: null, icon: svgHTML(ICON.twin_test) },
     again:     { label: 'Again, exactly', sub: 'the very same question', helper: 'The same question again. Doesn’t move mastery.', key: 'E', icon: svgHTML(ICON.again) },
-    fix:       { label: 'Fix', sub: 'your open mistakes', helper: 'Two clean answers on questions with that trap close each mistake.', key: 'F', icon: svgHTML(ICON.fix) },
+    fix:       { label: 'Fix', sub: 'your open mistakes', helper: 'Two correct answers on questions with that trap close each mistake.', key: 'F', icon: svgHTML(ICON.fix) },
     learn:     { label: 'Learn this type', sub: 'one solved, then three', helper: 'A worked example on new numbers, then three of your own. Counts toward mastery.', key: null, icon: svgHTML(ICON.learn) },
   };
   const KEYS = { twin: 'T', twin_menu: 'Shift+T', details: 'V', guess: 'I', report: 'R', save: 'B', mark: 'M', note: 'O', history: 'Y', desmos: 'Shift+G', again: 'E', fix: 'F' };

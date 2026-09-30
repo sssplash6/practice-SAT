@@ -241,17 +241,18 @@
     if (c.status === 'upcoming') {
       act.append(h('button', { type: 'button', class: 'quiet', text: 'Add to calendar', onclick: () => UI.ics({ title: `SAT Freshman · ${c.title}`, start: new Date(c.opens), minutes: 30, url: `${location.origin}${C.href(c.id)}` }) }));
     } else if (closedGhost) {
-      const go = h('button', { type: 'button', class: 'pill', text: 'Sit it now (unranked)' });
+      const go = h('button', { type: 'button', class: 'pill sm', text: 'Sit it now (unranked)' });
       go.addEventListener('click', () => busy(go, () => C.start(c.id, { kind: c.kind })));
       act.append(go);
     } else {
-      const go = h('button', { type: 'button', class: 'pill', id: 'start', text: c.kind === 'daily' ? 'Start the challenge' : 'Start' });
+      const go = h('button', { type: 'button', class: 'pill sm', id: 'start', text: c.kind === 'daily' ? 'Start the challenge' : 'Start' });
       go.addEventListener('click', () => doStart(go));
       act.append(go);
     }
     if (me.status === 'new' && c.status !== 'closed' && ['daily', 'weekly', 'final', 'trap', 'private'].includes(c.kind) && (c.ladder || []).length) {
       const low = [...c.ladder].sort((a, b) => (a.chance ?? 1) - (b.chance ?? 1)).slice(0, 3).map(q => C.topicName(q.topic));
       const warm = quiet('Warm up · 6', ev => busy(ev.currentTarget, async () => runner(await api(`/contest/${enc(c.id)}/warmup`, { method: 'POST', body: {} }))));
+      warm.className = 'btn sm';
       UI.tooltip(warm, `Two questions each on ${[...new Set(low)].join(' · ')}, from other question types, key after each.`);
       act.append(warm);
     }

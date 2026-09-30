@@ -69,13 +69,13 @@
     const yday = new Date(); yday.setDate(yday.getDate() - 1);
     const yid = `daily-${yday.getFullYear()}-${String(yday.getMonth() + 1).padStart(2, '0')}-${String(yday.getDate()).padStart(2, '0')}`;
     const moreBtn = extra => {
-      const b = h('button', { type: 'button', class: 'quiet', 'aria-haspopup': 'menu', text: 'More ▾' });
+      const b = h('button', { type: 'button', class: 'btn sm', 'aria-haspopup': 'menu', text: 'More ▾' });
       UI.menu.bind(b, () => [...extra, { label: 'Past days', href: C.href(yid) }, { label: 'Daily reminder', onClick: () => C.reminder() }], { label: 'More' });
       return b;
     };
     const st = h('div', { class: 'daily-status' });
     if (me.status === 'new') {
-      const go = h('button', { type: 'button', class: 'pill', text: 'Start the challenge' });
+      const go = h('button', { type: 'button', class: 'pill sm', text: 'Start the challenge' });
       go.addEventListener('click', () => {
         if (C.rulesSeen('daily')) busy(go, () => C.start(c.id, { kind: 'daily' }));
         else location.href = C.href(c.id);
@@ -84,10 +84,11 @@
         const r = await api(`/contest/${encodeURIComponent(c.id)}/warmup`, { method: 'POST', body: {} });
         location.href = `/practice/session/?id=${encodeURIComponent(r.session)}`;
       }));
+      warm.className = 'btn sm';   // Start, Warm up and More are one row of the same-height buttons
       UI.tooltip(warm, 'Two questions on each of your three lowest-chance skills, from other question types. Offered only before you start.');
       st.append(h('div', { class: 'row-act' }, go, warm, moreBtn([])));
     } else if (me.status === 'progress') {
-      const go = h('button', { type: 'button', class: 'pill', text: 'Resume' });
+      const go = h('button', { type: 'button', class: 'pill sm', text: 'Resume' });
       go.addEventListener('click', () => busy(go, () => C.start(c.id)));
       st.append(h('div', { class: 'row-act' }, go, h('span', { class: 'meta', text: `${num(me.answered)} of ${num(c.count)} answered${me.clock ? ` · ${mmss(me.clock.left)} on the clock` : ''}` }), moreBtn([])));
     } else {

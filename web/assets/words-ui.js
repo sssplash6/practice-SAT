@@ -136,6 +136,17 @@ button.term { appearance: none; border: 0; background: none; padding: 0; font: i
 .tw-line { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; }
 .tw-line h2 { font: 700 15px var(--font); }
 .tw-line .btn { margin-left: auto; min-height: 44px; }
+/* Today's words: one solid Start, the three ways in as one connected group, the time box as its own group, the offline offer under a rule */
+.today-words .tw-row > .pill { height: 40px; min-height: 40px; min-width: 110px; padding: 0 24px; border-radius: 10px; font-size: 15px; }
+.tw-modes { display: inline-flex; border-radius: 10px; overflow: hidden; box-shadow: inset 0 0 0 1px var(--line); }
+.tw-modes > .btn { height: 40px; min-height: 40px; border-radius: 0; box-shadow: none; padding: 0 16px; }
+.tw-modes > .btn + .btn { box-shadow: inset 1px 0 0 var(--line); }
+.tw-box .btn.sm { height: 34px; min-height: 34px; }
+@media (max-width: 759px) { .tw-modes { flex: 1 1 100%; } .tw-modes > .btn { flex: 1 1 0; min-height: var(--touch); padding: 0 8px; } }
+.tw-find { display: grid; gap: 6px; margin-top: 14px; }
+.tw-find .field { width: 100%; height: 40px; }
+.tw-find-h { margin: 0; }
+.today-words .tw-off { display: flex; justify-content: flex-end; align-items: center; gap: 6px; margin: 14px 0 0; padding-top: 12px; border-top: 1px solid var(--line); }
 .wfin > details > summary { list-style: none; cursor: pointer; display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 14px; }
 .wfin > details > summary::-webkit-details-marker { display: none; }
 .wfin > details > summary::after { content: "▸"; margin-left: auto; color: var(--soft); }
@@ -314,6 +325,26 @@ button.term { appearance: none; border: 0; background: none; padding: 0; font: i
   }
 
   /* ------------------------------------------------------------ Today's words (W11) */
+  /* "10 cards on transitions", "quiz 5 saved", "20 science": a count, cards or a quiz, and what to draw from.
+     A saved / missed / due... keyword picks that deck; anything else matches a collection, a topic, a list, a root,
+     a part of speech or the start of a word, and the set is drawn from the matches. */
+  const FIND_DECKS = { due: 'due', new: 'new', saved: 'saved', missed: 'missed', mine: 'mine', stubborn: 'stubborn', 'looked up': 'looked_up', hard: 'hard_for_you' };
+  function parseFind(text, words) {
+    const t = String(text || '').toLowerCase().replace(/[^a-z0-9\s'-]/g, ' ').replace(/\s+/g, ' ').trim();
+    if (!t) return null;
+    const m = t.match(/\b(\d{1,3})\b/);
+    const count = m ? Math.max(1, Math.min(200, +m[1])) : 10;
+    const mode = /\b(quiz|test)\b/.test(t) ? 'quiz' : 'cards';
+    let rest = t.replace(/\b\d{1,3}\b/g, ' ').replace(/\b(cards?|flashcards?|words?|quiz|test|on|about|for|of|from|with|me|the|a|some|my)\b/g, ' ').replace(/\s+/g, ' ').trim();
+    const key = Object.keys(FIND_DECKS).find(k => rest === k || rest === k + 's');
+    if (key || !rest) return { mode, count, label: key || 'new words', deck: { source: key ? FIND_DECKS[key] : 'new' }, n: null };
+    const has = (w, term) => [w.collection, w.pos, ...(w.topics || []), ...(w.lists || []), ...(w.roots || []).map(x => (typeof x === 'string' ? x : x.root || x.id || ''))]
+      .some(x => x && String(x).toLowerCase().replace(/_/g, ' ').includes(term)) || String(w.word || '').toLowerCase().startsWith(term);
+    const hit = (words || []).filter(w => has(w, rest));
+    if (!hit.length) return { mode, count, label: rest, none: true };
+    const pick = hit.slice().sort(() => Math.random() - .5).slice(0, count).map(w => w.slug);
+    return { mode, count: pick.length, label: rest, deck: { source: 'words', words: pick }, n: hit.length };
+  }
   function todayWords(host, o = {}) {
     const el = h('section', { class: 'card today-words', 'aria-label': 'Today’s words' });
     if (host) host.replaceChildren(el);
@@ -381,13 +412,36 @@ button.term { appearance: none; border: 0; background: none; padding: 0; font: i
         return;
       }
       const row = h('div', { class: 'tw-row' });
+      // the search: a typed request becomes a custom set on Enter
+      const words = lib && lib.words;
+      let find = null;
+      if (words && words.length) {
+        const input = h('input', { type: 'search', class: 'field', 'aria-label': 'Make a set', placeholder: 'Make a set: “10 cards on transitions”, “quiz 5 saved”', autocomplete: 'off', enterkeyhint: 'go' });
+        const hint = h('p', { class: 'help tw-find-h', hidden: true });
+        const plan = () => parseFind(input.value, words);
+        input.addEventListener('input', () => {
+          const pl_ = plan();
+          hint.hidden = !pl_;
+          if (pl_) hint.textContent = pl_.none ? `No words match “${pl_.label}”` : `${pl_.mode === 'quiz' ? 'Quiz' : 'Cards'} · ${plural(pl_.count, 'word')} · ${pl_.label}${pl_.n ? ` (${pl_.n} match)` : ''} · Enter to start`;
+        });
+        input.addEventListener('keydown', e => {
+          if (e.key !== 'Enter') return;
+          e.preventDefault();
+          const p_ = plan();
+          if (!p_) return;
+          if (p_.none) { toast(`No words match “${p_.label}”`); return; }
+          if (p_.mode === 'quiz') quizStart(p_.deck, p_.count);
+          else startWords({ mode: 'cards', deck: p_.deck, count: p_.count });
+        });
+        find = h('div', { class: 'tw-find' }, input, hint);
+      }
       // a fresh learner has one way in: placement sizes the first words (the user: why is Learn 10 an option here)
       if (fresh) {
         row.append(h('button', { type: 'button', class: 'pill', text: 'Find your level · 3 min', onclick: () => startWords({ mode: 'placement' }) }));
       } else {
         const start = h('button', { type: 'button', class: 'pill', onclick: () => startWords(startBody()) },
           s.done ? 'Start again' : 'Start', h('span', { class: 'kbd', text: 'Enter', hidden: !o.enter }));
-        row.append(start, review, learn, quiz);
+        row.append(start, h('span', { class: 'tw-modes', role: 'group', 'aria-label': 'Ways to practise' }, review, learn, quiz));
         const chips = h('span', { class: 'tw-box' }, h('span', { class: 'k', text: 'Time box' }));
         const seg = UI.chips(chips, [{ value: '5', label: '5 min' }, { value: '10', label: '10' }, { value: '15', label: '15' }],
           { value: box ? String(box) : null, label: 'Time box, minutes', onChange: v => { box = box === +v ? null : +v; ls.set('satf.words.box', box); seg.set(box ? String(box) : null, true); } });
@@ -395,7 +449,7 @@ button.term { appearance: none; border: 0; background: none; padding: 0; font: i
         chips.append(prev);
         row.append(chips);
       }
-      el.replaceChildren(top, row);
+      el.replaceChildren(top, row, ...(find && !fresh ? [find] : []));
       if (debt && debt.due) {
         const days = Math.max(2, Math.ceil(debt.due / Math.max(1, debt.spread || 1)));
         el.append(h('p', { class: 'tw-note' }, h('b', { text: `${debt.due} due` }), debt.away ? ` after ${plural(debt.away, 'day')} away · ` : ' · ',

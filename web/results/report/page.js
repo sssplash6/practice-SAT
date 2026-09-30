@@ -902,7 +902,7 @@
     const meta = [r.list.map(labelOf).join(' · '), x.held ? null : topicName(x.topic, x.topic_name), TIER[x.difficulty], r.list.length > 1 ? `×${r.list.length} here` : null,
       m && m.hits_all_time > 1 ? `×${n(m.hits_all_time)} all time` : null, rx.worth(x.worth) || null, x.cause ? causeOne(x.cause) : null, x.raw === 'mixed' ? 'right on a later try' : null].filter(Boolean).join(' · ');
     const state = fixed ? h('span', { class: 'st', text: `✓ Fixed${m && m.closed ? ` ${UI.date(m.closed)}` : ''}` })
-      : m && m.open ? h('span', { class: 'st rp-dot', text: ` Open · ${plural(m.owed || 2, 'clean answer')} to close` }) : null;
+      : m && m.open ? h('span', { class: 'st rp-dot', text: ` Open · ${plural(m.owed || 2, 'correct answer')} to close` }) : null;
     const acts = h('div', { class: 'rp-row acts' }, btn('Review', () => openPlayer(x.i)));
     if (owner) {
       if (!x.held) acts.append(btn('Try one like this', () => openPlayer(x.i, { twin: true })));

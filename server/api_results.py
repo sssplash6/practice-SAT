@@ -30,7 +30,7 @@ import re
 import statistics
 from collections import Counter, defaultdict
 
-from fastapi import APIRouter, Depends, Header, HTTPException, Query
+from fastapi import APIRouter, Depends, Header, HTTPException, Query, Response
 from pydantic import BaseModel, Field
 
 from . import blueprint, db, deps, drill, estimate, practice, progress, scoring
@@ -966,6 +966,21 @@ def stats(learner: str, tz: int = 0) -> dict:
             "calibration_trend": progress.calibration(learner),
             "types_met": progress.types_met(learner),
             "week": {"minutes": minutes_week, "questions": sum(d["questions"] for d in ledger["recent"][-7:])}}
+
+
+@router.get("/api/results/progress.pdf")
+def get_progress_pdf(lang: str = "en", share: str | None = None, x_learner: str | None = Header(default=None),
+                     x_tz: int = Depends(tz_of)) -> Response:
+    """The progress report as a PDF download, in Uzbek, English or Russian: what a student hands a parent or a
+    tutor. A progress link's reader can download it too (the same read-only view)."""
+    from . import progress_pdf
+    if lang not in progress_pdf.LANGS:
+        raise HTTPException(422, "lang is one of uz, en, ru")
+    learner, _ = _reader(x_learner, share)
+    pdf = progress_pdf.build(learner, x_tz, lang)
+    name = f"progress-{lang}-{dt.date.today().isoformat()}.pdf"
+    return Response(pdf, media_type="application/pdf", headers={"Content-Disposition": f'attachment; filename="{name}"',
+                                                                 "Cache-Control": "no-store"})
 
 
 @router.get("/api/stats")

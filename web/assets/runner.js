@@ -3316,6 +3316,8 @@
       const l2 = h('div', { class: 'rv-h2' });
       bits.forEach((x, i) => { if (i) l2.append(h('span', { class: 'rv-dot', 'aria-hidden': 'true', text: '·' })); l2.append(x instanceof Node ? x : h('span', { text: x })); });
       head.append(l1, l2);
+      // in the pane the mistake, its tags and the cause sit together in one panel instead of a run of separate lines
+      const factsA = h('div', { class: 'rv-fa' }), factsB = h('div', { class: 'rv-fb' });
       const tags = h('div', { class: 'rv-tags' });
       const tag = (text, cls) => tags.append(h('span', { class: 'rv-tag' + (cls ? ' ' + cls : ''), text }));
       if (second) tag(`Second look · ${order.indexOf(items.indexOf(it)) + 1} of ${order.length} · no clock`, 'on');
@@ -3326,7 +3328,7 @@
       if (it.new && !it._revealed) tag('New', 'on');
       if (it.saved) tag('Saved');
       tags.append(h('span', { class: 'rv-tag rv-hidechip', text: 'Answers hidden' }));
-      head.append(tags);
+      (pane ? factsB : head).append(tags);
       // SR12: how students do on this type; no level and no "your odds" on screen (the user: internal calibration)
       const od = it.odds, cr = it.crowd;
       let students = null;
@@ -3342,7 +3344,7 @@
           ...RV_CAUSES.filter(([kk]) => kk !== 'entry' || q.type === 'spr').map(([kk, lab]) => ({ label: lab, radio: 'cause', checked: it.cause.cause === kk, onClick: () => setCause(it, kk) })),
         ], { label: 'What happened?' }));
         else cb.disabled = true;
-        head.append(h('div', { class: 'rv-causerow' }, cb));
+        (pane ? factsB : head).append(h('div', { class: 'rv-causerow' }, cb));
       }
       // the mistake behind it: open with pips, or fixed
       const m = it.mistake;
@@ -3353,15 +3355,24 @@
           const owed = m.owed ?? 2, of = m.of ?? 2;
           if (UI.pips) line.append(UI.pips(owed, of));
           const word = m.status === 'relapsed' ? `Relapsed${m.relapses > 1 ? ' ×' + m.relapses : ''}` : m.status === 'stuck' ? 'Stuck' : m.status === 'half' ? 'Half fixed' : 'Open mistake';
-          line.append(h('b', { text: ` ${word}` }), pane ? ` · ${of - owed} of ${of} clean answers` : ` · ${owed} clean answer${owed === 1 ? '' : 's'} to close`,
-            m.hits ? ` · hit ${m.hits}× all time` : '', m.label && pane ? ` · ${m.label}` : '');
+          if (pane) {
+            // the state on top, the count under it, the mistake's name last: three short lines, not one long sentence
+            line.replaceChildren();
+            const mrow = h('span', { class: 'rv-mrow' });
+            if (UI.pips) mrow.append(UI.pips(owed, of));
+            mrow.append(h('b', { text: word }));
+            line.append(mrow, h('span', { class: 'rv-msub', text: [`${of - owed} of ${of} correct answers`, m.hits ? `hit ${m.hits}× all time` : ''].filter(Boolean).join(' · ') }),
+              m.label ? h('span', { class: 'rv-mlabel', text: m.label }) : null);
+          } else {
+            line.append(h('b', { text: ` ${word}` }), ` · ${owed} correct answer${owed === 1 ? '' : 's'} to close`, m.hits ? ` · hit ${m.hits}× all time` : '');
+          }
         }
-        head.append(line);
+        (pane ? factsA : head).append(line);
       }
+      if (pane && (factsA.children.length || factsB.children.length)) head.append(h('div', { class: 'rv-facts' }, factsA, factsB));
       if (it.path && (it.path.conf === 'sure' || it.path.conf_assumed) && miss(it)) head.append(h('p', { class: 'rv-blind rv-keyed', text: it.path.conf_assumed ? 'Fast answer · assumed sure' : 'You were sure' }));
       if (it.rule) head.append(h('p', { class: 'rv-rule' }, h('b', { text: 'Your rule: ' }), it.rule));
-      if (pane && it.story && it.story.length) head.append(timeline(it));
-      if (pane && items.length > 1) head.append(resultStrip());
+      if (pane && it.story && it.story.length) head.append(h('p', { class: 'rv-tlh', text: 'History' }), timeline(it));
     }
     function paintHead() { const el = col.querySelector('.rv-item'); if (el && el._head && cur && cur.q) fillHead(el._head, cur); }
     async function setCause(it, kind) {

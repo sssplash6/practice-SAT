@@ -107,7 +107,7 @@
       revealed: e.blank ? true : !!(a && a.revealed), diag_choices: choices(d, e, a),
     });
     if (e.blank) it.status = 'unanswered';
-    else if (!it.mistake) it.status = 'fixed';           // closed since by a clean answer elsewhere: "Incorrect · fixed since"
+    else if (!it.mistake) it.status = 'fixed';           // closed since by a correct answer elsewhere: "Incorrect · fixed since"
     items[i] = it;
     return it;
   }

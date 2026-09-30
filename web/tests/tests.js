@@ -339,8 +339,14 @@
       host.append(bar);
     }
     if ((H.n || 0) < 2 || !(H.rows || []).length) {
-      host.append(h('p', { class: 'help', text: 'Sit 2 timed tests to see how you take them: pacing, blanks, answer changes, marking and confidence.' }),
-        btn('Full section · 70 min', { cls: 'btn sm', run: b => start({ kind: 'section' }, b) }));
+      // the empty state previews the result: five blank cells to be filled, how many tests it needs, one button
+      const n = Math.min(2, H.n || 0);
+      host.append(h('div', { class: 'hb-empty' },
+        h('div', { class: 'hb-what', 'aria-label': 'What it will measure' }, ['Pacing', 'Blanks', 'Answer changes', 'Marking', 'Confidence'].map(t =>
+          h('div', { class: 'hb-cell' }, h('span', { class: 'hb-ck', text: t }), h('span', { class: 'hb-cv', 'aria-hidden': 'true', text: '—' })))),
+        h('div', { class: 'hb-foot' },
+          h('div', { class: 'hb-prog', role: 'img', 'aria-label': `${n} of 2 timed tests` }, UI.pips ? UI.pips(2 - n, 2) : null, h('span', { class: 'meta', text: `${n} of 2 timed tests to unlock` })),
+          btn('Start a full section · 70 min', { cls: 'pill sm', run: b => start({ kind: 'section' }, b) }))));
       return;
     }
     const list = h('ul', { class: 'hb-rows' });
@@ -443,7 +449,6 @@
         if (k.yours) stat('You', k.last !== null && k.last !== undefined ? `≈${Math.round(k.last)}` : 'Practice');
         if (k.best !== null && k.best !== undefined && k.yours > 1) stat('Best', `≈${Math.round(k.best)}`);
         if (id === 'section' && est.latest) stat('Adds', est.confidence && est.confidence.level === 'high' ? 'Keeps it High' : '+1 section → High confidence');
-        if (k.everyone) stat('Everyone', plural(k.everyone, 'sitting'));
       }
       if (stats.childNodes.length) card.append(stats);
       if (k.percentile !== null && k.percentile !== undefined) card.append(h('p', { class: 'meta', text: `Your last beats ${Math.round(k.percentile)}% of fresh ${id === 'section' ? 'sections' : 'sittings'}` }));
@@ -451,7 +456,7 @@
       if (id === 'trainer') card.append(h('div', { class: 'tc-goal' }, h('span', { text: 'Route up 3 times in a row' }), pips(k.pips), k.best_streak ? h('span', { class: 'meta', text: `Best streak ${k.best_streak}` }) : null));
       if (id === 'module2u' && k.gauntlet && k.gauntlet.shown) card.append(h('div', { class: 'tc-goal' }, h('span', { text: `${k.gauntlet.goal || 18} of 22 on the harder module 2` }), pips(k.gauntlet.pips)));
       const acts = h('div', { class: 'tc-acts' });
-      const primary = rec === id ? 'pill' : 'btn';
+      const primary = 'pill sm';   // one Start for every card: the compact orange one (the recommended card is marked elsewhere, not by a bigger button)
       const body = id === 'twin' ? { kind: 'twin', twin_of: D.twin && D.twin.source } : id === 'module2u' && k.gauntlet && k.gauntlet.shown ? Object.assign({}, I.body, { trainer: 'gauntlet' }) : I.body;
       const disabled = id === 'traps' && !k.ready;
       const go = btn(disabled ? 'No traps ready yet' : 'Start', { cls: primary, run: b => (I.sheet ? S.open(I.opts) : start(body, b)) });
@@ -515,7 +520,7 @@
       { key: 'p.for', label: 'For me', options: PF.for.map(([value, label]) => ({ value, label })) },
       { key: 'p.src', label: 'Source', options: PF.src.map(([value, label]) => ({ value, label })) },
       { key: 'p.sort', label: 'Sort', type: 'sort', default: hasEst ? 'best' : 'new',
-        options: [['best', 'Best for me'], ['new', 'Newest'], ['old', 'Oldest'], ['hard', 'Hardest for me'], ['easy', 'Easiest for me'], ['crowd', 'Hardest for everyone'], ['most', 'Most sat']].map(([value, label]) => ({ value, label })) },
+        options: [['best', 'Best for me'], ['new', 'Newest'], ['old', 'Oldest'], ['hard', 'Hardest for me'], ['easy', 'Easiest for me'], ['most', 'Most sat']].map(([value, label]) => ({ value, label })) },
     ];
     const vals = v => ({ diff: v['p.diff'], status: v['p.status'], for: v['p.for'], src: v['p.src'] });
     const paint = v => {
@@ -550,13 +555,6 @@
       if (UI.tooltip) UI.tooltip(c, tip); else c.title = tip;
       box.append(c);
     }
-    if (ev.label) {
-      const w = { harder: 'harder than most', easier: 'easier than most', typical: 'typical' }[ev.label] || ev.label;
-      const c = h('span', { class: 'tag', text: `Everyone: ${w}` });
-      const tip = ev.source === 'measured' ? `Measured from ${plural(ev.n, 'first ranked sitting')}` : 'Predicted from its types';
-      if (UI.tooltip) UI.tooltip(c, tip); else c.title = tip;
-      box.append(c);
-    }
     return box;
   }
   function paperCard(p) {
@@ -584,7 +582,7 @@
     const rec = u.kind === 'paper' && u.paper === p.n;
     const label = status === 'in_progress' ? 'Resume' : status === 'completed' ? 'Retake' : 'Start';
     const acts = h('div', { class: 'tc-acts' });
-    acts.append(btn(label, { cls: rec ? 'pill' : 'btn', run: b => (status === 'in_progress' && y.live_session ? (location.href = lobby(y.live_session)) : start({ kind: 'paper', paper: p.n }, b)) }));
+    acts.append(btn(label, { cls: 'pill sm', run: b => (status === 'in_progress' && y.live_session ? (location.href = lobby(y.live_session)) : start({ kind: 'paper', paper: p.n }, b)) }));
     acts.append(btn('Options', { cls: 'quiet', run: () => S.open({ kind: 'paper', paper: p.n, step: 1 }) }));
     // before you sit a paper its board is closed: the link waits for posts to tease, and never repeats "opens after you sit it" 8 times
     if (!p.gated || p.posts) acts.append(btn(`Questions & discussion${p.posts ? ' ' + p.posts : ''}`, { cls: 'quiet tc-talk', run: () => talk(p) }));

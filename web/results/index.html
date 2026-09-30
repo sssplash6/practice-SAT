@@ -26,10 +26,18 @@
   .rs-line { font: 400 15px/1.5 var(--font); color: var(--ink); text-wrap: pretty; }
   .rs-line b, .rs-num { font-family: var(--mono); font-weight: 500; font-variant-numeric: tabular-nums; }
   .rs-helper { font: 400 13.5px/1.45 var(--font); color: var(--soft); text-wrap: pretty; }
+  .rs-langs { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+  .rs-lang { appearance: none; border: 0; cursor: pointer; display: grid; gap: 2px; justify-items: center; padding: 16px 8px; border-radius: 12px; background: var(--tile-2); color: var(--ink); font: 600 16px var(--font); }
+  .rs-lang small { font: 500 12px var(--font); color: var(--soft); }
+  .rs-lang[aria-busy="true"] { opacity: .5; cursor: progress; }
+  @media (hover: hover) and (pointer: fine) { .rs-lang:hover { box-shadow: inset 0 0 0 1.5px var(--amber); } }
+  @media (max-width: 420px) { .rs-langs { grid-template-columns: minmax(0, 1fr); } }
   .rs-row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px; }
   .rs-info { min-height: 24px; padding: 0 6px; margin-left: 2px; font: 500 14px/1 var(--font); color: var(--soft); }
   .card-head .rs-headr { margin-left: auto; display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
   .card-head .rs-headr .help:empty { display: none; }
+  /* Every sitting: the filter chips and the sort menu share one line beside the title instead of stacking */
+  @media (min-width: 760px) { #sittings .card-head { align-items: center; } #sittings .rs-headr, #sittings .rs-headr .rs-row { flex-wrap: nowrap; } #sittings .rs-headr .field { width: auto; min-width: 150px; } }
   .rs-big { white-space: nowrap; font: 800 clamp(30px, 2.9vw, 38px)/1.05 var(--font); letter-spacing: -.03em; font-variant-numeric: tabular-nums; }
   .rs-est { display: grid; gap: 12px; align-content: start; }
   .rs-facts { display: grid; gap: 6px; margin: 0; padding: 0; list-style: none; }
@@ -63,7 +71,11 @@
   .rs-skill b { display: flex; align-items: center; gap: 8px; font: 600 14.5px/1.3 var(--font); }
   .rs-skill .glyph { width: 18px; height: 18px; flex: none; }
   .rs-skill .badge { justify-self: start; }
-  .rs-dom-h { grid-column: 1 / -1; font: 700 12px/1 var(--font); letter-spacing: .08em; text-transform: uppercase; color: var(--soft); margin-top: 8px; }
+    .rs-dom-h { grid-column: 1 / -1; font: 700 12px/1 var(--font); letter-spacing: .08em; text-transform: uppercase; color: var(--soft); margin-top: 8px; }
+  /* the four domain headings: in the ink colour, larger, with an orange tick, so the grid reads as four groups */
+  #skills .rs-dom-h { grid-column: 1 / -1; display: flex; align-items: center; gap: 10px; font: 700 15px/1.2 var(--font); letter-spacing: .02em; text-transform: none; color: var(--ink); margin-top: 18px; padding-bottom: 8px; border-bottom: 1px solid var(--line); }
+  #skills .rs-dom-h::before { content: ""; width: 4px; height: 18px; border-radius: 2px; background: var(--amber); flex: none; }
+  #skills .rs-dom-h:first-child { margin-top: 4px; }
   .rs-cmp { position: sticky; bottom: 16px; z-index: 5; display: flex; flex-wrap: wrap; align-items: center; gap: 10px; padding: 10px 14px; border-radius: 12px; background: var(--ink); color: var(--on-ink); }
   .rs-cmp[hidden] { display: none; }
   .rs-cmp .quiet { color: var(--on-ink); }

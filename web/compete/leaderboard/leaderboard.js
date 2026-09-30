@@ -303,7 +303,7 @@
         d.nearest_nonempty ? h('p', {}, h('a', { class: 'link', href: `?metric=${S.metric}&period=${d.nearest_nonempty.period}`, text: `${d.nearest_nonempty.label || d.nearest_nonempty.period}: ${num(d.nearest_nonempty.players)} students ›` })) : null,
         pars.length && S.metric === 'points' ? h('ul', { class: 'mini-rows', style: 'margin-top:12px' }, [...pars].sort((a, b) => b.points - a.points).map(p => h('li', { class: 'par' }, h('span', { class: 'mt', text: `L${p.level} par · today’s Daily` }), h('span', { class: 'ma mono', text: num(p.points) })))) : null,
         h('p', { class: 'help', text: 'Your spot appears after your first ranked contest.' }),
-        h('div', { class: 'row-act' }, h('a', { class: 'pill', href: C.href('daily'), text: 'Start the challenge' })));
+        h('div', { class: 'row-act' }, h('a', { class: 'pill sm', href: C.href('daily'), text: 'Start the challenge' })));
       host.append(empty);
       return;
     }

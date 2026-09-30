@@ -115,9 +115,38 @@
     dots.addEventListener('click', () => UI.menu(dots, [
       { label: 'Download CSV (all sittings)', onClick: csv },
       { label: 'Print', onClick: () => window.print() },
-      !readOnly && { label: 'Share my progress', onClick: shareSheet },
+      !readOnly && { label: 'Share a read-only link', onClick: shareSheet },
     ].filter(Boolean), { label: 'More', align: 'end' }));
-    box.append(dots);
+    box.append(btn('Share', () => shareChoose(), 'btn sm'), dots);
+  }
+  // Share: for a parent or a tutor. The student picks a language and a PDF of the progress downloads at once.
+  const LANGS = [['uz', 'Oʻzbekcha', 'Uzbek'], ['en', 'English', 'English'], ['ru', 'Русский', 'Russian']];
+  async function downloadReport(lang) {
+    const r = await fetch(`/api/results/progress.pdf?lang=${lang}${SHARE ? `&share=${encodeURIComponent(SHARE)}` : ''}`,
+      { headers: { 'X-Learner': UI.learner(), 'X-Tz': String(new Date().getTimezoneOffset()) } });
+    if (!r.ok) throw new Error(`HTTP ${r.status}`);
+    const a = h('a', { href: URL.createObjectURL(await r.blob()), download: `progress-${lang}-${new Date().toISOString().slice(0, 10)}.pdf` });
+    document.body.append(a);
+    a.click();
+    setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1500);
+  }
+  function shareChoose() {
+    let sh;
+    const tiles = LANGS.map(([code, native, english]) => {
+      const b = h('button', { type: 'button', class: 'rs-lang' }, h('span', { text: native }), h('small', { text: english }));
+      b.addEventListener('click', async () => {
+        if (b.getAttribute('aria-busy') === 'true') return;
+        b.setAttribute('aria-busy', 'true');
+        try { await downloadReport(code); UI.toast(`Downloaded · progress report in ${english}`); sh.close(); }
+        catch (_) { b.removeAttribute('aria-busy'); UI.toast('Couldn’t make the PDF. Try again.'); }
+      });
+      return b;
+    });
+    const body = h('div', { class: 'rs-est' },
+      h('p', { class: 'rs-helper', text: 'Send your progress to a parent or a tutor. Pick a language and a PDF downloads right away.' }),
+      h('div', { class: 'rs-langs', role: 'group', 'aria-label': 'Language' }, tiles),
+      readOnly ? null : h('div', { class: 'rs-row' }, btn('Or share a read-only link', () => { sh.close(); shareSheet(); }, 'quiet')));
+    sh = UI.sheet({ title: 'Share progress', body, size: 's' });
   }
   // R18(a): the progress link is S1's POST /api/share; until it lands, the plan's view link is the same token kind
   async function shareSheet() {
@@ -165,10 +194,11 @@
     const band = E && (E.low !== undefined && E.low !== null ? E : E.combined || E.range);
     const pr = (ST && ST.profile) || {};
     if (!E || !E.latest || !band || band.low === undefined) {
-      head(el, { k: 'Current estimate', title: 'Your first test gives you an estimate.' });
+      head(el, { k: 'Current estimate', title: 'Sit a test to get your estimate.' });
       if (!readOnly) {
-        const full = btn('Full section · 70 min', b => startTest(true, b), 'pill');
-        el.append(h('div', { class: 'rs-row' }, full, btn('or one module · 35 min', b => startTest(false, b), 'quiet')));
+        // the two ways in, the same button twice: the section is the most accurate, the module the quick start
+        el.append(h('div', { class: 'rs-row' }, btn('Full section · 70 min', b => startTest(true, b), 'pill sm'), btn('One module · 35 min', b => startTest(false, b), 'pill sm')),
+          h('p', { class: 'meta', style: 'margin-top: 10px', text: 'A full section is the most accurate. A module is the quick way in.' }));
       }
       return;
     }
@@ -228,7 +258,7 @@
     rows.forEach(s => list.append(h('div', { class: 'rs-bar', style: `--rp: ${s.gain / top}` }, h('span', {}, glyph(s.topic), ' ', topicName(s.topic)), h('span', { class: 't' }, h('i')),
       h('span', { class: 'rs-row' }, h('b', { class: 'rs-num', text: `≈ +${n(s.gain)}` }), readOnly ? '' : btn('Practise', b => drill({ topics: [s.topic], count: 10, adaptive: true, source: 'skill' }, b), 'quiet')))));
     el.append(list);
-    if (!readOnly) el.append(h('div', { class: 'rs-row' }, btn(`Practise the top 3 · ≈ +${n(g.top3.gain)}`, b => drill({ topics: g.top3.topics, count: 12, adaptive: true, source: 'gain' }, b), 'pill sm')));
+    if (!readOnly) el.append(h('div', { class: 'rs-row', style: 'margin-top: 18px' }, btn(`Practise the top 3 · ≈ +${n(g.top3.gain)}`, b => drill({ topics: g.top3.topics, count: 12, adaptive: true, source: 'gain' }, b), 'pill sm')));
   }
 
   /* ------------------------------------------------------------ totals (2.4, SR22) */
@@ -436,7 +466,7 @@
     head(el, { k: 'Top misconceptions', title: 'The mistakes you make most', right: readOnly ? null : [open ? btn(`Fix all open · ${n(open)}`, b => drill({ mistakes: true, source: 'fix' }, b), 'pill sm') : null, h('a', { class: 'quiet', href: '/mistakes/', text: 'All mistakes' })] });
     const box = h('div');
     list.slice(0, 10).forEach(t => {
-      const st = t.closed ? h('span', { class: 'st', text: `✓ Fixed ${UI.date(t.closed)}` }) : h('span', { class: 'st open', text: `Open · ${plural(t.owed || 2, 'clean answer')} to close` });
+      const st = t.closed ? h('span', { class: 'st', text: `✓ Fixed ${UI.date(t.closed)}` }) : h('span', { class: 'st open', text: `Open · ${plural(t.owed || 2, 'correct answer')} to close` });
       box.append(h('div', { class: 'rs-trap' }, glyph(t.topic) || h('span'), h('div', {}, h('h4', { text: cap(t.label) }),
         h('p', { class: 'meta', text: [topicName(t.topic), `×${n(t.hits)}`].join(' · ') }), st),
         readOnly || t.closed ? h('span') : h('div', { class: 'rs-row' }, btn('Fix', b => drill({ pool: 'redo', templates: [t.template], topics: [t.topic], source: 'mistakes' }, b)))));

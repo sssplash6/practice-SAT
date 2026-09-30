@@ -12,7 +12,6 @@
 .cx .card-head .card-act { margin-left: auto; }
 .cx .card-foot .quiet, .cx .card-head .quiet { margin: 0; }
 .cx .foot-links { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 28px; margin-top: 16px; }
-.cx .foot-links .quiet { margin: 0 -12px; }
 .cx p + p { margin-top: 6px; }
 .cx .soft { color: var(--soft); }
 .cx .line { font: 500 14px/1.45 var(--font); }
@@ -20,9 +19,8 @@
 .cx .chip-s { display: inline-flex; align-items: center; gap: 5px; padding: 2px 8px; border-radius: 6px; background: var(--tile-2); font: 500 12px var(--mono); color: var(--ink); white-space: nowrap; }
 .cx .chip-s.on { background: var(--wash); box-shadow: inset 0 0 0 1px var(--amber); }
 /* a quiet control's hover box reaches 12px past its text: 28px between neighbours keeps two boxes apart */
-.cx .row-act { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 28px; margin-top: 16px; }
+.cx .row-act { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 12px; margin-top: 18px; }
 .cx .card-act { display: flex; flex-wrap: wrap; align-items: center; column-gap: 28px; }
-.cx .row-act .quiet { margin: 0 -12px; }
 .cx .kind-ic { display: inline-grid; place-items: center; width: 28px; height: 28px; color: var(--ink); }
 .cx .kind-ic svg { width: 22px; height: 22px; }
 .cx .err-line { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; }

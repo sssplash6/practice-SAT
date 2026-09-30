@@ -69,9 +69,9 @@
     { id: 'goals', title: 'Goals', col: 'R', o: 3, help: 'routing' },
     { id: 'prefs', title: 'Learning preferences', col: 'R', o: 14, chip: 'Preferences', me: true, help: 'stages' },
     { id: 'skills', title: 'Skills', col: 'R', o: 4, help: 'points' },
-    { id: 'readiness', title: 'Test-day readiness', col: 'R', o: 6, chip: 'Readiness', help: 'readiness' },
-    { id: 'trend', title: 'Score trend', col: 'R', o: 7, chip: 'Trend', help: 'projection' },
-    { id: 'pace', title: 'Pace', col: 'R', o: 8, me: true, help: 'pace' },
+    { id: 'readiness', title: 'Test-day readiness', col: 'L', o: 6, chip: 'Readiness', help: 'readiness' },
+    { id: 'trend', title: 'Score trend', col: 'L', o: 7, chip: 'Trend', help: 'projection' },
+    { id: 'pace', title: 'Pace', col: 'L', o: 8, me: true, help: 'pace' },
     { id: 'catching', title: 'What keeps catching you', col: 'R', o: 9, chip: 'Catching you', help: 'mistakes' },
     { id: 'habits', title: 'Your habits', col: 'R', o: 10, chip: 'Habits', help: 'habits' },
     { id: 'badges', title: 'Achievements', col: 'R', o: 11, chip: 'Badges', me: true },
@@ -1018,7 +1018,7 @@
     let show = 'all';
     UI.sheet({ title: `Achievements (${all.length})`, size: 'l', body: b => {
       const list = h('div');
-      const chipHost = h('div');
+      const chipHost = h('div', { style: 'margin-bottom: 20px' });
       const draw = () => {
         const pick = all.filter(a => show === 'all' || (show === 'earned' ? a.earned && a.earned.length : a.next && !(a.earned && a.earned.length)));
         const groups = {};
@@ -1077,7 +1077,7 @@
     if (RO) { FEED.items = FEED.items || (S && S.feed) || []; }
     if (!ready('recent', 'feed')) return;
     if (!RO) {
-      const chipHost = h('div');
+      const chipHost = h('div', { style: 'margin-bottom: 20px' });
       UI.chips(chipHost, FILTERS.map(([v, l]) => ({ value: v, label: l, n: v === 'unread' && FEED.unread ? FEED.unread : undefined })),
         { value: FEED.kind, label: 'Show', onChange: v => { FEED.kind = v; FEED.next = null; loadFeed(true); } });
       acts('recent');

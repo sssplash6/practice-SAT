@@ -202,7 +202,7 @@
     }
     meta.textContent = bits.join(' · ');
     meta.hidden = !bits.length;
-    box.append(segRow, split, meta);
+    box.append(segRow, split);   // the small line under it (check-ins, quick wins, what it closes) is gone; meta stays detached for allLabel
     if (plan.all) allLabel(main, meta);
   }
   // All: every frozen key, then every open trap max(owed) times, at most 120 (V1): the preview counts it
@@ -802,7 +802,7 @@
     const { row, btn } = rowShell('redo', r, i, { label: r.label });
     const of = (r.clean || 0) + (r.owed || 0) || (r.kind === 'unsure' ? 1 : 2);
     const pips = UI.pips ? UI.pips(r.owed, of) : null;
-    if (pips) { pips.setAttribute('aria-label', `${of - r.owed} of ${of} clean answers`); pips.title = `${of - r.owed} of ${of} clean answers`; }
+    if (pips) { pips.setAttribute('aria-label', `${of - r.owed} of ${of} correct answers`); pips.title = `${of - r.owed} of ${of} correct answers`; }
     const status = r.stuck ? 'stuck' : r.status;
     const tags = [
       r.new ? ['New', 'new'] : null,
