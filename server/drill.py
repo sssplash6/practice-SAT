@@ -964,8 +964,8 @@ def resolve(learner: str, body: dict, out: dict | None = None) -> dict:
         _invalid("review_mix", "use off, 2 or 20")
     if "words_mix" in body and body["words_mix"] not in ("off", 2, "all"):
         _invalid("words_mix", "use off, 2 or all")
-    if "box" in body and body["box"] is not None and (type(body["box"]) is not int or not 5 <= body["box"] <= 60):
-        _invalid("box", "use 5–60 minutes")
+    if "box" in body and body["box"] is not None and (type(body["box"]) is not int or not 5 <= body["box"] <= 180):
+        _invalid("box", "use 5–180 minutes")
     if "per_q" in body and body["per_q"] is not None and (type(body["per_q"]) not in (int, float)
                                                          or not .5 <= body["per_q"] <= 1.5):
         _invalid("per_q", "use 0.5–1.5")

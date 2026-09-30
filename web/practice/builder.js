@@ -1246,7 +1246,7 @@
       list('types').forEach(t => { if (B.byT.has(t)) B.sel.add(t); });
     }
     if (g('count')) st.count = g('count') === '0' || g('count') === 'inf' ? null : Math.max(1, Math.min(120, +g('count') || 10));
-    if (g('box')) st.box = Math.max(5, Math.min(60, +g('box')));
+    if (g('box')) st.box = Math.max(5, Math.min(180, +g('box')));
     if (g('pool')) st.pool = { mistakes: 'redo' }[g('pool')] || g('pool');
     if (g('result')) st.result = g('result');
     if (g('marked') === '1') st.pool = 'marked';
