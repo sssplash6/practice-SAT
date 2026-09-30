@@ -132,6 +132,8 @@
   #next .lead-head .pill { border-radius: 19.5px; }   /* 13px + 50% */
   #next .lead-t { font: 700 20px/1.25 var(--font); letter-spacing: -.01em; color: var(--ink); }
   .size { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; }
+  .size-est { margin-left: auto; }
+  .size-est:empty { display: none; }
   /* the streak: flame and number centred on one line, the number in the text font (the user: misaligned) */
   .streak { display: inline-flex; align-items: center; gap: 6px; font: 600 14px/1 var(--font); font-variant-numeric: tabular-nums; }
   .streak > span[aria-hidden] { display: inline-flex; }
@@ -1064,6 +1066,9 @@
     UI.seg(size, [{ value: 'box', label: 'Minutes' }, { value: 'count', label: 'Questions' }], { value: s.kind === 'box' ? 'box' : 'count',
       label: 'Session size', onChange: kind => { paintPicks(kind); choose(kind === 'box' ? { kind: 'box', v: DEF.box } : { kind: 'count', v: DEF.count }); } });
     size.append(picks);
+    // "about 15 questions at your pace" sits at the right end of this row (paintBlocks fills it)
+    SZ.estEl = h('span', { class: 'meta size-est' });
+    size.append(SZ.estEl);
     paintPicks(s.kind === 'box' ? 'box' : 'count');
     const helper = h('p', { class: 'help size-help', text: 'Short on time? 5 minutes keeps your streak and your check-ins.', hidden: !(s.kind === 'box' && s.v === 5) });
     wrap.append(size, helper);
@@ -1131,7 +1136,7 @@
     if (!host || !S.t) return;
     const coach = S.t.coach || {}, p = SZ.preview, s = sizeValue();
     const kids = [];
-    kids.push(h('p', { class: 'reason', text: reasonText(coach, p) }));
+    if (SZ.estEl && SZ.estEl.isConnected) SZ.estEl.textContent = '';
     if (p && Array.isArray(p.blocks) && p.blocks.length) {
       const ul = h('ol', { class: 'blocks', 'aria-label': 'The plan of the session' });
       let i = 0;
@@ -1152,16 +1157,11 @@
         btn(MODULE, () => go({ path: '/mock/new', body: { full: false, timed: true } }))));
       if (p.plan_note) kids.push(line(p.plan_note, 'soft'));
     } else {
-      // the mentor's set: its skills as chips, the estimate from the preview when it has one
-      const topics = coach.topics || [];
-      const byTopic = {};
-      (S.t.domains || []).forEach(d => (d.topics || []).forEach(x => { byTopic[x.topic] = x; }));
-      if (topics.length) kids.push(h('div', { class: 'tchips' }, topics.map(x => topicChip(x, { traps: (coach.traps || {})[x], mastery: (byTopic[x] || {}).mastery || 0, answered: (byTopic[x] || {}).answered }))));
       // the chip already says the size, so the line says only the other half, both from one pace (the user: facts said twice;
       // the two modes disagreed): the preview's own numbers when it has them, else the learner's median seconds a question
       const est = s.kind === 'box' ? `about ${n(Math.max(1, Math.round(p && p.count ? p.count : s.v * 60 / spq())))} questions at your pace`
         : s.v === null ? 'as many as you like' : `~${n(Math.round(p && p.minutes ? p.minutes : s.v * spq() / 60))} min at your pace`;
-      kids.push(meta(est));
+      if (SZ.estEl && SZ.estEl.isConnected) SZ.estEl.textContent = est; else kids.push(meta(est));
       if (SZ.failed) kids.push(h('p', { class: 'note-ok', text: 'Couldn’t size the set. Here is the usual one.' }));
       if (coach.suppressed && coach.suppressed.length) coach.suppressed.forEach(x => kids.push(h('p', { class: 'line soft' }, x.text, ' ',
         quiet('Practise anyway', () => drill({ topics: [x.topic], count: 10, source: 'today' })))));
@@ -1369,7 +1369,7 @@
   function paintMist() {
     const t = S.t, tr = t.traps || {}, rv = t.review || {};
     const right = link('All mistakes', '/review/');
-    const lands = 'Every wrong answer lands here under the mistake it names, and leaves after two clean answers.';
+    const lands = 'Every wrong answer lands here under the mistake it names, and leaves after two correct answers.';
     if (!tr.open && !rv.due) {
       // one line; how it works is its (i) (the user: a whole card saying there is nothing, and a second Practice)
       const noReview = !t.warmup || !t.warmup.due;
@@ -1430,7 +1430,7 @@
     if (foot.children.length) kids.push(foot);
     card('mist', 'Mistakes', right, kids);
   }
-  // a mistake: its label (tap to fix it, 2 questions) and a chevron; one quiet line (how often, clean answers owed, the skill);
+  // a mistake: its label (tap to fix it, 2 questions) and a chevron; one quiet line (how often, correct answers owed, the skill);
   // then its actions at one size (the user: a cluttered meta row of mono, tags, links and a button)
   function trapRow(x, first, sure) {
     const el = h('div', { class: 'mrow' });
@@ -2385,8 +2385,6 @@
     if (UI.stackBar) UI.stackBar(el, doms.map(([d, m]) => ({ key: d, label: DSHORT(d), value: Math.round(m) })), { unit: 'min', label: 'Minutes by domain', noun: 'minutes', largest: false, warm: true, barText: 'value' });
     let nudge = null;
     if (doms.length) {
-      const [d0, m0] = doms[0];
-      el.append(line(join(`${Math.round(100 * m0 / ts.minutes)}% of your time on ${DSHORT(d0)}`, ts.test_share && `${Math.round(100 * (ts.test_share[d0] || 0))}% of the test`, ts.points_share && `${Math.round(100 * (ts.points_share[d0] || 0))}% of your points`)));
       const gap = Object.keys(ts.points_share || {}).map(d => [d, (ts.points_share[d] || 0) - ((ts.domains[d] || 0) / ts.minutes)]).sort((a, b) => b[1] - a[1])[0];
       if (gap && gap[1] > 0.1 && gains) {
         const topics = (gains.skills || []).filter(s => s.domain === gap[0]).sort((a, b) => b.gain - a.gain).slice(0, 3).map(s => s.topic);

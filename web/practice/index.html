@@ -37,9 +37,12 @@
   .pr-banner .acts { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
   .pr-banner .help { flex-basis: 100%; margin: 0; }
   .pr-ready { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
-  .pr-card { display: grid; gap: 6px; align-content: start; padding: 14px; border-radius: 12px; border: 1px solid var(--line); background: var(--paper); }
-  .pr-card b { font: 700 14.5px/1.3 var(--font); }
-  .pr-card .acts { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 4px; }
+  /* equal cards: the title holds two lines, the meta and the note follow, and the actions sit on the bottom edge of every card */
+  .pr-card { display: flex; flex-direction: column; gap: 6px; padding: 14px; border-radius: 12px; border: 1px solid var(--line); background: var(--paper); }
+  .pr-card b { font: 700 14.5px/1.3 var(--font); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; min-height: 2.6em; }
+  .pr-card .meta { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+  .pr-card .acts { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-top: auto; padding-top: 8px; }
+  .pr-card .pill.sm { height: 34px; padding: 0 18px; border-radius: 10px; font-size: 14px; }
   .pr-chips { display: flex; flex-wrap: wrap; gap: 8px; align-items: stretch; }
   .pr-chip { display: inline-grid; align-content: center; gap: 2px; min-height: 36px; padding: 6px 12px; border-radius: 10px; border: 0; background: var(--tile);
     font: 600 13.5px/1.2 var(--font); color: var(--ink); cursor: pointer; text-align: left; position: relative; }
@@ -186,7 +189,12 @@
   .pr-abar-in { max-width: var(--max); margin: 0 auto; min-height: 72px; padding: 10px var(--gutter) calc(10px + env(safe-area-inset-bottom, 0px)); display: flex; gap: 12px 20px; align-items: center; justify-content: space-between; }
   .pr-abar .sum { display: grid; gap: 3px; flex: 1; min-width: 0; }
   .pr-abar .l1 { font: 600 16px/1.35 var(--font); font-variant-numeric: tabular-nums; justify-self: start; }
-  .pr-abar .go { display: flex; gap: 10px; align-items: center; justify-content: flex-end; }
+  .pr-abar .l2 { font: 400 13px/1.35 var(--font); color: var(--soft); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .pr-abar .l2:empty { display: none; }
+  .pr-abar .go { display: flex; gap: 12px; align-items: center; justify-content: flex-end; }
+  /* Settings quiet, Start the one solid button, both the same height */
+  .pr-abar #openSettings { height: 40px; background: none; box-shadow: inset 0 0 0 1.5px var(--line); }
+  .pr-abar #start { height: 40px; padding: 0 24px; border-radius: 10px; font-size: 15px; }
   .pr-abar .reason { font: 400 13.5px/1.4 var(--font); color: var(--ink); max-width: 300px; }
   .pr-abar #openSettings { gap: 8px; }
   .pr-abar .error { margin: 0; }
@@ -273,6 +281,7 @@
     <div class="sum" id="abarSum">
       <p class="error" id="abarErr" hidden></p>
       <span class="l1" id="l1" tabindex="0">Loading…</span>
+      <span class="l2" id="l2"></span>
     </div>
     <div class="go">
       <span class="reason" id="reason" hidden></span>

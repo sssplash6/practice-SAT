@@ -668,7 +668,7 @@ body.has-rail { padding-left: var(--rail-w); }
 .nextup-m { font: 500 12px var(--mono); color: var(--soft); font-variant-numeric: tabular-nums; }
 .nextup-r { font: 400 13px/1.4 var(--font); color: var(--soft); }
 .nextup-go { display: flex; gap: 6px; margin-top: 8px; }
-.nextup-go .pill { flex: 1 1 auto; height: 40px; padding: 0 14px; font-size: 14.5px; }
+.nextup-go .pill { flex: 1 1 auto; height: 34px; padding: 0 14px; font-size: 14px; }
 
 /* the Today card: the sidebar's, the Now strip's and the menu sheet's.
    .side-day-head (.k TODAY, the streak), .meter rows, .side-day-foot "Exam in 45 days · Nov 7" */
@@ -685,7 +685,16 @@ body.has-rail { padding-left: var(--rail-w); }
 .now-strip { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); gap: 12px; margin: 0 0 20px; }
 .now-strip > .nextup, .now-strip > .side-day { padding: 16px 18px; border-radius: var(--radius-card); background: var(--tile); box-shadow: none; }
 .now-strip .nextup-t { display: block; overflow: visible; }
-.now-strip .nextup-go .pill { flex: 0 1 auto; min-width: 160px; }
+.now-strip .nextup-go .pill { flex: 0 1 auto; min-width: 0; padding: 0 18px; }
+/* Up next reads across (text left, Start right) and the Today card centres its lines, so neither cell holds a block of empty space */
+.now-strip > .nextup { grid-template-columns: minmax(0, 1fr) auto; column-gap: 18px; align-content: center; }
+.now-strip > .nextup > :not(.nextup-go) { grid-column: 1; }
+.now-strip > .nextup > .nextup-go { grid-column: 2; grid-row: 1 / span 4; align-self: center; margin-top: 0; }
+.now-strip > .side-day { align-content: center; }
+/* the "more up next" list: every row the same, Start the same compact size, Not today beside it */
+.mup-row { display: grid; gap: 2px; padding-top: 10px; border-top: 1px solid var(--line); }
+.mup-acts { display: flex; align-items: center; gap: 12px; margin-top: 8px; }
+.mup-acts .pill { height: 34px; min-width: 88px; padding: 0 16px; border-radius: 10px; font-size: 14px; }
 @media (min-width: 1100px) and (min-height: 1100px) { body.has-side .now-strip { display: none; } }
 @media (max-width: 879px) { .now-strip { grid-template-columns: minmax(0, 1fr); } }
 
@@ -760,7 +769,8 @@ body.has-rail { padding-left: var(--rail-w); }
 }
 .pill.wide { width: 100%; }
 /* a card's or a sheet's primary: the same pill at control height */
-.pill.sm { height: var(--ctl); padding: 0 20px; font-size: 14.5px; gap: 7px; }
+/* the one Start: compact, softly cornered (the round 52px pill stays for the page's own big action) */
+.pill.sm { height: 34px; padding: 0 18px; border-radius: 10px; font-size: 14px; gap: 7px; }
 .pill svg { width: 18px; height: 18px; flex: none; }
 .pill .kbd { background: rgba(30, 30, 30, .12); box-shadow: none; color: var(--ink-deep); }
 @media (hover: hover) and (pointer: fine) {
@@ -2247,7 +2257,9 @@ dialog.sheet:focus-visible, .popover:focus-visible, .menu:focus-visible { outlin
 .skill-side { display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: 8px 12px; }
 .skill-open { display: inline-flex; align-items: center; gap: 6px; }
 /* every column but the two fluid ones is fixed, so the bars start at the same x on every row (the side column was `auto`, so its content moved them) */
-.skill-row.gain { grid-template-columns: minmax(170px, 1fr) 84px minmax(130px, 1.1fr) 168px; min-height: 78px; }
+.skill-row.gain { grid-template-columns: minmax(170px, 1fr) 84px minmax(130px, 1.1fr) 96px; min-height: 60px; }
+.skill-play { width: 36px; height: 36px; min-height: 0; padding: 0; border-radius: 50%; flex: none; }
+.skill-play svg { width: 16px; height: 16px; }
 /* one line per name and the side on one line, so every row is the same height and its bars sit at the same y */
 .skill-row.gain .skill-name > span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .skill-row.gain .skill-side { flex-wrap: nowrap; }

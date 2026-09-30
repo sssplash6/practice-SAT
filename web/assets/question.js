@@ -1210,7 +1210,7 @@
       if (fb.habit && fb.habit.name) v.append(habitChip(fb.habit));
       (fb.opened || []).map(x => (typeof x === 'string' ? { label: x } : x)).filter(x => x && x.label).forEach(x => {
         v.append(h('p', { class: 'v-line v-new' }, h('b', { text: 'New mistake to fix: ' }), cap1(x.label),
-          ` · ${x.clean ?? 0} of ${x.of ?? 2} clean answers · `, h('a', { class: 'qlink', href: x.href || '/review/?tab=redo', text: 'See it in Review' })));
+          ` · ${x.clean ?? 0} of ${x.of ?? 2} correct answers · `, h('a', { class: 'qlink', href: x.href || '/review/?tab=redo', text: 'See it in Review' })));
       });
       if (fb.repair_next) v.append(h('p', { class: 'v-line', text: 'Next: one like this, with new numbers' }));
 
@@ -1695,7 +1695,7 @@
         const b = UI.verb ? UI.verb('again', { sm: true, onClick: () => on.again() }) : btn('Again, exactly', 'history', { id: 'again', key: 'E' }, () => on.again());
         put('again', b);
       }
-      if (q.template) put('about', btn('About this type', 'book', { id: 'about' }, null, { href: `/types/?t=${encodeURIComponent(q.template)}` }));
+      // "About this type" pointed at /types/, a page that does not exist (404), so it is gone until that page is built
     }
     const report = () => {
       const f = on.report || UI.report;
@@ -2306,7 +2306,7 @@
     const why = kind => (o.onWhy ? o.onWhy(kind) : api('/saved', { method: 'PATCH', body: Object.assign({ why: kind }, body) }));
     chip('Nice trick', () => why('trick'), 'Noted');
     chip('Hard', () => why('hard'), 'Noted');
-    if (o.revealed !== false) chip('Got lucky', () => (o.onLucky ? o.onLucky() : api('/mistakes/add', { method: 'POST', body })), 'In Redo: one clean answer closes it');
+    if (o.revealed !== false) chip('Got lucky', () => (o.onLucky ? o.onLucky() : api('/mistakes/add', { method: 'POST', body })), 'In Redo: one correct answer closes it');
     if (o.onAsk) chip('Ask a tutor', () => o.onAsk());
     if (o.onNote) chip('Note', () => o.onNote());
     t = toast(row, { ms: 5000 });

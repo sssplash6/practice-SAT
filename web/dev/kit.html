@@ -135,7 +135,7 @@
     <div class="kit-row" id="x-dbars"></div>
     <div class="kit-sub"><h2 class="h2">UI.strip</h2><span class="meta">static · pickable with a marker · .fit</span></div>
     <div class="kit-stack" id="x-strips"></div>
-    <div class="kit-sub"><h2 class="h2">UI.pips</h2><span class="meta">clean answers given of owed</span></div>
+    <div class="kit-sub"><h2 class="h2">UI.pips</h2><span class="meta">correct answers given of owed</span></div>
     <div class="kit-row" id="x-pips"></div>
     <div class="kit-sub"><h2 class="h2">UI.atlas · the type map</h2><span class="meta">unmet · met · ready, open, fixing, due; the second row selects</span></div>
     <div class="card"><div id="x-atlas"></div><div id="x-atlas-sel"></div></div>
@@ -832,7 +832,7 @@
   });
   demo('UI.pop', 'x-pops', host => {
     const out = t => { $('x-pops-out').textContent = t; };
-    btn(host, 'Popover', b => UI.pop(b, (p, res) => [el('p', { class: 'h3', text: 'Two clean answers close it' }), el('p', { class: 'help', text: 'A clean answer is right, first try, not a repeat, not flagged and not a guess.' }), el('button', { class: 'btn sm', type: 'button', text: 'Got it', style: 'margin-top: 10px', onclick: () => res.close() })], { label: 'How mistakes close' }));
+    btn(host, 'Popover', b => UI.pop(b, (p, res) => [el('p', { class: 'h3', text: 'Two correct answers close it' }), el('p', { class: 'help', text: 'A correct answer is right, first try, not a repeat, not flagged and not a guess.' }), el('button', { class: 'btn sm', type: 'button', text: 'Got it', style: 'margin-top: 10px', onclick: () => res.close() })], { label: 'How mistakes close' }));
     btn(host, 'Listbox', b => UI.pop(b, [{ group: 'Algebra', options: [{ value: 'lf', label: 'Linear functions', meta: '14', sub: '3 open mistakes' }, { value: 'sy', label: 'Systems of equations', meta: '9' }] }, { group: 'Geometry', options: [{ value: 'ci', label: 'Circles', meta: '7' }, { value: 'rt', label: 'Right triangles', meta: '3', disabled: true }] }],
       { role: 'listbox', label: 'Skill', value: 'sy', onPick: v => out(`Picked ${v}`) }));
     const m = btn(host, 'Menu', () => {});

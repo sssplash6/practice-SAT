@@ -3355,7 +3355,7 @@
           const owed = m.owed ?? 2, of = m.of ?? 2;
           if (UI.pips) line.append(UI.pips(owed, of));
           const word = m.status === 'relapsed' ? `Relapsed${m.relapses > 1 ? ' ×' + m.relapses : ''}` : m.status === 'stuck' ? 'Stuck' : m.status === 'half' ? 'Half fixed' : 'Open mistake';
-          line.append(h('b', { text: ` ${word}` }), pane ? ` · ${of - owed} of ${of} clean answers` : ` · ${owed} clean answer${owed === 1 ? '' : 's'} to close`,
+          line.append(h('b', { text: ` ${word}` }), pane ? ` · ${of - owed} of ${of} correct answers` : ` · ${owed} correct answer${owed === 1 ? '' : 's'} to close`,
             m.hits ? ` · hit ${m.hits}× all time` : '', m.label && pane ? ` · ${m.label}` : '');
         }
         head.append(line);

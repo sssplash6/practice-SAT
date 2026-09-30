@@ -385,7 +385,7 @@
     ready.forEach(c => {
       const go = h('button', { type: 'button', class: 'pill sm', text: 'Start' });
       go.addEventListener('click', () => create(c.body, go));
-      row.append(h('div', { class: 'pr-card' }, h('b', { text: c.title }), c.meta ? h('span', { class: 'meta', text: c.meta }) : null, c.why ? h('span', { class: 'help', text: c.why }) : null,
+      row.append(h('div', { class: 'pr-card' }, h('b', { text: c.title, title: c.title }), c.meta ? h('span', { class: 'meta', text: c.meta }) : null, c.why ? h('span', { class: 'help', text: c.why }) : null,
         h('div', { class: 'acts' }, c.reason ? h('span', { class: 'help', text: c.reason }) : go,
           c.body && !c.body.again ? h('button', { type: 'button', class: 'quiet', text: 'Edit', onclick: () => { loadBody(c.body); linkNote('Settings from Up next'); } }) : null)));
     });
@@ -776,7 +776,7 @@
     const traps = s.traps || [];
     if (traps.length) {
       panel.append(h('h4', { text: 'Open mistakes in this skill' }), ...traps.map(t => h('div', { class: 'omis' },
-        h('span', {}, h('span', { class: 'dot', 'aria-hidden': 'true' }), ` ${cap(t.label)} · ${(B.byT.get(t.template) || {}).name || t.template} · ${plural(t.owed ?? 2, 'clean answer')} left`),
+        h('span', {}, h('span', { class: 'dot', 'aria-hidden': 'true' }), ` ${cap(t.label)} · ${(B.byT.get(t.template) || {}).name || t.template} · ${plural(t.owed ?? 2, 'correct answer')} left`),
         h('button', { type: 'button', class: 'quiet', text: 'Fix', onclick: () => create({ subject: 'math', source: 'mistakes', pool: 'redo', templates: [t.template] }) }))));
     }
     panel.append(h('div', { class: 'btns' },
@@ -965,7 +965,7 @@
     const seen = P.seen || {};
     const rows = [
       ['new', `New questions`, 'types', P.new, 'Generated for you now. You have never seen any of them.'],
-      ['redo', 'Fresh numbers on my open mistakes', 'types', P.mistakes, 'Each type you fell for, twice. Two clean answers close a mistake.'],
+      ['redo', 'Fresh numbers on my open mistakes', 'types', P.mistakes, 'Each type you fell for, twice. Two correct answers close a mistake.'],
       ['checks', 'Check-ins on mistakes you fixed', 'due', P.checks, 'A fixed mistake comes back once to prove it stayed fixed.'],
       ['review', 'Fresh numbers on types due for review', 'types', P.review, forecastText()],
       ['untried', 'Fresh numbers on types I’ve never tried', 'types', P.untried, null],
@@ -1193,6 +1193,7 @@
     B.setText = [time, FB_WORD[st.feedback], REP_WORD[st.repairs], st.final_round ? 'final round on' : null, st.review_mix !== 'off' ? `${st.review_mix === 2 ? '2 reviews' : '20% reviews'} mixed in` : null,
       { mixed: 'mixed', grouped: 'grouped', ramp: 'easiest first', mixup: 'mix-up' }[st.order]].filter(Boolean).join(' · ');
     $('#openSettings').setAttribute('aria-description', B.setText);
+    $('#l2').textContent = B.setText;
     $('#jump').textContent = `${POOL_WORD[st.pool] || 'Questions'} · ${diff} ↓`;
     const startB = $('#start'), reason = $('#reason');
     if (starting) return;
