@@ -13,7 +13,8 @@
   const h = UI.h, A = UI.acct;
   const ls = A.ls;
   const q = new URLSearchParams(location.search);
-  const go = (q.get('go') || '').startsWith('/') && !q.get('go').startsWith('//') ? q.get('go') : '/';
+  // only a path on this site: resolve it and require the same origin (so /\\evil.com and //evil.com cannot leave the site)
+  const go = (() => { const raw = q.get('go') || ''; if (!raw.startsWith('/')) return '/'; try { const u = new URL(raw, location.origin); return u.origin === location.origin ? u.pathname + u.search + u.hash : '/'; } catch (_) { return '/'; } })();
   UI.shell('signin');
   document.getElementById('mark').innerHTML = UI.mark(32);
   const body = document.getElementById('body');

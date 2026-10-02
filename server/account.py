@@ -388,6 +388,33 @@ def link_email(body: LinkEmail, request: Request, x_learner: str | None = Header
     return {"sent": True, "delivery": delivery, "email_masked": _mask(email)}
 
 
+class BetaIn(BaseModel):
+    email: EmailStr
+
+
+@router.post("/api/account/beta")
+def beta_account(body: BetaIn, request: Request, x_learner: str | None = Header(default=None)) -> dict:
+    """Closed-beta shortcut: an email makes (or opens) an account at once, with no code.
+    Off unless SATF_BETA_OPEN=1. Anyone who knows an address can open that account, so this is for
+    a small group of testers; switch it off and the emailed code is the only way in again."""
+    if os.environ.get("SATF_BETA_OPEN") != "1":
+        raise HTTPException(404, "not available")
+    source = deps.writer_of(x_learner)
+    _limit("beta-ip", _ip(request), 30, 3600)
+    email = str(body.email).strip().lower()
+    with db.transaction():
+        row = db.one("SELECT id,learner FROM users WHERE email=?", email)
+        if row is None:
+            uid = secrets.token_urlsafe(12)
+            db.run("INSERT INTO users(id,first,last,email,created) VALUES (?,?,?,?,?)", uid, "", "", email, deps.now())
+            row = {"id": uid, "learner": None}
+        target = row["learner"] or source
+        db.run("UPDATE users SET verified=1, learner=?, last_login=? WHERE id=?", target, deps.now(), row["id"])
+    if row["learner"] is None:
+        start_swap(target)
+    return _credential(target, source, carry=False, session_only=False, method="email", request=request)
+
+
 @router.put("/api/account/email")
 def change_email(body: LinkEmail, request: Request,
                  x_learner: str | None = Header(default=None)) -> dict:

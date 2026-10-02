@@ -8,7 +8,8 @@
   'use strict';
   const h = UI.h, A = UI.acct;
   const q = new URLSearchParams(location.search);
-  const go = (q.get('go') || '').startsWith('/') && !q.get('go').startsWith('//') ? q.get('go') : '/';
+  // only a path on this site: resolve it and require the same origin (so /\\evil.com and //evil.com cannot leave the site)
+  const go = (() => { const raw = q.get('go') || ''; if (!raw.startsWith('/')) return '/'; try { const u = new URL(raw, location.origin); return u.origin === location.origin ? u.pathname + u.search + u.hash : '/'; } catch (_) { return '/'; } })();
   const seen = () => { try { localStorage.setItem('satf.welcomed', '1'); } catch (_) {} };
   UI.shell('welcome');
   document.getElementById('mark').innerHTML = UI.mark(32);
@@ -29,6 +30,12 @@
       seen();
       try {
         if (mode === 'create') await UI.api('/me', { method: 'PUT', body: { name: name.value.trim() } });
+        // closed beta: the server may let an email in with no code (SATF_BETA_OPEN); otherwise the emailed code
+        try {
+          const res = await UI.api('/account/beta', { method: 'POST', body: { email: email.value.trim() }, quiet: true });
+          await A.finish(res, { shared: false, local: { answers: 0 }, to: go, method: 'email' });
+          return;
+        } catch (x) { if (x.status !== 404) throw x; }
         const r = await UI.api('/account/link', { method: 'POST', body: { email: email.value.trim() } });
         if (r.delivery === 'outbox') { say('Email codes aren’t switched on for this site yet. You can carry on without an account for now.'); return; }
         codeStep(email.value.trim(), r.email_masked || email.value.trim());
