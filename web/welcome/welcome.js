@@ -46,11 +46,11 @@
     const tabs = h('div', { class: 'wl-tabs' });
     UI.seg(tabs, [{ value: 'create', label: 'Create account' }, { value: 'signin', label: 'Sign in' }], { value: mode, label: 'Create an account or sign in', full: true, onChange: v => { mode = v; form(); } });
     body.replaceChildren(
-      h('p', { class: 'wl-lead', text: mode === 'create' ? 'Practice that remembers your mistakes. Make a free account to keep your progress on any device.' : 'Welcome back. We’ll email you a 6-digit code.' }),
+      h('p', { class: 'wl-lead', text: mode === 'create' ? 'Practice that remembers your mistakes. Make a free account to keep your progress on any device.' : 'Welcome back. Enter your email to pick up where you left off.' }),
       tabs,
       h('div', { class: 'wl-form' }, mode === 'create' ? name : null, email, err,
         btn(mode === 'create' ? 'Create my account' : 'Send me a code', true, send),
-        h('p', { class: 'help', text: 'We email a 6-digit code. No password.' })),
+        h('p', { class: 'help', text: 'No password: your email is how you sign in on any device.' })),
       h('div', { class: 'wl-skip' }, h('a', { class: 'quiet', href: go, text: 'Continue without an account', onclick: seen })));
     (mode === 'create' ? name : email).focus();
   }
