@@ -85,7 +85,7 @@ SOURCES = {"map", "coach", "plan", "today", "mistakes", "review", "quick",
            "worksheet", "shared", "qotd", "spot", "start", "due", "warmup",
            "learn", "next", "prep", "probe", "habit", "gauntlet", "finish",
            "official", "challenge", "rematch", "test", "result", "builder", "sprint", "gain",
-          "skill", "mixup"}
+          "skill", "mixup", "fix", "pace"}
 INLINE = {"twin", "try", "word-example", "review", "spot"}
 FIELDS = {"topics", "templates", "exclude", "want", "count", "tiers", "levels",
           "unmeasured", "formats", "spr_share", "adaptive", "order", "mix", "pool",

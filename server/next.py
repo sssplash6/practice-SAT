@@ -214,7 +214,7 @@ def queue(learner: str, tz: int = 0, limit: int = 6, *, exclude=(), _plan=_UNSET
                           f"{count} due",                   # the meta adds the minutes once
                           "Today's check-ins and spaced review" +
                           (" · also in today's plan" if "due" in plan_sources or "checks" in plan_pools else ""),
-                          _minutes(count, seconds), body={"source": "due", "box": settings.get("review_minutes", 10)},
+                          _minutes(count, seconds), body={"source": "due", "box": settings.get("review_minutes", 10) or None},   # 0 means all of it
                           urgent=bool(checks)))
     elif checks:
         ids = [i["trap_id"] for i in checks[:3] if i.get("trap_id")]
@@ -344,9 +344,9 @@ def resolve_drill(learner: str, body: dict) -> dict:
     skill. F5 serves fresh seeds and owns the clock and mixed ordering.
     """
     box = body.get("box")
-    if type(box) is not int or not 5 <= box <= 60:
+    if type(box) is not int or not 5 <= box <= 180:
         from fastapi import HTTPException
-        raise HTTPException(422, {"field": "box", "reason": "use 5–60 minutes"})
+        raise HTTPException(422, {"field": "box", "reason": "use 5–180 minutes"})
     tz = body.get("tz", 0)
     slots = []
     want = dict(body.get("want") or {})

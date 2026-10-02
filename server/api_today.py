@@ -1151,7 +1151,7 @@ def today_payload(learner: str, tz: int) -> dict:
     work = workload(learner, tz, p, t, d, len(open_list), warm, gains, secs, (plan or {}).get("days"))
     review = review_counts(learner, tz, t)
     box = (p.get("prefs") or {}).get("review_minutes", 10)
-    review["start"] = {"path": "/api/drill", "body": {"source": "due", "box": box}, "minutes": box}
+    review["start"] = {"path": "/api/drill", "body": {"source": "due", "box": box or None}, "minutes": box or None}
     doms = domains(learner)
     exam = exam_part(p, t)
     if exam and st and st.get("mode") in ("stretch", "taper", "eve", "exam"):

@@ -279,7 +279,7 @@
 
   // Mark for review: Review's flag endpoint (S10); /api/saved until it lands
   async function mark(qid, on) {
-    try { await api(`/session/${encodeURIComponent(sid)}/flag`, { method: 'POST', body: { question_id: qid, on: !!on }, quiet: true }); }
+    try { await api('/flags', { method: 'POST', body: { session: sid, question_id: qid, on: !!on }, quiet: true }); }   // a practice set is flagged through /api/flags (tests use /session/{sid}/flag)
     catch (e) {
       if (e.status !== 404 && e.status !== 405) throw e;
       await api('/saved', { method: 'POST', body: { session: sid, question_id: qid, on: !!on } });
