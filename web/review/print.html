@@ -1,0 +1,250 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Your traps · SAT Freshman</title>
+<link rel="icon" href="/assets/mark.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<link rel="manifest" href="/manifest.webmanifest">
+<meta name="theme-color" content="#FFFFFF">
+<script src="/assets/head.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800;900&family=DM+Mono:wght@400;500&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap">
+<link rel="stylesheet" href="/assets/ui.css">
+<style>
+  /* Review's paper for test week (review.md V19): ?sheet=traps, your traps sheet (the same list
+     Plan prints), and ?sheet=log, the error log of every open mistake. Print CSS, and a
+     readable phone view. */
+  .pr { max-width: 920px; }
+  .pr-back { display: inline-flex; align-items: center; min-height: 44px; color: var(--ink-soft); text-decoration: none; font-weight: 600; }
+  .pr-back:hover { color: var(--ink); }
+  .pr h1 { font: 800 32px/1.15 var(--sans, 'Archivo'), sans-serif; margin: 4px 0 6px; }
+  .pr-sub { margin: 0 0 16px; color: var(--ink-soft); }
+  .pr-ctl { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin: 0 0 20px; }
+  .pr-sec { margin: 0 0 20px; }
+  .pr-sec > h2 { font: 700 13px var(--mono, 'DM Mono'), monospace; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-soft); margin: 0 0 8px; }
+  .pr-habit { margin: 0 0 6px; }
+  .pr-habit b { font-weight: 700; }
+  .pr-trap { break-inside: avoid; padding: 14px 0; border-top: 1px solid var(--line, #e5e5e5); display: grid; grid-template-columns: 28px minmax(0, 1fr); gap: 4px 10px; }
+  .pr-trap .n { font: 700 15px var(--mono, 'DM Mono'), monospace; }
+  .pr-trap .lab { font-weight: 700; font-size: 16px; margin: 0; }
+  .pr-trap .meta { margin: 0; }
+  .pr-trap .tell, .pr-trap .rule { margin: 2px 0 0; }
+  .pr-trap .rule b, .pr-trap .tell b { font-weight: 600; }
+  .pr-ex { grid-column: 2; margin-top: 6px; padding: 10px 12px; background: var(--tile); border-radius: 8px; }
+  .pr-ex .stem { font-family: 'Source Serif 4', Georgia, serif; font-size: 15px; margin: 0 0 6px; }
+  .pr-ex .fig { max-width: 260px; max-height: 180px; overflow: hidden; margin: 4px 0 6px; }
+  .pr-ex .fig svg { max-width: 100%; height: auto; max-height: 180px; }
+  .pr-ex table { border-collapse: collapse; margin: 4px 0 6px; font-size: 13px; }
+  .pr-ex td, .pr-ex th { border: 1px solid var(--line, #ccc); padding: 2px 8px; }
+  .pr-ch { display: flex; flex-wrap: wrap; gap: 4px 18px; margin: 0; padding: 0; list-style: none; }
+  .pr-ch li { display: inline-flex; gap: 6px; align-items: baseline; }
+  .pr-ch .l { font-weight: 700; }
+  .pr-ch .key { font-weight: 700; }
+  .pr-ch .tag { font: 600 11px var(--mono, 'DM Mono'), monospace; text-transform: uppercase; letter-spacing: .04em; border: 1px solid currentColor; border-radius: 4px; padding: 0 4px; }
+  .pr-ex .why { margin: 6px 0 0; color: var(--ink-soft); font-size: 14px; }
+  .pr-log { width: 100%; border-collapse: collapse; font-size: 14px; }
+  .pr-log th { text-align: left; font: 600 11px var(--mono, 'DM Mono'), monospace; letter-spacing: .05em; text-transform: uppercase; color: var(--ink-soft); padding: 6px 8px; border-bottom: 1.5px solid var(--ink); }
+  .pr-log td { vertical-align: top; padding: 8px; border-bottom: 1px solid var(--line, #e5e5e5); }
+  .pr-log tr { break-inside: avoid; }
+  .pr-log .q { font-family: 'Source Serif 4', Georgia, serif; }
+  .pr-log .sk { display: block; font-size: 12px; color: var(--ink-soft); font-family: var(--sans, 'Archivo'), sans-serif; }
+  .pr-log .pk { font-family: var(--mono, 'DM Mono'), monospace; white-space: nowrap; }
+  .pr-log .st { white-space: nowrap; }
+  .pr-empty { background: var(--tile); border-radius: 12px; padding: 20px; display: grid; gap: 12px; }
+  @media (max-width: 759px) {
+    .pr h1 { font-size: 26px; }
+    .pr-log thead { display: none; }
+    .pr-log, .pr-log tbody, .pr-log tr, .pr-log td { display: block; width: 100%; }
+    .pr-log tr { padding: 10px 0; border-bottom: 1px solid var(--line, #e5e5e5); }
+    .pr-log td { border: 0; padding: 2px 0; }
+    .pr-log td[data-k]::before { content: attr(data-k) ' · '; color: var(--ink-soft); font-size: 12px; }
+  }
+  @media print {
+    .pr-back, .pr-ctl { display: none !important; }
+    .pr { max-width: none; padding: 0; }
+    body { background: #fff; }
+    .pr-ex { background: none; border: 1px solid #ccc; }
+    @page { margin: 14mm; }
+  }
+</style>
+</head>
+<body>
+<header id="bar"></header>
+<main class="page pr" id="main" tabindex="-1">
+  <a class="pr-back" href="/review/">‹ Review</a>
+  <h1 id="title">Your traps</h1>
+  <p class="pr-sub" id="sub"></p>
+  <div class="pr-ctl" id="ctl"></div>
+  <section id="sheet" aria-busy="true"></section>
+</main>
+<nav id="tabs"></nav>
+<script src="/assets/ui.js"></script>
+<script src="/assets/kit.js"></script>
+<script src="/assets/question.js"></script>
+<script>UI.shell('review');</script>
+<script>
+(() => {
+  'use strict';
+  const h = UI.h;
+  const $ = id => document.getElementById(id);
+  const enc = encodeURIComponent;
+  const Q = new URLSearchParams(location.search);
+  const sheet = Q.get('sheet') === 'log' ? 'log' : 'traps';
+  const LET = 'ABCDE';
+  const cap = s => (s ? s[0].toUpperCase() + s.slice(1) : '');
+  const box = $('sheet');
+  const CAUSE = { trap: 'Fell for a trap', slip: 'Slip: I knew it', misread: 'Misread the question', clock: 'Ran out of time', entry: 'Entered it wrong', gap: 'Didn’t know how to start', changed: 'Changed a right answer' };
+  const KIND = { gridin: 'Grid-in: a wrong value', slip: 'Arithmetic slip', unsure: 'Unsure: right, but flagged' };   // their label is the skill, already in Question
+  const STATUS = { open: 'Open', half: 'Half fixed', relapsed: 'Relapsed', stuck: 'Stuck', unsure: 'Unsure' };
+  // fractions in math text stack in the line when the kit offers it (the user's rule, 2026-09-28)
+  const mtext = (el, t) => { const got = UI.fracText ? UI.fracText(String(t ?? '')) : null; if (got instanceof Node) el.replaceChildren(got); else el.textContent = String(t ?? ''); return el; };
+  const firstSentence = t => { const m = String(t || '').match(/^.*?[.!?](\s|$)/); return (m ? m[0] : String(t || '')).trim(); };
+  const firstLine = t => { const s = String(t || '').split('\n')[0].trim(); return s.length > 140 ? s.slice(0, 137) + '…' : s; };
+  const today = UI.date ? UI.date(new Date().toISOString(), 'short') : '';
+
+  function controls() {
+    const other = sheet === 'traps' ? ['Error log', '/review/print.html?sheet=log'] : ['Your trap sheet', '/review/print.html?sheet=traps'];
+    $('ctl').replaceChildren(
+      h('button', { type: 'button', class: 'pill', text: 'Print / Save as PDF', onclick: () => print() }),
+      h('a', { class: 'btn', href: other[1], text: other[0] }));
+  }
+  function empty(text) {
+    box.removeAttribute('aria-busy');
+    $('ctl').replaceChildren();
+    box.replaceChildren(h('div', { class: 'pr-empty' }, h('p', { style: 'margin:0', text }),
+      h('div', {}, h('a', { class: 'pill', href: '/review/', text: 'Open Review' }))));
+  }
+  function failed(retry) {
+    box.removeAttribute('aria-busy');
+    box.replaceChildren();
+    UI.cardError(box, retry, sheet === 'log' ? 'The error log didn’t load.' : 'Your trap sheet didn’t load.');
+  }
+
+  /* ------------------------------------------------------------ your traps (?sheet=traps) */
+  function example(ex, e) {
+    const el = h('div', { class: 'pr-ex' });
+    el.append(mtext(h('p', { class: 'stem' }), ex.stem));
+    if (ex.figure) { const f = h('div', { class: 'fig', role: 'img', 'aria-label': ex.figure_alt || 'Figure' }); f.innerHTML = ex.figure; el.append(f); }
+    if (Array.isArray(ex.table) && ex.table.length) {
+      const [hd, ...rows] = ex.table;
+      el.append(h('table', {}, h('thead', {}, h('tr', {}, ...hd.map(c => h('th', { text: String(c) })))), h('tbody', {}, ...rows.map(r => h('tr', {}, ...r.map(c => h('td', { text: String(c) })))))));
+    }
+    const key = LET.indexOf(String(ex.answer));
+    if (ex.type !== 'spr' && (ex.choices || []).length) {
+      const ul = h('ul', { class: 'pr-ch' });
+      ex.choices.forEach((c, i) => {
+        const val = h('span', {});
+        if (UI.tex) UI.tex(val, c, (ex.latex || [])[i]); else val.textContent = c;
+        ul.append(h('li', { class: i === key ? 'key' : null }, h('span', { class: 'l', text: LET[i] }), val,
+          i === key ? h('span', { class: 'tag', text: 'Answer' }) : null,
+          i === ex.trap_index ? h('span', { class: 'tag', text: 'Your trap' }) : null));
+      });
+      el.append(ul);
+    } else if (ex.answer !== null && ex.answer !== undefined) el.append(h('p', { class: 'pr-ch' }, h('b', { text: 'Answer: ' }), String(ex.answer)));
+    if (ex.rationale) el.append(mtext(h('p', { class: 'why' }), firstSentence(ex.rationale)));
+    return el;
+  }
+  async function traps() {
+    document.title = 'Your traps · SAT Freshman';
+    let d;
+    try { d = await UI.api('/review/trapsheet'); } catch (_) { failed(traps); return; }
+    const entries = d.entries || [], habits = d.habits || [];
+    $('title').textContent = 'Your traps';
+    if (!entries.length && !habits.length) { $('sub').textContent = ''; empty('No open traps right now. Miss a question and it lands here, named.'); return; }
+    $('sub').textContent = (d.title || '').replace(/^Your traps · /, '');
+    controls();
+    const out = [];
+    if (habits.length) {
+      const sec = h('section', { class: 'pr-sec' }, h('h2', { text: 'Habits' }));
+      habits.forEach(x => sec.append(h('p', { class: 'pr-habit' }, h('b', { text: x.name || x.label || '' }), x.tell ? ` · ${x.tell}` : '',
+        x.n || x.misses ? h('span', { class: 'meta', text: ` · missed ${x.n || x.misses}×` }) : null)));
+      out.push(sec);
+    }
+    const sec = h('section', { class: 'pr-sec' }, h('h2', { text: 'Top traps' }));
+    entries.forEach((e, i) => {
+      const bits = [e.skill && e.skill !== e.label ? e.skill : null, e.hits > 1 ? `missed ${e.hits}×` : null, e.relapses ? `relapsed ${e.relapses}×` : null,
+        e.dodged && e.dodged.of ? `avoided it ${e.dodged.dodged} of the last ${e.dodged.of} times` : null].filter(Boolean);
+      const body = h('div', {},
+        h('p', { class: 'lab', text: e.label }),
+        h('p', { class: 'meta', text: bits.join(' · ') }),
+        e.habit && e.habit.tell ? h('p', { class: 'tell' }, h('b', { text: 'Tell: ' }), e.habit.tell) : null,
+        e.rule ? h('p', { class: 'rule' }, h('b', { text: 'Your rule: ' }), e.rule) : null);
+      const art = h('article', { class: 'pr-trap' }, h('span', { class: 'n', text: `${i + 1}.` }), body);
+      if (e.example) art.append(example(e.example, e));
+      sec.append(art);
+    });
+    out.push(sec);
+    box.removeAttribute('aria-busy');
+    box.replaceChildren(...out);
+  }
+
+  /* ------------------------------------------------------------ the error log (?sheet=log) */
+  async function allOpen() {
+    const out = [];
+    let cursor = null;
+    for (let guard = 0; guard < 10; guard++) {
+      const d = await UI.api(`/review/redo?limit=100&sort=recent${cursor !== null ? `&cursor=${enc(cursor)}` : ''}`);
+      out.push(...(d.items || []));
+      if (d.next === null || d.next === undefined) break;
+      cursor = d.next;
+    }
+    return out;
+  }
+  // the stem's first line and the key come from each mistake's own question, six at a time
+  async function stems(rows) {
+    const got = new Map();
+    let at = 0;
+    const one = async () => {
+      while (at < rows.length) {
+        const r = rows[at++];
+        if (!r.template || r.seed === null || r.seed === undefined) continue;
+        try {
+          const d = await UI.api(`/review/item?template=${enc(r.template)}&seed=${enc(r.seed)}`, { quiet: true });
+          got.set(r.id, { stem: d.question && d.question.stem, answer: d.answer });
+        } catch (_) {}
+      }
+    };
+    await Promise.all(Array.from({ length: 6 }, one));
+    return got;
+  }
+  async function log() {
+    document.title = 'Error log · SAT Freshman';
+    $('title').textContent = 'Error log';
+    let rows;
+    try { rows = await allOpen(); } catch (_) { failed(log); return; }
+    if (!rows.length) { $('sub').textContent = ''; empty('No open mistakes. The log fills as you miss questions.'); return; }
+    $('sub').textContent = `${today} · ${rows.length} open`;
+    controls();
+    const more = await stems(rows);
+    const tb = h('tbody');
+    const rules = rows.some(r => r.rule);            // the column shows only when a rule exists
+    rows.forEach((r, i) => {
+      const x = more.get(r.id) || {};
+      const key = x.answer === null || x.answer === undefined ? '' : String(x.answer);
+      const pick = r.given_label || r.given;
+      const status = r.stuck ? 'stuck' : r.status;
+      const of = (r.clean || 0) + (r.owed || 0) || 2;
+      tb.append(h('tr', {},
+        h('td', { class: 'pk', text: String(i + 1) }),
+        h('td', { 'data-k': null }, h('span', { class: 'sk', text: [r.name, r.skill].filter(Boolean).join(' · ') }), mtext(h('span', { class: 'q' }), firstLine(x.stem))),
+        h('td', { class: 'pk', 'data-k': 'Picked', text: pick !== null && pick !== undefined && pick !== '' ? `${pick} → ${key || '?'}` : key ? `→ ${key}` : '' }),
+        h('td', { 'data-k': 'Mistake', text: KIND[r.kind] || r.label || '' }),
+        h('td', { 'data-k': 'Cause', text: CAUSE[r.cause] || cap(r.cause || '') }),
+        h('td', { class: 'st', 'data-k': 'Status' }, UI.pips && r.owed ? UI.pips(r.owed, of) : null, ' ', `${STATUS[status] || cap(status || '')}${r.relapses ? ` ×${r.relapses}` : ''}`),
+        rules ? h('td', { 'data-k': r.rule ? 'Your rule' : null, text: r.rule || '' }) : null));
+    });
+    const table = h('table', { class: 'pr-log' },
+      h('thead', {}, h('tr', {}, ...['#', 'Question', 'Picked → key', 'Mistake', 'Cause', 'Status', rules ? 'Your rule' : null].filter(Boolean).map(t => h('th', { text: t })))), tb);
+    box.removeAttribute('aria-busy');
+    box.replaceChildren(table);
+  }
+
+  if (UI.skel) UI.skel(box, 'rows:6');
+  (sheet === 'log' ? log : traps)();
+})();
+</script>
+</body>
+</html>

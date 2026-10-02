@@ -155,14 +155,14 @@ def estimate(learner: str, subject: str = "math") -> dict:
                     "n": len(last3)}
     last30 = [x for x in standard if (dt.date.today() - dt.date.fromisoformat(x["at"][:10])).days <= 30]
     if not standard:
-        confidence = {"level": "low", "reason": "Low: only a module or the diagnostic so far. One full section narrows it to about 140 points."}
+        confidence = {"level": "low", "reason": "Rough estimate: based on a module or the diagnostic only. One full section narrows it to about 140 points."}
     elif len(last30) >= 2 and max(x["mid"] for x in last30[:3]) - min(x["mid"] for x in last30[:3]) <= 100:
-        confidence = {"level": "high", "reason": f"High: {len(last30[:3])} sections in the last 30 days within 100 points."}
+        confidence = {"level": "high", "reason": f"Consistent estimate: your last {len(last30[:3])} sections (past 30 days) landed within 100 points of each other."}
     elif len(standard) == 1:
-        confidence = {"level": "medium", "reason": "Medium: one full section. Two within 100 points of each other make it high."}
+        confidence = {"level": "medium", "reason": "Mixed estimate: one full section so far. A second within 100 points would firm it up."}
     else:
         gap = round(abs(standard[0]["mid"] - standard[1]["mid"]) / 10) * 10
-        confidence = {"level": "medium", "reason": f"Medium: your last sections are {gap} points apart."}
+        confidence = {"level": "medium", "reason": f"Mixed estimate: your last two sections are {gap} points apart."}
     delta = round(latest["mid"] - previous["mid"]) if latest and previous else None
     trend = {"direction": "steady" if delta is None or abs(delta) <= 20 else ("up" if delta > 0 else "down"),
              "delta": delta, "since": previous["at"] if previous else None}

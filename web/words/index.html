@@ -1,0 +1,682 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Words · SAT Freshman</title>
+<link rel="icon" href="/assets/mark.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<link rel="manifest" href="/manifest.webmanifest">
+<meta name="theme-color" content="#FFFFFF">
+<script src="/assets/head.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800;900&family=DM+Mono:wght@400;500&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap">
+<link rel="stylesheet" href="/assets/ui.css">
+<style>
+  /* The Words library (spec 3.8 §3, words.md layout, W2 W4 W5 W11 W12 W14 W18 W21).
+     Shared parts (tabs, Today's words, the sheet) are words-ui.js. */
+  .wl { padding-bottom: 150px; display: grid; gap: 20px; }
+  .wl * { min-width: 0; }
+  .wl-head { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 12px 24px; }
+  .wl-title { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 16px; }
+  .wl-acts { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+  .wl-acts .field { width: 280px; height: 44px; }
+  #fbar > #q { width: auto; flex: 1 1 240px; min-width: 240px; height: 44px; }
+  .wl-acts > * { min-height: 44px; }
+  .wl-acts > .quiet { margin: 0; }
+  .wl-strip { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; }
+  .wl-strip[hidden] { display: none; }
+  .wl-strip .stat { display: grid; gap: 4px; align-content: start; min-height: 0; padding: 10px 14px; }
+  .wl-strip .big { font: 500 26px/1 var(--mono); letter-spacing: -.02em; }
+  .wl-strip .big small { font-size: 13px; color: var(--soft); }
+  .wl-strip .bar { height: 4px; border-radius: 2px; background: var(--mat); overflow: hidden; }
+  .wl-strip .bar i { display: block; height: 100%; background: var(--amber); }
+  .wl-strip .stat .pill, .wl-strip .stat .btn { justify-self: start; }
+  .wl-strip .qd-text { font: 400 14.5px/1.45 var(--serif); display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+  .wl-strip .qd-key { font: 700 20px var(--font); }
+  .wl-groups { display: grid; gap: 14px; }
+  .wl-group { display: grid; gap: 8px; }
+  .wl-all > summary { cursor: pointer; list-style: none; }
+  .wl-all > summary::-webkit-details-marker { display: none; }
+  .wl-all > summary::after { content: " ▸"; }
+  .wl-all[open] > summary::after { content: " ▾"; }
+  .wl-all[open] > summary { margin-bottom: 10px; }
+  .wl-all > .wl-groups { display: flex; flex-wrap: wrap; gap: 14px 32px; align-items: flex-start; }
+  .wl-all .wl-group:first-child { flex: 1 1 100%; }
+  .wl-all .wl-group:not(:first-child) .wl-gtiles { display: flex; gap: 8px; }
+  .wl-all .wl-group:not(:first-child) .ctile { width: 210px; flex: none; }
+  .wl-gtiles { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 8px; }
+  .ctile { appearance: none; border: 0; cursor: pointer; text-align: left; display: grid; gap: 6px; align-content: start; min-height: 92px; padding: 12px 14px;
+    border-radius: 10px; background: var(--tile); color: var(--ink); font: inherit; position: relative; }
+  .ctile[aria-pressed="true"] { background: var(--wash); box-shadow: inset 0 0 0 1.5px var(--amber); }
+  .ctile b { font: 600 15px/1.25 var(--font); padding-right: 30px; }
+  .ctile .meta { font-size: 12px; }
+  .ctile .kb { height: 4px; border-radius: 2px; background: var(--mat); overflow: hidden; margin-top: auto; }
+  .ctile .kb i { display: block; height: 100%; background: var(--ink); }
+  .ctile .due { position: absolute; top: 10px; right: 12px; display: inline-flex; align-items: center; gap: 4px; font: 500 11.5px var(--mono); }
+  .ctile.new { place-content: center; text-align: center; color: var(--soft); background: none; box-shadow: inset 0 0 0 1.5px var(--line); }
+  @media (hover: hover) and (pointer: fine) { .ctile:not([aria-pressed="true"]):hover { background: var(--tile-2); } }
+  .wl-fbar { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+  .wl-fbar .filters { flex: 0 0 auto; }
+  .wl-fbar .filters > [hidden] { display: none !important; }
+  .wl-fbar .dd .dd-v[hidden], .wl-fbar .dd .dd-k[hidden] { display: none; }
+  .wl-legrow { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 16px; }
+  .wl-legacts { display: flex; gap: 6px; margin-left: auto; align-items: center; }
+  .wl-legopts { display: flex; gap: 6px; }
+  .wl-legend { display: flex; flex-wrap: wrap; gap: 4px 16px; font: 500 12px var(--mono); color: var(--soft); }
+  .wl-legend b { color: var(--ink); font-weight: 500; }
+  .wgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 8px; }
+  @media (max-width: 389px) { .wgrid { grid-template-columns: repeat(2, 1fr); } }
+  .wtile { appearance: none; border: 0; cursor: pointer; text-align: left; position: relative; display: grid; grid-template-rows: auto auto 1fr auto; gap: 3px;
+    min-height: 92px; padding: 10px 12px; border-radius: 10px; background: var(--tile); color: var(--ink); font: inherit; }
+  @media (hover: hover) and (pointer: fine) { .wtile:hover { background: var(--tile-2); } }
+  .wtile .w { font: 600 clamp(14px, 1.15vw, 17px)/1.25 var(--font); padding-right: 38px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .wtile .w .sn { font-weight: 500; color: var(--soft); }
+  .wtile .tag { font: 500 10.5px var(--mono); letter-spacing: .06em; text-transform: uppercase; color: var(--soft); }
+  .wtile .mt { font: 400 12.5px/1.35 var(--font); color: var(--soft); }
+  .wtile .mt.on { color: var(--ink); }
+  .wtile .bot { display: flex; align-items: center; justify-content: space-between; gap: 6px; margin-top: 4px; }
+  .wtile .dbars { font-size: 0; }
+  .wtile .marks { position: absolute; top: 9px; right: 10px; display: flex; align-items: center; gap: 4px; font: 500 10.5px var(--mono); }
+  .wtile .marks .due { color: var(--amber-deep); }
+  .wtile .marks .st svg { width: 13px; height: 13px; }
+  .wtile .marks .st.on svg path { fill: var(--amber); stroke: var(--amber-deep); }
+  .wtile .ck { position: absolute; bottom: 10px; right: 10px; width: 18px; height: 18px; border-radius: 5px; box-shadow: inset 0 0 0 1.5px var(--ink); display: none; }
+  .wgrid.selecting .wtile .ck { display: block; }
+  .wtile[aria-checked="true"] { background: var(--wash); box-shadow: inset 0 0 0 1.5px var(--amber); }
+  .wtile[aria-checked="true"] .ck { background: var(--amber); box-shadow: inset 0 0 0 1.5px var(--amber-deep); }
+  .wgrid.selecting .wtile .bot { padding-right: 24px; }
+  .wtile.skel { cursor: default; }
+  .wl-more { justify-self: center; margin-top: 24px; }
+  .wl-msg { padding: 32px 0; text-align: center; display: grid; gap: 12px; justify-items: center; }
+  .lmap { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; }
+  @media (max-width: 1099px) { .lmap { grid-template-columns: repeat(4, 1fr); } }
+  @media (max-width: 759px) { .lmap { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; } .lmap .logic-col { flex: 0 0 82%; scroll-snap-align: start; } }
+  .logic-col { display: grid; gap: 8px; align-content: start; padding: 14px; border-radius: 12px; background: var(--tile); }
+  .logic-col h3 { font: 700 15px var(--font); display: flex; justify-content: space-between; gap: 8px; align-items: center; }
+  .logic-col .test { font: 400 13px/1.4 var(--font); color: var(--ink); }
+  .logic-col .wtile { background: var(--paper); min-height: 0; padding: 8px 10px; }
+  .logic-col .wtile .w { font-size: 14.5px; }
+  .logic-col .kb { height: 4px; border-radius: 2px; background: var(--mat); overflow: hidden; }
+  .logic-col .kb i { display: block; height: 100%; background: var(--ink); }
+  .wl-bar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 25; background: var(--paper); box-shadow: 0 -1px 0 var(--line), 0 -12px 30px -18px rgba(0, 0, 0, .25); }
+  body.has-side .wl-bar { left: var(--side-w); }
+  body.has-rail .wl-bar { left: var(--rail-w); }
+  .wl-bar-in { max-width: var(--max); margin: 0 auto; min-height: 68px; padding: 10px var(--gutter) calc(10px + env(safe-area-inset-bottom, 0px));
+    display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: center; justify-content: space-between; }
+  .wl-bar[hidden] { display: none; }
+  .wl-bar .l1 { font: 600 15.5px/1.35 var(--font); font-variant-numeric: tabular-nums; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .wl-bar-in > div:first-child { min-width: 0; }
+  .wl-bar .go { display: flex; gap: 10px; align-items: center; flex: none; }
+  @media (max-width: 759px) {
+    .wl-acts { width: 100%; }
+    .wl-acts .field { flex: 1 1 100%; width: auto; }
+    .wl-acts .btn { flex: 1; }
+    .wl-strip { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; }
+    .wl-strip .stat { flex: 0 0 78%; min-height: 160px; scroll-snap-align: start; }
+    .wl-gtiles { display: flex; flex-wrap: nowrap; overflow-x: auto; scroll-snap-type: x mandatory; padding-bottom: 4px; }
+    .ctile { flex: 0 0 160px; scroll-snap-align: start; }
+    .wl-fbar .filters { flex: 1 1 100%; flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; padding: 2px 0; }
+    .wl-fbar .filters > * { flex: 0 0 auto; }
+    .wl-bar { bottom: calc(64px + env(safe-area-inset-bottom, 0px)); }
+    .wl-bar-in { min-height: 56px; padding-top: 6px; padding-bottom: 6px; flex-wrap: nowrap; gap: 10px; }
+    .wl-bar .l1 { font-size: 14px; }
+    .wl-bar .go { gap: 6px; }
+    .wl-bar .go > .btn:not(.icon), .wl-bar .go > .pill { padding: 0 12px; }
+    .wl { padding-bottom: 240px; }
+  }
+</style>
+</head>
+<body data-page="words">
+<header id="bar"></header>
+<main class="page wl" id="main" tabindex="-1">
+  <header class="wl-head">
+    <div class="wl-title">
+      <h1 class="h1">Words</h1>
+      <p class="meta" id="meta">Loading…</p>
+    </div>
+    <div class="wl-acts">
+      <input class="field" id="q" type="search" autocomplete="off" spellcheck="false" placeholder="Search words and meanings" aria-label="Search words and meanings">
+      <button type="button" class="btn" id="bring" aria-haspopup="menu">Add words ▾</button>
+    </div>
+  </header>
+  <div id="today"></div>
+  <div id="wtabs"></div>
+  <section class="wl-strip" id="strip" aria-label="Today"></section>
+  <div id="finish"></div>
+  <section class="wl-groups" id="colls" aria-label="Collections"></section>
+  <div class="wl-fbar" id="fbar"></div>
+  <div class="wl-legrow"><p class="wl-legend" id="legend"></p><div class="wl-legacts" id="legacts"></div></div>
+  <section id="gridSec" aria-label="Words" aria-live="polite"></section>
+</main>
+<div class="wl-bar" id="studybar" role="region" aria-label="Study these words" hidden>
+  <div class="wl-bar-in">
+    <div><p class="l1" id="barText">Loading…</p></div>
+    <div class="go"><button type="button" class="btn icon" id="barMore" aria-label="Share, print or grade a worksheet" aria-haspopup="menu">⋯</button><button type="button" class="btn" id="barQuiz">Quiz</button><button type="button" class="btn" id="barCards">Flashcards</button></div>
+  </div>
+</div>
+<nav id="tabs"></nav>
+<script src="/assets/ui.js"></script>
+<script src="/assets/kit.js"></script>
+<script src="/assets/charts.js"></script>
+<script>UI.shell('words');</script>
+<script src="/assets/words-ui.js"></script>
+<script>
+(() => {
+  'use strict';
+  const h = UI.h, $ = id => document.getElementById(id);
+  const W = UI.word;
+  const cap = s => (s ? s[0].toUpperCase() + s.slice(1) : '');
+  const num = n => UI.num ? UI.num(n) : String(n);
+  const params = () => new URLSearchParams(location.search);
+  const ls = { get(k, d) { try { const v = localStorage.getItem(k); return v === null ? d : JSON.parse(v); } catch (_) { return d; } } };
+  const SUBJECTS = [['science', 'Science'], ['history', 'History & social studies'], ['literature', 'Literature & arts']];
+  const LOGIC = [['contrast', 'Contrast', 'Does sentence 2 push against sentence 1?'], ['concession', 'Concession', 'Does sentence 2 admit a point before the claim still holds?'],
+    ['cause-effect', 'Cause → effect', 'Is sentence 2 a result of sentence 1?'], ['addition', 'Addition', 'Does sentence 2 add a point in the same direction?'],
+    ['example', 'Example', 'Is sentence 2 a case of what sentence 1 says?'], ['sequence', 'Sequence', 'Does sentence 2 come next in time?'],
+    ['clarification', 'Clarification and emphasis', 'Does sentence 2 restate or sharpen sentence 1?'], ['similarity', 'Similarity', 'Does sentence 2 show the same thing elsewhere?'],
+    ['conclusion', 'Conclusion', 'Does sentence 2 sum up what came before?']];
+  const CONFUSABLE = { concession: 'contrast', contrast: 'concession', 'cause-effect': 'sequence', sequence: 'cause-effect', example: 'addition',
+    addition: 'example', clarification: 'example', similarity: 'addition', conclusion: 'cause-effect' };
+  const STATUS_OPTS = [['new', 'New'], ['learning', 'Learning'], ['claimed', 'Claimed'], ['known', 'Known'], ['due', 'Due today'], ['saved', 'Saved'],
+    ['missed', 'Missed lately'], ['thought', 'Thought I knew'], ['probable', 'Probably known'], ['trap', 'Fell for a trap'], ['stubborn', 'Stubborn'],
+    ['atrisk', 'At risk'], ['lookedup', 'Looked up'], ['second', 'Two meanings'], ['ladder', 'On a ladder'], ['root', 'Has a root'], ['mine', 'My own']];
+  const SORTS = [['az', 'A–Z'], ['topic', 'By topic'], ['value', 'Test value'], ['due', 'Due soonest'], ['weakest', 'Weakest first'],
+    ['hardforyou', 'Hard for you'], ['missed', 'Most missed by students'], ['level', 'Level'], ['recent', 'Recently added']];
+  const LIMIT0 = 400;
+
+  let lib = null, ins = null, words = [], famSize = new Map(), rootsOf = new Map(), fbar = null, shown = [], limit = LIMIT0;
+  let meanings = params().get('m') === '1', selecting = false, selected = new Set(), lastPick = null, alsoOf = new Map(), sBtn = null;
+  const qEl = $('q');
+  qEl.value = params().get('q') || '';
+
+  UI.menu.bind($('bring'), () => [
+    { label: 'A word', sub: 'Type one in yourself', kbd: 'N', onClick: () => UI.addWord() },
+    { separator: true },
+    { label: 'From a text', sub: 'Paste a passage; see which words are new', onClick: () => UI.bringWords ? UI.bringWords('text') : soon() },
+    { label: 'A word list', sub: 'One per line or comma-separated', onClick: () => UI.bringWords ? UI.bringWords('list') : soon() },
+    { label: 'A question I missed', sub: 'Log a Words in Context or Transitions miss', onClick: () => UI.bringWords ? UI.bringWords('missed') : soon() },
+  ]);
+  const soon = () => UI.toast('That is not ready yet.');
+  UI.wordsTabs($('wtabs'), 'library');
+
+  function setUrl(k, v) {
+    try { const u = new URL(location.href); if (v === null || v === '' || v === undefined) u.searchParams.delete(k); else u.searchParams.set(k, v); history.replaceState(history.state, '', u); } catch (_) {}
+  }
+
+  /* ---------------- load */
+  async function load() {
+    skeleton();
+    try { [lib, ins] = await Promise.all([UI.api('/words'), UI.api('/words/insights', { quiet: true }).catch(() => null)]); }
+    catch (e) { $('meta').textContent = ''; $('gridSec').replaceChildren(); UI.cardError($('gridSec'), load, 'Words did not load.'); if (e.offline) UI.todayWords($('today')); return; }
+    words = lib.words || [];
+    famSize = new Map(); rootsOf = new Map();
+    words.forEach(w => {
+      if (w.family) famSize.set(w.family, (famSize.get(w.family) || 0) + 1);
+      (w.roots || []).forEach(r => { if (!rootsOf.has(r)) rootsOf.set(r, []); rootsOf.get(r).push(w); });
+    });
+    (lib.groups || []).forEach(g => (g.collections || []).forEach(c => { W._coll[c.id] = c.name; }));
+    const builtin = new Set(['second-sense', 'my-words', ...Object.keys(W._coll)]);
+    W._lists = [...new Set(words.flatMap(w => [...(w.lists || []).filter(l => !builtin.has(l)), ...(w.own && w.collection ? [w.collection] : [])]))];
+    W.index().then(ix => { ix.words.forEach(x => alsoOf.set(x.slug, (x.also || []).join(' ').toLowerCase())); if (qEl.value) paintGrid(); }).catch(() => {});
+    head();
+    UI.todayWords($('today'), { lib, noDebt: true, onChange: load });
+    strip();
+    groups();
+    if (!fbar) filters(); else fbar.counts && fbar.counts('s', statusCounts());
+    paintGrid();
+    const w = params().get('w');
+    if (w && !document.querySelector('dialog.wsheet[open]')) openWord(w, { fromLink: true });
+  }
+  function skeleton() {
+    const g = h('div', { class: 'wgrid' });
+    for (let i = 0; i < 18; i++) g.append(h('div', { class: 'wtile skel', 'aria-hidden': 'true' }));
+    $('gridSec').replaceChildren(g);
+  }
+
+  /* ---------------- title meta: "1,180 words · 212 known · 64 claimed · 12 due" */
+  function head() {
+    const c = lib.counts || {};
+    const mine = c.mine || words.filter(w => w.own).length;
+    $('meta').textContent = [c.known ? `${num(c.known)} known` : null, mine ? `${num(mine)} of your own` : null].filter(Boolean).join(' · ');
+  }
+
+  /* ---------------- today strip */
+  function strip() {
+    const c = lib.counts || {}, fresh = !c.learning && !c.known && !c.claimed && !c.due && !c.new_today;
+    const el = $('strip');
+    el.replaceChildren();
+    el.hidden = false;
+    const tidy = () => { el.hidden = !el.children.length; };
+    // a fresh learner: the Today card already says Find your level, so only the daily items
+    if (!fresh) dueAndNew(el, c);
+    el.append(daily('wic', 'Word of the day'), daily('transition', 'Transition'));
+    UI.api('/words/today', { quiet: true }).then(t => { dailyData = t; el.querySelectorAll('[data-daily]').forEach(x => { const n = daily(x.dataset.daily, x.dataset.title); if (n) x.replaceWith(n); else x.remove(); }); tidy(); })
+      .catch(() => { el.querySelectorAll('[data-daily]').forEach(x => x.remove()); tidy(); });
+  }
+  function dueAndNew(el, c) {
+    // Due today
+    const nextDay = (lib.forecast || []).find(d => d.n > 0 && d.day > lib.today);
+    const due = h('div', { class: 'stat' }, h('span', { class: 'stat-k', text: 'Due today' }));
+    if (lib.debt && lib.debt.due) {
+      const days = Math.max(2, Math.ceil(lib.debt.due / Math.max(1, lib.debt.spread || 1)));
+      due.append(h('span', { class: 'big', text: num(lib.debt.due) }), h('span', { class: 'stat-sub', text: lib.debt.away ? `due after ${lib.debt.away} days away` : 'a backlog' }),
+        h('button', { type: 'button', class: 'btn sm', text: `Spread over ${days} days`, onclick: () => spread(days) }),
+        h('button', { type: 'button', class: 'quiet', text: 'Do all now', onclick: () => UI.startWords({ mode: 'cards', deck: { source: 'due' }, count: Math.min(200, lib.debt.due) }) }));
+    } else if (c.due) {
+      due.append(h('span', { class: 'big', text: num(c.due) }), h('button', { type: 'button', class: 'btn sm', text: 'Review', onclick: () => UI.startWords({ mode: 'cards', deck: { source: 'due' }, order: 'due' }) }));
+    } else if (nextDay) {
+      due.firstChild.textContent = 'Next due';
+      due.append(h('span', { class: 'big', text: num(nextDay.n) }), h('span', { class: 'stat-sub', text: `on ${W.dayName(nextDay.day, { plain: true }).split(',')[0]} · nothing due today` }));
+    } else due.append(h('span', { class: 'stat-sub', text: 'Nothing due' }));
+    // New today
+    const goal = c.goal ?? 10, nt = c.new_today || 0;
+    const nw = h('div', { class: 'stat' }, h('span', { class: 'stat-k', text: 'New today' }));
+    const met = goal > 0 && nt >= goal;
+    nw.append(...[nt ? h('span', { class: 'big' }, String(nt), h('small', { text: ` / ${goal}${met ? ' ✓' : ''}` })) : h('span', { class: 'big' }, String(goal), h('small', { text: ' to learn' })),
+      met ? h('span', { class: 'stat-sub', text: 'Goal met' }) : null,
+      goal && nt ? h('span', { class: 'bar', role: 'img', 'aria-label': `${nt} of ${goal} new words today` }, h('i', { style: `width:${Math.min(100, Math.round(nt / goal * 100))}%` })) : null,
+      h('button', { type: 'button', class: 'btn sm', text: met ? `Learn ${goal || 10} more` : `Learn ${goal || 10}`,
+        onclick: () => UI.startWords({ mode: 'cards', deck: { source: 'new' }, count: goal || 10 }) })].filter(Boolean));
+    UI.tooltip && UI.tooltip(nw.querySelector('.stat-k'), 'Daily goal, set in Plan. It is never a cap.');
+    el.append(due, nw);
+  }
+  let dailyData = null;
+  function daily(fmt, title) {
+    const box = h('div', { class: 'stat', 'data-daily': fmt, 'data-title': title }, h('span', { class: 'stat-k', text: title }));
+    if (!dailyData) { box.append(h('span', { class: 'stat-sub', text: 'Loading…' })); return box; }
+    const d = dailyData[fmt];
+    if (!d || !d.item) return null;   // no item today: no tile
+    if (d.mine) {
+      const g = /^[0-3]$/.test(String(d.mine.given)) ? (d.item.choices || [])[+d.mine.given] : d.mine.given;
+      box.append(h('span', { class: 'qd-key', text: d.word ? (words.find(w => w.slug === d.word) || {}).word || d.word : '' }),
+        h('span', { class: 'stat-sub', text: d.mine.correct ? 'You got it' : `You picked “${g}”` }),
+        h('button', { type: 'button', class: 'btn sm', text: 'See it again', onclick: () => answerDaily(fmt, title, d) }), h('span', { class: 'meta', text: 'New one tomorrow' }));
+    } else {
+      box.append(h('p', { class: 'qd-text', text: d.item.text || '' }), h('button', { type: 'button', class: 'btn sm', text: 'Answer it', onclick: () => answerDaily(fmt, title, d) }));
+    }
+    return box;
+  }
+  async function answerDaily(fmt, title, d) {
+    try { if (!UI.workspace) await UI.need('question'); } catch (_) { UI.toast('Could not load the question.'); return; }
+    const item = d.item;
+    const q = { id: item.item_id, type: 'mcq', stem: item.text || '', choices: item.choices || [], latex: [] };
+    UI.sheet({ title, size: 'm', body: b => {
+      const ws = UI.workspace(b, q, { mode: 'quiz', head: { label: fmt === 'wic' ? 'Words in Context' : 'Transitions' },
+        onCheck: async (answer, meta) => {
+          const r = await UI.api(`/words/daily/${fmt}/answer`, { method: 'POST', body: { answer, ms: meta && meta.ms } });
+          const fb = W.verdict(r, answer);
+          UI.api('/words/today', { quiet: true }).then(t => { dailyData = t; const el = document.querySelector(`[data-daily="${fmt}"]`), n = daily(fmt, title); if (el && n) el.replaceWith(n); }).catch(() => {});
+          return fb;
+        } });
+      const stem = ws.el.querySelector('.q-stem');
+      if (stem && item.stem) stem.after(h('p', { class: 'ws-ask', text: item.stem }));
+      // answered already (here or on Today): the same verdict comes back and nothing new is filed (W21)
+      if (d.mine && d.mine.given !== undefined) { const g = String(d.mine.given); const i = /^[0-3]$/.test(g) ? +g : (item.choices || []).indexOf(g); if (i >= 0) { ws.select(i); ws.check(); } }
+    } });
+  }
+  async function spread(days) {
+    const d = new Date(); d.setDate(d.getDate() + days);
+    try { await UI.prefs.set({ words_spread: d.toISOString().slice(0, 10) }); UI.toast(`Spread over ${days} days · new words pause until you catch up`); load(); }
+    catch (e) { if (!e.offline) UI.toast('Not saved. Try again.'); }
+  }
+
+  /* ---------------- collections */
+  let collOpen = false;
+  function groups() {
+    const el = $('colls');
+    el.replaceChildren();
+    const inner = h('div', { class: 'wl-groups' });
+    let picked = false;
+    const sel = () => (fbar ? fbar.values().c : (params().get('c') || '').split(',').filter(Boolean));
+    const tile = (id, name, rows, o = {}) => {
+      const known = o.known ?? rows.filter(w => W.status(w) === 'known').length, due = o.noDue ? 0 : rows.filter(w => w.is_due).length, of = o.total ?? rows.length;
+      const on = id === '' ? !sel().length : sel().includes(id);
+      const b = h('button', { type: 'button', class: 'ctile', 'aria-pressed': String(on), onclick: () => toggleColl(id) },
+        h('b', { text: name }), h('span', { class: 'meta', text: o.sub || `${num(rows.length)} ${rows.length === 1 ? 'word' : 'words'}` }),
+        h('span', { class: 'kb', role: 'img', 'aria-label': `${known} of ${of} known` }, h('i', { style: `width:${of ? Math.round(known / of * 100) : 0}%` })),
+        known ? h('span', { class: 'meta', text: o.knownText || `${num(known)} known` }) : null,
+        due ? h('span', { class: 'due', 'aria-label': `${due} due` }, h('span', { class: 'dot' }), String(due)) : null);
+      return b;
+    };
+    const inColl = (w, c) => w.collection === c.id || (w.lists || []).includes(c.id);
+    for (const g of lib.groups || []) {
+      const tiles = [];
+      if (g.id === 'rw') tiles.push(tile('', 'All', words.filter(w => !w.own), { noDue: true }));   // its due count is the strip's
+      if (g.id === 'roots') {
+        const rw = words.filter(w => (w.roots || []).length);
+        // W4: a root is known when half its family is at box 3 or higher
+        const known = [...rootsOf.values()].filter(ws => ws.length && ws.filter(w => w.state && w.state.box >= 3).length * 2 >= ws.length).length;
+        tiles.push(tile('roots', 'Roots', rw, { sub: `${rootsOf.size} roots · ${num(rw.length)} words`, known, total: rootsOf.size, knownText: `${known} ${known === 1 ? 'root' : 'roots'} known` }));
+      } else if (g.id === 'mine') {
+        const own = words.filter(w => w.own);
+        tiles.push(tile('my-words', 'My words', own));
+        (W._lists || []).filter(l => l !== 'My words').forEach(l => tiles.push(tile(l, l, words.filter(w => (w.lists || []).includes(l) || (w.own && w.collection === l)))));
+        tiles.push(h('button', { type: 'button', class: 'ctile new', onclick: newList }, h('b', { text: '+ New list' })));
+      } else {
+        (g.collections || []).forEach(c => tiles.push(tile(c.id, c.name, words.filter(w => inColl(w, c)))));
+      }
+      inner.append(h('div', { class: 'wl-group' }, h('p', { class: 'k', text: g.name }), h('div', { class: 'wl-gtiles' }, tiles)));
+      if (tiles.some(t => t.getAttribute && t.getAttribute('aria-pressed') === 'true' && t.firstChild.textContent !== 'All')) picked = true;
+    }
+    // all three groups in one fold, closed until opened (or while a tile is chosen)
+    const det = h('details', { class: 'wl-all' }, h('summary', { class: 'k', text: 'Collections' }), inner);
+    det.open = collOpen || picked;
+    det.addEventListener('toggle', () => { collOpen = det.open; });
+    el.append(det);
+  }
+  function toggleColl(id) {
+    const cur = fbar.values().c || [];
+    fbar.set('c', id === '' ? [] : cur.includes(id) ? cur.filter(x => x !== id) : [...cur, id]);
+  }
+  async function newList() {
+    const name = await UI.confirm({ title: 'New list', text: selected.size ? `A list of the ${selected.size} selected words.` : 'Name it. Add words from any word sheet or with Select.', confirm: 'Create', input: { label: 'Name', value: '', maxlength: 30 } });
+    if (!name) return;
+    const nm = String(name).trim().slice(0, 30);
+    try {
+      await UI.api('/words/lists', { method: 'POST', body: { name: nm, words: [...selected] } });
+      UI.toast(`Made “${nm}”`);
+      words.forEach(w => { if (selected.has(w.slug)) w.lists = [...(w.lists || []), nm]; });
+      if (!(W._lists || []).includes(nm)) W._lists = [...(W._lists || []), nm];
+      filters(); groups(); paintGrid();
+    }
+    catch (e) { if (!e.offline) UI.toast(e.status === 409 ? 'You already have a list with that name.' : 'Not made. Try again.'); }
+  }
+
+  /* ---------------- filters */
+  function levelOf(w) { return W.level(w.measured, w.difficulty).tier; }
+  const flag = {
+    new: w => W.status(w) === 'new', learning: w => W.status(w) === 'learning', claimed: w => W.status(w) === 'claimed', known: w => W.status(w) === 'known',
+    due: w => w.is_due, saved: w => w.saved, missed: w => w.missed, thought: w => w.thought, probable: w => w.placed === 2, trap: w => !!w.trap,
+    stubborn: w => w.stubborn, atrisk: w => w.at_risk, lookedup: w => w.looked_up, second: w => w.second_sense || (w.lists || []).includes('second-sense'),
+    ladder: w => w.family && famSize.get(w.family) >= 3, root: w => (w.roots || []).length > 0, mine: w => w.own,
+  };
+  function statusCounts() {
+    const out = {};
+    for (const k of Object.keys(flag)) out[k] = words.filter(flag[k]).length;
+    Object.keys(W.TRAP).forEach(t => { const n = words.filter(w => w.trap === t).length; if (n) out['trap:' + t] = n; });
+    return out;
+  }
+  function filters() {
+    const count = (fn) => words.filter(fn).length;
+    const collOpts = [];
+    (lib.groups || []).forEach(g => (g.collections || []).forEach(c => { if (c.id !== 'my-words') collOpts.push({ value: c.id, label: c.name }); }));
+    collOpts.push({ value: 'my-words', label: 'My words' });
+    (W._lists || []).filter(l => l !== 'My words').forEach(l => collOpts.push({ value: l, label: l }));
+    const topicGroups = [
+      { label: 'SAT subjects', options: SUBJECTS.map(([v, l]) => ({ value: v, label: l, n: count(w => (w.topics || []).includes(v)) })) },
+      { label: 'Transition logic', options: LOGIC.map(([v, l]) => ({ value: v, label: l, n: count(w => (w.topics || []).includes(v)) })) },
+      { label: 'Roots', options: [...rootsOf.entries()].sort((a, b) => b[1].length - a[1].length).map(([r, ws]) => ({ value: 'r:' + r, label: r, n: ws.length })) },
+    ];
+    const fams = [...famSize.entries()].filter(([, n]) => n >= 3).sort((a, b) => b[1] - a[1]).map(([f, n]) => ({ value: f, label: `${cap(f.replace(/[-_]/g, ' '))}`, n }));
+    const sc = statusCounts();
+    const statusGroups = [{ label: 'Status', options: STATUS_OPTS.filter(([v]) => v !== 'trap').map(([v, l]) => ({ value: v, label: l, n: sc[v] })) },
+      { label: 'Fell for a trap', options: [{ value: 'trap', label: 'Any trap', n: sc.trap }, ...Object.entries(W.TRAP).filter(([t]) => sc['trap:' + t]).map(([t, l]) => ({ value: 'trap:' + t, label: l, n: sc['trap:' + t] }))] }];
+    const hasRW = words.some(w => !w.own);
+    const F = [
+      { key: 'c', label: 'Collection', type: 'multi', options: collOpts, counts: Object.fromEntries(collOpts.map(o => [o.value, count(w => inC(w, o.value))])) },
+      { key: 't', label: 'Topic', type: 'multi', groups: topicGroups },
+      { key: 'f', label: 'Family', type: 'multi', options: fams },
+      { key: 'd', label: 'Difficulty', type: 'multi', options: [{ value: 'easy', label: 'Easy', n: count(w => !w.own && levelOf(w) === 'easy') }, { value: 'medium', label: 'Medium', n: count(w => !w.own && levelOf(w) === 'medium') },
+        { value: 'hard', label: 'Hard', n: count(w => !w.own && levelOf(w) === 'hard') }, { value: 'hardforyou', label: 'Hard for you', n: count(w => w.hard_for_you) || undefined }] },
+      { key: 's', label: 'Status', type: 'select', groups: statusGroups, all: 'All' },
+      ...(hasRW ? [{ key: 'p', label: 'Part of speech', type: 'multi', options: Object.entries(W.POS).filter(([k]) => k !== 'phrase').map(([v, l]) => ({ value: v, label: l, n: count(w => w.pos === v) })) }] : []),
+      { key: 'sort', label: 'Sort', type: 'sort', options: SORTS.map(([v, l]) => ({ value: v, label: l })) },
+    ];
+    const host = $('fbar');
+    host.replaceChildren();
+    fbar = UI.filterBar(host, F, { url: true, sheet: false, label: 'Word filters', onChange: () => { limit = LIMIT0; tidyChips(); groups(); paintGrid(); } });
+    const mBtn = h('button', { type: 'button', class: 'btn sm', 'aria-pressed': String(meanings), text: 'Meanings', title: 'Show each word’s short meaning on its tile',
+      onclick: () => { meanings = !meanings; mBtn.setAttribute('aria-pressed', String(meanings)); mBtn.classList.toggle('on', meanings); setUrl('m', meanings ? '1' : null); paintGrid(); } });
+    mBtn.classList.toggle('on', meanings);
+    sBtn = h('button', { type: 'button', class: 'btn sm', 'aria-pressed': 'false', text: 'Select',
+      onclick: () => { selecting = !selecting; if (!selecting) selected.clear(); sBtn.setAttribute('aria-pressed', String(selecting)); sBtn.classList.toggle('on', selecting); paintGrid(); } });
+    // view toggles sit behind a settings icon on the legend line; a tap opens them to its left (open while one is on)
+    const opts = h('span', { class: 'wl-legopts' }, mBtn, sBtn);
+    const gear = h('button', { type: 'button', class: 'btn sm icon', 'aria-label': 'View options', 'aria-expanded': 'false', title: 'View options' });
+    { const t = document.createElement('template'); t.innerHTML = UI.svg(UI.ICON.settings || '', 18); gear.append(t.content.firstElementChild); }
+    const showOpts = v => { opts.style.display = v ? 'flex' : 'none'; gear.setAttribute('aria-expanded', String(v)); };
+    showOpts(meanings);
+    gear.addEventListener('click', () => showOpts(opts.style.display === 'none'));
+    $('legacts').replaceChildren(opts, gear);
+    host.prepend(qEl);   // the search sits in the filter row
+    tidyChips();
+  }
+  // "Collection" until set, then "SAT core"; a count ("3") keeps its label; the sort shows once it is not A–Z
+  function tidyChips() {
+    const dds = [...$('fbar').querySelectorAll('.filters .dd')], sort = dds[dds.length - 1], v = fbar.values();
+    dds.forEach(d => {
+      const val = d.querySelector('.dd-v'), k = d.querySelector('.dd-k');
+      const set = d === sort ? (v.sort || 'az') !== 'az' : d.classList.contains('on');
+      val.hidden = !set;
+      k.hidden = set && !/^\d+$/.test(val.textContent.trim());
+    });
+  }
+  function inC(w, c) {
+    if (c === 'roots') return (w.roots || []).length > 0;
+    if (c === 'my-words') return !!w.own;
+    return w.collection === c || (w.lists || []).includes(c);
+  }
+  const fold = s => String(s || '').normalize('NFKD').replace(/[̀-ͯ]/g, '').toLowerCase();
+  function visible() {
+    const v = fbar ? fbar.values() : {};
+    const q = fold(qEl.value.trim());
+    const c = v.c || [], t = v.t || [], f = v.f || [], d = v.d || [], s = v.s || '', p = v.p || [];
+    let rows = words.filter(w => {
+      if (c.length && !c.some(x => inC(w, x))) return false;
+      if (t.length && !t.some(x => x.startsWith('r:') ? (w.roots || []).includes(x.slice(2)) : (w.topics || []).includes(x))) return false;
+      if (f.length && !f.includes(w.family)) return false;
+      if (d.length && !d.some(x => x === 'hardforyou' ? w.hard_for_you : !w.own && levelOf(w) === x)) return false;
+      if (s && !(s.startsWith('trap:') ? w.trap === s.slice(5) : flag[s] && flag[s](w))) return false;
+      if (p.length && !p.includes(w.pos)) return false;
+      return true;
+    });
+    let score = null;
+    if (q) {
+      score = new Map();
+      rows = rows.filter(w => {
+        const word = fold(w.word);
+        const sc = word.startsWith(q) ? 0 : word.includes(q) ? 1 : fold(alsoOf.get(w.slug)).includes(q) ? 2 : fold(w.short).includes(q) ? 3 : -1;
+        if (sc < 0) return false;
+        score.set(w.slug, sc);
+        return true;
+      });
+    }
+    const sort = (v.sort || 'az');
+    const due = w => (w.state && w.state.due) || '9999';
+    const lv = { easy: 0, medium: 1, hard: 2 };
+    const by = {
+      az: (a, b) => a.word.localeCompare(b.word),
+      topic: (a, b) => String((a.topics || [])[0] || 'zz').localeCompare(String((b.topics || [])[0] || 'zz')) || a.word.localeCompare(b.word),
+      value: (a, b) => (b.value || 0) - (a.value || 0) || a.word.localeCompare(b.word),
+      due: (a, b) => due(a).localeCompare(due(b)) || a.word.localeCompare(b.word),
+      weakest: (a, b) => (W.status(a) === 'new') - (W.status(b) === 'new') || ((a.state || {}).box || 0) - ((b.state || {}).box || 0) || ((b.state || {}).lapses || 0) - ((a.state || {}).lapses || 0),
+      hardforyou: (a, b) => (b.hard_for_you ? 1 : 0) - (a.hard_for_you ? 1 : 0) || ((b.state || {}).lapses || 0) - ((a.state || {}).lapses || 0),
+      missed: (a, b) => ((a.measured || {}).pct ?? 100) - ((b.measured || {}).pct ?? 100),
+      level: (a, b) => lv[levelOf(b)] - lv[levelOf(a)] || a.word.localeCompare(b.word),
+      recent: (a, b) => String((b.state || {}).first || '').localeCompare(String((a.state || {}).first || '')) || (b.own ? 1 : 0) - (a.own ? 1 : 0),
+    }[sort] || ((a, b) => a.word.localeCompare(b.word));
+    rows.sort(score ? ((a, b) => score.get(a.slug) - score.get(b.slug) || by(a, b)) : by);
+    return rows;
+  }
+
+  /* ---------------- the grid */
+  function tileFor(w, o = {}) {
+    const st = W.status(w), lv = W.level(w.measured, w.difficulty);
+    const tag = w.own ? 'mine' : W.POS[w.pos] || w.pos || '';
+    const sense = !w.own && w.sense && w.sense !== 'main' ? w.sense.replace(/_/g, ' ') : '';
+    const subj = (w.topics || [])[0];
+    const metaText = meanings ? w.short : o.compact ? '' : subj ? (LOGIC.find(l => l[0] === subj) || SUBJECTS.find(s => s[0] === subj) || [0, cap(subj)])[1] : (w.own ? w.collection : '');
+    const marks = h('span', { class: 'marks' },
+      w.trap ? h('span', { class: 'dot', title: `Fell for a trap: ${W.TRAP[w.trap] || w.trap}` }) : null,
+      w.proven ? h('span', { title: 'Proven in context', text: '✓' }) : null,
+      w.stubborn ? h('span', { title: 'Stubborn', text: '⌇' }) : null,
+      w.is_due ? h('span', { class: 'due', text: 'DUE' }) : null,
+      w.saved ? h('span', { class: 'st on', title: 'Saved' }, W.icon('star', 13)) : null);
+    const b = h('button', { type: 'button', class: 'wtile', 'data-slug': w.slug, 'aria-label': W.label(w) + (meanings && w.short ? `: ${w.short}` : ''),
+      role: selecting ? 'checkbox' : null, 'aria-checked': selecting ? String(selected.has(w.slug)) : null },
+      h('span', { class: 'w', title: sense ? `${w.word} · ${sense}` : w.word }, w.word, sense ? h('span', { class: 'sn', text: ` · ${sense}` }) : null), h('span', { class: 'tag', text: tag }),
+      h('span', { class: 'mt' + (meanings ? ' on' : ''), text: metaText || '' }),
+      h('span', { class: 'bot' }, W.pips(w), w.own ? null : h('span', { title: lv.n ? `Difficulty: ${lv.tier}` : `Difficulty: ${lv.tier} · estimated until your first answer` }, UI.dbars ? UI.dbars(lv.tier) : '')), marks, h('span', { class: 'ck', 'aria-hidden': 'true' }));
+    return b;
+  }
+  function paintGrid() {
+    const sec = $('gridSec');
+    shown = visible();
+    const v = fbar ? fbar.values() : {};
+    const c = v.c || [];
+    legend();
+    bar();
+    if (!words.length) { sec.replaceChildren(h('div', { class: 'wl-msg' }, h('p', { text: 'No words yet.' }))); return; }
+    if (!shown.length) {
+      sec.replaceChildren(h('div', { class: 'wl-msg' }, h('p', { text: 'No words match these filters.' }),
+        h('button', { type: 'button', class: 'btn', text: 'Clear filters', onclick: () => { qEl.value = ''; setUrl('q', null); fbar.clear(); } })));
+      return;
+    }
+    if (c.length === 1 && c[0] === 'transitions' && !qEl.value) return logicMap(sec);
+    if (c.length === 1 && c[0] === 'roots' && !qEl.value) return rootTiles(sec);
+    const grid = h('div', { class: 'wgrid' + (selecting ? ' selecting' : ''), role: selecting ? 'group' : null, 'aria-label': selecting ? 'Select words' : null });
+    shown.slice(0, limit).forEach(w => grid.append(tileFor(w)));
+    grid.addEventListener('click', onTile);
+    sec.replaceChildren(grid);
+    if (shown.length > limit) sec.append(h('button', { type: 'button', class: 'btn wl-more', text: `Show ${Math.min(200, shown.length - limit)} more · ${num(shown.length - limit)} left`, onclick: () => { limit += 200; paintGrid(); } }));
+  }
+  function onTile(e) {
+    const b = e.target.closest('.wtile');
+    if (!b) return;
+    const slug = b.dataset.slug;
+    if (selecting) {
+      const order = shown.map(w => w.slug);
+      if (e.shiftKey && lastPick) {
+        const [i, j] = [order.indexOf(lastPick), order.indexOf(slug)].sort((a, b2) => a - b2);
+        order.slice(i, j + 1).forEach(s => selected.add(s));
+      } else if (selected.has(slug)) selected.delete(slug); else selected.add(slug);
+      lastPick = slug;
+      document.querySelectorAll('.wtile[data-slug]').forEach(t => t.setAttribute('aria-checked', String(selected.has(t.dataset.slug))));
+      bar();
+      return;
+    }
+    openWord(slug);
+  }
+  function openWord(slug, o = {}) {
+    const pref = W.coverPref();
+    const covered = o.fromLink || qEl.value.trim() ? false : pref ? pref === 'covered' : !meanings;
+    W.open(slug, { list: shown.map(w => w.slug), covered, onChange: () => { dirty = true; } , onClose: () => { if (dirty) { dirty = false; load(); } } });
+  }
+  let dirty = false;
+  function logicMap(sec) {
+    const mix = (ins && ins.logic) || [];
+    const map = h('div', { class: 'lmap' });
+    LOGIC.forEach(([id, name, test]) => {
+      const col = shown.filter(w => (w.topics || []).includes(id));
+      const known = col.filter(w => W.status(w) === 'known').length;
+      const top = mix.filter(m => m.needed === id).sort((a, b) => b.n - a.n)[0];
+      const other = top ? top.picked : CONFUSABLE[id];
+      const otherName = (LOGIC.find(l => l[0] === other) || [0, other])[1];
+      const practise = h('button', { type: 'button', class: 'btn sm', text: 'Practise · 8', onclick: () => UI.startWords({ mode: 'quiz', deck: { source: 'topic', value: id }, formats: ['transition'], count: 8 }) });
+      map.append(h('section', { class: 'logic-col', 'aria-label': name },
+        h('h3', {}, name, practise),
+        h('p', { class: 'test', text: `${test} → ${name.toLowerCase()}` }),
+        col.map(w => tileFor(w, { compact: true })),
+        other ? h('p', { class: 'help', text: `Most mixed up with: ${otherName}${top ? ` (${top.n}×)` : ''}` }) : null,
+        known ? h('span', { class: 'kb', role: 'img', 'aria-label': `${known} of ${col.length} known` }, h('i', { style: `width:${Math.round(known / col.length * 100)}%` })) : null,
+        known ? h('p', { class: 'meta', text: `${known} of ${col.length} known` }) : null));
+    });
+    map.addEventListener('click', onTile);
+    sec.replaceChildren(map);
+  }
+  function rootTiles(sec) {
+    const grid = h('div', { class: 'wgrid' });
+    [...rootsOf.entries()].sort((a, b) => b[1].length - a[1].length || a[0].localeCompare(b[0])).forEach(([r, ws]) => {
+      const known = ws.filter(w => W.status(w) === 'known').length;
+      grid.append(h('button', { type: 'button', class: 'wtile', 'aria-label': `${r}, ${ws.length} words, ${known} known`, onclick: () => W.open('root:' + r) },
+        h('span', { class: 'w', text: r }), h('span', { class: 'tag', text: 'root' }), h('span', { class: 'mt', text: ws.slice(0, 3).map(w => w.word).join(', ') }),
+        h('span', { class: 'bot' }, h('span', { class: 'meta', text: `family known ${known}/${ws.length}` }))));
+    });
+    sec.replaceChildren(grid);
+  }
+  function legend() {
+    const n = fn => shown.filter(fn).length;
+    const bits = [['●●●○○', 'strength'], [n(w => w.proven), '✓ proven'], [shown.some(w => w.is_due) ? 'DUE' : 0, 'due today'], [n(w => w.saved), '★ saved'],
+      [n(w => w.trap), '● fell for a trap'], [n(w => w.stubborn), '⌇ stubborn'], ['▮▮▯', 'difficulty']];
+    $('legend').replaceChildren(...bits.filter(([c]) => c !== 0).map(([c, t]) => h('span', {}, typeof c === 'number' ? [h('b', { text: String(c) }), ' '] : [c, ' '], t,
+      t === 'difficulty' && W.info ? [' ', W.info('Estimated until your first answer, then measured from students’ answers', 'Difficulty')] : null)));
+  }
+
+  /* ---------------- the study bar */
+  function studySlugs() {
+    const pick = selected.size ? shown.filter(w => selected.has(w.slug)) : shown;
+    const rank = w => (w.is_due ? 0 : W.status(w) === 'new' ? 1 : 2);
+    return [...pick].sort((a, b) => rank(a) - rank(b)).slice(0, 200).map(w => w.slug);
+  }
+  function narrowed() {
+    const v = fbar ? fbar.values() : {};
+    return selected.size > 0 || !!qEl.value.trim() || ['c', 't', 'f', 'd', 's', 'p'].some(k => [].concat(v[k] || []).filter(Boolean).length);
+  }
+  let gridSeen = !('IntersectionObserver' in window);
+  if (!gridSeen) new IntersectionObserver(es => { gridSeen = es.some(e => e.isIntersecting); barShow(); }, { rootMargin: '0px 0px -25% 0px' }).observe($('gridSec'));
+  function barShow() {
+    const n = narrowed();
+    $('studybar').hidden = !(gridSeen || n) || !words.length;
+    $('barCards').className = n ? 'pill' : 'btn';
+  }
+  function bar() {
+    const pick = selected.size ? shown.filter(w => selected.has(w.slug)) : shown;
+    const due = pick.filter(w => w.is_due).length, nw = pick.filter(w => W.status(w) === 'new').length;
+    $('barText').textContent = selected.size ? `${num(selected.size)} selected` : '';
+    const last = ls.get('satf.words.study', {}) || {};
+    const n = (last.cards && last.cards.count) || 20;
+    $('barCards').title = pick.length > n ? `Takes ${n}: due first, then new` : '';
+    $('barCards').disabled = $('barQuiz').disabled = !pick.length;
+    barShow();
+  }
+  $('barCards').addEventListener('click', () => {
+    const last = (ls.get('satf.words.study', {}) || {}).cards || {};
+    UI.startWords({ mode: 'cards', deck: { source: 'words', words: studySlugs() }, count: Math.min(200, last.count || 20), order: 'due', direction: last.direction || 'word' });
+  });
+  $('barQuiz').addEventListener('click', () => {
+    const last = (ls.get('satf.words.study', {}) || {}).quiz || {};
+    const deck = { source: 'words', words: studySlugs() };
+    if (last.formats && last.formats.length) UI.startWords({ mode: 'quiz', deck, formats: last.formats, count: last.count || 10, timer: last.timer || 0 }, { fallback: { mode: 'quiz', deck, formats: ['meaning2word', 'word2meaning'], count: last.count || 10 } });
+    else W.quizStart(deck, 10);
+  });
+
+  // ⋯: share this view or the selection, print it as a worksheet, grade a printed one (W20)
+  const viewTitle = () => {
+    const c = (fbar ? fbar.values().c : []) || [];
+    const name = c.length === 1 ? ((W._coll || {})[c[0]] || c[0]) : '';
+    return selected.size ? (name ? `${name} · picked` : 'Picked words') : name || (qEl.value.trim() ? `Words: ${qEl.value.trim()}` : 'Words');
+  };
+  $('barMore').addEventListener('click', () => {
+    const pick = studySlugs();
+    UI.menu($('barMore'), [
+      { label: 'Share these words', sub: `${num(pick.length)} words · a link anyone can open`, disabled: !pick.length, onClick: () => W.share({ title: viewTitle(), words: pick }) },
+      { label: 'Print a worksheet', sub: 'In context and meaning, with a key page', disabled: !pick.length,
+        onClick: () => { const q = (ls.get('satf.words.study', {}) || {}).quiz || {}; W.print({ source: 'words', words: pick }, { formats: q.formats, count: Math.min(20, pick.length) }); } },
+      { label: 'Grade a worksheet', sub: 'The code and your letters', onClick: () => W.gradeSheet() },
+    ], { align: 'end', label: 'More' });
+  });
+
+  /* ---------------- search and keys */
+  let qt = 0;
+  qEl.addEventListener('input', () => { clearTimeout(qt); qt = setTimeout(() => { setUrl('q', qEl.value.trim() || null); limit = LIMIT0; paintGrid(); }, 150); });
+  qEl.addEventListener('keydown', e => { if (e.key === 'Escape' && qEl.value) { qEl.value = ''; setUrl('q', null); paintGrid(); } });
+  UI.keys.register('wordslib', {
+    '/': { does: 'Search words', run: () => { qEl.focus(); qEl.select(); } },
+    N: { does: 'Add a word', run: () => UI.addWord() },
+  }, { label: 'Words' });
+  W.listKeys('wordslist', '.wgrid .wtile, .lmap .wtile, .wroots .wtile', { label: 'Word tiles', select: el => {
+    const slug = el.dataset.slug;
+    if (!slug) return;
+    if (!selecting && sBtn) sBtn.click();
+    const t = document.querySelector(`.wtile[data-slug="${CSS.escape(slug)}"]`);
+    if (t) { t.click(); t.focus(); }
+  } });
+  document.addEventListener('satf:words', () => load());
+  addEventListener('popstate', () => { const w = params().get('w'); if (w) openWord(w, { fromLink: true }); });
+  load();
+})();
+</script>
+</body>
+</html>

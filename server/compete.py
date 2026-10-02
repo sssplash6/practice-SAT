@@ -438,14 +438,17 @@ def _ensure_unlocked(at: dt.datetime | None = None, tz: int = 0) -> list[dict]:
                 dt.datetime.combine(weekend, dt.time(), dt.timezone.utc),
                 dt.datetime.combine(weekend + dt.timedelta(days=2), dt.time(12), dt.timezone.utc),
                 slots, 4200 if final_date else 2100, extra=extra)
-    themes = trap_families()
+    # the trap weeks: trap_families() builds ~16k questions on its first call in a process, so it runs only when a
+    # trap-week contest is actually missing (every cold /api/shell paid it, 17.7 s for five calls; Up next, F2B)
+    missing = []
+    for offset in (0, 7):
+        first = monday + dt.timedelta(days=offset)
+        week = f"{first.isocalendar().year}-W{first.isocalendar().week:02d}"
+        if not db.one("SELECT 1 FROM contests WHERE id=?", "trap-" + week):
+            missing.append((first, week, "trap-" + week))
+    themes = trap_families() if missing else {"families": []}
     if themes["families"]:
-        for offset in (0, 7):
-            first = monday + dt.timedelta(days=offset)
-            week = f"{first.isocalendar().year}-W{first.isocalendar().week:02d}"
-            cid = "trap-" + week
-            if db.one("SELECT 1 FROM contests WHERE id=?", cid):
-                continue
+        for first, week, cid in missing:
             theme = trap_theme(week, themes)
             slots = _trap_slots(week, theme, themes["topic_floor"])
             family = theme["family"]
@@ -2265,6 +2268,17 @@ def create_private(learner: str, body: dict) -> dict:
     kinds = blueprint.kinds()
     names = body.get("templates") or []
     topics = body.get("topics") or []
+    if isinstance(body.get("paper"), int):      # a race on a paper: its module 1 question types
+        from . import papers
+        names = list(dict.fromkeys(slot[0] for slot in papers.slots(body["paper"], "module1")))
+    elif body.get("from_session"):             # a race on a sitting of yours: its question types, module 1 first
+        row = db.one("SELECT * FROM sessions WHERE id=? AND learner=?", str(body["from_session"]), learner)
+        if row is None:
+            raise HTTPException(404, "no such sitting")
+        from . import sets as _sets
+        qs = _sets._paper(row)
+        first = [q for q in qs if q.get("module") in (None, 1)] or qs
+        names = list(dict.fromkeys(q.get("template") or q.get("key") for q in first if q.get("template") or q.get("key")))
     if source == "my_traps":
         names = [t["template"] for t in progress.open_traps(learner)]
     elif not names:

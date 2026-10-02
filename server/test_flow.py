@@ -62,12 +62,14 @@ def main() -> int:
 
         # --- starting ---------------------------------------------------------
         s = c.post("/api/session").json()
+        DH = {"X-Learner": s["learner"]}        # the server minted this code (SEC-07)
+        s = c.post(f"/api/session/{s['id']}/begin", headers=DH).json()
         sid, qs = s["id"], s["questions"]
         # the clock counts from the start time, so a fresh one is at or just under
         assert len(qs) == 20
         full = 20 * 95
         assert full - 20 <= s["seconds"] <= full, s["seconds"]
-        assert c.get(f"/api/session/{sid}").json()["seconds"] <= s["seconds"], \
+        assert c.get(f"/api/session/{sid}", headers=DH).json()["seconds"] <= s["seconds"], \
             "the clock reset on reload"
 
         for q in qs:
@@ -87,7 +89,7 @@ def main() -> int:
 
         # --- the gates --------------------------------------------------------
         assert c.get(f"/api/session/{sid}/results").status_code == 409, "results before finishing"
-        assert c.post(f"/api/session/{sid}/answer",
+        assert c.post(f"/api/session/{sid}/answer", headers=DH,
                       json={"question_id": "nope", "answer": 0}).status_code == 400
         assert c.get("/api/session/does-not-exist").status_code == 404
         print("ok  results refused before finishing, unknown ids refused")
@@ -96,23 +98,23 @@ def main() -> int:
         form = FORMS[s["form"]]
         for q in form:
             right = "ABCD".index(q["answer"]) if q["type"] == "mcq" else q["answer"]
-            r = c.post(f"/api/session/{sid}/answer",
+            r = c.post(f"/api/session/{sid}/answer", headers=DH,
                        json={"question_id": q["id"], "answer": right})
             assert r.status_code == 200, r.text
 
         # one is cleared again, to check a blank round-trips
-        c.post(f"/api/session/{sid}/answer", json={"question_id": form[0]["id"], "answer": None})
-        assert c.get(f"/api/session/{sid}").json()["answers"].get(form[0]["id"]) is None
-        c.post(f"/api/session/{sid}/answer",
+        c.post(f"/api/session/{sid}/answer", headers=DH, json={"question_id": form[0]["id"], "answer": None})
+        assert c.get(f"/api/session/{sid}", headers=DH).json()["answers"].get(form[0]["id"]) is None
+        c.post(f"/api/session/{sid}/answer", headers=DH,
                json={"question_id": form[0]["id"],
                      "answer": "ABCD".index(form[0]["answer"]) if form[0]["type"] == "mcq"
                                else form[0]["answer"]})
         print("ok  answers save, clear and come back")
 
         # --- finishing --------------------------------------------------------
-        done = c.post(f"/api/session/{sid}/finish").json()
+        done = c.post(f"/api/session/{sid}/finish", headers=DH).json()
         assert done["right"] == 20, f"a perfect paper marked {done['right']}/20"
-        assert c.post(f"/api/session/{sid}/answer",
+        assert c.post(f"/api/session/{sid}/answer", headers=DH,
                       json={"question_id": form[1]["id"], "answer": 0}).status_code == 409
         print("ok  a perfect paper marks 20/20, and the test then closes")
 
@@ -206,8 +208,9 @@ def main() -> int:
         pid = mixed and c.post("/api/practice",
                                json={"basket": {"circles": 3}, "learner": "u:check2"}).json()
         for q in pid["questions"]:
-            c.post(f"/api/session/{pid['id']}/answer", json={"question_id": q["id"], "answer": 0})
-        c.post(f"/api/session/{pid['id']}/finish")
+            c.post(f"/api/session/{pid['id']}/answer", headers={"X-Learner": "u:check2"},
+                   json={"question_id": q["id"], "answer": 0})
+        c.post(f"/api/session/{pid['id']}/finish", headers={"X-Learner": "u:check2"})
         res = c.get(f"/api/session/{pid['id']}/results")
         assert res.status_code == 200, "practice results were gated behind signup"
         assert res.json()["mode"] == "practice"
@@ -245,8 +248,10 @@ def main() -> int:
 
         def sit(mock, m1_right):
             """Sit a mock, getting the first m1_right of module 1 correct."""
+            MH = {"X-Learner": "u:mocks"}
             st = c.post(f"/api/mock/{mock}", json={"learner": "u:mocks"}).json()
             sid = st["id"]
+            st = c.post(f"/api/session/{sid}/begin", headers=MH).json()
             assert st["seconds"] > 2000, "a module is 35 minutes"
             keyed = {q["id"]: q for f in ("module1", "module2_lower", "module2_upper")
                      for q in MOCKS[mock][f]}
@@ -255,17 +260,17 @@ def main() -> int:
                     k = keyed[q["id"]]
                     right = "ABCD".index(k["answer"]) if k["type"] == "mcq" else k["answer"]
                     wrong = ("ABCD".index(k["answer"]) + 1) % 4 if k["type"] == "mcq" else "0"
-                    c.post(f"/api/session/{sid}/answer",
+                    c.post(f"/api/session/{sid}/answer", headers=MH,
                            json={"question_id": q["id"],
                                  "answer": right if i < upto else wrong})
             reply(st["questions"], m1_right)
-            gate = c.post(f"/api/session/{sid}/finish").json()
+            gate = c.post(f"/api/session/{sid}/finish", headers=MH).json()
             assert gate["next_module"] == 2, "module 1 finished the whole test"
-            two = c.get(f"/api/session/{sid}").json()
+            two = c.post(f"/api/session/{sid}/begin", headers=MH).json()
             assert two["module"] == 2 and len(two["questions"]) == 22
             assert two["seconds"] > 2000, "module 2 did not get its own clock"
             reply(two["questions"], 22)
-            c.post(f"/api/session/{sid}/finish")
+            c.post(f"/api/session/{sid}/finish", headers=MH)
             return gate, c.get(f"/api/session/{sid}/results").json()
 
         gate, res = sit("1.1", 22)
@@ -479,6 +484,7 @@ def check_learner(c) -> None:
     def sit_fresh(m1_right: int):
         st = c.post("/api/mock/new", headers=H, json={"full": True}).json()
         mid = st["id"]
+        st = c.post(f"/api/session/{mid}/begin", headers=H).json()
         assert st["mode"] == "mock" and len(st["questions"]) == 22 and st["seconds"] > 2000
         for bad in LEAKS:
             assert all(bad not in q for q in st["questions"]), f"{bad} leaked from a fresh section"
@@ -489,18 +495,18 @@ def check_learner(c) -> None:
         at = tuple(i for i, q in enumerate(m1, 1) if q["type"] == "spr")
         assert at == (6, 7, 13, 14, 21, 22), f"fresh module 1 grid-ins at {at}"
         for i, q in enumerate(m1):
-            c.post(f"/api/session/{mid}/answer",
+            c.post(f"/api/session/{mid}/answer", headers=H,
                    json={"question_id": q["id"], "answer": keyed_answer(q, i < m1_right)})
-        gate = c.post(f"/api/session/{mid}/finish").json()
+        gate = c.post(f"/api/session/{mid}/finish", headers=H).json()
         assert gate["next_module"] == 2
-        two = c.get(f"/api/session/{mid}").json()
+        two = c.post(f"/api/session/{mid}/begin", headers=H).json()
         kept = json.loads(db.one("SELECT questions FROM sessions WHERE id=?", mid)["questions"])
         m2 = kept["module2"]
         assert len(two["questions"]) == 22 and len(m2) == 22
         for q in m2:
-            c.post(f"/api/session/{mid}/answer",
+            c.post(f"/api/session/{mid}/answer", headers=H,
                    json={"question_id": q["id"], "answer": keyed_answer(q, False)})
-        c.post(f"/api/session/{mid}/finish")
+        c.post(f"/api/session/{mid}/finish", headers=H)
         res = c.get(f"/api/session/{mid}/results").json()
         return mid, m1 + m2, res
 
@@ -534,8 +540,9 @@ def check_learner(c) -> None:
     again = c.post("/api/qotd", headers=H, json={"answer": keyed_answer(kq, True)}).json()
     assert again["correct"] is False, "a second answer replaced the first"
     c.post("/api/qotd", headers={"X-Learner": "a:qotdother"}, json={"answer": keyed_answer(kq, True)})
+    db.run("UPDATE learners SET created='2020-01-01' WHERE id='a:qotdother'")   # SEC-02: the crowd counts established codes
     mine = c.get("/api/qotd", headers=H).json()["mine"]
-    assert mine and mine["crowd"] == {"answered": 2, "right": 1}, mine
+    assert mine and (mine["crowd"]["answered"], mine["crowd"]["right"]) == (2, 1), mine
     print("ok  the question of the day is one question, one answer each, with the crowd's count")
 
     # --- the challenge: the same ten for everyone, ranked --------------------------
@@ -577,9 +584,10 @@ def check_learner(c) -> None:
     # --- a grid-in names no mistake, so it is filed under the bank's skill ---------
     D = {"X-Learner": "a:diaggrid"}
     s = c.post("/api/session", headers=D).json()
+    s = c.post(f"/api/session/{s['id']}/begin", headers=D).json()
     grid = next(q for q in s["questions"] if q["type"] == "spr")
-    c.post(f"/api/session/{s['id']}/answer", json={"question_id": grid["id"], "answer": "123456"})
-    c.post(f"/api/session/{s['id']}/finish")
+    c.post(f"/api/session/{s['id']}/answer", headers=D, json={"question_id": grid["id"], "answer": "12345"})
+    c.post(f"/api/session/{s['id']}/finish", headers=D)
     form = json.loads(pathlib.Path("server/forms.json").read_text())["forms"]
     full = next(q for f in form for q in f["questions"] if q["id"] == grid["id"] and q["stem"] == grid["stem"])
     skill = practice.skill_of(full)
@@ -672,6 +680,7 @@ def check_integrity(c) -> None:
     assert c.post("/api/saved", headers=S, json=body).status_code == 409, "saved an unanswered challenge question"
     assert c.post("/api/saved", headers={"X-Learner": "a:someoneelse"}, json=body).status_code == 403
     mock = c.post("/api/mock/new", headers=S, json={"full": False}).json()
+    mock = c.post(f"/api/session/{mock['id']}/begin", headers=S).json()
     assert c.post("/api/saved", headers=S, json={"session": mock["id"], "question_id": mock["questions"][0]["id"]}
                   ).status_code == 404, "saved a question off a live test"
     c.post(f"/api/drill/{ch['id']}/answer", headers=S, json={"question_id": cur["id"], "answer": keyed_answer(cur, True)})
@@ -679,8 +688,8 @@ def check_integrity(c) -> None:
     print("ok  save keeps only practice questions, a challenge's once answered, and only your own")
 
     # --- a practice set is not a paper, and a paper is not a practice set ---------
-    assert c.post(f"/api/session/{ch['id']}/answer", json={"question_id": cur["id"], "answer": None}).status_code == 409
-    assert c.post(f"/api/session/{ch['id']}/finish").status_code == 409
+    assert c.post(f"/api/session/{ch['id']}/answer", headers=S, json={"question_id": cur["id"], "answer": None}).status_code == 409
+    assert c.post(f"/api/session/{ch['id']}/finish", headers=S).status_code == 409
     assert c.get(f"/api/drill/{mock['id']}", headers=S).status_code == 404
     assert c.post(f"/api/drill/{mock['id']}/answer", headers=S,
                   json={"question_id": mock["questions"][0]["id"], "answer": 0}).status_code == 404
@@ -689,9 +698,9 @@ def check_integrity(c) -> None:
     # --- two answers to a test at once both land ---------------------------------
     q1, q2 = mock["questions"][0]["id"], mock["questions"][1]["id"]
     for _ in range(4):
-        at_once(lambda: c.post(f"/api/session/{mock['id']}/answer", json={"question_id": q1, "answer": 1}),
-                lambda: c.post(f"/api/session/{mock['id']}/answer", json={"question_id": q2, "answer": 2}))
-        got = c.get(f"/api/session/{mock['id']}").json()["answers"]
+        at_once(lambda: c.post(f"/api/session/{mock['id']}/answer", headers=S, json={"question_id": q1, "answer": 1}),
+                lambda: c.post(f"/api/session/{mock['id']}/answer", headers=S, json={"question_id": q2, "answer": 2}))
+        got = c.get(f"/api/session/{mock['id']}", headers=S).json()["answers"]
         assert got.get(q1) == 1 and got.get(q2) == 2, got
     print("ok  two answers sent to a test at the same moment are both kept")
 

@@ -19,7 +19,7 @@ import gzip
 import pathlib
 from functools import lru_cache
 
-from fastapi import APIRouter, Depends, Header, HTTPException, Request
+from fastapi import APIRouter, Depends, Header, HTTPException, Query, Request
 from fastapi.responses import Response
 
 from . import challenge, daily, db, progress, satdates
@@ -117,6 +117,27 @@ def _newest_report(learner: str) -> str | None:
     return None
 
 
+def _away(learner: str, d: dict, answered: int) -> dict | None:
+    """U25's welcome-back: 2 or more study days in a row with no activity before
+    today. Rest days (R13) and spare days (U16) are not study days; a learner who
+    is already back today is not away."""
+    def active(line: dict) -> bool:
+        return bool(line["questions"] or line["words"] >= 10 or line["tests"] or line["official"])
+    if not answered or active(d["recent"][-1]):
+        return None
+    missed, spare, since = 0, False, None
+    for line in reversed(d["recent"][:-1]):
+        if active(line):
+            since = line["day"]
+            break
+        spare = spare or line["spare_used"]
+        missed += not (line["rest"] or line["spare_used"])
+    if missed < 2:
+        return None
+    return {"days": missed, "since": since, "spare": spare,
+            "checks": len(progress.due_rechecks(learner, d["today"]))}
+
+
 def _device(token: str) -> dict:
     if token.startswith("d:"):
         row = db.one("SELECT method, session_only, expires FROM devices WHERE token=?", token)
@@ -154,7 +175,30 @@ def shell(learner: str, tz: int, token: str) -> dict:
     day = daily.today(tz)
     mine = db.one("SELECT finished FROM sessions WHERE kind='challenge' AND learner=? AND day=?", learner, day)
     b = challenge.board(day, learner, limit=0)
-    closing = part("compete", "closing_soon")
+    # Plan's snapshot and Compete's schedule can be expensive on a cold DB.
+    # Read each once, then give those exact rows to Up next and the chrome.
+    plan_summary = compete_part = plan_part = None
+    plan_reader = part("plan", "today_summary")
+    if plan_reader:
+        try:
+            plan_summary = plan_reader(learner, tz)
+            if plan_summary:
+                plan_part = {"plan": {"id": plan_summary["id"], "day": plan_summary["day"],
+                                      "done": plan_summary["tasks_done"],
+                                      "total": plan_summary["tasks_counted"],
+                                      "minutes_left": plan_summary["minutes_left"],
+                                      "next": plan_summary["next"]["title"] if plan_summary["next"] else None}}
+        except Exception:
+            log.exception("plan today_summary failed")
+    compete_reader = part("compete", "shell_part")
+    if compete_reader:
+        try:
+            compete_part = compete_reader(learner, tz)
+        except Exception:
+            log.exception("compete shell_part failed")
+    cutoff = dt.datetime.now(dt.timezone.utc) + dt.timedelta(hours=24)
+    closing = [item for item in (compete_part or {}).get("due", [])
+               if dt.datetime.fromisoformat(item["closes"]) <= cutoff]
 
     out = {
         "me": {"name": p["name"], "handle": p["handle"], "label": p["name"] or p["handle"] or challenge.handle(learner, None),
@@ -166,7 +210,7 @@ def shell(learner: str, tz: int, token: str) -> dict:
         "today": {"day": d["today"], "questions": line["questions"], "right": line["right"],
                   "minutes": line["minutes"], "words": line["words"], "rest": line["rest"],
                   "goal": {"minutes": p["minutes"], "questions": per_session(p)} if p["minutes"] else None,
-                  "done": None, "exam": exam, "contest": closing(learner, tz) if closing else []},
+                  "done": None, "exam": exam, "contest": closing},
         "plan": plan,
         "tested_today": tested,
         "mistakes": review["open"],
@@ -183,6 +227,7 @@ def shell(learner: str, tz: int, token: str) -> dict:
         "next": [],
         "goals": [],
         "inbox": 0,
+        "away": _away(learner, d, answered),
         "registration": satdates.registration(p["exam_date"], p["prefs"].get("registered"), today),
         "device": _device(token),
         "dates": satdates.dates(today),
@@ -190,8 +235,18 @@ def shell(learner: str, tz: int, token: str) -> dict:
     }
     queue = part("next", "queue")
     if queue:
-        out["next"] = queue(learner, tz, limit=3)[:3]
+        try:                                # U1: on an error the block hides and the nav stands
+            out["next"] = queue(learner, tz, limit=3, _plan=plan_summary,
+                                _closing=closing, _board=board)[:3]
+        except Exception:
+            log.exception("next.queue failed")
+    if plan_part:
+        _merge(out, plan_part)
+    if compete_part:
+        _merge(out, compete_part)
     for name in PARTS:
+        if (name == "plan" and plan_reader) or (name == "compete" and compete_reader):
+            continue
         fn = part(name, "shell_part") or ADAPT.get(name, lambda: None)()
         if fn is None:
             continue
@@ -220,7 +275,7 @@ ADAPT = {"reports": _reports_part}
 
 # What the chrome may call: another section's route or file, present or not yet. The
 # client asks nothing that would 404 (a 404 is a console error on every page).
-HAS_ROUTES = {"next": "/api/next", "pair": "/api/pair", "share": "/api/share", "feed": "/api/me/feed",
+HAS_ROUTES = {"next": "/api/next", "levers": "/api/levers", "pair": "/api/pair", "share": "/api/share", "feed": "/api/me/feed",
               "achievements_seen": "/api/me/achievements/seen", "reports_seen": "/api/reports/seen",
               "match": "/api/types/match", "log": "/api/mistakes/log", "example": "/api/types/{template}/example",
               "outside": "/api/outside/misses", "scores": "/api/scores", "export": "/api/me/export"}
@@ -248,6 +303,19 @@ def get_shell(request: Request, x_learner: str | None = Header(default=None), x_
             return {"retired": True}
         raise
     return {**shell(learner, x_tz, (x_learner or "").strip()), "has": _has(request.app)}
+
+
+@router.get("/api/next")
+def get_next(limit: int = Query(default=6, ge=1, le=20),
+             exclude: str = Query(default="", max_length=400),
+             x_learner: str | None = Header(default=None),
+             x_tz: int = Depends(tz_of)) -> dict:
+    """U1's queue. `exclude=skill:probability,redo` leaves out what a session
+    just did (a key, a kind, or kind:topic), for the Next: primary after it."""
+    learner = learner_of(x_learner)
+    queue = part("next", "queue")
+    drop = tuple(x.strip() for x in exclude.split(",") if x.strip())
+    return {"items": queue(learner, x_tz, limit=limit, exclude=drop) if queue else []}
 
 
 # ponytail: College Board's Math question bank size from the teardown (2026-09); F5's

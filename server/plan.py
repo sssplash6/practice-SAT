@@ -876,7 +876,8 @@ def build_day(learner: str, row, day: dt.date, topics: list[str] | None = None,
         take = min(warm_n, left)
         tasks.append(_task(day, "recheck", "Warm-up", take, take * s / 60,
                            {"source": "warmup", "count": take},
-                           detail=f"{len(warm['checks'])} check-ins due · {len(warm['fading'])} fading",
+                           detail=" · ".join(x for x in (warm['checks'] and f"{len(warm['checks'])} check-ins due",
+                                                          warm['fading'] and f"{len(warm['fading'])} fading") if x),
                            why=[{"text": "Review questions just as they start to fade", "href": "/review/"}]))
         left -= take
     elif warm_n:

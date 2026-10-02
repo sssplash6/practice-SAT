@@ -14,7 +14,7 @@
      opts  mode      practice | exam | review | quiz | inline | example
            feedback  instant | retry | end (practice, inline); quiz is instant
            tries     3 (retry)        prefs {first_tap, option_reasons, open_explanations,
-           rationale, confidence}     confActive (P7: the pill reads "Check · Sure")
+           rationale, confidence}     confActive
            state     restore {selected, value, struck, tries, hints, covered, own, eliminate, saved}
            fb        review / example: the feedback shown at once   hidden (review: Hide answers)
            bar       its own Check bar (default in practice, inline, quiz, example; the runner
@@ -36,7 +36,7 @@
      ws    {el, q, key(e), check(conf), select(i), choose(i), strike(i, on, by), eliminate(on),
             cover(on), hint(), skip(), reveal(fb), unlock(), answered(), canCheck(), value(),
             state(), setHidden(on), tools(), renderTools(host), focus(), restart(), destroy()}
-   UI.splitCheck(host, {confidence, active, save, onSubmit(conf)}) -> {el, set({enabled, save, firstTry})}
+   UI.splitCheck(host, {confidence, save, onSubmit(conf)}) -> {el, set({enabled, save, firstTry})}
    UI.questionActions(host, q, ctx) -> {el, run(id), has(id)}        G4, R49
    UI.twin(host, ctx) -> {el, run(axis, n), menu()}                   R44, P18
    UI.twinSheet({body, recall, title, onDone}) -> sheet api           T5 (callers go through UI.twin)
@@ -157,7 +157,7 @@
   // The bank gives a plain and a LaTeX form of every option. Where they differ it is a
   // fraction or a radical, and only then is it handed to KaTeX; the plain form shows first.
   function tex(el, plain, latex) {
-    el.textContent = plain ?? '';
+    fracText(el, plain ?? '');
     if (!latex || latex === plain) return el;
     // a thousands comma is part of the number, not punctuation: 1{,}225, never "1, 225"
     latex = String(latex).replace(/(\d),(?=\d{3}(?!\d))/g, '$1{,}');
@@ -175,10 +175,74 @@
         // the punctuation after the math stays on its line
         const p = (parts[i + 1] || '').match(/^[.,;:!?)]+/);
         if (p) { parts[i + 1] = parts[i + 1].slice(p[0].length); el.append(h('span', { style: 'white-space: nowrap' }, m, p[0])); } else el.append(m);
-      } else if (part) el.append(part);
+      } else if (part) el.append(...fracNodes(part));
     });
     return el;
   }
+
+  /* ------------------------------------------------------------ fractions: stacked, in the line */
+  // The user's rule: "8/(x − 14)", "34π/5" and "(2/19)s" draw as a numerator over a bar over a denominator, in the line.
+  // Every character stays in the DOM (the slash and a group's outer brackets are only visually hidden), so textContent
+  // offsets for highlights and notes stay valid and a screen reader still reads the slash. Units and words (km/h, and/or,
+  // 5 m/s, 4.50/hour) are not fractions; neither is a/b/c.
+  const SUP = '⁰¹²³⁴⁵⁶⁷⁸⁹ⁿ';
+  const INT = '(?:\\d{1,3}(?:,\\d{3})+|\\d+)(?:\\.\\d+)?';
+  const NUM_END = new RegExp(`(?:√?${INT}[A-Za-zπθ]*|√?[A-Za-zπθ]+)[${SUP}]*$`);
+  const DEN_START = new RegExp(`^(?:√?${INT}[${SUP}]*|[A-Z]{2,3}(?![A-Za-z])|[A-Za-zπθ][${SUP}]*(?![A-Za-z]))`);
+  function fracNodes(str) {
+    str = String(str ?? '');
+    if (!str.includes('/')) return [doc.createTextNode(str)];
+    const out = [];
+    let at = 0;
+    const hid = t => h('span', { class: 'fh', text: t });
+    const back = i => { let d = 0; for (let j = i; j >= at; j--) { if (str[j] === ')') d++; else if (str[j] === '(' && !--d) return j; } return -1; };
+    const fwd = i => { let d = 0; for (let j = i; j < str.length; j++) { if (str[j] === '(') d++; else if (str[j] === ')' && !--d) return j; } return -1; };
+    const part = (t, group) => (group ? [hid('('), ...fracNodes(t.slice(1, -1)), hid(')')] : fracNodes(t));
+    for (let k = str.indexOf('/'); k > 0; k = str.indexOf('/', k + 1)) {
+      if (k < at || /[\s/]/.test(str[k - 1]) || /[\s/]/.test(str[k + 1] || ' ')) continue;
+      let a, nGroup = false;
+      if (str[k - 1] === ')') {
+        a = back(k - 1);
+        if (a < 0) continue;
+        nGroup = true;
+        // f(x)/2, 2(x + 1)/3, √(x)/2: the brackets belong to the numerator and stay
+        const pre = str.slice(at, a).match(new RegExp(`(?:${INT}|[A-Za-z√]+)$`));
+        if (pre) { a -= pre[0].length; nGroup = false; }
+      } else if (str[k - 1] === '|') {
+        a = str.lastIndexOf('|', k - 2);                                     // |x|/a
+        if (a < at) continue;
+      } else {
+        const m = str.slice(at, k).match(NUM_END);
+        if (!m) continue;
+        a = k - m[0].length;
+      }
+      let b, dGroup = false;
+      if (str[k + 1] === '(') { b = fwd(k + 1); if (b < 0) continue; b += 1; dGroup = true; }
+      else { const m = str.slice(k + 1).match(DEN_START); if (!m) continue; b = k + 1 + m[0].length; }
+      if (str[b] === '/' || str[a - 1] === '/') continue;                    // a/b/c: leave the chain
+      const num0 = str.slice(a, k), den0 = str.slice(k + 1, b);
+      if (/^[A-Za-z]+$/.test(num0) && /\d\s$/.test(str.slice(0, a))) continue;   // 5 m/s
+      // words and units with no number (km/h, lb/ft³, and/or) stay; segment ratios (BC/AB) and cd/3 are fractions
+      const word = t => /^[A-Za-z]{2,}[${SUP}]*$/.test(t), seg = t => /^[A-Z]{2,3}$/.test(t);
+      if ((word(num0) || word(den0)) && !(seg(num0) && seg(den0)) && !/\d/.test(num0 + den0)) continue;
+      if (str[a - 1] === '$') continue;                                        // $4.50/h
+      // a lone fraction in brackets, (2/19)s: the brackets go with the bar
+      let wl = '', wr = '';
+      if (!nGroup && !dGroup && str[a - 1] === '(' && str[b] === ')' && a - 1 >= at && !/[A-Za-z√\d]/.test(str[a - 2] || '')) { a -= 1; b += 1; wl = '('; wr = ')'; }
+      if (a > at) out.push(doc.createTextNode(str.slice(at, a)));
+      out.push(h('span', { class: 'frac' }, wl ? hid(wl) : null, h('span', { class: 'fn' }, part(num0, nGroup)), hid('/'),
+        h('span', { class: 'fd' }, part(den0, dGroup)), wr ? hid(wr) : null));
+      at = b;
+      k = b - 1;
+    }
+    if (at < str.length) out.push(doc.createTextNode(str.slice(at)));
+    return out;
+  }
+  // UI.fracText(el, text) fills el; UI.fracText(text) returns a span to insert (the Review and Results pages call it so)
+  const fracText = (el, str) => {
+    if (!(el instanceof Element)) { const s = h('span'); s.append(...fracNodes(el)); return s; }
+    el.replaceChildren(...fracNodes(str)); return el;
+  };
 
   /* ------------------------------------------------------------ the grid-in rules */
   const num = x => /^(\d+\.?\d*|\.\d+)$/.test(x);
@@ -252,7 +316,13 @@
     if (n !== 15) bad.push(`${n} two-digit cuts, not 15`);
     const sci = sciEval.__test.filter(([src, want]) => { try { return Math.abs(sciEval(src, true, 0) - want) > 1e-9; } catch (_) { return true; } }).map(([s]) => s);
     const diff = stemDiff.__test.filter(([a, b, want]) => JSON.stringify(stemDiff(a, b).map(s => b.slice(s.start, s.end))) !== JSON.stringify(want)).map(([a]) => a);
-    return { ok: !bad.length && !sci.length && !diff.length, spr: bad, sci, diff };
+    // fractions: [text, how many stack]; the text itself never changes (highlight offsets)
+    const frac = [['10x²/(x² − 196) − 5x/(x + 14) = 8/(x − 14)', 3], ['P = (2/19)s − 1/9', 2], ['the ratio BC/AB', 1], ['|x|/a − 6', 1],
+      ['60 km/h and/or more', 0], ['at 5 m/s', 0], ['$4.50/hour', 0], ['a/b/c', 0], ['lb/ft³', 0]].filter(([t, want]) => {
+      const box = h('span', {}, fracNodes(t));
+      return box.textContent !== t || box.querySelectorAll(':scope > .frac').length !== want || fracText(t).textContent !== t;
+    }).map(([t]) => t);
+    return { ok: !bad.length && !sci.length && !diff.length && !frac.length, spr: bad, sci, diff, frac };
   }
 
   const DIRECTIONS = [
@@ -329,7 +399,7 @@
     el.replaceChildren();
     const put = str => str.split(/(_{3,})/).forEach(p => {
       if (!p) return;
-      el.append(/^_{3,}$/.test(p) ? h('span', { class: 'blank', role: 'img', 'aria-label': 'blank' }, p) : doc.createTextNode(p));
+      el.append(...(/^_{3,}$/.test(p) ? [h('span', { class: 'blank', role: 'img', 'aria-label': 'blank' }, p)] : fracNodes(p)));
     });
     let at = 0;
     (spans || []).filter(s => s && s.end > s.start).sort((a, b) => a.start - b.start).forEach(s => {
@@ -451,15 +521,15 @@
         return hd;
       }
       const t = UI.TOPIC && UI.TOPIC[q.topic];
-      const skill = h('span', { class: 'ws-skill' }, UI.glyph && q.topic ? UI.glyph(q.topic) : '',
+      const skill = h('span', { class: 'ws-skill' },
         h('span', { class: 'ws-skill-name', text: o.hideSkill || (t ? t.short : q.topic_name || '') }));
       hd.append(skill);
       if (!o.hideSkill && q.name) hd.append(h('span', { class: 'ws-type', text: q.name }));
       if (q.difficulty) {
         const d = UI.dbars ? UI.dbars(q.difficulty) : h('span', { text: cap1(q.difficulty) });
-        hd.append(h('span', { class: 'ws-diff' }, d, q.level ? h('span', { class: 'ws-level', text: `L${q.level}` }) : null));
+        hd.append(h('span', { class: 'ws-diff' }, d));       // the difficulty only: the internal level stays off screen (the user)
       }
-      if (!mc) hd.append(h('span', { class: 'ws-fmt', text: 'Grid-in' }));
+      if (!mc && o.fmt !== false) hd.append(h('span', { class: 'ws-fmt', text: 'Grid-in' }));   // fmt: false when the page labels the format
       if (q.repair || o.again) hd.append(h('span', { class: 'again', text: 'Again', title: q.repair_of ? `Same trap as question ${q.repair_of}, new numbers` : 'Same trap, new numbers' }));
       return hd;
     }
@@ -730,9 +800,9 @@
       errEl = h('p', { class: 'field-err', id: eid, hidden: true });
       hintEl = h('p', { class: 'help spr-hint', hidden: true, role: 'status' });
       nudgeEl = h('p', { class: 'spr-nudge', hidden: true, role: 'status' });
-      const rulesBtn = h('button', { type: 'button', class: 'qlink spr-all', text: 'All entry rules', 'aria-haspopup': 'dialog' });
+      const rulesBtn = h('button', { type: 'button', class: 'qlink spr-all', text: 'Entry rules', 'aria-haspopup': 'dialog' });
       rulesBtn.addEventListener('click', () => (UI.pop ? UI.pop(rulesBtn, directions(), { label: 'Entering your answer' }) : null));
-      const rule = h('p', { class: 'help spr-rule', id: rid }, spr.RULE + ' ', rulesBtn);
+      const rule = h('p', { class: 'help spr-rule', id: rid }, h('span', { class: 'sr', text: spr.RULE }), rulesBtn);
       if (mode === 'review') {                                   // answers hidden: check here, file nothing
         localCheck = h('button', { type: 'button', class: 'btn', text: 'Check', hidden: true, onclick: () => localPick(spr.clean(field.value)) });
         fieldWrap.append(localCheck);
@@ -902,7 +972,7 @@
         return;
       }
       if (!live || S.stage === 'on') { barEl.hidden = true; return; }
-      if (!splitCtl) splitCtl = splitCheck(barEl, { confidence: prefs.confidence, active: o.confActive, save: endMode, onSubmit: conf => check(conf) });
+      if (!splitCtl) splitCtl = splitCheck(barEl, { confidence: prefs.confidence, save: endMode, onSubmit: conf => check(conf) });
       splitCtl.set({ enabled: canCheck(), firstTry: S.tries.length === 0, save: endMode });
       barEl.hidden = false;
     }
@@ -912,6 +982,7 @@
       if (S.busy || S.answered) return false;
       if (S.covered && mc) { if (o.onOwn && spr.parse(S.own).ok) checkOwn(); return false; }
       if (!canCheck()) return false;
+      if (conf === 'auto' && prefs.confidence !== 'off' && !S.tries.length) conf = 'sure';   // D: no unrated first try
       S.lastConf = conf;
       // P8: a fast answer on a slip-prone type asks once
       if (q.check_anyway && !S.fastOk && elapsed() < (q.check_anyway.under_ms || 0)) {
@@ -934,7 +1005,6 @@
       if (!o.onCheck) return false;
       S.busy = true; errLine.hidden = true; paint();
       status.textContent = 'Checking';
-      bump('satf.conf.tip', 3);
       let fb;
       try { fb = await o.onCheck(a, m); }
       catch (e) { S.busy = false; paint(); return showErr(e, () => check(conf)); }
@@ -1003,9 +1073,12 @@
         hintMsg(`Struck ${LETTERS[r.choice]}`, r.reason ? `that’s what you get if you ${low1(r.reason)}.` : 'a trap, not the answer.');
       } else if (r.kind === 'step') hintMsg('First step', r.step);
       else if (r.kind === 'example') {
-        if (o.onExample) o.onExample(r.example);
-        else if (r.example) exampleSheet(r.example);
-        hintMsg('Worked twin', 'open beside this question. This one still counts as yours.');
+        const open = () => (o.onExample ? o.onExample(r.example) : r.example && exampleSheet(r.example));
+        open();
+        // closing it keeps a way back (the user: closed the auto pop-up and had no way to open it again)
+        hintBox.append(h('p', { class: 'ws-hint-l' }, h('b', { text: 'Worked twin: ' }), quiet('Show it', () => open()),
+          ' · this one still counts as yours.'));
+        hintBox.hidden = false;
       }
       paint(); changed();
       return true;
@@ -1177,7 +1250,8 @@
       v.append(vHead(fb, right, blank));
       if (fb.mastery && UI.masteryWord) v.append(masteryLine(fb.mastery));
       if (!mc) v.append(...gridLines(fb, right, blank));
-      else if (mode === 'review') v.append(answerBoxes(fb, key, g, blank));
+      // the options carry Your answer and Correct answer; the boxes only say what they can't: that nothing was picked
+      else if (mode === 'review' && blank) v.append(answerBoxes(fb, key, g, blank));
 
       // 2. a mistake that closed
       const closed = (fb.closed || []).map(c => (typeof c === 'string' ? { label: c } : c)).filter(c => c && c.label);
@@ -1190,7 +1264,9 @@
       // 3. the named mistake, confidence, traps on offer, causes, habit
       if (!right && !blank) {
         const reason = mc ? (fb.mistake || (fb.reasons && fb.reasons[g])) : null;
-        if (mc && reason) {
+        // the pick's own reason already sits under its option (optionLines): the line would say it twice
+        const onOption = mc && fb.reasons && fb.reasons[g] === reason && !fb.trap && !fb.trap_check && mode !== 'quiz' && !(prefs.option_reasons === false && live);
+        if (mc && reason && !onOption) {
           v.append(h('p', { class: 'mistake' },
             fb.trap ? h('span', { class: 'trap-chip', text: String(fb.trap).replace(/_/g, ' ').toUpperCase() }) : null,
             h('span', { text: cap1(reason) }),
@@ -1208,14 +1284,18 @@
       if (mc && fb.reasons && !blank && mode !== 'quiz') v.append(...trapsLines(fb, key, g, right));
       if (!right && !blank && fb.cause && o.onCause) v.append(causeChips(fb.cause));
       if (fb.habit && fb.habit.name) v.append(habitChip(fb.habit));
+      // the verdict's headline already names the trap the answer came from: the new-mistake line then only says what it takes
+      const named = g !== null && fb.reasons && fb.reasons[g] ? String(fb.reasons[g]).trim().toLowerCase() : null;
       (fb.opened || []).map(x => (typeof x === 'string' ? { label: x } : x)).filter(x => x && x.label).forEach(x => {
-        v.append(h('p', { class: 'v-line v-new' }, h('b', { text: 'New mistake to fix: ' }), cap1(x.label),
-          ` · ${x.clean ?? 0} of ${x.of ?? 2} clean answers · `, h('a', { class: 'qlink', href: x.href || '/review/?tab=redo', text: 'See it in Review' })));
+        const same = named && String(x.label).trim().toLowerCase() === named;
+        v.append(h('p', { class: 'v-line v-new' }, h('b', { text: same ? 'New mistake to fix' : 'New mistake to fix: ' }), same ? '' : cap1(x.label),
+          ` · ${x.clean ?? 0} of ${x.of ?? 2} correct answers · `, h('a', { class: 'qlink', href: x.href || '/review/?tab=redo', text: 'See it in Review' })));
       });
       if (fb.repair_next) v.append(h('p', { class: 'v-line', text: 'Next: one like this, with new numbers' }));
 
       // 4. the next step, then vs now, the formula, everyone, and offers
-      if (fb.next_step) v.append(h('p', { class: 'v-line v-next', text: fb.next_step }));
+      const openedNow = (fb.opened || []).map(x => String((typeof x === 'string' ? x : x && x.label) || '').toLowerCase()).filter(Boolean);
+      if (fb.next_step && !openedNow.some(l => fb.next_step.toLowerCase().startsWith(l))) v.append(h('p', { class: 'v-line v-next', text: fb.next_step }));
       if (fb.then) v.append(h('p', { class: 'v-line v-then', text: fb.then }));
       // V3: a fresh version from the Saved pool brings back the note on the saved one
       const sn = typeof fb.saved_note === 'string' ? { text: fb.saved_note } : fb.saved_note;
@@ -1326,25 +1406,10 @@
     // P6: the traps this question set, and how the strikes were graded
     function trapsLines(fb, key, g, right) {
       const out = [];
-      const named = rows.map((_, i) => i).filter(i => i !== key && fb.reasons[i] && !(fb.filler && fb.filler[i]));
-      // with every option's reason on screen the line only counts; without them it names each trap
-      const shown = !(prefs.option_reasons === false && live);
-      const letters = list => list.map(i => LETTERS[i]).join(list.length === 2 ? ' and ' : ', ');
-      if (named.length && g !== null) {
-        const word = named.length === 1 ? 'it' : named.length === 2 ? 'both' : `all ${named.length}`;
-        if (right || !named.includes(g)) {
-          out.push(h('p', { class: 'v-line v-traps' }, h('b', { text: 'Traps on offer: ' }),
-            shown ? letters(named) : named.map(i => `${LETTERS[i]} ${low1(fb.reasons[i])}`).join(' · '), right ? ` · dodged ${word}` : ''));
-        } else {
-          const rest = named.filter(i => i !== g);
-          out.push(h('p', { class: 'v-line v-traps' }, h('b', { text: `Caught by ${LETTERS[g]}` }), shown ? '' : `: ${low1(fb.reasons[g])}`,
-            rest.length ? ` · dodged ${letters(rest)}` : ''));
-        }
-      }
       const struck = fb.struck || [...S.struck];
       struck.forEach(i => {
         if (i === key) out.push(h('p', { class: 'v-line v-struck-key', text: `You struck the key (${LETTERS[i]})` }));
-        else if (fb.reasons[i]) out.push(h('p', { class: 'v-line v-struck', text: `struck ${LETTERS[i]} · dodged: ${low1(fb.reasons[i])}` }));
+        else if (fb.reasons[i]) out.push(h('p', { class: 'v-line v-struck', text: `struck ${LETTERS[i]}: ${low1(fb.reasons[i])}` }));
       });
       return out;
     }
@@ -1612,28 +1677,27 @@
   /* ------------------------------------------------------------ the split Check (P7, R54) */
   function splitCheck(host, o = {}) {
     const el = h('div', { class: 'split-check', role: 'group', 'aria-label': 'Check your answer' });
-    const label = () => (o.save ? 'Save & next' : o.active ? 'Check · Sure' : 'Check');
-    const main = h('button', { type: 'button', class: 'pill sc-main', 'data-conf': 'auto', disabled: true }, h('span', { class: 'sc-l', text: label() }), h('kbd', { class: 'kbd', text: 'Enter' }));
-    const sure = h('button', { type: 'button', class: 'btn sc-part', 'data-conf': 'sure', text: 'Sure' });
-    const unsure = h('button', { type: 'button', class: 'btn sc-part', 'data-conf': 'unsure', title: 'Shift+Enter' }, 'Unsure');
-    const guess = h('button', { type: 'button', class: 'quiet sc-part', 'data-conf': 'guess', title: 'I' }, 'Guess');
-    const tip = h('p', { class: 'help sc-tip', hidden: true, text: 'Sure? Tap Sure. Not sure? Tap Unsure. Check alone leaves it unrated.' });
+    const main = h('button', { type: 'button', class: 'pill sc-main', 'data-conf': 'auto', disabled: true }, h('span', { class: 'sc-l' }), h('kbd', { class: 'kbd', text: 'Enter' }));
+    // D: the rating is the button, three of one shape
+    const sure = h('button', { type: 'button', class: 'pill sc-part', 'data-conf': 'sure' }, 'Sure', h('kbd', { class: 'kbd', text: 'Enter' }));
+    const unsure = h('button', { type: 'button', class: 'btn sc-part', 'data-conf': 'unsure' }, 'Not sure', h('kbd', { class: 'kbd', text: '⇧Enter' }));
+    const guess = h('button', { type: 'button', class: 'btn sc-part', 'data-conf': 'guess' }, 'Guessing', h('kbd', { class: 'kbd', text: 'I' }));
     el.append(main, sure, unsure, guess);
     let enabled = false;
     [main, sure, unsure, guess].forEach(b => b.addEventListener('click', () => { if (enabled && o.onSubmit) o.onSubmit(b.dataset.conf); }));
     function set(p = {}) {
       Object.assign(o, p);
       if ('enabled' in p) enabled = !!p.enabled;
-      const split = o.confidence !== 'off' && enabled && o.firstTry !== false;
-      [sure, unsure, guess].forEach(b => { b.hidden = !split; });
+      const split = o.confidence !== 'off' && o.firstTry !== false;
+      [sure, unsure, guess].forEach(b => { b.hidden = !split; b.disabled = !enabled; });
+      main.hidden = split;
       main.disabled = !enabled;
-      main.querySelector('.sc-l').textContent = label();
+      main.querySelector('.sc-l').textContent = o.save ? 'Save & next' : 'Check';
       el.classList.toggle('split', split);
-      tip.hidden = !(split && ls.get('satf.conf.tip', 0) < 3);
     }
     set({});
-    if (host) host.append(el, tip);
-    return { el, tip, set, get enabled() { return enabled; } };
+    if (host) host.append(el);
+    return { el, set, get enabled() { return enabled; } };
   }
 
   /* ------------------------------------------------------------ the answer pad (X6) */
@@ -1710,7 +1774,7 @@
         const b = UI.verb ? UI.verb('again', { sm: true, onClick: () => on.again() }) : btn('Again, exactly', 'history', { id: 'again', key: 'E' }, () => on.again());
         put('again', b);
       }
-      if (q.template) put('about', btn('About this type', 'book', { id: 'about' }, null, { href: `/types/?t=${encodeURIComponent(q.template)}` }));
+      // "About this type" pointed at /types/, a page that does not exist (404), so it is gone until that page is built
     }
     const report = () => {
       const f = on.report || UI.report;
@@ -2321,7 +2385,7 @@
     const why = kind => (o.onWhy ? o.onWhy(kind) : api('/saved', { method: 'PATCH', body: Object.assign({ why: kind }, body) }));
     chip('Nice trick', () => why('trick'), 'Noted');
     chip('Hard', () => why('hard'), 'Noted');
-    if (o.revealed !== false) chip('Got lucky', () => (o.onLucky ? o.onLucky() : api('/mistakes/add', { method: 'POST', body })), 'In Redo: one clean answer closes it');
+    if (o.revealed !== false) chip('Got lucky', () => (o.onLucky ? o.onLucky() : api('/mistakes/add', { method: 'POST', body })), 'In Redo: one correct answer closes it');
     if (o.onAsk) chip('Ask a tutor', () => o.onAsk());
     if (o.onNote) chip('Note', () => o.onNote());
     t = toast(row, { ms: 5000 });
@@ -2330,7 +2394,7 @@
 
   /* ------------------------------------------------------------ export */
   Object.assign(UI, {
-    workspace, question, splitCheck, questionActions, twin, twinSheet, twinInline, stemDiff, pad, calc, tex, katex, spr, readAloud, sciEval, savedToast,
+    workspace, question, splitCheck, questionActions, twin, twinSheet, twinInline, stemDiff, pad, calc, tex, katex, spr, readAloud, sciEval, savedToast, fracText, fracNodes,
     workspaceSelfTest: selfTest, qicon: icon,
   });
   if (location.pathname.startsWith('/dev/')) {

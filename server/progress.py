@@ -765,14 +765,14 @@ def carry(frm: str, to: str) -> int:
     return n
 
 
-# ------------------------------------------------------------------ the coach
+# ------------------------------------------------------------------ the mentor
 
 def _days_since(at: str | None, today: dt.date) -> int:
     return (today - dt.date.fromisoformat(at[:10])).days if at else 10_000
 
 
 def _confident_traps(learner: str) -> dict[int, dict]:
-    """Open traps whose latest miss the student marked Sure (P7). The coach
+    """Open traps whose latest miss the student marked Sure (P7). The mentor
     reads only the explicit tag (practice.md's R9 row: null is an ordinary
     miss, P7 acceptance 6); T9's inferred blind spots are blind()."""
     out = {}

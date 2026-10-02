@@ -37,9 +37,19 @@
   .pr-banner .acts { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
   .pr-banner .help { flex-basis: 100%; margin: 0; }
   .pr-ready { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
-  .pr-card { display: grid; gap: 6px; align-content: start; padding: 14px; border-radius: 12px; border: 1px solid var(--line); background: var(--paper); }
-  .pr-card b { font: 700 14.5px/1.3 var(--font); }
-  .pr-card .acts { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 4px; }
+  /* equal cards: the title holds two lines, the meta and the note follow, and the actions sit on the bottom edge of every card */
+  .pr-card { display: flex; flex-direction: column; gap: 3px; padding: 10px 12px; border-radius: 12px; border: 1px solid var(--line); background: var(--paper); }
+  .pr-card b { font: 700 14.5px/1.3 var(--font); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+  .pr-card .meta { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+  .pr-card :is(b, .meta) { cursor: pointer; }
+  .pr-card :is(b, .meta).open { -webkit-line-clamp: unset; display: block; overflow: visible; }
+  .pr-card .acts { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-top: auto; padding-top: 6px; }
+  .pr-card .pill.sm { height: 34px; padding: 0 18px; border-radius: 10px; font-size: 14px; }
+  .pr-fold { display: flex; align-items: center; gap: 8px; appearance: none; border: 0; background: none; padding: 6px 0; font: 600 14px var(--font); color: var(--ink); cursor: pointer; }
+  .pr-fold .chev { display: inline-flex; color: var(--soft); transition: transform .16s; }
+  .pr-fold[aria-expanded="false"] .chev { transform: rotate(-90deg); }
+  .pr-ready[hidden], #presetBody[hidden] { display: none; }
+  #presetBody { margin-top: 6px; }
   .pr-chips { display: flex; flex-wrap: wrap; gap: 8px; align-items: stretch; }
   .pr-chip { display: inline-grid; align-content: center; gap: 2px; min-height: 36px; padding: 6px 12px; border-radius: 10px; border: 0; background: var(--tile);
     font: 600 13.5px/1.2 var(--font); color: var(--ink); cursor: pointer; text-align: left; position: relative; }
@@ -48,9 +58,38 @@
   .pr-chip .why { font: 500 11px var(--mono); color: var(--soft); }
   .pr-chip .x { margin-left: 4px; }
   .pr-chips .quiet { min-height: 36px; margin: 0; padding: 0 10px; }
+  /* the typed number sits in the segmented row as one more cell, empty until used, with a blinking caret */
+  .segfield { min-width: 0; width: auto; box-sizing: border-box; align-self: stretch; min-height: calc(var(--ctl, 44px) - 6px); padding: 0 8px; border: 0; border-radius: 9px; background: transparent; color: var(--ink);
+    font: 500 14px var(--font); text-align: center; caret-color: var(--amber); -moz-appearance: textfield; appearance: textfield; }
+  /* a row that ends in the typed field is a grid of equal cells, so "Other" is as wide as the chips and never cut */
+  .sset .seg:has(> .segfield), .seg:has(> .segfield) { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); width: 100%; }   /* beats the later .sset .seg flex rule */
+  .sset .seg:has(> .segfield) > *, .seg:has(> .segfield) > * { min-width: 0; flex: none; }
+  .segfield::-webkit-outer-spin-button, .segfield::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+  .segfield:focus { outline: 0; background: var(--paper); box-shadow: inset 0 0 0 1.5px var(--faint); }
+  .segfield::placeholder { color: var(--ink); opacity: 1; }
+  .segfield.on { background: var(--paper); box-shadow: inset 0 0 0 1.5px var(--amber); }
+  .pr-swrow { display: flex; align-items: center; gap: 10px; }
+  .pr-i { position: relative; flex: none; appearance: none; border: 1.5px solid var(--faint); background: none; color: var(--soft); width: 18px; height: 18px; border-radius: 50%; padding: 0;
+    font: 600 11px/1 var(--font); cursor: pointer; display: inline-grid; place-items: center; }
+  .pr-i::before { content: ""; position: absolute; inset: -13px; }
+  .pr-i[aria-expanded="true"] { border-color: var(--ink); color: var(--ink); }
+  .info-pop p { margin: 0; max-width: 320px; font: 400 13.5px/1.45 var(--font); }
   .pr-note { margin: 8px 0 0; font: 400 13px/1.45 var(--font); color: var(--soft); display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
-  .pr-search label { display: block; margin-bottom: 6px; }
-  .pr-search .field { width: 100%; height: 48px; font-size: 15.5px; }
+  /* the search is the product's own trick (type a set, get it), so it is the one boxed, orange-edged thing above the skills */
+  .pr-search { padding: 0; }   /* no panel behind it (the user): the glowing box is enough */
+  .pr-search label { display: block; margin: 0 0 10px; font: 700 17px/1.3 var(--font); letter-spacing: -.01em; color: var(--ink); }
+  /* orange runs slowly around the search box's edge: a conic gradient whose angle is animated (a registered property, so it can be) */
+  @property --sa { syntax: '<angle>'; initial-value: 0deg; inherits: false; }
+  .pr-search .field { width: 100%; height: 56px; font-size: 17px; padding-left: 50px; border-radius: 12px; border: 2px solid transparent;
+    background:
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23F18508' stroke-width='2' stroke-linecap='round'%3E%3Ccircle cx='11' cy='11' r='7'/%3E%3Cpath d='M20 20l-4-4'/%3E%3C/svg%3E") 16px 50% / 20px no-repeat padding-box,
+      linear-gradient(var(--paper), var(--paper)) padding-box,
+      conic-gradient(from var(--sa), rgba(241, 133, 8, .22) 0deg, rgba(241, 133, 8, .22) 190deg, rgba(241, 133, 8, .6) 255deg, #F18508 315deg, #FFC47A 346deg, rgba(241, 133, 8, .22) 360deg) border-box;
+    animation: pr-flow 4.5s linear infinite; }
+  @keyframes pr-flow { to { --sa: 360deg; } }
+  @media (prefers-reduced-motion: reduce) { .pr-search .field { animation: none; } }
+  :root[data-motion="reduce"] .pr-search .field { animation: none; }
+  .pr-search .field:focus { outline: 0; box-shadow: 0 0 0 3px color-mix(in srgb, var(--amber) 40%, transparent); }
   .pr-sline { margin-top: 8px; display: flex; flex-wrap: wrap; gap: 6px 10px; align-items: center; font: 400 13.5px/1.4 var(--font); }
   .pr-sline .chipx { display: inline-flex; align-items: center; gap: 4px; padding: 3px 8px; border-radius: 8px; background: var(--tile); font: 600 12.5px var(--font); border: 0; color: var(--ink); cursor: pointer; }
   .pr-sline .meta { font-size: 12.5px; }
@@ -60,15 +99,13 @@
   .pr-res .acts { display: flex; flex-wrap: wrap; gap: 6px; }
 
   .pr-grid { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 24px; align-items: start; margin-top: 18px; }
-  .pr-tree { grid-column: span 7; }
-  .pr-set { grid-column: span 5; position: sticky; top: 80px; max-height: calc(100vh - 176px); overflow: auto; overscroll-behavior: contain; }
+  .pr-tree { grid-column: 1 / -1; }
   .pr-thead { display: flex; flex-wrap: wrap; gap: 8px 12px; align-items: center; justify-content: space-between; margin-bottom: 10px; }
   .pr-thead .h2 { margin: 0; }
   .pr-thead .ttl { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 12px; }
   .pr-thead .ctl { display: flex; flex-wrap: wrap; gap: 4px 8px; align-items: center; }
   .pr-thead .ctl > .quiet { margin: 0; padding: 0 10px; min-height: var(--ctl); }
   .pr-thead select { height: var(--ctl); border-radius: 10px; border: 1px solid var(--line); background: var(--paper); color: var(--ink); padding: 0 8px; font: 500 13.5px var(--font); max-width: 100%; }
-  .pr-jump { display: none; }
   .pr-new { margin: 0 0 10px; padding: 12px 14px; border-radius: 10px; background: var(--tile); font: 400 13.5px/1.45 var(--font); }
   .pr-count { font: 400 14px var(--font); color: var(--soft); font-variant-numeric: tabular-nums; }
 
@@ -79,37 +116,49 @@
   .tri[aria-checked="mixed"]::after { width: 10px; height: 2px; background: var(--ink-deep); }
   .tri::before { content: ''; position: absolute; inset: -12px; }
 
-  /* calm tree (decision 7): one size per level, secondary facts muted, orange only where something is open */
-  .dcard { border: 1px solid var(--line); border-radius: 14px; background: var(--paper); margin-bottom: 14px; overflow: clip; }
-  .dhead { display: grid; grid-template-columns: 20px minmax(0, 1fr) auto 28px; grid-template-areas: "c n s v" ". l l ."; gap: 6px 14px; align-items: center; min-height: 64px; padding: 12px 16px; cursor: pointer; }
-  .dhead > .tri { grid-area: c; } .dhead > .dname { grid-area: n; } .dhead > .dright { grid-area: s; } .dhead > .chev { grid-area: v; }
-  .dhead .dname { display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 12px; font: 700 16px/1.3 var(--font); }
-  .dhead .dsub, .dsel { font: 400 13.5px/1.35 var(--font); color: var(--soft); font-variant-numeric: tabular-nums; white-space: nowrap; }
-  .dright, .sright { display: flex; align-items: center; gap: 12px; }
-  .dhead > .dline { grid-area: l; display: flex; flex-wrap: wrap; gap: 4px 18px; align-items: center; font: 400 13.5px/1.35 var(--font); color: var(--soft); font-variant-numeric: tabular-nums; }
-  .mcell { display: inline-flex; align-items: center; gap: 8px; }
-  .mcell .mbar { width: 56px; height: 4px; }
-  .mcell .w { font: 400 13.5px var(--font); color: var(--soft); white-space: nowrap; }
+  /* the Domains tree: four columns from 1040px (one per domain, always open), two tiles below it; a skill's detail is a window */
+  .dgrid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; align-items: start; }
+  .dcard { border: 1px solid var(--line); border-radius: 14px; background: var(--paper); overflow: clip; }
+  .dhead { position: relative; }
+  .dhead > .tri { position: absolute; left: 12px; top: 15px; z-index: 1; }
+  .dopen { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 8px; width: 100%; box-sizing: border-box; padding: 12px 12px 12px 44px; text-align: left; color: var(--ink); font: inherit; background: none; border: 0; }
+  button.dopen { cursor: pointer; min-height: 44px; }
+  .dname { flex: 1 1 auto; font: 700 15px/1.3 var(--font); }
+  .dsel { flex: 1 1 0; font: 400 13.5px/1.35 var(--font); color: var(--soft); font-variant-numeric: tabular-nums; }
+  .dright { display: flex; align-items: center; gap: 8px; margin-left: auto; }
+  .dpts { font: 400 13.5px var(--font); color: var(--soft); font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .dopen > .mbar { flex: 1 1 100%; height: 4px; margin-top: 4px; }
   .obadge { display: inline-grid; place-items: center; min-width: 22px; height: 22px; padding: 0 7px; border-radius: 11px; background: var(--amber); color: var(--ink-deep); font: 600 12px/1 var(--mono); }
-  .chev { width: 28px; height: 28px; border-radius: 8px; border: 0; background: none; color: var(--soft); cursor: pointer; display: grid; place-items: center; }
-  .chev svg { transition: transform .16s var(--ease); transform: rotate(0deg); }
-  [aria-expanded="true"] > .chev svg, .chev[aria-expanded="true"] svg { transform: rotate(90deg); }
   .dbody { border-top: 1px solid var(--line); }
-  .srow { display: grid; grid-template-columns: 20px minmax(0, 1fr) auto 28px; grid-template-areas: "c n r v"; gap: 6px 14px; align-items: center; min-height: 58px; padding: 10px 16px; border-top: 1px solid var(--line); cursor: pointer; user-select: none; }
+  .srow { display: grid; grid-template-columns: 20px minmax(0, 1fr) auto auto; gap: 0 12px; align-items: center; min-height: 44px; padding: 0 14px; border-top: 1px solid var(--line); cursor: pointer; }
   .srow:first-child { border-top: 0; }
-  .srow > .tri { grid-area: c; } .srow > .nm { grid-area: n; } .srow > .sright { grid-area: r; } .srow > .chev { grid-area: v; }
-  .srow .sname { font: 500 15px/1.35 var(--font); }
+  .snm { align-self: stretch; display: flex; flex-direction: column; justify-content: center; gap: 2px; padding: 6px 0; text-align: left; background: none; border: 0; color: var(--ink); font: inherit; cursor: pointer; }
+  .srow .sname { font: 500 15px/1.3 var(--font); }
   .srow .reason { font: 400 13px/1.35 var(--font); color: var(--soft); }
   .srow .reason:empty { display: none; }
+  .sright { display: flex; align-items: center; gap: 8px; }
+  .sright .mbar { width: 48px; height: 4px; }
+  .srow .go { color: var(--soft); display: grid; place-items: center; }
   .srow.dim .sname, .srow.dim .sright { opacity: .42; }
-  @media (hover: hover) and (pointer: fine) { .dhead:hover, .srow:hover { background: var(--tile); } .chev:hover { color: var(--ink); } }
-  .spanel { padding: 2px 16px 20px 50px; border-top: 1px dashed var(--line); background: var(--paper); }
-  .spanel .facts { display: grid; gap: 3px; margin: 12px 0 14px; font: 400 13.5px/1.5 var(--font); color: var(--soft); font-variant-numeric: tabular-nums; }
-  .spanel .facts p { margin: 0; }
-  .spanel .facts p:first-child { color: var(--ink); }
-  .spanel h4 { margin: 16px 0 6px; font: 600 13.5px var(--font); color: var(--ink); }
-  .spanel .btns { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0 8px; }
-  .spanel .btns .btn { height: 36px; font-size: 13.5px; }
+  @media (hover: hover) and (pointer: fine) { .srow:hover, button.dopen:hover { background: var(--tile); } }
+  /* the phone/tablet domain window */
+  .dwin .dfacts { margin: 0 0 12px; font: 400 13.5px/1.5 var(--font); color: var(--soft); }
+  .dwin .dall { display: flex; align-items: center; gap: 12px; min-height: 44px; padding: 0 14px; font: 600 14px var(--font); }
+  .dwin .dlist { border: 1px solid var(--line); border-radius: 12px; overflow: clip; }
+  .dwin .dlist > .srow { padding-right: 10px; }
+  /* the skill window: small headed blocks, then the types */
+  .skwin .sgrid2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 12px; margin: 4px 0 6px; }
+  .sblock { padding: 12px 14px; border-radius: 12px; background: var(--tile); align-self: start; }
+  .sh { margin: 0 0 6px; font: 600 13px var(--font); color: var(--soft); }
+  .skwin > .sh, .skwin .sheet-body > .sh { margin-top: 18px; color: var(--ink); font-size: 14px; }
+  .kv { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 4px 12px; margin: 0; font: 400 13.5px/1.4 var(--font); font-variant-numeric: tabular-nums; }
+  .kv dt { color: var(--soft); }
+  .kv dd { margin: 0; text-align: right; }
+  .skwin .help:empty { display: none; }
+  .skwin .btns { display: flex; flex-wrap: wrap; gap: 8px; margin: 14px 0 4px; }
+  .skwin .btns .btn { height: 36px; font-size: 13.5px; }
+  .skwin .tthead { display: flex; align-items: center; gap: 12px; margin-top: 18px; }
+  .skwin .tthead .sh { margin: 0; color: var(--ink); font-size: 14px; }
   .omis { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 4px 16px; align-items: center; padding: 10px 0; font: 400 13.5px/1.45 var(--font); border-bottom: 1px solid var(--line); }
   .omis .quiet { margin: 0; padding: 4px 10px; }
   .lhead { position: sticky; top: 0; z-index: 1; display: flex; flex-wrap: wrap; gap: 4px 12px; align-items: center; padding: 12px 0 8px; background: var(--paper); border-bottom: 1px solid var(--line); font: 600 14px var(--font); }
@@ -136,8 +185,18 @@
   .pr-habits .hrow { display: flex; gap: 10px; align-items: flex-start; padding: 10px 0; border-bottom: 1px solid var(--line); }
   .pr-habits .hrow p { margin: 2px 0 0; font: 400 13px/1.45 var(--font); }
 
-  /* settings */
-  .pr-set { padding: 20px; border: 1px solid var(--line); border-radius: 12px; background: var(--paper); }
+  /* the Start window (settings live here, not on the page): tabs, a scrolling panel, a sticky footer */
+  dialog.sheet.pset { height: min(720px, calc(100dvh - 48px)); }
+  .pset .pset-tabs { flex: none; padding: 0 16px; }
+  .pset .pset-panel, .pset .pset-panel * { min-width: 0; }
+  .pset .pset-panel { padding-top: 4px; }
+  .pset .sgrid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 32px; align-items: start; }
+  .pset .sheet-foot { flex-wrap: nowrap; }
+  .pset-sum { flex: 1 1 auto; display: grid; gap: 2px; min-width: 0; margin-right: auto; }
+  .pset-sum .l1 { font: 600 15px/1.35 var(--font); font-variant-numeric: tabular-nums; }
+  .pset-sum .l2 { font: 400 13px/1.35 var(--font); color: var(--soft); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .pset-sum .l2:empty { display: none; }
+  .pset-sum .l2.why { color: var(--ink); white-space: normal; }
   .sset .sgrp { padding: 16px 0; border-top: 1px solid var(--line); display: grid; gap: 10px; }
   .sset .sgrp:first-of-type { border-top: 0; padding-top: 0; }
   .sset .sgrp > .k { display: block; }
@@ -146,7 +205,6 @@
   .sset .seg { display: flex; flex-wrap: wrap; }
   .sset .seg > button { flex: 1 1 auto; }
   .sset .lab { font: 500 14px/1.35 var(--font); margin-top: 4px; }
-  .pr-sheet .sgrp:last-of-type { border-bottom: 0; }
   .radio-row { display: flex; gap: 12px; align-items: center; min-height: 46px; padding: 8px 0; border-bottom: 1px solid var(--line); cursor: pointer; }
   .radio-row:last-child { border-bottom: 0; }
   .radio-row input { margin: 0; width: 18px; height: 18px; flex: none; accent-color: var(--amber); }
@@ -186,9 +244,12 @@
   .pr-abar-in { max-width: var(--max); margin: 0 auto; min-height: 72px; padding: 10px var(--gutter) calc(10px + env(safe-area-inset-bottom, 0px)); display: flex; gap: 12px 20px; align-items: center; justify-content: space-between; }
   .pr-abar .sum { display: grid; gap: 3px; flex: 1; min-width: 0; }
   .pr-abar .l1 { font: 600 16px/1.35 var(--font); font-variant-numeric: tabular-nums; justify-self: start; }
-  .pr-abar .go { display: flex; gap: 10px; align-items: center; justify-content: flex-end; }
+  .pr-abar .l2 { font: 400 13px/1.35 var(--font); color: var(--soft); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .pr-abar .l2:empty { display: none; }
+  .pr-abar .go { display: flex; gap: 12px; align-items: center; justify-content: flex-end; }
+  /* Start is the one solid button; it opens the Start window */
+  .pr-abar #start { height: 40px; padding: 0 24px; border-radius: 10px; font-size: 15px; }
   .pr-abar .reason { font: 400 13.5px/1.4 var(--font); color: var(--ink); max-width: 300px; }
-  .pr-abar #openSettings { gap: 8px; }
   .pr-abar .error { margin: 0; }
   .pr-rw { display: grid; gap: 16px; margin-top: 18px; }
   .pr-rw .card h3 { margin: 0 0 8px; }
@@ -199,24 +260,42 @@
   .pr-rw form .field { width: 100%; }
   .skel-tree .skel { margin-bottom: 10px; }
 
+  @media (min-width: 1040px) {
+    .dgrid { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
+    .dopen { padding: 11px 10px 10px 38px; }
+    .dhead > .tri { left: 10px; top: 13px; }
+    .dgrid .srow { min-height: 38px; gap: 0 8px; padding: 0 10px; }
+    .dgrid .snm { padding: 4px 0; }
+    .dgrid .srow .sname { font-size: 13.5px; line-height: 1.25; }
+    .dgrid .srow .reason, .dgrid .srow .go { display: none; }
+    .dgrid .sright { gap: 6px; }
+    .dgrid .sright .mbar { width: 28px; }
+    .dgrid .obadge { min-width: 20px; height: 20px; padding: 0 6px; font-size: 11px; }
+  }
   @media (max-width: 1039px) {
+    .dname { flex-basis: 100%; }
     .pr-grid { grid-template-columns: minmax(0, 1fr); }
-    .pr-tree, .pr-set { grid-column: 1 / -1; }
-    .pr-set { position: static; max-height: none; overflow: visible; order: -1; }
-    .pr-set .sgrid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 24px; }
-    .pr-set .sgrid > .wide { grid-column: 1 / -1; }
+    .pr-tree { grid-column: 1 / -1; }
     .pr-ready { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   }
   @media (max-width: 759px) {
     .pr { padding-bottom: 190px; }
-    .pr-set { order: 2; padding: 16px; }
-    .pr-set .sgrid { display: block; }
-    .pr-jump { display: flex; width: 100%; justify-content: space-between; min-height: 44px; margin: 0 0 10px; }
-    .srow { grid-template-columns: 20px minmax(0, 1fr) 28px; grid-template-areas: "c n v" ". r ."; }
-    .sright:empty { display: none; }
-    .dhead { grid-template-areas: "c n s v" ". l l l"; }
-    .dhead .dname { display: grid; gap: 2px; }
-    .spanel { padding-left: 16px; }
+    /* the Start window is a full-height sheet on a phone; its tabs scroll sideways */
+    dialog.sheet.pset, dialog.sheet.pset[data-size] { height: 100dvh; max-height: 100dvh; border-radius: 0; }
+    dialog.sheet.pset::before { display: none; }
+    .pset .pset-tabs { padding: 0 8px; }
+    .pset .tablist { flex-wrap: nowrap; overflow-x: auto; box-shadow: inset 0 -1px 0 var(--line); }
+    .pset .tablist [role="tab"] { flex: none; min-height: 44px; box-shadow: none; }
+    .pset .sgrid { display: block; }
+    .pset .seg > button, .pset .seg > label { min-height: 44px; }
+    .pset .inline .field { height: 44px; }
+    .pset .sfoot :is(.quiet, .btn) { min-height: 44px; }
+    .pset .sheet-foot { flex-wrap: wrap; }
+    .pset-sum { flex-basis: 100%; }
+    .pset .sheet-foot :is(.pill, .quiet) { min-height: 44px; }
+    .pset .sheet-foot .pill { flex: 1 1 0; }
+    .trow .tacts .quiet { min-height: 44px; }
+    .skwin .btns .btn { height: 44px; }
     .setrow { grid-template-columns: minmax(0, 1fr) auto; }
     .setrow > :nth-child(n+3):not(.acts) { grid-column: 1; }
     .setrow .acts { grid-column: 1 / -1; justify-content: flex-start; }
@@ -238,7 +317,6 @@
     <div class="pr-head-l">
       <div id="subject"></div>
       <h1 class="h1">Practice</h1>
-      <p class="meta" id="meta">… skills · … question types · unlimited questions, never repeated</p>
       <p class="meta" id="points"></p>
       <div class="pr-route" id="route" hidden></div>
     </div>
@@ -246,38 +324,37 @@
   </header>
   <div id="banners" class="pr-sec" hidden></div>
   <section id="ready" class="pr-sec" aria-label="Ready to start" hidden></section>
-  <section class="pr-sec" aria-label="Presets" id="presetSec">
-    <div class="pr-chips" id="presets"></div>
-    <p class="pr-note" id="linkNote" hidden></p>
-  </section>
   <section class="pr-sec pr-search" id="searchSec">
-    <label class="k" for="q">Search or build a set</label>
+    <label for="q">Build any set by typing it</label>
     <input class="field" id="q" type="search" autocomplete="off" spellcheck="false"
-           placeholder="circles hard 10 timed · a type name · a College Board ID · or paste a question">
+           placeholder="circles hard 10 in 15 min · a type name">
     <div class="pr-sline" id="sline" aria-live="polite"></div>
     <div class="pr-results" id="results"></div>
+  </section>
+  <section class="pr-sec" aria-label="Presets" id="presetSec">
+    <button type="button" class="pr-fold" id="presetTog" aria-expanded="false"><span>Presets</span><span class="chev" aria-hidden="true"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></span></button>
+    <div id="presetBody" hidden><div class="pr-chips" id="presets"></div>
+      <section class="pr-sec pr-sets" id="sets" aria-label="Your sets"></section></div>
+    <p class="pr-note" id="linkNote" hidden></p>
   </section>
   <div id="rw" class="pr-rw" hidden></div>
   <div class="pr-grid" id="grid">
     <section class="pr-tree" id="tree" aria-label="Skills">
       <div class="pr-thead" id="thead"></div>
-      <button type="button" class="btn pr-jump" id="jump"></button>
       <div id="treeBody" class="skel-tree"></div>
     </section>
-    <aside class="pr-set" id="settings" aria-label="Settings"></aside>
   </div>
-  <section class="pr-sec pr-sets" id="sets" aria-label="Your sets"></section>
 </main>
 <div class="pr-abar" id="abar" role="region" aria-label="Start">
   <div class="pr-abar-in">
     <div class="sum" id="abarSum">
       <p class="error" id="abarErr" hidden></p>
       <span class="l1" id="l1" tabindex="0">Loading…</span>
+      <span class="l2" id="l2"></span>
     </div>
     <div class="go">
       <span class="reason" id="reason" hidden></span>
-      <button type="button" class="btn" id="openSettings" aria-haspopup="dialog">Settings</button>
-      <button type="button" class="pill" id="start" disabled>Loading…</button>
+      <button type="button" class="pill" id="start" aria-haspopup="dialog" disabled>Loading…</button>
     </div>
   </div>
 </div>

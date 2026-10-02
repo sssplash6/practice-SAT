@@ -32,6 +32,13 @@
                                     map: {'G T': fn | {does, run, id, when}}; UI.keys.sheet()
                                     opens the ? sheet; UI.keys.label(combo)
      UI.ROUTES, UI.start(item), UI.nextItems()   where G-keys go; start an Up next item
+     UI.run.start(), UI.run.between(host, done, next, {onStop}), UI.run.rail(host, {current})
+                                    the day as one run over the Up next queue (G1); ?run=1;
+                                    UI.run.on(cfg.run), .label(), .parts(), .state()
+     UI.autoSheet(open) -> Promise<sheet | null>   a sheet that opens by itself (U25)
+     UI.share(q, {anchor}) -> Promise<url | null>  Send to a friend: a twin by default (U28)
+     UI.notify.on(kinds) / .off() / .sub() / .ok() / .offer(time)   push on this device (U18b):
+                                    registers /sw.js and asks the browser, from a tap only
      UI.skip()                      the skip link, first on every page with a <main>
    The chrome (Shell 2-2.6, R1, U1, U25, U26):
      UI.shell(page | {page, sections, now})   the sidebar, rail and overlay, the phone top bar,
@@ -347,7 +354,11 @@
     shellAt = Date.now();
     // the look follows every fresh copy, changed or not, never a cached one
     shellAsked = cached('/shell', takeShell, { key: 'satf.shell', fresh: !first,
-                                              onFresh: d => { if (d && d.prefs) look(d.prefs, true); } });
+                                              onFresh: d => {
+                                                if (d && d.prefs) look(d.prefs, true);
+                                                // every fresh copy, changed or not, and before the event toasts, so they wait for it
+                                                if (shellOn) whenVisible(() => autoSheets(d));
+                                              } });
     shellAsked.catch(() => {});
     return shellAsked;
   }
@@ -593,12 +604,14 @@
     }
     if (topics.length) body.topics = topics;
     if (tiers) body.tiers = ['easy', 'medium', 'hard'].filter(x => tiers.has(x));
-    if (box) { body.box = box; body.count = null; }
+    const inTime = box && count;                  // "10 in 10 min": the count, with the minutes as its limit
+    if (inTime) { body.count = count; body.timing = 'custom'; body.minutes = box; body.timed = true; }
+    else if (box) { body.box = box; body.count = null; }
     else if (count !== undefined) body.count = count;
     else { const c = o.count ?? 10; body.count = c ? c : null; }
     body.source = o.source || 'palette';
     const any = set || topics.length > 0 || !!type;
-    if (box && !any) { for (const k in body) delete body[k]; Object.assign(body, { source: 'next', box }); }
+    if (box && !inTime && !any) { for (const k in body) delete body[k]; Object.assign(body, { source: 'next', box }); }
 
     // chips and the composed line: "Practise Circles · Hard · 5 questions · timed"
     topics.forEach(s => chips.push({ key: 'topic:' + s, label: TOPIC[s].short }));
@@ -608,16 +621,17 @@
     if (body.adaptive) chips.push({ key: 'adaptive', label: 'Adaptive' });
     if (body.tiers && body.tiers.length < 3) chips.push({ key: 'tiers', label: body.tiers.map(cap).join(', ') });
     else if (body.tiers) chips.push({ key: 'tiers', label: 'Mixed' });
-    if (box) chips.push({ key: 'box', label: `${box} minutes` });
+    if (inTime) chips.push({ key: 'count', label: `${count} ${count === 1 ? 'question' : 'questions'} in ${box} min` });
+    else if (box) chips.push({ key: 'box', label: `${box} minutes` });
     else chips.push({ key: 'count', label: body.count ? `${body.count} ${body.count === 1 ? 'question' : 'questions'}` : 'Endless' });
-    if (body.timed === true) chips.push({ key: 'timed', label: body.feedback === 'end' ? 'Test mode' : 'timed' });
+    if (body.timed === true && !inTime) chips.push({ key: 'timed', label: body.feedback === 'end' ? 'Test mode' : 'timed' });
     if (body.timed === false) chips.push({ key: 'timed', label: 'untimed' });
     if (body.formats) chips.push({ key: 'formats', label: body.formats[0] === 'spr' ? 'Grid-in' : 'Multiple choice' });
     if (body.feedback === 'retry') chips.push({ key: 'feedback', label: 'Retry first' });
     if (body.order === 'ramp') chips.push({ key: 'order', label: 'Easy to hard' });
     if (body.zone) chips.push({ key: 'zone', label: body.zone === 'warm' ? 'Warm-up' : 'Stretch' });
-    const line = box && !any ? `Up next for ${box} minutes` : `Practise ${chips.map(c => c.label).join(' · ')}`;
-    return { body, chips, unknown, text: line, any: any || !!box, box };
+    const line = box && !inTime && !any ? `Up next for ${box} minutes` : `Practise ${chips.map(c => c.label).join(' · ')}`;
+    return { body, chips, unknown, text: line, any: any || !!box, box: inTime ? null : box };
   }
 
   /* ------------------------------------------------------------ the question-type index
@@ -1051,11 +1065,11 @@
   });
 
   /* ------------------------------------------------------------ Up next (U1) */
-  function nextItems() {
+  function nextItems(d = shellData) {
     let snooze = {};
     try { snooze = JSON.parse(sget(LS(), 'satf.next.snooze') || '{}') || {}; } catch (_) {}
     const day = localDay();
-    return ((shellData && shellData.next) || []).filter(x => snooze[x.key] !== day);
+    return ((d && d.next) || []).filter(x => snooze[x.key] !== day);
   }
   async function start(item) {
     if (!item) return;
@@ -1071,6 +1085,303 @@
     if (!item) { if (UI.toast) UI.toast('Nothing is up next right now.'); return; }
     try { await start(item); } catch (e) { if (UI.toast && !e.offline) UI.toast('Couldn’t start it. Try again.'); }
   }
+
+  /* ------------------------------------------------------------ the run (G1)
+     UI.run walks the day's Up next queue as one run, each part its own ordinary sitting
+     started with run: <local day> (in a drill body, or &run= on an href) and chained by the
+     between pane. The queue is the truth (GET /api/next, else /api/shell.next); what this tab
+     started or skipped today is sessionStorage satf.run {day, done: [{key, title}], skipped:
+     [key]}, left out of the next read. Contests and the challenge keep their own lobby.
+     ponytail: per tab, so a second device starts from the queue; read G1's /api/today.due
+     rows (with run {on, part, parts}) once S3 serves them. */
+  const RUN_NEVER = new Set(['contest', 'challenge']);
+  function runState() {
+    let st = null;
+    try { st = JSON.parse(sget(SS(), 'satf.run') || 'null'); } catch (_) {}
+    const day = localDay();
+    return st && st.day === day && Array.isArray(st.done) ? { ...st, skipped: Array.isArray(st.skipped) ? st.skipped : [] }
+      : { day, done: [], skipped: [] };
+  }
+  const runKeep = st => sput(SS(), 'satf.run', JSON.stringify(st));
+  async function runParts() {
+    if (!shellData) await (shellAsked || refresh()).catch(() => null);
+    const st = runState(), out = new Set([...st.done.map(x => x.key), ...st.skipped]);
+    const keys = [...out];
+    while (keys.join(',').length > 400) keys.shift();             // GET /api/next caps exclude at 400
+    let items = null;
+    if (has('next')) {
+      try { items = (await api(`/next?limit=6${keys.length ? '&exclude=' + encodeURIComponent(keys.join(',')) : ''}`, { quiet: true })).items; } catch (_) {}
+    }
+    if (!Array.isArray(items)) items = (shellData && shellData.next) || [];
+    const snoozed = lget('satf.next.snooze', {}) || {};
+    const next = items.flatMap(x => x && !x.start && !x.href && x.warmup ? [{ key: 'warmup:eve', kind: 'warm', ...x.warmup }] : [x])
+      .filter(x => x && !RUN_NEVER.has(x.kind) && (x.start || x.href) && !out.has(x.key) && snoozed[x.key] !== st.day);
+    return { state: st, done: st.done, next, part: st.done.length + 1, parts: st.done.length + next.length,
+      minutes: next.reduce((a, x) => a + (x.minutes || 0), 0) };
+  }
+  function withRun(it, day) {
+    if (it.start) return { ...it, start: { ...it.start, body: { ...(it.start.body || {}), run: day } } };
+    const u = new URL(it.href, location.origin);
+    u.searchParams.set('run', day);
+    return { ...it, href: u.pathname + u.search + u.hash };
+  }
+  async function runGo(it) {
+    const st = runState();
+    await start(withRun(it, st.day));
+    st.done = [...st.done.filter(x => x.key !== it.key), { key: it.key, title: it.title }];
+    runKeep(st);
+  }
+  async function runStart() {
+    const it = (await runParts()).next[0];
+    if (!it) { if (UI.toast) UI.toast('Nothing left for today.'); return null; }
+    try { await runGo(it); } catch (e) { if (UI.toast && !e.offline) UI.toast('Couldn’t start it. Try again.'); }
+    return it;
+  }
+  // "Start today · 4 parts · 38 min", mid-run "Continue today · part 2 of 5"; null when nothing is left
+  async function runLabel() {
+    const p = await runParts();
+    if (!p.next.length) return null;
+    return p.done.length ? `Continue today · part ${fmt(p.part)} of ${fmt(p.parts)}`
+      : `Start today · ${plural(p.parts, 'part')}${p.minutes ? ` · ${fmt(p.minutes)} min` : ''}`;
+  }
+  // L8's interstitial: the finished part on the left, the next on the right. done: {title,
+  // right, total, minutes}; next: an Up next item, or read from the queue; o.onStop
+  let runKeys = null;
+  function runBetween(host, done = {}, next = null, o = {}) {
+    const el = h('section', { class: 'card run-between', 'aria-label': 'Today’s run',
+      style: 'display: grid; gap: 16px 28px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr))' });
+    const col = () => h('div', { style: 'display: grid; gap: 4px; align-content: start; min-width: 0' });
+    const left = col(), right = col();
+    const st = runState(), last = st.done[st.done.length - 1];
+    const title = done.title || (last && last.title) || '';
+    left.append(h('span', { class: 'k', text: 'Done' }), title ? h('span', { class: 'nextup-t', text: title }) : '',
+      done.total ? h('span', { style: 'font: 500 20px var(--mono); font-variant-numeric: tabular-nums', text: `${fmt(done.right || 0)} / ${fmt(done.total)}` }) : '',
+      done.minutes ? h('span', { class: 'nextup-m', text: `${fmt(done.minutes)} min` }) : '');
+    el.append(left, right);
+    let cur = null, contBtn = null;
+    const act = (label, cls, kbd, fn) => h('button', { type: 'button', class: cls, onclick: fn }, label,
+      kbd && !media('(pointer: coarse)') ? keycaps(kbd) : null);             // no key hints on a touch screen
+    const stop = () => { if (o.onStop) o.onStop(); else location.href = '/'; };
+    async function cont() {
+      if (!cur || !contBtn || contBtn.getAttribute('aria-busy') === 'true') return;
+      contBtn.setAttribute('aria-busy', 'true');
+      try { await runGo(cur); }
+      catch (e) { contBtn.removeAttribute('aria-busy'); if (UI.toast && !e.offline) UI.toast('Couldn’t start it. Try again.'); }
+    }
+    function skipPart() {                  // moves on without marking the part; it stays undone on Today
+      if (!cur) return;
+      const s = runState();
+      s.skipped = [...s.skipped, cur.key];
+      runKeep(s);
+      paint(null);
+    }
+    async function paint(given) {
+      cur = null;
+      right.replaceChildren(h('span', { class: 'k', text: 'Up next' }), UI.skel ? UI.skel(null, 'lines:2') : '');
+      const p = await runParts();
+      cur = given && !p.state.skipped.includes(given.key) ? given : p.next[0] || null;
+      if (!cur) {                          // the end: keep going, or today's challenge
+        const ch = shellData && shellData.challenge;
+        right.replaceChildren(h('span', { class: 'k', text: 'Day done' }),
+          h('div', { style: 'display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px' },
+            startBtn({ start: { path: '/drill', body: { source: 'next', box: 15 } } }, 'Keep going · 15 min'),
+            ch && !ch.done ? h('a', { class: 'btn sm', href: '/challenge/', text: 'Today’s challenge' }) : null));
+        return;
+      }
+      const meta = nextMeta(cur);
+      contBtn = act('Continue', 'pill sm', 'Enter', cont);
+      right.replaceChildren(h('span', { class: 'k', text: `Part ${fmt(p.part)} of ${fmt(Math.max(p.parts, p.part))}` }),
+        h('span', { class: 'nextup-t', text: cur.title }), meta ? h('span', { class: 'nextup-m', text: meta }) : '',
+        cur.reason ? h('span', { class: 'nextup-r', text: cur.reason }) : '',
+        h('div', { style: 'display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 10px' },
+          contBtn, act('Skip this part', 'quiet', 'S', skipPart), act('Stop for now', 'quiet', 'Escape', stop)));
+    }
+    if (runKeys) runKeys.unregister();
+    runKeys = register('run', {
+      // Enter on another focused control is that control's own
+      Enter: { does: 'Continue today', run: e => {
+        const t = e && e.target && e.target.closest ? e.target.closest('button, a, input, textarea, select') : null;
+        if (!cur || (t && t !== contBtn)) return false;
+        cont();
+      } },
+      S: { does: 'Skip this part', run: () => { if (!cur) return false; skipPart(); } },
+      Escape: { does: 'Stop for now', run: () => { if (!cur) return false; stop(); } },
+    }, { label: 'Today’s run', when: () => el.isConnected });
+    paint(next);
+    if (host) host.append(el);
+    return { el, refresh: () => paint(null) };
+  }
+  // L8's day rail, one segment per part: "Today 18 of 38 min" (the minutes studied today of
+  // those plus what is left); o.current: false once the last part started is finished
+  function runRail(host, o = {}) {
+    const el = h('div', { class: 'run-rail', hidden: true, style: 'display: flex; align-items: center; gap: 10px; min-width: 0' });
+    async function paint() {
+      const p = await runParts();
+      const n = p.done.length, all = n + p.next.length;
+      el.hidden = !all;
+      if (!all) return;
+      const t = (shellData && shellData.today) || {}, total = (t.minutes || 0) + p.minutes;
+      const at = o.current === false ? -1 : n - 1;
+      el.replaceChildren(h('span', { class: 'nextup-m', style: 'white-space: nowrap',
+        text: total ? `Today ${fmt(t.minutes || 0)} of ${fmt(total)} min` : `Today · part ${fmt(Math.max(1, n))} of ${fmt(all)}` }),
+        h('span', { role: 'img', 'aria-label': `Part ${fmt(Math.max(1, n))} of ${fmt(all)}`, style: 'display: flex; gap: 3px; flex: 1; min-width: 48px' },
+          Array.from({ length: all }, (_, i) => h('i', { style: `flex: 1; height: 6px; border-radius: 3px; background: ${i < n ? 'var(--amber)' : 'var(--line)'}${i === at ? '; opacity: .55' : ''}` }))));
+    }
+    paint();
+    if (host) host.append(el);
+    return { el, update: paint };
+  }
+  const run = { start: runStart, between: runBetween, rail: runRail, parts: runParts, label: runLabel,
+    state: runState, on: r => !!r && r === localDay() };
+
+  /* ------------------------------------------------------------ sheets that open by themselves (U25)
+     (the shell no longer opens any by itself: Today's strip below offers the week sheet and welcome-back)
+     UI.autoSheet(open) -> Promise<sheet | null>: open() runs only on a clean load (no query and
+     no hash on arrival, a section root, shown rather than prerendered), and at most one sheet a
+     local day opens by itself on this device (localStorage satf.sheet.day). Toasts that wait
+     (kit's wait) hold until it closes. The shell offers S1's week sheet (UI.week, when it is on
+     the page) and then welcome-back; when both are due the week sheet carries welcome-back. */
+  const LOADED = { path: location.pathname, clean: !location.search && !location.hash };
+  const ROOTS = ['/', '/practice/', '/review/', '/tests/', '/plan/', '/results/', '/me/', '/words/', '/compete/'];
+  let autoOpen = null;
+  function autoSheet(open) {
+    if (doc.prerendering) return whenVisible(() => autoSheet(open));
+    const day = localDay();
+    if (autoOpen || !LOADED.clean || !ROOTS.includes(LOADED.path) || sget(LS(), 'satf.sheet.day') === day || topModal()) return Promise.resolve(null);
+    const s = open() || null;
+    if (s) {
+      autoOpen = s;
+      sput(LS(), 'satf.sheet.day', day);
+      if (s.closed) s.closed.then(() => { autoOpen = null; }, () => { autoOpen = null; });
+    }
+    return Promise.resolve(s);
+  }
+  function welcomeLines(d) {
+    const a = d.away, out = [];
+    if (a.checks) out.push({ text: `${plural(a.checks, 'check-in')} due`, href: '/review/' });
+    out.push(...contestLines(d));
+    if (d.streak) out.push({ text: `Streak ${plural(d.streak, 'day')}${a.spare ? ', kept with a spare' : ''}` });
+    return out;
+  }
+  function weekStart(d) {
+    const t = new Date();
+    t.setDate(t.getDate() - (t.getDay() - (d.prefs && d.prefs.week_start === 'sun' ? 0 : 1) + 7) % 7);
+    return `${t.getFullYear()}-${String(t.getMonth() + 1).padStart(2, '0')}-${String(t.getDate()).padStart(2, '0')}`;
+  }
+  let offered = false;
+  // the day's week / welcome-back offer (S16): a dismissible strip at the top of Today (UI.banner), not a sheet
+  // that opens by itself. Same once-a-day stamp (satf.sheet.day) and the same "shown" marks (satf.week.shown,
+  // satf.welcome); they are set when the strip is dismissed or its button is tapped.
+  function autoSheets(d) {
+    if (offered || !d || !d.me || !UI.banner || page() !== 'today') return;
+    offered = true;
+    const today = localDay();
+    if (sget(LS(), 'satf.sheet.day') === today) return;
+    const a = d.away, gap = a && (a.since || 'long');
+    const lines = a && a.days >= 2 && lget('satf.welcome', null) !== gap ? welcomeLines(d) : null;
+    const week = weekStart(d);
+    const wk = typeof UI.week === 'function' && lget('satf.week.shown', null) !== week;
+    const it = nextItems(d)[0];             // d, not shellData: a fresh copy arrives here before it is taken
+    // nothing else waiting: the line says what Pick up starts
+    if (lines && !lines.length && it) lines.push({ text: [nextMeta(it), it.reason].filter(Boolean).join(' · ') });
+    if (!wk && !lines) return;
+    const done = () => {
+      sput(LS(), 'satf.sheet.day', today);
+      if (wk) lput('satf.week.shown', week);
+      if (lines) lput('satf.welcome', gap);
+    };
+    const welcome = lines && lines.length ? h('span', {}, 'Welcome back', ...lines.flatMap(l => [' · ',
+      l.href ? h('a', { class: 'link', href: l.href, text: l.text }) : l.text])) : null;
+    const act = wk
+      ? { label: 'Plan your week', primary: true, onClick: () => {
+          done(); UI.banner.clear('sheet');
+          UI.week({ welcome: lines ? h('p', { class: 'run-welcome', style: 'margin: 0 0 12px',
+            text: ['Welcome back', ...lines.map(l => l.text)].join(' · ') }) : null });
+        } }
+      : it ? { label: `Pick up: ${it.title}`, primary: true, onClick: e => { done(); go(e.currentTarget, it); } }
+        : { label: 'Practise', primary: true, href: '/practice/', onClick: done };
+    UI.banner('sheet', wk ? (welcome || 'A new week: last week’s results and your goals.') : (welcome || 'Welcome back'), [act], { dismiss: true, onDismiss: done });
+  }
+
+  /* ------------------------------------------------------------ Send to a friend (U28)
+     UI.share(q, {anchor}) -> Promise<url | null>, q {template, seed}. The default sends a twin:
+     POST /api/sets {kind: 'set', cfg: {templates: [t], count: 1, fresh: true}, show_score:
+     true}, so a friend gets the same kind of question on their own numbers and the sender's
+     results card lists both. With an anchor a menu also offers Exactly this question (the ?q=
+     permalink, for tutors). A touch screen gets the system share sheet, else the clipboard. */
+  async function send(path, toast) {
+    const url = new URL(path, location.origin).href;
+    if (navigator.share && media('(pointer: coarse)')) {
+      try { await navigator.share({ title: 'A question from a friend', url }); return url; }
+      catch (e) { if (e && e.name === 'AbortError') return null; }
+    }
+    if (UI.copyText) UI.copyText(url, { toast });
+    return url;
+  }
+  async function twinLink(q) {
+    const r = await api('/sets', { method: 'POST', body: { kind: 'set', cfg: { templates: [q.template], count: 1, fresh: true }, show_score: true } });
+    return send(r.url || `/s/?c=${encodeURIComponent(r.code)}`, 'Link copied: their own numbers');
+  }
+  function share(q, o = {}) {
+    if (!q || !q.template) return Promise.resolve(null);
+    const fail = e => { if (UI.toast && !(e && e.offline)) UI.toast('Couldn’t make the link. Try again.'); return null; };
+    const exact = q.seed !== undefined && q.seed !== null;
+    if (!o.anchor || !UI.menu || !exact) return twinLink(q).catch(fail);
+    return new Promise(resolve => {
+      let picked = false;
+      const pick = fn => () => { picked = true; fn().then(resolve, e => resolve(fail(e))); };
+      UI.menu(o.anchor, [
+        { label: 'Same kind, their own numbers', sub: 'a twin', onClick: pick(() => twinLink(q)) },
+        { label: 'Exactly this question', sub: 'for tutors', onClick: pick(() => send(`/practice/session/?q=${encodeURIComponent(`${q.template}:${q.seed}`)}`, 'Link copied')) },
+      ], { label: 'Send to a friend', onClose: () => { if (!picked) setTimeout(() => { if (!picked) resolve(null); }); } });
+    });
+  }
+
+  /* ------------------------------------------------------------ notify (U18b)
+     The one way to /sw.js, for Settings › Study and the "Want a nudge at 19:00?" offer right
+     after a study time is set (Plan step 3, Settings). The worker is registered and the browser
+     asked only inside on(), which only a tap calls: a page load never does. Settings' shapes:
+     POST /api/push/subscribe {endpoint, keys, kinds}, DELETE {endpoint}; satf.push.kinds and
+     satf.push.offered hold JSON. */
+  const notify = (() => {
+    const KINDS = { study: true, streak: false, contest: true };
+    const ios = () => /iPhone|iPad|iPod/.test(navigator.userAgent) && !matchMedia('(display-mode: standalone)').matches;
+    const ok = () => !ios() && 'serviceWorker' in navigator && 'PushManager' in window && 'Notification' in window;
+    const b64 = t => Uint8Array.from(atob(t.replace(/-/g, '+').replace(/_/g, '/') + '==='.slice((t.length + 3) % 4)), c => c.charCodeAt(0));
+    const key = () => api('/push/key', { quiet: true }).then(r => (r && r.key) || null, () => null);   // null: push is off here
+    const json = k => { try { return JSON.parse(sget(LS(), k)); } catch (_) { return null; } };
+    async function sub() {
+      const reg = ok() && await navigator.serviceWorker.getRegistration('/').catch(() => null);
+      return reg ? reg.pushManager.getSubscription().catch(() => null) : null;
+    }
+    async function on(kinds) {                 // the prompt comes first, while the tap still counts
+      if (!ok()) throw new Error('unsupported');
+      if (await Notification.requestPermission() !== 'granted') throw Object.assign(new Error('denied'), { denied: true });
+      const k = await key();
+      if (!k) throw new Error('push off');
+      const reg = await navigator.serviceWorker.register('/sw.js');
+      await navigator.serviceWorker.ready;
+      const s = await reg.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: b64(k) });
+      kinds = kinds || json('satf.push.kinds') || KINDS;
+      const j = s.toJSON();
+      await api('/push/subscribe', { method: 'POST', body: { endpoint: j.endpoint, keys: j.keys, kinds } });
+      sput(LS(), 'satf.push.kinds', JSON.stringify(kinds));
+      return s;
+    }
+    async function off() {
+      const s = await sub();
+      if (!s) return;
+      await api('/push/subscribe', { method: 'DELETE', body: { endpoint: s.endpoint }, quiet: true }).catch(() => null);
+      await s.unsubscribe().catch(() => null);
+    }
+    async function offer(time) {                // once ever, and only where push can work
+      if (!time || !ok() || json('satf.push.offered') || Notification.permission === 'denied' || await sub() || !await key()) return;
+      sput(LS(), 'satf.push.offered', '1');
+      const said = e => UI.toast(e && e.denied ? 'Your browser said no. Allow notifications for this site in its settings.' : 'Couldn’t turn them on here. Try again in Settings.');
+      UI.toast(`Want a nudge at ${time}?`, { ms: 8000, action: { label: 'Notify me', onClick: () => on().then(() => UI.toast('Notifications on for this device'), said) } });
+    }
+    return { ok, sub, on, off, offer };
+  })();
 
   /* ------------------------------------------------------------ skip link (Shell 2)
      The first Tab stop on every page with a <main>: "Skip to content", moving focus there. */
@@ -1232,6 +1543,7 @@
   /* ---- the Today card (Shell 2.2 item 7, U16, U17, U26): the sidebar's, the Now strip's
      and the menu sheet's. Figures open their working (U13, kit's [data-fact]). */
   const flame = (size, spare) => { const e = icon('flame', size); if (spare) e.querySelector('.flame').removeAttribute('class'); return e; };
+  const unreadOf = x => (typeof x === 'number' ? x : x && typeof x === 'object' ? Number(x.unread ?? x.count ?? x.n ?? 0) || 0 : 0);
   function streakText(d) {
     const sp = d.spares || 0;
     return `${plural(d.streak || 0, 'day')}${sp ? ` · ${plural(sp, 'spare')}` : ''}`;
@@ -1268,8 +1580,12 @@
       return card;
     }
     const t = d.today || {}, goal = t.goal, streak = d.streak || 0;
-    const st = h('button', { type: 'button', class: 'streak' + (streak > 0 ? ' on' : ''), 'data-fact': 'streak',
-      'data-fact-label': 'Streak', 'data-fact-value': streakText(d) },
+    // how a figure is worked out opens from GET /api/levers (S1); until it is served the
+    // flame goes to the activity heatmap (§2.2.7) and the minutes are plain text
+    const facts = has('levers');
+    const fact = (key, label, value) => facts ? { 'data-fact': key, 'data-fact-label': label, 'data-fact-value': value } : {};
+    const st = h(facts ? 'button' : 'a', { type: facts ? 'button' : null, href: facts ? null : '/me/#activity',
+      class: 'streak' + (streak > 0 ? ' on' : ''), ...fact('streak', 'Streak', streakText(d)) },
       flame(16), h('span', { text: o.compact ? plural(streak, 'day') : streakText(d) }),
       // one small outlined flame per banked spare (U16); the narrow sidebar card says it with these
       Array.from({ length: d.spares || 0 }, () => flame(12, true)),
@@ -1282,10 +1598,10 @@
     } else if (goal && goal.minutes && UI.meter) {
       const m = UI.meter(card, { label: 'Study time', value: t.minutes || 0, max: goal.minutes, unit: 'min' });
       const n = m.el.querySelector('.meter-n');
-      if (n) Object.assign(n.dataset, { fact: 'minutes:today', factLabel: 'Study time today', factValue: n.textContent });
+      if (n && facts) Object.assign(n.dataset, { fact: 'minutes:today', factLabel: 'Study time today', factValue: n.textContent });
     } else {
-      card.append(h('p', {}, h('button', { type: 'button', 'data-fact': 'minutes:today', 'data-fact-label': 'Study time today',
-        text: `${fmt(t.minutes)} min today` })));
+      const mins = `${fmt(t.minutes)} min today`;
+      card.append(h('p', {}, facts ? h('button', { type: 'button', ...fact('minutes:today', 'Study time today', mins), text: mins }) : mins));
       if (!goal) card.append(h('a', { class: 'link', href: '/plan/', text: 'Set a daily goal' }));
     }
     const reg = regLine(d);
@@ -1323,7 +1639,7 @@
     catch (e) { btn.removeAttribute('aria-busy'); if (UI.toast && !e.offline) UI.toast('Couldn’t start it. Try again.'); }
   }
   const startBtn = (it, label = 'Start', kbd) => {
-    const b = h(it.href ? 'a' : 'button', { class: 'pill sm', href: it.href || null, type: it.href ? null : 'button' }, label, kbd ? keycaps(kbd) : null);
+    const b = h(it.href ? 'a' : 'button', { class: 'pill sm', href: it.href || null, type: it.href ? null : 'button' }, label, kbd && !media('(pointer: coarse)') ? keycaps(kbd) : null);
     if (!it.href) b.addEventListener('click', () => go(b, it));
     return b;
   };
@@ -1342,10 +1658,10 @@
     const fill = items => {
       list.replaceChildren(h('span', { class: 'k', text: 'Up next' }));
       if (!items.length) list.append(h('p', { class: 'help', text: 'Nothing else is up next right now.' }));
-      items.forEach((it, i) => list.append(h('div', { style: 'display: grid; gap: 2px; padding-top: 8px; border-top: 1px solid var(--line)' },
+      items.forEach((it, i) => list.append(h('div', { class: 'mup-row' },
         h('b', { text: it.title, style: 'font-weight: 600' }), h('span', { class: 'nextup-m', text: nextMeta(it) }),
         it.reason ? h('span', { class: 'nextup-r', text: it.reason }) : null,
-        h('div', { style: 'display: flex; gap: 6px; margin-top: 6px' }, startBtn(it, i ? 'Start' : 'Start now'),
+        h('div', { class: 'mup-acts' }, startBtn(it, 'Start'),
           h('button', { type: 'button', class: 'quiet', text: 'Not today', onclick: () => { snooze(it); pop.close(); } })))));
       list.append(boxChips());
     };
@@ -1367,9 +1683,7 @@
     const it = nextItems()[0];
     if (!it) { el.hidden = true; return el; }        // nothing, or an error: the block hides
     el.append(h('span', { class: 'k', text: 'Up next' }), h('span', { class: 'nextup-t', text: it.title }));
-    const meta = nextMeta(it);
-    if (meta) el.append(h('span', { class: 'nextup-m', text: meta }));
-    if (it.reason) el.append(h('span', { class: 'nextup-r', text: it.reason }));
+    el.title = nextTip(it);   // the title and Start are enough; the check-ins, minutes and reason are a tooltip
     const more = h('button', { type: 'button', class: 'ibtn', 'aria-label': 'More up next', 'aria-haspopup': 'dialog' }, icon('chev', 18));
     more.addEventListener('click', () => morePop(more));
     el.append(h('div', { class: 'nextup-go' }, startBtn(it, 'Start', o.kbd === false ? null : 'G N'), more));
@@ -1387,7 +1701,7 @@
     UI.tooltip(el, () => {
       const t = typeof text === 'function' ? text() : text;
       if (!t) return '';
-      return kbd ? h('span', {}, t, ' ', keycaps(kbd)) : t;
+      return kbd && !media('(pointer: coarse)') ? h('span', {}, t, ' ', keycaps(kbd)) : t;
     });
   }
   function navItem(n) {
@@ -1570,7 +1884,7 @@
     u.querySelector('.side-name').textContent = me.label || (d ? 'You' : 'Account');   // no data (offline, retired): a neutral name, never a blank card
     const sub = u.querySelector('.side-sub');
     const sharedPc = d && d.device && d.device.session_only;
-    const unread = (d && d.inbox) || 0;
+    const unread = unreadOf(d && d.inbox);
     if (!d) sub.textContent = '';
     else if (sharedPc) sub.replaceChildren('Shared computer · Sign out');
     else if (me.linked) sub.replaceChildren(me.email_masked || 'Saved');
@@ -1619,7 +1933,7 @@
     st.classList.toggle('on', (d.streak || 0) > 0);
     st.querySelector('span').textContent = fmt(d.streak || 0);
     st.setAttribute('aria-label', `Streak: ${streakText(d)}`);
-    const me = refs.meBtn, unread = d.inbox || 0, c = d.challenge || {};
+    const me = refs.meBtn, unread = unreadOf(d.inbox), c = d.challenge || {};
     me.replaceChildren(avatarOf(d, 32));
     if (unread) me.append(h('span', { class: 'badge n', text: cap99(unread), style: 'position: absolute; top: -2px; right: -4px; box-shadow: 0 0 0 2px var(--paper)' }));
     else if (!c.started) me.append(dot());
@@ -1774,7 +2088,7 @@
       { label: d.report_replies ? ['Settings ', dot(), h('span', { class: 'sr', text: `, ${plural(d.report_replies, 'unread reply', 'unread replies')}` })] : 'Settings',
         icon: 'settings', href: '/me/settings/', kbd: 'G S' });
     if (!saved) items.push({ label: 'Sign in', icon: 'signin', href: '/signin/' });
-    items.push({ label: 'Sign in another device', icon: 'devices', href: '/link/' },
+    items.push({ label: 'Sign in another device', icon: 'devices', href: '/pair/' },
       has('pair') ? { label: 'Continue on your phone', icon: 'devices', onClick: () => UI.continueOnPhone() } : null,
       { label: 'Help & FAQ', icon: 'help', href: '/help/', kbd: 'G H' },
       { label: 'Send feedback', icon: 'chat', onClick: feedback },
@@ -1849,7 +2163,7 @@
       row('Settings', 'settings', { href: '/me/settings/', current: here === 'me' && page() === 'settings', meta: d && d.report_replies ? dot() : null }),
       !saved && !shared ? row('Save your progress', 'save', { href: '/me/settings/#account', meta: dot() }) : null,
       !saved ? row('Sign in', 'signin', { href: '/signin/' }) : null,
-      row('Sign in another device', 'devices', { href: '/link/' }),
+      row('Sign in another device', 'devices', { href: '/pair/' }),
       has('pair') ? row('Continue on your phone', 'devices', { onClick: () => UI.continueOnPhone() }) : null,
       row('Help & FAQ', 'help', { href: '/help/', current: here === 'help' }),
       row('Send feedback', 'chat', { onClick: feedback })),
@@ -1882,16 +2196,17 @@
     return dlg;
   }
 
-  /* ---- the Now strip (U26): Up next and the Today card at the top of main, every line as
-     text, wherever the sidebar is not showing both in full (ui.css decides by media query) */
+  /* ---- the Now strip (U26): Up next as one line at the top of main, as text, wherever the
+     sidebar is not showing it in full (ui.css decides by media query) */
   const strips = [];                     // the shell's, or the one Today places itself
   function nowStrip(host) {
-    const el = h('section', { class: 'now-strip', 'aria-label': 'Up next and today' });
+    const el = h('section', { class: 'now-strip', 'aria-label': 'Up next' });
     el._paint = d => {
-      const nb = nextBlock(d), card = todayCard(d);
-      // the phone keeps its Today card in the menu sheet, one tap away
-      el.replaceChildren(...(nb.hidden ? [] : [nb]), ...(media(W_PHONE) ? [] : [card]));
-      el.style.gridTemplateColumns = el.children.length === 1 ? 'minmax(0, 1fr)' : '';
+      const nb = nextBlock(d);
+      // one line: the reason moves to the title's tooltip; the Today card stays in the sidebar, the hero and the phone's menu sheet
+      const r = nb.querySelector('.nextup-r');
+      if (r) nb.querySelector('.nextup-t').title = r.textContent;
+      el.replaceChildren(...(nb.hidden ? [] : [nb]));
       el.hidden = !el.children.length;
     };
     el._paint(shellData);
@@ -1915,7 +2230,8 @@
     if (!barEl) return;
     const old = barEl.querySelector('.sections-next');
     if (old) old.remove();
-    const it = shellData && nextItems()[0];
+    // Today has its own Up next card: the bar doesn't say it a second time (the user)
+    const it = shellData && doc.body.dataset.page !== 'today' && nextItems()[0];
     if (it) barEl.append(h('span', { class: 'sections-next' }, 'Up next: ', h('b', { text: it.title }), startBtn(it)));
     const chips = barEl.querySelectorAll(':scope > a').length;
     barEl.hidden = !chips && !it;
@@ -2108,14 +2424,18 @@
       Object.values(refs.tabs).forEach(a => a.querySelectorAll('.dot, .sr').forEach(x => x.remove()));
     };
     (shellAsked || refresh()).then(gone, gone);
+    (shellAsked || refresh()).then(d => whenVisible(() => autoSheets(d)), () => {});    // data asked before the shell
     addEventListener('satf:retired', gone);
     if (doc.prerendering) whenVisible(() => { if (shellData) paintAll(shellData); });
     const qs = new URLSearchParams(location.search);
     if (qs.has('feedback')) whenVisible(feedback);
-    if (qs.get('next') === '1') {         // ?next=1 starts Up next item 1 once (U1, U18)
-      qs.delete('next');
+    // ?next=1 starts Up next item 1 once (U1, U18); ?run=1 starts the day's run (G1)
+    for (const [k, fn] of [['next', startNext], ['run', runStart]]) {
+      if (qs.get(k) !== '1') continue;
+      qs.delete(k);
+      if (qs.get('from') === 'push') qs.delete('from');       // a notification's tap (/sw.js)
       try { history.replaceState(history.state, '', location.pathname + (qs.toString() ? '?' + qs : '') + location.hash); } catch (_) {}
-      whenVisible(startNext);
+      whenVisible(fn);
     }
   }
   shell.toggle = toggle;
@@ -2176,9 +2496,11 @@
       ] };
     }
     if (shared || saved) return null;
-    if (!d.answered && !lget('satf.first')) {
+    // not on the sign-in page itself, where it only repeats the page
+    if (!d.answered && !lget('satf.first') && !location.pathname.startsWith('/signin')) {
+      // a question for the few with progress elsewhere, so a plain button: the page's own start (Today's Study) stays its one orange
       return { kind: 'first', text: 'Have progress on another device?', actions: [
-        { label: 'Sign in', primary: true, href: '/signin/' },
+        { label: 'Sign in', href: '/signin/' },
         { label: 'Dismiss', quiet: true, dismiss: true, onClick: () => lput('satf.first', 1) },
       ] };
     }
@@ -2459,7 +2781,7 @@
   Object.assign(UI, {
     learner, useLearner, freshLearner, shared: () => shared, stored: () => storable, ready,
     api, cached, whenVisible, refresh, onShell, shellData: () => shellData, me, prefs, prefRow, look,
-    keys, ROUTES, start, nextItems, skip, need, has, types, parseSet, ALIASES, boxChips, feedback,
+    keys, ROUTES, start, nextItems, skip, need, has, types, parseSet, ALIASES, boxChips, feedback, run, autoSheet, share, notify,
     NAV, SECTION, shell, nowStrip, sections, menuSheet, accountMenu: accountItems,
     signOut: () => (shellData && shellData.me && shellData.me.linked) || shared ? signOut() : leave(),
     h, s, svg, mark, ICON, TOPICS, TOPIC, DOMAINS, glyph, chip,

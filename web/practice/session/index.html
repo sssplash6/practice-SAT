@@ -46,6 +46,12 @@
   .psum h2 { margin: 0; font: 600 17px/1.3 var(--font); letter-spacing: -.01em; }
   .psum h3 { margin: 0 0 8px; font: 600 15px/1.3 var(--font); }
   .sm-head { display: grid; gap: 12px; }
+  /* the skills sit beside the score where there is room (the user: the white space right of the score) */
+  @media (min-width: 760px) {
+    .sm-head { grid-template-columns: minmax(0, 1fr) minmax(0, auto); column-gap: 48px; }
+    .sm-head > :not(.sm-changed) { grid-column: 1; }
+    .sm-head > .sm-changed { grid-column: 2; grid-row: 2 / span 3; align-self: center; margin: 0; }
+  }
   .sm-head .k { margin: 0; color: var(--soft); }
   .sm-score { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 20px; }
   .sm-score .num { font-size: 96px; line-height: .95; letter-spacing: -.04em; }
@@ -122,6 +128,10 @@
   .sm-mist ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 8px; }
   .sm-mist li { display: flex; flex-wrap: wrap; gap: 6px 12px; align-items: center; font: 400 15px/1.45 var(--font); }
   .sm-mist li .s { color: var(--soft); font-size: 13.5px; }
+  /* new mistakes: the label, its skill and Fix now in shared columns, so every Fix now lines up on the right (the user) */
+  .sm-mist ul.sm-new { grid-template-columns: minmax(0, 1fr) auto auto; column-gap: 16px; }
+  .sm-new li { display: grid; grid-column: 1 / -1; grid-template-columns: subgrid; }
+  .sm-new li .btn { justify-self: end; }
   @media (max-width: 759px) {
     .psum { padding-top: 24px; gap: 32px; }
     .sm-score .num { font-size: 72px; }

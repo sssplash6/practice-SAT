@@ -93,7 +93,7 @@
   --tile-2:     #EFECE6;
   --mat:        #E9E5DF;
   --line:       #E4E1DC;
-  --soft:       #8A847C;
+  --soft:       #6F6A62;     /* 4.55:1 on --tile-2, 4.88:1 on --tile: small text passes AA (#8A847C was 3.1-3.7:1) */
   --faint:      #B7B1A8;
 
   --on-ink:     #FFFFFF;     /* a number or glyph on an --ink fill */
@@ -271,6 +271,14 @@ dialog::backdrop { background: var(--backdrop); }
 
 /* heard, not seen */
 .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+/* a fraction in the line: numerator over a bar over denominator (UI.fracText); the slash and brackets stay in the text,
+   visually hidden, so highlights' offsets and screen readers are unchanged */
+.frac { position: relative; display: inline-flex; flex-direction: column; align-items: stretch; vertical-align: middle;
+  margin: 0 .12em; font-size: .9em; line-height: 1.2; text-align: center; white-space: nowrap; text-indent: 0; }
+.frac > .fn { padding: 0 .2em .08em; border-bottom: max(1px, .065em) solid currentColor; }
+.frac > .fd { padding: .1em .2em 0; }
+.frac .frac { font-size: 1em; }
+.fh { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 /* "Skip to content": the first Tab stop, seen only when focused */
 .skip {
   position: fixed; left: 12px; top: 12px; z-index: 100;
@@ -668,7 +676,7 @@ body.has-rail { padding-left: var(--rail-w); }
 .nextup-m { font: 500 12px var(--mono); color: var(--soft); font-variant-numeric: tabular-nums; }
 .nextup-r { font: 400 13px/1.4 var(--font); color: var(--soft); }
 .nextup-go { display: flex; gap: 6px; margin-top: 8px; }
-.nextup-go .pill { flex: 1 1 auto; height: 40px; padding: 0 14px; font-size: 14.5px; }
+.nextup-go .pill { flex: 1 1 auto; height: 34px; padding: 0 14px; font-size: 14px; }
 
 /* the Today card: the sidebar's, the Now strip's and the menu sheet's.
    .side-day-head (.k TODAY, the streak), .meter rows, .side-day-foot "Exam in 45 days · Nov 7" */
@@ -680,14 +688,27 @@ body.has-rail { padding-left: var(--rail-w); }
 .side-day-foot { font: 500 12px var(--mono); color: var(--soft); font-variant-numeric: tabular-nums; }
 .side-day .ring { display: none; }
 
-/* the Now strip (U26): the first row of main whenever the sidebar is not showing both blocks
-   in full. Two cells, Up next and Today, every line as text; they stack when main is narrow. */
-.now-strip { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); gap: 12px; margin: 0 0 20px; }
-.now-strip > .nextup, .now-strip > .side-day { padding: 16px 18px; border-radius: var(--radius-card); background: var(--tile); box-shadow: none; }
-.now-strip .nextup-t { display: block; overflow: visible; }
-.now-strip .nextup-go .pill { flex: 0 1 auto; min-width: 160px; }
+/* the Now strip (U26): the first row of main whenever the sidebar is not showing Up next in
+   full. One 44px line, "Up next · title · 8 min · Start ⋯"; the reason is the title's tooltip. */
+.now-strip { display: grid; grid-template-columns: minmax(0, 1fr); margin: 0 0 16px; }
+.now-strip > .nextup {
+  display: flex; align-items: center; gap: 10px; min-height: 44px; padding: 5px 6px 5px 16px;
+  border-radius: var(--radius-card); background: var(--tile); box-shadow: none;
+}
+.now-strip > .nextup > .k { flex: none; }
+.now-strip > .nextup > .nextup-t { display: block; flex: 0 1 auto; min-width: 0; white-space: nowrap; text-overflow: ellipsis; }
+.now-strip > .nextup > .nextup-m { flex: none; white-space: nowrap; }
+.now-strip > .nextup > .nextup-t::before, .now-strip > .nextup > .nextup-m::before { content: '\00b7'; margin-right: 10px; color: var(--soft); }
+.now-strip > .nextup > .nextup-r { display: none; }
+.now-strip > .nextup > .nextup-go { flex: none; margin: 0 0 0 auto; }
+.now-strip .nextup-go .pill { flex: 0 1 auto; min-width: 0; padding: 0 18px; }
+@media (max-width: 759px), (pointer: coarse) { .now-strip > .nextup { padding-block: 0; } }
+@media (max-width: 559px) { .now-strip > .nextup > .nextup-m { display: none; } }
+/* the "more up next" list: every row the same, Start the same compact size, Not today beside it */
+.mup-row { display: grid; gap: 2px; padding-top: 10px; border-top: 1px solid var(--line); }
+.mup-acts { display: flex; align-items: center; gap: 12px; margin-top: 8px; }
+.mup-acts .pill { height: 34px; min-width: 88px; padding: 0 16px; border-radius: 10px; font-size: 14px; }
 @media (min-width: 1100px) and (min-height: 1100px) { body.has-side .now-strip { display: none; } }
-@media (max-width: 879px) { .now-strip { grid-template-columns: minmax(0, 1fr); } }
 
 /* the section bar (U26): UI.sections, sticky at the top of main. Chips are a|button with
    aria-current="true" on the one in view; .sections-next ("Up next: ... · Start") shows
@@ -760,7 +781,8 @@ body.has-rail { padding-left: var(--rail-w); }
 }
 .pill.wide { width: 100%; }
 /* a card's or a sheet's primary: the same pill at control height */
-.pill.sm { height: var(--ctl); padding: 0 20px; font-size: 14.5px; gap: 7px; }
+/* the one Start: compact, softly cornered (the round 52px pill stays for the page's own big action) */
+.pill.sm { height: 34px; padding: 0 18px; border-radius: 10px; font-size: 14px; gap: 7px; }
 .pill svg { width: 18px; height: 18px; flex: none; }
 .pill .kbd { background: rgba(30, 30, 30, .12); box-shadow: none; color: var(--ink-deep); }
 @media (hover: hover) and (pointer: fine) {
@@ -820,12 +842,17 @@ body.has-rail { padding-left: var(--rail-w); }
 .quiet {
   appearance: none; border: 0; background: none; cursor: pointer; text-decoration: none;
   display: inline-flex; align-items: center; gap: 8px;
-  padding: 9px 12px; margin: -9px -12px; border-radius: 8px;
+  /* a tall tap area that reaches only 4px sideways: 12px made neighbours in a row share taps ("Review" over "Fix" on
+     every report row, "Options" over "Race friends"); padding and margin cancel, so nothing moves */
+  padding: 9px 4px; margin: -9px -4px; border-radius: 8px;
   font: 600 14.5px var(--font); color: var(--ink);
   transition: background-color .16s var(--ease), color .16s var(--ease);
 }
-@media (hover: hover) and (pointer: fine) { .quiet:hover { background: var(--tile); } }
+/* the hover underlines instead of painting: the padding reaches 9px past the text, and a painted hover covered neighbours */
+@media (hover: hover) and (pointer: fine) { .quiet:hover { background: none; text-decoration: underline; text-decoration-thickness: 1.5px; text-underline-offset: 4px; } }
 .quiet:disabled { color: var(--faint); cursor: default; background: none; }
+/* the ring sits inside the padded box, 3px above and below the text, so it no longer covers the neighbours */
+.quiet:focus-visible { outline-offset: -4px; }
 .quiet svg { width: 16px; height: 16px; }
 
 .link {
@@ -840,15 +867,18 @@ body.has-rail { padding-left: var(--rail-w); }
 .choices button {
   appearance: none; border: 0; background: none; cursor: pointer;
   position: relative; min-width: 36px; height: 38px; padding: 0 9px;
-  font: 600 15px var(--font); font-variant-numeric: tabular-nums; color: var(--faint);
+  font: 600 15px var(--font); font-variant-numeric: tabular-nums; color: var(--soft);
   transition: color .16s var(--ease);
 }
+/* three looks: picked (ink, orange line), open to pick (soft), not open (faint): an open option drawn --faint read as
+   disabled, so a disabled one looked no different (the user: "why cant i click our mistakes") */
+.choices button:disabled { color: var(--faint); cursor: default; }
 .choices button[aria-pressed="true"] { color: var(--ink); }
 .choices button[aria-pressed="true"]::after {
   content: ""; position: absolute; left: 9px; right: 9px; bottom: 4px;
   height: 2px; border-radius: 2px; background: var(--amber);
 }
-@media (hover: hover) and (pointer: fine) { .choices button:hover { color: var(--ink); } }
+@media (hover: hover) and (pointer: fine) { .choices button:not(:disabled):hover { color: var(--ink); } }
 
 .field {
   appearance: none; width: 100%; height: 48px; padding: 0 14px;
@@ -952,6 +982,8 @@ input[type="range"]:focus-visible::-moz-range-thumb { box-shadow: 0 0 0 2px var(
   background: var(--paper); box-shadow: inset 0 0 0 1.5px var(--amber), 0 1px 2px rgba(30, 30, 30, .08); font-weight: 600;
 }
 .seg:where([role]) > label:has(input:focus-visible) { outline: 2px solid var(--ink); outline-offset: 2px; }
+/* options sit 2px apart: the ring goes inside, never over the next one */
+.seg:where([role]) > button:focus-visible { outline-offset: -2px; }
 .seg:where([role]) .n { font: 500 12px var(--mono); color: var(--soft); font-variant-numeric: tabular-nums; }
 .seg:where([role]) > :disabled, .seg:where([role]) > [aria-disabled="true"] { color: var(--faint); cursor: not-allowed; }
 @media (hover: hover) and (pointer: fine) {
@@ -1083,7 +1115,7 @@ input[type="range"]:focus-visible::-moz-range-thumb { box-shadow: 0 0 0 2px var(
    at final size while loading, .card-err inside it on failure, UI.empty when new. */
 .card { position: relative; min-width: 0; padding: var(--card-pad); border-radius: var(--radius-card); background: var(--tile); }
 .card.line { background: var(--paper); box-shadow: inset 0 0 0 1px var(--line); }
-.card-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 14px; margin-bottom: 16px; }
+.card-head { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 14px; margin-bottom: 16px; }   /* centred, so the ? / i beside a title and the fold button line up with it */
 .card-head > h2, .card-head > h3, .card-head > .h2 { font: 700 18px/1.25 var(--font); letter-spacing: -.015em; }
 .card-head > .k { flex: 1 0 100%; margin-bottom: -2px; }
 .card-head .meta { font-size: 12.5px; }
@@ -1351,6 +1383,7 @@ button[data-fact] { appearance: none; border: 0; background: none; padding: 0; t
 .sw::after, .strip > [data-status]::after, .atlas > [data-status]::after { content: var(--st-glyph, ""); }
 :is(.sw, .strip > *, .atlas > *)[data-fixing] { --o-hatch: var(--hatch); }
 :is(.strip, .atlas) > [data-open] { --o-dot: radial-gradient(circle at calc(100% - 4px) 4px, var(--amber) 2.5px, var(--paper) 2.6px 3.6px, transparent 3.7px); }
+.atlas > [data-status="met"][data-open] { --o-dot: none; --st-mark: var(--amber); font-size: 16px; }   /* met with an open mistake: the dot itself is orange */
 .sw[data-flag]::before, .strip > [data-flag]::before {
   content: ""; position: absolute; top: 0; right: 0; width: 6px; height: 6px;
   background: var(--st-flag, var(--amber)); clip-path: polygon(0 0, 100% 0, 100% 100%); border-top-right-radius: 2px;
@@ -1618,7 +1651,9 @@ figure.chart svg text.g-tl { font: 600 11.5px var(--font); fill: var(--ink); }
 .cal-d[data-h="3"] { background: var(--amber); color: var(--ink-deep); }
 .cal-d[data-hollow] { background: none; box-shadow: inset 0 0 0 1.5px var(--amber-deep); }
 .cal-d[data-today] { box-shadow: 0 0 0 1.5px var(--ink); }
-.cal-d[aria-selected="true"] { outline: 2px solid var(--amber); outline-offset: 1px; }
+/* the picked day is ink: orange is the SAT's, as the legend says */
+.cal-d[aria-selected="true"] { outline: 2px solid var(--ink); outline-offset: 1px; }
+.cal-d:focus-visible { outline-offset: -2px; }
 .cal-d[data-exam] { box-shadow: inset 0 0 0 1.5px var(--amber); }
 .cal-d[data-spare]::after { content: ""; position: absolute; inset: 5px; border-radius: 50%; box-shadow: inset 0 0 0 1.5px var(--amber-deep); pointer-events: none; }
 .cal-sat { position: absolute; bottom: 2px; font: 600 9px var(--mono); color: var(--amber-deep); }
@@ -1705,15 +1740,15 @@ figure.chart svg text.g-tl { font: 600 11.5px var(--font); fill: var(--ink); }
    tooltip and aria-label carry the numbers, so the heat is never the only signal */
 .heat {
   --hc: 12px; --h0: var(--tile-2);
-  display: grid; grid-template-columns: 12px repeat(var(--weeks, 26), var(--hc)); grid-template-rows: 14px repeat(7, var(--hc));
-  gap: 3px; width: max-content; max-width: 100%;
+  display: grid; grid-template-columns: 12px repeat(var(--weeks, 26), minmax(0, var(--hc))); grid-template-rows: 14px repeat(7, auto);
+  gap: 3px; width: 100%; max-width: max-content;   /* 52 weeks shrink to the card instead of running past it */
 }
 :where(.card, .panel) :is(.heat, .heat-key) { --h0: var(--mat); }
 .heat-r { display: contents; }
 .heat-m { font: 500 10.5px/14px var(--mono); color: var(--soft); white-space: nowrap; }
 .heat-d { font: 500 10px/1 var(--mono); color: var(--soft); align-self: center; }
 .heat-c, .heat-scale > i {
-  display: block; width: var(--hc, 12px); height: var(--hc, 12px); padding: 0; border: 0; border-radius: 3px;
+  display: block; width: 100%; max-width: var(--hc, 12px); aspect-ratio: 1; padding: 0; border: 0; border-radius: 3px;
   background: var(--h0, var(--tile-2)); appearance: none;
 }
 button.heat-c { cursor: pointer; }
@@ -1788,7 +1823,7 @@ figure.chart svg text.q-lab { font: 500 11.5px var(--font); fill: var(--ink); }
 .sb-wrap { position: relative; }
 .sb-bar { display: flex; gap: 2px; height: 30px; }
 .sb-seg {
-  --sb: var(--ink); flex: 1 1 0; min-width: 3px; display: flex; align-items: center; padding: 0 8px; overflow: hidden;
+  --sb: var(--ink); flex: 1 1 0; min-width: 3px; display: flex; align-items: center; padding: 0; overflow: hidden;   /* no padding: a padded segment can't be narrower than the padding, which bent the proportions and the hit boxes */
   background: var(--sb); color: var(--on-ink); font: 600 12px/1 var(--font); white-space: nowrap;
 }
 .sb-seg:first-child { border-radius: 6px 0 0 6px; }
@@ -1802,12 +1837,30 @@ figure.chart svg text.q-lab { font: 500 11.5px var(--font); fill: var(--ink); }
 :is(.sb-seg, .sb-sw).top { --sb: var(--amber); color: var(--ink-deep); }
 :is(.sb-seg, .sb-sw).hatch { background: repeating-linear-gradient(-45deg, var(--ink) 0 1.5px, transparent 1.5px 5px), color-mix(in srgb, var(--ink) 12%, var(--surface, var(--paper))); color: var(--ink); }
 .sb-seg.empty { background: var(--track); }
+/* .sb-warm: shades of orange then grey, so the legend's swatches read as colour codes */
+.sb-warm :is(.sb-seg, .sb-sw)[data-shade="0"] { --sb: var(--amber); color: var(--ink-deep); }
+.sb-warm :is(.sb-seg, .sb-sw)[data-shade="1"] { --sb: color-mix(in srgb, var(--amber) 55%, var(--surface, var(--paper))); color: var(--ink-deep); }
+.sb-warm :is(.sb-seg, .sb-sw)[data-shade="2"] { --sb: color-mix(in srgb, var(--ink) 72%, var(--surface, var(--paper))); color: var(--on-ink); }
+.sb-warm :is(.sb-seg, .sb-sw)[data-shade="3"] { --sb: color-mix(in srgb, var(--ink) 30%, var(--surface, var(--paper))); color: var(--ink); }
+/* dark: the ink shades are light, so they step down from a mid tone instead of starting at near-white (the brightest block on the page) */
+@media screen {
+  :root[data-theme="dark"] :is(.sb-seg, .sb-sw, .sb-shade)[data-shade] { color: var(--ink); }
+  :root[data-theme="dark"] :is(.sb-seg, .sb-sw, .sb-shade)[data-shade="0"] { --sb: color-mix(in srgb, var(--ink) 46%, var(--paper)); }
+  :root[data-theme="dark"] :is(.sb-seg, .sb-sw, .sb-shade)[data-shade="1"] { --sb: color-mix(in srgb, var(--ink) 34%, var(--paper)); }
+  :root[data-theme="dark"] :is(.sb-seg, .sb-sw, .sb-shade)[data-shade="2"] { --sb: color-mix(in srgb, var(--ink) 25%, var(--paper)); }
+  :root[data-theme="dark"] :is(.sb-seg, .sb-sw, .sb-shade)[data-shade="3"] { --sb: color-mix(in srgb, var(--ink) 18%, var(--paper)); }
+  :root[data-theme="dark"] :is(.sb-seg, .sb-sw, .sb-shade)[data-shade="4"] { --sb: color-mix(in srgb, var(--ink) 12%, var(--paper)); }
+}
+.sb-l { padding: 0 8px; }
 .sb-l.hide { visibility: hidden; }
 @media (max-width: 759px) { .sb-l { visibility: hidden; } }
 .sb-hits { position: absolute; inset: 0; display: flex; gap: 2px; }
 .sb-hit { flex: 1 1 0; min-width: 3px; margin: 0; padding: 0; border: 0; border-radius: 6px; background: transparent; cursor: pointer; appearance: none; }
 @media (hover: hover) and (pointer: fine) { .sb-hit:hover { box-shadow: inset 0 0 0 2px var(--ink); } }
 .sb-key { margin-top: 10px; }
+/* the warm bars' legend: the full names, wrapping to a second line when the card is narrow (the user: "Cl… Tr…" was cut) */
+.sb-warm .sb-key { flex-wrap: wrap; gap: 6px 14px; font-size: 12px; }
+.sb-warm .sb-key > li { min-width: 0; gap: 6px; white-space: nowrap; }
 .sb-sw { --sb: var(--ink); display: inline-block; width: 12px; height: 12px; border-radius: 3px; background: var(--sb); flex: none; }
 .sb-key > li.off .sb-sw { background: var(--track); }
 .sb-n { font: 500 12px var(--mono); color: var(--soft); }
@@ -2142,6 +2195,8 @@ body.has-rail .toasts { left: calc(var(--rail-w) + 20px); }
 .banner > svg { width: 20px; height: 20px; flex: none; }
 .banner-t { flex: 1 1 320px; min-width: 0; }
 .banner-act { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+/* a quiet action beside a button keeps its tap area to itself (Dismiss's -12px margin ran under Sign in) */
+.banner-act .quiet { margin: 0; padding: 6px 8px; }
 .banner > .x { width: 34px; height: 34px; margin: -4px -2px -4px 0; }
 
 /* the command palette (UI.palette): <dialog class="palette"> with .palette-q (an svg and the
@@ -2237,9 +2292,17 @@ dialog.sheet:focus-visible, .popover:focus-visible, .menu:focus-visible { outlin
 .skill-word { font: 600 13px var(--font); }
 .skill-side { display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: 8px 12px; }
 .skill-open { display: inline-flex; align-items: center; gap: 6px; }
-.skill-row.gain { grid-template-columns: minmax(150px, 1fr) 84px minmax(150px, 1.2fr) auto; }
+/* every column but the two fluid ones is fixed, so the bars start at the same x on every row (the side column was `auto`, so its content moved them) */
+.skill-row.gain { grid-template-columns: minmax(170px, 1fr) 84px minmax(130px, 1.1fr) 96px; min-height: 60px; }
+.skill-play { width: 36px; height: 36px; min-height: 0; padding: 0; border-radius: 50%; flex: none; }
+.skill-play svg { width: 16px; height: 16px; }
+/* one line per name and the side on one line, so every row is the same height and its bars sit at the same y */
+.skill-row.gain .skill-name > span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.skill-row.gain .skill-side { flex-wrap: nowrap; }
 .skill-row.gain .skill-m { grid-column: 1; }
 .skill-gain { grid-column: 2; grid-row: 1 / span 2; font: 600 18px var(--mono); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.skill-gain.small { font: 500 13px var(--font); color: var(--soft); }
+.skill-m .meta { white-space: nowrap; }
 .skill-track-wrap { grid-column: 3; display: grid; gap: 5px; }
 .skill-track { position: relative; height: 4px; border-radius: 2px; background: var(--mat); }
 .skill-track > i { position: absolute; top: -4px; bottom: -4px; left: calc(var(--t, 0) * 100%); width: 2px; margin-left: -1px; border-radius: 1px; background: var(--ink); }

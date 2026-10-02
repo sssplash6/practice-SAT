@@ -148,7 +148,11 @@ def _meta(row, learner: str | None, tz: int = 0, race: str | None = None) -> dic
                       "best": max(all_scores) if all_scores else None},
             "me": me, "entrants": entrants,
             "race": {k: v for k, v in race_data.items() if k not in ("target", "sid")} if race_data else None,
-            "series": row["series"], "round": row["round"]}
+            "series": row["series"], "round": row["round"],
+            # a private contest's invite code goes to its members, so any of them can pass it on
+            **({"code": row["code"] or (db.one("SELECT code FROM contests WHERE id=?", row["series"]) or {}).get("code"),
+                "owner": bool(learner) and row["owner"] == learner}
+               if row["kind"] == "private" and learner in compete.private_members(row["id"]) else {})}
 
 
 @router.get("/api/compete")

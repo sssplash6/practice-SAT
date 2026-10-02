@@ -1,0 +1,977 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Words run · SAT Freshman</title>
+<link rel="icon" href="/assets/mark.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<link rel="manifest" href="/manifest.webmanifest">
+<meta name="theme-color" content="#FFFFFF">
+<script src="/assets/head.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800;900&family=DM+Mono:wght@400;500&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap">
+<link rel="stylesheet" href="/assets/ui.css">
+<link rel="stylesheet" href="/assets/runner.css">
+<style>
+  /* The Words runner (spec 3.8 §6-§8; words.md W1-W3, W6-W11, W15, W16). No site chrome
+     (design rule 6): its own top bar, one item at a time, then the summary. */
+  body { background: var(--paper); }
+  .wr { max-width: 820px; margin: 0 auto; padding: 0 var(--gutter) calc(120px + env(safe-area-inset-bottom, 0px)); }
+  .wr * { min-width: 0; }
+  .wr-top { position: sticky; top: 0; z-index: 20; background: var(--paper); display: grid; grid-template-columns: auto 1fr auto auto; gap: 12px; align-items: center;
+    padding: 12px 0 10px; box-shadow: 0 1px 0 var(--line); }
+  .wr-mid { display: grid; gap: 6px; }
+  .wr-title { font: 600 14px var(--font); display: flex; gap: 10px; align-items: baseline; flex-wrap: wrap; }
+  .wr-title .meta { font-size: 12.5px; }
+  .wr-prog { display: flex; gap: 3px; align-items: center; }
+  .wr-prog i { flex: 1; height: 6px; border-radius: 3px; background: var(--mat); max-width: 32px; }
+  .wr-prog i.know, .wr-prog i.right { background: var(--amber); }
+  .wr-prog i.dont, .wr-prog i.wrong { background: var(--ink); }
+  .wr-prog i.done { background: var(--tile-2); box-shadow: inset 0 0 0 1px var(--faint); }
+  .wr-prog i.cur { box-shadow: 0 0 0 1.5px var(--paper), 0 0 0 3px var(--ink); }
+  .wr-prog i.grow { animation: wgrow .3s var(--ease) both; }
+  @keyframes wgrow { from { transform: scaleX(0); } }
+  .wr-prog .n { font: 500 12.5px var(--mono); color: var(--soft); white-space: nowrap; }
+  .wr-clock { font: 500 13px var(--mono); color: var(--ink); white-space: nowrap; }
+  .wr-clock.low { color: var(--ink-deep); font-weight: 700; }
+  .wr-tools { display: flex; gap: 2px; }
+  .wr-tools .btn.icon { background: none; }
+  .wr-tools .btn[aria-pressed="true"] svg path { fill: var(--amber); stroke: var(--amber-deep); }
+  .wr-tbar { height: 3px; background: var(--mat); border-radius: 2px; overflow: hidden; margin-top: 6px; }
+  .wr-tbar i { display: block; height: 100%; background: var(--ink); transform-origin: left; }
+  .wr-stage { padding-top: 24px; display: grid; gap: 16px; }
+  .wr-status { min-height: 22px; font: 500 14px var(--font); text-align: center; color: var(--ink); }
+  .wr-left { font: 500 12.5px var(--mono); color: var(--soft); text-align: center; }
+  /* the flashcard */
+  .fstack { position: relative; width: 100%; max-width: 620px; margin: 8px auto 0; perspective: 1400px; }
+  .fstack::before, .fstack::after { content: ""; position: absolute; left: 16px; right: 16px; height: 100%; border-radius: 16px; z-index: -1; }
+  .fstack::before { top: 8px; background: var(--tile-2); left: 8px; right: 8px; }
+  .fstack::after { top: 16px; background: var(--mat); }
+  .fcard { position: relative; min-height: 340px; transition: transform .45s var(--ease); transform-style: preserve-3d; touch-action: pan-y; }
+  .fcard.flipped { transform: rotateY(180deg); }
+  .fface { position: absolute; inset: 0; backface-visibility: hidden; -webkit-backface-visibility: hidden; border-radius: 16px; background: var(--tile);
+    padding: 24px 28px; display: grid; align-content: center; gap: 10px; overflow-y: auto; }
+  .fface.back { transform: rotateY(180deg); align-content: start; }
+  .fcard.tall { min-height: 460px; }
+  .fface.learnc { position: relative; inset: auto; min-height: 300px; }
+  .ffront { text-align: center; justify-items: center; }
+  .fword { font: 800 clamp(36px, 6vw, 56px)/1.05 var(--font); letter-spacing: -.03em; overflow-wrap: anywhere; }
+  .fmean { font: 400 24px/1.4 var(--serif); }
+  .fsent { font: 400 21px/1.5 var(--serif); }
+  .fchips { display: flex; gap: 6px; flex-wrap: wrap; justify-content: center; }
+  .fback-w { font: 700 18px var(--font); }
+  .fback .k { margin-top: 8px; }
+  .fback .meaning { font: 400 19px/1.45 var(--serif); }
+  .fback .ex { font: 400 16px/1.5 var(--serif); }
+  .fback details summary { cursor: pointer; font: 600 13px var(--font); margin-top: 6px; }
+  .fpicks { font: 500 13px var(--mono); color: var(--ink); }
+  @media (prefers-reduced-motion: reduce) { .fcard { transition: none; transform: none !important; } .fface.back { transform: none; opacity: 0; transition: opacity .15s; } .fcard.flipped .fface.back { opacity: 1; } .fcard.flipped .fface.ffront { opacity: 0; } .wr-prog i.grow { animation: none; } }
+  html[data-motion="reduce"] .fcard { transition: none; transform: none !important; }
+  html[data-motion="reduce"] .fface.back { transform: none; opacity: 0; }
+  html[data-motion="reduce"] .fcard.flipped .fface.back { opacity: 1; }
+  html[data-motion="reduce"] .fcard.flipped .fface.ffront { opacity: 0; }
+  .wr-ctl { display: flex; gap: 10px; justify-content: center; align-items: center; flex-wrap: wrap; max-width: 620px; margin: 0 auto; width: 100%; }
+  .wr-ctl .grade { flex: 1; min-height: 44px; }
+  .wr-ctl .nav { min-width: var(--touch); }
+  .wr-ctl .kbd { margin-left: 6px; }
+  /* a touch screen has no keys to hint at */
+  @media (hover: none) and (pointer: coarse) { .wr .kbd, .wr .keys { display: none; } }
+  /* sorting and placement */
+  .sortw { text-align: center; display: grid; gap: 18px; justify-items: center; padding: 40px 0 16px; }
+  .sortw .fword { font-size: clamp(40px, 7vw, 64px); }
+  .sort-btns { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; width: 100%; max-width: 480px; }
+  .sort-btns button { min-height: 52px; padding: 0 8px; }
+  /* staged items, quick options, order, typed */
+  .wtext { font: 400 var(--q-size, 20px)/1.6 var(--serif); }
+  .wtext .blank { display: inline-block; width: 4em; border-bottom: 1.5px solid var(--ink); }
+  .wask { font: 600 14.5px var(--font); }
+  .q-stem + .wask, .q-stem + .wsrc { margin-top: 10px; }
+  .ws-actions { display: flex; flex-wrap: wrap; gap: 8px 10px; align-items: center; }
+  .wsrc { font: italic 400 13px var(--font); color: var(--soft); }
+  .wstage { display: grid; gap: 8px; }
+  .wstage .btn, .wquick .btn { justify-content: flex-start; min-height: 52px; text-align: left; white-space: normal; padding: 10px 16px; font: 500 16px/1.35 var(--font); }
+  .wstage .btn .kbd, .wquick .btn .kbd { flex: none; }
+  .wquick { display: grid; gap: 8px; }
+  .wquick .btn[aria-pressed="true"] { background: var(--wash); box-shadow: inset 0 0 0 1.5px var(--amber); }
+  .wtray { display: flex; flex-wrap: wrap; gap: 6px; }
+  .word-order { display: grid; gap: 8px; list-style: none; padding: 0; }
+  .word-order li { display: flex; align-items: center; gap: 12px; min-height: 52px; padding: 0 14px; border-radius: 10px; background: var(--tile); font: 600 17px var(--font); cursor: grab; }
+  .word-order li[aria-selected="true"] { background: var(--wash); box-shadow: inset 0 0 0 1.5px var(--amber); }
+  .word-order li.dragging { opacity: .6; }
+  .word-order .hd { width: 44px; height: 44px; display: grid; place-items: center; color: var(--soft); touch-action: none; }
+  .word-order .n { font: 500 12px var(--mono); color: var(--soft); width: 18px; }
+  .word-order li.ok { box-shadow: inset 0 0 0 1.5px var(--amber-deep); }
+  .typed { display: flex; gap: 8px; flex-wrap: wrap; }
+  .typed .field { flex: 1 1 240px; font: 500 18px var(--font); }
+  .typed .btn { min-height: var(--touch); }
+  .wverd { display: grid; gap: 8px; padding: 14px 16px; border-radius: 12px; background: var(--tile); }
+  .wverd .head { font: 700 16px var(--font); display: flex; gap: 8px; align-items: center; }
+  .wverd .line { font: 400 14.5px/1.5 var(--font); }
+  .wverd-acts { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+  .wr-oot { font: 600 14px var(--font); }
+  .ws-next.autonext { position: relative; }
+  .ws-next.autonext::after { content: ""; position: absolute; inset: -4px; border-radius: 999px; border: 2px solid var(--amber); animation: wdrain 2.5s linear forwards; }
+  @keyframes wdrain { from { clip-path: inset(0 0 0 0); } to { clip-path: inset(0 100% 0 0); } }
+  .guess-chip { font: 500 12px var(--mono); padding: 3px 8px; border-radius: 999px; background: var(--wash); box-shadow: inset 0 0 0 1px var(--amber); }
+  /* summary */
+  .wsum { display: grid; gap: 20px; padding-top: 24px; }
+  .wsum .score { font: 800 clamp(44px, 8vw, 64px)/1 var(--font); letter-spacing: -.03em; font-variant-numeric: tabular-nums; }
+  .wsum .score small { font-size: .35em; color: var(--soft); letter-spacing: 0; }
+  .wsum h2 { font: 700 15px var(--font); margin-bottom: 8px; }
+  .wsum .rows { display: grid; gap: 6px; }
+  .wsum .row { display: flex; flex-wrap: wrap; gap: 6px 12px; align-items: center; justify-content: space-between; padding: 10px 14px; border-radius: 10px; background: var(--tile); font: 400 14.5px var(--font); }
+  .wsum .row .meta { font-size: 12.5px; }
+  .wsum .chips { display: flex; flex-wrap: wrap; gap: 6px; }
+  .wsum .upnext { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+  .band { display: grid; grid-template-columns: 180px 1fr auto; gap: 10px; align-items: center; font: 400 13.5px var(--font); }
+  .band .b { height: 8px; border-radius: 4px; background: var(--mat); overflow: hidden; }
+  .band .b i { display: block; height: 100%; background: var(--ink); }
+  .band .meta { font-size: 12.5px; }
+  @media (max-width: 759px) {
+    .wr-top { grid-template-columns: auto 1fr auto; }
+    .wr-clock { grid-column: 2; grid-row: 2; }
+    .fcard { min-height: 56vh; }
+    .fface { padding: 20px; }
+    .wr-ctl.grades { position: fixed; left: 0; right: 0; bottom: 0; background: var(--paper); padding: 10px 16px calc(10px + env(safe-area-inset-bottom, 0px)); box-shadow: 0 -1px 0 var(--line); z-index: 15; }
+    .band { grid-template-columns: 1fr auto; }
+    .band .b { grid-column: 1 / -1; }
+  }
+</style>
+</head>
+<body data-page="words-run">
+<main class="wr" id="main" tabindex="-1">
+  <header class="wr-top">
+    <button type="button" class="btn icon" id="exit" aria-label="End this run"></button>
+    <div class="wr-mid">
+      <p class="wr-title" id="title">Words</p>
+      <div class="wr-prog" id="prog" aria-hidden="true"></div>
+    </div>
+    <p class="wr-clock" id="clock" aria-live="off"></p>
+    <div class="wr-tools" id="tools"></div>
+  </header>
+  <div class="wr-tbar" id="tbar" hidden><i></i></div>
+  <section class="wr-stage" id="stage" aria-live="polite"><p class="meta">Loading…</p></section>
+</main>
+<script src="/assets/ui.js"></script>
+<script src="/assets/kit.js"></script>
+<script src="/assets/charts.js"></script>
+<script src="/assets/question.js"></script>
+<script src="/assets/words-ui.js"></script>
+<script>
+(() => {
+  'use strict';
+  const h = UI.h, $ = id => document.getElementById(id), W = UI.word;
+  const enc = encodeURIComponent;
+  const num = n => UI.num ? UI.num(n) : String(n);
+  const cap = s => (s ? String(s)[0].toUpperCase() + String(s).slice(1) : '');
+  const reduced = () => matchMedia('(prefers-reduced-motion: reduce)').matches || document.documentElement.dataset.motion === 'reduce';
+  const put = (el, ...kids) => { el.replaceChildren(...kids.flat().filter(k => k !== null && k !== undefined && k !== false)); return el; };
+  const MODE = { cards: 'Flashcards', quiz: 'Quiz', mix: 'Today’s words', placement: 'Find your level', sort: 'Sort what you know', sprint: 'Sprint', check: 'Words check', print: 'Worksheet' };
+  const CARDS = new Set(['card', 'fix']);
+  const XICON = '<svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>';
+  $('exit').innerHTML = XICON;
+
+  const P = new URLSearchParams(location.search);
+  let id = P.get('id');
+  const R = {
+    run: null, items: [], verdicts: new Map(), cur: null, prevStack: [], viewing: null, flipped: false, shownAt: 0, ws: null,
+    guess: false, busy: false, graded: 0, right: 0, asked: 0, timer: null, boxEnd: null, boxOver: false, sprintEnd: null, miss: [], last: null,
+    checkPick: null, order: null, typedHint: false, autoT: 0, dir: 'word',
+  };
+  let ix = null;
+  W.index().then(x => { ix = x; }).catch(() => {});
+  const wordOf = slug => W.nameOf(slug, ix && ix.bySlug.get(slug) ? ix.bySlug.get(slug).word : String(slug || '').replace(/\..*$/, '').replace(/^u:.*/, 'your word'));
+  const pos = item => R.items.findIndex(x => x.item_id === item.item_id);   // items get copied (predictions, back faces), so match by id
+  const shortOf = slug => (ix && ix.bySlug.get(slug) ? ix.bySlug.get(slug).short : '');
+
+  /* ---------------- load or create */
+  async function boot() {
+    if (!id && P.get('today')) {
+      try { const r = await UI.api('/words/run', { method: 'POST', body: { mode: 'mix', deck: { source: 'today' } } }); id = r.id; history.replaceState(null, '', `/words/run/?id=${enc(id)}`); }
+      catch (e) { return fail(e.status === 409 ? cap(e.message) : 'Couldn’t start today’s words.'); }
+    }
+    if (!id) return nothingHere();
+    let run;
+    const kept = W.offline && W.offline.ok() ? await W.offline.run(id) : null;
+    R.stored = !!kept;
+    R.keptDone = new Set((kept && kept.done) || []);
+    try { run = await UI.api(`/words/run/${enc(id)}`, { quiet: R.stored }); }
+    catch (e) {
+      // W22: no signal, and this run's cards are on the device: go on from the first one not yet graded
+      if (e.offline && kept) {
+        const done = new Set(kept.done || []);
+        run = { ...kept, next: (kept.items || []).find(x => !done.has(x.item_id)) || null, finished: false };
+        R.offline = true;
+        W.offline.pending().then(n => W.offline.banner(n || 0));
+      } else return fail(e.status === 403 ? 'This run belongs to someone else.' : e.status === 404 ? 'No such run.' : 'This run did not load.', e.status >= 500 || e.offline);
+    }
+    if (run.mode === 'print' && !run.finished) { location.replace(`/words/print/?id=${enc(id)}`); return; }
+    R.run = run;
+    R.items = run.items || [];
+    R.dir = (run.cfg && run.cfg.direction) || 'word';
+    const t = MODE[run.mode] || 'Words';
+    document.title = `${t} · SAT Freshman`;
+    put($('title'), h('span', { text: t }), deckLabel(run.deck) ? h('span', { class: 'meta', text: deckLabel(run.deck) }) : null);
+    tools();
+    if (run.finished) return summary(run.summary || {});
+    const cfg = run.cfg || {};
+    if (cfg.box) R.boxEnd = Date.now() + cfg.box * 60000;
+    if (run.mode === 'sprint' && run.timer_total) R.sprintEnd = Date.now() + run.timer_total * 1000;
+    if (run.mode === 'check' && run.timer_total) R.sprintEnd = Date.now() + run.timer_total * 1000;
+    if (R.boxEnd || R.sprintEnd) tick();
+    if (!run.next) return finish();
+    show(run.next);
+  }
+  function deckLabel(d) {
+    if (!d) return '';
+    const s = d.source;
+    return { due: 'Due today', new: 'New words', today: '', missed: 'Missed lately', saved: 'Saved', thought: 'Thought I knew', stubborn: 'Stubborn',
+      atrisk: 'At risk', looked_up: 'Looked up', probable: 'Probably known', trap: `Trap · ${W.TRAP[d.value] || d.value}`,
+      collection: W._coll[d.value] || { 'sat-core': 'SAT core', 'sat-advanced': 'SAT advanced', transitions: 'Transitions', 'second-sense': 'Second meanings', 'answer-choice': 'Answer-choice language' }[d.value] || d.value,
+      topic: cap(String(d.value || '').replace(/-/g, ' ')), root: `Root · ${d.value}`, words: d.words ? `${d.words.length} words` : '', mine: 'My words', list: d.value }[s] ?? '';
+  }
+  function fail(text, retry) {
+    put($('stage'), h('div', { class: 'wl-msg', style: 'display:grid;gap:12px;justify-items:start;padding-top:24px' }, h('p', { text }),
+      h('div', { style: 'display:flex;gap:10px' }, retry ? h('button', { type: 'button', class: 'btn', text: 'Retry', onclick: boot }) : null, h('a', { class: 'btn', href: '/words/', text: 'Words' }))));
+  }
+  function nothingHere() {
+    put($('stage'), h('div', { style: 'display:grid;gap:12px;justify-items:start;padding-top:24px' }, h('p', { text: 'Start a run from the Words library, Flashcards or Quiz.' }),
+      h('div', { style: 'display:flex;gap:10px;flex-wrap:wrap' }, h('a', { class: 'pill sm', href: '/words/run/?today=1', text: 'Today’s words' }), h('a', { class: 'btn', href: '/words/', text: 'Library' }))));
+  }
+
+  /* ---------------- top bar: tools, progress, clocks */
+  function tools() {
+    const b = (label, icon, fn, o = {}) => { const x = h('button', { type: 'button', class: 'btn icon', 'aria-label': label, title: label + (o.key ? ` (${o.key})` : ''), onclick: fn }, W.icon(icon)); if (o.id) x.id = o.id; return x; };
+    put($('tools'), b('Say it', 'speak', speakCur, { key: 'P' }), b('Save', 'star', saveCur, { key: 'B', id: 'saveBtn' }), b('Report a problem', 'flag', reportCur));
+  }
+  const curSlug = () => { const it = R.viewing || R.cur; if (!it) return null; const v = R.verdicts.get(it.item_id); return it.word || (v && v.word) || null; };
+  function speakCur() { const it = R.viewing || R.cur; const s = curSlug(); const t = it && CARDS.has(it.kind) ? it.text : s ? wordOf(s) : null; if (t) UI.speak(t); else UI.toast('Answer first: the word is hidden until the verdict.'); }
+  async function saveCur() {
+    const it = R.viewing || R.cur; if (!it) return;
+    const v = R.verdicts.get(it.item_id);
+    try {
+      if (CARDS.has(it.kind) || it.kind === 'learn') await UI.api(`/words/${enc(it.word)}/save`, { method: 'POST', body: { on: true } });
+      else if (v) await UI.api(`/words/run/${enc(id)}/save`, { method: 'POST', body: { item_id: it.item_id } });
+      else { UI.toast('Save unlocks with the verdict.'); return; }
+      $('saveBtn').setAttribute('aria-pressed', 'true');
+      UI.toast('Saved · it goes to the front of New');
+    } catch (e) { if (!e.offline) UI.toast(e.status === 409 ? 'Save unlocks with the verdict.' : 'Not saved. Try again.'); }
+  }
+  function reportCur() {
+    const it = R.viewing || R.cur;
+    UI.report && UI.report({ kind: 'word', source: 'words', session: id, question_id: it && it.item_id, word: curSlug() || undefined, revealed: !!(it && R.verdicts.get(it.item_id)) });
+  }
+  function progress() {
+    const el = $('prog');
+    const items = R.items, total = Math.max(items.length, (R.run && R.run.total) || 0);
+    const at = R.cur ? items.findIndex(x => x.item_id === R.cur.item_id) : items.length;
+    const nAns = R.run ? R.run.answered || 0 : 0;
+    const count = R.run && (R.run.mode === 'quiz' || R.run.mode === 'mix') && R.right ? h('span', { class: 'n', text: `${R.right} right of ${R.asked}` }) : null;
+    if (total > 24) {
+      put(el, h('span', { class: 'n', text: `${Math.min(total, Math.max(0, at) + 1)} / ${total}` }), count);
+      return;
+    }
+    put(el, items.map((it, i) => {
+      const v = R.verdicts.get(it.item_id);
+      const cls = v ? (v.skipped ? 'done' : v.correct === true ? (CARDS.has(it.kind) ? 'know' : 'right') : v.correct === false ? (CARDS.has(it.kind) ? 'dont' : 'wrong') : 'done')
+        : i < at && i < nAns + R.graded ? 'done' : '';
+      return h('i', { class: [cls, i === at ? 'cur' : '', it._new ? 'grow' : ''].filter(Boolean).join(' ') });
+    }), count);
+    items.forEach(it => { delete it._new; });
+  }
+  function tick() {
+    clearInterval(R.timer);
+    R.timer = setInterval(() => {
+      const c = $('clock');
+      if (R.sprintEnd) {
+        const left = Math.max(0, Math.round((R.sprintEnd - Date.now()) / 1000));
+        c.textContent = UI.mmss ? UI.mmss(left) : `${Math.floor(left / 60)}:${String(left % 60).padStart(2, '0')}`;
+        c.classList.toggle('low', left <= 5);
+        const tb = $('tbar'); tb.hidden = false; tb.firstChild.style.transform = `scaleX(${left / ((R.run.timer_total) || 60)})`;
+        if (!left) { clearInterval(R.timer); finish(); }
+      } else if (R.boxEnd) {
+        const left = Math.max(0, Math.round((R.boxEnd - Date.now()) / 1000));
+        c.textContent = `${Math.floor(left / 60)}:${String(left % 60).padStart(2, '0')} left of your ${R.run.cfg.box}`;
+        if (!left) { R.boxOver = true; clearInterval(R.timer); c.textContent = 'Time’s up · this one, then the summary'; }
+      }
+    }, 250);
+  }
+
+  /* ---------------- one item */
+  function show(item) {
+    clearTimeout(R.autoT);
+    if (R.ws) { try { R.ws.destroy(); } catch (_) {} R.ws = null; }
+    if (!R.items.some(x => x.item_id === item.item_id)) {
+      const at = R.cur ? R.items.findIndex(x => x.item_id === R.cur.item_id) : -1;
+      item._new = true;
+      R.items.splice(at + 1, 0, item);
+    }
+    R.cur = item; R.viewing = null; R.flipped = false; R.shownAt = performance.now(); R.guess = false; R.checkPick = null; R.typedHint = false;
+    $('saveBtn') && $('saveBtn').setAttribute('aria-pressed', 'false');
+    progress();
+    itemTimer(item);
+    const k = item.kind;
+    if (CARDS.has(k)) return card(item);
+    if (k === 'learn') return learn(item);
+    if (k === 'commit') return commit(item);
+    if (k === 'placement' || k === 'sort') return sortItem(item);
+    if (k === 'order') return orderItem(item);
+    if (k === 'typed') return typed(item);
+    if (R.run.mode === 'sprint') return quick(item);
+    if (R.run.mode === 'check') return checkItem(item);
+    if (item.step && !item.choices) return staged(item);
+    return quiz(item);
+  }
+  const ms = () => Math.round(performance.now() - R.shownAt);
+  async function post(body) {
+    const b = { item_id: R.cur.item_id, ms: ms(), ...body };
+    if (!R.stored) return UI.api(`/words/run/${enc(id)}/answer`, { method: 'POST', body: b });
+    // W22: a kept run queues its grade when there is no signal, and goes on to the next kept card
+    try { const v = await UI.api(`/words/run/${enc(id)}/answer`, { method: 'POST', body: b, quiet: true }); R.keptDone.add(b.item_id); W.offline.done(id, b.item_id); return v; }
+    catch (e) {
+      if (!e.offline || !CARDS.has(R.cur.kind)) throw e;
+      await W.offline.queue({ run: id, ...b, at: new Date().toISOString() });
+      await W.offline.done(id, b.item_id);
+      R.keptDone.add(b.item_id);
+      R.offline = true;
+      return { offline: true, correct: body.answer === 'know' ? true : body.answer === 'dontknow' ? false : null,
+        next: R.items.find(x => !R.keptDone.has(x.item_id)) || null };
+    }
+  }
+  function took(v) {
+    R.verdicts.set(R.cur.item_id, v);
+    if (v.correct !== null && v.correct !== undefined) { R.graded++; if (!CARDS.has(R.cur.kind) && R.cur.kind !== 'learn') { R.asked++; if (v.correct) R.right++; } }
+    if (v.requeued) { R.run.total = (R.run.total || R.items.length) + 1; }
+    R.last = v;
+    progress();
+  }
+  function advance(v) {
+    if (v && v.summary) return summary(v.summary);
+    if (R.boxOver || !v || !v.next) return finish();
+    show(v.next);
+  }
+  async function finish() {
+    clearInterval(R.timer); clearTimeout(R.autoT);
+    put($('stage'), h('p', { class: 'meta', text: 'Adding it up…' }));
+    try { summary(await UI.api(`/words/run/${enc(id)}/finish`, { method: 'POST', quiet: R.stored })); }
+    catch (e) {
+      if (e.offline && R.stored) {
+        const n = await W.offline.pending();
+        return put($('stage'), h('div', { class: 'wl-msg', style: 'display:grid;gap:12px;justify-items:start;padding-top:24px' },
+          h('p', { text: n ? `Done · ${n === 1 ? '1 grade' : `${n} grades`} will sync when you’re back online.` : 'Done.' }),
+          h('p', { class: 'help', text: 'The summary comes with the signal. Quizzes need a connection.' }),
+          h('div', { style: 'display:flex;gap:10px' }, h('button', { type: 'button', class: 'btn', text: 'Try again', onclick: finish }), h('a', { class: 'btn', href: '/words/', text: 'Words' }))));
+      }
+      fail(e.status === 409 ? 'This run is finished.' : 'The summary did not load.', true);
+    }
+  }
+  // the per-question timer (off, 15, 30, 60 or SAT pace 71 s)
+  let itemT = 0;
+  function itemTimer(item) {
+    clearInterval(itemT);
+    const t = R.run.cfg && +R.run.cfg.timer;
+    const tb = $('tbar');
+    if (!t || CARDS.has(item.kind) || ['learn', 'placement', 'sort'].includes(item.kind) || R.run.mode === 'sprint' || R.run.mode === 'check') { if (!R.sprintEnd) tb.hidden = true; return; }
+    tb.hidden = false;
+    const end = Date.now() + t * 1000;
+    itemT = setInterval(() => {
+      const left = Math.max(0, end - Date.now());
+      tb.firstChild.style.transform = `scaleX(${left / (t * 1000)})`;
+      const c = $('clock');
+      if (!R.boxEnd) { c.textContent = UI.mmss ? UI.mmss(Math.ceil(left / 1000)) : String(Math.ceil(left / 1000)); c.classList.toggle('low', left < 5000); }
+      if (!left) { clearInterval(itemT); timeUp(); }
+    }, 200);
+  }
+  async function timeUp() {
+    if (R.verdicts.has(R.cur.item_id) || R.busy) return;
+    R.busy = true;
+    try {
+      const v = await post({ answer: null });
+      took(v);
+      if (R.ws) { R.ws.reveal(W.verdict(v, null)); oot(); }
+      else advance(v);
+    } catch (_) {} finally { R.busy = false; }
+  }
+  const oot = () => { const vv = R.ws && R.ws.el.querySelector('.ws-verdict, .verdict'); const p = h('p', { class: 'wr-oot', text: 'Out of time' }); if (vv) vv.prepend(p); else R.ws && R.ws.el.append(p); };
+  const stopItemTimer = () => clearInterval(itemT);
+
+  /* ---------------- flashcards (§6, W7, W8, W9) */
+  function front(item) {
+    const b = item.back || {};
+    let dir = R.dir;
+    if (dir === 'mixed') dir = (pos(item) % 3 === 1) ? 'meaning' : (pos(item) % 3 === 2 && b.sentence) ? 'sentence' : 'word';
+    if (dir === 'meaning' && b.meaning) return h('p', { class: 'fmean', text: b.meaning });
+    if (dir === 'sentence' && b.sentence && b.sentence.text) return W.markWord(b.sentence.text, [item.text], 'fsent');
+    return h('p', { class: 'fword', text: item.text });
+  }
+  function backFace(item, v) {
+    const b = item.back || {};
+    const picks = item.picks || [];
+    return h('div', { class: 'fface back fback', 'aria-hidden': 'true' },
+      h('p', { class: 'fback-w', text: item.text }),
+      h('span', { class: 'k', text: 'Meaning' }), h('p', { class: 'meaning', text: b.meaning || b.short || '' }),
+      b.sentence && b.sentence.text ? [h('span', { class: 'k', text: 'In a new sentence' }), W.markWord(b.sentence.text, [item.text], 'ex'),
+        b.sentence.source ? h('p', { class: 'wsrc', text: `Adapted from ${b.sentence.source.author}, ${b.sentence.source.title}, ${b.sentence.source.year}` }) : null] : null,
+      (b.examples || []).length ? h('details', {}, h('summary', { text: 'More examples' }), b.examples.map(e => W.marked(e))) : null,
+      b.hook ? [h('span', { class: 'k', text: 'My hook' }), h('p', { class: 'ex', text: b.hook })] : null,
+      picks.length ? h('p', { class: 'fpicks', text: `Last time you picked “${typeof picks[0] === 'string' ? picks[0] : picks[0].given || picks[0].word}”` }) : null,
+      h('button', { type: 'button', class: 'quiet', style: 'justify-self:start;margin-top:6px', text: 'Open word', onclick: () => W.open(item.word) }),
+      v && v.status ? h('p', { class: 'meta', text: W.statusLine(v.status) }) : null);
+  }
+  function card(item, o = {}) {
+    const v = o.review ? R.verdicts.get(item.item_id) : null;
+    const picks = item.picks || [];
+    const fr = h('div', { class: 'fface ffront' },
+      item.kind === 'fix' ? h('p', { class: 'fpicks', text: fixLine(picks) }) : null,
+      front(item),
+      h('span', { class: 'keys meta', text: 'Space' }));
+    const bk = backFace(item, v);
+    const cardEl = h('div', { class: 'fcard' + ((item.back && (item.back.examples || []).length > 1) || item.kind === 'fix' ? ' tall' : ''), role: 'group', 'aria-label': `Card: ${item.text}` }, fr, bk);
+    const stack = h('div', { class: 'fstack' }, cardEl);
+    const status = h('p', { class: 'wr-status', id: 'status', 'aria-live': 'polite' });
+    const left = R.items.length - pos(item) - 1;
+    const ctl = h('div', { class: 'wr-ctl grades' });
+    put($('stage'), stack, h('p', { class: 'wr-left', text: left > 0 ? `${left} left` : 'Last one' }), status, ctl);
+    const flip = () => {
+      if (R.flipped) return;
+      R.flipped = true; cardEl.classList.add('flipped'); fr.setAttribute('aria-hidden', 'true'); bk.setAttribute('aria-hidden', 'false');
+      status.textContent = ''; controls();
+    };
+    function controls() {
+      const prev = h('button', { type: 'button', class: 'btn nav', 'aria-label': 'Previous card', disabled: !R.prevStack.length && !o.review, onclick: back }, '‹', h('span', { class: 'kbd', text: '←' }));
+      const next = h('button', { type: 'button', class: 'btn nav', 'aria-label': o.review ? 'Back to the current card' : 'Next card without grading', onclick: o.review ? forward : skip }, '›', h('span', { class: 'kbd', text: '→' }));
+      if (o.review) {
+        const was = v && v.correct;
+        put(ctl, prev, v && v.review_id ? h('button', { type: 'button', class: 'btn grade', onclick: () => regrade(item, !was) }, was ? 'Change to Don’t know' : 'Change to Know') : h('span', { class: 'meta', text: v ? (v.correct ? 'Know' : v.skipped ? 'Skipped' : 'Don’t know') : '' }), next);
+        return;
+      }
+      if (!R.flipped) put(ctl, prev, h('button', { type: 'button', class: 'pill grade', onclick: flip }, 'Show', h('span', { class: 'kbd', text: 'Space' })), next);
+      else put(ctl, prev, h('button', { type: 'button', class: 'btn grade', onclick: () => grade(false) }, 'Don’t know', h('span', { class: 'kbd', text: '1' })),
+        h('button', { type: 'button', class: 'pill grade', onclick: () => grade(true) }, 'Know', h('span', { class: 'kbd', text: '2' })), next);
+    }
+    R.flipCard = flip;
+    if (o.review) { R.flipped = true; cardEl.classList.add('flipped'); fr.setAttribute('aria-hidden', 'true'); bk.setAttribute('aria-hidden', 'false'); }
+    controls();
+    cardEl.addEventListener('click', e => { if (!R.flipped && !e.target.closest('button, a, summary')) flip(); });
+    swipe(cardEl, ok => { if (R.flipped && !o.review) grade(ok); });
+  }
+  const fixLine = picks => {
+    if (!picks.length) return 'This one keeps slipping: a different drill';
+    const counts = new Map();
+    picks.forEach(p => { const g = typeof p === 'string' ? p : p.given || p.word; counts.set(g, (counts.get(g) || 0) + (p.n || 1)); });
+    const total = [...counts.values()].reduce((a, b) => a + b, 0);
+    return `Missed ${total} ${total === 1 ? 'time' : 'times'} · ` + [...counts.entries()].map(([g, n]) => `picked “${g}” ${n}×`).join(' · ');
+  };
+  function swipe(el, fn) {
+    let x0 = null, y0 = 0, dx = 0;
+    el.addEventListener('pointerdown', e => { if (e.pointerType === 'mouse') return; x0 = e.clientX; y0 = e.clientY; dx = 0; });
+    el.addEventListener('pointermove', e => {
+      if (x0 === null || !R.flipped) return;
+      dx = e.clientX - x0;
+      if (Math.abs(e.clientY - y0) > Math.abs(dx)) return;
+      if (!reduced()) el.style.transform = `rotateY(180deg) translateX(${-dx}px) rotate(${-Math.max(-8, Math.min(8, dx / 12))}deg)`;
+    });
+    const end = () => { if (x0 === null) return; el.style.transform = ''; const d = dx; x0 = null; if (Math.abs(d) > 80) fn(d > 0); };
+    el.addEventListener('pointerup', end); el.addEventListener('pointercancel', () => { x0 = null; el.style.transform = ''; });
+  }
+  async function grade(ok) {
+    if (R.busy || R.viewing) return;
+    R.busy = true;
+    const item = R.cur;
+    let v;
+    try { v = await post({ answer: ok ? 'know' : 'dontknow' }); }
+    catch (e) { R.busy = false; if (!e.offline) UI.toast('Not saved. Try again.'); return; }
+    took(v);
+    R.prevStack.push(item);
+    const st = $('status');
+    const line = v.offline ? 'Saved on this device' : v.requeued ? 'Again in 3 cards' : W.statusLine(v.status);
+    if (st) st.textContent = `${ok ? 'Know' : 'Don’t know'} · ${line}`;
+    setTimeout(() => { R.busy = false; advance(v); }, 900);
+  }
+  async function skip() {
+    if (R.busy || R.viewing) return;
+    R.busy = true;
+    try { const v = await post({ answer: 'skip' }); R.verdicts.set(R.cur.item_id, v); R.prevStack.push(R.cur); if (v.next && !R.items.some(x => x.item_id === v.next.item_id)) { /* the skipped card goes once to the end */ } R.busy = false; advance(v); }
+    catch (e) { R.busy = false; if (!e.offline) UI.toast('Couldn’t skip. Try again.'); }
+  }
+  function back() {
+    const list = R.prevStack;
+    const at = R.viewing ? list.indexOf(R.viewing) : list.length;
+    if (at <= 0) return;
+    const it = list[at - 1];
+    R.viewing = it;
+    if (CARDS.has(it.kind)) card(it, { review: true });
+    else put($('stage'), h('div', { class: 'wverd' }, h('p', { class: 'head', text: `${it.text || ''}` }), h('p', { class: 'line', text: (R.verdicts.get(it.item_id) || {}).correct ? 'Right' : 'Wrong' })),
+      h('div', { class: 'wr-ctl' }, h('button', { type: 'button', class: 'btn', onclick: back, text: '‹ Previous' }), h('button', { type: 'button', class: 'pill sm', onclick: forward, text: 'Back to the current one' })));
+    R.viewing = it;
+  }
+  function forward() {
+    const list = R.prevStack;
+    const at = R.viewing ? list.indexOf(R.viewing) : -1;
+    if (at >= 0 && at < list.length - 1) { R.viewing = list[at + 1]; if (CARDS.has(R.viewing.kind)) return card(R.viewing, { review: true }); }
+    R.viewing = null;
+    const cur = R.cur;
+    R.cur = null;
+    show(cur);
+  }
+  async function regrade(item, ok) {
+    try {
+      const v = await UI.api(`/words/run/${enc(id)}/answer`, { method: 'POST', body: { item_id: item.item_id, answer: ok ? 'know' : 'dontknow', regrade: true, ms: 0 } });
+      R.verdicts.set(item.item_id, v);
+      UI.toast(`Changed to ${ok ? 'Know' : 'Don’t know'} · ${W.statusLine(v.status)}`);
+      progress();
+      card(item, { review: true });
+    } catch (e) { if (!e.offline) UI.toast(e.status === 409 ? 'That grade is no longer the word’s latest review.' : 'Not changed. Try again.'); }
+  }
+
+  /* ---------------- a Learn card (W7 box 0) */
+  function learn(item) {
+    const b = item.back || {};
+    put($('stage'), h('div', { class: 'fstack' }, h('div', { class: 'fface fback learnc' },
+      h('span', { class: 'k', text: 'New word' }),
+      h('div', { style: 'display:flex;gap:10px;align-items:center' }, h('p', { class: 'fword', style: 'font-size:clamp(32px,5vw,44px)', text: item.text }), W.speakBtn(item.text)),
+      h('p', { class: 'meaning', text: b.meaning || '' }),
+      b.sentence && b.sentence.text ? W.markWord(b.sentence.text, [item.text], 'ex') : (b.examples || [])[0] ? W.marked(b.examples[0]) : null,
+      h('p', { class: 'help', text: 'A quick check on it comes a few cards later.' }))),
+      h('div', { class: 'wr-ctl grades' }, h('button', { type: 'button', class: 'pill grade', onclick: gotit }, 'Got it', h('span', { class: 'kbd', text: 'Space' }))));
+  }
+  async function gotit() {
+    if (R.busy) return;
+    R.busy = true;
+    try { const v = await post({ answer: 'gotit' }); took({ ...v, correct: null }); R.prevStack.push(R.cur); R.busy = false; advance(v); }
+    catch (e) { R.busy = false; if (!e.offline) UI.toast('Not saved. Try again.'); }
+  }
+
+  /* ---------------- Commit first (W7): 3 meanings and No idea, then the back */
+  function commit(item) {
+    const opts = item.choices || [];
+    put($('stage'), h('p', { class: 'fword', style: 'text-align:center', text: item.text }), h('p', { class: 'wask', style: 'text-align:center', text: item.stem || 'Which meaning is it?' }),
+      h('div', { class: 'wquick' }, opts.map((c, i) => h('button', { type: 'button', class: 'btn', onclick: () => commitPick(i) }, h('span', { class: 'kbd', text: String(i + 1) }), c)),
+        h('button', { type: 'button', class: 'btn', onclick: () => commitPick(null) }, h('span', { class: 'kbd', text: '0' }), 'No idea')),
+      h('p', { class: 'help', text: 'Commit first: pick before you see the back. The pick grades the card.' }));
+  }
+  async function commitPick(i) {
+    if (R.busy) return;
+    R.busy = true;
+    let v;
+    try { v = await post({ answer: i }); } catch (e) { R.busy = false; if (!e.offline) UI.toast('Not saved. Try again.'); return; }
+    took(v); R.prevStack.push(R.cur);
+    const item = { ...R.cur, back: v.back || R.cur.back };
+    put($('stage'), h('div', { class: 'wverd' }, h('p', { class: 'head', text: v.correct ? 'Right' : i === null ? 'No idea' : 'Not that one' }),
+      h('p', { class: 'line', text: W.statusLine(v.status) })), h('div', { class: 'fstack' }, h('div', { class: 'fcard flipped' }, h('div', { class: 'fface ffront' }), backFace(item, v))),
+      h('div', { class: 'wr-ctl grades' }, nextBtn(() => { R.busy = false; advance(v); })));
+    R.busy = false;
+    R.onEnter = () => advance(v);
+  }
+  const nextBtn = fn => h('button', { type: 'button', class: 'pill grade ws-next', onclick: fn }, 'Next', h('span', { class: 'kbd', text: 'Enter' }));
+
+  /* ---------------- placement and triage (W10) */
+  function sortItem(item) {
+    const place = item.kind === 'placement';
+    const opts = place ? [['yes', 'Yes'], ['no', 'No'], ['unsure', 'Not sure']] : [['know', 'Know it'], ['unsure', 'Not sure'], ['no', 'New to me']];
+    const done = pos(item), tot = R.items.length;
+    put($('stage'), h('div', { class: 'sortw' },
+      h('p', { class: 'wask', text: place ? 'Do you know this word?' : 'Do you know it?' }),
+      h('p', { class: 'fword', text: item.text }),
+      h('div', { class: 'sort-btns' }, opts.map(([a, l], i) => h('button', { type: 'button', class: 'btn', onclick: () => sortPick(a) }, l, h('span', { class: 'kbd', text: String(i + 1) })))),
+      !place ? h('p', { class: 'meta', text: `${done + 1} of ${tot} · about ${Math.max(1, Math.round((tot - done) * 1.5 / 60))} min left` }) : null,
+      !place && R.prevStack.length ? h('button', { type: 'button', class: 'quiet', onclick: undoSort }, 'Undo the last', h('span', { class: 'kbd', text: 'Z' })) : null,
+      h('p', { class: 'help', text: place ? 'Say yes only if you could use it in a sentence. A few are checked.' : 'Know it: it comes back once as a question in context. Not sure: starred for soon.' })));
+    const w = $('stage').querySelector('.fword');
+    let x0 = null, y0 = 0;
+    w.parentElement.addEventListener('pointerdown', e => { if (e.pointerType !== 'mouse') { x0 = e.clientX; y0 = e.clientY; } });
+    w.parentElement.addEventListener('pointerup', e => {
+      if (x0 === null) return;
+      const dx = e.clientX - x0, dy = e.clientY - y0; x0 = null;
+      if (Math.abs(dx) > 80 && Math.abs(dx) > Math.abs(dy)) sortPick(dx > 0 ? opts[0][0] : opts[2][0]);
+      else if (dy < -80) sortPick(opts[1][0]);
+    });
+  }
+  async function sortPick(a) {
+    if (R.busy) return;
+    R.busy = true;
+    try { const v = await post({ answer: a }); took({ ...v, correct: null }); R.prevStack.push(R.cur); R.busy = false; advance(v); }
+    catch (e) { R.busy = false; if (!e.offline) UI.toast(e.status === 422 ? cap(e.message) : 'Not saved. Try again.'); }
+  }
+  async function undoSort() {
+    if (R.run.mode !== 'sort' || !R.prevStack.length) return;
+    try { const r = await UI.api(`/words/run/${enc(id)}/undo`, { method: 'POST', body: {} }); R.prevStack.pop(); R.verdicts.delete(r.undone); R.graded = Math.max(0, R.graded - 1); UI.toast('Undone'); R.cur = null; show(r.next); }
+    catch (e) { if (!e.offline) UI.toast('Nothing to undo.'); }
+  }
+
+  /* ---------------- staged items: predict the blank (W6), the relationship first (W2) */
+  function staged(item) {
+    const logic = item.step === 'logic';
+    const opts = item.predictions || [];
+    put($('stage'), head(item), passage(item),
+      h('div', { class: 'wstage' }, h('p', { class: 'wask', text: logic ? 'How does the second sentence relate to the first?' : 'Before the choices: what does the blank need?' }),
+        opts.map((p, i) => h('button', { type: 'button', class: 'btn', onclick: () => predict(i) }, h('span', { class: 'kbd', text: String(i + 1) }), cap(p))),
+        h('button', { type: 'button', class: 'quiet', style: 'justify-self:start', onclick: () => predict('skip') }, 'Skip to the choices', h('span', { class: 'kbd', text: 'Enter' }))),
+      h('p', { class: 'help', text: logic ? 'Relationship first: name the logic, then pick the word. It turns off once your logic picks are reliable.' : 'Method: predict what the blank needs before you look. It turns off once your predictions are reliable.' }));
+  }
+  async function predict(i) {
+    if (R.busy) return;
+    R.busy = true;
+    try { const r = await UI.api(`/words/run/${enc(id)}/answer`, { method: 'POST', body: { item_id: R.cur.item_id, prediction: i } }); R.busy = false; const it = { ...r.item }; R.items[R.items.findIndex(x => x.item_id === it.item_id)] = it; R.cur = it; quiz(it); }
+    catch (e) { R.busy = false; if (!e.offline) UI.toast('Not saved. Try again.'); }
+  }
+  function head(item) {
+    return h('div', { class: 'q-skill ws-headline', style: 'display:flex;gap:10px;align-items:center' }, h('span', { class: 'ws-skill', text: W.kindLabel(item) }),
+      R.guess ? h('span', { class: 'guess-chip', text: 'Guessing' }) : null);
+  }
+  function passage(item) {
+    const p = h('p', { class: 'wtext' });
+    String(item.text || '').split(/(_{3,})/).forEach(x => p.append(/^_{3,}$/.test(x) ? h('span', { class: 'blank', role: 'img', 'aria-label': 'blank' }) : x));
+    return h('div', {}, p, item.source ? h('p', { class: 'wsrc', text: `Adapted from ${item.source.author}, ${item.source.title}, ${item.source.year}` }) : null);
+  }
+
+  /* ---------------- a quiz item through UI.workspace (§7, W1, W2) */
+  function quiz(item) {
+    const host = h('div', { tabindex: '-1', style: 'outline:none' });
+    const q = { id: item.item_id, type: 'mcq', stem: item.text || '', choices: item.choices || [], latex: [] };
+    put($('stage'), host);
+    const ws = R.ws = UI.workspace(host, q, { mode: 'quiz', head: { label: W.kindLabel(item) },
+      onCheck: async (answer, meta) => {
+        stopItemTimer();
+        const conf = (meta && meta.conf === 'guess') || R.guess ? 'guess' : undefined;
+        const v = await post({ answer, conf });
+        took(v);
+        return W.verdict(v, answer);
+      },
+      onReveal: fb => afterReveal(fb),
+      onNext: () => next(),
+      actions: (slot, fb) => verdictActions(slot, fb, item) });
+    const stem = ws.el.querySelector('.q-stem');
+    if (stem && W.stemOf(item)) stem.after(h('p', { class: 'wask', text: W.stemOf(item) }));
+    if (stem && item.source) stem.after(h('p', { class: 'wsrc', text: `Adapted from ${item.source.author}, ${item.source.title}, ${item.source.year}` }));
+    if (UI.gloss && R.run.mode !== 'check' && stem) UI.gloss(stem, { exclude: [...(item.choices || []), item.text], ref: id });   // word → meaning: the text is the target word, so never gloss it
+    host.focus({ preventScroll: true });   // not option A: a ring there reads as already picked; keys reach the workspace from here
+  }
+  function next() {
+    clearTimeout(R.autoT);
+    const v = R.verdicts.get(R.cur && R.cur.item_id);
+    R.prevStack.push(R.cur);
+    advance(v);
+  }
+  function verdictActions(slot, fb, item) {
+    const gen = !!(fb.traps && fb.traps.some(Boolean));
+    const logic = item.kind === 'transition';
+    const twin = like => another(like);
+    if (fb.status) slot.append(h('span', { class: 'meta', text: W.statusLine(fb.status) }));
+    if (twinable(item)) {
+      const t = UI.verb ? UI.verb('twin', { subject: 'rw', sm: true, onClick: () => twin('word') }) : h('button', { type: 'button', class: 'btn sm', text: 'Twin', onclick: () => twin('word') });
+      const menu = h('button', { type: 'button', class: 'btn sm', 'aria-haspopup': 'menu', text: 'Twin ▾', title: 'Shift+T' });
+      menu.addEventListener('click', () => UI.menu(menu, [
+        { label: logic ? 'Same logic, new text' : 'Same word, new text', kbd: 'T', onClick: () => twin('word') },
+        { label: logic ? 'Same mix-up, new text' : 'Same trap, new word', kbd: 'Shift+T', onClick: () => twin('trap') }]));
+      R.twinMenu = () => menu.click();
+      slot.append(t, menu);
+    }
+    if (fb.word) slot.append(h('button', { type: 'button', class: 'btn sm', onclick: () => W.open(fb.word) }, 'Open word', h('span', { class: 'kbd', style: 'font-family:var(--font)', text: 'O' })));
+    if (gen && fb.correct === false && fb.given !== null && fb.given !== undefined) {
+      slot.append(h('button', { type: 'button', class: 'quiet', style: 'margin:0 0 0 auto', text: 'Another choice also fits', onclick: async e => {
+        e.target.disabled = true;
+        try { await UI.api(`/words/run/${enc(id)}/also-fits`, { method: 'POST', body: { item_id: item.item_id } }); UI.toast('Sent · thank you, a person checks every one'); }
+        catch (x) { e.target.disabled = false; if (!x.offline) UI.toast('Not sent. Try again.'); }
+      } }));
+    }
+    if (fb.spelling) slot.append(h('span', { class: 'meta', text: `Spelling: ${fb.spelling}` }));
+  }
+  const twinable = it => !!it && ['incontext', 'nearly', 'transition'].includes(it.kind);   // only generated items have a twin
+  async function another(like) {
+    if (!R.cur || !R.verdicts.has(R.cur.item_id) || !twinable(R.cur)) return;
+    try {
+      const r = await UI.api(`/words/run/${enc(id)}/another`, { method: 'POST', body: { item_id: R.cur.item_id, like } });
+      R.run.total = r.total;
+      R.prevStack.push(R.cur);
+      show(r.item);
+    } catch (e) { if (!e.offline) UI.toast(e.status === 409 ? cap(e.message) : 'Couldn’t make one. Try again.'); }
+  }
+  // W1: right answers stay until Next; with prefs.words_autonext on, 2.5 s with a draining ring,
+  // held by any key, the pointer over the verdict or a touch on it; never after a guess, a quick answer or a miss
+  function afterReveal(fb) {
+    const pref = UI.prefs && UI.prefs.now ? UI.prefs.now().words_autonext : false;
+    if (!pref || !fb.correct || fb.guessed || fb.conf === 'guess' || (fb.ms || 0) < 3000) return;
+    const nx = R.ws && R.ws.el.querySelector('.ws-next');
+    if (!nx) return;
+    nx.classList.add('autonext');
+    const hold = () => { clearTimeout(R.autoT); nx.classList.remove('autonext'); };
+    const area = R.ws.el;
+    area.addEventListener('pointerenter', hold, { once: true });
+    area.addEventListener('pointerdown', hold, { once: true });
+    document.addEventListener('keydown', hold, { once: true, capture: true });
+    R.autoT = setTimeout(() => { document.removeEventListener('keydown', hold, { capture: true }); next(); }, 2500);
+  }
+
+  /* ---------------- Order the ladder (W3) */
+  function orderItem(item) {
+    const words = (item.choices || []).map((w, i) => ({ w, i }));
+    R.order = { words, sel: 0, done: false };
+    const ol = h('ol', { class: 'word-order', 'aria-label': 'Weakest to strongest' });
+    const draw = () => {
+      put(ol, words.map((x, k) => {
+        const li = h('li', { 'aria-selected': String(R.order.sel === k), tabindex: '-1' }, h('span', { class: 'hd', 'aria-hidden': 'true', text: '⠿' }), h('span', { class: 'n', text: String(k + 1) }), x.w);
+        li.addEventListener('click', () => { R.order.sel = k; draw(); });
+        dragRow(li, k);
+        return li;
+      }));
+    };
+    function dragRow(li, k) {
+      const hd = li.querySelector('.hd');
+      hd.addEventListener('pointerdown', e => {
+        e.preventDefault(); hd.setPointerCapture(e.pointerId); li.classList.add('dragging');
+        const move = ev => {
+          const rows = [...ol.children];
+          const to = rows.findIndex(r => { const b = r.getBoundingClientRect(); return ev.clientY < b.top + b.height / 2; });
+          const j = to < 0 ? rows.length - 1 : to;
+          const from = words.findIndex(x => x === words[k]);
+          if (j !== from && j >= 0) { const [m] = words.splice(from, 1); words.splice(j, 0, m); k = j; R.order.sel = j; draw(); }
+        };
+        const up = () => { hd.removeEventListener('pointermove', move); li.classList.remove('dragging'); };
+        hd.addEventListener('pointermove', move);
+        hd.addEventListener('pointerup', up, { once: true });
+      });
+    }
+    R.order.draw = draw;
+    draw();
+    put($('stage'), head(item), h('p', { class: 'wask', text: item.stem || 'Put them in order, weakest to strongest.' }), ol,
+      h('div', { class: 'wr-ctl' }, h('button', { type: 'button', class: 'pill', onclick: checkOrder }, 'Check', h('span', { class: 'kbd', text: 'Enter' }))),
+      h('p', { class: 'help', text: '1–4 pick a word · ↑ ↓ move it · or drag the handle. Order items never move a box.' }));
+  }
+  function moveOrder(d) {
+    const o = R.order; if (!o || o.done) return;
+    const j = o.sel + d; if (j < 0 || j >= o.words.length) return;
+    [o.words[o.sel], o.words[j]] = [o.words[j], o.words[o.sel]]; o.sel = j; o.draw();
+  }
+  async function checkOrder() {
+    const o = R.order; if (!o || o.done || R.busy) return;
+    R.busy = true;
+    let v;
+    try { v = await post({ answer: o.words.map(x => x.i) }); } catch (e) { R.busy = false; if (!e.offline) UI.toast(e.status === 422 ? cap(e.message) : 'Not saved. Try again.'); return; }
+    R.busy = false; o.done = true; took(v);
+    const right = (v.answer_order || []).map(wordOf);
+    const verd = h('div', { class: 'wverd' }, h('p', { class: 'head', text: v.correct ? 'Right order' : 'Not quite' }),
+      !v.correct && right.length ? h('p', { class: 'line', text: `Weakest → strongest: ${right.join(' · ')}` }) : null,
+      (Array.isArray(v.reasons) ? v.reasons : []).filter(Boolean).map(r => h('p', { class: 'line', text: r })));
+    $('stage').querySelector('.wr-ctl').replaceWith(verd, h('div', { class: 'wr-ctl' }, nextBtn(next)));
+    R.onEnter = next;
+  }
+
+  /* ---------------- Type it (W8) */
+  function typed(item) {
+    const inp = h('input', { class: 'field', type: 'text', autocomplete: 'off', autocapitalize: 'off', spellcheck: 'false', 'aria-label': 'Type the word', placeholder: 'Type the word' });
+    const hint = h('button', { type: 'button', class: 'btn', title: 'Alt+W', disabled: !item.first }, 'Hint · first letter');
+    if (!item.first) hint.title = 'No hint for this one';
+    const useHint = () => { if (!item.first) return; R.typedHint = true; inp.placeholder = `Starts with “${item.first}”`; hint.disabled = true; inp.focus(); };
+    hint.addEventListener('click', useHint);
+    const go = h('button', { type: 'button', class: 'pill', text: 'Check' });
+    const submit = async () => {
+      if (R.busy || R.verdicts.has(item.item_id) || !inp.value.trim()) return;
+      R.busy = true;
+      let v;
+      try { v = await post({ answer: inp.value, hinted: R.typedHint || undefined }); } catch (e) { R.busy = false; if (!e.offline) UI.toast('Not saved. Try again.'); return; }
+      R.busy = false; took(v); inp.disabled = true; go.remove(); hint.remove();
+      $('stage').append(h('div', { class: 'wverd' }, h('p', { class: 'head', text: v.correct ? (v.spelling ? 'Right, with a spelling slip' : 'Right') : 'Not that word' }),
+        v.spelling ? h('p', { class: 'line', text: `Spelling: ${inp.value.trim()} → ${v.spelling}` }) : null,
+        !v.correct && v.word ? h('p', { class: 'line', text: `It was “${wordOf(v.word)}”: ${shortOf(v.word)}` }) : null,
+        h('p', { class: 'meta', text: v.hinted ? 'Hinted · no box up' : W.statusLine(v.status) })), h('div', { class: 'wr-ctl' }, nextBtn(next)));
+      R.onEnter = next;
+    };
+    go.addEventListener('click', submit);
+    inp.addEventListener('keydown', e => {
+      if (e.key === 'Enter') { e.preventDefault(); if (R.verdicts.has(item.item_id)) next(); else submit(); }
+      if (e.altKey && (e.code === 'KeyW')) { e.preventDefault(); useHint(); }
+    });
+    put($('stage'), head(item), item.stem ? h('p', { class: 'fmean', style: 'font-size:20px', text: item.stem }) : null, passage(item), h('div', { class: 'typed' }, inp, hint, go));
+    setTimeout(() => inp.focus(), 30);
+  }
+
+  /* ---------------- Sprint (W16): one key answers and moves on */
+  function quick(item) {
+    put($('stage'), h('p', { class: 'wask', text: W.stemOf(item) || '' }), passage(item),
+      h('div', { class: 'wquick' }, (item.choices || []).map((c, i) => h('button', { type: 'button', class: 'btn', onclick: () => sprintPick(i) }, h('span', { class: 'kbd', text: String(i + 1) }), c))),
+      R.miss.length ? h('div', {}, h('p', { class: 'k', text: `Missed · ${R.miss.length}` }), h('div', { class: 'wtray' }, R.miss.map(s => h('span', { class: 'wchip plain', text: wordOf(s) })))) : null);
+  }
+  async function sprintPick(i) {
+    if (R.busy) return;
+    R.busy = true;
+    try { const v = await post({ answer: i }); took(v); if (v.correct === false && v.word) R.miss.push(v.word); R.busy = false; advance(v); }
+    catch (e) { R.busy = false; }
+  }
+
+  /* ---------------- Words check (W15): no feedback until the end */
+  function checkItem(item) {
+    const n = pos(item) + 1;
+    put($('stage'), h('p', { class: 'k', text: `Question ${n} of ${R.items.length}` }), passage(item), h('p', { class: 'wask', text: W.stemOf(item) || '' }),
+      h('div', { class: 'wquick', role: 'radiogroup' }, (item.choices || []).map((c, i) => h('button', { type: 'button', class: 'btn', 'aria-pressed': 'false', onclick: e => { R.checkPick = i; e.currentTarget.parentElement.querySelectorAll('.btn').forEach((b, j) => b.setAttribute('aria-pressed', String(j === i))); } },
+        h('span', { class: 'kbd', text: 'ABCD'[i] }), c))),
+      h('div', { class: 'wr-ctl' }, h('button', { type: 'button', class: 'pill', onclick: checkNext }, n === R.items.length ? 'Finish' : 'Next', h('span', { class: 'kbd', text: 'Enter' }))));
+  }
+  async function checkNext() {
+    if (R.busy) return;
+    if (R.checkPick === null) { UI.toast('Pick an answer, or it counts as blank.', { action: { label: 'Leave it blank', onClick: () => { R.checkPick = -1; checkNext(); } } }); return; }
+    R.busy = true;
+    try { const v = await post({ answer: R.checkPick < 0 ? null : R.checkPick }); R.verdicts.set(R.cur.item_id, { correct: null }); R.graded++; R.busy = false; advance(v); }
+    catch (e) { R.busy = false; if (!e.offline) UI.toast('Not saved. Try again.'); }
+  }
+
+  /* ---------------- the summary (§8, W5-W7, W10, W13, W15, W16) */
+  async function summary(s) {
+    clearInterval(R.timer); clearInterval(itemT); clearTimeout(R.autoT);
+    R.cur = null; R.viewing = null;
+    $('tbar').hidden = true; $('clock').textContent = ''; put($('tools'));
+    try { if (!ix) ix = await W.index(); } catch (_) {}
+    const mode = R.run.mode;
+    const mins = Math.max(1, Math.round((s.ms || 0) / 60000));
+    const chip = slug => h('button', { type: 'button', class: 'wchip', onclick: () => W.open(slug) }, wordOf(slug));
+    const out = h('div', { class: 'wsum' });
+    // the score
+    if (mode === 'placement' && s.estimate) out.append(placementResult(s));
+    else if (mode === 'sprint') out.append(h('div', {}, h('p', { class: 'score' }, String(s.score ?? 0), h('small', { text: ' points' })),
+      h('p', { class: 'meta', text: `best ${s.best ?? 0} · today ${s.score ?? 0}${s.new_best ? ' · New best' : ''}` })));
+    else if (mode === 'sort') out.append(h('p', { class: 'score' }, String(R.graded), h('small', { text: ' sorted' })));
+    else {
+      const cards = mode === 'cards';
+      out.append(h('div', {}, h('p', { class: 'score' }, `${s.right ?? 0}`, h('small', { text: cards ? ` known / ${s.asked ?? 0}` : ` / ${s.asked ?? 0}` })), h('p', { class: 'meta', text: `${mins} min` })));
+    }
+    // moved to Known, still learning, next reviews
+    if ((s.moved_known || []).length) out.append(sec('Moved to Known', h('div', { class: 'chips' }, s.moved_known.map(chip))));
+    const learning = (s.learning || []).slice(0, 40);
+    // one date for all of them is said once, in the heading; the dates are the scheduled ones
+    const days = new Set(learning.map(l => l.due || ''));
+    const one = days.size === 1 && learning[0].due ? backOn(learning[0].due) : '';
+    if (learning.length) out.append(sec(one ? `Still learning · ${learning.length === 1 ? 'back' : `all ${learning.length} back`} ${one}` : 'Still learning',
+      h('div', { class: 'chips' }, learning.map(l => h('button', { type: 'button', class: 'wchip', onclick: () => W.open(l.slug) }, wordOf(l.slug), !one && l.due ? h('small', { text: backOn(l.due) }) : null)))));
+    const sc = { ...(s.schedule || {}) };
+    // ponytail: the server files words due today under "tomorrow"; count those back out from the learning list (helper: split "today" server-side)
+    const dueNow = (s.learning || []).filter(l => l.due && l.due <= W.today()).length;
+    if (dueNow && sc.tomorrow) sc.tomorrow = Math.max(0, sc.tomorrow - dueNow);
+    const nx = [dueNow ? `${dueNow} today` : null, sc.tomorrow ? `${sc.tomorrow} tomorrow` : null, sc.in3 ? `${sc.in3} in 3 days` : null, sc.in7 ? `${sc.in7} in a week` : null, sc.later ? `${sc.later} later` : null].filter(Boolean);
+    if (nx.length) out.append(h('p', { class: 'line', text: `Next reviews: ${nx.join(' · ')}` }));
+    // by type, with pace against 71 s
+    const bk = Object.entries(s.by_kind || {}).filter(([k]) => !['card', 'fix', 'learn', 'placement', 'sort'].includes(k));
+    if (bk.length > 1) out.append(sec('By type', h('div', { class: 'rows' }, bk.map(([k, v]) => {
+      const p = (s.pace || {})[k] || {};
+      return h('div', { class: 'row' }, h('span', { text: W.KIND[k] || k }), h('span', { class: 'meta', text: `${v.right}/${v.asked}${p.median_ms ? ` · ${Math.round(p.median_ms / 1000)} s median · SAT pace 71 s` : ''}` }));
+    }))));
+    if ((s.rushed_misses || []).length) out.append(h('p', { class: 'line', text: `Rushed misses (wrong in under 8 s): ${s.rushed_misses.length} · slow down on these` }));
+    // how you missed (W5)
+    const mix = (s.mixups || []).filter(m => m.n);
+    if (mix.length) out.append(sec('How you missed', h('div', { class: 'rows' }, mix.map(m => h('div', { class: 'row trap-row' }, h('span', {}, h('b', { text: W.TRAP[m.kind] || m.kind }), ` ×${m.n}`),
+      h('button', { type: 'button', class: 'btn sm', text: 'Twin ×10', onclick: () => UI.startWords({ mode: 'quiz', deck: { source: 'trap', value: m.kind }, formats: ['incontext'], count: 10 }) }))))));
+    if (s.caution && mode !== 'placement') out.append(h('p', { class: 'help', text: s.caution }));
+    // sprint tray
+    if (mode === 'sprint' && R.miss.length) out.append(sec('Missed', [h('div', { class: 'rows' }, [...new Set(R.miss)].map(sl => h('div', { class: 'row' }, h('b', { text: wordOf(sl) }), h('span', { class: 'meta', text: shortOf(sl) })))),
+      h('button', { type: 'button', class: 'btn', style: 'margin-top:8px', text: 'Study these', onclick: () => UI.startWords({ mode: 'cards', deck: { source: 'words', words: [...new Set(R.miss)] } }) })]));
+    // skipped
+    if ((s.skipped || []).length) out.append(h('p', { class: 'line' }, `${s.skipped.length} skipped · `, h('button', { type: 'button', class: 'quiet', text: 'Study them', onclick: () => UI.startWords({ mode: 'cards', deck: { source: 'words', words: [...new Set(s.skipped)] } }) })));
+    // up next
+    out.append(await upNext(s));
+    put($('stage'), out);
+    put($('prog'));
+    const title = $('title').firstChild; if (title) title.textContent = `${MODE[mode] || 'Words'} · done`;
+  }
+  const sec = (t, body) => h('section', {}, h('h2', { text: t }), body);
+  const backOn = day => { const n = W.dayDiff(W.today(), day); return n <= 0 ? 'today' : n === 1 ? 'tomorrow' : n < 7 ? `in ${n} days` : `on ${W.shortDate(day)}`; };
+  function placementResult(s) {
+    const e = s.estimate || {};
+    const BAND = b => { const [tier, lv] = String(b).split(':'); return `SAT ${tier} · ${lv}`; };
+    return h('div', { style: 'display:grid;gap:14px' },
+      h('p', { class: 'score' }, `~${num(e.n || 0)}`, h('small', { text: ` words (±${Math.max(0, (e.hi || 0) - (e.n || 0))})` })),
+      h('p', { class: 'line', text: `You know about ${num(e.n || 0)} of the SAT words.` }),
+      s.caution ? h('p', { class: 'help', text: s.caution }) : null,
+      h('div', { class: 'rows' }, (e.bands || []).map(b => h('div', { class: 'band' }, h('span', { text: BAND(b.band) }), h('span', { class: 'b', role: 'img', 'aria-label': `${Math.round(b.rate * 100)}%` }, h('i', { style: `width:${Math.round((b.rate || 0) * 100)}%` })), h('span', { class: 'meta', text: `about ${num(b.n)} of ${num(b.size)}` })))),
+      s.claimed_n ? h('p', { class: 'line', text: `The ${s.claimed_n} placement words you said you know come back once each as an in-context question over the next 2 weeks.` }) : null,
+      s.probable_n ? h('div', { style: 'display:flex;gap:10px;flex-wrap:wrap;align-items:center' }, h('p', { class: 'line', text: `${num(s.probable_n)} more are probably known: 1–2 a day come back as one in-context question each.` }),
+        h('button', { type: 'button', class: 'btn', text: `Confirm the rest · ${num(s.probable_n)} words · ~${Math.max(1, Math.round(s.probable_n * 1.5 / 60))} min`, onclick: () => UI.startWords({ mode: 'sort', deck: { source: 'probable' } }) })) : null);
+  }
+  async function upNext(s) {
+    const row = h('div', { class: 'upnext' });
+    let item = null;
+    try { await UI.refresh(); item = (UI.nextItems() || [])[0] || null; } catch (_) {}
+    if (item) {
+      const words = item.start && /\/words\/run/.test(item.start.path || '');
+      row.append(h('button', { type: 'button', class: 'pill', text: `Next: ${item.title || 'Up next'}`, onclick: () => words ? UI.startWords(item.start.body) : UI.start(item) }));
+    }
+    const c = await UI.api('/words', { quiet: true }).then(d => d.counts).catch(() => null);
+    if (c && c.due) row.append(h('button', { type: 'button', class: item ? 'btn' : 'pill', text: `Review ${c.due} due`, onclick: () => UI.startWords({ mode: 'cards', deck: { source: 'due' } }) }));
+    row.append(h('button', { type: 'button', class: item || (c && c.due) ? 'btn' : 'pill', text: `${(c && c.goal) || 10} new`, onclick: () => UI.startWords({ mode: 'cards', deck: { source: 'new' }, count: (c && c.goal) || 10 }) }));
+    const played = R.items.map(x => x.word).filter(Boolean).concat((s.learning || []).map(l => l.slug), s.moved_known || []);
+    const uniq = [...new Set(played)].slice(0, 200);
+    if (uniq.length >= 4 && R.run.mode === 'cards') row.append(h('button', { type: 'button', class: 'btn', text: `Quiz these ${uniq.length}`, onclick: () => W.quizStart({ source: 'words', words: uniq }, Math.min(20, uniq.length)) }));
+    row.append(h('a', { class: 'btn', href: '/words/', text: 'Library' }));
+    return sec('Up next', row);
+  }
+
+  /* ---------------- exit */
+  $('exit').addEventListener('click', async () => {
+    const from = (() => { try { return sessionStorage.getItem('satf.words.from'); } catch (_) { return null; } })() || '/words/';
+    if (!R.run || R.run.finished || document.querySelector('.wsum')) { location.href = from; return; }
+    if (!R.graded && !(R.run.answered)) { location.href = from; return; }
+    finish();
+  });
+
+  /* ---------------- keys (§2.8, §14) */
+  const it = () => R.viewing || R.cur;
+  const isCard = () => !!it() && CARDS.has(it().kind);
+  const kindIs = (...k) => !!R.cur && !R.viewing && k.includes(R.cur.kind);
+  const answered = () => !!R.cur && R.verdicts.has(R.cur.item_id);
+  UI.keys.register('wordsrun', {
+    Space: { does: 'Flip the card', when: () => (isCard() && !R.flipped) || kindIs('learn'), run: () => (kindIs('learn') ? gotit() : R.flipCard && R.flipCard()) },
+    1: { does: 'Don’t know · Yes · Know it', when: () => (isCard() && R.flipped && !R.viewing) || kindIs('placement', 'sort', 'commit') || (kindIs('order') && !R.order.done) || (!!R.cur && R.cur.step && !R.cur.choices) || (R.run && R.run.mode === 'sprint' && !!R.cur),
+      run: () => keyNum(1) },
+    2: { does: 'Know · No · Not sure', when: () => (isCard() && R.flipped && !R.viewing) || kindIs('placement', 'sort', 'commit') || (kindIs('order') && !R.order.done) || (!!R.cur && R.cur.step && !R.cur.choices) || (R.run && R.run.mode === 'sprint' && !!R.cur),
+      run: () => keyNum(2) },
+    3: { does: 'Not sure · New to me', when: () => kindIs('placement', 'sort', 'commit') || (kindIs('order') && !R.order.done) || (!!R.cur && R.cur.step && !R.cur.choices) || (R.run && R.run.mode === 'sprint' && !!R.cur), run: () => keyNum(3) },
+    4: { does: 'Fourth choice', when: () => (kindIs('order') && !R.order.done) || (!!R.cur && R.cur.step && !R.cur.choices && (R.cur.predictions || []).length > 3) || (R.run && R.run.mode === 'sprint' && !!R.cur), run: () => keyNum(4) },
+    0: { does: 'No idea (Commit first)', when: () => kindIs('commit') && !answered(), run: () => commitPick(null) },
+    ArrowLeft: { does: 'Previous', when: () => isCard() || (!!R.viewing), run: () => back() },
+    ArrowRight: { does: 'Next without grading', when: () => isCard(), run: () => (R.viewing ? forward() : skip()) },
+    ArrowUp: { does: 'Move it up (Order the ladder)', when: () => kindIs('order') && !R.order.done, run: () => moveOrder(-1) },
+    ArrowDown: { does: 'Move it down (Order the ladder)', when: () => kindIs('order') && !R.order.done, run: () => moveOrder(1) },
+    Enter: { does: 'Next', when: () => !!R.cur && !R.viewing && ((answered() && !R.ws) || (R.ws && R.ws.answered && R.ws.answered()) || kindIs('order') || (R.cur.step && !R.cur.choices) || (R.run && R.run.mode === 'check')),
+      run: () => {
+        if (R.run.mode === 'check') return checkNext();
+        if (R.cur.step && !R.cur.choices) return predict('skip');
+        if (kindIs('order') && !R.order.done) return checkOrder();
+        if (R.ws && R.ws.answered && R.ws.answered()) return next();
+        if (R.onEnter) { const f = R.onEnter; R.onEnter = null; f(); }
+      } },
+    Z: { does: 'Undo the last (triage)', when: () => R.run && R.run.mode === 'sort', run: undoSort },
+    T: { does: 'Twin: same word, new text', when: () => !!R.ws && answered() && twinable(R.cur), run: () => another('word') },
+    'Shift+T': { does: 'Twin menu', when: () => !!R.ws && answered() && twinable(R.cur), run: () => (R.twinMenu ? R.twinMenu() : another('trap')) },
+    O: { does: 'Open the word', when: () => !!curSlug() && (isCard() || answered()), run: () => W.open(curSlug()) },
+    B: { does: 'Save', when: () => !!it(), run: saveCur },
+    P: { does: 'Say it', when: () => !!it(), run: speakCur },
+    I: { does: 'Mark a guess before choosing', when: () => !!R.ws && !answered(), run: () => { R.guess = !R.guess; UI.toast(R.guess ? 'Marked as a guess · a right guess never moves the box' : 'Guess mark off'); } },
+    Escape: { does: 'End the run', when: () => !document.querySelector('dialog[open]'), run: () => $('exit').click() },
+  }, { label: 'Words run' });
+  function keyNum(n) {
+    const c = R.cur;
+    if (!c) return;
+    if (CARDS.has(c.kind) && R.flipped) return n === 1 ? grade(false) : n === 2 ? grade(true) : null;
+    if (c.kind === 'placement') return sortPick(['yes', 'no', 'unsure'][n - 1]);
+    if (c.kind === 'sort') return sortPick(['know', 'unsure', 'no'][n - 1]);
+    if (c.kind === 'commit') return commitPick(n - 1);
+    if (c.kind === 'order') { R.order.sel = Math.min(n - 1, R.order.words.length - 1); return R.order.draw(); }
+    if (c.step && !c.choices) return (c.predictions || [])[n - 1] !== undefined ? predict(n - 1) : null;
+    if (R.run.mode === 'sprint') return sprintPick(n - 1);
+  }
+  // letters and digits the workspace owns reach it when focus is outside it
+  document.addEventListener('keydown', e => {
+    if (e.defaultPrevented || !R.ws || document.querySelector('dialog[open]')) return;
+    if (R.ws.el.contains(document.activeElement)) return;
+    if (R.ws.key && R.ws.key(e)) e.preventDefault();
+  });
+  document.addEventListener('keydown', e => {
+    if (e.defaultPrevented || R.run == null || R.run.mode !== 'check' || !R.cur || e.target.closest('input, textarea')) return;
+    const i = 'ABCD'.indexOf(e.key.toUpperCase());
+    if (i >= 0 && e.key.length === 1) { const b = $('stage').querySelectorAll('.wquick .btn')[i]; if (b) { b.click(); e.preventDefault(); } }
+  });
+  boot();
+})();
+</script>
+</body>
+</html>

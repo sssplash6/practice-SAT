@@ -790,11 +790,13 @@
   function flushWaiting() { waiting.splice(0).forEach(([t, o]) => toast(t, { ...o, wait: false })); }
   function toast(text, o = {}) {
     if (o.wait && topModal()) { waiting.push([text, o]); return null; }
+    // the same words again replace the one on screen instead of stacking (three "Next: one like this" covered the verdict)
+    if (typeof text === 'string' && !o.undo) shown.filter(e => e.text === text).forEach(e => e.close());
     const host = toastRoot();
     const el = h('div', { class: 'toast' }, icon(o.icon, 22), h('span', { class: 'toast-t' }, text instanceof Node ? text : String(text)));
     let timer = 0, left = o.ms ?? (o.undo ? 6000 : 4000), since = 0;
     const entry = {
-      el, undo: o.undo || null,
+      el, undo: o.undo || null, text: typeof text === 'string' ? text : null,
       close() { clearTimeout(timer); const i = shown.indexOf(entry); if (i >= 0) shown.splice(i, 1); el.remove(); },
       async doUndo() { entry.close(); try { await o.undo(); } catch (_) { toast('Couldn’t undo that.'); } },
     };
@@ -1219,6 +1221,15 @@
           body.append(sec);
         }
       };
+      if (o.pop) {   // a dropdown under the button: the bar's own dropdowns, stacked, instead of a dialog
+        const moved = [...el.children].filter(x => x !== openBtn);
+        pop(openBtn, () => {
+          const wrap = h('div', { class: 'filters-pop' });
+          moved.forEach(x => wrap.append(x));
+          return wrap;
+        }, { label: o.title || 'Filters', anchored: true, onClose: () => moved.forEach(x => el.insertBefore(x, openBtn)) });
+        return;
+      }
       sheet({ title: o.title || 'Filters', size: 'm', body: b => { body = b; fill(); },
         actions: [{ label: o.clear || 'Clear', quiet: true, onClick: () => { api_.clear(); fill(); return false; } }, { label: 'Show results', primary: true }] });
     });
@@ -1790,7 +1801,7 @@
   }
   const pips = (owed, of = 2) => {
     const given = Math.max(0, Math.min(of, of - (owed || 0)));
-    return h('span', { class: 'pips', role: 'img', 'aria-label': `${given} of ${of} clean answers` }, Array.from({ length: of }, (_, i) => h('i', { class: i < given ? 'on' : null })));
+    return h('span', { class: 'pips', role: 'img', 'aria-label': `${given} of ${of} correct answers` }, Array.from({ length: of }, (_, i) => h('i', { class: i < given ? 'on' : null })));
   };
   const dbars = (tier, o = {}) => {
     const t = tierOf(tier) || 'medium';
@@ -1904,27 +1915,28 @@
       h('span', { class: 'mbar', role: 'img', 'aria-label': `Mastery: ${word}` }, h('i', { style: `--m: ${Math.max(0, Math.min(1, s.mastery || 0))}` })),
       h('span', { class: 'skill-word', text: word }),
       h('span', { class: 'meta', text: s.answered ? `${pct(acc)} right of ${fmtN(s.answered)}` : 'no answers yet' }));
-    el.append(m);
+    if (s.gain === undefined) el.append(m);   // a gain row is name, gain, bar, play: the bar already says where the skill stands
     if (s.gain !== undefined) {
-      el.append(h('span', { class: 'skill-gain', text: s.gain === null || s.gain < 5 ? 'under 5' : `≈ +${Math.round(s.gain)}` }));
+      // a figure only when there is one: under 5 is a quiet note, not the row's headline
+      const small = s.gain === null || s.gain < 5;
+      el.append(h('span', { class: 'skill-gain' + (small ? ' small' : ''), text: small ? 'under 5' : `≈ +${Math.round(s.gain)}` }));
       const goal = s.to ?? STRONG;
       el.append(h('div', { class: 'skill-track-wrap' },
         h('span', { class: 'skill-track', role: 'img', 'aria-label': `First-try accuracy ${pct(acc)}; the gain assumes ${pct(goal)}` },
           h('i', { class: 'you', style: `--t: ${acc || 0}` }), h('i', { class: 'goal', style: `--t: ${goal}` })),
         h('span', { class: 'meta', text: `${pct(acc)} → ${pct(goal)}` })));
-      const meta = [s.per_test !== undefined && `about ${fmtN(s.per_test)} of 44`, s.need_right && `at least ${fmtN(s.need_right)} right`, s.minutes && `~${dur(s.minutes)}`].filter(Boolean);
-      if (meta.length) el.append(h('p', { class: 'meta skill-meta', text: meta.join(' · ') }));
-      if (s.tiers) el.append(h('p', { class: 'meta skill-tiers', text: ['easy', 'medium', 'hard'].filter(t => s.tiers[t]).map(t => `${t[0].toUpperCase()} ${s.tiers[t][0]}/${s.tiers[t][1]}`).join(' · ') }));
     }
     const side = h('div', { class: 'skill-side' });
     if (s.open) side.append(h('span', { class: 'skill-open', 'aria-label': `${s.open} open mistake${s.open === 1 ? '' : 's'}` },
-      h('span', { class: 'dots', 'aria-hidden': 'true' }, Array.from({ length: Math.min(3, s.open) }, () => h('i'))), h('span', { class: 'meta', text: fmtN(s.open) })));
-    if (s.evidence !== undefined && s.evidence < 10) side.append(h('span', { class: 'badge soft', text: `rough · ${fmtN(s.evidence)} answers` }));
+      h('span', { class: 'meta', text: fmtN(s.open) })));
+    // the answer count is the accuracy line's ("of 6"), so the badge only says the figure is rough
     if (s.pts !== undefined && s.gain === undefined) side.append(pts(null, s.pts, `skill:${topic}`) || '');
     const pr = o.practise;
     if (pr) {
       const count = pr.count ?? 10;
-      const b = button({ label: pr.label || `Practise · ${count}`, href: pr.href, primary: pr.primary }, true);
+      const lbl = pr.label || `Practise · ${count}`;
+      // a gain row carries the label as the tooltip and the accessible name only: a round play button
+      const b = s.gain !== undefined ? button({ icon: 'play', ariaLabel: lbl, title: lbl, href: pr.href, primary: pr.primary, className: 'skill-play' }, true) : button({ label: lbl, href: pr.href, primary: pr.primary }, true);
       if (!pr.href) b.addEventListener('click', async () => {
         b.setAttribute('aria-busy', 'true');
         try { if (pr.onClick) await pr.onClick(s); else await startDrill(pr.body || { topics: [topic], count, adaptive: true, source: pr.source || 'skill' }); }
@@ -2099,7 +2111,7 @@
     twin_set:  { label: 'Twin this set', sub: 'same types, new numbers', helper: 'The same question types, new numbers.', key: null, icon: svgHTML(ICON.twin) },
     twin_test: { label: 'Twin test', sub: 'same slots, new numbers', helper: 'Same question types in the same places, new numbers, scored like any test.', key: null, icon: svgHTML(ICON.twin_test) },
     again:     { label: 'Again, exactly', sub: 'the very same question', helper: 'The same question again. Doesn’t move mastery.', key: 'E', icon: svgHTML(ICON.again) },
-    fix:       { label: 'Fix', sub: 'your open mistakes', helper: 'Two clean answers on questions with that trap close each mistake.', key: 'F', icon: svgHTML(ICON.fix) },
+    fix:       { label: 'Fix', sub: 'your open mistakes', helper: 'Two correct answers on questions with that trap close each mistake.', key: 'F', icon: svgHTML(ICON.fix) },
     learn:     { label: 'Learn this type', sub: 'one solved, then three', helper: 'A worked example on new numbers, then three of your own. Counts toward mastery.', key: null, icon: svgHTML(ICON.learn) },
   };
   const KEYS = { twin: 'T', twin_menu: 'Shift+T', details: 'V', guess: 'I', report: 'R', save: 'B', mark: 'M', note: 'O', history: 'Y', desmos: 'Shift+G', again: 'E', fix: 'F' };

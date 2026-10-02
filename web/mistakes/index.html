@@ -2,112 +2,23 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Mistakes · SAT Freshman</title>
-<link rel="icon" href="/assets/mark.svg" type="image/svg+xml">
-<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Review · SAT Freshman</title>
+<meta name="robots" content="noindex">
 <link rel="manifest" href="/manifest.webmanifest">
 <meta name="theme-color" content="#FFFFFF">
 <script src="/assets/head.js"></script>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800;900&family=DM+Mono:wght@400;500&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap">
-<link rel="stylesheet" href="/assets/ui.css">
-<style>
-  /* Every open mistake by the name of the misconception, grouped by topic.
-     Two clean answers close one; the two rings on each row are those two. */
-  .head { display: flex; align-items: flex-end; justify-content: space-between; gap: 20px; flex-wrap: wrap; }
-  .head .num { font-size: clamp(64px, 10vw, 104px); }
-  .head .meta { margin-left: 12px; color: var(--ink); }
-  .groups { margin-top: 36px; display: grid; gap: 26px; }
-  .group-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 8px; }
-  .group-head .chip { background: none; padding-left: 0; }
-  .traps { display: grid; gap: 6px; }
-  .trap { display: grid; grid-template-columns: 8px minmax(0, 1fr) auto auto; gap: 14px; align-items: center;
-          padding: 14px 16px; border-radius: 10px; background: var(--tile); }
-  .trap .lbl { font: 600 15px var(--font); }
-  .trap .hits { font: 500 12.5px var(--mono); color: var(--soft); font-variant-numeric: tabular-nums; }
-  .owed { display: inline-flex; gap: 4px; }
-  .owed i { width: 10px; height: 10px; border-radius: 50%; box-shadow: inset 0 0 0 1.5px var(--ink); display: block; }
-  .owed i.done { background: var(--amber); box-shadow: none; }
-  .saved { margin-top: 48px; display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
-  .saved .num { font-size: 32px; }
-</style>
-</head>
-<body data-page="mistakes">
-<header id="bar"></header>
-
-<main class="page">
-  <div class="head rise">
-    <div><span class="num" id="n">0</span><span class="meta" id="nk">open</span></div>
-    <div id="fixAll"></div>
-  </div>
-  <p class="error" id="err" hidden></p>
-  <div class="groups rise rise-2" id="groups"></div>
-  <div class="saved rise rise-3" id="saved" hidden>
-    <span class="num" id="sn">0</span><span class="meta">saved</span>
-    <button type="button" class="quiet" id="again">Again</button>
-  </div>
-</main>
-
-<nav id="tabs"></nav>
-<script src="/assets/ui.js"></script>
-<script src="/assets/kit.js"></script>
-<script src="/assets/charts.js"></script>
+<!-- R2: /mistakes/ is Review's Redo tab. The server answers 307 first (api_review.py);
+     this page covers a static copy, keeping the query. -->
 <script>
-(() => {
-  'use strict';
-  const { api, h, $ } = UI;
-  UI.shell();
-
-  async function go(body, btn) {
-    btn && btn.setAttribute('aria-busy', 'true');
-    try {
-      const d = await api('/drill', { method: 'POST', body });
-      location.href = `/practice/session/?id=${encodeURIComponent(d.id)}`;
-    } catch (e) {
-      btn && btn.removeAttribute('aria-busy');
-      $('#err').textContent = e.message; $('#err').hidden = false;
-    }
-  }
-
-  (async () => {
-    let m;
-    try { m = await api('/mistakes'); } catch (e) { $('#err').textContent = 'The server is not answering.'; $('#err').hidden = false; return; }
-    const traps = m.traps;
-    $('#n').textContent = traps.length;
-    $('#nk').textContent = traps.length === 1 ? 'open mistake' : 'open mistakes';
-    if (traps.length) {
-      const templates = new Set(traps.map(t => t.template)).size;
-      const b = h('button', { type: 'button', class: 'pill', text: `Fix all · ${templates * 2}` });
-      b.addEventListener('click', () => go({ mistakes: true }, b));
-      $('#fixAll').append(b);
-    } else {
-      $('#groups').append(h('a', { class: 'quiet', href: '/practice/', text: 'Practice' }));
-    }
-
-    const by = {};
-    traps.forEach(t => (by[t.topic] = by[t.topic] || []).push(t));
-    Object.entries(by).forEach(([topic, list]) => {
-      const fix = h('button', { type: 'button', class: 'quiet', text: 'Fix' });
-      fix.addEventListener('click', () => go({ mistakes: true, topics: [topic] }, fix));
-      $('#groups').append(h('section', {},
-        h('div', { class: 'group-head' }, UI.chip(topic), fix),
-        h('div', { class: 'traps' }, list.map(t => h('div', { class: 'trap' },
-          h('span', { class: 'dot' }),
-          h('span', { class: 'lbl', text: t.label }),
-          h('span', { class: 'hits', text: t.hits > 1 ? `×${t.hits}` : '' }),
-          h('span', { class: 'owed', title: `${2 - t.owed} of 2` },
-            [0, 1].map(i => h('i', { class: i < 2 - t.owed ? 'done' : '' }))))))));
-    });
-
-    if (m.saved.length) {
-      $('#saved').hidden = false;
-      $('#sn').textContent = m.saved.length;
-      $('#again').addEventListener('click', e => go({ saved: true }, e.currentTarget));
-    }
+  (function () {
+    var q = location.search.replace(/^\?/, '');
+    location.replace('/review/?tab=redo' + (q ? '&' + q : '') + location.hash);
   })();
-})();
 </script>
+<noscript><meta http-equiv="refresh" content="0; url=/review/?tab=redo"></noscript>
+</head>
+<body>
+<p><a href="/review/?tab=redo">Open Review</a></p>
 </body>
 </html>

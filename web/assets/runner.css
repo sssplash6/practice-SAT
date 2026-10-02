@@ -35,8 +35,11 @@
 .ws > .q-figure, .ws > .q-fig { margin: 4px 0 18px; }
 figure.q-figure { margin: 4px 0 18px; }
 
-.ws-headline { flex-wrap: wrap; gap: 6px 10px; margin-bottom: 14px; }
-.ws-headline .ws-skill { display: inline-flex; align-items: center; gap: 8px; color: var(--ink); }
+/* decision 7: one quiet line above the question, sentence case, muted, no icon */
+.ws-headline { flex-wrap: wrap; gap: 6px 10px; margin-bottom: 14px; font: 500 13.5px var(--font); text-transform: none; letter-spacing: 0; color: var(--soft); }
+.ws-headline .ws-skill { display: inline-flex; align-items: center; gap: 8px; color: var(--soft); }
+.ws-headline .ws-diff::before { content: "·"; margin-right: 4px; color: var(--faint); }
+.ws-headline .dbars { font-size: 13px; color: var(--soft); }
 .ws-headline .ws-type { color: var(--soft); letter-spacing: .08em; }
 .ws-headline .ws-type::before { content: "·"; margin-right: 10px; color: var(--faint); }
 .ws-headline .ws-diff { display: inline-flex; align-items: center; gap: 6px; text-transform: none; letter-spacing: 0; }
@@ -80,7 +83,7 @@ figure.q-figure { margin: 4px 0 18px; }
 .ws .opt .t { grid-column: 2; grid-row: 1; min-width: 0; overflow-wrap: anywhere; }
 /* the scroll sits inside the text cell: a scroll container as the grid item has no height floor, and the letter's span then pads a second row */
 .ws .opt .t.tex > .katex { display: block; overflow-x: auto; overflow-y: hidden; }
-.ws .opt .mk { grid-column: 3; grid-row: 1 / span 2; font: 700 15px var(--font); color: var(--ink); }
+.ws .opt .mk { grid-column: 3; grid-row: 1 / span 2; width: auto; height: auto; border-radius: 0; box-shadow: none; background: none; font: 700 18px var(--font); color: var(--ink); }   /* a bare mark: Today's round .mk badge must not ring it */
 .ws .opt.ok .mk { color: var(--amber-deep); }
 .ws .opt .opt-cap { grid-column: 2; grid-row: 2; font: 600 10.5px var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--soft); }
 .ws .opt .opt-cap:empty, .ws .opt .mk:empty { display: none; }
@@ -116,6 +119,8 @@ figure.q-figure { margin: 4px 0 18px; }
 .opt-row.out > .opt .l { box-shadow: none; outline: 1.5px dashed var(--soft); outline-offset: -1.5px; color: var(--soft); background: none; }
 .opt-row.tried > .opt { opacity: .55; }
 .opt-row.tried > .opt .t { text-decoration: line-through; text-decoration-thickness: 1px; }
+/* an inline-grid fraction doesn't inherit its parent's line-through, so it carries its own */
+.opt-row.out > .opt .t .frac, .opt-row.tried > .opt .t .frac { text-decoration: line-through; text-decoration-thickness: 1px; }
 /* X6: a hold strikes on touch; the ring fills while it counts */
 .opt-row.pressing > .opt { box-shadow: inset 0 0 0 1.5px var(--soft); }
 .opt-row.pressing > .opt .l { background: conic-gradient(var(--tile-2) var(--p, 0%), transparent 0); animation: hold .45s linear forwards; }
@@ -220,10 +225,10 @@ figure.q-figure { margin: 4px 0 18px; }
 .ws-verdict { gap: 12px; }
 .v-head { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 0; font: 600 16px var(--font); color: var(--ink); }
 .v-head b { font-weight: 700; margin-right: 2px; }
-.v-glyph { width: 24px; height: 24px; margin-right: 10px; border-radius: 50%; display: inline-grid; place-items: center; font: 700 13px var(--font); }
-.v-head.ok .v-glyph { background: var(--amber); color: var(--ink-deep); }
-.v-head.no .v-glyph { background: var(--ink); color: var(--on-ink); }
-.v-head.blank .v-glyph { box-shadow: inset 0 0 0 1.5px var(--faint); outline: 1.5px dashed var(--faint); outline-offset: -1.5px; box-shadow: none; color: var(--soft); }
+.v-glyph { width: 24px; height: 24px; margin-right: 10px; display: inline-grid; place-items: center; font: 700 18px var(--font); }
+.v-head.ok .v-glyph { color: var(--amber-deep); }
+.v-head.no .v-glyph { color: var(--ink); }
+.v-head.blank .v-glyph { color: var(--soft); }
 .v-bit { font: 500 13px var(--mono); color: var(--soft); font-variant-numeric: tabular-nums; white-space: pre-wrap; }   /* a flex item drops its leading space */
 .v-mastery { display: flex; align-items: center; flex-wrap: wrap; gap: 6px 8px; font: 500 13.5px var(--font); color: var(--ink); }
 .v-mastery .glyph { width: 18px; height: 18px; }
@@ -303,10 +308,11 @@ figure.q-figure { margin: 4px 0 18px; }
 /* the split Check (P7) */
 .split-check { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
 .split-check .kbd { margin-left: 4px; }
-.sc-tip { margin-top: 6px; }
+/* D: Sure, Not sure, Guessing share one height and one radius; only the fill differs */
+.split-check .sc-part { height: var(--ctl); min-height: 0; padding: 0 16px; border-radius: var(--radius); font: 600 14.5px/1 var(--font); letter-spacing: 0; gap: 6px; white-space: nowrap; }
 @media (hover: none) { .split-check .kbd, .ws-bar .kbd { display: none; } }
 @media (max-width: 759px) {
-  .split-check.split { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; width: 100%; gap: 6px; }
+  .split-check.split { display: grid; grid-template-columns: repeat(3, 1fr); width: 100%; gap: 6px; }
   .split-check.split > * { min-width: 0; padding-left: 6px; padding-right: 6px; justify-content: center; }
 }
 
@@ -606,7 +612,6 @@ html.has-runner, html.has-runner body { background: var(--paper); }
 @media (hover: none) { .rn-next .rn-enter { display: none; } }
 .rn-check { display: flex; align-items: center; }
 .rn-check .split-check { flex-wrap: nowrap; }
-.rn-check .sc-tip { display: none; }
 .rn-saved { font: 500 12px var(--mono); color: var(--soft); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .rn-saved[data-state="offline"], .rn-saved[data-state="error"] { color: var(--ink); }
 .rn-who { font: 600 14px var(--font); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
@@ -826,7 +831,8 @@ html.rv-open { overflow: hidden; }
 .rv-next { gap: 6px; }
 .rv-pos, .rv-miss { white-space: nowrap; }
 .rv-postop .rv-pos { display: none; }
-.rv-hint { margin: 26px 0 0; text-align: center; font-size: 11.5px; }
+.rv-hint { margin: 26px 0 0; display: flex; flex-wrap: wrap; justify-content: center; gap: 7px 16px; font: 500 13px var(--font); color: var(--ink); }
+.rv-hk kbd { display: inline-block; min-width: 22px; min-height: 0; height: auto; padding: 3px 5px; margin-right: 4px; border-radius: 6px; background: var(--tile-2); box-shadow: inset 0 0 0 1px var(--line); font: 600 12px/1.3 var(--mono); text-align: center; }
 @media (hover: none) { .rv-hint { display: none; } }
 
 /* the pane: the same parts, in the page (Review 8) */
@@ -851,8 +857,7 @@ html.rv-open { overflow: hidden; }
 .rv-type { color: var(--soft); font-weight: 500; }
 .rv-type::before { content: "·"; margin-right: 8px; color: var(--faint); }
 .rv-status { margin-left: auto; display: inline-flex; align-items: center; gap: 6px; height: 28px; padding: 0 10px 0 6px; border-radius: 8px; background: var(--tile); font: 600 13px var(--font); white-space: nowrap; }
-.rv-status .rv-glyph { display: inline-grid; place-items: center; width: 18px; height: 18px; border-radius: 50%; background: var(--st-fill, var(--tile-2)); color: var(--st-fg, var(--ink)); font: 700 11px var(--font); }
-.rv-status[data-status="unanswered"] .rv-glyph, .rv-status[data-status="blank"] .rv-glyph { background: none; outline: 1.5px dashed var(--faint); outline-offset: -1.5px; }
+.rv-status .rv-glyph { display: inline-grid; place-items: center; width: 18px; height: 18px; color: var(--st-fill, var(--st-fg, var(--ink))); font: 700 15px var(--font); }
 .rv-pair-h .rv-status { margin-left: 8px; height: 24px; font-size: 12px; }
 .rv-h2 { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; font: 500 13px var(--font); color: var(--ink); font-variant-numeric: tabular-nums; }
 .rv-dot { color: var(--faint); }
@@ -870,7 +875,7 @@ html.rv-open { overflow: hidden; }
 .rv-blind { color: var(--ink); font-weight: 600; }
 .rv-rule { color: var(--ink); }
 .rv-causerow { display: flex; }
-.rv-cause { height: 32px; font-size: 13px; cursor: pointer; border: 0; }
+.rv-cause { height: 24px; padding: 0 8px; font-size: 13px; cursor: pointer; border: 0; }
 .rv-cause svg { width: 14px; height: 14px; }
 .rv-mistake { margin: 0; display: flex; flex-wrap: wrap; align-items: center; gap: 4px; font: 400 14px/1.45 var(--font); color: var(--ink); }
 .rv-mistake svg { color: var(--amber-deep); }
@@ -1159,3 +1164,27 @@ html[data-motion="reduce"] .v-fixed.pop { animation: none; }
   .strike, .undo, .ws-under, .ws-bar, .tools-row, .q-actions, .x-toggle, .pad, .calc { display: none !important; }
   .x-card[hidden] { display: grid !important; }
 }
+
+/* the review pane's question head: one panel for the mistake, its tags and the cause; a labelled history under it */
+.rv-facts { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); gap: 12px 24px; align-items: start; margin: 14px 0; padding: 14px 16px; border-radius: 12px; background: var(--tile); }
+.rv-fa:empty, .rv-fb:empty { display: none; }
+.rv-thin { padding: 0; height: 1px; background: var(--line); border-radius: 0; }
+.rv-thin > * { display: none; }
+.rv-hide .rv-thin { height: auto; padding: 14px 16px; background: var(--tile); border-radius: 12px; }
+.rv-hide .rv-thin > * { display: flex; }
+.rv-fb { display: flex; flex-wrap: wrap; align-content: start; gap: 8px; }
+.rv-facts .rv-mistake { display: grid; gap: 4px; margin: 0; }
+.rv-mrow { display: inline-flex; align-items: center; gap: 8px; font: 600 15px/1.3 var(--font); }
+.rv-msub { font: 400 13px/1.4 var(--font); color: var(--soft); }
+.rv-mlabel { margin-top: 4px; font: 500 14px/1.4 var(--font); color: var(--ink); }
+.rv-tlh { margin: 16px 0 6px; font: 600 11px/1.3 var(--font); letter-spacing: .08em; text-transform: uppercase; color: var(--soft); }
+@media (max-width: 720px) { .rv-facts { grid-template-columns: minmax(0, 1fr); } }
+
+/* the review pane's actions: the two big verbs share the first line, the small tools follow, then the extras under a rule */
+.rh-pane .q-actions:not(.rv-extra) { gap: 10px; }
+.rh-pane .q-actions:not(.rv-extra) > * { order: 2; }
+.rh-pane .q-actions:not(.rv-extra) > .split.twin { order: 0; flex: 1 1 calc(50% - 10px); display: flex; }
+.rh-pane .q-actions:not(.rv-extra) > .split.twin > :first-child { flex: 1 1 auto; }
+.rh-pane .q-actions:not(.rv-extra) > .verb { order: 1; flex: 1 1 calc(50% - 10px); justify-content: flex-start; }
+.rh-pane .q-actions .btn.sm { min-height: 34px; }
+.rh-pane .q-actions.rv-extra { margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--line); }

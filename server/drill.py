@@ -10,7 +10,7 @@ student asks for the next one, so it can answer to what just happened:
 
 Everything the student is given is remembered against them, so nothing is
 ever served twice, and every answer is filed through progress.record so the
-map, the coach and the mistakes list move as they go.
+map, the mentor and the mistakes list move as they go.
 """
 
 from __future__ import annotations
@@ -810,6 +810,12 @@ def resolve(learner: str, body: dict, out: dict | None = None) -> dict:
             if resolver is None:
                 raise HTTPException(501, {"reason": f"{module}_resolver_unavailable"})
             body = resolver(learner, body)
+    # Up next's time box (U1): next.resolve_drill lays out its first slots (check-ins, open traps, a weak and a warm
+    # skill); then the coach's pick runs until the box's clock ends
+    if body.get("source") == "next" and body.get("box") is not None:
+        resolver = deps.part("next", "resolve_drill")
+        if resolver is not None:
+            body = resolver(learner, body)
     if body.get("source") == "warmup":
         body["source"] = "due"
         body.setdefault("count", 5)
@@ -1037,7 +1043,8 @@ def resolve(learner: str, body: dict, out: dict | None = None) -> dict:
         cfg["exact"] = True
     if segments:
         cfg["slots"] = segments
-        cfg["count"] = cfg["total"] = len(segments)
+        if not cfg.get("box"):                          # a time box keeps going after its slots, until the clock ends
+            cfg["count"] = cfg["total"] = len(segments)
         cfg["topics"] = list(dict.fromkeys(topics + [topic_of(s["template"]) for s in segments]))
     queue, items, why = _pool(learner, cfg, body)
     if source == "due" and pool == "new" and not cfg["templates"] and not cfg["topics"]:
@@ -1841,7 +1848,7 @@ def _make(row, cfg: dict, served: list[dict]) -> tuple[dict | None, object]:
                       " ORDER BY id DESC LIMIT 1", learner, card.key)
         q["why"] = {"kind": "mistake", "detail": (f"You were sure of this one and missed it ({_day_word(sure['at'])})"
                                                   if sure else f"Open mistake · {trap['owed']} clean answer"
-                                                  f"{'s' if trap['owed'] != 1 else ''} closes it")}
+                                                  f"{'s close' if trap['owed'] != 1 else ' closes'} it")}
     slot = cfg.pop("_slot", None)
     if slot:
         if slot.get("of"):
@@ -2866,7 +2873,7 @@ def _next_step(learner: str, q: dict, ok: bool, filed: dict, run: int) -> str | 
     trap = next((t for t in progress.open_traps(learner) if t["template"] == q["key"]), None)
     if trap:
         n = trap["owed"]
-        return f"{trap['label']}: {n} more clean answer{'s' if n != 1 else ''} closes it"
+        return f"{trap['label']}: {n} more clean answer{'s close' if n != 1 else ' closes'} it"
     if (q.get("why") or {}).get("kind") == "due":
         return "Held · back in 12 days if you keep it" if ok else "Slipped · back tomorrow"
     firsts = db.rows(f"SELECT correct FROM attempts WHERE learner=? AND template=? AND {progress.COUNTED}",
@@ -2894,12 +2901,8 @@ def _then(learner: str, q: dict, ok: bool, spent: int, filed: dict) -> str | Non
         return None
     letter = "ABCD"[int(old["given"])] if old["fmt"] == "mcq" and str(old["given"]).isdigit() \
         and int(old["given"]) < 4 else old["given"]
-    bits = [f"{_day_word(old['at'])} on this type: {letter}"]
-    if old["reason"]:
-        bits.append(old["reason"])
-    if old["ms"]:
-        bits.append(_fmt_ms(old["ms"]))
-    return ", ".join(bits) + f" · today: right{', ' + _fmt_ms(spent) if spent else ''}"
+    # the choice then and the result now: no times, and no trap sentence (the next-step line above already names it; the user)
+    return f"{_day_word(old['at'])} on this type: {letter} · today: right"
 
 
 def cause_kind(learner: str, a: dict, q: dict, cfg: dict, medians: dict) -> tuple[str, dict]:

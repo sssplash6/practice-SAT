@@ -18,7 +18,7 @@
      question type (GET /api/types/match, POST /api/types/match, or the local index), each
      with a generated example; or Pick by skill instead. Then which answer, what went wrong,
      where, and Add to my mistakes (POST /api/mistakes/log), with the fix path in place: the
-     trap in an example, Try one now, Practise 3. A whole test: two 22-cell grids; each missed
+     trap in an example, Twin, Practise 3. A whole test: two 22-cell grids; each missed
      cell takes a skill, then Build my follow-up.
    Add a word: hands the word or a pasted text to S9's UI.addWord (words-ui.js).
    ========================================================================== */
@@ -498,17 +498,17 @@
         const trap = r.trap || {};
         st.done = { trap, template: body.template, topic: st.picked.topic, reason: body.reason || null };
         UI.refresh();
-        if (UI.toast) UI.toast('Added. Two clean answers on this type close it.', { wait: true, action: { label: 'Practise now · 3',
+        if (UI.toast) UI.toast('Added. Two correct answers on this type close it.', { wait: true, action: { label: 'Practise now · 3',
           onClick: () => startDrill({ pool: 'redo', ids: [trap.id], count: 3, source: 'outside' }).catch(() => UI.toast('Couldn’t start it. Try again.')) } });
         doneView(st.done);
       });
     }
-    // the fix path, in place: the trap, Try one now, Practise 3
+    // the fix path, in place: the trap, Twin (one inline, the trap on offer), Practise 3
     function doneView(d) {
       add.hidden = true; again.hidden = false;
       const trapHost = h('div');
       const tryHost = h('div', { style: 'margin-top: 10px' });
-      const tryBtn = btn('Try one now', { cls: 'btn sm', onClick: () => tryOne(tryHost, d, tryBtn) });
+      const tryBtn = btn(UI.VERBS ? UI.VERBS.twin.label : 'Twin', { cls: 'btn sm', onClick: () => tryOne(tryHost, d, tryBtn) });
       const three = btn('Practise 3', { cls: 'pill sm', onClick: e => busy(e.currentTarget, () => startDrill({ pool: 'redo', ids: [d.trap.id], count: 3, source: 'outside' }))
         .catch(() => say('Couldn’t start it. Try again.')) });
       view.replaceChildren(
@@ -695,7 +695,9 @@
       if (seg.value !== name) seg.set(name, true);
       const p = pane(name);
       s.body.replaceChildren(p.el);
-      s.el.style.height = name === 'word' ? '' : 'min(780px, calc(100dvh - 48px))';   // no jump as questions load
+      // the phone: full screen, as the palette (§2.7); wider, a fixed height so questions load without a jump
+      if (matchMedia('(max-width: 759px)').matches) Object.assign(s.el.style, { height: '100dvh', maxHeight: '100dvh', margin: '0', borderRadius: '0' });
+      else s.el.style.height = name === 'word' ? '' : 'min(780px, calc(100dvh - 48px))';
       foot.replaceChildren(...p.foot.filter(Boolean));
       if (name === 'question') p.start();
       if (p.show) p.show();

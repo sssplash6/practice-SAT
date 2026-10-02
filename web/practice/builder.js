@@ -2,7 +2,7 @@
    SAT Freshman -- the practice builder, /practice/ (spec 3.3 part 1, practice.md
    P3 P5 P6 P7 P10-P17 P19 P21 P22). One read (GET /api/bank), one debounced
    POST /api/drill/preview for every count and the Start gate, POST /api/drill to
-   start. Settings 1-9 save to prefs (PUT /api/me) 600 ms after a change; a deep
+   start. The bar's Start opens a window (tabs of settings); its settings save to prefs (PUT /api/me) 600 ms after a change; a deep
    link's settings apply to this visit only. Nothing auto-starts.
    ========================================================================== */
 (() => {
@@ -28,9 +28,6 @@
     return `${Math.floor(d / 30)}mo ago`;
   }
   const when = iso => { try { return new Date(iso).toLocaleString(undefined, { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', hour12: false }); } catch (_) { return iso || ''; } };
-  // one bar and its one word (Learning · Getting there · Strong); the word says it, so the bar is decoration
-  const mbar = (m, answered) => h('span', { class: 'mcell' }, h('span', { class: 'mbar', 'aria-hidden': 'true' }, h('i', { style: `--m:${answered ? Math.max(0, Math.min(1, m || 0)) : 0}` })),
-    h('span', { class: 'w', text: UI.masteryWord(m, answered) }));
   // an explanation on hover, keyboard focus or a tap (decision 7), and to a screen reader as the control's description
   const FOC = 'button, input, select, textarea, [tabindex="0"]';
   const tipped = new WeakSet();
@@ -91,18 +88,21 @@
   };
   const B = {
     bank: null, byT: new Map(), skills: new Map(), sel: new Set(), st: Object.assign({}, DEF), prefs: {}, saved: null,
-    preset: 'coach', source: null, fromLink: false, preview: null, search: '', open: new Set(ls.get('satf.tree.open', null) || []),
-    closed: new Set(ls.get('satf.tree.closed', []) || []), sort: ls.get('satf.tree.sort', null), view: 'skills', sets: null, owned: null,
+    preset: 'coach', source: null, fromLink: false, preview: null, search: '',
+    sort: ls.get('satf.tree.sort', null), view: 'skills', sets: null, owned: null,
     subject: url.get('subject') === 'rw' ? 'rw' : 'math', presetBody: null, me: null,
   };
 
+  // a typed number is for this set only (the user: the box should just say Other): only the chip values are remembered as defaults
+  const CHIP_COUNTS = [10, 30, 50], CHIP_MINS = [10, 30, 60];
+  const typed = new Set();   // which boxes hold a number typed in this visit; the rest read "Other"
   function fromPrefs(p) {
     const st = Object.assign({}, DEF);
-    if (Number.isInteger(p.set_length)) st.count = p.set_length === 0 ? null : p.set_length;
-    if (p.clock) st.timing = p.clock;
-    if (p.clock_minutes) st.minutes = p.clock_minutes;
+    if (Number.isInteger(p.set_length) && (p.set_length === 0 || CHIP_COUNTS.includes(p.set_length))) st.count = p.set_length === 0 ? null : p.set_length;
+    if (p.clock && !(p.clock === 'custom' && !CHIP_MINS.includes(p.clock_minutes))) st.timing = p.clock;
+    if (p.clock_minutes && CHIP_MINS.includes(p.clock_minutes)) st.minutes = p.clock_minutes;
     ['tiers', 'levels', 'formats'].forEach(k => { if (Array.isArray(p[k]) && p[k].length) st[k] = p[k].slice(); });
-    ['adaptive', 'unmeasured', 'pace_alert'].forEach(k => { if (typeof p[k] === 'boolean') st[k] = p[k]; });
+    ['adaptive', 'pace_alert'].forEach(k => { if (typeof p[k] === 'boolean') st[k] = p[k]; });
     ['feedback', 'repairs', 'order', 'mix', 'confidence'].forEach(k => { if (p[k]) st[k] = p[k]; });
     if (p.pool) st.pool = p.pool === 'checks' ? 'checks' : p.pool;
     const pm = ((p.practice || {}).math) || {};
@@ -112,7 +112,8 @@
   }
   function toPrefs(st) {
     return {
-      set_length: st.count === null ? 0 : st.count, clock: st.timing, clock_minutes: st.minutes, tiers: st.tiers, adaptive: st.adaptive,
+      set_length: st.count === null ? 0 : CHIP_COUNTS.includes(st.count) ? st.count : DEF.count ?? 10,
+      clock: st.timing === 'custom' && !CHIP_MINS.includes(st.minutes) ? (DEF.timing || 'pace') : st.timing, clock_minutes: CHIP_MINS.includes(st.minutes) ? st.minutes : (DEF.minutes ?? 10), tiers: st.tiers, adaptive: st.adaptive,
       levels: st.levels, unmeasured: st.unmeasured, formats: st.formats, feedback: st.feedback, repairs: st.repairs,
       order: st.order === 'mixup' ? 'mixed' : st.order, mix: st.mix, pool: st.pool, confidence: st.confidence, pace_alert: st.pace_alert,
       practice: { math: { zone: st.zone, review_mix: st.review_mix, review_from: st.review_from, final_round: st.final_round, hints: st.hints,
@@ -152,7 +153,6 @@
     if (!B.st.tiers.includes(d)) return false;
     const L = lv ? lv.level : t.level;
     if (L && !B.st.levels.includes(L)) return false;
-    if (lv && lv.rough && !B.st.unmeasured) return false;
     return true;
   }
   function fits(t) {
@@ -225,7 +225,6 @@
   /* ---------------------------------------------------------------- page header */
   function paintHead() {
     const b = B.bank, t = b.totals || {};
-    $('#meta').textContent = `${t.skills} skills · ${t.types} question types · unlimited questions, never repeated`;
     const pts = $('#points');
     const g = b.gains;
     pts.replaceChildren();
@@ -246,9 +245,8 @@
     };
     $('#links').replaceChildren(
       link('Mistakes', c.mistakes, '/mistakes/', null, true),
-      link('Marked', c.marked, '/mistakes/#marked'),
-      link('Saved', c.saved, null, () => { setPool('saved'); $('#settings').scrollIntoView({ behavior: 'smooth', block: 'start' }); }),
-      h('button', { type: 'button', onclick: () => $('#sets').scrollIntoView({ behavior: 'smooth' }) }, h('span', { text: 'Your sets' }), act.length ? h('span', { class: 'n on', text: `· ${act.length} in progress` }) : null));
+      link('Saved', c.saved, null, () => { setPool('saved'); openStart('set'); }),
+      h('button', { type: 'button', onclick: () => showSets() }, h('span', { text: 'Your sets' }), act.length ? h('span', { class: 'n on', text: `· ${act.length} in progress` }) : null));
   }
   function paintSubject() {
     const host = $('#subject');
@@ -325,7 +323,7 @@
       host.append(h('div', { class: 'pr-banner', role: 'region', 'aria-label': 'Set in progress' },
         h('p', { text: `Set in progress · ${names || 'Practice'} · ${s.answered} of ${s.total ?? '∞'} answered · ${clock}` }),
         h('div', { class: 'acts' }, h('a', { class: 'pill sm', href: `/practice/session/?id=${encodeURIComponent(s.id)}`, text: 'Resume' }), endB,
-          act.length > 1 ? h('button', { type: 'button', class: 'qlink', text: `+${act.length - 1} more`, onclick: () => { setsTab('active'); $('#sets').scrollIntoView({ behavior: 'smooth' }); } }) : null)));
+          act.length > 1 ? h('button', { type: 'button', class: 'qlink', text: `+${act.length - 1} more`, onclick: () => { setsTab('active'); showSets(); } }) : null)));
     }
     const code = url.get('share');
     if (code) sharedBanner(host, code);
@@ -385,16 +383,21 @@
     ready.forEach(c => {
       const go = h('button', { type: 'button', class: 'pill sm', text: 'Start' });
       go.addEventListener('click', () => create(c.body, go));
-      row.append(h('div', { class: 'pr-card' }, h('b', { text: c.title }), c.meta ? h('span', { class: 'meta', text: c.meta }) : null, c.why ? h('span', { class: 'help', text: c.why }) : null,
-        h('div', { class: 'acts' }, c.reason ? h('span', { class: 'help', text: c.reason }) : go,
-          c.body && !c.body.again ? h('button', { type: 'button', class: 'quiet', text: 'Edit', onclick: () => { loadBody(c.body); linkNote('Settings from Up next'); } }) : null)));
+      const more = e => e.currentTarget.classList.toggle('open');   // a cut-off line opens in full on a tap (the user)
+      row.append(h('div', { class: 'pr-card' }, h('b', { text: c.title, title: c.title, tabindex: '0', onclick: more }), [c.meta, c.why].filter(Boolean).length ? h('span', { class: 'meta', tabindex: '0', onclick: more, text: [c.meta, c.why].filter(Boolean).join(' · ') }) : null,   // one muted line, not two
+        h('div', { class: 'acts' }, c.reason ? h('span', { class: 'help', text: c.reason }) : go)));   // no Edit: the builder below already tweaks a set
     });
-    host.append(row);
+    // a heading folds the cards (the user); remembered on this device
+    const open = ls.get('satf.pr.ready', true);
+    const tg = h('button', { type: 'button', class: 'pr-fold', 'aria-expanded': String(open) }, h('span', { text: 'Ready to start' }), h('span', { class: 'chev', 'aria-hidden': 'true', html: '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>' }));
+    row.hidden = !open;
+    tg.addEventListener('click', () => { row.hidden = !row.hidden; tg.setAttribute('aria-expanded', String(!row.hidden)); ls.set('satf.pr.ready', !row.hidden); });
+    host.append(tg, row);
     host.hidden = B.subject !== 'math';
     paintSearchHelp();
   }
 
-  /* ---------------------------------------------------------------- presets and coach line */
+  /* ---------------------------------------------------------------- presets and mentor line */
   function presets() {
     const b = B.bank, c = b.counts || {}, seen = c.seen || {};
     const sk = [...B.skills.values()];
@@ -405,7 +408,7 @@
     const focusSkills = sk.filter(s => focus.includes(s.domain) || focus.includes(s.slug));
     const untried = sk.filter(s => !s.placed && !s.answered).slice(0, 3);
     const list = [
-      { id: 'coach', label: 'Coach’s pick', about: coachWhy() },
+      { id: 'coach', label: 'Mentor’s pick', about: coachWhy() },
       { id: 'weak', label: 'Weakest 3', why: weak.length < 3 ? 'Needs 5 answers in 3 skills' : null, skills: weak },
       { id: 'focus', label: 'Plan focus', why: focusSkills.length ? null : 'No Focus domain in your plan yet: set one in Plan', skills: focusSkills, href: focusSkills.length ? null : '/plan/' },
       { id: 'full', label: 'Full section mix' },
@@ -454,7 +457,7 @@
       h('button', { type: 'button', class: 'quiet', text: 'Reset', onclick: () => { B.st = fromPrefs(B.prefs); B.fromLink = false; applyPreset('coach'); linkNote(null); } }));
     if (!(B.bank.totals || {}).answered) host.append(tip(h('a', { class: 'quiet', href: '/diagnostic/', text: 'Diagnostic' }), 'A starting score in 20 questions'));
   }
-  // why the coach picked these skills: the Coach's pick chip's tooltip, not a permanent line
+  // why the mentor picked these skills: the Mentor's pick chip's tooltip, not a permanent line
   function coachWhy() {
     const b = B.bank;
     if (!b.coach) return null;
@@ -556,7 +559,7 @@
     }
     if (parsed && parsed.chips && parsed.chips.length) {
       line.append(...parsed.chips.map(c => h('span', { class: 'chipx', text: typeof c === 'string' ? c : c.label || c.text || '' })));
-      line.append(h('span', { class: 'meta', text: `→ ${parsed.text || 'a set'} · Enter to start · Shift+Enter applies it below` }));
+      line.append(h('span', { class: 'meta', text: 'Enter to start · Shift+Enter applies it below' }));   // the chips already say the set
     }
     if (!q.trim()) paintSearchHelp();
   }
@@ -564,22 +567,21 @@
     const line = $('#sline');
     if (B.search.trim()) return;
     line.replaceChildren();
-    if (ready[0]) line.append(h('span', { class: 'help', text: `Enter starts: ${ready[0].title}${ready[0].meta ? ` · ${ready[0].meta}` : ''}` }));
   }
   function paintSearch(hits) {
     document.querySelectorAll('.trow').forEach(r => { r.hidden = !!hits && !hits.has(r.dataset.t); });
+    // a search never opens a window; a skill row shows while any of its types match, a domain while any of its skills do
     document.querySelectorAll('.srow').forEach(r => {
       const sk = B.skills.get(r.dataset.s);
-      const any = !hits || typesOf(sk).some(t => hits.has(t.template));
-      r.hidden = !any;
-      const panel = r.nextElementSibling;
-      if (hits && any && hits.size <= 60) openSkill(sk, true);
-      if (panel && panel.classList.contains('spanel')) panel.hidden = !any || !B.open.has(sk.slug);
+      r.hidden = !!hits && !typesOf(sk).some(t => hits.has(t.template));
       const nm = r.querySelector('.sname');
       if (nm) highlight(nm, sk.name, B.search);
     });
     document.querySelectorAll('.trow .tname').forEach(n => highlight(n, (B.byT.get(n.closest('.trow').dataset.t) || {}).name, B.search));
-    document.querySelectorAll('.dcard').forEach(c => { c.hidden = !!hits && ![...c.querySelectorAll('.srow')].some(r => !r.hidden); });
+    document.querySelectorAll('.dcard').forEach(c => {
+      const d = B.bank.domains.find(x => x.name === c.dataset.d);
+      c.hidden = !!hits && !(d && d.skills.some(sk => typesOf(sk).some(t => hits.has(t.template))));
+    });
   }
   function highlight(el, text, q) {
     const w = norm(q).split(/\s+/).filter(x => x.length > 1);
@@ -621,7 +623,6 @@
     if (key) s.sort((a, z) => key(a) - key(z));
     return s;
   }
-  let paintExpand = () => {};
   function paintTreeHead() {
     const host = $('#thead');
     host.replaceChildren();
@@ -633,34 +634,26 @@
     if (!B.sort) B.sort = hasPts ? 'points' : 'test';
     sort.value = B.sort;
     sort.addEventListener('change', () => { B.sort = sort.value; ls.set('satf.tree.sort', B.sort); paintTree(); });
-    const expand = h('button', { type: 'button', class: 'ibtn', id: 'expandAll' });
-    const allOpen = () => [...B.skills.values()].every(s => B.open.has(s.slug));
-    paintExpand = () => {
-      const o = allOpen();
-      if (expand.getAttribute('aria-label') === (o ? 'Collapse all' : 'Expand all')) return;
-      expand.setAttribute('aria-label', o ? 'Collapse all' : 'Expand all');
-      expand.innerHTML = UI.svg(`<path d="${o ? 'M7 4l5 5 5-5M7 20l5-5 5 5' : 'M7 9l5-5 5 5M7 15l5 5 5-5'}" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>`, 20);
-    };
-    tip(expand, () => expand.getAttribute('aria-label'));
-    expand.addEventListener('click', () => { const open = !allOpen(); B.skills.forEach(s => (open ? B.open.add(s.slug) : B.open.delete(s.slug))); ls.set('satf.tree.open', [...B.open]); paintTree(); paintExpand(); });
-    paintExpand();
     const viewHost = h('div', {});
     UI.seg(viewHost, [{ value: 'skills', label: 'Skills' }, { value: 'map', label: 'Map' }, { value: 'habits', label: 'Habits' }], { value: B.view, label: 'Show', onChange: v => { B.view = v; paintTree(); } });
-    host.append(h('div', { class: 'ttl' }, h('h2', { class: 'h2', text: 'Skills' }), count),
+    host.append(h('div', { class: 'ttl' }, h('h2', { class: 'h2', text: 'Domains' }), count),
       h('div', { class: 'ctl' }, viewHost,
         h('button', { type: 'button', class: 'quiet', text: 'Select all', onclick: () => { B.skills.forEach(s => setSkill(s, true)); markCustom(); paintSel(); preview(); } }),
         h('button', { type: 'button', class: 'quiet', text: 'Clear', onclick: () => { B.sel.clear(); markCustom(); paintSel(); preview(); } }),
-        expand, h('label', { class: 'sr', for: 'sort', text: 'Sort' }), sort));
-    const jump = $('#jump');
-    jump.onclick = () => $('#settings').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        h('label', { class: 'sr', for: 'sort', text: 'Sort' }), sort));
   }
+  // wide: four columns, one per domain, always open. Narrow: a 2x2 grid of tiles; a tile opens a window of that domain's skills.
+  const wideMQ = matchMedia('(min-width: 1040px)');
+  const wide = () => wideMQ.matches;
+  try { wideMQ.addEventListener('change', () => { if (B.bank && B.view === 'skills') paintTree(); }); } catch (_) {}
   function paintTree() {
     const host = $('#treeBody');
-    host.classList.remove('skel-tree');
+    host.className = B.view === 'skills' ? 'dgrid' : '';
     host.replaceChildren();
     if (B.view === 'map') return paintMap(host);
     if (B.view === 'habits') return paintHabits(host);
-    B.bank.domains.forEach(d => host.append(domainCard(d)));
+    // side by side the shortest column comes first (fewest skills), the rest in order; on tiles the natural order
+    (wide() ? [...B.bank.domains].sort((x, y) => x.skills.length - y.skills.length) : B.bank.domains).forEach(d => host.append(domainCard(d)));
     paintSel(); paintAvail();
     if (B.search) paintSearch(matches(B.search));
   }
@@ -670,120 +663,114 @@
     b.addEventListener('pointerdown', e => e.stopPropagation());
     return b;
   }
-  const chev = (label, open) => h('button', { type: 'button', class: 'chev', 'aria-label': label, 'aria-expanded': String(open), html: UI.svg(UI.ICON.chev, 18) });
   // a small orange count, only when something is open (decision 7)
   function openBadge(n) {
     if (!n) return null;
     const b = h('span', { class: 'obadge' }, String(n), h('span', { class: 'sr', text: ` open ${n === 1 ? 'mistake' : 'mistakes'}` }));
     return tip(b, plural(n, 'open mistake'));
   }
-  const factLines = lines => h('div', { class: 'facts' }, ...lines.map(l => l.filter(Boolean)).filter(l => l.length).map(l => h('p', { text: l.join(' · ') })));
+  const bar = (m, answered) => h('span', { class: 'mbar', 'aria-hidden': 'true' }, h('i', { style: `--m:${answered ? Math.max(0, Math.min(1, m || 0)) : 0}` }));
+  // the facts the column header no longer shows: a tooltip on the header, a line in the phone's domain window, a block in each skill window
+  const domFacts = d => [
+    ['On the test', `about ${Math.round(d.weight * 44)} of 44`],
+    d.answered ? ['Answered', String(d.answered)] : null,
+    d.answered ? ['First try', pct(d.right / Math.max(1, d.answered))] : null,
+    d.gain ? ['On the table', `≈ +${Math.round(d.gain)} points`] : null,
+    d.due_n ? ['Due for review', String(d.due_n)] : null,
+    d.ready_n ? ['Types ready', `${d.ready_n} of ${d.types_n}`] : null,
+  ].filter(Boolean);
   function domainCard(d) {
-    const open = !B.closed.has(d.name);
-    const card = h('section', { class: 'dcard', 'data-d': d.name });
+    const isWide = wide();
+    const card = h('section', { class: 'dcard', 'data-d': d.name, 'aria-label': d.name });
     const skills = skillOrder(d.skills);
     const tb = tri(`Select every skill in ${d.name}`, on => { skills.forEach(s => setSkill(s, on)); markCustom(); paintSel(); preview(); });
-    const ch = chev(`Show or hide ${d.name}`, open);
+    tb.dataset.dtri = d.name;
     const traps = d.skills.reduce((a, s) => a + ((s.traps || []).length || s.open_n || 0), 0);
-    // the name, what is picked and its share of the test; the rest only once it says something
-    const facts = [
-      d.answered ? mbar(d.mastery, d.answered) : null,
-      d.answered ? h('span', { text: `${d.answered} answered · ${pct(d.right / Math.max(1, d.answered))} first try` }) : null,
-      d.gain ? h('span', { text: `≈ +${Math.round(d.gain)} on the table` }) : null,
-      d.due_n ? h('span', { text: `${d.due_n} due for review` }) : null,
-      d.ready_n ? h('span', { text: `${d.ready_n} of ${d.types_n} types ready` }) : null,
-    ].filter(Boolean);
-    const head = h('div', { class: 'dhead', role: 'button', tabindex: '0', 'aria-expanded': String(open) },
-      tb, h('span', { class: 'dname' }, h('span', { text: d.name }), h('span', { class: 'dsub', text: `~${Math.round(d.weight * 44)} of 44 on the test` })),
-      h('span', { class: 'dright' }, openBadge(traps), h('span', { class: 'dsel', 'data-dsel': d.name })),
-      facts.length ? h('span', { class: 'dline' }, facts) : null,
-      ch);
-    const bodyEl = h('div', { class: 'dbody', hidden: !open });
-    const toggle = () => { const o = bodyEl.hidden; bodyEl.hidden = !o; head.setAttribute('aria-expanded', String(o)); ch.setAttribute('aria-expanded', String(o)); o ? B.closed.delete(d.name) : B.closed.add(d.name); ls.set('satf.tree.closed', [...B.closed]); };
-    head.addEventListener('click', e => { if (!e.target.closest('.tri')) toggle(); });
-    head.addEventListener('keydown', e => { if (e.target === head && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); toggle(); } });
-    card._tri = tb;
-    skills.forEach(s => { const r = skillRow(s); bodyEl.append(r, r._panel); });
-    card.append(head, bodyEl);
+    const pts = Math.round(d.gain || 0);
+    const inner = [h('span', { class: 'dname', text: d.name }),
+      isWide ? null : h('span', { class: 'dsel', 'data-dsel': d.name }),
+      h('span', { class: 'dright' }, pts > 0 ? h('span', { class: 'dpts', text: `+${pts} pts` }) : null, openBadge(traps)),
+      bar(d.mastery, d.answered)];
+    const open = isWide ? h('div', { class: 'dopen' }, inner) : h('button', { type: 'button', class: 'dopen', 'aria-haspopup': 'dialog', onclick: () => openDomain(d) }, inner);
+    const head = h('div', { class: 'dhead' }, tb, open);
+    if (isWide) tip(head, domFacts(d).map(([k, v]) => `${k} ${v}`).join(' · '));
+    card.append(head);
+    if (isWide) card.append(h('div', { class: 'dbody' }, skills.map(skillRow)));
     return card;
   }
-  let paint = null;
-  addEventListener('pointerup', () => { paint = null; });
-  // the row: checkbox, name, and once started one mastery word; open mistakes only above 0. The rest is in the panel.
+  // the phone/tablet window for one domain: its facts, a select-all, and its skills
+  function openDomain(d) {
+    if (document.querySelector('dialog.dwin')) return;
+    const skills = skillOrder(d.skills);
+    const w = UI.sheet({ title: d.name, className: 'dwin', body: b => {
+      const all = tri(`Select every skill in ${d.name}`, on => { skills.forEach(s => setSkill(s, on)); markCustom(); paintSel(); preview(); });
+      all.dataset.dtri = d.name;
+      b.append(h('p', { class: 'dfacts', text: domFacts(d).map(([k, v]) => `${k} ${v}`).join(' · ') }),
+        h('div', { class: 'dall' }, all, h('span', { text: `All ${plural(skills.length, 'skill')}` })),
+        h('div', { class: 'dlist' }, skills.map(skillRow)));
+    }, actions: [{ label: 'Done' }] });
+    paintSel(); paintAvail(); if (B.search) paintSearch(matches(B.search));
+    w.closed.then(() => { paintSel(); paintAvail(); });
+  }
+  // the row: checkbox (selects), name (opens the skill window), a tiny mastery bar and the open-mistakes count
   function skillRow(s) {
-    const open = B.open.has(s.slug);
     const tb = tri(`Select ${s.name}`, on => { setSkill(s, on); markCustom(); paintSel(); preview(); });
-    const ch = chev('Show stats and question types', open);
-    const types = typesOf(s);
     const traps = (s.traps || []).length || s.open_n || 0;
-    const row = h('div', { class: 'srow', 'data-s': s.slug, tabindex: '0', 'aria-expanded': String(open) },
-      tb, h('div', { class: 'nm' }, h('div', { class: 'sname', text: s.name }), h('div', { class: 'reason', 'data-reason': '' })),
-      h('span', { class: 'sright' }, s.answered ? mbar(s.mastery, s.answered) : null, openBadge(traps)),
-      ch);
-    const panel = h('div', { class: 'spanel', hidden: !open, 'data-panel': s.slug });
-    row._panel = panel; row._tri = tb;
-    if (open) fillPanel(s, panel);
-    const toggleSel = () => { setSkill(s, selOf(s) !== types.length); markCustom(); paintSel(); preview(); };
-    row.addEventListener('click', e => {
-      if (e.target.closest('.chev')) { openSkill(s, !B.open.has(s.slug)); return; }
-      if (e.target.closest('.tri')) return;
-      if (paint && paint.moved) return;
-      toggleSel();
-    });
-    row.addEventListener('pointerdown', e => { if (e.pointerType !== 'mouse' || e.target.closest('.chev, .tri')) return; paint = { on: selOf(s) !== types.length, moved: false, start: s.slug }; });
-    row.addEventListener('pointerenter', () => {
-      if (!paint || paint.start === s.slug && !paint.moved) return;
-      if (!paint.moved) { paint.moved = true; setSkill(B.skills.get(paint.start), paint.on); }
-      setSkill(s, paint.on); markCustom(); paintSel(); preview();
-    });
-    row.addEventListener('keydown', e => {
-      if (e.target !== row) return;
-      if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); toggleSel(); }
-      else if (e.key === 'ArrowRight') { e.preventDefault(); openSkill(s, true); }
-      else if (e.key === 'ArrowLeft') { e.preventDefault(); openSkill(s, false); }
-    });
+    const nm = h('button', { type: 'button', class: 'snm', 'aria-haspopup': 'dialog', 'aria-label': `${s.name}, details and question types` },
+      h('span', { class: 'sname', text: s.name }), h('span', { class: 'reason', 'data-reason': '' }));
+    const row = h('div', { class: 'srow', 'data-s': s.slug }, tb, nm,
+      h('span', { class: 'sright' }, bar(s.mastery, s.answered), s.answered ? h('span', { class: 'sr', text: UI.masteryWord(s.mastery, s.answered) }) : null, openBadge(traps)),
+      h('span', { class: 'go', 'aria-hidden': 'true', html: UI.svg(UI.ICON.chev, 16) }));
+    row._tri = tb;
+    nm.addEventListener('click', () => openSkill(s));
+    row.addEventListener('click', e => { if (!e.target.closest('.tri, .snm')) openSkill(s); });
     return row;
   }
-  function openSkill(s, open) {
-    const row = document.querySelector(`.srow[data-s="${s.slug}"]`);
-    if (!row) return;
-    open ? B.open.add(s.slug) : B.open.delete(s.slug);
-    ls.set('satf.tree.open', [...B.open]);
-    row.setAttribute('aria-expanded', String(open));
-    row.querySelector('.chev').setAttribute('aria-expanded', String(open));
-    const panel = row._panel;
-    if (open && !panel.childNodes.length) { fillPanel(s, panel); paintSel(); paintAvail(); if (B.search) paintSearch(matches(B.search)); }
-    panel.hidden = !open;
-    paintCount(); paintExpand();
+  // the skill's window (was the inline panel). Kept callable as openSkill(sk, true); false is a no-op.
+  function openSkill(s, open = true) {
+    if (typeof s === 'string') s = B.skills.get(s);
+    if (!s || open === false || document.querySelector(`dialog.skwin[data-sk="${s.slug}"]`)) return;
+    const w = UI.sheet({ title: s.name, size: 'l', className: 'skwin', body: b => fillPanel(s, b), actions: [{ label: 'Done' }] });
+    w.el.dataset.sk = s.slug;
+    paintSel(); paintAvail(); if (B.search) paintSearch(matches(B.search));
+    w.closed.then(() => { paintSel(); paintAvail(); });   // the tree behind it catches up
   }
   function fillPanel(s, panel) {
     const types = typesOf(s);
     const bt = s.by_tier || {};
-    const tierN = d => types.filter(t => (t.tiers || []).includes(d)).length;
+    const d = B.bank.domains.find(x => x.name === s.domain);
+    const tierN = x => types.filter(t => (t.tiers || []).includes(x)).length;
     const grid = types.filter(t => t.formats.includes('spr')).length;
     const held = s.mastery >= UI.STRONG && s.answered ? (s.held_after ? `held after ${s.held_after} days` : 'not yet tested after a gap') : null;
-    panel.append(factLines([
-      [plural(types.length, 'type'), ...TIERS.map(d => (tierN(d) ? `${TIER_WORD[d]} ${tierN(d)}` : null)), grid ? `${grid} grid-in` : null,
-        s.crowd_rate !== null && s.crowd_rate !== undefined ? `everyone ${pct(s.crowd_rate)} first try` : null],
-      s.answered ? [`${s.answered} answered · ${pct(s.accuracy ?? s.right / Math.max(1, s.answered))} first try`, s.last ? `practised ${ago(s.last)}` : null,
-        ...TIERS.filter(d => (bt[d] || [0, 0])[1]).map(d => `${TIER_WORD[d]} ${bt[d][0]}/${bt[d][1]}`), s.avg_ms ? `average ${mmss(s.avg_ms)} a question` : null] : [],
-      [s.due_n ? `${s.due_n} due for review` : null, held, s.fluent_n ? `Fluent ${s.fluent_n} of ${types.length}` : null, s.solve_first ? `solve-first ${pct(s.solve_first)}` : null,
-        s.sure_rate && s.sure_rate.n ? `Sure-accuracy ${pct(s.sure_rate.rate)} (${s.sure_rate.n})` : null,
-        s.calc_split ? `With Desmos ${pct(s.calc_split.with)} (${s.calc_split.with_n ?? ''}) · without ${pct(s.calc_split.without)} (${s.calc_split.without_n ?? ''})` : null],
-      s.gain ? [`≈ +${Math.round(s.gain)} points on the table`, `about ${s.per_test ?? '—'} of 44 on the test`, s.to_strong ? `you miss ~${s.to_strong}` : null]
-        : [s.per_test ? `about ${s.per_test} of 44 on the test` : null],
-    ]));
+    const kv = rows => { const r = rows.filter(x => x && x[1] !== null && x[1] !== undefined && x[1] !== ''); return r.length ? h('dl', { class: 'kv' }, r.map(([k, v]) => [h('dt', { text: k }), h('dd', { text: v })])) : null; };
+    const block = (title, node) => (node ? h('section', { class: 'sblock' }, h('h3', { class: 'sh', text: title }), node) : null);
+    const cs = s.calc_split;
+    const record = s.answered ? kv([
+      ['Answered', String(s.answered)], ['First try', pct(s.accuracy ?? s.right / Math.max(1, s.answered))], ['Last practised', s.last ? ago(s.last) : null],
+      ...TIERS.filter(x => (bt[x] || [0, 0])[1]).map(x => [`${TIER_WORD[x]} right`, `${bt[x][0]} of ${bt[x][1]}`]),
+      ['Average time', s.avg_ms ? `${mmss(s.avg_ms)} a question` : null], ['Over time', held],
+      ['Fluent types', s.fluent_n ? `${s.fluent_n} of ${types.length}` : null], ['Solve-first', s.solve_first ? pct(s.solve_first) : null],
+      ['Sure-accuracy', s.sure_rate && s.sure_rate.n ? `${pct(s.sure_rate.rate)} (${s.sure_rate.n})` : null],
+      ['With Desmos', cs ? `${pct(cs.with)} (${cs.with_n ?? ''})` : null], ['Without Desmos', cs ? `${pct(cs.without)} (${cs.without_n ?? ''})` : null],
+    ]) : h('p', { class: 'help', text: 'Nothing answered in this skill yet.' });
+    const worth = kv([['On the table', s.gain ? `≈ +${Math.round(s.gain)} points` : null], ['On the test', s.per_test ? `about ${s.per_test} of 44` : null],
+      ['You miss', s.gain && s.to_strong ? `~${s.to_strong}` : null], ['Due for review', s.due_n ? String(s.due_n) : null]]);
+    const about = kv([['Question types', String(types.length)], ['By difficulty', TIERS.filter(tierN).map(x => `${TIER_WORD[x]} ${tierN(x)}`).join(' · ')],
+      ['Grid-in', grid ? String(grid) : null], ['Everyone', s.crowd_rate !== null && s.crowd_rate !== undefined ? `${pct(s.crowd_rate)} first try` : null]]);
+    panel.append(h('p', { class: 'help', 'data-sreason': s.slug }),
+      h('div', { class: 'sgrid2' }, block('Your record', record), block('Points and review', worth), block('This skill', about), d ? block(`In ${d.name}`, kv(domFacts(d))) : null));
     const traps = s.traps || [];
     if (traps.length) {
-      panel.append(h('h4', { text: 'Open mistakes in this skill' }), ...traps.map(t => h('div', { class: 'omis' },
-        h('span', {}, h('span', { class: 'dot', 'aria-hidden': 'true' }), ` ${cap(t.label)} · ${(B.byT.get(t.template) || {}).name || t.template} · ${plural(t.owed ?? 2, 'clean answer')} left`),
+      panel.append(h('h3', { class: 'sh', text: 'Open mistakes in this skill' }), ...traps.map(t => h('div', { class: 'omis' },
+        h('span', {}, h('span', { class: 'dot', 'aria-hidden': 'true' }), ` ${cap(t.label)} · ${(B.byT.get(t.template) || {}).name || t.template} · ${plural(t.owed ?? 2, 'correct answer')} left`),
         h('button', { type: 'button', class: 'quiet', text: 'Fix', onclick: () => create({ subject: 'math', source: 'mistakes', pool: 'redo', templates: [t.template] }) }))));
     }
+    // one way in from the skill (the user: keep Check my level only; Finish, Mix it up and the College Board link went)
     panel.append(h('div', { class: 'btns' },
-      h('button', { type: 'button', class: 'btn', text: `Finish ${s.short || s.name} · ${Math.min(40, types.length * 2)} questions`, onclick: () => create({ subject: 'math', source: 'finish', topics: [s.slug] }) }),
-      h('button', { type: 'button', class: 'btn', text: 'Check my level · 8 questions', onclick: () => create({ subject: 'math', source: 'probe', topics: [s.slug], count: 8 }) }),
-      h('button', { type: 'button', class: 'btn', text: 'Mix it up · 8', onclick: () => create({ subject: 'math', source: 'mixup', order: 'mixup', topics: [s.slug], count: 8 }) }),
-      s.cb_count ? h('a', { class: 'btn', target: '_blank', rel: 'noopener', href: 'https://satsuitequestionbank.collegeboard.org/digital/search', text: `Official questions on College Board · ${s.cb_count}` }) : null));
+      h('button', { type: 'button', class: 'btn', text: 'Check my level · 8 questions', onclick: () => create({ subject: 'math', source: 'probe', topics: [s.slug], count: 8 }) })));
+    const all = tri(`Select every type in ${s.name}`, on => { setSkill(s, on); markCustom(); paintSel(); preview(); });
+    all.dataset.stri = s.slug;
+    panel.append(h('div', { class: 'tthead' }, all, h('h3', { class: 'sh', text: `Question types · ${types.length}` })));
     const labels = (s.labels || []).length > 1 ? s.labels : [{ label: null, templates: types.map(t => t.template) }];
     const tt = h('div', { class: 'ttypes' });
     labels.forEach(l => {
@@ -802,9 +789,6 @@
   }
   function typeRow(t) {
     const tb = tri(`Select ${t.name}`, on => { on ? B.sel.add(t.template) : B.sel.delete(t.template); markCustom(); paintSel(); preview(); });
-    const lv = Object.values(t.levels || {});
-    const level = lv.length ? lv.map(x => `L${x.level}${x.rough ? ` · rough${x.n ? ` (${x.n})` : ''}` : ''}`).join(' / ') : t.level ? `L${t.level}` : '';
-    const traps = (t.traps || []).length;
     const tiers = t.tiers || [];
     const tryB = h('button', { type: 'button', class: 'quiet', text: 'Try one ▾' });
     UI.menu.bind(tryB, () => [
@@ -817,23 +801,9 @@
       { label: 'See the traps', onClick: () => traps_(t) },
       { label: 'Mix it up with look-alikes', disabled: !(t.lookalikes || []).length, onClick: () => create({ subject: 'math', source: 'mixup', order: 'mixup', templates: [t.template, ...(t.lookalikes || [])].slice(0, 6), count: 8 }) },
     ], { label: t.name });
-    // what sets this type apart; the defaults (all three tiers, multiple choice, not yet tried) go unsaid
-    const chips = [
-      tiers.length < 3 ? h('span', { text: `${tiers.map(d => TIER_WORD[d]).join(' + ')} only` }) : null,
-      t.formats.includes('spr') ? h('span', { text: t.formats.includes('mcq') ? 'MC + grid-in' : 'Grid-in only' }) : null,
-      level ? h('span', { class: 'mono', text: level }) : null,
-      Number.isFinite(t.odds) ? h('span', { text: `your odds ~${Math.round(t.odds * 100)}%` }) : null,
-      t.answered ? h('span', { text: `${t.right} of ${t.answered} right` }) : null,
-      t.crowd && t.crowd.n >= 20 ? h('span', { text: `everyone ${pct(t.crowd.rate)}` }) : null,
-      openBadge(traps),
-      t.marked ? h('span', { text: `Marked ${t.marked}` }) : null,
-      t.state === 'ready' ? h('span', { text: 'Ready' }) : null,
-      t.due ? h('span', { text: 'Due today' }) : t.next_return ? h('span', { text: `Back ${UI.date ? UI.date(t.next_return, 'short') : t.next_return}${t.k ? ` · held ${t.k}` : ''}` }) : null,
-      t.fluent ? h('span', { text: `Fluent${t.best_ms ? ` · best ${mmss(t.best_ms)}` : ''}` }) : t.slow_right ? h('span', { text: `Slow: right but ${mmss(t.median_ms)} median` }) : null,
-      t.desmos ? h('span', { text: 'Desmos way' }) : null,
-      t.official ? h('span', { text: `Built from ${plural(t.official, 'official question')}` }) : null,
-      t.type_note ? tip(h('span', { text: '✎ your rule' }), t.type_note) : null,
-    ].filter(Boolean);
+    // the row's one detail line is its difficulty, only when it isn't all three (the user: keep the difficulty, remove
+    // everything else: format, level, odds, record, everyone, open mistakes, marked, ready, due, fluent, Desmos, official, note)
+    const chips = [tiers.length < 3 ? h('span', { text: `${tiers.map(d => TIER_WORD[d]).join(' + ')} only` }) : null].filter(Boolean);
     const row = h('div', { class: 'trow', 'data-t': t.template }, tb,
       h('div', { class: 'tmain' }, h('span', { class: 'tname', text: t.name }), t.about ? h('span', { class: 'tabout', text: t.about }) : null,
         chips.length ? h('span', { class: 'tchips' }, chips) : null, h('span', { class: 'reason help', 'data-reason': '' })),
@@ -852,41 +822,41 @@
     }, actions: [{ label: 'Practise this type', primary: true, onClick: () => { create({ subject: 'math', source: 'builder', templates: [t.template], count: 5 }); } }, { label: 'Close', quiet: true }] });
   }
   function paintSel() {
-    let skillsN = 0;
+    const q = (a, v) => document.querySelectorAll(`[${a}="${CSS.escape(v)}"]`);
     B.bank.domains.forEach(d => {
-      const card = document.querySelector(`.dcard[data-d="${CSS.escape(d.name)}"]`);
       let dn = 0, dof = 0, sOn = 0;
       d.skills.forEach(s => {
         const n = selOf(s), of = typesOf(s).length;
-        dn += n; dof += of; if (n) { sOn++; skillsN++; }
-        const row = document.querySelector(`.srow[data-s="${s.slug}"]`);
-        if (row) row._tri.setAttribute('aria-checked', triOf(n, of));
-        if (row && row._panel.childNodes.length) {
-          row._panel.querySelectorAll('.trow').forEach(r => r._tri.setAttribute('aria-checked', String(B.sel.has(r.dataset.t))));
-          row._panel.querySelectorAll('.lhead .tri').forEach(b => { const ts = b.dataset.group.split(' '); b.setAttribute('aria-checked', triOf(ts.filter(x => B.sel.has(x)).length, ts.length)); });
-        }
+        dn += n; dof += of; if (n) sOn++;
+        q('data-s', s.slug).forEach(r => r._tri && r._tri.setAttribute('aria-checked', triOf(n, of)));
+        q('data-stri', s.slug).forEach(b => b.setAttribute('aria-checked', triOf(n, of)));
       });
-      if (card) { card._tri.setAttribute('aria-checked', triOf(dn, dof)); const c = card.querySelector('[data-dsel]'); if (c) c.textContent = sOn ? `${sOn} of ${d.skills.length} selected` : plural(d.skills.length, 'skill'); }
+      q('data-dtri', d.name).forEach(b => b.setAttribute('aria-checked', triOf(dn, dof)));
+      q('data-dsel', d.name).forEach(c => { c.textContent = sOn ? `${sOn} of ${d.skills.length} selected` : plural(d.skills.length, 'skill'); });
     });
+    document.querySelectorAll('.trow').forEach(r => r._tri.setAttribute('aria-checked', String(B.sel.has(r.dataset.t))));
+    document.querySelectorAll('.lhead .tri').forEach(b => { const ts = b.dataset.group.split(' '); b.setAttribute('aria-checked', triOf(ts.filter(x => B.sel.has(x)).length, ts.length)); });
     paintCount();
     paintBar();
   }
-  // "3 skills"; the type count joins only while a skill is open to show its types
+  // "3 skills"
   function paintCount() {
     const c = $('#treeCount');
     if (!c) return;
-    const n = selectedSkills().length, anyOpen = B.view === 'skills' && [...B.open].some(k => B.skills.has(k));
-    c.textContent = n ? `${plural(n, 'skill')}${anyOpen ? ` · ${plural(B.sel.size, 'type')}` : ''}` : '';
+    const n = selectedSkills().length;
+    c.textContent = n ? plural(n, 'skill') : '';
   }
   function paintAvail() {
     B.skills.forEach(s => {
-      const row = document.querySelector(`.srow[data-s="${s.slug}"]`);
-      if (!row) return;
-      const why = whyNot(typesOf(s));
-      row.classList.toggle('dim', !!why);
-      row.querySelector('[data-reason]').textContent = why ? cap(why) : '';
-      row._panel.querySelectorAll('.trow').forEach(r => { const t = B.byT.get(r.dataset.t); const w = whyNot([t]); r.classList.toggle('dim', !!w); r.querySelector('[data-reason]').textContent = w; });
+      const why = whyNot(typesOf(s)), text = why ? cap(why) : '';
+      document.querySelectorAll(`.srow[data-s="${CSS.escape(s.slug)}"]`).forEach(row => {
+        row.classList.toggle('dim', !!why);
+        row.querySelector('[data-reason]').textContent = text;
+        if (text) row.title = text; else row.removeAttribute('title');
+      });
+      document.querySelectorAll(`[data-sreason="${CSS.escape(s.slug)}"]`).forEach(p => { p.textContent = text; });
     });
+    document.querySelectorAll('.trow').forEach(r => { const w = whyNot([B.byT.get(r.dataset.t)]); r.classList.toggle('dim', !!w); r.querySelector('[data-reason]').textContent = w; });
   }
   function paintMap(host) {
     const box = h('div', { class: 'pr-map' });
@@ -912,7 +882,8 @@
     host.append(box);
   }
 
-  /* ---------------------------------------------------------------- settings */
+  /* ---------------------------------------------------------------- settings: the Start window */
+  // The page holds no settings. The bar's Start opens one window; the first tab is what matters, the rest are extra tweaks.
   const ctl = {};
   function group(host, label, id, cls) {
     const g = h('div', { class: 'sgrp' + (cls ? ' ' + cls : ''), id: id || null });
@@ -920,22 +891,78 @@
     host.append(g);
     return g;
   }
+  // a switch with a small (i) beside it that says what it does
+  function swInfo(host, o, text) {
+    const row = h('div', { class: 'pr-swrow' });
+    host.append(row);
+    const sw = UI.switch(row, o);
+    const i = h('button', { type: 'button', class: 'pr-i', text: 'i', 'aria-label': `About: ${o.label}`, 'aria-haspopup': 'dialog', 'aria-expanded': 'false' });
+    i.addEventListener('click', () => UI.pop(i, () => h('div', { class: 'info-pop' }, h('p', { text })), { label: o.label }));
+    row.append(i);
+    return sw;
+  }
   const helpLine = (host, text) => { const p = h('p', { class: 'help', text: text || '' }); host.append(p); return p; };
   function setPool(v) { B.st.pool = v; if (['marked', 'history'].includes(v)) B.st.exact = true; else if (['seen', 'saved'].includes(v)) B.st.exact = false; changed(); paintSettings(); }
   function changed() { markCustom(); savePrefs(); preview(); paintAvail(); paintSel(); }
-  // What to practise sits in the panel beside the tree; how the set runs sits in the Settings sheet (decision 7).
-  let sheetBody = null;
+  const SET_TABS = [
+    { id: 'set', label: 'Set', paint: paintSetTab },
+    { id: 'feedback', label: 'Feedback', paint: paintFeedbackTab },
+    { id: 'miss', label: 'After a miss', paint: paintMissTab },
+    { id: 'more', label: 'Order and more', paint: paintMoreTab },
+  ];
+  let win = null;   // the open window: { sheet, panel, tabs, tab, sum, l1, l2, go }
+  function openStart(tab) {
+    if (win) { if (tab) win.tabs.set(tab); return; }
+    if (!B.bank) return;
+    const w = win = { tab: SET_TABS.some(t => t.id === tab) ? tab : 'set' };
+    w.sheet = UI.sheet({ title: 'Start practice', size: 'l', className: 'pset', body: (b, s) => {
+      const th = h('div', { class: 'pset-tabs' });
+      s.el.insertBefore(th, b);        // the tabs stay put while the panel scrolls
+      w.panel = h('div', { class: 'pset-panel sset', role: 'tabpanel' });
+      b.append(w.panel);
+      w.tabs = UI.tabs(th, SET_TABS.map(t => ({ id: t.id, label: t.label, tabId: `pt-${t.id}` })), { label: 'Settings', value: w.tab, onChange: id => { w.tab = id; b.scrollTop = 0; paintSettings(); } });
+      paintSettings();
+    }, actions: [{ label: 'Cancel', quiet: true }, { label: 'Start', primary: true, onClick: () => { launch(); } }] });
+    const foot = w.sheet.foot;
+    w.go = foot.lastElementChild;
+    w.sum = h('div', { class: 'pset-sum', 'aria-live': 'polite' }, w.l1 = h('span', { class: 'l1' }), w.l2 = h('span', { class: 'l2' }));
+    foot.insertBefore(w.sum, foot.firstChild);
+    syncWin();
+    w.tabs.el.querySelector('[aria-selected="true"]').focus({ preventScroll: true });
+    w.sheet.closed.then(() => { win = null; });
+  }
+  // the footer: what the set is (the bar's line), the choices that shape it, or why it can't start
+  function syncWin() {
+    if (!win || !win.sum) return;
+    const startB = $('#start'), off = startB.disabled && !starting, why = $('#reason').textContent;
+    win.l1.textContent = $('#l1').textContent;
+    win.l2.textContent = off ? why : B.setText || '';
+    win.l2.title = off ? '' : B.setText || '';
+    win.l2.classList.toggle('why', !!off);
+    win.go.disabled = off;
+    win.go.title = off ? why : '';
+  }
+  // Start from the window (or Enter in a number field): the same body the bar's Start used to send
+  function launch(extra) {
+    if ($('#start').disabled) return;
+    if (win) win.sheet.close();
+    create(body(extra));
+  }
   function paintSettings() {
+    if (!win || !win.panel) return;
     const k = focusKey();
-    paintPanel();
-    if (sheetBody) paintSheet();
-    paintHelpers(); paintFormatHelp(); paintPools();
+    Object.keys(ctl).forEach(x => delete ctl[x]);
+    const t = SET_TABS.find(x => x.id === win.tab) || SET_TABS[0];
+    win.panel.replaceChildren();
+    win.panel.setAttribute('aria-labelledby', `pt-${t.id}`);
+    t.paint(win.panel);
+    paintHelpers(); paintFormatHelp(); paintPools(); syncWin();
     refocus(k);
   }
   // a repaint keeps keyboard focus on the same control
   function focusKey() {
     const a = document.activeElement;
-    if (!a || !a.closest || !a.closest('#settings, .pr-sheet')) return null;
+    if (!a || !a.closest || !a.closest('.pset-panel')) return null;
     if (a.type === 'radio') return `input[name="${a.name}"][value="${a.value}"]`;
     const g = a.closest('.sgrp[id]');
     return g ? [g.id, [...g.querySelectorAll(FOC)].indexOf(a)] : null;
@@ -946,26 +973,21 @@
     const el = typeof k === 'string' ? document.querySelector(k) : g && g.querySelectorAll(FOC)[k[1]];
     if (el && el !== document.activeElement) el.focus({ preventScroll: true });
   }
-  function openSettings() {
-    if (sheetBody) return;
-    const s = UI.sheet({ title: 'Settings', size: 'm', body: b => { sheetBody = h('div', { class: 'pr-sheet' }); b.append(sheetBody); paintSheet(); paintHelpers(); paintFormatHelp(); },
-      actions: [{ label: 'Done' }] });
-    s.closed.then(() => { sheetBody = null; });
-  }
   const lab = (host, text) => host.append(h('span', { class: 'lab', text }));
-  function paintPanel() {
-    const host = $('#settings');
+
+  // Tab 1, Set: where the questions come from, how many, how hard
+  function paintSetTab(host) {
     const st = B.st;
-    host.replaceChildren();
-    const grid = h('div', { class: 'sgrid sset' });
+    const grid = h('div', { class: 'sgrid' }), colL = h('div', { class: 'scol' }), colR = h('div', { class: 'scol' });
+    grid.append(colL, colR);
     host.append(grid);
-    // 1. Questions from
-    const g1 = group(grid, 'Questions from', 'sPool', 'wide');
+    // Questions from
+    const g1 = group(colL, 'Questions from', 'sPool');
     const P = (B.preview && B.preview.pools) || B.bank.counts || {};
     const seen = P.seen || {};
     const rows = [
       ['new', `New questions`, 'types', P.new, 'Generated for you now. You have never seen any of them.'],
-      ['redo', 'Fresh numbers on my open mistakes', 'types', P.mistakes, 'Each type you fell for, twice. Two clean answers close a mistake.'],
+      ['redo', 'Fresh numbers on my open mistakes', 'types', P.mistakes, 'Each type you fell for, twice. Two correct answers close a mistake.'],
       ['checks', 'Check-ins on mistakes you fixed', 'due', P.checks, 'A fixed mistake comes back once to prove it stayed fixed.'],
       ['review', 'Fresh numbers on types due for review', 'types', P.review, forecastText()],
       ['untried', 'Fresh numbers on types I’ve never tried', 'types', P.untried, null],
@@ -973,14 +995,13 @@
       ['marked', 'Marked for review', '', P.marked, 'A marked question you get right here leaves your Marked list, unless you tick Keep marked on it.'],
       ['saved', 'Saved', '', P.saved, 'Questions you saved for good. Twins test the skill; Exactly replays the question.'],
     ];
-    const name = 'pool';
     rows.forEach(([v, label, unit, n, helper]) => {
       const off = n === 0 && st.pool !== v;
-      const inp = h('input', { type: 'radio', name, value: v, checked: st.pool === v ? true : null, disabled: off ? true : null });
+      const inp = h('input', { type: 'radio', name: 'pool', value: v, checked: st.pool === v ? true : null, disabled: off ? true : null });
       inp.addEventListener('change', () => setPool(v));
       const row = h('label', { class: 'radio-row' + (off ? ' off' : ''), 'data-pool': v, 'data-unit': unit ? ' ' + unit : '' }, inp,
         h('span', { class: 'rl', text: label }), h('span', { class: 'rn', text: n ? `${n0(n)}${unit ? ' ' + unit : ''}` : '' }));
-      g1.append(tip(row, helper));
+      g1.append(tip(row, () => (row.classList.contains('off') ? reasonText('pool_empty') : helper)));   // a greyed pool says why on hover
       if (st.pool === v && ['seen', 'marked', 'saved'].includes(v)) {
         const sub = h('div', { class: 'sub' });
         const how = UI.seg(sub, [{ value: false, label: 'Fresh twins' }, { value: true, label: 'Exactly as they were' }], { value: !!st.exact, label: 'How', onChange: x => { st.exact = x; changed(); } });
@@ -994,32 +1015,83 @@
         g1.append(sub);
       }
     });
-    // 2. Questions
-    const g2 = group(grid, 'Questions', 'sCount');
-    const cv = st.box ? `b${st.box}` : st.count === null ? 'inf' : [5, 10, 20, 30, 40, 50].includes(st.count) ? st.count : 'other';
-    const opts = [5, 10, 20, 30, 40, 50].map(n => ({ value: n, label: String(n) })).concat([{ value: 'inf', label: '∞' }, { value: 'b15', label: '15 min' }, { value: 'b30', label: '30 min' }, { value: 'other', label: 'Other' }]);
-    ctl.count = UI.seg(g2, opts, { value: cv, label: 'Questions', onChange: v => {
-      if (v === 'other') { other.hidden = false; other.focus(); return; }
-      other.hidden = true;
-      if (v === 'inf') { st.count = null; st.box = null; } else if (v === 'b15' || v === 'b30') { st.box = +v.slice(1); } else { st.count = v; st.box = null; }
-      changed(); paintSettings();
-    } });
-    const other = h('input', { class: 'field', type: 'number', min: 1, max: 120, value: cv === 'other' ? st.count : '', hidden: cv !== 'other', 'aria-label': 'How many questions (1–120)' });
-    other.addEventListener('change', () => { const n = Math.max(1, Math.min(120, Math.round(+other.value || 10))); other.value = n; st.count = n; st.box = null; changed(); });
-    other.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); other.dispatchEvent(new Event('change')); start(); } });
-    tip(ctl.count.btns.find(b => b._opt.value === 'inf'), 'Endless: stop whenever you like.');
-    g2.append(h('div', { class: 'inline' }, other));
+    // Questions: three kinds of set (the user): a number of questions, a number in a time limit, or a time limit alone
+    const g2 = group(colR, 'Questions', 'sCount');
+    // an endless set on a clock (the old Sprint) is a time-only set now
+    if (st.count === null && !st.box && st.timing !== 'off') { st.box = Math.max(5, Math.min(180, st.minutes || 15)); st.timing = 'off'; }
+    const kind = st.box ? 'time' : st.timing === 'off' || st.count === null ? 'count' : 'both';
+    UI.seg(g2, [{ value: 'count', label: 'Questions' }, { value: 'both', label: 'Questions in a time' }, { value: 'time', label: 'Time only' }],
+      { value: kind, label: 'Kind of set', onChange: v => {
+        if (v === 'count') { st.box = null; st.timing = 'off'; }
+        else if (v === 'both') { st.box = null; if (st.count === null) st.count = 10; if (st.timing === 'off') st.timing = 'pace'; }
+        else { st.box = st.box || 15; st.timing = 'off'; }
+        changed(); paintSettings();
+      } });
+    // an empty field in the row, the size of a chip, instead of an "Other" chip: type a number, the chips let go
+    const ownIn = (segCtl, min, max, value, label, set) => {
+      const f = h('input', { class: 'segfield' + (value !== '' ? ' on' : ''), type: 'number', inputmode: 'numeric', min, max, value, 'aria-label': label });
+      // reads "Other" like the other cells; a tap clears the word and leaves a blinking caret to type into
+      f.placeholder = 'Other';
+      f.addEventListener('focus', () => { f.placeholder = ''; });
+      f.addEventListener('blur', () => { if (f.value === '') f.placeholder = 'Other'; });
+      f.addEventListener('input', () => {
+        const n = Math.round(+f.value);
+        f.classList.toggle('on', f.value !== '');
+        if (f.value === '' || !(n >= min && n <= max)) return;
+        segCtl().set(null, true); set(n); changed();
+      });
+      f.addEventListener('change', () => { if (f.value !== '') { f.value = Math.max(min, Math.min(max, Math.round(+f.value || min))); f.dispatchEvent(new Event('input')); } });
+      f.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); f.dispatchEvent(new Event('change')); launch(); } });
+      return f;
+    };
+    if (kind !== 'time') {
+      const COUNTS = [10, 30, 50];
+      const cv = st.count === null ? 'inf' : COUNTS.includes(st.count) ? st.count : null;   // null: a typed number
+      const own = ownIn(() => ctl.count, 1, 120, cv === null && typed.has('count') ? st.count : '', 'How many questions (1–120)', n => { st.count = n; typed.add('count'); });
+      ctl.count = UI.seg(g2, COUNTS.map(n => ({ value: n, label: String(n) })).concat(kind === 'count' ? [{ value: 'inf', label: '∞' }] : []),
+        { value: cv, label: 'How many questions', onChange: v => {
+          own.value = ''; own.classList.remove('on'); typed.delete('count');
+          st.count = v === 'inf' ? null : v; changed(); paintSettings();
+        } });
+      ctl.count.el.append(own);
+      const inf = ctl.count.btns.find(x => x._opt.value === 'inf');
+      if (inf) tip(inf, 'Endless: stop whenever you like.');
+    }
+    if (kind === 'both') {
+      const MINS = [10, 30, 60];
+      const tv = st.timing === 'pace' ? 'pace' : MINS.includes(st.minutes) ? st.minutes : null;   // null: a typed number
+      const mins = ownIn(() => tseg, 1, 180, tv === null && typed.has('mins') ? st.minutes : '', 'Minutes (1–180)', n => { st.timing = 'custom'; st.minutes = n; typed.add('mins'); });
+      const tseg = UI.seg(g2, [{ value: 'pace', label: 'Test pace' }, ...MINS.map(m => ({ value: m, label: `${m} min` }))],
+        { value: tv, label: 'Time limit', onChange: v => {
+          mins.value = ''; mins.classList.remove('on'); typed.delete('mins');
+          if (v === 'pace') st.timing = 'pace'; else { st.timing = 'custom'; st.minutes = v; }
+          changed();
+        } });
+      tseg.el.append(mins);
+      tip(tseg.btns[0], 'Paced to each question’s difficulty, like the test.');
+    }
+    if (kind === 'time') {
+      const BOX = [10, 30, 60];
+      const bv = BOX.includes(st.box) ? st.box : null;   // null: a typed number of minutes
+      const own = ownIn(() => bseg, 5, 180, bv === null && st.box && typed.has('box') ? st.box : '', 'Minutes (5–180)', n => { st.box = n; typed.add('box'); });
+      const bseg = UI.seg(g2, BOX.map(m => ({ value: m, label: `${m} min` })), { value: bv, label: 'Time limit: as many as you can', onChange: v => { own.value = ''; own.classList.remove('on'); typed.delete('box'); st.box = v; changed(); } });
+      bseg.el.append(own);
+    }
     ctl.countHelp = helpLine(g2, '');
-    // 3. Difficulty (P11)
-    const g3 = group(grid, 'Difficulty', 'sDiff');
+    ctl.timeHelp = helpLine(g2, '');
+    // Difficulty (P11)
+    const g3 = group(colR, 'Difficulty', 'sDiff');
     const dz = UI.seg(g3, [{ value: 'forme', label: 'For me' }, { value: 'standard', label: 'Standard' }], { value: standard() ? 'standard' : 'forme', label: 'Difficulty', onChange: v => { st.zone = v === 'standard' ? 'off' : (st._zone || 'stretch'); changed(); paintSettings(); } });
-    tip(dz.btns[0], 'Aimed at your odds: chosen from how you’ve done in each skill and how hard each type has been for everyone.');
-    tip(dz.btns[1], 'Pick the tiers and levels yourself.');
+    tip(dz.btns[0], 'Aimed at you: chosen from how you’ve done in each skill and how hard each type has been for everyone.');
+    tip(dz.btns[1], 'Pick the tiers yourself.');
     if (!standard()) {
       const aim = UI.seg(g3, [{ value: 'warm', label: 'Warm-up' }, { value: 'stretch', label: 'Stretch' }, { value: 'challenge', label: 'Challenge' }], { value: st.zone, label: 'Aim', onChange: v => { st.zone = v; st._zone = v; changed(); paintBar(); } });
       ['80% or more likely right', '60–80% likely right', '35–60% likely right'].forEach((t, i) => tip(aim.btns[i], t));
       const unplaced = selectedSkills().filter(s => !s.placed);
-      if (unplaced.length) helpLine(g3, `For me starts after 8 answers in a skill. Not placed yet: ${unplaced.slice(0, 4).map(s => `${s.short || s.name} (${s.to_place ?? 8} to go)`).join(', ')}${unplaced.length > 4 ? ` +${unplaced.length - 4}` : ''}. Those are served like module 1 (7 Easy · 8 Medium · 7 Hard).`);
+      if (unplaced.length) {   // just "practice more"; the skills and counts are the hover text
+        const tipTxt = `For me starts after 8 answers in a skill. Not placed yet: ${unplaced.slice(0, 4).map(s => `${s.short || s.name} (${s.to_place ?? 8} to go)`).join(', ')}${unplaced.length > 4 ? ` +${unplaced.length - 4}` : ''}. Those are served like module 1 (7 Easy · 8 Medium · 7 Hard).`;
+        helpLine(g3, 'Practice more to unlock.').title = tipTxt;
+      }
     } else {
       const tierCount = d => [...B.sel].filter(t => ((B.byT.get(t) || {}).tiers || []).includes(d)).length;
       ctl.tiers = UI.seg(g3, TIERS.map(d => ({ value: d, label: TIER_WORD[d], n: tierCount(d) })), { multi: true, value: st.tiers, label: 'Tiers', onChange: v => {
@@ -1027,61 +1099,17 @@
         st.tiers = v; tierHelp.textContent = ''; changed();
       } });
       const tierHelp = helpLine(g3, '');
-      const lv = h('div', { class: 'lvls', role: 'group', 'aria-label': 'Levels 1 to 7' });
-      const lvCount = L => [...B.sel].filter(t => Object.values((B.byT.get(t) || {}).levels || {}).some(x => x.level === L)).length;
-      LEVELS.forEach(L => {
-        const b = h('button', { type: 'button', 'aria-pressed': String(st.levels.includes(L)), 'data-tier': LEVEL_TIER(L), 'aria-label': `Level ${L}, ${lvCount(L)} types` }, h('span', { text: `L${L}` }), h('small', { text: String(lvCount(L)) }));
-        b.addEventListener('click', () => {
-          const on = st.levels.includes(L);
-          if (on && st.levels.length === 1) { lv.classList.remove('shake'); void lv.offsetWidth; lv.classList.add('shake'); return; }
-          st.levels = on ? st.levels.filter(x => x !== L) : [...st.levels, L].sort();
-          b.setAttribute('aria-pressed', String(!on)); changed();
-        });
-        lv.append(b);
-      });
-      g3.append(lv);
-      const rough = allTypes().filter(t => Object.values(t.levels || {}).some(x => x.rough)).length;
-      tip(UI.triCheck(g3, { label: `Include rough levels · ${rough}`, checked: st.unmeasured, onChange: v => { st.unmeasured = v; changed(); } }).el,
-        'A level is rough until 20 students have answered that type; ratings move with every clean first try.');
       const tmix = UI.seg(g3, [{ value: 'any', label: 'Any' }, { value: 'module1', label: 'Like module 1 (7/8/7)' }, { value: 'module2_upper', label: 'Like the harder module 2 (3/8/11)' }], { value: st.tier_mix, label: 'Mix', onChange: v => { st.tier_mix = v; changed(); } });
       tip(tmix.btns[2], 'Aiming above 580? The harder module 2 is 11 Hard of 22.');
-      const ad = UI.switch(g3, { checked: st.adaptive && st.order !== 'ramp', label: 'Adaptive: step up a tier after 2 first-try rights in a skill, down after a miss', disabled: st.order === 'ramp', onChange: v => { st.adaptive = v; changed(); } });
+      UI.switch(g3, { checked: st.adaptive && st.order !== 'ramp', label: 'Adaptive: step up a tier after 2 first-try rights in a skill, down after a miss', disabled: st.order === 'ramp', onChange: v => { st.adaptive = v; changed(); } });
       if (st.order === 'ramp') helpLine(g3, 'Off while Order is Easiest first.');
-      void ad;
     }
   }
-  function paintSheet() {
+
+  // Tab 2, Feedback: what you are told, and the help while you solve
+  function paintFeedbackTab(host) {
     const st = B.st;
-    const grid = h('div', { class: 'sset' });
-    sheetBody.replaceChildren(grid);
-    // 4. Format
-    const g4 = group(grid, 'Format', 'sFormat');
-    const fv = st.formats.length === 2 ? 'both' : st.formats[0];
-    UI.seg(g4, [{ value: 'both', label: 'Both' }, { value: 'mcq', label: 'Multiple choice' }, { value: 'spr', label: 'Grid-in' }], { value: fv, label: 'Format', onChange: v => { st.formats = v === 'both' ? ['mcq', 'spr'] : [v]; changed(); paintFormatHelp(); } });
-    ctl.fmtHelp = helpLine(g4, '');
-    const selT = () => [...B.sel].map(t => B.byT.get(t)).filter(Boolean);
-    const hasBox = (key, label) => UI.triCheck(g4, { label, checked: st.has.includes(key), onChange: v => { st.has = v ? [...st.has, key] : st.has.filter(x => x !== key); changed(); } });
-    if (B.bank.desmos_way) hasBox('desmos', `Only types with a Desmos way (${selT().filter(t => t.desmos).length})`);
-    hasBox('official', `Only types built from official questions (${allTypes().filter(t => t.official).length} of ${B.byT.size})`);
-    // 5. Timing
-    const g5 = group(grid, 'Timing', 'sTiming');
-    const endless = st.count === null || !!st.box;
-    const tm = UI.seg(g5, [{ value: 'off', label: 'Untimed' }, { value: 'pace', label: 'Test pace', disabled: endless, why: endless ? 'An endless set has no length to pace' : null }, { value: 'custom', label: endless && !st.box ? 'Sprint' : 'Custom' }],
-      { value: endless && st.timing === 'pace' ? 'off' : st.timing, label: 'Timing', onChange: v => { st.timing = v; changed(); paintSettings(); } });
-    tip(tm.btns[0], 'A stopwatch counts up.');
-    tip(tm.btns[1], 'Paced to each question’s difficulty, like the test.');
-    if (st.timing === 'custom') {
-      const m = h('input', { class: 'field', type: 'number', min: 1, max: 180, value: st.minutes, 'aria-label': 'Minutes' });
-      m.addEventListener('change', () => { st.minutes = Math.max(1, Math.min(180, Math.round(+m.value || 16))); m.value = st.minutes; changed(); });
-      g5.append(h('div', { class: 'inline' }, m, h('span', { class: 'meta', text: endless && !st.box ? 'minutes: as many as you can' : 'minutes' })));
-    }
-    ctl.timeHelp = helpLine(g5, '');
-    if (st.timing !== 'off' || st.box) {
-      tip(UI.switch(g5, { checked: st.pace_alert, label: 'Pace alert on each question', onChange: v => { st.pace_alert = v; savePrefs(); } }).el, 'The stopwatch turns amber-deep past that question’s budget.');
-      UI.switch(g5, { checked: st.two_passes, label: 'Two passes: offer Skip past 1.5× the budget', onChange: v => { st.two_passes = v; changed(); } });
-    }
-    // 6. Answers shown
-    const g6 = group(grid, 'Answers shown', 'sFeedback', 'wide');
+    const g6 = group(host, 'Answers shown', 'sFeedback');
     [['instant', 'After each question', 'The key, your mistake by name and the explanation, right away.'],
       ['retry', 'After I retry', 'Wrong? We name the mistake your answer comes from, not the key. Up to 3 tries; only the first counts.'],
       ['end', 'At the end, like a test', 'No feedback until you finish. Change answers, skip around, Check Your Work.']].forEach(([v, l, help]) => {
@@ -1089,49 +1117,69 @@
       inp.addEventListener('change', () => { st.feedback = v; if (v === 'end' && st.repairs === 'next') st.repairs = 'end'; changed(); paintSettings(); });
       g6.append(tip(h('label', { class: 'radio-row', 'data-feedback': v }, inp, h('span', { class: 'rl', text: l })), help));
     });
-    const sub6 = h('div', { class: 'sub' });
-    g6.append(sub6);
-    lab(sub6, 'Ask how sure');
-    tip(UI.seg(sub6, [{ value: 'ask', label: 'Ask' }, { value: 'off', label: 'Off' }], { value: st.confidence, label: 'Check asks how sure (Sure · Unsure · Guess)', onChange: v => { st.confidence = v; savePrefs(); } }).el,
+    const g6b = group(host, 'Asking how sure', 'sSure');
+    tip(UI.seg(g6b, [{ value: 'ask', label: 'Ask' }, { value: 'off', label: 'Off' }], { value: st.confidence, label: 'Check asks how sure (Sure · Unsure · Guess)', onChange: v => { st.confidence = v; savePrefs(); } }).el,
       'Check asks how sure (Sure · Unsure · Guess). A Guess counts half and opens the explanation.');
-    UI.switch(sub6, { checked: st.hints, label: 'Hints before I answer', onChange: v => { st.hints = v; changed(); } });
-    lab(sub6, 'Solve before seeing choices');
-    tip(UI.seg(sub6, [{ value: 'off', label: 'Off' }, { value: 'hard', label: 'Medium and Hard' }, { value: 'all', label: 'All' }], { value: st.cover, label: 'Solve before seeing choices', onChange: v => { st.cover = v; changed(); } }).el,
+    const g6c = group(host, 'While I solve', 'sSolve');
+    UI.switch(g6c, { checked: st.hints, label: 'Hints before I answer', onChange: v => { st.hints = v; changed(); } });
+    lab(g6c, 'Solve before seeing choices');
+    tip(UI.seg(g6c, [{ value: 'off', label: 'Off' }, { value: 'hard', label: 'Medium and Hard' }, { value: 'all', label: 'All' }], { value: st.cover, label: 'Solve before seeing choices', onChange: v => { st.cover = v; changed(); } }).el,
       'The options stay covered until you type what you got.');
-    UI.switch(sub6, { checked: st.worked_first, label: 'New types: show me one worked first', onChange: v => { st.worked_first = v; changed(); } });
-    // 7. After a miss
-    const g7 = group(grid, 'After a miss', 'sRepairs');
+    UI.switch(g6c, { checked: st.worked_first, label: 'New types: show me one worked first', onChange: v => { st.worked_first = v; changed(); } });
+    // pace: moved here from the Set tab (the user); shown for timed sets only, as before
+    if (st.box || (st.timing !== 'off' && st.count !== null)) {
+      const gp = group(host, 'Pace', 'sPace');
+      swInfo(gp, { checked: st.pace_alert, label: 'Pace alert on each question', onChange: v => { st.pace_alert = v; savePrefs(); } },
+        'Every question has a time budget, worked out from the real test. With this on, the stopwatch turns amber once you go past the budget, so you notice when you are running slow. It never stops you.');
+      swInfo(gp, { checked: st.two_passes, label: 'Two passes: offer Skip past 1.5× the budget', onChange: v => { st.two_passes = v; changed(); } },
+        'The real-test habit of skipping a hard question and coming back to it. With this on, once you have spent one and a half times a question’s budget you are offered Skip, and skipped questions wait for a second pass at the end.');
+    }
+  }
+
+  // Tab 3, After a miss: repairs, the final round, and what else joins the set
+  function paintMissTab(host) {
+    const st = B.st;
+    const g7 = group(host, 'After a miss', 'sRepairs');
     const endM = st.feedback === 'end';
     tip(UI.seg(g7, [{ value: 'next', label: 'Next question', disabled: endM, why: endM ? 'In test mode, misses become a Fix set at the end.' : null }, { value: 'later', label: '3 questions later', disabled: endM }, { value: 'end', label: 'At the end' }, { value: 'off', label: 'Off' }],
       { value: st.repairs, label: 'After a miss', onChange: v => { st.repairs = v; changed(); } }).el, 'One like it follows a miss: the same trap, new numbers.');
     UI.triCheck(g7, { label: 'Final round: re-ask what I missed at the end, new numbers', checked: st.final_round, onChange: v => { st.final_round = v; changed(); } });
-    // 7a. Mix in reviews (P12)
-    const g7a = group(grid, 'Mix in reviews', 'sReviews');
+    const g7a = group(host, 'Mix in reviews', 'sReviews');
     UI.seg(g7a, [{ value: 'off', label: 'Off' }, { value: 2, label: '2 per set' }, { value: 20, label: '20%' }], { value: st.review_mix, label: 'Mix in reviews', onChange: v => { st.review_mix = v; changed(); } });
     UI.triCheck(g7a, { label: 'Only from the skills I picked', checked: st.review_from === 'picked', onChange: v => { st.review_from = v ? 'picked' : 'all'; changed(); } });
     helpLine(g7a, forecastText());
-    lab(g7a, 'Mix in due SAT words');
-    tip(UI.seg(g7a, [{ value: 'off', label: 'Off' }, { value: 2, label: '2 per set' }, { value: 'all', label: 'All due' }], { value: st.words_mix, label: 'Mix in due SAT words', onChange: v => { st.words_mix = v; changed(); } }).el,
+    const g7b = group(host, 'Mix in due SAT words', 'sWords');
+    tip(UI.seg(g7b, [{ value: 'off', label: 'Off' }, { value: 2, label: '2 per set' }, { value: 'all', label: 'All due' }], { value: st.words_mix, label: 'Mix in due SAT words', onChange: v => { st.words_mix = v; changed(); } }).el,
       'Reviewed at set breaks, filed to Words, never counted in Math.');
-    // 8. Order
-    const g8 = group(grid, 'Order', 'sOrder');
+  }
+
+  // Tab 4, Order and more: order, spread, format, and the defaults
+  function paintMoreTab(host) {
+    const st = B.st;
+    const endless = st.count === null;   // a time-only set has no end to ramp to
+    const g8 = group(host, 'Order', 'sOrder');
     const ord = UI.seg(g8, [{ value: 'mixed', label: 'Mixed' }, { value: 'grouped', label: 'Grouped by skill' }, { value: 'ramp', label: 'Easiest first', disabled: endless, why: endless ? 'An endless set has no end to ramp to' : null }, { value: 'mixup', label: 'Mix-up' }],
       { value: st.order, label: 'Order', onChange: v => { st.order = v; changed(); paintSettings(); } });
     ['Never serves 3 questions of one type in a row.', 'One skill at a time.', 'By level where measured, by tier otherwise.', 'Look-alike types interleaved, so you learn which method applies.'].forEach((t, i) => tip(ord.btns[i], t));
-    // 9. Spread
-    const g9 = group(grid, 'Spread', 'sSpread');
+    const g9 = group(host, 'Spread', 'sSpread');
     const oneDomain = new Set(selectedSkills().map(s => s.domain)).size <= 1;
     const spr = UI.seg(g9, [{ value: 'even', label: 'Even across skills' }, { value: 'blueprint', label: 'Like the test', disabled: oneDomain, why: oneDomain ? 'Your pick sits in one domain' : null }],
       { value: oneDomain ? 'even' : st.mix, label: 'Spread', onChange: v => { st.mix = v; changed(); } });
     tip(spr.btns[1], 'Algebra and Advanced Math 35% each, the other two 15%.');
-    // 10. Repeats
-    const g10 = group(grid, null, 'sRepeats', 'wide');
-    g10.append(h('p', { class: 'lock' }, icon('save', 16), h('span', { text: 'Never repeats. Nothing you were shown in a set, a test or the diagnostic comes back, except the exact replays you ask for above. No practice question copies a College Board question.' })));
-    // 11. Footer
-    const foot = h('div', { class: 'sfoot' }, h('span', { class: 'help', id: 'sfootNote', text: B.foot || (B.fromLink ? 'Settings from the link, not your defaults' : 'Saved as your defaults') }),
+    const g4 = group(host, 'Format', 'sFormat');
+    const fv = st.formats.length === 2 ? 'both' : st.formats[0];
+    UI.seg(g4, [{ value: 'both', label: 'Both' }, { value: 'mcq', label: 'Multiple choice' }, { value: 'spr', label: 'Grid-in' }], { value: fv, label: 'Format', onChange: v => { st.formats = v === 'both' ? ['mcq', 'spr'] : [v]; changed(); paintFormatHelp(); } });
+    ctl.fmtHelp = helpLine(g4, '');
+    const selT = () => [...B.sel].map(t => B.byT.get(t)).filter(Boolean);
+    const hasBox = (key, label) => UI.triCheck(g4, { label, checked: st.has.includes(key), onChange: v => { st.has = v ? [...st.has, key] : st.has.filter(x => x !== key); changed(); } });
+    if (B.bank.desmos_way) hasBox('desmos', `Only types with a Desmos way (${selT().filter(t => t.desmos).length})`);
+    hasBox('official', `Only types built from official questions (${allTypes().filter(t => t.official).length} of ${B.byT.size})`);
+    const g11 = group(host, 'Defaults', 'sDefaults');
+    g11.append(tip(h('p', { class: 'lock' }, icon('save', 16), h('span', { text: 'Never repeats a question you were shown' })),
+      'Nothing you were shown in a set, a test or the diagnostic comes back, except the exact replays you ask for. No practice question copies a College Board question.'));
+    g11.append(h('div', { class: 'sfoot' }, h('span', { class: 'help', id: 'sfootNote', text: B.foot || (B.fromLink ? 'Settings from the link, not your defaults' : 'Saved as your defaults') }),
       h('button', { type: 'button', class: 'quiet', text: 'Reset to defaults', onclick: () => { B.st = Object.assign({}, DEF); B.fromLink = false; B.foot = null; changed(); paintSettings(); } }),
-      h('button', { type: 'button', class: 'btn sm', id: 'worksheet', text: 'Printable worksheet', disabled: $('#start').disabled || null, onclick: worksheet }));
-    grid.append(foot);
+      h('button', { type: 'button', class: 'btn sm', id: 'worksheet', text: 'Printable worksheet', disabled: $('#start').disabled || null, onclick: worksheet })));
   }
   function footNote(text) { B.foot = text; const e = $('#sfootNote'); if (e) e.textContent = text; }
   function forecastText() {
@@ -1169,12 +1217,11 @@
       : st.timing === 'off' ? '' : st.count === null && !st.box ? `Sprint: as many as you can in ${st.minutes} min` : `${st.minutes} min for the set`);
   }
 
-  /* ---------------------------------------------------------------- the action bar */
+  /* ---------------------------------------------------------------- the action bar: a short summary and Start (which opens the window) */
   const FB_WORD = { instant: 'answers after each', retry: 'answers after a retry', end: 'answers at the end' };
   const REP_WORD = { next: 'repairs next', later: 'repairs 3 later', end: 'repairs at the end', off: 'repairs off' };
-  const POOL_WORD = { new: 'New questions', redo: 'Open mistakes', checks: 'Check-ins', review: 'Due for review', untried: 'Never tried', seen: 'Seen before', marked: 'Marked', saved: 'Saved' };
   const dur = m => (m < 60 ? `~${Math.max(1, Math.round(m))} min` : `~${Math.round(m / 30) / 2} h`);
-  // One line: how many and how long. The rest of the summary is the Settings button's tooltip; the skills are the checkmarks.
+  // Line 1: how many and how long. Line 2: the skills and types picked. The rest is the window's footer (B.setText) and this line's tooltip (B.sumText).
   function paintBar() {
     if (!B.bank) return;
     const st = B.st, p = B.preview;
@@ -1192,8 +1239,7 @@
     const time = st.timing === 'off' ? 'Untimed' : st.timing === 'pace' ? 'Test pace' : sprint ? `Sprint ${st.minutes} min` : `Timed ${st.minutes} min`;
     B.setText = [time, FB_WORD[st.feedback], REP_WORD[st.repairs], st.final_round ? 'final round on' : null, st.review_mix !== 'off' ? `${st.review_mix === 2 ? '2 reviews' : '20% reviews'} mixed in` : null,
       { mixed: 'mixed', grouped: 'grouped', ramp: 'easiest first', mixup: 'mix-up' }[st.order]].filter(Boolean).join(' · ');
-    $('#openSettings').setAttribute('aria-description', B.setText);
-    $('#jump').textContent = `${POOL_WORD[st.pool] || 'Questions'} · ${diff} ↓`;
+    $('#l2').textContent = B.sel.size ? [plural(skills.length, 'skill'), plural(ts, 'type')].join(' · ') : '';   // the choices behind it are the window's footer
     const startB = $('#start'), reason = $('#reason');
     if (starting) return;
     let why = '';
@@ -1206,6 +1252,7 @@
     reason.hidden = !why;
     const ws = $('#worksheet');
     if (ws) ws.disabled = startB.disabled;
+    syncWin();
   }
 
   /* ---------------------------------------------------------------- starting */
@@ -1231,8 +1278,7 @@
       paintBar();
     }
   }
-  const start = () => { if (!$('#start').disabled) create(body()); };
-  const worksheet = () => { if (!$('#start').disabled) create(body({ source: 'worksheet', feedback: 'end', timing: 'off', repairs: 'end', final_round: false })); };
+    const worksheet = () => launch({ source: 'worksheet', feedback: 'end', timing: 'off', repairs: 'end', final_round: false });
 
   /* ---------------------------------------------------------------- deep links (1.10) */
   function fromLink() {
@@ -1252,8 +1298,6 @@
     if (g('marked') === '1') st.pool = 'marked';
     if (g('from')) st.from = g('from');
     if (g('tiers')) { st.tiers = list('tiers').filter(x => TIERS.includes(x)); st.zone = 'off'; }
-    if (g('levels')) { st.levels = list('levels').flatMap(x => { const m = x.split('-').map(Number); return m.length === 2 ? LEVELS.filter(l => l >= m[0] && l <= m[1]) : [m[0]]; }).filter(l => LEVELS.includes(l)); st.zone = 'off'; }
-    if (g('unmeasured')) st.unmeasured = g('unmeasured') !== '0';
     if (g('formats')) st.formats = list('formats').filter(x => x === 'mcq' || x === 'spr');
     if (g('timing')) { const t = g('timing'); if (t.startsWith('custom')) { st.timing = 'custom'; st.minutes = +t.split(':')[1] || 16; } else st.timing = t === 'untimed' ? 'off' : t; }
     if (g('feedback')) st.feedback = g('feedback');
@@ -1306,6 +1350,8 @@
 
   /* ---------------------------------------------------------------- Your sets */
   let setsTabV = 'active', setsLimit = 10, setsFilter = { topic: '', kind: '', misses: false };
+  // Your sets lives inside the presets fold: open it, then scroll
+  function showSets() { if ($('#presetBody').hidden) $('#presetTog').click(); $('#sets').scrollIntoView({ behavior: 'smooth' }); }
   function setsTab(v) { setsTabV = v; setsLimit = 10; paintSets(); }
   async function loadSets() {
     try { B.sets = await UI.api('/drill', { quiet: true }); } catch (_) { B.sets = { active: [], recent: [], shared: [], error: true }; }
@@ -1433,8 +1479,8 @@
   function skeleton() {
     const host = $('#treeBody');
     host.replaceChildren();
+    host.className = 'skel-tree dgrid';
     for (let i = 0; i < 4; i++) host.append(h('div', { class: 'dcard skel-card' }, UI.skel(null, 'lines:3')));
-    $('#settings').replaceChildren(h('p', { class: 'meta', text: 'Settings load with your preferences…' }));
   }
   async function load() {
     skeleton();
@@ -1449,6 +1495,7 @@
     try { bank = await UI.api('/bank?subject=math', { quiet: true }); }
     catch (e) {
       const host = $('#treeBody');
+      host.className = '';
       host.replaceChildren();
       UI.cardError(host, () => load(), 'The server is not answering.');
       $('#start').disabled = true; $('#start').textContent = 'Start practice';
@@ -1470,10 +1517,12 @@
 
   $('#q').addEventListener('input', onSearch);
   $('#q').addEventListener('keydown', searchKeys);
-  $('#start').addEventListener('click', start);
-  $('#openSettings').prepend(icon('settings', 18));
-  $('#openSettings').addEventListener('click', openSettings);
-  if (UI.tooltip) UI.tooltip($('#openSettings'), () => B.setText || '');   // a tap opens the sheet, which says it all
+  { // the presets fold: closed until asked for, remembered
+    const tg = $('#presetTog'), body = $('#presetBody'), open = ls.get('satf.pr.presets', false);
+    body.hidden = !open; tg.setAttribute('aria-expanded', String(open));
+    tg.addEventListener('click', () => { body.hidden = !body.hidden; tg.setAttribute('aria-expanded', String(!body.hidden)); ls.set('satf.pr.presets', !body.hidden); });
+  }
+  $('#start').addEventListener('click', () => { if (!$('#start').disabled) openStart(); });   // the bar's Start opens the window; the quick paths (Ready cards, the search's Enter, Your sets) still create directly
   tip($('#l1'), () => B.sumText || '');
   if (UI.keys && UI.keys.register) {
     try { UI.keys.register('page', { '/': { does: 'Search or build a set', run: () => { $('#q').focus(); } } }, { label: 'Practice' }); } catch (_) {}

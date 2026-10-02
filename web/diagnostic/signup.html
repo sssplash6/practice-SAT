@@ -29,8 +29,9 @@
 <body data-page="diagnostic">
 <header id="bar"></header>
 
-<main class="page">
-  <form class="gate rise" id="form" novalidate>
+<main class="page" id="main" tabindex="-1">
+  <div class="gate rise" id="wait"><span class="skel line lg" style="width: 60%"></span><span class="skel line"></span></div>
+  <form class="gate rise" id="form" novalidate hidden>
     <div><span class="k">Diagnostic</span><h1 class="h1">Where should the results go?</h1></div>
     <div class="pair">
       <label><span class="k">First name</span><input class="field" id="first" autocomplete="given-name" required maxlength="60"></label>
@@ -39,14 +40,30 @@
     <label><span class="k">Email</span><input class="field" id="email" type="email" autocomplete="email" required inputmode="email" spellcheck="false"></label>
     <p class="error" id="err" role="alert" hidden></p>
     <div class="go"><button class="pill" type="submit" id="go">See my results</button><span class="note">One email, to confirm it</span></div>
+    <p class="note" id="pk" hidden>Or <button type="button" class="quiet" id="pkgo">save with a passkey</button>: no email, and the results open at once.</p>
   </form>
+  <div class="gate rise" id="sent" hidden>
+    <div><span class="k">Diagnostic</span><h1 class="h1">Check your email</h1></div>
+    <p id="sentText"></p>
+    <p class="note" role="status" id="sentState">This page opens your results as soon as you confirm.</p>
+    <div class="go"><button type="button" class="pill" id="pkgo2" hidden>Save with a passkey</button><button type="button" class="quiet" id="again">Use a different email</button></div>
+  </div>
+  <div class="gate rise" id="later" hidden>
+    <div><span class="k">Diagnostic</span><h1 class="h1">Finish the test first</h1></div>
+    <p>Your results are ready once the last module is handed in.</p>
+    <div class="go"><a class="pill" href="/diagnostic/">Back to the diagnostic</a></div>
+  </div>
 </main>
 
 <nav id="tabs"></nav>
 <script src="/assets/ui.js"></script>
 <script src="/assets/kit.js"></script>
 <script src="/assets/charts.js"></script>
+<script src="/me/account.js"></script>
 <script>
+/* The diagnostic's gate (R38, shell-me U19): a saved learner (passkey, verified email or
+   Google, account.saved) goes straight to the results with no form. Anyone else gives a
+   name and an email; the results open here once the email's link is tapped. */
 (() => {
   'use strict';
   const { $ } = UI;
@@ -54,8 +71,27 @@
   const sid = new URL(location.href).searchParams.get('s');
   if (!sid) { location.replace('/diagnostic/'); return; }
   const report = `/results/report/?id=${encodeURIComponent(sid)}`;
-
+  const show = id => ['wait', 'form', 'sent', 'later'].forEach(x => { $('#' + x).hidden = x !== id; });
   const fail = text => { $('#err').textContent = text; $('#err').hidden = false; };
+  // results come back 200 once this learner is saved or the email is confirmed
+  const check = () => UI.api(`/session/${encodeURIComponent(sid)}/results`, { quiet: true }).then(() => true, e => {
+    if (e && e.status === 409) return 'finish';
+    return false;
+  });
+  check().then(r => {
+    if (r === true) { location.replace(report); return; }
+    if (r === 'finish') { show('later'); return; }
+    show('form');
+    UI.acct.passkeyReady().then(ok => { $('#pk').hidden = !ok; });
+  });
+  const viaPasskey = async () => {
+    try { await UI.acct.savePasskey(); UI.acct.flash('Saved. This passkey signs you in wherever your passwords sync.'); location.href = report; }
+    catch (e) { if (!e || e.name !== 'NotAllowedError') { show('form'); fail('Couldn’t save a passkey here. Use your email instead.'); } }
+  };
+  $('#pkgo').addEventListener('click', viaPasskey);
+  $('#pkgo2').addEventListener('click', viaPasskey);
+  let poll = 0;
+  $('#again').addEventListener('click', () => { clearInterval(poll); show('form'); $('#email').focus(); });
 
   $('#form').addEventListener('submit', async e => {
     e.preventDefault();
@@ -68,8 +104,17 @@
     $('#err').hidden = true;
     $('#go').setAttribute('aria-busy', 'true');
     try {
-      await UI.api(`/session/${encodeURIComponent(sid)}/signup`, { method: 'POST', body: { first, last, email } });
-      location.href = report;
+      const r = await UI.api(`/session/${encodeURIComponent(sid)}/signup`, { method: 'POST', body: { first, last, email } });
+      $('#go').removeAttribute('aria-busy');
+      if (r && r.verified) { location.href = report; return; }
+      const masked = email.replace(/^(.)[^@]*(@.*)$/, (m, a, b) => `${a}•••${b}`);
+      $('#sentText').textContent = r && r.email === 'outbox'
+        ? 'Email isn’t switched on for this site yet, so no confirmation can arrive. Save with a passkey instead to see your results now.'
+        : `We sent a confirmation to ${masked}. Tap Confirm in it, on any device.`;
+      $('#pkgo2').hidden = !(r && r.email === 'outbox') || $('#pk').hidden;
+      show('sent');
+      clearInterval(poll);
+      poll = setInterval(async () => { if (await check() === true) { clearInterval(poll); location.href = report; } }, 3000);
     } catch (ex) {
       $('#go').removeAttribute('aria-busy');
       // a name the server refuses says so; a 422 with no words of its own is the email

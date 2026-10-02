@@ -120,7 +120,7 @@
     option_steps: [1, null, 0, 1], wrong_steps: ['32 ÷ 8 = 4', null, 'r = 32', '32 × 2 = 64'],
     desmos: { exprs: [{ latex: 'd=32' }, { latex: 'r=\\frac{d}{2}' }], note: 'Type the diameter, then r = d/2: Desmos shows r = 16.', bounds: { left: -5, right: 40, bottom: -5, top: 40 } },
     rungs: ['strike', 'step', 'example'], watch_for: ['doubling instead of halving', 'giving the diameter'],
-    why: 'Open mistake: gave the diameter instead · 1 of 2 clean answers left',
+    why: 'Open mistake: gave the diameter instead · 1 of 2 correct answers left',
   });
   FX.forEach((q, i) => { q.number = i + 1; });
   const quiz = {

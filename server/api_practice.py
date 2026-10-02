@@ -37,7 +37,7 @@ class Strict(BaseModel):
 
 @router.get("/api/map")
 def get_map(x_learner: str | None = Header(default=None)) -> dict:
-    """The 19 topics with mastery and open mistakes, and the coach's pick."""
+    """The 19 topics with mastery and open mistakes, and the mentor's pick."""
     learner = learner_of(x_learner)
     board = progress.board(learner)
     return {"topics": list(board.values()),
@@ -169,7 +169,7 @@ def _habits(learner: str, rows: list, traps: list) -> tuple[list[dict], dict | N
 
 def bank(learner: str, subject: str = "math", tz: int = 0) -> dict:
     """The builder's one read: the catalogue with this learner's record on
-    every skill and type, the coach, the pools' counts and the extras."""
+    every skill and type, the mentor, the pools' counts and the extras."""
     if subject == "rw":
         return _rw_bank(learner, tz)
     from . import estimate, ratings
@@ -340,7 +340,7 @@ def bank(learner: str, subject: str = "math", tz: int = 0) -> dict:
 @router.get("/api/bank")
 def get_bank(subject: str = Query(default="math", max_length=8), x_learner: str | None = Header(default=None),
              tz: int = Depends(deps.tz_of)) -> dict:
-    """GET /api/bank?subject=math: the builder's tree, counts and coach."""
+    """GET /api/bank?subject=math: the builder's tree, counts and mentor."""
     return bank(learner_of(x_learner), deps.subject_param(subject), tz)
 
 

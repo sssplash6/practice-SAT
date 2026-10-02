@@ -13,218 +13,273 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800;900&family=DM+Mono:wght@400;500&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap">
 <link rel="stylesheet" href="/assets/ui.css">
+<link rel="stylesheet" href="/assets/runner.css">
 <style>
-  /* A report is a diagnosis, so it ends in the cure: every miss is one tap
-     from a fresh question on the same template. */
-  .head { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 24px; align-items: end; }
-  .head .num { font-size: clamp(64px, 11vw, 112px); display: block; margin-top: 10px; }
-  .head .meta { display: block; margin-top: 12px; color: var(--ink); }
-  .fix { display: grid; justify-items: end; gap: 10px; }
+  /* The score report (spec 3.5 §1, reports.md SR1-SR25). One sitting, read top down:
+     what the score means, where the points went, why each miss happened, then every
+     question, then the skills, judgement and time. Every region keeps its frame. */
+  .rp { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 24px; }
+  .rp > * { grid-column: 1 / -1; min-width: 0; }
+  .rp > [hidden] { display: none; }
+  .rp-helper { font: 400 14px/1.45 var(--font); color: var(--soft); text-wrap: pretty; }
+  .rp-line { font: 400 15px/1.5 var(--font); color: var(--ink); text-wrap: pretty; }
+  .rp-line b, .rp-num { font-family: var(--mono); font-weight: 500; font-variant-numeric: tabular-nums; }
+  .rp-row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px; }
+  .rp-chip { display: inline-flex; align-items: center; gap: 6px; min-height: 28px; padding: 0 10px; border-radius: 999px; background: var(--tile-2); color: var(--ink); font: 500 13px var(--font); border: 0; text-decoration: none; }
+  button.rp-chip, a.rp-chip { cursor: pointer; }
+  .rp-chip.ok { background: var(--wash-2); box-shadow: inset 0 0 0 1.5px var(--amber); }
+  .rp-chip.line { background: none; box-shadow: inset 0 0 0 1px var(--line); color: var(--soft); }
+  .rp-qchip { font-family: var(--mono); }
+  .rp-dot::before { content: ""; display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: var(--amber); margin-right: 2px; }
+  .rp-cols { display: grid; grid-template-columns: repeat(var(--c, 2), minmax(0, 1fr)); gap: 12px; }
 
-  .block { margin-top: 44px; }
-  .block > .k { display: block; margin-bottom: 14px; }
-  .doms { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
-  .dom { padding: 18px 18px 16px; border-radius: 10px; background: var(--tile); display: grid; gap: 12px; }
-  .dom .nm { font: 600 14px var(--font); }
-  .dom .foot { display: flex; justify-content: space-between; align-items: baseline; }
-  .dom .word { font: 700 15px var(--font); }
-  .dom .rs { font: 500 12.5px var(--mono); color: var(--soft); font-variant-numeric: tabular-nums; }
+  .rp-info { min-height: 24px; padding: 0 6px; margin-left: 2px; font: 500 14px/1 var(--font); color: var(--soft); vertical-align: 1px; }
+  .card-head .rp-headr { margin-left: auto; display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+  .card-head .rp-headr .seg + .help { display: none; }
+  .rp-alone { display: grid; gap: 14px; justify-items: start; }
+  .rp-inline { display: inline-flex; vertical-align: middle; gap: 6px; }
+  .rp-chip[aria-pressed="true"] { background: var(--wash-2); box-shadow: inset 0 0 0 1.5px var(--amber); }
+  .rp-chip b.rp-num { font-weight: 500; color: var(--soft); }
+  .rp-count { justify-items: start; align-content: center; gap: 6px; }
+  .rp-count .rp-num { font-size: 18px; color: var(--soft); }
+  .rp-tools .k { flex: none; }
+  .rp-tools .rp-row { gap: 6px 10px; }
+  .rp-tools .chips + .help:empty, .rp-tools .seg + .help:empty { display: none; }
+  .rp-legend .legend { margin: 0; }
+  .rp-vrow > .rp-row { justify-content: flex-start; }
+  #review .cell-grid { --cell: 40px; }
+  /* the question filters live in the one Filters sheet on every screen, not as a row of dropdowns */
+  #review .filters > :not(.filters-open) { display: none; }
+  #review .filters > .filters-open { display: inline-flex; }
+  @media (max-width: 759px) { #review .cell-grid { --cell: 44px; --cols: 7; --cell-gap: 3px; } }
 
-  .mods { display: grid; gap: 10px; }
-  .mrow { display: grid; grid-template-columns: 30px minmax(0, 1fr); gap: 10px; align-items: center; }
-  .mrow .k { margin: 0; }
-  .cells { display: flex; flex-wrap: wrap; gap: 6px; }
-  .cell {
-    appearance: none; border: 0; cursor: pointer; width: 36px; height: 36px; border-radius: 9px;
-    font: 600 13px var(--font); font-variant-numeric: tabular-nums;
-    background: var(--tile); color: var(--soft);
-    transition: transform .12s var(--ease), box-shadow .16s var(--ease);
+  /* header */
+  #head { display: grid; gap: 12px; }
+  .rp-back { display: flex; flex-wrap: wrap; gap: 6px 16px; font: 500 14px var(--font); }
+  .rp-back a { color: var(--soft); text-decoration: none; }
+  .rp-back a:hover { color: var(--ink); text-decoration: underline; }
+  .rp-title { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px 24px; align-items: flex-end; }
+  .rp-title > div:first-child { flex: 1 1 340px; min-width: 0; }
+  .rp-rw select.field { width: auto; }
+  .rp-title h1 { font: 800 clamp(22px, 3.2vw, 30px)/1.2 var(--font); letter-spacing: -.02em; }
+  .rp-acts { display: flex; flex-wrap: wrap; justify-content: flex-end; align-items: center; gap: 8px; }
+  .rp-split { display: inline-flex; align-items: stretch; }
+  .rp-split > .pill:first-child { border-top-right-radius: 0; border-bottom-right-radius: 0; padding-right: 16px; }
+  .rp-split > .pill + .pill { border-top-left-radius: 0; border-bottom-left-radius: 0; padding: 0 12px; margin-left: 1px; }
+  .rp-strip { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; padding: 10px 14px; border-radius: var(--radius); background: var(--tile-2); font: 500 14px var(--font); }
+  .rp-note { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+  .rp-note q { font: italic 400 15px/1.4 var(--serif, var(--font)); }
+  .rp-note .field { max-width: 360px; }
+
+  /* recovery and second look: one status line under the hero */
+  .rp-status { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 14px; padding: 10px 14px; border-radius: var(--radius); background: var(--tile-2); font: 500 14px var(--font); }
+  .rp-status .k { margin: 0; }
+  .rp-status .rp-sep { color: var(--soft); }
+  .rp-status .rp-num { font-size: 13.5px; }
+
+  /* hero */
+  .rp-hero { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 24px; align-items: start; }
+  .rp-gauge { grid-column: span 5; display: grid; gap: 10px; justify-items: center; }
+  .rp-facts { grid-column: span 7; display: grid; gap: 12px; }
+  .rp-big { font: 800 clamp(44px, 7vw, 64px)/1 var(--font); letter-spacing: -.03em; font-variant-numeric: tabular-nums; }
+  .rp-facts details summary { cursor: pointer; font: 600 14px var(--font); }
+  .rp-facts details ul { margin: 8px 0 0 18px; display: grid; gap: 4px; color: var(--soft); font-size: 14px; }
+  .rp-facts details > div { margin-top: 8px; display: grid; gap: 8px; }
+  .rp-rw { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+  .rp-rw .field { width: 110px; }
+
+  /* tiles */
+  #tiles .stats { --cols: 5; }
+  #tiles .stats[data-n="8"] { --cols: 4; }
+
+  /* takeaways, value, habits */
+  .rp-cards { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+  .rp-card { display: grid; gap: 8px; align-content: start; padding: 16px; border-radius: 12px; background: var(--tile-2); }
+  .rp-card h3 { font: 700 15.5px/1.3 var(--font); }
+  .rp-card .rp-row { margin-top: 4px; }
+  .rp-vrow { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 6px 12px; padding: 12px 0; border-top: 1px solid var(--line); }
+  .rp-vrow:first-of-type { border-top: 0; }
+  .rp-vbar { grid-column: 1 / -1; height: 6px; border-radius: 3px; background: var(--tile-2); overflow: hidden; }
+  .rp-vbar i { display: block; height: 100%; width: calc(var(--rp) * 100%); background: var(--amber); }
+  .rp-mist-wrap { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 24px; align-items: start; }
+  .rp-mist-wrap > #mistakes { grid-column: span 8; }
+  .rp-mist-wrap > #value { grid-column: span 4; }
+
+  /* mistakes */
+  .rp-group { display: grid; gap: 8px; margin-top: 16px; }
+  .rp-group > h3 { font: 700 12px/1 var(--font); letter-spacing: .08em; text-transform: uppercase; color: var(--soft); }
+  .rp-mrow { position: relative; display: grid; grid-template-columns: 22px minmax(0, 1fr) auto; gap: 4px 12px; padding: 12px 14px; border-radius: 10px; background: var(--paper); align-items: start; }
+  .rp-mrow:hover { background: var(--tile-2); }
+  .rp-mrow:has(.rp-mtitle:focus-visible) { outline: 2px solid var(--amber-deep); outline-offset: 1px; }
+  /* the title is the row's Review button; its ::after stretches over the whole row, the menu sits above it */
+  .rp-mtitle { background: none; border: 0; padding: 0; font: inherit; color: inherit; text-align: left; cursor: pointer; }
+  .rp-mtitle:focus-visible { outline: none; }
+  .rp-mtitle::after { content: ""; position: absolute; inset: 0; border-radius: 10px; }
+  .rp-mrow > .rp-menu { position: relative; z-index: 1; align-self: start; }
+  .rp-mrow.fixed .rp-mtitle { text-decoration: line-through; text-decoration-thickness: 1px; color: var(--soft); }
+  .rp-mrow .glyph { width: 20px; height: 20px; margin-top: 2px; }
+  .rp-mrow h4 { font: 600 15px/1.35 var(--font); }
+  .rp-mrow .meta { font-size: 12.5px; }
+  .rp-mrow .st { font: 500 13px var(--font); color: var(--ink); }
+
+  /* review */
+  .rp-tools { display: grid; gap: 10px; }
+  .rp-tools .rp-row.lab > .k { margin-right: 4px; }
+  .rp-legend { margin-top: 4px; }
+  .rp-grid-group { display: grid; gap: 8px; margin-top: 14px; }
+  .rp-grid-group > h3 { font: 600 14px var(--font); }
+  .rp-grid-group .meta { font-weight: 500; }
+  .rp-cells .cell { overflow: visible; }
+  .rp-cells .cell small { position: absolute; bottom: 2px; left: 0; right: 0; text-align: center; font: 500 8.5px/1 var(--mono); }
+  .rp-cells .cell[data-saver]::before { content: "▲"; position: absolute; left: 3px; bottom: 2px; font: 700 8px/1 var(--font); color: var(--amber-deep); background: none; width: auto; height: auto; clip-path: none; }
+  .cell[data-whatif="right"]::after { content: "✓" !important; color: var(--amber-deep) !important; font-size: 11px !important; }
+  .cell[data-whatif="wrong"]::after { content: "✕" !important; color: var(--ink) !important; font-size: 11px !important; }
+  .cell[data-whatif] { outline: 2px dashed var(--ink); outline-offset: 1px; }
+  .cell[aria-selected="true"] { outline: 2.5px solid var(--amber-deep); outline-offset: 1.5px; }
+  /* colour by time, cause, points, level, crowd: four warm steps, always with a corner letter or number */
+  [data-colour]:not([data-colour="status"]):not([data-colour="difficulty"]) .cell[data-shade] { border-color: transparent; text-shadow: none; }
+  [data-colour]:not([data-colour="status"]):not([data-colour="difficulty"]) .cell[data-shade="0"] { background: #F4EFE8; color: var(--ink); }
+  [data-colour]:not([data-colour="status"]):not([data-colour="difficulty"]) .cell[data-shade="1"] { background: #DDD3C6; color: var(--ink); }
+  [data-colour]:not([data-colour="status"]):not([data-colour="difficulty"]) .cell[data-shade="2"] { background: #A89A88; color: #fff; }
+  [data-colour]:not([data-colour="status"]):not([data-colour="difficulty"]) .cell[data-shade="3"] { background: #5B5046; color: #fff; }
+  [data-colour]:not([data-colour="status"]):not([data-colour="difficulty"]) .cell[data-shade]::after { content: attr(data-corner); color: inherit; opacity: .85; }
+  [data-colour]:not([data-colour="status"]):not([data-colour="difficulty"]) .cell:not([data-shade]) { opacity: .45; }
+  .rp-steps-key { display: flex; flex-wrap: wrap; gap: 6px 14px; font: 500 12.5px var(--mono); color: var(--soft); }
+  .rp-steps-key i { display: inline-block; width: 14px; height: 14px; border-radius: 4px; vertical-align: -2px; margin-right: 5px; }
+  .rp-table .ans { display: block; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .rp-table .mist { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+  .rp-table table { table-layout: auto; min-width: 1180px; }
+  .rp-table td { white-space: nowrap; vertical-align: top; }
+  .rp-table td .ans { max-width: 140px; }
+  .rp-table td .mist { white-space: normal; min-width: 220px; max-width: 280px; }
+  .rp-table td small { display: block; margin-top: 2px; }
+  .rp-whatif { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; padding: 10px 14px; border-radius: 10px; background: var(--wash); }
+
+  /* modules, domains, skills, split, judgement, pace */
+  .rp-mods { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+  .rp-mod { display: grid; gap: 10px; padding: 16px; border-radius: 12px; background: var(--tile-2); }
+  .rp-doms { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
+  .rp-dom { display: grid; gap: 8px; align-content: start; padding: 16px; border-radius: 12px; background: var(--tile-2); }
+  .rp-dom h3 { font: 600 14px/1.3 var(--font); }
+  .rp-dom .v { font: 500 28px/1 var(--mono); }
+  .rp-lvl { display: flex; gap: 3px; }
+  .rp-lvl i { flex: 1; height: 8px; border-radius: 2px; background: var(--mat); }
+  .rp-lvl i.on { background: var(--ink); }
+  .rp-srow { display: grid; grid-template-columns: minmax(0, 1.6fr) 90px minmax(0, 1fr) 150px; gap: 6px 16px; align-items: center; padding: 10px 0; border-top: 1px solid var(--line); cursor: pointer; }
+  .rp-srow:first-child { border-top: 0; }
+  .rp-srow > .rp-row { justify-content: flex-end; }
+  .rp-srow .nm { display: flex; align-items: center; gap: 8px; font: 600 14.5px var(--font); }
+  .rp-srow .glyph { width: 18px; height: 18px; flex: none; }
+  .rp-mb { position: relative; height: 8px; border-radius: 4px; background: var(--mat); }
+  .rp-mb i { position: absolute; inset: 0 auto 0 0; width: calc(var(--a) * 100%); border-radius: 4px; background: var(--ink); transition: width .6s var(--ease); }
+  .rp-mb b { position: absolute; top: -3px; bottom: -3px; width: 2px; left: calc(var(--b) * 100%); background: var(--soft); }
+  .rp-bars { display: grid; gap: 8px; }
+  .rp-bar { display: grid; grid-template-columns: 150px minmax(0, 1fr) auto; gap: 12px; align-items: center; border: 0; background: none; padding: 4px 0; font: inherit; text-align: left; color: var(--ink); cursor: pointer; }
+  .rp-bar .t { height: 10px; border-radius: 5px; background: var(--tile-2); overflow: hidden; }
+  .rp-bar .t i { display: block; height: 100%; width: calc(var(--rp) * 100%); background: var(--amber); }
+  .rp-conf { display: grid; grid-template-columns: auto repeat(2, minmax(0, 1fr)); gap: 6px; max-width: 420px; }
+  .rp-conf > * { padding: 8px 10px; border-radius: 8px; background: var(--tile-2); font: 500 13.5px var(--mono); text-align: center; border: 0; }
+  .rp-conf > .h { background: none; font: 600 12px var(--font); color: var(--soft); text-align: left; }
+  .rp-conf button { cursor: pointer; color: var(--ink); }
+  .rp-judge { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px 24px; }
+  .rp-judge > div { display: grid; gap: 8px; align-content: start; }
+  .rp-judge h3, .rp-sub { font: 700 12px/1 var(--font); letter-spacing: .08em; text-transform: uppercase; color: var(--soft); }
+  #next { border-top: 1px solid var(--line); padding-top: 24px; background: none; }
+
+  /* the sticky strip on a phone: the primary, Jump to, Review, more */
+  .rp-stick { display: none; }
+  .rp > section, .rp-mist-wrap > section { scroll-margin-top: 72px; }
+  @media (max-width: 759px) { .rp > section, .rp-mist-wrap > section { scroll-margin-top: 128px; } }
+  /* on a phone a head's control row takes its own line, so the ⓘ's 44px hit area never lies over it ("By cause") */
+  @media (max-width: 759px) { .card-head > .rp-headr { flex-basis: 100%; margin-top: 6px; } }
+  /* a phone or a coarse pointer: chips and info buttons get a 44px hit area, as the kit's .btn.sm does */
+  @media (max-width: 759px), (pointer: coarse) {
+    .rp-info, button.rp-chip, a.rp-chip { position: relative; }
+    .rp-info::before, button.rp-chip::before, a.rp-chip::before { content: ""; position: absolute; left: 50%; top: 50%; width: max(100%, 44px); height: max(100%, 44px); transform: translate(-50%, -50%); }
   }
-  .cell.ok { background: var(--amber); color: var(--ink-deep); }
-  .cell.no { background: var(--ink); color: #FFFFFF; }
-  .cell[aria-current="true"] { box-shadow: 0 0 0 2px var(--paper), 0 0 0 4px var(--ink); }
-  .cell:active { transform: scale(.94); }
-
-  .detail { margin-top: 26px; padding: 26px 28px 28px; border-radius: 14px; background: var(--tile); max-width: 760px; }
-  .detail .q-skill .glyph { --gb: var(--tile); }
-  .detail .opt { background: var(--paper); }
-  .dnav { margin-top: 18px; display: flex; gap: 18px; }
-
-  .missed { display: grid; gap: 8px; }
-  .miss { display: grid; grid-template-columns: 22px minmax(0, 1fr) auto; gap: 12px; align-items: center;
-          padding: 12px 14px; border-radius: 10px; background: var(--tile); cursor: pointer; text-align: left;
-          appearance: none; border: 0; width: 100%; font: inherit; color: inherit; }
-  .miss .glyph { color: var(--ink); }
-  .miss .lbl { font: 600 14.5px var(--font); }
-  .miss .n { font: 500 12.5px var(--mono); color: var(--soft); }
-  @media (hover: hover) and (pointer: fine) { .miss:hover { background: var(--tile-2); } }
-
-  @media (max-width: 859px) { .doms { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-  @media (max-width: 560px) { .head { grid-template-columns: 1fr; } .fix { justify-items: start; } .detail { padding: 20px; } }
+  @media (max-width: 1099px) {
+    .rp-gauge, .rp-facts { grid-column: 1 / -1; }
+    .rp-mist-wrap > #mistakes, .rp-mist-wrap > #value { grid-column: 1 / -1; }
+    .rp-doms { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .rp-cards { grid-template-columns: minmax(0, 1fr); }
+  }
+  @media (max-width: 759px) {
+    .rp { gap: 16px; }
+    body[data-page="report"] .sections { display: none; }
+    .rp-stick { position: sticky; top: calc(56px + env(safe-area-inset-top, 0px)); z-index: 21; display: flex; flex-wrap: wrap; gap: 8px; align-items: center;
+      margin: 0 calc(-1 * var(--gutter)); padding: 8px var(--gutter); background: var(--paper); box-shadow: 0 1px 0 var(--line); }
+    .rp-stick[hidden] { display: none; }
+    .rp-stick select { flex: 1 1 120px; min-height: var(--touch); }
+    .rp-title { grid-template-columns: minmax(0, 1fr); }
+    .rp-acts { justify-content: flex-start; }
+    #tiles .stats, #tiles .stats[data-n="8"] { --cols: 2; }
+    .rp-mods, .rp-judge { grid-template-columns: minmax(0, 1fr); }
+    .rp-srow { grid-template-columns: minmax(0, 1fr) auto; }
+    .rp-srow .rp-mb { grid-column: 1 / -1; }
+    .rp-bar { grid-template-columns: minmax(0, 1fr) auto; }
+    .rp-bar .t { grid-column: 1 / -1; order: 3; }
+    .card-head .rp-headr { flex: 1 1 100%; margin-left: 0; min-width: 0; }
+  }
+  .rp-ptable, .rp-pack { display: none; }
+  @media print {
+    body.rp-packing .rp-pack { display: block; }
+    body.rp-packing .rp-pack .rp-ptable { display: table; }
+    body.rp-packonly main { display: none !important; }
+    .rp-ppage { break-before: page; }
+    body.rp-packonly .rp-ppage:first-child { break-before: auto; }
+    .rp-pfresh { break-inside: avoid; margin-bottom: 12px; }
+    .rp-pwork { height: 120px; border: 1px dashed #999; border-radius: 6px; margin-top: 8px; }
+    #bar, #tabs, .rp-stick, #next, .rp-tools, .rp-whatif, #rvbody { display: none !important; }
+    .rp { display: block; }
+    .rp > section { break-inside: avoid-page; margin-bottom: 16px; }
+    .rp > #review { break-inside: auto; }
+    .rp-ptable { display: table; width: 100%; border-collapse: collapse; font: 400 10.5px/1.35 var(--font); }
+    .rp-ptable th { text-align: left; font-weight: 700; border-bottom: 1px solid #000; padding: 4px 6px; }
+    .rp-ptable td { border-bottom: 1px solid #ccc; padding: 3px 6px; vertical-align: top; }
+    .rp-ptable tr { break-inside: avoid; }
+    .rp-ptable thead { display: table-header-group; }
+  }
 </style>
 </head>
 <body data-page="report">
 <header id="bar"></header>
 
-<main class="page">
-  <div class="head rise">
-    <div>
-      <span class="k" id="when"></span>
-      <span class="num" id="big">—</span>
-      <span class="meta" id="sub"></span>
+<main class="page" id="main" aria-busy="true">
+  <div class="rp-stick" id="stick" hidden></div>
+  <div class="rp" id="root">
+    <header id="head"></header>
+    <section id="hero" class="card" aria-label="Score"></section>
+    <section id="recovery" class="rp-status" aria-label="Recovery" hidden></section>
+    <section id="ledger" class="card" hidden></section>
+    <section id="compare" class="card" hidden></section>
+    <div class="rp-mist-wrap" id="mistwrap">
+      <section id="mistakes" class="card"></section>
+      <section id="value" class="card" hidden></section>
     </div>
-    <div class="fix" id="fix"></div>
+    <section id="takeaways" class="card" hidden></section>
+    <section id="tiles" aria-label="Summary"></section>
+    <section id="habits" class="card" hidden></section>
+    <section id="review" class="card"></section>
+    <section id="modules" class="card" hidden></section>
+    <section id="breakdown" class="card" hidden>
+      <div id="domains" hidden></div>
+      <div id="skills" hidden></div>
+      <div id="split" hidden></div>
+      <div id="format" hidden></div>
+    </section>
+    <section id="judgement" class="card" hidden></section>
+    <section id="pace" class="card" hidden></section>
+    <section id="next" hidden></section>
   </div>
-  <p class="error" id="err" hidden></p>
-
-  <section class="block rise rise-2" id="domsBlock" hidden><span class="k">Domains</span><div class="doms" id="doms"></div></section>
-  <section class="block rise rise-2" id="topicsBlock" hidden><span class="k">Topics</span><div class="missed" id="topics"></div></section>
-  <section class="block rise rise-3" id="missBlock" hidden><span class="k">Mistakes</span><div class="missed" id="missed"></div></section>
-  <section class="block rise rise-3"><span class="k">Questions</span><div class="mods" id="mods"></div>
-    <div class="detail" id="detail" hidden><div id="dq"></div>
-      <div class="dnav"><button type="button" class="quiet" id="prev">Previous</button><button type="button" class="quiet" id="nextq">Next</button></div>
-    </div>
-  </section>
 </main>
 
 <nav id="tabs"></nav>
 <script src="/assets/ui.js"></script>
 <script src="/assets/kit.js"></script>
 <script src="/assets/charts.js"></script>
-<script>
-(() => {
-  'use strict';
-  const { api, h, glyph, TOPIC, DOMAINS, band, day, $ } = UI;
-  UI.shell();
-  const id = new URL(location.href).searchParams.get('id');
-  const KIND = { mock: 'Section', module: 'Module', diagnostic: 'Diagnostic', drill: 'Practice', challenge: 'Challenge', practice: 'Practice' };
-  let R = null, cur = -1, cells = [];
-
-  function feedback(item) {
-    return {
-      correct: item.correct, given: item.given, answer: item.answer, mistake: item.mistake,
-      rationale: item.rationale,
-      answer_index: item.type === 'mcq' ? 'ABCD'.indexOf(item.answer) : null,
-    };
-  }
-
-  function open(i) {
-    if (i < 0 || i >= R.review.length) return;
-    cur = i;
-    cells.forEach((c, j) => c.setAttribute('aria-current', String(j === i)));
-    const item = R.review[i];
-    $('#detail').hidden = false;
-    const ctrl = UI.question($('#dq'), item, {});
-    ctrl.reveal(feedback(item), { open: true });
-    if (item.given === null || item.given === undefined || item.given === '') {
-      $('#dq').querySelector('.verdict').prepend(h('p', { class: 'note', text: 'Not answered' }));
-    }
-    const had = document.activeElement;
-    $('#prev').disabled = i === 0;
-    $('#nextq').disabled = i === R.review.length - 1;
-    if (had && had.disabled) (had.id === 'nextq' ? $('#prev') : $('#nextq')).focus();   // keep focus on the pair
-  }
-  $('#prev').addEventListener('click', () => open(cur - 1));
-  $('#nextq').addEventListener('click', () => { open(cur + 1); });
-
-  function paint(r) {
-    R = r;
-    const kind = KIND[r.mode] || 'Practice';
-    $('#when').textContent = `${day(r.finished || r.started)} · ${kind}`;
-    document.title = `${kind} · SAT Freshman`;
-
-    if (r.estimate) {
-      $('#big').textContent = band(r.estimate);
-      let sub = `Math · ${r.right}/${r.asked}`;
-      if (r.mode === 'mock' && r.estimate.route) sub += r.estimate.route === 'upper' ? ' · harder module 2' : ' · easier module 2';
-      if (r.estimate.capped) sub += ` · ${r.estimate.high} cap`;
-      $('#sub').textContent = sub;
-    } else {
-      $('#big').textContent = `${r.right}/${r.asked}`;
-      $('#sub').textContent = r.ms ? `${Math.max(1, Math.round(r.ms / 60000))} min` : '';
-    }
-
-    const misses = r.review.filter(q => !q.correct).length;
-    if (misses) {
-      const b = h('button', { type: 'button', class: 'pill', text: `Fix these · ${misses}` });
-      b.addEventListener('click', async () => {
-        b.setAttribute('aria-busy', 'true');
-        try {
-          const d = await api('/drill', { method: 'POST', body: { from_session: id } });
-          location.href = `/practice/session/?id=${encodeURIComponent(d.id)}`;
-        } catch (e) { b.removeAttribute('aria-busy'); $('#err').textContent = e.message; $('#err').hidden = false; }
-      });
-      $('#fix').append(b);
-    }
-
-    if (r.domains && r.domains.length) {
-      $('#domsBlock').hidden = false;
-      const short = Object.fromEntries(DOMAINS);
-      $('#doms').replaceChildren(...r.domains.map(d => {
-        const fill = h('i');
-        const el = h('div', { class: 'dom' }, h('span', { class: 'nm', text: short[d.domain] || d.domain }),
-          h('span', { class: 'mbar' }, fill),
-          h('div', { class: 'foot' }, h('span', { class: 'word', text: d.band }), h('span', { class: 'rs', text: `${d.right}/${d.asked}` })));
-        setTimeout(() => fill.style.setProperty('--m', d.mastery.toFixed(3)), 250);
-        return el;
-      }));
-    }
-    if (r.topics && r.topics.length) {
-      $('#topicsBlock').hidden = false;
-      $('#topics').replaceChildren(...r.topics.map(t => {
-        const fill = h('i');
-        fill.style.setProperty('--m', (t.before || 0).toFixed(3));
-        setTimeout(() => fill.style.setProperty('--m', (t.after || 0).toFixed(3)), 300);
-        return h('div', { class: 'miss', style: 'cursor:default' }, glyph(t.topic),
-          h('span', { class: 'lbl', text: (TOPIC[t.topic] || {}).short || t.name }),
-          h('span', { class: 'n', text: `${t.right}/${t.asked}` }));
-      }));
-    }
-
-    // the misses by name, each one opening its question
-    const named = [];
-    r.review.forEach((q, i) => { if (!q.correct) named.push([q, i]); });
-    if (named.length) {
-      $('#missBlock').hidden = false;
-      $('#missed').replaceChildren(...named.slice(0, 12).map(([q, i]) => {
-        const b = h('button', { type: 'button', class: 'miss' }, glyph(q.topic),
-          h('span', { class: 'lbl', text: q.mistake || (q.given === null || q.given === undefined ? 'Not answered' : UI.cap(q.skill || q.topic_name || '')) }),
-          h('span', { class: 'n', text: `Q${i + 1}` }));
-        b.addEventListener('click', () => { open(i); $('#detail').scrollIntoView({ behavior: UI.reduced() ? 'auto' : 'smooth', block: 'start' }); });
-        return b;
-      }));
-    }
-
-    // the question grid, one row per module
-    const rows = r.mode === 'mock' ? [['M1', 0, 22], ['M2', 22, r.review.length]] : [['', 0, r.review.length]];
-    cells = [];
-    $('#mods').replaceChildren(...rows.map(([label, a, b]) => {
-      const row = h('div', { class: 'cells' });
-      for (let i = a; i < b; i++) {
-        const q = r.review[i];
-        const blank = q.given === null || q.given === undefined || q.given === '';
-        const c = h('button', { type: 'button', class: 'cell ' + (q.correct ? 'ok' : blank ? '' : 'no'), text: String(i - a + 1),
-                                'aria-label': `Question ${i - a + 1}, ${q.correct ? 'right' : blank ? 'not answered' : 'wrong'}` });
-        c.addEventListener('click', () => open(i));
-        cells.push(c);
-        row.append(c);
-      }
-      return label ? h('div', { class: 'mrow' }, h('span', { class: 'k', text: label }), row) : row;
-    }));
-    const firstMiss = r.review.findIndex(q => !q.correct);
-    if (firstMiss >= 0) open(firstMiss);
-  }
-
-  (async () => {
-    if (!id) { location.href = '/results/'; return; }
-    try { paint(await api(`/session/${encodeURIComponent(id)}/results`)); }
-    catch (e) {
-      if (e.status === 403) { location.href = `/diagnostic/signup.html?s=${encodeURIComponent(id)}`; return; }
-      if (e.status === 409) { location.href = `/test/?s=${encodeURIComponent(id)}`; return; }
-      $('#err').textContent = e.status === 404 ? 'That sitting does not exist.' : e.message; $('#err').hidden = false;
-    }
-  })();
-})();
-</script>
+<script src="/assets/question.js"></script>
+<script src="/assets/runner.js"></script>
+<script src="/assets/results-ui.js"></script>
+<script src="/results/report/page.js"></script>
 </body>
 </html>

@@ -14,540 +14,528 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800;900&family=DM+Mono:wght@400;500&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap">
 <link rel="stylesheet" href="/assets/ui.css">
 <style>
-  /* A plan is four questions -- where you are, where you're going, the time
-     you have, what to focus on -- and a calendar drawn from them, redrawn from
-     today every time it is opened so a missed day never piles up. What each
-     practice day holds comes from the results; focus steers it. */
+  /* The study plan (spec 3.6, plan.md L1-L21, decisions 4 and 7): the landing, the
+     four-step wizard and the plan view in three tabs. Shared pieces are ui.css and
+     plan-ui.js; these rules lay the page out. */
+  .pl { padding-bottom: 120px; }
+  .pl * { min-width: 0; }
+  .pl h1, .pl h2, .pl h3, .pl p { margin: 0; }
+  .pl-sec { margin-top: 18px; }
+  .pl .row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; }
+  .pl .spread { justify-content: space-between; }
+  .pl .soft { color: var(--soft); }
+  .pl .ink { color: var(--ink); }
+  .pl .tag { display: inline-flex; align-items: center; height: 22px; padding: 0 9px; border-radius: 999px; background: var(--tile-2);
+    font: 600 11.5px/1 var(--font); color: var(--ink); white-space: nowrap; }
+  .pl .tag.or { background: var(--amber); color: var(--ink-deep); }
+  .pl .tag.line { background: none; box-shadow: inset 0 0 0 1.5px var(--ink); }
+  .pl .line-t { font: 400 14px/1.5 var(--font); color: var(--ink); }
+  .pl .card-head { margin-bottom: 12px; }
+  .pl .x { appearance: none; border: 0; background: none; width: 32px; height: 32px; border-radius: 8px; cursor: pointer; color: var(--soft); display: grid; place-items: center; }
+  .pl .x:hover { background: var(--tile-2); color: var(--ink); }
 
-  /* ---- the wizard */
-  .wiz { max-width: 860px; }
-  .steps { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; margin-bottom: 34px; }
-  .steps button {
-    appearance: none; border: 0; cursor: pointer; width: 100%; text-align: left;
-    display: flex; align-items: center; gap: 10px; padding: 12px 14px; border-radius: 12px;
-    background: var(--tile); color: var(--soft); font: 600 14px var(--font);
-    transition: background-color .16s var(--ease), color .16s var(--ease);
+  /* ---- title row, tiles */
+  .pl-title { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-start; gap: 10px 20px; }
+  .pl-title h1 { font: 800 28px/1.1 var(--font); letter-spacing: -.025em; }
+  .pl-title .meta { margin-top: 6px; }
+  .pl-tiles { display: grid; grid-template-columns: repeat(var(--n, 4), minmax(0, 1fr)); gap: 10px; margin-top: 14px; }
+  .pl-tiles .stat { display: grid; align-content: start; gap: 3px; padding: 11px 14px; }
+  .pl-tiles .stat-sub, .pl-tiles .quiet { font-size: 13px; line-height: 1.3; }
+  .pl-big { font: 500 28px/1 var(--mono); letter-spacing: -.03em; color: var(--ink); font-variant-numeric: tabular-nums; }
+  .pl-big small { font: 500 13px var(--mono); color: var(--soft); letter-spacing: 0; }
+  .pl-tiles .stat-sub { margin: 0; }
+  .pl-tiles .btn.sm, .pl-tiles .quiet, .pl-tiles .tag { justify-self: start; }
+  .pl-big small { white-space: nowrap; }
+  .pl-track { position: relative; height: 6px; border-radius: 3px; background: var(--mat); margin: 8px 0 4px; }
+  .pl-track > b { position: absolute; top: 0; bottom: 0; border-radius: 3px; }
+  .pl-track > b.gap { background: var(--amber); opacity: .3; }
+  .pl-track > b.band { background: var(--ink); opacity: .22; }
+  .pl-track > i { position: absolute; top: -4px; width: 3px; height: 14px; margin-left: -1.5px; border-radius: 2px; background: var(--ink); }
+  .pl-track > i.t { background: var(--amber); }
+  .pl-dots { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 4px; }
+  .pl-dots > span { display: grid; justify-items: center; gap: 3px; font: 500 10px var(--mono); color: var(--soft); }
+  .pl-dots i { width: 11px; height: 11px; border-radius: 50%; box-shadow: inset 0 0 0 1.5px var(--faint); position: relative; }
+  .pl-dots [data-s="done"] i, .pl-dots [data-s="made_up"] i { background: var(--ink); box-shadow: none; }
+  .pl-dots [data-s="partial"] i { background: linear-gradient(90deg, var(--ink) 50%, transparent 50%); box-shadow: inset 0 0 0 1.5px var(--ink); }
+  .pl-dots [data-s="missed"] i::after { content: ""; position: absolute; left: 2px; right: 2px; top: 4.75px; height: 1.5px; background: var(--soft); }
+  .pl-dots [data-today] i { box-shadow: inset 0 0 0 2px var(--amber); }
+  .pl-dots [data-today] { color: var(--ink); }
+  @media (max-width: 759px) {
+    /* the four tiles are one row to swipe, so the day comes straight after the title */
+    .pl-tiles { display: flex; gap: 8px; overflow-x: auto; scroll-snap-type: x mandatory; margin: 14px calc(-1 * var(--gutter)) 0; padding: 0 var(--gutter) 4px;
+      scroll-padding: 0 var(--gutter); scrollbar-width: none; }
+    .pl-tiles::-webkit-scrollbar { display: none; }
+    .pl-tiles > * { flex: 0 0 72%; scroll-snap-align: start; }
+    .pl-tiles .stat { padding: 12px; }
+    .pl-big { font-size: 26px; }
+    .pl-title h1 { font-size: 24px; }
   }
-  .steps b { flex: none; width: 24px; height: 24px; border-radius: 50%; display: grid; place-items: center;
-             font: 700 12px var(--font); box-shadow: inset 0 0 0 1.5px currentColor; }
-  .steps button[aria-current="step"] { background: var(--wash); color: var(--ink); box-shadow: inset 0 0 0 1.5px var(--amber); }
-  .steps button.done { color: var(--ink); }
-  .steps button.done b { background: var(--ink); color: var(--paper); box-shadow: none; }
-  @media (hover: hover) and (pointer: fine) { .steps button:not([aria-current="step"]):hover { background: var(--tile-2); } }
-  @media (max-width: 720px) { .steps span { display: none; } .steps button { justify-content: center; } }
 
-  .step { display: grid; gap: 26px; }
-  .block { display: grid; gap: 10px; }
-  .block > .k { display: block; }
-  .big { display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap; }
-  .big .num { font-size: clamp(56px, 9vw, 88px); }
-  .big .to { font: 800 30px var(--font); color: var(--faint); }
-  .gain { font: 700 14px var(--font); padding: 6px 12px; border-radius: 999px; background: var(--wash-2); color: var(--ink-deep); align-self: center; }
-  .ends { display: flex; justify-content: space-between; font: 500 12px var(--mono); color: var(--soft); }
-  /* the target on the same 200-800 scale, orange from where you are to where you're going */
-  #tgt::-webkit-slider-runnable-track { background: linear-gradient(to right, var(--mat) var(--a), var(--amber) var(--a) var(--p), var(--mat) var(--p)); }
-  #tgt::-moz-range-progress { background: none; }
-  .dates { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 2px; }
-  .dates input { width: auto; height: 38px; padding: 0 10px; font: 500 14px var(--font); margin-left: 8px; }
-  .dayrow { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; }
-  .dayrow input { flex: 1 1 220px; max-width: 380px; }
-  .dayrow .meta { color: var(--ink); }
-  .wk button { min-width: 42px; }
-  .choices button:disabled { color: var(--mat); cursor: default; }
+  /* ---- banners, tabs, the changelog */
+  .pl-banners { display: grid; gap: 10px; margin-top: 16px; }
+  .pl-banners:empty { display: none; }
+  .pl-banner { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px 12px; padding: 14px 16px; border-radius: 12px;
+    background: var(--wash); box-shadow: inset 3px 0 0 var(--amber); }
+  .pl-banner > p { font: 500 14.5px/1.45 var(--font); color: var(--ink); align-self: center; }
+  .pl-banner .help { margin: 0; grid-column: 1 / -1; }
+  .pl-banner .acts { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+  .pl-banner .chips > button { min-height: 34px; font-size: 13px; }
+  .pl-tabbar { position: sticky; top: 0; z-index: 6; background: var(--paper); margin-top: 20px; padding: 8px 0; }
+  @media (max-width: 759px) { .pl-tabbar { top: var(--bar, 56px); } }
 
-  .doms { display: grid; gap: 8px; }
-  .drow { display: grid; grid-template-columns: minmax(0, 1fr) 150px auto; gap: 18px; align-items: center;
-          padding: 12px 12px 12px 18px; border-radius: 12px; background: var(--tile); }
-  .drow .nm { font: 600 15px var(--font); }
-  .drow .mb { display: grid; gap: 5px; }
-  .drow .mb .meta { font-size: 11.5px; }
-  .seg { display: inline-flex; padding: 3px; border-radius: 10px; background: var(--paper); gap: 2px; }
-  .seg button { appearance: none; border: 0; cursor: pointer; padding: 7px 13px; border-radius: 8px; background: none;
-                font: 600 13.5px var(--font); color: var(--soft); transition: background-color .16s var(--ease), color .16s var(--ease); }
-  .seg button[aria-pressed="true"] { background: var(--ink); color: var(--paper); }
-  .seg button[data-v="focus"][aria-pressed="true"] { background: var(--amber); color: var(--ink-deep); }
-  .seg button:disabled { opacity: .35; cursor: default; }
-  @media (max-width: 620px) { .drow { grid-template-columns: minmax(0, 1fr) auto; } .drow .mb { grid-column: 1 / -1; grid-row: 2; } }
-  .glance { border-radius: 14px; background: var(--wash); padding: 18px 20px; display: grid; gap: 9px; }
-  .glance .k { display: block; margin-bottom: 2px; }
-  .glance p { display: flex; justify-content: space-between; gap: 16px; font: 500 14.5px var(--font); color: var(--soft); }
-  .glance p b { font-weight: 600; color: var(--ink); text-align: right; }
-  .wiz-foot { margin-top: 34px; display: flex; align-items: center; justify-content: space-between; gap: 16px; }
-  .wiz-foot .quiet { margin: 0; }
-  .wiz-foot .pill { margin-left: auto; }
+  /* ---- Plan tab */
+  .pl-cols { display: grid; grid-template-columns: minmax(0, 7.5fr) minmax(0, 4.5fr); gap: 16px; align-items: start; margin-top: 16px; }
+  .pl-stack { display: grid; gap: 16px; align-content: start; }
+  @media (max-width: 1079px) { .pl-cols { grid-template-columns: minmax(0, 1fr); } }
+  .pl-dayhead { display: grid; gap: 10px; }
+  .pl-dayhead .k { color: var(--ink); }
+  .pl-day-go { display: flex; flex-wrap: wrap; gap: 8px 10px; align-items: center; margin-top: 12px; }
+  .pl-day-go .pill { height: 40px; min-height: 0; min-width: 0; padding: 0 22px; border-radius: 10px; font-size: 14.5px; }
+  .pl-day-go .btn.pl-have { margin-top: 0; height: 40px; min-height: 0; padding: 0 14px; border-radius: 10px; font-size: 14px; }
+  .pl-have { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; margin-top: 12px; }
+  .pl-have .k { margin-right: 4px; }
+  .pl-have .chips { gap: 6px; }
+  .pl-have .chips > button { min-height: 34px; padding: 0 12px; font: 500 13px var(--mono); }
+  .pl-trim { margin-top: 10px; padding: 12px 14px; border-radius: 10px; background: var(--paper); box-shadow: inset 0 0 0 1px var(--line); display: grid; gap: 8px; }
+  .pl-trim p { font: 400 13.5px/1.5 var(--font); }
+  .pl-meter { margin-top: 14px; }
+  .pl-foot { margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--line); display: flex; flex-wrap: wrap; gap: 8px 12px; align-items: center; }
+  .pl-foot > p { font: 600 15px/1.4 var(--font); flex: 1 1 220px; }
+  .pl-check { display: grid; gap: 2px; margin-top: 10px; }
+  .pl-rest { padding: 18px 0 6px; display: grid; gap: 10px; justify-items: start; }
+  .pl-rest p { font: 500 15px/1.45 var(--font); }
+  .pl-week { display: grid; grid-template-columns: repeat(var(--n, 7), minmax(0, 1fr)); gap: 8px; margin-top: 12px; }
+  .pl-wd { appearance: none; border: 0; cursor: pointer; display: flex; flex-direction: row; flex-wrap: wrap; align-items: center; align-content: flex-start; gap: 3px 8px; padding: 8px 10px; border-radius: 10px;
+    background: var(--paper); box-shadow: inset 0 0 0 1px var(--line); text-align: left; color: var(--ink); font: inherit; min-height: 0; position: relative; }
+  .pl-wd .k { letter-spacing: .06em; }
+  /* the weekday and the date on two fixed lines in every cell, so the rows below line up */
+  .pl-wdn { display: flex; align-items: baseline; gap: 6px; line-height: 1.15; flex: 1 0 100%; }
+  .pl-wdn .n { font: 500 13px var(--mono); letter-spacing: 0; color: var(--ink); }
+  .pl-wdn .short { display: none; }
+  @media (max-width: 759px) { .pl-wdn .long { display: none; } .pl-wdn .short { display: inline; } }
+  .pl-wd .mono { font-size: 12px; }
+  .pl-wd[data-today] { box-shadow: inset 0 3px 0 var(--ink), inset 0 0 0 1px var(--ink); }
+  .pl-wd[aria-pressed="true"] { background: var(--wash); box-shadow: inset 0 0 0 2px var(--amber); }
+  .pl-wd[data-kind="off"] { background: repeating-linear-gradient(-45deg, var(--paper) 0 5px, var(--mat) 5px 6px); }
+  .pl-wd .ic { width: 14px; height: 14px; border-radius: 50%; box-shadow: inset 0 0 0 1.5px var(--ink); }
+  .pl-wd[data-kind="test"] .ic { border-radius: 4px; width: 18px; }
+  .pl-wd[data-kind="exam"] .ic { box-shadow: none; background: var(--amber); width: auto; height: auto; border-radius: 4px; padding: 1px 5px; font: 600 10px var(--mono); color: var(--ink-deep); }
+  .pl-wd[data-kind="rest"] .ic, .pl-wd[data-kind="eve"] .ic, .pl-wd[data-kind="off"] .ic { visibility: hidden; }
+  .pl-wd[data-status="done"] .ic, .pl-wd[data-status="made_up"] .ic { background: var(--ink); }
+  .pl-wd[data-status="partial"] .ic { background: linear-gradient(90deg, var(--ink) 50%, transparent 50%); }
+  .pl-wd .wbar { flex: 1 0 100%; margin-top: 2px; height: 3px; border-radius: 2px; background: var(--mat); overflow: hidden; }
+  .pl-wd .wbar > i { display: block; height: 100%; width: calc(var(--p, 0) * 100%); background: var(--ink); }
+  .pl-wd .dotc { position: absolute; top: 6px; right: 6px; }
+  @media (max-width: 759px) { .pl-week { gap: 4px; } .pl-wd { padding: 6px 5px; min-height: 0; } .pl-wd .k { font-size: 9.5px; letter-spacing: .02em; } .pl-wd .mono { font-size: 10.5px; } }
+  .pl-wk { margin-bottom: 14px; }
+  .pl .cal.plan .cal-d[data-wk] { box-shadow: inset 0 0 0 1px var(--ink); }
+  .pl-print-months .cal-tk, .pl-print .cal-tk { display: none !important; }
+  @media print { .cal-tk { display: none !important; } }
+  .cal-d .cal-tk { position: absolute; left: 7px; right: 7px; bottom: 5px; font: 500 10.5px var(--mono); color: var(--soft); display: grid; gap: 2px; }
+  .cal-d .cal-tk::after { content: ""; height: 3px; border-radius: 2px; background: linear-gradient(90deg, var(--ink) calc(var(--p, 0) * 100%), var(--mat) 0); }
+  .pl-weekhead { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; }
+  .pl-weekhead .h3 { margin-right: auto; }
+  .pl-theme { margin-top: 6px; font: 400 13.5px/1.45 var(--font); color: var(--soft); }
+  .pl-up { display: grid; }
+  .pl-up button { appearance: none; border: 0; background: none; cursor: pointer; text-align: left; padding: 9px 0; border-top: 1px solid var(--line);
+    display: grid; gap: 2px; font: inherit; color: var(--ink); }
+  .pl-up button:first-child { border-top: 0; }
+  .pl-up .d { font: 500 12.5px var(--mono); color: var(--soft); }
+  .pl-up .t { font: 500 14px/1.4 var(--font); }
+  .pl-up p { padding-top: 8px; border-top: 1px solid var(--line); font: 400 13px/1.5 var(--font); color: var(--soft); }
+  .pl-strip19 { display: grid; grid-template-columns: repeat(19, minmax(0, 1fr)); gap: 3px; margin-top: 10px; }
+  .pl-strip19 i { height: 16px; border-radius: 3px; box-shadow: inset 0 0 0 1.5px var(--faint); display: grid; place-items: center; font: 600 9px var(--font); font-style: normal; }
+  .pl-strip19 i[data-on] { background: var(--ink); color: var(--on-ink); box-shadow: none; }
+  .pl-phases { display: grid; gap: 6px; }
+  .pl-ph { padding: 10px 12px; border-radius: 10px; background: var(--paper); box-shadow: inset 0 0 0 1px var(--line); display: grid; gap: 3px; }
+  .pl-ph[data-now] { background: var(--wash); box-shadow: inset 3px 0 0 var(--amber); }
+  .pl-ph[data-now] b { font-weight: 800; }
+  .pl-ph b { font: 700 14px var(--font); }
+  .pl-ph .mono { font-size: 11.5px; }
+  .pl-ph span:last-child { font: 400 12.5px/1.4 var(--font); }
+  .pl-thumb { display: none; }
+  .pl-thumb[hidden] { display: none !important; }
+  @media (max-width: 759px) {
+    .pl-thumb { display: flex; align-items: center; gap: 10px; position: sticky; bottom: calc(68px + env(safe-area-inset-bottom, 0px)); z-index: 7;
+      margin: 18px calc(-1 * var(--gutter)) 0; padding: 10px var(--gutter); background: var(--paper); box-shadow: 0 -1px 0 var(--line); }
+    .pl-thumb p { flex: 1 1 auto; font: 500 13.5px/1.35 var(--font); }
+    .pl-thumb p .soft { display: block; font: 500 11px var(--mono); letter-spacing: .1em; text-transform: uppercase; }
+  }
 
-  /* ---- the plan */
-  .head { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 24px; align-items: end; }
-  .head .num { font-size: clamp(64px, 10vw, 104px); display: block; }
-  .head .meta { display: block; margin-top: 10px; color: var(--ink); }
-  .head .meta + .meta { margin-top: 4px; color: var(--soft); }
+  /* ---- landing */
+  .pl-hero { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); gap: 28px; padding: 36px; border-radius: 18px; background: var(--wash); }
+  .pl-hero h1 { font: 800 clamp(30px, 4vw, 44px)/1.05 var(--font); letter-spacing: -.035em; margin-top: 10px; text-wrap: balance; }
+  .pl-hero .lead { margin-top: 12px; font: 400 16px/1.5 var(--font); color: var(--soft); max-width: 52ch; }
+  .pl-hero .row { margin-top: 22px; }
+  .pl-hero .meta { margin-top: 10px; }
+  .pl-ready { display: grid; gap: 12px; align-content: start; padding: 18px; border-radius: 14px; background: var(--paper); }
+  .pl-ready .cal .cal-key { display: none; }
+  .pl .cal.plan.compact .cal-own, .pl .cal.plan.compact .cal-phase { display: none; }
+  .pl-mini { display: grid; gap: 10px; align-content: start; }
+  .pl-mini .stat { background: var(--paper); }
+  .pl-draft { grid-column: 1 / -1; display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; padding: 14px 16px; border-radius: 12px; background: var(--paper); }
+  .pl-draft p { flex: 1 1 240px; font: 500 14.5px/1.4 var(--font); }
+  .pl-bank { font: 500 13px/1.5 var(--mono); color: var(--soft); }
+  .pl-how ol { margin: 0; padding: 0; list-style: none; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+  .pl-how li { display: flex; align-items: center; gap: 12px; padding: 14px 16px; border-radius: 12px; background: var(--tile); font: 400 14px/1.4 var(--font); color: var(--soft); }
+  .pl-how li b { font-weight: 600; color: var(--ink); }
+  .pl-how .num-c { width: 28px; height: 28px; flex: none; border-radius: 50%; display: grid; place-items: center; background: var(--paper); font: 500 13px var(--mono); color: var(--ink); }
+  .pl-find { display: grid; gap: 8px; align-content: start; text-decoration: none; color: var(--ink); }
+  .pl-find-t { font: 600 15px/1.3 var(--font); }
+  @media (max-width: 759px) {
+    .pl-hero { grid-template-columns: minmax(0, 1fr); padding: 20px; gap: 20px; }
+    .pl-mini { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+    .pl-mini .stat { padding: 12px; }
+    .pl-mini .stat-v { font-size: 18px; }
+    .pl-how ol { grid-template-columns: minmax(0, 1fr); gap: 8px; }
+  }
 
-  /* the day the calendar has chosen, today unless another is tapped */
-  .task { margin-top: 26px; padding: 14px 14px 14px 18px; border-radius: 14px; background: var(--wash);
-          display: flex; align-items: center; flex-wrap: wrap; gap: 10px 16px; min-height: 72px; }
-  .task.rest { background: var(--tile); }
-  .task > .k { flex-basis: 100%; margin-bottom: -2px; }
-  .task .chips { display: flex; flex-wrap: wrap; gap: 6px; flex: 1 1 auto; }
-  .task .chip { background: var(--paper); height: 32px; font-size: 13.5px; }
-  .task .h2 { flex: 1 1 auto; }
-  .task .meta { color: var(--ink); white-space: nowrap; }
-  .task .pill { height: 44px; padding: 0 26px; }
-  .task .then { flex-basis: 100%; display: flex; align-items: center; flex-wrap: wrap; gap: 10px 16px;
-                padding-top: 10px; box-shadow: 0 -1px 0 var(--wash-2); }
+  /* ---- Plans list */
+  .pl-plans { display: grid; }
+  .pl-prow { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px 18px; align-items: start; padding: 14px 0; border-top: 1px solid var(--line); }
+  .pl-prow:first-child { border-top: 0; }
+  .pl-pmain { display: grid; gap: 6px; min-width: 0; }
+  .pl-prow .h3 { display: flex; flex-wrap: wrap; gap: 6px 10px; align-items: center; }
+  .pl-prow .acts { display: flex; flex-wrap: wrap; gap: 6px; justify-content: flex-end; align-items: center; }
+  @media (max-width: 759px) { .pl-prow { grid-template-columns: minmax(0, 1fr); } .pl-prow .acts { justify-content: flex-start; } }
+  .pl-dow { display: flex; gap: 4px; flex-wrap: wrap; }
+  .pl-dow span { display: grid; justify-items: center; min-width: 34px; padding: 3px 4px; border-radius: 6px; background: var(--tile); font: 500 10.5px var(--mono); color: var(--soft); }
+  .pl-dow span b { font-weight: 500; color: var(--ink); }
 
-  .cal { margin-top: 40px; }
-  .grid7 { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 6px; }
-  .dh { font: 500 10.5px var(--mono); color: var(--soft); text-align: center; padding-bottom: 4px; }
-  .cell { height: 64px; border-radius: 10px; background: var(--tile); position: relative;
-          display: grid; place-items: center; font: 500 11px var(--mono); color: var(--soft); }
-  @media (max-width: 560px) { .cell { height: 46px; } }
-  .cell.past { background: none; }
-  .cell .d { position: absolute; top: 6px; left: 8px; }
-  .mk { width: 10px; height: 10px; display: block; }
-  .mk.p { border-radius: 50%; box-shadow: inset 0 0 0 1.5px var(--ink); }
-  .mk.p.done { background: var(--ink); box-shadow: none; }
-  .mk.t { border-radius: 3px; box-shadow: inset 0 0 0 1.5px var(--ink); width: 14px; }
-  .mk.t.done { background: var(--ink); box-shadow: none; }
-  .cell.today { box-shadow: inset 0 0 0 1.5px var(--ink); background: var(--paper); }
-  .cell.exam { background: var(--amber); color: var(--ink-deep); font-weight: 600; }
-  button.cell { appearance: none; border: 0; padding: 0; cursor: pointer; transition: background-color .16s var(--ease); }
-  @media (hover: hover) and (pointer: fine) { button.cell:not(.exam):not([aria-pressed="true"]):hover { background: var(--tile-2); } }
-  .cell[aria-pressed="true"] { box-shadow: inset 0 0 0 1.5px var(--amber); background: var(--wash); color: var(--ink); }
-  .cell.exam[aria-pressed="true"] { box-shadow: inset 0 0 0 2px var(--ink-deep); background: var(--amber); }
-  .legend { margin-top: 14px; display: flex; gap: 18px; flex-wrap: wrap; font: 500 12px var(--mono); color: var(--soft); }
-  .legend span { display: inline-flex; align-items: center; gap: 7px; }
-  @media (max-width: 560px) { .head { grid-template-columns: 1fr; } .cell .d { top: 3px; left: 5px; font-size: 9.5px; } }
+  /* ---- wizard */
+  .wz-top { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-start; gap: 10px 20px; }
+  .wz-top h1 { font: 800 28px/1.1 var(--font); letter-spacing: -.025em; }
+  .wz-steps { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; margin-top: 18px; }
+  .wz-steps button { appearance: none; border: 0; cursor: pointer; display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 12px;
+    background: var(--tile); color: var(--soft); font: 600 14px var(--font); text-align: left; position: relative; min-height: var(--touch); }
+  .wz-steps button:disabled { cursor: default; opacity: .6; }
+  .wz-steps .c { width: 26px; height: 26px; flex: none; border-radius: 50%; display: grid; place-items: center; box-shadow: inset 0 0 0 1.5px var(--faint); font: 500 12.5px var(--mono); }
+  .wz-steps [data-done] { color: var(--ink); }
+  .wz-steps [data-done] .c { background: var(--ink); color: var(--on-ink); box-shadow: none; }
+  .wz-steps [aria-current="step"] { background: var(--wash); color: var(--ink); box-shadow: inset 0 0 0 1.5px var(--amber); }
+  .wz-steps [aria-current="step"] .c { box-shadow: inset 0 0 0 1.5px var(--amber); }
+  .wz-steps [data-err]::after { content: ""; position: absolute; top: 8px; right: 8px; width: 7px; height: 7px; border-radius: 50%; background: var(--ink); }
+  .wz-body { display: grid; grid-template-columns: minmax(0, 660px) 320px; gap: 28px; margin-top: 22px; align-items: start; justify-content: space-between; }
+  .wz-step { display: grid; gap: 22px; }
+  .wz-step > header p { margin-top: 6px; color: var(--soft); font: 400 14.5px/1.5 var(--font); }
+  .wz-field { display: grid; gap: 8px; }
+  .wz-field > .label { margin: 0; }
+  .wz-note { padding: 12px 14px; border-radius: 10px; background: var(--tile); display: flex; flex-wrap: wrap; gap: 8px 12px; align-items: center; font: 400 14px/1.45 var(--font); }
+  .wz-note p { flex: 1 1 240px; }
+  .wz-choice { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+  .wz-choice button { appearance: none; border: 0; cursor: pointer; text-align: left; padding: 14px; border-radius: 12px; background: var(--tile); display: grid; gap: 4px; font: inherit; color: var(--ink); }
+  .wz-choice button[aria-checked="true"] { background: var(--wash); box-shadow: inset 0 0 0 1.5px var(--amber); }
+  .wz-choice b { font: 600 15px var(--font); }
+  .wz-choice span { font: 400 13px/1.45 var(--font); color: var(--soft); }
+  .wz-range { position: relative; height: 40px; }
+  .wz-range svg { width: 100%; height: 40px; display: block; overflow: visible; }
+  .wz-gain { padding: 18px; border-radius: 14px; background: var(--wash); display: grid; gap: 10px; }
+  .wz-gain .row { gap: 10px 16px; }
+  .wz-gain .big { font: 500 30px/1 var(--mono); }
+  .wz-gain .big.t { color: var(--amber-deep); }
+  .wz-dates { display: grid; gap: 6px; }
+  .wz-date { appearance: none; border: 0; cursor: pointer; text-align: left; display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 2px 12px; align-items: center;
+    padding: 11px 14px; border-radius: 12px; background: var(--tile); font: inherit; color: var(--ink); }
+  .wz-date[aria-checked="true"] { background: var(--wash); box-shadow: inset 0 0 0 1.5px var(--amber); }
+  .wz-date b { font: 600 15px var(--font); }
+  .wz-date .meta { grid-column: 1; font-size: 12.5px; }
+  .wz-date .badge { grid-row: 1 / span 2; grid-column: 2; }
+  .wz-dates { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .wz-later > summary, .wz-more > summary { cursor: pointer; font: 600 14.5px var(--font); color: var(--ink); padding: 10px 0; min-height: var(--touch); display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+  .wz-later > .wz-dates { margin-top: 4px; }
+  .wz-later > summary::after, .wz-more > summary::after { content: "▾"; margin-left: 2px; color: var(--soft); font-size: 12px; }
+  .wz-later[open] > summary::after, .wz-more[open] > summary::after { content: "▴"; }
+  .wz-later > summary::-webkit-details-marker, .wz-more > summary::-webkit-details-marker { display: none; }
+  .wz-more { border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+  .wz-more > .wz-step { padding: 8px 0 18px; }
+  .wz-lab { display: flex; align-items: center; gap: 8px; }
+  .wz-sw { display: flex; align-items: center; gap: 10px; min-height: var(--touch); }
+  .wz-tog { justify-self: start; margin: 4px 0 0 -10px !important; font-size: 13.5px; color: var(--soft); }
+  .wz-seg3 > [aria-checked="true"]:nth-child(2) { box-shadow: inset 0 0 0 1.5px var(--line), 0 1px 2px rgba(30, 30, 30, .08); font-weight: 500; }
+  /* the score slider says its value in the box; the bubble shows only while dragging */
+  .wz .score-slider { padding-top: 4px; }
+  .wz .score-slider .bubble { top: -26px; opacity: 0; transition: opacity .15s; }
+  .wz .score-slider:has(input[type="range"]:active) .bubble, .wz .score-slider:has(input[type="range"]:focus-visible) .bubble { opacity: 1; }
+  .wz-ticks { position: absolute; left: 0; right: 0; top: 4px; height: var(--ctl); pointer-events: none; }
+  .wz-ticks b { position: absolute; top: calc(50% - 6px); height: 12px; border-radius: 3px; background: var(--faint); opacity: .45; }
+  .wz-ticks i { position: absolute; top: calc(50% - 9px); width: 2px; height: 18px; margin-left: -1px; border-radius: 1px; background: var(--soft); }
+  .wz-ticks i.you { background: var(--ink); }
+  .wz-ticks i::after { content: attr(data-l); position: absolute; top: 19px; left: 50%; transform: translateX(-50%); font: 500 10.5px var(--mono); color: var(--soft); white-space: nowrap; }
+  .wz-field:has(.wz-ticks) { padding-bottom: 12px; }
+  .wz-wd > button:focus-visible, .wz-wd select:focus-visible { outline-offset: -3px; }
+  .wz-tiles { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 6px; }
+  .wz-wd { display: grid; gap: 0; border-radius: 10px; overflow: hidden; background: var(--tile); }
+  .wz-wd > button { appearance: none; border: 0; cursor: pointer; display: grid; gap: 2px; justify-items: center; padding: 10px 4px 8px; background: transparent; font: inherit; color: var(--soft); min-height: var(--touch); }
+  .wz-wd > button b { font: 600 13.5px var(--font); color: var(--ink); }
+  .wz-wd > button span { font: 500 10px var(--mono); letter-spacing: .1em; }
+  .wz-wd[data-on] > button { background: var(--wash); color: var(--ink); }
+  .wz-wd select { border: 0; border-top: 1px solid var(--line); height: 34px; background: var(--paper); font: 500 12.5px var(--mono); text-align: center; width: 100%; }
+  .wz-wd select.diff { text-decoration: underline; text-underline-offset: 3px; }
+  .wz-wd .meta { font-size: 10px; text-align: center; padding: 4px 2px 6px; line-height: 1.3; }
+  .wz-wd.shake { animation: wzshake .3s; }
+  @keyframes wzshake { 25% { transform: translateX(-3px); } 75% { transform: translateX(3px); } }
+  @media (prefers-reduced-motion: reduce) { .wz-wd.shake { animation: none; } }
+  .wz-rows { display: grid; gap: 0; }
+  .wz-dom { padding: 14px 0; border-top: 1px solid var(--line); display: grid; gap: 10px; }
+  .wz-dom:first-child { border-top: 0; }
+  .wz-dom[data-state="focus"] { background: var(--wash); margin: 0 -14px; padding: 14px; border-radius: 12px; border-top-color: transparent; }
+  .wz-dom[data-state="strong"] { box-shadow: inset 0 0 0 1.5px var(--ink); margin: 0 -14px; padding: 14px; border-radius: 12px; }
+  .wz-dom-head { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 6px 14px; align-items: center; }
+  .wz-dom-head .meta { font-size: 12px; }
+  .wz-skills { display: grid; gap: 0; padding-left: 12px; border-left: 2px solid var(--line); }
+  .wz-skill { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 4px 12px; align-items: center; padding: 7px 0; }
+  .wz-skill .nm { display: flex; align-items: center; gap: 8px; font: 500 14px/1.3 var(--font); }
+  .wz-skill .nm .glyph { width: 18px; height: 18px; flex: none; }
+  .wz-skill .nm .meta { display: block; font-size: 12px; }
+  .wz-skill .seg > button { min-height: 34px; padding: 0 10px; font-size: 12.5px; }
+  .wz-split-key { display: none; }
+  .wz-points { display: grid; gap: 4px; }
+  .wz-points .skill-row { padding: 8px 0; border-top: 1px solid var(--line); }
+  .wz-split { display: flex; gap: 2px; min-height: 30px; border-radius: 8px; overflow: hidden; }
+  .wz-split span { display: flex; align-items: center; padding: 0 8px; background: var(--mat); font: 500 11.5px var(--mono); color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; transition: flex-grow .3s var(--ease); }
+  .wz-split span:nth-child(2n) { background: var(--tile-2); }
+  .wz-split span[data-on] { background: var(--amber); color: var(--ink-deep); }
+  .wz-own { display: grid; gap: 6px; }
+  .wz-own-item { display: flex; align-items: center; gap: 10px; padding: 8px 12px; border-radius: 10px; background: var(--tile); }
+  .wz-own-item p { flex: 1 1 auto; font: 500 14px/1.35 var(--font); }
+  .wz-form { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 8px; align-items: end; padding: 12px; border-radius: 10px; background: var(--tile); }
+  .wz-off { display: grid; gap: 6px; }
+  .wz-off > div { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+  .wz-off input[type="date"] { width: 170px; }
+  .wz-err { font: 500 13px/1.4 var(--font); color: var(--ink); }
+  .wz-err:empty { display: none; }
+  .wz-err::before { content: ""; display: inline-block; width: 7px; height: 7px; margin-right: 7px; border-radius: 50%; background: var(--ink); vertical-align: 1px; }
+  .wz-glance { position: sticky; top: 88px; display: grid; gap: 14px; padding: 18px; border-radius: 14px; background: var(--tile);
+    max-height: calc(100vh - 88px - 96px); overflow: auto; overscroll-behavior: contain; }
+  .wz-glance[data-stale] .wz-grows, .wz-glance[data-stale] .wz-live { opacity: .6; }
+  .wz-live { display: grid; gap: 10px; }
+  .wz-live .cal .cal-key { display: none; }
+  .wz-wk { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 3px; }
+  .wz-wk span { display: grid; gap: 2px; justify-items: center; padding: 5px 2px; border-radius: 6px; background: var(--paper); font: 500 10.5px var(--mono); color: var(--soft); text-align: center; }
+  .wz-wk span b { font-weight: 500; color: var(--ink); }
+  .wz-wk span[data-ch] { box-shadow: inset 0 0 0 1.5px var(--amber); }
+  .wz-grows { display: grid; gap: 6px; margin: 0; }
+  .wz-grows > div { display: grid; grid-template-columns: 70px minmax(0, 1fr); gap: 8px; font: 400 13px/1.4 var(--font); }
+  .wz-grows dt { font: 500 10.5px var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--soft); padding-top: 2px; }
+  .wz-grows dd { margin: 0; color: var(--ink); }
+  .wz-foot { position: sticky; bottom: 0; z-index: 8; display: flex; align-items: center; gap: 12px; margin-top: 26px; padding: 12px 0 calc(12px + env(safe-area-inset-bottom, 0px));
+    background: var(--paper); box-shadow: 0 -1px 0 var(--line); }
+  .wz-foot .meta { margin-right: auto; }
+  .wz-foot .hint { font: 500 11.5px var(--mono); color: var(--soft); }
+  @media (max-width: 1079px) { .wz-body { grid-template-columns: minmax(0, 1fr); } .wz-glance { position: static; max-height: none; overflow: visible; } }
+  @media (max-width: 759px) {
+    .wz-steps button > span:not(.c) { display: none; }
+    .wz-steps button { justify-content: center; }
+    .wz-tiles { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    .wz-choice { grid-template-columns: minmax(0, 1fr); }
+    .wz-dates { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; gap: 8px; padding-bottom: 4px; }
+    .wz-date { flex: 0 0 78%; scroll-snap-align: start; }
+    .wz-foot { bottom: calc(64px + env(safe-area-inset-bottom, 0px)); padding-bottom: 12px; }
+    .wz-foot .hint { display: none; }
+    .wz-split span { font-size: 0; padding: 0; }
+    .wz-split-key { display: block; }
+  }
+
+  /* ---- Progress tab */
+  .pg { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; margin-top: 16px; align-items: start; }
+  .pg > .wide { grid-column: 1 / -1; }
+  @media (max-width: 1079px) { .pg { grid-template-columns: minmax(0, 1fr); } }
+  .pg-nums { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 14px 18px; margin: 0; }
+  .pg-nums dt { font: 500 10.5px var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--soft); }
+  .pg-nums dd { margin: 4px 0 0; font: 500 22px/1.1 var(--mono); color: var(--ink); }
+  .pg-nums dd small { font-size: 12.5px; color: var(--soft); }
+  .pg-rows { display: grid; }
+  .pg-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 4px 12px; padding: 10px 0; border-top: 1px solid var(--line); align-items: center; }
+  .pg-row:first-child { border-top: 0; }
+  .pg-row .meta { font-size: 12px; grid-column: 1 / -1; }
+  .pg-grid { display: grid; grid-template-columns: minmax(0, 1fr) repeat(3, 44px); gap: 4px 6px; align-items: center; font: 400 13px/1.3 var(--font); }
+  .pg-grid .hd { font: 500 10px var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--soft); text-align: center; }
+  .pg-grid .dm { grid-column: 1 / -1; margin-top: 8px; font: 600 12.5px var(--font); color: var(--soft); }
+  .pg-cell { appearance: none; border: 0; cursor: pointer; height: 30px; border-radius: 6px; font: 600 12px var(--font); display: grid; place-items: center;
+    background: var(--paper); box-shadow: inset 0 0 0 1.5px var(--faint); color: var(--soft); }
+  .pg-cell[data-s="proven"] { background: var(--ink); color: var(--on-ink); box-shadow: none; }
+  .pg-cell[data-s="shaky"] { background: linear-gradient(90deg, var(--ink) 50%, var(--paper) 50%); box-shadow: inset 0 0 0 1.5px var(--ink); color: var(--ink); }
+  .pg-key { display: flex; flex-wrap: wrap; gap: 6px 16px; margin: -4px 0 12px; font: 500 12.5px var(--font); color: var(--soft); }
+  .pg-key > span { display: inline-flex; align-items: center; gap: 7px; }
+  .pg-key .pg-cell { width: 16px; height: 16px !important; border-radius: 4px; cursor: default; }
+  .pg-traj .chart-empty, .pg-traj .ch-ghost { display: none; }
+  .pg-dn { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; }
+  .pg .table a { color: inherit; text-decoration: none; }
+  .pg .table tr:hover a, .pg .table a:focus-visible { text-decoration: underline; text-underline-offset: 3px; }
+  .pg-split { display: flex; gap: 2px; height: 14px; border-radius: 6px; overflow: hidden; }
+  .pg-split > span, .pg-sw { background: color-mix(in srgb, var(--ink) 60%, var(--paper)); }
+  :is(.pg-split > span, .pg-sw)[data-g="focus"] { background: var(--amber); }
+  :is(.pg-split > span, .pg-sw)[data-g="1"] { background: color-mix(in srgb, var(--ink) 48%, var(--paper)); }
+  :is(.pg-split > span, .pg-sw)[data-g="2"] { background: color-mix(in srgb, var(--ink) 28%, var(--paper)); }
+  :is(.pg-split > span, .pg-sw)[data-g="3"] { background: color-mix(in srgb, var(--ink) 14%, var(--paper)); }
+  .pg-sw { display: inline-block; width: 12px; height: 12px; border-radius: 3px; }
+  .pg-split + .pg-key { margin: 10px 0 0; }
+  .pg-conf { display: grid; gap: 10px; margin-top: 4px; }
+  .pg-untried { margin-top: 10px; }
+  .pg-untried summary { cursor: pointer; font: 600 14px var(--font); padding: 8px 0; min-height: 36px; }
+  .pg-utl { display: flex; flex-wrap: wrap; gap: 8px 18px; padding: 4px 0 6px; font: 500 14px var(--font); }
+  .pg-utl a { color: var(--ink); text-decoration: none; }
+  .pg-utl a:hover { text-decoration: underline; text-underline-offset: 3px; }
+  .pg-cell[data-s="na"] { box-shadow: none; background: none; cursor: default; }
+  .pg-cell[data-need="0"] { opacity: .45; }
+
+  /* ---- fixes from the hygiene pass: every hit area its own, help on demand, one of each */
+  .pl .k, .pl .stat-k { font-size: 11.5px; }
+  .pl .quiet { margin: 0; padding: 6px 10px; }
+  :is(.pl-log, .pl-rest, .pl .help, .pl-prow, .pl-hero .row, .pl-up) > .quiet:first-child { margin-left: -10px; }
+  .pl .pl-tiles .quiet { text-align: left; white-space: normal; }
+  .pl-tile { position: relative; }
+  .pl-tile > * { position: relative; z-index: 1; pointer-events: none; }
+  .pl-tile > .pl-tap { position: absolute; inset: 0; z-index: 0; pointer-events: auto; appearance: none; border: 0; padding: 0; background: none; border-radius: inherit; cursor: pointer; }
+  .pl-tile a, .pl-tile button:not(.pl-tap) { pointer-events: auto; }
+  .pl-tile:has(> .pl-tap:hover) { background: color-mix(in srgb, var(--tile), var(--ink) 4%); }
+  .pl-tap:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+  .pl-links { display: flex; flex-wrap: wrap; gap: 2px 8px; margin: 2px 0 0 -10px; }
+  .pl-reg { justify-self: start; margin-left: -10px !important; font-size: 13.5px; }
+  .pl-log { display: flex; margin-top: 12px; }
+  .pl-log .quiet { font: 500 13.5px var(--font); color: var(--soft); }
+  .pl-chgs { display: grid; }
+  .pl-chg { appearance: none; border: 0; background: none; font: 400 14px/1.45 var(--font); color: var(--ink); text-align: left; display: flex; flex-wrap: wrap; justify-content: space-between;
+    gap: 2px 12px; padding: 10px 0; min-height: 44px; align-items: center; border-top: 1px solid var(--line); }
+  .pl-chgs > .pl-chg:first-child { border-top: 0; }
+  button.pl-chg { cursor: pointer; }
+  button.pl-chg:hover > span:first-child { text-decoration: underline; text-underline-offset: 3px; text-decoration-color: var(--line); }
+  .pl-panel .card, .pl-sec { scroll-margin-top: 72px; }
+  @media (max-width: 759px) { .pl-panel .card, .pl-sec { scroll-margin-top: 128px; } }
+  @media (prefers-reduced-motion: no-preference) {
+    .pl-flash { animation: plflash 1.1s var(--ease); }
+    @keyframes plflash { 0%, 40% { box-shadow: inset 0 0 0 2px var(--amber); } 100% { box-shadow: inset 0 0 0 2px transparent; } }
+  }
+  .pl-upnotes { display: grid; gap: 2px; margin-top: 10px; }
+  .pl-hmeta { display: inline-flex; align-items: center; gap: 8px; }
+  .pl-map { display: flex; flex-wrap: wrap; gap: 4px 10px; }
+  .pl-mapd { display: flex; gap: 3px; }
+  .pl-map i { width: 16px; height: 16px; border-radius: 3px; box-shadow: inset 0 0 0 1.5px var(--faint); display: grid; place-items: center; font: 600 9px var(--font); font-style: normal; }
+  .pl-map i[data-on] { background: var(--ink); color: var(--on-ink); box-shadow: none; }
+  .pl-side .pl-ph span:last-child { color: var(--soft); }
+  .pl .pl-shared { margin-top: 8px; font: 500 13px var(--font); color: var(--soft); }
+  /* the month: weeks before the plan and after the SAT fold away; a missed day is a ring with an x */
+  .pl .cal.plan .cal-row:not(:has(button.cal-d)) { display: none; }
+  .pl .cal.plan .cal-d.blank .cal-n { color: var(--soft); }
+  .pl .cal.compact .cal-meta { display: none; }
+  .pl .cal.plan .cal-d[data-state="missed"] .cal-mark, body[data-page="plan"] .cal-sw.missed {
+    background: linear-gradient(45deg, transparent 44%, var(--ink) 44% 56%, transparent 56%), linear-gradient(-45deg, transparent 44%, var(--ink) 44% 56%, transparent 56%); }
+  .pl-dots [data-s="missed"] i::after { content: none; }
+  .pl-dots [data-s="missed"] i { background: linear-gradient(45deg, transparent 42%, var(--soft) 42% 58%, transparent 58%), linear-gradient(-45deg, transparent 42%, var(--soft) 42% 58%, transparent 58%); }
+  body[data-plan-mode] .banner:is([data-kind="first"], [data-kind="nudge"]) { display: none; }
+
+  /* ---- loading: the page's shape, pulsing only when motion is allowed (spec 3.6 6) */
+  .pl-skcal { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 4px; }
+  .pl-skcal .skel { height: 44px; border-radius: 6px; }
+  @media (prefers-reduced-motion: no-preference) { .pl .skel { animation: plpulse 1.4s ease-in-out infinite; } }
+  @keyframes plpulse { 50% { opacity: .55; } }
+
+  /* ---- moving a task (L12): each target says its new load or why not, in text */
+  .pl-dragging, .pl-dragging * { cursor: grabbing !important; user-select: none; }
+  .pl-ghost { position: fixed; left: 0; top: 0; z-index: 90; pointer-events: none; padding: 6px 10px; border-radius: 8px; background: var(--ink); color: var(--on-ink);
+    font: 600 13px var(--font); box-shadow: 0 6px 18px rgba(0, 0, 0, .18); max-width: 260px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .pl [data-drop] { position: relative; }
+  .pl [data-drop="no"] { opacity: .45; }
+  .pl [data-drop="ok"] { box-shadow: inset 0 0 0 1.5px var(--ink); }
+  .pl [data-drop="ok"][data-over] { background: var(--wash); box-shadow: inset 0 0 0 2px var(--amber); opacity: 1; }
+  .pl-drop { display: block; font: 500 10px/1.2 var(--mono); color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .pl .cal-d .pl-drop { position: absolute; left: 1px; right: 1px; bottom: 1px; font-size: 8.5px; text-align: center; background: var(--paper); border-radius: 3px; }
+  .pl-moving { margin: 4px 0 0; font: 500 13px/1.4 var(--mono); color: var(--ink); }
+  .pl-wd .chg { display: inline-block; width: 6px; height: 6px; margin-left: 4px; vertical-align: 1px; border-radius: 50%; background: var(--amber); }
+  .pl-goals { display: inline-flex; gap: 3px; font: 600 12px var(--mono); color: var(--soft); }
+  .pl-goals i { font-style: normal; }
+  .pl-goals i[data-s="met"] { color: var(--ink); }
+
+  /* ---- side cards: the sweep's squares (L19) */
+  .pl-sweep { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 10px; }
+  .pl-sweep i { width: 18px; height: 18px; border-radius: 4px; display: grid; place-items: center; font: 700 11px var(--font); font-style: normal; }
+  .pl-sweep i[data-s="ok"] { background: var(--amber); color: var(--ink-deep); }
+  .pl-sweep i[data-s="back"] { background: var(--ink); color: var(--on-ink); }
+  .pl-sweep i[data-s="togo"] { box-shadow: inset 0 0 0 1.5px var(--faint); }
+
+  /* ---- the test-day sheet (?print=sheet) */
+  .pl-trap { display: grid; gap: 6px; padding: 14px 0; border-top: 1px solid var(--line); }
+  .pl-trap:first-of-type { border-top: 0; padding-top: 0; }
+  .pl-sheet { display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: 0 16px; align-items: start; }
+  .pl-sheet > #bring { position: sticky; top: 16px; }
+  @media (max-width: 1079px) { .pl-sheet { grid-template-columns: minmax(0, 1fr); } .pl-sheet > #bring { position: static; } }
+  .pl-stem { font: 400 15px/1.55 var(--serif, var(--font)); color: var(--ink); white-space: pre-line; max-width: 68ch; }
+  .pl-choices { margin: 0; padding: 0; list-style: none; display: grid; gap: 4px; max-width: 68ch; }
+  .pl-choices li { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 6px 10px; border-radius: 8px; background: var(--paper); font: 400 14px/1.4 var(--font); }
+  .pl-choices li[data-key] { background: var(--wash); box-shadow: inset 3px 0 0 var(--amber); font-weight: 600; }
+  .pl-choices li[data-trap] { color: var(--soft); }
+  .pl-choices li[data-trap] .c { text-decoration: line-through; text-decoration-color: var(--soft); }
+  .pl-trap .help, .pl-trap .line-t { max-width: 68ch; }
+  .pl-check .check { min-height: var(--touch); }
+  .pl-check .check input { width: 20px; height: 20px; }
+
+  /* ---- phone: overlays are bottom sheets, every tap target 44px (spec 3.6 7) */
+  @media (max-width: 759px) {
+    body[data-page="plan"] .menu { position: fixed !important; left: 0 !important; right: 0 !important; top: auto !important; bottom: 0 !important; width: auto !important; max-width: none !important;
+      max-height: 70vh; overflow-y: auto; border-radius: 16px 16px 0 0; padding-bottom: calc(8px + env(safe-area-inset-bottom, 0px)); }
+    body[data-page="plan"] .menu [role^="menuitem"] { min-height: var(--touch); }
+    .pl .x { width: var(--touch); height: var(--touch); }
+    .pl-have .chips > button, .trow-sub .chips > button, .pl-banner .chips > button { min-height: var(--touch); }
+    .pl-log button { min-height: var(--touch); }
+    .trows .trow { -webkit-touch-callout: none; }
+    .pl a.tag { position: relative; }
+    .pl a.tag::after { content: ""; position: absolute; inset: -11px -4px; }
+    .pg-cell { height: var(--touch); }
+    /* a text link keeps its look and gets a 44px reach */
+    .pg a:not(.btn):not(.pill), .pl a.quiet { position: relative; }
+    .pg a:not(.btn):not(.pill)::after, .pl a.quiet::after { content: ""; position: absolute; inset: -12px -2px; }
+  }
+
+  /* ---- phone: every control a 44px reach (spec 3.6 7) */
+  @media (max-width: 759px) {
+    .pl .btn.sm, .pl .btn.icon, .pl .seg > button, .wz-wd select, .wz-skill .seg > button { min-height: var(--touch); }
+    .pl .btn.sm.icon, .pl .btn.icon { min-width: var(--touch); }
+    .wz-wd select { height: auto; }
+    .pl label.check, .pl .wz-sw, .pg-untried summary { min-height: var(--touch); }
+    .pl-have .chips > button { min-width: var(--touch); }
+    .pl-week { gap: 3px; }
+    .pg-utl a { display: inline-block; padding: 6px 0; }
+  }
+
+  /* ---- paper (3l): title, tiles, phases, every month and the week-by-week list */
+  .pl-print { display: none; }
+  @media print {
+    .pl-panel, .pl-tabbar, .pl-thumb, .pl-banners, .pl-log, [role="status"] { display: none !important; }
+    .pl-print { display: block; }
+    .pl-tiles { grid-template-columns: repeat(var(--n, 4), minmax(0, 1fr)) !important; }
+    .pl-tiles > * { grid-column: auto !important; }
+    .pl-pcal { width: 100%; border-collapse: separate; border-spacing: 3px; table-layout: fixed; }
+    .pl-pcal th { font: 500 10px var(--mono); color: var(--soft); text-align: center; }
+    .pl-pcal td { height: 44px; padding: 4px 6px; vertical-align: top; border: 1px solid var(--line); border-radius: 6px; break-inside: avoid; }
+    .pl-pcal td b { display: block; font: 600 11px var(--mono); }
+    .pl-pcal td span { display: block; font: 400 10px var(--mono); color: var(--soft); margin-top: 2px; }
+    .pl-pcal td.out { border-color: transparent; }
+    .pl-pcal td.out b { color: var(--soft); font-weight: 400; }
+    .pl-pcal td.test { border: 1.5px solid var(--ink); }
+    .pl-pcal td.sat { background: var(--amber); border-color: var(--amber); } 
+    .pl-pcal tr { break-inside: avoid; }
+    .pl-pweek { margin-top: 10px; }
+    .pl-pweek ul { margin: 4px 0 0; padding-left: 16px; font: 400 11.5px/1.45 var(--font); }
+    .pl-trap { break-inside: avoid; }
+    .pl-sheet { display: block; }
+    .pl-stem { font-size: 12.5px; }
+    .pl-choices li { padding: 3px 8px; font-size: 12px; }
+  }
 </style>
 </head>
 <body data-page="plan">
 <header id="bar"></header>
-
-<main class="page">
-  <section class="wiz rise" id="setup" hidden>
-    <ol class="steps" id="steps">
-      <li><button type="button" data-step="0"><b>1</b><span>Where you are</span></button></li>
-      <li><button type="button" data-step="1"><b>2</b><span>Where you're going</span></button></li>
-      <li><button type="button" data-step="2"><b>3</b><span>Time you have</span></button></li>
-      <li><button type="button" data-step="3"><b>4</b><span>What to focus on</span></button></li>
-    </ol>
-
-    <div class="step" data-step="0">
-      <h1 class="h1">Where you are</h1>
-      <div class="block">
-        <span class="k">Math</span>
-        <div class="big"><span class="num" id="curN">500</span></div>
-        <input type="range" id="cur" min="200" max="800" step="10" aria-label="Your Math score now">
-        <div class="ends"><span>200</span><span>800</span></div>
-        <p class="meta" id="curFrom"></p>
-      </div>
-    </div>
-
-    <div class="step" data-step="1" hidden>
-      <h1 class="h1">Where you're going</h1>
-      <div class="block">
-        <span class="k">Target</span>
-        <div class="big"><span class="num" id="gNow">500</span><span class="to">→</span><span class="num" id="gTo">600</span><span class="gain" id="gPlus">+100</span></div>
-        <input type="range" id="tgt" min="200" max="800" step="10" aria-label="Target Math score">
-        <div class="ends"><span>200</span><span>800</span></div>
-      </div>
-      <div class="block">
-        <span class="k">Exam</span>
-        <div class="choices dates" id="dates" role="group" aria-label="Exam date"></div>
-        <p class="meta" id="pace"></p>
-      </div>
-    </div>
-
-    <div class="step" data-step="2" hidden>
-      <h1 class="h1">Time you have</h1>
-      <div class="block">
-        <span class="k">A day</span>
-        <div class="choices" id="mins" role="group" aria-label="Time a day"></div>
-      </div>
-      <div class="block">
-        <span class="k">Days a week</span>
-        <div class="dayrow"><input type="range" id="dpw" min="1" max="7" step="1" aria-label="Days a week"><span class="meta" id="dpwT"></span></div>
-        <div class="choices wk" id="wk" role="group" aria-label="Study days"></div>
-      </div>
-      <div class="block">
-        <span class="k">Tests</span>
-        <div class="choices" id="tests" role="group" aria-label="Tests">
-          <button type="button" data-v="weekly">Each week</button>
-          <button type="button" data-v="daily">Every study day</button>
-        </div>
-        <p class="meta" id="testsT"></p>
-      </div>
-    </div>
-
-    <div class="step" data-step="3" hidden>
-      <h1 class="h1">What to focus on</h1>
-      <p class="meta" id="fcount"></p>
-      <div class="doms" id="doms"></div>
-      <section class="glance" id="glance" aria-label="Your plan at a glance"></section>
-    </div>
-
-    <p class="error" id="serr" hidden></p>
-    <div class="wiz-foot">
-      <button type="button" class="quiet" id="back">Back</button>
-      <button type="button" class="pill" id="next">Next</button>
-    </div>
-  </section>
-
-  <div id="plan" hidden>
-    <div class="head rise">
-      <div><span class="num" id="left"></span><span class="meta" id="to"></span><span class="meta" id="rhythm"></span></div>
-      <button type="button" class="quiet" id="change">Change</button>
-    </div>
-    <section class="task rise rise-2" id="task" aria-live="polite"></section>
-    <p class="error" id="err" hidden></p>
-    <section class="cal rise rise-3" aria-label="Until the exam">
-      <div class="grid7" id="cal"></div>
-      <div class="legend"><span><i class="mk p"></i>Practice</span><span id="legendTest"><i class="mk t"></i>Test</span></div>
-    </section>
-  </div>
+<main class="page pl" id="main" tabindex="-1">
+  <div id="plan" aria-live="off"></div>
 </main>
-
 <nav id="tabs"></nav>
 <script src="/assets/ui.js"></script>
 <script src="/assets/kit.js"></script>
 <script src="/assets/charts.js"></script>
-<script>
-(() => {
-  'use strict';
-  const { api, h, day, band, minutesFor, snap, $ } = UI;
-  UI.shell();
-
-  // the published administrations, 2026-27
-  const SAT_DATES = ['2026-10-03', '2026-11-07', '2026-12-05', '2027-03-13', '2027-05-01', '2027-06-05'];
-  const MINS = [15, 30, 45, 60, 90, 120, 180, 240];
-  const LET = ['M', 'T', 'W', 'T', 'F', 'S', 'S'];
-  const DAYNAMES = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
-  const WEEKDAY = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-  const KIND = { mock: 'Section', module: 'Module', diagnostic: 'Diagnostic' };
-  const { iso, dow, testOf } = UI.plan;
-  const kindOf = UI.plan.dayOf;
-  const at = s => new Date(s + 'T12:00:00');
-  const todayIso = iso(new Date());
-
-  let P = null, T = null, M = [];         // the profile, today's payload, the map's topics
-
-  const perDay = minutes => Math.max(5, Math.min(120, Math.round(minutes * 60 / 95)));
-  const testMin = minutes => testOf(minutes) === 'section' ? 70 : 35;
-  const chipLabel = m => m < 60 ? `${m}m` : `${+(m / 60).toFixed(1)}h`;
-  const span = m => m < 60 ? `${m}m` : (m % 60 ? `${Math.floor(m / 60)}h ${m % 60}m` : `${m / 60}h`);
-  const nDays = d => [...d].filter(x => x === '1').length;
-  const daysTo = s => Math.max(0, Math.round((at(s) - at(todayIso)) / 86400000));
-  const shortOf = Object.fromEntries(UI.DOMAINS);
-  const testName = minutes => testOf(minutes) === 'section' ? 'Section · 44 questions · 70 min' : 'Module · 22 questions · 35 min';
-
-  function startBtn(make, where, cls = 'pill') {
-    const b = h('button', { type: 'button', class: cls, text: 'Start' });
-    b.addEventListener('click', async () => {
-      b.setAttribute('aria-busy', 'true');
-      try {
-        const s = await make();
-        location.href = where === 'test' ? `/test/?s=${encodeURIComponent(s.id)}` : `/practice/session/?id=${encodeURIComponent(s.id)}`;
-      } catch (e) { b.removeAttribute('aria-busy'); $('#err').textContent = e.message; $('#err').hidden = false; }
-    });
-    return b;
-  }
-
-  /* ========================================================== the plan */
-  function paintPlan() {
-    $('#setup').hidden = true;
-    $('#plan').hidden = false;
-    const exam = at(P.exam_date), now = at(todayIso);
-    const left = Math.round((exam - now) / 86400000);
-    $('#left').textContent = left;
-    const gain = P.current && P.target ? ` · ${P.current} → ${P.target}` : P.target ? ` · ${P.target}` : '';
-    $('#to').textContent = `${left === 1 ? 'day' : 'days'} · ${day(P.exam_date)}${gain}`;
-    const focus = Object.entries(P.focus || {}).filter(([, v]) => v === 'focus').map(([d]) => shortOf[d] || d);
-    $('#rhythm').textContent = `${nDays(P.days)} days a week · ${chipLabel(P.minutes)} a day · `
-      + (testOf(P.minutes) ? (P.tests === 'daily' ? 'a test every study day' : 'a test each week') : 'no tests')
-      + (focus.length ? ` · focus ${focus.join(', ')}` : '');
-
-    const done = Object.fromEntries((T.days.recent || []).map(d => [d.day, d.questions]));
-    chosen = todayIso;
-    paintTask(chosen);
-
-    // until the exam, a week a row, Monday first; at most sixteen weeks shown
-    const start = new Date(now); start.setDate(start.getDate() - dow(start));
-    const end = new Date(exam); end.setDate(end.getDate() + (6 - dow(end)));
-    const cells = LET.map(l => h('span', { class: 'dh', text: l }));
-    let count = 0;
-    for (let d = new Date(start); d <= end && count < 16 * 7; d.setDate(d.getDate() + 1), count++) {
-      const s = iso(d);
-      const k = kindOf(d, P);
-      const past = s < todayIso;
-      const open = !past && k !== 'none';            // today and every day ahead show their plan
-      const cell = h(open ? 'button' : 'div', { class: 'cell' + (s === todayIso ? ' today' : '') + (k === 'exam' ? ' exam' : '') + (past || k === 'none' ? ' past' : ''),
-                             title: s }, h('span', { class: 'd', text: d.getDate() === 1 || s === iso(start) ? day(s) : String(d.getDate()) }));
-      if (open) {
-        cell.type = 'button';
-        cell.dataset.day = s;
-        cell.setAttribute('aria-pressed', String(s === chosen));
-        cell.setAttribute('aria-label', `${WEEKDAY[d.getDay()]} ${day(s)}, ${k}`);
-        cell.addEventListener('click', () => {
-          chosen = s;
-          $('#cal').querySelectorAll('button.cell').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.day === s)));
-          paintTask(s);
-          const r = $('#task').getBoundingClientRect();
-          if (r.top < 64 || r.bottom > innerHeight) $('#task').scrollIntoView({ block: 'center', behavior: UI.reduced() ? 'auto' : 'smooth' });
-        });
-      }
-      if ((k === 'practice' || k === 'test') && (!past || done[s])) {     // a day gone by shows only what was done
-        cell.append(h('i', { class: `mk ${k === 'test' ? 't' : 'p'}${done[s] ? ' done' : ''}` }));
-      } else if (k === 'exam') cell.append(h('span', { text: 'SAT' }));
-      cells.push(cell);
-    }
-    $('#cal').replaceChildren(...cells);
-    $('#legendTest').hidden = !testOf(P.minutes);
-  }
-
-  /* ---------------------------------------------------------- a day
-     Today's practice is the coach's pick. A day ahead gets the next set of
-     the coach's ranking, one set per practice day in order -- a forecast
-     from today's results, and the plan is redrawn from each day's. A test day
-     long enough for more than its test keeps the rest for practice. */
-  let chosen = null;
-  function topicsFor(s) {
-    const ahead = T.coach.ahead && T.coach.ahead.length ? T.coach.ahead : [T.coach.topics];
-    let n = 0;
-    for (let d = at(todayIso); iso(d) < s; d.setDate(d.getDate() + 1)) if (kindOf(d, P) === 'practice') n++;
-    return ahead[n % ahead.length];
-  }
-  function practiceRow(topics, minutes, cls) {
-    const n = perDay(minutes);
-    return [h('div', { class: 'chips' }, topics.map(t => UI.chip(t))),
-            h('span', { class: 'meta', text: `${n} questions · ${minutesFor(n)} min` }),
-            startBtn(() => api('/drill', { method: 'POST', body: { topics, count: n, source: 'plan' } }), 'session', cls)];
-  }
-  function paintTask(s) {
-    const d = at(s), isToday = s === todayIso;
-    let kind = kindOf(d, P);
-    if (isToday && kind === 'test' && T.tested) kind = 'practice';       // the day's test is done
-    const topics = isToday ? T.coach.topics : topicsFor(s);
-    const task = $('#task');
-    task.className = 'task' + (kind === 'practice' || kind === 'test' ? '' : ' rest');
-    task.replaceChildren(h('span', { class: 'k', text: isToday ? 'Today' : `${WEEKDAY[d.getDay()]} · ${day(s)}` }));
-    if (kind === 'practice') {
-      task.append(...practiceRow(topics, P.minutes));
-    } else if (kind === 'test') {
-      const full = testOf(P.minutes) === 'section';
-      task.append(h('span', { class: 'h2', text: full ? 'Section' : 'Module' }),
-        h('span', { class: 'meta', text: full ? '44 questions · 70 min' : '22 questions · 35 min' }),
-        startBtn(() => api('/mock/new', { method: 'POST', body: { full } }), 'test'));
-      const rest = P.minutes - testMin(P.minutes);
-      if (rest >= 15) task.append(h('div', { class: 'then' }, ...practiceRow(topics, rest, 'quiet')));
-    } else if (kind === 'exam') {
-      task.append(h('span', { class: 'h2', text: 'SAT' }));
-    } else {
-      task.append(h('span', { class: 'h2', text: 'Rest' }));
-      if (isToday) task.append(h('a', { class: 'quiet', href: '/practice/', text: 'Practice anyway' }));
-    }
-  }
-
-  /* ========================================================== the wizard
-     Four questions, one screen each. Each opens set from the results where
-     there are any, and the draft is kept for the tab, so a reload loses
-     nothing. The screens are built once; a choice only changes what shows as
-     chosen, so focus stays where it is. */
-  let step = 0, W = null;
-
-  function domainMastery() {
-    const out = {};
-    UI.DOMAINS.forEach(([dom]) => {
-      const ts = M.filter(t => t.domain === dom && t.answered);
-      out[dom] = ts.length ? { m: ts.reduce((a, t) => a + t.mastery, 0) / ts.length, n: ts.reduce((a, t) => a + t.answered, 0) } : null;
-    });
-    return out;
-  }
-  function focusFromResults() {
-    const m = domainMastery(), f = {};
-    const worked = Object.entries(m).filter(([, v]) => v).sort((a, b) => a[1].m - b[1].m);
-    if (worked.length && worked[0][1].m < .8) f[worked[0][0]] = 'focus';
-    worked.forEach(([d, v]) => { if (v.m >= .8) f[d] = 'strong'; });
-    return f;
-  }
-  function draft() {
-    const saved = snap.get('plan-draft');
-    if (saved) return saved;
-    const s = T.score;
-    const now = P.current || (s ? Math.round((s.low + s.high) / 20) * 10 : 500);
-    return {
-      current: now,
-      target: Math.max(now, P.target || Math.min(800, now + 100)),
-      exam: P.exam_date && P.exam_date > todayIso ? P.exam_date : (SAT_DATES.find(d => d > todayIso) || null),
-      minutes: P.minutes || 60, days: P.days || '1111100', tests: P.tests || 'weekly',
-      focus: Object.keys(P.focus || {}).length ? { ...P.focus } : focusFromResults(),
-    };
-  }
-  const keep = () => snap.set('plan-draft', W);
-
-  // one group of choices, built once; state is painted by refresh()
-  function group(host, values, label, on, pick, name) {
-    const buttons = values.map((v, i) => {
-      const b = h('button', { type: 'button', text: label(v) });
-      if (name) b.setAttribute('aria-label', name(v, i));
-      b.addEventListener('click', () => { pick(v); keep(); refresh(); });
-      return b;
-    });
-    host.replaceChildren(...buttons);
-    painters.push(() => buttons.forEach((b, i) => b.setAttribute('aria-pressed', String(on(values[i])))));
-    return buttons;
-  }
-  const painters = [];
-
-  function build() {
-    painters.length = 0;
-    // 1 -- where you are
-    $('#cur').oninput = e => { W.current = +e.target.value; if (W.target < W.current) W.target = W.current; keep(); refresh(); };
-    // 2 -- where you're going
-    $('#tgt').oninput = e => { W.target = Math.max(W.current, +e.target.value); keep(); refresh(); };
-    const upcoming = SAT_DATES.filter(d => d > todayIso);
-    const other = h('input', { class: 'field', type: 'date', min: todayIso, 'aria-label': 'Another date' });
-    group($('#dates'), upcoming, d => day(d) + (d.slice(0, 4) !== todayIso.slice(0, 4) ? ` ’${d.slice(2, 4)}` : ''),
-          d => W.exam === d, d => { W.exam = d; other.value = ''; });
-    other.value = W.exam && !upcoming.includes(W.exam) ? W.exam : '';
-    other.addEventListener('change', () => { W.exam = other.value || null; keep(); refresh(); });
-    $('#dates').append(other);
-    // 3 -- time you have
-    group($('#mins'), MINS, chipLabel, m => W.minutes === m, m => {
-      W.minutes = m;
-      if (!testOf(m)) W.tests = 'weekly';
-    });
-    group($('#wk'), [0, 1, 2, 3, 4, 5, 6], i => LET[i], i => W.days[i] === '1', i => {
-      const a = W.days.split('');
-      a[i] = a[i] === '1' ? '0' : '1';
-      if (a.includes('1')) W.days = a.join('');
-    }, i => DAYNAMES[i]);
-    $('#dpw').oninput = e => {
-      // more days are added from Monday on, fewer are taken from Sunday back
-      const n = +e.target.value, a = W.days.split('');
-      for (let i = 0; i < 7 && nDays(a.join('')) < n; i++) a[i] = '1';
-      for (let i = 6; i >= 0 && nDays(a.join('')) > n; i--) a[i] = '0';
-      W.days = a.join(''); keep(); refresh();
-    };
-    const tb = [...$('#tests').querySelectorAll('button')];
-    tb.forEach(b => b.onclick = () => { W.tests = b.dataset.v; keep(); refresh(); });
-    painters.push(() => tb.forEach(b => {
-      b.setAttribute('aria-pressed', String(W.tests === b.dataset.v));
-      b.disabled = b.dataset.v === 'daily' && !testOf(W.minutes);
-    }));
-    // 4 -- what to focus on
-    const dm = domainMastery();
-    $('#doms').replaceChildren(...UI.DOMAINS.map(([dom, short]) => {
-      const fill = h('i');
-      fill.style.setProperty('--m', (dm[dom] ? dm[dom].m : 0).toFixed(3));
-      const seg = h('div', { class: 'seg', role: 'group', 'aria-label': short });
-      const buttons = [['focus', 'Focus'], ['normal', 'Normal'], ['strong', 'Strong']].map(([v, label]) => {
-        const b = h('button', { type: 'button', 'data-v': v, text: label });
-        b.addEventListener('click', () => { if (v === 'normal') delete W.focus[dom]; else W.focus[dom] = v; keep(); refresh(); });
-        seg.append(b);
-        return b;
-      });
-      painters.push(() => {
-        const nf = Object.values(W.focus).filter(x => x === 'focus').length;
-        buttons.forEach(b => {
-          const state = W.focus[dom] || 'normal';
-          b.setAttribute('aria-pressed', String(state === b.dataset.v));
-          b.disabled = b.dataset.v === 'focus' && state !== 'focus' && nf >= 2;
-        });
-      });
-      return h('div', { class: 'drow' }, h('span', { class: 'nm', text: short }),
-        h('div', { class: 'mb' }, h('span', { class: 'mbar' }, fill),
-          h('span', { class: 'meta', text: dm[dom] ? `${dm[dom].n} answered` : 'Not started' })),
-        seg);
-    }));
-  }
-
-  const fill = el => el.style.setProperty('--p', ((el.value - el.min) / ((el.max - el.min) || 1) * 100) + '%');
-  function refresh() {
-    painters.forEach(p => p());
-    // 1
-    $('#cur').value = W.current;
-    $('#curN').textContent = W.current;
-    const s = T.score;
-    if (s) $('#curFrom').textContent = `Latest · ${band(s)} · ${KIND[s.kind] || 'Test'} · ${day(s.at)}`;
-    else $('#curFrom').replaceChildren(h('a', { class: 'link', href: '/diagnostic/', text: 'Take the diagnostic' }));
-    // 2
-    $('#tgt').value = W.target;
-    $('#tgt').style.setProperty('--a', ((W.current - 200) / 600 * 100) + '%');
-    $('#gNow').textContent = W.current;
-    $('#gTo').textContent = W.target;
-    const plus = W.target - W.current;
-    $('#gPlus').textContent = `+${plus}`;
-    const left = W.exam ? daysTo(W.exam) : 0;
-    const weekly = plus > 0 && left ? Math.max(1, Math.round(plus / (left / 7))) : 0;
-    $('#pace').textContent = W.exam ? `${left} ${left === 1 ? 'day' : 'days'}${weekly ? ` · about ${weekly} points a week` : ''}` : '';
-    // 3
-    const nd = nDays(W.days);
-    $('#dpw').value = nd;
-    ['#cur', '#tgt', '#dpw'].forEach(sel => fill($(sel)));
-    $('#dpwT').textContent = `${nd} ${nd === 1 ? 'day' : 'days'} · ${span(nd * W.minutes)} a week`;
-    $('#testsT').textContent = testOf(W.minutes) ? testName(W.minutes) : 'A module takes 35 min';
-    // 4
-    const nf = Object.values(W.focus).filter(x => x === 'focus').length;
-    const ns = Object.values(W.focus).filter(x => x === 'strong').length;
-    $('#fcount').textContent = `${nf}/2 focus · ${ns} strong`;
-    const names = v => UI.DOMAINS.filter(([d]) => W.focus[d] === v).map(([, sh]) => sh).join(', ') || '—';
-    const row = (k, v) => h('p', {}, h('span', { text: k }), h('b', { text: v }));
-    $('#glance').replaceChildren(h('span', { class: 'k', text: 'At a glance' }),
-      row('Score', `${W.current} → ${W.target} · +${plus}`),
-      row('Exam', W.exam ? `${day(W.exam)} · ${left} days` : '—'),
-      row('Pace', weekly ? `about ${weekly} points a week` : '—'),
-      row('Study', `${nd} ${nd === 1 ? 'day' : 'days'} a week · ${chipLabel(W.minutes)} a day`),
-      row('Tests', testOf(W.minutes) ? `${W.tests === 'daily' ? 'Every study day' : 'Each week'} · ${testOf(W.minutes) === 'section' ? 'Section' : 'Module'}` : 'None'),
-      row('Focus', names('focus')), row('Strong', names('strong')));
-    // the steps and the way on
-    $('#steps').querySelectorAll('button').forEach((b, i) => {
-      b.setAttribute('aria-current', i === step ? 'step' : 'false');
-      b.classList.toggle('done', i < step);
-    });
-    document.querySelectorAll('.step').forEach((el, i) => { el.hidden = i !== step; });
-    $('#back').hidden = step === 0;
-    $('#next').textContent = step < 3 ? 'Next' : (UI.plan.set(P) ? 'Save plan' : 'Create plan');
-    $('#next').disabled = step >= 1 && !(W.exam && W.exam > todayIso);
-  }
-
-  function openWizard(to = 0) {
-    W = draft();
-    step = to;
-    $('#setup').hidden = false;
-    $('#plan').hidden = true;
-    build();
-    refresh();
-  }
-  function go(to) { step = Math.max(0, Math.min(3, to)); refresh(); scrollTo({ top: 0, behavior: 'instant' }); }
-  $('#steps').addEventListener('click', e => { const b = e.target.closest('button'); if (b) go(+b.dataset.step); });
-  $('#back').addEventListener('click', () => go(step - 1));
-  $('#next').addEventListener('click', async () => {
-    if (step < 3) return go(step + 1);
-    const b = $('#next');
-    b.setAttribute('aria-busy', 'true');
-    $('#serr').hidden = true;
-    try {
-      const focus = Object.fromEntries(UI.DOMAINS.map(([d]) => [d, W.focus[d] || 'normal']));
-      const r = await api('/me', { method: 'PUT', body: { current: W.current, target: W.target, exam_date: W.exam,
-        minutes: W.minutes, days: W.days, tests: W.tests, focus } });
-      snap.set('plan-draft', null);
-      P = r.profile;
-      T = await api('/today');                       // the coach, now steered by the focus
-      b.removeAttribute('aria-busy');
-      paintPlan();
-      scrollTo({ top: 0, behavior: 'instant' });
-    } catch (err) { b.removeAttribute('aria-busy'); $('#serr').textContent = err.message; $('#serr').hidden = false; }
-  });
-  $('#change').addEventListener('click', () => { snap.set('plan-draft', null); openWizard(0); });
-
-  /* ---------------------------------------------------------- boot */
-  (async () => {
-    try { [T, M] = await Promise.all([api('/today'), api('/map').then(m => m.topics)]); }
-    catch (_) { $('#serr').textContent = 'The server is not answering.'; $('#serr').hidden = false; $('#setup').hidden = false; $('#next').disabled = true; return; }
-    P = T.profile;
-    if (UI.plan.set(P) && P.exam_date >= todayIso && !snap.get('plan-draft')) paintPlan();
-    else openWizard(0);
-  })();
-})();
-</script>
+<script>UI.shell({ page: 'plan', now: false });</script>
+<script src="/assets/plan-ui.js"></script>
+<script src="/plan/wizard.js"></script>
+<script src="/plan/progress.js"></script>
+<script src="/plan/plan.js"></script>
 </body>
 </html>

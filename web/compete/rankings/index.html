@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Your rankings · SAT Freshman</title>
+<link rel="icon" href="/assets/mark.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<link rel="manifest" href="/manifest.webmanifest">
+<meta name="theme-color" content="#FFFFFF">
+<script src="/assets/head.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800;900&family=DM+Mono:wght@400;500&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap">
+<link rel="stylesheet" href="/assets/ui.css">
+<link rel="stylesheet" href="/compete/compete.css">
+<style>
+  /* Your rankings (spec 3.7 §6, compete.md layout): summary → Rating card | Pace → Your ranks → Records → Trap Index
+     → Rivals → Badges → Seasons → Champions → Level ladder → Contest history. */
+  .sum-tiles { --cols: 5; --cols-phone: 2; }
+  .sum-tiles .stat { background: var(--paper); }
+  .rk-sec + .rk-sec { margin-top: 20px; }
+  .rate-block { display: flex; align-items: center; gap: 16px; }
+  .rate-block .num { font-size: 36px; }
+  .pace-rows { display: grid; gap: 12px; }
+  .pace-row { display: grid; grid-template-columns: 120px minmax(0, 1fr); gap: 4px 12px; align-items: center; }
+  .pace-row .tb { position: relative; height: 8px; border-radius: 4px; background: var(--mat); }
+  .pace-row .tb > i { position: absolute; top: 0; bottom: 0; left: 0; border-radius: inherit; background: var(--amber); }
+  .pace-row .tb > b { position: absolute; top: -4px; bottom: -4px; width: 2px; margin-left: -1px; background: var(--ink); }
+  .pace-row .pm { grid-column: 2; font: 500 12px var(--mono); color: var(--soft); }
+  .pace-row .pa { grid-column: 2; justify-self: start; }
+  .pace-row .pa .quiet { margin: 0 -12px; }
+  /* phone: two-column tables (Trap Index, Rivals) become rows, each number labelled */
+  @media (max-width: 759px) {
+    .table.stack thead { display: none; }
+    .table.stack tr { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 2px 12px; padding: 10px 0; border-top: 1px solid var(--line); }
+    .table.stack tbody tr:first-child { border-top: 0; }
+    .table.stack td { display: block; padding: 0; border: 0; text-align: left; grid-column: 1; }
+    .table.stack td.n { font: 500 12px var(--mono); color: var(--soft); }
+    .table.stack td[data-label]::before { content: attr(data-label) " "; }
+    .table.stack td:last-child { grid-column: 2; grid-row: 1 / span 3; align-self: center; }
+    .table.stack td.hx-opt { display: none; }
+  }
+  .hist-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 16px; margin-bottom: 12px; }
+  .hist .xbtn { width: 32px; height: 32px; border: 0; border-radius: 8px; background: none; cursor: pointer; font: 600 14px var(--font); color: var(--ink); }
+  .hist .xbtn[aria-expanded="true"] { transform: rotate(90deg); }
+  .hist td .star svg { width: 14px; height: 14px; vertical-align: -2px; color: var(--amber-deep); }
+  .hx-ph { display: none; }
+  .rv-act { display: inline-flex; align-items: center; gap: 16px; }
+  .rv-act .quiet { margin: 0 -4px 0 0; }
+  .rowmenu { flex: none; width: 32px; height: 32px; border: 0; border-radius: 8px; background: none; color: var(--soft); cursor: pointer; }
+  @media (hover: hover) and (pointer: fine) { .rowmenu:hover { background: var(--tile-2); color: var(--ink); } }
+  #ranks td[colspan] { text-align: left; }
+  @media (max-width: 759px) { .pace-row { grid-template-columns: 90px minmax(0, 1fr); } .cx .hx-opt { display: none; }
+    .hx-ph { display: block; margin-top: 3px; font: 500 12px var(--mono); color: var(--soft); } .hist th.hx-opt { display: none; } }
+</style>
+</head>
+<body data-page="compete">
+<header id="bar"></header>
+<main class="page cx" id="main" tabindex="-1">
+  <h1 class="h1">Your rankings</h1>
+  <div id="subnav"></div>
+  <section class="card rk-sec" id="summary" aria-labelledby="summary-h"></section>
+  <div class="rk-grid2 rk-sec">
+    <section class="card" id="rating" aria-labelledby="rating-h"></section>
+    <section class="card" id="pace" aria-labelledby="pace-h"></section>
+  </div>
+  <section class="card rk-sec" id="ranks" aria-labelledby="ranks-h"></section>
+  <section class="card rk-sec" id="records" aria-labelledby="records-h"></section>
+  <section class="card rk-sec" id="rivals" aria-labelledby="rivals-h"></section>
+  <section class="card rk-sec" id="badges" aria-labelledby="badges-h"></section>
+  <section class="card rk-sec" id="seasons" aria-labelledby="seasons-h"></section>
+  <section class="card rk-sec" id="champions" aria-labelledby="champions-h"></section>
+  <section class="card rk-sec" id="ladder" aria-labelledby="ladder-h"></section>
+  <section class="card rk-sec" id="history" aria-labelledby="history-h"></section>
+</main>
+<nav id="tabs"></nav>
+<script src="/assets/ui.js"></script>
+<script src="/assets/kit.js"></script>
+<script src="/assets/charts.js"></script>
+<script>UI.shell('compete');</script>
+<script src="/assets/compete-ui.js"></script>
+<script src="/compete/rankings/rankings.js"></script>
+</body>
+</html>
