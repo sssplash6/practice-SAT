@@ -1,0 +1,28 @@
+[Unit]
+Description=SAT Freshman (FastAPI + SQLite)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=freshbot
+Group=freshbot
+WorkingDirectory=/srv/satbank
+EnvironmentFile=/etc/freshbot/satbank.env
+# Loopback only: Caddy is the only process on 80/443.
+ExecStart=/srv/satbank/.venv/bin/python -m uvicorn server.app:app --host 127.0.0.1 --port 3020 --log-level warning
+Restart=always
+RestartSec=5
+
+StateDirectory=freshbot/satbank
+StateDirectoryMode=0750
+
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+# the database lives in /var/lib/freshbot/satbank; mail drafts, report files and caches in server/
+ReadWritePaths=/var/lib/freshbot/satbank /srv/satbank/server
+
+[Install]
+WantedBy=multi-user.target

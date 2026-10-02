@@ -1,0 +1,10 @@
+# Add to /etc/caddy/Caddyfile, with your real domain (its DNS A record must point at the VPS):
+sat.example.com {
+	encode zstd gzip
+	reverse_proxy 127.0.0.1:3020
+}
+
+# No domain yet? Serve it on the VPS's IP over plain http instead (replace the block above):
+# :80 {
+# 	reverse_proxy 127.0.0.1:3020
+# }
