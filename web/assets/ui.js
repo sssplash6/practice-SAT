@@ -2091,6 +2091,7 @@
     items.push({ label: 'Sign in another device', icon: 'devices', href: '/pair/' },
       has('pair') ? { label: 'Continue on your phone', icon: 'devices', onClick: () => UI.continueOnPhone() } : null,
       { label: 'Help & FAQ', icon: 'help', href: '/help/', kbd: 'G H' },
+      tourItem(),
       { label: 'Send feedback', icon: 'chat', onClick: feedback },
       { group: 'Display' },
       lookItem('Dark theme', 'moon', isDark(), on => ({ theme: on ? 'dark' : 'light' })),
@@ -2166,6 +2167,7 @@
       row('Sign in another device', 'devices', { href: '/pair/' }),
       has('pair') ? row('Continue on your phone', 'devices', { onClick: () => UI.continueOnPhone() }) : null,
       row('Help & FAQ', 'help', { href: '/help/', current: here === 'help' }),
+      tourPage ? row('Show this page’s tour', 'help', { onClick: () => need('tour').then(() => UI.tour.start(tourPage, { force: true })).catch(() => {}) }) : null,
       row('Send feedback', 'chat', { onClick: feedback })),
       h('div', { class: 'more-group' },
         swRow('Dark theme', 'moon', isDark(), on => ({ theme: on ? 'dark' : 'light' })),
@@ -2380,6 +2382,11 @@
   lazy('quick', 'quick'); lazy('palette', 'palette'); lazy('report', 'report'); lazy('continueOnPhone', 'qr');
   const feedback = () => UI.report({ kind: 'page', source: location.pathname + location.search });
 
+  /* ---- the first-visit page tour (tour.js loads on first use) */
+  const TOUR_PAGES = new Set(['today', 'practice', 'tests', 'plan', 'review', 'words', 'results', 'compete', 'me']);
+  let tourPage = null;
+  const tourSeen = p => { try { return !!localStorage.getItem(`satf.tour.${p}`); } catch (_) { return true; } };
+  const tourItem = () => (tourPage ? { label: 'Show this page’s tour', icon: 'help', onClick: () => need('tour').then(() => UI.tour.start(tourPage, { force: true })).catch(() => {}) } : null);
   /* ---- UI.shell */
   let shellOn = false;
   function shell(o = {}) {
@@ -2388,6 +2395,7 @@
     shellOn = true;
     const pg = o.page || page();
     here = SECTION[pg] || pg;
+    if (TOUR_PAGES.has(pg) && !(typeof RO !== 'undefined' && RO)) { tourPage = pg; if (!tourSeen(pg) && !new URLSearchParams(location.search).has('print')) { UI.__tourPage = pg; need('tour').catch(() => {}); } }
     keys.chrome = true;
     const bar = $('#bar');
     if (bar) {
