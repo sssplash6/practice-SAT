@@ -22,6 +22,7 @@
       { sel: '#due', title: 'Due today', text: 'Mistakes and saved questions that are ready to look at again. A few minutes here stops old mistakes coming back.' },
       { sel: '#qotd', title: 'Question of the day', text: 'One question a day, the same for everyone. Answer it to keep your streak going.' },
       { sel: '#gain', title: 'Points on the table', text: 'Shows which skills would raise your score the most. It fills in after about 30 answers.' },
+      { sel: '#soon', title: 'Unlocks as you practise', text: 'A card stays hidden until it has something to show. Tap a name to open its card early, or the ? beside it to see what it is.' },
       { sel: ['#bar .side-item[data-id="practice"]', '#tabs [data-id="practice"]', '#tabs a'], title: 'Your menu', text: 'Practice builds your own sets, Review fixes mistakes, Words trains vocabulary, Tests gives full tests and Plan schedules your days.' },
     ],
     practice: [

@@ -100,6 +100,8 @@
     display: inline-grid; place-items: center; font: 600 11px/1 var(--font); font-style: italic; margin-left: 6px; vertical-align: 1px; cursor: pointer; padding: 0; }
   .why-i::before { content: ""; position: absolute; inset: -13px; }
   .why-i[aria-expanded="true"] { border-color: var(--ink); color: var(--ink); }
+  .why-i.q { font-style: normal; }
+  .soon-i { display: inline-flex; align-items: center; white-space: nowrap; }
   .info-pop { max-width: 320px; }
   .info-pop p { margin: 0; font: 400 14px/1.5 var(--font); color: var(--ink); }
   .info-pop p + p, .info-pop ul, .info-pop ol { margin-top: 8px; }
@@ -545,8 +547,10 @@
   const svgI = (d, size = 16) => UI.svg(`<path d="${d}" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>`, size);
   const CHEV = 'M9 6l6 6-6 6';
   // a small (i): the sentence opens on tap or hover, never a paragraph on the card (decision 7, the user's "help paragraphs")
-  function info(text, label = 'More about this') {
-    const b = h('button', { type: 'button', class: 'why-i', text: 'i', 'aria-label': label, 'aria-haspopup': 'dialog', 'aria-expanded': 'false' });
+  // o.mark swaps the letter ('?'), o.hover also shows a string on mouse hover and keyboard focus
+  function info(text, label = 'More about this', o = {}) {
+    const b = h('button', { type: 'button', class: o.mark ? 'why-i q' : 'why-i', text: o.mark || 'i', 'aria-label': label, 'aria-haspopup': 'dialog', 'aria-expanded': 'false' });
+    if (o.hover && UI.tooltip) UI.tooltip(b, text);
     b.addEventListener('click', () => UI.pop(b, () => h('div', { class: 'info-pop' }, [].concat(typeof text === 'function' ? text() : text).map(x => typeof x === 'string' ? h('p', { text: x }) : x)), { label }));
     return b;
   }
@@ -859,6 +863,16 @@
   /* a card with nothing to show yet is not painted: one row names the ones to come (decision 7, "hide zeros and defaults").
      Each name is a button: a card with a page of its own goes there; the others open their card in place, empty-state actions and all */
   const SOON = { gain: ['Points'], pace: ['Pace'], score: ['Score'], study: ['Study time'], mist: ['Mistakes', '/review/'], tests: ['Tests', '/tests/'], words: ['Words', '/words/'] };
+  // what each waiting card is, for the ? beside its name
+  const SOON_WHAT = {
+    gain: 'The skills that would raise your score the most, ranked. Shows once you have about 30 answers.',
+    pace: 'How long a module takes you at your speed, next to the 35 minutes the SAT gives. Shows after 20 timed answers.',
+    score: 'Your estimated SAT score and how far it is from your target. It gets more reliable as you sit more tests.',
+    study: 'The minutes you have studied today, this week and this month, against your daily goal.',
+    mist: 'Every wrong answer lands here under the mistake it names, and leaves after two correct answers.',
+    tests: 'Your timed tests: modules, full sections and the diagnostic. Finished ones are listed here with their scores.',
+    words: 'Today’s vocabulary: the words due for review and the new ones to learn.',
+  };
   const soonNow = new Set(), soonOpen = new Set();
   function soon(id, empty) {
     const hide = empty && !soonOpen.has(id);
@@ -873,7 +887,9 @@
     const row = h('div', { class: 'row' }, h('span', { class: 'meta', text: 'Unlocks as you practise:' }));
     ids.forEach((id, i) => {
       if (i) row.append(h('span', { class: 'meta', 'aria-hidden': 'true', text: '·' }));
-      row.append(SOON[id][1] ? link(SOON[id][0], SOON[id][1]) : quiet(SOON[id][0], () => openSoon(id)));
+      // the name and its ? are one unit, so a wrapping row never parts them
+      row.append(h('span', { class: 'soon-i' }, SOON[id][1] ? link(SOON[id][0], SOON[id][1]) : quiet(SOON[id][0], () => openSoon(id)),
+        info(SOON_WHAT[id], `What ${SOON[id][0]} is`, { mark: '?', hover: true })));
     });
     el.replaceChildren(row);
   }
