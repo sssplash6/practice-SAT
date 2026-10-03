@@ -765,6 +765,8 @@ def delete_me(body: DeleteMe, x_learner: str | None = Header(default=None)) -> d
             else:
                 where, args = "learner=?", (learner,)
             counts[name] = db.run(f"DELETE FROM {name} WHERE {where}", *args).rowcount
+        db.run("DELETE FROM guardians WHERE parent=? OR student=?", learner, learner)
+        db.run("DELETE FROM guardian_invites WHERE student=?", learner)
         counts["sessions"] = db.run("DELETE FROM sessions WHERE learner=?", learner).rowcount
         counts["passkey_users"] = db.run("DELETE FROM passkey_users WHERE learner=?", learner).rowcount
         db.run("UPDATE users SET learner=NULL WHERE learner=?", learner)

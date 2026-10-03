@@ -647,7 +647,10 @@
   async function loadPrivacy() {
     const b = $('privacy');
     const links = h('div');
-    b.replaceChildren(h('h3', { class: 'sub-h', text: 'Share with a parent or tutor' }),
+    const fam = h('div');
+    b.replaceChildren(h('h3', { class: 'sub-h', text: 'Parents' }),
+      h('p', { class: 'help', style: 'margin: 0 0 10px', text: 'Invite a parent with a link. They sign in with their own email and see a short summary: how much you practise, your score trend, strengths and what needs work. They can’t change anything, and you can remove them any time.' }), fam,
+      h('h3', { class: 'sub-h', text: 'Share with a tutor' }),
       h('p', { class: 'help', style: 'margin: 0 0 10px', text: 'They see your stats, skills, score trend, activity and open mistakes. Never your email or device code.' }), links,
       h('h3', { class: 'sub-h', text: 'Your data' }),
       h('div', { class: 'acts' }, btn('Download my data', { onClick: exportData }), btn('Delete everything…', { quiet: true, onClick: deleteAll })));
@@ -668,6 +671,28 @@
     };
     const refresh = () => UI.api('/share').then(draw, e => { if (!e || !e.retired) links.replaceChildren(UI.cardError(null, refresh)); });
     refresh();
+
+    const drawFam = g => {
+      const full = u => `${location.origin}${u}`;
+      fam.replaceChildren(
+        ...g.parents.map(p => h('div', { class: 'dev' }, h('span', { class: 't', text: p.name || 'A parent' }),
+          h('span', { class: 'acts' }, btn('Remove', { quiet: true, onClick: async () => {
+            try { await UI.api(`/guardians/${encodeURIComponent(p.id)}`, { method: 'DELETE' }); UI.toast('Parent removed'); loadFam(); }
+            catch (e) { UI.toast(errText(e, 'Couldn’t remove them. Try again.')); }
+          } })), h('span', { class: 'd', text: `Following you since ${day(p.since)}` }))),
+        ...g.invites.map(i => h('div', { class: 'dev' }, h('span', { class: 't', text: 'Invite not used yet' }),
+          h('span', { class: 'acts' }, btn('Copy link', { quiet: true, onClick: () => UI.copyText(full(i.url), { toast: 'Invite link copied' }) }),
+            btn('Cancel', { quiet: true, onClick: async () => {
+              try { await UI.api(`/guardians/invites/${encodeURIComponent(i.code)}`, { method: 'DELETE' }); loadFam(); }
+              catch (e) { UI.toast(errText(e, 'Couldn’t cancel it. Try again.')); }
+            } })), h('span', { class: 'd', text: `Works until ${day(i.expires)}, for one parent` }))),
+        h('div', { class: 'acts', style: 'margin-top: 10px' }, btn('Invite a parent', { primary: !g.parents.length && !g.invites.length, onClick: async () => {
+          try { const r = await UI.api('/guardians/invite', { method: 'POST' }); UI.copyText(full(r.url), { toast: 'Invite link copied. Send it to your parent' }); loadFam(); }
+          catch (e) { UI.toast(errText(e, 'Couldn’t make an invite. Try again.')); }
+        } })));
+    };
+    const loadFam = () => UI.api('/guardians').then(drawFam, e => { if (!e || !e.retired) fam.replaceChildren(UI.cardError(null, loadFam)); });
+    loadFam();
   }
   async function exportData() {
     try {

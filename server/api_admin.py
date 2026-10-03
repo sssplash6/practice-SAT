@@ -51,10 +51,13 @@ def students(x_admin: str | None = Header(default=None)) -> dict:
     for r in db.rows("SELECT learner, email, verified FROM users WHERE learner IS NOT NULL ORDER BY verified, created"):
         emails[r["learner"]] = r["email"]
     out = []
+    guardians = {r["parent"] for r in db.rows("SELECT DISTINCT parent FROM guardians")}
     for l in db.rows("SELECT id, name, handle, country, created, target, exam_date, rating, rated FROM learners"):
         if l["id"].startswith(SKIP):
             continue
         a = att.get(l["id"])
+        if l["id"] in guardians and not a:
+            continue                       # a parent's own account, not a student
         t = tests.get(l["id"], 0)
         if not a and not t and not emails.get(l["id"]) and not l["name"]:
             continue                       # opened the site and did nothing: not a student yet
@@ -77,7 +80,12 @@ def student(learner: str, x_admin: str | None = Header(default=None)) -> dict:
     l = db.one("SELECT * FROM learners WHERE id=?", learner)
     if l is None:
         raise HTTPException(404, "no such student")
+    return detail(l)
 
+
+def detail(l) -> dict:
+    """Everything about one learner row, grouped. The admin page shows it whole, the parent view a part."""
+    learner = l["id"]
     users = [dict(r) for r in db.rows(
         "SELECT email, verified, created, last_login FROM users WHERE learner=? ORDER BY verified DESC, created", learner)]
     plan = db.one("SELECT 1 FROM plans WHERE learner=? LIMIT 1", learner) if _has_table("plans") else None
@@ -154,7 +162,10 @@ def student(learner: str, x_admin: str | None = Header(default=None)) -> dict:
 
     badges = [dict(r) for r in db.rows("SELECT id, MAX(tier) tier FROM earned WHERE learner=? GROUP BY id", learner)]
     reports = [dict(r) for r in db.rows("SELECT title, kind, at FROM reports WHERE learner=? ORDER BY at DESC LIMIT 5", learner)]
-    return {"profile": profile, "activity": activity, "last30": last30, "skills": skills, "tests": {"practice_sets": practice, "sittings": sittings},
+    parents = [{"name": r["name"], "email": r["email"], "since": r["created"]} for r in db.rows(
+        "SELECT g.created, l.name, (SELECT email FROM users WHERE learner=g.parent LIMIT 1) email"
+        " FROM guardians g LEFT JOIN learners l ON l.id=g.parent WHERE g.student=? ORDER BY g.created", learner)]
+    return {"profile": profile, "parents": parents, "activity": activity, "last30": last30, "skills": skills, "tests": {"practice_sets": practice, "sittings": sittings},
             "mistakes": mistakes, "compete": compete, "words": words, "badges": len(badges), "reports": reports}
 
 

@@ -110,7 +110,7 @@
           card('Words', null, kv([['Words touched', num(w.touched)], ['Reviews', num(w.reviews)], ['Lapses', num(w.lapses)], ['Saved', num(w.saved)], ['Due now', num(w.due_now)]])),
           card('Goals and account', null, kv([['Target score', p.target], ['SAT date', p.exam_date && day(p.exam_date)], ['Daily minutes', p.daily_minutes], ['Study plan', p.has_plan ? 'yes' : 'no'],
             ['Hard questions', a.hard_answers ? `${num(a.hard_answers)} answered, ${pct(a.hard_accuracy)} right` : 'none yet'], ['Hints used', num(a.hints_used)], ['Badges earned', d.badges],
-            ['Email', p.email ? `${p.email}${p.email_verified ? '' : ' (not verified)'}` : 'none'], ['Country', p.country], ['Learner id', p.id]]),
+            ['Email', p.email ? `${p.email}${p.email_verified ? '' : ' (not verified)'}` : 'none'], ['Country', p.country], ['Parents', d.parents.length ? d.parents.map(x => x.name || x.email || 'unnamed').join(', ') : 'none'], ['Learner id', p.id]]),
             d.reports.length ? h('p', { class: 'adm-empty', text: `Sent ${d.reports.length} report${d.reports.length === 1 ? '' : 's'}: ${d.reports.map(r => r.title || r.kind).join('; ')}` }) : null))));
   });
 })();

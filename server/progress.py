@@ -682,6 +682,10 @@ def carry(frm: str, to: str) -> int:
                       "passkeys", "webauthn_challenges", "transfers", "push_subs", "users"):
             c.execute(f"UPDATE {table} SET learner=? WHERE learner=?", (to, frm))
         c.execute("UPDATE sets SET owner=? WHERE owner=?", (to, frm))
+        for col in ("parent", "student"):
+            c.execute(f"UPDATE OR IGNORE guardians SET {col}=? WHERE {col}=?", (to, frm))
+        c.execute("DELETE FROM guardians WHERE parent=? OR student=?", (frm, frm))
+        c.execute("UPDATE guardian_invites SET student=? WHERE student=?", (to, frm))
         c.execute("UPDATE contests SET owner=? WHERE owner=?", (to, frm))
         for table, cols in (("name_reports", ("target", "reporter")), ("follows", ("learner", "target")),
                             ("nudges", ("sender", "target"))):
