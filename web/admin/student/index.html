@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>Student · SAT Freshman admin</title>
+<link rel="icon" href="/assets/mark.svg" type="image/svg+xml">
+<link rel="manifest" href="/manifest.webmanifest">
+<meta name="theme-color" content="#FFFFFF">
+<script src="/assets/head.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800;900&family=DM+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="/assets/ui.css">
+<style>
+  .ad { display: grid; grid-template-columns: minmax(0, 1fr); gap: 18px; padding-bottom: 60px; }
+  .ad-gate { display: grid; gap: 10px; max-width: 420px; }
+  .ad-row { display: flex; gap: 8px; }
+  .ad-row .field { flex: 1; min-width: 0; }
+  .ad-tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; }
+  .ad-tile { display: grid; gap: 4px; padding: 14px 16px; border-radius: var(--radius-card); background: var(--tile); }
+  .ad-tile b { font: 600 24px/1.1 var(--mono); letter-spacing: -.02em; }
+  .ad-tile span { font: 500 12.5px var(--font); color: var(--soft); }
+  .low { color: var(--amber-deep); } .mid, .good { color: var(--ink); }
+  .ad-grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: 18px; align-items: start; }
+  @media (min-width: 980px) { .ad-grid { grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); } }
+  .ad-col { display: grid; gap: 18px; min-width: 0; }
+  .ad-card { display: grid; gap: 12px; padding: 18px 20px; border-radius: var(--radius-card); background: var(--tile); min-width: 0; }
+  .ad-card h2 { margin: 0; font: 700 17px var(--font); letter-spacing: -.01em; }
+  .ad-card .sub { margin: -6px 0 0; font: 400 13px var(--font); color: var(--soft); }
+  .ad-wrap { overflow-x: auto; }
+  table.ad-t { width: 100%; border-collapse: collapse; font: 400 14px/1.4 var(--font); }
+  .ad-t th { text-align: left; font: 500 11.5px var(--mono); color: var(--soft); text-transform: uppercase; letter-spacing: .05em; padding: 0 10px 8px 0; white-space: nowrap; }
+  .ad-t td { padding: 10px 10px 10px 0; border-top: 1px solid var(--line); vertical-align: middle; }
+  .ad-t td.n, .ad-t th.n { text-align: right; white-space: nowrap; }
+  .ad-t td.n { font: 400 13px var(--mono); }
+  .ad-t tr.row { cursor: pointer; }
+  .ad-t tr.row:hover td { background: var(--tile-2); }
+  .ad-name { font-weight: 600; }
+  .ad-sm { display: block; font: 400 12.5px var(--font); color: var(--soft); }
+  .ad-bars { display: grid; grid-template-columns: repeat(30, minmax(0, 1fr)); gap: 3px; align-items: end; height: 96px; }
+  .ad-bars i { display: block; border-radius: 3px 3px 0 0; background: var(--faint); }
+  .ad-bars i.on { background: var(--amber); }
+  .ad-axis { display: flex; justify-content: space-between; font: 500 11.5px var(--mono); color: var(--soft); }
+  .ad-meter { display: inline-block; width: 60px; height: 6px; border-radius: 3px; background: var(--mat); vertical-align: middle; margin-right: 8px; overflow: hidden; }
+  .ad-meter i { display: block; height: 100%; background: var(--ink); }
+  .ad-t td.ad-dom { font: 600 12px var(--mono); color: var(--soft); text-transform: uppercase; letter-spacing: .05em; padding-top: 14px; }
+  .ad-kv { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: 6px 18px; margin: 0; font: 400 14px/1.4 var(--font); }
+  .ad-kv dt { color: var(--soft); } .ad-kv dd { margin: 0; overflow-wrap: anywhere; }
+  .ad-search { display: flex; flex-wrap: wrap; gap: 8px; }
+  .ad-search .field { flex: 1 1 220px; max-width: 360px; }
+  .ad-back { justify-self: start; }
+  .ad-empty { color: var(--soft); font: 400 14px var(--font); margin: 0; }
+</style>
+</head>
+<body data-page="admin">
+<main class="page">
+  <div class="ad" id="root"></div>
+</main>
+<script src="/assets/kit.js"></script>
+<script src="/admin/admin.js"></script>
+<script>
+(() => {
+  const { h, api, boot, num, pct, dur, day, ago, tone } = AD;
+  const root = document.getElementById('root');
+  const id = new URLSearchParams(location.search).get('id');
+  const KINDS = { mock: 'Full section', section: 'Full section', module: 'Module', paper: 'Paper', twin: 'Twin', custom: 'Custom test', diagnostic: 'Diagnostic', shared: 'Shared test' };
+  const tile = (v, l) => h('div', { class: 'ad-tile' }, h('b', { text: v }), h('span', { text: l }));
+  const card = (title, sub, ...kids) => h('section', { class: 'ad-card' }, h('h2', { text: title }), sub ? h('p', { class: 'sub', text: sub }) : null, ...kids);
+  const kv = pairs => h('dl', { class: 'ad-kv' }, pairs.flatMap(([k, v]) => [h('dt', { text: k }), h('dd', { text: v === null || v === undefined || v === '' ? '-' : String(v) })]));
+  const meter = x => h('span', { class: 'ad-meter' }, h('i', { style: `width: ${Math.round((x || 0) * 100)}%` }));
+  const table = (head, rows, right = 1) => h('div', { class: 'ad-wrap' }, h('table', { class: 'ad-t' },
+    head ? h('thead', {}, h('tr', {}, head.map((t, i) => h('th', { class: i >= right ? 'n' : '', text: t })))) : null, h('tbody', {}, rows)));
+  boot(root, 'Student', async () => {
+    if (!id) { location.href = '/admin/students/'; return; }
+    const d = await api(`/students/${encodeURIComponent(id)}`);
+    const p = d.profile, a = d.activity, c = d.compete, w = d.words, m = d.mistakes;
+    document.title = `${p.name || 'Student'} · SAT Freshman admin`;
+
+    const max = Math.max(1, ...d.last30.map(x => x.answers));
+    const bars = h('div', { class: 'ad-bars', role: 'img', 'aria-label': 'Questions answered per day over the last 30 days' },
+      d.last30.map(x => h('i', { class: x.answers ? 'on' : '', style: `height: ${Math.max(2, Math.round(x.answers / max * 100))}%`, title: `${day(x.day)}: ${x.answers} answered, ${x.right} right` })));
+
+    const doms = {};
+    d.skills.forEach(s => { (doms[s.domain || 'Other'] = doms[s.domain || 'Other'] || []).push(s); });
+    const skillRows = Object.entries(doms).flatMap(([dom, list]) => [
+      h('tr', {}, h('td', { colspan: 4, class: 'ad-dom', text: dom })),
+      ...list.map(s => h('tr', {}, h('td', { text: s.name }), h('td', { class: 'n', text: num(s.answers) }),
+        h('td', { class: `n ${tone(s.accuracy)}` }, meter(s.accuracy), pct(s.accuracy)), h('td', { class: 'n', text: ago(s.last) })))]);
+
+    const sit = d.tests.sittings.map(t => h('tr', {}, h('td', { text: day(t.finished) }), h('td', { text: `${KINDS[t.kind] || t.kind}${t.number ? ` #${t.number}` : ''}` }),
+      h('td', { class: 'n', text: t.low ? `${t.low} to ${t.high}` : (t.asked ? `${t.right} / ${t.asked}` : '-') }), h('td', { class: 'n', text: t.minutes === null ? '-' : `${t.minutes} min` })));
+
+    root.replaceChildren(
+      h('a', { class: 'quiet ad-back', href: '/admin/students/', text: '‹ All students' }),
+      h('div', {}, h('h1', { class: 'h1', text: p.name || 'No name yet' }),
+        h('p', { class: 'ad-empty', text: [p.email, p.handle && `@${p.handle}`, `joined ${day(p.joined)}`, `last active ${ago(a.last)}`].filter(Boolean).join('  ·  ') })),
+      h('div', { class: 'ad-tiles' }, tile(num(a.answers), 'questions answered'), tile(pct(a.accuracy), 'accuracy'), tile(dur(a.minutes), 'study time'),
+        tile(num(a.active_days), 'active days'), tile(a.streak === null || a.streak === undefined ? '-' : num(a.streak), 'day streak'), tile(num(d.tests.sittings.length), 'tests taken')),
+      h('div', { class: 'ad-grid' },
+        h('div', { class: 'ad-col' },
+          card('Last 30 days', 'Questions answered each day', bars, h('div', { class: 'ad-axis' }, h('span', { text: day(d.last30[0].day) }), h('span', { text: 'today' }))),
+          card('Skills', `${d.skills.length} skills practised`, d.skills.length ? table(['Skill', 'Answers', 'Accuracy', 'Last'], skillRows) : h('p', { class: 'ad-empty', text: 'No answers yet.' })),
+          card('Tests', `${d.tests.practice_sets} practice sets finished`, sit.length ? table(['Date', 'Test', 'Score', 'Time'], sit, 2) : h('p', { class: 'ad-empty', text: 'No tests taken yet.' }))),
+        h('div', { class: 'ad-col' },
+          card('Mistakes', `${m.open} open, ${m.fixed} fixed`, m.top.length ? table(null, m.top.map(t => h('tr', {}, h('td', {}, t.label, h('span', { class: 'ad-sm', text: t.skill })), h('td', { class: 'n', text: `${t.hits}×` })))) : h('p', { class: 'ad-empty', text: 'No open mistakes.' })),
+          card('Compete', null, kv([['Rating', c.rating ? `${c.rating} (${c.rated_sittings} rated sittings)` : 'not rated yet'], ['Contests played', c.contests_played], ['Daily challenges', c.daily_challenges]]),
+            c.recent.length ? table(null, c.recent.map(r => h('tr', {}, h('td', { text: r.title }), h('td', { class: 'n', text: r.points === null ? '-' : `${r.points} pts` }), h('td', { class: 'n', text: ago(r.at) })))) : null),
+          card('Words', null, kv([['Words touched', num(w.touched)], ['Reviews', num(w.reviews)], ['Lapses', num(w.lapses)], ['Saved', num(w.saved)], ['Due now', num(w.due_now)]])),
+          card('Goals and account', null, kv([['Target score', p.target], ['SAT date', p.exam_date && day(p.exam_date)], ['Daily minutes', p.daily_minutes], ['Study plan', p.has_plan ? 'yes' : 'no'],
+            ['Hard questions', a.hard_answers ? `${num(a.hard_answers)} answered, ${pct(a.hard_accuracy)} right` : 'none yet'], ['Hints used', num(a.hints_used)], ['Badges earned', d.badges],
+            ['Email', p.email ? `${p.email}${p.email_verified ? '' : ' (not verified)'}` : 'none'], ['Country', p.country], ['Learner id', p.id]]),
+            d.reports.length ? h('p', { class: 'ad-empty', text: `Sent ${d.reports.length} report${d.reports.length === 1 ? '' : 's'}: ${d.reports.map(r => r.title || r.kind).join('; ')}` }) : null))));
+  });
+})();
+</script>
+</body>
+</html>

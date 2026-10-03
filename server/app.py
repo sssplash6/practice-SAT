@@ -38,7 +38,7 @@ MOCKS_PATH = HERE / "mocks.json"
 # exists, so a task adds its router without editing this file.
 ROUTERS = ("api_shell", "api_legacy", "api_me", "api_notes", "api_account", "api_profile",
            "api_practice", "api_bank", "api_tests", "api_results", "api_today", "api_review",
-           "api_plan", "api_compete", "api_words", "classes", "reports", "sets")
+           "api_plan", "api_compete", "api_words", "classes", "reports", "sets", "api_admin")
 # and every module whose init() startup runs when it has one: data migrations,
 # warm caches, the weekly paper
 STARTUP = ROUTERS + ("account", "achievements", "challenge", "compete", "daily", "papers",
