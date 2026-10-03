@@ -1,0 +1,16 @@
+[Unit]
+Description=SAT Freshman parent emails (weekly summary and alerts)
+After=network-online.target
+
+[Service]
+Type=oneshot
+User=freshbot
+Group=freshbot
+WorkingDirectory=/srv/satbank
+EnvironmentFile=/etc/freshbot/satbank.env
+ExecStart=/srv/satbank/.venv/bin/python -m server.parent_mail
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/var/lib/freshbot/satbank /srv/satbank/server

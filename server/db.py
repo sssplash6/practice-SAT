@@ -261,6 +261,8 @@ CREATE TABLE IF NOT EXISTS plan_events (id INTEGER PRIMARY KEY, plan TEXT, at TE
 CREATE TABLE IF NOT EXISTS rw_log (id INTEGER PRIMARY KEY, learner TEXT, at TEXT, source TEXT, ref TEXT, domain TEXT, missed INTEGER, "of" INTEGER);
 CREATE TABLE IF NOT EXISTS guardians (id TEXT PRIMARY KEY, parent TEXT, student TEXT, created TEXT, UNIQUE(parent,student));
 CREATE TABLE IF NOT EXISTS guardian_invites (code TEXT PRIMARY KEY, student TEXT, created TEXT, expires TEXT, used TEXT);
+CREATE TABLE IF NOT EXISTS parent_prefs (parent TEXT PRIMARY KEY, lang TEXT, mail INTEGER DEFAULT 1);
+CREATE TABLE IF NOT EXISTS parent_mail (parent TEXT, key TEXT, at TEXT, PRIMARY KEY(parent,key));
 CREATE TABLE IF NOT EXISTS word_lists (learner TEXT, name TEXT, words TEXT, created TEXT, PRIMARY KEY(learner,name));
 CREATE TABLE IF NOT EXISTS word_suppress (frame TEXT, word TEXT, why TEXT, at TEXT, PRIMARY KEY(frame,word));
 CREATE TABLE IF NOT EXISTS official_done (learner TEXT, cb_id TEXT, pick TEXT, "right" INTEGER, ms INTEGER, at TEXT, PRIMARY KEY(learner,cb_id,at));

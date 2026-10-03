@@ -3,6 +3,9 @@
 (() => {
   'use strict';
   const T = {"en": {"loc": "en-US", "title": "Your child’s progress", "signin": "Sign in to follow your child", "invited": "You were invited to follow a student’s SAT practice. Sign in with your email to accept.", "plain": "Sign in with your email to see how your child is doing.", "name": "Your name", "email": "Email", "go": "Continue", "nopass": "No password: your email is how you sign in on any device.", "bad_email": "That email doesn’t look right.", "fail": "Something went wrong. Try again.", "joined": "You are now following {name}.", "gone": "This invite has expired or was already used. Ask your child to send a new one.", "own": "This is your own invite. Send it to your parent instead.", "none": "No student linked yet", "none_p": "Ask your child to open Settings, then Privacy and data, then Parents, and press Invite a parent. Then open the link they send you.", "child": "Child", "last": "Last active", "never": "never", "today": "today", "yesterday": "yesterday", "ago": "{n} days ago", "week": "This week", "wk_q": "Questions this week", "wk_up": "{n} more than last week", "wk_down": "{n} fewer than last week", "wk_same": "Same as last week", "wk_days": "Days practised this week", "acc": "Accuracy", "time": "Time studied", "hm": "{h} h {m} min", "m": "{m} min", "days": "Active days", "streak": "Day streak", "tests": "Tests taken", "days14": "Last 14 days", "days14s": "Questions answered each day", "strong": "Doing well", "weak": "Needs attention", "few": "Not enough answers yet to say.", "recent": "Recent tests", "range": "score", "none_t": "No tests taken yet.", "goal": "Goal", "target": "Target score", "exam": "SAT date", "left": "{n} days to go", "plan": "Study plan", "yes": "Set up", "no": "Not set up yet", "mist": "Mistakes still to fix", "stop": "Stop following {name}", "sure": "Tap again to confirm", "right": "right", "kinds": {"mock": "Full test", "section": "Full section", "module": "Module", "paper": "Paper", "twin": "Twin", "custom": "Custom test", "diagnostic": "Diagnostic", "shared": "Shared test"}, "student": "Your child"}, "uz": {"loc": "uz-UZ", "title": "Farzandingiz natijalari", "signin": "Farzandingizni kuzatish uchun kiring", "invited": "Sizni o‘quvchining SAT tayyorgarligini kuzatishga taklif qilishdi. Qabul qilish uchun elektron pochtangiz bilan kiring.", "plain": "Farzandingiz qanday o‘qiyotganini ko‘rish uchun elektron pochtangiz bilan kiring.", "name": "Ismingiz", "email": "Elektron pochta", "go": "Davom etish", "nopass": "Parol kerak emas: istalgan qurilmada elektron pochtangiz orqali kirasiz.", "bad_email": "Elektron pochta noto‘g‘ri ko‘rinadi.", "fail": "Xatolik yuz berdi. Qayta urinib ko‘ring.", "joined": "Endi siz {name} natijalarini kuzatyapsiz.", "gone": "Taklif muddati tugagan yoki allaqachon ishlatilgan. Farzandingizdan yangi taklif yuborishini so‘rang.", "own": "Bu o‘zingizning taklifingiz. Uni ota-onangizga yuboring.", "none": "Hali hech kim bog‘lanmagan", "none_p": "Farzandingizdan Sozlamalar, so‘ng Maxfiylik va ma’lumotlar, so‘ng Ota-onalar bo‘limini ochib, “Ota-onani taklif qilish” tugmasini bosishini so‘rang. Keyin u yuborgan havolani oching.", "child": "Farzand", "last": "Oxirgi faollik", "never": "hech qachon", "today": "bugun", "yesterday": "kecha", "ago": "{n} kun oldin", "week": "Bu hafta", "wk_q": "Bu haftadagi savollar", "wk_up": "O‘tgan haftadan {n} ta ko‘p", "wk_down": "O‘tgan haftadan {n} ta kam", "wk_same": "O‘tgan haftadagidek", "wk_days": "Bu hafta mashq qilingan kunlar", "acc": "Aniqlik", "time": "O‘qish vaqti", "hm": "{h} soat {m} daqiqa", "m": "{m} daqiqa", "days": "Faol kunlar", "streak": "Ketma-ket kunlar", "tests": "Topshirilgan testlar", "days14": "So‘nggi 14 kun", "days14s": "Har kuni yechilgan savollar", "strong": "Yaxshi natijalar", "weak": "E’tibor kerak", "few": "Xulosa qilish uchun hali yetarli javob yo‘q.", "recent": "So‘nggi testlar", "range": "ball", "none_t": "Hali test topshirilmagan.", "goal": "Maqsad", "target": "Maqsadli ball", "exam": "SAT sanasi", "left": "{n} kun qoldi", "plan": "O‘quv reja", "yes": "Tuzilgan", "no": "Hali tuzilmagan", "mist": "Tuzatilishi kerak bo‘lgan xatolar", "stop": "{name} natijalarini kuzatishni to‘xtatish", "sure": "Tasdiqlash uchun yana bosing", "right": "to‘g‘ri", "kinds": {"mock": "To‘liq test", "section": "To‘liq bo‘lim", "module": "Modul", "paper": "Variant", "twin": "Juft test", "custom": "Maxsus test", "diagnostic": "Diagnostika", "shared": "Ulashilgan test"}, "student": "Farzandingiz"}, "ru": {"loc": "ru-RU", "title": "Успехи вашего ребёнка", "signin": "Войдите, чтобы следить за успехами ребёнка", "invited": "Вас пригласили следить за подготовкой ученика к SAT. Чтобы принять приглашение, войдите по электронной почте.", "plain": "Войдите по электронной почте, чтобы увидеть, как занимается ваш ребёнок.", "name": "Ваше имя", "email": "Электронная почта", "go": "Продолжить", "nopass": "Пароль не нужен: вы входите по электронной почте с любого устройства.", "bad_email": "Похоже, адрес почты указан неверно.", "fail": "Что-то пошло не так. Попробуйте ещё раз.", "joined": "Теперь вы следите за успехами: {name}.", "gone": "Срок приглашения истёк или оно уже использовано. Попросите ребёнка отправить новое.", "own": "Это ваше собственное приглашение. Отправьте его родителю.", "none": "Пока никто не подключён", "none_p": "Попросите ребёнка открыть Настройки, затем «Конфиденциальность и данные», затем «Родители» и нажать «Пригласить родителя». Затем откройте ссылку, которую он пришлёт.", "child": "Ребёнок", "last": "Последняя активность", "never": "никогда", "today": "сегодня", "yesterday": "вчера", "ago": "{n} дн. назад", "week": "Эта неделя", "wk_q": "Вопросов за неделю", "wk_up": "На {n} больше, чем на прошлой неделе", "wk_down": "На {n} меньше, чем на прошлой неделе", "wk_same": "Столько же, сколько на прошлой неделе", "wk_days": "Дней занятий на этой неделе", "acc": "Точность", "time": "Время занятий", "hm": "{h} ч {m} мин", "m": "{m} мин", "days": "Дней с занятиями", "streak": "Дней подряд", "tests": "Пройдено тестов", "days14": "Последние 14 дней", "days14s": "Решено вопросов по дням", "strong": "Получается хорошо", "weak": "Нужно подтянуть", "few": "Пока слишком мало ответов для выводов.", "recent": "Недавние тесты", "range": "баллов", "none_t": "Тестов пока нет.", "goal": "Цель", "target": "Целевой балл", "exam": "Дата SAT", "left": "До экзамена: {n} дн.", "plan": "План занятий", "yes": "Составлен", "no": "Пока не составлен", "mist": "Ошибок, которые ещё нужно исправить", "stop": "Больше не следить: {name}", "sure": "Нажмите ещё раз для подтверждения", "right": "верно", "kinds": {"mock": "Полный тест", "section": "Полный раздел", "module": "Модуль", "paper": "Вариант", "twin": "Парный тест", "custom": "Свой тест", "diagnostic": "Диагностика", "shared": "Общий тест"}, "student": "Ваш ребёнок"}};
+  Object.assign(T.en, { mail_on: 'Email me a weekly summary and updates' });
+  Object.assign(T.uz, { mail_on: 'Haftalik xulosa va yangiliklarni elektron pochtamga yuborish' });
+  Object.assign(T.ru, { mail_on: 'Присылать мне итоги недели и новости на почту' });
   const h = UI.h, A = UI.acct;
   const root = document.getElementById('root');
   const q = new URLSearchParams(location.search);
@@ -12,6 +15,8 @@
   let lang = T[LS.get('satf.parent.lang')] ? LS.get('satf.parent.lang') : guess();
   let kid = LS.get('satf.parent.kid') || '';
   let redraw = () => {};
+  let signed = false, prefs = { lang: null, mail: true };
+  const savePrefs = patch => { if (signed) UI.api('/parent/prefs', { method: 'PUT', body: patch, quiet: true }).catch(() => {}); };
   const t = (k, v) => String(T[lang][k] ?? T.en[k]).replace(/\{(\w+)\}/g, (_, x) => (v && v[x] !== undefined ? v[x] : ''));
   const num = n => (n === null || n === undefined ? '-' : Number(n).toLocaleString(T[lang].loc));
   const pct = x => (x === null || x === undefined ? '-' : `${Math.round(x * 100)}%`);
@@ -29,7 +34,7 @@
   function top(extra) {
     const seg = h('div');
     UI.seg(seg, [{ value: 'en', label: 'EN' }, { value: 'uz', label: 'O‘Z' }, { value: 'ru', label: 'РУ' }],
-      { value: lang, label: 'Language', onChange: v => { lang = v; LS.set('satf.parent.lang', v); document.documentElement.lang = v; redraw(); } });
+      { value: lang, label: 'Language', onChange: v => { lang = v; LS.set('satf.parent.lang', v); document.documentElement.lang = v; savePrefs({ lang: v }); redraw(); } });
     return h('div', { class: 'par-top' }, h('span', { html: UI.mark(30) }), h('h1', { class: 'grow', text: t('title') }), seg);
   }
   const page = (...kids) => { document.title = `${t('title')} · SAT Freshman`; root.replaceChildren(top(), ...kids.filter(Boolean)); };
@@ -70,6 +75,8 @@
     const days = d.goal.exam_date ? Math.ceil((new Date(d.goal.exam_date + 'T00:00:00') - Date.now()) / 864e5) : null;
     const skill = s => h('li', {}, h('div', { style: 'flex: 1; min-width: 0' }, s.name, h('span', { class: 'par-meter' }, h('i', { style: `width: ${Math.round(s.accuracy * 100)}%` }))), h('b', { text: pct(s.accuracy) }));
     const kv = rows => h('dl', { class: 'par-kv' }, rows.filter(Boolean).flatMap(([k, v]) => [h('dt', { text: k }), h('dd', { text: v })]));
+    const mailBox = h('input', { type: 'checkbox', checked: prefs.mail });
+    mailBox.addEventListener('change', () => { prefs.mail = mailBox.checked; savePrefs({ mail: mailBox.checked }); });
     let sure = false;
     const stop = h('button', { type: 'button', class: 'quiet', text: t('stop', { name: cur.name || t('student') }) });
     stop.addEventListener('click', async () => {
@@ -91,7 +98,7 @@
         h('b', { text: x.low ? `${x.low} to ${x.high}` : (x.asked ? `${x.right} / ${x.asked}` : '-') })))) : h('p', { class: 'par-empty', text: t('none_t') })),
       card(t('goal'), null, kv([[t('target'), d.goal.target ? num(d.goal.target) : null], d.goal.exam_date ? [t('exam'), `${date(d.goal.exam_date)}${days !== null && days >= 0 ? ` · ${t('left', { n: days })}` : ''}`] : null,
         [t('plan'), d.goal.has_plan ? t('yes') : t('no')], [t('mist'), num(d.open_mistakes)]].filter(r => !r || r[1] !== null))),
-      h('div', { class: 'par-foot' }, stop));
+      h('label', { class: 'par-mail' }, mailBox, t('mail_on')), h('div', { class: 'par-foot' }, stop));
   }
 
   async function load(list) {
@@ -107,6 +114,7 @@
     let acc = null;
     try { acc = await UI.api('/account'); } catch (_) {}
     if (!acc || !acc.saved) { redraw = signIn; signIn(); return; }
+    signed = true;
     if (invite) {
       try {
         const r = await UI.api('/parent/join', { method: 'POST', body: { code: invite }, quiet: true });
@@ -121,7 +129,9 @@
         if (!had || !had.children.length) { redraw = () => message(t('title'), t('gone')); redraw(); return; }
       }
     }
-    const list = (await UI.api('/parent/children').catch(() => ({ children: [] }))).children;
+    const got = await UI.api('/parent/children').catch(() => ({ children: [] }));
+    const list = got.children;
+    if (got.prefs) { prefs = got.prefs; if (!prefs.lang) savePrefs({ lang }); else if (!LS.get('satf.parent.lang') && T[prefs.lang]) { lang = prefs.lang; document.documentElement.lang = lang; } }
     if (!list.length) { redraw = () => message(t('none'), t('none_p')); redraw(); return; }
     load(list);
   }

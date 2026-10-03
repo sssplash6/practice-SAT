@@ -32,8 +32,10 @@ if [[ ! -f /etc/freshbot/satbank.env ]]; then
 fi
 
 cp /srv/satbank/deploy/fa-satbank.service /etc/systemd/system/fa-satbank.service
+cp /srv/satbank/deploy/fa-satbank-mail.service /srv/satbank/deploy/fa-satbank-mail.timer /etc/systemd/system/
 systemctl daemon-reload
 systemctl enable fa-satbank >/dev/null
+systemctl enable --now fa-satbank-mail.timer >/dev/null
 systemctl restart fa-satbank
 # the first start takes about 15 seconds (it builds its question catalogue)
 for i in $(seq 1 30); do

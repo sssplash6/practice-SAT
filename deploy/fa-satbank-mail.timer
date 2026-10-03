@@ -1,0 +1,10 @@
+[Unit]
+Description=Run the SAT Freshman parent emails every morning
+
+[Timer]
+# 03:00 UTC is 08:00 in Uzbekistan. The Sunday summary is picked inside the script.
+OnCalendar=*-*-* 03:00:00 UTC
+Persistent=true
+
+[Install]
+WantedBy=timers.target

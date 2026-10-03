@@ -44,6 +44,6 @@ copy `prev5.db` to `/var/lib/freshbot/satbank/satfreshman.db` while the service 
 (`systemctl stop fa-satbank`), fix the owner (`chown freshbot:freshbot ...`) and start it again.
 
 ## Notes
-- Mail: without `SATF_SMTP_*` set, emails are written to `server/outbox` instead of being sent.
+- Mail: without `SATF_SMTP_*` set, emails are written to `server/outbox` instead of being sent. The parent emails (weekly summary on Sundays, alerts daily) run from the `fa-satbank-mail.timer` at 08:00 Uzbekistan time and send nothing until SMTP is set. Try one now with `sudo -u freshbot /srv/satbank/.venv/bin/python -m server.parent_mail --dry` (run from /srv/satbank with the env file loaded).
 - The app keeps its question material (`material/`, about 150 MB) next to the code; `push.sh` copies it.
 - Port 3020 is loopback only; only Caddy talks to the internet (open 80 and 443 in the VPS firewall).

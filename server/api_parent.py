@@ -100,8 +100,33 @@ def join(body: Join, x_learner: str | None = Header(default=None)) -> dict:
 @router.get("/api/parent/children")
 def children(x_learner: str | None = Header(default=None)) -> dict:
     parent = learner_of(x_learner)
-    return {"name": _name(parent), "children": [{"id": r["id"], "name": _name(r["student"]), "since": r["created"]} for r in db.rows(
+    return {"name": _name(parent), "prefs": prefs_of(parent), "children": [{"id": r["id"], "name": _name(r["student"]), "since": r["created"]} for r in db.rows(
         "SELECT id, student, created FROM guardians WHERE parent=? ORDER BY created", parent)]}
+
+
+LANGS = ("en", "uz", "ru")
+
+
+class Prefs(BaseModel):
+    lang: str | None = Field(default=None, pattern="^(en|uz|ru)$")
+    mail: bool | None = None
+
+
+def prefs_of(parent: str) -> dict:
+    r = db.one("SELECT lang, mail FROM parent_prefs WHERE parent=?", parent)
+    return {"lang": r["lang"] if r else None, "mail": bool(r["mail"]) if r and r["mail"] is not None else True}
+
+
+@router.put("/api/parent/prefs")
+def set_prefs(body: Prefs, x_learner: str | None = Header(default=None)) -> dict:
+    parent = deps.writer_of(x_learner)
+    db.ensure_learner(parent)
+    cur = prefs_of(parent)
+    lang = body.lang or cur["lang"]
+    mail = cur["mail"] if body.mail is None else body.mail
+    db.run("INSERT INTO parent_prefs(parent,lang,mail) VALUES (?,?,?) ON CONFLICT(parent) DO UPDATE SET lang=excluded.lang, mail=excluded.mail",
+           parent, lang, int(mail))
+    return {"lang": lang, "mail": mail}
 
 
 def _link(link: str, parent: str):
@@ -121,8 +146,11 @@ def unlink(link: str, x_learner: str | None = Header(default=None)) -> dict:
 
 @router.get("/api/parent/children/{link}")
 def child(link: str, x_learner: str | None = Header(default=None)) -> dict:
+    return summary(_link(link, learner_of(x_learner)))
+
+
+def summary(student: str) -> dict:
     """The short version of the admin's student page: how much, how well, where it is going, what needs work."""
-    student = _link(link, learner_of(x_learner))
     d = api_admin.detail(db.one("SELECT * FROM learners WHERE id=?", student))
     a, p, days = d["activity"], d["profile"], d["last30"]
     this, prev = days[-7:], days[-14:-7]
