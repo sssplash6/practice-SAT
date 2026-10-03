@@ -773,15 +773,15 @@ body.has-rail { padding-left: var(--rail-w); }
 .pill {
   appearance: none; border: 0; cursor: pointer; text-decoration: none;
   display: inline-flex; align-items: center; justify-content: center; gap: 8px;
-  height: 52px; padding: 0 30px; border-radius: 999px;
+  height: 42px; padding: 0 22px; border-radius: 10px;   /* the one primary button: compact, softly cornered. No 999px pills, nothing taller than 48px (tools/check-ui.py) */
   background: var(--amber); color: var(--ink-deep);
-  font: 700 15.5px var(--font); letter-spacing: -.01em;
+  font: 700 15px var(--font); letter-spacing: -.01em;
   transition: transform .16s var(--ease), box-shadow .2s var(--ease), opacity .2s var(--ease);
   user-select: none; -webkit-user-select: none;
 }
 .pill.wide { width: 100%; }
 /* a card's or a sheet's primary: the same pill at control height */
-/* the one Start: compact, softly cornered (the round 52px pill stays for the page's own big action) */
+/* the same button, a size down */
 .pill.sm { height: 34px; padding: 0 18px; border-radius: 10px; font-size: 14px; gap: 7px; }
 .pill svg { width: 18px; height: 18px; flex: none; }
 .pill .kbd { background: rgba(30, 30, 30, .12); box-shadow: none; color: var(--ink-deep); }
@@ -1146,7 +1146,7 @@ input[type="range"]:focus-visible::-moz-range-thumb { box-shadow: 0 0 0 2px var(
 .skel.line.lg { height: 18px; }
 .skel.num { width: 88px; height: 34px; }
 .skel.circle { border-radius: 50%; }
-.skel.pill-s { width: 140px; height: 40px; border-radius: 999px; }
+.skel.pill-s { width: 140px; height: 40px; border-radius: 10px; }
 
 /* a stat tile (UI.tile): .stat-k label, .stat-v value (DM Mono), .stat-sub sub-line, and
    optionally .stat-delta ("▲ 84") and a 24px .stat-spark. A button or link tile is a
