@@ -34,8 +34,8 @@ window.AD = (() => {
       const err = h('p', { class: 'field-err', role: 'alert', hidden: !msg, text: msg || '' });
       const open = () => { if (f.value.trim()) { tok.set(f.value.trim()); run(); } };
       f.addEventListener('keydown', e => { if (e.key === 'Enter') open(); });
-      root.replaceChildren(h('h1', { class: 'h1', text: title }), h('div', { class: 'ad-gate' }, h('label', { class: 'label', text: 'Admin token' }),
-        h('div', { class: 'ad-row' }, f, h('button', { type: 'button', class: 'pill sm', text: 'Open', onclick: open })), err,
+      root.replaceChildren(h('h1', { class: 'h1', text: title }), h('div', { class: 'adm-gate' }, h('label', { class: 'label', text: 'Admin token' }),
+        h('div', { class: 'adm-row' }, f, h('button', { type: 'button', class: 'pill sm', text: 'Open', onclick: open })), err,
         h('p', { class: 'help', text: 'It is the SATF_ADMIN_TOKEN on the server. Kept for this tab only.' })));
       f.focus();
     };
