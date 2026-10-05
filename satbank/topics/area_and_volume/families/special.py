@@ -450,7 +450,7 @@ def equal_area_square(rng: random.Random, seed: int, *, r=None, given=None,
         # whichever of the side and the perimeter the item asks for
         pool = {"diameter_as_radius": Mis("used the diameter as the radius",
                                           E(2) * key), **pool}
-    rationale = (f"The circle has area pi({r.plain()})^2 = {(PI*r**2).plain()}; a square of that "
+    rationale = (f"The circle has area π({r.plain()})² = {(PI*r**2).plain()}; a square of that "
                  f"area has side {side.plain()}"
                  + (f", so its perimeter is {key.plain()}." if ask == "perimeter" else "."))
     P = {"kind": "equal_area_square", "r": float(r), "ask": ask}
@@ -520,7 +520,7 @@ def formula_solve(rng: random.Random, seed: int, *, a=None, b=None, volume=None,
     pool = {
         "cube_root_only": Mis("ignored the coefficient and took the cube root of the "
                               "volume alone", approx(volume ** (1 / 3))),
-        "no_pi": Mis("left pi out of the calculation", approx((b * volume / a) ** (1 / 3))),
+        "no_pi": Mis("left π out of the calculation", approx((b * volume / a) ** (1 / 3))),
         "inverted": Mis("inverted the coefficient",
                         approx((a * volume / (b * math.pi)) ** (1 / 3))),
         "square_root": Mis("took a square root instead of a cube root",

@@ -263,7 +263,7 @@ def solid_scaling(rng: random.Random, seed: int, *, mode=None, fmt="mcq",
             f"the radius R, in terms of r, and the height H, in terms of h, of the second "
             f"cylinder?")
     pool = {
-        "swapped": Mis(f"swapped the factors ({b}^2 x {a} = {b*b*a}, not {mult})",
+        "swapped": Mis(f"swapped the factors ({b}² × {a} = {b*b*a}, not {mult})",
                        f"R = {b}r and H = {a}h"),
         "square_height": Mis("squared the height factor instead of the radius factor",
                              f"R = {b}r and H = {a*a}h"),

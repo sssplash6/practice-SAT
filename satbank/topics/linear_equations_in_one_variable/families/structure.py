@@ -384,7 +384,7 @@ def no_solution_conditions(rng: random.Random, seed: int, *, var=None, m=None, c
     rng.shuffle(mistakes)
     P = {"kind": "lin1_conditions", "m": float(m), "c": float(c), "picks": list(picks)}
     ch, why, letter = assemble_text(key, mistakes, rng)
-    rationale = (f"No solution needs a = {num(m)} with a*b ≠ {num(c)}, so b ≠ "
+    rationale = (f"No solution needs a = {num(m)} with ab ≠ {num(c)}, so b ≠ "
                  f"{num(c / m)}, which leaves {key} true.")
     return Item("lin1.no_solution_conditions", "solution set", "hard", seed, stem,
                 "mcq", E(1), letter, rationale, ch, why, ch, params=P)

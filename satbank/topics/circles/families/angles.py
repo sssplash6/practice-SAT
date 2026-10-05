@@ -88,7 +88,7 @@ def degree_radian(rng: random.Random, seed: int, *, mode=None, deg=None, num=Non
         fmt = fmt or ("spr" if rng.random() < 0.5 else "mcq")
         key = E(180 * c)
         mistakes = [
-            Mis("multiplied by 360/pi instead of 180/pi", key * E(2)),
+            Mis("multiplied by 360/π instead of 180/π", key * E(2)),
             Mis("used 90 degrees for a straight angle", key / E(2)),
             Mis("gave the measure of the rest of a full turn", E(360) - key),
             Mis("inverted the fraction before converting", E(180 / c)),

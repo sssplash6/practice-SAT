@@ -27,18 +27,18 @@ def _window(pts, pad=2):
 # ---------------------------------------------------- circle through 3 points
 
 CIRCLE_STEMS = [
-    "The three points shown define a circle. The {measure} of this circle is k*pi, where k "
+    "The three points shown define a circle. The {measure} of this circle is kπ, where k "
     "is a constant. What is the value of k?",
     "A circle in the xy-plane passes through the three points shown. The {measure} of the "
-    "circle is k*pi, where k is a constant. What is the value of k?",
-    "The three points shown lie on a circle. If the {measure} of the circle is k*pi, what is "
+    "circle is kπ, where k is a constant. What is the value of k?",
+    "The three points shown lie on a circle. If the {measure} of the circle is kπ, what is "
     "the value of k?",
 ]
 
 
 def circle_from_points(rng: random.Random, seed: int, *, fmt=None, r=None,
                        center=None, ask=None, wrongs=None) -> Item:
-    """Three points fix a circle; the answer is its circumference as k*pi.
+    """Three points fix a circle; the answer is its circumference as kπ.
 
     The source builds these the same way every time: two points are the ends of
     a vertical diameter and the third is the horizontal extreme, so k = 2r.
@@ -54,7 +54,7 @@ def circle_from_points(rng: random.Random, seed: int, *, fmt=None, r=None,
     stem = rng.choice(CIRCLE_STEMS).format(measure=ask)
     fig = coordinate_grid(max(0, xmin), xmax, max(0, ymin), ymax, points=pts)
     P = {"kind": "circle_3pt", "r": r, "ask": ask, "center": (cx, cy)}
-    formula = "C = 2*pi*r" if ask == "circumference" else "A = pi*r^2"
+    formula = "C = 2πr" if ask == "circumference" else "A = πr²"
     rationale = (f"The points lie on a circle centered at ({cx}, {cy}) with radius {r}, so "
                  f"{formula} gives k = {key.plain()}.")
     other = E(r * r) if ask == "circumference" else E(2 * r)
@@ -204,7 +204,7 @@ def square_on_axes(rng: random.Random, seed: int, *, fmt="mcq", a=None, b=None,
             "halved": Mis("halved the side", side / E(2)),
         }
         rationale = (f"Half of each diagonal is {a} and {b}, so a side is "
-                     f"sqrt({a}^2 + {b}^2) = {side.plain()}.")
+                     f"√({a}² + {b}²) = {side.plain()}.")
     else:
         pool = {
             "one_side": Mis("gave one side instead of the perimeter", side),
@@ -212,7 +212,7 @@ def square_on_axes(rng: random.Random, seed: int, *, fmt="mcq", a=None, b=None,
             "half_diagonals": Mis("added the four half-diagonals", E(2 * (a + b))),
             "area": Mis("gave the area instead of the perimeter", E(2 * a * b)),
         }
-        rationale = (f"Each side is sqrt({a}^2 + {b}^2) = {side.plain()}, so the perimeter is "
+        rationale = (f"Each side is √({a}² + {b}²) = {side.plain()}, so the perimeter is "
                      f"4({side.plain()}) = {key.plain()}.")
 
     P = {"kind": "square_diagonals", "a": a, "b": b, "ask": ask}

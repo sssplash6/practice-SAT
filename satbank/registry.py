@@ -9,13 +9,14 @@ cannot be entered in a grid-in. The registry just draws again.
 from __future__ import annotations
 
 import random
+import re
 from typing import Callable
 
 from .audit import audit
 from .item import Item, ItemError
 from .topic import Topic, load_topics
 
-__all__ = ["templates", "topic_of", "generate", "generate_many"]
+__all__ = ["templates", "topic_of", "generate", "generate_many", "typeset"]
 
 _TEMPLATES: dict[str, Callable] = {}
 _OWNER: dict[str, str] = {}
@@ -40,6 +41,32 @@ def topic_of(name: str) -> str:
     return _OWNER[name]
 
 
+_SPACED_MINUS = re.compile(r"(?<=[\w)²³.]) - (?=[\w(])")
+_LEADING_MINUS = re.compile(r"(?<![\w)\-])-(?=\d)")
+_RANGE = re.compile(r"(?<![\d-])(\d{1,3})-(?=\d{1,3}(?![\d-]))")
+
+
+def typeset(text):
+    """The typography every printed item shares: a minus sign is U+2212, a range takes an en dash and a product
+    a times sign, whatever a template typed. Answers are compared normalised (norm_text), so this is display only."""
+    if not isinstance(text, str):
+        return text
+    text = _SPACED_MINUS.sub(" \u2212 ", text)
+    text = _LEADING_MINUS.sub("\u2212", text)
+    text = _RANGE.sub("\\1\u2013", text)
+    return text.replace(" * ", " \u00d7 ")
+
+
+def _typeset_item(item: Item) -> Item:
+    item.stem = typeset(item.stem)
+    item.choices = [typeset(c) for c in item.choices]
+    item.rationale = typeset(item.rationale)
+    item.reasons = [typeset(r) for r in item.reasons]
+    if item.table:
+        item.table = [[typeset(c) for c in row] if isinstance(row, (list, tuple)) else row for row in item.table]
+    return item
+
+
 def generate(name: str, seed: int, attempts: int = 60, verify: bool = True, **kw) -> Item:
     """Deterministic in `seed`: the same seed always yields the same item.
 
@@ -62,7 +89,7 @@ def generate(name: str, seed: int, attempts: int = 60, verify: bool = True, **kw
                 continue
             if verify:
                 audit(item)
-            return item
+            return _typeset_item(item)
     limit = FALLBACK_ATTEMPTS if fallback else attempts
     raise ItemError(f"{name}: no valid item after {limit} attempts (seed {seed})")
 
