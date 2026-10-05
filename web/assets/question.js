@@ -187,26 +187,68 @@
   // 5 m/s, 4.50/hour) are not fractions; neither is a/b/c.
   const SUP = '⁰¹²³⁴⁵⁶⁷⁸⁹ⁿ';
   const INT = '(?:\\d{1,3}(?:,\\d{3})+|\\d+)(?:\\.\\d+)?';
-  const NUM_END = new RegExp(`(?:√?${INT}[A-Za-zπθ]*|√?[A-Za-zπθ]+)[${SUP}]*$`);
+  const NUM_END = new RegExp(`(?:(?:${INT})?√(?:${INT}|[A-Za-zπ])|√?${INT}[A-Za-zπθ]*|√?[A-Za-zπθ]+)[${SUP}]*$`);
   const DEN_START = new RegExp(`^(?:√?${INT}[${SUP}]*|[A-Z]{2,3}(?![A-Za-z])|[A-Za-zπθ][${SUP}]*(?![A-Za-z]))`);
-  function fracNodes(str) {
-    str = String(str ?? '');
-    if (!str.includes('/')) return [doc.createTextNode(str)];
+  // Radicals and powers in the line: √(…), ³√(…), √2, x^(a/b), 5^x. Every character stays in the DOM (the √, ^ and
+  // brackets are visually hidden), so offsets are unchanged; a radical is drawn as a stretchy sign with a bar over its
+  // radicand, an exponent as a raised, smaller run.
+  const SUPD = '²³⁴⁵⁶⁷⁸⁹';
+  const hid = t => h('span', { class: 'fh', text: t });
+  const group = (s, i) => { let d = 0; for (let j = i; j < s.length; j++) { if (s[j] === '(') d++; else if (s[j] === ')' && !--d) return j; } return -1; };
+  // the ranges inside √( ) and ^( ): a slash there belongs to that group, not to a fraction around it
+  const holes = s => { const r = []; for (let i = 0; i < s.length; i++) if ((s[i] === '√' || s[i] === '^') && s[i + 1] === '(') { const e = group(s, i + 1); if (e > 0) r.push([i + 2, e]); } return r; };
+  function richNodes(str) {
+    if (!/[√^]/.test(str)) return [doc.createTextNode(str)];
     const out = [];
     let at = 0;
-    const hid = t => h('span', { class: 'fh', text: t });
+    const text = (a, b) => { if (b > a) out.push(doc.createTextNode(str.slice(a, b))); };
+    for (let p = 0; p < str.length; p++) {
+      const c = str[p];
+      if (c === '^') {
+        let e, inner, tail = '';
+        if (str[p + 1] === '(') { e = group(str, p + 1); if (e < 0) continue; inner = str.slice(p + 2, e); }
+        else { const m = str.slice(p + 1).match(/^[−-]?(?:\d+(?:\.\d+)?|[A-Za-zπ])/); if (!m || p === 0 || /[\s(]/.test(str[p - 1])) continue; inner = m[0]; e = p + m[0].length; tail = 'x'; }
+        text(at, p);
+        out.push(hid('^'), ...(tail ? [] : [hid('(')]), h('span', { class: inner.includes('/') ? 'sp spf' : 'sp' }, fracNodes(inner)), ...(tail ? [] : [hid(')')]));
+        at = e + 1;
+        p = at - 1;
+      } else if (c === '√') {
+        let e, inner;
+        if (str[p + 1] === '(') { e = group(str, p + 1); if (e < 0) continue; inner = str.slice(p + 2, e); }
+        else { const m = str.slice(p + 1).match(/^(?:\d+(?:\.\d+)?|[A-Za-zπ])/); if (!m) continue; inner = m[0]; e = p + m[0].length; }
+        // an index, ³√ or ⁴√, is the raised digits right before the sign, unless they are a power of what comes before
+        let a = p;
+        while (a > at && SUPD.includes(str[a - 1])) a--;
+        if (a < p && /[A-Za-z0-9)]/.test(str[a - 1] || '')) a = p;
+        text(at, a);
+        const open = str[p + 1] === '(';
+        out.push(h('span', { class: 'rad' }, a < p ? h('span', { class: 'ri' }, str.slice(a, p)) : null, hid('√'), h('span', { class: 'rs', 'aria-hidden': 'true' }),
+          h('span', { class: 'rr' }, open ? hid('(') : null, fracNodes(inner), open ? hid(')') : null)));
+        at = e + 1;
+        p = at - 1;
+      }
+    }
+    text(at, str.length);
+    return out;
+  }
+  function fracNodes(str) {
+    str = String(str ?? '');
+    if (!str.includes('/')) return richNodes(str);
+    const out = [];
+    let at = 0;
+    const skip = holes(str);
     const back = i => { let d = 0; for (let j = i; j >= at; j--) { if (str[j] === ')') d++; else if (str[j] === '(' && !--d) return j; } return -1; };
     const fwd = i => { let d = 0; for (let j = i; j < str.length; j++) { if (str[j] === '(') d++; else if (str[j] === ')' && !--d) return j; } return -1; };
     const part = (t, group) => (group ? [hid('('), ...fracNodes(t.slice(1, -1)), hid(')')] : fracNodes(t));
     for (let k = str.indexOf('/'); k > 0; k = str.indexOf('/', k + 1)) {
-      if (k < at || /[\s/]/.test(str[k - 1]) || /[\s/]/.test(str[k + 1] || ' ')) continue;
+      if (k < at || /[\s/]/.test(str[k - 1]) || /[\s/]/.test(str[k + 1] || ' ') || skip.some(([x, y]) => k >= x && k < y)) continue;
       let a, nGroup = false;
       if (str[k - 1] === ')') {
         a = back(k - 1);
         if (a < 0) continue;
         nGroup = true;
         // f(x)/2, 2(x + 1)/3, √(x)/2: the brackets belong to the numerator and stay
-        const pre = str.slice(at, a).match(new RegExp(`(?:${INT}|[A-Za-z√]+)$`));
+        const pre = str.slice(at, a).match(new RegExp(`(?:(?:${INT})?[${SUPD}]*√|${INT}|[A-Za-z]+)$`));
         if (pre) { a -= pre[0].length; nGroup = false; }
       } else if (str[k - 1] === '|') {
         a = str.lastIndexOf('|', k - 2);                                     // |x|/a
@@ -216,9 +258,33 @@
         if (!m) continue;
         a = k - m[0].length;
       }
+      // x^2/3 and (1 + r)^2/4: a power is one thing, so its base belongs to the numerator
+      while (a > at && str[a - 1] === '^') {
+        const j = a - 1;
+        if (str[j - 1] === ')') { const s0 = back(j - 1); if (s0 < at) break; a = s0; }
+        else { const m = str.slice(at, j).match(/(?:\d+(?:\.\d+)?|[A-Za-z])$/); if (!m) break; a = j - m[0].length; }
+        nGroup = false;
+      }
       let b, dGroup = false;
       if (str[k + 1] === '(') { b = fwd(k + 1); if (b < 0) continue; b += 1; dGroup = true; }
-      else { const m = str.slice(k + 1).match(DEN_START); if (!m) continue; b = k + 1 + m[0].length; }
+      else {
+        const rd = str.slice(k + 1).match(new RegExp(`^[${SUPD}]*√`));
+        if (rd) {                                                            // ⁴√(z⁸), √2: a radical is a whole denominator
+          const j = k + 1 + rd[0].length;
+          if (str[j] === '(') { const e = group(str, j); if (e < 0) continue; b = e + 1; }
+          else { const m = str.slice(j).match(new RegExp(`^(?:${INT}|[A-Za-zπ])`)); if (!m) continue; b = j + m[0].length; }
+        } else {
+          const m = str.slice(k + 1).match(DEN_START); if (!m) continue; b = k + 1 + m[0].length;
+          // f(n)/g(n): a function over a function keeps the denominator's brackets
+          if (nGroup === false && str[k - 1] === ')' && /^[A-Za-z]$/.test(m[0]) && str[b] === '(') { const e = group(str, b); if (e > 0) b = e + 1; }
+        }
+      }
+      // 1/2^x, 5/(x + 1)^2: the denominator takes its power
+      while (str[b] === '^') {
+        if (str[b + 1] === '(') { const e = group(str, b + 1); if (e < 0) break; b = e + 1; }
+        else { const m = str.slice(b + 1).match(/^[−-]?(?:\d+(?:\.\d+)?|[A-Za-z])/); if (!m) break; b += 1 + m[0].length; }
+        dGroup = false;
+      }
       if (str[b] === '/' || str[a - 1] === '/') continue;                    // a/b/c: leave the chain
       const num0 = str.slice(a, k), den0 = str.slice(k + 1, b);
       if (/^[A-Za-z]+$/.test(num0) && /\d\s$/.test(str.slice(0, a))) continue;   // 5 m/s
@@ -229,13 +295,13 @@
       // a lone fraction in brackets, (2/19)s: the brackets go with the bar
       let wl = '', wr = '';
       if (!nGroup && !dGroup && str[a - 1] === '(' && str[b] === ')' && a - 1 >= at && !/[A-Za-z√\d]/.test(str[a - 2] || '')) { a -= 1; b += 1; wl = '('; wr = ')'; }
-      if (a > at) out.push(doc.createTextNode(str.slice(at, a)));
+      if (a > at) out.push(...richNodes(str.slice(at, a)));
       out.push(h('span', { class: 'frac' }, wl ? hid(wl) : null, h('span', { class: 'fn' }, part(num0, nGroup)), hid('/'),
         h('span', { class: 'fd' }, part(den0, dGroup)), wr ? hid(wr) : null));
       at = b;
       k = b - 1;
     }
-    if (at < str.length) out.push(doc.createTextNode(str.slice(at)));
+    if (at < str.length) out.push(...richNodes(str.slice(at)));
     return out;
   }
   // UI.fracText(el, text) fills el; UI.fracText(text) returns a span to insert (the Review and Results pages call it so)
@@ -318,7 +384,7 @@
     const diff = stemDiff.__test.filter(([a, b, want]) => JSON.stringify(stemDiff(a, b).map(s => b.slice(s.start, s.end))) !== JSON.stringify(want)).map(([a]) => a);
     // fractions: [text, how many stack]; the text itself never changes (highlight offsets)
     const frac = [['10x²/(x² − 196) − 5x/(x + 14) = 8/(x − 14)', 3], ['P = (2/19)s − 1/9', 2], ['the ratio BC/AB', 1], ['|x|/a − 6', 1],
-      ['60 km/h and/or more', 0], ['at 5 m/s', 0], ['$4.50/hour', 0], ['a/b/c', 0], ['lb/ft³', 0]].filter(([t, want]) => {
+      ['√(z⁹)/⁴√(z⁸) = z^(a/b)', 1], ['f(w)/g(w), for w > 5', 1], ['5(1/2^x) and x²/3', 2], ['2√3/3', 1], ['12√65 and 5^x', 0], ['60 km/h and/or more', 0], ['at 5 m/s', 0], ['$4.50/hour', 0], ['a/b/c', 0], ['lb/ft³', 0]].filter(([t, want]) => {
       const box = h('span', {}, fracNodes(t));
       return box.textContent !== t || box.querySelectorAll(':scope > .frac').length !== want || fracText(t).textContent !== t;
     }).map(([t]) => t);

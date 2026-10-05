@@ -1566,6 +1566,8 @@
     try { r = await api(`/plan/${enc(a.id)}/trapsheet`); }
     catch (_) { UI.cardError(traps, () => { S.d = d; sheetPage(); }, 'Couldn’t load your traps.'); return; }
     const plain = x => String(x ?? '').replace(/\$([^$]+)\$/g, '$1');
+    // the text first, then the same fractions, radicals and powers as in a set once question.js is in
+    const rich = el => { const t = el.textContent; if (UI.need) UI.need('question').then(() => UI.fracText(el, t)).catch(() => {}); return el; };
     const L = 'ABCDEFGH';
     const list = (r.entries || []).map((e, n) => {
       const ex = e.example, q = ex && ex.question, key = ex && ex.key;
@@ -1576,17 +1578,17 @@
         e.hits > 1 ? h('p', { class: 'meta', text: `caught you ${e.hits} times` }) : null,
         e.tell && e.tell !== e.name && e.tell !== title ? h('p', { class: 'line-t', text: e.tell }) : null);
       if (q) {
-        item.append(h('p', { class: 'pl-stem', text: plain(q.stem) }));
+        item.append(rich(h('p', { class: 'pl-stem', text: plain(q.stem) })));
         if (q.figure_alt || q.figure) item.append(h('p', { class: 'meta', text: q.figure_alt || 'There is a figure.' }));
         if ((q.choices || []).length) {
           item.append(h('ol', { class: 'pl-choices' }, q.choices.map((c, i) => {
             const trap = ex.trap_index === i, right = key !== undefined && (String(c) === String(key) || L[i] === String(key));
             // the answer stands out; the trap is there to recognise, crossed through
-            return h('li', { 'data-trap': trap ? '' : null, 'data-key': right ? '' : null }, h('b', { text: L[i] }), h('span', { class: 'c', text: plain(c) }),
+            return h('li', { 'data-trap': trap ? '' : null, 'data-key': right ? '' : null }, h('b', { text: L[i] }), rich(h('span', { class: 'c', text: plain(c) })),
               right ? h('span', { class: 'tag', text: '✓ Answer' }) : null, trap ? h('span', { class: 'tag', text: 'The trap' }) : null);
           })));
         } else if (key !== undefined) item.append(h('p', { class: 'line-t', text: `Answer: ${plain(key)}` }));
-        if (ex.rationale) item.append(h('p', { class: 'help', text: plain(ex.rationale) }));
+        if (ex.rationale) item.append(rich(h('p', { class: 'help', text: plain(ex.rationale) })));
       }
       return item;
     });
