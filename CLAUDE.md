@@ -7,3 +7,6 @@
 
 ## Writing
 - No em dashes in code, UI text, docs or commits.
+
+## Extra detail
+- Long helper text, intro lines, notes, banner text and the Explanation card fold behind a small toggle automatically (`ui.js` fold, selectors in `FOLD_SEL`). Open boxes are remembered. Put a new kind of info box in `FOLD_SEL`, or add `data-nofold` where text must always show (errors, live status, anything the user must read first).

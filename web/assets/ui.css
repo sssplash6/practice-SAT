@@ -2459,3 +2459,15 @@ main  { view-transition-name: main; }
 .sp { font-size: .72em; vertical-align: .55em; line-height: 0; }
 .sp .frac { font-size: .92em; }
 .sp.spf { vertical-align: .95em; }
+
+/* fold (ui.js): extra detail behind a small toggle, closed until tapped */
+details.fold { min-width: 0; }
+.fold-s { display: inline-flex; align-items: center; gap: 6px; max-width: 100%; list-style: none; cursor: pointer;
+  font: 500 12.5px/1.4 var(--font); color: var(--soft); border-radius: 6px; padding: 2px 4px 2px 0; }
+.fold-s::-webkit-details-marker { display: none; }
+.fold-s::before { content: ""; flex: none; width: 5px; height: 5px; border-right: 1.5px solid currentColor; border-bottom: 1.5px solid currentColor;
+  transform: rotate(-45deg); margin: 0 3px 0 2px; transition: transform .15s var(--ease); }
+details.fold[open] > .fold-s::before { transform: rotate(45deg); }
+.fold-s:hover { color: var(--ink); }
+.fold-s:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+@media (prefers-reduced-motion: reduce) { .fold-s::before { transition: none; } }

@@ -2785,6 +2785,61 @@
   /* ------------------------------------------------------------ start */
   if (doc.body) skip(); else doc.addEventListener('DOMContentLoaded', skip);
 
+  /* ------------------------------------------------------------ fold: extra detail behind a small toggle
+     Long helper text, intro lines, notes, banner text and the Explanation cards are wrapped in a closed <details> whose
+     one-line label is the start of the text. The element itself is moved, not rebuilt, so the pages' references and
+     listeners stay valid. Open boxes are remembered per page and text (satf.fold). Opt out with data-nofold. */
+  const FOLD_SEL = '.help, .lead, .lead-t, .wz-note, .rp-helper, .rs-helper, .chart-note, .calc-note, .tw-lead, .tw-note, .v-note, .ts-sub, .spr-rule, .banner-t, .x-card';
+  const FOLD_SKIP = 'dialog, [inert], [hidden], [data-nofold], details, .pref, [role=alert], [aria-live], .field-err, .sr, #bar, #tabs, nav, .skel, .tour';
+  const FOLD_MIN = 70;
+  const FOLD_OFF = /\/(print|report|help)\b/;
+  const foldMem = (() => {
+    const read = () => { try { return JSON.parse(localStorage.getItem('satf.fold') || '[]'); } catch (_) { return []; } };
+    return {
+      has: id => read().includes(id),
+      set(id, on) {
+        let a = read().filter(x => x !== id);
+        if (on) a.push(id);
+        try { localStorage.setItem('satf.fold', JSON.stringify(a.slice(-300))); } catch (_) {}
+      },
+    };
+  })();
+  function foldOne(el) {
+    const text = (el.textContent || '').replace(/\s+/g, ' ').trim();
+    const card = el.matches('.x-card');
+    if (!text || (!card && text.length < FOLD_MIN)) return;
+    if (el.closest('.ws') && !el.matches('.spr-rule, .x-card')) return;
+    if (el.closest('.x-card') && el !== el.closest('.x-card')) return;
+    const first = text.match(/^.{16,64}?(?=[.:;!?]\s|$)/);
+    const label = card ? 'Explanation' : first && first[0].length < text.length - 1 ? first[0] : text.slice(0, 56).replace(/\s\S*$/, '') + '…';
+    const id = card ? 'explanation' : `${location.pathname}|${text.slice(0, 48).replace(/\d+/g, '#')}`;
+    const cs = getComputedStyle(el);
+    const d = h('details', { class: 'fold' }, h('summary', { class: 'fold-s', text: label }));
+    el.replaceWith(d);
+    d.append(el);
+    d.style.margin = `${cs.marginTop} ${cs.marginRight} ${cs.marginBottom} ${cs.marginLeft}`;
+    for (const p of ['gridColumn', 'gridRow', 'flex', 'alignSelf', 'justifySelf', 'order', 'minWidth']) {
+      const v = cs[p];
+      if (v && !['auto', 'normal', '0', '0px', '0 1 auto', ''].includes(v)) d.style[p] = v;
+    }
+    el.style.margin = '6px 0 0';
+    if (foldMem.has(id)) d.open = true;
+    d.addEventListener('toggle', () => foldMem.set(id, d.open));
+  }
+  function foldScan() {
+    if (FOLD_OFF.test(location.pathname)) return;
+    doc.querySelectorAll(FOLD_SEL).forEach(el => { if (!el.closest(FOLD_SKIP) && !el.parentElement.closest('.fold') && !el.matches(FOLD_SKIP)) foldOne(el); });
+  }
+  (() => {
+    let t = 0;
+    const later = () => { clearTimeout(t); t = setTimeout(foldScan, 180); };
+    const start = () => { foldScan(); new MutationObserver(later).observe(doc.body, { childList: true, subtree: true, characterData: true }); };
+    if (doc.readyState === 'loading') doc.addEventListener('DOMContentLoaded', start); else start();
+    let was = [];
+    window.addEventListener('beforeprint', () => { was = [...doc.querySelectorAll('details.fold')].filter(d => !d.open); was.forEach(d => { d.open = true; }); });
+    window.addEventListener('afterprint', () => { was.forEach(d => { d.open = false; }); was = []; });
+  })();
+
   /* ------------------------------------------------------------ export */
   Object.assign(UI, {
     learner, useLearner, freshLearner, shared: () => shared, stored: () => storable, ready,
