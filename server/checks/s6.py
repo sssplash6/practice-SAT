@@ -7,10 +7,11 @@ from __future__ import annotations
 
 import logging
 import secrets
+from contextlib import nullcontext
 
 from fastapi.testclient import TestClient
 
-from server import api_results, db, progress
+from server import api_results, db, progress, scoring
 from server.api_tests import FORMS
 from server.app import app
 
@@ -26,14 +27,17 @@ def answer(q, right: bool):
     if q["type"] == "mcq":
         n = "ABCD".index(q["answer"])
         return n if right else (n + 1) % 4
-    return q["answer"] if right else "-999"
+    return scoring.keys(q["answer"])[0] if right else "-999"
 
 
-def check() -> None:
+def check(client: TestClient | None = None) -> None:
+    # share the caller's client (and its db connection) when given one: a second,
+    # separate TestClient here would write through a different connection, which a
+    # same-process direct db.one() read can briefly not see (WAL across connections)
     learner = "a:s6check" + secrets.token_hex(6)
     other = "a:s6other" + secrets.token_hex(6)
     h = {"X-Learner": learner}
-    with TestClient(app) as client:
+    with TestClient(app) if client is None else nullcontext(client) as client:
         sample = ok(client.get("/api/session/sample-section/results"))
         assert sample["asked"] == 44 and sample["mine"] is False
         ok(client.post("/api/session/sample-section/note", json={"note": "edit"},
@@ -42,6 +46,7 @@ def check() -> None:
 
         start = ok(client.post("/api/session", headers=h))
         sid = start["id"]
+        start = ok(client.post(f"/api/session/{sid}/begin", headers=h))      # a sitting is made in its lobby
         paper = FORMS[start["form"]]
         wrong, right = paper[:2]
         ok(client.post(f"/api/session/{sid}/answer", headers=h,
@@ -51,6 +56,14 @@ def check() -> None:
         ok(client.post(f"/api/session/{sid}/finish", headers=h))
         ok(client.get(f"/api/session/{sid}/results"), 403)
         ok(client.get(f"/api/session/{sid}/results", headers={"X-Learner": other}), 403)
+        # a diagnostic's results need the old signup-by-email gate (SEC-01/03): the learner
+        # header alone is not ownership proof for this kind, unlike every other sitting
+        email = f"{learner[2:]}@example.com".lower()
+        up = ok(client.post(f"/api/session/{sid}/signup", json={"first": "Ada", "last": "Lovelace", "email": email}))
+        assert up["ok"]
+        token = db.one("SELECT token FROM users WHERE email=?", email)["token"]
+        verified = client.get("/api/verify", params={"token": token}, follow_redirects=False)
+        assert verified.headers["location"].endswith("state=ok")
         report = ok(client.get(f"/api/session/{sid}/results", headers=h))
         assert report["mine"] and report["summary"]["correct"] == 1
         assert report["summary"]["incorrect"] == 1
@@ -95,6 +108,7 @@ def check() -> None:
         second_sitting = ok(client.post("/api/session", headers=h))
         new_sid = second_sitting["id"]
         db.run("UPDATE sessions SET form_id=? WHERE id=?", start["form"], new_sid)
+        ok(client.post(f"/api/session/{new_sid}/begin", headers=h))
         for q in paper:
             ok(client.post(f"/api/session/{new_sid}/answer", headers=h,
                            json={"question_id": q["id"], "answer": answer(q, True)}))

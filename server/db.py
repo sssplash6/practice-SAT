@@ -198,6 +198,7 @@ LATER_COLUMNS = (
     ("contests", "subject", "TEXT DEFAULT 'math'"), ("contests", "series", "TEXT"),
     ("contests", "round", "INTEGER"),
     ("contest_items", "slot", "INTEGER"), ("contest_items", "qhash", "TEXT"),
+    ("learners", "rw_rating", "REAL DEFAULT 1000"), ("learners", "rw_rated", "INTEGER DEFAULT 0"),   # R&W contests rate apart
     ("plans", "start_points", "TEXT"), ("plan_days", "gate", "INTEGER DEFAULT 0"),
     ("plan_overrides", "trim", "INTEGER DEFAULT 0"),
     ("plan_marks", "minutes", "INTEGER"), ("plan_marks", "note", "TEXT"),
@@ -218,6 +219,8 @@ CREATE TABLE IF NOT EXISTS notes (learner TEXT, template TEXT, seed INTEGER, not
 CREATE TABLE IF NOT EXISTS links (token TEXT PRIMARY KEY, learner TEXT, kind TEXT, created TEXT, revoked TEXT, views INTEGER DEFAULT 0, last_view TEXT);
 CREATE TABLE IF NOT EXISTS pairs (code TEXT PRIMARY KEY, learner TEXT, created TEXT, expires TEXT, used TEXT, req_learner TEXT, req_device TEXT, req_answers INTEGER, state TEXT DEFAULT 'open');
 CREATE TABLE IF NOT EXISTS retired (code TEXT PRIMARY KEY, "into" TEXT, at TEXT);
+-- email sign-in is the only way in (2026-10-20): the addresses allowed to open a new account (tools/allow_emails.py)
+CREATE TABLE IF NOT EXISTS email_allow (email TEXT PRIMARY KEY, name TEXT, grp TEXT, added TEXT);
 CREATE TABLE IF NOT EXISTS reports (id INTEGER PRIMARY KEY AUTOINCREMENT, learner TEXT, kind TEXT, source TEXT, session TEXT, qid TEXT, paper TEXT, word TEXT, template TEXT, seed INTEGER, category TEXT, title TEXT, answer TEXT, given TEXT, details TEXT, context TEXT, device TEXT, email TEXT, files TEXT, dispute INTEGER DEFAULT 0, at TEXT, status TEXT DEFAULT 'new', reply TEXT, replied TEXT, seen TEXT);
 CREATE TABLE IF NOT EXISTS sets (code TEXT PRIMARY KEY, owner TEXT, kind TEXT, session TEXT, items TEXT, cfg TEXT, title TEXT, show_score INTEGER DEFAULT 1, show_name INTEGER DEFAULT 0, created TEXT, revoked TEXT);
 CREATE TABLE IF NOT EXISTS earned (learner TEXT, id TEXT, tier INTEGER, at TEXT, PRIMARY KEY(learner,id,tier));
@@ -351,14 +354,18 @@ def conn() -> sqlite3.Connection:
     """One connection per thread: sqlite objects do not cross threads."""
     c = getattr(_local, "c", None)
     if c is None:
-        c = sqlite3.connect(DB_PATH, timeout=2.5)
+        # 10 s: with several worker processes a writer may wait on another process's commit
+        c = sqlite3.connect(DB_PATH, timeout=10)
         c.row_factory = sqlite3.Row
-        c.execute("PRAGMA busy_timeout=2500")
+        c.execute("PRAGMA busy_timeout=10000")
         path = str(DB_PATH.resolve())
         with _write_lock:
             if path not in _wal_ready:
                 _retry_locked(lambda: c.execute("PRAGMA journal_mode=WAL"))
                 _wal_ready.add(path)
+        # WAL's usual setting: no fsync on every commit, still never a corrupt file (a power cut can
+        # lose only the last moments); a full SAT hand-in commits once per answer
+        c.execute("PRAGMA synchronous=NORMAL")
         c.execute("PRAGMA foreign_keys=ON")
         _local.c = c
     return c
@@ -400,6 +407,7 @@ def init() -> None:
       CREATE INDEX IF NOT EXISTS plans_learner_archived ON plans(learner,archived);
       CREATE INDEX IF NOT EXISTS word_reviews_template ON word_reviews(template);
       CREATE UNIQUE INDEX IF NOT EXISTS contest_items_slot ON contest_items(contest,slot,qhash);
+      CREATE INDEX IF NOT EXISTS contest_items_qhash ON contest_items(qhash);
       CREATE UNIQUE INDEX IF NOT EXISTS pairs_token ON pairs(token);
       CREATE UNIQUE INDEX IF NOT EXISTS users_google_sub ON users(google_sub);
       CREATE INDEX IF NOT EXISTS trap_log_at ON trap_log(learner,at);
@@ -412,6 +420,7 @@ def init() -> None:
     _once(c, "backfill:trap_log", _backfill_trap_log)
     _once(c, "backfill:handle", _backfill_handles)
     _once(c, "backfill:trap_log_undoes", _backfill_undoes)
+    _once(c, "reband:20", _reband)
     from . import ratings
     ratings.backfill()
 
@@ -441,6 +450,59 @@ def _backfill_undoes(c: sqlite3.Connection) -> None:
     trap's points (V4); it moves to its own column."""
     c.execute("UPDATE trap_log SET undoes=pts, pts=NULL WHERE event IN ('discarded','restored')"
               " AND undoes IS NULL AND pts IS NOT NULL")
+
+
+def _reband(c: sqlite3.Connection) -> None:
+    """The 20-point rule (2026-10-22): every stored band is re-marked from its
+    centre through scoring.section_band (a lower route capped again), the old
+    ends kept in `was`. The centre comes from the marked domains; a re-scored
+    sitting's domains are stale, so it is re-marked from its paper with its
+    removed / remarked lists, and anything that cannot be uses the old
+    midpoint. `ponytail:` a capped band left to the midpoint sits up to ~old
+    half low; fine for history."""
+    from . import scoring
+
+    def remarked(sid: str) -> float | None:
+        from . import estimate
+        try:
+            got = estimate._marking(sid)
+            return estimate._score(*got)["centre"] if got and got[1] else None
+        except Exception:                                   # noqa: BLE001  never stop a boot over history
+            log.exception("reband: %s could not be re-marked", sid)
+            return None
+
+    def reband(b, centre, route, subject) -> bool:
+        if not isinstance(b, dict) or b.get("low") is None or b.get("high") is None or "was" in b:
+            return False
+        new = scoring.section_band((b["low"] + b["high"]) / 2 if centre is None else centre, route, subject)
+        b.update(was={"low": b["low"], "high": b["high"]}, low=new["low"], high=new["high"], mid=new["mid"])
+        if "capped" in b or new["capped"]:
+            b["capped"] = new["capped"]
+        return True
+
+    for r in c.execute("SELECT id, route, subject, result FROM sessions WHERE result IS NOT NULL").fetchall():
+        res = json.loads(r["result"])
+        if not isinstance(res, dict):
+            continue
+        subject, doms = r["subject"] or res.get("subject") or "math", res.get("domains") or []
+        possible = sum(d.get("possible") or 0 for d in doms if isinstance(d, dict))
+        est = res.get("estimate")
+        # an estimate with `mid` was marked by the new band already; an old rescore() band (pressure) always had one
+        if not isinstance(est, dict) or "mid" in est or "was" in est:
+            centre = None
+        elif res.get("rescored"):
+            centre = remarked(r["id"])
+        else:
+            centre = scoring._interpolate(sum(d.get("earned") or 0 for d in doms) / possible) if possible else None
+        changed = isinstance(est, dict) and "mid" not in est and reband(est, centre, r["route"], subject)
+        logs = res.get("rescored") or []
+        for i, entry in enumerate(logs):
+            changed |= reband(entry.get("before"), None, r["route"], subject)
+            # the last re-score's result is the estimate itself: the same centre, so the two agree
+            changed |= reband(entry.get("after"), centre if i == len(logs) - 1 else None, r["route"], subject)
+        changed |= reband((res.get("pressure") or {}).get("ceiling"), None, r["route"], subject)
+        if changed:
+            c.execute("UPDATE sessions SET result=? WHERE id=?", (json.dumps(res), r["id"]))
 
 
 HANDLE_OK = re.compile(r"^[A-Za-z0-9 _.\-]{3,24}$")
@@ -615,8 +677,11 @@ def rows(sql: str, *args) -> list[sqlite3.Row]:
 def run(sql: str, *args) -> sqlite3.Cursor:
     if getattr(_local, "atomic", False):
         return conn().execute(sql, args)
-    cur = _retry_locked(lambda: conn().execute(sql, args))
-    _retry_locked(conn().commit)
+    # in-process writers take turns on the lock transaction() holds, rather than polling SQLite's
+    # busy handler, which under a burst (a class handing in at once) gave up with "database is locked"
+    with _write_lock:
+        cur = _retry_locked(lambda: conn().execute(sql, args))
+        _retry_locked(conn().commit)
     return cur
 
 

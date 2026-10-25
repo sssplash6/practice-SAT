@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Report · SAT Freshman</title>
+<link rel="icon" href="/favicon.ico" sizes="32x32">
 <link rel="icon" href="/assets/mark.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
 <link rel="manifest" href="/manifest.webmanifest">
@@ -11,214 +12,236 @@
 <script src="/assets/head.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800;900&family=DM+Mono:wght@400;500&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap">
+<link rel="preload" href="/assets/fonts/Geist.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap">
 <link rel="stylesheet" href="/assets/ui.css">
 <link rel="stylesheet" href="/assets/runner.css">
 <style>
-  /* The score report (spec 3.5 §1, reports.md SR1-SR25). One sitting, read top down:
-     what the score means, where the points went, why each miss happened, then every
-     question, then the skills, judgement and time. Every region keeps its frame. */
-  .rp { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 24px; }
-  .rp > * { grid-column: 1 / -1; min-width: 0; }
-  .rp > [hidden] { display: none; }
+  /* The score report (spec 3.5 §1, reports.md SR1-SR25). Header: "Results / the sitting's name" with the actions on
+     the same row, one meta line. Main: the score (the page's one hero, .card.hero), where the points went,
+     then-vs-now, the mistakes (habits included), every question (module heads on the grid), the breakdown, judgement
+     and time; a card whose answer is a number leads with it. Right column (1280px+, sticky under the section chips),
+     one surface split by hairlines: recovery, the summary rows, takeaways, best value and up next. Below 1280 both
+     columns dissolve into one list in the old reading order. The page root is #root.rp: report.js's modal is
+     dialog.sheet.rp, so nothing here may style a bare .rp. */
+  #root.rp { display: grid; gap: var(--card-gap); }
+  #cols { --twocol-top: 64px; }
+  .rp-main { display: grid; gap: var(--card-gap); min-width: 0; }
+  @media (max-width: 1279px) {
+    .rp-main, #side, .rx-side { display: contents; }
+    #hero { order: 1; } #recovery { order: 2; } #ledger { order: 3; } #compare { order: 4; } #mistakes { order: 5; } #value { order: 6; }
+    #takeaways { order: 7; } #tiles { order: 8; } #review { order: 9; } #breakdown { order: 10; } #judgement { order: 11; } #pace { order: 12; } #next { order: 13; }
+  }
+  @media (min-width: 1280px) {
+    /* the right column is one card (.rx-side): its parts meet at a hairline */
+    .rx-side { display: grid; border-radius: var(--radius-card); background: var(--raised); box-shadow: var(--shadow-1); }
+    .rx-side > :not([hidden]) { padding: 12px var(--card-pad); border-radius: 0; background: none; box-shadow: none; }
+    .rx-side > :not([hidden]) ~ :not([hidden]) { box-shadow: inset 0 1px 0 var(--line); }
+    .rx-side > :not([hidden]):not(:not([hidden]) ~ *) { padding-top: var(--card-pad); }
+    .rx-side > :not([hidden]):not(:has(~ :not([hidden]))) { padding-bottom: var(--card-pad); }
+  }
+  @media print { .rx-side { box-shadow: none; } }
+  /* a number leads its card: the figure at 28, its unit small on the same baseline */
+  .rp-fig { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0 6px; }
+  .rp-fig > b { font: 600 28px/1.05 var(--font); letter-spacing: -.02em; }
+  .rp-fig > span { font: 400 14.5px/1.35 var(--font); letter-spacing: 0; color: var(--soft); }
   .rp-helper { font: 400 14px/1.45 var(--font); color: var(--soft); text-wrap: pretty; }
-  .rp-line { font: 400 15px/1.5 var(--font); color: var(--ink); text-wrap: pretty; }
-  .rp-line b, .rp-num { font-family: var(--mono); font-weight: 500; font-variant-numeric: tabular-nums; }
-  .rp-row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px; }
-  .rp-chip { display: inline-flex; align-items: center; gap: 6px; min-height: 28px; padding: 0 10px; border-radius: 999px; background: var(--tile-2); color: var(--ink); font: 500 13px var(--font); border: 0; text-decoration: none; }
-  button.rp-chip, a.rp-chip { cursor: pointer; }
-  .rp-chip.ok { background: var(--wash-2); box-shadow: inset 0 0 0 1.5px var(--amber); }
-  .rp-chip.line { background: none; box-shadow: inset 0 0 0 1px var(--line); color: var(--soft); }
-  .rp-qchip { font-family: var(--mono); }
-  .rp-dot::before { content: ""; display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: var(--amber); margin-right: 2px; }
-  .rp-cols { display: grid; grid-template-columns: repeat(var(--c, 2), minmax(0, 1fr)); gap: 12px; }
-
-  .rp-info { min-height: 24px; padding: 0 6px; margin-left: 2px; font: 500 14px/1 var(--font); color: var(--soft); vertical-align: 1px; }
-  .card-head .rp-headr { margin-left: auto; display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+  .rp-line { font: 400 14.5px/1.5 var(--font); color: var(--ink); text-wrap: pretty; }
+  .rp-line b, .rp-num { font-weight: 600; font-variant-numeric: tabular-nums; }
+  .rp-row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+  /* a small button that opens a question or filters the grid: chip corners, never a pill */
+  .rp-chip { display: inline-flex; align-items: center; gap: 6px; min-height: 28px; padding: 0 8px; border-radius: 8px; border: 0; background: var(--well); color: var(--ink);
+    font: 500 12.5px var(--font); font-variant-numeric: tabular-nums; text-decoration: none; cursor: pointer; }
+  .rp-chip { transition: background-color .14s var(--ease), transform .25s cubic-bezier(.3, .7, .4, 1); }
+  @media (hover: hover) and (pointer: fine) { .rp-chip:not([aria-pressed="true"]):hover { background: var(--mat); } }
+  .rp-chip:active { transform: scale(.97); transition-duration: .05s; }
+  .rp-chip[aria-pressed="true"] { background: var(--sel-bg); box-shadow: var(--sel-edge); }
+  .rp-dot::before { content: ""; display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--amber); margin-right: 4px; vertical-align: 1px; }
+  .card-head .rp-headr { margin-left: auto; display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 8px; align-items: center; }
   .card-head .rp-headr .seg + .help { display: none; }
-  .rp-alone { display: grid; gap: 14px; justify-items: start; }
-  .rp-inline { display: inline-flex; vertical-align: middle; gap: 6px; }
-  .rp-chip[aria-pressed="true"] { background: var(--wash-2); box-shadow: inset 0 0 0 1.5px var(--amber); }
-  .rp-chip b.rp-num { font-weight: 500; color: var(--soft); }
-  .rp-count { justify-items: start; align-content: center; gap: 6px; }
-  .rp-count .rp-num { font-size: 18px; color: var(--soft); }
-  .rp-tools .k { flex: none; }
-  .rp-tools .rp-row { gap: 6px 10px; }
+  .rp-alone { display: grid; gap: 12px; justify-items: start; }
+  .rp-inline { display: inline-flex; vertical-align: middle; gap: 4px; }
   .rp-tools .chips + .help:empty, .rp-tools .seg + .help:empty { display: none; }
   .rp-legend .legend { margin: 0; }
-  .rp-vrow > .rp-row { justify-content: flex-start; }
   #review .cell-grid { --cell: 40px; }
   /* the question filters live in the one Filters sheet on every screen, not as a row of dropdowns */
   #review .filters > :not(.filters-open) { display: none; }
   #review .filters > .filters-open { display: inline-flex; }
-  @media (max-width: 759px) { #review .cell-grid { --cell: 44px; --cols: 7; --cell-gap: 3px; } }
+  /* a phone: six across, so a 22-question module ends on a row of four, not Q22 alone */
+  @media (max-width: 759px) { #review .cell-grid { --cell: 48px; --cols: 6; --cell-gap: 6px; } }
 
-  /* header */
-  #head { display: grid; gap: 12px; }
-  .rp-back { display: flex; flex-wrap: wrap; gap: 6px 16px; font: 500 14px var(--font); }
-  .rp-back a { color: var(--soft); text-decoration: none; }
-  .rp-back a:hover { color: var(--ink); text-decoration: underline; }
-  .rp-title { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px 24px; align-items: flex-end; }
-  .rp-title > div:first-child { flex: 1 1 340px; min-width: 0; }
-  .rp-rw select.field { width: auto; }
-  .rp-title h1 { font: 800 clamp(22px, 3.2vw, 30px)/1.2 var(--font); letter-spacing: -.02em; }
-  .rp-acts { display: flex; flex-wrap: wrap; justify-content: flex-end; align-items: center; gap: 8px; }
-  .rp-split { display: inline-flex; align-items: stretch; }
-  .rp-split > .pill:first-child { border-top-right-radius: 0; border-bottom-right-radius: 0; padding-right: 16px; }
-  .rp-split > .pill + .pill { border-top-left-radius: 0; border-bottom-left-radius: 0; padding: 0 12px; margin-left: 1px; }
-  .rp-strip { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; padding: 10px 14px; border-radius: var(--radius); background: var(--tile-2); font: 500 14px var(--font); }
-  .rp-note { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
-  .rp-note q { font: italic 400 15px/1.4 var(--serif, var(--font)); }
+  /* header: "Results / the sitting's name" with the actions beside it, one meta line; a way back to where the
+     student came from (the plan) only when there is one */
+  #head { display: grid; gap: 4px; }
+  .rp-back { display: flex; flex-wrap: wrap; gap: 4px 16px; font: 500 14px var(--font); }
+  .rp-back a, .rp-crumb a { color: var(--soft); text-decoration: none; }
+  .rp-back a:hover, .rp-crumb a:hover { color: var(--ink); text-decoration: underline; text-underline-offset: 4px; }
+  .rp-title { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 8px 16px; }
+  .rp-crumb { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0 8px; min-width: 0; }
+  .rp-crumb > a, .rp-crumb > span { font: 500 22px/1.2 var(--font); letter-spacing: -.02em; }
+  .rp-crumb > span { color: var(--faint); }
+  .rp-crumb > .h1 { min-width: 0; }
+  /* a phone keeps the split and More in the row; Review mistakes is the first line of More (and the sticky strip) */
+  @media (max-width: 759px) { #head .rp-rv { display: none; } }
+  #head .rp-acts { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+  .rp-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 2px 8px; font: 400 14px/1.45 var(--font); color: var(--soft); }
+  .rp-meta > span + span:not(.badge)::before { content: "·"; margin-right: 8px; }
+  .rp-meta q { font: italic 400 14px var(--font); color: var(--ink); }
+  .rp-note { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 4px; }
   .rp-note .field { max-width: 360px; }
+  .rp-strip { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; padding: 8px 12px; border-radius: var(--radius); background: var(--mat); font: 500 14px var(--font); }
 
-  /* recovery and second look: one status line under the hero */
-  .rp-status { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 14px; padding: 10px 14px; border-radius: var(--radius); background: var(--tile-2); font: 500 14px var(--font); }
-  .rp-status .k { margin: 0; }
-  .rp-status .rp-sep { color: var(--soft); }
-  .rp-status .rp-num { font-size: 13.5px; }
-
-  /* hero */
-  .rp-hero { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 24px; align-items: start; }
-  .rp-gauge { grid-column: span 5; display: grid; gap: 10px; justify-items: center; }
-  .rp-facts { grid-column: span 7; display: grid; gap: 12px; }
-  .rp-big { font: 800 clamp(44px, 7vw, 64px)/1 var(--font); letter-spacing: -.03em; font-variant-numeric: tabular-nums; }
-  .rp-facts details summary { cursor: pointer; font: 600 14px var(--font); }
-  .rp-facts details ul { margin: 8px 0 0 18px; display: grid; gap: 4px; color: var(--soft); font-size: 14px; }
+  /* the score, the page's one hero: the gauge beside its facts from 760px (a 360px column, so the figure reaches 44),
+     the gauge over them on a phone */
+  .rp-hero { display: grid; gap: 12px; align-items: start; }
+  @media (min-width: 760px) { .rp-hero { grid-template-columns: minmax(0, 360px) minmax(0, 1fr); gap: 12px 24px; align-items: center; } }
+  .rp-gauge { display: grid; gap: 8px; justify-items: stretch; min-width: 0; }   /* stretch: the gauge svg has no width of its own, so a centred figure shrank to its key */
+  .rp-facts { display: grid; gap: 8px; align-content: start; min-width: 0; }
+  .rp-count { justify-items: start; align-content: center; gap: 4px; }
+  .rp-count .rp-num { font: 500 14.5px var(--font); color: var(--soft); }
   .rp-facts details > div { margin-top: 8px; display: grid; gap: 8px; }
   .rp-rw { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
   .rp-rw .field { width: 110px; }
+  .rp-rw select.field { width: auto; }
 
-  /* tiles */
-  #tiles .stats { --cols: 5; }
-  #tiles .stats[data-n="8"] { --cols: 4; }
+  /* recovery: four steps, one row each */
+  .rp-steps { list-style: none; margin: 0; padding: 0; display: grid; }
+  .rp-steps > li { display: grid; grid-template-columns: 16px minmax(0, 1fr) auto; gap: 2px 8px; align-items: center; min-height: 36px; padding: 6px 0; }
+  .rp-steps > li + li { border-top: 1px solid var(--line); }
+  .rp-steps .mk { width: 14px; height: 14px; border-radius: 50%; box-shadow: inset 0 0 0 1.5px var(--faint); display: inline-grid; place-items: center; font: 600 9px/1 var(--font); color: var(--on-ink); }
+  .rp-steps .mk.on { background: var(--ink); box-shadow: none; }
+  .rp-steps .mk > svg { width: 10px; height: 10px; }
+  /* a test just handed in: the mark fills to the four domains' mastery (UI.spotArt('done')) */
+  .rp-done .spot { width: 56px; height: 56px; }
+  .rp-back svg { vertical-align: -3px; }
+  .rp-clear { display: flex; align-items: center; gap: 16px; }
+  .rp-clear .spot { width: 56px; height: 56px; }
+  .rp-steps .nm { font: 500 14.5px/1.35 var(--font); }
+  .rp-steps .v { font: 500 14px var(--font); color: var(--soft); font-variant-numeric: tabular-nums; text-align: right; }
+  .rp-steps .sub { grid-column: 2 / -1; }
+  .rp-steps .acts { grid-column: 2 / -1; display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; margin: 2px 0 2px; }
 
-  /* takeaways, value, habits */
-  .rp-cards { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
-  .rp-card { display: grid; gap: 8px; align-content: start; padding: 16px; border-radius: 12px; background: var(--tile-2); }
-  .rp-card h3 { font: 700 15.5px/1.3 var(--font); }
-  .rp-card .rp-row { margin-top: 4px; }
-  .rp-vrow { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 6px 12px; padding: 12px 0; border-top: 1px solid var(--line); }
-  .rp-vrow:first-of-type { border-top: 0; }
-  .rp-vbar { grid-column: 1 / -1; height: 6px; border-radius: 3px; background: var(--tile-2); overflow: hidden; }
+  /* takeaways, best value, habits: rows with hairlines */
+  .rp-takes { list-style: none; margin: 0; padding: 0; display: grid; }
+  .rp-takes > li { display: grid; gap: 4px; justify-items: start; padding: 8px 0; }
+  .rp-takes > li + li { border-top: 1px solid var(--line); }
+  .rp-takes p { font: 500 14.5px/1.4 var(--font); text-wrap: pretty; }
+  .rp-vrow { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 4px 12px; align-items: center; padding: 8px 0; border-top: 1px solid var(--line); }
+  .rp-vrow:first-child, .rp-group > h3 + .rp-vrow { border-top: 0; }
+  .rp-vrow .h3 { display: flex; align-items: center; gap: 6px; }
+  .rp-vbar { grid-column: 1 / -1; height: 4px; border-radius: 2px; background: var(--track); overflow: hidden; }
   .rp-vbar i { display: block; height: 100%; width: calc(var(--rp) * 100%); background: var(--amber); }
-  .rp-mist-wrap { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 24px; align-items: start; }
-  .rp-mist-wrap > #mistakes { grid-column: span 8; }
-  .rp-mist-wrap > #value { grid-column: span 4; }
+  .rp-vrow > .rp-row { grid-column: 1 / -1; }
+  #next > .rp-row { margin-top: 8px; }
 
-  /* mistakes */
-  .rp-group { display: grid; gap: 8px; margin-top: 16px; }
-  .rp-group > h3 { font: 700 12px/1 var(--font); letter-spacing: .08em; text-transform: uppercase; color: var(--soft); }
-  .rp-mrow { position: relative; display: grid; grid-template-columns: 22px minmax(0, 1fr) auto; gap: 4px 12px; padding: 12px 14px; border-radius: 10px; background: var(--paper); align-items: start; }
-  .rp-mrow:hover { background: var(--tile-2); }
-  .rp-mrow:has(.rp-mtitle:focus-visible) { outline: 2px solid var(--amber-deep); outline-offset: 1px; }
+  /* mistakes: one row each, the label over one meta line; the row's menu shows on hover or focus */
+  .rp-group { display: grid; margin-top: 12px; }
+  .rp-group > h3 { margin-bottom: 2px; font: 500 12.5px/1.3 var(--font); color: var(--soft); }
+  .rp-mrow { position: relative; display: grid; grid-template-columns: 20px minmax(0, 1fr) auto; gap: 0 12px; align-items: center; min-height: 44px; padding: 6px 8px; margin: 0 -8px; }
+  .rp-mrow + .rp-mrow { border-top: 1px solid var(--line); }
+  @media (hover: hover) and (pointer: fine) { .rp-mrow:hover, .rp-srow:hover { background: var(--hover); } }
+  .rp-mrow:has(.rp-mtitle:focus-visible) { outline: 2px solid var(--amber-deep); outline-offset: -2px; }
+  .rp-srow:focus-visible { outline: 2px solid var(--amber-deep); outline-offset: -2px; }
   /* the title is the row's Review button; its ::after stretches over the whole row, the menu sits above it */
   .rp-mtitle { background: none; border: 0; padding: 0; font: inherit; color: inherit; text-align: left; cursor: pointer; }
   .rp-mtitle:focus-visible { outline: none; }
-  .rp-mtitle::after { content: ""; position: absolute; inset: 0; border-radius: 10px; }
-  .rp-mrow > .rp-menu { position: relative; z-index: 1; align-self: start; }
+  .rp-mtitle::after { content: ""; position: absolute; inset: 0; }
+  .rp-mrow > .rp-menu { position: relative; z-index: 1; }
   .rp-mrow.fixed .rp-mtitle { text-decoration: line-through; text-decoration-thickness: 1px; color: var(--soft); }
-  .rp-mrow .glyph { width: 20px; height: 20px; margin-top: 2px; }
-  .rp-mrow h4 { font: 600 15px/1.35 var(--font); }
-  .rp-mrow .meta { font-size: 12.5px; }
-  .rp-mrow .st { font: 500 13px var(--font); color: var(--ink); }
+  .rp-mrow .glyph { width: 20px; height: 20px; }
+  .rp-mrow h4 { font: 600 14.5px/1.35 var(--font); }
+  .rp-mrow .st { color: var(--ink); white-space: nowrap; }   /* the dot never parts from its status on a phone */
 
-  /* review */
-  .rp-tools { display: grid; gap: 10px; }
-  .rp-tools .rp-row.lab > .k { margin-right: 4px; }
-  .rp-legend { margin-top: 4px; }
-  .rp-grid-group { display: grid; gap: 8px; margin-top: 14px; }
-  .rp-grid-group > h3 { font: 600 14px var(--font); }
-  .rp-grid-group .meta { font-weight: 500; }
+  /* every question: one row of tools (Show, then Filters with Focus inside, View, Reset), the key under the grid */
+  .rp-tools { display: grid; gap: 8px; }
+  .rp-tools > .rp-row { justify-content: space-between; row-gap: 8px; }
+  .rp-tools .rp-tr { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-left: auto; }
+  #rvlegend { margin-top: 12px; }
+  #rvlegend .legend { font-size: 12.5px; }
+  .rp-grid-group { display: grid; gap: 8px; margin-top: 12px; }
+  .rp-grid-group > h3 { font: 600 14.5px/1.35 var(--font); }
+  .rp-grid-group > h3 .meta { font-weight: 500; }
+  .rp-modsum { display: grid; gap: 2px; margin-top: 12px; }
+  .rp-modsum b { font-weight: 600; color: var(--ink); }
   .rp-cells .cell { overflow: visible; }
-  .rp-cells .cell small { position: absolute; bottom: 2px; left: 0; right: 0; text-align: center; font: 500 8.5px/1 var(--mono); }
-  .rp-cells .cell[data-saver]::before { content: "▲"; position: absolute; left: 3px; bottom: 2px; font: 700 8px/1 var(--font); color: var(--amber-deep); background: none; width: auto; height: auto; clip-path: none; }
-  .cell[data-whatif="right"]::after { content: "✓" !important; color: var(--amber-deep) !important; font-size: 11px !important; }
-  .cell[data-whatif="wrong"]::after { content: "✕" !important; color: var(--ink) !important; font-size: 11px !important; }
+  .rp-cells .cell small { position: absolute; bottom: 2px; left: 0; right: 0; text-align: center; font: 500 9px/1 var(--font); font-variant-numeric: tabular-nums; }
+  /* a route saver: its own mark bottom-left, so the flag corner (::before) stays */
+  .rp-cells .rp-saver { position: absolute; left: 3px; bottom: 2px; font: 600 9px/1 var(--font); font-style: normal; color: var(--amber-deep); pointer-events: none; }
+  .cell[data-whatif="right"]::after { content: "✓" !important; color: var(--amber-deep) !important; font-size: 11.5px !important; }
+  .cell[data-whatif="wrong"]::after { content: "✕" !important; color: var(--ink) !important; font-size: 11.5px !important; }
   .cell[data-whatif] { outline: 2px dashed var(--ink); outline-offset: 1px; }
   .cell[aria-selected="true"] { outline: 2.5px solid var(--amber-deep); outline-offset: 1.5px; }
-  /* colour by time, cause, points, level, crowd: four warm steps, always with a corner letter or number */
+  /* colour by time, cause, points: four steps of ink on the card, always with a corner letter or number; tokens, so dark mode holds */
+  #review { --sh-0: color-mix(in srgb, var(--ink) 12%, var(--surface)); --sh-1: color-mix(in srgb, var(--ink) 34%, var(--surface));
+    --sh-2: color-mix(in srgb, var(--ink) 70%, var(--surface)); --sh-3: color-mix(in srgb, var(--ink) 90%, var(--surface)); }
   [data-colour]:not([data-colour="status"]):not([data-colour="difficulty"]) .cell[data-shade] { border-color: transparent; text-shadow: none; }
-  [data-colour]:not([data-colour="status"]):not([data-colour="difficulty"]) .cell[data-shade="0"] { background: #F4EFE8; color: var(--ink); }
-  [data-colour]:not([data-colour="status"]):not([data-colour="difficulty"]) .cell[data-shade="1"] { background: #DDD3C6; color: var(--ink); }
-  [data-colour]:not([data-colour="status"]):not([data-colour="difficulty"]) .cell[data-shade="2"] { background: #A89A88; color: #fff; }
-  [data-colour]:not([data-colour="status"]):not([data-colour="difficulty"]) .cell[data-shade="3"] { background: #5B5046; color: #fff; }
+  [data-colour]:not([data-colour="status"]):not([data-colour="difficulty"]) .cell[data-shade="0"] { background: var(--sh-0); color: var(--ink); }
+  [data-colour]:not([data-colour="status"]):not([data-colour="difficulty"]) .cell[data-shade="1"] { background: var(--sh-1); color: var(--ink); }
+  [data-colour]:not([data-colour="status"]):not([data-colour="difficulty"]) .cell[data-shade="2"] { background: var(--sh-2); color: var(--on-ink); }
+  [data-colour]:not([data-colour="status"]):not([data-colour="difficulty"]) .cell[data-shade="3"] { background: var(--sh-3); color: var(--on-ink); }
   [data-colour]:not([data-colour="status"]):not([data-colour="difficulty"]) .cell[data-shade]::after { content: attr(data-corner); color: inherit; opacity: .85; }
   [data-colour]:not([data-colour="status"]):not([data-colour="difficulty"]) .cell:not([data-shade]) { opacity: .45; }
-  .rp-steps-key { display: flex; flex-wrap: wrap; gap: 6px 14px; font: 500 12.5px var(--mono); color: var(--soft); }
-  .rp-steps-key i { display: inline-block; width: 14px; height: 14px; border-radius: 4px; vertical-align: -2px; margin-right: 5px; }
+  .rp-steps-key { display: flex; flex-wrap: wrap; gap: 4px 12px; font: 500 12.5px var(--font); color: var(--soft); font-variant-numeric: tabular-nums; }
+  .rp-steps-key i { display: inline-block; width: 14px; height: 14px; border-radius: 4px; vertical-align: -2px; margin-right: 4px; }
   .rp-table .ans { display: block; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .rp-table .mist { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-  .rp-table table { table-layout: auto; min-width: 1180px; }
+  .rp-table table { table-layout: auto; min-width: 100%; }
   .rp-table td { white-space: nowrap; vertical-align: top; }
   .rp-table td .ans { max-width: 140px; }
   .rp-table td .mist { white-space: normal; min-width: 220px; max-width: 280px; }
   .rp-table td small { display: block; margin-top: 2px; }
-  .rp-whatif { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; padding: 10px 14px; border-radius: 10px; background: var(--wash); }
+  .rp-whatif { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; padding: 8px 12px; border-radius: var(--radius); background: var(--wash); }
 
-  /* modules, domains, skills, split, judgement, pace */
-  .rp-mods { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
-  .rp-mod { display: grid; gap: 10px; padding: 16px; border-radius: 12px; background: var(--tile-2); }
-  .rp-doms { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
-  .rp-dom { display: grid; gap: 8px; align-content: start; padding: 16px; border-radius: 12px; background: var(--tile-2); }
-  .rp-dom h3 { font: 600 14px/1.3 var(--font); }
-  .rp-dom .v { font: 500 28px/1 var(--mono); }
-  .rp-lvl { display: flex; gap: 3px; }
-  .rp-lvl i { flex: 1; height: 8px; border-radius: 2px; background: var(--mat); }
-  .rp-lvl i.on { background: var(--ink); }
-  .rp-srow { display: grid; grid-template-columns: minmax(0, 1.6fr) 90px minmax(0, 1fr) 150px; gap: 6px 16px; align-items: center; padding: 10px 0; border-top: 1px solid var(--line); cursor: pointer; }
+  /* breakdown: domains, skills, difficulty, format; judgement; pace */
+  .rp-doms { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px 32px; }
+  @media (max-width: 759px) { .rp-doms { grid-template-columns: minmax(0, 1fr); } }
+  .rp-domnote:not(:empty) { margin-top: 16px; }
+  .rp-dom { display: grid; gap: 8px; align-content: start; min-width: 0; }
+  .rp-dom h3 { font: 600 14.5px/1.3 var(--font); }
+  .rp-dom .v { font: 600 28px/1 var(--font); letter-spacing: -.02em; font-variant-numeric: tabular-nums; }
+  .rp-domtools { display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: 8px; margin-bottom: 12px; }
+  .rp-srow { display: grid; grid-template-columns: minmax(0, 1.6fr) 90px minmax(0, 1fr) 150px; gap: 4px 16px; align-items: center; min-height: var(--row-h); padding: 4px 8px; margin: 0 -8px; border-top: 1px solid var(--line); cursor: pointer; }
   .rp-srow:first-child { border-top: 0; }
   .rp-srow > .rp-row { justify-content: flex-end; }
   .rp-srow .nm { display: flex; align-items: center; gap: 8px; font: 600 14.5px var(--font); }
   .rp-srow .glyph { width: 18px; height: 18px; flex: none; }
-  .rp-mb { position: relative; height: 8px; border-radius: 4px; background: var(--mat); }
-  .rp-mb i { position: absolute; inset: 0 auto 0 0; width: calc(var(--a) * 100%); border-radius: 4px; background: var(--ink); transition: width .6s var(--ease); }
+  .rp-mb { position: relative; height: 8px; border-radius: 4px; background: var(--track); }
+  .rp-mb i { position: absolute; inset: 0 auto 0 0; width: calc(var(--a) * 100%); border-radius: 4px; background: var(--ink); transition: width .2s var(--ease); }
   .rp-mb b { position: absolute; top: -3px; bottom: -3px; width: 2px; left: calc(var(--b) * 100%); background: var(--soft); }
-  .rp-bars { display: grid; gap: 8px; }
-  .rp-bar { display: grid; grid-template-columns: 150px minmax(0, 1fr) auto; gap: 12px; align-items: center; border: 0; background: none; padding: 4px 0; font: inherit; text-align: left; color: var(--ink); cursor: pointer; }
-  .rp-bar .t { height: 10px; border-radius: 5px; background: var(--tile-2); overflow: hidden; }
+  .rp-bars { display: grid; grid-template-columns: max-content minmax(80px, 1fr) max-content; gap: 4px 16px; }
+  .rp-bar { grid-column: 1 / -1; display: grid; grid-template-columns: subgrid; align-items: center; min-height: 36px; border: 0; background: none; padding: 0; font: 400 14.5px var(--font); text-align: left; color: var(--ink); cursor: pointer; }
+  .rp-bar > :last-child { text-align: right; }   /* the figures end on one edge */
+  .rp-bar .t { height: 8px; border-radius: 4px; background: var(--track); overflow: hidden; }
   .rp-bar .t i { display: block; height: 100%; width: calc(var(--rp) * 100%); background: var(--amber); }
-  .rp-conf { display: grid; grid-template-columns: auto repeat(2, minmax(0, 1fr)); gap: 6px; max-width: 420px; }
-  .rp-conf > * { padding: 8px 10px; border-radius: 8px; background: var(--tile-2); font: 500 13.5px var(--mono); text-align: center; border: 0; }
-  .rp-conf > .h { background: none; font: 600 12px var(--font); color: var(--soft); text-align: left; }
-  .rp-conf button { cursor: pointer; color: var(--ink); }
+  .rp-conf { display: grid; grid-template-columns: auto repeat(2, minmax(0, 1fr)); gap: 4px; max-width: 420px; }
+  .rp-conf > * { padding: 8px; border-radius: 8px; background: var(--well); font: 500 14px var(--font); font-variant-numeric: tabular-nums; text-align: center; border: 0; }
+  .rp-conf > .h { background: none; font: 500 12.5px var(--font); color: var(--soft); text-align: left; }
   .rp-judge { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px 24px; }
-  .rp-judge > div { display: grid; gap: 8px; align-content: start; }
-  .rp-judge h3, .rp-sub { font: 700 12px/1 var(--font); letter-spacing: .08em; text-transform: uppercase; color: var(--soft); }
-  #next { border-top: 1px solid var(--line); padding-top: 24px; background: none; }
+  .rp-judge > div { display: grid; gap: 8px; align-content: start; justify-items: start; }
+  .rp-judge h3 { font: 600 14.5px/1.35 var(--font); color: var(--ink); }
 
-  /* the sticky strip on a phone: the primary, Jump to, Review, more */
+  /* the sticky strip on a phone: the primary, Jump to, Review */
   .rp-stick { display: none; }
-  .rp > section, .rp-mist-wrap > section { scroll-margin-top: 72px; }
-  @media (max-width: 759px) { .rp > section, .rp-mist-wrap > section { scroll-margin-top: 128px; } }
-  /* on a phone a head's control row takes its own line, so the ⓘ's 44px hit area never lies over it ("By cause") */
-  @media (max-width: 759px) { .card-head > .rp-headr { flex-basis: 100%; margin-top: 6px; } }
-  /* a phone or a coarse pointer: chips and info buttons get a 44px hit area, as the kit's .btn.sm does */
+  #cols section { scroll-margin-top: 72px; }
+  @media (max-width: 759px) { #cols section { scroll-margin-top: 128px; } }
+  /* on a phone a head's control row takes its own line, so a ? never lies over it ("By cause") */
+  @media (max-width: 759px) { .card-head > .rp-headr { flex-basis: 100%; justify-content: flex-start; margin-top: 4px; } }
+  /* a phone or a coarse pointer: chips get a 44px hit area, as the kit's .btn.sm does */
   @media (max-width: 759px), (pointer: coarse) {
-    .rp-info, button.rp-chip, a.rp-chip { position: relative; }
-    .rp-info::before, button.rp-chip::before, a.rp-chip::before { content: ""; position: absolute; left: 50%; top: 50%; width: max(100%, 44px); height: max(100%, 44px); transform: translate(-50%, -50%); }
+    button.rp-chip, a.rp-chip { position: relative; }
+    button.rp-chip::before, a.rp-chip::before { content: ""; position: absolute; left: 50%; top: 50%; width: max(100%, 44px); height: max(100%, 44px); transform: translate(-50%, -50%); }
   }
-  @media (max-width: 1099px) {
-    .rp-gauge, .rp-facts { grid-column: 1 / -1; }
-    .rp-mist-wrap > #mistakes, .rp-mist-wrap > #value { grid-column: 1 / -1; }
-    .rp-doms { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-    .rp-cards { grid-template-columns: minmax(0, 1fr); }
-  }
+  @media (max-width: 1099px) { .rp-judge { grid-template-columns: minmax(0, 1fr); } }
   @media (max-width: 759px) {
-    .rp { gap: 16px; }
     body[data-page="report"] .sections { display: none; }
     .rp-stick { position: sticky; top: calc(56px + env(safe-area-inset-top, 0px)); z-index: 21; display: flex; flex-wrap: wrap; gap: 8px; align-items: center;
-      margin: 0 calc(-1 * var(--gutter)); padding: 8px var(--gutter); background: var(--paper); box-shadow: 0 1px 0 var(--line); }
+      margin: 0 calc(-1 * var(--gutter)); padding: 8px var(--gutter); background: var(--page); box-shadow: var(--shadow-scroll); }
     .rp-stick[hidden] { display: none; }
     .rp-stick select { flex: 1 1 120px; min-height: var(--touch); }
-    .rp-title { grid-template-columns: minmax(0, 1fr); }
-    .rp-acts { justify-content: flex-start; }
-    #tiles .stats, #tiles .stats[data-n="8"] { --cols: 2; }
-    .rp-mods, .rp-judge { grid-template-columns: minmax(0, 1fr); }
     .rp-srow { grid-template-columns: minmax(0, 1fr) auto; }
     .rp-srow .rp-mb { grid-column: 1 / -1; }
-    .rp-bar { grid-template-columns: minmax(0, 1fr) auto; }
+    .rp-bars { grid-template-columns: minmax(0, 1fr) auto; }
     .rp-bar .t { grid-column: 1 / -1; order: 3; }
-    .card-head .rp-headr { flex: 1 1 100%; margin-left: 0; min-width: 0; }
   }
   .rp-ptable, .rp-pack { display: none; }
   @media print {
@@ -229,12 +252,12 @@
     body.rp-packonly .rp-ppage:first-child { break-before: auto; }
     .rp-pfresh { break-inside: avoid; margin-bottom: 12px; }
     .rp-pwork { height: 120px; border: 1px dashed #999; border-radius: 6px; margin-top: 8px; }
-    #bar, #tabs, .rp-stick, #next, .rp-tools, .rp-whatif, #rvbody { display: none !important; }
-    .rp { display: block; }
-    .rp > section { break-inside: avoid-page; margin-bottom: 16px; }
-    .rp > #review { break-inside: auto; }
+    #bar, #tabs, .rp-stick, #next, .rp-tools, #rvlegend, .rp-whatif, #rvbody, #head .rp-acts { display: none !important; }
+    #root.rp { display: block; }
+    #cols section { break-inside: avoid-page; margin-bottom: 16px; }
+    #cols > .rp-main > #review { break-inside: auto; }
     .rp-ptable { display: table; width: 100%; border-collapse: collapse; font: 400 10.5px/1.35 var(--font); }
-    .rp-ptable th { text-align: left; font-weight: 700; border-bottom: 1px solid #000; padding: 4px 6px; }
+    .rp-ptable th { text-align: left; font-weight: 600; border-bottom: 1px solid #000; padding: 4px 6px; }
     .rp-ptable td { border-bottom: 1px solid #ccc; padding: 3px 6px; vertical-align: top; }
     .rp-ptable tr { break-inside: avoid; }
     .rp-ptable thead { display: table-header-group; }
@@ -248,28 +271,32 @@
   <div class="rp-stick" id="stick" hidden></div>
   <div class="rp" id="root">
     <header id="head"></header>
-    <section id="hero" class="card" aria-label="Score"></section>
-    <section id="recovery" class="rp-status" aria-label="Recovery" hidden></section>
-    <section id="ledger" class="card" hidden></section>
-    <section id="compare" class="card" hidden></section>
-    <div class="rp-mist-wrap" id="mistwrap">
-      <section id="mistakes" class="card"></section>
-      <section id="value" class="card" hidden></section>
+    <div class="twocol" id="cols">
+      <div class="rp-main" id="rpmain" data-m="stagger">
+        <section id="hero" class="card hero" aria-label="Score"></section>
+        <section id="ledger" class="card" hidden></section>
+        <section id="compare" class="card" hidden></section>
+        <section id="mistakes" class="card"></section>
+        <section id="review" class="card"></section>
+        <section id="breakdown" class="card" hidden>
+          <div id="domains" hidden></div>
+          <div id="skills" hidden></div>
+          <div id="split" hidden></div>
+          <div id="format" hidden></div>
+        </section>
+        <section id="judgement" class="card" hidden></section>
+        <section id="pace" class="card" hidden></section>
+      </div>
+      <aside class="twocol-side" id="side" aria-label="This sitting" data-m="stagger">
+        <div class="rx-side">
+          <section id="recovery" class="card" aria-label="Recovery" hidden></section>
+          <section id="tiles" class="card" aria-label="Summary"></section>
+          <section id="takeaways" class="card" hidden></section>
+          <section id="value" class="card" hidden></section>
+          <section id="next" class="card" hidden></section>
+        </div>
+      </aside>
     </div>
-    <section id="takeaways" class="card" hidden></section>
-    <section id="tiles" aria-label="Summary"></section>
-    <section id="habits" class="card" hidden></section>
-    <section id="review" class="card"></section>
-    <section id="modules" class="card" hidden></section>
-    <section id="breakdown" class="card" hidden>
-      <div id="domains" hidden></div>
-      <div id="skills" hidden></div>
-      <div id="split" hidden></div>
-      <div id="format" hidden></div>
-    </section>
-    <section id="judgement" class="card" hidden></section>
-    <section id="pace" class="card" hidden></section>
-    <section id="next" hidden></section>
   </div>
 </main>
 

@@ -18,29 +18,28 @@ import random
 import re
 import secrets
 import statistics
+import threading
 import time
 from collections import Counter, defaultdict
 from typing import Literal
 
-from fastapi import APIRouter, Header, HTTPException
+from fastapi import APIRouter, Depends, Header, HTTPException
 from pydantic import BaseModel, ConfigDict, Field
 
 from . import blueprint, db, deps, drill, papers, practice, progress, scoring
-from .deps import SECONDS_PER_QUESTION, learner_of, now, session_or_404, writer_of
+from .deps import learner_of, now, session_or_404, writer_of
 
 log = logging.getLogger("satf")
 router = APIRouter()
 router.include_router(papers.router)
 
-# A mock is the real thing: 35 minutes a module, whatever is in it.
-MOCK_MODULE_SECONDS = 35 * 60
-
 # what a student is allowed to see about a question
 PUBLIC_FIELDS = ("id", "domain", "topic_name", "difficulty", "type",
-                 "stem", "choices", "latex", "figure", "table")
+                 "stem", "choices", "latex", "figure", "table", "text", "table_title")
 
-# filled by app.py's startup
+# filled by app.py's startup: every diagnostic form by id (Math 1-10, R&W 101+), and each subject's ids
 FORMS: dict[int, list[dict]] = {}
+FORM_IDS: dict[str, list[int]] = {"math": [], "rw": []}
 MOCKS: dict[str, dict] = {}
 
 FRESH = "new"               # questions built for the sitting and stored in it
@@ -57,6 +56,8 @@ PREDICT_WINDOW = 15 * 60    # predictions after the final hand-in
 QSTATE_MAX = 256 * 1024
 SCRATCH_MAX = 20 * 1024
 BREAK_MAX_MS = 75_000       # X11: Bluebook's 60 s step plus slack for a slow device
+SECTION_BREAK_S = 10 * 60   # a full SAT's break between R&W and Math, as Bluebook gives it
+SECTION_BREAK_MAX_MS = (SECTION_BREAK_S + 60) * 1000      # plus a minute's slack, like BREAK_MAX_MS
 AWAY_MAX_MS = 120_000       # X1
 PRESSURE_MAX = 15
 NEW_PER_HOUR = 120          # sittings a code may build in an hour (each one generates a module)
@@ -82,12 +83,22 @@ def _cfg(row) -> dict:
     return _json(row["cfg"], {}) or {}
 
 
+def _subject(row) -> str:
+    """The sitting's subject; rows from before the column count as Math."""
+    return row["subject"] if "subject" in row.keys() and row["subject"] in deps.SUBJECTS else "math"
+
+
 def _utc() -> dt.datetime:
     return dt.datetime.now(dt.timezone.utc)
 
 
 def _at(text: str) -> dt.datetime:
     return dt.datetime.fromisoformat(text)
+
+
+def _day(at: str, tz: int = 0) -> str:
+    """An ISO moment's day where the learner is (X-Tz: minutes behind UTC), for copy that names a day."""
+    return (_at(at) - dt.timedelta(minutes=tz)).date().isoformat()
 
 
 def mmss(ms: float) -> str:
@@ -116,6 +127,8 @@ def mock_module(row, module: int | None = None, route: str | None = None) -> lis
     module = module or row["module"] or 1
     built = _json(row["questions"])
     if isinstance(built, dict):
+        if module == 1 and not built.get("module1") and (_cfg(row).get("full") or {}).get("part") == 2:
+            return _full_math_m1(row)
         return built["module1"] if module == 1 else built.get("module2", [])
     m = MOCKS[row["mock_id"]]
     if module == 1:
@@ -171,15 +184,16 @@ def is_timed(row) -> bool:
 
 
 def duration(row) -> int:
-    """The live module's clock: 35 minutes a module, 95 s a question for a
-    diagnostic or custom test (or its own minutes), times the timing factor."""
+    """The live module's clock: a mock is the real thing (35 minutes a Math
+    module, 32 an R&W one, whatever is in it), the subject's pace a question
+    for a diagnostic or custom test (or its own minutes), times the timing factor."""
     cfg = _cfg(row)
     if row["kind"] in ("mock", "module"):
-        base = MOCK_MODULE_SECONDS
+        base = blueprint.SPEC[_subject(row)]["module_seconds"]
     elif row["kind"] == "custom" and cfg.get("minutes"):
         base = cfg["minutes"] * 60
     else:
-        base = len(questions_of(row)) * SECONDS_PER_QUESTION
+        base = len(questions_of(row)) * deps.PACE[_subject(row)]
     return int(round(base * FACTOR.get(timing_of(row), 1.0)))
 
 
@@ -223,6 +237,8 @@ def kind_label(row) -> str:
     k = kind_of(row)
     if row["contest"]:
         return {"final": "Season Final", "weekly": "Weekly Module"}.get(_contest_kind(row) or "", "Contest")
+    if k == "full":
+        return "Full SAT"
     if k == "paper":
         return f"Paper #{cfg.get('paper') or (row['mock_id'] or 'P')[1:]}"
     if k == "twin":
@@ -247,19 +263,23 @@ def kind_label(row) -> str:
 
 def modules_list(row) -> list[dict]:
     """Decision 3: [{subject, n, questions}], one per module of the sitting."""
-    subject = row["subject"] if "subject" in row.keys() and row["subject"] else "math"
+    subject = _subject(row)
     if row["kind"] in ("mock", "module", "custom") and two_modules(row):
         n1 = len(mock_module(row, 1))
-        return [{"subject": subject, "n": 1, "questions": n1}, {"subject": subject, "n": 2, "questions": 22}]
+        return [{"subject": subject, "n": 1, "questions": n1},
+                {"subject": subject, "n": 2, "questions": blueprint.SPEC[subject]["module_size"]}]
     return [{"subject": subject, "n": 1, "questions": len(questions_of(row))}]
 
 
 def section_label(row) -> str:
-    """Derived from the modules list, subject first; nothing hard-codes 'of 2'."""
+    """Derived from the modules list, subject first; nothing hard-codes 'of 2'.
+    A full SAT part reads as Bluebook's header does."""
     cfg = _cfg(row)
     mods = modules_list(row)
     subject = SUBJECT_LABEL.get(mods[0]["subject"], "Math")
     m = row["module"] or 1
+    if (cfg.get("full") or {}).get("part"):
+        return f"Section {cfg['full']['part']}, Module {m}: {subject}"
     if row["kind"] == "practice":
         return "Mixed practice"
     if row["kind"] == "diagnostic":
@@ -387,8 +407,7 @@ def _met_templates(learner: str | None, before: str | None = None, exclude: str 
 
 def holds(row, qs: list[dict]) -> dict:
     """X2: what the live module holds, public counts only."""
-    subject = row["subject"] if "subject" in row.keys() and row["subject"] else "math"
-    out = blueprint.holds(qs, subject)
+    out = blueprint.holds(qs, _subject(row))
     templates = {q["key"] for q in qs if "key" in q}
     met = _met_templates(row["learner"])
     ever = {r["template"] for r in db.rows("SELECT DISTINCT template FROM attempts WHERE learner=?",
@@ -416,12 +435,12 @@ def payload(row) -> dict:
     started, paused = begun(row), bool(row["paused_at"])
     show = started and not paused
     training = _training(cfg)
-    subject = row["subject"] if "subject" in row.keys() and row["subject"] else "math"
+    subject = _subject(row)
     answers = db.load_answers(row)
     qstate = _json(row["qstate"], {}) or {}
     out = {
         "id": row["id"], "mode": row["kind"], "kind": kind_of(row), "kind_label": kind_label(row),
-        "section": section_label(row), "subject": subject,
+        "section": section_label(row), "subject": subject, "integrity": integrity_of(row),
         # practice is not an exam, so it is not on a clock
         "seconds": None if practice_mode or not is_timed(row) else remaining(row),
         "duration": None if practice_mode or not is_timed(row) else duration(row),
@@ -430,11 +449,11 @@ def payload(row) -> dict:
         "question_count": len(qs),
         "answers": {k: v for k, v in answers.items() if k in ids},
         "finished": row["finished"], "begun": started, "paused": paused,
-        "pauses": row["pauses"] or 0, "number": row["number"],
+        "pauses": row["pauses"] or 0, "number": number_of(row),
         "modules": modules_list(row), "module": row["module"] or 1,
         "conditions": cfg.get("conditions", "test_day"), "timing": timing_of(row),
         "factor": FACTOR.get(timing_of(row), 1.0),
-        "calculator": cfg.get("calculator", True), "fullscreen": cfg.get("fullscreen", True),
+        "calculator": subject == "math" and cfg.get("calculator", True), "fullscreen": cfg.get("fullscreen", True),
         "predict": cfg.get("predict", True),
         "confidence": training and bool(cfg.get("confidence")),
         "reveal_route": training and bool(cfg.get("reveal_route")),
@@ -463,13 +482,15 @@ def payload(row) -> dict:
         out["new_to_you"] = sum((q.get("key"), q.get("seed")) not in seen for q in qs)
     if row["kind"] == "mock" and not cfg.get("kind"):
         out["mock"] = row["mock_id"]
+    if cfg.get("full"):
+        out["full"] = full_of(row)
     if training and cfg.get("reveal_route") and (row["module"] or 1) == 2:
         out["route"] = row["route"]
     if training and cfg.get("pace") and is_timed(row) and row["kind"] in TESTS:
         # numbers from the public ladder only, so the lobby can say whose pace it is
         out["pace"] = pace_plan(row["learner"], _form_of(row), FACTOR.get(timing_of(row), 1.0),
                                 reveal_route=bool(cfg.get("reveal_route")), route=row["route"],
-                                seconds=duration(row))
+                                seconds=duration(row), subject=subject)
     if training and show:
         from . import ratings
         out["odds"] = {q["id"]: round(ratings.odds(row["learner"], q["key"], q["difficulty"], q.get("topic")), 2)
@@ -508,27 +529,31 @@ def _form_of(row):
 
 # ------------------------------------------------------------------ X3: the pace plan
 
-TIER_DEFAULT_S = {"easy": 65, "medium": 95, "hard": 126}     # P16
+# P16's seconds per tier, per subject (drill's budgets: Math 65 / 95 / 126, R&W 49 / 71 / 94)
+TIER_DEFAULT_S = {s: {t: ms // 1000 for t, ms in b.items()} for s, b in drill.TIER_BUDGET.items()}
 
 
-def _tier_bases(learner: str | None) -> tuple[dict[str, float], str, int]:
+def _tier_bases(learner: str | None, subject: str = "math") -> tuple[dict[str, float], str, int]:
     """Median seconds on first-try right answers per tier over 60 days in
-    timed contexts, when every tier has 15; else P16's defaults."""
+    timed contexts of this subject, when every tier has 15; else P16's defaults."""
+    default = TIER_DEFAULT_S[subject]
     if not learner:
-        return dict(TIER_DEFAULT_S), "default", 0
+        return dict(default), "default", 0
     since = (_utc() - dt.timedelta(days=60)).isoformat()
     per: dict[str, list[float]] = defaultdict(list)
     n = 0
-    for r in db.rows("SELECT a.difficulty, COALESCE(a.ms, a.sms) AS ms, s.kind, s.cfg FROM attempts AS a"
+    for r in db.rows("SELECT a.difficulty, a.topic, COALESCE(a.ms, a.sms) AS ms, s.kind, s.cfg FROM attempts AS a"
                      " JOIN sessions AS s ON s.id=a.session WHERE a.learner=? AND a.at>=? AND a.correct=1"
                      " AND a.repeat=0 AND a.void IS NULL AND COALESCE(a.ms, a.sms) IS NOT NULL", learner, since):
         cfg = _json(r["cfg"], {}) or {}
+        if deps.subject_of(r["topic"]) != subject:
+            continue
         if r["kind"] in TESTS or cfg.get("timing") == "pace" or cfg.get("clock") == "pace":
             per[r["difficulty"]].append(r["ms"] / 1000)
             n += 1
-    if all(len(per[t]) >= 15 for t in TIER_DEFAULT_S):
-        return {t: statistics.median(per[t]) for t in TIER_DEFAULT_S}, "you", n
-    return dict(TIER_DEFAULT_S), "default", n
+    if all(len(per[t]) >= 15 for t in default):
+        return {t: statistics.median(per[t]) for t in default}, "you", n
+    return dict(default), "default", n
 
 
 def _scale(weights: list[float], total: int) -> list[int]:
@@ -542,27 +567,27 @@ def _scale(weights: list[float], total: int) -> list[int]:
 
 
 def pace_plan(learner: str | None, form, factor: float = 1.0, reveal_route: bool = False,
-              route: str | None = None, seconds: int | None = None) -> dict:
+              route: str | None = None, seconds: int | None = None, subject: str = "math") -> dict:
     """X3: {subject, budget_s[n], reserve_s, source, n_answers}. Each
     position's tier is the form's public ladder, never the items served;
     budgets fill duration - reserve (180 s x factor). Module 2 without the
     route revealed averages the two module 2 ladders, so it can't tell."""
-    bases, source, n = _tier_bases(learner)
+    bases, source, n = _tier_bases(learner, subject)
     if isinstance(form, list):
         weights = [bases[t] for t in form]
-        dur = seconds or int(round(len(form) * SECONDS_PER_QUESTION * factor))
+        dur = seconds or int(round(len(form) * deps.PACE[subject] * factor))
     else:
         if form == "module2":
             if reveal_route and route in ("upper", "lower"):
-                weights = [bases[t] for t in blueprint.ladder("module2_" + route)]
+                weights = [bases[t] for t in blueprint.ladder("module2_" + route, subject)]
             else:
                 weights = [(bases[a] + bases[b]) / 2 for a, b in
-                           zip(blueprint.ladder("module2_upper"), blueprint.ladder("module2_lower"))]
+                           zip(blueprint.ladder("module2_upper", subject), blueprint.ladder("module2_lower", subject))]
         else:
-            weights = [bases[t] for t in blueprint.ladder(form)]
-        dur = seconds or int(round(blueprint.MODULE_SECONDS * factor))
+            weights = [bases[t] for t in blueprint.ladder(form, subject)]
+        dur = seconds or int(round(blueprint.SPEC[subject]["module_seconds"] * factor))
     reserve = int(round(180 * factor))
-    return {"subject": "math", "budget_s": _scale(weights, max(0, dur - reserve)), "reserve_s": reserve,
+    return {"subject": subject, "budget_s": _scale(weights, max(0, dur - reserve)), "reserve_s": reserve,
             "source": source, "n_answers": n}
 
 
@@ -571,20 +596,22 @@ def pace_plan(learner: str | None, form, factor: float = 1.0, reveal_route: bool
 class NewDiagnostic(BaseModel):
     model_config = ConfigDict(extra="forbid")
     conditions: Literal["test_day", "training"] | None = None
+    subject: Literal["math", "rw"] = "math"
 
 
 @router.post("/api/session")
 def new_session(body: NewDiagnostic | None = None, x_learner: str | None = Header(default=None)) -> dict:
-    """Start a diagnostic on one of the ten forms, drawn at random, in its
+    """Start a diagnostic on one of the subject's fixed forms, drawn at random, in its
     lobby. With no code, the server mints one and returns it (SEC-07)."""
+    body = body or NewDiagnostic()
     minted = not (x_learner and x_learner.strip())
     learner = writer_of("anon:" + secrets.token_urlsafe(9)) if minted else writer_of(x_learner)
     if not minted:
         _rate(learner)
-    form_id = random.choice(list(FORMS))
-    opts = options(learner, NewMock(conditions=body.conditions if body else None))
-    cfg = {**opts, "kind": "diagnostic", "lobby": True}
-    sid = _insert(learner, "diagnostic", None, None, cfg, form_id=form_id)
+    form_id = random.choice(FORM_IDS[body.subject])
+    opts = options(learner, NewMock(conditions=body.conditions))
+    cfg = {**opts, "kind": "diagnostic", "lobby": True, "subject": body.subject}
+    sid = _insert(learner, "diagnostic", None, None, cfg, form_id=form_id, subject=body.subject)
     log.info("session %s started on form %d", sid[:8], form_id)
     out = payload(session_or_404(sid))
     if minted:
@@ -688,7 +715,7 @@ class Mark(BaseModel):
     end: int = Field(ge=0, le=20_000)
     style: Literal["highlight", "strong", "underline", "dashed", "dotted", "box", "strike"]
     note: str | None = Field(default=None, max_length=500)
-    at: str | None = Field(default=None, pattern=r"^(stem|t:\d{1,2}:\d{1,2}|o:[0-3])$")
+    at: str | None = Field(default=None, pattern=r"^(stem|p|t:\d{1,2}:\d{1,2}|o:[0-3])$")    # p: the passage
 
 
 class Calc(BaseModel):
@@ -704,6 +731,14 @@ class Nudge(BaseModel):
     took: bool | None = None
 
 
+class IgEvent(BaseModel):
+    """One integrity event: left the window (blur), hid the tab, left fullscreen, tried to copy or paste."""
+    model_config = ConfigDict(extra="forbid")
+    kind: Literal["blur", "hidden", "fullscreen", "copy", "paste"]
+    ms: int = Field(default=0, ge=0, le=3_600_000)
+    q: str | None = Field(default=None, max_length=40)
+
+
 class State(Stamps):
     model_config = ConfigDict(extra="forbid")
     question_id: str | None = Field(default=None, max_length=40)
@@ -714,7 +749,15 @@ class State(Stamps):
     note: str | None = Field(default=None, max_length=500)
     marks: list[Mark] | None = Field(default=None, max_length=50)
     away_ms: int | None = Field(default=None, ge=0, le=3_600_000)
-    away_n: int | None = Field(default=None, ge=0, le=10)
+    away_n: int | None = Field(default=None, ge=0, le=1000)
+    # integrity (runner.js): another window focused while the tab stayed visible, and the blocked copy,
+    # paste and fullscreen exits; counts are deltas, summed while the client queued them
+    blur_n: int | None = Field(default=None, ge=0, le=1000)
+    blur_ms: int | None = Field(default=None, ge=0, le=10_800_000)
+    copy_n: int | None = Field(default=None, ge=0, le=1000)
+    paste_n: int | None = Field(default=None, ge=0, le=1000)
+    fs_n: int | None = Field(default=None, ge=0, le=1000)
+    ig: list[IgEvent] | None = Field(default=None, max_length=20)
     predict: Literal["miss"] | None = None
     scratch: dict | None = None
     calc: Calc | None = None
@@ -802,9 +845,14 @@ def put_state(sid: str, body: State, x_learner: str | None = Header(default=None
             parts.append(_add(_path(qid, k), fields[k]))
     if body.reveal_ms is not None:
         parts.append(_set(_path(qid, "reveal_ms"), body.reveal_ms))
-    for k in ("away_ms", "away_n"):
+    for k in ("away_ms", "away_n", "blur_n", "blur_ms", "copy_n", "paste_n", "fs_n"):
         if fields.get(k):
             parts.append(_add(f'$."_session"."{k}"', fields[k]))
+    if body.ig:                             # the teacher's timeline: which question, how long, when in the module
+        at = elapsed_ms(row)
+        events = (sess.get("ig") or []) + [{**e.model_dump(exclude_none=True), "at": at, "m": row["module"] or 1}
+                                           for e in body.ig]
+        parts.append(_set('$."_session"."ig"', events[-200:]))
     if body.report_later is not None:
         later = list(dict.fromkeys((sess.get("report_later") or []) + [body.report_later]))
         parts.append(_set('$."_session"."report_later"', later))
@@ -827,9 +875,12 @@ class Begin(Stamps):
 
 
 def _remember(row) -> None:
+    """The live module's items are never served to this learner again. A written R&W item is
+    marked by its whole question (Builder.signature): its stem repeats across passages, and its
+    seeds wrap (seed % n), so neither the stem nor the (template, seed) pair would catch it."""
     if row["learner"]:
         db.remember(row["learner"], [{"key": q["key"], "seed": q["seed"],
-                                      "stem_hash": practice.stem_hash(q["stem"])}
+                                      "stem_hash": drill._hash_of(q) if q.get("text") else practice.stem_hash(q["stem"])}
                                      for q in questions_of(row) if "key" in q], now())
 
 
@@ -864,6 +915,11 @@ def begin(sid: str, body: Begin | None = None, x_learner: str | None = Header(de
         if db.run("UPDATE sessions SET module_started=? WHERE id=? AND module_started IS NULL",
                   start, sid).rowcount:
             _remember(row)
+            full = _cfg(row).get("full") or {}
+            if (row["module"] or 1) == 1 and full.get("part") == 2 and full.get("after"):
+                # a full SAT's break ends at the Math section's Begin; judged by rank_of, not BREAK_MAX_MS
+                ms = int((_at(start) - _at(full["after"])).total_seconds() * 1000)
+                _write_qstate(sid, [_set('$."_session"."section_break"', {"ms": max(0, ms), "source": "server"})])
             if (row["module"] or 1) == 2:
                 qstate = _json(row["qstate"], {}) or {}
                 pids = (qstate.get("_session") or {}).get("pids") or {}
@@ -1048,13 +1104,14 @@ def exposure(learner: str) -> dict[str, int]:
     return dict(out)
 
 
-def fresh_module(learner: str, form: str, training: bool = False) -> list[dict]:
-    """A module built to the blueprint now, from questions this learner has
+def fresh_module(learner: str, form: str, training: bool = False, subject: str = "math") -> list[dict]:
+    """A module built to the subject's blueprint now, from questions this learner has
     never been given: a seeded shuffle for Test-day, the least-met types
     first for Training (X2). Remembered at /begin, not here."""
     if training:
-        return blueprint.module(form, _builder(learner), order="exposure", exposure=exposure(learner))
-    return blueprint.module(form, _builder(learner), order="shuffle")
+        return blueprint.module(form, _builder(learner), order="exposure", exposure=exposure(learner),
+                                subject=subject)
+    return blueprint.module(form, _builder(learner), order="shuffle", subject=subject)
 
 
 def _pairs_questions(pairs: list[list], prefix: str, start: int = 1) -> list[dict]:
@@ -1092,7 +1149,7 @@ def _module2(row, cfg: dict, route: str) -> list[dict] | None:
             return _pairs_questions(m2, prefix)
     if row["mock_id"] in MOCKS:
         return None
-    return fresh_module(learner, "module2_" + route, _training(cfg))
+    return fresh_module(learner, "module2_" + route, _training(cfg), _subject(row))
 
 
 def _route(row, cfg: dict, body) -> dict:
@@ -1128,7 +1185,7 @@ def _route(row, cfg: dict, body) -> dict:
     log.info("sitting %s: module 1 %d/%d -> %s module 2", row["id"][:8], right, len(m1), route)
     out = {"next_module": 2, "finished_module": 1, "summary": info["summary"]}
     if _training(cfg) and cfg.get("reveal_route"):
-        out.update({"route": route, "right": right, "asked": len(m1), "gate": gate_of(m1, answers)})
+        out.update({"route": route, "right": right, "asked": len(m1), "gate": gate_of(m1, answers, _subject(row))})
     return out
 
 
@@ -1185,10 +1242,38 @@ def away_of(qstate: dict) -> tuple[int, int]:
     return int(away), int(off)
 
 
+IG_LEAVES = 3               # leaving the test this often flags a sitting for the teacher, however short each time
+
+
+def integrity_of(row) -> dict:
+    """What the teacher sees about a sitting: how often and how long the student was outside the test
+    (a hidden tab, from the stamps; another window focused while the tab stayed visible, from the runner),
+    fullscreen exits, the blocked copy and paste attempts, the timeline, and whether that flags it."""
+    qstate = _json(row["qstate"], {}) or {}
+    sess = qstate.get("_session") or {}
+    hidden_ms, _ = away_of(qstate)
+    out = {"away_n": sess.get("away_n") or 0, "away_ms": int(hidden_ms), "blur_n": sess.get("blur_n") or 0,
+           "blur_ms": int(sess.get("blur_ms") or 0), "copy_n": sess.get("copy_n") or 0,
+           "paste_n": sess.get("paste_n") or 0, "fs_n": sess.get("fs_n") or 0, "events": sess.get("ig") or []}
+    out["left_n"], out["left_ms"] = out["away_n"] + out["blur_n"], out["away_ms"] + out["blur_ms"]
+    why = []
+    if out["left_ms"] > AWAY_MAX_MS:
+        why.append(f"outside the test {mmss(out['left_ms'])}")
+    if out["left_n"] >= IG_LEAVES:
+        why.append(f"left the test {out['left_n']} times")
+    if out["copy_n"]:
+        why.append("tried to copy" + (f" {out['copy_n']} times" if out["copy_n"] > 1 else ""))
+    if out["paste_n"]:
+        why.append("tried to paste" + (f" {out['paste_n']} times" if out["paste_n"] > 1 else ""))
+    out["flagged"], out["why"] = bool(why), why
+    return out
+
+
 def rank_of(row, cfg: dict, partial: bool = False) -> tuple[int, str | None]:
     """X1: a sitting ranks when Test-day, official timing, adaptive, standard
-    module 1, a rankable kind, no pause, a break of 75 s or less and 2 minutes
-    or less away. The reason is the first rule that fails."""
+    module 1, a rankable kind, no pause, a break of 75 s or less (a full SAT's
+    section break 11:00 or less) and 2 minutes or less away. The reason is the
+    first rule that fails."""
     if cfg.get("conditions", "test_day") == "training":
         return 0, "training"
     pauses = row["pauses"] or 0
@@ -1206,7 +1291,9 @@ def rank_of(row, cfg: dict, partial: bool = False) -> tuple[int, str | None]:
     between = (qstate.get("_session") or {}).get("between") or {}
     if (between.get("ms") or 0) > BREAK_MAX_MS:
         return 0, f"break {mmss(between['ms'])}"
-    away, _ = away_of(qstate)
+    if (section_break_ms(row, cfg) or 0) > SECTION_BREAK_MAX_MS:
+        return 0, "long break"
+    away = integrity_of(row)["left_ms"]           # a hidden tab and another window focused both count
     if away > AWAY_MAX_MS:
         return 0, f"away {mmss(away)}"
     return 1, None
@@ -1228,7 +1315,7 @@ def _moments(row, result: dict, est: dict | None, prev: dict | None) -> list[dic
     band = result.get("estimate") or {}
     if row["kind"] == "mock" and row["route"] == "upper" and learner and not db.one(
             "SELECT 1 FROM sessions WHERE learner=? AND kind='mock' AND route='upper' AND finished IS NOT NULL"
-            " AND id!=?", learner, row["id"]):
+            " AND id!=? AND COALESCE(subject,'math')=?", learner, row["id"], _subject(row)):
         out.append({"id": "first_upper", "text": "Your first harder module 2"})
     if band.get("low") is not None and est and est.get("best") and est["best"]["id"] == row["id"] and prev:
         out.append({"id": "best", "text": "A new best band"})
@@ -1259,13 +1346,14 @@ def pressure_questions(row) -> list[str]:
     answers = db.load_answers(row)
     qstate = _json(row["qstate"], {}) or {}
     factor = FACTOR.get(timing_of(row), 1.0)
+    budget = TIER_DEFAULT_S[_subject(row)]
     first, then = [], []
     for q in marked_questions(row):
         given = answers.get(q["id"])
         st = qstate.get(q["id"]) or {}
         if given in (None, "") or not scoring.is_correct(q, given):
             first.append(q["id"])
-        elif st.get("conf") == "guess" or (st.get("ms") or 0) > 2 * TIER_DEFAULT_S[q["difficulty"]] * 1000 * factor:
+        elif st.get("conf") == "guess" or (st.get("ms") or 0) > 2 * budget[q["difficulty"]] * 1000 * factor:
             then.append(q["id"])
     return (first + then)[:PRESSURE_MAX]
 
@@ -1289,14 +1377,18 @@ def pressure_eligible(row) -> tuple[bool, str | None]:
     return True, None
 
 
-def _done(row, result: dict) -> dict:
-    """X12: the hand-in moment."""
+def _done(row, result: dict, tz: int = 0) -> dict:
+    """X12: the hand-in moment. `since` is the previous estimate's ISO moment; the headline names
+    its day where the learner is."""
     from . import estimate
     learner = row["learner"]
-    est = estimate.estimate(learner) if learner and result.get("scored") and row["kind"] != "diagnostic" else None
+    subject = _subject(row)
+    est = estimate.estimate(learner, subject) if learner and result.get("scored") and row["kind"] != "diagnostic" \
+        else None
     band = result.get("estimate") or {}
     prev = est["previous"] if est else None
-    target = db.one("SELECT target FROM learners WHERE id=?", learner) if learner else None
+    lr = db.one("SELECT target, rw_target FROM learners WHERE id=?", learner) if learner else None
+    target = (lr["rw_target"] if subject == "rw" else lr["target"]) if lr else None
     ok, _ = pressure_eligible(row)
     n = len(pressure_questions(row)) if ok else 0
     qstate = _json(row["qstate"], {}) or {}
@@ -1305,29 +1397,166 @@ def _done(row, result: dict) -> dict:
     headline = None
     if band.get("low") is not None and row["kind"] != "diagnostic":
         if prev:
-            d = (band["low"] + band["high"]) / 2 - prev["mid"]
-            day = prev["at"][:10]
+            d = estimate._mid(band) - prev["mid"]
+            day = _day(prev["at"], tz)
             headline = (f"Up {int(round(d / 10) * 10)} since {day}" if d >= 10 else
                         f"Down {int(round(-d / 10) * 10)} since {day}" if d <= -10 else f"Level with {day}")
         else:
             headline = "Your first estimate"
-    return {"subject": row["subject"] if "subject" in row.keys() and row["subject"] else "math",
-            "kind_label": kind_label(row), "number": row["number"],
+    out = {"subject": subject, "kind_label": kind_label(row), "number": number_of(row),
             "estimate": None if band.get("low") is None or row["kind"] == "diagnostic" else {
                 "low": band["low"], "high": band["high"],
                 "previous": {"low": prev["low"], "high": prev["high"]} if prev else None,
                 "best": {"low": est["best"]["low"], "high": est["best"]["high"]} if est and est.get("best") else None,
-                "target": target["target"] if target else None},
-            "headline": headline, "route": row["route"], "gate": result.get("gate"),
+                "target": target},
+            "headline": headline, "since": prev["at"] if prev and headline else None,
+            "route": row["route"], "gate": result.get("gate"),
             "moments": _moments(row, result, est, prev), "misses": misses, "blanks": blanks,
             "right": result.get("right"), "asked": result.get("asked"),
             "report_later": (qstate.get("_session") or {}).get("report_later") or [],
             "ranked": result.get("ranked"), "unranked_why": result.get("unranked_why"),
             "pressure": {"eligible": ok and n > 0, "n": n, "minutes": max(1, round(n * 80 / 60)) if n else 0},
             "scored": result.get("scored"), "not_scored": result.get("not_scored")}
+    full = result.get("full")
+    if full and full["part"] == 1:
+        out["full"] = {"id": full["id"], "part": 1}
+        if full.get("next"):
+            out["next"] = {"id": full["next"], "subject": "math", "part": 2, "href": f"/test/?s={full['next']}",
+                           "break_seconds": SECTION_BREAK_S}
+    elif full:
+        # the total against this learner's earlier full SATs only (like with like)
+        before = [f["total"] for f in full_results(learner) if f["id"] != full["id"]] if learner else []
+        out["full"] = {**{k: full.get(k) for k in ("id", "part", "total", "rw", "math")},
+                       "previous": before[0] if before else None,
+                       "best": max(before, key=lambda t: t["mid"]) if before else None,
+                       # a total target is the two section targets' sum (DESIGN 4), when both are set
+                       "target": lr["target"] + lr["rw_target"] if lr and lr["target"] and lr["rw_target"] else None,
+                       "href": f"/results/full/?id={full['id']}"}
+    return out
 
 
-def _final(row, cfg: dict) -> dict:
+# ------------------------------------------------------------------ the full SAT (kind "full")
+#
+# Two linked sittings, each a normal section: R&W (cfg.full = {id, part: 1}, id = its own sid), then Math
+# (part 2, made at R&W's hand-in in its lobby; full.after = that hand-in). The break between them is the
+# Math lobby: measured at Math's first Begin, its own limit in rank_of. The total is made at Math's
+# hand-in from both section centres (scoring.total_band) and kept in result.full.
+
+def _centre(band: dict | None) -> float | None:
+    from . import estimate
+    return estimate._mid(band) if band and band.get("low") is not None else None
+
+
+def section_break_ms(row, cfg: dict) -> int | None:
+    """A full SAT's break: Math's Begin less the R&W hand-in, as measured at Begin; while Math's
+    lobby still waits, the time so far."""
+    full = cfg.get("full") or {}
+    if full.get("part") != 2 or not full.get("after"):
+        return None
+    got = ((_json(row["qstate"], {}) or {}).get("_session") or {}).get("section_break")
+    if got:
+        return got["ms"]
+    return None if begun(row) else max(0, int((_utc() - _at(full["after"])).total_seconds() * 1000))
+
+
+def full_number(learner: str | None, fid: str) -> int:
+    """Which of this learner's full SATs this is (1 = the first), by their R&W sittings; both
+    sections carry it, so the Math half of the first one is #1 too."""
+    return db.one("SELECT COUNT(*) AS n FROM sessions WHERE learner IS ? AND json_extract(cfg,'$.full.part')=1"
+                  " AND (abandoned IS NULL OR id=?) AND rowid<=(SELECT rowid FROM sessions WHERE id=?)",
+                  learner, fid, fid)["n"]
+
+
+def number_of(row) -> int | None:
+    """The number a sitting shows ("Section #3"): a full SAT part shows the full SAT's own, the
+    same on both parts (the Math half of the first one is #1, not the second test sat)."""
+    fid = (_cfg(row).get("full") or {}).get("id")
+    return full_number(row["learner"], fid) if fid else row["number"]
+
+
+def full_of(row) -> dict:
+    """The payload's `full`: {id, part, of, number}, and on the Math part its break."""
+    cfg = _cfg(row)
+    full = cfg["full"]
+    out = {"id": full["id"], "part": full["part"], "of": 2, "number": full_number(row["learner"], full["id"])}
+    if full["part"] == 2:
+        ms = section_break_ms(row, cfg)
+        out["break"] = {"since": full.get("after"), "seconds": SECTION_BREAK_S,
+                        "limit_seconds": SECTION_BREAK_MAX_MS // 1000} if not begun(row) else \
+            {"ms": ms, "long": (ms or 0) > SECTION_BREAK_MAX_MS}
+    return out
+
+
+def full_rows(fid: str) -> tuple:
+    """(R&W sitting, Math sitting or None) of the full SAT `fid` (the R&W sitting's id)."""
+    rw = db.one("SELECT * FROM sessions WHERE id=?", fid)
+    if rw is None:
+        return None, None
+    return rw, db.one("SELECT * FROM sessions WHERE learner IS ? AND json_extract(cfg,'$.full.id')=? AND id!=?"
+                      " AND abandoned IS NULL ORDER BY started DESC LIMIT 1", rw["learner"], fid, fid)
+
+
+def fulls_done(learner: str | None = None) -> set[str]:
+    """Ids of the full SATs (one learner's, or everyone's) whose Math section is handed in. One that
+    stopped after R&W, or whose Math still waits, counts and lists as its R&W section (DESIGN 2)."""
+    return {r["f"] for r in db.rows("SELECT json_extract(cfg,'$.full.id') AS f FROM sessions WHERE (? IS NULL OR learner=?)"
+                                    " AND finished IS NOT NULL AND abandoned IS NULL"
+                                    " AND json_extract(cfg,'$.full.part')=2", learner, learner)}
+
+
+def full_results(learner: str) -> list[dict]:
+    """This learner's finished full SATs with a total, newest first: {id, math, finished, total, ranked}."""
+    out = []
+    for r in db.rows("SELECT id, finished, result FROM sessions WHERE learner=? AND finished IS NOT NULL"
+                     " AND abandoned IS NULL AND json_extract(cfg,'$.full.part')=2 ORDER BY finished DESC", learner):
+        f = (_json(r["result"], {}) or {}).get("full") or {}
+        if f.get("total"):
+            out.append({"id": f["id"], "math": r["id"], "finished": r["finished"], "total": f["total"],
+                        "ranked": bool(f.get("ranked"))})
+    return out
+
+
+def _full_math_m1(row) -> list[dict]:
+    """A full SAT's Math module 1: built during the break by the thread the R&W hand-in starts, or
+    here by the first reader that needs it sooner. The first build stored wins, so every reader
+    sees one module."""
+    m1 = fresh_module(row["learner"], "module1", _training(_cfg(row)), "math")
+    db.run("UPDATE sessions SET questions=json_set(questions,'$.module1',json(?)) WHERE id=?"
+           " AND json_array_length(json_extract(questions,'$.module1'))=0", json.dumps(m1), row["id"])
+    return _json(db.one("SELECT questions FROM sessions WHERE id=?", row["id"])["questions"])["module1"]
+
+
+def _build_full_math(sid: str) -> None:
+    try:
+        row = db.one("SELECT * FROM sessions WHERE id=?", sid)
+        if row:
+            mock_module(row, 1)
+    except Exception:                       # the reader that needs it builds it instead
+        log.exception("building the Math module of full SAT %s during the break", sid)
+
+
+def _full_hand_in(row, cfg: dict, result: dict) -> dict:
+    """result.full at a part's hand-in. R&W: the Math section, in its lobby with the same options;
+    its module 1 is built during the break (a class handing in R&W at time-up waited ~25 s when the
+    hand-in built it). Math: the total from both section centres, ranked only when both sections rank."""
+    full = cfg["full"]
+    if full["part"] == 1:
+        nxt = _insert(row["learner"], "mock", FRESH, {"module1": []},
+                      {**cfg, "subject": "math", "full": {"id": full["id"], "part": 2, "after": row["finished"]}},
+                      subject="math")
+        threading.Thread(target=_build_full_math, args=(nxt,), daemon=True, name="full-math-m1").start()
+        return {"id": full["id"], "part": 1, "next": nxt}
+    rw, _ = full_rows(full["id"])
+    rw_band = (_json(rw["result"], {}) or {}).get("estimate") if rw and rw["finished"] else None
+    math_band = result.get("estimate")
+    a, b = _centre(rw_band), _centre(math_band)
+    pick = lambda e: {"low": e["low"], "high": e["high"]} if e else None      # noqa: E731
+    return {"id": full["id"], "part": 2, "total": scoring.total_band(a, b) if a is not None and b is not None else None,
+            "rw": pick(rw_band), "math": pick(math_band),
+            "ranked": bool(rw and rw["ranked"] and result.get("ranked"))}
+
+
+def _final(row, cfg: dict, tz: int = 0) -> dict:
     marked = marked_questions(row)
     answers = db.load_answers(row)
     qstate = _json(row["qstate"], {}) or {}
@@ -1340,26 +1569,30 @@ def _final(row, cfg: dict) -> dict:
         wrong = {q["id"] for q in live if answers.get(q["id"]) not in (None, "")
                  and not scoring.is_correct(q, answers.get(q["id"]))}
         blank = {q["id"] for q in live if answers.get(q["id"]) in (None, "")}
-        mods.append({"subject": row["subject"] or "math", "n": n,
+        mods.append({"subject": _subject(row), "n": n,
                      "right": sum(scoring.is_correct(q, answers.get(q["id"])) for q in live),
                      "asked": len(live), "missed": _positions(qs, wrong), "blank": _positions(qs, blank)})
     scored, not_scored = scored_of(row, cfg)
     sess = qstate.get("_session") or {}
-    away, offline = away_of(qstate)
+    _, offline = away_of(qstate)
     m1_info = _json(row["module1"], {}) or {}
     timing = timing_of(row)
     now_summary = summary(row, questions_of(row))
+    integrity = integrity_of(row)
     result.update({
-        "subject": row["subject"] or "math", "modules": mods, "removed": removed,
+        "subject": _subject(row), "modules": mods, "removed": removed,
         "timing": timing, "factor": FACTOR.get(timing, 1.0), "extended": timing in ("x1.5", "x2"),
         "pauses": row["pauses"] or 0, "late": sess.get("late", 0),
-        "away": {"ms": away, "n": sess.get("away_n", 0)}, "offline_ms": offline,
+        # time outside the test: a hidden tab and another window focused (integrity_of), kept whole for the teacher
+        "away": {"ms": integrity["left_ms"], "n": integrity["left_n"]}, "offline_ms": offline, "integrity": integrity,
         "fixed_route": cfg.get("route") in ("upper", "lower"), "scored": scored,
         "conditions": cfg.get("conditions", "test_day"), "left_s": now_summary["left_s"],
         "summary": now_summary,
     })
     if sess.get("between"):
         result["between"] = sess["between"]
+    if sess.get("section_break"):
+        result["section_break"] = sess["section_break"]
     if m1_info:
         result["module1"] = {k: m1_info.get(k) for k in ("right", "asked")}
         result["would_route"] = m1_info.get("would_route")
@@ -1369,7 +1602,7 @@ def _final(row, cfg: dict) -> dict:
     if row["kind"] == "mock" or two_modules(row):
         result["mock"] = row["mock_id"]
         result["route"] = row["route"]
-        result["estimate"] = scoring.section_score(result, row["route"]) if scored else None
+        result["estimate"] = scoring.section_score(result, row["route"], _subject(row)) if scored else None
     elif not scored:
         result["estimate"] = None
     if not scored:
@@ -1405,7 +1638,9 @@ def _final(row, cfg: dict) -> dict:
         base, without = estimate.rescore(row["id"]), estimate.rescore(row["id"], wrong=rights)
         if base and without:
             res["pass2"]["pts"] = int(round((base["mid"] - without["mid"]) / 10) * 10)
-    res["done"] = done = _done(fresh, res)
+    if cfg.get("full"):
+        res["full"] = _full_hand_in(fresh, cfg, res)
+    res["done"] = done = _done(fresh, res, tz)
     db.run("UPDATE sessions SET result=? WHERE id=?", json.dumps(res), row["id"])
     log.info("session %s finished: %d/%d", row["id"][:8], result["right"], result["asked"])
     return {"finished": stamp, "right": result["right"], "asked": result["asked"],
@@ -1413,7 +1648,8 @@ def _final(row, cfg: dict) -> dict:
 
 
 @router.post("/api/session/{sid}/finish")
-def finish(sid: str, body: Finish | None = None, x_learner: str | None = Header(default=None)) -> dict:
+def finish(sid: str, body: Finish | None = None, x_learner: str | None = Header(default=None),
+           x_tz: int = Depends(deps.tz_of)) -> dict:
     """Hand in the live module. Module 1 of a section routes; the last one marks
     the paper, files it, and returns the hand-in moment (X12)."""
     row = own(session_or_404(sid), x_learner, write=True)
@@ -1433,7 +1669,7 @@ def finish(sid: str, body: Finish | None = None, x_learner: str | None = Header(
     cfg = _cfg(row)
     if two_modules(row) and (row["module"] or 1) == 1:
         return _route(row, cfg, body)
-    return _final(row, cfg)
+    return _final(row, cfg, x_tz)
 
 
 def predicted(row) -> dict:
@@ -1466,7 +1702,7 @@ class Custom(BaseModel):
     model_config = ConfigDict(extra="forbid")
     source: Literal["skills", "mistakes", "saved", "misses", "traps"] = "skills"
     from_session: str | None = Field(default=None, max_length=80)
-    topics: list[str] = Field(default_factory=list, max_length=19)
+    topics: list[str] = Field(default_factory=list, max_length=29)       # 19 Math + 10 R&W skills
     count: int | None = Field(default=None, ge=5, le=60)
     order: Literal["ladder", "mixed"] = "ladder"
     formats: Literal["both", "mcq", "spr"] = "both"
@@ -1478,7 +1714,8 @@ class Custom(BaseModel):
 
 class NewMock(Options):
     model_config = ConfigDict(extra="forbid")
-    kind: Literal["section", "module", "custom", "twin", "paper", "shared"] | None = None
+    kind: Literal["section", "module", "custom", "twin", "paper", "shared", "full"] | None = None
+    subject: Literal["math", "rw"] | None = None     # inferred when absent (custom, twin, shared, paper)
     module: Literal["m1", "m2u", "m2l"] | None = None
     m1: Literal["standard", "upper", "lower"] | None = None
     route: Literal["adaptive", "upper", "lower"] | None = None
@@ -1502,9 +1739,9 @@ def _rate(learner: str) -> None:
 
 
 def _insert(learner: str, kind: str, mock_id: str | None, questions: dict | None, cfg: dict,
-            form_id: int | None = None, subject: str = "math") -> str:
+            form_id: int | None = None, subject: str = "math", sid: str | None = None) -> str:
     """A sitting in its lobby; `number` is counted inside the insert."""
-    sid = secrets.token_urlsafe(16)
+    sid = sid or secrets.token_urlsafe(16)
     db.run("INSERT INTO sessions (id, kind, mock_id, form_id, module, learner, started, questions, cfg,"
            " subject, number) VALUES (?,?,?,?,1,?,?,?,?,?, (SELECT COUNT(*)+1 FROM sessions WHERE learner=?"
            " AND abandoned IS NULL AND kind IN ('mock','module','custom','diagnostic')))",
@@ -1578,28 +1815,32 @@ def _neutral(b: practice.Builder, templates: list[str], norms: set[str], n: int)
     return out
 
 
-def _custom(learner: str, c: Custom) -> tuple[list[dict], dict]:
+def _custom(learner: str, c: Custom, subject: str = "math") -> tuple[list[dict], dict]:
+    """A custom test of one subject (the session row has one): every source keeps only its items."""
     b = _builder(learner)
+    size = blueprint.SPEC[subject]["module_size"]
     if c.source == "skills":
         cat = practice.catalogue()
-        bad = [t for t in c.topics if t not in cat["by_topic"]]
+        bad = [t for t in c.topics if t not in cat["by_topic"] or deps.subject_of(t) != subject]
         if not c.topics or bad:
-            raise HTTPException(422, {"field": "custom.topics", "reason": "known skill slugs, at least one"})
-        return blueprint.custom(c.topics, c.count or 22, list(c.tiers), c.order, c.formats, b,
-                                exposure=exposure(learner)), {}
+            raise HTTPException(422, {"field": "custom.topics", "reason": "known skill slugs of one subject, at least one"})
+        # R&W has no grid-ins, so a "both" test would leave its grid-in slots empty
+        return blueprint.custom(c.topics, c.count or size, list(c.tiers), c.order,
+                                c.formats if subject == "math" else "mcq", b, exposure=exposure(learner)), {}
     if c.source == "saved":
         pairs = [[r["template"], r["seed"]] for r in db.rows(
             "SELECT template, seed FROM saved WHERE learner=? ORDER BY at DESC", learner)]
-        pairs = [p for p in pairs if deps.access(learner, p[0], p[1]) in ("reveal", "kept")][:c.count or 22]
+        pairs = [p for p in pairs if deps.subject_of(p[0]) == subject
+                 and deps.access(learner, p[0], p[1]) in ("reveal", "kept")][:c.count or size]
         if not pairs:
             raise HTTPException(409, {"reason": "nothing saved"})
         return _pairs_questions(pairs, "c", 1), {}
     if c.source == "mistakes":
         queue = [r["template"] for r in db.rows("SELECT template FROM traps WHERE learner=? AND closed IS NULL"
-                                                " ORDER BY last DESC", learner)]
+                                                " ORDER BY last DESC", learner) if deps.subject_of(r["template"]) == subject]
         if not queue:
             raise HTTPException(409, {"reason": "no open mistakes"})
-        qs = blueprint.custom([], 0, ["easy"], "ladder", "both", b, queue=queue[:c.count or 22])
+        qs = blueprint.custom([], 0, ["easy"], "ladder", "both", b, queue=queue[:c.count or size])
         return [dict(q, id=f"c{i:02d}") for i, q in enumerate(qs, 1)], {}
     if c.source == "misses":
         if not c.from_session:
@@ -1615,7 +1856,7 @@ def _custom(learner: str, c: Custom) -> tuple[list[dict], dict]:
         qs = blueprint.custom([], 0, ["easy"], "ladder", "both", b, queue=queue[:c.count or 60])
         return [dict(q, id=f"c{i:02d}") for i, q in enumerate(qs, 1)], {}
     # traps (X16): each slot offers a trap you've fallen for; neutral ones mixed in
-    queue = _trap_queue(learner, c)
+    queue = [(t, n) for t, n in _trap_queue(learner, c) if deps.subject_of(t) == subject]
     if not queue:
         raise HTTPException(409, {"reason": "no traps ready"})
     if c.count:
@@ -1671,7 +1912,9 @@ def _new(learner: str, body: NewMock) -> str:
         kind = "section" if body.full is not False else "module"
     opts = options(learner, body)
     training = opts["conditions"] == "training"
-    cfg: dict = {**opts, "kind": kind, "lobby": True, "subject": "math"}
+    # the body's subject; custom, twin, paper and shared settle theirs below
+    subject = "rw" if kind == "full" else body.subject or "math"
+    cfg: dict = {**opts, "kind": kind, "lobby": True, "subject": subject}
     if kind != "custom" and body.minutes is not None:
         raise HTTPException(422, {"field": "minutes", "reason": "own minutes are for a custom test"})
     if kind in ("section", "module") and body.m1:
@@ -1680,10 +1923,14 @@ def _new(learner: str, body: NewMock) -> str:
         if kind not in ("section", "paper", "twin", "shared"):
             raise HTTPException(422, {"field": "route", "reason": "a route is for a full section"})
         cfg["route"] = body.route
-    if kind == "section":
-        form = M1_FORM[body.m1 or "standard"]
-        m1 = fresh_module(learner, form, training)
-        return _insert(learner, "mock", FRESH, {"module1": m1}, cfg)
+    if kind in ("section", "full"):
+        form = M1_FORM[cfg.get("m1") or "standard"]           # a full SAT is always the standard module 1
+        m1 = fresh_module(learner, form, training, subject)
+        # a full SAT starts as its R&W section; its id is the full SAT's (the Math part is made at hand-in)
+        sid = secrets.token_urlsafe(16)
+        if kind == "full":
+            cfg["full"] = {"id": sid, "part": 1}
+        return _insert(learner, "mock", FRESH, {"module1": m1}, cfg, subject=subject, sid=sid)
     if kind == "module":
         module = body.module or "m1"
         cfg["module"] = module
@@ -1694,15 +1941,18 @@ def _new(learner: str, body: NewMock) -> str:
         if module != "m1" and body.m1:
             raise HTTPException(422, {"field": "m1", "reason": "a module 1 tier is for module 1"})
         form = M1_FORM[body.m1 or "standard"] if module == "m1" else MODULE_FORM[module]
-        qs = fresh_module(learner, form, training)
-        return _insert(learner, "module", FRESH, {"module1": qs}, cfg)
+        qs = fresh_module(learner, form, training, subject)
+        return _insert(learner, "module", FRESH, {"module1": qs}, cfg, subject=subject)
     if kind == "custom":
         c = body.custom or Custom()
-        qs, extra = _custom(learner, c)
+        parent = db.one("SELECT subject FROM sessions WHERE id=? AND learner=?", c.from_session, learner) \
+            if c.from_session else None
+        cfg["subject"] = subject = body.subject or deps.infer_subject(c.topics, parent=parent)
+        qs, extra = _custom(learner, c, subject)
         if not qs:
             raise HTTPException(409, {"reason": "nothing to build from those choices"})
         cfg["custom"] = {**c.model_dump(), **extra}
-        return _insert(learner, "custom", FRESH, {"module1": qs}, cfg)
+        return _insert(learner, "custom", FRESH, {"module1": qs}, cfg, subject=subject)
     if kind == "twin":
         if not body.twin_of:
             raise HTTPException(422, {"field": "twin_of", "reason": "which sitting to twin"})
@@ -1713,13 +1963,20 @@ def _new(learner: str, body: NewMock) -> str:
         for k in ("m1", "module", "paper", "trainer"):
             if scfg.get(k) and k not in cfg:
                 cfg[k] = scfg[k]
+        # a twin is of its source's subject (a full SAT part twins as a plain section of it)
+        cfg["subject"] = subject = _subject(src)
         m1 = blueprint.twin(mock_module(src, 1), _twin_builder(learner))
         return _insert(learner, "mock" if src["kind"] == "mock" else "module",
-                       f"P{scfg['paper']}" if scfg.get("paper") else FRESH, {"module1": m1}, cfg)
+                       f"P{scfg['paper']}" if scfg.get("paper") else FRESH, {"module1": m1}, cfg, subject=subject)
     if kind == "paper":
-        n = body.paper or papers.ensure()
-        if papers.paper(n) is None:
+        n = body.paper or papers.ensure(subject=subject)
+        p = papers.paper(n)
+        if p is None:
             raise HTTPException(404, f"no paper {n}")
+        # a paper is one section of one subject: R&W papers are their own numbers
+        cfg["subject"] = subject = papers.subject_of(p)
+        if body.subject and body.subject != subject:
+            raise HTTPException(422, {"field": "subject", "reason": f"paper {n} is {SUBJECT_LABEL[subject]}"})
         cfg["paper"] = n
         first = _first_of_paper(learner, n) if body.exact else None
         if body.exact:
@@ -1729,7 +1986,7 @@ def _new(learner: str, body: NewMock) -> str:
             m1 = [dict(q) for q in mock_module(first, 1)]
         else:
             m1 = blueprint.twin_slots(papers.slots(n, "module1"), _twin_builder(learner), "m1")
-        return _insert(learner, "mock", f"P{n}", {"module1": m1}, cfg)
+        return _insert(learner, "mock", f"P{n}", {"module1": m1}, cfg, subject=subject)
     # shared (R18c): the set's module 1, exact or twins, and its module 2 for the same route
     if not body.shared:
         raise HTTPException(422, {"field": "shared", "reason": "the set code"})
@@ -1740,11 +1997,12 @@ def _new(learner: str, body: NewMock) -> str:
     mods = got.get("modules") or [1] * len(got["items"])
     m1_pairs = [p for p, m in zip(got["items"], mods) if m == 1]
     m2_pairs = [p for p, m in zip(got["items"], mods) if m == 2]
+    subject = deps.infer_subject([t for t, _ in got["items"]])
     cfg.update({"share": got["code"], "exact_share": bool(got.get("exact")), "shared_route": got.get("route"),
-                "shared_m2": m2_pairs})
+                "shared_m2": m2_pairs, "subject": subject})
     single = not m2_pairs and not got.get("route")
     sid = _insert(learner, "module" if single else "mock", FRESH,
-                  {"module1": _pairs_questions(m1_pairs, "m1")}, cfg)
+                  {"module1": _pairs_questions(m1_pairs, "m1")}, cfg, subject=subject)
     sets.link(sid, got["code"])
     return sid
 
@@ -1825,12 +2083,18 @@ def resolve_drill(learner: str, body: dict) -> dict:
     b = _twin_builder(learner)
     marked = {q["id"]: q for q in marked_questions(row)}
     ids, of = [], {}
+    used: dict[str, int] = {}
     for qid in pressure_questions(row):
         q = marked[qid]
-        card = blueprint.draw_matching(b, q["key"], q["difficulty"], "spr" if q["type"] == "spr" else None, tries=40)
-        if card is None or card.seed == q["seed"]:
+        fmt = "spr" if q["type"] == "spr" else None
+        card = blueprint.draw_matching(b, q["key"], q["difficulty"], fmt, tries=40)
+        if card is None and _subject(row) == "rw":
+            # a written item has no new-numbers version: an unseen one of the same skill and tier
+            card = blueprint._fallback(b, q["key"], q["difficulty"], fmt, used)
+        if card is None or card.seed == q["seed"] and card.key == q["key"]:
             continue
         b.keep(card)
+        used[card.key] = used.get(card.key, 0) + 1
         ids.append([card.key, card.seed])
         of[f"{card.key}:{card.seed}"] = qid
     if not ids:
@@ -1883,7 +2147,7 @@ def on_drill_finish(row) -> dict | None:
             continue
         given = answers.get(qid)
         right = given not in (None, "") and scoring.is_correct(q, given)
-        budget = TIER_DEFAULT_S[q["difficulty"]] * 1000 * factor
+        budget = TIER_DEFAULT_S[_subject(parent)][q["difficulty"]] * 1000 * factor
         ms = a["ms"] if a["ms"] is not None else (a["sms"] or 0)
         if not right:
             if not a["correct"]:
@@ -1902,7 +2166,7 @@ def on_drill_finish(row) -> dict | None:
         right = sum(scoring.is_correct(q, answers.get(q["id"])) for q in m1q) + sum(f in m1 for f in flips)
         routes_up = scoring.route_after(right, len(m1q)) == "upper"
     result = _json(parent["result"], {}) or {}
-    result["pressure"] = {"subject": parent["subject"] or "math", "buckets": buckets,
+    result["pressure"] = {"subject": _subject(parent), "buckets": buckets,
                           "ceiling": ceiling, "routes_up": routes_up, "drill": row["id"]}
     db.run("UPDATE sessions SET result=? WHERE id=?", json.dumps(result), parent["id"])
     return result["pressure"]
@@ -1951,7 +2215,7 @@ def sitting_row(row) -> dict:
     if mods is None and row["finished"]:
         mods = []
         for n, qs in enumerate(_modules(row), 1):
-            mods.append({"subject": row["subject"] or "math", "n": n,
+            mods.append({"subject": _subject(row), "n": n,
                          "right": sum(scoring.is_correct(q, answers.get(q["id"])) for q in qs), "asked": len(qs),
                          "missed": [i for i, q in enumerate(qs, 1) if answers.get(q["id"]) not in (None, "")
                                     and not scoring.is_correct(q, answers.get(q["id"]))],
@@ -1973,8 +2237,9 @@ def sitting_row(row) -> dict:
         chain = {"root": cfg["twin_of"], "n": k + 1}
     est = res.get("estimate") or None
     out = {"id": row["id"], "kind": kind_of(row), "mode": row["kind"], "kind_label": kind_label(row),
-           "section": section_label(row), "subject": row["subject"] or "math",
-           "number": row["number"], "status": status_of(row), "started": row["started"],
+           "section": section_label(row), "subject": _subject(row),
+           "full": full_of(row) if cfg.get("full") else None,
+           "number": number_of(row), "status": status_of(row), "started": row["started"],
            "finished": row["finished"], "route": row["route"],
            "fixed_route": cfg.get("route") in ("upper", "lower"),
            "capped": bool(est and est.get("capped")), "timing": timing_of(row),
@@ -2004,27 +2269,43 @@ def open_sittings(learner: str) -> list:
                    " AND kind IN ('mock','module','custom','diagnostic') ORDER BY started DESC", learner)
 
 
-def finished_sittings(learner: str, limit: int = 200) -> list:
+def finished_sittings(learner: str, limit: int = 200, subject: str | None = None) -> list:
+    """Finished test sittings, newest first; with a subject, that subject's only."""
     return db.rows("SELECT * FROM sessions WHERE learner=? AND finished IS NOT NULL AND abandoned IS NULL"
-                   " AND kind IN ('mock','module','custom','diagnostic') ORDER BY finished DESC LIMIT ?",
-                   learner, limit)
+                   " AND kind IN ('mock','module','custom','diagnostic') AND (? IS NULL OR COALESCE(subject,'math')=?)"
+                   " ORDER BY finished DESC LIMIT ?", learner, subject, subject, limit)
 
 
 # ------------------------------------------------------------------ /api/tests pieces
 
 def _mid(res: dict) -> float | None:
+    from . import estimate
     e = res.get("estimate") or {}
-    return (e["low"] + e["high"]) / 2 if e.get("low") is not None else None
+    return estimate._mid(e) if e.get("low") is not None else None
 
 
 EVERYONE_TTL = 300          # the kinds' crowd counts; nobody's own row waits on it
 _EVERYONE: dict[str, tuple[float, tuple]] = {}
 
 
-def kinds_rows(learner: str) -> list[dict]:
-    """T4: each kind's use by everyone, and yours."""
-    def key(row) -> str | None:
+def _full_mid(res: dict) -> float | None:
+    """A full SAT's total centre, kept on its Math part's result."""
+    return _centre((res.get("full") or {}).get("total"))
+
+
+def kinds_rows(learner: str, subject: str = "math") -> list[dict]:
+    """T4: each kind's use by everyone, and yours, in one subject. A full SAT is
+    a kind of its own across both (counted once, at its Math hand-in, by its total);
+    one with no Math hand-in counts as its R&W section."""
+    def key(row, done: set[str]) -> str | None:
         cfg = _cfg(row)
+        full = cfg.get("full") or {}
+        if full.get("part") == 2:
+            return "full"
+        if full.get("part") == 1 and full["id"] in done:
+            return None
+        if (row["subject"] or "math") != subject:
+            return None
         if row["kind"] == "mock":
             return "section"
         if row["kind"] == "module":
@@ -2034,33 +2315,42 @@ def kinds_rows(learner: str) -> list[dict]:
         if row["kind"] == "custom":
             return "traps" if (cfg.get("custom") or {}).get("source") == "traps" else "custom"
         return "diagnostic" if row["kind"] == "diagnostic" else None
-    ids = ("section", "module1", "module2u", "module2l", "custom", "diagnostic", "trainer", "traps")
-    hit = _EVERYONE.get("kinds")
+    ids = ("section", "module1", "module2u", "module2l", "custom", "diagnostic", "trainer", "traps", "full")
+    hit = _EVERYONE.get(f"kinds:{subject}")
     if hit and time.monotonic() - hit[0] < EVERYONE_TTL:
         everyone, ranked = hit[1]
     else:
         everyone: Counter = Counter()
         ranked: dict[str, dict[str, float]] = defaultdict(dict)
+        done_all = fulls_done()
         # only the small columns: a sitting's questions never leave SQLite here
-        for r in db.rows(f"SELECT kind, learner, ranked, cfg, json_extract(result,'$.estimate.low') AS lo,"
-                         f" json_extract(result,'$.estimate.high') AS hi FROM sessions WHERE finished IS NOT NULL"
+        for r in db.rows(f"SELECT kind, learner, ranked, cfg, subject, json_extract(result,'$.estimate.low') AS lo,"
+                         f" json_extract(result,'$.estimate.high') AS hi, json_extract(result,'$.estimate.mid') AS mid,"
+                         f" json_extract(result,'$.full.total.mid') AS total,"
+                         f" json_extract(result,'$.full.ranked') AS full_ranked FROM sessions WHERE finished IS NOT NULL"
                          f" AND abandoned IS NULL AND contest IS NULL"
                          f" AND kind IN ('mock','module','custom','diagnostic') AND {db.NOT_SAMPLE} ORDER BY finished"):
-            k = key(r)
-            if k:
+            k = key(r, done_all)
+            if k == "full":
+                everyone[k] += 1
+                if r["total"] is not None and r["full_ranked"] and r["learner"] not in ranked[k]:
+                    ranked[k][r["learner"]] = r["total"]
+            elif k:
                 everyone[k] += 1
                 if r["lo"] is not None and r["hi"] is not None and r["ranked"] and r["learner"] not in ranked[k]:
-                    ranked[k][r["learner"]] = (r["lo"] + r["hi"]) / 2
-        _EVERYONE["kinds"] = (time.monotonic(), (everyone, ranked))
+                    ranked[k][r["learner"]] = r["mid"] if r["mid"] is not None else (r["lo"] + r["hi"]) / 2
+        _EVERYONE[f"kinds:{subject}"] = (time.monotonic(), (everyone, ranked))
     mine: dict[str, list] = defaultdict(list)
+    done = fulls_done(learner)
     for r in reversed(finished_sittings(learner)):
-        k = key(r)
+        k = key(r, done)
         if k:
             mine[k].append(r)
     out = []
     for k in ids:
         rs = mine.get(k, [])
-        mids = [m for m in (_mid(_json(r["result"], {}) or {}) for r in rs) if m is not None]
+        mid_of = _full_mid if k == "full" else _mid
+        mids = [m for m in (mid_of(_json(r["result"], {}) or {}) for r in rs) if m is not None]
         pct = None
         peers = list(ranked[k].values())
         if mids and len(peers) >= papers.CROWD_N:
@@ -2070,6 +2360,8 @@ def kinds_rows(learner: str) -> list[dict]:
                        {"right": (_json(rs[-1]["result"], {}) or {}).get("right"),
                         "asked": (_json(rs[-1]["result"], {}) or {}).get("asked")}),
                "best": max(mids) if mids else None, "percentile": pct}
+        if k == "full":
+            row["last_id"] = (_cfg(rs[-1]).get("full") or {}).get("id") if rs else None
         if k == "trainer":
             streak = best = 0
             for r in rs:
@@ -2082,12 +2374,15 @@ def kinds_rows(learner: str) -> list[dict]:
         if k == "traps":
             row["ready"] = _traps_ready(learner)
         if k == "module2u":
-            # X14's gauntlet: 18 of 22 on the harder module 2, shown from a 620 target or 2 upper routes
+            # X14's gauntlet: 18 of 22 on the harder module 2 (22 of 27 R&W), shown from a 620 target
+            # or 2 upper routes in this subject
             g = [r for r in rs if _cfg(r).get("trainer") == "gauntlet"]
-            lr = db.one("SELECT target FROM learners WHERE id=?", learner)
-            ups = sum(r["route"] == "upper" for r in finished_sittings(learner, 50) if r["kind"] == "mock")
-            row["gauntlet"] = {"shown": bool((lr and (lr["target"] or 0) >= 620) or ups >= 2), "goal": 18,
-                               "pips": [((_json(r["result"], {}) or {}).get("right") or 0) >= 18 for r in g[-5:]]}
+            lr = db.one("SELECT target, rw_target FROM learners WHERE id=?", learner)
+            aim = (lr["rw_target"] if subject == "rw" else lr["target"]) if lr else None
+            ups = sum(r["route"] == "upper" for r in finished_sittings(learner, 50, subject) if r["kind"] == "mock")
+            goal = round(18 * blueprint.SPEC[subject]["module_size"] / blueprint.MODULE_SIZE)
+            row["gauntlet"] = {"shown": bool((aim or 0) >= 620 or ups >= 2), "goal": goal,
+                               "pips": [((_json(r["result"], {}) or {}).get("right") or 0) >= goal for r in g[-5:]]}
         out.append(row)
     return out
 
@@ -2098,9 +2393,9 @@ def _traps_ready(learner: str) -> int:
                   " AND (closed IS NULL OR closed>=?)", learner, since)["n"]
 
 
-def gate_summary(learner: str) -> dict:
-    """X14's T1 row: routed up k of n, the last 6 margins, and the lower-route warning."""
-    sections = [r for r in finished_sittings(learner, 50) if r["kind"] == "mock"]
+def gate_summary(learner: str, subject: str = "math") -> dict:
+    """X14's T1 row: routed up k of n, the last 6 margins, and the lower-route warning, in one subject."""
+    sections = [r for r in finished_sittings(learner, 50, subject) if r["kind"] == "mock"]
     margins = [(_json(r["result"], {}) or {}).get("gate", {}).get("margin") for r in sections]
     margins = [m for m in margins if m is not None]
     lower_recent = sum(r["route"] == "lower" for r in sections[:3]) >= 2
@@ -2126,23 +2421,26 @@ def _up_to(row, qids: list[str], got: dict | None, base: dict | None) -> int | N
     m1 = {q["id"] for q in mock_module(row, 1)}
     if g.get("right", 0) + sum(q in m1 for q in qids) < g.get("needed", 10 ** 6):
         return None
-    centre = min(800 - scoring.MOCK_HALF_BAND, got["low"] + scoring.MOCK_HALF_BAND)
-    return int(round((centre - base["mid"]) / 10) * 10)
+    # a capped band no longer carries its uncapped end (it is the 20 under the ceiling): price the
+    # flips at the re-marked sitting's uncapped centre
+    from . import estimate
+    centre = estimate.rescore(row["id"], right=qids)["centre"]
+    return int(round((min(centre, 800) - base["mid"]) / 10) * 10)
 
 
-def levers(learner: str) -> dict:
-    """X15: where the points went over the last 3 sections, priced by
+def levers(learner: str, subject: str = "math", tz: int = 0) -> dict:
+    """X15: where the points went over the last 3 sections of one subject, priced by
     re-marking them with that cause's positions right."""
     from . import estimate
-    sections = [r for r in finished_sittings(learner, 30)
+    sections = [r for r in finished_sittings(learner, 30, subject)
                 if r["kind"] == "mock" and _mid(_json(r["result"], {}) or {}) is not None][:3]
-    empty = {"subject": "math", "causes": [], "route": None, "skills": [], "both": None, "sittings": len(sections)}
+    empty = {"subject": subject, "causes": [], "route": None, "skills": [], "both": None, "sittings": len(sections)}
     if not sections:
         return empty
     per_cause: dict[str, dict] = defaultdict(lambda: {"n": 0, "pts": [], "up": [], "templates": []})
     both_flips: dict[str, list[str]] = {}
     for r in sections:
-        c = progress.causes(learner, session=r["id"]).get("per_q", {})
+        c = progress.causes(learner, session=r["id"], subject=subject).get("per_q", {})
         base = estimate.rescore(r["id"])
         if not base:
             continue
@@ -2182,27 +2480,30 @@ def levers(learner: str) -> dict:
             flips = [m1[i - 1]["id"] for i in g.get("cheap_misses", [])][:-g["margin"]]
             base = estimate.rescore(r["id"])
             up = _up_to(r, flips, estimate.rescore(r["id"], right=flips), base) if flips and base else None
-            route = {"session": r["id"], "day": r["finished"][:10], "short_by": -g["margin"],
-                     "cap": scoring.LOWER_ROUTE_CEILING, "pts": up}
+            route = {"session": r["id"], "at": r["finished"], "day": _day(r["finished"], tz), "short_by": -g["margin"],
+                     "cap": scoring.CEILING[subject], "pts": up}
             break
-    gains = estimate.gains(learner) or {}
+    gains = estimate.gains(learner, subject) or {}
     skills = (gains.get("skills") or gains.get("rows") or [])[:3] if isinstance(gains, dict) else []
     both = None
     if any(both_flips.values()):
         pts = [estimate.rescore(sid, right=q)["mid"] - estimate.rescore(sid)["mid"] for sid, q in both_flips.items()]
         both = {"pts": int(round(statistics.mean(pts) / 10) * 10)}
-    return {"subject": "math", "causes": causes, "route": route, "skills": skills, "both": both,
+    if subject == "rw":
+        causes = [c for c in causes if c["cause"] != "entry"]      # no grid-ins to enter
+    return {"subject": subject, "causes": causes, "route": route, "skills": skills, "both": both,
             "sittings": len(sections)}
 
 
-def habits(learner: str, last: int | None = None) -> dict:
+def habits(learner: str, last: int | None = None, subject: str = "math") -> dict:
     """X17: how this learner takes tests, from qstate across finished, timed,
-    non-abandoned test sittings. Every row shows (decision 4)."""
-    rows = [r for r in finished_sittings(learner, 60) if is_timed(r)]
+    non-abandoned test sittings of one subject. Every row shows (decision 4),
+    the Math tools' rows for Math only."""
+    rows = [r for r in finished_sittings(learner, 60, subject) if is_timed(r)]
     if last:
         rows = rows[:last]
     with_state = [r for r in rows if len(_json(r["qstate"], {}) or {}) > 1]
-    out = {"subject": "math", "n": len(rows), "from_n": len(with_state), "rows": []}
+    out = {"subject": subject, "n": len(rows), "from_n": len(with_state), "rows": []}
     if len(rows) < 2:
         return out
     end_r = end_n = early_r = early_n = 0
@@ -2280,8 +2581,9 @@ def habits(learner: str, last: int | None = None) -> dict:
                 took += bool(nd.get("took"))
         series["blanks"].append(sitting_blanks)
         series["end"].append(res.get("right"))
-    ch = progress.causes(learner, days=365).get("changes", {})
-    q_worth = 12
+    ch = progress.causes(learner, days=365, subject=subject).get("changes", {})
+    q_worth = 12 if subject == "math" else 10      # about 600 points over 44 questions, or over 54
+    size = blueprint.SPEC[subject]["module_size"]
     rows_out = []
 
     def add(id_, verdict, title, evidence, points=0, action=None, why=""):
@@ -2290,8 +2592,9 @@ def habits(learner: str, last: int | None = None) -> dict:
     end_pct = round(100 * end_r / end_n) if end_n else 0
     early_pct = round(100 * early_r / early_n) if early_n else 0
     add("end", "costs" if early_pct - end_pct >= 20 else "good", "End of module",
-        f"Q17–22: {end_pct}% right · Q1–16: {early_pct}%", action={"label": "Hard-end practice · 10 hard at 95 s",
-        "body": {"tiers": ["hard"], "count": 10, "timing": "pace"}}, why="The last six questions of each module.")
+        f"Q{size - 5}–{size}: {end_pct}% right · Q1–{size - 6}: {early_pct}%",
+        action={"label": f"Hard-end practice · 10 hard at {deps.PACE[subject]} s",
+                "body": {"tiers": ["hard"], "count": 10, "timing": "pace"}}, why="The last six questions of each module.")
     avg = round(statistics.mean(margins)) if margins else 0
     add("finish", "costs" if zero else "good", "Finish margin",
         f"{zero} of {len(margins)} modules ran to 0:00" if zero else f"You kept {mmss(avg * 1000)} on average to check",
@@ -2317,11 +2620,13 @@ def habits(learner: str, last: int | None = None) -> dict:
         add("confidence", "info", "Confidence", " · ".join(
             f"{k.title()} {round(100 * v[1] / v[0]) if v[0] else 0}%" for k, v in guess.items()))
     total_q = calc_with[0] + calc_without[0]
-    add("calculator", "info", "Calculator",
-        f"Open on {round(100 * calc_with[0] / total_q) if total_q else 0}% of questions · right "
-        f"{round(100 * calc_with[1] / calc_with[0]) if calc_with[0] else 0}% with it, "
-        f"{round(100 * calc_without[1] / calc_without[0]) if calc_without[0] else 0}% without")
-    add("reference", "info", "Reference", f"Opened {round(ref / mods, 1) if mods else 0} times a module ({mmss(ref_ms / max(1, mods))})")
+    if subject == "math":
+        add("calculator", "info", "Calculator",
+            f"Open on {round(100 * calc_with[0] / total_q) if total_q else 0}% of questions · right "
+            f"{round(100 * calc_with[1] / calc_with[0]) if calc_with[0] else 0}% with it, "
+            f"{round(100 * calc_without[1] / calc_without[0]) if calc_without[0] else 0}% without")
+        add("reference", "info", "Reference",
+            f"Opened {round(ref / mods, 1) if mods else 0} times a module ({mmss(ref_ms / max(1, mods))})")
     add("away", "costs" if away_n else "good", "Away", f"Left the window in {away_n} of {len(rows)} tests")
     press = [(_json(r["result"], {}) or {}).get("pressure") for r in rows]
     press = [p for p in press if p]
@@ -2335,22 +2640,22 @@ def habits(learner: str, last: int | None = None) -> dict:
     return out
 
 
-def types_met(learner: str) -> dict:
+def types_met(learner: str, subject: str = "math") -> dict:
     """{tests, practice, never, total}: F4's progress.types_met when present."""
     fn = deps.part("progress", "types_met")
     if fn:
-        return fn(learner)
-    total = sum(len(v) for v in practice.catalogue()["by_topic"].values())
+        return fn(learner, subject)
+    total = sum(len(v) for k, v in practice.catalogue()["by_topic"].items() if deps.subject_of(k) == subject)
     tests = _met_templates(learner)
     ever = {r["template"] for r in db.rows("SELECT DISTINCT template FROM attempts WHERE learner=?", learner)}
     return {"tests": len(tests), "practice": len(ever - tests), "never": total - len(ever | tests), "total": total}
 
 
-def cycle(learner: str) -> dict | None:
-    """X16: Test -> Fix -> Prove for the latest scored sitting with 3 or more
+def cycle(learner: str, subject: str = "math", tz: int = 0) -> dict | None:
+    """X16: Test -> Fix -> Prove for the latest scored sitting of the subject with 3 or more
     misses in the last 21 days."""
     since = (_utc() - dt.timedelta(days=21)).isoformat()
-    for r in finished_sittings(learner, 20):
+    for r in finished_sittings(learner, 20, subject):
         if r["finished"] < since:
             break
         res = _json(r["result"], {}) or {}
@@ -2363,9 +2668,10 @@ def cycle(learner: str) -> dict | None:
         closed = [t["closed"] for t in traps if t["closed"]]
         prove_due = None
         if traps and len(closed) == len(traps):
-            prove_due = (dt.date.fromisoformat(max(closed)[:10]) + dt.timedelta(days=3)).isoformat()
-        twin_from = (dt.date.fromisoformat(r["finished"][:10]) + dt.timedelta(days=7)).isoformat()
-        return {"session": r["id"], "label": kind_label(r), "number": r["number"], "misses": misses,
+            prove_due = (dt.date.fromisoformat(_day(max(closed), tz)) + dt.timedelta(days=3)).isoformat()
+        twin_from = (dt.date.fromisoformat(_day(r["finished"], tz)) + dt.timedelta(days=7)).isoformat()
+        from .api_results import seqs        # the number history and the report show (kind and subject)
+        return {"session": r["id"], "label": kind_label(r), "number": seqs(learner).get(r["id"]), "misses": misses,
                 "fix": {"body": {"from_session": r["id"], "scope": "misses", "source": _src("fix")},
                         "open": len(traps) - len(closed), "done": bool(traps) and len(closed) == len(traps)},
                 "prove": {"due": prove_due, "body": {"kind": "custom", "custom": {"source": "traps",
@@ -2374,23 +2680,26 @@ def cycle(learner: str) -> dict | None:
     return None
 
 
-def up_next(learner: str, live: list, done: list, gate: dict, lever: dict, paper_n: int) -> dict:
+def up_next(learner: str, live: list, done: list, gate: dict, lever: dict, paper_n: int,
+            subject: str = "math", tz: int = 0) -> dict:
     """§3.1 item 11's order: resume, pressure, prove, plan, new learner,
     Season Final / Road-to, trap test, route-up trainer, this week's paper,
-    then the biggest cause."""
+    then the biggest cause. `done` and the paper are the subject's."""
     if live:
         return {"kind": "resume", "reason": "resume", "session": live[0]["id"]}
     day_ago = (_utc() - dt.timedelta(hours=24)).isoformat()
     for r in done[:5]:
         if r["finished"] >= day_ago and pressure_eligible(r)[0]:
             return {"kind": "pressure", "reason": "pressure", "session": r["id"]}
-    cyc = cycle(learner)
-    if cyc and cyc["prove"]["due"] and cyc["prove"]["due"] <= dt.date.today().isoformat():
+    cyc = cycle(learner, subject, tz)
+    if cyc and cyc["prove"]["due"] and cyc["prove"]["due"] <= _day(now(), tz):
         return {"kind": "traps", "reason": "prove", "session": cyc["session"], "body": cyc["prove"]["body"]}
     plan = db.one("SELECT d.test FROM plan_days AS d JOIN learners AS l ON l.plan=d.plan WHERE l.id=? AND d.day=?"
                   " AND d.test IS NOT NULL", learner, dt.date.today().isoformat())
     if plan and plan["test"]:
-        return {"kind": "module" if "module" in str(plan["test"]) else "section", "reason": "plan", "preset": "like_test_day"}
+        test = str(plan["test"])
+        return {"kind": "full" if "full" in test else "module" if "module" in test else "section",
+                "reason": "plan", "preset": "like_test_day"}
     if not done:
         return {"kind": "diagnostic", "reason": "new"}
     stamp = now()
@@ -2400,12 +2709,14 @@ def up_next(learner: str, live: list, done: list, gate: dict, lever: dict, paper
     road = db.one("SELECT n FROM papers WHERE source LIKE 'final-%' ORDER BY n DESC LIMIT 1")
     exam = db.one("SELECT exam_date FROM learners WHERE id=?", learner)
     if road and exam and exam["exam_date"] and exam["exam_date"] >= dt.date.today().isoformat() \
-            and not papers.sat_by(learner, road["n"]):
+            and papers.subject_of(papers.paper(road["n"])) == subject and not papers.sat_by(learner, road["n"]):
         return {"kind": "paper", "reason": "paper", "paper": road["n"]}
     week_ago = (_utc() - dt.timedelta(days=7)).isoformat()
-    due = db.one("SELECT COUNT(*) AS n FROM traps WHERE learner=? AND closed IS NOT NULL AND due<=?",
-                 learner, dt.date.today().isoformat())["n"]
-    open_ = db.one("SELECT COUNT(*) AS n FROM traps WHERE learner=? AND closed IS NULL", learner)["n"]
+    today = dt.date.today().isoformat()
+    traps = [t for t in db.rows("SELECT template, closed, due FROM traps WHERE learner=?", learner)
+             if deps.subject_of(t["template"]) == subject]
+    due = sum(t["closed"] is not None and t["due"] is not None and t["due"] <= today for t in traps)
+    open_ = sum(t["closed"] is None for t in traps)
     recent_trap = any(_cfg(r).get("custom", {}).get("source") == "traps" and r["finished"] >= week_ago for r in done)
     if (due >= 5 or open_ >= 8) and not recent_trap:
         return {"kind": "traps", "reason": "traps"}
@@ -2418,7 +2729,7 @@ def up_next(learner: str, live: list, done: list, gate: dict, lever: dict, paper
     return {"kind": "section", "reason": "default"}
 
 
-def recommended(learner: str, done: list, gate: dict) -> dict:
+def recommended(learner: str, done: list, gate: dict, tz: int = 0) -> dict:
     """X1's orange preset chip and its reason line."""
     sections = [r for r in done if r["kind"] == "mock"][:2]
     blanks = [sum(len(m.get("blank", [])) for m in (_json(r["result"], {}) or {}).get("modules", [])) for r in sections]
@@ -2427,49 +2738,58 @@ def recommended(learner: str, done: list, gate: dict) -> dict:
     for r in sections:
         g = (_json(r["result"], {}) or {}).get("gate") or {}
         if r["route"] == "lower" and -2 <= g.get("margin", -99) < 0:
-            return {"preset": "routing", "reason": f"{r['finished'][:10]} missed the harder module 2 by {-g['margin']}"}
+            return {"preset": "routing", "at": r["finished"],
+                    "reason": f"{_day(r['finished'], tz)} missed the harder module 2 by {-g['margin']}"}
     return {"preset": "like_test_day", "reason": None}
 
 
 @router.get("/api/tests")
-def tests_overview(x_learner: str | None = Header(default=None)) -> dict:
-    """Everything /tests/ shows, in one round trip. Builds this week's paper
-    if it is missing."""
+def tests_overview(subject: str | None = None, x_learner: str | None = Header(default=None),
+                   x_tz: int = Depends(deps.tz_of)) -> dict:
+    """Everything /tests/ shows for one subject (?subject=, default math), in one
+    round trip; In progress lists every subject. Builds this week's paper if it is missing."""
     from . import estimate, prefs
+    subject = deps.subject_param(subject)
     learner = learner_of(x_learner)
-    paper_n = papers.ensure()
+    paper_n = papers.ensure(subject=subject)
     settle_pressure(learner)
     live = open_sittings(learner)
-    done = finished_sittings(learner)
-    est = estimate.estimate(learner)
-    latest = est.get("latest")
-    lr = db.one("SELECT target, exam_date FROM learners WHERE id=?", learner)
+    done = finished_sittings(learner, subject=subject)
+    est = estimate.estimate(learner, subject)
+    # "your current score" is estimate.current everywhere it is shown; a sitting keeps its own band
+    cur = estimate.current(learner, subject)
+    lr = db.one("SELECT target, rw_target, exam_date FROM learners WHERE id=?", learner)
     exam = None
     if lr and lr["exam_date"]:
         exam = {"date": lr["exam_date"], "days": (dt.date.fromisoformat(lr["exam_date"]) - dt.date.today()).days}
-    gate = gate_summary(learner)
-    lever = levers(learner)
+    gate = gate_summary(learner, subject)
+    lever = levers(learner, subject, x_tz)
     twin = None
     for r in done:
         if r["kind"] in ("mock", "module") and (_json(r["result"], {}) or {}).get("scored"):
-            twin = {"source": r["id"], "label": f"{kind_label(r)} #{r['number']}" if r["number"] else kind_label(r)}
+            from .api_results import seqs
+            n = seqs(learner).get(r["id"])
+            twin = {"source": r["id"], "label": f"{kind_label(r)} #{n}" if n else kind_label(r)}
             break
     p = prefs.get(learner) if not db.is_sample(learner) else dict(prefs.DEFAULTS)
     ranked_n = sum(1 for r in done if r["ranked"])
     return {
-        "estimate": {**est, "delta": est.get("trend", {}).get("delta"),
-                     "headline_parts": {"subject": "Math", "low": latest["low"] if latest else None,
-                                        "high": latest["high"] if latest else None},
+        "subject": subject,
+        "estimate": {**est, "delta": est.get("trend", {}).get("delta"), "current": cur,
+                     "headline_parts": {"subject": SUBJECT_LABEL[subject], "low": cur["low"] if cur else None,
+                                        "high": cur["high"] if cur else None},
                      "counted": {**est.get("counted", {}), "ranked": ranked_n}},
-        "target": lr["target"] if lr else None, "exam": exam,
-        "up_next": up_next(learner, live, done, gate, lever, paper_n),
-        "recommended": recommended(learner, done, gate),
+        "target": (lr["rw_target"] if subject == "rw" else lr["target"]) if lr else None, "exam": exam,
+        "up_next": up_next(learner, live, done, gate, lever, paper_n, subject, x_tz),
+        "recommended": recommended(learner, done, gate, x_tz),
         "in_progress": [sitting_row(r) for r in live],
-        "kinds": kinds_rows(learner),
-        "papers": papers.listing(learner),
+        "kinds": kinds_rows(learner, subject),
+        "papers": papers.listing(learner, subject),
         "twin": twin,
         "prefs": {k: v for k, v in p.items() if k.startswith("test_")},
-        "levers": lever, "total": estimate.total(learner), "projection": estimate.projection(learner),
-        "growth": estimate.growth(learner), "calibration": estimate.calibration(learner),
-        "habits": habits(learner), "cycle": cycle(learner), "gate": gate, "types_met": types_met(learner),
+        "levers": lever, "total": estimate.total(learner),
+        "projection": estimate.projection(learner, subject=subject),
+        "growth": estimate.growth(learner, subject), "calibration": estimate.calibration(learner, subject),
+        "habits": habits(learner, subject=subject), "cycle": cycle(learner, subject, x_tz), "gate": gate,
+        "types_met": types_met(learner, subject),
     }

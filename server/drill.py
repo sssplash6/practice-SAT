@@ -36,7 +36,7 @@ MAX_FIXED = 120             # the longest set with a length
 GRACE = 15                  # seconds past a timed set's clock an answer may still arrive
 TIERS = ("easy", "medium", "hard")
 PUBLIC = ("id", "topic", "topic_name", "domain", "difficulty", "skill", "type",
-          "stem", "choices", "latex", "figure", "table", "text", "seen", "why",
+          "stem", "choices", "latex", "figure", "table", "table_title", "text", "band", "seen", "why",
           "trap_true", "level", "rough", "budget_ms", "kind", "zone", "rungs", "n",
           "type_name", "about", "final", "slot_of")
 
@@ -68,10 +68,18 @@ def _save(sid: str, cfg: dict, served: list[dict]) -> None:
            json.dumps(cfg), json.dumps(served, ensure_ascii=False), sid)
 
 
+def shown_skill(q: dict) -> str | None:
+    """The skill line a student sees: an R&W item's own `skill` is its passage's subtype (kept for
+    the adaptive steps), so it shows its question type's name instead."""
+    return progress.rw_label(q["key"]) if q.get("text") and q.get("key") else q.get("skill")
+
+
 def public(q: dict) -> dict:
     if q.get("kind") == "word":              # S9's public item, with the token /word grades
         return {k: v for k, v in q.items() if k != "served"}
     out = {k: q[k] for k in PUBLIC if k in q}
+    if "skill" in out:
+        out["skill"] = shown_skill(q)
     out["repair"] = bool(q.get("repair"))
     return out
 
@@ -87,6 +95,7 @@ SOURCES = {"map", "coach", "plan", "today", "mistakes", "review", "quick",
            "official", "challenge", "rematch", "test", "result", "builder", "sprint", "gain",
           "skill", "mixup", "fix", "pace"}
 INLINE = {"twin", "try", "word-example", "review", "spot"}
+TASK_KINDS = ("fix", "recheck", "focus", "map", "learn", "check", "sweep", "extra", "test", "pace", "habit")   # plan.py's drill tasks
 FIELDS = {"topics", "templates", "exclude", "want", "count", "tiers", "levels",
           "unmeasured", "formats", "spr_share", "adaptive", "order", "mix", "pool",
           "list", "ids", "exact", "each", "level", "result", "marked", "from",
@@ -100,7 +109,8 @@ FIELDS = {"topics", "templates", "exclude", "want", "count", "tiers", "levels",
           "show_name", "tier_mix", "review_mix", "review_from", "final_round", "habits",
           "rematch", "clean", "words_mix", "per_q", "example", "segments", "cover",
           "hints", "worked_first", "two_passes"}
-TIER_BUDGET = {"math": {"easy": 65_000, "medium": 95_000, "hard": 126_000}}   # P16, R34
+TIER_BUDGET = {"math": {"easy": 65_000, "medium": 95_000, "hard": 126_000},   # P16, R34
+               "rw": {"easy": 49_000, "medium": 71_000, "hard": 94_000}}      # R&W: 64 min for 54, Math's spread
 ZONES = {"warm": .87, "stretch": .70, "challenge": .47}                        # P11 centres
 ZONE_WORD = {"warm": "Warm-up", "stretch": "Stretch", "challenge": "Challenge"}
 MUTABLE = ("repair", "end_repairs", "later_repairs", "items", "queue", "trap_queue", "turn",
@@ -190,6 +200,39 @@ def _miss_tier(learner: str, trap: dict, serve: str, level: str) -> str | None:
     return tier if tier in _tiers_of(serve) else None
 
 
+def _rw_serve(b: practice.Builder, t: dict, serve: str) -> tuple[str, str | None]:
+    """An R&W mistake is served on its own type while that has a fresh item, else on another
+    type of its skill (it closes on clean answers anywhere in the skill: progress.record).
+    Types hold 1 to 110 written items (median 19), so a type does run out."""
+    names = practice.catalogue()["by_topic"].get(t["topic"], ())
+    row = db.one("SELECT difficulty FROM attempts WHERE learner=? AND template=? AND correct=0 ORDER BY id DESC LIMIT 1",
+                 b.learner, t["template"])
+    fresh = [(n, c.feats["difficulty"]) for n in [serve, *[x for x in names if x != serve]]
+             if (c := b.draw(n, t["topic"])) is not None]
+    # the missed tier when some type of the skill still has one, else whatever is fresh
+    return next((p for p in fresh if row and p[1] == row["difficulty"]), fresh[0] if fresh else (serve, None))
+
+
+SIBLING_WHY = {"kind": "sibling", "detail": "Another type of this skill: the last one is used up"}
+
+
+def _rw_sibling(b: practice.Builder, template: str, tiers: set[str] | None, cfg: dict) -> practice.Card | None:
+    """An R&W 'one more like this' (twin, repair, final round, a slot) when its type is spent:
+    an unseen item of another type of the same skill, at the same tier when one is left.
+    A written item has no new-numbers version, so this is its twin (DESIGN §2)."""
+    if deps.subject_of(template) != "rw":
+        return None
+    names = sorted((t for t in practice.catalogue()["by_topic"].get(topic_of(template), ()) if t != template),
+                   key=lambda t: zlib.crc32(f"{b.learner}:{template}:{t}".encode()))
+    walk = {**cfg, "want": {}, "adaptive_state": {}, "levels": None}
+    for allowed in ([tiers] if tiers else []) + [None]:
+        for t in names:
+            card = _fresh(b, t, allowed, walk)
+            if card is not None:
+                return card
+    return None
+
+
 def _pool(learner: str, cfg: dict, body: dict) -> tuple[list[str], list[list], dict[str, str]]:
     pool, ids = cfg["pool"], cfg.get("ids")
     queue: list[str] = []
@@ -229,18 +272,22 @@ def _pool(learner: str, cfg: dict, body: dict) -> tuple[list[str], list[list], d
         return queue, items, why
     if pool in {"redo", "checks"}:
         today = progress._local_today(learner).isoformat()
-        traps = progress.open_traps(learner) if pool == "redo" else [dict(r) for r in db.rows(
+        traps = progress.open_traps(learner, subject=cfg.get("subject", "math")) if pool == "redo" else [dict(r) for r in db.rows(
             "SELECT * FROM traps WHERE learner=? AND closed IS NOT NULL AND due<=? AND checks<3",
             learner, today)]
         if ids is not None:
             allowed = set(str(x) for x in _list(ids, "ids"))
             traps = [t for t in traps if str(t["id"]) in allowed]
+        b = _builder(learner) if any(deps.subject_of(t["topic"]) == "rw" for t in traps) else None
         for t in traps:
             # R45 rule 5: a later check-in is served on another template with the same norm
             serve = progress.checkin_template(t) if pool == "checks" else t["template"]
+            rw_tier = False
+            if b and deps.subject_of(t["topic"]) == "rw":
+                serve, rw_tier = _rw_serve(b, t, serve)
             queue.append(serve)
             cfg.setdefault("trap_queue", []).append({"template": serve, "norm": t["norm"],
-                                                     "tier": _miss_tier(learner, t, serve, cfg["level"])})
+                                                     "tier": rw_tier if rw_tier is not False else _miss_tier(learner, t, serve, cfg["level"])})
             why[serve] = "open mistake" if pool == "redo" else "check-in due"
             if t.get("norm") and not str(t["norm"]).startswith("~"):
                 cfg["want"].setdefault(serve, "^" + re.escape(t["norm"]) + "$")
@@ -255,7 +302,8 @@ def _pool(learner: str, cfg: dict, body: dict) -> tuple[list[str], list[list], d
     elif pool == "untried":
         counts = {r["template"]: r["n"] for r in db.rows(
             "SELECT template, COUNT(*) n FROM attempts WHERE learner=? GROUP BY template", learner)}
-        all_t = [t for ts in practice.catalogue()["by_topic"].values() for t in ts]
+        all_t = [t for k, ts in practice.catalogue()["by_topic"].items()
+                 if deps.subject_of(k) == cfg.get("subject", "math") for t in ts]
         queue = [t for t in all_t if t not in counts]
         if not queue:
             least = min(counts.values(), default=0)
@@ -342,12 +390,8 @@ def _pool(learner: str, cfg: dict, body: dict) -> tuple[list[str], list[list], d
         unknown = [x for x in wanted if x not in known and x not in index]
         if unknown:
             _invalid("ids", f"not in College Board's bank: {unknown[0]}")
-        # an R&W id waits for the R&W bank (P15); a Math id outside the exact
-        # map resolves through the index to its skill and tier (P13)
-        cfg["official_rw"] = [x for x in wanted if x not in known and index[x]["subject"] != "math"]
-        cfg["official_ids"] = [x for x in wanted if x not in cfg["official_rw"]]
-        if not cfg["official_ids"]:
-            _empty("rw_bank_pending")
+        # an id outside the exact map (every R&W id) resolves through the index to its skill and tier (P13)
+        cfg["official_ids"] = wanted
         for cbid in cfg["official_ids"]:
             t = known[cbid]["template"] if cbid in known else _index_twins(cbid, 1)[0]
             queue.append(t)
@@ -431,7 +475,7 @@ CB_SKILL = {"linear inequalities in one or two variables": "linear_inequalities"
 def cb_index() -> dict[str, dict]:
     """T-bank's capture of College Board's Question Bank listing (metadata
     only): {cb_id: {subject, domain, skill, tier, band, topic}}, where topic is
-    our skill for a Math item (None for R&W)."""
+    our skill (an R&W skill by its exact name, None when the bank has no such skill)."""
     import difflib
     path = pathlib.Path(__file__).resolve().parent.parent / "material" / "cb" / "cb_index.json"
     try:
@@ -445,7 +489,7 @@ def cb_index() -> dict[str, dict]:
         skill = (x.get("skill") or "").strip()
         if skill not in topic_of_skill:
             k = skill.lower()
-            topic_of_skill[skill] = None if x.get("subject") != "math" else CB_SKILL.get(k) or names.get(k) or \
+            topic_of_skill[skill] = names.get(k) if x.get("subject") != "math" else CB_SKILL.get(k) or names.get(k) or \
                 names[max(names, key=lambda n: difflib.SequenceMatcher(None, k, n).ratio())]
         out[cbid.lower()] = {**x, "skill": skill, "topic": topic_of_skill[skill]}
     return out
@@ -736,7 +780,8 @@ def _plan(learner: str, cfg: dict, selected: list[str]) -> None:
     elif count is None:
         cfg["plan"] = []
     else:
-        mix = blueprint.TIERS.get(cfg.get("tier_mix") if cfg.get("tier_mix") != "any" else "module1")
+        mixes = blueprint.SPEC[cfg.get("subject", "math")]["tiers"]          # the section's own module mixes
+        mix = mixes.get(cfg.get("tier_mix") if cfg.get("tier_mix") != "any" else "module1")
         weights = {t: mix[t] for t in tiers}
         total = sum(weights.values()) or 1
         quotas = {t: count * weights[t] / total for t in tiers}
@@ -745,7 +790,7 @@ def _plan(learner: str, cfg: dict, selected: list[str]) -> None:
             base[t] += 1
         cfg["plan"] = practice.interleave({t: n for t, n in base.items() if n})
         if cfg.get("tier_mix") not in (None, "any"):
-            missing = [t for t in blueprint.TIERS[cfg["tier_mix"]] if t not in tiers]
+            missing = [t for t in mixes[cfg["tier_mix"]] if t not in tiers]
             cfg["mix_missing"] = missing
     budgets = TIER_BUDGET.get(cfg["subject"], TIER_BUDGET["math"])
     if cfg["timing"] == "pace" and count is not None:
@@ -789,6 +834,57 @@ def _plan(learner: str, cfg: dict, selected: list[str]) -> None:
         except Exception:
             cards = []
         cfg["word_cards"] = cards
+
+
+def _subject_of(learner: str, body: dict, pool: str) -> str:
+    """A set's subject when the body does not say (DESIGN §1): the first topic or template it
+    names, else the majority of its question pairs, its parent sitting (again, rematch, retake,
+    from_session), or the College Board ids, traps or answers its ids point at. Math only when
+    nothing tells; a list of both subjects keeps the larger part (the other is filtered out)."""
+    def most(subjects) -> str | None:
+        got = Counter(s for s in subjects if s in deps.SUBJECTS).most_common(1)
+        return got[0][0] if got else None
+    want = body.get("want")
+    trap = body.get("trap")
+    named = deps.infer_subject(
+        body.get("topics"), body.get("templates"), list(want) if isinstance(want, dict) else None,
+        [s.get("template") for s in body.get("segments") or () if isinstance(s, dict)],
+        str(body.get("item") or "").rsplit(":", 1)[0], trap.get("template") if isinstance(trap, dict) else None,
+        default="")
+    if named:
+        return named
+    ids = body.get("ids") if isinstance(body.get("ids"), list) else []
+    pairs = [p[0] for p in ids if isinstance(p, (list, tuple)) and p and isinstance(p[0], str)]
+    s = most(deps.subject_of(t) for t in pairs)
+    if s:
+        return s
+    for key in ("again", "rematch", "retake", "from_session"):
+        if isinstance(body.get(key), str):
+            row = db.one("SELECT subject FROM sessions WHERE id=? AND learner=?", body[key], learner)
+            if row and row["subject"] in deps.SUBJECTS:
+                return row["subject"]
+    if pool == "set":                       # a shared set: its own items, else the sitting it was shared from
+        code = body.get("ids") if isinstance(body.get("ids"), str) else body.get("share")
+        row = db.one("SELECT items, session FROM sets WHERE code=?", code) if isinstance(code, str) else None
+        if row:
+            try:
+                items = json.loads(row["items"] or "[]")
+            except ValueError:
+                items = []
+            names = [p.get("template") if isinstance(p, dict) else p[0] if isinstance(p, list) and p else None for p in items]
+            s = most(deps.subject_of(t) for t in names if isinstance(t, str))
+            parent = db.one("SELECT subject FROM sessions WHERE id=?", row["session"]) if not s and row["session"] else None
+            s = s or (parent["subject"] if parent else None)
+    elif pool == "official":
+        index = cb_index()
+        s = most((index.get(str(x).strip().lower()) or {}).get("subject") for x in ids)
+    elif pool in ("redo", "checks", "history"):
+        nums = [int(x) for x in ids if isinstance(x, int) or (isinstance(x, str) and x.isdigit())][:120]
+        if nums:
+            table = "attempts" if pool == "history" else "traps"
+            s = most(deps.subject_of(r["topic"]) for r in db.rows(
+                f"SELECT topic FROM {table} WHERE learner=? AND id IN ({','.join('?' for _ in nums)})", learner, *nums))
+    return s or "math"
 
 
 def resolve(learner: str, body: dict, out: dict | None = None) -> dict:
@@ -835,7 +931,7 @@ def resolve(learner: str, body: dict, out: dict | None = None) -> dict:
         old = json.loads(row["cfg"] or "{}")
         for key in ("topics", "templates", "count", "tiers", "levels", "unmeasured",
                     "formats", "spr_share", "adaptive", "order", "mix", "pool", "source",
-                    "timing", "feedback", "repairs", "each"):
+                    "timing", "feedback", "repairs", "each", "subject"):
             if key not in body and key in old:
                 body[key] = old[key]
         body.setdefault("exact", False)
@@ -874,18 +970,21 @@ def resolve(learner: str, body: dict, out: dict | None = None) -> dict:
     if body.get("item") or body.get("retake"):
         pool = "items"
     pool = _choices(pool, "pool", POOLS)
-    subject = _choices(body.get("subject", "math"), "subject", {"math", "rw"})
+    subject = _choices(body.get("subject") or _subject_of(learner, body, pool), "subject", set(deps.SUBJECTS))
     source = _choices(body.get("source", "map"), "source", SOURCES)
+    # a plan task's id (plan._task): its day, its kind and, for one subject's or one skill's task, a suffix (":rw", ":circles")
     if body.get("task") is not None and (not isinstance(body["task"], str) or not re.fullmatch(
-            r"\d{4}-\d{2}-\d{2}:(fix|recheck|focus|extra|test)", body["task"])):
-        _invalid("task", "use YYYY-MM-DD:fix|recheck|focus|extra|test")
+            r"\d{4}-\d{2}-\d{2}:(" + "|".join(TASK_KINDS) + r")(:[a-z0-9_]{1,64})?", body["task"])):
+        _invalid("task", "use YYYY-MM-DD:<plan task kind>, with an optional :suffix")
     cat = practice.catalogue()
     topics = _list(body.get("topics", []), "topics")
     if any(not isinstance(t, str) for t in topics):
         _invalid("topics")
     topics = list(dict.fromkeys(topics))
     if any(t not in cat["by_topic"] for t in topics):
-        _empty("no_bank") if subject == "rw" else _invalid("topics", "unknown topic")
+        _invalid("topics", "unknown topic")
+    if any(deps.subject_of(t) != subject for t in topics):
+        _invalid("topics", "a topic of the other subject")
     templates = _list(body.get("templates", []), "templates")
     if any(not isinstance(t, str) or t not in {n for v in cat["by_topic"].values() for n in v} for t in templates):
         _invalid("templates", "unknown template")
@@ -1057,6 +1156,10 @@ def resolve(learner: str, body: dict, out: dict | None = None) -> dict:
             _empty("nothing_due")
         why.update((t, "spaced warm-up") for t in queue)
     queue, items, why = _shape(learner, body, cfg, queue, items, why)
+    # every pool (mistakes, seen, saved, ...) keeps to the set's subject and to the bank's templates
+    known = {n for v in cat["by_topic"].values() for n in v}
+    queue = [t for t in queue if t in known and deps.subject_of(t) == subject]
+    items = [p for p in items if p[0] in known and deps.subject_of(p[0]) == subject]
     if cfg["templates"]:
         queue = [t for t in queue if t in cfg["templates"]]
         items = [p for p in items if p[0] in cfg["templates"]]
@@ -1082,20 +1185,18 @@ def resolve(learner: str, body: dict, out: dict | None = None) -> dict:
     selected = cfg["templates"] or [t for topic in cfg["topics"] for t in cat["by_topic"].get(topic, ())]
     selected += cfg["queue"] + [t for t, _ in cfg["items"]] + slot_names
     if not selected and source == "quick":
-        pick = progress.coach(learner, count=1)
+        pick = progress.coach(learner, count=1, subject=subject)
         cfg["topics"] = pick.get("topics", [])[:1]
         selected = [t for topic in cfg["topics"] for t in cat["by_topic"].get(topic, ())]
     if source == "start" and not cfg["topics"] and not cfg["templates"]:
-        cfg["topics"] = list(cat["by_topic"])
+        cfg["topics"] = [t for t in cat["by_topic"] if deps.subject_of(t) == subject]
         selected = [t for topic in cfg["topics"] for t in cat["by_topic"][topic]]
     if not selected and source in {"coach", "today", "next"}:
-        pick = progress.coach(learner, k=4 if source == "start" else 3, count=count or 10)
+        pick = progress.coach(learner, k=4 if source == "start" else 3, count=count or 10, subject=subject)
         cfg["topics"] = pick.get("topics", [])
         selected = [t for topic in cfg["topics"] for t in cat["by_topic"].get(topic, ())]
-    if not selected:
-        _empty("no_bank" if subject == "rw" else "no_templates")
-    if not any(deps.subject_of(topic_of(t)) == subject for t in selected):
-        _empty("no_bank")
+    if not selected or not any(deps.subject_of(topic_of(t)) == subject for t in selected):
+        _empty("no_templates")
     rated = levels()
 
     def fits(t, formats):
@@ -1136,7 +1237,8 @@ def preview(learner: str, body: dict) -> dict:
         if e.status_code == 409:
             return {"available": False, "servable": False, "count": 0, "templates": 0,
                     "types": 0, "questions": 0, "minutes": None, "reason": e.detail["reason"],
-                    "pools": pool_counts(learner, topics)}
+                    "pools": pool_counts(learner, topics, body.get("subject") or _subject_of(
+                        learner, body, str(body.get("pool") or "new")) if isinstance(body, dict) else "math")}
         raise
     names = set(kept.get("kept") or ())
     count = cfg["count"]
@@ -1151,7 +1253,7 @@ def preview(learner: str, body: dict) -> dict:
     return {"available": True, "servable": True, "count": count, "templates": len(names),
             "types": len(names), "questions": count if cfg["exact"] else None,
             "minutes": minutes, "plan": cfg.get("plan"), "seconds": cfg.get("seconds"),
-            "pools": pool_counts(learner, topics), "exact": len(cfg["items"]), "pool": cfg["pool"],
+            "pools": pool_counts(learner, topics, cfg.get("subject", "math")), "exact": len(cfg["items"]), "pool": cfg["pool"],
             "topics": len({topic_of(t) for t in names}), "mix_missing": cfg.get("mix_missing") or [],
             "review_slots": len(cfg.get("review_slots") or ()), "words": len(cfg.get("word_cards") or ()),
             "cfg": {k: cfg.get(k) for k in ("source", "subject", "formats", "tiers", "levels", "timing",
@@ -1159,18 +1261,18 @@ def preview(learner: str, body: dict) -> dict:
                                             "review_mix", "cover", "order")}}
 
 
-def pool_counts(learner: str, topics: list | None = None) -> dict:
-    """The counts beside each 'Questions from' row, within the chosen skills."""
-    cat = practice.catalogue()["by_topic"]
+def pool_counts(learner: str, topics: list | None = None, subject: str = "math") -> dict:
+    """The counts beside each 'Questions from' row, within the chosen skills of one subject."""
+    cat = {k: v for k, v in practice.catalogue()["by_topic"].items() if deps.subject_of(k) == subject}
     picked = [t for t in (topics or ()) if isinstance(t, str) and t in cat] or None
     names = [t for topic in (picked or cat) for t in cat.get(topic, ())]
-    inside = (lambda topic: topic in picked) if picked else (lambda topic: True)
+    inside = (lambda topic: topic in picked) if picked else (lambda topic: deps.subject_of(topic) == subject)
     traps = [t for t in progress.open_traps(learner) if inside(t["topic"])]
     sure = {r["template"] for r in db.rows(
         "SELECT a.template FROM attempts a WHERE a.learner=? AND a.correct=0 AND a.conf='sure' AND a.id ="
         " (SELECT MAX(b.id) FROM attempts b WHERE b.learner=a.learner AND b.template=a.template AND b.correct=0)",
         learner)}
-    due = progress.warmup_candidates(learner)
+    due = progress.warmup_candidates(learner, subject=subject)
     tried = {r["template"] for r in db.rows("SELECT DISTINCT template FROM attempts WHERE learner=?", learner)}
     rows = [r for r in db.rows("SELECT template, topic, seed, correct, guess, conf FROM attempts"
                                " WHERE learner=? ORDER BY id", learner) if inside(r["topic"])]
@@ -1246,7 +1348,7 @@ def levels() -> dict[tuple[str, str], dict]:
 
 
 def budget_ms(template: str, tier: str) -> int:
-    default = {"easy": 65_000, "medium": 95_000, "hard": 126_000}[tier]
+    default = TIER_BUDGET[deps.subject_of(template)][tier]
     measured = levels().get((template, tier), {})
     median = measured.get("median_ms_right")
     return max(round(default * .6), min(round(default * 1.6), median)) if median and measured.get("n", 0) >= 20 else default
@@ -1406,6 +1508,10 @@ def _more_card(b: practice.Builder, cfg: dict, ask: dict) -> practice.Card | Non
     card = _fresh(b, template, tiers, walk, required_norm=ask.get("want"))
     if card is None and tiers:
         card = _fresh(b, template, None, walk, required_norm=ask.get("want"))
+    if card is None:
+        card = _rw_sibling(b, template, tiers, cfg)
+        if card is not None and not ask.get("why", {}).get("kind") == "learn":
+            ask["why"] = SIBLING_WHY
     return card
 
 
@@ -1438,6 +1544,8 @@ def _slot_card(b: practice.Builder, cfg: dict, slot: dict) -> practice.Card | No
             break
         if alt != slot["template"]:
             card = _fresh(b, alt, {slot["tier"]}, walk)
+    if card is None:
+        card = _rw_sibling(b, slot["template"], {slot["tier"]} if slot.get("tier") else None, walk)
     if card is None:
         card = _fresh(b, slot["template"], None, {**walk, "formats": ["mcq", "spr"]})
     return card
@@ -1540,8 +1648,11 @@ def _pick(row, cfg: dict, served: list[dict], b: practice.Builder):
         if want:
             target_want[rep_key] = want
         target = {**cfg, "want": target_want, "adaptive_state": {}}
-        card = _fresh(b, rep_key, None, target, required_norm=norm,
-                      prefer_mcq=not norm)
+        tier = rep.get("tier") if isinstance(rep, dict) else None
+        card = None
+        if tier and deps.subject_of(rep_key) == "rw":     # a written type: its tier, on this type or another of its skill
+            card = _fresh(b, rep_key, {tier}, target) or _rw_sibling(b, rep_key, {tier}, target)
+        card = card or _fresh(b, rep_key, None, target, required_norm=norm, prefer_mcq=not norm)
         if card:
             return card, True
 
@@ -1615,7 +1726,7 @@ def _pick(row, cfg: dict, served: list[dict], b: practice.Builder):
     # An endless mistakes set keeps working on its open traps after the
     # initial queue; each named question still has to offer its target.
     if cfg.get("pool") == "redo" and cfg.get("count") is None:
-        for trap in progress.open_traps(learner):
+        for trap in progress.open_traps(learner, subject=cfg.get("subject", "math")):
             norm = trap["norm"] if progress.named(trap["norm"]) else None
             target_want = {t: v for t, v in cfg.get("want", {}).items() if t != trap["template"]}
             if norm:
@@ -1625,9 +1736,8 @@ def _pick(row, cfg: dict, served: list[dict], b: practice.Builder):
             if card:
                 return card, False
 
-    if cfg.get("source") == "start" and len(served) < 4:
-        domain = ("Algebra", "Advanced Math", "Problem-Solving and Data Analysis",
-                  "Geometry and Trigonometry")[len(served)]
+    if cfg.get("source") == "start" and len(served) < 4:          # one medium from each domain of the section first
+        domain = tuple(progress.RW_BLUEPRINT if cfg.get("subject") == "rw" else progress.BLUEPRINT)[len(served)]
         names = [t for t in blueprint.by_domain().get(domain, ())
                  if ("medium", "mcq") in blueprint.abilities().get(t, ())]
         ranked = sorted(names, key=lambda t: zlib.crc32(f"{row['id']}:{t}".encode()))
@@ -1651,9 +1761,9 @@ def _pick(row, cfg: dict, served: list[dict], b: practice.Builder):
         ring = [block] + [t for t in topics if t != block]
     elif cfg.get("mix") == "blueprint" and len(topics) > 1:
         # the topic furthest below its share: domain weight over the domain's picked skills
-        names = progress.topics()
+        names = progress.topics(cfg.get("subject", "math"))
         per_domain = Counter(names[t].domain for t in topics if t in names)
-        share = {t: progress.BLUEPRINT.get(names[t].domain, .15) / per_domain[names[t].domain]
+        share = {t: progress.DOMAIN_WEIGHT.get(names[t].domain, .15) / per_domain[names[t].domain]
                  for t in topics if t in names}
         total_share = sum(share.values()) or 1
         have = Counter(q["topic"] for q in asked)
@@ -1735,16 +1845,33 @@ def _pick(row, cfg: dict, served: list[dict], b: practice.Builder):
             return min(cards, key=lambda c: practice.penalty(c, recent, dict(used)) +
                        3 * len(blueprint.kinds()[c.key]["reasons"]) +
                        (400 if wanted_share is not None and (c.item.fmt == "spr") != target_spr else 0)), False
+    # R&W types hold a few written items: a set on chosen types that are spent (a twin, Prove it, again,
+    # a worksheet) goes on with other types of the same skills, at the set's tiers, rather than ending
+    narrowed = {k: cfg.get(k) for k in ("templates", "pool_templates") if cfg.get(k)}
+    if cfg.get("subject") == "rw" and narrowed and not cfg.get("exact") and row["kind"] != "challenge":
+        cfg.update(templates=[], pool_templates=[])
+        try:
+            card, _repair = _pick(row, cfg, served, b)
+        finally:
+            cfg.update(narrowed)
+        if card is not None:
+            cfg["_why"] = SIBLING_WHY
+        return card, False
     return None, False
 
 
 def type_name(template: str) -> str:
-    """The slug after the dot, humanised (QBank's type name)."""
+    """The slug after the dot, humanised (QBank's type name); an R&W type's authored name
+    (progress.rw_label, the name its mistakes carry)."""
+    if deps.subject_of(template) == "rw":
+        return progress.rw_label(template)
     slug = template.split(".", 1)[-1].replace(".", " ").replace("_", " ").strip()
     return slug[:1].upper() + slug[1:]
 
 
 def _about(template: str) -> str | None:
+    if deps.subject_of(template) == "rw":       # an R&W type's about is its name (type_name), nothing more
+        return None
     about = (blueprint.kinds().get(template) or {}).get("about") or ""
     first = re.split(r"(?<=[.!?])\s", about.strip(), maxsplit=1)[0] if about else ""
     return first or None
@@ -1761,29 +1888,69 @@ def _rungs(q: dict) -> list[str]:
     return out
 
 
-def _example(template: str, n: int) -> dict | None:
+def _held(cfg: dict) -> set:
+    """What a set still holds for later (exact items, /more's held cards, the pending preview), as
+    pairs and question hashes: an R&W example must not be one of them, or its key shows first."""
+    pairs = [tuple(p) for p in cfg.get("items") or () if isinstance(p, (list, tuple)) and len(p) == 2]
+    pairs += [(a["template"], a["exact"]) for a in cfg.get("more") or () if a.get("exact") is not None]
+    pend = (cfg.get("pending") or {}).get("q") or {}
+    if pend.get("key") is not None:
+        pairs.append((pend["key"], pend["seed"]))
+    out: set = set()
+    for t, seed in pairs:
+        if deps.subject_of(t) == "rw":
+            out.add((t, seed))
+            try:
+                out.add(practice.question_hash(generate(t, seed)))
+            except Exception:
+                pass
+    return out
+
+
+def _example(template: str, n: int, avoid: str | None = None, b: practice.Builder | None = None,
+             tier: str | None = None, hold: set = frozenset()) -> dict | None:
     """A reserved-seed worked example (900000 and up): shown with its key,
-    never filed, never a slot (P2, T4)."""
-    start = 900_000 + zlib.crc32(template.encode()) % 10_000
-    for seed in range(start, start + 60):
-        try:
-            item = generate(template, seed)
-        except Exception:
-            continue
-        q = practice.to_question(practice.Card.of(template, seed, item, topic_of(template)), n)
-        q.update({"id": f"d{n:03d}", "kind": "example", "served": progress.now(),
-                  "why": {"kind": "example", "detail": "A worked example: study it, then try one"},
-                  "type_name": type_name(template), "about": _about(template)})
-        return q
+    never filed, never a slot (P2, T4). An R&W template is a few written items, so a
+    reserved seed lands on a real one: for a learner (b) it is one they have not met,
+    never the question queued behind it (avoid: its source id), and when the type has
+    none left, one of another type of its skill. The caller remembers it as seen."""
+    names = [template]
+    if b is not None and deps.subject_of(template) == "rw":
+        names += sorted((t for t in practice.catalogue()["by_topic"].get(topic_of(template), ()) if t != template),
+                        key=lambda t: zlib.crc32(f"{b.learner}:{template}:{t}".encode()))
+    for name in names:
+        start = 900_000 + zlib.crc32(name.encode()) % 10_000
+        for seed in range(start, start + 60):
+            try:
+                item = generate(name, seed)
+            except Exception:
+                continue
+            if avoid is not None and getattr(item, "source_id", None) == avoid or tier and item.difficulty != tier:
+                continue
+            if b is not None and item.text and ((name, seed) in b.seen or b.signature(item) in b.seen_stems
+                                                or (name, seed) in hold or b.signature(item) in hold
+                                                or deps._protected(b.learner, name, seed)):
+                continue
+            q = practice.to_question(practice.Card.of(name, seed, item, topic_of(name)), n)
+            q.update({"id": f"d{n:03d}", "kind": "example", "served": progress.now(),
+                      "why": {"kind": "example", "detail": "A worked example: study it, then try one"},
+                      "type_name": type_name(name), "about": _about(name)})
+            return q
     return None
 
 
-def _example_due(row, cfg: dict, served: list[dict]) -> dict | None:
+def remember_example(learner: str, ex: dict) -> None:
+    """An R&W example is a bank question shown with its key: it never comes back as a question."""
+    if ex.get("text"):
+        db.remember(learner, [{"key": ex["key"], "seed": ex["seed"], "stem_hash": _hash_of(ex)}], progress.now())
+
+
+def _example_due(row, cfg: dict, served: list[dict], b: practice.Builder) -> dict | None:
     wanted = [t for t in cfg.get("examples") or () if t not in (cfg.get("examples_done") or [])]
     if not wanted or row["kind"] == "challenge":
         return None
     cfg.setdefault("examples_done", []).append(wanted[0])
-    return _example(wanted[0], len(served) + 1)
+    return _example(wanted[0], len(served) + 1, b=b, hold=_held(cfg))
 
 
 def _word_due(row, cfg: dict, served: list[dict], at_end: bool = False) -> dict | None:
@@ -1806,16 +1973,16 @@ def _make(row, cfg: dict, served: list[dict]) -> tuple[dict | None, object]:
     wc = _word_due(row, cfg, served)
     if wc:
         return wc, None
-    ex = _example_due(row, cfg, served)
+    b = _builder(row["learner"], dedupe="question" if cfg.get("whole_question", True) else "stem")
+    ex = _example_due(row, cfg, served, b)
     if ex:
         return ex, None
-    b = _builder(row["learner"], dedupe="question" if cfg.get("whole_question", True) else "stem")
     card, repair = _pick(row, cfg, served, b)
     if card is None:
         return None, None
     learner = row["learner"]
     # P2's worked_first: a type this learner has never answered opens with its
-    # example, at most once a skill a set; never timed, in end mode or the challenge
+    # example, at most once a skill a set; never timed, in end mode or the challenge.
     if cfg.get("worked_first") and not cfg.get("timed") and cfg.get("feedback") != "end" \
             and row["kind"] != "challenge" and not repair \
             and card.topic not in (cfg.get("worked_topics") or []) \
@@ -1823,7 +1990,7 @@ def _make(row, cfg: dict, served: list[dict]) -> tuple[dict | None, object]:
         cfg.setdefault("worked_topics", []).append(card.topic)
         cfg.setdefault("more", []).insert(0, {"template": card.key, "exact": card.seed,
                                              "why": cfg.get("_why")})
-        ex = _example(card.key, len(served) + 1)
+        ex = _example(card.key, len(served) + 1, avoid=getattr(card.item, "source_id", None), b=b, hold=_held(cfg))
         if ex:
             return ex, None
     n = len(served) + 1
@@ -1837,7 +2004,8 @@ def _make(row, cfg: dict, served: list[dict]) -> tuple[dict | None, object]:
     q["trap_true"] = getattr(card, "trap_true", None)
     open_here = any(t["template"] == card.key for t in progress.open_traps(learner, card.topic))
     if repair:
-        q["why"] = {"kind": "repair", "detail": "The same trap with new numbers, right after the miss"}
+        q["why"] = {"kind": "repair", "detail": "Another one like it, right after the miss" if q.get("text")
+                    else "The same trap with new numbers, right after the miss"}
     elif cfg.get("_why"):
         q["why"] = _why_of(cfg["_why"])
     else:
@@ -1902,13 +2070,14 @@ def _commit(row, served: list[dict], q: dict) -> None:
     """A question is served once the student is shown it (P23)."""
     q["served"] = progress.now()
     served.append(q)
-    if q.get("kind", "question") == "question":
+    # a worked example counts as seen too: an R&W one is a bank question shown with its key, never to come back
+    if q.get("kind", "question") in ("question", "example"):
         db.remember(row["learner"], [{"key": q["key"], "seed": q["seed"],
                                       "stem_hash": _hash_of(q)}], q["served"])
 
 
 def _hash_of(q: dict) -> str:
-    data = (q["stem"], list(q["choices"]), q.get("figure"), q.get("table"))
+    data = (q["stem"], list(q["choices"]), q.get("figure"), q.get("table")) + ((q["text"],) if q.get("text") else ())
     return hashlib.sha1(json.dumps(data, ensure_ascii=False, sort_keys=True).encode()).hexdigest()[:16]
 
 
@@ -2013,8 +2182,9 @@ def create(learner: str, sid: str | dict, topics: list[str] | None = None,
         return new_sid
     topics = topics or []
     every = set(topics) | {topic_of(t) for t in (queue or [])} | {topic_of(t) for t, _ in (items or [])}
+    subject = deps.infer_subject(topics, queue, [t for t, _ in (items or [])])
     cfg = {
-        "topics": topics, "count": count, "total": count,
+        "topics": topics, "count": count, "total": count, "subject": subject,
         "difficulty": [d for d in (difficulty or TIERS) if d in TIERS] or list(TIERS),
         "timed": bool(timed), "source": source, "turn": 0, "fixed": fixed,
         # the student's own clock, if they set one; otherwise the set's length decides
@@ -2022,16 +2192,16 @@ def create(learner: str, sid: str | dict, topics: list[str] | None = None,
         "queue": list(queue or []), "items": [list(i) for i in (items or [])],
         "before": {t: progress.topic_mastery(learner, t) for t in every},
     }
-    row = (sid, kind, learner, progress.now(), json.dumps(cfg), "[]", day)
+    row = (sid, kind, learner, progress.now(), json.dumps(cfg), "[]", day, subject)
     if day is None:
-        db.run("INSERT INTO sessions (id, kind, learner, started, cfg, questions, day)"
-               " VALUES (?,?,?,?,?,?,?)", *row)
+        db.run("INSERT INTO sessions (id, kind, learner, started, cfg, questions, day, subject)"
+               " VALUES (?,?,?,?,?,?,?,?)", *row)
     else:
         # A day's sitting exists once per learner. The check is inside the
         # insert, so two starts at the same moment still make one; the caller
         # reads back whichever was made.
-        db.run("INSERT INTO sessions (id, kind, learner, started, cfg, questions, day)"
-               " SELECT ?,?,?,?,?,?,? WHERE NOT EXISTS"
+        db.run("INSERT INTO sessions (id, kind, learner, started, cfg, questions, day, subject)"
+               " SELECT ?,?,?,?,?,?,?,? WHERE NOT EXISTS"
                " (SELECT 1 FROM sessions WHERE kind=? AND learner=? AND day=?)", *row, kind, learner, day)
     return None
 
@@ -2045,7 +2215,7 @@ def seconds_of(cfg: dict) -> int | None:
     if cfg.get("seconds"):
         return cfg["seconds"]
     if cfg.get("count"):
-        return cfg["count"] * (blueprint.MODULE_SECONDS // blueprint.MODULE_SIZE)   # R34: 95 s each
+        return cfg["count"] * deps.PACE.get(cfg.get("subject"), deps.PACE["math"])   # R34: the section's pace (95 s, 71 s)
     return None
 
 
@@ -2296,7 +2466,7 @@ def state(row) -> dict:
         meta = (cfg.get("end_meta") or {}).get(qid, {})
         a = firsts.get(qid)
         rows.append({
-            "id": qid, "n": q.get("n"), "kind": kind, "topic": q.get("topic"), "skill": q.get("skill"),
+            "id": qid, "n": q.get("n"), "kind": kind, "topic": q.get("topic"), "skill": shown_skill(q),
             "type_name": None if cfg.get("hide_skill") and not revealable(row, cfg, qid) else q.get("type_name"),
             "difficulty": q.get("difficulty"), "level": q.get("level"), "rough": q.get("rough"),
             "why": None if _challenge(row) else q.get("why"), "repair": bool(q.get("repair")),
@@ -2337,6 +2507,8 @@ def state(row) -> dict:
                 "guess": not challenge, "hint": not closed and fb != "end" and cfg.get("hints_on", True),
                 "permalink": (not challenge) or _day_passed(row), "clean": not challenge},
     }
+    if cfg.get("walk"):                     # a Review walk's steps and position (web/review/walk reads it here)
+        out["walk"] = cfg["walk"]
     if row["contest"]:
         extra = deps.part("compete", "state_extra")
         if extra:
@@ -2461,14 +2633,14 @@ def _own(q: dict, own: str):
     typed = str(own).strip()
     if not typed or len(typed) > 40:
         raise HTTPException(422, {"field": "own", "reason": "type an answer"})
-    from satbank.item import numeral
+    from satbank.item import fold_entry, numeral
     for i, choice in enumerate(q.get("choices") or ()):
         value = numeral(choice)
-        if value is not None and scoring.grid_equal(typed, str(choice).replace("−", "-")):
+        if value is not None and scoring.grid_equal(typed, fold_entry(choice)):
             return i
         if value is not None:
             try:
-                if abs(float(typed.replace("−", "-")) - value) < 1e-9:
+                if abs(float(fold_entry(typed)) - value) < 1e-9:
                     return i
             except ValueError:
                 pass
@@ -2545,7 +2717,7 @@ def answer(row, qid: str, given, ms: int | None, *, conf=None, guess: bool = Fal
         if q["id"] == (served[-1]["id"] if served else None):
             nxt = preview_next(row, cfg, served)
             _save(row["id"], cfg, served)
-        return {"saved": True, "given": given, "question_id": qid, "skill": q.get("skill"),
+        return {"saved": True, "given": given, "question_id": qid, "skill": shown_skill(q),
                 "budget_ms": q.get("budget_ms"), "total": cfg.get("total"),
                 "answered": sum(1 for x in _served_questions(served) if answers.get(x["id"]) not in (None, "")),
                 "next": public(nxt) if nxt else None}
@@ -2659,7 +2831,7 @@ def _after_first(row, cfg: dict, q: dict, filed: dict, conf: str | None, served:
         normalized = progress.norm(filed["reason"] or "")
         named = progress.named(normalized)
         want = "^" + re.escape(normalized) + "$" if named else None
-        repair = {"template": q["key"], "want": want, "norm": normalized if named else None}
+        repair = {"template": q["key"], "want": want, "norm": normalized if named else None, "tier": q["difficulty"]}
         if conf == "sure":
             repairs = "next"                  # P7: a confident miss comes back first
         if repairs == "end":
@@ -2793,7 +2965,7 @@ def _feedback(row, q, given, ok, reason, opened, closed, before, after, cfg, ans
     out = {
         "correct": ok, "given": given, "question_id": q["id"],
         "mistake": mistake,
-        "skill": q.get("skill"),
+        "skill": shown_skill(q),
         "opened": opened, "closed": closed,
         "opened_ids": (filed or {}).get("opened_ids", []),
         "closed_ids": (filed or {}).get("closed_ids", []),
@@ -3065,7 +3237,8 @@ def more(row, qid: str, step: int = 0, axis: str | None = None, want: str | None
     voided = qid in _voided(row, served)
     if voided and axis == "same":                # P25: the replacement takes the slot, the time comes back
         asks = [{**a, "replaces": qid, "why": {"kind": "replacement",
-                                               "detail": "Replaces a voided question: same type, new numbers"}}
+                                               "detail": "Replaces a voided question: another one like it" if q.get("text")
+                                               else "Replaces a voided question: same type, new numbers"}}
                 for a in asks[:1]]
         spent = (cfg.get("ms") or {}).get(qid, 0)
         if cfg.get("timing") == "pace" and spent and not (cfg.get("gave_back") or {}).get(qid):
@@ -3137,15 +3310,20 @@ def hint(row, qid: str) -> dict:
             cfg.setdefault("strike", {}).setdefault(qid, []).append(pick)
             cfg["strike"][qid].sort()
             cfg.setdefault("strike_by", {}).setdefault(qid, {})[str(pick)] = "hint"
+            # an R&W reason is the option's own sentence ("A comma alone cannot join ..."), not a step to complete
             out.update({"choice": pick, "reason": reasons[pick],
-                        "text": f"Struck {'ABCD'[pick]}: that's what you get if you {reasons[pick]}."})
+                        "text": f"Struck {'ABCD'[pick]}: {reasons[pick]}" if q.get("text")
+                        else f"Struck {'ABCD'[pick]}: that's what you get if you {reasons[pick]}."})
     if kind == "step":
         out["step"] = (q.get("steps") or [None])[0]
     if kind == "example":
-        ex = _example(q["key"], 0)
+        # never the question on screen (it is seen already, so an R&W example skips it), and remembered
+        ex = _example(q["key"], 0, b=_builder(row["learner"], dedupe="question"), hold=_held(cfg))
         if ex:
-            out["example"] = {k: ex[k] for k in ("stem", "choices", "latex", "figure", "table", "type",
-                                                  "answer", "rationale", "reasons", "steps", "seed", "difficulty")}
+            remember_example(row["learner"], ex)
+            out["example"] = {k: ex.get(k) for k in ("stem", "choices", "latex", "figure", "figure_alt", "table",
+                                                      "table_title", "text", "type", "answer", "rationale", "reasons",
+                                                      "steps", "seed", "difficulty", "type_name")}
     _save(row["id"], cfg, served)
     return out
 
@@ -3359,7 +3537,7 @@ def finish(row) -> dict:
     for q in questions:
         a = firsts.get(q["id"])
         meta = (cfg.get("end_meta") or {}).get(q["id"], {})
-        rows_out.append({"id": q["id"], "n": q.get("n"), "topic": q["topic"], "skill": q.get("skill"),
+        rows_out.append({"id": q["id"], "n": q.get("n"), "topic": q["topic"], "skill": shown_skill(q),
                          "type_name": q.get("type_name"), "difficulty": q["difficulty"], "level": q.get("level"),
                          "status": statuses[q["id"]], "ms": ms_of(q), "budget_ms": q.get("budget_ms"),
                          "mistake": _cap(a["reason"]) if a and not a["correct"] else None,

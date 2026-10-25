@@ -38,7 +38,7 @@ systemctl enable fa-satbank >/dev/null
 systemctl enable --now fa-satbank-mail.timer >/dev/null
 systemctl restart fa-satbank
 # the first start takes about 15 seconds (it builds its question catalogue)
-for i in $(seq 1 30); do
+for i in $(seq 1 90); do   # the one-time startup step and four workers take a minute or two
   code=$(curl -s -o /dev/null -w "%{http_code}" http://127.0.0.1:3020/ || true)
   [[ "$code" == "200" ]] && break
   sleep 2

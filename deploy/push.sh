@@ -8,7 +8,7 @@ ssh "$HOST" 'mkdir -p /srv/satbank'
 rsync -az --delete \
   --exclude '.git' --exclude '.claude' --exclude '.venv' --exclude '__pycache__' \
   --exclude '*.db' --exclude '*.db-shm' --exclude '*.db-wal' \
-  --exclude 'server/cache' --exclude 'server/outbox' --exclude '/.playwright-mcp' \
+  --exclude 'server/cache' --exclude 'server/outbox' --exclude 'server/reports' --exclude '/.playwright-mcp' \
   --exclude '/archive' --exclude '/poc' --exclude '/spec' \
   ./ "$HOST":/srv/satbank/
 ssh "$HOST" 'bash /srv/satbank/deploy/remote-setup.sh'

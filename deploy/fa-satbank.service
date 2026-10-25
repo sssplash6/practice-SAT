@@ -9,8 +9,13 @@ User=freshbot
 Group=freshbot
 WorkingDirectory=/srv/satbank
 EnvironmentFile=/etc/freshbot/satbank.env
-# Loopback only: Caddy is the only process on 80/443.
-ExecStart=/srv/satbank/.venv/bin/python -m uvicorn server.app:app --host 127.0.0.1 --port 3020 --log-level warning
+# Migrations, new columns and today's contests run once here, so the workers below start on a ready
+# database instead of racing each other through the same one-time steps.
+ExecStartPre=/srv/satbank/.venv/bin/python -c "from server.app import startup; startup()"
+# Loopback only: Caddy is the only process on 80/443. Four workers, one per core: a class of about
+# 100 handing in at once queued for a minute on one process (load test, 2026-10-23).
+ExecStart=/srv/satbank/.venv/bin/python -m uvicorn server.app:app --host 127.0.0.1 --port 3020 --workers 4 --log-level warning
+TimeoutStartSec=300
 Restart=always
 RestartSec=5
 

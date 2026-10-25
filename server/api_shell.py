@@ -56,14 +56,20 @@ def _merge(base: dict, extra: dict) -> dict:
     return base
 
 
+# R&W domains in Bluebook's order (ui.js RW_DOMAINS): the living mark pairs each with the Math corner in its place
+RW_ORDER = ("Craft and Structure", "Information and Ideas", "Standard English Conventions", "Expression of Ideas")
+
+
 def _domains(learner: str) -> tuple[dict, dict]:
-    """U22: each domain's mastery, 0 to 1, in progress.DOMAINS order, per subject."""
-    board = progress.board(learner)
-    out = []
-    for d in progress.DOMAINS:
-        ms = [t["mastery"] for t in board.values() if t["domain"] == d]
-        out.append(round(sum(ms) / len(ms), 3) if ms else 0.0)
-    return {"math": out}, board
+    """U22: each domain's mastery, 0 to 1, per subject: Math in progress.DOMAINS order, R&W in
+    Bluebook's. The board returned is both subjects' skills (Up next reads both)."""
+    out, board = {}, {}
+    for subject, names in (("math", progress.DOMAINS), ("rw", RW_ORDER)):
+        b = progress.board(learner, subject)
+        board.update(b)
+        ms = [[t["mastery"] for t in b.values() if t["domain"] == d] for d in names]
+        out[subject] = [round(sum(m) / len(m), 3) if m else 0.0 for m in ms]
+    return out, board
 
 
 def _avatar(learner: str, choice: str | None, board: dict) -> dict:
@@ -72,7 +78,7 @@ def _avatar(learner: str, choice: str | None, board: dict) -> dict:
     if not choice:
         return {"kind": "mark", "glyph": None, "ring": False}
     strong = (board.get(choice) or {}).get("mastery", 0) >= progress.STRONG
-    earned = db.one("SELECT 1 FROM earned WHERE learner=? AND id=?", learner, choice)
+    earned = db.one("SELECT 1 FROM earned WHERE learner=? AND id=?", learner, f"skill:{choice}")
     return {"kind": "glyph", "glyph": choice, "ring": bool(strong or earned)}
 
 
@@ -162,8 +168,11 @@ def shell(learner: str, tz: int, token: str) -> dict:
     plan = None
     if has_plan:
         kind = "exam" if p["exam_date"] == d["today"] else "rest" if line["rest"] else "practice"
+        # target: the 400-1600 total when both section targets are set, else the Math target; targets says which
+        total = p["target"] + p["rw_target"] if p["target"] and p["rw_target"] else None
         plan = {"exam_date": p["exam_date"], "minutes": p["minutes"], "days": p["days"], "tests": p["tests"],
-                "per_session": per_session(p), "target": p["target"], "kind": kind, "done": None,
+                "per_session": per_session(p), "target": total or p["target"],
+                "targets": {"total": total, "rw": p["rw_target"], "math": p["target"]}, "kind": kind, "done": None,
                 "next_test": None}          # the next test day within 7 days, from the plan part (S7)
     tested = any(progress._local_day(r["finished"], tz) == today
                  for r in db.rows("SELECT finished FROM sessions WHERE learner=? AND finished IS NOT NULL"
@@ -236,8 +245,8 @@ def shell(learner: str, tz: int, token: str) -> dict:
     queue = part("next", "queue")
     if queue:
         try:                                # U1: on an error the block hides and the nav stands
-            out["next"] = queue(learner, tz, limit=3, _plan=plan_summary,
-                                _closing=closing, _board=board)[:3]
+            out["next"] = queue(learner, tz, limit=3, _plan=plan_summary, _closing=closing,
+                                _board=board)[:3]          # both subjects: Up next holds both
         except Exception:
             log.exception("next.queue failed")
     if plan_part:
@@ -301,6 +310,8 @@ def get_shell(request: Request, x_learner: str | None = Header(default=None), x_
     except HTTPException as e:
         if e.status_code == 401 and isinstance(e.detail, dict) and e.detail.get("retired"):
             return {"retired": True}
+        if e.status_code == 401 and isinstance(e.detail, dict) and e.detail.get("signin"):
+            return {"signin": True}
         raise
     return {**shell(learner, x_tz, (x_learner or "").strip()), "has": _has(request.app)}
 
@@ -332,9 +343,12 @@ def _catalog() -> tuple[bytes, bytes]:
     budgets; this is ~260 KB, ~50 KB gzipped, and fixed per deploy."""
     types = part("api_bank", "types")
     rows = []
-    for t in (types() if types else []):
+    # both subjects (a type's topic says which); an R&W type's reasons are one passage's own lines, not
+    # named traps (R&W misses go unnamed), so they stay out and keep the index small
+    for t in ([*types(subject="math"), *types(subject="rw")] if types else []):
         about = " ".join(str(t.get("about") or "").split())
         rows.append([t["template"], t["name"], t["topic"],
+                     [] if t["subject"] == "rw" else
                      [[r["norm"]] if r["label"] == r["norm"] else [r["norm"], r["label"]] for r in t["reasons"]],
                      "" if about.lower().rstrip(".") == t["name"].lower() else about])
     official = part("api_bank", "_official")

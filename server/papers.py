@@ -7,9 +7,11 @@ paper #3 gets the same question type, tier and format in every slot, each with
 their own numbers (blueprint.twin_slots), so Sat by, the rating and the
 percentile compare while answers can't be passed around.
 
-* #1-#7 are the launch set, from server/mocks.json's seven shelf sections.
-* One paper a week, built the first time anyone asks on or after Monday 00:00
-  UTC, from blueprint.fill(order='shuffle') on a Builder seeded paper:{week}.
+* #1-#7 are the launch set, from server/mocks.json's seven shelf sections (Math).
+* One paper a week per subject, built the first time anyone asks on or after Monday 00:00
+  UTC, from blueprint.fill(order='shuffle') on a Builder seeded paper:{week} (paper:{week}:rw).
+  A paper is one section of one subject, so an R&W paper is a number of its own (week
+  '{week}-rw') and every per-paper reader (Sat by, crowd, board, posts) stays one subject.
 * A Compete Season Final joins the shelf when it closes, as a Road-to paper
   whose crowd starts with the Final's ranked sittings.
 
@@ -20,6 +22,7 @@ from __future__ import annotations
 
 import datetime as dt
 import json
+import math
 import pathlib
 import re
 import statistics
@@ -45,7 +48,7 @@ POSTS_A_DAY = 20
 EDIT_SECONDS = 15 * 60
 HIDE_AT = 3             # reports from different codes that hide a post
 TEXT_MAX = 500
-ABOUT_OK = re.compile(r"^m(1|2u|2l):([1-9]|1\d|2[0-2])$")
+ABOUT_OK = re.compile(r"^m(1|2u|2l):([1-9]|1\d|2[0-7])$")       # positions 1-27 (an R&W module)
 CROWD_TTL = 600         # the board's crowd part, per paper, in seconds
 FIRSTS_TTL = 300        # each paper's first sittings; a paper sitting's hand-in forgets its paper
 _CROWD: dict[int, tuple[float, dict]] = {}
@@ -90,25 +93,28 @@ def launch() -> None:
                n, None, "Launch set", now(), json.dumps({"sections": [section]}), "launch")
 
 
-def _build(salt: str) -> dict:
+def _build(salt: str, subject: str = "math") -> dict:
     b = practice.Builder(salt, set(), set(), dedupe="question")
-    section = {"subject": "math"}
+    section = {"subject": subject}
+    # an R&W slot names its skill (blueprint.slots), so its pool is the skill's templates
+    pools = blueprint.by_domain() if subject == "math" else practice.catalogue()["by_topic"]
     for form in FORMS:
-        cards = blueprint.fill(blueprint.slots(form, blueprint.module_of(form)), blueprint.by_domain(), b,
+        cards = blueprint.fill(blueprint.slots(form, blueprint.module_of(form), subject), pools, b,
                                blueprint.abilities(), log=lambda *_: None, order="shuffle")
         section[form] = [[c.key, c.item.difficulty, c.item.fmt] for c in cards]
     return {"sections": [section]}
 
 
-def ensure(day: dt.date | None = None) -> int:
-    """This ISO week's paper, built the first time anyone asks (as the daily
+def ensure(day: dt.date | None = None, subject: str = "math") -> int:
+    """This ISO week's paper of the subject, built the first time anyone asks (as the daily
     challenge is), and every Season Final that has closed since. Returns n."""
     day = day or _utc_today()
-    week = week_of(day)
+    week = week_of(day) + ("" if subject == "math" else f"-{subject}")
     row = db.one("SELECT n FROM papers WHERE week=?", week)
     if row is None:
         monday = day - dt.timedelta(days=day.weekday())
-        questions = json.dumps(_build(f"paper:{week}"))
+        questions = json.dumps(_build(f"paper:{week_of(day)}" + ("" if subject == "math" else f":{subject}"),
+                                      subject))
         # n is taken inside the insert and week is UNIQUE, so two first
         # requests of the week make one paper
         db.run("INSERT OR IGNORE INTO papers(n,week,label,built,questions,source)"
@@ -117,6 +123,11 @@ def ensure(day: dt.date | None = None) -> int:
         row = db.one("SELECT n FROM papers WHERE week=?", week)
     _road_to()
     return row["n"]
+
+
+def subject_of(p: dict | None) -> str:
+    """A paper's subject: its one section's."""
+    return ((p or {}).get("sections") or [{}])[0].get("subject") or "math"
 
 
 def _road_to() -> None:
@@ -184,8 +195,9 @@ def _ranked(row) -> bool:
 
 
 def _mid(row) -> float | None:
+    from . import estimate
     e = (_json(row["result"], {}) or {}).get("estimate") or {}
-    return (e["low"] + e["high"]) / 2 if e.get("low") is not None and e.get("high") is not None else None
+    return estimate._mid(e) if e.get("low") is not None and e.get("high") is not None else None
 
 
 def _share(row) -> float | None:
@@ -287,7 +299,8 @@ def ratings_for(learner: str, papers: list[dict]) -> dict[int, dict]:
     for p in papers:
         s = p["sections"][0]
         m1 = you.expect(s["module1"])
-        m2 = you.expect(s["module2_upper"] if m1 >= 14 else s["module2_lower"])
+        up = math.ceil(scoring.ROUTE_UP_AT * len(s["module1"]))      # 14 of 22, 17 of 27
+        m2 = you.expect(s["module2_upper"] if m1 >= up else s["module2_lower"])
         rows[p["n"]] = {"m1": m1, "m2": m2, "everyone": crowd.expect(s["module1"])}
     typical = statistics.median(r["m1"] for r in rows.values()) if rows else 0.0
     shelf = statistics.median(r["everyone"] for r in rows.values()) if rows else 0.0
@@ -394,10 +407,10 @@ def _hardest(p: dict, mine_q: dict[str, dict], ans: dict) -> dict | None:
     return best
 
 
-def listing(learner: str) -> list[dict]:
-    """Every paper, newest first, with its stats for this viewer."""
-    ensure()
-    papers = all_papers()
+def listing(learner: str, subject: str = "math") -> list[dict]:
+    """Every paper of the subject, newest first, with its stats for this viewer."""
+    ensure(subject=subject)
+    papers = [p for p in all_papers() if subject_of(p) == subject]
     rating = ratings_for(learner, papers)
     met = _met_under_clock(learner)
     seen = {r["template"] for r in db.rows("SELECT DISTINCT template FROM practice_seen WHERE learner=?", learner)}
@@ -740,7 +753,7 @@ def get_crowd(n: int, x_learner: str | None = Header(default=None)) -> dict:
 def get_paper(n: int, x_learner: str | None = Header(default=None)) -> dict:
     learner = learner_of(x_learner)
     p = _paper_or_404(n)
-    rating = ratings_for(learner, all_papers())
+    rating = ratings_for(learner, [x for x in all_papers() if subject_of(x) == subject_of(p)])
     met = _met_under_clock(learner)
     seen = {r["template"] for r in db.rows("SELECT DISTINCT template FROM practice_seen WHERE learner=?", learner)}
     open_t = {r["template"] for r in db.rows("SELECT template FROM traps WHERE learner=? AND closed IS NULL", learner)}

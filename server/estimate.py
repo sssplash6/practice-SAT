@@ -62,22 +62,43 @@ DOMAIN_OF = {
 SPR_SHARE = 12 / 44             # grid-ins in a section (blueprint.SPR_AT, both modules)
 
 
-def _domain_split() -> dict[str, int]:
-    from .blueprint import DOMAIN_SPLIT
+def _spec(subject: str) -> dict:
+    from .blueprint import SPEC
+    return SPEC[subject]
+
+
+def weights(subject: str = "math") -> dict[str, int]:
+    """Question Bank counts per skill: SKILL_WEIGHT for Math, blueprint.RW_SKILL_WEIGHT for R&W."""
+    return _spec(subject)["skill_weight"] or SKILL_WEIGHT
+
+
+def domain_of(subject: str = "math") -> dict[str, str]:
+    """skill -> domain; R&W's from the bank's own topics."""
+    if subject == "math":
+        return DOMAIN_OF
+    from satbank.topic import load_topics
+    return {t: load_topics()[t].domain for t in weights(subject)}
+
+
+def section_size(subject: str = "math") -> int:
+    return 2 * _spec(subject)["module_size"]
+
+
+def _domain_split(subject: str = "math") -> dict[str, int]:
     out: Counter = Counter()
-    for module in DOMAIN_SPLIT.values():
+    for module in _spec(subject)["domain_split"].values():
         out.update(module)
     return dict(out)
 
 
-def shares() -> dict[str, float]:
-    """s_t: each skill's share of a 44-question section."""
-    split = _domain_split()
+def shares(subject: str = "math") -> dict[str, float]:
+    """s_t: each skill's share of a section (44 Math, 54 R&W)."""
+    split, of = _domain_split(subject), domain_of(subject)
     total = sum(split.values())
     per_domain: Counter = Counter()
-    for t, w in SKILL_WEIGHT.items():
-        per_domain[DOMAIN_OF[t]] += w
-    return {t: split[DOMAIN_OF[t]] / total * w / per_domain[DOMAIN_OF[t]] for t, w in SKILL_WEIGHT.items()}
+    for t, w in weights(subject).items():
+        per_domain[of[t]] += w
+    return {t: split[of[t]] / total * w / per_domain[of[t]] for t, w in weights(subject).items()}
 
 
 def _round10(value: float) -> int:
@@ -122,15 +143,45 @@ def _sittings(learner: str, subject: str = "math") -> list[dict]:
         if not isinstance(band, dict) or band.get("low") is None or band.get("high") is None:
             continue
         out.append({"id": row["id"], "kind": row["kind"], "low": band["low"], "high": band["high"],
-                    "mid": (band["low"] + band["high"]) / 2, "at": row["finished"],
+                    "mid": _mid(band), "at": row["finished"], "capped": bool(band.get("capped")),
                     "route": row["route"], "standard": _standard(row), "outside": False,
                     "why": None if _standard(row) else (row["unranked_why"] or "not standard")})
     col = "math" if subject == "math" else "rw"
     for row in db.rows(f"SELECT * FROM outside_scores WHERE learner=? AND {col} IS NOT NULL", learner):
         out.append({"id": row["id"], "kind": "outside", "low": row[col], "high": row[col],
-                    "mid": row[col], "at": row["day"] + "T12:00:00+00:00",
+                    "mid": row[col], "at": row["day"] + "T12:00:00+00:00", "capped": False,
                     "route": None, "standard": False, "outside": True, "source": row["source"]})
     return sorted(out, key=lambda x: (x["at"], str(x["id"])), reverse=True)
+
+
+def current(learner: str, subject: str = "math", items: list[dict] | None = None) -> dict | None:
+    """"Your current score" in a subject, the one rule every page shows: the
+    latest up to 3 scored sittings and logged scores, as the band of their mean
+    mid. One alone keeps its own band (a logged point gets scoring.band's); when
+    every one was capped on a lower route the band stays under that ceiling.
+    None of them: the score the student typed (source "self"), else None.
+    `items` = _sittings(learner, subject) when the caller has them already."""
+    recent = (_sittings(learner, subject) if items is None else items)[:3]
+    if not recent:
+        lr = db.one("SELECT current, rw_now, updated FROM learners WHERE id=?", learner)
+        typed = lr["rw_now" if subject == "rw" else "current"] if lr else None
+        return {**scoring.band(typed), "capped": False, "n": 0, "source": "self", "at": lr["updated"],
+                "id": None} if typed else None
+    # items built elsewhere (fixtures, older callers) may lack capped / mid / outside
+    if len(recent) == 1 and not recent[0].get("outside"):
+        x = recent[0]
+        band = {"low": x["low"], "high": x["high"], "mid": _mid(x), "capped": bool(x.get("capped"))}
+    else:
+        band = scoring.section_band(statistics.mean(_mid(x) for x in recent),
+                                    "lower" if all(x.get("capped") for x in recent) else None, subject)
+    sat = next((x for x in recent if not x.get("outside")), None)
+    return {**band, "n": len(recent), "source": "measured" if sat else (recent[0].get("source") or "other"),
+            "at": recent[0]["at"], "id": sat["id"] if sat else None}
+
+
+def _mid(band: dict) -> float:
+    """A stored band's centre: its own `mid` (held at a route's ceiling), else the middle of the ends."""
+    return band["mid"] if band.get("mid") is not None else (band["low"] + band["high"]) / 2
 
 
 def _mean3(items: list[dict]) -> int | None:
@@ -147,15 +198,11 @@ def estimate(learner: str, subject: str = "math") -> dict:
     mean3 = _mean3(items)
     standard = [x for x in items if x["standard"] and x["kind"] in SECTION_KINDS]
     last3 = standard[:3]
-    combined = None
-    if len(last3) >= 2:
-        centre = sum(x["mid"] for x in last3) / len(last3)
-        half = 70 / math.sqrt(len(last3))
-        combined = {"low": max(200, _round10(centre - half)), "high": min(800, _round10(centre + half)),
-                    "n": len(last3)}
-    last30 = [x for x in standard if (dt.date.today() - dt.date.fromisoformat(x["at"][:10])).days <= 30]
+    combined = {**scoring.band(statistics.mean(x["mid"] for x in last3)), "n": len(last3)} if len(last3) >= 2 else None
+    last30 =[x for x in standard if (dt.date.today() - dt.date.fromisoformat(x["at"][:10])).days <= 30]
+    # the 100 below is how far apart sittings landed, not a band width
     if not standard:
-        confidence = {"level": "low", "reason": "Rough estimate: based on a module or the diagnostic only. One full section narrows it to about 140 points."}
+        confidence = {"level": "low", "reason": "Rough estimate: based on a module or the diagnostic only. A full section makes it firmer."}
     elif len(last30) >= 2 and max(x["mid"] for x in last30[:3]) - min(x["mid"] for x in last30[:3]) <= 100:
         confidence = {"level": "high", "reason": f"Consistent estimate: your last {len(last30[:3])} sections (past 30 days) landed within 100 points of each other."}
     elif len(standard) == 1:
@@ -171,18 +218,20 @@ def estimate(learner: str, subject: str = "math") -> dict:
                "modules": sum(x["kind"] == "module" for x in items),
                "diagnostics": sum(x["kind"] == "diagnostic" for x in items)}
     return {"subject": subject, "latest": latest, "previous": previous, "best": best,
-            "range": {"low": min((x["mid"] for x in items), default=None),
-                      "high": max((x["mid"] for x in items), default=None)},
+            "range": current(learner, subject, items),
             "mean3": mean3, "combined": combined, "confidence": confidence, "trend": trend,
             "routed_up": {"up": sum(x["route"] == "upper" for x in sections), "sections": len(sections)},
             "counted": counted}
 
 
 def _peer_key(row) -> tuple:
-    """Who a sitting is compared with: the same kind, and for a paper
-    (kind mock, mock_id 'P{n}') the same paper."""
+    """Who a sitting is compared with: the same kind and subject, a full SAT's
+    section only with full SAT sections, and for a paper (kind mock, mock_id
+    'P{n}') the same paper."""
     paper = row["kind"] == "mock" and (row["mock_id"] or "").startswith("P")
-    return (row["kind"], row["mock_id"] if paper else ("paper" if row["kind"] == "paper" else None), paper)
+    full = bool(_cfg(row).get("full"))
+    return (row["kind"], _subject(row), row["mock_id"] if paper else ("paper" if row["kind"] == "paper" else None),
+            paper, full)
 
 
 def percentile(sid: str) -> dict:
@@ -203,14 +252,14 @@ def percentile(sid: str) -> dict:
             continue
         e = (json.loads(x["result"] or "{}").get("estimate") or {})
         if e.get("low") is not None and e.get("high") is not None:
-            first[x["learner"]] = (x["id"], (e["low"] + e["high"]) / 2)
+            first[x["learner"]] = (x["id"], _mid(e))
     mine = first.get(row["learner"])
     if mine and mine[0] != sid:
         return {"ranked": False, "pct": None, "n": 0, "why": "repeat sitting"}
     peers = [m for _, m in first.values()]
     if len(peers) < 20:
         return {"ranked": False, "pct": None, "n": len(peers), "why": "too few sittings"}
-    me = (band["low"] + band["high"]) / 2
+    me = _mid(band)
     return {"ranked": True, "pct": round(100 * sum(score <= me for score in peers) / len(peers)), "n": len(peers)}
 
 
@@ -237,16 +286,12 @@ def national(low: int, high: int, subject: str = "math") -> dict | None:
 
 # ------------------------------------------------------------------ exact re-marking
 
-def mid(earned: float, possible: float, route: str | None, half: float) -> dict:
-    """SR1's measure: the band's unrounded midpoint, with the lower route's
-    580 cap, from scoring's own curve."""
+def mid(earned: float, possible: float, route: str | None, subject: str = "math") -> dict:
+    """SR1's measure: scoring's band for this marking, its mid the unrounded
+    centre held at the lower route's ceiling (so a point under the cap still
+    counts and one over it does not)."""
     c = scoring._interpolate(earned / possible if possible else 0.0)
-    low, high = max(200.0, c - half), min(800.0, c + half)
-    capped = False
-    if route == "lower" and high > scoring.LOWER_ROUTE_CEILING:
-        high, capped = float(scoring.LOWER_ROUTE_CEILING), True
-        low = min(low, high - 10)
-    return {"low": low, "high": high, "mid": (low + high) / 2, "capped": capped, "centre": c}
+    return {**scoring.section_band(c, route, subject), "centre": c}
 
 
 def _paper(row) -> list[dict]:
@@ -271,24 +316,20 @@ def _marking(sid: str):
     return row, questions, right, removed
 
 
-def _half(row) -> int:
-    return scoring.MOCK_HALF_BAND if row["kind"] in SECTION_KINDS else scoring.HALF_BAND
-
-
 def _route(row) -> str | None:
-    return row["route"] if row["kind"] in SECTION_KINDS else None
+    """Only a two-module sitting (a section, the Season Final) has a route; it is what marking capped by."""
+    return row["route"]
 
 
 def _score(row, questions, right, removed) -> dict:
     earned = sum(scoring.WEIGHT[q["difficulty"]] for q in questions if q["id"] not in removed and right[q["id"]])
     possible = sum(scoring.WEIGHT[q["difficulty"]] for q in questions if q["id"] not in removed)
-    return mid(earned, possible, _route(row), _half(row))
+    return mid(earned, possible, _route(row), _subject(row))
 
 
 def _printed(m: dict) -> dict:
     """The band in scoring's tens, the midpoint unrounded."""
-    return {"low": int(round(m["low"] / 10) * 10), "high": int(round(m["high"] / 10) * 10),
-            "mid": m["mid"], "capped": m["capped"]}
+    return {k: m[k] for k in ("low", "high", "mid", "capped", "centre")}
 
 
 def rescore(sid: str, right=(), wrong=(), drop=()) -> dict | None:
@@ -378,19 +419,17 @@ def ledger(sid: str) -> dict | None:
     by_domain = [{"domain": b.pop("key"), **b} for b in buckets(lambda q: q.get("domain") or "Math")]
     blank = {b["key"]: b for b in buckets(lambda q: "blank" if answers.get(q["id"]) in (None, "") else "incorrect")}
     route = None
-    if row["kind"] in SECTION_KINDS and row["route"] == "lower":
-        m1 = questions[:22]
+    if row["route"] == "lower":
+        m1 = questions[:_spec(_subject(row))["module_size"]]
         m1_right = sum(marks[q["id"]] for q in m1 if q["id"] not in removed)
         needed = math.ceil(scoring.ROUTE_UP_AT * len(m1))
         short = max(0, needed - m1_right)
         savers = sorted((q for q in m1 if q in misses), key=lambda q: (scoring.WEIGHT[q["difficulty"]],
                                                                        -per_q[q["id"]]["pts"]))[:short]
-        uncapped = mid(sum(scoring.WEIGHT[q["difficulty"]] for q in questions if q["id"] not in removed),
-                       sum(scoring.WEIGHT[q["difficulty"]] for q in questions if q["id"] not in removed),
-                       None, _half(row))
+        # all right off the cap: the centre the ceiling took away, not a band end
         route = {"m1_right": m1_right, "m1_asked": len(m1), "needed": needed, "short_by": short,
                  "savers": [q["id"] for q in savers],
-                 "cap_cost": max(0, round(uncapped["high"] - scoring.LOWER_ROUTE_CEILING))}
+                 "cap_cost": max(0, round(everything["centre"] - everything["mid"]))}
     return {"subject": _subject(row), "mid": base["mid"],
             "all_right": {"low": everything["low"], "high": everything["high"], "mid": everything["mid"]},
             "total": round(everything["mid"] - base["mid"], 2), "per_q": per_q,
@@ -420,8 +459,7 @@ def rescore_sitting(sid: str, qid: str | None = None, how: str | None = None,
     db.run("UPDATE sessions SET result=? WHERE id=?", json.dumps(result), sid)
     _, questions, marks, gone = _marking(sid)
     m = _score(row, questions, marks, gone)
-    after = {**before, "low": int(round(m["low"] / 10) * 10), "high": int(round(m["high"] / 10) * 10),
-             "capped": m["capped"]}
+    after = {**before, **_printed(m)}
     result["estimate"] = after
     result.setdefault("rescored", []).append({"at": deps.now(), "qid": qid, "how": how, "report": report,
                                               "before": {"low": before["low"], "high": before["high"]},
@@ -453,9 +491,9 @@ def _acc(rows) -> tuple[float, int]:
     return (num / den if den else 0.5), len(rows)
 
 
-def model(rows: list[dict]) -> dict:
+def model(rows: list[dict], subject: str = "math") -> dict:
     """U4 steps 1-3, pure: per skill (s_t, a, n, a'), F and S."""
-    s = shares()
+    s = shares(subject)
     overall, _ = _acc(rows)
     per: dict[str, list] = defaultdict(list)
     for r in rows:
@@ -490,9 +528,9 @@ def gains(learner: str, subject: str = "math") -> dict | None:
     """U4 (+ T6): each skill priced in points, the top 3 together, and the
     extras (grid-ins, pace), tiers and domains. None under 30 answers."""
     rows = _rows(learner, subject)
-    if len(rows) < MIN_ANSWERS or subject != "math":
+    if len(rows) < MIN_ANSWERS:
         return None
-    m = model(rows)
+    m, of, size = model(rows, subject), domain_of(subject), section_size(subject)
     from . import progress
     skills = []
     tier_now = {}
@@ -506,9 +544,9 @@ def gains(learner: str, subject: str = "math") -> dict | None:
     for t, v in m["skills"].items():
         gain = _lift(m, [t])
         k = progress.steps_to(learner, t, progress.STRONG, tier_now.get(t, "medium")) or 0
-        secs = statistics.median(medians[t]) / 1000 if medians[t] else deps.SECONDS_PER_QUESTION
-        skills.append({"topic": t, "domain": DOMAIN_OF[t], "gain": _round5(gain), "raw": round(gain, 2),
-                       "per_test": round(44 * v["share"], 1),
+        secs = statistics.median(medians[t]) / 1000 if medians[t] else deps.PACE[subject]
+        skills.append({"topic": t, "domain": of[t], "gain": _round5(gain), "raw": round(gain, 2),
+                       "per_test": round(size * v["share"], 1),
                        "accuracy": None if v["accuracy"] is None else round(v["accuracy"], 3),
                        "evidence": v["n"], "rough": v["n"] < 10, "to_strong": k,
                        "minutes": round(k * secs / 60, 1)})
@@ -525,13 +563,13 @@ def gains(learner: str, subject: str = "math") -> dict | None:
             g = scoring._interpolate(m["F"] - SPR_SHARE * a_s + SPR_SHARE * a_m) - m["S"]
             extras.append({"kind": "spr", "gain": _round5(g),
                            "detail": {"spr": round(a_s, 3), "mcq": round(a_m, 3), "per_test": 12}})
-    cost = time_cost(learner)
+    cost = time_cost(learner, subject=subject)
     if cost:
         extras.append({"kind": "pace", "gain": cost, "detail": {}})
     board = progress.board(learner, subject)
     by_domain = []
-    for d in progress.DOMAINS:
-        ts = [t for t in m["skills"] if DOMAIN_OF[t] == d]
+    for d in (scoring.RW_DOMAINS if subject == "rw" else progress.DOMAINS):
+        ts = [t for t in m["skills"] if of[t] == d]
         answered = sum(board[t]["answered"] for t in ts if t in board)
         by_domain.append({"domain": d, "gain": _round5(_lift(m, ts)),
                           "mastery": round(statistics.mean([board[t]["mastery"] for t in ts if t in board] or [0]), 3),
@@ -548,7 +586,7 @@ def trap_pts(learner: str, template: str, normalized: str, topic: str) -> int | 
     """V4: a trap's points, gain(t) x share, where share is this trap's wrong
     first tries over all wrong first tries in skill t in 60 days (U1). Whole
     points; None below 1, and while gains is None (under 30 answers)."""
-    g = gains(learner)
+    g = gains(learner, deps.subject_of(topic))
     gain = next((x["gain"] for x in g["skills"] if x["topic"] == topic), None) if g else None
     if not gain:
         return None
@@ -560,22 +598,24 @@ def trap_pts(learner: str, template: str, normalized: str, topic: str) -> int | 
     return pts if pts >= 1 else None
 
 
-def need(target: int, learner: str | None = None) -> dict:
-    """U4 step 7 (+ T12's path): what a Math target takes, in right answers of
-    44, the module-1 route and the skill work."""
+def need(target: int, learner: str | None = None, subject: str = "math") -> dict:
+    """U4 step 7 (+ T12's path): what a section target takes, in right answers
+    of the section (`right_of_44` keeps its name: out of `of`, 54 for R&W), the
+    module-1 route and the skill work."""
     ceiling = scoring.ANCHORS[-1][1]
-    m1_min = math.ceil(scoring.ROUTE_UP_AT * 22 - 1e-9) if target > scoring.LOWER_ROUTE_CEILING else None
-    m = model(_rows(learner)) if learner else None
-    now_of_44 = round(44 * m["F"]) if m and m["answers"] else None
+    n, m1_of = section_size(subject), _spec(subject)["module_size"]
+    m1_min = math.ceil(scoring.ROUTE_UP_AT * m1_of - 1e-9) if target > scoring.CEILING[subject] else None
+    m = model(_rows(learner, subject), subject) if learner else None
+    now_of_44 = round(n * m["F"]) if m and m["answers"] else None
     if target > ceiling:
-        return {"target": target, "reachable": False, "ceiling": int(ceiling), "right_of_44": 44,
-                "now_of_44": now_of_44, "m1_min": m1_min, "where": [], "path": None}
+        return {"target": target, "reachable": False, "ceiling": int(ceiling), "right_of_44": n, "of": n,
+                "now_of_44": now_of_44, "m1_min": m1_min, "m1_of": m1_of, "where": [], "path": None}
     f_star = scoring.fraction_for(target)["fraction"]
-    right = min(44, max(0, math.ceil(44 * f_star - 1e-9)))
-    out = {"target": target, "reachable": True, "ceiling": int(ceiling), "right_of_44": right,
-           "now_of_44": now_of_44, "m1_min": m1_min, "where": [], "path": None}
+    right = min(n, max(0, math.ceil(n * f_star - 1e-9)))
+    out = {"target": target, "reachable": True, "ceiling": int(ceiling), "right_of_44": right, "of": n,
+           "now_of_44": now_of_44, "m1_min": m1_min, "m1_of": m1_of, "where": [], "path": None}
     if m and m["answers"] >= MIN_ANSWERS:
-        g = gains(learner) or {"skills": []}
+        g = gains(learner, subject) or {"skills": []}
         order = [x["topic"] for x in g["skills"]]
         out["where"] = order[:3]
         chosen, F = [], m["F"]
@@ -596,12 +636,11 @@ def route(learner: str, subject: str = "math") -> dict | None:
     rows = _rows(learner, subject)
     if len(rows) < MIN_ANSWERS:
         return None
-    return route_of(rows)
+    return route_of(rows, subject)
 
 
-def route_of(rows) -> dict:
-    from .blueprint import TIERS
-    mix = TIERS["module1"]
+def route_of(rows, subject: str = "math") -> dict:
+    mix = _spec(subject)["tiers"]["module1"]
     p = {}
     for tier in mix:
         rs = [r for r in rows if r["difficulty"] == tier]
@@ -613,20 +652,20 @@ def route_of(rows) -> dict:
             "margin": round(m1 - scoring.ROUTE_UP_AT, 3), "tiers": {t: round(v, 3) for t, v in p.items()}}
 
 
-def time_cost(learner: str, pace: dict | None = None) -> int:
+def time_cost(learner: str, pace: dict | None = None, subject: str = "math") -> int:
     """T8: points lost to the clock alone at the learner's pace. Blanks are the
     module-1 strip's cells after it runs out, and as many at the end of module
     2; each costs only what the learner would have scored on it."""
     from . import progress
-    from .blueprint import TIERS, slots
-    pace = pace or progress.pace(learner)
+    pace = pace or progress.pace(learner, subject=subject)
     fc = pace["forecast"]
     if not fc.get("blanks"):
         return 0
-    rows = _rows(learner)
-    m = model(rows) if rows else None
+    rows = _rows(learner, subject)
+    m = model(rows, subject) if rows else None
     if not m:
         return 0
+    tiers = _spec(subject)["tiers"]
     overall = m["overall"]
     a_tier = {}
     for tier in ("easy", "medium", "hard"):
@@ -634,13 +673,15 @@ def time_cost(learner: str, pace: dict | None = None) -> int:
         a = sum(r["correct"] for r in rs) / len(rs) if rs else overall
         a_tier[tier] = (len(rs) * a + EVIDENCE * overall) / (len(rs) + EVIDENCE)
     latest = db.one("SELECT route FROM sessions WHERE learner=? AND kind IN ('mock','section','paper')"
-                    " AND finished IS NOT NULL AND route IS NOT NULL ORDER BY finished DESC", learner)
+                    " AND finished IS NOT NULL AND route IS NOT NULL AND COALESCE(subject,'math')=?"
+                    " ORDER BY finished DESC", learner, subject)
     up = (latest["route"] == "upper") if latest else m["F"] >= scoring.ROUTE_UP_AT
     form = "module2_upper" if up else "module2_lower"
-    W = sum(scoring.WEIGHT[t] * n for t, n in TIERS["module1"].items()) + \
-        sum(scoring.WEIGHT[t] * n for t, n in TIERS[form].items())
+    W = sum(scoring.WEIGHT[t] * n for t, n in tiers["module1"].items()) + \
+        sum(scoring.WEIGHT[t] * n for t, n in tiers[form].items())
     m1_tiers = [c["tier"] for c in fc["strip"][fc["runs_out_at"]:]] if fc.get("runs_out_at") is not None else []
-    m2_tiers = fc.get("m2_blank_tiers") or [tier for _d, tier, _f in slots(form, 2)][-len(m1_tiers):]
+    ladder = [t for t in ("easy", "medium", "hard") for _ in range(tiers[form][t])]     # a module runs easiest first
+    m2_tiers = fc.get("m2_blank_tiers") or ladder[-len(m1_tiers):]
     lost = sum(scoring.WEIGHT[t] * a_tier[t] for t in m1_tiers + m2_tiers) / W
     return max(0, _round5(m["S"] - scoring._interpolate(m["F"] - lost)))
 
@@ -652,16 +693,18 @@ def practice_delta(learner: str, since: str, subject: str = "math") -> dict:
     after = _rows(learner, subject)
     if not after:
         return {"pts": 0, "answers": 0, "since": since}
-    delta = model(after)["S"] - (model(before)["S"] if before else scoring._interpolate(model([])["F"]))
+    delta = model(after, subject)["S"] - (model(before, subject)["S"] if before
+                                          else scoring._interpolate(model([], subject)["F"]))
     return {"pts": _round5(delta), "raw": round(delta, 2), "answers": len(after) - len(before), "since": since}
 
 
 # ------------------------------------------------------------------ U9: projection
 
-def project(points: list[tuple[dt.date, float]], to_day: dt.date, half_latest: float) -> dict | None:
-    """U9, pure: a shrunk, tapered least-squares line. `ponytail:` replace with
-    a fitted growth model once enough learners have sat both a module and the
-    real SAT to calibrate against."""
+def project(points: list[tuple[dt.date, float]], to_day: dt.date, half_latest: float | None = None) -> dict | None:
+    """U9, pure: a shrunk, tapered least-squares line, shown as scoring's band
+    around where it lands (`half_latest` is ignored; every band is +- 10).
+    `ponytail:` replace with a fitted growth model once enough learners have sat
+    both a module and the real SAT to calibrate against."""
     points = sorted(points)
     n = len(points)
     if n < 3 or (points[-1][0] - points[0][0]).days < 21:
@@ -676,19 +719,15 @@ def project(points: list[tuple[dt.date, float]], to_day: dt.date, half_latest: f
     w = max(0.0, (to_day - points[-1][0]).days / 7)
     gain = b2 * min(w, 4) + max(-20.0, min(20.0, b2)) * max(w - 4, 0)
     mid_ = max(200.0, min(800.0, anchor + gain))
-    resid = [yi - (yb + b * (xi - xb)) for xi, yi in zip(x, y)]
-    s = math.sqrt(sum(r * r for r in resid) / (n - 2)) if n > 2 else 0.0
-    x0 = x[-1] + w
-    err = s * math.sqrt(1 + 1 / n + (x0 - xb) ** 2 / sxx)
-    half = max(60, min(150, _round10(half_latest + err)))
-    return {"mid": round(mid_), "low": max(200, round(mid_ - half)), "high": min(800, round(mid_ + half)),
-            "half": half, "slope": round(b, 1), "slope_used": round(b2, 1), "n": n, "to": to_day.isoformat(),
+    band = scoring.band(mid_)
+    return {"mid": round(mid_), "low": band["low"], "high": band["high"], "half": scoring.HALF,
+            "slope": round(b, 1), "slope_used": round(b2, 1), "n": n, "to": to_day.isoformat(),
             "label": "If this pace held"}
 
 
-def projection(learner: str, to_day: str | dt.date | None = None) -> dict | None:
-    """U9: the band on a date, from 3+ scored standard sittings over 21+ days
-    in the last 90."""
+def projection(learner: str, to_day: str | dt.date | None = None, subject: str = "math") -> dict | None:
+    """U9: the band on a date, from 3+ scored standard sittings of the subject
+    over 21+ days in the last 90."""
     if to_day is None:
         row = db.one("SELECT exam_date FROM learners WHERE id=?", learner)
         to_day = row["exam_date"] if row and row["exam_date"] else None
@@ -696,51 +735,47 @@ def projection(learner: str, to_day: str | dt.date | None = None) -> dict | None
         return None
     day = dt.date.fromisoformat(to_day) if isinstance(to_day, str) else to_day
     cutoff = dt.date.today() - dt.timedelta(days=90)
-    items = [x for x in _sittings(learner) if x["standard"] and dt.date.fromisoformat(x["at"][:10]) >= cutoff]
-    if not items:
-        return None
-    latest = items[0]
-    return project([(dt.date.fromisoformat(x["at"][:10]), x["mid"]) for x in items], day,
-                   (latest["high"] - latest["low"]) / 2)
+    items = [x for x in _sittings(learner, subject) if x["standard"] and dt.date.fromisoformat(x["at"][:10]) >= cutoff]
+    return project([(dt.date.fromisoformat(x["at"][:10]), x["mid"]) for x in items], day) if items else None
 
 
 # ------------------------------------------------------------------ totals and placement
 
 def total(learner: str, sid: str | None = None) -> dict | None:
-    """SR4: Math measured here plus the R&W the student entered (or an
-    outside R&W score within 60 days), placed on College Board's total table."""
-    lr = db.one("SELECT rw_now, rw_target, target, updated FROM learners WHERE id=?", learner)
-    outside = db.one("SELECT day, rw, source FROM outside_scores WHERE learner=? AND rw IS NOT NULL"
-                     " ORDER BY day DESC", learner)
-    fresh = outside and (dt.date.today() - dt.date.fromisoformat(outside["day"])).days <= 60
-    if fresh:
-        rw = {"subject": "rw", "value": outside["rw"], "source": outside["source"] or "other", "at": outside["day"]}
-    elif lr and lr["rw_now"]:
-        rw = {"subject": "rw", "value": lr["rw_now"], "source": "self", "at": (lr["updated"] or "")[:10] or None}
-    else:
+    """SR4: an R&W centre plus a Math centre, +- 10 (scoring.total_band), placed
+    on College Board's total table. Each side is `sid` (and a full SAT part's
+    partner) for its own subject, else that subject's current() score. Never two
+    ranges added."""
+    parts: dict[str, dict] = {}
+    row = db.one("SELECT * FROM sessions WHERE id=?", sid) if sid else None
+    full = (_cfg(row).get("full") or {}).get("id") if row else None
+    mine = [row] if row else []
+    if full:
+        mine += db.rows("SELECT * FROM sessions WHERE learner=? AND id<>? AND json_extract(cfg,'$.full.id')=?",
+                        row["learner"], sid, full)
+    for r in mine:
+        band = json.loads(r["result"] or "{}").get("estimate") if r["result"] else None
+        if isinstance(band, dict) and band.get("low") is not None:
+            parts[_subject(r)] = {"low": band["low"], "high": band["high"], "mid": _mid(band),
+                                  "capped": bool(band.get("capped")), "n": 1, "source": "measured",
+                                  "at": r["finished"], "id": r["id"]}
+    for subject in ("rw", "math"):
+        if subject not in parts and (now := current(learner, subject)):
+            parts[subject] = now
+    if set(parts) != {"rw", "math"}:
         return None
-    band = None
-    if sid:
-        row = db.one("SELECT result FROM sessions WHERE id=?", sid)
-        band = (json.loads(row["result"] or "{}").get("estimate") if row and row["result"] else None)
-    if not band:
-        e = estimate(learner)
-        band = e["latest"] if e["latest"] else None
-    if not band or band.get("low") is None:
-        return None
-    low, high = band["low"] + rw["value"], band["high"] + rw["value"]
+    parts = {s: {"subject": s, **p, "value": _round10(p["mid"])} for s, p in parts.items()}
+    lr = db.one("SELECT rw_target, target FROM learners WHERE id=?", learner)
+    t = scoring.total_band(parts["rw"]["mid"], parts["math"]["mid"])
     gap = None
     if lr and lr["target"] and lr["rw_target"]:
-        path = None
-        if sid:
-            path = _path(sid, lr["target"])
-        gap = {"target": lr["target"] + lr["rw_target"], "above_high": lr["target"] + lr["rw_target"] - high,
-               "math_path": path, "rw_to_target": lr["rw_target"] - rw["value"]}
+        path = _path(sid, lr["target"]) if sid and parts["math"]["id"] == sid else None
+        gap = {"target": lr["target"] + lr["rw_target"], "above_high": lr["target"] + lr["rw_target"] - t["high"],
+               "math_path": path, "rw_to_target": lr["rw_target"] - parts["rw"]["value"]}
     history = [{"day": r["day"], "value": r["rw"], "source": r["source"]}
                for r in db.rows("SELECT day, rw, source FROM outside_scores WHERE learner=? AND rw IS NOT NULL"
                                 " ORDER BY day", learner)]
-    return {"low": low, "high": high, "pct": national(low, high, "total"),
-            "parts": [{"subject": "math", "low": band["low"], "high": band["high"], "source": "measured"}, rw],
+    return {**t, "pct": national(t["low"], t["high"], "total"), "parts": [parts["rw"], parts["math"]],
             "gap": gap, "rw_history": history}
 
 
@@ -762,21 +797,21 @@ def _path(sid: str, target: int) -> list[str] | None:
     return chosen if rescore(sid, right=chosen)["mid"] >= target else None
 
 
-def growth(learner: str) -> dict | None:
+def growth(learner: str, subject: str = "math") -> dict | None:
     """X15: mean3 against the first ranked section's midpoint, among learners
-    whose first ranked section was within 40 points and who have sat two or
-    more ranked sections (n >= 20)."""
+    whose first ranked section of the subject was within 40 points and who have
+    sat two or more ranked sections of it (n >= 20)."""
     def firsts() -> dict[str, list[float]]:
         out: dict[str, list[float]] = defaultdict(list)
         for x in db.rows(f"SELECT * FROM sessions WHERE finished IS NOT NULL AND kind IN ('mock','section','paper')"
                          f" AND {db.NOT_SAMPLE} ORDER BY finished,id"):
             e = (json.loads(x["result"] or "{}").get("estimate") or {}) if x["result"] else {}
-            if _standard(x) and _subject(x) == "math" and e.get("low") is not None:
-                out[x["learner"]].append((e["low"] + e["high"]) / 2)
+            if _standard(x) and _subject(x) == subject and e.get("low") is not None:
+                out[x["learner"]].append(_mid(e))
         return out
     seq = firsts()
     mine = seq.get(learner)
-    now3 = _mean3(_sittings(learner)) if mine and len(mine) >= 2 else None
+    now3 = _mean3(_sittings(learner, subject)) if mine and len(mine) >= 2 else None
     if now3 is None:
         return None
     my_gain = now3 - mine[0]
@@ -784,7 +819,7 @@ def growth(learner: str) -> dict | None:
     for k, s in seq.items():
         if k != learner and len(s) >= 2 and abs(s[0] - mine[0]) <= 40:
             # ponytail: one read per nearby peer; keep mean3 on learners if peers grow into thousands
-            m3 = _mean3(_sittings(k))
+            m3 = _mean3(_sittings(k, subject))
             if m3 is not None:
                 peers.append(m3 - s[0])
     if len(peers) < 20:
@@ -793,28 +828,29 @@ def growth(learner: str) -> dict | None:
             "pct": round(100 * sum(g < my_gain for g in peers) / len(peers))}
 
 
-def calibration(learner: str) -> dict:
-    """X15: official or Bluebook scores dated within 10 days of a ranked
-    section, against that section's band."""
-    sections = [x for x in _sittings(learner) if x["standard"] and x["kind"] in SECTION_KINDS]
+def calibration(learner: str, subject: str = "math") -> dict:
+    """X15: official or Bluebook scores of the subject dated within 10 days of
+    a ranked section of it, against that section's band."""
+    col = "rw" if subject == "rw" else "math"     # outside_scores has one column per subject
+    sections = [x for x in _sittings(learner, subject) if x["standard"] and x["kind"] in SECTION_KINDS]
     pairs = []
-    for o in db.rows("SELECT * FROM outside_scores WHERE learner=? AND math IS NOT NULL"
+    for o in db.rows(f"SELECT * FROM outside_scores WHERE learner=? AND {col} IS NOT NULL"
                      " AND source IN ('bluebook','official') ORDER BY day", learner):
         day = dt.date.fromisoformat(o["day"])
         near = [s for s in sections if abs((dt.date.fromisoformat(s["at"][:10]) - day).days) <= 10]
         if near:
             s = min(near, key=lambda s: abs((dt.date.fromisoformat(s["at"][:10]) - day).days))
-            pairs.append({"score": o["math"], "day": o["day"], "source": o["source"], "section": s["id"],
+            pairs.append({"score": o[col], "day": o["day"], "source": o["source"], "section": s["id"],
                           "band": {"low": s["low"], "high": s["high"]},
-                          "inside": s["low"] <= o["math"] <= s["high"]})
+                          "inside": s["low"] <= o[col] <= s["high"]})
     checked = 0             # pairs across every real learner, for "Checked against n scores"
-    for o in db.rows(f"SELECT learner, day FROM outside_scores WHERE math IS NOT NULL"
+    for o in db.rows(f"SELECT learner, day FROM outside_scores WHERE {col} IS NOT NULL"
                      f" AND source IN ('bluebook','official') AND {db.NOT_SAMPLE}"):
         lo = (dt.date.fromisoformat(o["day"]) - dt.timedelta(days=10)).isoformat()
         hi = (dt.date.fromisoformat(o["day"]) + dt.timedelta(days=11)).isoformat()
         checked += any(_standard(x) for x in db.rows(
             "SELECT * FROM sessions WHERE learner=? AND kind IN ('mock','section','paper')"
-            " AND finished>=? AND finished<?", o["learner"], lo, hi))
+            " AND COALESCE(subject,'math')=? AND finished>=? AND finished<?", o["learner"], subject, lo, hi))
     return {"pairs": pairs, "latest": pairs[-1] if pairs else None, "inside": sum(p["inside"] for p in pairs),
             "checked": checked}
 
@@ -844,23 +880,57 @@ if __name__ == "__main__":
         assert r == 0 or scoring._interpolate((r - 1) / 44) < target, target
     assert scoring.route_after(need(700)["m1_min"], 22) == "upper"
     assert scoring.route_after(need(700)["m1_min"] - 1, 22) == "lower"
+    # R&W: its own skills, a 54-question section, 27-question modules
+    rw = weights("rw")
+    assert abs(sum(shares("rw").values()) - 1) < 1e-9 and set(domain_of("rw").values()) == set(scoring.RW_DOMAINS)
+    assert abs(shares("rw")["rw_cross_text_connections"] - 15 / 54 * 181 / 1400) < 1e-9
+    assert model(rows_at({t: 0.9 for t in rw}), "rw")["S"] > model(rows_at({t: 0.5 for t in rw}), "rw")["S"]
+    assert (need(700, subject="rw")["of"], need(700, subject="rw")["m1_min"]) == (54, 17)
+    assert scoring.route_after(17, 27) == "upper" and scoring.route_after(16, 27) == "lower"
+    # the 20-point rule: a lower route holds the centre at its ceiling, so only points under it count
+    for c in (300, 522, 575, 606, 780):
+        for r in (None, "upper", "lower"):
+            b = mid(scoring.fraction_for(c)["fraction"], 1, r)
+            assert b["high"] - b["low"] == 20 and (r != "lower" or b["high"] <= 580), (c, r, b)
+    assert mid(scoring.fraction_for(606)["fraction"], 1, "lower")["mid"] == 580
+    assert mid(scoring.fraction_for(522)["fraction"], 1, "lower")["mid"] == 522
     # P10: the route check
     all_right = [{"difficulty": t, "correct": 1} for t in ("easy", "medium", "hard") for _ in range(20)]
-    assert route_of(all_right)["route"] == "upper"
+    assert route_of(all_right)["route"] == "upper" and route_of(all_right, "rw")["route"] == "upper"
     assert route_of([{**r, "correct": 0} for r in all_right])["route"] == "lower"
-    # U9: a flat series projects its own mean; no more than 20 a week after week 4
+    # U9: a flat series projects its own mean; no more than 20 a week after week 4; a 20-point band
     d0 = dt.date(2026, 9, 1)
     flat = project([(d0, 500), (d0 + dt.timedelta(days=14), 500), (d0 + dt.timedelta(days=28), 500)],
-                   d0 + dt.timedelta(days=120), 70)
-    assert flat["mid"] == 500
+                   d0 + dt.timedelta(days=120))
+    assert flat["mid"] == 500 and (flat["low"], flat["high"]) == (490, 510)
     steep = [(d0, 400), (d0 + dt.timedelta(days=14), 500), (d0 + dt.timedelta(days=28), 600)]
-    a = project(steep, d0 + dt.timedelta(days=28 + 7 * 10), 70)["mid"]
-    b = project(steep, d0 + dt.timedelta(days=28 + 7 * 11), 70)["mid"]
+    a = project(steep, d0 + dt.timedelta(days=28 + 7 * 10))["mid"]
+    b = project(steep, d0 + dt.timedelta(days=28 + 7 * 11))["mid"]
     assert b - a <= 20 + 1
-    assert project(steep[:2], d0 + dt.timedelta(days=60), 70) is None
+    assert project(steep[:2], d0 + dt.timedelta(days=60)) is None
     three = project([(dt.date(2026, 9, 1), 500), (dt.date(2026, 9, 15), 560), (dt.date(2026, 9, 22), 600)],
-                    dt.date(2026, 11, 7), 70)
-    assert three["mid"] < 700 and abs(three["mid"] - 683) <= 3, three
+                    dt.date(2026, 11, 7), 70)        # api_today still passes a half; it no longer widens anything
+    assert three["mid"] < 700 and abs(three["mid"] - 683) <= 3 and three["high"] - three["low"] == 20, three
+    top = project([(d0, 760), (d0 + dt.timedelta(days=14), 790), (d0 + dt.timedelta(days=28), 800)], d0 + dt.timedelta(days=90))
+    assert (top["low"], top["high"]) == (780, 800), top
+    assert scoring.total_band(745, 752) == {"low": 1490, "high": 1510, "mid": 1497}
+    # current(): one sitting keeps its own band; three are the band of their mean; all capped stays under 580
+    def sat(mid_, capped=False, outside=False, at="2026-10-0"):
+        b = scoring.section_band(mid_, "lower" if capped else None)
+        return {**b, "id": f"s{mid_}", "outside": outside, "at": at, "source": "bluebook" if outside else None}
+    one = current("x", "math", [sat(612.4)])
+    assert (one["low"], one["high"], one["mid"], one["n"], one["source"]) == (600, 620, 612.4, 1, "measured")
+    three = current("x", "math", [sat(640), sat(600), sat(560), sat(400)])
+    assert (three["low"], three["high"], three["mid"], three["n"]) == (590, 610, 600, 3), three
+    capped = current("x", "math", [sat(640, True), sat(620, True), sat(600, True)])
+    assert capped["high"] <= 580 and capped["capped"] and capped["mid"] == 580, capped
+    assert not current("x", "math", [sat(640, True), sat(600)])["capped"]
+    old = [{"id": "o1", "low": 500, "high": 640, "at": "2026-09-01"}, {"id": "o2", "low": 560, "high": 580, "at": "2026-08-01"}]
+    assert (current("x", "math", old[:1])["mid"], current("x", "math", old)["low"]) == (570, 560)   # pre-migration shape
+    logged = current("x", "rw", [sat(650, outside=True)])
+    assert (logged["low"], logged["high"], logged["source"], logged["id"]) == (640, 660, "bluebook", None)
+    t = scoring.total_band(three["mid"], logged["mid"])
+    assert (t["low"], t["high"]) == (1240, 1260)
     # SR1: Shapley shares sum to the whole and ignore labels
     v = lambda s: {frozenset(): 0, frozenset("a"): 10, frozenset("b"): 20, frozenset("ab"): 40}[s]  # noqa: E731
     sh = _shapley(v, ["a", "b"])

@@ -1,0 +1,66 @@
+# runner.js raw
+- 119-220 timer: subject-neutral; warns default [300,60]; unhides at 5:00.
+- 224-339 saveQueue: neutral, keyed by sid; localStorage satf.pending.{sid}.
+- 343 overBudget default pace 95000 ms (math). 566, 665 exam over-budget ring 2*(budget||pace||95000).
+- 435-609 navPanel: neutral (cells), title o.title||'Questions'.
+- 634-783 checkYourWork: lead text 645 'Once you move on, you can't come back to this module.'; 728 'Pace is ... a question'; 735 blank advice.
+- 785-961 annotate: addrs 's' stem, 't:r:c' table, 'o:i' option (comment 786-789). Generic [data-addr] lookup (801) so passage needs data-addr on passage node (check question.js / runner for 'p').
+- 989-1115 scratch neutral.
+- 1117-1194 REF (math reference sheet), refDock, refSheet.
+- 1197-1215 DIRECTIONS: Math-only text (calculator permitted, SPR rules). 1217-1234 directionsSheet appends UI.spr.directions() table.
+- 1241 doc: title 'Math · Module 1 of 2'.
+- 1269 G, COL_MIN 560, SLOT_W 300, PASSAGE_MIN 320, PASSAGE_MAX 960 (passage pane constants exist).
+- 1291-1296 cfg: calc o.calc!==false, ref o.ref!==false, annotate, scratch default exam, dirs default exam. NOT per-item subject: set once per runner.
+- 1309 isMc = q().type!=='spr'.
+- 1337-1338 condChip 'Training'/'Ranked'.
+- 1349-1358 tool buttons: exam order [annB, scrB, notesB, calcB, refB, moreB]. calc 'G', ref 'F'.
+- 1424-1430 passage pane <section class=rn-passage data-nofold> "wide screens only: an R&W question's passage, table and figure, moved here from the workspace (ws.passageNodes)".
+- 1431 dock (calculator) and passage share left grid column (1481-1483: passage wins).
+- 1472-1505 layout(): --passage-w, has-passage class; passageW default half split (Bluebook), satf.passage.w.
+- 1531-1539 passage grip resize.
+- 1550 TABS: details(practice 1280+), ref (if cfg.ref), notes, spr 'Entry rules' (if !isMc).
+- 1599-1604 detailsFit: it.q.text -> passage width counted.
+- 1709 wsOpts passes calc: cfg.calc, ref: cfg.ref to UI.workspace (runner-level, not per item).
+- 1754-1755 destroyWs clears passage.
+- 1757-1772 fitsPassage/placePassage: if it.q.text && !phone() && fits -> passageBody.append(ws.passageNodes); else inline in workspace. Works in exam mode too (no mode check).
+- 1792-1800 annotate(bodyEl,...) so marks anchor on passage pane or inline.
+- 1819-1832 sprHelp: exam && !isMc -> opens 'spr' Entry rules slot (>=1180) or disclosure. Per item, so RW (all MC) never triggers.
+- 1850 practice 'Grid-in' badge.
+- 1866 elimB hidden when !isMc.
+- 1972-1988 paceTicks: checkpoints [7,14] hard-coded (math 22-question thirds; RW 27 would be 9,18).
+- 1998 exam footer label: phone `${o.short||'M1'} · n of total`, else `Question n of total`.
+- 2003 exam next label last() ? 'Review' : 'Next'.
+- 2163-2168 leave(): saves calc exprs per question (math).
+- 2241 navPanel pace_ms: 95000 hard-coded; 2292 checkYourWork pace_ms: 95000; 2293 odds value fallback 95 s.
+- 2265-2266 finish() exam -> openReview (Check your work); onFinish -> emit('finish') -> test.js handIn.
+- 2361-2366 toggleCalc guarded only by cfg.calc.
+- 2409 report title `Question n, ${o.short}`.
+- 2452 Details 'Format' Grid-in vs Multiple choice.
+- 2481 More Directions; 2492 answer pad for grid-ins; 2500 'Hand in this module…'.
+- 2522-2525 practice calc mode menu if cfg.calc.
+- 2610-2624 timeUp: closes calc; emits timeUp -> test.js.
+- 2641 budgetAt fallback 95000. 2648 time sink nudge >max(2*budget,150 s).
+- 2663-2681 paceDelta exam checkpoints [7,14] toast 'behind at Q8/Q15'.
+- 2726-2733 fullscreen banner.
+- 2810 G calculator key; 2811-2817 F reference key (cfg.ref).
+- 2906 auto-open calc if prefs.calc_mode and cfg.calc.
+- 2910-2996 UI.between: o.seconds (test.js passes 60); 2950 title default 'Module 1 is in'; 2959 'Module 2 starts in'; 2963 'Begin module 2 now'/'Begin module 2'; 2978 'Getting module 2 ready…'; 2989 'Module 2 starts in k seconds'; 2995. Strings all module-2 hard-coded; o.title overridable only for h1. No break-screen (10 min) concept; but seconds param generic.
+- 2918-2942 predictGrid/predictSheet neutral.
+- 3006 review items include subject. 3019 'UI.review.at(items) reads #q=m1-7'. 3023 sitting {subjects}.
+- 3050 QF (flat review row q fields) lacks 'text' -> a flat row's passage dropped in rvPrep (check).
+- 3054 LET 'ABCDE'.
+# review player & helpers
+- runner.js 3074 rvAddr uses UI.qlabel.addr -> `${subject}-m${module}-${n}`; 3075-3084 rvAt parses #q=(math|rw)-m1-7 and matches subject+module+n. Multi-subject ready.
+- 3160-3165 review player tools always include Calculator + Reference (not subject gated). 3179-3191.
+- 3274 label via UI.qlabel(it, o.sitting): kit.js 2933-2949 SUBJECT {math, rw (label 'Reading and Writing', short 'R&W', 200-800)}; qlabel prefixes subject short when sitting.subjects>1 -> 'R&W M1 Q5'. report page passes sitting:{subjects:1} (report/page.js 1663).
+- 3440-3455 review renders UI.workspace(qb, q) -> passage inline (no two-pane in player); marks annotate read-only on ws.el.
+- 3541 cause 'entry' only for spr. 3957 Format row.
+# question.js (workspace)
+- 399-401 R&W speech; 429-445 passage(q): <div class=q-passage data-addr='p' data-nofold>, paragraphs, 'Text 1/Text 2' labels, <u>, blanks.
+- 570-576 fig/table/passage inline; 640 R&W options prose (data-addr o:i, no TeX when q.text).
+- 1670-1671 tools(): calc if o.calc!==false, ref if o.ref!==false.
+- 1754 ws.passageNodes [figEl, tableEl, passEl].
+# practice/session/session.js
+- 176-215 UI.runner mode 'practice': does NOT pass calc/ref -> calculator + reference show on R&W practice too. Passage pane works via runner.placePassage (mode-agnostic). 66, 87 subject passed to /drill.
+- 80-81 marksIn/Out keep addr as-is (practice), test.js maps 's'->'stem' only; passage addr 'p' would be sent as at:'p'.
+# ui.js 652-680: DOMAINS (4 math) and TOPICS (19 math) only; RW_SKILL map (10 rw slugs -> names) with no domain grouping. UI.TOPIC lacks rw.

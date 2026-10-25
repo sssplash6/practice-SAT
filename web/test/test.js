@@ -23,15 +23,15 @@
   const toast = (t, o) => (UI.toast ? UI.toast(t, o) : null);
   const mmss = s => UI.mmss(Math.max(0, Math.round(s || 0)));
   const plural = (n, one, many) => `${n} ${n === 1 ? one : many || one + 's'}`;
-  const cap = t => (t ? t[0].toUpperCase() + t.slice(1) : '');
   const reduced = () => (UI.reduced ? UI.reduced() : matchMedia('(prefers-reduced-motion: reduce)').matches);
   const ss = {
     get(k) { try { return sessionStorage.getItem(k); } catch (_) { return null; } },
     set(k, v) { try { sessionStorage.setItem(k, v); } catch (_) {} },
   };
-  const icon = (name, size = 18) => h('span', { class: 'ic', 'aria-hidden': 'true', html: UI.svg(UI.ICON[name] || UI.ICON.dot || '', size) });
-  const subjectLabel = s => ((UI.SUBJECT || {})[s] || {}).label || cap(s || 'math');
+  const icon = (name, size = 18) => h('span', { class: 'ic', 'aria-hidden': 'true', html: UI.svg(UI.ICON[name] || '', size) });   // an unknown name draws nothing (was an orange dot that hid typos)
   const LIVE = `satf.test.live.${sid}`;
+  // the screen's one button takes focus on load so Enter goes on, with no ring until a key moves focus (data-quiet)
+  const quietFocus = el => { el.dataset.quiet = ''; el.addEventListener('blur', () => delete el.dataset.quiet, { once: true }); el.focus({ preventScroll: true }); };
   let wantReview = location.hash === '#review';     // Tests' "Hand in" on an in-progress row
   const TRAINING_AIDS = [
     ['pace', 'Pace guide', 'Paced to your own speed on the progress strip and under the clock'],
@@ -56,13 +56,23 @@
   const two = () => (S.modules || []).length > 1;
   const lastModule = () => !two() || (S.module || 1) >= (S.modules || []).length;
   const training = () => S.conditions === 'training';
+  // Reading and Writing: 27 questions in 32 minutes a module (71 s a question), every question a passage, and no
+  // calculator, reference sheet or Math directions; Math: 22 in 35 (95 s)
+  const rw = () => S.subject === 'rw';
+  const SPEC = { math: { n: 22, secs: 2100, pace: 95 }, rw: { n: 27, secs: 1920, pace: 71 } };
+  const spec = () => SPEC[S.subject] || SPEC.math;
+  // a full SAT: two linked sittings, R&W (part 1) then Math (part 2), with Bluebook's 10-minute break between
+  const fullPart = () => (S.full && S.full.part) || 0;
+  const BREAK_S = 600;
+  const fullHref = id => `/results/full/?id=${encodeURIComponent(id)}`;
   const qidsAnswered = () => Object.values(S.answers || {}).filter(v => v !== null && v !== undefined && v !== '').length;
   const marked = () => Object.entries(S.qstate || {}).filter(([k, v]) => k !== '_session' && v && v.marked).length;
   const baseSeconds = () => {
     if (S.duration) return Math.round(S.duration / (S.factor || 1));
-    return ['custom', 'diagnostic'].includes(S.kind) ? (S.question_count || 22) * 95 : 2100;
+    return ['custom', 'diagnostic'].includes(S.kind) ? (S.question_count || spec().n) * spec().pace : spec().secs;
   };
-  const title = () => `${S.kind_label}${S.number ? ` #${S.number}` : ''}`;
+  // a full SAT's two parts carry the full SAT's number (full.number), not each sitting's own
+  const title = () => { const k = (S.full && S.full.number) || S.number; return `${S.kind_label}${k ? ` #${k}` : ''}`; };
   function timingText(t, per) {
     const b = baseSeconds();
     const each = per || (two() ? ' for each module' : '');
@@ -71,7 +81,7 @@
     const t0 = Math.round(b * f);
     const clock = `${Math.floor(t0 / 60)}:${String(t0 % 60).padStart(2, '0')}`;
     const extra = { 'x1.5': ' · time and a half', x2: ' · double time', 'x0.85': ' · tight clock' }[t] || '';
-    if (S.kind === 'custom' && t === 'official') return `95 s a question · ${clock}`;
+    if (S.kind === 'custom' && t === 'official') return `${spec().pace} s a question · ${clock}`;
     return `${clock}${each}${extra}`;
   }
   const elNow = () => {
@@ -148,8 +158,8 @@
     destroyRun();
     runHost.hidden = true;
     view.hidden = false;
-    const exit = o.exit === null ? null : h('button', { type: 'button', class: 'tw-exit', 'aria-label': o.exitLabel || 'Back to Tests', title: o.exitLabel || 'Back to Tests',
-      onclick: o.exit || (() => { location.href = '/tests/'; }) }, icon('x', 20), h('span', { class: 'tw-exit-l', text: o.exitLabel || 'Back to Tests' }));
+    const exit = o.exit === null ? null : h('button', { type: 'button', class: 'rn-exit', 'aria-label': o.exitLabel || 'Back to Tests', title: o.exitLabel || 'Back to Tests',
+      onclick: o.exit || (() => { location.href = '/tests/'; }) }, icon('x', 20), h('span', { class: 'rn-exit-l', text: o.exitLabel || 'Back to Tests' }));
     const top = h('header', { class: 'tw-top' }, exit, h('span', { class: 'tw-title', text: o.title || '' }));
     const body = h('div', { class: 'tw-body' + (o.wide ? ' wide' : '') });
     view.replaceChildren(top, body);
@@ -160,7 +170,7 @@
   function loading(text) {
     const b = frame({ title: text || '', exit: null });
     const box = h('div', { class: 'tw-card', 'aria-busy': 'true', 'aria-label': text || 'Loading the test' });
-    if (UI.skel) { UI.skel(box, 'lines:3'); UI.skel(box, { w: '100%', h: 44, r: 999 }); }
+    if (UI.skel) { UI.skel(box, 'lines:3'); UI.skel(box, { w: '100%', h: 42, r: 10 }); }
     b.append(box);
     return b;
   }
@@ -194,6 +204,7 @@
     if (S.abandoned) return discarded();
     if (S.finished) return finishedAway();
     if (two() && (S.module || 1) > 1 && !S.begun && !S.paused) return between();
+    if (fullPart() === 2 && !S.begun && !S.paused && (S.module || 1) === 1 && breakLeft() > 0) return breakScreen();
     if (!S.begun || S.paused) return lobby();
     if (S.seconds !== null && S.seconds !== undefined && S.seconds <= 0) return lobby('expired');
     if (!ss.get(LIVE)) return lobby('left');
@@ -201,78 +212,78 @@
   }
 
   /* ---------------- the lobby (4.2, X1, X2) */
-  function fact(text, ic) { return h('li', {}, icon(ic || 'dot', 18), h('span', { text })); }
+  const fact = text => h('li', { text });
   function lobby(how) {
     const paused = !!S.paused, fresh = !S.begun && !paused;
     const b = frame({ title: S.section, hash: 'lobby' });
     const card = h('section', { class: 'tw-card lobby', id: 'lobby', 'aria-labelledby': 'lobbyH' });
     const n = S.question_count || 0;
     const answered = qidsAnswered();
-    card.append(h('p', { class: 'k', text: paused ? 'Paused' : `${subjectLabel(S.subject)}${S.number ? ` · #${S.number}` : ''}` }),
-      h('h1', { class: 'h1', id: 'lobbyH', text: paused || how ? title() : S.kind_label }));
+    // the subject is the top bar's (S.section): the h1 is the test, and says when it is paused
+    card.append(h('h1', { class: 'h1', id: 'lobbyH', text: paused ? `${title()}, paused` : title() }));
+    if (how === 'break') card.append(h('p', { class: 'tw-lead', 'data-nofold': '', text: 'The break is over. Math starts when you begin.' }));
     const facts = h('ul', { class: 'tw-facts' });
     if (fresh) {
       if (two()) {
-        facts.append(fact(`${S.modules.length} modules · ${S.modules[0].questions} questions each`, 'tests'));
-        facts.append(fact(S.why === 'fixed route' ? 'Module 2 is fixed, whatever module 1 gives' : 'Module 2 is chosen by how module 1 goes', 'arrow'));
-        facts.append(fact('Once you move on, you can’t go back to a module', 'check'));
-      } else facts.append(fact(`${plural(n, 'question')}`, 'tests'));
+        facts.append(fact(`${S.modules.length} modules · ${S.modules[0].questions} questions each`));
+        facts.append(fact(S.why === 'fixed route' ? 'Module 2 is fixed, whatever module 1 gives' : 'Module 2 is chosen by how module 1 goes'));
+        facts.append(fact('Once you move on, you can’t go back to a module'));
+      } else facts.append(fact(`${plural(n, 'question')}`));
+      if (fullPart() === 1) facts.append(fact('Then a 10-minute break, then Math: the whole SAT, as on test day'));
+      if (fullPart() === 2) facts.append(fact('The second half of your full SAT: the total comes when you hand it in'));
       const shared = S.new_to_you !== undefined && S.new_to_you < n;
-      facts.append(fact(shared ? `${S.new_to_you} of its ${n} questions are new to you` : 'Every question is new to you', 'plus'));
+      facts.append(fact(shared ? `${S.new_to_you} of its ${n} questions are new to you` : 'Every question is new to you'));
       const hd = S.holds;
       if (hd && hd.domains) {
         const parts = Object.entries(hd.domains).filter(([, v]) => v).map(([k, v]) => `${k} ${v}`);
         if (hd.grid_ins) parts.push(plural(hd.grid_ins, 'grid-in'));
-        facts.append(fact(`What it holds: ${parts.join(' · ')}`, 'text'));
+        facts.append(fact(`What it holds: ${parts.join(' · ')}`));
         const nt = hd.never && hd.never === hd.new_types ? [`${plural(hd.never, 'question type')} you’ve never met`]
           : [hd.new_types ? `${plural(hd.new_types, 'question type')} you haven’t met under the clock` : null, hd.never ? `${hd.never} you’ve never met at all` : null].filter(Boolean);
-        if (nt.length) facts.append(fact(nt.join(' · '), 'search'));
+        if (nt.length) facts.append(fact(nt.join(' · ')));
       }
-      if (/trainer/i.test(S.kind_label)) facts.append(fact(`The line: ${Math.ceil(0.6 * n)} of ${n} right routes you up`, 'trophy'));
+      if (/trainer/i.test(S.kind_label)) facts.append(fact(`The line: ${Math.ceil(0.6 * n)} of ${n} right routes you up`));
     } else {
       const m = S.module || 1;
       const where = two() ? `Module ${m} of ${S.modules.length} · ` : '';
-      facts.append(fact(`${where}${answered} of ${n} answered${marked() ? ` · ${marked()} marked` : ''}`, 'tests'));
+      facts.append(fact(`${where}${answered} of ${n} answered${marked() ? ` · ${marked()} marked` : ''}`));
       const left = S.seconds;
-      if (how === 'expired') facts.append(fact(`Time ran out while you were away. Your ${plural(answered, 'answer')} ${answered === 1 ? 'is' : 'are'} saved.`, 'clock'));
-      else if (how === 'left') facts.append(fact(left === null ? 'You left without Save and exit. The clock counts up from where it was.' : `You left without Save and exit, so the clock kept running: ${mmss(left)} left.`, 'clock'));
-      else facts.append(fact(left === null ? 'Untimed. The clock is stopped until you resume.' : `${mmss(left)} left. The clock is stopped until you resume.`, 'clock'));
-      if (!training() && S.ranked === false && S.why) facts.append(fact(`This sitting keeps its score but won’t rank (${S.why}).`, 'help'));
+      if (how === 'expired') facts.append(fact(`Time ran out while you were away. Your ${plural(answered, 'answer')} ${answered === 1 ? 'is' : 'are'} saved.`));
+      else if (how === 'left') facts.append(fact(left === null ? 'You left without Save and exit. The clock counts up from where it was.' : `You left without Save and exit, so the clock kept running: ${mmss(left)} left.`));
+      else facts.append(fact(left === null ? 'Untimed. The clock is stopped until you resume.' : `${mmss(left)} left. The clock is stopped until you resume.`));
+      if (!training() && S.ranked === false && S.why) facts.append(fact(`This sitting keeps its score but won’t rank (${S.why}).`));
     }
     card.append(facts);
 
-    // one summary line and one Settings sheet until Begin (POST /cfg)
-    if (fresh) {
-      card.append(h('div', { class: 'tw-set' }, h('p', { class: 'v', id: 'lobbySet', text: settingsLine() }),
-        S.contest ? null : h('button', { type: 'button', class: 'quiet', text: 'Settings', onclick: () => settingsSheet() })));
-    }
-
-    // the buttons
+    // one row: the settings line and its sheet (POST /cfg, until Begin) on the left, Begin on the right
     const acts = h('div', { class: 'tw-acts' });
     const fsOk = document.fullscreenEnabled && S.fullscreen !== false;
     const go = (fs, label, primary) => h('button', { type: 'button', class: primary ? 'pill' : 'quiet', text: label, id: primary ? 'begin' : 'beginPlain',
       onclick: e => begin(fs, e.currentTarget, how === 'expired') });
+    let plain = null;                  // the start without fullscreen sits first among the quiet links under the row
     if (how === 'expired') acts.append(go(false, 'Continue', true));
     else if (how === 'left') acts.append(go(fsOk, 'Continue', true));
     else if (paused) acts.append(go(fsOk, 'Resume', true));
-    else if (fsOk) acts.append(go(true, 'Enter fullscreen and begin', true), go(false, 'Begin without fullscreen', false));
+    else if (fsOk) { acts.append(go(true, 'Enter fullscreen and begin', true)); plain = go(false, 'Begin without fullscreen', false); }
     else acts.append(go(false, 'Begin', true));
-    card.append(acts);
+    card.append(h('div', { class: 'tw-go' }, fresh ? h('div', { class: 'tw-set' }, h('p', { class: 'v', id: 'lobbySet', text: settingsLine() }),
+      S.contest ? null : h('button', { type: 'button', class: 'quiet', text: 'Settings', onclick: () => settingsSheet() })) : null, acts));
     const err = h('p', { class: 'error', id: 'lobbyErr', hidden: true, role: 'alert' });
     card.append(err);
-    const links = h('p', { class: 'tw-links' },
-      h('button', { type: 'button', class: 'quiet', text: 'Directions', onclick: () => UI.directions && UI.directions({}) }),
+    // the section's own directions (College Board's words for Math or for Reading and Writing)
+    const links = h('p', { class: 'tw-links' }, plain,
+      h('button', { type: 'button', class: 'quiet', text: 'Directions', onclick: () => UI.directions && UI.directions({ subject: S.subject || 'math' }) }),
       h('button', { type: 'button', class: 'quiet', text: 'Keyboard shortcuts', onclick: () => keysSheet() }));
     if (paused) {
       links.append(h('button', { type: 'button', class: 'quiet', text: `Hand in module ${S.module || 1}`, onclick: e => begin(false, e.currentTarget, false, true) }),
         h('button', { type: 'button', class: 'quiet', text: 'Discard this test', onclick: () => discard() }));
-    } else if (fresh && !S.contest && S.kind !== 'diagnostic') {
+    } else if (fresh && !S.contest && S.kind !== 'diagnostic' && !fullPart()) {
       links.append(h('button', { type: 'button', class: 'quiet', text: 'Start over with other modules', onclick: () => startOver() }));
     }
     card.append(links);
     b.append(card);
     const first = card.querySelector('#begin');
-    if (first) setTimeout(() => first.focus({ preventScroll: true }), 0);
+    if (first) setTimeout(() => quietFocus(first), 0);
     if (wantReview && !fresh && how !== 'expired') { wantReview = false; begin(false, first, false, true); }
   }
 
@@ -294,7 +305,7 @@
   // "Test-day · 35:00 a module · calculator"
   function settingsLine() {
     const cond = S.contest ? 'Contest' : training() ? 'Training' : 'Test-day';
-    const calc = !S.calculator ? 'no calculator' : UI.DESMOS_KEY === '' ? 'scientific calculator' : 'calculator';
+    const calc = rw() ? null : !S.calculator ? 'no calculator' : UI.DESMOS_KEY === '' ? 'scientific calculator' : 'calculator';
     const rank = S.contest ? (S.contest.ranked === false ? 'won’t rank' : null) : !training() && S.ranked === false && S.why ? `won’t rank: ${S.why}` : null;
     return [cond, timingText(S.timing, two() ? ' a module' : ''), calc, rank].filter(Boolean).join(' · ');
   }
@@ -330,7 +341,7 @@
         const inp = h('input', { type: 'radio', name: 'tm', id, value: k, checked: v.timing === k ? true : null });
         inp.addEventListener('change', () => { v.timing = k; });
         const meta = h('span', { class: 'meta' });
-        const lab = h('label', { class: 'tw-radio', for: id }, inp, h('span', {}, h('b', { text: label }), meta));
+        const lab = h('label', { class: 'choice-row', for: id }, inp, h('span', { text: label }), meta);
         radios[k] = { inp, lab, meta };
         list.append(lab);
       });
@@ -343,8 +354,10 @@
       }
 
       const tl = sec('Tools');
-      UI.switch(tl, { label: 'Calculator', checked: v.calculator, onChange: x => { v.calculator = x; } });
-      tl.append(h('p', { class: 'help', text: 'Off gives no-calculator practice, and the tool is hidden.' }));
+      if (!rw()) {
+        UI.switch(tl, { label: 'Calculator', checked: v.calculator, onChange: x => { v.calculator = x; } });
+        tl.append(h('p', { class: 'help', text: 'Off gives no-calculator practice, and the tool is hidden.' }));
+      }
       UI.switch(tl, { label: 'Ask which I think I missed', checked: v.predict, onChange: x => { v.predict = x; } });
       tl.append(h('p', { class: 'help', text: 'About 20 seconds after each module; your report compares.' }));
       if (document.fullscreenEnabled) UI.switch(tl, { label: 'Fullscreen', checked: v.fullscreen, onChange: x => { v.fullscreen = x; } });
@@ -365,13 +378,14 @@
   }
   function keysSheet() {
     const rows = [['A–D or 1–4', 'Choose'], ['Shift+A–D', 'Eliminate or undo'], ['E', 'Eliminate mode'], ['M', 'Mark for review'],
-      ['U', 'Next unanswered'], ['Shift+M', 'Next marked'], ['Z', 'Save to Review'], ['← →', 'Back, Next'], ['N', 'Navigator'],
+      ['U', 'Next unanswered'], ['Shift+M', 'Next marked'], ['← →', 'Back, Next'], ['N', 'Navigator'],
       ['Shift+R', 'Check your work'], ['G', 'Calculator'], ['F', 'Reference'], ['L', 'Highlights & Notes'], ['Shift+L', 'Scratch'],
-      ['H', 'Hide or show the clock'], ['K', 'Confidence (Training)'], ['V', 'Cover the choices (Training)'], ['?', 'Shortcuts'], ['Esc', 'Close the top sheet']];
+      ['H', 'Hide or show the clock'], ['K', 'Confidence (Training)'], ['V', 'Cover the choices (Training)'], ['?', 'Shortcuts'], ['Esc', 'Close the top sheet']]
+      .filter(([k]) => !(rw() && (k === 'G' || k === 'F')));     // Math's tools
     if (!UI.sheet) return;
     UI.sheet({ title: 'Keyboard shortcuts', size: 'm', body: b => b.append(
       h('table', { class: 'table compact' }, h('tbody', {}, rows.map(([k, d]) => h('tr', {}, h('td', {}, h('kbd', { class: 'kbd', text: k })), h('td', { text: d }))))),
-      h('p', { class: 'help', text: 'In a test, A–D only choose: Save is Z and Details isn’t offered.' })) });
+      h('p', { class: 'help', text: 'In a test, A–D only choose. Save to Review and Report are in More; Details isn’t offered.' })) });
   }
   async function discard() {
     const n = qidsAnswered();
@@ -384,7 +398,7 @@
     const ok = await UI.confirm({ title: 'Start over with other modules?', text: 'This unbegun test is discarded and the start sheet opens.', confirm: 'Start over', cancel: 'Keep it' });
     if (!ok) return;
     try { await api(path('/discard'), { method: 'POST' }); } catch (_) {}
-    location.href = `/tests/?start=${S.kind === 'module' ? 'modules' : S.kind === 'custom' ? 'custom' : 'section'}`;
+    location.href = `/tests/?start=${S.kind === 'module' ? 'modules' : S.kind === 'custom' ? 'custom' : 'section'}&subject=${S.subject || 'math'}`;
   }
 
   /* ---------------- Begin (and Resume, Continue) */
@@ -453,7 +467,8 @@
       clock: timed ? { secondsLeft: S.seconds } : { elapsed: Math.round(elapsed / 1000) },
       conditions: S.conditions, confidence: tr && S.confidence, pace: tr && S.pace ? Object.assign({ duration_s: S.duration }, S.pace) : null,
       nudges: tr && S.nudges, odds: tr ? S.odds || null : null,
-      calc: S.calculator !== false, ref: true, annotate: true, scratch: true, directions: true,
+      // subject: R&W's directions, 71 s pace and checkpoints after Q9 and Q18, no calculator or reference sheet
+      subject: S.subject || 'math', calc: !rw() && S.calculator !== false, ref: !rw(), annotate: true, scratch: true, directions: true,
       prefs: Object.assign({}, prefs, { test_pace: prefs.test_pace !== false }), queue, who: S.name || null, source: 'test',
       fullscreen: S.fullscreen !== false, guardLeave: timed, resumed: !o.first && qidsAnswered() > 0,
       finishLabel: lastModule() ? 'Hand in' : `Move on to module ${(S.module || 1) + 1}`,
@@ -479,6 +494,19 @@
           const dm = Math.max(0, Math.round((a.away_ms || 0) - awaySent.ms)), dn = Math.max(0, (a.away_n || 0) - awaySent.n);
           awaySent.ms = Math.max(awaySent.ms, a.away_ms || 0); awaySent.n = Math.max(awaySent.n, a.away_n || 0);
           if (dm || dn) putState('_session', { away_ms: Math.min(3600000, dm), away_n: Math.min(10, dn) });
+        },
+        // integrity (runner.js): leaving the window, fullscreen, copy and paste attempts, counted and timed for the teacher
+        integrity: e => {
+          const ms = Math.min(3600000, Math.round(e.ms || 0));
+          const q = S.questions[e.at] ? S.questions[e.at].id : undefined;
+          const patch = { ig: [{ kind: e.kind, ms, q }] };
+          if (e.kind === 'blur') Object.assign(patch, { blur_n: 1, blur_ms: ms });
+          else if (e.kind === 'copy') patch.copy_n = 1;
+          else if (e.kind === 'paste') patch.paste_n = 1;
+          else if (e.kind === 'fullscreen') patch.fs_n = 1;
+          putState('_session', patch);          // a hidden tab's count and time go through away, as before
+          // a strict contest (the Weekly Module, the Season Final) also flags the question for its spot-check
+          if (q && S.contest && S.contest.strict) UI.need('compete-ui').then(() => api(path('/spot'), { method: 'POST', quiet: true, body: UI.compete.spotBody(q, e) })).catch(() => {});
         },
         nudge: n => putState('_session', { nudge: { kind: n.kind === 'sink' || n.kind === 'grid' ? n.kind : 'last_minute', qid: n.qid || undefined, took: n.took ?? undefined } }),
         view: (name, i) => {
@@ -585,6 +613,10 @@
     const body = loading(timedOut ? 'Time’s up' : final ? 'Marking your test…' : 'Handing in module 1…');
     body.querySelector('.tw-card').prepend(h('p', { class: 'tw-lead', text: timedOut ? 'Time’s up. Handing in…' : final ? 'Marking your test…' : `Handing in module ${S.module || 1}…` }));
     await flushOrWait(body.querySelector('.tw-card'));
+    // a strict contest's spot-check comes before its last hand-in (the hand-in freezes the points)
+    if (final && S.contest && S.contest.strict) {
+      try { await UI.need('compete-ui'); await UI.compete.spotCheck(body, b => api(path('/confirm'), { method: 'POST', body: b })); } catch (_) {}
+    }
     let res;
     try { res = await api(path('/finish'), { method: 'POST', body: stampsNow() }); }
     catch (e) {
@@ -623,11 +655,11 @@
     const m = final ? (S.module || 1) : 1;
     const card = h('section', { class: 'tw-card', id: 'timeup', 'aria-labelledby': 'tuH' },
       h('h1', { class: 'h1', id: 'tuH', text: 'Time’s up' }),
-      h('p', { class: 'tw-lead', text: `Module ${m} was handed in with ${answered ?? '—'} of ${of || s.answered + s.unanswered || '—'} answered. Every answer you gave is saved.` }));
+      h('p', { class: 'tw-lead', 'data-nofold': '', text: `Module ${m} was handed in with ${answered ?? '–'} of ${of || s.answered + s.unanswered || '–'} answered. Every answer you gave is saved.` }));
     const next = h('button', { type: 'button', class: 'pill', text: final ? 'Continue' : 'Continue to module 2', onclick: () => (final ? done(d || {}) : between()) });
     card.append(h('div', { class: 'tw-acts' }, next));
     b.append(card);
-    setTimeout(() => next.focus(), 0);
+    setTimeout(() => quietFocus(next), 0);
   }
 
   /* ---------------- between modules (4.6, X11, X14) */
@@ -643,8 +675,8 @@
     };
     const b = frame({ title: S.section, hash: 'between', exit: leave, exitLabel: 'Save and exit' });
     const s = lastSummary || {};
-    const n2 = (S.modules[m - 1] || {}).questions || S.question_count || 22;
-    const tools = S.calculator === false ? 'no calculator' : 'calculator and reference sheet on every question';
+    const n2 = (S.modules[m - 1] || {}).questions || S.question_count || spec().n;
+    const tools = rw() ? 'a passage with every question' : S.calculator === false ? 'no calculator' : 'calculator and reference sheet on every question';
     let route = null;
     if (lastRoute && lastRoute.route) {
       const g = lastRoute.gate || {};
@@ -684,6 +716,55 @@
       },
     });
   }
+  /* ---------------- a full SAT's break (Bluebook's 10 minutes between Reading and Writing and Math)
+     The Math sitting is made at R&W's hand-in; until it begins, its page is this break. The clock counts from R&W's
+     hand-in (the server's full.break.since, else the moment this tab handed in); Resume testing ends it early and the
+     Math lobby follows. The server judges a long break (past 10 minutes and 60 s slack: Math keeps its score, won't
+     rank); this screen only says so. */
+  const BREAK_KEY = () => `satf.break.${sid}`;
+  function breakLeft() {
+    if (ss.get(BREAK_KEY()) === 'done') return 0;
+    const br = (S.full || {}).break || {};
+    const from = br.since ? Date.parse(br.since) : Number(ss.get(BREAK_KEY())) || 0;
+    return from ? Math.max(0, (br.seconds || BREAK_S) - (Date.now() - from) / 1000) : 0;
+  }
+  function breakScreen() {
+    const b = frame({ title: S.section, hash: 'break', exit: () => { location.href = '/tests/#live'; }, exitLabel: 'Save and exit' });
+    const left0 = breakLeft(), t0 = performance.now();
+    const n = ((S.modules || [])[0] || {}).questions || spec().n, per = Math.round(baseSeconds() / 60);
+    const tools = S.calculator === false ? 'the reference sheet' : 'a calculator and the reference sheet';
+    // the countdown is the screen's one figure (the between screen's look), Resume testing beside it
+    const clockT = h('span', { class: 'num rn-between-t' });
+    const bar = h('span', { class: 'rn-between-bar' }, h('i'));
+    const live = h('p', { class: 'sr', 'aria-live': 'polite' });
+    const go = h('button', { type: 'button', class: 'pill', text: 'Resume testing', onclick: () => end(false) });
+    const card = h('section', { class: 'tw-card', id: 'break', 'aria-labelledby': 'breakH' },
+      h('h1', { class: 'h1', id: 'breakH', text: 'Take a 10-minute break' }),
+      h('p', { class: 'tw-lead', 'data-nofold': '', text: `Reading and Writing is handed in. Math is next: ${two() ? `${S.modules.length} modules of ${n} questions, ${per} minutes each` : `${plural(n, 'question')}, ${per} minutes`}, with ${tools}.` }),
+      h('div', { class: 'rn-between-count' }, h('div', { class: 'rn-between-clock', role: 'timer' }, h('span', { class: 'rn-between-l', text: 'Break time left ' }), clockT), bar, go),
+      live, h('p', { class: 'meta', 'data-nofold': '', text: 'A break past 11 minutes keeps both scores, but Math won’t rank.' }));
+    b.append(card);
+    let iv = 0, said = false, over = false;
+    function tick() {
+      const left = Math.max(0, left0 - (performance.now() - t0) / 1000);
+      const txt = mmss(Math.ceil(left));
+      if (clockT.textContent !== txt) clockT.textContent = txt;
+      bar.firstChild.style.transform = `scaleX(${(left / BREAK_S).toFixed(4)})`;
+      if (left <= 60 && !said) { said = true; live.textContent = 'One minute of break left'; }
+      if (left <= 0) end(true);
+    }
+    function end(auto) {
+      if (over) return;
+      over = true;
+      clearInterval(iv);
+      ss.set(BREAK_KEY(), 'done');
+      lobby(auto ? 'break' : undefined);
+    }
+    tick();
+    iv = setInterval(tick, 250);
+    setTimeout(() => quietFocus(go), 0);
+  }
+
   function gateLine(g) {
     if (!g || g.margin === undefined || g.margin === null) return '';
     if (g.margin >= 0) return g.margin ? `Routed up with ${g.margin} to spare` : 'Routed up, with none to spare';
@@ -693,6 +774,11 @@
 
   /* ---------------- the hand-in moment (X12, X13, X10) */
   function done(d) {
+    // a full SAT: R&W handed in opens the break, then the Math sitting the server made (no score in between, as on
+    // test day); Math handed in opens the full result, the total first
+    const nx = d.next && (typeof d.next === 'string' ? d.next : d.next.id || d.next.sid);
+    if (fullPart() === 1 && nx) { ss.set(`satf.break.${nx}`, String(Date.now())); location.replace(`/test/?s=${encodeURIComponent(nx)}`); return; }
+    if (fullPart() === 2 && S.full.id) { location.replace(`${fullHref(S.full.id)}&fresh=1`); return; }
     const diag = S.kind === 'diagnostic';
     const trainer = !diag && d.gate && (/trainer/i.test(d.kind_label || S.kind_label || '') || S.trainer);
     // The report's first view is the hand-in moment (fresh=1 counts the score up). The card stays only where the
@@ -706,8 +792,9 @@
     const b = frame({ title: S.section, hash: 'done', wide: true });
     const card = h('section', { class: 'tw-card done', id: 'done', 'aria-labelledby': 'doneH' });
     const rankChip = d.ranked === undefined || d.ranked === null || d.scored === false ? null
-      : h('span', { class: 'tw-chip' + (d.ranked ? ' ranked' : ''), text: d.ranked ? 'Ranked' : `Unranked${d.unranked_why ? ' · ' + d.unranked_why : ''}` });
-    card.append(h('p', { class: 'tw-kline' }, h('span', { class: 'k', text: `${d.kind_label || S.kind_label}${d.number || S.number ? ` #${d.number || S.number}` : ''} · handed in` }), rankChip));
+      : h('span', { class: 'badge tw-chip' + (d.ranked ? ' ranked' : ' soft'), text: d.ranked ? 'Ranked' : `Unranked${d.unranked_why ? ' · ' + d.unranked_why : ''}` });
+    // what was handed in, as a meta line under the h1 (no kicker over it)
+    const kline = h('p', { class: 'tw-kline' }, h('span', { class: 'meta', text: `${d.kind_label || S.kind_label}${d.number || S.number ? ` #${d.number || S.number}` : ''} · handed in` }), rankChip);
     const est = d.estimate;
     if (est && !diag) {
       const day = s => String(s || '').replace(/\d{4}-\d{2}-\d{2}/g, x => (UI.date ? UI.date(x, 'short') : x));
@@ -724,16 +811,17 @@
       card.append(h('h1', { class: 'h1', id: 'doneH', text: 'The diagnostic is in' }),
         h('p', { class: 'tw-lead', text: 'Your result is one step away.' }));
     }
+    card.querySelector('h1').after(kline);
     if (!diag && (d.route || d.gate)) {
       const line = h('p', { class: 'tw-route' });
-      if (d.route) line.append(h('span', { class: 'tw-chip', text: d.route === 'upper' ? 'Harder module 2' : 'Easier module 2' }));
+      if (d.route) line.append(h('span', { class: 'badge soft tw-chip', text: d.route === 'upper' ? 'Harder module 2' : 'Easier module 2' }));
       const g = gateLine(d.gate);
       if (g) line.append(h('span', { text: g }));
       card.append(line);
     }
     if (trainer) card.append(trainerBlock(d.gate));
     if (!diag && d.moments && d.moments.length) {
-      card.append(h('ul', { class: 'tw-moments' }, d.moments.slice(0, 2).map(m => h('li', {}, icon(m.id === 'best' || m.id === 'first_upper' ? 'trophy' : 'check', 18), h('span', { text: m.text })))));
+      card.append(h('ul', { class: 'tw-moments' }, d.moments.slice(0, 2).map(m => h('li', { text: m.text }))));
     }
     if (d.report_later && d.report_later.length) {
       const box = h('div', { class: 'tw-later' });
@@ -756,10 +844,10 @@
     if (!diag && toFix) acts.append(h('button', { type: 'button', class: 'quiet', text: `Fix ${toFix} now`, onclick: e => fix(e.currentTarget) }));
     acts.append(S.contest ? h('a', { class: 'quiet', href: '/compete/', text: 'Back to Compete' }) : h('a', { class: 'quiet', href: '/tests/', text: 'Back to Tests' }));
     card.append(acts);
-    if (p.eligible) card.append(h('p', { class: 'help', text: `${plural(p.n, 'question')} like ones you missed, left blank, guessed or spent long on. Same kind, same difficulty, new numbers, no clock.` }));
+    if (p.eligible) card.append(h('p', { class: 'help', text: `${plural(p.n, 'question')} like ones you missed, left blank, guessed or spent long on. ${rw() ? 'Same skill, same difficulty, different passages' : 'Same kind, same difficulty, new numbers'}, no clock.` }));
     b.append(card);
     const first = acts.querySelector('.pill');
-    if (first) setTimeout(() => first.focus({ preventScroll: true }), 0);
+    if (first) setTimeout(() => quietFocus(first), 0);
   }
   // X14: the Route-up trainer's hand-in: where the line fell, what cost the route, and the next go
   function trainerBlock(g) {
@@ -786,7 +874,7 @@
     acts.append(h('button', { type: 'button', class: 'quiet', text: 'Next module 1', onclick: async e => {
       const b = e.currentTarget;
       b.setAttribute('aria-busy', 'true');
-      try { const r = await api('/mock/new', { method: 'POST', body: { kind: 'module', module: 'm1', trainer: 'route', conditions: 'test_day' } }); location.href = `/test/?s=${encodeURIComponent(r.id)}`; }
+      try { const r = await api('/mock/new', { method: 'POST', body: { kind: 'module', module: 'm1', trainer: 'route', conditions: 'test_day', subject: S.subject || 'math' } }); location.href = `/test/?s=${encodeURIComponent(r.id)}`; }
       catch (x) { b.removeAttribute('aria-busy'); toast(`Couldn’t build it: ${x.message}`); }
     } }));
     box.append(acts);

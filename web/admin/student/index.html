@@ -5,59 +5,20 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="robots" content="noindex, nofollow">
 <title>Student · SAT Freshman admin</title>
+<link rel="icon" href="/favicon.ico" sizes="32x32">
 <link rel="icon" href="/assets/mark.svg" type="image/svg+xml">
 <link rel="manifest" href="/manifest.webmanifest">
 <meta name="theme-color" content="#FFFFFF">
 <script src="/assets/head.js"></script>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800;900&family=DM+Mono:wght@400;500&display=swap">
+<link rel="preload" href="/assets/fonts/Geist.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/assets/ui.css">
-<style>
-  .adm { display: grid; grid-template-columns: minmax(0, 1fr); gap: 18px; padding-bottom: 60px; }
-  .adm-gate { display: grid; gap: 10px; max-width: 420px; }
-  .adm-row { display: flex; gap: 8px; }
-  .adm-row .field { flex: 1; min-width: 0; }
-  .adm-tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; }
-  .adm-tile { display: grid; gap: 4px; padding: 14px 16px; border-radius: var(--radius-card); background: var(--tile); }
-  .adm-tile b { font: 600 24px/1.1 var(--mono); letter-spacing: -.02em; }
-  .adm-tile span { font: 500 12.5px var(--font); color: var(--soft); }
-  .low { color: var(--amber-deep); } .mid, .good { color: var(--ink); }
-  .adm-grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: 18px; align-items: start; }
-  @media (min-width: 980px) { .adm-grid { grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); } }
-  .adm-col { display: grid; gap: 18px; min-width: 0; }
-  .adm-card { display: grid; gap: 12px; padding: 18px 20px; border-radius: var(--radius-card); background: var(--tile); min-width: 0; }
-  .adm-card h2 { margin: 0; font: 700 17px var(--font); letter-spacing: -.01em; }
-  .adm-card .sub { margin: -6px 0 0; font: 400 13px var(--font); color: var(--soft); }
-  .adm-wrap { overflow-x: auto; }
-  table.adm-t { width: 100%; border-collapse: collapse; font: 400 14px/1.4 var(--font); }
-  .adm-t th { text-align: left; font: 500 11.5px var(--mono); color: var(--soft); text-transform: uppercase; letter-spacing: .05em; padding: 0 10px 8px 0; white-space: nowrap; }
-  .adm-t td { padding: 10px 10px 10px 0; border-top: 1px solid var(--line); vertical-align: middle; }
-  .adm-t td.n, .adm-t th.n { text-align: right; white-space: nowrap; }
-  .adm-t td.n { font: 400 13px var(--mono); }
-  .adm-t tr.row { cursor: pointer; }
-  .adm-t tr.row:hover td { background: var(--tile-2); }
-  .adm-name { font-weight: 600; }
-  .adm-sm { display: block; font: 400 12.5px var(--font); color: var(--soft); }
-  .adm-bars { display: grid; grid-template-columns: repeat(30, minmax(0, 1fr)); gap: 3px; align-items: end; height: 96px; }
-  .adm-bars i { display: block; border-radius: 3px 3px 0 0; background: var(--faint); }
-  .adm-bars i.on { background: var(--amber); }
-  .adm-axis { display: flex; justify-content: space-between; font: 500 11.5px var(--mono); color: var(--soft); }
-  .adm-meter { display: inline-block; width: 60px; height: 6px; border-radius: 3px; background: var(--mat); vertical-align: middle; margin-right: 8px; overflow: hidden; }
-  .adm-meter i { display: block; height: 100%; background: var(--ink); }
-  .adm-t td.adm-dom { font: 600 12px var(--mono); color: var(--soft); text-transform: uppercase; letter-spacing: .05em; padding-top: 14px; }
-  .adm-kv { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: 6px 18px; margin: 0; font: 400 14px/1.4 var(--font); }
-  .adm-kv dt { color: var(--soft); } .adm-kv dd { margin: 0; overflow-wrap: anywhere; }
-  .adm-search { display: flex; flex-wrap: wrap; gap: 8px; }
-  .adm-search .field { flex: 1 1 220px; max-width: 360px; }
-  .adm-back { justify-self: start; }
-  .adm-empty { color: var(--soft); font: 400 14px var(--font); margin: 0; }
-</style>
+<link rel="stylesheet" href="/admin/admin.css">
 </head>
 <body data-page="admin">
-<main class="page">
+<main class="page" data-nofold>
   <div class="adm" id="root"></div>
 </main>
+<script src="/assets/ui.js"></script>
 <script src="/assets/kit.js"></script>
 <script src="/admin/admin.js"></script>
 <script>
@@ -66,6 +27,8 @@
   const root = document.getElementById('root');
   const id = new URLSearchParams(location.search).get('id');
   const KINDS = { mock: 'Full section', section: 'Full section', module: 'Module', paper: 'Paper', twin: 'Twin', custom: 'Custom test', diagnostic: 'Diagnostic', shared: 'Shared test' };
+  const SUBJ = { total: 'Total', rw: 'R&W', math: 'Math' };
+  const testName = t => (t.kind === 'full' ? 'Full SAT' : `${t.subject === 'rw' ? 'R&W' : 'Math'} · ${KINDS[t.kind] || t.kind}${t.number ? ` #${t.number}` : ''}`);
   const tile = (v, l) => h('div', { class: 'adm-tile' }, h('b', { text: v }), h('span', { text: l }));
   const card = (title, sub, ...kids) => h('section', { class: 'adm-card' }, h('h2', { text: title }), sub ? h('p', { class: 'sub', text: sub }) : null, ...kids);
   const kv = pairs => h('dl', { class: 'adm-kv' }, pairs.flatMap(([k, v]) => [h('dt', { text: k }), h('dd', { text: v === null || v === undefined || v === '' ? '-' : String(v) })]));
@@ -81,6 +44,19 @@
     const max = Math.max(1, ...d.last30.map(x => x.answers));
     const bars = h('div', { class: 'adm-bars', role: 'img', 'aria-label': 'Questions answered per day over the last 30 days' },
       d.last30.map(x => h('i', { class: x.answers ? 'on' : '', style: `height: ${Math.max(2, Math.round(x.answers / max * 100))}%`, title: `${day(x.day)}: ${x.answers} answered, ${x.right} right` })));
+    // a pointer or a tap names its day in the axis row (a fixed slot); at rest, the 30-day total
+    const n30 = d.last30.length, total = d.last30.reduce((s, x) => s + (x.answers || 0), 0);
+    const read = h('span', { class: 'adm-read', 'aria-hidden': 'true' });
+    const say = k => {
+      const x = k === null ? null : d.last30[k];
+      read.textContent = x ? `${day(x.day)}: ${num(x.answers)} answered, ${num(x.right)} right` : `${num(total)} in ${n30} days`;
+      [...bars.children].forEach((b, i) => b.toggleAttribute('data-at', i === k));
+    };
+    const at = e => { const r = bars.getBoundingClientRect(); return r.width ? Math.max(0, Math.min(n30 - 1, Math.floor((e.clientX - r.left) / r.width * n30))) : null; };
+    bars.addEventListener('pointermove', e => say(at(e)));
+    bars.addEventListener('pointerdown', e => say(at(e)));
+    bars.addEventListener('pointerleave', e => { if (e.pointerType === 'mouse') say(null); });
+    say(null);
 
     const doms = {};
     d.skills.forEach(s => { (doms[s.domain || 'Other'] = doms[s.domain || 'Other'] || []).push(s); });
@@ -89,26 +65,36 @@
       ...list.map(s => h('tr', {}, h('td', { text: s.name }), h('td', { class: 'n', text: num(s.answers) }),
         h('td', { class: `n ${tone(s.accuracy)}` }, meter(s.accuracy), pct(s.accuracy)), h('td', { class: 'n', text: ago(s.last) })))]);
 
-    const sit = d.tests.sittings.map(t => h('tr', {}, h('td', { text: day(t.finished) }), h('td', { text: `${KINDS[t.kind] || t.kind}${t.number ? ` #${t.number}` : ''}` }),
-      h('td', { class: 'n', text: t.low ? `${t.low} to ${t.high}` : (t.asked ? `${t.right} / ${t.asked}` : '-') }), h('td', { class: 'n', text: t.minutes === null ? '-' : `${t.minutes} min` })));
+    const sit = d.tests.sittings.map(t => h('tr', {}, h('td', { text: day(t.finished) }), h('td', { text: testName(t) }),
+      h('td', { class: 'n', text: t.low ? `${t.low}–${t.high}` : (t.asked ? `${t.right} / ${t.asked}` : '-') }), h('td', { class: 'n', text: t.minutes === null ? '-' : `${t.minutes} min` }),
+      h('td', { class: `n${t.integrity && t.integrity.flagged ? ' low' : ''}`, text: AD.integrity(t.integrity) })));
+    // scores side by side, College Board's order (Total, R&W, Math): now as the server's 20-point range, the target, and that subject's answers
+    const sc = d.scores || {}, subs = a.subjects || {};
+    const scRows = ['total', 'rw', 'math'].map(k => {
+      const x = sc[k] || {}, s = k === 'total' ? { answers: a.answers, accuracy: a.accuracy } : (subs[k] || {});
+      const now = x.low !== null && x.low !== undefined ? `${x.low}–${x.high}${x.source === 'yours' ? ' (typed)' : x.source && x.source !== 'measured' ? ` (${x.source})` : ''}` : '-';
+      return h('tr', {}, h('td', { text: SUBJ[k] }), h('td', { class: 'n', text: now }), h('td', { class: 'n', text: x.target ? String(x.target) : '-' }),
+        h('td', { class: 'n', text: num(s.answers || 0) }), h('td', { class: `n ${tone(s.accuracy)}`, text: pct(s.accuracy) }));
+    });
 
     root.replaceChildren(
-      h('a', { class: 'quiet adm-back', href: '/admin/students/', text: '‹ All students' }),
+      h('a', { class: 'quiet adm-back', href: '/admin/students/' }, UI.icon('caret_left', 16), 'All students'),
       h('div', {}, h('h1', { class: 'h1', text: p.name || 'No name yet' }),
         h('p', { class: 'adm-empty', text: [p.email, p.handle && `@${p.handle}`, `joined ${day(p.joined)}`, `last active ${ago(a.last)}`].filter(Boolean).join('  ·  ') })),
       h('div', { class: 'adm-tiles' }, tile(num(a.answers), 'questions answered'), tile(pct(a.accuracy), 'accuracy'), tile(dur(a.minutes), 'study time'),
         tile(num(a.active_days), 'active days'), tile(a.streak === null || a.streak === undefined ? '-' : num(a.streak), 'day streak'), tile(num(d.tests.sittings.length), 'tests taken')),
       h('div', { class: 'adm-grid' },
         h('div', { class: 'adm-col' },
-          card('Last 30 days', 'Questions answered each day', bars, h('div', { class: 'adm-axis' }, h('span', { text: day(d.last30[0].day) }), h('span', { text: 'today' }))),
+          card('Last 30 days', 'Questions answered each day', bars, h('div', { class: 'adm-axis' }, h('span', { text: day(d.last30[0].day) }), read, h('span', { text: 'today' }))),
           card('Skills', `${d.skills.length} skills practised`, d.skills.length ? table(['Skill', 'Answers', 'Accuracy', 'Last'], skillRows) : h('p', { class: 'adm-empty', text: 'No answers yet.' })),
-          card('Tests', `${d.tests.practice_sets} practice sets finished`, sit.length ? table(['Date', 'Test', 'Score', 'Time'], sit, 2) : h('p', { class: 'adm-empty', text: 'No tests taken yet.' }))),
+          card('Tests', `${d.tests.practice_sets} practice sets finished`, sit.length ? table(['Date', 'Test', 'Score', 'Time', 'Integrity'], sit, 2) : h('p', { class: 'adm-empty', text: 'No tests taken yet.' }))),
         h('div', { class: 'adm-col' },
+          card('Scores', null, table(['', 'Now', 'Target', 'Answers', 'Accuracy'], scRows)),
           card('Mistakes', `${m.open} open, ${m.fixed} fixed`, m.top.length ? table(null, m.top.map(t => h('tr', {}, h('td', {}, t.label, h('span', { class: 'adm-sm', text: t.skill })), h('td', { class: 'n', text: `${t.hits}×` })))) : h('p', { class: 'adm-empty', text: 'No open mistakes.' })),
           card('Compete', null, kv([['Rating', c.rating ? `${c.rating} (${c.rated_sittings} rated sittings)` : 'not rated yet'], ['Contests played', c.contests_played], ['Daily challenges', c.daily_challenges]]),
             c.recent.length ? table(null, c.recent.map(r => h('tr', {}, h('td', { text: r.title }), h('td', { class: 'n', text: r.points === null ? '-' : `${r.points} pts` }), h('td', { class: 'n', text: ago(r.at) })))) : null),
           card('Words', null, kv([['Words touched', num(w.touched)], ['Reviews', num(w.reviews)], ['Lapses', num(w.lapses)], ['Saved', num(w.saved)], ['Due now', num(w.due_now)]])),
-          card('Goals and account', null, kv([['Target score', p.target], ['SAT date', p.exam_date && day(p.exam_date)], ['Daily minutes', p.daily_minutes], ['Study plan', p.has_plan ? 'yes' : 'no'],
+          card('Goals and account', null, kv([['SAT date', p.exam_date && day(p.exam_date)], ['Daily minutes', p.daily_minutes], ['Study plan', p.has_plan ? 'yes' : 'no'],
             ['Hard questions', a.hard_answers ? `${num(a.hard_answers)} answered, ${pct(a.hard_accuracy)} right` : 'none yet'], ['Hints used', num(a.hints_used)], ['Badges earned', d.badges],
             ['Email', p.email ? `${p.email}${p.email_verified ? '' : ' (not verified)'}` : 'none'], ['Country', p.country], ['Parents', d.parents.length ? d.parents.map(x => x.name || x.email || 'unnamed').join(', ') : 'none'], ['Learner id', p.id]]),
             d.reports.length ? h('p', { class: 'adm-empty', text: `Sent ${d.reports.length} report${d.reports.length === 1 ? '' : 's'}: ${d.reports.map(r => r.title || r.kind).join('; ')}` }) : null))));

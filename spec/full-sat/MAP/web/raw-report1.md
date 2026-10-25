@@ -1,0 +1,43 @@
+# results/report/page.js (1772) part 1 (1-900)
+- 37-47 ?q= parsing: /^(?:(math|rw)[-\s]?)?(?:m(\d)[-\s]?)?q?(\d+)$/ -> hash q=math-m1-7 (default 'math'). Already subject-aware addressing!
+- 61 FORMAT mcq/spr Grid-in. 62 CAUSES incl 'entry' (grid-in entry). 67 DOMAIN_ORDER from UI.DOMAINS.
+- 207 sectioned = modules.length>1.
+- 219 UI.review.at(IT.map({n,module,subject})) uses subject.
+- 226-236 sittingName: mock 'Full section', module 'One module'.
+- 240 kindBits mock 'Adaptive' 'Form x'.
+- 265 'Calculator off' meta bit.
+- 297 fixPlan fallback budget 95455 ms per q (=35min/22, math).
+- 328 'Entry: grid-in rules'.
+- 354 'Harder next · New section' -> /mock/new {full:true, timed:true}. 386 retake {kind:'twin', twin_of, full: kind!=='module'}.
+- 393-395 retake for mock/module/diagnostic/paper.
+- 566-567 UI.gauge(... subject: R.subject||'math', sub: UI.SUBJECT[subj].label ...). Subject aware!
+- 571 about text 'Math is measured here. Reading and Writing is your own score until SAT Freshman has R&W questions.'
+- 576 'First section'.
+- 585 'needs the harder Module 2'. 606-610 R.kind==='mock' m1 route line; rule.lower_ceiling||580.
+- 625 doneMs: 4 math domains by name prefix (Algebra, Advanced Math, Problem-Solving, Geometry) for spotArt('done').
+- 627-648 totalBlock: R.total.parts subject rw; owner R&W input 200-800 self-entered (PUT /me rw_now). One-section model.
+- 719-723 route savers 'harder Module 2', 580.
+- 751-759 compare slots grouped by s.module (number) 'Module m'.
+- 863 'grid-in' count in mistakes meta.
+# report part 2 (900-1349)
+- 922 'Missed grid-in: ...' label for spr.
+- 1000 filter v.module vs String(x.module): no subject.
+- 1048 module filter options from R.modules m.n 'Module n'.
+- 1052 Format filter mcq/spr only when both.
+- 1153 time shade key 'under 0:30','to 1:35','to 3:10' and 1160 thresholds 30/95/190 s (math pace 95 s).
+- 1171-1179 modLine: name `Module ${m}`; route for mod.n===2 harder/easier else 'mixed'; ' of 35:00' hard-coded; timed if sectioned||kind module.
+- 1180-1184 modGroups keyed by x.module only (if sectioned): R&W M1 and Math M1 would merge. Needs subject+module key.
+- 1190 table modsum.
+- 1244 Format col 'Grid-in'/'MC'.
+- 1328 whatif 'Module 2 stays as you sat it'.
+# report part 3 (1349-1772)
+- 1336-1381 drawDomains: server R.domains, sorted by DOMAIN_ORDER (UI.DOMAINS). 1377 '% of the section'.
+- 1458-1480 split difficulty/format.
+- 1498-1538 drawPace: groups by sectioned ? x.module (no subject) 'Module m'; pace default 95455 ms (1512) 'Test pace'; 1529 blank advice mcq vs grid-in.
+- 1542-1571 clockReplay: pace.modules find Number(p.n)===(m||1) (no subject); dur = clock_ms / modules.length (assumes equal module durations).
+- 1595 budget fallback 95455.
+- 1598 'New section' link.
+- 1602-1625 playerItem: Q fields include 'text' (passage) and 'subject'; returns subject: x.subject||'math', module.
+- 1662-1663 UI.review(... sitting: { subjects: 1 } ...) hard-coded 1 subject.
+- 1682 CSV columns question,module,n (no subject).
+- 1724 printPack uses UI.workspace(host,q,...) for review/exam; 1749 'ABCD' reasons.

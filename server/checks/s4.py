@@ -161,8 +161,9 @@ def bank_checks(c) -> dict:
     assert len(d["forecast"]) == 14
     rw = get(c, learner, "/api/bank?subject=rw")
     skills = [s for x in rw["domains"] for s in x["skills"]]
-    assert rw["subject"] == "rw" and rw["bank"] is False and len(rw["domains"]) == 4 and len(skills) == 10, rw
-    assert {s["name"] for s in skills if s["available"]} == {"Words in Context", "Transitions"}
+    # the R&W bank is served now (satbank/topics/rw.py): the real catalogue, with Words' drills beside it
+    assert rw["subject"] == "rw" and rw["bank"] is True and len(rw["domains"]) == 4 and len(skills) == 10, rw
+    assert "words" in rw and all(s["slug"].startswith("rw_") for s in skills)
     assert all(s["cb_count"] > 0 for s in skills)
     call(c, learner, "get", "/api/bank?subject=physics", expect=422)
     return d
@@ -491,6 +492,10 @@ def mistake_checks(c) -> None:
         assert db.one("SELECT owed FROM traps WHERE id=?", trap["id"])["owed"] == owed
     # P9 1: a clean right that pays the last owed closes it, and next_step says so
     db.run("UPDATE traps SET owed=1 WHERE id=?", trap["id"])
+    # the second miss above may have opened another trap on this type, newer by a second or not: the set
+    # aims at the newest open one, so leave this one alone on the type (it was timing-dependent)
+    db.run("UPDATE traps SET closed=?, closed_how='dismissed' WHERE learner=? AND template='lin.evaluate'"
+           " AND id!=? AND closed IS NULL", progress.now(), learner, trap["id"])
     f = start(c, learner, {"templates": ["lin.evaluate"], "formats": ["mcq"], "count": 1, "zone": "off"})
     fq = full(f["id"], f["question"]["id"])
     said = answer(c, learner, f["id"], fq["id"], right(fq), ms=15000)
@@ -897,7 +902,7 @@ def twin_checks(c) -> None:
     post(c, learner, f"/api/drill/{s['id']}/finish")
     brought = get(c, learner, "/api/drill")["official"]
     assert brought[0]["cb_id"] == "23c5fcce" and brought[0]["twins"] == 3
-    names = practice.catalogue()["by_topic"]
+    names = {k: v for k, v in practice.catalogue()["by_topic"].items() if progress.deps.subject_of(k) == "math"}
     every = [t for ts in names.values() for t in ts]
     pv = post(c, learner, "/api/drill/preview", {"has": ["official"], "topics": list(names)})
     official = {e["template"] for e in drill._official_map().values()}
@@ -911,8 +916,11 @@ def twin_checks(c) -> None:
         assert all(q["topic"] == x["topic"] and q["difficulty"] == x["tier"] for q in qs), (cbid, x, [(q["key"], q["difficulty"], q.get("why"), q.get("repair")) for q in qs], [drill._tiers_of(t) for t in drill._index_twins(cbid, 3)])
         assert "Close twin" in qs[0]["why"]["detail"] and "Not in our map" not in json.dumps(got)
         assert got["total"] == 3
+    # an R&W id twins through the index too (the R&W bank is served): its skill and tier, subject inferred from the id
     rw = next(k for k, v in drill.cb_index().items() if v["subject"] == "rw")
-    assert start(c, learner, {"pool": "official", "ids": [rw]}, expect=409)["detail"]["reason"] == "rw_bank_pending"
+    got = start(c, who("cbrw"), {"pool": "official", "ids": [rw]})
+    q = asked(got["id"])[0]
+    assert got["subject"] == "rw" and q["topic"] == drill.cb_index()[rw]["topic"] and q["text"], (rw, q["key"])
     # P17: Mix-up interleaves look-alikes, never one type twice in a row, and hides the skill until Check
     assert "pct.change" not in blueprint.lookalikes("pct.change")
     mx = who("mix1")

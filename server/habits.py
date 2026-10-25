@@ -114,6 +114,13 @@ def members(family_id: str) -> list[dict]:
             if (found := family_of(norm)) and found["id"] == family_id]
 
 
+def of_learner(learner: str) -> list[dict]:
+    """Today's "By habit" view (api_today): the learner's habit families over the last 28 days, the
+    same list Me shows. Math only: R&W misses go unnamed, so no R&W miss has a family."""
+    from . import api_profile
+    return api_profile._habits(learner)
+
+
 def regex_for(family_id: str) -> str:
     return next(row["regex"] for row in FAMILIES if row["id"] == family_id)
 

@@ -3,12 +3,14 @@
    (spec/rebuild-v2.md 3.5 §1; v2-upgrades reports.md SR1-SR25; decisions 3, 4, 7;
    the user's UI rules of 2026-09-28)
 
-   One sitting, read top down: the header and its actions, the score, one recovery
-   status line (second look, fix, check-ins, prove it), where the points went,
-   then-vs-now, the mistakes beside Best value, three takeaways, the tiles, habits,
-   every question (grid or table, Show + Filters + Focus + View, What if, selection),
-   modules, one Breakdown card (domain, skill, difficulty, format), judgement, pace,
-   and up next.
+   One sitting. The header: "Results / the sitting's name" with the actions (the Fix split,
+   Review mistakes, More with Retake as a test first), one meta line (date, minutes, timing,
+   form, conditions, note). Main column: the score (the page's one hero), where the points went,
+   then-vs-now, the mistakes (habits are a group in them), every question (grid or table,
+   one row: Show, Filters (Focus inside), View; What if, selection; the grid's module heads carry each
+   module's result), one Breakdown card (domain, skill, difficulty, format), judgement and
+   pace. Right column (1280px+, sticky): the recovery steps, the summary rows,
+   three takeaways, Best value and up next.
 
    Reads GET /api/session/{sid}/results (api_results.report), painted at once from
    sessionStorage satf.results.<sid> when the runner prefetched it. Writes: /seen,
@@ -60,27 +62,31 @@
   const CAUSES = ['trap', 'slip', 'misread', 'clock', 'entry', 'gap'];
   const causeName = c => (rx.CAUSE[c] || { label: cap(c) }).label;
   const causeOne = c => cap((rx.CAUSE[c] || { one: c }).one);
-  const topicName = (slug, fb) => ((UI.TOPIC && UI.TOPIC[slug]) || {}).short || fb || slug || '';
-  const glyph = slug => (UI.glyph && slug ? UI.glyph(slug) : null);
-  const DOMAIN_ORDER = (UI.DOMAINS || []).map(d => d[0]);
-  const TESTS = ['mock', 'module', 'diagnostic', 'paper', 'custom', 'twin', 'shared'];
+  const topicName = (slug, fb) => (UI.RW_SKILL && UI.RW_SKILL[slug]) || ((UI.TOPIC && UI.TOPIC[slug]) || {}).short || fb || slug || '';
+  const glyph = slug => (UI.glyph && slug && !/^rw_/.test(slug) ? UI.glyph(slug) : null);
+  // the sitting's subject orders its domains and sets a question's pace and a module's clock (R&W 71 s and 32:00,
+  // Math 95 s and 35:00)
+  const rwSit = () => !!R && R.subject === 'rw';
+  const domOrder = () => (rwSit() ? (UI.RW_DOMAINS || []).map(d => d.name) : (UI.DOMAINS || []).map(d => d[0]));
+  const PACE_MS = () => (rwSit() ? 71111 : 95455);
+  const MOD_CLOCK = () => (rwSit() ? '32:00' : '35:00');
+  const TESTS = ['full', 'mock', 'module', 'diagnostic', 'paper', 'custom', 'twin', 'shared'];
   const RUSHED = 30000, LONG = 190000;
   const LS = { get(k, d) { try { const v = localStorage.getItem(k); return v === null ? d : JSON.parse(v); } catch (_) { return d; } },
     set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (_) {} } };
   const letter = (x, g) => (g === null || g === undefined || g === '' ? null : x.type === 'mcq' && Number.isInteger(+g) && String(g).length < 3 ? 'ABCD'[+g] : String(g));
   const math = t => (UI.fracText && t ? UI.fracText(String(t)) : String(t ?? ''));
 
-  /* a quiet ⓘ: explanations live in tooltips (decision 7) */
-  function info(text, label = 'How this works') {
-    const b = h('button', { type: 'button', class: 'quiet rp-info', 'aria-label': `${label}: ${text}` }, 'ⓘ');
-    if (UI.tooltip) UI.tooltip(b, text);
-    return b;
-  }
+  /* kit's one "?": explanations open from it (decision 7) */
+  const info = (text, about) => UI.why(text, { about });
+  // a card's head: its short title (no kicker over it), a meta, a ? and the controls on the right. fig: [figure, unit]
+  // leads with the number (28, its unit small on the same baseline) in place of a title
   function head(host, o) {
     host.hidden = false;
     host.replaceChildren();
-    const hd = h('div', { class: 'card-head' }, o.k ? h('p', { class: 'k', text: o.k }) : null,
-      h('h2', { text: o.title }), o.meta ? h('span', { class: 'meta', text: o.meta }) : null, o.tip ? info(o.tip) : null,
+    const hd = h('div', { class: 'card-head' },
+      o.fig ? h('h2', { class: 'rp-fig' }, h('b', { text: o.fig[0] }), h('span', { text: ` ${o.fig[1]}` })) : h('h2', { text: o.title }),
+      o.meta ? h('span', { class: 'meta', text: o.meta }) : null, o.tip ? info(o.tip, o.about) : null,
       o.right ? h('div', { class: 'rp-headr' }, o.right) : null);
     host.append(hd);
     return host;
@@ -104,13 +110,13 @@
   /* ------------------------------------------------------------ load */
   function skeleton() {
     const root = $('root');
-    root.querySelectorAll(':scope > section, :scope > header, #mistwrap > section').forEach(s => { s.hidden = true; });
+    root.querySelectorAll('#head, section').forEach(s => { s.hidden = true; });
     const hero = $('hero');
     hero.hidden = false;
     hero.replaceChildren(h('div', { class: 'rp-hero' }, h('div', { class: 'rp-gauge' }, UI.skel(null, 'circle:200')), h('div', { class: 'rp-facts' }, UI.skel(null, 'line.lg'), UI.skel(null, 'lines:4'))));
     const tiles = $('tiles');
     tiles.hidden = false;
-    tiles.replaceChildren(h('div', { class: 'stats' }, Array.from({ length: 10 }, () => UI.skel(null, 'tile'))));
+    tiles.replaceChildren(UI.skel(null, 'line.lg'), UI.skel(null, 'rows:5'));
     const rv = $('review');
     rv.hidden = false;
     rv.replaceChildren(UI.skel(null, 'line.lg'), UI.skel(null, 'cells:44'));
@@ -211,7 +217,7 @@
     $('main').removeAttribute('aria-busy');
     doc.title = `${r.label || 'Report'}${r.seq ? ` #${r.seq}` : ''} · SAT Freshman`;
     drawHead(); drawStrips(); drawHero(); drawRecovery(); drawLedger(); drawCompare(); drawMistakes(); drawValue(); drawTakeaways(); drawTiles();
-    drawHabits(); drawReview(); drawModules(); drawDomains(); drawSkills(); drawSplit(); drawBreakdown(); drawJudgement();
+    drawReview(); drawDomains(); drawSkills(); drawSplit(); drawBreakdown(); drawJudgement();
     drawPace(); drawNext();
     registerSections();
     if (!again) {
@@ -221,74 +227,82 @@
   }
 
   /* ------------------------------------------------------------ header */
-  function eyebrow() {
-    const r = R, k = r.kind, seq = r.seq ? ` #${r.seq}` : '';
-    const src = r.source ? ` · ${String(({ map: 'Map', mistakes: 'Mistakes', saved: 'Saved', fix: 'Fix these', plan: 'Plan', coach: 'Coach', today: 'Today', learn: 'Learn it', habit: 'Habit drill', twin: 'Try one like this' })[r.source] || r.source)}` : '';
-    if (k === 'mock') return `Practice test · Full Math section${seq} · Adaptive${/^\d+\.\d+$/.test(r.mock || '') ? ` · Form ${r.mock}` : ''}`;
-    if (k === 'module') return `Practice test · One module${seq}`;
-    if (k === 'diagnostic') return 'Diagnostic';
-    if (k === 'paper') return `Practice test · Paper${seq}`;
-    if (k === 'custom') return `Custom test · ${plural(r.asked, 'question')}`;
-    if (k === 'twin') return `Twin test${seq}`;
-    if (k === 'challenge') return `Daily challenge · ${UI.date(r.challenge && r.challenge.day ? r.challenge.day : r.finished)}`;
-    return `Practice set${seq}${src}`;
+  // the sitting's name is the h1; what kind of sitting it is joins the meta line
+  function sittingName() {
+    const r = R, seq = r.seq ? ` #${r.seq}` : '';
+    if (r.kind === 'challenge') return 'Daily challenge';
+    if (r.kind === 'diagnostic') return 'Diagnostic';
+    if (r.full) return UI.subjectLabel(r.subject || 'math');     // a full SAT's section: the crumb carries "Full SAT"
+    if (r.kind === 'mock') return `Full section${seq}`;
+    if (r.kind === 'module') return `One module${seq}`;
+    if (r.kind === 'paper') return `Paper${seq}`;
+    if (r.kind === 'custom') return 'Custom test';
+    if (r.kind === 'twin') return `Twin test${seq}`;
+    return `Practice set${seq}`;
+  }
+  function kindBits() {
+    const r = R, k = r.kind;
+    const src = r.source ? String(({ map: 'Map', mistakes: 'Mistakes', saved: 'Saved', fix: 'Fix these', plan: 'Plan', coach: 'Coach', today: 'Today', learn: 'Learn it', habit: 'Habit drill', twin: 'Try one like this' })[r.source] || r.source) : null;
+    if (k === 'mock' || k === 'full') return ['Adaptive', /^\d+\.\d+$/.test(r.mock || '') ? `Form ${r.mock}` : null];
+    if (k === 'custom') return [plural(r.asked, 'question')];
+    if (TESTS.includes(k) || k === 'challenge') return [];
+    return [src ? `From ${src}` : null];
   }
   function drawHead() {
     const el = $('head');
     el.hidden = false;
     el.replaceChildren();
-    const back = h('nav', { class: 'rp-back', 'aria-label': 'Back' }, h('a', { href: '/results/', text: '← Results' }));
+    // "Results / Full section #3": the way up and the name on one line, the actions beside them; the way back to where
+    // the student came from (the plan) is its own small line, only when there is one
     try {
       const ret = JSON.parse(sessionStorage.getItem('satf.return') || 'null');
-      if (ret && ret.href && /^\/[^/]/.test(ret.href)) back.append(h('a', { href: ret.href, text: `← ${ret.label || 'Back to your plan'}` }));
+      if (ret && ret.href && /^\/[^/]/.test(ret.href)) el.append(h('nav', { class: 'rp-back', 'aria-label': 'Back' }, h('a', { href: ret.href }, UI.icon('caret_left', 16), ` ${ret.label || 'Back to your plan'}`)));
     } catch (_) {}
-    const d = new Date(R.finished || R.started);
-    const bits = [UI.date(d, 'long')];             // the day, not the clock time (the user: no timestamps)
-    if (R.ms) bits.push(`${mins(R.ms)} min`);
-    bits.push(R.timed ? 'Timed' : 'Untimed');
-    const title = h('div', {}, h('p', { class: 'k', text: eyebrow() }), h('h1', { text: bits.join(' · ') }));
     const acts = h('div', { class: 'rp-acts' });
     headActions(acts);
-    el.append(back, h('div', { class: 'rp-title' }, title, acts));
-    // conditions: only what differs from a standard sitting (decision 7)
+    // a full SAT's section sits under its full SAT: "Results / Full SAT #2 / Reading and Writing"
+    const up = R.full ? [h('a', { href: R.full.href || `/results/full/?id=${encodeURIComponent(R.full.id)}`, text: `Full SAT${R.full.number ? ` #${R.full.number}` : ''}` }), h('span', { 'aria-hidden': 'true', text: '/' })] : [];
+    el.append(h('div', { class: 'rp-title' }, h('div', { class: 'rp-crumb' }, h('a', { href: '/results/', text: 'Results' }), h('span', { 'aria-hidden': 'true', text: '/' }), ...up,
+      h('h1', { class: 'h1', text: sittingName() })), acts));
+    // one meta line: the subject, the day (not the clock time: the user's rule), minutes, timing, then only what
+    // differs from a standard sitting (decision 7), then the note
+    const d = new Date(R.finished || (R.challenge && R.challenge.day) || R.started);
     const c = R.conditions || {}, J = R.judgement || {};
-    const chips = [];
-    if (c.timing && c.timing !== 'official' && test) chips.push(c.timing === 'untimed' ? 'Untimed' : `${String(c.timing).replace(/^x/, '')}× time`);
-    if (c.calculator === false) chips.push('Calculator off');
-    if (c.pauses) chips.push(`Paused ${n(c.pauses)}×`);
-    if (J.away && J.away.n) chips.push(`Left the window ${n(J.away.n)}× · ${tm(J.away.ms)}`);
-    const cond = h('div', { class: 'rp-row' }, chips.map(t => h('span', { class: 'rp-chip line', text: t })));
-    if (scored && c.timing && c.timing !== 'official') cond.append(h('span', { class: 'badge soft lg', text: `Practice only: ${chips[0] || 'not standard'}` }));
-    if (cond.childNodes.length) el.append(cond);
-    el.append(noteRow());
+    const bits = [R.full || !test ? null : UI.subjectLabel(R.subject || 'math'), UI.date(d, 'long'), R.ms ? `${mins(R.ms)} min` : null, R.timed ? 'Timed' : 'Untimed', ...kindBits()];
+    if (c.timing && c.timing !== 'official' && test) bits.push(c.timing === 'untimed' ? 'Untimed' : `${String(c.timing).replace(/^x/, '')}× time`);
+    if (c.calculator === false && !rwSit()) bits.push('Calculator off');     // R&W never has one
+    if (c.pauses) bits.push(`Paused ${n(c.pauses)}×`);
+    if (J.away && J.away.n) bits.push(`Left the window ${n(J.away.n)}× · ${tm(J.away.ms)}`);
+    const meta = h('p', { class: 'rp-meta' }, [...new Set(bits.filter(Boolean))].map(t => h('span', { text: t })));
+    // the timing that made it so is in the line already
+    if (scored && c.timing && c.timing !== 'official') meta.append(h('span', { class: 'badge soft', text: 'Practice only' }));
+    if (R.note) meta.append(h('span', {}, h('q', { text: R.note })));
+    el.append(meta);
+    noteBox = h('div', { class: 'rp-note', hidden: true });
+    el.append(noteBox);
   }
-  function noteRow() {
-    const box = h('div', { class: 'rp-note' });
-    const draw = editing => {
-      box.replaceChildren();
-      if (editing) {
-        const f = h('input', { class: 'field sm', maxlength: '140', value: R.note || '', 'aria-label': 'A note about this sitting', placeholder: 'tired, after school' });
-        const save = btn('Save', async b => {
-          b.setAttribute('aria-busy', 'true');
-          try { await UI.api(`/session/${encodeURIComponent(SID)}/note`, { method: 'POST', body: { note: f.value.trim() } }); R.note = f.value.trim() || null; draw(false); }
-          catch (_) { UI.toast('Not saved. Try again.'); b.removeAttribute('aria-busy'); }
-        });
-        f.addEventListener('keydown', e => { if (e.key === 'Enter') save.click(); if (e.key === 'Escape') draw(false); });
-        box.append(f, save, btn('Cancel', () => draw(false), 'quiet'));
-        setTimeout(() => f.focus(), 0);
-        return;
-      }
-      if (R.note) box.append(h('q', { text: R.note }));
-      if (owner) box.append(btn(R.note ? 'Edit note' : 'Add a note', () => draw(true), 'quiet'));
-    };
-    draw(false);
-    return box;
+  // the note: written from the More menu (Add a note, Edit note); it shows in the meta line
+  let noteBox = null;
+  function editNote() {
+    const box = noteBox;
+    if (!box) return;
+    const f = h('input', { class: 'field sm', maxlength: '140', value: R.note || '', 'aria-label': 'A note about this sitting', placeholder: 'tired, after school' });
+    const close = () => { box.hidden = true; box.replaceChildren(); };
+    const save = btn('Save', async b => {
+      b.setAttribute('aria-busy', 'true');
+      try { await UI.api(`/session/${encodeURIComponent(SID)}/note`, { method: 'POST', body: { note: f.value.trim() } }); R.note = f.value.trim() || null; drawHead(); }
+      catch (_) { UI.toast('Not saved. Try again.'); b.removeAttribute('aria-busy'); }
+    });
+    f.addEventListener('keydown', e => { if (e.key === 'Enter') save.click(); if (e.key === 'Escape') close(); });
+    box.replaceChildren(f, save, btn('Cancel', close, 'quiet'));
+    box.hidden = false;
+    setTimeout(() => f.focus(), 0);
   }
 
   /* the Fix primary: misses by points per minute up to the day's minutes (SR2) */
   function fixPlan() {
     const all = misses();
-    if (!scored || !R.ledger || !(R.best_value || []).length) return { list: all, pts: null, ms: all.reduce((s, x) => s + (x.budget_ms || 95455), 0), all: true };
+    if (!scored || !R.ledger || !(R.best_value || []).length) return { list: all, pts: null, ms: all.reduce((s, x) => s + (x.budget_ms || PACE_MS()), 0), all: true };
     let cap = null;
     try { const p = UI.prefs && UI.prefs.now && UI.prefs.now(); cap = p && +p.minutes > 0 ? +p.minutes * 60000 : null; } catch (_) { cap = null; }
     const take = [];
@@ -345,51 +359,55 @@
       prim.addEventListener('click', async () => {
         if (!test) { const nx = UI.nextItems ? UI.nextItems()[0] : null; if (nx) UI.start(nx).catch(() => UI.toast('Couldn’t start it. Try again.')); else location.href = '/practice/'; return; }
         prim.setAttribute('aria-busy', 'true');
-        try { const s = await UI.api('/mock/new', { method: 'POST', body: { full: true, timed: true } }); location.href = `/test/?s=${encodeURIComponent(s.id)}`; }
+        try { const s = await UI.api('/mock/new', { method: 'POST', body: { kind: 'section', subject: R.subject || 'math' } }); location.href = `/test/?s=${encodeURIComponent(s.id)}`; }
         catch (_) { prim.removeAttribute('aria-busy'); UI.toast('Couldn’t start a section. Try again.'); }
       });
     } else {
       const plan = fixPlan();
-      const label = plan.pts !== null || (scored && R.ledger)
-        ? `Win back${plan.pts !== null ? ` ${rx.pts(plan.pts)} pts` : ''} · ${plural(plan.list.length, 'question')} · ${mins(plan.ms)} min`
-        : `Fix these · ${n(all.length)}`;
-      const main = h('button', { type: 'button', class: 'pill', text: label, 'aria-keyshortcuts': 'F' });
+      const ledger = plan.pts !== null || (scored && R.ledger);
+      const size = `${plural(plan.list.length, 'question')} · about ${mins(plan.ms)} min`;
+      const label = ledger ? `Win back${plan.pts !== null ? ` ${rx.pts(plan.pts)} pts` : ''}` : `Fix these · ${n(all.length)}`;
+      const main = h('button', { type: 'button', class: 'pill', text: label, 'aria-keyshortcuts': 'F', title: ledger ? size : null, 'aria-label': ledger ? `${label}: ${size}` : null });
       main.addEventListener('click', () => drill(scored && R.ledger ? fixBody(plan.list, { order: 'given' }) : fixBody(all), main));
-      const more = h('button', { type: 'button', class: 'pill', 'aria-label': 'More ways to fix', 'aria-haspopup': 'menu', id: 'fixmore' }, '⌄');
-      more.addEventListener('click', () => UI.menu(more, fixMenu(), { label: 'Fix' }));
-      prim = h('span', { class: 'rp-split' }, main, more);
+      // the split button's menu half: a plain down caret (.split-btn turns it while open; caret_down would turn twice)
+      const more = h('button', { type: 'button', class: 'pill', 'aria-label': 'More ways to fix', 'aria-haspopup': 'menu', 'aria-expanded': 'false', id: 'fixmore' }, UI.icon('caret_down', 16));
+      // the menu opens on what the primary does, so its size is one tap away on a phone too
+      more.addEventListener('click', () => UI.menu(more, [...(ledger ? [{ group: `${label}: ${size}` }] : []), ...fixMenu()], { label: 'Fix' }));
+      prim = h('span', { class: 'split-btn' }, main, more);
       if (plan.pts === null && scored && R.ledger && owner) {
         UI.api(`/session/${encodeURIComponent(SID)}/whatif`, { method: 'POST', body: { right: qids(plan.list) }, quiet: true })
-          .then(w => { if (w && w.mid !== undefined) main.textContent = `Win back ${rx.pts(w.mid - R.ledger.mid)} pts · ${plural(plan.list.length, 'question')} · ${mins(plan.ms)} min`; }).catch(() => {});
+          .then(w => { if (w && w.mid !== undefined) { main.textContent = `Win back ${rx.pts(w.mid - R.ledger.mid)} pts`; main.setAttribute('aria-label', `${main.textContent}: ${size}`); } }).catch(() => {});
       }
     }
     acts.append(prim);
     if (sample) (prim.tagName === 'SPAN' ? [...prim.children] : [prim]).forEach(sampleTip);
-    // 2. Review mistakes
-    if (all.length) acts.append(btn('Review mistakes', () => openPlayer(all[0].i, { filter: 'misses' }), 'btn'));
-    // 3. Retake as a test: Tests' twin (S5); until it lands the server makes a fresh section of the same size
-    if (['mock', 'module', 'diagnostic', 'paper'].includes(R.kind)) {
-      const b = h('button', { type: 'button', class: 'btn', text: 'Retake as a test' });
-      if (UI.tooltip) UI.tooltip(b, 'Same question types, new numbers. Scored like any section.');
-      b.addEventListener('click', async () => {
-        b.setAttribute('aria-busy', 'true');
-        try { const s = await UI.api('/mock/new', { method: 'POST', body: { kind: 'twin', twin_of: SID, full: R.kind !== 'module', timed: true } }); location.href = `/test/?s=${encodeURIComponent(s.id || s.session)}`; }
-        catch (_) { b.removeAttribute('aria-busy'); UI.toast('Couldn’t start the retake. Try again.'); }
-      });
-      if (sample) sampleTip(b);
-      acts.append(b);
-    }
-    // 4. more
-    const dots = h('button', { type: 'button', class: 'btn icon', 'aria-label': 'More', 'aria-haspopup': 'menu', text: '⋯' });
-    dots.addEventListener('click', () => UI.menu(dots, moreItems(), { label: 'More', align: 'end' }));
+    // 2. Review mistakes (on a phone it is the first line of More, and the sticky strip's Review)
+    if (all.length) acts.append(btn('Review mistakes', () => openPlayer(all[0].i, { filter: 'misses' }), 'btn rp-rv'));
+    // 3. more: Retake as a test leads it
+    const dots = h('button', { type: 'button', class: 'btn icon', 'aria-label': 'More', 'aria-haspopup': 'menu' }, UI.icon('more', 18));
+    dots.addEventListener('click', () => UI.menu(dots, moreItems(dots), { label: 'More', align: 'end' }));
     acts.append(dots);
   }
-  function moreItems() {
+  // Retake as a test: Tests' twin (S5); until it lands the server makes a fresh section of the same size
+  async function retake(b) {
+    b.setAttribute('aria-busy', 'true');
+    try { const s = await UI.api('/mock/new', { method: 'POST', body: { kind: 'twin', twin_of: SID, full: R.kind !== 'module', timed: true } }); location.href = `/test/?s=${encodeURIComponent(s.id || s.session)}`; }
+    catch (_) { b.removeAttribute('aria-busy'); UI.toast('Couldn’t start the retake. Try again.'); }
+  }
+  function moreItems(dots) {
     const list = [];
+    const all = misses();
+    if (all.length && matchMedia('(max-width: 759px)').matches) list.push({ label: 'Review mistakes', onClick: () => openPlayer(all[0].i, { filter: 'misses' }) });
+    if (['mock', 'full', 'module', 'diagnostic', 'paper'].includes(R.kind) && (R.mine || sample)) {
+      list.push(sample ? { label: 'Retake as a test', sub: 'Sit your own section to use this.', disabled: true }
+        : { label: 'Retake as a test', sub: rwSit() ? 'Same skills and difficulty, questions you haven’t seen. Scored like any section.' : 'Same question types, new numbers. Scored like any section.', onClick: () => retake(dots) });
+    }
+    if (list.length) list.push({ separator: true });
     if (owner) {
-      if (drillKind) list.push({ label: `Same set, new numbers · ${n(IT.length)}`, onClick: () => drill({ from_session: SID, scope: 'all' }) });
+      if (drillKind) list.push({ label: `Same set, ${rwSit() ? 'new questions' : 'new numbers'} · ${n(IT.length)}`, onClick: () => drill({ from_session: SID, scope: 'all' }) });
       list.push({ label: `Redo as practice · answers shown · ${n(IT.length)}`, onClick: () => drill({ from_session: SID, scope: 'all', timed: true }) });
       list.push({ label: 'Compare with…', onClick: compareSheet });
+      list.push({ label: R.note ? 'Edit note' : 'Add a note', onClick: editNote });
       if (scored && R.ledger) list.push({ label: 'What if…', kbd: 'W', onClick: () => whatifMode(true) });
       list.push({ separator: true });
     }
@@ -429,10 +447,10 @@
     else if (!R.mine) text = [h('b', { text: 'Shared report · read-only' })];
     const res = R.rescored || [];
     const strips = [];
-    if (text) strips.push(h('div', { class: 'rp-strip' }, text));
+    if (text) strips.push(h('div', { class: 'rp-strip', 'data-nofold': '' }, text));
     res.forEach(x => {
       const it = byId.get(x.qid);
-      strips.push(h('div', { class: 'rp-strip' }, `${it ? labelOf(it) : 'A question'} was corrected on ${UI.date(x.at)} after a report. This sitting was re-scored: ${rx.band(x.before)} → ${rx.band(x.after)}.`));
+      strips.push(h('div', { class: 'rp-strip', 'data-nofold': '' }, `${it ? labelOf(it) : 'A question'} was corrected on ${UI.date(x.at)} after a report. This sitting was re-scored: ${rx.band(x.before)} → ${rx.band(x.after)}.`));
     });
     strips.reverse().forEach(s => $('head').after(s));
     stickBar();
@@ -460,11 +478,12 @@
       !$('breakdown').hidden && { id: 'breakdown', label: 'Breakdown' }, !$('judgement').hidden && { id: 'judgement', label: 'Judgement' },
       !$('pace').hidden && { id: 'pace', label: 'Time' }].filter(Boolean);
   }
-  function registerSections() { UI.shell({ page: 'report', sections: jumpList() }); stickBar(); }
+  // the header's Fix / Win back pill is the page's one orange: Up next's Start goes .btn while it shows
+  function registerSections() { UI.shell({ page: 'report', ownPrimary: !!$('head').querySelector('.pill'), sections: jumpList() }); stickBar(); }
 
-  /* ------------------------------------------------------------ recovery status line (SR6, SR3) */
-  /* one line under the hero: Second look 3/8 · Fix 2/5 closed · Check-ins · Prove it Oct 6.
-     The one Fix/Win back action is the header's; the second look keeps its Start and Show answers. */
+  /* ------------------------------------------------------------ recovery (SR6, SR3): four steps, one row each */
+  /* Second look (Start, Show answers now) · Fix n/m closed · Check-ins · Prove it by a date. The one Fix / Win back
+     action is the header's; Prove it is in its menu. */
   function drawRecovery() {
     const el = $('recovery');
     el.hidden = true;
@@ -476,7 +495,9 @@
     if (!offered && !(scored && all.length)) return;
     const closed = (R.mistakes || []).filter(m => m.closed).length, groups = (R.mistakes || []).length;
     const due = new Date(new Date(R.finished).getTime() + 7 * 864e5);
-    const bits = [];
+    const step = (done, name, value, more) => h('li', {}, h('span', { class: 'mk' + (done ? ' on' : ''), 'aria-hidden': 'true' }, done ? UI.icon('check', 10) : null),
+      h('span', { class: 'nm' }, name, done ? h('span', { class: 'sr', text: ' (done)' }) : null), h('span', { class: 'v' }, value || ''), more || null);
+    const rows = [];
     if (offered) {
       const start = btn('Start second look', startSecond, 'btn sm');
       const skip = btn('Show answers now', async b => {
@@ -484,17 +505,22 @@
         try { await UI.api(`/session/${encodeURIComponent(SID)}/second/state`, { method: 'POST', body: { state: 'skipped' } }); await refresh(); }
         catch (_) { b.removeAttribute('aria-busy'); UI.toast('Not saved. Try again.'); }
       }, 'quiet');
-      bits.push(h('span', {}, h('b', { text: 'Second look ' }), `${plural(s2.unseen.length, 'miss', 'misses')} · answers hidden · about ${n(Math.max(1, s2.minutes || 1))} min`), start, skip);
       if (UI.tooltip) UI.tooltip(start, 'Re-work each miss before you see the answer. It tells a slip from a gap, and it makes the fix stick.');
-    } else if (s2.looked) bits.push(h('span', {}, h('b', { text: 'Second look ' }), h('span', { class: 'rp-num', text: `${n(s2.looked)}/${n(all.length)}` })));
+      rows.push(step(false, 'Second look', `about ${n(Math.max(1, s2.minutes || 1))} min`,
+        h('div', { class: 'sub' }, h('p', { class: 'meta', text: `${plural(s2.unseen.length, 'miss', 'misses')} · answers hidden` }), h('div', { class: 'acts' }, start, skip))));
+    } else if (s2.looked) rows.push(step(s2.looked >= all.length, 'Second look', h('span', { class: 'rp-num', text: `${n(s2.looked)}/${n(all.length)}` })));
     if (scored && all.length) {
-      if (groups) bits.push(h('span', {}, h('b', { text: 'Fix ' }), h('span', { class: 'rp-num', text: `${n(closed)}/${n(groups)}` }), ' closed'));
-      bits.push(link('Check-ins', '/review/'), h('span', {}, h('b', { text: 'Prove it ' }), UI.date(due)));
+      if (groups) rows.push(step(closed >= groups, 'Fix', h('span', {}, h('span', { class: 'rp-num', text: `${n(closed)}/${n(groups)}` }), ' closed')));
+      rows.push(step(false, h('a', { href: '/review/', text: 'Check-ins' }), ''));
+      rows.push(step(false, 'Prove it', `by ${UI.date(due)}`));
     }
-    bits.push(info('Four steps turn these misses into points: look again cold, fix them, pass the check-ins, then prove it on a fresh test. Prove it is in the Win back menu.', 'Your recovery'));
-    el.hidden = false;
-    el.append(h('span', { class: 'k', text: 'Recovery' }), ...bits);
+    head(el, { title: 'Recovery', about: 'recovery', tip: 'Four steps turn these misses into points: look again cold, fix them, pass the check-ins, then prove it on a fresh test. Prove it is in the Win back menu.' });
+    el.append(h('ol', { class: 'rp-steps' }, rows));
+    const done = new Map([...el.querySelectorAll('.rp-steps > li')].filter(li => li.querySelector('.mk.on')).map(li => [li.querySelector('.nm').textContent, li.querySelector('.mk')]));
+    if (recDone && UI.fx) done.forEach((mk, k) => { if (!recDone.has(k)) UI.fx.check(mk); });
+    recDone = new Set(done.keys());
   }
+  let recDone = null;      // the steps done at the last draw: one that turns done on a refresh draws its check
 
   /* ------------------------------------------------------------ second look (SR3) */
   function startSecond() {
@@ -543,35 +569,40 @@
     const prevName = prev ? `${R.label} #${prev.seq}` : null;
     const differs = x => x && (Math.round(x.low) !== e.low || Math.round(x.high) !== e.high) ? x : null;   // a layer that says nothing new is left out
     const today = (rec.recovered || []).length ? differs(rec.now) : null;
+    const sweep = FRESH && !drawHero.swept;
+    drawHero.swept = true;
     gaugeApi = UI.gauge(g, { band: e, target: (R.profile || {}).target, previous: prev ? { ...prev.estimate, label: prevName } : null, today, second: differs(s2.with),
-      subject: R.subject || 'math', sub: `${UI.SUBJECT ? UI.SUBJECT[R.subject || 'math'].label : 'Math'} · middle ${mid}`, animate: FRESH,
-      caption: 'Math measured here. Reading and Writing is your own score until SAT Freshman has R&W questions.' });
-    if (FRESH && gaugeApi && gaugeApi.el) gaugeApi.el.setAttribute('data-animate', '');
+      subject: R.subject || 'math', sub: `${UI.SUBJECT ? UI.SUBJECT[R.subject || 'math'].label : 'Math'} · middle ${mid}`, animate: sweep });
     wrap.append(g);
     const f = h('div', { class: 'rp-facts' });
-    // movement
+    // movement, and what the score is made of behind a "?" (it was a folded caption under the dial)
+    const about = info(`This sitting’s ${UI.subjectLabel(R.subject || 'math')} range, from how many you got right and which module 2 you reached. An estimate from our questions, shown to ±10 points, not a College Board score.`, 'this score');
+    let chip;
     if (prev) {
-      const d = Math.round(((e.low + e.high) - (prev.estimate.low + prev.estimate.high)) / 2);
-      f.append(h('div', { class: 'rp-row' }, h('span', { class: 'rp-chip' + (d > 0 ? ' ok' : ''), text: `${d > 0 ? '+' : d < 0 ? '−' : '±'}${n(Math.abs(d))} vs ${prevName} (${UI.date(prev.finished)})` })));
-    } else f.append(h('div', { class: 'rp-row' }, h('span', { class: 'rp-chip line', text: `First ${String(R.label || 'section').toLowerCase()}` })));
-    // target and the path to it (SR2)
+      const d = Math.round(((e.low + e.high) - (prev.estimate.low + prev.estimate.high)) / 20) * 10;   // on tens
+      chip = h('span', { class: 'badge lg' + (d > 0 ? '' : ' soft'), text: `${d > 0 ? '+' : d < 0 ? '−' : '±'}${n(Math.abs(d))} vs ${prevName} (${UI.date(prev.finished)})` });
+    } else chip = h('span', { class: 'badge soft lg', text: `First ${kindWord()}` });
+    f.append(h('div', { class: 'rp-row' }, sweep && UI.spotArt ? h('span', { class: 'rp-done', html: UI.spotArt('done', doneMs()) }) : null, chip, about));
+    // the change lands after the sweep, once (the gauge sweeps 1200ms)
+    if (sweep && UI.motion) UI.motion.enter(chip, 'nudge', { delay: 1200 });
+    // target and the path to it (SR2); the number itself is on the dial, right above
     const tgt = (R.profile || {}).target, path = R.path;
     if (tgt) {
       let line;
-      if (path && path.state === 'reached') line = h('p', { class: 'rp-line' }, h('b', { text: `Target ${tgt}` }), ' reached on this section.');
-      else if (path && path.state === 'out_of_reach') line = h('p', { class: 'rp-line' }, `All right on this route reaches ${Math.round(path.estimate.high)}; ${tgt} needs the harder Module 2.`);
-      else if (path && path.state === 'reachable') line = h('p', { class: 'rp-line' }, h('b', { text: `${plural(path.n, 'question')} from ${tgt}` }), ' on this section: ', qchips(path.qids.map(id => byId.get(id)).filter(Boolean)));
-      else line = h('p', { class: 'rp-line' }, h('b', { text: `Target ${tgt}` }), e.high >= tgt ? ' · reached' : ` · ${n(tgt - e.high)} above this high end`);
+      if (path && path.state === 'reached') line = h('p', { class: 'rp-line' }, h('b', { text: 'Target reached' }), ' on this section.');
+      else if (path && path.state === 'out_of_reach') line = h('p', { class: 'rp-line' }, `All right on this route reaches ${Math.round(path.estimate.high)}; your target needs the harder Module 2.`);
+      else if (path && path.state === 'reachable') line = h('p', { class: 'rp-line' }, h('b', { text: `${plural(path.n, 'question')} from your target` }), ' on this section: ', qchips(path.qids.map(id => byId.get(id)).filter(Boolean)));
+      else line = h('p', { class: 'rp-line' }, e.high >= tgt ? h('b', { text: 'Target reached' }) : [h('b', { text: `${n(tgt - e.high)} to your target` }), ' from the high end']);
       f.append(line);
     } else if (owner) f.append(h('p', { class: 'rp-line' }, link('Set a target', '/plan/')));
     // one percentile in view (nationally, else students here); the rest sits under Details (SR5)
     const det = [];
     const rk = R.rank || {}, nat = rk.national;
     const natOk = nat && nat.low_pct !== undefined, stu = rk.pct !== null && rk.pct !== undefined;
-    const stuLine = () => h('p', { class: 'rp-line' }, h('b', { text: `${Math.round(rk.pct * (rk.pct <= 1 ? 100 : 1))}%` }), ` of students here scored at or below you on their first ${String(R.label || 'section').toLowerCase()} (${n(rk.n)} students) `,
+    const stuLine = () => h('p', { class: 'rp-line' }, h('b', { text: `${Math.round(rk.pct * (rk.pct <= 1 ? 100 : 1))}%` }), ` of students here scored at or below you on their first ${kindWord()} (${n(rk.n)} students) `,
       h('span', { class: 'badge soft', text: rk.ranked ? 'Ranked · your first' : `Not ranked · retake #${rk.attempt}` }));
-    if (natOk) f.append(h('p', { class: 'rp-line' }, `About the `, h('b', { text: `${ord(nat.low_pct)}–${ord(nat.high_pct)}` }), ' percentile nationally ',
-      info(`Your band ${rx.band(e)} sits at about this percentile of SAT takers (College Board, ${nat.year}). Our band is an estimate. This places it on College Board’s published table; it is not a College Board score.`, 'About this')));
+    if (natOk) f.append(h('p', { class: 'rp-line' }, `About the `, h('b', { text: pctTxt(nat) }), ' percentile nationally ',
+      info(`Your band ${rx.band(e)} sits at about this percentile of SAT takers (College Board, ${nat.year}). Our band is an estimate. This places it on College Board’s published table; it is not a College Board score.`, 'the percentile')));
     if (stu) { if (natOk) det.push(stuLine()); else f.append(stuLine()); }
     else if (!rk.ranked && rk.attempt > 1) {
       const b = h('span', { class: 'badge soft', text: `Not ranked · retake #${rk.attempt}` });
@@ -580,7 +611,7 @@
     }
     // the route (Module 1 decides Module 2)
     const m1 = R.module1, rule = R.route_rule || {};
-    if (R.kind === 'mock' && m1 && m1.asked) {
+    if (['mock', 'full'].includes(R.kind) && m1 && m1.asked) {
       const up = R.route === 'upper';
       f.append(h('p', { class: 'rp-line' }, `Module 1: `, h('b', { text: `${sc(m1.right, m1.asked)} (${pc(m1.right, m1.asked)}%)` }),
         up ? ' earned the harder Module 2.' : ` → easier Module 2, which tops out at ${rule.lower_ceiling || 580}.${e.capped ? ` Capped at ${rule.lower_ceiling || 580} by the easier route.` : ''}`));
@@ -593,21 +624,31 @@
     if (R.twins && R.twins.n) det.push(h('p', { class: 'rp-line' }, h('a', { href: '#mistakes', text: `Tried ${n(R.twins.n)} like this since · ${n(R.twins.right)} right` })));
     const tot = totalBlock();
     if (tot) det.push(tot);
-    if (det.length) f.append(h('details', {}, h('summary', { text: 'Details' }), h('div', {}, det)));
+    if (det.length) f.append(h('details', { class: 'fold' }, h('summary', { class: 'fold-s', text: 'Details' }), h('div', {}, det)));
     wrap.append(f);
     el.append(wrap);
     if (!(R.summary || {}).answered) { el.replaceChildren(h('p', { class: 'rp-line', text: 'Nothing answered, so there is no estimate.' })); gaugeApi = null; }
   }
+  // the four domains' mastery for the mark (Algebra, Advanced Math, PSDA, Geometry), 0 to 1 of Strong
+  const doneMs = () => (rwSit() ? domOrder() : ['Algebra', 'Advanced Math', 'Problem-Solving', 'Geometry']).map(k => { const d = (R.domains || []).find(x => String(x.domain).startsWith(k)); return d ? Math.min(1, (d.mastery || 0) / (UI.STRONG || 0.8)) : 0; });
+  // "full section", "module"; a full SAT's section says "full SAT" (its kind keeps the acronym)
+  // "84th–86th", or one figure when a 20-point range sits inside one percentile ("1st", never "1st–1st")
+  const pctTxt = p => (ord(p.low_pct) === ord(p.high_pct) ? ord(p.low_pct) : `${ord(p.low_pct)}–${ord(p.high_pct)}`);
+  const kindWord = () => (R.full ? 'full SAT' : String(R.label || 'section').toLowerCase());
   const ord = v => { const x = Math.round(v); const s = ['th', 'st', 'nd', 'rd'], m = x % 100; return x + (s[(m - 20) % 10] || s[m] || s[0]); };
+  // the total this sitting makes with the other section (estimate.total: this one plus the other subject's latest,
+  // R&W first); a full SAT's section links its full result instead
   function totalBlock() {
     const t = R.total;
+    if (R.full) return h('p', { class: 'rp-line' }, h('a', { href: R.full.href || `/results/full/?id=${encodeURIComponent(R.full.id)}`, text: 'This full SAT’s total and both sections' }));
     if (t && t.low) {
-      const rw = (t.parts || []).find(p => p.subject === 'rw');
-      return h('div', { class: 'rp-line' }, h('b', { text: `Total ≈ ${n(t.low)}–${n(t.high)}` }),
-        t.pct ? ` · about the ${ord(t.pct.low_pct)}–${ord(t.pct.high_pct)} percentile` : '',
-        rw ? h('p', { class: 'rp-helper', text: `Math ${rx.band(R.estimate)} measured here · R&W ${rw.value}, you entered ${UI.date(rw.at)}${rw.source && rw.source !== 'self' ? ` (${cap(rw.source)})` : ''}` }) : null);
+      const said = p => `${UI.subjectLabel(p.subject, true)} ${p.low !== undefined && p.low !== p.high ? `${p.low}–${p.high}` : p.value}${p.id === SID ? ' here' : p.source && p.source !== 'measured' ? ` (${p.source === 'self' ? 'you entered' : cap(p.source)}${p.at ? `, ${UI.date(p.at)}` : ''})` : p.at ? ` (${UI.date(p.at)})` : ''}`;
+      return h('div', { class: 'rp-line' }, h('b', { text: `Total ${n(t.low)}–${n(t.high)}` }),
+        t.pct ? ` · about the ${pctTxt(t.pct)} percentile` : '',
+        (t.parts || []).length ? h('p', { class: 'rp-helper', text: t.parts.map(said).join(' · ') }) : null);
     }
-    if (!owner) return '';
+    // no total yet: a Math sitting can take a typed R&W score (a Bluebook or official one); R&W has no Math field
+    if (!owner || rwSit()) return '';
     const box = h('div', { class: 'rp-rw' });
     const f = h('input', { class: 'field sm', type: 'number', min: '200', max: '800', step: '10', inputmode: 'numeric', 'aria-label': 'Your R&W score, 200 to 800', placeholder: 'R&W' });
     const src = h('select', { class: 'field sm', 'aria-label': 'Where it is from' }, ['Bluebook', 'Official', 'Other'].map(s => h('option', { value: s.toLowerCase(), text: s })));
@@ -624,7 +665,7 @@
   function heroCount(el) {
     const s = R.summary || {};
     const wrap = h('div', { class: 'rp-hero' });
-    const left = h('div', { class: 'rp-gauge rp-count' }, h('span', { class: 'rp-big', text: sc(s.correct || 0, R.asked || 0) }), h('span', { class: 'rp-num', text: `${pc(s.correct || 0, R.asked || 0)}%` }));
+    const left = h('div', { class: 'rp-gauge rp-count' }, h('span', { class: 'hero-num', text: sc(s.correct || 0, R.asked || 0) }), h('span', { class: 'rp-num', text: `${pc(s.correct || 0, R.asked || 0)}%` }));
     const f = h('div', { class: 'rp-facts' });
     const repairs = IT.filter(x => x.repair && x.bucket !== 'not_reached').length;
     const topics = [...new Set(IT.map(x => topicName(x.topic, x.topic_name)))].slice(0, 3);
@@ -639,7 +680,7 @@
   function heroChallenge(el) {
     const s = R.summary || {}, c = R.challenge || {}, ct = R.contest || {};
     const wrap = h('div', { class: 'rp-hero' });
-    wrap.append(h('div', { class: 'rp-gauge rp-count' }, h('span', { class: 'rp-big', text: sc(s.correct || 0, R.asked || 0) }), R.ms ? h('span', { class: 'rp-num', text: tm(R.ms) }) : null));
+    wrap.append(h('div', { class: 'rp-gauge rp-count' }, h('span', { class: 'hero-num', text: sc(s.correct || 0, R.asked || 0) }), R.ms ? h('span', { class: 'rp-num', text: tm(R.ms) }) : null));
     const f = h('div', { class: 'rp-facts' });
     if (ct.points !== undefined && ct.points !== null) {
       const pp = ct.points_parts || {};
@@ -671,14 +712,14 @@
       const by = {};
       all.forEach(x => { if (x.cause) by[x.cause] = (by[x.cause] || 0) + 1; });
       if (!Object.keys(by).length) return;
-      head(el, { k: 'Why you missed', title: `${plural(all.length, 'miss', 'misses')}, by cause` });
+      head(el, { fig: [n(all.length), `${all.length === 1 ? 'miss' : 'misses'}, by cause`] });
       UI.stackBar(el, CAUSES.filter(c => by[c]).map(c => ({ key: c, label: causeName(c), value: by[c], n: by[c] })), { label: 'Misses by cause', noun: 'misses', format: v => n(v),
         onPick: s => setFilter('cause', s.key) });
       return;
     }
     let mode = LS.get('satf.report.ledger', 'cause');
     const seg = UI.seg(null, [{ value: 'cause', label: 'By cause' }, { value: 'tier', label: 'By difficulty' }], { value: mode, label: 'Split the points', onChange: v => { mode = v; LS.set('satf.report.ledger', v); draw(); } });
-    head(el, { k: 'Where your points went', title: `About ${rx.pts(L.total).replace('≈ ', '')} points below all right on this route (${rx.band({ low: Math.round(L.all_right.low), high: Math.round(L.all_right.high) })})`,
+    head(el, { fig: [rx.pts(L.total), `pts below all right on this route (${rx.band({ low: Math.round(L.all_right.low), high: Math.round(L.all_right.high) })})`], about: 'the points',
       tip: 'Each group’s points are what fixing it is worth on average, whatever you fix first, so the groups add up to the whole gap. Re-scored with this report’s own scoring, on the route you took.', right: seg.el });
     const box = h('div');
     el.append(box);
@@ -703,14 +744,14 @@
   async function drawCompare() {
     const el = $('compare');
     if (!VS || !owner) { el.hidden = true; return; }
-    head(el, { k: 'Compared', title: 'Then vs now' });
+    head(el, { title: 'Then vs now' });
     el.append(UI.skel(null, 'lines:3'));
     let c;
     try { c = await UI.api(`/session/${encodeURIComponent(SID)}/compare?with=${encodeURIComponent(VS)}`, { quiet: true }); }
     catch (e) { UI.cardError(el, drawCompare, e && e.status === 403 ? 'Only your own sittings can be compared.' : 'Couldn’t load the comparison.'); return; }
     const w = c.with || {};
-    head(el, { k: `Compared with ${w.label || 'that sitting'}${w.seq ? ` #${w.seq}` : ''} · ${c.paired === IT.length ? `same ${n(c.paired)} question types` : `${n(c.paired)} question types appear in both`}`,
-      title: c.band && c.band.then && c.band.now ? `${rx.band(c.band.then)} → ${rx.band(c.band.now)} (${c.band.delta > 0 ? '+' : ''}${n(c.band.delta)})` : 'Then vs now' });
+    head(el, { title: 'Then vs now', meta: `with ${w.label || 'that sitting'}${w.seq ? ` #${w.seq}` : ''} · ${c.paired === IT.length ? `same ${n(c.paired)} question types` : `${n(c.paired)} question types appear in both`}` });
+    if (c.band && c.band.then && c.band.now) el.append(h('p', { class: 'rp-line' }, h('b', { text: `${rx.band(c.band.then)} → ${rx.band(c.band.now)} (${c.band.delta > 0 ? '+' : ''}${n(c.band.delta)})` })));
     const k = c.counts || {};
     const misses0 = (k.fixed || 0) + (k.still_missing || 0);
     const bits = [misses0 ? `${n(k.fixed || 0)} of your ${n(misses0)} misses are now right` : null, k.slipped ? `${n(k.slipped)} slipped` : null,
@@ -720,7 +761,7 @@
     if (c.module2 === 'different_route') el.append(h('p', { class: 'rp-line', text: 'Module 2: a different route this time.' }));
     const chipRow = h('div', { class: 'rp-row' });
     [['fixed', 'Fixed'], ['slipped', 'Slipped'], ['still_missing', 'Still missing'], ['held', 'Held']].forEach(([key, lab]) => {
-      if (k[key]) chipRow.append(h('span', { class: 'rp-chip', text: `${lab} · ${n(k[key])}${key === 'still_missing' && k.same_trap ? ` (same trap again ${n(k.same_trap)})` : ''}` }));
+      if (k[key]) chipRow.append(h('span', { class: 'badge soft lg', text: `${lab} · ${n(k[key])}${key === 'still_missing' && k.same_trap ? ` (same trap again ${n(k.same_trap)})` : ''}` }));
     });
     el.append(chipRow);
     const mods = new Map();
@@ -741,8 +782,8 @@
     // the misses count is the Incorrect tile's and the Fix pill's already: a takeaway never repeats it (the user's rule)
     const list = ((R.debrief || {}).takeaways || []).filter(t => t.kind !== 'misses').slice(0, 3);
     if (!list.length || !owner) return;
-    head(el, { k: 'Takeaways', title: 'What to do about this sitting' });
-    const box = h('div', { class: 'rp-cards' });
+    head(el, { title: 'Takeaways' });
+    const box = h('ul', { class: 'rp-takes' });
     const all = misses();
     const rushed = IT.filter(x => x.time === 'rushed');
     list.forEach(t => {
@@ -751,7 +792,7 @@
       else if (t.kind === 'pace' && rushed.length) act = btn(`Careful set · ${n(rushed.length)}`, b => drill(fixBody(rushed, { timing: 'careful' }), b));
       else if (t.kind === 'changes') act = btn('See them', () => setShow('changed'));
       else if (all.length) act = btn('Review', () => openPlayer(all[0].i, { filter: 'misses' }));
-      box.append(h('div', { class: 'rp-card' }, h('h3', { text: cap(t.text) }), act ? h('div', { class: 'rp-row' }, act) : null));
+      box.append(h('li', {}, h('p', { text: cap(t.text) }), act));
     });
     el.append(box);
   }
@@ -762,8 +803,7 @@
     el.hidden = false;
     el.replaceChildren();
     const s = R.summary || {};
-    const box = h('div', { class: 'stats' });
-    const L = R.ledger, pv = R.previous;
+    const L = R.ledger;
     const tiles = [];
     const filt = key => ({ onClick: () => setShow(S.show === key ? 'all' : key) });
     // "n still open" only when some are closed: all open would repeat the tile's own number
@@ -784,11 +824,9 @@
       if (!chall && fixed) tiles.push({ label: 'Fixed', value: fixed, sub: 'closed since' });
     } else {
       // Correct (with %), Time, Per question and at most one of Unanswered / Flagged / Changed. Incorrect and Accuracy
-      // are Correct's own numbers; Second look and Recovered are on the status line and under the hero's Details;
-      // the "Show" chips filter, so the tiles no longer do.
-      const path = R.path;
-      tiles.push({ label: 'Correct', value: sc(s.correct || 0, R.asked || 0), sub: [`${Math.round((s.accuracy || 0) * 100)}%`, s.unanswered ? `${Math.round((s.accuracy_answered || 0) * 100)}% of answered` : null,
-        path && path.state === 'reachable' ? `need ${n((s.correct || 0) + path.n)} for ${path.target}` : null].filter(Boolean).join(' · ') });
+      // are Correct's own numbers; Second look and Recovered are in Recovery and under the score's Details; what the
+      // target needs is the score's own line (one number said once); the "Show" chips filter, so the rows do not.
+      tiles.push({ label: 'Correct', value: sc(s.correct || 0, R.asked || 0), sub: [`${Math.round((s.accuracy || 0) * 100)}%`, s.unanswered ? `${Math.round((s.accuracy_answered || 0) * 100)}% of answered` : null].filter(Boolean).join(' · ') });
       const ch = s.changed || {};
       if (s.unanswered) tiles.push({ label: 'Unanswered', value: s.unanswered, sub: [L && L.blank_pts ? `${rx.pts(L.blank_pts).replace('≈ ', '≈ −')} pts` : null, 'a guess costs nothing'].filter(Boolean).join(' · ') });
       else if (s.flagged) tiles.push({ label: 'Flagged', value: s.flagged, sub: s.flagged_wrong ? `${n(s.flagged_wrong)} of them wrong` : 'all right' });
@@ -796,31 +834,27 @@
       if (s.ms) tiles.push({ label: 'Time', value: tm(s.ms), sub: R.timed && R.clock_ms ? `of ${tm(R.clock_ms)}` : 'untimed' });
       if (s.avg_ms) tiles.push({ label: 'Per question', value: tm(s.avg_ms), sub: `test pace ${tm(s.pace_ms)}` });
     }
-    tiles.forEach(t => { t.countUp = FRESH && !!pv; });   // SR4: counting only on the first view after Finish
-    tiles.forEach(t => UI.tile(box, t));
-    box.style.setProperty('--cols', String(Math.min(5, tiles.length)));
-    el.append(box);
+    el.append(h('div', { class: 'card-head' }, h('h2', { text: 'Summary' })), rx.kv(tiles, { label: 'Summary' }));
   }
 
-  /* ------------------------------------------------------------ habits (SR11) */
-  function drawHabits() {
-    const el = $('habits');
-    el.hidden = true;
+  /* ------------------------------------------------------------ habits (SR11): a group in Mistakes */
+  function habitGroup() {
     const fam = R.habits || [], norms = R.norms || [];
-    if (!fam.length && !norms.length) return;
-    head(el, { k: 'Habits', title: 'The same slip in more than one place' });
+    if (!fam.length && !norms.length) return null;
+    const box = h('div', { class: 'rp-group' }, h('h3', { text: 'Habits: the same slip in more than one place' }));
     fam.forEach(f => {
       const list = f.qids.map(id => byId.get(id)).filter(Boolean);
-      el.append(h('div', { class: 'rp-vrow' }, h('div', {}, h('h3', { class: 'h3', text: `${f.name} · ${n(list.length)} of your ${n(misses().length)} misses` }),
+      box.append(h('div', { class: 'rp-vrow' }, h('div', {}, h('h4', { class: 'h3', text: `${f.name} · ${n(list.length)} of your ${n(misses().length)} misses` }),
         f.tell ? h('p', { class: 'rp-helper' }, h('i', { text: f.tell })) : null, qchips(list)),
         owner ? btn('Drill this habit · 8', b => drill({ source: 'habit', habit: f.id, count: 8 }, b)) : ''));
     });
     norms.forEach(m => {
       const list = m.qids.map(id => byId.get(id)).filter(Boolean);
-      el.append(h('div', { class: 'rp-vrow' }, h('div', {}, h('h3', { class: 'h3', text: `${cap(m.label)} ×${n(m.hits_all_time || list.length)}` }),
-        h('p', { class: 'rp-helper', text: `${plural((m.templates || []).length || 1, 'question type')}` }), qchips(list)),
+      box.append(h('div', { class: 'rp-vrow' }, h('div', {}, h('h4', { class: 'h3', text: `${cap(m.label)} ×${n(m.hits_all_time || list.length)}` }),
+        h('p', { class: 'meta', text: `${plural((m.templates || []).length || 1, 'question type')}` }), qchips(list)),
         owner ? btn('Trap drill · 10', b => drill({ pool: 'related', ids: [m.norm], count: 10 }, b)) : ''));
     });
+    return box;
   }
 
   /* ------------------------------------------------------------ mistakes */
@@ -844,17 +878,23 @@
     const { rows, blanks } = mistakeRows();
     const named = rows.filter(r => r.m && r.m.kind === 'misconception').length, grid = rows.filter(r => r.first.type === 'spr').length;
     const fixed = rows.filter(r => r.group === 'fixed').length;
-    head(el, { k: `Mistakes · ${n(all.length)}`, title: all.length ? 'Every miss, named' : 'No mistakes',
+    head(el, { ...(all.length ? { fig: [n(all.length), all.length === 1 ? 'miss' : 'misses'] } : { title: 'Mistakes' }),
       meta: [named ? `${n(named)} named` : null, grid ? plural(grid, 'grid-in') : null, blanks.length ? `${n(blanks.length)} not answered` : null, fixed ? `${n(fixed)} fixed since` : null].filter(Boolean).join(' · ') });
-    if (!all.length) { el.append(h('p', { class: 'rp-helper', text: (R.summary || {}).answered ? 'Every question right.' : 'Nothing answered, so nothing to fix yet.' })); return; }
-    const rv = h('p', { class: 'meta', id: 'reviewed' });
-    el.querySelector('.card-head').append(rv);
+    if (!all.length) {
+      const right = !!(R.summary || {}).answered;
+      el.append(h('div', { class: 'rp-clear' }, right && UI.spotArt ? h('span', { html: UI.spotArt('clear') }) : null, h('p', { class: 'rp-helper', text: right ? 'Every question right.' : 'Nothing answered, so nothing to fix yet.' })));
+      const hg = habitGroup(); if (hg) el.append(hg); return;
+    }
+    // "Reviewed 3 of 7" joins the head's one meta line
+    const hd = el.querySelector('.card-head');
+    let meta = hd.querySelector(':scope > .meta');
+    if (!meta) { meta = h('span', { class: 'meta' }); hd.firstElementChild.after(meta); }
+    meta.append(h('span', { id: 'reviewed', 'data-sep': meta.textContent ? ' · ' : '' }));
     reviewedLine();
     const sorts = [...(scored && R.ledger ? [{ value: 'points', label: 'Most points' }] : []), { value: 'order', label: 'Question order' }, { value: 'open', label: 'Open first' }, { value: 'topic', label: 'By topic' }, { value: 'hits', label: 'Most hit' }];
     let sort = sorts[0].value;
-    const sel = h('select', { class: 'field sm', 'aria-label': 'Sort mistakes' }, sorts.map(s => h('option', { value: s.value, text: s.label })));
-    sel.addEventListener('change', () => { sort = sel.value; draw(); });
-    el.querySelector('.card-head').append(h('div', { class: 'rp-headr' }, sel));
+    const sel = UI.dropdown(null, { label: 'Sort', sm: true, plain: true, noAll: true, default: sort, value: sort, options: sorts, onChange: v => { sort = v; draw(); } });
+    hd.append(h('div', { class: 'rp-headr' }, sel.el));
     const body = h('div');
     el.append(body);
     const heldAny = IT.some(x => x.held);
@@ -879,7 +919,9 @@
           owner ? btn(`Practise these ${n(blanks.length)}`, b => drill(fixBody(blanks), b), 'quiet') : ''));
         body.append(box);
       }
-      if (heldAny) body.append(h('p', { class: 'rp-helper', text: 'Misconceptions show once you’ve looked at each miss again.' }));
+      const hg = habitGroup();
+      if (hg) body.append(hg);
+      if (heldAny) body.append(h('p', { class: 'rp-helper', 'data-nofold': '', text: 'Misconceptions show once you’ve looked at each miss again.' }));
     }
     draw();
   }
@@ -887,29 +929,32 @@
     const el = $('reviewed');
     if (!el) return;
     const all = misses(), done = all.filter(x => x.looked).length;
-    el.textContent = done ? `Reviewed ${n(done)} of ${n(all.length)}` : '';
+    el.textContent = done ? `${el.dataset.sep || ''}Reviewed ${n(done)} of ${n(all.length)}` : '';
   }
   function missRow(r) {
     const x = r.first, m = r.m;
     const fixed = r.group === 'fixed';
     // a held key names the skill, not the same "hidden" line on every row; the second-look banner says why once
     const label = x.held ? topicName(x.topic, x.topic_name) : m ? cap(m.label) : x.type === 'spr' ? (x.diagnosis && x.diagnosis.text) || `Missed grid-in: ${math(x.answer)}` : cap(x.mistake || 'Incorrect');
-    const meta = [r.list.map(labelOf).join(' · '), x.held ? null : topicName(x.topic, x.topic_name), TIER[x.difficulty], r.list.length > 1 ? `×${r.list.length} here` : null,
-      m && m.hits_all_time > 1 ? `×${n(m.hits_all_time)} all time` : null, rx.worth(x.worth) || null, x.cause ? causeOne(x.cause) : null, x.raw === 'mixed' ? 'right on a later try' : null].filter(Boolean).join(' · ');
+    const full = [r.list.map(labelOf).join(' · '), x.held ? null : topicName(x.topic, x.topic_name), TIER[x.difficulty], r.list.length > 1 ? `×${r.list.length} here` : null,
+      m && m.hits_all_time > 1 ? `×${n(m.hits_all_time)} all time` : null, rx.worth(x.worth) || null, x.cause ? causeOne(x.cause) : null, x.raw === 'mixed' ? 'right on a later try' : null].filter(Boolean);
+    const shown = [r.list.map(labelOf).join(' · '), x.held ? null : topicName(x.topic, x.topic_name), rx.worth(x.worth) || (x.cause ? causeOne(x.cause) : null)].filter(Boolean);
     const state = fixed ? h('span', { class: 'st', text: `✓ Fixed${m && m.closed ? ` ${UI.date(m.closed)}` : ''}` })
-      : m && m.open ? h('span', { class: 'st rp-dot', text: ` Open · ${plural(m.owed || 2, 'correct answer')} to close` }) : null;
+      : m && m.open ? h('span', { class: 'st rp-dot', text: `Open, ${n(m.owed || 2)} to close` }) : null;
+    const stateText = fixed ? `Fixed${m && m.closed ? ` ${UI.date(m.closed)}` : ''}` : m && m.open ? `Open, ${plural(m.owed || 2, 'correct answer')} to close` : '';
     // the title is the row's Review button (its ::after covers the row); Try one like this and Fix sit in the row menu
-    const title = h('button', { type: 'button', class: 'rp-mtitle', text: label, 'aria-label': `${label}. Review ${r.list.map(labelOf).join(', ')}` });
+    const title = h('button', { type: 'button', class: 'rp-mtitle', text: label, title: [full.join(' · '), stateText].filter(Boolean).join(' · '),
+      'aria-label': `${label}. ${full.join(', ')}${stateText ? `. ${stateText}` : ''}. Review ${r.list.map(labelOf).join(', ')}` });
     title.addEventListener('click', () => openPlayer(x.i));
     let menu = null;
     if (owner) {
       const items = [{ label: 'Review', onClick: () => openPlayer(x.i) }];
       if (!x.held) items.push({ label: 'Try one like this', onClick: () => openPlayer(x.i, { twin: true }) });
       items.push({ label: 'Fix', onClick: () => drill(fixBody(r.list, { each: 2 })) });
-      menu = h('button', { type: 'button', class: 'btn sm icon rp-menu', 'aria-label': `More for ${labelOf(x)}`, 'aria-haspopup': 'menu', text: '⋯' });
+      menu = h('button', { type: 'button', class: 'btn sm icon rp-menu reveal', 'aria-label': `More for ${labelOf(x)}`, 'aria-haspopup': 'menu' }, UI.icon('more', 18));
       menu.addEventListener('click', () => UI.menu(menu, items, { label: `${labelOf(x)}`, align: 'end' }));
     }
-    return h('div', { class: 'rp-mrow' + (fixed ? ' fixed' : '') }, glyph(x.topic) || h('span'), h('div', {}, h('h4', {}, title), h('p', { class: 'meta', text: meta }), state), menu);
+    return h('div', { class: 'rp-mrow' + (fixed ? ' fixed' : '') }, glyph(x.topic) || h('span'), h('div', {}, h('h4', {}, title), h('p', { class: 'meta' }, shown.join(' · '), state ? [' · ', state] : null)), menu);
   }
 
   /* ------------------------------------------------------------ best value next (SR2) */
@@ -922,7 +967,7 @@
     const byTopic = new Map();
     bv.forEach(b => { const x = byId.get(b.qid); if (!x) return; const t = b.topic || x.topic; if (!byTopic.has(t)) byTopic.set(t, { topic: t, list: [], ms: 0 }); const g = byTopic.get(t); g.list.push(x); g.ms += b.budget_ms; });
     const groups = [...byTopic.values()];
-    head(el, { k: 'Best value next', title: 'Cheapest points first', tip: 'Re-scored on this test with those questions right. A guide to order, not a promise.' });
+    head(el, { title: 'Best value', about: 'best value', tip: 'Cheapest points first: re-scored on this test with those questions right. A guide to order, not a promise.' });
     const body = h('div', { 'aria-busy': 'true' }, UI.skel(null, 'rows:3'));
     el.append(body);
     const rescore = async ids => { try { return await UI.api(`/session/${encodeURIComponent(SID)}/whatif`, { method: 'POST', body: { right: ids }, quiet: true }); } catch (_) { return null; } };
@@ -938,7 +983,7 @@
         h('div', {}, h('b', { class: 'h3' }, glyph(g.topic), ' ', topicName(g.topic, g.list[0].topic_name)), h('p', { class: 'meta', text: `${plural(g.list.length, 'miss', 'misses')} · about ${mins(g.ms)} min` })),
         h('b', { class: 'rp-num', text: `${rx.worth(g.pts) || 'under 5'}` }),
         h('span', { class: 'rp-vbar', style: `--rp: ${Math.max(0.04, g.pts / top)}` }, h('i')));
-      if (owner) row.append(h('div', { class: 'rp-row', style: 'grid-column: 1 / -1' }, btn(`Fix these ${n(g.list.length)}`, b => drill(fixBody(g.list, { order: 'given' }), b)),
+      if (owner) row.append(h('div', { class: 'rp-row' }, btn(`Fix these ${n(g.list.length)}`, b => drill(fixBody(g.list, { order: 'given' }), b)),
         link('Practise skill', `/practice/?topics=${encodeURIComponent(g.topic)}`)));
       body.append(row);
     });
@@ -947,7 +992,7 @@
       const w = await rescore(qids(top3.flatMap(g => g.list)));
       const tgt = (R.profile || {}).target;
       if (w) body.append(h('p', { class: 'rp-line' }, `Fix the top ${top3.length}: this test re-scores at `, h('b', { text: rx.band(w) }),
-        tgt && w.low <= tgt && w.high >= tgt ? ` · your target ${tgt} falls inside` : '', '.'));
+        tgt && w.low <= tgt && w.high >= tgt ? ' · your target falls inside' : '', '.'));
     }
   }
 
@@ -990,7 +1035,7 @@
     ['banked', 'Banked'], ['sink', 'Time sink'], ['rushed', 'Rushed'], ['stuck', 'Stuck']];
   function drawReview() {
     const el = $('review');
-    head(el, { k: `Questions · ${n(IT.length)}`, title: 'Every question' });
+    head(el, { title: 'Questions' });
     const tools = h('div', { class: 'rp-tools' });
     // Show, with live counts; a 0 is left out (decision 7)
     const cnt = {
@@ -1005,17 +1050,16 @@
     if (!(S.show in cnt) || (!cnt[S.show] && S.show !== 'all')) S.show = 'all';
     showApi = UI.chips(null, [...SHOW, ...MORE.filter(([k]) => k === S.show)].filter(([k]) => k === 'all' || cnt[k] || k === S.show).map(([value, label]) => ({ value, label, n: cnt[value] })),
       { value: S.show, label: 'Show', onChange: v => { S.show = v; writeQ('show', v === 'all' ? '' : v); applyFilter(); } });
-    tools.append(h('div', { class: 'rp-row lab' }, h('span', { class: 'k', text: 'Show' }), showApi.el));
-    // Focus: one dropdown in place of the "Act on" chips
+    // Focus ("Act on": not looked at, sure and wrong, time sinks...) leads the Filters sheet
     const actN = Object.fromEntries(ACTS.map(([k]) => [k, IT.filter(x => { const keep = S.act; S.act = k; const ok = passesAct(x); S.act = keep; return ok; }).length]));
     const focusOpts = ACTS.filter(([k]) => actN[k] || S.act === k).map(([value, label]) => ({ value, label, n: actN[value] }));
-    const focus = focusOpts.length ? UI.dropdown(null, { label: 'Focus', all: 'Everything', sm: true, options: focusOpts, value: S.act, onChange: v => setAct(v) }) : null;
     // filters (the existing "Filters · n" sheet, on every screen)
-    const doms = [...new Set(IT.map(x => x.domain).filter(Boolean))].sort((a, b) => DOMAIN_ORDER.indexOf(a) - DOMAIN_ORDER.indexOf(b));
+    const doms = [...new Set(IT.map(x => x.domain).filter(Boolean))].sort((a, b) => domOrder().indexOf(a) - domOrder().indexOf(b));
     const topics = [...new Set(IT.map(x => x.topic).filter(Boolean))];
     const opt = (list, f) => list.map(v => ({ value: v, label: f ? f(v) : v, n: undefined }));
     const causesHere = CAUSES.filter(c => IT.some(x => x.miss && x.cause === c));
     const filters = [
+      focusOpts.length && { key: 'act', label: 'Focus', all: 'Everything', options: focusOpts },
       MORE.length && { key: 'result', label: 'Result', all: 'Any result', options: MORE.map(([value, label]) => ({ value, label, n: cnt[value] })) },
       sectioned && { key: 'module', label: 'Module', all: 'All modules', options: (R.modules || []).map(m => ({ value: String(m.n), label: `Module ${m.n}` })) },
       doms.length > 1 && { key: 'domain', label: 'Domain', all: 'All domains', options: opt(doms) },
@@ -1025,7 +1069,7 @@
       IT.some(x => x.time) && { key: 'time', label: 'Time', all: 'Any time', options: [{ value: 'rushed', label: 'Rushed' }, { value: 'long', label: 'Long' }].filter(o => IT.some(x => x.time === o.value)) },
       causesHere.length && { key: 'cause', label: 'Cause', all: 'Any cause', options: causesHere.map(c => ({ value: c, label: causeName(c) })) },
     ].filter(Boolean);
-    fbar = UI.filterBar(null, filters, { url: true, label: 'Question filters', onChange: () => applyFilter() });
+    fbar = UI.filterBar(null, filters, { url: true, label: 'Question filters', onChange: (v, key) => { if (key === 'act' || key === null) S.act = v.act || ''; applyFilter(); } });
     // colour by and view: one small menu
     const colours = [['status', 'Status'], ['difficulty', 'Difficulty'], IT.some(x => x.ms) && ['time', 'Time'], causesHere.length && ['cause', 'Cause'], scored && R.ledger && ['points', 'Points']].filter(Boolean);
     if (!colours.some(([k]) => k === S.colour)) S.colour = 'status';
@@ -1038,16 +1082,14 @@
     ], { label: 'Colour by and view' }));
     const reset = btn('Reset', () => { S.show = 'all'; S.act = ''; fbar.clear(); writeQ('show', ''); writeQ('act', ''); drawReview(); }, 'quiet');
     reset.id = 'rvreset';
-    // What if stays in the header's More menu (W)
-    const row2 = h('div', { class: 'rp-row' }, fbar.el, focus && focus.el, viewBtn, reset);
-    tools.append(row2);
-    const legendBox = h('div', { class: 'rp-legend', id: 'rvlegend' });
-    tools.append(legendBox);
+    // one row: Show on the left; Filters (Focus inside), View and Reset on the right. What if stays in More (W)
+    tools.append(h('div', { class: 'rp-row' }, showApi.el, h('div', { class: 'rp-tr' }, fbar.el, viewBtn, reset)));
     const wiBox = h('div', { id: 'wibox', hidden: !WI.on });
     tools.append(wiBox);
     el.append(tools);
     reviewBody = h('div', { id: 'rvbody' });
-    el.append(reviewBody, printTable());
+    // the key sits under the grid, at meta size
+    el.append(reviewBody, h('div', { class: 'rp-legend', id: 'rvlegend' }), printTable());
     drawLegend();
     drawBody();
     applyFilter();
@@ -1100,9 +1142,13 @@
     const r = $('rvreset');
     if (r) r.hidden = !any;
     if (S.view === 'table') drawBody(); else drawCells();
-    const m = $('review').querySelector('.card-head .meta') || h('span', { class: 'meta' });
-    m.textContent = any ? `${n(keep)} shown` : '';
-    if (!m.parentElement) $('review').querySelector('.card-head').append(m);
+    // the count: a filter changed on screen rolls it (a redrawn card starts plain)
+    let m = $('rvcount');
+    if (!m) { m = h('span', { class: 'meta', id: 'rvcount' }); $('review').querySelector('.card-head').append(m); }
+    const old = m.querySelector('.rp-n'), was = old ? old.textContent : '', to = n(any ? keep : IT.length);
+    const num = h('span', { class: 'rp-n', text: to });
+    m.replaceChildren(num, any ? ` of ${n(IT.length)} shown` : '');
+    if (was && was !== to) { num.textContent = was; UI.roll(num, to); }
   }
   function drawLegend() {
     const box = $('rvlegend');
@@ -1115,19 +1161,19 @@
         IT.some(x => x.raw === 'not_reached') && ['not_reached'], IT.some(x => x.flagged) && ['flag'], IT.some(x => x.repair) && ['repaired'],
         IT.some(x => x.miss && x.trap && x.trap.open) && ['open']].filter(Boolean).map(([k]) => k);
       UI.legend(box, keys);
-      if ((R.ledger && R.ledger.route && R.ledger.route.savers || []).length) box.append(h('p', { class: 'rp-helper', text: '▲ would have routed you up' }));
+      if ((R.ledger && R.ledger.route && R.ledger.route.savers || []).length) box.append(h('p', { class: 'rp-helper', text: '▴ would have routed you up' }));
     } else if (c === 'difficulty') UI.legend(box, TIERS);
-    else box.append(h('div', { class: 'rp-steps-key' }, ...shadeKey(c).map((t, i) => h('span', {}, h('i', { style: `background:${['#F4EFE8', '#DDD3C6', '#A89A88', '#5B5046'][i]}` }), t))));
+    else box.append(h('div', { class: 'rp-steps-key' }, ...shadeKey(c).map((t, i) => h('span', {}, h('i', { style: `background: var(--sh-${i})` }), t))));
   }
   function shadeKey(c) {
-    if (c === 'time') return ['under 0:30', 'to 1:35', 'to 3:10', '3:10+'];
+    if (c === 'time') { const p = PACE_MS() / 1000; return ['under 0:30', `to ${tm(p * 1000)}`, `to ${tm(2 * p * 1000)}`, `${tm(2 * p * 1000)}+`]; }   // the subject's pace and twice it
     if (c === 'points') return ['under 5', '≈ 5–10', '≈ 10–15', '≈ 15+'];
     if (c === 'cause') return CAUSES.filter(k => IT.some(x => x.miss && x.cause === k)).slice(0, 4).map(k => `${(rx.CAUSE[k] || {}).letter || '?'} ${causeName(k)}`);
     return [];
   }
   function shade(x) {
     const c = S.colour;
-    if (c === 'time') { if (!x.ms) return null; const s = x.ms / 1000; return { s: s < 30 ? 0 : s < 95 ? 1 : s < 190 ? 2 : 3, corner: '' }; }
+    if (c === 'time') { if (!x.ms) return null; const s = x.ms / 1000; const p = PACE_MS() / 1000; return { s: s < 30 ? 0 : s < p ? 1 : s < 2 * p ? 2 : 3, corner: '' }; }
     if (c === 'points') { if (!x.miss || !x.pts) return null; return { s: x.pts < 5 ? 0 : x.pts < 10 ? 1 : x.pts < 15 ? 2 : 3, corner: rx.worth(x.worth).replace('≈ ', '') }; }
     if (c === 'cause') { if (!x.miss || !x.cause) return null; const list = CAUSES.filter(k => IT.some(y => y.miss && y.cause === k)); return { s: Math.min(3, list.indexOf(x.cause)), corner: (rx.CAUSE[x.cause] || {}).letter || '' }; }
     return null;
@@ -1137,17 +1183,33 @@
       x.miss && x.cause ? causeOne(x.cause).toLowerCase() : null, x.miss && rx.worth(x.worth) ? `about ${rx.worth(x.worth).replace('≈ +', '')} points` : null,
       x.flagged ? 'flagged' : null, x.changed ? `changed ${letter(x, x.changed[0])} to ${letter(x, x.changed[1])}` : null].filter(Boolean).join(', ');
   }
+  // a module's one line: Module 2 · harder · 31 / 44 · 70% · 31:20 of 35:00 · 2 flagged
+  function modLine(m, list) {
+    const mod = (R.modules || []).find(x => x.n === m) || ((R.modules || []).length === 1 && !sectioned ? R.modules[0] : null);
+    const right = list.filter(x => x.bucket === 'correct').length, asked = list.filter(x => x.bucket !== 'not_reached').length;
+    const ms = (mod && mod.ms) || list.reduce((s, x) => s + (x.ms || 0), 0);
+    const flagged = (mod && mod.flagged) || list.filter(x => x.flagged).length;
+    const route = mod && sectioned ? (mod.n === 2 ? (mod.route === 'upper' ? 'harder' : mod.route === 'lower' ? 'easier' : '') : 'mixed') : '';
+    const timed = R.timed && (sectioned || R.kind === 'module');
+    return { name: m ? `Module ${m}` : 'Questions', bits: [route || null, sc(right, asked), `${pc(right, asked)}%`, ms ? `${tm(ms)}${timed ? ` of ${MOD_CLOCK()}` : ''}` : null, flagged ? `${n(flagged)} flagged` : null].filter(Boolean).join(' · ') };
+  }
+  function modGroups() {
+    const groups = new Map();
+    IT.forEach(x => { const k = sectioned ? x.module : 0; if (!groups.has(k)) groups.set(k, []); groups.get(k).push(x); });
+    return groups;
+  }
   function drawBody() {
     if (!reviewBody) return;
     reviewBody.replaceChildren();
-    if (S.view === 'table') return drawTable();
+    if (S.view === 'table') {
+      // the table has no module heads: their lines sit above it
+      if (sectioned || R.kind === 'module') reviewBody.append(h('div', { class: 'rp-modsum' }, [...modGroups()].map(([m, list]) => { const l = modLine(m, list); return h('p', { class: 'meta' }, h('b', { text: l.name }), ` · ${l.bits}`); })));
+      return drawTable();
+    }
     reviewGrid = h('div', { class: 'rp-cells', 'data-colour': S.colour });
-    const groups = new Map();
-    IT.forEach(x => { const k = sectioned ? x.module : 0; if (!groups.has(k)) groups.set(k, []); groups.get(k).push(x); });
-    for (const [m, list] of groups) {
-      const right = list.filter(x => x.bucket === 'correct').length, asked = list.filter(x => x.bucket !== 'not_reached').length;
-      const ms = list.reduce((s, x) => s + (x.ms || 0), 0);
-      const g = h('div', { class: 'rp-grid-group' }, h('h3', {}, m ? `Module ${m} · ` : 'Questions · ', h('span', { class: 'meta', text: [sc(right, asked), `${pc(right, asked)}%`, ms ? tm(ms) : null].filter(Boolean).join(' · ') })));
+    for (const [m, list] of modGroups()) {
+      const l = modLine(m, list);
+      const g = h('div', { class: 'rp-grid-group' }, h('h3', {}, `${l.name} · `, h('span', { class: 'meta', text: l.bits })));
       const cells = h('div', { class: 'cell-grid', role: 'group', 'aria-label': m ? `Module ${m}` : 'Questions' });
       list.forEach(x => cells.append(makeCell(x)));
       g.append(cells);
@@ -1161,7 +1223,7 @@
     const c = UI.cell(x.st, x.n, { flag: x.flagged ? '' : null, open: x.miss && x.trap && x.trap.open && x.st !== 'fixed' ? '' : null, saved: x.saved ? '' : null, note: x.note ? '' : null, tier: x.difficulty,
       label: cellLabel(x), onClick: e => cellClick(x, e) });
     c.dataset.id = x.id;
-    if (savers().has(x.id)) c.setAttribute('data-saver', '');
+    if (savers().has(x.id)) { c.setAttribute('data-saver', ''); c.append(h('i', { class: 'rp-saver', 'aria-hidden': 'true', text: '▴' })); }
     if (x.crowd && x.crowd.n >= 20 && chall && x.crowd.rate !== null) c.append(h('small', { text: `${Math.round(x.crowd.rate * 100)}%` }));
     if (UI.tooltip && matchMedia('(hover: hover)').matches) UI.tooltip(c, () => hoverText(x));
     return c;
@@ -1275,29 +1337,18 @@
         WI.band = w;
         if (gaugeApi) gaugeApi.set({ whatif: { low: w.low, high: w.high } });
         const d = Math.round(w.mid - R.ledger.mid);
-        if (line) line.textContent = `What if: ${rx.band(w)} (${d >= 0 ? '+' : '−'}${n(Math.abs(d))}) · ${n(k)} flipped · Module 2 stays as you sat it`;
+        if (line) {
+          // the band rolls from the last answer to this one as cells flip
+          const old = line.querySelector('.rp-wb'), was = old ? old.textContent : '', to = rx.band(w);
+          const b = h('b', { class: 'rp-wb', text: to });
+          line.replaceChildren('What if: ', b, ` (${d >= 0 ? '+' : '−'}${n(Math.abs(d))}) · ${n(k)} flipped · Module 2 stays as you sat it`);
+          if (was && was !== to) { b.textContent = was; UI.roll(b, to); }
+        }
       } catch (_) { if (line) line.textContent = 'Couldn’t re-score that. Try again.'; }
     }, 150);
   }
 
-  /* ------------------------------------------------------------ modules, domains, skills */
-  function drawModules() {
-    const el = $('modules');
-    el.hidden = true;
-    const mods = R.modules || [];
-    if (!sectioned && R.kind !== 'module') return;
-    head(el, { k: 'Modules', title: sectioned ? 'Module by module' : 'The module' });
-    const box = h('div', { class: 'rp-mods' });
-    mods.forEach(m => {
-      const list = IT.filter(x => !sectioned || x.module === m.n);
-      const route = m.n === 2 ? (m.route === 'upper' ? 'harder' : m.route === 'lower' ? 'easier' : '') : 'mixed';
-      const bits = [sc(m.right, m.asked), `${pc(m.right, m.asked)}%`, m.ms ? `${tm(m.ms)}${R.timed ? ' of 35:00' : ''}` : null, m.flagged ? `${n(m.flagged)} flagged` : null].filter(Boolean);
-      const t = h('div', { class: 'rp-mod' }, h('h3', { class: 'h3', text: `Module ${m.n}${route ? ` · ${route}` : ''}` }), h('p', { class: 'meta', text: bits.join(' · ') }));
-      UI.strip(t, list.map(x => ({ status: x.st, flag: x.flagged ? '' : null, label: cellLabel(x) })), { fit: true, noun: `M${m.n} Q`, onPick: i => openPlayer(list[i].i) });
-      box.append(t);
-    });
-    el.append(box);
-  }
+  /* ------------------------------------------------------------ domains, skills (the modules are the question grid's heads) */
   function drawDomains() {
     const el = $('domains');
     el.hidden = true;
@@ -1306,17 +1357,21 @@
     const L = R.ledger;
     const lost = d => ((L && L.by_domain) || []).find(x => x.domain === d.domain);
     let mode = scored && L ? LS.get('satf.report.domains', 'points') : 'sat';
-    const seg = scored && L ? UI.seg(null, [{ value: 'points', label: 'By points' }, { value: 'sat', label: 'SAT order' }], { value: mode, label: 'Order', onChange: v => { mode = v; LS.set('satf.report.domains', v); draw(); } }) : null;
+    let order = null;
+    if (scored && L) {
+      order = UI.dropdown(null, { label: 'Order', sm: true, plain: true, noAll: true, default: 'points', value: mode,
+        options: [{ value: 'points', label: 'By points' }, { value: 'sat', label: 'SAT order' }], onChange: v => { mode = v; LS.set('satf.report.domains', mode); draw(); } }).el;
+    }
     el.hidden = false;
-    el.replaceChildren(h('div', { class: 'rp-row' }, seg ? seg.el : null, info('A domain is a handful of questions, so read one weak card as a hint, not a verdict.', 'Domains')));
+    el.replaceChildren(h('div', { class: 'rp-domtools' }, order, info('A domain is a handful of questions, so read one weak one as a hint, not a verdict.', 'domains')));
     const box = h('div', { class: 'rp-doms' });
     el.append(box);
-    const check = h('div');
+    const check = h('div', { class: 'rp-domnote' });
     el.append(check);
     function draw() {
       box.replaceChildren();
       check.replaceChildren();
-      const list = doms.slice().sort(mode === 'points' ? (a, b) => ((lost(b) || {}).pts || 0) - ((lost(a) || {}).pts || 0) : (a, b) => DOMAIN_ORDER.indexOf(a.domain) - DOMAIN_ORDER.indexOf(b.domain));
+      const list = doms.slice().sort(mode === 'points' ? (a, b) => ((lost(b) || {}).pts || 0) - ((lost(a) || {}).pts || 0) : (a, b) => domOrder().indexOf(a.domain) - domOrder().indexOf(b.domain));
       list.forEach(d => {
         const qs = IT.filter(x => x.domain === d.domain);
         const lo = lost(d);
@@ -1407,17 +1462,11 @@
       if (ins.changes >= 5) p.append(h('p', { class: 'rp-helper', text: `When you change an answer you end up right ${pc(ins.right, ins.changes)}% of the time (${n(ins.changes)} changes).` }));
       panels.push(p);
     }
+    // time away and pauses are in the header's meta line
     const ck = (J.crossed_key || []).map(id => byId.get(id)).filter(Boolean);
-    const away = J.away || {};
-    if (ck.length || away.n || J.pauses) {
-      const p = h('div', {}, h('h3', { text: 'Eliminations and time away' }));
-      if (ck.length) p.append(h('p', { class: 'rp-line' }, `You crossed out the right answer ${n(ck.length)}× `, qchips(ck)));
-      if (away.n) p.append(h('p', { class: 'rp-line', text: `Left the test window ${n(away.n)}× · ${tm(away.ms)} in all` }));
-      if (J.pauses) p.append(h('p', { class: 'rp-line', text: `Paused ${n(J.pauses)}×` }));
-      panels.push(p);
-    }
+    if (ck.length) panels.push(h('div', {}, h('h3', { text: 'Eliminations' }), h('p', { class: 'rp-line' }, `You crossed out the right answer ${n(ck.length)}× `, qchips(ck))));
     if (!panels.length) return;
-    head(el, { k: 'Judgement', title: 'How you decided' });
+    head(el, { title: 'Judgement' });
     el.append(h('div', { class: 'rp-judge' }, panels));
   }
 
@@ -1457,7 +1506,7 @@
     if (!panels.some(([id]) => id === mode)) mode = panels[0][0];
     const show = () => panels.forEach(([id]) => { $(id).hidden = id !== mode; });
     const seg = panels.length > 1 ? UI.seg(null, panels.map(([value, label]) => ({ value, label })), { value: mode, label: 'Break down by', onChange: v => { mode = v; LS.set('satf.report.breakdown', v); show(); } }) : null;
-    el.prepend(h('div', { class: 'card-head' }, h('p', { class: 'k', text: 'Breakdown' }), h('h2', { text: 'How each part went' }), seg ? h('div', { class: 'rp-headr' }, seg.el) : null));
+    el.prepend(h('div', { class: 'card-head' }, h('h2', { text: 'Breakdown' }), seg ? h('div', { class: 'rp-headr' }, seg.el) : null));
     show();
   }
 
@@ -1466,7 +1515,7 @@
     const el = $('pace');
     el.hidden = true;
     if (!test && !drillKind) return;
-    head(el, { k: 'Time', title: 'Where the minutes went' });
+    head(el, { title: 'Time' });
     const timed = IT.filter(x => x.ms);
     if (!timed.length) { el.append(h('p', { class: 'rp-helper', text: 'Times were not recorded for this sitting.' })); return; }
     const groups = new Map();
@@ -1476,7 +1525,7 @@
       clockReplay(box, m, list);
       UI.barChart(box, list.map(x => ({ key: labelOf(x), label: String(x.n), value: Math.min(300, (x.ms || 0) / 1000), status: x.st, budget: x.budget_ms ? x.budget_ms / 1000 : null,
         tip: `${labelOf(x)} · ${tm(x.ms)} · ${(UI.STATES[x.st] || {}).label || x.st} · ${TIER[x.difficulty] || ''}` })),
-      { unit: 's', pace: { value: ((R.summary || {}).pace_ms || 95455) / 1000, label: `Test pace ${tm((R.summary || {}).pace_ms || 95455)}` }, max: 300, labels: 'label',
+      { unit: 's', pace: { value: ((R.summary || {}).pace_ms || PACE_MS()) / 1000, label: `Test pace ${tm((R.summary || {}).pace_ms || PACE_MS())}` }, max: 300, labels: 'label',
         label: m ? `Seconds per question, Module ${m}` : 'Seconds per question', onPick: r => { const x = list.find(y => labelOf(y) === r.key); if (x) openPlayer(x.i); } });
       el.append(box);
     }
@@ -1542,31 +1591,27 @@
     const el = $('next');
     el.hidden = true;
     if (!owner) return;
-    el.hidden = false;
-    el.replaceChildren(h('p', { class: 'k', text: 'Up next' }));
-    const rows = h('div', { class: 'rp-row' });
-    let primary = false;
+    head(el, { title: 'Up next' });
+    const rows = h('div');
+    // one row each: what it is and its size, Start on the right
+    const row = (name, meta, go) => h('div', { class: 'rp-vrow' }, h('div', {}, h('h4', { class: 'h3', text: name }), h('p', { class: 'meta', text: meta })), btn('Start', go));
     // the Pressure check, offered by the test window's hand-in (X13); gone once it has run
     let pr = null;
     try { pr = R.pressure ? null : JSON.parse(sessionStorage.getItem(`satf.pressure.${SID}`) || 'null'); } catch (_) {}
-    if (pr) rows.append(btn(`Pressure check · ${pr.n} ${pr.n === 1 ? 'question' : 'questions'} · ~${pr.minutes} min`, async b => {
+    if (pr) rows.append(row('Pressure check', `${pr.n} ${pr.n === 1 ? 'question' : 'questions'} · about ${pr.minutes} min`, async b => {
       b.setAttribute('aria-busy', 'true');
       try { const x = await UI.api(`/session/${encodeURIComponent(SID)}/pressure`, { method: 'POST' }); location.href = `/practice/session/?id=${encodeURIComponent(x.id)}`; }
       catch (e) { b.removeAttribute('aria-busy'); UI.toast(e.status === 409 ? 'The pressure check has closed for this sitting.' : `Couldn’t start it: ${e.message}`); }
-    }, 'pill sm'));
+    }));
     const bv = R.best_value || [];
     if (scored && bv.length) {
       const top = bv[0], x = byId.get(top.qid);
       const same = x ? IT.filter(y => y.miss && y.topic === x.topic) : [];
       if (same.length) {
-        rows.append(btn(`Start: ${topicName(x.topic, x.topic_name)} · ${rx.worth(top.pts) || 'under 5'} · ~${mins(same.reduce((s, y) => s + (y.budget_ms || 95455), 0))} min`, b => drill(fixBody(same, { order: 'given' }), b), 'pill sm'));
-        primary = true;
+        rows.append(row(topicName(x.topic, x.topic_name), `${rx.worth(top.pts) || 'under 5'} · about ${mins(same.reduce((s, y) => s + (y.budget_ms || PACE_MS()), 0))} min`, b => drill(fixBody(same, { order: 'given' }), b)));
       }
     }
-    const nx = UI.nextItems ? UI.nextItems()[0] : null;
-    if (nx) rows.append(btn(`${nx.title || nx.label || 'Next'}${nx.minutes ? ` · ${nx.minutes} min` : ''}`, b => { b.setAttribute('aria-busy', 'true'); UI.start(nx).catch(() => { b.removeAttribute('aria-busy'); UI.toast('Couldn’t start it. Try again.'); }); }, primary ? 'btn sm' : 'pill sm'));
-    rows.append(link('New section', '/tests/'));
-    el.append(rows);
+    el.append(rows, h('div', { class: 'rp-row' }, link('New section', `/tests/?subject=${R.subject || 'math'}`)));
   }
 
   /* ------------------------------------------------------------ the player (F3's UI.review) */
@@ -1615,6 +1660,17 @@
         await UI.api('/notes', { method: 'POST', body: { session: SID, question_id: it.q.id, note: text, scope: 'type' } });
         return true;
       };
+      // the held-back banner's two buttons: the second look, or the answers now
+      if (R.second && R.second.offered && (R.second.unseen || []).length) {
+        on.startSecond = () => { if (player) player.close(); setTimeout(startSecond, 200); };   // ponytail: wait out the closing dialog's history.back()
+        on.showNow = async it => {
+          try { await UI.api(`/session/${encodeURIComponent(SID)}/second/state`, { method: 'POST', body: { state: 'skipped' } }); }
+          catch (_) { UI.toast('Not saved. Try again.'); return null; }
+          await refresh();
+          const x = byId.get(it.id);
+          return x ? playerItem(x) : null;
+        };
+      }
       // Save needs /api/saved to accept finished tests (S10); practice sets work today
       if (!test) on.save = async (it, v) => { await UI.api('/saved', { method: 'POST', body: { session: SID, question_id: it.q.id, on: v } }); dirty = true; };
     }

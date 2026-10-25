@@ -183,10 +183,10 @@ def contexts(c) -> None:
                 "category": "figure"}, code=403)
 
     # a sitting: its kind, date and band, from the sitting itself
-    db.run("UPDATE sessions SET result=? WHERE id=?", json.dumps({"estimate": {"low": 520, "high": 600}}), sid)
+    db.run("UPDATE sessions SET result=? WHERE id=?", json.dumps({"estimate": {"low": 550, "high": 570}}), sid)
     pv = c.get("/api/reports/context", params={"kind": "sitting", "session": sid}, headers={"X-Learner": m}).json()
     st = pv["box"]["sitting"]
-    assert (st["kind"], st["band"], st["finished"], pv["allowed"]) == ("mock", "520–600", True, list(reports.GENERAL)), pv
+    assert (st["kind"], st["band"], st["finished"], pv["allowed"]) == ("mock", "550–570", True, list(reports.GENERAL)), pv
     got = post(c, m, {"kind": "sitting", "source": "report", "session": sid, "category": "confusing"})
     assert db.one("SELECT kind, session FROM reports WHERE id=?", got["id"])["session"] == sid
     post(c, fresh("other"), {"kind": "sitting", "session": sid, "category": "confusing"}, code=403)

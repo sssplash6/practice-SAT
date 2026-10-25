@@ -77,35 +77,8 @@
   // a read-only field (a grid-in once it is checked) takes no typing, so the keys move on from it
   const typing = el => !!el && (el.isContentEditable || el.tagName === 'SELECT' || (/^(INPUT|TEXTAREA)$/.test(el.tagName) && !el.readOnly && !el.disabled));
 
-  /* icons: question.js's set where it has one, these for the rest (24px strokes in currentColor) */
-  const L = 'fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"';
-  const RI = {
-    x:       `<path d="M6 6l12 12M18 6L6 18" ${L} stroke-width="1.8"/>`,
-    pause:   `<path d="M9 5.5v13M15 5.5v13" ${L} stroke-width="2"/>`,
-    more:    `<circle cx="5.5" cy="12" r="1.5" fill="currentColor"/><circle cx="12" cy="12" r="1.5" fill="currentColor"/><circle cx="18.5" cy="12" r="1.5" fill="currentColor"/>`,
-    marker:  `<path d="M14.5 4.5l5 5-8.5 8.5H6v-5z" ${L}/><path d="M4 20.5h9" ${L}/>`,
-    pen:     `<path d="M4.5 19.5l1-4.2L15.8 5a2 2 0 0 1 2.8 0l.4.4a2 2 0 0 1 0 2.8L8.7 18.5z" ${L}/><path d="M13.8 7l3.2 3.2" ${L}/>`,
-    info:    `<circle cx="12" cy="12" r="8.5" ${L}/><path d="M12 11v5.2" ${L} stroke-width="1.9"/><circle cx="12" cy="7.9" r="1" fill="currentColor"/>`,
-    up:      `<path d="M7 14l5-5 5 5" ${L} stroke-width="1.8"/>`,
-    down:    `<path d="M7 10l5 5 5-5" ${L} stroke-width="1.8"/>`,
-    left:    `<path d="M19 12H6M11 6.5L5.5 12l5.5 5.5" ${L}/>`,
-    right:   `<path d="M5 12h13M13 6.5l5.5 5.5-5.5 5.5" ${L}/>`,
-    eye:     `<path d="M2.5 12s3.6-6.5 9.5-6.5S21.5 12 21.5 12s-3.6 6.5-9.5 6.5S2.5 12 2.5 12z" ${L}/><circle cx="12" cy="12" r="2.6" ${L}/>`,
-    eyeoff:  `<path d="M2.5 12s3.6-6.5 9.5-6.5S21.5 12 21.5 12s-3.6 6.5-9.5 6.5S2.5 12 2.5 12z" ${L}/><path d="M4 20L20 4" ${L}/>`,
-    list:    `<path d="M9 7h11M9 12h11M9 17h11" ${L}/><circle cx="5" cy="7" r="1" fill="currentColor"/><circle cx="5" cy="12" r="1" fill="currentColor"/><circle cx="5" cy="17" r="1" fill="currentColor"/>`,
-    search:  `<circle cx="10.5" cy="10.5" r="6" ${L}/><path d="M15 15l5 5" ${L}/>`,
-    erase:   `<path d="M8.5 19.5h11M4.6 14.9l8.8-8.8a2 2 0 0 1 2.8 0l2.7 2.7a2 2 0 0 1 0 2.8L12.3 18.2a2 2 0 0 1-1.4.6H8.2a2 2 0 0 1-1.4-.6l-2.2-2.2a1 1 0 0 1 0-1.1z" ${L}/>`,
-    hl:      `<path d="M5 18.5h14" ${L} stroke-width="3" opacity=".35"/><path d="M8 15.5l1.5-9h5l1.5 9" ${L}/>`,
-    play:    `<path d="M8 5.5v13l10-6.5z" ${L}/>`,
-    queue:   `<path d="M4 7h10M4 12h10M4 17h6" ${L}/><path d="M17 14l3 3-3 3" ${L}/>`,
-  };
-  const svgHTML = (inner, size) => `<svg width="${size}" height="${size}" viewBox="0 0 24 24" aria-hidden="true" focusable="false">${inner}</svg>`;
-  function icon(name, size = 18) {
-    if (!RI[name] && UI.qicon) return UI.qicon(name, size);
-    const t = doc.createElement('template');
-    t.innerHTML = svgHTML(RI[name] || '', size);
-    return t.content.firstElementChild;
-  }
+  /* icons: the shared set (UI.icon, ui.js: Phosphor at one stroke, filled twins for pressed toggles) */
+  const icon = (name, size = 18) => (UI.icon ? UI.icon(name, size) : '');
 
   /* one key registry (F2's UI.keys, R22, R43); a small stand-in until ui.js has it */
   const NAMED = { esc: 'Escape', escape: 'Escape', enter: 'Enter', left: 'ArrowLeft', right: 'ArrowRight', up: 'ArrowUp', down: 'ArrowDown' };
@@ -189,14 +162,20 @@
         box.classList.toggle('t-last', s <= 60);
         if (s <= 0 && !ended && !paused) { ended = true; if (o.onEnd) setTimeout(() => o.onEnd(), 0); }
       }
-      const txt = hidden ? '— : —' : mmss(s);
-      if (txt !== last) { digits.textContent = txt; last = txt; }
-      digits.setAttribute('aria-label', hidden ? 'Timer hidden' : `${mmss(s)} ${timed ? 'left' : 'elapsed'}`);
+      const txt = hidden ? '–:––' : mmss(s);
+      if (txt !== last) {
+        digits.textContent = txt; last = txt;
+        digits.setAttribute('aria-label', hidden ? 'Timer hidden' : `${txt} ${timed ? 'left' : 'elapsed'}`);
+      }
       box.classList.toggle('t-hidden', hidden);
       box.classList.toggle('t-paused', paused);
-      hideB.setAttribute('aria-pressed', String(hidden));
-      hideB.replaceChildren(icon(hidden ? 'eyeoff' : 'eye', 16), h('span', { class: 't-hide-l', text: hidden ? (o.showLabel || 'Show') : 'Hide' }));
-      hideB.setAttribute('aria-label', hidden ? 'Show the timer' : 'Hide the timer');
+      // the Hide button is rebuilt only when it flips, not on every 250 ms paint
+      if (hideB.dataset.on !== String(hidden)) {
+        hideB.dataset.on = String(hidden);
+        hideB.setAttribute('aria-pressed', String(hidden));
+        hideB.replaceChildren(icon(hidden ? 'eyeoff' : 'eye', 16), h('span', { class: 't-hide-l', text: hidden ? (o.showLabel || 'Show') : 'Hide' }));
+        hideB.setAttribute('aria-label', hidden ? 'Show the timer' : 'Hide the timer');
+      }
       deltaEl.hidden = hidden || !deltaText;
     }
     function hide(on) {
@@ -241,7 +220,9 @@
   }
 
   /* ------------------------------------------------------------ UI.saveQueue (Tests 4.9, X1) */
-  const SUM = new Set(['ms', 'ref_ms']);          // deltas; everything else is the latest value
+  // deltas, added up while queued (time away and the integrity counts too: two leaves before a send are two);
+  // a list (the integrity timeline, ig) is joined; everything else is the latest value
+  const SUM = new Set(['ms', 'ref_ms', 'away_ms', 'away_n', 'blur_ms', 'blur_n', 'copy_n', 'paste_n', 'fs_n']);
   function saveQueue(sid, send, o = {}) {
     const KEY = `satf.pending.${sid}`, SKEY = `satf.pendstate.${sid}`;
     const pid = Math.random().toString(36).slice(2, 10);
@@ -294,7 +275,8 @@
       } else {
         const open = [...items].reverse().find(x => x.kind === 'state' && x.qid === qid && !x.flight);
         if (open) {
-          for (const [k, v] of Object.entries(body || {})) open.body[k] = SUM.has(k) && typeof v === 'number' && typeof open.body[k] === 'number' ? open.body[k] + v : v;
+          for (const [k, v] of Object.entries(body || {})) open.body[k] = SUM.has(k) && typeof v === 'number' && typeof open.body[k] === 'number' ? open.body[k] + v
+            : Array.isArray(v) && Array.isArray(open.body[k]) ? open.body[k].concat(v).slice(-20) : v;
         } else items.push({ kind, qid, body: Object.assign({}, body) });
       }
       mirror();
@@ -381,6 +363,31 @@
     return t;
   }
   const CONF = { sure: 'S', unsure: 'U', guess: 'G' };
+  // the running counts ("2 right · 3 in a row"), a span each, so a count that changes on screen rolls its
+  // digits (UI.roll); the first paint and a count that just appeared are plain text. lead: the set's name first
+  function paintCounts(el, bits, lead) {
+    const was = el._cnt || new Map(), now = new Map(), rolls = [], lit = [];
+    const put = (e, t) => { if (e.textContent !== t) e.textContent = t; };
+    bits.forEach(([n, word, ic], i) => {
+      let b = was.get(word);
+      if (!b) { b = h('span', {}, h('span'), h('span', { class: 'rn-cnt-i' }), h('span', { text: String(n) }), ` ${word}`); b._num = b.children[2]; b._ic = b.children[1]; }
+      else if (b._n !== n) rolls.push([b._num, String(n)]);
+      // ic: [name, burst] -- the flame from 3 in a row; burst at 3, 5 and 10 (a rise, never the first paint)
+      const want = ic ? ic[0] : '';
+      if (b._icName !== want) { b._ic.replaceChildren(want ? icon(want, 14) : ''); b._icName = want; }
+      b.classList.toggle('rn-streak', !!want);
+      if (ic && ic[1] && was.has(word) && b._n !== n && n > b._n) lit.push(b);
+      b._n = n;
+      put(b.children[0], i || lead ? ' · ' : '');
+      now.set(word, b);
+    });
+    const kids = [...now.values()];
+    if (lead) { el._lead = el._lead || h('span'); put(el._lead, lead); kids.unshift(el._lead); }
+    if (kids.length !== el.children.length || kids.some((k, i) => el.children[i] !== k)) el.replaceChildren(...kids);
+    el._cnt = now;
+    rolls.forEach(([f, t]) => (UI.roll ? UI.roll(f, t) : put(f, t)));
+    lit.forEach(b => { if (UI.fx) { UI.fx.flame(b._ic); UI.fx.pop(b._ic); } });
+  }
   function cellLabel(c, i, exam) {
     const st = (UI.STATES && UI.STATES[c.status]) || {};
     const bits = [`Question ${c.n ?? i + 1}`];
@@ -402,7 +409,7 @@
   }
   const topicName = c => {
     const t = UI.TOPIC && UI.TOPIC[c.topic];
-    return (t && (t.short || t.name)) || c.topic_name || c.topic || 'Other';
+    return (t && (t.short || t.name)) || c.topic_name || (c.topic && UI.topicName ? UI.topicName(c.topic) : c.topic) || 'Other';
   };
   // arrows move across a cell grid, Home and End jump; the columns are read from the layout
   function gridKeys(grid) {
@@ -439,7 +446,7 @@
     const views = (o.views || (exam ? ['status'] : ['status', 'difficulty', 'skill', 'time', 'confidence', 'traps'])).filter(v => VIEWS[v]);
     const tid = uid('nav');
     const el = h('div', { class: 'navp' + (exam ? ' exam' : ''), role: 'group', 'aria-labelledby': tid });
-    const head = h('div', { class: 'navp-head' }, h('h2', { class: 'navp-title', id: tid, text: o.title || (exam ? 'Questions' : 'Question overview') }));
+    const head = h('div', { class: 'navp-head' }, h('h2', { class: 'navp-title', id: tid, text: o.title || 'Questions' }));
     if (o.onClose) head.append(h('button', { type: 'button', class: 'x', 'aria-label': 'Close', onclick: () => o.onClose() }, icon('x', 18)));
     el.append(head);
     let seg = null;
@@ -752,7 +759,7 @@
       }
       // the footer: the save status, Back to question N, the move-on pill
       foot.replaceChildren();
-      const stat = h('p', { class: 'cyw-status mono', text: saving ? saving.text || '' : '' });
+      const stat = h('p', { class: 'cyw-status', text: saving ? saving.text || '' : '' });
       const acts = h('div', { class: 'cyw-acts' });
       if (o.onBack) acts.append(h('button', { type: 'button', class: 'quiet', onclick: () => o.onBack() }, o.backLabel || 'Back to questions'));
       if (o.onFinish) {
@@ -1004,7 +1011,7 @@
       h('button', { type: 'button', class: 'tool scratch-done', onclick: () => { if (o.onDone) o.onDone(); } }, icon('check', 18), h('span', { text: 'Done' })));
     const ta = h('textarea', { class: 'field scratch-ta', rows: '3', maxlength: '1000', spellcheck: 'false', 'aria-label': 'Typed scratch' });
     ta.value = data.typed;
-    const typedBox = h('div', { class: 'scratch-typed' }, h('label', { class: 'k', text: 'Typed scratch' }), ta, UI.counter ? UI.counter(ta, 1000) : null);
+    const typedBox = h('div', { class: 'scratch-typed' }, h('label', { class: 'label', text: 'Typed scratch' }), ta, UI.counter ? UI.counter(ta, 1000) : null);
     let typedT = 0;
     ta.addEventListener('input', () => { clearTimeout(typedT); typedT = setTimeout(() => { data.typed = ta.value.slice(0, 1000); save(); }, 500); });
     const ink = () => getComputedStyle(host).getPropertyValue('--ink').trim() || '#3F3F3F';
@@ -1209,14 +1216,20 @@
       <li>If your answer is a <b>mixed number</b> (such as 3½), enter it as an improper fraction (7/2) or its decimal equivalent (3.5).</li>
       <li>Don’t enter <b>symbols</b> such as a percent sign, comma, or dollar sign.</li>
     </ul>`;
+  // Reading and Writing's directions, in our own words (Bluebook's say the same)
+  const DIRECTIONS_RW = `
+    <p>This section tests reading and writing skills. Each question comes with one or more short passages, some with a table or a graph.</p>
+    <p>Read each passage and its question carefully, then choose the best answer, based on what the passage says.</p>
+    <p>Every question is <b>multiple choice</b>, with four choices and a single best answer.</p>`;
   const DIRS_KEY = 'satf.dirs.hide';
   function directionsSheet(o = {}) {
     if (!UI.sheet) return null;
+    const rw = o.subject === 'rw';
     return UI.sheet({
       title: 'Directions', className: 'dirs-sheet', size: 'l',
       body: b => {
-        b.append(h('div', { class: 'dirs', html: DIRECTIONS }));
-        const ex = UI.spr && UI.spr.directions ? UI.spr.directions() : null;
+        b.append(h('div', { class: 'dirs', html: rw ? DIRECTIONS_RW : DIRECTIONS }));
+        const ex = !rw && UI.spr && UI.spr.directions ? UI.spr.directions() : null;
         if (ex) { const t = ex.querySelector('table'); if (t) b.append(h('p', { class: 'k', text: 'Examples' }), t); }
         if (o.first) {
           const cb = h('input', { type: 'checkbox', checked: ls.get(DIRS_KEY, false) ? true : null });
@@ -1262,7 +1275,7 @@
      run   {el, at, ws, view, cells, timer, show(i, item), go(i), next(), back(), item(i, patch), cell(i, patch),
             setCells(cells, total), preload(i, item), review(), closeReview(i), navigator(), screen(node, foot),
             directions(first), say(text), banner(text, actions), status(info), reveal(fb), destroy()} */
-  const G = 16, COL_MIN = 560, SLOT_W = 300;
+  const G = 16, COL_MIN = 560, SLOT_W = 300, PASSAGE_MIN = 320, PASSAGE_MAX = 960;
   function statusOf(fb, q) {
     if (fb.status) return fb.status;
     if (fb.voided) return 'voided';
@@ -1284,13 +1297,19 @@
     };
     const prefs = Object.assign({ show_timer: true, show_stopwatch: true, pace_alert: true, two_passes: true, confidence: 'ask', first_tap: false }, o.prefs || {});
     const sid = String(o.sid || 'sitting');
+    // Reading and Writing has no calculator or reference sheet: a set's subject turns them off, and in
+    // practice a passage question hides them too, whatever set it sits in (writtenQ)
+    // the section's pace (deps.PACE: 95 s Math, 71 s R&W) and its checkpoints at the module's thirds (22 / 27 questions)
+    const paceMs = o.subject === 'rw' ? 71000 : 95000;
+    const CHECKS = o.subject === 'rw' ? [9, 18] : [7, 14];
     const cfg = {
-      calc: o.calc !== false, ref: o.ref !== false, annotate: o.annotate !== false,
+      calc: o.calc !== false && o.subject !== 'rw', ref: o.ref !== false && o.subject !== 'rw', annotate: o.annotate !== false,
       scratch: o.scratch ?? exam, dirs: o.directions ?? exam, pause: !!o.pausable && !exam && !challenge,
       conf: exam && training && !!o.confidence, pace: training && !!(o.pace && o.pace.budget_s && o.pace.budget_s.length),
       nudges: training && o.nudges !== false, noteMax: exam ? 500 : 1000,
     };
     let cells = (o.cells || []).map((c, i) => Object.assign({ n: i + 1, status: 'unanswered' }, c));
+    renumber();
     let total = o.total === null ? null : (o.total ?? cells.length);
     const items = new Map();
     (o.items || []).forEach((it, i) => { if (it) items.set(i, it); });
@@ -1308,6 +1327,12 @@
 
     /* ---------------- the frame */
     const root = h('div', { class: `rn rn-${exam ? 'exam' : 'practice'}${challenge ? ' rn-challenge' : ''}`, 'data-feedback': fbMode });
+    // the footer's key chips show on hover and focus; in a learner's first 3 sets they show all the time (runner.css .rn-keys)
+    if (!exam) {
+      const seen = [].concat(ls.get('satf.keysets', []) || []);
+      if (!seen.includes(sid) && seen.length < 3) { seen.push(sid); ls.set('satf.keysets', seen); }
+      root.classList.toggle('rn-keys', seen.includes(sid));
+    }
     const live = h('p', { class: 'sr', role: 'status', 'aria-live': 'polite' });
     const tool = (id, label, ic, key, run, x = {}) => {
       const b = h('button', { type: 'button', class: 'tool rn-tool' + (x.cls ? ' ' + x.cls : ''), id: x.id || null, 'data-tool': id,
@@ -1318,15 +1343,19 @@
       return b;
     };
     // top bar
-    const top = h('header', { class: 'rn-top', id: 'top' });
+    const top = h('header', { class: 'rn-top', id: 'top', 'data-scrolled': exam ? null : '' });
     const exitB = h('button', { type: 'button', class: 'rn-exit', id: 'exit', 'aria-label': exam ? 'Save and exit' : 'Exit', title: exam ? 'Save and exit' : 'Exit' },
       icon('x', 20), h('span', { class: 'rn-exit-l', text: exam ? 'Save and exit' : 'Exit' }));
     exitB.addEventListener('click', () => exit());
     const titleEl = h('span', { class: 'rn-title', id: 'title', text: o.title || '' });
     const dirsB = cfg.dirs ? h('button', { type: 'button', class: 'quiet rn-dirs', id: 'dirs', 'aria-haspopup': 'dialog', onclick: () => directions() }, 'Directions', icon('down', 16)) : null;
-    const condChip = exam && o.conditions ? h('span', { class: 'rn-cond', text: training ? 'Training' : 'Ranked',
+    const condChip = exam && o.conditions ? h('span', { class: 'badge soft rn-cond', text: training ? 'Training' : 'Ranked',
       title: training ? 'Training: the aids are on. This sitting keeps its score and doesn’t rank.' : 'Test-day: exactly Bluebook. This sitting ranks.' }) : null;
-    top.append(h('div', { class: 'rn-left' }, exitB, h('div', { class: 'rn-titles' }, titleEl, dirsB), condChip));
+    // practice: right, skipped and the streak beside the title (the footer says which question of how many)
+    const railText = h('span', { class: 'rn-railtext', hidden: true });
+    // Bluebook's header has no badge: Ranked / Training is the title's tooltip and the first line of More
+    if (condChip) titleEl.title = `${o.title || ''} · ${condChip.textContent}. ${condChip.title}`;
+    top.append(h('div', { class: 'rn-left' }, exitB, h('div', { class: 'rn-titles' }, titleEl, dirsB, railText)));
     const clockBox = h('div', { class: 'rn-clock', id: 'clock' });
     const pauseB = cfg.pause && o.clock ? tool('pause', 'Pause', 'pause', 'P', () => pause(), { id: 'pause' }) : null;
     top.append(h('div', { class: 'rn-mid' }, clockBox, pauseB));
@@ -1343,13 +1372,18 @@
     if (exam) toolsTop.append(...[annB, scrB, notesB, calcB, refB, moreB].filter(Boolean));
     else toolsTop.append(...[scrB, calcB, refB, notesB, moreB].filter(Boolean));
 
-    // progress rail (practice) / strip (exam)
+    // progress rail (practice) / strip (exam): the top bar's bottom edge
     const rail = h('div', { class: 'rn-rail', id: 'strip' });
     const segs = h('div', { class: 'rn-segs', role: exam ? 'progressbar' : 'group', 'aria-label': 'Progress', 'aria-valuemin': exam ? '0' : null });
-    const railText = h('p', { class: 'rn-railtext' });
-    rail.append(segs, railText);
+    rail.append(segs);
+    // practice: one current marker that slides from question to question (it outlives the repainted segments)
+    const curMark = exam ? null : h('i', { class: 'rn-curmark', 'aria-hidden': 'true', hidden: true });
+    if (curMark) rail.append(curMark);
+    top.append(rail);
+    // a phone hides the title: the set's name and the counts take one line over the question
+    const railLine = h('p', { class: 'rn-railline', hidden: true });
     segs.addEventListener('click', e => {
-      if (phone() && exam) return toggleNav();
+      if (phone()) return toggleNav();                         // an 8px strip on a phone: a tap opens the navigator
       const b = e.target.closest('[data-i]');
       if (b && !b.disabled) pick(+b.dataset.i);
     });
@@ -1377,7 +1411,7 @@
     const detB = !exam ? tool('details', 'Details', 'info', 'V', () => openDetails(), { id: 'detailsBtn' }) : null;
     const repB = tool('report', 'Report', 'report', 'R', () => report(), { id: 'reportBtn' });
     repB.setAttribute('aria-label', 'Report a problem with this question');
-    const attB = !exam ? tool('history', 'Attempts', 'history', 'Y', () => history(), { id: 'attemptsBtn' }) : null;
+    const attB = !exam ? tool('history', 'History', 'history', 'Y', () => history(), { id: 'attemptsBtn' }) : null;
     const saveB = exam ? tool('save', 'Save', 'bookmark', null, () => toggleSave(), { id: 'saveBtn', toggle: true }) : null;
     let confSeg = null;
     if (cfg.conf) {
@@ -1388,27 +1422,37 @@
         confSeg.append(b);
       });
     }
-    if (exam) qtools.append(...[markB, confSeg, saveB, h('span', { class: 'rn-spacer' }), elimB, repB].filter(Boolean));
-    else qtools.append(...[markB, elimB, annB, noteB, detB, repB, attB].filter(Boolean));
+    // the strip keeps what a student reaches for on every question; Report and History (practice), Save and Report
+    // (the test) are in More under "This question", their keys unchanged (R, Y)
+    if (exam) qtools.append(...[markB, confSeg, h('span', { class: 'rn-spacer' }), elimB].filter(Boolean));
+    else qtools.append(...[markB, elimB, annB, noteB, detB].filter(Boolean));
     if (exam && annB) { /* Highlights & Notes sits in the top bar in the test */ }
     const whyEl = h('p', { class: 'rn-why', hidden: true });
     const nudgeEl = h('div', { class: 'rn-nudge', hidden: true, role: 'status' });
     const qHost = h('div', { class: 'rn-q' });
-    const addNote = exam ? h('button', { type: 'button', class: 'quiet rn-addnote', onclick: e => openNote(e.currentTarget) }, icon('note', 16), h('span', { text: 'Add a note' })) : null;
+    const addNote = null;   // the test's notes are More, Notes and the O key (Bluebook has no note line under the question)
     const scratchHost = h('div', { class: 'rn-scratchtools', hidden: true });
     const toolsRow = h('div', { class: 'tools-row rn-toolsrow', role: 'toolbar', 'aria-label': 'Tools', hidden: true });
     const screenEl = h('div', { class: 'rn-screen', hidden: true });
-    const qArea = h('div', { class: 'rn-qarea' }, strip, whyEl, nudgeEl, scratchHost, qHost, addNote, toolsRow);
-    const col = h('main', { class: 'rn-col', id: o.mainId || 'main', tabindex: '-1' }, rail, qArea, screenEl);
-    const passage = h('section', { class: 'rn-passage', hidden: true, 'aria-label': 'Passage' });       // decision 3: kept empty until an R&W bank
+    // integrity: what a student is told on coming back to the test (role alert: never folded away)
+    const igEl = h('div', { class: 'rn-ig', role: 'alert', hidden: true, 'data-nofold': '' });
+    const qArea = h('div', { class: 'rn-qarea' }, railLine, igEl, strip, whyEl, nudgeEl, scratchHost, qHost, addNote, toolsRow);
+    const col = h('main', { class: 'rn-col', id: o.mainId || 'main', tabindex: '-1' }, qArea, screenEl);
+    // wide screens only: an R&W question's passage, table and figure, moved here from the
+    // workspace (ws.passageNodes) instead of being drawn a second time; data-nofold: the
+    // passage must always show, never collapse behind ui.js's fold toggle
+    const passage = h('section', { class: 'rn-passage', hidden: true, 'aria-label': 'Passage', 'data-nofold': '' });
+    const passageBody = h('div', { class: 'rn-passage-body' });
+    const passageGrip = h('div', { class: 'rn-dock-grip rn-passage-grip', role: 'separator', 'aria-orientation': 'vertical', 'aria-label': 'Resize the passage', tabindex: '0' });
+    passage.append(passageBody, passageGrip);
     const dock = h('aside', { class: 'rn-dock', 'aria-label': 'Calculator', hidden: true });
     const dockGrip = h('div', { class: 'rn-dock-grip', role: 'separator', 'aria-orientation': 'vertical', 'aria-label': 'Resize the calculator', tabindex: '0' });
     dock.append(dockGrip);
-    const slot = h('aside', { class: 'rn-slot', id: 'rightSlot', hidden: true, 'aria-label': 'Reference and notes' });
+    const slot = h('aside', { class: 'rn-slot', id: 'rightSlot', hidden: true, 'aria-label': exam ? 'Reference and notes' : 'Details, reference and notes' });
     const bodyEl = h('div', { class: 'rn-body' }, dock, passage, col, slot);
     // footer
-    const foot = h('footer', { class: 'rn-foot', id: 'foot' });
-    const backB = h('button', { type: 'button', class: 'quiet rn-back', id: 'back', title: 'Back (←)' }, icon('left', 18), h('span', { class: 'rn-back-l', text: exam ? 'Back' : 'Previous' }));
+    const foot = h('footer', { class: 'rn-foot', id: 'foot', 'data-scrolled': exam ? null : 'bottom' });
+    const backB = h('button', { type: 'button', class: 'quiet rn-back', id: 'back', title: 'Back (←)' }, icon('left', 18), h('span', { class: 'rn-back-l', text: 'Back' }));
     backB.addEventListener('click', () => back());
     const markFoot = h('button', { type: 'button', class: 'rn-markfoot', id: 'markFoot', 'aria-pressed': 'false', 'aria-label': 'Mark for review', title: 'Mark for review (M)' }, icon('flag', 20), h('span', { class: 'tl', text: 'Mark' }));
     markFoot.addEventListener('click', () => setMark(at));
@@ -1442,35 +1486,52 @@
       });
     } else clockBox.hidden = true;
 
-    /* ---------------- layout: the calculator on the left, one slot on the right (X9) */
+    /* ---------------- layout: the calculator or an R&W passage on the left, one slot on the right (X9) */
     let dockW = Math.max(320, Math.min(560, +ls.get('satf.calc.w', 420) || 420));
+    // the passage pane: half of what the question and passage share (Bluebook's split) until the student drags it
+    let passageSet = +ls.get('satf.passage.w', 0) || 0;
+    let passageW = passageSet ? Math.max(PASSAGE_MIN, Math.min(PASSAGE_MAX, passageSet)) : 440;
     function layout() {
       if (dead) return;
       const W = root.clientWidth || innerWidth;
-      const docked = !!(UI.calc && UI.calc.isOpen && UI.calc.mode === 'dock' && dock.contains(UI.calc.el));
+      const wantPassage = !passage.hidden;
+      // the passage pane and a docked calculator share the left grid column; a question never
+      // needs both, and the passage wins if the calculator was left open from an earlier one
+      const docked = !wantPassage && !!(UI.calc && UI.calc.isOpen && UI.calc.mode === 'dock' && dock.contains(UI.calc.el));
       const slotOn = !slot.hidden;
       dock.hidden = !docked;
-      let cw = dockW;
-      const colW = w => W - (docked ? w + G : 0) - (slotOn ? SLOT_W + G : 0) - 2 * G;
+      let cw = dockW, pw = passageSet ? passageW : Math.max(PASSAGE_MIN, Math.min(PASSAGE_MAX, Math.round((W - (slotOn ? SLOT_W + G : 0)) / 2)));
+      const colW = w => W - (w ? w + G : 0) - (slotOn ? SLOT_W + G : 0) - 2 * G;
       slotFloat = false;
       if (colW(cw) < COL_MIN && docked) cw = Math.max(320, cw - (COL_MIN - colW(cw)));
-      if (colW(cw) < COL_MIN) {
+      if (colW(pw) < COL_MIN && wantPassage) pw = Math.max(PASSAGE_MIN, pw - (COL_MIN - colW(pw)));
+      const activeW = docked ? cw : wantPassage ? pw : 0;
+      if (colW(activeW) < COL_MIN) {
         if (slotOn && (lastOpened === 'slot' || !docked)) slotFloat = true;
         else if (docked && UI.calc.setMode) { UI.calc.setMode('float'); return layout(); }
       }
       root.style.setProperty('--dock-w', cw + 'px');
+      root.style.setProperty('--passage-w', pw + 'px');
       slot.classList.toggle('float', slotOn && slotFloat);
       root.classList.toggle('has-dock', docked);
       root.classList.toggle('has-slot', slotOn && !slotFloat);
+      root.classList.toggle('has-passage', wantPassage);
       if (calcB) calcB.setAttribute('aria-pressed', String(!!(UI.calc && UI.calc.isOpen)));
       if (refB) refB.setAttribute('aria-pressed', String(slotOn && slotTab === 'ref'));
+      if (detB) { if (sideDetails()) detB.setAttribute('aria-pressed', String(slotOn && slotTab === 'details')); else detB.removeAttribute('aria-pressed'); }
     }
     if (UI.calc) {
       if (UI.calc.dock) UI.calc.dock(dock);
       if (UI.calc.sitting) UI.calc.sitting(sid);
       if (UI.calc.onOpen) cleanups.push(UI.calc.onOpen(open => { if (open) { lastOpened = 'calc'; calcOpenAt = calcOpenAt || performance.now(); } layout(); renderToolsRow(); }));
     }
-    const onResize = () => { layout(); if (!slot.hidden && innerWidth < 1180) { const t = slotTab; closeSlot(); openSlot(t); } };
+    const onResize = () => {
+      layout();
+      placeMark(false);
+      if (!slot.hidden && slotTab === 'details' && !sideDetails()) closeSlot();        // below 1280 Details is the popover
+      else if (!slot.hidden && innerWidth < 1180) { const t = slotTab; closeSlot(); openSlot(t); }
+      else if (slot.hidden) autoDetails();
+    };
     addEventListener('resize', onResize);
     cleanups.push(() => removeEventListener('resize', onResize));
     // the dock's width: drag its right edge (320-560)
@@ -1483,18 +1544,31 @@
       dockGrip.addEventListener('pointercancel', stop);
       dockGrip.addEventListener('keydown', e => { const d = { ArrowLeft: -20, ArrowRight: 20 }[e.key]; if (!d) return; e.preventDefault(); dockW = Math.max(320, Math.min(560, dockW + d)); ls.set('satf.calc.w', dockW); layout(); });
     })();
+    // the passage pane's width: drag its right edge (320-720), remembered per viewer
+    (() => {
+      let x0 = 0, w0 = 0, drag = false;
+      passageGrip.addEventListener('pointerdown', e => { drag = true; x0 = e.clientX; w0 = passage.getBoundingClientRect().width; passageGrip.setPointerCapture(e.pointerId); e.preventDefault(); });
+      passageGrip.addEventListener('pointermove', e => { if (!drag) return; passageW = passageSet = Math.max(PASSAGE_MIN, Math.min(PASSAGE_MAX, w0 + e.clientX - x0)); layout(); });
+      const stop = () => { if (!drag) return; drag = false; ls.set('satf.passage.w', Math.round(passageW)); };
+      passageGrip.addEventListener('pointerup', stop);
+      passageGrip.addEventListener('pointercancel', stop);
+      passageGrip.addEventListener('keydown', e => { const d = { ArrowLeft: -20, ArrowRight: 20 }[e.key]; if (!d) return; e.preventDefault(); passageW = passageSet = Math.max(PASSAGE_MIN, Math.min(PASSAGE_MAX, passage.getBoundingClientRect().width + d)); ls.set('satf.passage.w', passageW); layout(); });
+    })();
 
-    /* ---------------- the right slot: Reference · Notes · Entering your answer */
+    /* ---------------- the right slot: Details (practice, 1280+) · Reference · Notes · Entry rules */
     const slotHead = h('div', { class: 'rn-slot-head' });
-    const slotTabs = h('div', { class: 'rn-slot-tabs', role: 'tablist', 'aria-label': 'Side panel' });
+    const slotTabs = h('div', { class: 'rn-slot-tabs' });   // holds the UI.tabs (paintSlot)
     const slotBody = h('div', { class: 'rn-slot-body', role: 'tabpanel' });
     slotHead.append(slotTabs, h('button', { type: 'button', class: 'x', 'aria-label': 'Close the panel', onclick: () => closeSlot(true) }, icon('x', 18)));
     slot.append(slotHead, slotBody);
-    const TABS = () => [['ref', 'Reference'], ['notes', 'Notes'], ...(isMc() ? [] : [['spr', 'Entering your answer']])].filter(([id]) => id !== 'ref' || cfg.ref);
+    // BIG 7: practice keeps the question's context in a Details tab from 1280 wide, open unless closed (remembered)
+    const DETAILS = 'satf.details2';   // v2: the side column starts closed; it opens by itself only after the student opened it
+    function sideDetails() { return !exam && !phone() && innerWidth >= 1280; }   // a declaration: layout() can run before this line
+    const TABS = () => [...(sideDetails() ? [['details', 'Details']] : []), ['ref', 'Reference'], ['notes', 'Notes'], ...(isMc() ? [] : [['spr', 'Entry rules']])].filter(([id]) => id !== 'ref' || cfg.ref);
     function openSlot(tab, o2 = {}) {
       if (innerWidth < 1180 || phone()) return sheetFor(tab, o2);
       slotTab = tab;
-      lastOpened = 'slot';
+      if (!o2.auto) lastOpened = 'slot';
       slot.hidden = false;
       paintSlot(o2);
       layout();
@@ -1502,21 +1576,65 @@
     }
     function closeSlot(byUser) {
       if (byUser && slotTab === 'spr') ls.set(`satf.sprhelp.${sid}`, 'closed');
+      if (byUser && sideDetails()) ls.set(DETAILS, 'closed');           // the student closed the side column: it stays closed
+      restoreTail();
       slot.hidden = true;
       if (slotTab === 'ref') stopRef();
       slotTab = null;
       layout();
     }
+    // one UI.tabs, rebuilt only when the tabs themselves change (Details from 1280 wide, Entry rules on a grid-in),
+    // so its underline slides from tab to tab; the notes count is its badge
+    let slotTabsApi = null, slotTabsKey = '';
+    function pickSlotTab(id) {
+      if (slotTab === 'ref' && id !== 'ref') stopRef();
+      slotTab = id;
+      if (id === 'details') ls.set(DETAILS, 'open');
+      paintSlot();
+      if (id === 'ref') countRef();
+      layout();
+    }
     function paintSlot(o2 = {}) {
-      slotTabs.replaceChildren(...TABS().map(([id, label]) => {
-        const b = h('button', { type: 'button', role: 'tab', 'aria-selected': String(slotTab === id), text: label === 'Notes' ? `Notes ${noteCount() || ''}`.trim() : label });
-        b.addEventListener('click', () => { if (slotTab === 'ref' && id !== 'ref') stopRef(); slotTab = id; paintSlot(); if (id === 'ref') countRef(); });
-        return b;
-      }));
+      restoreTail();
+      const tabs = TABS(), key = tabs.map(t => t[0]).join();
+      if (!slotTabsApi || key !== slotTabsKey) {
+        slotTabsKey = key;
+        slotTabsApi = UI.tabs(null, tabs.map(([id, label]) => ({ id, label })), { value: slotTab, label: 'Side panel', onChange: pickSlotTab });
+        slotTabsApi.el.classList.add('inline', 'sm');   // the head draws the hairline; .sm fits four in 300px
+        slotTabs.replaceChildren(slotTabsApi.el);
+        if (UI.edgeFade) UI.edgeFade(slotTabsApi.el, true);   // four tabs scroll in 300px: a soft edge where more are
+      } else if (slotTabsApi.value !== slotTab) slotTabsApi.set(slotTab, true);
+      slotTabsApi.count('notes', noteCount() || null);
       slotBody.replaceChildren();
-      if (slotTab === 'ref') { refApi = refDock(slotBody, { highlight: o2.highlight }); }
+      if (slotTab === 'details') slotBody.append(detailsPanel());
+      else if (slotTab === 'ref') { refApi = refDock(slotBody, { highlight: o2.highlight }); }
       else if (slotTab === 'notes') slotBody.append(notesList(true));
       else if (slotTab === 'spr' && UI.spr && UI.spr.directions) slotBody.append(UI.spr.directions());
+    }
+    // opened by itself only when the column keeps COL_MIN beside the passage or a docked calculator at their own
+    // widths: Details never squeezes an R&W passage (the student can still open it)
+    function detailsFit(it) {
+      const W = root.clientWidth || innerWidth;
+      const docked = prefs.calc_mode === 'dock' || (UI.calc && UI.calc.isOpen && UI.calc.mode === 'dock');
+      const left = it && it.q && it.q.text ? passageW + G : docked ? dockW + G : 0;
+      return W - left - SLOT_W - G - 2 * G >= COL_MIN;
+    }
+    function autoDetails() {
+      if (!sideDetails() || view !== 'q' || !slot.hidden || ls.get(DETAILS, 'closed') !== 'open' || !detailsFit(items.get(at))) return;
+      openSlot('details', { auto: true });
+    }
+    // the verdict's tail (mastery, then, your saved note, formula, everyone) moves into Details and back
+    let tailEl = null, tailHome = null;
+    function restoreTail() {
+      if (!tailEl) return;
+      if (tailHome && tailHome.isConnected) tailHome.replaceWith(tailEl); else tailEl.remove();
+      tailEl = tailHome = null;
+    }
+    function detailsPanel() {
+      const tail = ws ? ws.el.querySelector('.v-tail') : null;
+      const box = h('div', { class: 'rn-side' }, detailsList(tail));
+      if (tail) { tailHome = doc.createComment('v-tail'); tail.replaceWith(tailHome); tailEl = tail; box.append(tail); }
+      return box;
     }
     function sheetFor(tab, o2 = {}) {
       if (tab === 'ref') { countRef(); const r = refSheet(o2.highlight); if (r && r.sheet) r.sheet.closed.then(stopRef); return r; }
@@ -1531,7 +1649,7 @@
     function countRef() { if (at < 0) return; refAt = { i: at, t: performance.now() }; refN.set(at, (refN.get(at) || 0) + 1); saveState(at, { ref_n: refN.get(at) }); }
     function stopRef() { if (!refAt) return; saveState(refAt.i, { ref_ms: Math.round(performance.now() - refAt.t) }); refAt = null; }
     function toggleRef(o2 = {}) {
-      if (!cfg.ref) return false;
+      if (!mathTool('ref')) return false;
       if (!slot.hidden && slotTab === 'ref' && !o2.highlight) { closeSlot(); return; }
       openSlot('ref', o2);
     }
@@ -1585,27 +1703,38 @@
       ta.addEventListener('blur', saveNote);
       ta.addEventListener('keydown', e => { if (e.key === 'Escape' && inSlot) { e.stopPropagation(); ta.blur(); } });
       if (inSlot) setTimeout(() => ta.focus({ preventScroll: true }), 0);
-      return h('div', { class: 'rn-note-ed' }, h('label', { class: 'k', for: id, text: `My note · Q${(cells[i] || {}).n ?? i + 1}` }), ta, h('div', { class: 'rn-note-foot' }, cnt, st));
+      return h('div', { class: 'rn-note-ed' }, h('label', { class: 'label', for: id, text: `My note · Q${(cells[i] || {}).n ?? i + 1}` }), ta, h('div', { class: 'rn-note-foot' }, cnt, st));
     }
+    // an anchor for a popover: the button itself when it is on screen (a phone hides some tools; they are in More)
+    const shown = b => (b && b.isConnected && !b.closest('[hidden]') && getComputedStyle(b).display !== 'none' ? b : null);
     function openNote(anchor) {
       if (view !== 'q' || at < 0) return false;
       if (exam && innerWidth >= 1180) return openSlot('notes');
       if (!UI.pop) return false;
       const box = h('div', { class: 'rn-notepop' }, noteEditor(at, false));
-      const p = UI.pop(anchor || noteB || addNote || navB, box, { label: 'My note', className: 'rn-notepop-p' });
+      const p = UI.pop(shown(anchor) || shown(noteB) || moreB || navB, box, { label: 'My note', className: 'rn-notepop-p' });
       if (p) setTimeout(() => { const t = p.el.querySelector('textarea'); if (t) t.focus({ preventScroll: true }); }, 0);
       return p;
     }
 
     /* ---------------- the question on screen */
+    function isExample(q) { return !!q && q.kind === 'example'; }
+    function writtenQ(q) { return !exam && !!q && !!q.text; }
+    const mathTool = name => cfg[name] && !writtenQ((items.get(at) || {}).q);
+    // a worked example or word card holds a position but is not a question: the questions are numbered past it
+    function qTotal() { return total - cells.filter(c => c.aside).length; }
+    function renumber() { if (!cells.some(c => c.aside)) return; let n = 0; cells.forEach(c => { c.n = c.aside ? null : ++n; }); }
     function wsOpts(i, it) {
       const base = o.workspace || {};
       const call = (name, ...a) => (typeof base[name] === 'function' ? base[name](...a) : undefined);
       return Object.assign({}, base, {
-        mode: exam ? 'exam' : 'practice', feedback: fbMode, prefs, bar: false, toolbar: false, head: false,
-        confActive: o.confActive, state: it.state || null, fb: it.fb || null, calc: cfg.calc, ref: cfg.ref,
+        // a worked example arrives solved: its own mode heads it "Worked example · the answer is A"
+        mode: exam ? 'exam' : isExample(it.q) ? 'example' : 'practice', feedback: fbMode, prefs, bar: false, toolbar: false, head: false,
+        confActive: o.confActive, state: it.state || null, fb: it.fb || null,
+        calc: cfg.calc && !writtenQ(it.q), ref: cfg.ref && !writtenQ(it.q),
         firstTap: !!prefs.first_tap,
         onCheck: async (a, meta) => {
+          checking = i;
           meta.ms = Math.round(msAt(i));
           if (Number.isFinite(timerApi && timerApi.left)) meta.made_left = Math.round(timerApi.left);
           const r = await emit('check', i, a, meta);
@@ -1630,18 +1759,13 @@
         onReveal: fb => { revealed(i, fb); call('onReveal', fb); },
         onChange: s => { changed(i, s); call('onChange', s); },
         annotating: () => annotateOn || scratchOn,
-        actions: exam ? null : actionsCtx(i, it),
+        actions: exam ? null : actionsCtx(),
       });
     }
-    function actionsCtx(i, it) {
+    // compact: Mark, Note, History and Report are the strip's (one of each); the row keeps Twin and Desmos way
+    function actionsCtx() {
       if (!o.actions) return null;
-      const a = o.actions;
-      const onA = Object.assign({}, a.on || {});
-      if (on.mark) onA.mark = v => setMark(i, v);
-      if (on.note) onA.note = () => openNote(noteB);
-      if (on.report || UI.report) onA.report = () => report();
-      if (on.history) onA.history = () => history();
-      return Object.assign({ surface: 'runner', session: sid, inSitting: true, marked: !!(cells[i] || {}).flag, saved: !!it.saved, hasNote: hasNote(i) }, a, { on: onA });
+      return Object.assign({ surface: 'runner', session: sid, inSitting: true, compact: true }, o.actions);
     }
     function mountWs(i, it, detached) {
       const w = UI.workspace(detached ? null : qHost, it.q, wsOpts(i, it));
@@ -1650,7 +1774,26 @@
     function destroyWs() {
       if (ann) { ann.destroy(); ann = null; }
       if (scr) { scr.destroy(); scr = null; }
+      restoreTail();
       if (ws) { try { ws.destroy(); } catch (_) {} ws = null; wsI = -1; }
+      passageBody.replaceChildren();
+      passage.hidden = true;
+    }
+    // wide screens only: an R&W question's passage, table and figure move from the workspace
+    // (drawn inline there by default) into the pane; math and narrow screens are untouched
+    function fitsPassage() {
+      const W = root.clientWidth || innerWidth;
+      const slotOn = !slot.hidden;
+      return W - PASSAGE_MIN - G - (slotOn ? SLOT_W + G : 0) - 2 * G >= COL_MIN;
+    }
+    function placePassage(it) {
+      if (it.q.text && !phone() && fitsPassage()) {
+        passageBody.append(...(ws.passageNodes || []));
+        passage.hidden = false;
+      } else {
+        passage.hidden = true;
+      }
+      layout();
     }
     function show(i, it, p) {
       if (dead) return;
@@ -1660,17 +1803,25 @@
       items.set(i, it);
       if (!cells[i]) cells[i] = { n: i + 1, status: 'unanswered' };
       if (cells[i].status === 'future') cells[i].status = 'unanswered';
+      if (isExample(it.q) || (it.q && it.q.kind === 'word')) cells[i].aside = true;
+      renumber();
       cells.forEach((c, k) => { c.current = k === i; });
       if (p && p.ws) { ws = p.ws; qHost.replaceChildren(ws.el); if (ws.restart) ws.restart(); }
       else ws = mountWs(i, it);
+      if (calcB) calcB.hidden = writtenQ(it.q);
+      if (refB) refB.hidden = writtenQ(it.q);
+      if (writtenQ(it.q) && UI.calc && UI.calc.isOpen) UI.calc.close();
+      autoDetails();
+      placePassage(it);
       pre.delete(i);
       wsI = i;
       screenEl.hidden = true; screenEl.replaceChildren();
       qArea.hidden = false; rail.hidden = false;
       footAlt.hidden = true; footAlt.replaceChildren();
       [fLeft, fMid, fRight].forEach(x => { x.hidden = false; });
-      // highlights and notes, restored
-      if (cfg.annotate) ann = annotate(ws.el, it.marks || [], { editable: annotateOn, onChange: m => {
+      // highlights and notes, restored: bodyEl (not ws.el) so a mark anchors on the passage
+      // whether it is inline in the workspace or moved out into the pane beside it
+      if (cfg.annotate) ann = annotate(bodyEl, it.marks || [], { editable: annotateOn, onChange: m => {
         it.marks = m;
         cells[i].note = hasNote(i);
         emit('marks', i, m);
@@ -1717,7 +1868,7 @@
       const qq = it.q || {};
       const c = cells[at] || {};
       const answered = !!(ws && ws.answered && ws.answered());
-      numEl.textContent = exam ? `Q${c.n ?? at + 1}` : String(c.n ?? at + 1);
+      numEl.textContent = exam ? `Q${c.n ?? at + 1}` : isExample(qq) ? 'Example' : String(c.n ?? at + 1);
       if (!exam) {
         infoEl.replaceChildren();
         const t = UI.TOPIC && UI.TOPIC[qq.topic];
@@ -1726,10 +1877,11 @@
         infoEl.append(skill);
         if (qq.name && !hideSkill) infoEl.append(h('span', { class: 'rn-type', text: qq.name }));
         if (qq.difficulty) infoEl.append(h('span', { class: 'rn-diff' }, UI.dbars ? UI.dbars(qq.difficulty) : h('span', { text: qq.difficulty })));   // no level badge: internal calibration stays off screen (the user)
-        if (qq.type === 'spr') infoEl.append(h('span', { class: 'rn-fmt', text: 'Grid-in' }));
+        if (qq.type === 'spr') infoEl.append(h('span', { class: 'badge soft rn-fmt', text: 'Grid-in' }));
         if (qq.repair) {
-          const ag = h('span', { class: 'rn-again', text: 'Again', tabindex: '0' });
-          if (UI.tooltip) UI.tooltip(ag, qq.repair_of ? `Same trap as question ${qq.repair_of}, new numbers` : 'Same trap, new numbers');
+          const ag = h('span', { class: 'badge rn-again', text: 'Again', tabindex: '0' });
+          if (UI.tooltip) UI.tooltip(ag, qq.text ? (qq.repair_of ? `Another one like question ${qq.repair_of}` : 'Another one like the one you missed')
+            : qq.repair_of ? `Same trap as question ${qq.repair_of}, new numbers` : 'Same trap, new numbers');
           infoEl.append(ag);
         }
       }
@@ -1753,22 +1905,21 @@
       if (attB) {
         const n = +it.attempts || 0;
         attB.hidden = !(answered || n > 0 || (s.tries && s.tries.length));
-        attB.querySelector('.tl').textContent = n ? `Attempts ${n}` : 'Attempts';
+        attB.querySelector('.tl').textContent = n ? `History ${n}` : 'History';
       }
       notesB.hidden = !(annotateOn || noteCount());
       notesB.querySelector('.tl').textContent = noteCount() ? `Notes ${noteCount()}` : 'Notes';
-      // why this one; a revisit says what it was
+      // a revisit says what it was; "why this one" is a Details row
       if (!exam) {
-        whyEl.replaceChildren();
         const fb = it.fb;
-        const bits = [];
-        if (answered && fb && it.revisit) bits.push(`Answered · ${stateLabel(statusOf(fb, qq))} · ${msx(msAt(at))}`);
-        else if (!challenge && (it.why || qq.why)) bits.push(it.why || qq.why);
-        whyEl.textContent = bits.join(' · ');
-        whyEl.hidden = !bits.length;
+        whyEl.textContent = isExample(qq) ? 'Worked example: the answer is shown so you can study it. Your own question comes next.'
+          : answered && fb && it.revisit ? `Answered · ${stateLabel(statusOf(fb, qq))} · ${msx(msAt(at))}` : '';
+        whyEl.hidden = !whyEl.textContent;
       }
       paintWatch();
     }
+    const watchT = h('span', { class: 'rn-watch-t' }), watchBar = h('span', { class: 'rn-watch-bar', 'aria-hidden': 'true' }, h('i'));
+    watchEl.append(watchT, watchBar);
     function paintWatch() {
       if (exam || !ws) { watchEl.hidden = true; return; }
       watchEl.hidden = prefs.show_stopwatch === false;
@@ -1776,9 +1927,14 @@
       const budget = +((items.get(at) || {}).q || {}).budget_ms || +(cells[at] || {}).budget_ms || 0;
       const over = budget && ms > budget && !ws.answered();
       watchEl.classList.toggle('over', !!(over && prefs.pace_alert !== false));
-      watchEl.replaceChildren(h('span', { class: 'rn-watch-t', text: budget ? `${msx(ms)} / ${msx(budget)}` : msx(ms) }));
-      if (budget) watchEl.append(h('span', { class: 'rn-watch-bar', 'aria-hidden': 'true' }, h('i', { style: `width:${Math.min(100, ms / budget * 100).toFixed(1)}%` })));
-      watchEl.setAttribute('aria-label', `Time on this question ${msx(ms)}${budget ? ', budget ' + msx(budget) : ''}`);
+      // the text and the bar change in place, once a second at most: no rebuilt nodes
+      const txt = budget ? `${msx(ms)} / ${msx(budget)}` : msx(ms);
+      if (watchT.textContent !== txt) {
+        watchT.textContent = txt;
+        watchEl.setAttribute('aria-label', `Time on this question ${msx(ms)}${budget ? ', budget ' + msx(budget) : ''}`);
+      }
+      watchBar.hidden = !budget || ms < budget / 2;   // the bar from half the budget: one clock on the first screen
+      if (budget) watchBar.firstChild.style.width = `${Math.min(100, ms / budget * 100).toFixed(1)}%`;
       // P16: past 1.5 times the budget in a timed set, offer the second pass
       const skipChip = qArea.querySelector('.rn-skipchip');
       const want = !challenge && on.skip && timerApi && timerApi.timed && prefs.two_passes !== false && budget && ms > 1.5 * budget && !ws.answered();
@@ -1810,6 +1966,8 @@
         segs.append(h('span', { class: 'rn-fill', style: `width:${Math.min(100, done / of * 100).toFixed(1)}%` }));
       }
       if (cfg.pace && timerApi) paceTicks();
+      placeMark(true);
+      navB.toggleAttribute('data-marked', !exam && t.flag > 0);   // practice: a dot on the navigator while anything is marked
       if (exam) {
         segs.setAttribute('aria-valuenow', String(t.answered));
         segs.setAttribute('aria-valuemax', String(n ?? t.served));
@@ -1819,16 +1977,28 @@
       } else {
         let streak = 0;
         for (let i = Math.max(at, t.served - 1); i >= 0; i--) { const s = (cells[i] || {}).status; if (s === 'correct' || s === 'repaired') streak++; else if (s === 'incorrect' || s === 'mixed') break; }
+        // "3 of 10" is the footer's: these are the counts it does not show
         const bits = [];
-        if (phone() || !o.title) bits.push(o.title || '');
-        if (total === null) bits.push(`${t.answered} answered`, `${t.right} right`);
-        else if (endMode) bits.push(`${Math.min(at + 1, n)} of ${n}`, `${t.answered} answered`);
-        else bits.push(`${Math.min(at + 1, n)} of ${n}`, `${t.right} right`);
-        if (t.skipped) bits.push(`${t.skipped} skipped`);
-        if (!endMode && streak >= 2) bits.push(`${streak} in a row`);
-        railText.textContent = bits.filter(Boolean).join(' · ');
-        railText.hidden = false;
+        if (total === null) bits.push([t.answered, 'answered'], [t.right, 'right']);
+        else bits.push(endMode ? [t.answered, 'answered'] : [t.right, 'right']);
+        if (t.skipped) bits.push([t.skipped, 'skipped']);
+        if (!endMode && streak >= 2) bits.push([streak, 'in a row', streak >= 3 ? ['flame', [3, 5, 10].includes(streak)] : null]);
+        paintCounts(railText, bits);
+        paintCounts(railLine, bits, o.title);
+        railText.hidden = railLine.hidden = false;
       }
+    }
+    function placeMark(slide) {
+      if (!curMark) return;
+      const cur = view === 'q' && !segs.classList.contains('bar') ? segs.querySelector('.rn-seg[aria-current="true"]') : null;
+      curMark.hidden = !cur;
+      if (!cur) return;
+      const still2 = !slide || !curMark._at;
+      if (still2) curMark.style.transition = 'none';
+      curMark.style.width = `${cur.offsetWidth}px`;
+      curMark.style.transform = `translateX(${cur.offsetLeft}px)`;
+      if (still2) { void curMark.offsetWidth; curMark.style.transition = ''; }
+      curMark._at = true;
     }
     // X3: the tick at the question you should be on, and checkpoints after Q7 and Q14
     function paceTicks() {
@@ -1842,7 +2012,7 @@
       // each tick sits at the left edge of its segment (or past the last one)
       const put = (k, el) => { const sg = segs.children[Math.min(k, segs.children.length - 1)]; if (!sg) return; if (k >= segs.children.length) el.classList.add('end'); sg.append(el); };
       put(pos, h('i', { class: 'rn-tick', title: `Pace: question ${Math.min(pos + 1, n)}` }));
-      [7, 14].forEach(k => {
+      CHECKS.forEach(k => {
         if (k >= n) return;
         const by = b.slice(0, k).reduce((a, x) => a + x, 0);
         put(k, h('i', { class: 'rn-tick cp', title: `By Q${k + 1}: ${mmss((o.pace.duration_s || dur) - by)} left` }));
@@ -1856,9 +2026,10 @@
       backB.disabled = queue ? queue.k <= 0 : at <= 0;
       nextB.disabled = false;
       const n = c.n ?? at + 1;
-      const label = queue ? `Going through · ${queue.k + 1} of ${queue.list.length} · Q${n}`
+      const label = isExample((items.get(at) || {}).q) ? 'Worked example'
+        : queue ? `Going through · ${queue.k + 1} of ${queue.list.length} · Q${n}`
         : exam ? (phone() ? `${o.short || 'M1'} · ${n} of ${total}` : `Question ${n} of ${total}`)
-        : total === null ? `Question ${n} · endless` : phone() ? `${n} / ${total}` : `Question ${n} of ${total}`;
+        : total === null ? `Question ${n} · endless` : phone() ? `${n} / ${qTotal()}` : `Question ${n} of ${qTotal()}`;
       navB.replaceChildren(h('span', { class: 'rn-navl', text: label }), icon('up', 16));
       navB.setAttribute('aria-label', `${label}. Open the navigator`);
       if (exam) {
@@ -1878,6 +2049,7 @@
       // Next: after the verdict; in end mode alongside Save & next; a skipped question may move on
       const nextLabel = saving ? (last() ? 'Review & finish' : 'Next') : last() ? 'Finish' : 'Next';
       nextB.replaceChildren(h('span', { text: nextLabel }), icon('right', 18), h('kbd', { class: 'kbd rn-enter', text: 'Enter' }));
+      nextB.title = `${nextLabel} (Enter)`;
       nextB.hidden = !(answered || saving || skipped);
       nextB.classList.toggle('quiet', saving && !answered);
       nextB.classList.toggle('pill', !(saving && !answered));
@@ -1924,9 +2096,12 @@
       }
       if (i === at) { syncFoot(); paintQ(); renderToolsRow(); }
     }
+    let checking = -1;
     function revealed(i, fb) {
       const it = items.get(i);
       if (!it) return;
+      const fresh = checking === i;
+      checking = -1;
       it.fb = fb;
       const st = statusOf(fb, it.q);
       if (cells[i]) { cells[i].status = st; if (fb.conf) cells[i].conf = fb.conf; if (fb.trap || fb.mistake) cells[i].trap = fb.trap || fb.mistake; }
@@ -1934,6 +2109,14 @@
       if (ann) ann.render();
       if (i === at) {
         paintQ(); paintRail(); syncFoot(); renderToolsRow();
+        if (fresh && !exam && !(UI.motion && UI.motion.off && UI.motion.off())) {
+          const sg = segs.querySelector(`.rn-seg[data-i="${i}"]`);
+          if (sg) sg.classList.add('fill');
+        }
+        if (!slot.hidden && slotTab === 'details') paintSlot();     // the verdict's tail joins Details
+        // the verdict's head comes into view (a long question left it under the footer); runner.css gives it room
+        const vh = !exam && ws && ws.el.querySelector('.v-head');
+        if (vh) vh.scrollIntoView({ block: 'nearest', behavior: still() ? 'auto' : 'smooth' });
         if (!coarse()) setTimeout(() => { if (!nextB.hidden && at === i) nextB.focus({ preventScroll: true }); }, 0);
       }
       if (navApi) navApi.update(cells, at);
@@ -1976,6 +2159,7 @@
       }
       if (items.get(i) && items.get(i).fb) it.revisit = true;
       show(i, it, p);
+      if (!exam && !phone() && UI.motion && /^(next|back|jump|skip|queue|note)$/.test(how || '')) UI.motion.enter(qHost, 'nudge', { duration: 140 });
       return true;
     }
     function skeleton(i) {
@@ -2087,8 +2271,8 @@
       if (navPop) { try { navPop.close(); } catch (_) {} navPop = null; return true; }
       if (!UI.pop) return false;
       navApi = navPanel(null, cells, {
-        mode: exam ? 'exam' : 'practice', end: endMode, current: at, confidence: cfg.conf, pace_ms: 95000,
-        title: exam ? o.title || 'Questions' : 'Question overview',
+        mode: exam ? 'exam' : 'practice', end: endMode, current: at, confidence: cfg.conf, pace_ms: paceMs,
+        title: (exam && o.title) || 'Questions',
         views: exam ? (training ? ['status', 'time'] : ['status']) : ['status', 'difficulty', 'skill', 'time', 'confidence', 'traps'],
         onPick: i => pick(i),
         onFinish: exam ? null : () => { if (navPop) navPop.close(); finish(); },
@@ -2099,7 +2283,7 @@
         onFix: on.fix ? (label, l) => { if (navPop) navPop.close(); emit('fix', label, l); } : null,
       });
       navApi.el.id = 'nav';
-      navPop = UI.pop(navB, navApi.el, { label: exam ? 'Questions' : 'Question overview', className: 'rn-navpop', align: 'center', onClose: () => { navPop = null; navApi = null; } });
+      navPop = UI.pop(navB, navApi.el, { label: 'Questions', className: 'rn-navpop', align: 'center', onClose: () => { navPop = null; navApi = null; } });
       if (navPop) setTimeout(() => navApi && navApi.focus(), 0);
       return true;
     }
@@ -2131,14 +2315,14 @@
       if (view === 'review') return;
       leave('review');
       if (navPop) { try { navPop.close(); } catch (_) {} navPop = null; }
-      if (!slot.hidden && slotTab === 'spr') closeSlot();
+      if (!slot.hidden && (slotTab === 'spr' || slotTab === 'details')) closeSlot();
       view = 'review';
       queue = null;
       const saving = o.queue ? o.queue.status : null;
       cyw = checkYourWork(null, cells, {
         id: 'review', mode: exam ? 'exam' : 'practice', end: endMode, meta: exam ? o.title : null,
         left: timerApi && Number.isFinite(timerApi.left) ? timerApi.left : null, timed: !!(timerApi && timerApi.timed),
-        pace_ms: 95000, confidence: cfg.conf, training, saving, foot: true,
+        pace_ms: paceMs, confidence: cfg.conf, training, saving, foot: true,
         value: training && o.odds ? i => { const c = cells[i]; const p = o.odds[(c || {}).qid || (items.get(i) || {}).q?.id]; const sec = (o.pace && o.pace.budget_s && o.pace.budget_s[i]) || 95; return p ? p / sec : 0; } : null,
         onPick: i => pick(i),
         onGo: exam || on.queue ? l => startQueue(l) : null,
@@ -2208,7 +2392,7 @@
       return true;
     }
     function toggleCalc() {
-      if (!cfg.calc || !UI.calc) return false;
+      if (!mathTool('calc') || !UI.calc) return false;
       if (UI.calc.isOpen) UI.calc.close();
       else UI.calc.open({ mode: prefs.calc_mode === 'float' ? 'float' : undefined });
       return true;
@@ -2256,9 +2440,7 @@
       if (on.report) return emit('report', at, qq);
       const ctx = { kind: 'question', source: o.source || (exam ? 'test' : 'practice'), session: sid, question_id: qq.id, template: qq.template, seed: qq.seed,
         revealed: !!(ws && ws.answered && ws.answered() && !exam), live: exam, title: `Question ${(cells[at] || {}).n ?? at + 1}${o.short ? ', ' + o.short : ''}` };
-      if (UI.report) return UI.report(ctx);
-      toast('Reports open here soon. Use Send feedback in the menu for now.');
-      return true;
+      return UI.report ? UI.report(ctx) : false;
     }
     function history() {
       const qq = q();
@@ -2267,38 +2449,58 @@
         lock: exam || (challenge && !(ws && ws.answered())) ? 'live' : ws && ws.answered() ? null : 'answer' });
       return false;
     }
+    // Details: the side column's tab from 1280 wide (practice), a popover below it
     function openDetails() {
-      if (exam || view !== 'q' || !UI.pop) return false;
+      if (exam || view !== 'q') return false;
       if (on.details) return emit('details', at);
+      if (sideDetails()) {
+        if (!slot.hidden && slotTab === 'details') { closeSlot(true); return true; }
+        ls.set(DETAILS, 'open');
+        openSlot('details');
+        return true;
+      }
+      if (!UI.pop) return false;
+      return UI.pop(shown(detB) || moreB || navB, h('div', { class: 'rn-detpop' }, h('div', { class: 'popover-head', text: 'Details' }), detailsList()), { label: 'Details' });
+    }
+    function detailsList(tail) {
       const it = items.get(at) || {};
       const qq = it.q || {};
       const d = it.details || {};
       const hidden = challenge && !d.open;
+      // a mix-up keeps the skill, the type and why it was picked to itself until the verdict
+      const masked = !!o.hideSkill && !(ws && ws.answered && ws.answered());
+      const inTail = sel => !!(tail && tail.querySelector(sel));
       const t = UI.TOPIC && UI.TOPIC[qq.topic];
       const row = (k, v) => (v ? [h('dt', { text: k }), h('dd', {}, v)] : []);
+      const answered = !!(ws && ws.answered && ws.answered());
       const idText = qq.template ? `${qq.template} · ${qq.seed ?? ''}`.trim() : qq.id || '';
       const link = qq.template ? `${location.origin}/practice/session/?q=${encodeURIComponent(qq.template)}:${qq.seed ?? ''}` : null;
       const copy = (text, msg) => h('button', { type: 'button', class: 'quiet sm', text: 'Copy', onclick: () => (UI.copyText ? UI.copyText(text, { toast: msg }) : null) });
-      const dl = h('dl', { class: 'rn-details' },
-        row('Question ID', hidden ? 'Shown after today’s challenge closes' : h('span', {}, h('span', { class: 'mono', text: idText }), ' ', idText ? copy(idText, 'Copied') : null)),
-        row('Skill', [t ? t.name || t.short : qq.topic_name || qq.topic || '', qq.skill ? ` · ${qq.skill}` : ''].join('')),
-        row('Question type', qq.name ? h('span', {}, h('b', { text: qq.name }), qq.about ? h('span', { class: 'meta', text: ` · ${qq.about}` }) : null) : null),
+      // the first screen keeps two rows; Everyone and Formula are answer context; the facts the strip already shows
+      // fold under one "Question info" (its open state is remembered)
+      const info = h('dl', { class: 'rn-details' },
+        row('Skill', masked ? null : [t ? t.name || t.short : qq.topic_name || qq.topic || '', qq.skill ? ` · ${qq.skill}` : ''].join('')),
+        row('Question type', !masked && qq.name ? h('span', {}, h('b', { text: qq.name }), qq.about ? h('span', { class: 'meta', text: ` · ${qq.about}` }) : null) : null),
         row('Difficulty', d.difficulty || (qq.difficulty ? `${qq.difficulty[0].toUpperCase() + qq.difficulty.slice(1)}` : null)),
         row('Format', qq.type === 'spr' ? 'Grid-in (student-produced response)' : 'Multiple choice'),
-        row('Why this one', !challenge ? it.why || qq.why : null),
-        row('You and this type', d.you || null),
-        row('Everyone', d.everyone || (!challenge ? 'Not enough answers yet' : null)),
-        row('Formula', d.formula || null),
+        row('Question ID', hidden ? 'Shown after today’s challenge closes' : h('span', {}, h('span', { class: 'mono', text: idText }), ' ', idText ? copy(idText, 'Copied') : null)),
         row('Link to this exact question', hidden ? 'Shown after today’s challenge closes' : link ? copy(link, 'Link copied: anyone who opens it gets this exact question') : null));
-      return UI.pop(detB || navB, h('div', { class: 'rn-detpop' }, h('div', { class: 'popover-head', text: 'Details' }), dl), { label: 'Details' });
+      const fold = h('details', { class: 'fold rn-qinfo', open: ls.get('satf.qinfo', false) ? true : null }, h('summary', { class: 'fold-s', text: 'Question info' }), info);
+      fold.addEventListener('toggle', () => ls.set('satf.qinfo', fold.open));
+      return h('div', { class: 'rn-details-w' }, h('dl', { class: 'rn-details' },
+        row('Why this one', !challenge && !masked ? it.why || qq.why : null),
+        row('You and this type', d.you || null),
+        row('Everyone', !answered || inTail('.v-crowd') ? null : d.everyone || (!challenge ? 'Not enough answers yet' : null)),
+        row('Formula', !answered || inTail('.v-formula') ? null : d.formula || null)), fold);
     }
     function directions(first) {
       if (first && directionsSheet.skipped()) return null;
-      return directionsSheet({ first });
+      return directionsSheet({ first, subject: o.subject });
     }
     function refreshNotes() {
       notesB.hidden = !(annotateOn || noteCount());
       notesB.querySelector('.tl').textContent = noteCount() ? `Notes ${noteCount()}` : 'Notes';
+      if (slotTabsApi) slotTabsApi.count('notes', noteCount() || null);
       if (!slot.hidden && slotTab === 'notes') { const box = slotBody.querySelector('.rn-notes'); if (box && !box.contains(doc.activeElement)) paintSlot(); }
     }
 
@@ -2308,7 +2510,8 @@
       const items2 = [];
       const pref = (key, label, v) => ({ label, checked: !!v, onClick: () => { prefs[key] = !v; emit('pref', key, prefs[key]); applyPref(key); } });
       if (exam) {
-        if (cfg.dirs) items2.push({ label: 'Directions', icon: 'ref', onClick: () => directions() });
+        if (condChip) items2.push({ head: h('p', { class: 'help', 'data-nofold': '', text: `${condChip.textContent}. ${condChip.title}` }) });
+        if (cfg.dirs) items2.push({ label: 'Directions', icon: icon('ref', 18), onClick: () => directions() });
         items2.push({ label: 'Keyboard shortcuts', kbd: '?', onClick: () => shortcuts() });
         const size = doc.documentElement.dataset.text || ls.get('satf.textsize', 'normal') || 'normal';
         items2.push({ group: 'Text size' });
@@ -2317,17 +2520,30 @@
           if (o.pace) items2.push(pref('test_pace', 'Pace guide', o.pace && prefs.test_pace !== false));
           items2.push(pref('test_confidence', 'Confidence tags', cfg.conf));
         }
-        items2.push({ label: 'Notes', icon: 'note', onClick: () => openSlot('notes') });
-        if (cfg.scratch) items2.push({ label: 'Scratch', icon: 'pen', kbd: 'Shift+L', onClick: () => toggleScratch() });
+        items2.push({ label: 'Notes', icon: icon('note', 18), kbd: 'O', onClick: () => openSlot('notes') });
+        if (cfg.scratch) items2.push({ label: 'Scratch', icon: icon('pen', 18), kbd: 'Shift+L', onClick: () => toggleScratch() });
         if (coarse()) items2.push({ label: 'Use the answer pad', checked: ls.get('satf.pad', true) !== false, onClick: () => { const v = !(ls.get('satf.pad', true) !== false); ls.set('satf.pad', v); toast(v ? 'The answer pad shows on grid-ins' : 'The keyboard shows on grid-ins'); } });
         if (coarse()) items2.push({ head: h('p', { class: 'help', text: 'Hold an option to cross it out (not while highlighting)' }) });
-        items2.push({ label: `Report a problem with question ${(cells[at] || {}).n ?? at + 1}`, icon: 'report', onClick: () => report() });
+        if (view === 'q' && at >= 0) {
+          items2.push({ group: 'This question' });
+          items2.push({ label: 'Save to Review', icon: icon('bookmark', 18), checked: !!(items.get(at) || {}).saved, close: true, onClick: () => toggleSave() });
+        }
+        items2.push({ label: `Report a problem with question ${(cells[at] || {}).n ?? at + 1}`, icon: icon('report', 18), kbd: 'R', onClick: () => report() });
         items2.push({ separator: true });
         items2.push({ label: 'Hand in this module…', onClick: () => openReview() });
         items2.push({ label: 'Save and exit', onClick: () => exit() });
         if (on.discard) items2.push({ label: 'Discard this test…', onClick: () => discard() });
       } else {
-        (typeof o.more === 'function' ? o.more([], run) : o.more || []).forEach(x => items2.push(x));
+        if (view === 'q' && at >= 0) {
+          items2.push({ group: 'This question' });
+          // a phone's strip keeps Eliminate and Note: Highlight and Details are here
+          if (phone() && annB) items2.push({ label: 'Highlight', icon: icon('marker', 18), kbd: 'L', checked: annotateOn, close: true, onClick: () => toggleAnnotate() });
+          if (phone() && detB) items2.push({ label: 'Details', icon: icon('info', 18), kbd: 'V', onClick: () => openDetails() });
+          items2.push({ label: 'Report a problem', icon: icon('report', 18), kbd: 'R', onClick: () => report() });
+          if (attB && !attB.hidden) items2.push({ label: 'Attempt history', meta: +(items.get(at) || {}).attempts || undefined, icon: icon('history', 18), kbd: 'Y', onClick: () => history() });
+        }
+        const setItems = typeof o.more === 'function' ? o.more([], run) : o.more || [];
+        if (setItems.length) { if (items2.length) items2.push({ separator: true }); items2.push({ group: 'This set' }, ...setItems); }
         if (items2.length) items2.push({ separator: true });
         items2.push({ group: 'Settings' });
         items2.push(pref('first_tap', 'Answer on first tap', prefs.first_tap));
@@ -2335,8 +2551,8 @@
         items2.push(pref('option_reasons', 'Show every option’s mistake', prefs.option_reasons !== false));
         items2.push(pref('show_stopwatch', 'Show question stopwatch', prefs.show_stopwatch !== false));
         items2.push(pref('pace_alert', 'Pace alert', prefs.pace_alert !== false));
-        items2.push({ label: 'Check asks how sure', checked: prefs.confidence !== 'off', onClick: () => { prefs.confidence = prefs.confidence === 'off' ? 'ask' : 'off'; emit('pref', 'confidence', prefs.confidence); applyPref('confidence'); } });
-        if (cfg.calc) {
+        items2.push({ label: 'Ask how sure on Check', checked: prefs.confidence !== 'off', onClick: () => { prefs.confidence = prefs.confidence === 'off' ? 'ask' : 'off'; emit('pref', 'confidence', prefs.confidence); applyPref('confidence'); } });
+        if (mathTool('calc')) {
           items2.push({ group: 'Calculator opens' });
           [['closed', 'Closed'], ['dock', 'Docked'], ['float', 'Floating']].forEach(([v, lab]) => items2.push({ label: lab, radio: 'calc', checked: (prefs.calc_mode || 'closed') === v, onClick: () => { prefs.calc_mode = v; emit('pref', 'calc_mode', v); } }));
         }
@@ -2407,7 +2623,7 @@
       qArea.hidden = true;
       rail.hidden = true;
       const resume = h('button', { type: 'button', class: 'pill', text: 'Resume', onclick: () => resumeRun() });
-      screenEl.replaceChildren(h('div', { class: 'rn-paused' }, h('p', { class: 'k', text: 'Paused' }), h('p', { class: 'rn-paused-t mono', text: `${mmssLeft(timerApi.left)} left` }), h('p', { class: 'meta', text: 'The questions are hidden while the clock is stopped.' }), resume));
+      screenEl.replaceChildren(h('div', { class: 'rn-paused' }, h('span', { class: 'rn-paused-ic', 'aria-hidden': 'true' }, icon('pause', 28)), h('h1', { class: 'h2', text: 'Paused' }), h('p', { class: 'rn-paused-t', text: `${mmssLeft(timerApi.left)} left` }), h('p', { class: 'meta', 'data-nofold': '', text: 'The questions are hidden while the clock is stopped.' }), resume));
       screenEl.hidden = false;
       [fLeft, fMid, fRight].forEach(x => { x.hidden = true; });
       resume.focus();
@@ -2455,7 +2671,7 @@
       say(text);
       if (kind) emit('nudge', { kind, qid: (q() || {}).id, at: Math.round(timerApi && Number.isFinite(timerApi.left) ? timerApi.left : 0) });
     }
-    function budgetAt(i) { return cfg.pace ? o.pace.budget_s[i] * 1000 : +((items.get(i) || {}).q || {}).budget_ms || 95000; }
+    function budgetAt(i) { return cfg.pace ? o.pace.budget_s[i] * 1000 : +((items.get(i) || {}).q || {}).budget_ms || paceMs; }
     function tick() {
       if (dead || view !== 'q' || !ws) return;
       paintWatch();
@@ -2487,8 +2703,8 @@
         const planned = cells.reduce((a, c, i) => a + (c.status === 'answered' ? (b[i] || 0) : 0), 0);
         const d = planned - elapsed;
         timerApi.delta(Math.abs(d) < 5 ? 'on pace' : `${d >= 0 ? '+' : ''}${mmss(Math.abs(d))} ${d >= 0 ? 'ahead' : 'behind'}`);
-        // checkpoint toasts after Q7 and Q14
-        [7, 14].forEach(k => {
+        // checkpoint toasts at the module's thirds (after Q7 and Q14; R&W after Q9 and Q18)
+        CHECKS.forEach(k => {
           if (cps.has(k) || at < k) return;
           const by = b.slice(0, k).reduce((a, x) => a + x, 0);
           const behind = elapsed - by;
@@ -2543,11 +2759,62 @@
     if (o.fullscreen && doc.fullscreenEnabled) {
       const fs = () => {
         if (doc.fullscreenElement || view === 'done') return;
+        if (guarded()) emit('integrity', { kind: 'fullscreen', ms: 0, at });
         if (UI.banner) UI.banner('fullscreen', 'You left fullscreen.', [{ label: 'Return to fullscreen', onClick: () => { try { doc.documentElement.requestFullscreen(); } catch (_) {} } }], { dismiss: true });
       };
       doc.addEventListener('fullscreenchange', fs);
       cleanups.push(() => doc.removeEventListener('fullscreenchange', fs));
     }
+
+    /* ---------------- integrity: a test (or a strict contest, o.integrity) while its clock runs. Leaving
+       the window (another app or window while the tab stays visible, or the tab hidden) is timed and told
+       to the student on return; copying the question and pasting are blocked. Each event goes out through
+       on.integrity {kind: blur | hidden | fullscreen | copy | paste, ms, at} for the teacher's view. */
+    // a strict contest's answer clock lives on the server (the practice runner counts up), so o.integrity guards without a countdown
+    function guarded() { return (exam || !!o.integrity) && !!timerApi && (timerApi.timed || !!o.integrity) && !timerApi.paused && view !== 'done'; }
+    const igWhat = exam ? 'test' : 'contest';
+    const ig = { n: 0, out: null };
+    function igTell(text) {
+      igEl.replaceChildren(h('span', { text }), h('button', { type: 'button', class: 'quiet sm', text: 'Got it', onclick: () => { igEl.hidden = true; } }));
+      igEl.hidden = false;
+    }
+    function igLeave(kind) { if (guarded() && !ig.out) ig.out = { kind, t: performance.now() }; }
+    function igBack() {
+      if (!ig.out) return;
+      const { kind, t } = ig.out;
+      ig.out = null;
+      const ms = Math.round(performance.now() - t);
+      if (kind === 'blur' && ms < 400) return;          // a flicker (a system prompt), not leaving
+      ig.n++;
+      emit('integrity', { kind, ms, at });
+      igTell(`You left the ${igWhat} ${ig.n === 1 ? 'once' : `${ig.n} times`} (this time ${mmss(ms / 1000)}). Each time is recorded, and your teacher sees it.`);
+    }
+    // focus that moves into our own frame (the calculator) is not leaving: the document still has focus
+    const onBlur = () => setTimeout(() => { if (!doc.hasFocus() && !doc.hidden) igLeave('blur'); }, 150);
+    const onFocus = () => { if (ig.out && ig.out.kind === 'blur') igBack(); };
+    const onIgVis = () => {
+      if (doc.hidden) { if (guarded()) ig.out = { kind: 'hidden', t: ig.out ? ig.out.t : performance.now() }; }
+      else if (ig.out && ig.out.kind === 'hidden') igBack();
+    };
+    addEventListener('blur', onBlur);
+    addEventListener('focus', onFocus);
+    doc.addEventListener('visibilitychange', onIgVis);
+    cleanups.push(() => { removeEventListener('blur', onBlur); removeEventListener('focus', onFocus); doc.removeEventListener('visibilitychange', onIgVis); });
+    const block = (kind, text) => e => {
+      if (!guarded()) return;
+      e.preventDefault();
+      emit('integrity', { kind, ms: 0, at });
+      toast(text);
+    };
+    const onCopy = block('copy', `Copying is off during the ${igWhat}. The attempt is recorded.`);
+    const onPaste = block('paste', `Pasting is off during the ${igWhat}. The attempt is recorded.`);
+    const onMenu = e => { if (guarded() && e.target.closest('.rn-q, .rn-passage')) e.preventDefault(); };   // no "Search for ..." on the question
+    const onDrag = e => { if (guarded()) e.preventDefault(); };
+    root.addEventListener('copy', onCopy);
+    root.addEventListener('cut', onCopy);
+    root.addEventListener('paste', onPaste);
+    root.addEventListener('contextmenu', onMenu);
+    root.addEventListener('dragstart', onDrag);
 
     /* ---------------- the save status (#saved) */
     function paintSaved(info) {
@@ -2616,7 +2883,7 @@
       qmap.V = { id: 'details', does: 'Details', run: () => (inQ() ? (openDetails(), undefined) : false) };
       qmap.Y = { id: 'history', does: 'Attempt history', run: () => (inQ() && (ws.answered() || +(items.get(at) || {}).attempts) ? (history(), undefined) : false) };
       const act = id => () => { if (!inQ() || !ws.answered()) return false; const btn = ws.el.querySelector(id === 'twin_menu' ? '.q-actions .split.twin .split-caret' : '.q-actions .split.twin > :first-child'); if (!btn) return false; btn.click(); return undefined; };
-      qmap.T = { id: 'twin', does: 'Twin: same kind, new numbers', run: act('twin') };
+      qmap.T = { id: 'twin', does: 'Twin: another of the same kind', run: act('twin') };
       qmap['Shift+T'] = { id: 'twin_menu', does: 'Twin menu', run: act('twin_menu') };
       qmap['Shift+G'] = { id: 'desmos', does: 'Show me in Desmos', run: () => { const it = items.get(at) || {}; const dz = it.fb && it.fb.desmos; if (!inQ() || !dz || !UI.calc || !UI.calc.walkthrough) return false; UI.calc.walkthrough(dz); return undefined; } };
     }
@@ -2626,7 +2893,7 @@
       N: { does: 'Navigator', run: () => (view === 'q' || view === 'review' ? (toggleNav(), undefined) : false) },
       G: { does: 'Calculator', run: () => (toggleCalc() ? undefined : false) },
       F: { does: 'Reference (formula sheet)', run: () => {
-        if (!cfg.ref) return false;
+        if (!mathTool('ref')) return false;
         // P24: after the reveal, at the formula this question used
         const f = ((items.get(at) || {}).fb || {}).formula;
         const id = Array.isArray(f) ? (f.find(x => x && x.on_sheet && x.id) || {}).id : null;
@@ -2666,7 +2933,7 @@
       item(i, patch) { const it = items.get(i); if (it) Object.assign(it, patch); else items.set(i, Object.assign({}, patch)); if (i === at) paintQ(); },
       cell(i, patch) { cells[i] = Object.assign(cells[i] || { n: i + 1, status: 'unanswered' }, patch); paintRail(); if (i === at) { paintQ(); syncFoot(); } if (navApi) navApi.update(cells, at); if (cyw) cyw.update(cells); },
       setCells(list, n) { cells = list.map((c, i) => Object.assign({ n: i + 1, status: 'unanswered' }, c, { current: i === at })); if (n !== undefined) total = n; paintRail(); syncFoot(); },
-      addSlot(c = {}, budget_s, why) { cells.push(Object.assign({ n: cells.length + 1, status: 'future', _added: true }, c)); if (total !== null) total++; paintRail(); syncFoot(); if (timerApi && budget_s) timerApi.add(budget_s, why); },
+      addSlot(c = {}, budget_s, why) { cells.push(Object.assign({ n: cells.length + 1, status: 'future', _added: true }, c)); renumber(); if (total !== null) total++; paintRail(); syncFoot(); if (timerApi && budget_s) timerApi.add(budget_s, why); },
       // G9: the next question rendered while the verdict shows; Next swaps it in
       preload(i, it) {
         if (!it || !it.q || pre.has(i) || dead) return;
@@ -2766,21 +3033,25 @@
     const el = h('section', { class: 'rn-between', id: 'between', 'aria-labelledby': 'betweenH' });
     el.append(h('h1', { class: 'h1', id: 'betweenH', text: o.title || 'Module 1 is in' }));
     const live = h('p', { class: 'sr', 'aria-live': 'polite' });
-    const tiles = h('div', { class: 'stats rn-between-tiles', style: '--cols: 4' });
-    [['Answered', st.answered !== undefined ? `${st.answered} of ${st.of}` : '—'], ['Left marked', st.marked ?? '—'],
-      ['Time used', st.used_s !== undefined ? mmss(st.used_s) : '—'], ['Away', mmss(st.away_s || 0)]].forEach(([k, v]) =>
-      tiles.append(h('div', { class: 'stat' }, h('span', { class: 'stat-k', text: k }), h('span', { class: 'stat-v', text: String(v) }))));
+    // one meta line, not four tiles: "12 of 22 answered · 2 left marked · 31:40 used · 0:00 away"
+    const tiles = h('p', { class: 'meta rn-between-tiles' }, [st.answered !== undefined ? `${st.answered} of ${st.of} answered` : null,
+      st.marked !== undefined && st.marked !== null ? `${st.marked} left marked` : null, st.used_s !== undefined ? `${mmss(st.used_s)} used` : null,
+      `${mmss(st.away_s || 0)} away`].filter(Boolean).join(' · '));
     el.append(live);
-    const clock = testDay ? h('div', { class: 'rn-between-clock', role: 'timer' }) : null;
+    // Bluebook's break screen: the countdown is the screen's one figure (44px), its words beside it
+    const clockT = testDay ? h('span', { class: 'num rn-between-t' }) : null;
+    const clock = testDay ? h('div', { class: 'rn-between-clock', role: 'timer' }, h('span', { class: 'rn-between-l', text: 'Module 2 starts in ' }), clockT) : null;
     const bar = testDay ? h('span', { class: 'rn-between-bar' }, h('i')) : null;
     // nothing answered, nothing to predict: no grid of disabled cells
     const pred = o.predict !== false && o.cells && o.cells.some(c => answeredish(c.status)) ? predictGrid(null, o.cells, o) : null;
-    const beginB = h('button', { type: 'button', class: testDay ? 'btn rn-begin' : 'pill rn-begin', text: testDay ? 'Begin module 2 now' : 'Begin module 2' });
+    // the screen's one primary, as on the full SAT's break screen (test.js), countdown or not
+    const beginB = h('button', { type: 'button', class: 'pill rn-begin', text: testDay ? 'Begin module 2 now' : 'Begin module 2' });
     const card = h('div', { class: 'rn-between-card' });
     if (o.next) card.append(h('p', { class: 'rn-between-next', text: o.next }));
     if (o.route) card.append(h('p', { class: 'rn-between-route', text: o.route }));
+    el.append(tiles);
     if (testDay) el.append(h('div', { class: 'rn-between-count' }, clock, bar, pred ? pred.el : null, beginB));
-    el.append(tiles, card);
+    el.append(card);
     if (!testDay) { if (pred) el.append(pred.el); if (o.extra) el.append(o.extra); el.append(beginB); }
     if (o.onExit) el.append(h('button', { type: 'button', class: 'quiet rn-between-exit', text: 'Save and exit', onclick: () => o.onExit() }));
     function begin(auto) {
@@ -2797,8 +3068,9 @@
     function tick() {
       const left = Math.max(0, total - (performance.now() - t0) / 1000);
       const s = Math.ceil(left);
-      clock.textContent = `Module 2 starts in ${mmss(s)}`;
-      bar.firstChild.style.width = `${(left / total * 100).toFixed(1)}%`;
+      const txt = mmss(s);
+      if (clockT.textContent !== txt) clockT.textContent = txt;          // once a second, not on every 250 ms tick
+      bar.firstChild.style.transform = `scaleX(${(left / total).toFixed(4)})`;   // a transform, not width: no layout per tick
       [30, 10].forEach(k => { if (s <= k && !said.has(k)) { said.add(k); live.textContent = `Module 2 starts in ${k} seconds`; } });
       if (left <= 0) begin(true);
     }
@@ -2860,7 +3132,8 @@
   const RV_CAUSES = [['trap', 'Fell for a trap'], ['slip', 'Slip: I knew it'], ['misread', 'Misread the question'], ['clock', 'Ran out of time'], ['entry', 'Entered it wrong'], ['gap', 'Didn’t know how to start']];
   const RV_CAUSE_WORD = { trap: 'Trap', slip: 'Slip', misread: 'Misread', clock: 'Clock', entry: 'Entry', gap: 'Gap', changed: 'Changed' };
   const RULES = ['Reread what the question asks before choosing', 'Write the sign on its own line', 'Estimate first: does the answer fit?'];
-  const QF = ['id', 'type', 'stem', 'choices', 'latex', 'figure', 'figure_alt', 'table', 'topic', 'topic_name', 'skill', 'name', 'about', 'difficulty', 'level', 'template', 'seed', 'subject', 'number', 'repair'];
+  const RULES_RW = ['Reread what the question asks before choosing', 'Find the words in the passage that prove it', 'Cross out any choice that says more than the text'];
+  const QF = ['id', 'type', 'stem', 'choices', 'latex', 'figure', 'figure_alt', 'table', 'table_title', 'text', 'topic', 'topic_name', 'skill', 'name', 'about', 'difficulty', 'level', 'template', 'seed', 'subject', 'number', 'repair'];
   const FBF = ['correct', 'given', 'answer', 'answer_index', 'reasons', 'rationale', 'accepted', 'steps', 'method', 'option_steps', 'diverge', 'wrong_step', 'about',
     'type_name', 'crowd', 'diagnosis', 'mistake', 'desmos', 'formula', 'then', 'filler', 'pick_note'];
   const LET = 'ABCDE';
@@ -2939,7 +3212,8 @@
     const posEl = h('span', { class: 'rv-pos meta', 'aria-live': 'polite' });
     const missB = h('button', { type: 'button', class: 'quiet rv-miss', title: 'Next miss (N)', text: o.nKey === 'unseen' ? 'Next not seen' : 'Next miss' });
     const twinFoot = h('button', { type: 'button', class: 'btn sm rv-twinfoot', title: 'Twin (T)' }, icon('twin', 16), h('span', { text: 'Twin' }));
-    const nextB = h('button', { type: 'button', class: 'pill sm rv-next', title: 'Next (→ or J)' }, h('span', { text: 'Next' }), icon('right', 18));
+    // in Review's pane the page has its own orange primary: Next is a secondary there (the dialog keeps the pill)
+    const nextB = h('button', { type: 'button', class: `${pane && !asDialog ? 'btn' : 'pill'} sm rv-next`, title: 'Next (→ or J)' }, h('span', { text: 'Next' }), icon('right', 18));
     prevB.addEventListener('click', () => prev());
     nextB.addEventListener('click', () => next());
     missB.addEventListener('click', () => nextMiss());
@@ -2978,22 +3252,26 @@
     toolsEl.append(...toolList);
     // the tools are rarely used: one quiet toggle opens the bar (keys still work while it is closed)
     toolsEl.style.display = 'none';
-    const toolsTog = h('button', { type: 'button', class: 'quiet rv-tools-tog', 'aria-expanded': 'false', text: 'Tools ▾' });
+    const toolsTog = h('button', { type: 'button', class: 'ibtn rv-tools-tog', 'aria-expanded': 'false', 'aria-label': 'Tools', title: 'Tools' }, icon('more', 20));
     toolsTog.addEventListener('click', () => {
       const open = toolsEl.style.display === 'none';
       toolsEl.style.display = open ? '' : 'none';
       toolsTog.setAttribute('aria-expanded', String(open));
-      toolsTog.textContent = open ? 'Tools ▴' : 'Tools ▾';
     });
-    toolsEl.before(toolsTog);
+    // one icon in the head (the pane: its corner); the tools open beside it (a phone: at the top of the column)
+    const headActs = h('div', { class: 'rv-head-acts' }, toolsOnTop ? toolsEl : null, toolsTog);
+    top.append(headActs);
 
+    // Math's tools: a passage question (Reading and Writing) has no calculator or reference sheet
+    const written = () => !!(cur && cur.q && cur.q.text);
     function calcToggle() {
-      if (!UI.calc) return;
+      if (!UI.calc || written()) return;
       if (UI.calc.isOpen) UI.calc.close(); else UI.calc.open({ mode: phone() ? 'sheet' : 'float' });
       setTimeout(syncTools, 0);
     }
     let refApi = null;
     function refOpen() {
+      if (written()) return;
       if (refApi && refApi.sheet && refApi.sheet.el.open) { refApi.sheet.close(); return; }
       const f = cur && cur.fb && cur.fb.formula;
       const id = Array.isArray(f) ? (f.find(x => x && x.on_sheet && x.id) || {}).id : null;
@@ -3001,6 +3279,7 @@
     }
     function syncTools() {
       const it = cur || {};
+      calcB.hidden = refB.hidden = written();
       hideB.setAttribute('aria-pressed', String(hidden && !second));
       if (!second) {
         hideB.querySelector('.tl').textContent = hidden ? 'Show answers' : 'Hide answers';
@@ -3069,7 +3348,7 @@
         navEl.append(segs);
       } else {
         const it = items[at] || {};
-        const pill = h('button', { type: 'button', class: 'rv-navpill', 'aria-haspopup': 'dialog', title: 'All questions' },
+        const pill = h('button', { type: 'button', class: 'rn-navb rv-navpill', 'aria-haspopup': 'dialog', title: 'All questions' },
           h('span', { text: `${label(it)} · ${at + 1} of ${items.length}` }), icon('down', 16));
         pill.addEventListener('click', () => {
           if (!UI.pop) return;
@@ -3311,14 +3590,13 @@
       const l1 = h('div', { class: 'rv-h1' });
       const skill = h('span', { class: 'rv-skill' }, glyphOf(q.topic),
         pane && t && t.dshort ? h('span', { class: 'rv-dom', text: t.dshort + ' · ' }) : null,
-        h('span', { text: t ? t.short : q.topic_name || q.topic || '' }),
+        h('span', { text: t ? t.short : q.topic_name || (q.topic && UI.topicName ? UI.topicName(q.topic) : q.topic) || '' }),
         q.name || q.skill ? h('span', { class: 'rv-type', text: q.name || q.skill }) : null);
       l1.append(h('span', { class: 'rv-n', text: label(it) }), skill);
       const st = it.status;
       l1.append(h('span', { class: 'rv-status rv-keyed', 'data-status': st }, h('span', { class: 'rv-glyph', 'aria-hidden': 'true', text: (UI.STATES && UI.STATES[st] && UI.STATES[st].glyph) || '' }), RV_WORD[st] || cap(st || '')));
       const bits = [];
       if (q.difficulty) bits.push(UI.dbars ? UI.dbars(q.difficulty) : h('span', { text: cap(q.difficulty) }));
-      if (q.level) bits.push(`L${q.level}`);
       if (it.ms) bits.push(`${msx(it.ms)}${it.budget_ms ? ` · budget ${msx(it.budget_ms)}` : ''}`);
       if (pane && it.sitting) bits.push(it.sitting.href ? h('a', { class: 'qlink', href: it.sitting.href, text: it.sitting.label }) : it.sitting.label);
       const l2 = h('div', { class: 'rv-h2' });
@@ -3353,13 +3631,18 @@
           ...RV_CAUSES.filter(([kk]) => kk !== 'entry' || q.type === 'spr').map(([kk, lab]) => ({ label: lab, radio: 'cause', checked: it.cause.cause === kk, onClick: () => setCause(it, kk) })),
         ], { label: 'What happened?' }));
         else cb.disabled = true;
-        l2.append(h('span', { class: 'rv-dot', 'aria-hidden': 'true', text: '·' }), cb);
+        l2.append(h('span', { class: 'rv-dot rv-keyed', 'aria-hidden': 'true', text: '·' }), cb);   // the dot hides with the chip: no stray "·" at the end
       }
       // the mistake behind it: open with pips, or fixed
       const m = it.mistake;
       if (m && m.status) {
         const line = h('p', { class: 'rv-mistake rv-keyed' });
-        if (m.status === 'fixed') line.append(icon('check', 16), h('b', { text: `Fixed${m.fixed_at ? ' ' + (UI.date ? UI.date(m.fixed_at, 'short') : m.fixed_at) : ''}` }), m.label ? ` · ${m.label}` : '');
+        if (m.status === 'fixed') {
+          const fixedB = h('b', { text: `Fixed${m.fixed_at ? ' ' + (UI.date ? UI.date(m.fixed_at, 'short') : m.fixed_at) : ''}` });
+          // the pane: the state on top, the name under it (as the open case), so no line starts with "·"
+          if (pane) line.append(h('span', { class: 'rv-mrow' }, icon('check', 16), fixedB), m.label ? h('span', { class: 'rv-mlabel', text: m.label }) : '');
+          else line.append(icon('check', 16), fixedB, m.label ? ` · ${m.label}` : '');
+        }
         else {
           const owed = m.owed ?? 2, of = m.of ?? 2;
           if (UI.pips) line.append(UI.pips(owed, of));
@@ -3381,11 +3664,13 @@
       if (pane && (factsA.children.length || factsB.children.length)) {
         // nothing but the (usually invisible) Answers-hidden chip: a thin rule, not an empty panel
         const thin = !factsA.children.length && ![...factsB.children].some(c => c !== tags || c.querySelector('.rv-tag:not(.rv-hidechip)'));
-        head.append(h('div', { class: 'rv-facts' + (thin ? ' rv-thin' : '') }, factsA, factsB));
+        // tags alone (a "New" chip): the chips on the page, not one chip centred in a grey panel
+        const plain = !thin && !factsA.children.length;
+        head.append(h('div', { class: 'rv-facts' + (thin ? ' rv-thin' : plain ? ' rv-plain' : '') }, factsA, factsB));
       }
       if (it.path && (it.path.conf === 'sure' || it.path.conf_assumed) && miss(it)) head.append(h('p', { class: 'rv-blind rv-keyed', text: it.path.conf_assumed ? 'Fast answer · assumed sure' : 'You were sure' }));
       if (it.rule) head.append(h('p', { class: 'rv-rule' }, h('b', { text: 'Your rule: ' }), it.rule));
-      if (pane && it.story && it.story.length) head.append(h('p', { class: 'rv-tlh', text: 'History' }), timeline(it));
+      if (pane && it.story && it.story.length) head.append(h('p', { class: 'rv-tlh rv-keyed', text: 'History' }), timeline(it));   // hides with its timeline
     }
     function paintHead() { const el = col.querySelector('.rv-item'); if (el && el._head && cur && cur.q) fillHead(el._head, cur); }
     async function setCause(it, kind) {
@@ -3509,7 +3794,7 @@
         }
         const inp = h('input', { id: fid, class: 'field sm', type: 'text', maxlength: '140', placeholder: 'When I see … I will …' });
         const sug = h('div', { class: 'rv-rule-sug' });
-        [it.tell, ...RULES].filter(Boolean).slice(0, 3).forEach(s => sug.append(h('button', { type: 'button', class: 'chip', text: s, onclick: () => { inp.value = s; inp.focus(); } })));
+        [it.tell, ...(it.q && it.q.text ? RULES_RW : RULES)].filter(Boolean).slice(0, 3).forEach(s => sug.append(h('button', { type: 'button', class: 'chip', text: s, onclick: () => { inp.value = s; inp.focus(); } })));
         const sv = h('button', { type: 'button', class: 'btn sm', text: 'Save rule', onclick: () => save(inp.value.trim()) });
         inp.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); sv.click(); } });
         box.append(h('label', { class: 'label', for: fid, text: 'Next time I will…' }), sug, h('div', { class: 'v-rule-row' }, inp, sv));
@@ -3609,6 +3894,7 @@
         inline: to => startInline(it, b, to), onSolved: trapMiss && q.template ? () => solved(it, b) : null, on: onx,
       });
       const qa = UI.questionActions(slot, q, ctx);
+      syncTwin(slot);                       // the slot is not in the player yet: look in it too
       const extra = h('div', { class: 'q-actions rv-extra', role: 'group', 'aria-label': 'More for this question' });
       const slug = q.topic;
       // V11: a stuck trap is learned, not hammered: Learn it leads, the twin follows
@@ -3670,7 +3956,7 @@
       const capN = ls.get('satf.review.swapcap', 0) || 0;
       const run = UI.twinInline(pane && !to.again ? b.qb : b.twinHost, {
         body: to.body || twinBody(it), axis: to.axis, prefs: o.prefs, prepend: pane && !to.again, finish: !pane,
-        caption: to.caption || (pane && capN >= 3 ? false : 'Same question type, new numbers'),
+        caption: to.caption || (pane && capN >= 3 ? false : it.q && it.q.text ? 'Same question type, another passage' : 'Same question type, new numbers'),
         backLabel: pane ? 'Back to the question you missed' : 'Back to the original',
         onBack: () => (pane ? rebuild() : b.el.scrollIntoView({ block: 'start', behavior: still() ? 'auto' : 'smooth' })),
         wsOpts: stem ? (q, n) => (n === 0 && UI.stemDiff ? { stemEl: stem, spans: UI.stemDiff(oldStem, q.stem) } : {}) : null,
@@ -3697,12 +3983,12 @@
       try {
         ex = on.example ? await on.example(it)
           : await UI.api(`/types/${encodeURIComponent(q.template)}/example?${new URLSearchParams(Object.assign({}, norm ? { want: norm } : {}, q.difficulty ? { tier: q.difficulty } : {}))}`);
-      } catch (e) { toast((e && e.message) || 'No worked example for this type yet.'); return; }
+      } catch (e) { toast(e && e.status === 409 ? 'No worked example of this type is left for you.' : (e && e.message) || 'No worked example for this type yet.'); return; }
       if (!ex) return;
       const exQ = ex.question || ex, exFb = Object.assign({}, ex.feedback || ex, { correct: null, given: null });
       const g = Number.isInteger(fb.given) ? fb.given : null;
       const left = h('div', { class: 'rv-solved-col qbody' }, h('p', { class: 'k', text: 'You missed' }));
-      const right = h('div', { class: 'rv-solved-col qbody' }, h('p', { class: 'k', text: 'Worked · new numbers' }));
+      const right = h('div', { class: 'rv-solved-col qbody' }, h('p', { class: 'k', text: q.text ? 'Worked · another passage' : 'Worked · new numbers' }));
       const wrap = h('div', { class: 'rv-solved' }, left, right);
       let seg = null;
       const s = UI.sheet({ title: 'See one solved', size: 'full', className: 'rv-solved-sheet', body: bd => {
@@ -3719,10 +4005,10 @@
       const ti = Number.isInteger(ex.trap_index) ? ex.trap_index : null;
       if (ti !== null) {
         const row = rw.querySelectorAll('.opt-row')[ti];
-        if (row) { row.classList.add('rv-trapout'); const cp = row.querySelector('.opt-cap'); if (cp) cp.textContent = `Your mistake gives ${(exQ.choices || [])[ti] ?? 'this'} here`; }
+        if (row) { row.classList.add('rv-trapout'); const cp = row.querySelector('.opt-cap'); if (cp) cp.textContent = 'Your mistake lands here'; }   // the value is the option right above, rendered
         const why = g !== null && fb.reasons ? fb.reasons[g] : fb.mistake;
         right.append(h('p', { class: 'rv-trapline' }, h('b', { text: `Same trap as your ${letterOf(q, g) || 'answer'}` }), why ? `: ${why}. ` : '. ',
-          `Here it gives ${(exQ.choices || [])[ti] ?? ''}.`));
+          'Here it gives ', UI.tex ? UI.tex(h('span'), (exQ.choices || [])[ti] ?? '', (exQ.latex || [])[ti]) : String((exQ.choices || [])[ti] ?? ''), '.'));   // the options' formatter, not raw w^2
       }
       return s;
     }
@@ -3755,8 +4041,8 @@
       const od = it.odds, cr = it.crowd;
       const dl = h('dl', { class: 'rn-details' },
         row('Question ID', h('span', {}, h('span', { class: 'mono', text: idText }), ' ', idText ? copy(idText, 'Copied') : null)),
-        row('Domain', t ? t.domain : null),
-        row('Skill', [t ? t.short : q.topic_name || q.topic || '', q.name || q.skill ? ` · ${q.name || q.skill}` : ''].join('')),
+        row('Domain', t ? t.domain : q.domain || null),
+        row('Skill', [t ? t.short : q.topic_name || (q.topic && UI.topicName ? UI.topicName(q.topic) : q.topic) || '', q.name || q.skill ? ` · ${q.name || q.skill}` : ''].join('')),
         row('Difficulty', q.difficulty ? cap(q.difficulty) : null),
         row('Format', q.type === 'spr' ? 'Grid-in (student-produced response)' : 'Multiple choice'),
         row('Time on it', it.ms ? `${msx(it.ms)}${it.budget_ms ? ` · budget ${msx(it.budget_ms)}` : ''}` : null),
@@ -3778,9 +4064,9 @@
       const ctx = Object.assign({ kind: 'question', source: o.source || 'review', session: it.session || o.session, question_id: q.id, template: q.template, seed: q.seed,
         revealed: !hidden, live: false, title: `${label(it)} · ${(UI.TOPIC && UI.TOPIC[q.topic] || {}).short || q.topic_name || ''}`,
         given: it.fb ? it.fb.given : null }, extra);
-      if (UI.report) { if (!hidden && keyShown(it)) markSeen(it); return UI.report(ctx); }
-      toast('Reports open here soon. Use Send feedback in the menu for now.');
-      return null;
+      if (!UI.report) return null;
+      if (!hidden && keyShown(it)) markSeen(it);
+      return UI.report(ctx);
     }
     function openHistory(it) {
       if (on.history) return call('history', it);
@@ -3881,6 +4167,12 @@
     const stepOf = it => steps.get(it) || (it.try && !it.blank ? 1 : 2);
     if (walk && Number.isInteger(o.step) && items[at]) steps.set(items[at], o.step);
     function walkDots() {
+      // a dot each while they fit at a glance; past 12, one thin bar of how far the walk has come
+      if (items.length > 12) {
+        const bar = h('span', { class: 'rv-walkbar', 'aria-hidden': 'true' }, h('i'));
+        bar.firstChild.style.width = `${Math.round(((at + 1) / items.length) * 100)}%`;
+        return bar;
+      }
       const d = h('span', { class: 'rv-walkdots', 'aria-hidden': 'true' });
       items.forEach((x, i) => d.append(h('i', { 'data-on': i === at ? '' : null, 'data-done': x._proven ? '' : x._walked ? 'half' : null })));
       return d;
@@ -3914,8 +4206,8 @@
         b.ws = UI.workspace(b.qb, q, { mode: 'review', fb: it.fb, bar: false, head: false });
         b.ws.el.classList.add('rv-dim');
         const run = UI.twinInline(b.twinHost, {
-          body: o.proveBody ? o.proveBody(it) : { list: 'templates', ids: [q.template], count: 1, source: 'review', tier: q.difficulty, want: it.norm ? { [q.template]: it.norm } : undefined },
-          caption: 'Prove it on new numbers', session: false,
+          body: o.proveBody ? o.proveBody(it) : { list: 'templates', ids: [q.template], count: 1, source: 'review', tiers: [q.difficulty], want: it.norm ? { [q.template]: it.norm } : undefined },
+          caption: q.text ? 'Prove it on another one' : 'Prove it on new numbers', session: false,
           onAnswer: fb => { if (fb.correct) it._proven = true; paintNav(); },
         });
         twinRuns.push(run);
@@ -3958,7 +4250,7 @@
       const open = items.filter(x => !x._proven);
       const box = h('section', { class: 'rv-end', 'aria-label': 'Walk done' },
         h('p', { class: 'k', text: 'Walk done' }),
-        h('p', { class: 'rv-end-sum', text: [`${n} reviewed`, `you named ${named} of ${n - blanks}`, `${proven} proven on new numbers`, `${open.length} still open`, blanks ? `${blanks} blanks` : null, o.checkins ? `first check-ins ${o.checkins}` : null].filter(Boolean).join(' · ') }),
+        h('p', { class: 'rv-end-sum', text: [`${n} reviewed`, `you named ${named} of ${n - blanks}`, `${proven} proven on ${items.some(x => x.q && x.q.text) ? 'another one' : 'new numbers'}`, `${open.length} still open`, blanks ? `${blanks} blanks` : null, o.checkins ? `first check-ins ${o.checkins}` : null].filter(Boolean).join(' · ') }),
         h('div', { class: 'rv-end-acts' },
           open.length && on.again ? h('button', { type: 'button', class: 'btn', text: `Walk the ${open.length} still open`, onclick: () => call('again', open) }) : null,
           h('button', { type: 'button', class: 'pill sm', text: 'Done', onclick: () => close() })));
@@ -4064,10 +4356,26 @@
       top.addEventListener('pointerup', e => { if (t0y !== null && e.clientY - t0y > 80) close(); t0y = null; });
     })();
 
+    /* ---------------- Review's bar: one orange on the screen. While its action bar shows, the pane's Twin is a .btn */
+    const rhBar = pane && !asDialog ? doc.querySelector('.rh-bar') : null;
+    function syncTwin(scope) {
+      const bar = !!(rhBar && rhBar.firstElementChild);
+      const roots = scope && scope.querySelectorAll ? [scope, root] : [root];   // the observer passes its records: ignore them
+      new Set(roots.flatMap(r => [...r.querySelectorAll('.split.twin')])).forEach(sp => {
+        if (sp.dataset.lead === undefined) sp.dataset.lead = sp.classList.contains('primary') ? '1' : '0';
+        const lead = sp.dataset.lead === '1' && !bar;
+        sp.classList.toggle('primary', lead);
+        [...sp.children].forEach(b => { b.classList.toggle('pill', lead); b.classList.toggle('btn', !lead); });
+      });
+    }
+    const barWatch = rhBar && typeof MutationObserver === 'function' ? new MutationObserver(syncTwin) : null;
+    if (barWatch) barWatch.observe(rhBar, { childList: true });
+
     /* ---------------- close */
     function close(how) {
       if (dead) return;
       dead = true;
+      if (barWatch) barWatch.disconnect();
       twinRuns.forEach(r => { try { r.destroy(); } catch (_) {} });
       if (ws) { try { ws.destroy(); } catch (_) {} }
       dropPre();
@@ -4125,7 +4433,7 @@
     const moreB = h('button', { type: 'button', class: 'btn sm hist-more', text: 'Load more', hidden: true });
     moreB.addEventListener('click', () => load(true));
     const sheet = UI.sheet({ title: `History · ${ctx.skill || 'this question type'}`, size: 'm', className: 'hist-sheet', body: b => {
-      b.append(h('p', { class: 'meta hist-sub', text: 'This kind of question, on every set of numbers.' }));
+      b.append(h('p', { class: 'meta hist-sub', text: UI.subjectOf(ctx.template) === 'rw' ? 'This kind of question, on every passage.' : 'This kind of question, on every set of numbers.' }));
       if (ctx.lock === 'answer') b.append(h('p', { class: 'help hist-lock', text: 'Open after you answer: reading a solved one first would make this answer unclean.' }));
       b.append(headEl, bodyEl, moreB);
       if (UI.skel) UI.skel(bodyEl, 'rows:5');
@@ -4213,14 +4521,14 @@
             h('span', { class: 'hist-src' }, r.href ? h('a', { class: 'qlink', href: r.href, text: r.sitting || cap(r.source || '') }) : r.sitting || cap(r.source || ''))),
           h('td', {}, r.tier && UI.dbars ? UI.dbars(r.tier) : cap(r.tier || '')),
           res,
-          h('td', { class: 'mono', text: r.ms ? msx(r.ms) : '—' }),
+          h('td', { class: 'mono', text: r.ms ? msx(r.ms) : '–' }),
           h('td', {}, openB));
         tb.append(tr2);
         // V8: every try inside the answer it belongs to
         if (r.tries && r.tries.length > 1) {
-          const sub = h('tr', { class: 'hist-tries', hidden: true }, h('td', { colspan: '6' }, h('ol', {}, r.tries.map((x, j) => h('li', { text: `#${j + 1} · ${x.given_label ?? '–'} · ${x.ms ? msx(x.ms) : '—'} · ${x.correct ? 'Right' : 'Wrong'}${!x.correct && x.reason ? ' · ' + x.reason : ''}` })))));
-          const tg = h('button', { type: 'button', class: 'quiet sm hist-tg', 'aria-expanded': 'false', text: `▸ ${r.tries.length} tries` });
-          tg.addEventListener('click', () => { sub.hidden = !sub.hidden; tg.setAttribute('aria-expanded', String(!sub.hidden)); tg.textContent = `${sub.hidden ? '▸' : '▾'} ${r.tries.length} tries`; });
+          const sub = h('tr', { class: 'hist-tries', hidden: true }, h('td', { colspan: '6' }, h('ol', {}, r.tries.map((x, j) => h('li', { text: `#${j + 1} · ${x.given_label ?? '–'} · ${x.ms ? msx(x.ms) : '–'} · ${x.correct ? 'Right' : 'Wrong'}${!x.correct && x.reason ? ' · ' + x.reason : ''}` })))));
+          const tg = h('button', { type: 'button', class: 'quiet sm hist-tg', 'aria-expanded': 'false' }, `${r.tries.length} tries`, icon('caret_down', 14));
+          tg.addEventListener('click', () => { sub.hidden = !sub.hidden; tg.setAttribute('aria-expanded', String(!sub.hidden)); });
           res.append(tg);
           tb.append(sub);
         }

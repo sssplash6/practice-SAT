@@ -285,6 +285,10 @@ def checks():
     db.run("UPDATE learners SET current=700 WHERE id=?", "a:f4seeded")
     s = ratings.skill("a:f4seeded", "circles")
     assert (round(s["rating"]), s["seed"]) == (1304, "score")
+    # an R&W skill starts from the R&W score (typed here), never from the Math one
+    db.run("UPDATE learners SET rw_now=530 WHERE id=?", "a:f4seeded")
+    s = ratings.skill("a:f4seeded", "rw_inferences")
+    assert (round(s["rating"]), s["seed"]) == (1100, "score"), s
     for i in range(4):
         add("attempts", learner=f"a:f4prior{i}", template="circles.prior", seed=i, topic="circles",
             difficulty="medium", fmt="mcq", correct=1, at=at(TODAY))
@@ -322,7 +326,10 @@ def checks():
         raise AssertionError("an unknown subject passed")
     except HTTPException as e:
         assert e.status_code == 422
-    assert "linear_functions" in progress.topics("math") and not progress.topics("rw")
+    assert "linear_functions" in progress.topics("math") and set(progress.topics("rw")) == {   # the R&W bank's ten skills
+        "rw_" + s for s in ("boundaries", "central_ideas_and_details", "command_of_evidence", "cross_text_connections",
+                            "form_structure_and_sense", "inferences", "rhetorical_synthesis", "text_structure_and_purpose",
+                            "transitions", "words_in_context")}
 
     # Shell §3.1.5: an outside mistake's label is the reason, the note, or the skill
     lm = "a:f4logged"
@@ -732,6 +739,7 @@ def estimate_checks():
     e = estimate.estimate(learner)
     assert e["latest"]["kind"] == "outside" and e["mean3"] == 620
     assert e["combined"] and e["confidence"]["level"] == "high"
+    assert e["combined"]["high"] - e["combined"]["low"] == 20 and e["range"]["high"] - e["range"]["low"] == 20
     assert estimate.percentile("score-f4-2")["why"] == "too few sittings"
     assert estimate.percentile("score-f4-1")["why"] == "repeat sitting"
     # R16 / Tests §3.4.5: repeats are by kind (not sessions.number); papers by mock_id; modules rank
@@ -744,6 +752,9 @@ def estimate_checks():
     assert estimate.percentile("f4-peer-retake")["why"] == "repeat sitting"
     ranked = estimate.percentile("f4-peer-10")
     assert ranked["ranked"] and ranked["n"] >= 25
+    add("sessions", id="f4-rw-module", kind="module", subject="rw", learner="a:f4rwpeer", started=at(TODAY),
+        finished=at(TODAY), number=1, result=json.dumps({"estimate": {"low": 600, "high": 620, "mid": 610}}))
+    assert estimate.percentile("f4-peer-10")["n"] == ranked["n"]          # an R&W module is no Math peer
     db.run("UPDATE sessions SET ranked=0, unranked_why='paused once' WHERE id='f4-peer-11'")
     assert estimate.percentile("f4-peer-11") == {"ranked": False, "pct": None, "n": 0, "why": "paused once"}
     mocks_before = estimate.percentile("score-f4-2")["n"]
@@ -774,7 +785,7 @@ def estimate_checks():
         item = real(pool[i % len(pool)], 1000 + i, f"m{'1' if i < 22 else '2l'}q{i % 22 + 1:02d}")
         paper.append(item)
         if i < 40:
-            answers[item["id"]] = ans(item, i % 4 != 0)
+            answers[item["id"]] = ans(item, i % 3 != 0)       # centre 522: under the lower route's 580, so misses price
     add("sessions", id="f4-ledger", kind="mock", mock_id="new", learner=sec, route="lower",
         started=at(TODAY), finished=at(TODAY, 13), answers=json.dumps(answers),
         questions=json.dumps({"module1": paper[:22], "module2": paper[22:]}),
@@ -797,8 +808,21 @@ def estimate_checks():
         else add("learners", id=sec, created=progress.now(), rw_now=610)
     tot = estimate.total(sec, "f4-ledger")
     band = stored["estimate"]
-    assert tot["low"] == band["low"] + 610 and tot["parts"][1]["source"] == "self"
+    assert band["high"] - band["low"] == 20 and tot == {**tot, **scoring.total_band(610, band["mid"])}
+    assert [(p["subject"], p["source"]) for p in tot["parts"]] == [("rw", "self"), ("math", "measured")]
     assert tot["pct"]["low_pct"] == data["tables"]["total"][str(tot["low"])]
+    # Full SAT: a measured R&W section replaces the typed one; the total is the two centres +- 10, never two
+    # ranges added, and neither subject's estimate sees the other's sittings
+    add("sessions", id="f4-rw", kind="mock", subject="rw", learner=sec, route="upper", started=at(TODAY),
+        finished=at(TODAY, 14), result=json.dumps({"estimate": scoring.section_band(633, "upper", "rw")}))
+    tot = estimate.total(sec)
+    assert [(p["source"], p["id"]) for p in tot["parts"]] == [("measured", "f4-rw"), ("measured", "f4-ledger")]
+    assert tot["high"] - tot["low"] == 20 and abs(tot["mid"] - (633 + band["mid"])) < 0.1, tot
+    # one "current score" everywhere: the total's parts, Results' range and current() agree; `at` is a full timestamp
+    now_math = estimate.current(sec)
+    assert {k: tot["parts"][1][k] for k in now_math} == now_math and estimate.estimate(sec)["range"] == now_math
+    assert tot["parts"][0]["at"] == at(TODAY, 14)
+    assert estimate.estimate(sec, "rw")["latest"]["id"] == "f4-rw" and estimate.estimate(sec)["latest"]["id"] == "f4-ledger"
 
     # U4 / T6: points on the table
     g = "a:f4gains"
@@ -818,6 +842,16 @@ def estimate_checks():
     assert estimate.gains("a:f4progress") is None
     assert estimate.need(700, g)["path"]["skills"] and estimate.need(700)["m1_min"] == 14
     assert estimate.route(g)["route"] in ("upper", "lower") and estimate.route("a:f4progress") is None
+    # R&W is priced like Math, from R&W answers only
+    rwg = "a:f4rwgains"
+    for i in range(40):
+        topic = ("rw_transitions", "rw_inferences")[i % 2]
+        add("attempts", learner=rwg, template=f"{topic}.x", seed=i, topic=topic, difficulty="medium", fmt="mcq",
+            correct=int(i % 3 > 0), ms=70000, at=at(TODAY - dt.timedelta(days=1)))
+    rg = estimate.gains(rwg, "rw")
+    assert rg and {s["topic"] for s in rg["skills"]} == set(estimate.weights("rw")) and estimate.gains(rwg) is None
+    assert [d["domain"] for d in rg["by_domain"]] == list(scoring.RW_DOMAINS)
+    assert estimate.need(700, rwg, "rw")["of"] == 54 and estimate.route(rwg, "rw")["route"] in ("upper", "lower")
     # T10: practice since a date moves U4's S
     for i in range(30):
         add("attempts", learner=g, template="circles.x", seed=5000 + i, topic="circles", difficulty="medium", fmt="mcq",
@@ -913,6 +947,11 @@ def routes(client):
     assert client.get("/api/me", headers=st).json()["prefs"]["feedback"] == "end"
     assert prefs.for_source("a:f4stage", "redo")["feedback"] == "instant"
     assert prefs.for_source("a:f4stage", "builder")["feedback"] == "end"
+    # U22: an R&W skill can be the avatar; the shell's mark reads both sections' domains
+    assert client.put("/api/me", headers=h, json={"avatar": "rw_boundaries"}).status_code == 200
+    assert client.put("/api/me", headers=h, json={"avatar": "rw_nope"}).status_code == 422
+    me_shell = client.get("/api/shell", headers=h).json()["me"]
+    assert me_shell["avatar"]["glyph"] == "rw_boundaries" and len(me_shell["domains"]["rw"]) == 4, me_shell
     # U29: your name is private and any script; the board name is unique
     assert client.put("/api/me", headers=h, json={"name": "José"}).status_code == 200
     assert client.put("/api/me", headers=h, json={"name": "李明"}).status_code == 200

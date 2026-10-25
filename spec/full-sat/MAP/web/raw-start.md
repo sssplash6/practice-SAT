@@ -1,0 +1,17 @@
+# web/tests/start.js (539) raw
+- No subject field anywhere in body() 131-165: POST /mock/new body has no subject. Diagnostic POST /session (81).
+- 23-30 AIDS: nudges 'grid-in form'; cover choices.
+- 35-45 KIND: section '44 questions · 70 min · adaptive' n 44 mods 2; modules n22; paper n44; custom '5–60'; diagnostic '20 questions · 32 min · all four domains evenly' n20; twin n44; traps '6–22 · 95 s each'; trainer '22 · 35 min'; shared n44 mods2.
+- 51-62 presets: like_test_day section; pacing m1 x0.85; routing '14 of 22'; finisher m2u gauntlet '700+'; accom section.
+- 112-118 count(): modules mods*22; shared fallback 44.
+- 123-130 seconds(): custom/traps/diagnostic n*95 else 2100*modules. MATH timing.
+- 178-186 summary: 'calculator on'/'no calculator'.
+- 196 step defaults; 218 steps Test/Modules/Conditions/Tools (diag Test/Conditions).
+- 242 shared minutes = count/22*35.
+- 342-357 Module 2 seg adaptive/upper/lower; '580' cap text. 349-353 Module 1 standard/harder/easier.
+- 362-378 modules list 'm1','m2u','m2l' each '22 questions · 35 min', '14 of 22', 'n of 2 modules · n*22 questions · n*35 min'.
+- 398-399 shared text Module 1/Module 2.
+- 412-420 custom skills: UI.DOMAINS + UI.TOPICS (check whether rw included).
+- 427 length seg 10/22/44; 434 formats both/mcq/spr 'Grid-in only'; 441 'mmss(n*95) at test pace'.
+- 498-502 timing: per=2100 'a module', custom '95 s a question'.
+- 524 Calculator switch always; 525 predict.

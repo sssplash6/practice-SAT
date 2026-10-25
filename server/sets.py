@@ -46,7 +46,7 @@ from typing import Literal
 from fastapi import APIRouter, Header, HTTPException
 from pydantic import BaseModel, ConfigDict, Field
 
-from . import db, deps, practice, progress
+from . import blueprint, db, deps, practice, progress
 from .deps import now
 
 router = APIRouter()
@@ -64,8 +64,8 @@ SPAN = 100_000             # below the Library's example seeds (900000+)
 TIERS = ("easy", "medium", "hard")
 FMTS = ("mcq", "spr")
 FEEDBACK = ("instant", "retry", "end")
-SECONDS = deps.SECONDS_PER_QUESTION
-MODULE_MIN = 35
+SECONDS = deps.PACE                  # a question's seconds, per subject
+MODULE_MIN = {s: v["module_seconds"] // 60 for s, v in blueprint.SPEC.items()}   # a test module, per subject
 CFG_KEYS = {"fresh", "slots", "templates", "count", "context", "note", "feedback", "timed", "minutes"}
 TITLE = {"set": "A set from a friend", "items": "A set from a friend",
          "test": "A test from a friend", "words": "Words from a friend"}
@@ -535,11 +535,12 @@ def _stats(set_row) -> dict:
 # ------------------------------------------------------------------ GET /api/sets/{code}
 
 def _minutes(set_row, items: list[dict], cfg: dict) -> int:
+    subject = deps.infer_subject([i.get("template") for i in items])
     if set_row["kind"] == "test":
-        return MODULE_MIN * len({i.get("module", 1) for i in items})
+        return MODULE_MIN[subject] * len({i.get("module", 1) for i in items})
     if cfg.get("timed") and cfg.get("seconds"):
         return cfg["seconds"] // 60
-    return max(1, math.ceil(len(items) * SECONDS / 60))
+    return max(1, math.ceil(len(items) * SECONDS[subject] / 60))
 
 
 def summary(set_row, viewer: str | None = None) -> dict:

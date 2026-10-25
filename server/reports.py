@@ -1255,7 +1255,7 @@ def question(template: str, seed: int) -> dict:
     except Exception as e:
         problems = [f"check_item raised {e!r}"]
     return {"template": template, "seed": seed, "topic": topic_of(template), "skill": item.skill,
-            "difficulty": item.difficulty, "fmt": item.fmt, "stem": item.stem, "choices": list(item.choices),
+            "difficulty": item.difficulty, "fmt": item.fmt, "text": item.text, "stem": item.stem, "choices": list(item.choices),
             "latex": list(item.latex_choices), "figure": item.figure, "table": item.table,
             "answer": item.answer, "key": str(item.key), "rationale": item.rationale,
             "reasons": list(item.reasons),

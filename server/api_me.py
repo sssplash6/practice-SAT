@@ -10,7 +10,7 @@ from fastapi import APIRouter, Depends, Header, HTTPException, Query
 from pydantic import BaseModel, ConfigDict, Field
 
 from . import db, drill, prefs, progress, satdates
-from .deps import (DATE_OK, DAYS_OK, HANDLE_OK, LEARNER_OK, NAME_OK, SECONDS_PER_QUESTION, TARGETS,
+from .deps import (DATE_OK, DAYS_OK, HANDLE_OK, LEARNER_OK, NAME_OK, PACE, SECONDS_PER_QUESTION, TARGETS,
                    learner_of, now, part, tz_of, writer_of)
 
 router = APIRouter()
@@ -58,6 +58,31 @@ def profile(learner: str, tz: int = 0) -> dict:
     return out
 
 
+def scores(learner: str) -> dict:
+    """Total, then R&W, then Math (College Board's order), the one reader behind every page that shows
+    scores side by side (Me, the plan's tile, parent, admin, the PDF, emails). Each section is
+    estimate.current, the one current score Results and Tests show too (the latest up to 3 sittings
+    and logged scores; a lower route's cap kept; the typed score, source "yours", only without one),
+    the total estimate.total (two centres +- 10, never two ranges added). Targets: each section's own,
+    the total their sum."""
+    from . import estimate
+    row = db.one("SELECT target, rw_target FROM learners WHERE id=?", learner)
+    out = {}
+    for s in ("rw", "math"):
+        now = estimate.current(learner, s)
+        mine = now and now["source"] != "self"
+        out[s] = {"low": now["low"] if now else None, "high": now["high"] if now else None,
+                  "mid": now["mid"] if now else None,
+                  "source": ("yours" if now["source"] == "self" else now["source"]) if now else None,
+                  "at": (now["at"] or "")[:10] or None if mine else None,
+                  "target": (row["rw_target"] if s == "rw" else row["target"]) if row else None}
+    total = estimate.total(learner)
+    total = {k: total[k] for k in ("low", "high", "mid")} if total else {"low": None, "high": None, "mid": None}
+    targets = (out["rw"]["target"], out["math"]["target"])
+    out = {"total": {**total, "target": sum(targets) if all(targets) else None}, **out}
+    return out
+
+
 def due_left(learner: str, tz: int, p: dict) -> int:
     """R1 / V1: today's review items not yet done or snoozed. Review's own
     count when S10 has built it; until then, check-ins due less snoozed."""
@@ -70,8 +95,9 @@ def due_left(learner: str, tz: int, p: dict) -> int:
                if f"due:check:{c['template']}" not in snoozed)
 
 
-def per_session(p: dict) -> int:
-    """How many questions a study day's minutes hold, at the real test's pace."""
+def per_session(p: dict, subject: str = "math") -> int:
+    """How many questions a study day's minutes hold, at the real test's pace for the subject
+    (95 s a Math question, 71 s an R&W one)."""
     if not p.get("minutes"):
         return 10
     minutes = p["minutes"]
@@ -79,7 +105,7 @@ def per_session(p: dict) -> int:
         fn = part("words", "minutes_today")
         if fn:
             minutes = max(0,minutes-fn(p["id"],0))
-    return max(5, min(drill.MAX_FIXED, round(minutes * 60 / SECONDS_PER_QUESTION)))
+    return max(5, min(drill.MAX_FIXED, round(minutes * 60 / PACE.get(subject, SECONDS_PER_QUESTION))))
 
 
 @router.get("/api/me")
@@ -177,8 +203,8 @@ def put_me(body: Me, x_learner: str | None = Header(default=None), x_tz: int = D
             raise HTTPException(422, f"{key} is a Reading and Writing score, 200 to 800 in tens")
     if got.get("board") is not None and got["board"] not in ("name","anon","hidden"):
         raise HTTPException(422, "board is name, anon or hidden")
-    if got.get("avatar") is not None and got["avatar"] not in progress.topics():
-        raise HTTPException(422, "avatar must be a topic slug")
+    if got.get("avatar") is not None and got["avatar"] not in {**progress.topics("math"), **progress.topics("rw")}:
+        raise HTTPException(422, "avatar must be a Math or Reading and Writing skill slug")
     if got.get("country") is not None:
         if got["country"] and got["country"] not in COUNTRIES:
             raise HTTPException(422, "country must be an ISO alpha-2 code or blank")

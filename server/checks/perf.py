@@ -32,7 +32,8 @@ def check(client=None) -> None:
         assert db.one("SELECT 1 FROM contests WHERE id=?", "daily-" + today)
         assert db.one("SELECT 1 FROM challenges WHERE day=?", today)
         assert db.conn().execute("PRAGMA journal_mode").fetchone()[0] == "wal"
-        assert db.conn().execute("PRAGMA busy_timeout").fetchone()[0] == 2500
+        assert db.conn().execute("PRAGMA busy_timeout").fetchone()[0] == 10000      # workers wait on each other's commits
+        assert db.conn().execute("PRAGMA synchronous").fetchone()[0] == 1           # NORMAL, WAL's usual setting
         print("ok  current contest and challenge precomputed; WAL and busy timeout enabled")
         # test_flow invokes all checks against its shared database. The full
         # concurrency and cache exercise belongs to this check's isolated run.

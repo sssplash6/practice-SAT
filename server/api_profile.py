@@ -12,7 +12,7 @@ from fastapi import APIRouter, Depends, Header, HTTPException, Query
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel, Field
 
-from . import achievements, api_me, db, deps, estimate, practice, prefs, progress
+from . import achievements, api_me, db, deps, estimate, practice, prefs, progress, scoring
 from .deps import learner_of, tz_of
 
 router = APIRouter()
@@ -55,20 +55,20 @@ def levers(learner: str, tz: int, keys: list[str]) -> dict[str, dict]:
                 "relapsed": sum(bool(t["relapses"]) for t in open_traps)}
 
     @lru_cache(maxsize=None)
-    def board():
-        return progress.board(learner)
+    def board(subject="math"):
+        return progress.board(learner, subject)
 
     @lru_cache(maxsize=None)
-    def gains():
-        return estimate.gains(learner)
+    def gains(subject="math"):
+        return estimate.gains(learner, subject)
 
     @lru_cache(maxsize=None)
-    def band():
-        return estimate.estimate(learner)
+    def band(subject="math"):
+        return estimate.estimate(learner, subject)
 
     @lru_cache(maxsize=None)
-    def pace():
-        return progress.pace(learner)
+    def pace(subject="math"):
+        return progress.pace(learner, subject=subject)
 
     def left_out() -> list[dict]:
         r = db.one("SELECT SUM(repeat=1) AS repeats,SUM(disputed=1) AS disputed,"
@@ -79,9 +79,16 @@ def levers(learner: str, tz: int, keys: list[str]) -> dict[str, dict]:
                  ("discarded", "discarded answers"), ("guesses", "right guesses count half"))
                 if r[col]]
 
+    def drill_body(body: dict, subject: str) -> dict:
+        return {**body, "subject": subject} if subject != "math" else body
+
     result = {}
     for key in dict.fromkeys(keys):
         parts = key.split(":")
+        # points, band and readiness take a subject (points:rw); the bare key stays Math, as the pages that use it are
+        sub = parts[1] if len(parts) == 2 and parts[1] in deps.SUBJECTS else "math"
+        name = parts[0] if sub != "math" or len(parts) == 2 and parts[1] == "math" else key
+        label = scoring.SECTION_NAME[sub]
         if key == "streak":
             d = days()
             today = d["recent"][-1]
@@ -125,23 +132,24 @@ def levers(learner: str, tz: int, keys: list[str]) -> dict[str, dict]:
                                  {"label": "Study minutes", "value": minutes}],
                                 help="study-time", next="Another answered question adds its measured time.",
                                 same_on=["today", "me"])
-        elif key in ("points", "points_on_table"):
-            g = gains()
+        elif name in ("points", "points_on_table"):
+            g = gains(sub)
             top = g["skills"][0] if g and g["skills"] else None
+            top_name = progress.topics(sub)[top["topic"]].name if top and top["topic"] in progress.topics(sub) else top and top["topic"]
             result[key] = _fact(g["total"] if g else None,
-                                "Estimated Math points available if each skill reaches Strong.",
+                                f"Estimated {label} points available if each skill reaches Strong.",
                                 [{"label": "Counted answers", "value": g["answers"] if g else 0},
-                                 {"label": "Top skill", "value": top["topic"] if top else "not measured"},
+                                 {"label": "Top skill", "value": top_name if top else "not measured"},
                                  {"label": "Top skill points", "value": top["gain"] if top else None}],
                                 help="points", next="Reach 30 counted answers for a measured estimate" if not g else
-                                f"Practise {top['topic']} to recover about {top['gain']} points" if top else None,
-                                start={"label": "Practise top skill", "body": {"topics": [top["topic"]], "count": 8}}
+                                f"Practise {top_name} to recover about {top['gain']} points" if top else None,
+                                start={"label": "Practise top skill", "body": drill_body({"topics": [top["topic"]], "count": 8}, sub)}
                                 if top else None, excluded=left_out(), same_on=["me", "results", "plan"])
-        elif key in ("band", "estimate"):
-            e = band()
+        elif name in ("band", "estimate"):
+            e = band(sub)
             latest = e["latest"]
             value = {"low": latest["low"], "high": latest["high"]} if latest else None
-            result[key] = _fact(value, "The latest scored sitting's Math score range; the range tightens with more sections.",
+            result[key] = _fact(value, f"The latest scored sitting's {label} score range, shown 20 points wide.",
                                 [{"label": "Scored sittings", "value": e["counted"]["sittings"]},
                                  {"label": "Full sections", "value": e["counted"]["sections"]},
                                  {"label": "Confidence", "value": e["confidence"]["level"]}],
@@ -164,7 +172,7 @@ def levers(learner: str, tz: int, keys: list[str]) -> dict[str, dict]:
                                 same_on=["today", "plan", "me"])
         elif len(parts) == 2 and parts[0] == "skill":
             topic = parts[1]
-            b = board().get(topic)
+            b = board(deps.subject_of(topic)).get(topic)
             if b is None:
                 raise HTTPException(422, {"field": "keys", "reason": f"unknown skill {topic}"})
             need = progress.steps_to(learner, topic, progress.STRONG, "medium")
@@ -174,7 +182,7 @@ def levers(learner: str, tz: int, keys: list[str]) -> dict[str, dict]:
                                  {"label": "Open mistakes", "value": len(b["traps"])}],
                                 help="mastery", next=f"{need} more right at Medium reaches Strong" if need is not None else
                                 "Practise this skill to build evidence",
-                                start={"label": "Practise", "body": {"topics": [topic], "count": 8}},
+                                start={"label": "Practise", "body": drill_body({"topics": [topic], "count": 8}, deps.subject_of(topic))},
                                 excluded=left_out(), same_on=["me", "results", "plan"])
         elif len(parts) == 3 and parts[0] == "accuracy":
             topic = parts[1]
@@ -182,7 +190,7 @@ def levers(learner: str, tz: int, keys: list[str]) -> dict[str, dict]:
                 window = int(parts[2])
             except ValueError:
                 raise HTTPException(422, "accuracy keys use accuracy:<topic>:<days>")
-            if topic not in progress.topics() or not 1 <= window <= 365:
+            if topic not in progress.topics(deps.subject_of(topic)) or not 1 <= window <= 365:
                 raise HTTPException(422, "unknown accuracy topic or days")
             since = (dt.datetime.now(dt.timezone.utc) - dt.timedelta(days=window)).isoformat()
             row = db.one("SELECT COUNT(*) AS n, SUM(correct) AS right FROM attempts WHERE learner=? AND topic=?"
@@ -193,29 +201,30 @@ def levers(learner: str, tz: int, keys: list[str]) -> dict[str, dict]:
                                 [{"label": "Right", "value": row["right"] or 0},
                                  {"label": "Counted", "value": n}],
                                 help="accuracy", next="One more clean answer lifts this rate.",
-                                start={"label": "Practise", "body": {"topics": [topic], "count": 8}},
+                                start={"label": "Practise", "body": drill_body({"topics": [topic], "count": 8}, deps.subject_of(topic))},
                                 excluded=left_out(), same_on=["me", "results"])
         elif len(parts) == 2 and parts[0] == "pace":
             topic = parts[1]
-            if topic not in progress.topics():
+            subject = deps.subject_of(topic)
+            if topic not in progress.topics(subject):
                 raise HTTPException(422, "unknown pace topic")
-            skill = pace()["skills"].get(topic)
+            skill = pace(subject)["skills"].get(topic)
             result[key] = _fact(skill["median_ms_right"] if skill else None,
                                 "Median time on right answers to this skill over the last 60 days.",
                                 [{"label": "Timed answers", "value": skill["n"] if skill else 0},
                                  {"label": "Right-answer median, ms", "value": skill["median_ms_right"] if skill else None},
-                                 {"label": "SAT question budget, ms", "value": 95000}],
+                                 {"label": "SAT question budget, ms", "value": deps.PACE[subject] * 1000}],
                                 help="pace", next="Aim to answer correctly within the SAT budget.",
-                                start={"label": "Speed drill", "body": {"topics": [topic], "count": 8,
-                                                                         "timing": "pace"}}, same_on=["me", "review"])
-        elif key == "readiness":
-            met = progress.types_met(learner)
-            result[key] = _fact(met["met"], "Question types you have met at least once, out of the Math catalogue.",
+                                start={"label": "Speed drill", "body": drill_body({"topics": [topic], "count": 8,
+                                                                                   "timing": "pace"}, subject)}, same_on=["me", "review"])
+        elif name == "readiness":
+            met = progress.types_met(learner, sub)
+            result[key] = _fact(met["met"], f"Question types you have met at least once, out of the {label} catalogue.",
                                 [{"label": "Met", "value": met["met"]},
                                  {"label": "Never met", "value": met["never"]},
                                  {"label": "Total types", "value": met["total"]}],
                                 help="readiness", next=f"Meet {met['never']} more question types",
-                                start={"label": "Practise unmet", "body": {"pool": "untried", "count": 8}},
+                                start={"label": "Practise unmet", "body": drill_body({"pool": "untried", "count": 8}, sub)},
                                 same_on=["today", "me", "plan"])
         elif len(parts) == 2 and parts[0] == "percentile":
             sid = parts[1]
@@ -309,7 +318,7 @@ def _habits(learner: str) -> list[dict]:
     counts: dict[str, dict] = {}
     for r in db.rows("SELECT reason,topic,at FROM attempts WHERE learner=? AND correct=0"
                      " AND repeat=0 AND disputed=0 AND at>=?", learner, prior):
-        family = family_of(r["reason"] or "")
+        family = family_of(r["reason"] or "") if deps.subject_of(r["topic"]) == "math" else None   # Math habits only
         if not family:
             continue
         item = counts.setdefault(family["id"], {"id": family["id"], "name": family["name"],
@@ -397,86 +406,100 @@ def summary(learner: str, tz: int = 0) -> dict:
              "sections": sum(kinds.get(k, 0) for k in ("section", "mock", "paper")),
              "modules": kinds.get("module", 0), "diagnostics": kinds.get("diagnostic", 0),
              "sets": kinds.get("drill", 0), "mistakes_open": traps["opened"] or 0,
+             # each section's open mistakes: a fix set is one subject's
+             "mistakes_open_by": dict(Counter(deps.subject_of(r["topic"]) for r in db.rows(
+                 "SELECT topic FROM traps WHERE learner=? AND closed IS NULL", learner))),
              "mistakes_fixed": traps["fixed"] or 0, "saved": saved, "hard_right": hard,
              "qotd": qotd,
              "challenges_played": sum(bool(r["kind"] == "challenge" or r["contest"])
                                       for r in sessions),
              "series": series, "delta": delta,
              "levers": levers(learner, tz, ["streak", "minutes:week", "open_mistakes"])}
-    domains = []
     by_topic = practice.catalogue()["by_topic"]
     met = {r["template"] for r in db.rows("SELECT DISTINCT template FROM attempts WHERE learner=?", learner)}
-    coverage = []
-    types = {}
     by_type = db.rows("SELECT template,COUNT(*) AS met,SUM(correct) AS right,MAX(at) AS last"
                       f" FROM attempts WHERE learner=? AND {progress.COUNTED} GROUP BY template", learner)
     type_counts = {r["template"]: dict(r) for r in by_type}
     open_types = {r["template"] for r in db.rows("SELECT DISTINCT template FROM traps"
                                                   " WHERE learner=? AND closed IS NULL", learner)}
-    from . import api_bank, blueprint
-    kinds = blueprint.kinds()
-    raw_weights = {name: api_bank._weight(entry) for name, entry in kinds.items()
-                   if deps.subject_of(entry["topic"]) == "math"}
-    weight_sum = sum(raw_weights.values()) or 1
-    ready_weight = 0.0
-    for name, weight in raw_weights.items():
-        counts = type_counts.get(name, {})
-        rights = counts.get("right") or 0
-        types[name] = {"met": counts.get("met") or 0, "right": rights,
-                       "last": counts.get("last"), "open": name in open_types}
-        if rights >= 2:
-            ready_weight += weight / weight_sum
-    for domain in progress.DOMAINS:
-        skills = []
-        for topic, skill in b.items():
-            if skill["domain"] != domain:
-                continue
-            skills.append({"topic": topic, "name": skill["name"], "mastery": skill["mastery"],
-                           "answered": skill["answered"], "right": round((skill["accuracy"] or 0) *
-                                                                             skill["answered"]),
-                           "traps": len(skill["traps"]), "evidence": skill["evidence"],
-                           "trend14": skill["trend14"], "last5": skill["last5"],
-                           "fading": skill["fading"]})
-            templates = set(by_topic.get(topic, []))
-            coverage.append({"topic": topic, "met": len(met & templates), "total": len(templates)})
-        domains.append({"domain": domain,
-                        "mastery": round(sum(x["mastery"] for x in skills) / len(skills), 3) if skills else 0,
-                        "answered": sum(x["answered"] for x in skills),
-                        "right": sum(x["right"] for x in skills), "skills": skills})
-    catching = [dict(r) for r in db.rows("SELECT template,reason,label,topic,hits,closed,last,source"
-                                        " FROM traps WHERE learner=? ORDER BY hits DESC,last DESC LIMIT 5", learner)]
-    for x in catching:
-        x["open"] = x.pop("closed") is None
-    score = {"latest": e["latest"], "best": e["best"],
-             "points": [{"at": x["at"], "low": x["low"], "high": x["high"],
-                         "kind": x["kind"], "session": x["id"]}
-                        for x in reversed(estimate._sittings(learner))]}
-    rw = {"target": p["rw_target"], "now": p["rw_now"], "source": "yours"}
-    math = {"target": p["target"], "band": e["latest"], "gains": g,
-            "coverage": {"readiness": round(ready_weight, 3),
-                         "met": sum(x["met"] for x in coverage),
-                         "total": sum(x["total"] for x in coverage), "types": types,
-                         "skills": coverage},
-            "domains": domains, "levers": levers(learner, tz, ["points", "band", "readiness"])}
-    total = None
-    if p["target"] and p["rw_target"]:
-        total = {"target": p["target"] + p["rw_target"],
-                 "now_low": (e["latest"]["low"] + p["rw_now"]) if e["latest"] and p["rw_now"] else None,
-                 "now_high": (e["latest"]["high"] + p["rw_now"]) if e["latest"] and p["rw_now"] else None}
-    goals = {"total": total, "subjects": {"math": {"target": p["target"], "band": e["latest"]},
-                                             "rw": rw},
+    traps_all = db.rows("SELECT template,reason,label,topic,hits,closed,last,source"
+                        " FROM traps WHERE learner=? ORDER BY hits DESC,last DESC", learner)
+    scores = api_me.scores(learner)
+
+    def part(subject: str, board: dict, est: dict, gained) -> dict:
+        """One subject's Skills, readiness, trend, pace and mistakes: the same keys for Math and R&W."""
+        from . import api_bank, blueprint
+        domains, coverage, types = [], [], {}
+        kinds = {name: entry for name, entry in blueprint.kinds().items() if deps.subject_of(entry["topic"]) == subject}
+        raw_weights = {name: api_bank._weight(entry) for name, entry in kinds.items()}
+        weight_sum = sum(raw_weights.values()) or 1
+        ready_weight = 0.0
+        for name, weight in raw_weights.items():
+            counts = type_counts.get(name, {})
+            rights = counts.get("right") or 0
+            types[name] = {"met": counts.get("met") or 0, "right": rights,
+                           "last": counts.get("last"), "open": name in open_types}
+            if subject == "rw":         # the shell's type catalogue is Math's: R&W readiness names its types from here
+                types[name].update(topic=kinds[name]["topic"], name=api_bank._name(name, kinds[name]),
+                                   about=kinds[name].get("about") or "")
+            if rights >= 2:
+                ready_weight += weight / weight_sum
+        for domain in (progress.DOMAINS if subject == "math" else tuple(progress.RW_BLUEPRINT)):
+            skills = []
+            for topic, skill in board.items():
+                if skill["domain"] != domain:
+                    continue
+                skills.append({"topic": topic, "name": skill["name"], "mastery": skill["mastery"],
+                               "answered": skill["answered"], "right": round((skill["accuracy"] or 0) *
+                                                                                 skill["answered"]),
+                               "traps": len(skill["traps"]), "evidence": skill["evidence"],
+                               "trend14": skill["trend14"], "last5": skill["last5"],
+                               "fading": skill["fading"]})
+                templates = set(by_topic.get(topic, []))
+                coverage.append({"topic": topic, "met": len(met & templates), "total": len(templates)})
+            domains.append({"domain": domain,
+                            "mastery": round(sum(x["mastery"] for x in skills) / len(skills), 3) if skills else 0,
+                            "answered": sum(x["answered"] for x in skills),
+                            "right": sum(x["right"] for x in skills), "skills": skills})
+        catching = [dict(r) for r in traps_all if deps.subject_of(r["topic"]) == subject][:5]
+        for x in catching:
+            x["open"] = x.pop("closed") is None
+        score = {"latest": est["latest"], "best": est["best"],
+                 "points": [{"at": x["at"], "low": x["low"], "high": x["high"],
+                             "kind": x["kind"], "session": x["id"]}
+                            for x in reversed(estimate._sittings(learner, subject))]}
+        keys = ["points", "band", "readiness"] if subject == "math" else ["points:rw", "band:rw", "readiness:rw"]
+        return {"target": scores[subject]["target"], "band": est["latest"], "gains": gained,
+                "coverage": {"readiness": round(ready_weight, 3),
+                             "met": sum(x["met"] for x in coverage),
+                             "total": sum(x["total"] for x in coverage), "types": types,
+                             "skills": coverage},
+                "domains": domains, "catching": catching, "score": score,
+                "pace": progress.pace(learner, subject=subject), "levers": levers(learner, tz, keys)}
+
+    math = part("math", b, e, g)
+    rw = part("rw", progress.board(learner, "rw"), estimate.estimate(learner, "rw"), estimate.gains(learner, "rw"))
+    rw.update(now=p["rw_now"], source=scores["rw"]["source"])
+    domains, catching, score = math["domains"], math["catching"], math["score"]
+    coverage = math["coverage"]["skills"]
+    goals = {"total": scores["total"], "subjects": {"math": {"target": p["target"], "band": e["latest"]},
+                                                    "rw": {"target": p["rw_target"], "band": rw["band"],
+                                                           "now": p["rw_now"], "source": rw["source"]}},
              "exam_date": p["exam_date"], "minutes": p["minutes"], "days": p["days"],
              "focus": p["focus"], "first_day": d["days"][0]["day"] if d["active_days"] else None,
-             "need": estimate.need(p["target"], learner) if p["target"] else None}
+             "need": estimate.need(p["target"], learner) if p["target"] else None,
+             "need_rw": estimate.need(p["rw_target"], learner, "rw") if p["rw_target"] else None}
     ranks = {"all": _practice_rank(learner), "exam": _practice_rank(learner, "exam"),
              "country": _practice_rank(learner, "country"), "climb": None,
              "self": _self_rank(learner, b, e["latest"])}
     climb = deps.part("compete", "climb")
-    if climb:
-        ranks["climb"] = climb(learner)
+    if climb:                                   # each section's climb against those who started near you
+        ranks["climb"] = climb(learner, "math")
+        ranks["climb_rw"] = climb(learner, "rw")
     words = deps.part("words", "me_stats")
     rank_snapshot = deps.part("compete", "rank_snapshot")
-    competition = rank_snapshot(learner, tz) if rank_snapshot else {}
+    competition = rank_snapshot(learner, tz, "math") if rank_snapshot else {}
+    rw_competition = rank_snapshot(learner, tz, "rw") if rank_snapshot else {}
     leaderboard = deps.part("compete", "leaderboard")
     week_board = leaderboard("points", "week", learner=learner, limit=1) if leaderboard else {}
     from . import challenge, daily
@@ -496,7 +519,10 @@ def summary(learner: str, tz: int = 0) -> dict:
                          "ahead_today": today_rank - 1 if today_rank else None,
                          "best_rank": best["rank"] if best else None,
                          "best_day": best["day"] if best else None,
-                         "rating": competition.get("rating"), "level": competition.get("level")}
+                         "rating": competition.get("rating"), "level": competition.get("level"),
+                         # R&W's contest rating only once an R&W contest has moved it (else it is the default)
+                         "rw_rating": rw_competition.get("rating") if rw_competition.get("rated") else None,
+                         "rw_level": rw_competition.get("level") if rw_competition.get("rated") else None}
     from . import api_shell
     resume = api_shell._resume(learner)
     habits = _habits(learner)
@@ -504,7 +530,7 @@ def summary(learner: str, tz: int = 0) -> dict:
     return {"stats": stats, "score": score, "ranks": ranks, "domains": domains,
             "catching": catching, "coverage": coverage, "challenge": challenge_summary,
             "resume": [resume] if resume else [],
-            "goals": goals, "subjects": {"math": math, "rw": rw},
+            "goals": goals, "subjects": {"math": math, "rw": rw}, "scores": scores,
             "gains": g, "words": words(learner, tz) if words else None,
             "achievements": achievements.evaluate(learner, tz), "habits": habits}
 
@@ -801,7 +827,7 @@ def _goal_progress(learner: str, week: str, kind: str, params: dict,
     end = (_week_start(week) + dt.timedelta(days=7)).isoformat()
     if kind == "fix_traps":
         topic = params.get("topic")
-        if topic and topic not in progress.topics():
+        if topic and topic not in progress.topics(deps.subject_of(topic)):
             raise HTTPException(422, "unknown goal topic")
         sql = "SELECT COUNT(*) AS n FROM traps WHERE learner=? AND closed>=? AND closed<?"
         args = [learner, start, end]
@@ -814,7 +840,7 @@ def _goal_progress(learner: str, week: str, kind: str, params: dict,
                       " AND event IN ('check-pass','check_pass','passed')", learner, start, end)["n"]
     elif kind == "reach_word":
         topic = params.get("topic")
-        if topic not in progress.topics():
+        if not isinstance(topic, str) or topic not in progress.topics(deps.subject_of(topic)):
             raise HTTPException(422, "unknown goal topic")
         mastery = progress.topic_mastery(learner, topic)
         have = round(mastery * 100)
@@ -869,19 +895,21 @@ def week_summary(learner: str, week: str | None = None, tz: int = 0) -> dict:
     newly = [r["label"] for r in db.rows("SELECT label FROM traps WHERE learner=?"
                                           " AND opened>=? AND opened<? ORDER BY opened DESC LIMIT 5",
                                           learner, last.isoformat(), end)]
+    # both subjects: the skill with the most open mistakes, and the weakest skill still growing
+    names = {**progress.topics("math"), **progress.topics("rw")}
     open_traps = progress.open_traps(learner)
-    top = Counter(x["topic"] for x in open_traps).most_common(1)
+    top = Counter(x["topic"] for x in open_traps if x["topic"] in names).most_common(1)
     suggestions = []
     if top:
         topic, n = top[0]
         suggestions.append({"kind": "fix_traps", "params": {"topic": topic}, "target": n,
-                            "why": f"{n} open mistakes in {topic}", "minutes": n * 3})
+                            "why": f"{n} open mistakes in {names[topic].name}", "minutes": n * 3})
     due = progress.due_rechecks(learner, today.isoformat())
     if due:
         suggestions.append({"kind": "pass_checks", "params": {}, "target": len(due),
                             "why": f"{len(due)} check-ins are due", "minutes": len(due) * 2})
-    rough = next((v for v in progress.board(learner).values() if v["answered"] and
-                  v["mastery"] < progress.STRONG), None)
+    rough = min((v for s in ("math", "rw") for v in progress.board(learner, s).values()
+                 if v["answered"] and v["mastery"] < progress.STRONG), key=lambda v: v["mastery"], default=None)
     if rough:
         suggestions.append({"kind": "reach_word", "params": {"topic": rough["topic"], "word": "Strong"},
                             "target": 80, "why": f"{rough['name']} is still growing", "minutes": 25})

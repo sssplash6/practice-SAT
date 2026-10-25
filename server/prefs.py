@@ -153,8 +153,14 @@ PRACTICE = {
 }
 SUBJECTS = ("math", "rw")
 PRACTICE_DEFAULTS = {k: v[0] for k, v in PRACTICE.items()}
+# R&W's worked example is a bank question shown with its answer: there it is opt-in, off by default
+SUBJECT_DEFAULTS = {"rw": {"worked_first": False}}
 
-# U15 and practice.md: what each mode sets. Flat keys, plus practice.math keys.
+
+def practice_default(subject: str, key: str):
+    return SUBJECT_DEFAULTS.get(subject, {}).get(key, PRACTICE_DEFAULTS[key])
+
+# U15 and practice.md: what each mode sets. Flat keys, plus the practice keys of each subject.
 BUNDLES = {
     "learn": {"clock": "off", "feedback": "instant", "repairs": "next", "rationale": "miss", "adaptive": True,
               "practice": {"zone": "stretch", "final_round": True}},
@@ -355,11 +361,12 @@ def resolve(learner: str, tz: int = 0) -> tuple[dict, dict, dict | None]:
     for subject in SUBJECTS:
         yours = {k: v for k, v in (stored_practice.get(subject) or {}).items() if v is not None}
         resolved = {}
-        for key, default in PRACTICE_DEFAULTS.items():
+        for key in PRACTICE_DEFAULTS:
+            default = practice_default(subject, key)
             if key in yours:
                 resolved[key], source[f"practice.{subject}.{key}"] = yours[key], "yours"
                 continue
-            for name, bundle in layers if subject == "math" else ():
+            for name, bundle in layers:          # a mode (Learn, Build, Test) is one choice for both subjects
                 if key in bundle.get("practice", {}):
                     resolved[key], source[f"practice.{subject}.{key}"] = bundle["practice"][key], name
                     break
@@ -390,7 +397,7 @@ def put(learner: str, changes: dict) -> dict:
             for subject, keys in value.items():
                 sub = dict(merged.get(subject) or {})
                 for k, v in keys.items():
-                    if v is None or (v == PRACTICE_DEFAULTS[k] and k not in BUNDLE_PRACTICE):
+                    if v is None or (v == practice_default(subject, k) and k not in BUNDLE_PRACTICE):
                         sub.pop(k, None)
                     else:
                         sub[k] = v

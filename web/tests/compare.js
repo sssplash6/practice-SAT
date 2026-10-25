@@ -20,25 +20,26 @@
   const name = r => `${r.kind_label || 'Sitting'}${r.number ? ` #${r.number}` : ''}`;
   const tag = r => (r.number ? `#${r.number}` : name(r));
   const MARK = { right: ['✓', 'right'], correct: ['✓', 'right'], wrong: ['✕', 'wrong'], incorrect: ['✕', 'wrong'], blank: ['–', 'blank'], unanswered: ['–', 'blank'] };
+  const NONE = UI.NONE || '\u2013';   // the missing-value glyph, an en dash
   const DOMAIN = { algebra: 'Algebra', advanced: 'Advanced Math', psda: 'Problem-Solving and Data', geometry: 'Geometry and Trigonometry' };
 
   function facts(r) {
     const m = r.modules || [];
     const g = r.gate && r.gate.margin !== undefined && r.gate.margin !== null ? (r.gate.margin >= 0 ? ` · gate +${r.gate.margin}` : ` · gate ${r.gate.margin}`) : '';
-    const route = r.route === 'upper' ? 'Harder module 2' : r.route === 'lower' ? 'Easier module 2' : m.length > 1 ? 'Adaptive' : '—';
-    const cond = r.conditions === undefined ? '—' : r.conditions === 'training' ? 'Training'
+    const route = r.route === 'upper' ? 'Harder module 2' : r.route === 'lower' ? 'Easier module 2' : m.length > 1 ? 'Adaptive' : NONE;
+    const cond = r.conditions === undefined ? NONE : r.conditions === 'training' ? 'Training'
       : `Test-day${r.ranked === false ? ` · unranked${r.unranked_why ? ' (' + r.unranked_why + ')' : ''}` : r.ranked ? ' · ranked' : ''}`;
     return {
-      when: r.started ? UI.date(r.started, 'short') : '—',
-      band: band(r.estimate) || (r.right !== null && r.right !== undefined && r.asked ? `${r.right}/${r.asked} · practice` : '—'),
-      m1: m[0] ? `${m[0].right}/${m[0].asked}` : '—',
-      m2: m[1] ? `${m[1].right}/${m[1].asked}` : '—',
+      when: r.started ? UI.date(r.started, 'short') : NONE,
+      band: band(r.estimate) || (r.right !== null && r.right !== undefined && r.asked ? `${r.right}/${r.asked} · practice` : NONE),
+      m1: m[0] ? `${m[0].right}/${m[0].asked}` : NONE,
+      m2: m[1] ? `${m[1].right}/${m[1].asked}` : NONE,
       route: `${route}${g}`,
-      time: r.ms ? `${r.timing === 'untimed' ? 'Untimed · ' : ''}${Math.round(r.ms / 60000)} min` : '—',
+      time: r.ms ? `${r.timing === 'untimed' ? 'Untimed · ' : ''}${Math.round(r.ms / 60000)} min` : NONE,
       misses: String(r.misses || 0),
       blanks: String(r.blanks || 0),
-      away: r.away_ms ? mmss(r.away_ms / 1000) : r.offline_ms ? `offline ${mmss(r.offline_ms / 1000)}` : '—',
-      pauses: r.pauses ? String(r.pauses) : '—',
+      away: r.away_ms ? mmss(r.away_ms / 1000) : r.offline_ms ? `offline ${mmss(r.offline_ms / 1000)}` : NONE,
+      pauses: r.pauses ? String(r.pauses) : NONE,
       cond,
     };
   }
@@ -60,7 +61,7 @@
     const fa = facts(a), fb = facts(b);
     const t = h('table', { class: 'table compact cmp-facts' },
       h('thead', {}, h('tr', {}, h('th', { scope: 'col', class: 'sr', text: 'Fact' }), h('th', { scope: 'col', text: `${name(a)}` }), h('th', { scope: 'col', text: `${name(b)}` }))),
-      h('tbody', {}, LABELS.filter(([k]) => fa[k] !== '—' || fb[k] !== '—').map(([k, l]) => h('tr', { class: fa[k] !== fb[k] && k !== 'when' ? 'diff' : null }, h('th', { scope: 'row', class: 'k', text: l }), h('td', { class: 'mono', text: fa[k] }), h('td', { class: 'mono', text: fb[k] })))));
+      h('tbody', {}, LABELS.filter(([k]) => fa[k] !== NONE || fb[k] !== NONE).map(([k, l]) => h('tr', { class: fa[k] !== fb[k] && k !== 'when' ? 'diff' : null }, h('th', { scope: 'row', class: 'k', text: l }), h('td', { text: fa[k] }), h('td', { text: fb[k] })))));
     bd.append(h('div', { class: 'cmp-wrap' }, t));
     const more = h('div', { class: 'cmp-more', 'aria-busy': 'true' });
     bd.append(more);
@@ -84,11 +85,11 @@
     if (!da || !db) return;
     const keys = [...new Set([...Object.keys(da), ...Object.keys(db)])];
     const bar = x => { const s = x && x.asked ? x.right / x.asked : 0; return h('span', { class: 'cmp-bar', 'aria-hidden': 'true' }, h('i', { style: `width:${Math.round(s * 100)}%` })); };
-    const txt = x => (x && x.asked ? `${x.right}/${x.asked}` : '—');
+    const txt = x => (x && x.asked ? `${x.right}/${x.asked}` : NONE);
     host.append(h('h3', { class: 'k', text: 'By domain' }), h('ul', { class: 'cmp-doms' }, keys.map(k => h('li', {},
       h('b', { text: DOMAIN[k] || k }),
-      h('span', { class: 'cmp-dom' }, h('span', { class: 'mono', text: `${tag(a)} ${txt(da[k])}` }), bar(da[k])),
-      h('span', { class: 'cmp-dom' }, h('span', { class: 'mono', text: `${tag(b)} ${txt(db[k])}` }), bar(db[k]))))));
+      h('span', { class: 'cmp-dom' }, h('span', { text: `${tag(a)} ${txt(da[k])}` }), bar(da[k])),
+      h('span', { class: 'cmp-dom' }, h('span', { text: `${tag(b)} ${txt(db[k])}` }), bar(db[k]))))));
   }
 
   function slots(host, d, a, b, o) {
@@ -102,7 +103,7 @@
     const table = h('table', { class: 'table compact cmp-slots' },
       h('thead', {}, h('tr', {}, h('th', { scope: 'col', text: 'Slot' }), h('th', { scope: 'col', text: 'Type' }), h('th', { scope: 'col', text: tag(a) }), h('th', { scope: 'col', text: tag(b) }), h('th', { scope: 'col', text: '' }))),
       h('tbody', {}, rows.map(r => h('tr', { class: r.a !== r.b ? 'diff' : null },
-        h('td', { class: 'mono', text: r.slot_label || r.slot || '' }),
+        h('td', { text: r.slot_label || r.slot || '' }),
         h('td', { text: r.topic_name || r.label || '' }),
         h('td', {}, mark(r.a)), h('td', {}, mark(r.b)),
         h('td', { class: 'meta', text: r.same_trap ? `Same trap both times: ${r.same_trap}` : r.still ? 'A different mistake' : '' })))));

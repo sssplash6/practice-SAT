@@ -95,6 +95,8 @@ def question(template: str, seed: int, qid: str = "q") -> dict | None:
 
 
 def skill_of(template: str, seed: int | None = None) -> str:
+    if deps.subject_of(template) == "rw":       # an R&W item's own skill names its passage: show its type
+        return progress.rw_label(template)
     if seed is not None:
         try:
             return practice._skill(template, seed)
@@ -149,7 +151,7 @@ def budget_fn():
     levels = drill.levels()
 
     def budget(template: str, tier: str) -> int:
-        default = progress.TIER_BUDGET_MS.get(tier, 95_000)
+        default = drill.TIER_BUDGET[deps.subject_of(template)].get(tier, 95_000)
         m = levels.get((template, tier), {})
         med = m.get("median_ms_right")
         return max(round(default * .6), min(round(default * 1.6), med)) if med and m.get("n", 0) >= 20 else default
@@ -264,14 +266,17 @@ def latest_misses(learner: str, subject: str = "math") -> dict[tuple[str, str], 
 
 def trap_kind(t, miss: dict | None) -> str:
     spr = bool(miss and miss.get("fmt") == "spr")
-    return progress.trap_kind(t["norm"], (miss or {}).get("miss_kind"), spr)
+    return progress.trap_kind(t["norm"], (miss or {}).get("miss_kind"), spr, t["topic"])
 
 
 def trap_label(t) -> str:
     """Review §0: a named mistake is the concrete text of its latest miss; an
-    unnamed grid-in miss and an Unsure are the skill; the filler is 'Arithmetic slip'."""
+    unnamed grid-in miss and an Unsure are the skill; the filler is 'Arithmetic slip';
+    an R&W miss is its question type, one name however many passages it was missed on."""
     if t["norm"] == progress.FILLER:
         return SLIP_LABEL
+    if t["norm"] == "" and deps.subject_of(t["topic"]) == "rw":
+        return progress.rw_label(t["template"])
     if t["norm"] in ("", "~unsure"):
         return cap(skill_of(t["template"], t["seed"] if t["seed"] is not None else None))
     return cap(t["reason"]) or t["label"]
@@ -728,10 +733,11 @@ def _closing_state(t, today: dt.date) -> str:
     return f"held{t['checks']}" if t["checks"] else "unchecked"
 
 
-def ledger_deltas(learner: str) -> list[tuple[str, int, str]]:
+def ledger_deltas(learner: str, subject: str | None = None) -> list[tuple[str, int, str]]:
     """(at, +1 | -1, event) for every change to the open count, from trap_log;
-    a discard or restore counts as the event it undid, reversed or redone."""
-    rows = db.rows("SELECT * FROM trap_log WHERE learner=? ORDER BY id", learner)
+    a discard or restore counts as the event it undid, reversed or redone; `subject` keeps one section's."""
+    rows = [r for r in db.rows("SELECT * FROM trap_log WHERE learner=? ORDER BY id", learner)
+            if subject is None or deps.subject_of(r["template"]) == subject]
     by_id = {r["id"]: r for r in rows}
     out = []
     for r in rows:
@@ -781,10 +787,10 @@ def counts(learner: str, tz: int = 0, subject: str = "math") -> dict:
     pts = pts_fn(learner, subject)
     stakes = [pts(t["template"], t["norm"], t["topic"]) for t in opens]
     d = due(learner, tz, subject)
-    diag = db.rows(f"SELECT diag, norm FROM attempts WHERE learner=? AND diag IS NOT NULL AND diag!='skip' AND {where}",
+    diag = db.rows(f"SELECT diag, norm, reason FROM attempts WHERE learner=? AND diag IS NOT NULL AND diag!='skip' AND {where}",
                    learner, *args)
     since = (utcnow() - dt.timedelta(days=7)).isoformat()
-    delta = sum(s for at, s, _ in ledger_deltas(learner) if at >= since)
+    delta = sum(s for at, s, _ in ledger_deltas(learner, subject) if at >= since)
     b = blind(learner, subject)
     return {
         "subject": subject,
@@ -808,8 +814,9 @@ def counts(learner: str, tz: int = 0, subject: str = "math") -> dict:
         "unchecked": sum(1 for t in fixed if not t["checks"]),
         "dismissed": db.one(f"SELECT COUNT(*) AS n FROM traps WHERE learner=? AND closed IS NOT NULL"
                             f" AND closed_how='dismissed' AND {where}", learner, *args)["n"],
-        "recovered_month": db.one("SELECT COALESCE(SUM(pts),0) AS n FROM trap_log WHERE learner=? AND event='fixed'"
-                                  " AND at>=?", learner, month)["n"],
+        "recovered_month": sum(r["pts"] or 0 for r in db.rows(
+            "SELECT template, pts FROM trap_log WHERE learner=? AND event='fixed' AND at>=?", learner, month)
+            if deps.subject_of(r["template"]) == subject),
         "due": sum(1 for c in progress.due_rechecks(learner, today.isoformat()) if c["topic"] in args),
         "due_left": d["left"], "due_total": d["total"], "waiting": d["waiting"],
         "answers": db.one(f"SELECT COUNT(*) AS n FROM attempts WHERE learner=? AND void IS NULL AND {where}",
@@ -817,10 +824,12 @@ def counts(learner: str, tz: int = 0, subject: str = "math") -> dict:
         "redo_questions": sum(per_template.values()), "redo_templates": len(per_template),
         "stake_total": sum(x for x in stakes if x) if any(x is not None for x in stakes) else None,
         "open_week_delta": delta,
-        "diag_n": len(diag), "diag_right": sum(1 for r in diag if r["diag"] == r["norm"]),
+        # named right: the miss's norm, or (an R&W miss files unnamed) its picked option's reason (api_review.why)
+        "diag_n": len(diag), "diag_right": sum(1 for r in diag if r["diag"] in (r["norm"], progress.norm(r["reason"] or ""))),
         "worksheets_waiting": db.one("SELECT COUNT(*) AS n FROM sessions WHERE learner=? AND kind='drill'"
                                      " AND finished IS NULL AND abandoned IS NULL AND json_valid(cfg)"
-                                     " AND json_extract(cfg,'$.source')='worksheet'", learner)["n"],
+                                     " AND json_extract(cfg,'$.source')='worksheet'"
+                                     " AND COALESCE(json_extract(cfg,'$.subject'),'math')=?", learner, subject)["n"],
     }
 
 
@@ -867,9 +876,15 @@ def trapsheet(learner: str, n: int = 10, subject: str = "math") -> dict:
         kind = trap_kind(t, None)
         example = None
         try:
-            ex = api_bank.example(t["template"], want=t["norm"] if progress.named(t["norm"]) else None)
+            if t["norm"] == "" and deps.subject_of(t["topic"]) == "rw" and t["seed"] is not None:
+                # an R&W trap prints the question it was missed on: a written bank item is spent once shown,
+                # and every print of the sheet would spend ten more
+                card = practice.Card.of(t["template"], t["seed"], drill.generate(t["template"], t["seed"]), t["topic"])
+                ex = {"seed": t["seed"], "question": practice.to_question(card, 1), "trap_index": None}
+            else:
+                ex = api_bank.example(t["template"], want=t["norm"] if progress.named(t["norm"]) else None, learner=learner)
             q = ex["question"]
-            example = {"seed": ex["seed"], "stem": q["stem"], "choices": q["choices"], "latex": q.get("latex"),
+            example = {"seed": ex["seed"], "text": q.get("text"), "stem": q["stem"], "choices": q["choices"], "latex": q.get("latex"),
                        "figure": q.get("figure"), "table": q.get("table"), "type": q["type"],
                        "answer": q["answer"], "trap_index": ex["trap_index"],
                        "rationale": (q["rationale"] or "").split(". ")[0].rstrip(".") + "." if q.get("rationale") else None}
@@ -925,7 +940,9 @@ def ledger(learner: str, tz: int = 0, weeks: int = 12, subject: str = "math") ->
     first = _week_start(today, p.get("week_start", "mon")) - dt.timedelta(weeks=weeks - 1)
     rows: dict[dt.date, dict] = {first + dt.timedelta(weeks=i): {"opened": 0, "relapsed": 0, "fixed": 0, "net": 0}
                                  for i in range(weeks)}
-    for r in db.rows("SELECT event, at FROM trap_log WHERE learner=? AND at>=?", learner, utc_of(first, tz)):
+    for r in db.rows("SELECT event, at, template FROM trap_log WHERE learner=? AND at>=?", learner, utc_of(first, tz)):
+        if deps.subject_of(r["template"]) != subject:
+            continue
         w = _week_start(local_day(r["at"], tz), p.get("week_start", "mon"))
         if w in rows:
             if r["event"] == "open":
@@ -934,7 +951,7 @@ def ledger(learner: str, tz: int = 0, weeks: int = 12, subject: str = "math") ->
                 rows[w]["relapsed"] += 1
             elif r["event"] == "fixed":
                 rows[w]["fixed"] += 1
-    for at, sign, _ in ledger_deltas(learner):
+    for at, sign, _ in ledger_deltas(learner, subject):
         w = _week_start(local_day(at, tz), p.get("week_start", "mon"))
         if w in rows:
             rows[w]["net"] += sign

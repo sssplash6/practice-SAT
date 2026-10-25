@@ -157,14 +157,16 @@ def summary(student: str) -> dict:
     tot = lambda xs, k: sum(x[k] for x in xs)
     skills = [s for s in d["skills"] if s["answers"] >= MIN_ANSWERS]
     by = sorted(skills, key=lambda s: s["accuracy"])
-    tests = [{k: t[k] for k in ("finished", "kind", "number", "right", "asked", "low", "high")} for t in d["tests"]["sittings"][:5]]
-    return {"name": p["name"] or "", "last": a["last"], "joined": p["joined"],
+    tests = [{k: t.get(k) for k in ("finished", "kind", "subject", "number", "right", "asked", "low", "high", "parts")}
+             for t in d["tests"]["sittings"][:5]]
+    # scores side by side: Total, R&W, Math, each now (a 20-point range) and target; goal.target stays the Math one
+    return {"name": p["name"] or "", "last": a["last"], "joined": p["joined"], "scores": d["scores"],
             "goal": {"target": p["target"], "exam_date": p["exam_date"], "has_plan": p["has_plan"]},
             "totals": {"answers": a["answers"], "accuracy": a["accuracy"], "minutes": a["minutes"], "active_days": a["active_days"],
                        "streak": a["streak"], "tests": len(d["tests"]["sittings"])},
             "week": {"answers": tot(this, "answers"), "right": tot(this, "right"), "active_days": sum(1 for x in this if x["answers"]),
                      "prev_answers": tot(prev, "answers")},
             "last14": [{"day": x["day"], "answers": x["answers"]} for x in days[-14:]],
-            "focus": [{"name": s["name"], "accuracy": s["accuracy"]} for s in by[:3]],
-            "strong": [{"name": s["name"], "accuracy": s["accuracy"]} for s in reversed(by[-3:]) if s["accuracy"] >= 0.7],
+            "focus": [{"name": s["name"], "subject": s["subject"], "accuracy": s["accuracy"]} for s in by[:3]],
+            "strong": [{"name": s["name"], "subject": s["subject"], "accuracy": s["accuracy"]} for s in reversed(by[-3:]) if s["accuracy"] >= 0.7],
             "tests": tests, "open_mistakes": d["mistakes"]["open"]}

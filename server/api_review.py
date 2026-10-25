@@ -23,6 +23,7 @@ import secrets
 import statistics
 from collections import Counter, defaultdict
 from functools import lru_cache
+from typing import Literal
 
 from fastapi import APIRouter, Depends, Header, HTTPException, Query, Request
 from fastapi.responses import RedirectResponse, Response
@@ -485,7 +486,8 @@ def redo(subject: str = "math", topics: str | None = None, difficulty: str | Non
     groups: dict[str, dict] = {}
     for item in items:
         key = (item["topic"] if group == "topic" else item["domain"] if group == "domain"
-               else (item["habit"] or {}).get("id", "other") if group == "habit" else item["norm"])
+               else (item["habit"] or {}).get("id", "other") if group == "habit"
+               else item["template"] if item["norm"] == "" and subject == "rw" else item["norm"])   # an R&W miss: its type
         g = groups.setdefault(key, {"key": key, "name": item["name"] if group == "topic" else
                                     item["domain"] if group == "domain" else
                                     (item["habit"] or {}).get("name", "Other") if group == "habit" else item["label"],
@@ -517,7 +519,7 @@ def _meta(template: str, seed: int, topic: str, names: dict) -> dict:
             "name": name.name if name else topic, "domain": name.domain if name else None,
             "skill": review.cap(review.skill_of(template, seed)),
             "difficulty": q.get("difficulty"), "fmt": q.get("type"),
-            "stem": (q.get("stem") or "")[:160]}
+            "stem": (q.get("text") or q.get("stem") or "")[:160]}    # an R&W row starts with its passage
 
 
 def _filtered_page(items: list[dict], *, topics: str | None, difficulty: str | None,
@@ -637,10 +639,12 @@ def fixed(subject: str = "math", topics: str | None = None, difficulty: str | No
         miss = misses.get((t["template"], t["norm"]))
         opened = dt.datetime.fromisoformat(t["opened"])
         closed = dt.datetime.fromisoformat(t["closed"])
+        # an R&W mistake closes on clean answers anywhere in its skill (progress.record), so those prove it
+        on = ("topic", t["topic"]) if t["norm"] == "" and deps.subject_of(t["topic"]) == "rw" else ("template", t["template"])
         proven = {r["difficulty"] for r in db.rows(
-            "SELECT DISTINCT difficulty FROM attempts WHERE learner=? AND template=? AND correct=1"
+            f"SELECT DISTINCT difficulty FROM attempts WHERE learner=? AND {on[0]}=? AND correct=1"
             " AND repeat=0 AND flagged=0 AND guess=0 AND hints=0 AND void IS NULL AND disputed=0"
-            " AND at>=? AND at<=?", learner, t["template"], t["opened"], t["closed"])}
+            " AND at>=? AND at<=?", learner, on[1], t["opened"], t["closed"])}
         tiers = ("easy", "medium", "hard")
         points = db.one("SELECT pts FROM trap_log WHERE learner=? AND template=? AND norm=?"
                         " AND event='fixed' ORDER BY id DESC LIMIT 1", learner, t["template"], t["norm"])
@@ -885,7 +889,8 @@ def item(template: str, seed: int = Query(ge=0), x_learner: str | None = Header(
                 choices.append({"id": norm, "text": review.cap(reason)})
                 seen.add(norm)
         choices.extend({"id": k, "text": v} for k, v in
-                       (("misread", "I misread it"), ("slip", "Arithmetic slip"),
+                       (("misread", "I misread it"),
+                        ("slip", "A careless pick" if q.get("text") else "Arithmetic slip"),
                         ("gap", "I did not know how to start")))
         import random
         random.Random(last["id"]).shuffle(choices)
@@ -1073,7 +1078,8 @@ def why(body: Why, x_learner: str | None = Header(default=None)) -> dict:
     a = _own_attempt(learner, body.attempt_id)
     trap = db.one("SELECT * FROM traps WHERE learner=? AND template=? AND norm=?", learner,
                   a["template"], a["norm"])
-    return {"called": bool(a["diag"] and a["diag"] == a["norm"]), "norm": a["norm"],
+    # an R&W miss files unnamed (norm ""): naming it is picking the reason of the option chosen
+    return {"called": bool(a["diag"] and a["diag"] in (a["norm"], progress.norm(a["reason"] or ""))), "norm": a["norm"],
             "label": review.trap_label(trap) if trap else review.cap(a["reason"]),
             "cause": a["miss_kind"], "diag": a["diag"], "guess": bool(a["guess"])}
 
@@ -1082,6 +1088,7 @@ class Walk(BaseModel):
     session: str | None = Field(default=None, max_length=64)
     ids: list[int] | None = None
     new: bool = False
+    subject: Literal["math", "rw"] | None = None
 
 
 @router.post("/api/review/walk")
@@ -1123,9 +1130,13 @@ def walk(body: Walk, x_learner: str | None = Header(default=None)) -> dict:
                         "try": a["revealed_at"] is None, "diag": a["diag"]})
     if not body.new:
         entries.extend(x for x in blanks if deps.access(learner, x["template"], x["seed"]) == "reveal")
+    # one subject a walk (a set never mixes them): the one asked for, else the larger part
+    subject = body.subject or Counter(deps.subject_of(x["template"]) for x in entries).most_common(1)[0][0] \
+        if entries else body.subject
+    entries = [x for x in entries if deps.subject_of(x["template"]) == subject]
     if not entries:
         raise HTTPException(409, "no missed questions to walk")
-    sid = drill.create(learner, {"source": "review", "pool": "items", "exact": True,
+    sid = drill.create(learner, {"source": "review", "pool": "items", "exact": True, "subject": subject,
                                  "ids": [[x["template"], x["seed"]] for x in entries],
                                  "count": len(entries), "feedback": "instant"})
     row = db.one("SELECT cfg FROM sessions WHERE id=?", sid)
@@ -1236,7 +1247,11 @@ def spot(body: Spot, x_learner: str | None = Header(default=None)) -> dict:
                                            learner, t["template"]))
     cursor = (max(seen) + 1) if seen else 0
     found = None
-    for seed in range(cursor, cursor + 40):
+    # a seed offering this exact misconception is rare for some templates (well under
+    # 5 in 400); 40 tries left the outcome a coin flip on the learner's own seed history.
+    # 2000 tries is still well under half a second (question generation is cheap) and
+    # makes the miss rate negligible rather than roughly even
+    for seed in range(cursor, cursor + 2000):
         if seed in seen or deps._protected(learner, t["template"], seed):
             continue
         q = _card(t["template"], seed)

@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Results · SAT Freshman</title>
+<link rel="icon" href="/favicon.ico" sizes="32x32">
 <link rel="icon" href="/assets/mark.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
 <link rel="manifest" href="/manifest.webmanifest">
@@ -11,115 +12,151 @@
 <script src="/assets/head.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800;900&family=DM+Mono:wght@400;500&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap">
+<link rel="preload" href="/assets/fonts/Geist.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap">
 <link rel="stylesheet" href="/assets/ui.css">
 <style>
-  /* Results (spec 3.5 §2, reports.md SR21-SR24): where you stand, where the points go,
-     every sitting, then every skill. One region per idea; each keeps its frame. */
-  .rs { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 24px; }
-  .rs > * { grid-column: 1 / -1; min-width: 0; }
-  .rs > [hidden] { display: none; }
-  #estimate { grid-column: span 4; }
-  #overview { grid-column: span 8; }
-  .rs-head { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 12px; }
-  .rs-strip { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; padding: 10px 14px; border-radius: var(--radius); background: var(--tile-2); font: 500 14px var(--font); }
-  .rs-line { font: 400 15px/1.5 var(--font); color: var(--ink); text-wrap: pretty; }
-  .rs-line b, .rs-num { font-family: var(--mono); font-weight: 500; font-variant-numeric: tabular-nums; }
-  .rs-helper { font: 400 13.5px/1.45 var(--font); color: var(--soft); text-wrap: pretty; }
-  .rs-langs { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
-  .rs-lang { appearance: none; border: 0; cursor: pointer; display: grid; gap: 2px; justify-items: center; padding: 16px 8px; border-radius: 12px; background: var(--tile-2); color: var(--ink); font: 600 16px var(--font); }
-  .rs-lang small { font: 500 12px var(--font); color: var(--soft); }
-  .rs-lang[aria-busy="true"] { opacity: .5; cursor: progress; }
-  @media (hover: hover) and (pointer: fine) { .rs-lang:hover { box-shadow: inset 0 0 0 1.5px var(--amber); } }
-  @media (max-width: 420px) { .rs-langs { grid-template-columns: minmax(0, 1fr); } }
-  .rs-row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px; }
-  .rs-info { min-height: 24px; padding: 0 6px; margin-left: 2px; font: 500 14px/1 var(--font); color: var(--soft); }
-  .card-head .rs-headr { margin-left: auto; display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+  /* Results (spec 3.5 §2, reports.md SR21-SR24). Main: the estimate as the hero over its chart, every sitting,
+     trends, mistakes, skills. The right column (1280px+, sticky under the section chips) is one surface of rows:
+     the estimate's facts, totals, share. Below 1280 both columns dissolve into one list, the hero first. */
+  .rs { display: grid; gap: var(--card-gap); }
+  /* the title, the subject switch 12px under it (Both | Math | Reading and Writing), the header's primary at the right
+     across both rows: the title never moves when a subject tab adds the primary; 20px down to the content */
+  .rs-head { display: grid; grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: "title acts" "subj acts"; align-items: center; gap: 12px;
+    margin-bottom: calc(20px - var(--card-gap)); }
+  .rs-head > .h1 { grid-area: title; margin: 0; }
+  .rs-head > #headacts { grid-area: acts; }
+  .rs-head > .rs-subj { grid-area: subj; }
+  .rs-figrow > .hero-num { font-size: min(var(--fs-hero), 12vw); }     /* "1220–1240 /1600" fits a 390px phone */
+  #cols { --twocol-top: 64px; }
+  .rs-main { display: grid; gap: var(--card-gap); min-width: 0; }
+  #cols:not(:has(> #side > .rx-side > :not([hidden]))) { grid-template-columns: minmax(0, 1fr); }
+  #cols:not(:has(> #side > .rx-side > :not([hidden]))) > #side { display: none; }
+  @media (max-width: 1279px) {
+    .rs-main, #side, .rx-side { display: contents; }
+    #overview { order: 1; } #estimate { order: 2; } #sittings { order: 3; } #totals { order: 4; } #share { order: 5; }
+    #trends { order: 6; } #traps { order: 7; } #skills { order: 8; }
+    #estimate.rs-est { order: 0; }
+  }
+  @media (min-width: 1280px) {
+    /* the right column is one card (.rx-side): its parts meet at a hairline */
+    .rx-side { display: grid; border-radius: var(--radius-card); background: var(--raised); box-shadow: var(--shadow-1); }
+    .rx-side > :not([hidden]) { padding: 12px var(--card-pad); border-radius: 0; background: none; box-shadow: none; }
+    .rx-side > :not([hidden]) ~ :not([hidden]) { box-shadow: inset 0 1px 0 var(--line); }
+    .rx-side > :not([hidden]):not(:not([hidden]) ~ *) { padding-top: var(--card-pad); }
+    .rx-side > :not([hidden]):not(:has(~ :not([hidden]))) { padding-bottom: var(--card-pad); }
+  }
+  @media print { .rx-side { box-shadow: none; } }
+  .rs-strip { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; padding: 8px 12px; border-radius: var(--radius); background: var(--mat); font: 500 14px var(--font); }
+  .rs-line { font: 400 14.5px/1.5 var(--font); color: var(--ink); text-wrap: pretty; }
+  .rs-num { font-weight: 600; font-variant-numeric: tabular-nums; }
+  .rs-helper { font: 400 14px/1.45 var(--font); color: var(--soft); text-wrap: pretty; }
+  .rs-row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+  .card-head .rs-headr { margin-left: auto; display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 8px; align-items: center; min-width: 0; }
   .card-head .rs-headr .help:empty { display: none; }
-  /* Every sitting: the filter chips and the sort menu share one line beside the title instead of stacking */
-  @media (min-width: 760px) { #sittings .card-head { align-items: center; } #sittings .rs-headr, #sittings .rs-headr .rs-row { flex-wrap: nowrap; } #sittings .rs-headr .field { width: auto; min-width: 150px; } }
-  .rs-big { white-space: nowrap; font: 800 clamp(30px, 2.9vw, 38px)/1.05 var(--font); letter-spacing: -.03em; font-variant-numeric: tabular-nums; }
+  .card-head .rs-headr .chart-ctl { justify-content: flex-end; }
+  /* a number leads its panel: the figure at 28, its unit small on the same baseline */
+  .rs-fig { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0 6px; }
+  .rs-fig > b { font: 600 28px/1.05 var(--font); letter-spacing: -.02em; }
+  .rs-fig > span { font: 400 14.5px/1.35 var(--font); letter-spacing: 0; color: var(--soft); }
+
+  /* the hero (.card.hero): the estimate heads its chart (the hero number, the scale beside it, the change since), one
+     Range and Kinds button top right */
+  #overview > .rs-hd { align-items: flex-start; }
+  .rs-hero { flex: 1 1 0; display: grid; gap: 4px; min-width: 0; }   /* takes the room left of All sittings: a long chip wraps under the figure, the control stays top right */
+  .rs-hero > .k { display: flex; align-items: center; }
+  .rs-figrow { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 12px; }
+  .rs-figrow > .hero-num { white-space: nowrap; }
+  .rs-figrow > .hero-num > span:not(.sr) { font-variant-numeric: tabular-nums; }   /* a hovered sitting swaps in without a jump */
+  .rs-said { align-self: baseline; }        /* a hovered sitting's name sits where the change badge was */
+  /* the estimate's facts; a first test's card */
   .rs-est { display: grid; gap: 12px; align-content: start; }
-  .rs-facts { display: grid; gap: 6px; margin: 0; padding: 0; list-style: none; }
-  .rs-facts li { font: 400 14px/1.4 var(--font); color: var(--ink); }
-  .rs-facts li b { font: 500 14px var(--mono); }
-  #totals .stats { --cols: 4; }
-  .rs-bars { display: grid; gap: 8px; }
-  .rs-bar { display: grid; grid-template-columns: 150px minmax(0, 1fr) auto; gap: 12px; align-items: center; font: 500 14px var(--font); }
+  .rs-track { position: relative; display: block; height: 4px; border-radius: 2px; background: var(--track); }
+  .rs-track > b { position: absolute; top: 0; height: 100%; border-radius: 2px; background: var(--ink); }
+  .rs-track > i { position: absolute; top: -3px; width: 2px; height: 10px; margin-left: -1px; border-radius: 1px; background: var(--amber); }
+  #estimate > .quiet { margin-top: 4px; }
+  .rs-est > .empty { padding: 0; }
+  /* Totals: four rows, the rest behind one fold */
+  .rs-tmore { margin-top: 4px; }
+  .rs-tmore > .rx-kv { margin-top: 4px; }
+  .rs-share { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+
+  /* trends */
+  #trendtabs { margin-bottom: 12px; }
+  .rs-ph { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; margin-bottom: 12px; }
+  /* the rows share one grid (subgrid), so names never wrap and every track starts and ends at the same x */
+  .rs-bars { display: grid; grid-template-columns: max-content minmax(80px, 1fr) max-content; gap: 8px 16px; }
+  .rs-bar { grid-column: 1 / -1; display: grid; grid-template-columns: subgrid; align-items: center; min-height: 32px; font: 400 14.5px var(--font); }
   /* the skill's glyph beside its name, a two-line name wrapping beside the glyph, not under it */
   .rs-bar > span:first-child { display: flex; align-items: flex-start; gap: 6px; line-height: 1.3; }
   .rs-bar > span:first-child > svg, .rs-bar > span:first-child > .glyph { flex: none; margin-top: 1px; }
-  .rs-bar .t { height: 10px; border-radius: 5px; background: var(--tile-2); overflow: hidden; }
+  .rs-bar > :last-child { justify-content: flex-end; text-align: right; }   /* figures and Practise end on one edge */
+  .rs-bar .t { height: 8px; border-radius: 4px; background: var(--track); overflow: hidden; }
   .rs-bar .t i { display: block; height: 100%; width: calc(var(--rp) * 100%); background: var(--amber); }
-  .rs-dt { width: 100%; border-collapse: collapse; font: 500 13.5px var(--mono); }
-  .rs-dt th, .rs-dt td { padding: 10px 8px; text-align: left; border-top: 1px solid var(--line); }
-  .rs-dt thead th { border-top: 0; font: 600 12px var(--font); color: var(--soft); }
-  .rs-dt td[data-s] { background: color-mix(in srgb, var(--amber) calc(var(--s) * 38%), transparent); border-radius: 6px; }
-  .rs-dt th[scope=row] { font: 600 13.5px var(--font); }
-  .rs-list { display: grid; gap: 10px; }
-  .rs-group > h3 { font: 700 12px/1 var(--font); letter-spacing: .08em; text-transform: uppercase; color: var(--soft); margin: 18px 0 10px; }
-  .rs-group > h3 span { text-transform: none; letter-spacing: 0; font: 500 12.5px var(--mono); margin-left: 8px; }
-  .rs-trap { display: grid; grid-template-columns: 22px minmax(0, 1fr) auto; gap: 4px 12px; padding: 12px 0; border-top: 1px solid var(--line); align-items: start; }
+  .rs-dt { width: 100%; border-collapse: collapse; font: 400 14px var(--font); font-variant-numeric: tabular-nums; }
+  .rs-dt th, .rs-dt td { padding: 8px; text-align: left; border-top: 1px solid var(--line); }
+  .rs-dt thead th { border-top: 0; font: 500 12.5px var(--font); color: var(--soft); }
+  .rs-dt td[data-s] { background: color-mix(in srgb, var(--amber) calc(var(--s) * 38%), transparent); }
+  .rs-dt th[scope=row] { font: 600 14px var(--font); }
+  .rs-dt td .rs-pct { display: flex; align-items: baseline; gap: 4px; }
+  .rs-dt td .rs-pct b { font: 600 14.5px/1.2 var(--font); }
+  .rs-dt td .rs-arrow { font-size: 11.5px; color: var(--soft); }
+  .rs-dt td .meta { margin-top: 2px; }
+
+  /* sittings */
+  .rs-list { display: grid; }
+  .rs-wk { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0 4px; margin: 12px 0 2px; font: 500 12.5px/1.3 var(--font); color: var(--ink); }
+  .rs-list > .rs-wk:first-child { margin-top: 0; }
+  .rs-group { margin-bottom: 8px; }
+  .rs-more { margin-top: 8px; }
+
+  /* mistakes: one row each, the label over one meta line; Fix shows on hover or focus */
+  .rs-trap { display: grid; grid-template-columns: 20px minmax(0, 1fr) auto; gap: 0 12px; align-items: center; min-height: 44px; padding: 6px 0; border-top: 1px solid var(--line); }
   .rs-trap:first-child { border-top: 0; }
-  .rs-trap h4 { font: 600 15px/1.35 var(--font); }
+  .rs-trap h4 { font: 600 14.5px/1.35 var(--font); }
   .rs-trap .glyph { width: 20px; height: 20px; }
-  .rs-trap .st { font: 500 13px var(--font); }
-  .rs-trap .st.open::before { content: ""; display: inline-block; width: 7px; height: 7px; margin-right: 6px; border-radius: 50%; background: var(--amber); vertical-align: 1px; }
-  .rs-skills { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 10px; }
-  .rs-skill { display: grid; gap: 8px; align-content: start; padding: 14px; border-radius: 12px; background: var(--tile-2); border: 0; text-align: left; font: inherit; color: var(--ink); cursor: pointer; }
-  .rs-skill:hover { box-shadow: inset 0 0 0 1.5px var(--line); }
-  .rs-skill b { display: flex; align-items: center; gap: 8px; font: 600 14.5px/1.3 var(--font); }
-  .rs-skill .glyph { width: 18px; height: 18px; flex: none; }
-  .rs-skill .badge { justify-self: start; }
-    .rs-dom-h { grid-column: 1 / -1; font: 700 12px/1 var(--font); letter-spacing: .08em; text-transform: uppercase; color: var(--soft); margin-top: 8px; }
-  /* the four domain headings: in the ink colour, larger, with an orange tick, so the grid reads as four groups */
-  #skills .rs-dom-h { grid-column: 1 / -1; display: flex; align-items: center; gap: 10px; font: 700 15px/1.2 var(--font); letter-spacing: .02em; text-transform: none; color: var(--ink); margin-top: 18px; padding-bottom: 8px; border-bottom: 1px solid var(--line); }
-  #skills .rs-dom-h::before { content: ""; width: 4px; height: 18px; border-radius: 2px; background: var(--amber); flex: none; }
-  #skills .rs-dom-h:first-child { margin-top: 4px; }
-  .rs-cmp { position: sticky; bottom: 16px; z-index: 5; display: flex; flex-wrap: wrap; align-items: center; gap: 10px; padding: 10px 14px; border-radius: 12px; background: var(--ink); color: var(--on-ink); }
-  .rs-cmp[hidden] { display: none; }
+  .rs-trap .st { white-space: nowrap; }      /* the dot never parts from its status on a phone */
+  .rs-trap .st.open::before { content: ""; display: inline-block; width: 6px; height: 6px; margin-right: 5px; border-radius: 50%; background: var(--amber); vertical-align: 1px; }
+
+  /* skills: rows, two columns where they fit; a tap opens the skill's stats */
+  .rs-skills { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 420px), 1fr)); column-gap: 24px; }
+  .rs-skill { display: grid; grid-template-columns: 18px minmax(0, 1fr) 48px 44px 56px; gap: 8px; align-items: center; min-height: var(--row-h); padding: 0 8px; margin: 0 -8px;
+    border: 0; border-top: 1px solid var(--line); background: none; text-align: left; font: inherit; color: var(--ink); cursor: pointer; }
+  @media (hover: hover) and (pointer: fine) { .rs-skill:hover { background: var(--hover); } }
+  @media (pointer: coarse) { .rs-skill { min-height: var(--touch); } }
+  .rs-skill .glyph { width: 18px; height: 18px; }
+  .rs-sn { font: 500 14.5px/1.3 var(--font); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .rs-sv { font: 500 12.5px var(--font); color: var(--soft); text-align: right; font-variant-numeric: tabular-nums; }
+  .rs-open { justify-self: end; font: 500 12.5px var(--font); color: var(--soft); white-space: nowrap; font-variant-numeric: tabular-nums; }
+  .rs-open::before { content: ""; display: inline-block; width: 6px; height: 6px; margin-right: 5px; border-radius: 50%; background: var(--amber); vertical-align: 1px; }
+  .rs-dom-h { grid-column: 1 / -1; margin: 16px 0 4px; font: 600 14.5px/1.3 var(--font); color: var(--ink); }
+  .rs-dom-h:first-child { margin-top: 0; }
+
+  /* all clear: the mark's four corners beside the line */
+  .rs-clear { display: flex; align-items: center; gap: 16px; }
+  .rs-clear .spot { width: 56px; height: 56px; }
+  .rs-langs { display: grid; gap: 4px; }
+  .rs-langs > [aria-busy="true"] { opacity: .5; cursor: progress; }
+  .rs-cmp { position: sticky; bottom: 16px; z-index: 5; display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; margin-top: var(--card-gap); padding: 8px 12px; border-radius: var(--radius-card); background: var(--ink); color: var(--on-ink); box-shadow: var(--shadow-float); }
   .rs-cmp .quiet { color: var(--on-ink); }
-  #trendtabs { margin-bottom: 16px; }
-  @media (max-width: 759px), (pointer: coarse) {
-    .rs-info { position: relative; }
-    .rs-info::before { content: ""; position: absolute; left: 50%; top: 50%; width: max(100%, 44px); height: max(100%, 44px); transform: translate(-50%, -50%); }
-  }
-  @media (max-width: 1099px) {
-    #estimate, #overview { grid-column: 1 / -1; }
-  }
   @media (max-width: 759px) {
-    .rs { gap: 16px; }
-    #totals .stats { --cols-phone: 2; }
-    .rs-bar { grid-template-columns: minmax(0, 1fr) auto; }
+    .rs-bars { grid-template-columns: minmax(0, 1fr) auto; }
     .rs-bar .t { grid-column: 1 / -1; order: 3; }
-    .card-head .rs-headr { flex: 1 1 100%; margin-left: 0; min-width: 0; }
+    .card-head .rs-headr { flex: 1 1 100%; justify-content: flex-start; margin-left: 0; }
+    /* a phone: the primary goes under the switch, full width (the title and the switch keep their place) */
+    .rs-head { grid-template-columns: minmax(0, 1fr); grid-template-areas: "title" "subj"; }
+    .rs-head > #headacts { grid-area: auto; }     /* its own row after the switch, only when it holds the primary */
+    .rs-head > #headacts:empty { display: none; }
     .card-head .rs-headr .seg { max-width: 100%; overflow-x: auto; }
+    .card-head .rs-headr .chart-ctl { justify-content: flex-start; }
     .rs-dt .old { display: none; }
-    .rs-trap { grid-template-columns: 22px minmax(0, 1fr); }
-    .rs-trap > .rs-row { grid-column: 2; }
     .rs-cmp { bottom: calc(72px + env(safe-area-inset-bottom, 0px)); }
   }
   @media print {
-    #bar, #tabs, .rs-cmp { display: none !important; }
-    .rs { display: block; }
-    .rs > section { break-inside: avoid-page; margin-bottom: 16px; }
+    #bar, #tabs, .rs-cmp, #share, #headacts { display: none !important; }
+    .rs, .rs-main { display: block; }
+    #cols section { break-inside: avoid-page; margin-bottom: 16px; }
   }
-  .rs-est { display: flex; align-items: center; gap: 10px; }
-  .rs-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
-  .rs-track { position: relative; height: 8px; margin: 40px 0 26px; border-radius: 4px; background: var(--mat); }
-  .rs-track .band { position: absolute; top: 0; height: 100%; border-radius: 3px; background: var(--ink); }
-  .rs-track .t { position: absolute; top: -4px; width: 2px; height: 14px; margin-left: -1px; background: var(--amber); }
-  .rs-track .tl { position: absolute; top: -22px; transform: translateX(-50%); font: 600 11.5px var(--mono); color: var(--amber-deep); }
-  .rs-stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); margin-top: 8px; padding-top: 20px; border-top: 1px solid var(--line); }
-  .rs-st { display: grid; gap: 4px; align-content: start; padding: 0 14px; }
-  .rs-st:first-child { padding-left: 0; }
-  .rs-st + .rs-st { border-left: 1px solid var(--line); }
-  .rs-st .k { margin: 0; }
-  .rs-st b { font: 600 17px/1.2 var(--mono); }
-  .rs-dt td .rs-pct { display: flex; align-items: baseline; gap: 6px; }
-  .rs-dt td .rs-pct b { font: 700 16px/1.2 var(--mono); }
-  .rs-dt td .rs-arrow { font-size: 11px; color: var(--soft); }
-  .rs-dt td .meta { font: 500 11.5px var(--mono); margin-top: 1px; }
 </style>
 </head>
 <body data-page="results">
@@ -130,22 +167,32 @@
     <header class="rs-head" id="head">
       <h1 class="h1">Results</h1>
       <div class="rs-row" id="headacts"></div>
+      <div class="rs-subj" id="subject"></div>
     </header>
-    <section id="estimate" class="card" aria-label="Current estimate"></section>
-    <section id="overview" class="card" aria-label="Score over time"></section>
-    <section id="sittings" class="card"></section>
-    <section id="totals" aria-label="Totals"></section>
-    <section id="trends" class="card" hidden aria-label="Trends">
-      <div class="card-head"><h2>Trends</h2></div>
-      <div id="trendtabs"></div>
-      <div id="gap" hidden></div>
-      <div id="days" hidden></div>
-      <div id="why" hidden></div>
-      <div id="split" hidden></div>
-      <div id="domtrend" hidden></div>
-    </section>
-    <section id="traps" class="card" hidden></section>
-    <section id="skills" class="card"></section>
+    <div class="twocol" id="cols">
+      <div class="rs-main" id="rsmain" data-m="stagger">
+        <section id="overview" class="card" aria-label="Score over time"></section>
+        <section id="sittings" class="card"></section>
+        <section id="trends" class="card" hidden aria-label="Trends">
+          <div class="card-head"><h2>Trends</h2></div>
+          <div id="trendtabs"></div>
+          <div id="gap" hidden></div>
+          <div id="days" hidden></div>
+          <div id="why" hidden></div>
+          <div id="split" hidden></div>
+          <div id="domtrend" hidden></div>
+        </section>
+        <section id="traps" class="card" hidden></section>
+        <section id="skills" class="card"></section>
+      </div>
+      <aside class="twocol-side" id="side" aria-label="Where you stand" data-m="stagger">
+        <div class="rx-side" id="sidecard">
+          <section id="estimate" class="card" aria-label="Current estimate"></section>
+          <section id="totals" class="card" aria-label="Totals"></section>
+          <div class="rs-share" id="share" hidden></div>
+        </div>
+      </aside>
+    </div>
   </div>
   <div class="rs-cmp" id="cmpbar" hidden></div>
 </main>

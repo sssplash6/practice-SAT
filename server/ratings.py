@@ -73,10 +73,18 @@ def level(template: str, tier: str) -> dict:
     return {"level": level_of(rating), "rating": round(rating), "n": n, "rough": n < MEASURED}
 
 
-def _seed_rating(learner: str) -> tuple[float, str]:
-    row = db.one("SELECT current FROM learners WHERE id=?", learner)
-    if row and row["current"]:
-        return max(700.0, min(1500.0, 1100 + 1.2 * (row["current"] - 530))), "score"
+def _seed_rating(learner: str, topic: str = "") -> tuple[float, str]:
+    """From the section's own score: Math's starting score for a Math skill; for an R&W skill the
+    latest R&W sitting (or logged Bluebook score), else the R&W score the student typed."""
+    from . import deps
+    row = db.one("SELECT current, rw_now FROM learners WHERE id=?", learner)
+    score = row["current"] if row else None
+    if deps.subject_of(topic) == "rw":
+        from . import estimate
+        latest = estimate.estimate(learner, "rw")["latest"]
+        score = latest["mid"] if latest else row["rw_now"] if row else None
+    if score:
+        return max(700.0, min(1500.0, 1100 + 1.2 * (score - 530))), "score"
     return 1000.0, "none"
 
 
@@ -86,7 +94,7 @@ def skill(learner: str, topic: str, seed: str | None = None) -> dict:
     r = db.one("SELECT rating,n,seed FROM skill_ratings WHERE learner=? AND topic=?", learner, topic)
     if r:
         return dict(r)
-    rating, how = _seed_rating(learner)
+    rating, how = _seed_rating(learner, topic)
     if db.is_sample(learner):
         return {"rating": rating, "n": 0, "seed": seed or how}
     db.run("INSERT OR IGNORE INTO skill_ratings(learner,topic,rating,n,seed) VALUES (?,?,?,0,?)",
@@ -143,25 +151,30 @@ def structural_priors(seeds: int = SURVEY_SEEDS) -> dict[tuple[str, str], float]
     """C13's prior for every (template, tier) the bank can make: the structural
     score (+50 a grid-in, +25 a figure or table, +25 per rationale sentence
     above the tier's median) ranks the pairs of a tier, and the rank places
-    each in the tier's SPREAD."""
+    each in the tier's SPREAD. Each subject ranks on its own: R&W has no grid-ins, and its tables and
+    figures are reading material, not extra steps, so an R&W pair ranks on its rationale alone."""
     from satbank.registry import generate, templates
+    from . import deps
     seen: dict[tuple[str, str], list[tuple[int, int, int]]] = defaultdict(list)
     for t in templates():
+        rw = deps.subject_of(t) == "rw"
         for seed in range(seeds):
             try:
                 it = generate(t, seed)
             except Exception:
                 continue
             sentences = max(1, len(_SENTENCE.findall(it.rationale or "")))
-            seen[(t, it.difficulty)].append((it.fmt == "spr", bool(it.figure or it.table), sentences))
-    median = {tier: statistics.median([s for (t, ti), rows in seen.items() if ti == tier for *_, s in rows] or [1])
-              for tier in TIER_PRIOR}
+            seen[(t, it.difficulty)].append((not rw and it.fmt == "spr", not rw and bool(it.figure or it.table),
+                                             sentences))
     out = {}
-    for tier, (lo, hi) in SPREAD.items():
-        scored = sorted((statistics.mean(50 * spr + 25 * pic + 25 * (s - median[tier]) for spr, pic, s in rows), t)
-                        for (t, ti), rows in seen.items() if ti == tier)
-        for i, (_, t) in enumerate(scored):
-            out[(t, tier)] = lo + (hi - lo) * (i + 0.5) / len(scored)
+    for subject in ("math", "rw"):
+        mine = {k: rows for k, rows in seen.items() if deps.subject_of(k[0]) == subject}
+        for tier, (lo, hi) in SPREAD.items():
+            median = statistics.median([s for (t, ti), rows in mine.items() if ti == tier for *_, s in rows] or [1])
+            scored = sorted((statistics.mean(50 * spr + 25 * pic + 25 * (s - median) for spr, pic, s in rows), t)
+                            for (t, ti), rows in mine.items() if ti == tier)
+            for i, (_, t) in enumerate(scored):
+                out[(t, tier)] = lo + (hi - lo) * (i + 0.5) / len(scored)
     return out
 
 
@@ -220,11 +233,15 @@ def replay() -> int:
 
 def backfill() -> None:
     """Startup: priors once, then the replay once (kv flags)."""
-    for flag, fn in (("backfill:item_priors", write_priors), ("backfill:ratings", replay)):
-        if db.one("SELECT 1 FROM kv WHERE k=?", flag):
+    # item_priors_rw: the priors once more after R&W pairs began ranking on their own (only unanswered
+    # pairs move); a fresh database writes them once and sets both flags
+    for flags, fn in ((("backfill:item_priors_rw", "backfill:item_priors"), write_priors),
+                      (("backfill:ratings",), replay)):
+        if db.one("SELECT 1 FROM kv WHERE k=?", flags[0]):
             continue
         fn()
-        db.run("INSERT OR REPLACE INTO kv(k,v) VALUES (?,?)", flag, now())
+        for flag in flags:
+            db.run("INSERT OR REPLACE INTO kv(k,v) VALUES (?,?)", flag, now())
 
 
 if __name__ == "__main__":

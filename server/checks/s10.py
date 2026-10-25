@@ -6,6 +6,7 @@ import json
 import os
 import secrets
 import datetime as dt
+from contextlib import nullcontext
 
 from fastapi.testclient import TestClient
 
@@ -14,13 +15,15 @@ from server import db, practice, progress
 from server.app import app
 
 
-def main() -> None:
-    path = os.environ.get("SATF_DB", "")
-    assert path.endswith("/server/s10.db"), "set SATF_DB=$PWD/server/s10.db"
+def main(client: TestClient | None = None) -> None:
+    # test_flow.py's check(c) discovery shares its own client (and its connection);
+    # a fresh TestClient here would serve requests off a second, separate db
+    # connection, which a WAL reader can leave briefly blind to the main thread's
+    # own writes (the trap this check files below).
     owner = "a:s10check" + secrets.token_hex(5)
     outsider = "a:s10other" + secrets.token_hex(5)
     h, other = {"X-Learner": owner}, {"X-Learner": outsider}
-    with TestClient(app) as c:
+    with TestClient(app) if client is None else nullcontext(client) as c:
         def call(method, path, *, headers=h, want=200, **kwargs):
             response = c.request(method, path, headers=headers, **kwargs)
             assert response.status_code == want, (path, response.status_code, response.text)
@@ -167,8 +170,12 @@ def main() -> None:
 
 def check(client: TestClient) -> None:
     """Entry point used by server/test_flow.py's check discovery."""
-    main()
+    main(client)
 
 
 if __name__ == "__main__":
+    # a safety net for standalone runs only: main() otherwise shares whatever db
+    # the caller (test_flow.py's check(c) discovery) already pointed db.DB_PATH at
+    path = os.environ.get("SATF_DB", "")
+    assert path.endswith("/server/s10.db"), "set SATF_DB=$PWD/server/s10.db"
     main()

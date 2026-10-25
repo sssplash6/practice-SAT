@@ -15,7 +15,7 @@ from collections import Counter
 
 from fastapi.testclient import TestClient
 
-from server import db, estimate, plan, practice, prefs, progress
+from server import api_me, db, estimate, plan, practice, prefs, progress
 from server.app import app
 
 logging.getLogger("httpx").setLevel(logging.WARNING)
@@ -53,11 +53,13 @@ def study_after(days: list[dict], day: str) -> dict:
 def check_empty_preview_and_validation(client: TestClient, exam: dt.date) -> tuple[str, dict]:
     learner = token()
     empty = call(client, "GET", "/api/plan", learner=learner)
-    assert empty["active"] is None and empty["bank"]["topics"] == 19
-    assert empty["bank"]["templates"] == sum(map(len, practice.catalogue()["by_topic"].values())) and empty["bank"]["example"]["label"]
-    assert empty["proposal"]["cfg"]["measure"] is True
+    assert empty["active"] is None and empty["bank"]["topics"] == 29        # both sections: 19 Math, 10 R&W
+    assert empty["bank"]["templates"] == sum(len(v) for k, v in practice.catalogue()["by_topic"].items()
+                                             if k in plan.TOPICS or k in plan.topics_of("rw")) and empty["bank"]["example"]["label"]
+    assert empty["proposal"]["cfg"]["measure"] is True and empty["proposal"]["cfg"]["rw_target"] == 600
     assert [t["kind"] for t in empty["proposal"]["preview"]["sample_day"]["tasks"][:2]] == ["test", "map"]
-    cfg = base(exam, focus={"Geometry and Trigonometry": "focus", "Algebra": "strong"})
+    assert empty["proposal"]["preview"]["sample_day"]["tasks"][0]["subject"] == "math"     # Math is measured first
+    cfg = base(exam, focus={"Geometry and Trigonometry": "focus", "Algebra": "strong"}, rw_target=650)
     t = time.perf_counter()
     p = call(client, "POST", "/api/plan/preview", cfg, learner)
     assert time.perf_counter() - t < .6
@@ -99,13 +101,39 @@ def check_create_schedule(client: TestClient, learner: str, cfg: dict, exam: dt.
     assert rehearsals and len(rehearsals) <= 2
     assert all((exam - dt.date.fromisoformat(d["date"])).days >= 6 for d in rehearsals)
     for d in rehearsals:
+        # a dress rehearsal is a full SAT: both sections, the break, in one sitting
         test = next(t for t in d["tasks"] if t["kind"] == "test")
-        assert test["start"]["body"]["pause"] is False and test["count"] == 44
-    assert all(t["subject"] in ("math", "rw") for d in days for t in d["tasks"])
+        assert test["start"]["body"] == {"kind": "full", "timed": True} and test["count"] == 98
+        assert test["subject"] == "both" and test["minutes"] == plan.FULL_MINUTES
+    assert all(t["subject"] in ("math", "rw", "both") for d in days for t in d["tasks"])
+    # other tests take turns, R&W first, and carry their subject to /api/mock/new
+    tests = [t for d in days for t in d["tasks"] if t["kind"] == "test" and not t.get("rehearsal")
+             and t["start"]["path"] == "/api/mock/new"]
+    assert [t["subject"] for t in tests[:2]] == ["rw", "math"], [t["subject"] for t in tests[:4]]
+    # no R&W score given: the first study day measures R&W with its diagnostic
+    first = next(d for d in days if d["kind"] in ("practice", "test"))
+    assert first["test"] == "diagnostic" and first["tasks"][0]["start"] == {"path": "/api/session", "body": {"subject": "rw"}}
+    assert tests[0]["start"]["body"]["subject"] == "rw" and "subject" not in tests[1]["start"]["body"]
+    assert all("task" not in t["start"]["body"] and "pause" not in t["start"]["body"] for t in tests)
+    assert tests[0]["minutes"] == 32 and tests[0]["count"] == 27 and tests[1]["minutes"] == 35
     for d in days:
         if d["budget"]:
             assert d["budget"]["q"] >= 0
             assert sum(t["minutes"] for t in d["tasks"] if t.get("counted")) <= d["minutes"] + .2, d["date"]
+    # every practice day holds both subjects, each drill saying its subject
+    practice_day = next(d for d in days if d["kind"] == "practice" and d["minutes"] >= 45)
+    assert {t["subject"] for t in practice_day["tasks"] if t["kind"] in ("focus", "map")} == {"math", "rw"}
+    rw_focus = next(t for t in practice_day["tasks"] if t["kind"] == "focus" and t["subject"] == "rw")
+    assert rw_focus["id"].endswith(":focus:rw") and rw_focus["start"]["body"]["subject"] == "rw"
+    assert rw_focus["topics"] and all(t.startswith("rw_") for t in rw_focus["topics"])
+    assert not any(t.get("type") == "rw" for d in days for t in d["tasks"])       # no more "On your own" rows
+    # every drill body starts as it stands: no plan-only fields (coverage pins stay on the task), the Map
+    # names the skills it probes, the task ids pass the drill's check
+    assert not any("pins" in ((t.get("start") or {}).get("body") or {}) for d in days for t in d["tasks"])
+    maps = [t for d in days for t in d["tasks"] if t["kind"] == "map"]
+    assert maps and all(t["start"]["body"]["topics"] for t in maps)
+    for t in (rw_focus, maps[0]):                   # (another learner, so this plan's tasks stay untouched)
+        assert call(client, "POST", "/api/drill", t["start"]["body"], token())["id"]
     for d in days[:20]:
         assert call(client, "GET", f"/api/plan/day/{d['date']}", learner=learner)["date"] == d["date"]
     call(client, "GET", f"/api/plan/day/{(exam + dt.timedelta(days=1)).isoformat()}", learner=learner, status=404)
@@ -129,21 +157,28 @@ def check_allocation_and_time(learner: str, cfg: dict, payload: dict) -> None:
         topics = allocated.get(d["date"], [])
         assert not any(t in recent[-1] and t in recent[-2] for t in topics) if len(recent) >= 2 else True
         recent.append(set(topics))
-    pins = plan.pin_schedule(learner, cfg, start, exam, payload["active"]["id"])
-    assert all(len(v) <= 1 and v[0]["count"] == 2 for v in pins.values())
-    assert all(p["tier"] in ("easy", "medium", "hard") for v in pins.values() for p in v)
-    pre_final_slots = sum(plan._slots(math.floor(d["minutes"] * 60 / 95)) for d in payload["days"]
-                          if d["kind"] == "practice" and d["phase"] != "Final")
-    assert len(pins) <= .3 * pre_final_slots + 1
+    assert any(t.startswith("rw_") for v in allocated.values() for t in v)
+    share = plan.split(cfg)
+    for subject in ("math", "rw"):
+        pins = plan.pin_schedule(learner, cfg, start, exam, payload["active"]["id"], subject)
+        assert all(len(v) <= 1 and v[0]["count"] == 2 for v in pins.values())
+        assert all(p["tier"] in ("easy", "medium", "hard") and p["topic"] in plan.topics_of(subject)
+                   for v in pins.values() for p in v)
+        pre_final_slots = sum(plan._slots(plan._practice_q(cfg, d["minutes"], None, subject, share[subject]))
+                              for d in payload["days"] if d["kind"] == "practice" and d["phase"] != "Final")
+        assert len(pins) <= .3 * pre_final_slots + 1
     coverage = payload["coverage"]["math"]
-    assert len(coverage["cells"]) == 57
+    assert len(coverage["cells"]) == 57 and len(payload["coverage"]["rw"]["cells"]) == 30
     assert coverage["counts"]["unplanned"] == sum(c["needed"] and c["state"] != "proven" and not c["planned"]
                                                   for c in coverage["cells"])
     row = plan.active_row(learner)
+    plain = dt.date.fromisoformat(next(d["date"] for d in payload["days"] if d["kind"] == "practice" and not d["test"]))
     for minutes in (10, 15, 30, 45, 60, 90):
-        day = plan.day_view(learner, row, start, preview_minutes=minutes)
-        assert day["budget"]["q"] == math.floor((day["budget"]["g"] - day["budget"]["w"]) * 60 /
-                                                day["budget"]["s"])
+        day = plan.day_view(learner, row, plain, preview_minutes=minutes)
+        b = day["budget"]
+        # the minutes a test and Words leave are split by need; each subject's questions at its own pace
+        assert abs(sum(x["minutes"] for x in b["split"].values()) - max(0, b["g"] - b["w"])) < .2
+        assert all(x["q"] == 120 or -.1 < x["minutes"] * 60 / x["s"] - x["q"] < 1.1 for x in b["split"].values()), b   # (minutes shown to .1)
         assert sum(t["minutes"] for t in day["tasks"] if t["counted"]) <= minutes + .2
     print("ok  deterministic allocation, coverage pins, and 10–90 minute budget")
 
@@ -151,9 +186,9 @@ def check_allocation_and_time(learner: str, cfg: dict, payload: dict) -> None:
 def check_tasks_days(client: TestClient, learner: str, payload: dict) -> None:
     pid = payload["active"]["id"]
     practice_day = next(d for d in payload["days"] if d["date"] >= payload["today"]["date"]
-                        and any(t["kind"] in ("focus", "map") for t in d["tasks"]))
+                        and any(t["kind"] in ("focus", "map") and t["subject"] == "math" for t in d["tasks"]))
     day = practice_day["date"]
-    focus = next(t for t in practice_day["tasks"] if t["kind"] in ("focus", "map"))
+    focus = next(t for t in practice_day["tasks"] if t["kind"] in ("focus", "map") and t["subject"] == "math")
     call(client, "PATCH", f"/api/plan/{pid}/tasks/{focus['id']}",
          {"day": day, "status": "done", "minutes": 15, "where": "khan"}, learner)
     marked = call(client, "GET", f"/api/plan/day/{day}", learner=learner)
@@ -276,10 +311,12 @@ def check_rw_measure_lifecycle(client: TestClient, exam: dt.date) -> None:
     pid = item["active"]["id"]
     assert item["score"]["total"]["start"] == 1060 and item["score"]["total"]["target"] == 1350
     first_study = next(d for d in item["days"] if d["kind"] == "practice")
-    rw = [t for t in first_study["tasks"] if t.get("type") == "rw"]
-    assert len(rw) == 2 and sum(t["minutes"] for t in rw) == 30
-    assert all(t["subject"] == "rw" for t in rw)
-    assert "Standard English Conventions" in rw[0]["title"]
+    # R&W is practised here like Math: the old plan's 30 R&W minutes still come on top of its share,
+    # and its focus domain leads the R&W focus set
+    assert first_study["budget"]["split"]["rw"]["minutes"] >= 30 and first_study["minutes"] == 45 + 30
+    rw = [t for t in first_study["tasks"] if t["subject"] == "rw" and t["kind"] in ("focus", "learn", "fix", "recheck")]
+    assert rw and all(t["start"]["body"]["subject"] == "rw" for t in rw)
+    assert any(plan.domain_of(t) == "Standard English Conventions" for x in rw for t in x["topics"]), rw
     bad = {**cfg, "sections": {**cfg["sections"], "rw": {**cfg["sections"]["rw"],
                                                     "focus": {d: "focus" for d in plan.RW_DOMAINS[:3]}}}}
     call(client, "POST", "/api/plan", bad, learner, 422)
@@ -299,12 +336,36 @@ def check_rw_measure_lifecycle(client: TestClient, exam: dt.date) -> None:
     call(client, "POST", f"/api/plan/{pid}/archive", {}, learner)
     call(client, "DELETE", f"/api/plan/{pid}", learner=learner)
     measure = token()
-    measured = call(client, "POST", "/api/plan", base(exam, current=None, target=600, measure=True,
-                                                        tests="none"), measure)
-    diagnostic = next(d for d in measured["days"] if d["test"] == "diagnostic")
+    measured = call(client, "POST", "/api/plan", base(exam, current=None, target=600, measure=True, rw_target=650,
+                                                        tests="none", days="1111111"), measure)
+    assert measured["active"]["cfg"]["measuring"] == ["math", "rw"]
+    diagnostic, rw_diagnostic = [d for d in measured["days"] if d["test"] == "diagnostic"]
     first = [t["kind"] for t in diagnostic["tasks"][:2]]
-    assert first == ["test", "map"] and diagnostic["tasks"][0]["start"]["path"] == "/api/session"
-    print("ok  R&W score/time/evidence, Words focus, lifecycle and diagnostic measure path")
+    assert first == ["test", "map"] and diagnostic["tasks"][0]["start"] == {"path": "/api/session", "body": {}}
+    # Math is measured on the first study day, R&W on the next
+    assert rw_diagnostic["tasks"][0]["start"] == {"path": "/api/session", "body": {"subject": "rw"}}
+    assert rw_diagnostic["tasks"][0]["id"].endswith(":test:rw")
+    # the Math diagnostic done today: today keeps it (ticked), the start is set, R&W still comes tomorrow
+    stamp = plan.today().isoformat() + "T{}:00:00+00:00"
+    db.run("INSERT INTO sessions(id,kind,learner,started,finished,questions,answers,result,cfg,subject)"
+           " VALUES (?,?,?,?,?,?,?,?,?,?)", "s7-diag-" + measure, "diagnostic", measure, stamp.format("01"),
+           stamp.format("02"), "[]", "{}", json.dumps({"estimate": {"low": 540, "high": 560, "mid": 550}}), "{}", "math")
+    after = call(client, "GET", "/api/plan", learner=measure)
+    assert after["active"]["cfg"]["current"] == 550
+    again = {d["date"]: d for d in after["days"]}
+    day1 = next(t for t in again[diagnostic["date"]]["tasks"] if t["kind"] == "test")
+    day2 = next(t for t in again[rw_diagnostic["date"]]["tasks"] if t["kind"] == "test")
+    assert (day1["subject"], day1["status"], day2["subject"], day2["status"]) == ("math", "done", "rw", "todo"), (day1, day2)
+    # a plan made before R&W was planned (no R&W target) keeps its Math time; only its old rw_minutes go to R&W
+    legacy = call(client, "POST", "/api/plan", base(exam, tests="weekly"), token())
+    days = [d for d in legacy["days"] if d["budget"] and d["kind"] in ("practice", "test")]
+    assert all(d["budget"]["split"]["rw"]["minutes"] == 0 for d in days)
+    assert not any(t["subject"] == "rw" and t["kind"] != "words" for d in days for t in d["tasks"])
+    assert {t["subject"] for d in legacy["days"] for t in d["tasks"] if t["kind"] == "test"} == {"math"}
+    rehearsal = next(t for d in legacy["days"] for t in d["tasks"] if t.get("rehearsal"))
+    assert rehearsal["count"] == 44 and rehearsal["start"]["body"] == {"full": True, "timed": True}
+    assert legacy["score"]["total"]["target"] is None and legacy["active"]["cfg"]["measuring"] == []
+    print("ok  R&W score/time/evidence, Words focus, lifecycle, measure path and Math-only plans")
 
 
 def check_focus_proof(client: TestClient, exam: dt.date) -> None:
@@ -361,12 +422,47 @@ def check_focus_proof(client: TestClient, exam: dt.date) -> None:
     print("ok  before check, 12-answer proof, auto focus and ask-first preference")
 
 
+def check_subject_tests(client: TestClient, exam: dt.date) -> None:
+    """A test task ticks only for a sitting of its own subject; a full SAT reads its total from both parts."""
+    learner = token()
+    made = call(client, "POST", "/api/plan", base(exam, days="1111111", rw_current=550, rw_target=650), learner)
+    pid, today = made["active"]["id"], plan.today()
+    day = call(client, "PUT", f"/api/plan/{pid}/day/{today}", {"test": "module"}, learner)["days"][0]
+    task = next(t for t in day["tasks"] if t["kind"] == "test")
+    assert task["subject"] == "rw" and task["start"]["body"] == {"full": False, "timed": True, "subject": "rw"}
+    stamp = today.isoformat() + "T{}:00:00+00:00"
+    sit = "INSERT INTO sessions(id,kind,learner,started,finished,questions,answers,result,cfg,subject)" \
+          " VALUES (?,?,?,?,?,?,?,?,?,?)"
+    db.run(sit, "s7-m-" + learner, "module", learner, stamp.format("08"), stamp.format("09"), "[]", "{}",
+           json.dumps({"estimate": {"low": 600, "high": 620, "mid": 610}}), "{}", "math")
+    after = call(client, "GET", f"/api/plan/day/{today}", learner=learner)
+    assert next(t for t in after["tasks"] if t["kind"] == "test")["status"] == "todo"     # a Math sitting is not it
+    db.run(sit, "s7-r-" + learner, "module", learner, stamp.format("10"), stamp.format("11"), "[]", "{}",
+           json.dumps({"estimate": {"low": 560, "high": 580, "mid": 570}}), "{}", "rw")
+    done = next(t for t in call(client, "GET", f"/api/plan/day/{today}", learner=learner)["tasks"] if t["kind"] == "test")
+    assert done["status"] == "done" and done["session"] == "s7-r-" + learner
+    assert done["result"]["high"] - done["result"]["low"] == 20
+    full = {"id": f"{today}:test:full", "kind": "test", "subject": "both", "aim": 1180, "count": 98, "status": "todo"}
+    parts = [{"id": f"s7-f{n}", "kind": "section", "subject": s, "finished": stamp.format(h), "started": stamp.format(h),
+              "config": {"full": {"id": "F1", "part": n}}, "answers": "{}", "questions": "[]",
+              "result": json.dumps({"estimate": {"low": low, "high": low + 20}})}
+             for n, s, h, low in ((1, "rw", "12", 580), (2, "math", "14", 610))]
+    ticked = plan._task_status(learner, pid, today, full, parts[:1], 0)
+    assert ticked["status"] == "todo"                                   # R&W alone is not the full SAT
+    ticked = plan._task_status(learner, pid, today, full, parts, 0)
+    assert ticked["status"] == "done" and ticked["result"]["low"] == 1200 and ticked["result"]["high"] == 1220
+    assert ticked["result"]["verdict"] == "beat" and len(ticked["result"]["parts"]) == 2
+    print("ok  test tasks per subject: R&W first, ticked by their own subject, full SAT totals")
+
+
 def check_checkpoints_and_verdicts(client: TestClient, exam: dt.date) -> None:
     learner = token()
-    made = call(client, "POST", "/api/plan", base(exam, current=560, target=700), learner)
+    made = call(client, "POST", "/api/plan", base(exam, current=560, target=700, rw_current=550, rw_target=650),
+                learner)
+    # a checkpoint re-sits an earlier module 1 of the same subject: every second Math test here
     tests = [d for d in made["days"] if d["kind"] == "test" and
-             not any(t.get("rehearsal") for t in d["tasks"])]
-    assert len(tests) >= 3
+             any(t["kind"] == "test" and t["subject"] == "math" and not t.get("rehearsal") for t in d["tasks"])]
+    assert len(tests) >= 2
     questions = [{"id": f"base-{n}", "key": f"synthetic.{n}", "type": "mcq", "answer": "A",
                   "difficulty": "medium", "topic_name": "Circles"} for n in range(22)]
     copy = [{**q, "id": f"twin-{n}"} for n, q in enumerate(questions)]
@@ -377,23 +473,22 @@ def check_checkpoints_and_verdicts(client: TestClient, exam: dt.date) -> None:
            " VALUES (?,?,?,?,?,?,?,?,?)", "s7-base-" + learner, "module", learner,
            stamp + "T09:00:00+00:00", stamp + "T10:00:00+00:00",
            json.dumps({"module1": questions}), json.dumps(base_answers),
-           json.dumps({"estimate": {"low": 470, "high": 610}}), "{}")
+           json.dumps({"estimate": {"low": 530, "high": 550}}), "{}")
     baseline = "s7-base-" + learner
     updated = call(client, "GET", "/api/plan", learner=learner)
-    first = next(t for t in next(d for d in updated["days"] if d["date"] == tests[0]["date"])["tasks"]
-                 if t["kind"] == "test")
-    second = next(t for t in next(d for d in updated["days"] if d["date"] == tests[1]["date"])["tasks"]
-                  if t["kind"] == "test")
-    third = next(t for t in next(d for d in updated["days"] if d["date"] == tests[2]["date"])["tasks"]
-                 if t["kind"] == "test")
-    assert "twin_of" not in first["start"]["body"] and "twin_of" not in third["start"]["body"]
+    found = [next(t for t in next(d for d in updated["days"] if d["date"] == x["date"])["tasks"]
+                  if t["kind"] == "test") for x in tests[:3]]
+    first, second = found[:2]
+    assert "twin_of" not in first["start"]["body"] and all("twin_of" not in t["start"]["body"] for t in found[2:])
     assert second["start"]["body"]["kind"] == "twin"
     assert second["start"]["body"]["twin_of"] == baseline
+    assert not any(t["start"]["body"].get("kind") == "twin" for d in updated["days"] for t in d["tasks"]
+                   if t["kind"] == "test" and t["subject"] == "rw")      # no R&W module 1 to re-sit yet
     db.run("INSERT INTO sessions(id,kind,learner,started,finished,questions,answers,result,cfg)"
            " VALUES (?,?,?,?,?,?,?,?,?)", "s7-twin-" + learner, "module", learner,
            stamp + "T12:00:00+00:00", stamp + "T13:00:00+00:00",
            json.dumps({"module1": copy}), json.dumps(twin_answers),
-           json.dumps({"estimate": {"low": 560, "high": 700}}), json.dumps({"twin_of": baseline}))
+           json.dumps({"estimate": {"low": 620, "high": 640}}), json.dumps({"twin_of": baseline}))
     db.run("INSERT INTO attempts(learner,session,template,seed,topic,difficulty,fmt,correct,at)"
            " VALUES (?,?,?,?,?,?,?,?,?)", learner, "other", "synthetic.0", 5, "circles",
            "medium", "mcq", 1, stamp + "T11:00:00+00:00")
@@ -405,8 +500,8 @@ def check_checkpoints_and_verdicts(client: TestClient, exam: dt.date) -> None:
                                   if s["change"] in ("slipped", "still_missed")]
     assert cp["fix"]["sibling"] is True
     assert [plan._test_band({"aim": 620}, {"result": json.dumps({"estimate": b})})["verdict"]
-            for b in ({"low": 630, "high": 770}, {"low": 580, "high": 720},
-                      {"low": 470, "high": 610})] == ["beat", "within", "under"]
+            for b in ({"low": 630, "high": 650}, {"low": 610, "high": 630},
+                      {"low": 590, "high": 610})] == ["beat", "within", "under"]
     print("ok  twin rhythm, 22-slot comparison, practice marks, fix body and score-band verdict")
 
 
@@ -433,6 +528,24 @@ def check_progress_and_records(client: TestClient, exam: dt.date) -> None:
     changed = call(client, "GET", "/api/plan/progress", learner=learner)
     assert not next(x for x in changed["bought"] if x["topic"] == "circles")["not_moving"]
     assert len(changed["skills"]) == 19 and len(changed["domains"]) == 4
+    rw = changed["by_subject"]["rw"]                              # the Progress tab's R&W side
+    assert len(rw["skills"]) == 10 and [d["domain"] for d in rw["domains"]] == list(plan.RW_DOMAINS)
+    assert len(rw["split_domain"]) == 4 and not any(x["topic"] == "circles" for x in rw["bought"])
+    assert changed["by_subject"]["math"]["skills"] == changed["skills"]
+    score = call(client, "GET", "/api/plan", learner=learner)["score"]
+    assert list(score) == ["total", "rw", "math"]
+    assert score["math"]["now"]["source"] == "yours" and score["math"]["now"]["high"] - score["math"]["now"]["low"] == 20
+    assert score["rw"]["now"]["low"] is None and score["total"]["now"]["low"] is None    # no R&W yet: no total
+    # a lower-route sitting keeps its capped range (scoring's), not a fresh 20 points around its centre
+    db.run("INSERT INTO sessions(id,kind,learner,started,finished,questions,answers,result,cfg,subject,route)"
+           " VALUES (?,?,?,?,?,?,?,?,?,?,?)", "s7-cap-" + learner, "section", learner, stamp + "T08:00:00+00:00",
+           stamp + "T09:00:00+00:00", "[]", "{}", json.dumps({"estimate": {"low": 560, "high": 580, "mid": 580,
+           "capped": True}}), "{}", "math", "lower")
+    capped = api_me.scores(learner)["math"]
+    assert (capped["low"], capped["high"], capped["source"]) == (560, 580, "measured"), capped
+    # each section's drift banner is dismissed on its own
+    call(client, "POST", f"/api/plan/{pid}/drift", {"dismiss": [], "subject": "rw"}, learner)
+    assert set(plan.drift_seen(plan.active_row(learner))) == {"rw"}
     call(client, "PUT", "/api/me", {"prefs": {"registered": exam.isoformat()}}, learner)
     registered = call(client, "GET", "/api/plan", learner=learner)
     assert registered["active"]["cfg"]["booked"] is True
@@ -484,6 +597,7 @@ def check(client: TestClient) -> None:
     check_freeze_and_links(client, learner, payload)
     check_rw_measure_lifecycle(client, exam)
     check_focus_proof(client, exam)
+    check_subject_tests(client, exam)
     check_checkpoints_and_verdicts(client, exam)
     check_progress_and_records(client, exam)
     check_me_mirror(client)

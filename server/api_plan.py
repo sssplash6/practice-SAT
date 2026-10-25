@@ -27,6 +27,11 @@ def _active(learner: str, pid: str):
     return plan.owned_row(learner, pid, active=True)
 
 
+def _skill(topic) -> bool:
+    """A Math or an R&W skill the plan deals."""
+    return isinstance(topic, str) and (topic in plan.TOPICS or topic in plan.topics_of("rw"))
+
+
 def _mirror(c, learner: str, pid: str, cfg: dict) -> None:
     c.execute("INSERT INTO learners(id,created,updated) VALUES (?,?,?) ON CONFLICT(id) DO NOTHING",
               (learner, deps.now(), deps.now()))
@@ -96,7 +101,7 @@ def get_progress(x_learner: str | None = Header(default=None), x_tz: int = Depen
     return {key: full.get(key) for key in ("active", "stats", "domains", "skills", "rw_domains", "coverage", "points",
                                           "projection", "pace", "score", "changes", "checks", "checkpoints",
                                           "bought", "causes", "calibration", "skill_pace", "split_domain",
-                                          "changes_counts", "weeks", "verdict", "workload")}
+                                          "changes_counts", "weeks", "verdict", "workload", "by_subject", "subjects")}
 
 
 @router.get("/api/plan/day/{day}")
@@ -155,10 +160,11 @@ def create(body: dict, x_learner: str | None = Header(default=None),
     exam = dt.date.fromisoformat(cfg["exam_date"])
     custom = [_custom(item, start, exam) for item in custom_in]
     pid = "pl:" + secrets.token_urlsafe(12)
-    board = progress.board(learner)
+    board = {**progress.board(learner), **progress.board(learner, "rw")}
     mastery = {d: round(sum(v["mastery"] for v in board.values() if v["domain"] == d) /
-                        max(1, sum(v["domain"] == d for v in board.values())), 3) for d in plan.DOMAINS}
+                        max(1, sum(v["domain"] == d for v in board.values())), 3) for d in plan.DOMAINS + plan.RW_DOMAINS}
     points = plan._points(learner)
+    rw_points = plan._points(learner, None, "rw")
     with db.atomic() as c:
         old = plan.active_row(learner)
         if old:
@@ -167,7 +173,8 @@ def create(body: dict, x_learner: str | None = Header(default=None),
         c.execute("INSERT INTO plans(id,learner,name,cfg,start,tz,start_mastery,start_points,created,updated)"
                   " VALUES (?,?,?,?,?,?,?,?,?,?)",
                   (pid, learner, name.strip(), json.dumps(cfg), start.isoformat(), x_tz,
-                   json.dumps(mastery), json.dumps({"total": points["total"]} if points else {}),
+                   json.dumps(mastery), json.dumps({**({"total": points["total"]} if points else {}),
+                                                    **({"rw": {"total": rw_points["total"]}} if rw_points else {})}),
                    deps.now(), deps.now()))
         for task in custom:
             _insert_custom(c, pid, task)
@@ -282,13 +289,15 @@ def patch_task(pid: str, tid: str, body: dict,
     if reason == "know":
         if not task or not task.get("topics"):
             raise HTTPException(422, "test-out needs a skill task")
+        subject = deps.subject_of(task["topics"][0])
         return {**_days(learner, row, [day]), "test_out": {"topics": task["topics"], "count": 8,
-                "tiers": ["medium", "hard"], "timing": "pace", "task": f"{day}:check:{task['topics'][0]}"}}
+                "tiers": ["medium", "hard"], "timing": "pace", "task": f"{day}:check:{task['topics'][0]}",
+                **({"subject": subject} if subject != "math" else {})}}
     swap = body.get("swap")
     if swap is not None:
         swap = [swap] if isinstance(swap, str) else swap
-        if not isinstance(swap, list) or not 1 <= len(swap) <= 3 or any(t not in plan.TOPICS for t in swap):
-            raise HTTPException(422, "swap must name up to three Math skills")
+        if not isinstance(swap, list) or not 1 <= len(swap) <= 3 or any(not _skill(t) for t in swap):
+            raise HTTPException(422, "swap must name up to three skills")
     with db.atomic() as c:
         if changes:
             c.execute("UPDATE plan_tasks SET title=?,minutes=?,type=?,subject=? WHERE id=?",
@@ -353,8 +362,8 @@ def put_day(pid: str, day: str, body: dict, x_learner: str | None = Header(defau
     if "test" in body and body["test"] not in ("module", "section", "none"):
         raise HTTPException(422, "test must be module, section or none")
     if "topics" in body and (not isinstance(body["topics"], list) or not 1 <= len(body["topics"]) <= 3 or
-                              any(t not in plan.TOPICS for t in body["topics"])):
-        raise HTTPException(422, "topics must name up to three Math skills")
+                              any(not _skill(t) for t in body["topics"])):
+        raise HTTPException(422, "topics must name up to three skills")
     old = plan._override(pid, date)
     merged = {"minutes": old.get("minutes"), "off": old.get("off", 0), "test": old.get("test"),
               "topics": old.get("topics"), "trim": old.get("trim", 0)}
@@ -496,11 +505,13 @@ def result(pid: str, body: dict, x_learner: str | None = Header(default=None)) -
 @router.post("/api/plan/{pid}/drift")
 def drift(pid: str, body: dict, x_learner: str | None = Header(default=None)) -> dict:
     learner = _writer(x_learner)
-    _active(learner, pid)
+    row = _active(learner, pid)
     if not isinstance(body.get("dismiss"), list):
         raise HTTPException(422, "dismiss must list sitting ids")
-    db.run("UPDATE plans SET drift_seen=? WHERE id=?", deps.now(), pid)
-    return {"dismissed": body["dismiss"]}
+    subject = deps.subject_param(body.get("subject"))       # each section's banner is dismissed on its own
+    seen = {**plan.drift_seen(row), subject: deps.now()}
+    db.run("UPDATE plans SET drift_seen=? WHERE id=?", json.dumps(seen), pid)
+    return {"dismissed": body["dismiss"], "subject": subject}
 
 
 @router.get("/api/plan/ics")
@@ -580,7 +591,7 @@ def changes(pid: str, before: int | None = None, x_learner: str | None = Header(
 def trapsheet(pid: str, x_learner: str | None = Header(default=None)) -> dict:
     learner = _reader(x_learner)
     plan.owned_row(learner, pid)
-    traps = progress.open_traps(learner)[:10]
+    traps = progress.open_traps(learner, subject="math")[:10]
     example = deps.part("api_bank", "example")
     entries = []
     for trap in traps:

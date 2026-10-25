@@ -26,20 +26,23 @@ T = {
                q="Questions this week: {n}{delta}", up=" ({n} more than last week)", down=" ({n} fewer than last week)", d="Days practised: {n} of 7",
                acc="Accuracy this week: {a}", last="Last active: {w}", today="today", yesterday="yesterday", ago="{n} days ago", never="never",
                strong="Doing well: {s}", weak="Needs attention: {s}", quiet="No practice this week.", tests="Tests finished this week: {n}",
-               idle="{name} has not practised for {n} days.", test="{name} finished a test: {score}.", score="score range {low} to {high}", score2="{right} of {asked} right",
-               exam="{name}'s SAT is coming up. Days to go: {n}.", open="See the full view: {url}", off="To stop these emails, switch them off at the bottom of that page.", bye="SAT Freshman"),
+               idle="{name} has not practised for {n} days.", test="{name} finished a test ({what}): {score}.", score="score range {low} to {high}", score2="{right} of {asked} right",
+               exam="{name}'s SAT is coming up. Days to go: {n}.", open="See the full view: {url}", off="To stop these emails, switch them off at the bottom of that page.", bye="SAT Freshman",
+               now="Estimated score: {s}", aim="Target: {s}", total="Total", rw="Reading and Writing", math="Math", full="Full SAT", yours="{s} (own estimate)"),
     "uz": dict(hello="Assalomu alaykum,", subj_week="Haftalik xulosa: {names}", subj_news="SAT Freshman: {names} haqida yangilik", child="farzandingiz",
                q="Bu haftadagi savollar: {n}{delta}", up=" (o‘tgan haftadan {n} ta ko‘p)", down=" (o‘tgan haftadan {n} ta kam)", d="Mashq qilingan kunlar: 7 tadan {n} ta",
                acc="Bu haftadagi aniqlik: {a}", last="Oxirgi faollik: {w}", today="bugun", yesterday="kecha", ago="{n} kun oldin", never="hech qachon",
                strong="Yaxshi natijalar: {s}", weak="E’tibor kerak: {s}", quiet="Bu hafta mashq qilinmadi.", tests="Bu hafta topshirilgan testlar: {n}",
-               idle="{name} {n} kundan beri mashq qilmayapti.", test="{name} testni tugatdi: {score}.", score="ball oralig‘i {low} dan {high} gacha", score2="{asked} tadan {right} tasi to‘g‘ri",
-               exam="{name}ning SAT imtihoni yaqinlashmoqda. Qolgan kunlar: {n}.", open="To‘liq ma’lumotni ko‘ring: {url}", off="Bu xatlarni to‘xtatish uchun shu sahifaning pastidagi tugmani o‘chiring.", bye="SAT Freshman"),
+               idle="{name} {n} kundan beri mashq qilmayapti.", test="{name} testni tugatdi ({what}): {score}.", score="ball oralig‘i {low} dan {high} gacha", score2="{asked} tadan {right} tasi to‘g‘ri",
+               exam="{name}ning SAT imtihoni yaqinlashmoqda. Qolgan kunlar: {n}.", open="To‘liq ma’lumotni ko‘ring: {url}", off="Bu xatlarni to‘xtatish uchun shu sahifaning pastidagi tugmani o‘chiring.", bye="SAT Freshman",
+               now="Taxminiy ball: {s}", aim="Maqsad: {s}", total="Umumiy ball", rw="O‘qish va yozish", math="Matematika", full="To‘liq SAT", yours="{s} (o‘z bahosi)"),
     "ru": dict(hello="Здравствуйте,", subj_week="Итоги недели: {names}", subj_news="SAT Freshman: новости о {names}", child="ваш ребёнок",
                q="Вопросов за неделю: {n}{delta}", up=" (на {n} больше, чем на прошлой неделе)", down=" (на {n} меньше, чем на прошлой неделе)", d="Дней занятий: {n} из 7",
                acc="Точность за неделю: {a}", last="Последняя активность: {w}", today="сегодня", yesterday="вчера", ago="{n} дн. назад", never="никогда",
                strong="Получается хорошо: {s}", weak="Нужно подтянуть: {s}", quiet="На этой неделе занятий не было.", tests="Тестов пройдено за неделю: {n}",
-               idle="Занятий у {name} не было уже {n} дн.", test="{name} прошёл(-ла) тест: {score}.", score="диапазон баллов от {low} до {high}", score2="верно {right} из {asked}",
-               exam="Приближается SAT у {name}. Осталось дней: {n}.", open="Подробности: {url}", off="Чтобы отключить эти письма, выключите их внизу той страницы.", bye="SAT Freshman"),
+               idle="Занятий у {name} не было уже {n} дн.", test="{name} прошёл(-ла) тест ({what}): {score}.", score="диапазон баллов от {low} до {high}", score2="верно {right} из {asked}",
+               exam="Приближается SAT у {name}. Осталось дней: {n}.", open="Подробности: {url}", off="Чтобы отключить эти письма, выключите их внизу той страницы.", bye="SAT Freshman",
+               now="Оценка балла: {s}", aim="Цель: {s}", total="Общий балл", rw="Чтение и письмо", math="Математика", full="Полный SAT", yours="{s} (своя оценка)"),
 }
 
 
@@ -52,6 +55,20 @@ def _when(lang: str, last: str | None, now: dt.datetime) -> str:
         return _t(lang, "never")
     n = (now - dt.datetime.fromisoformat(last)).days
     return _t(lang, "today") if n <= 0 else _t(lang, "yesterday") if n == 1 else _t(lang, "ago", n=n)
+
+
+def score_lines(lang: str, scores: dict | None) -> list[str]:
+    """Total, R&W, Math (College Board's order): the 20-point range now, then the targets; parts nobody knows are left out."""
+    sc = scores or {}
+    now, aim = [], []
+    for k in ("total", "rw", "math"):
+        x = sc.get(k) or {}
+        if x.get("low") is not None:
+            v = f"{x['low']}–{x['high']}"
+            now.append(f"{_t(lang, k)} {_t(lang, 'yours', s=v) if x.get('source') == 'yours' else v}")
+        if x.get("target"):
+            aim.append(f"{_t(lang, k)} {x['target']}")
+    return ([_t(lang, "now", s=" · ".join(now))] if now else []) + ([_t(lang, "aim", s=" · ".join(aim))] if aim else [])
 
 
 def weekly_lines(lang: str, name: str, s: dict, now: dt.datetime) -> list[str]:
@@ -67,6 +84,7 @@ def weekly_lines(lang: str, name: str, s: dict, now: dt.datetime) -> list[str]:
     done = sum(1 for t in s["tests"] if (t["finished"] or "") >= week_ago)
     if done:
         out.append(_t(lang, "tests", n=done))
+    out += score_lines(lang, s.get("scores"))
     if s["strong"]:
         out.append(_t(lang, "strong", s=", ".join(x["name"] for x in s["strong"])))
     if s["focus"]:
@@ -88,7 +106,8 @@ def alerts(lang: str, name: str, s: dict, now: dt.datetime, local: dt.datetime) 
         if (t["finished"] or "") >= recent:
             score = (_t(lang, "score", low=t["low"], high=t["high"]) if t["low"] else _t(lang, "score2", right=t["right"], asked=t["asked"]) if t["asked"] else None)
             if score:
-                out.append((f"test:{sid}:{t['finished']}", _t(lang, "test", name=name, score=score)))
+                what = _t(lang, "full" if t.get("kind") == "full" else "rw" if t.get("subject") == "rw" else "math")
+                out.append((f"test:{sid}:{t['finished']}", _t(lang, "test", name=name, what=what, score=score)))
     ex = s["goal"]["exam_date"]
     if ex:
         n = (dt.date.fromisoformat(ex) - local.date()).days

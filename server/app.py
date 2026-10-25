@@ -24,7 +24,7 @@ from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 
 from . import blueprint, db, deps, practice
-from .api_tests import FORMS, MOCKS
+from .api_tests import FORM_IDS, FORMS, MOCKS
 
 logging.basicConfig(level=logging.INFO, format="%(levelname)s %(name)s %(message)s")
 log = logging.getLogger("satf")
@@ -32,6 +32,7 @@ log = logging.getLogger("satf")
 HERE = pathlib.Path(__file__).resolve().parent
 WEB = HERE.parent / "web"
 FORMS_PATH = HERE / "forms.json"
+RW_FORMS_PATH = HERE / "forms_rw.json"          # tools/build_rw_forms.py, ids 101+
 MOCKS_PATH = HERE / "mocks.json"
 
 # Every planned router (spec/rebuild-v2.md 2.10), each included once its module
@@ -52,11 +53,15 @@ def startup() -> None:
     db.init()
     if not FORMS_PATH.exists():
         raise SystemExit(f"{FORMS_PATH} is missing. Run tools/build_diagnostics.py first.")
-    data = json.loads(FORMS_PATH.read_text())
-    for form in data["forms"]:
-        FORMS[form["id"]] = form["questions"]
-    log.info("loaded %d diagnostic forms, %d questions each",
-             len(FORMS), len(next(iter(FORMS.values()))))
+    for subject, path in (("math", FORMS_PATH), ("rw", RW_FORMS_PATH)):
+        if not path.exists():
+            raise SystemExit(f"{path} is missing. Run tools/build_diagnostics.py (Math) or tools/build_rw_forms.py.")
+        FORM_IDS[subject].clear()
+        for form in json.loads(path.read_text())["forms"]:
+            FORMS[form["id"]] = form["questions"]
+            FORM_IDS[subject].append(form["id"])
+    log.info("loaded %d diagnostic forms (%d Math, %d R&W), %d questions each",
+             len(FORMS), len(FORM_IDS["math"]), len(FORM_IDS["rw"]), len(next(iter(FORMS.values()))))
     # the bank's lazy globals are not thread safe on first touch, so they are
     # warmed here rather than on whichever request happens to arrive first
     cat = practice.catalogue()
@@ -73,6 +78,12 @@ def startup() -> None:
     # filters both need, surveyed once rather than on a student's first request
     can = blueprint.abilities()
     log.info("surveyed %d templates", len(can))
+    # the builder's tree (blueprint.kinds) took ~16 s on the first Practice open after each
+    # restart, and the one process stalled every visitor meanwhile: built here instead
+    from .api_practice import _catalogue
+    for subject in ("math", "rw"):
+        _catalogue(subject)
+    log.info("builder catalogue ready")
     for name in STARTUP:
         init = deps.part(name, "init")
         if init is not None:

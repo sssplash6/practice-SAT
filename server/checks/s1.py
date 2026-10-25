@@ -19,7 +19,7 @@ from cryptography.hazmat.primitives.asymmetric import ec, rsa, padding
 from fastapi.testclient import TestClient
 
 from server.app import app, FORMS
-from server import account, achievements, compete, db, practice
+from server import account, achievements, compete, db, practice, progress
 
 
 def check(c: TestClient) -> None:
@@ -233,7 +233,9 @@ def check(c: TestClient) -> None:
     assert badges.status_code == 200, badges.text
     answered = next(b for b in badges.json() if b["id"] == "answered")
     assert answered["have"] == 50 and answered["earned"][0]["at"] == "2026-09-01T00:00:49+00:00"
-    assert len([b for b in badges.json() if b["id"].startswith("skill:")]) == 19
+    skills = [b["id"] for b in badges.json() if b["id"].startswith("skill:")]      # one per skill, both sections
+    assert len(skills) == len(progress.topics("math")) + len(progress.topics("rw")) == 29, len(skills)
+    assert sum(s.startswith("skill:rw_") for s in skills) == 10
     assert set(achievements.FOLDED) == {"first-contest", "streak-7", "daily-7",
                                        "daily-30", "perfect-ten", "podium",
                                        "solved-1000", "consistency", "trap-hunter"}

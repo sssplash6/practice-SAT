@@ -19,6 +19,10 @@ CHALLENGE_SIZE = 10
 # the section's weights, rounded to ten questions
 MIX = {"Algebra": 3, "Advanced Math": 3,
        "Problem-Solving and Data Analysis": 2, "Geometry and Trigonometry": 2}
+# Reading and Writing's ten, in Bluebook's domain order: the published shares (28 / 26 / 26 / 20 per
+# cent) rounded to ten, which is also each domain's number of skills, so the R&W Daily has one per skill
+RW_MIX = {"Craft and Structure": 3, "Information and Ideas": 3,
+          "Standard English Conventions": 2, "Expression of Ideas": 2}
 LADDER = ["easy"] * 3 + ["medium"] * 4 + ["hard"] * 3
 SPR_AT = (4, 8)             # two grid-ins, as a module carries about a quarter
 BOARD_RIGHT = "COALESCE(CAST(json_extract(result,'$.right') AS INTEGER),0)"

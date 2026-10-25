@@ -1,0 +1,22 @@
+# web/tests/tests.js (1186) raw
+- 92 'Estimated Math score' title. 98 empty text "full section band ~140 wide; module/diagnostic ~200".
+- 113 'of 800' unit. 116 'Full section · 70 min' quiet. 117 'Sit one more section'.
+- 130 bandChart min 200 max 800. 179-185 ghost: 480-620 'of 800', min 200 max 800.
+- 144 D.total line: Total low-high "with your R&W rw (entered day)": total = math + self-entered RW. MATH-ONLY model.
+- 152 calibration x.math ?? x.score.
+- 232 L.route text fallback 'One more right in module 1 would have lifted the 580 cap'.
+- 257 nextCard default 'Full section' '44 questions · 70 min'. 272 diagnostic '20 questions · 32 min · all four domains evenly'. 277 paper '44 questions · 70 min'. 281 trainer '22 questions · 35 min'. 284 module '22 questions · 35 min'. 288 section plan '44 questions · 70 min'.
+- 326 lastM1: modules[0].asked===22. 333-335 m1/m2 meters max 22, tick 14, '14 of 22 right routes you up'. 337 count fallback diagnostic 20 else 22. 338 'Module X of 2'.
+- 406-407 liveRow 'Module X of 2', count fallback 20/22, ticks min(count,22).
+- 515-525 INFO: section '8/7/4/3 each module' (math domain mix per module), '44 questions · 70 min · 2 modules'; module1/2u/2l '22 questions · 35 min'; '580' cap; custom '5–60 questions'; diagnostic 'All four domains evenly' '20 questions · 32 min'; trainer '14 of 22'; traps '6–22 questions · 95 s each'.
+- 565 race count 22 minutes 35. 739 paper race 22/35.
+- 656 papers why text: 'line at 14'. 704 'Expect e1 of 22 in module 1, where 14 routes you up'. 715-716 preview max 22 tick 14. 741 'of 22'.
+- 769-771 SF kinds/route filters: 'Harder module 2'/'Easier module 2'.
+- 870-873 scoreChips 'Harder M2','Easier M2','580 cap'. 884 route line text.
+- 912 Twin for section/mock/module/paper/twin/shared. 914 'Try the harder module 2' -> module m2u.
+- 919 sm: M1 x/y, M2 x/y only first two modules.
+- 855-859 missChips `M${m.n}` keys and report q `M${n}-${p}`: no section in key.
+- 1018 race text '22 questions, 35 minutes'; 1022 count 22 minutes 35.
+- 1044 CSV head 'Math M1..' columns hard-coded "Math".
+- 1054-1080 howScored: route 14 of 22, 580 cap, ±70/±100, 'up to 800', 75 s break threshold.
+- 1173 deep links map start=section|modules|module1|module2u|module2l|custom|diagnostic|twin|traps|trainer|paper:N.

@@ -127,12 +127,12 @@ def _meta(row, learner: str | None, tz: int = 0, race: str | None = None) -> dic
         me["forecast"] = None
     entrants = None
     if row["kind"] == "private" and learner in compete.private_members(row["id"]):
-        entrants = [{**compete._identity(person, learner, private=True),
+        entrants = [{**compete._identity(person, learner, private=True, subject=row["subject"]),
                      "status": "finished" if (s := _sitting(row["id"], person)) and s["finished"]
                      else "progress" if s else "new"} for person in compete.private_members(row["id"])]
     status = "upcoming" if row["opens"] > now else "closed" if row["closes"] <= now else "live"
-    if row["kind"] == "daily":
-        status = "live" if row["id"] == "daily-" + compete.local_day(tz).isoformat() else "closed"
+    if row["kind"] == "daily":                  # daily-YYYY-MM-DD, R&W's with -rw after the date
+        status = "live" if row["id"][6:16] == compete.local_day(tz).isoformat() else "closed"
     race_data = compete.race_choice(row["id"], learner, race) if race and learner else None
     if race and not learner:
         raise HTTPException(400, "send a learner code to race")
@@ -156,24 +156,26 @@ def _meta(row, learner: str | None, tz: int = 0, race: str | None = None) -> dic
 
 
 @router.get("/api/compete")
-def compete_home(x_learner: str | None = Header(default=None), x_tz: int = Depends(tz_of)) -> dict:
+def compete_home(subject: str | None = None, x_learner: str | None = Header(default=None),
+                 x_tz: int = Depends(tz_of)) -> dict:
+    """The hub for one subject: its Daily, your rating and ranks in it, its board (the streak is shared)."""
     learner = learner_of(x_learner)
+    subject = deps.subject_param(subject)
     contests = compete.ensure(tz=x_tz)
-    daily_row = compete.contest("daily", x_tz)
+    daily_row = compete.contest("daily" if subject == "math" else "daily-rw", x_tz)
     now = compete._iso(compete._now())
-    ranked = compete.rank_snapshot(learner, x_tz)
+    ranked = compete.rank_snapshot(learner, x_tz, subject)
     next_sat = next((d for d in compete.SAT_DATES if d >= compete.local_day(x_tz).isoformat()), None)
-    profile = db.one("SELECT rated FROM learners WHERE id=?", learner)
     return {"daily": _meta(daily_row, learner, x_tz),
             "live": sum(c["opens"] <= now < c["closes"] for c in contests),
             "upcoming": sum(c["opens"] > now for c in contests),
             "me": {**ranked, "challenge_streak": compete.challenge_streak(learner, x_tz)["current"],
                    "played": db.one("SELECT COUNT(*) AS n FROM sessions WHERE learner=? AND contest IS NOT NULL"
-                                    " AND finished IS NOT NULL", learner)["n"]},
+                                    " AND finished IS NOT NULL AND subject=?", learner, subject)["n"]},
             "season": {"closes": next_sat,
                        "name": "Road to " + dt.date.fromisoformat(next_sat).strftime("%b %-d") if next_sat else None},
-            "board_preview": compete.leaderboard(learner=learner, limit=5),
-            "records": compete.records(learner), "week_line": compete.week_line(learner),
+            "board_preview": compete.leaderboard(learner=learner, limit=5, subject=subject),
+            "records": compete.records(learner, subject), "week_line": compete.week_line(learner),
             "champions": compete.champions(limit=1, viewer=learner),
             "traps": compete.traps_index(learner)[:3],
             "next_badges": [b for b in compete.evaluate(learner) if not b["earned"]][:3],
@@ -181,15 +183,17 @@ def compete_home(x_learner: str | None = Header(default=None), x_tz: int = Depen
 
 
 @router.get("/api/contests")
-def list_contests(status: str = "live", offset: int = 0, limit: int = 20,
+def list_contests(status: str = "live", offset: int = 0, limit: int = 20, subject: str | None = None,
                   x_learner: str | None = Header(default=None), x_tz: int = Depends(tz_of)) -> dict:
+    """Contests by status; ?subject= keeps one subject's (every subject when absent)."""
     learner = learner_of(x_learner)
     if status not in ("live", "upcoming", "finished", "private"):
         raise HTTPException(422, "invalid contest status")
     compete.ensure(tz=x_tz)
     now = compete._iso(compete._now())
     rows = db.rows("SELECT * FROM contests ORDER BY opens DESC")
-    rows = [r for r in rows if (r["kind"] != "private" or learner in compete.private_members(r["id"]))
+    rows = [r for r in rows if (not subject or r["subject"] == deps.subject_param(subject))
+            and (r["kind"] != "private" or learner in compete.private_members(r["id"]))
                and (r["opens"] <= now < r["closes"] if status == "live" else
                                r["opens"] > now if status == "upcoming" else
                                bool(_sitting(r["id"], learner)) if status == "finished" else
@@ -320,12 +324,14 @@ def compete_champions(kind: str | None = None, mine: bool = False, before: str |
 
 
 @router.get("/api/compete/me")
-def compete_me(x_learner: str | None = Header(default=None), x_tz: int = Depends(tz_of)) -> dict:
+def compete_me(subject: str | None = None, x_learner: str | None = Header(default=None),
+               x_tz: int = Depends(tz_of)) -> dict:
     learner = learner_of(x_learner)
-    return {**compete.rank_snapshot(learner, x_tz), "badges": compete.evaluate(learner),
+    subject = deps.subject_param(subject)
+    return {**compete.rank_snapshot(learner, x_tz, subject), "badges": compete.evaluate(learner),
             "streak": compete.challenge_streak(learner, x_tz),
-            "records": compete.records(learner), "week_line": compete.week_line(learner),
-            "boards": {p: compete.leaderboard(period=p, learner=learner)["you"]
+            "records": compete.records(learner, subject), "week_line": compete.week_line(learner),
+            "boards": {p: compete.leaderboard(period=p, learner=learner, subject=subject)["you"]
                        for p in ("week", "month", "season", "all")}}
 
 
@@ -349,8 +355,10 @@ def contest_test_day_card(cid: str, x_learner: str | None = Header(default=None)
     focus = compete.final_focus(learner)
     if not focus or focus["sid"] != (_sitting(row["id"], learner) or {"id": None})["id"]:
         raise HTTPException(403, "finish your Final first")
+    # move on at twice a question's budget (the Final is the Math section)
+    pace = {t: 2 * compete._budget(row["subject"], t) // 1000 for t in ("easy", "medium", "hard")}
     return {"date": focus["exam_date"] or focus["sat_date"], "doors": compete.DOORS_LINE,
-            "pace": {"easy": "2:10", "medium": "3:10", "hard": "4:12"},
+            "pace": {t: f"{s // 60}:{s % 60:02d}" for t, s in pace.items()},
             "skip_first": focus["skip_first"], "traps": focus["trap_norms"],
             "band": focus["band"], "route": focus["route"]}
 
@@ -362,16 +370,17 @@ def compete_traps_index(x_learner: str | None = Header(default=None)) -> list[di
 
 @router.get("/api/compete/history")
 def compete_history(kind: str | None = None, followup: str | None = None,
-                    offset: int = 0, limit: int = 20,
+                    offset: int = 0, limit: int = 20, subject: str | None = None,
                     x_learner: str | None = Header(default=None)) -> dict:
     learner = learner_of(x_learner)
-    rows = db.rows("SELECT s.*,c.kind AS contest_kind,c.title FROM sessions s JOIN contests c ON c.id=s.contest"
+    rows = db.rows("SELECT s.*,c.kind AS contest_kind,c.title,c.subject AS contest_subject FROM sessions s"
+                   " JOIN contests c ON c.id=s.contest"
                    " WHERE s.learner=? AND s.finished IS NOT NULL ORDER BY s.finished DESC", learner)
     if followup not in (None, "open"):
         raise HTTPException(422, "followup must be open")
     items = []
     for r in rows:
-        if kind and r["contest_kind"] != kind:
+        if kind and r["contest_kind"] != kind or subject and r["contest_subject"] != deps.subject_param(subject):
             continue
         follow = compete.rematch_status(r)
         open_traps = db.one("SELECT COUNT(DISTINCT t.template||':'||t.reason) AS n FROM attempts a"
@@ -382,6 +391,7 @@ def compete_history(kind: str | None = None, followup: str | None = None,
             continue
         result = compete._json(r["result"], {}) or {}
         items.append({"id": r["contest"], "session": r["id"], "kind": r["contest_kind"],
+                      "subject": r["contest_subject"],
                       "title": r["title"], "finished": r["finished"], "points": r["points"],
                       "net": result.get("net"), "ranked": bool(r["ranked"]),
                       "why": r["unranked_why"], "result": result,
@@ -408,14 +418,25 @@ def unfollow_student(pid: str, x_learner: str | None = Header(default=None)) -> 
 
 
 @router.get("/api/compete/rivals")
-def compete_rivals(x_learner: str | None = Header(default=None)) -> dict:
-    return compete.rivals(learner_of(x_learner))
+def compete_rivals(subject: str | None = None, x_learner: str | None = Header(default=None)) -> dict:
+    return compete.rivals(learner_of(x_learner), deps.subject_param(subject))
 
 
+def _secs(body: dict) -> float:
+    try:
+        return float(body.get("secs", 0))
+    except (TypeError, ValueError):
+        raise HTTPException(422, "secs is a number") from None
+
+
+# Strict mode's flag (the runner's integrity events, compete.flag): /spot, its own path, because
+# /api/session/{sid}/void is Review's discard (api_review registers it first); /api/drill/{sid}/void stays for
+# older pages
+@router.post("/api/drill/{sid}/spot")
 @router.post("/api/drill/{sid}/void")
 def flag_drill(sid: str, body: dict, x_learner: str | None = Header(default=None)) -> dict:
-    return compete.flag(sid, learner_of(x_learner), str(body.get("question_id", "")),
-                        str(body.get("why", "")), float(body.get("secs", 0)))
+    return compete.flag(sid, learner_of(x_learner), str(body.get("question_id", "")), str(body.get("why", "")),
+                        _secs(body))
 
 
 @router.post("/api/drill/{sid}/confirm")
@@ -423,10 +444,10 @@ def confirm_drill(sid: str, body: dict, x_learner: str | None = Header(default=N
     return compete.confirm_next(sid, learner_of(x_learner), body.get("answer"))
 
 
-@router.post("/api/session/{sid}/void")
+@router.post("/api/session/{sid}/spot")
 def flag_test(sid: str, body: dict, x_learner: str | None = Header(default=None)) -> dict:
-    return compete.flag(sid, learner_of(x_learner), str(body.get("question_id", "")),
-                        str(body.get("why", "")), float(body.get("secs", 0)))
+    return compete.flag(sid, learner_of(x_learner), str(body.get("question_id", "")), str(body.get("why", "")),
+                        _secs(body))
 
 
 @router.post("/api/session/{sid}/confirm")
@@ -564,6 +585,9 @@ def contest_review(cid: str, x_learner: str | None = Header(default=None),
 def _slot_field(cid: str, slot: int) -> dict:
     sittings = db.rows("SELECT id,questions,answers FROM sessions WHERE contest=?"
                        " AND finished IS NOT NULL AND ranked=1", cid)
+    # R&W entrants each had their own item in a slot, and an R&W miss's reason is that item's own wording:
+    # pooled, it would quote other students' questions (live ones too), so R&W counts wrong answers unnamed
+    named = (db.one("SELECT subject FROM contests WHERE id=?", cid) or {"subject": "math"})["subject"] != "rw"
     counts: Counter = Counter()
     times = []
     for sitting in sittings:
@@ -580,7 +604,7 @@ def _slot_field(cid: str, slot: int) -> dict:
         elif attempt["correct"]:
             counts["right"] += 1
         else:
-            counts["wrong:" + progress.norm(attempt["reason"] or "Other mistake")] += 1
+            counts["wrong:" + progress.norm(attempt["reason"] or "Other mistake") if named else "wrong"] += 1
         if attempt and attempt["sms"] is not None:
             times.append(attempt["sms"])
     n = sum(counts.values())
@@ -773,7 +797,7 @@ def get_contest(cid: str, code: str | None = None, race: str | None = None,
         if not code:
             raise HTTPException(403, "join this contest first")
         return {"id": row["id"], "kind": "private", "title": row["title"],
-                "count": row["count"], "opens": row["opens"], "closes": row["closes"],
+                "count": row["count"], "opens": row["opens"], "closes": row["closes"], "subject": row["subject"],
                 "join": True}
     return _meta(row, viewer, x_tz, race)
 

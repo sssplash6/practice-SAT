@@ -52,14 +52,17 @@ def _known(template: str) -> dict:
     return entry
 
 
-def _name(entry: dict) -> str:
+def _name(template: str, entry: dict) -> str:
+    # an R&W type is named by its author (its items' skill field is a per-passage subtype)
+    if deps.subject_of(entry["topic"]) == "rw":
+        return progress.rw_label(template)
     return entry["skill"][:1].upper() + entry["skill"][1:]
 
 
 def _weight(entry: dict) -> float:
     # The catalogue stays useful before the official mapping is installed.
     same = practice.catalogue()["by_topic"].get(entry["topic"], ())
-    return round(progress.BLUEPRINT.get(entry["domain"], .15) / max(len(same), 1), 5)
+    return round(progress.DOMAIN_WEIGHT.get(entry["domain"], .15) / max(len(same), 1), 5)
 
 
 def _type(template: str, entry: dict) -> dict:
@@ -68,7 +71,8 @@ def _type(template: str, entry: dict) -> dict:
     formats = sorted({fmt for _, fmt in kinds})
     lv = drill.levels()
     level_rows = {tier: lv.get((template, tier), {}) for tier in tiers}
-    return {"template": template, "name": _name(entry), "about": entry["about"],
+    return {"template": template, "name": _name(template, entry),
+            "about": None if deps.subject_of(entry["topic"]) == "rw" else entry["about"],   # R&W's is authoring taxonomy
             "topic": entry["topic"], "domain": entry["domain"],
             "subject": deps.subject_of(entry["topic"]), "skill": entry["skill"],
             "formats": formats, "tiers": tiers, "weight": _weight(entry), "available": True,
@@ -89,6 +93,9 @@ def types(topic: str | None = None, subject: str = "math") -> list[dict]:
 
 def _match_id(cbid: str) -> dict | None:
     found = _official().get(cbid)
+    if not found:                   # an R&W id (or an index-only Math one): the skill and tier College Board lists
+        x = drill.cb_index().get(cbid.lower())
+        found = {"topic": x["topic"], "tier": x.get("tier")} if x and x.get("topic") else None
     if not found:
         return None
     names = practice.catalogue()["by_topic"].get(found["topic"], ())
@@ -169,7 +176,8 @@ def match_pick(body: Pick) -> dict:
     entry = blueprint.kinds().get(template)
     if entry is None:
         raise HTTPException(422, {"field": "template", "reason": "unknown question type"})
-    reasons = list(entry["reasons"].values())
+    # an R&W type's reasons are other passages' sentences: an outside R&W miss is logged unnamed
+    reasons = [] if deps.subject_of(template) == "rw" else list(entry["reasons"].values())
     if body.letter and body.letter not in "ABCD":
         raise HTTPException(422, {"field": "letter", "reason": "A–D"})
     picked = reasons[(ord(body.letter) - 65) % len(reasons)] if body.letter and reasons else None
@@ -178,12 +186,30 @@ def match_pick(body: Pick) -> dict:
 
 
 @router.get("/api/types/{template}/example")
-def example(template: str, want: str | None = None, tier: str | None = None) -> dict:
+def get_example(template: str, want: str | None = None, tier: str | None = None,
+                x_learner: str | None = Header(default=None)) -> dict:
+    return example(template, want, tier, deps.learner_of(x_learner) if x_learner else None)
+
+
+def example(template: str, want: str | None = None, tier: str | None = None, learner: str | None = None) -> dict:
+    """A worked example of a type, shown with its key. An R&W type's examples are its written
+    items: for a learner, one they have not met (so never the question on screen), at the
+    tier when one is left, else another type of the skill; remembered, so it never comes back."""
     entry = _known(template)
     if tier is not None and tier not in drill.TIERS:
         raise HTTPException(422, {"field": "tier", "reason": "easy, medium or hard"})
     if want is not None and len(want) > 500:
         raise HTTPException(422, {"field": "want", "reason": "too long"})
+    if deps.subject_of(template) == "rw":
+        # a written item shown with its key: only for a learner (it is spent for them), never one live anywhere
+        if not learner:
+            raise HTTPException(409, {"reason": "no_example"})
+        b = drill._builder(learner, dedupe="question")
+        q = drill._example(template, 1, b=b, tier=tier) or drill._example(template, 1, b=b)
+        if q is None:
+            raise HTTPException(409, {"reason": "no_example"})
+        drill.remember_example(learner, q)
+        return {"template": q["key"], "seed": q["seed"], "question": q, "trap_index": None, "trap_true": True}
     start = 900_000 + zlib.crc32(f"{template}:{want}:{tier}".encode()) % 10_000
     nearest = None
     for seed in range(start, start + 60):
@@ -272,6 +298,9 @@ def log_mistake(body: MistakeLog, x_learner: str | None = Header(default=None)) 
     q = {"id": "outside", "key": body.template, "seed": 900_000, "topic": entry["topic"],
          "topic_name": practice.catalogue()["topics"][entry["topic"]].name,
          "skill": entry["skill"]}
+    if deps.subject_of(body.template) == "rw":     # unnamed, named by its type, closes on clean answers in its skill
+        q["text"] = True
+        body.reason = None
     with db.transaction():
         # One request marker, even though opening a trap writes two events.
         # trap_log already follows the learner through export, merge and delete.

@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Test · SAT Freshman</title>
 <meta name="description" content="The test window: one module at a time, Bluebook's rules, nothing lost.">
+<link rel="icon" href="/favicon.ico" sizes="32x32">
 <link rel="icon" href="/assets/mark.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
 <link rel="manifest" href="/manifest.webmanifest">
@@ -12,7 +13,8 @@
 <script src="/assets/head.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800;900&family=DM+Mono:wght@400;500&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap">
+<link rel="preload" href="/assets/fonts/Geist.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap">
 <link rel="stylesheet" href="/assets/ui.css">
 <link rel="stylesheet" href="/assets/runner.css">
 <style>
@@ -23,65 +25,56 @@
   #run main { view-transition-name: none; }
   .tw-top { position: sticky; top: 0; z-index: 20; display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: center; gap: 12px;
     height: 64px; padding: 0 16px; background: var(--paper); box-shadow: inset 0 -1px 0 var(--line); }
-  .tw-exit { display: inline-flex; align-items: center; gap: 6px; height: 40px; padding: 0 10px; border: 0; border-radius: 8px; background: none;
-    color: var(--ink); font: 600 14px var(--font); cursor: pointer; }
-  .tw-exit:hover { background: var(--tile); }
-  .tw-exit .ic { display: inline-flex; }
-  .tw-title { font: 700 15px var(--font); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .tw-body { max-width: 640px; margin: 0 auto; padding: clamp(20px, 5vh, 48px) 16px 120px; display: grid; gap: 20px; }
+  .tw-top .rn-exit .ic { display: inline-flex; }
+  .tw-title { font: 600 16px var(--font); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  /* the screens are a plain column: the h1, its facts as hairline rows, one row with the primary */
+  .tw-body { max-width: 640px; margin: 0 auto; padding: 16px 16px 48px; display: grid; gap: 20px; }
   .tw-body.wide { max-width: 760px; }
   .tw-body * { min-width: 0; }
-  .tw-card { display: grid; gap: 16px; padding: 28px; border-radius: var(--radius-card); background: var(--wash); outline: none; }
+  .tw-card { display: grid; gap: 16px; outline: none; }
   .tw-card .h1 { margin: 0; }
-  .tw-card > .k { margin: 0 0 -8px; }
   .tw-lead { margin: 0; font: 500 16px/1.5 var(--font); color: var(--ink); }
-  .tw-facts { margin: 0; padding: 0; list-style: none; display: grid; gap: 10px; }
-  .tw-facts li { display: grid; grid-template-columns: 22px minmax(0, 1fr); gap: 10px; align-items: start; font: 400 15px/1.45 var(--font); color: var(--ink); }
-  .tw-facts .ic { display: inline-flex; margin-top: 1px; color: var(--soft); }
-  .tw-set { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 4px 14px; padding: 12px 0; border-block: 1px solid var(--line); }
-  .tw-set .v { margin: 0; font: 500 14.5px/1.4 var(--font); color: var(--ink); }
-  .tw-set .quiet { justify-self: end; }
-  .tw-sec { display: grid; gap: 10px; margin: 0 0 20px; }
+  .tw-facts { margin: 0; padding: 0; list-style: none; display: grid; border-top: 1px solid var(--line); }
+  .tw-facts li { display: flex; align-items: center; min-height: var(--row-h); padding: 8px 0; border-bottom: 1px solid var(--line); font: 400 14.5px/1.45 var(--font); color: var(--ink); }
+  .tw-go { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px 16px; }
+  .tw-set { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 12px; min-width: 0; }
+  .tw-set .v { margin: 0; font: 400 14.5px/1.4 var(--font); color: var(--soft); }
+  .tw-go .tw-acts { margin-left: auto; }
+  .tw-go .tw-acts:only-child { margin-left: 0; }   /* Resume / Continue alone stays on the left edge */
+  .tw-sec { display: grid; gap: 8px; margin: 0 0 16px; }
   .tw-sec[hidden] { display: none; }
   .tw-sec > .k, .tw-sec > .help { margin: 0; }
-  .tw-acts { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; }
-  .tw-links { display: flex; flex-wrap: wrap; gap: 2px 8px; margin: -4px 0 0; }
-  .tw-links .quiet { font-size: 13.5px; }
-  .tw-radios { display: grid; gap: 8px; }
-  .tw-radio { display: grid; grid-template-columns: 20px minmax(0, 1fr); gap: 10px; align-items: start; padding: 12px 14px; border-radius: var(--radius);
-    background: var(--tile); cursor: pointer; }
-  .tw-radio:has(input:checked) { background: var(--wash-2); box-shadow: inset 0 0 0 1.5px var(--amber); }
-  .tw-radio.off { cursor: default; color: var(--faint); }
-  .tw-radio input { margin: 3px 0 0; }
-  .tw-radio b { display: block; font: 600 14.5px var(--font); }
-  .tw-radio .meta { display: block; margin-top: 2px; }
-  .tw-kline { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; margin: 0; }
-  .tw-kline .k { margin: 0; }
-  .tw-chip { display: inline-flex; align-items: center; height: 24px; padding: 0 10px; border-radius: 8px; background: var(--paper);
-    font: 600 12px var(--font); color: var(--ink); white-space: nowrap; }
-  .tw-chip.ranked { box-shadow: inset 0 0 0 1px var(--ink); }
+  .tw-acts { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; }
+  .tw-links { display: flex; flex-wrap: wrap; gap: 2px 20px; margin: -8px 0 0; }
+  .tw-links .quiet { font-weight: 500; justify-self: start; }   /* quiet links under the bold primary */
+  /* in two even columns, so the fourth never wraps alone onto a line of its own */
+  @media (min-width: 760px) { .tw-links { display: grid; grid-template-columns: repeat(2, max-content); column-gap: 32px; } }
+  [data-quiet]:focus-visible { outline: none; }   /* test.js quietFocus: focused on load, ringed once a key moves focus */
+  /* Timing: the shared .choice-row (label left, minutes right); .off is the Training-only timing under Test-day */
+  .tw-radios { display: grid; gap: 4px; }
+  .tw-radios .off { color: var(--faint); cursor: default; }
+  .tw-kline { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; margin: -8px 0 0; }
+  .tw-kline .badge { height: auto; min-height: 20px; white-space: normal; }
   .tw-scale { min-height: 72px; }
-  .tw-band { font-size: clamp(48px, 8vw, 72px); margin: 0; }
-  .tw-route { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; margin: 0; font: 400 15px/1.45 var(--font); }
-  .tw-moments { margin: 0; padding: 0; list-style: none; display: grid; gap: 8px; }
-  .tw-moments li { display: flex; gap: 10px; align-items: center; font: 500 15px/1.4 var(--font); }
-  .tw-moments .ic { display: inline-flex; color: var(--amber-deep); }
-  .tw-later { display: grid; gap: 6px; padding: 12px 14px; border-radius: var(--radius); background: var(--paper); }
-  .tw-later p { margin: 0; display: flex; flex-wrap: wrap; gap: 4px 12px; align-items: center; font: 400 14.5px var(--font); }
+  .tw-band { font-size: 44px; line-height: 1; letter-spacing: -.03em; margin: 0; }
+  .tw-route { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; margin: 0; font: 400 14.5px/1.45 var(--font); }
+  .tw-moments { margin: 0; padding: 0; list-style: none; display: grid; border-top: 1px solid var(--line); }
+  .tw-moments li { min-height: var(--row-h); padding: 8px 0; border-bottom: 1px solid var(--line); font: 500 14.5px/1.4 var(--font); }
+  .tw-later { display: grid; border-top: 1px solid var(--line); }
+  .tw-later p { margin: 0; display: flex; flex-wrap: wrap; gap: 4px 12px; align-items: center; min-height: var(--row-h); padding: 4px 0; border-bottom: 1px solid var(--line); font: 400 14.5px var(--font); }
   .tw-pace { display: grid; gap: 6px; }
-  .tw-trainer { display: grid; gap: 10px; padding: 14px 16px; border-radius: var(--radius); background: var(--paper); }
+  .tw-trainer { display: grid; gap: 12px; padding: var(--card-pad); border-radius: var(--radius-card); background: var(--tile); }
   .tw-trainer .k { margin: 0; }
   .tw-strip { display: flex; gap: 3px; }
   .tw-strip i { flex: 1; max-width: 22px; height: 10px; border-radius: 2px; box-shadow: inset 0 0 0 1.5px var(--line); }
   .tw-strip i.on { background: var(--ink); box-shadow: none; }
   .tw-strip i.line { outline: 2px solid var(--amber); outline-offset: 2px; }
-  .tw-cost { margin: 0; padding: 0; list-style: none; display: flex; flex-wrap: wrap; gap: 4px 18px; }
+  .tw-cost { margin: 0; padding: 0; list-style: none; display: flex; flex-wrap: wrap; gap: 4px 16px; }
   .tw-cost li { display: inline-flex; align-items: center; gap: 8px; font: 500 14.5px var(--font); }
   @media (max-width: 759px) {
-    .tw-top { height: 56px; }
-    .tw-exit-l { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
-    .tw-card { padding: 20px 16px; }
+    .tw-top { height: 56px; padding: 0 8px; }
     .tw-acts .pill { flex: 1 1 100%; justify-content: center; }
+    .tw-go .tw-acts { flex: 1 1 100%; margin-left: 0; }
   }
 </style>
 </head>

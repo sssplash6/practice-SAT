@@ -1,4 +1,4 @@
-"""The shape of a digital SAT Math section, and filling a module to it.
+"""The shape of a digital SAT section (Math, and Reading and Writing), and filling a module to it.
 
 Moved out of tools/build_mocks.py so a section can be built for one student at
 the moment they sit it, against their own history, rather than only once onto
@@ -38,6 +38,33 @@ TIERS = {
     "module1_upper": {"easy": 3,  "medium": 8, "hard": 11},
     "module1_lower": {"easy": 11, "medium": 8, "hard": 3},
 }
+# Reading and Writing: 27 questions in 32 minutes a module, no grid-ins. Domains per module follow the
+# published shares (26 / 28 / 20 / 26 per cent of 54); tier mixes are Math's scaled to 27.
+RW_MODULE_SIZE = 27
+RW_MODULE_SECONDS = 32 * 60
+RW_DOMAIN_SPLIT = {
+    1: {"Information and Ideas": 7, "Craft and Structure": 8,
+        "Expression of Ideas": 5, "Standard English Conventions": 7},
+    2: {"Information and Ideas": 7, "Craft and Structure": 7,
+        "Expression of Ideas": 6, "Standard English Conventions": 7},
+}
+RW_TIERS = {
+    "module1":       {"easy": 9,  "medium": 9,  "hard": 9},
+    "module2_lower": {"easy": 13, "medium": 10, "hard": 4},
+    "module2_upper": {"easy": 4,  "medium": 10, "hard": 13},
+    "module1_upper": {"easy": 4,  "medium": 10, "hard": 13},
+    "module1_lower": {"easy": 13, "medium": 10, "hard": 4},
+}
+# Skills inside a domain, by College Board Question Bank proportions (the 5k bank plan's split), and
+# Bluebook's order: a module runs domain by domain, skill by skill, easiest to hardest inside each.
+RW_SKILL_WEIGHT = {
+    "rw_words_in_context": 776, "rw_text_structure_and_purpose": 443, "rw_cross_text_connections": 181,
+    "rw_central_ideas_and_details": 323, "rw_command_of_evidence": 649, "rw_inferences": 328,
+    "rw_boundaries": 658, "rw_form_structure_and_sense": 642,
+    "rw_transitions": 487, "rw_rhetorical_synthesis": 513,
+}
+RW_ORDER = tuple(RW_SKILL_WEIGHT)           # the dict above is written in Bluebook's order
+
 # the id prefix of each form's questions; every module 1 tier is 'm1'
 PREFIX = {"module1": "m1", "module1_upper": "m1", "module1_lower": "m1",
           "module2_lower": "m2l", "module2_upper": "m2u"}
@@ -46,6 +73,14 @@ PREFIX = {"module1": "m1", "module1_upper": "m1", "module1_lower": "m1",
 # 27; scaled to 22 positions that is this.
 SPR_AT = (6, 7, 13, 14, 21, 22)
 SPR_PULL = 400         # a slot that wants a grid-in really wants one
+
+# One record per subject, so a builder never hard-codes 22, 35 minutes or grid-in slots.
+SPEC = {
+    "math": {"module_size": MODULE_SIZE, "module_seconds": MODULE_SECONDS, "domain_split": DOMAIN_SPLIT,
+             "tiers": TIERS, "spr_at": SPR_AT, "order": None, "skill_weight": None},
+    "rw": {"module_size": RW_MODULE_SIZE, "module_seconds": RW_MODULE_SECONDS, "domain_split": RW_DOMAIN_SPLIT,
+           "tiers": RW_TIERS, "spr_at": (), "order": RW_ORDER, "skill_weight": RW_SKILL_WEIGHT},
+}
 
 
 def spread(counts: dict[str, int]) -> list[str]:
@@ -67,25 +102,49 @@ def module_of(form: str) -> int:
     return 2 if form.startswith("module2") else 1
 
 
-def ladder(form: str) -> list[str]:
-    """The public tier of each position, easiest first (X3's pace budgets)."""
-    return [tier for _, tier, _ in slots(form, module_of(form))]
+def ladder(form: str, subject: str = "math") -> list[str]:
+    """The public tier of each position (X3's pace budgets): easiest first for Math, easiest first
+    inside each skill for R&W."""
+    return [tier for _, tier, _ in slots(form, module_of(form), subject)]
 
 
-def slots(form: str, module: int) -> list[tuple[str, str, str | None]]:
+def skill_counts(counts: dict[str, int]) -> dict[str, int]:
+    """R&W: each domain's count shared among its skills by RW_SKILL_WEIGHT, largest remainder first."""
+    domain_of = {t: practice.catalogue()["topics"][t].domain for t in RW_ORDER}
+    out: dict[str, int] = {}
+    for dom, n in counts.items():
+        skills = [t for t in RW_ORDER if domain_of[t] == dom]
+        raw = {s: n * RW_SKILL_WEIGHT[s] / sum(RW_SKILL_WEIGHT[x] for x in skills) for s in skills}
+        got = {s: int(raw[s]) for s in skills}
+        for s in sorted(skills, key=lambda s: got[s] - raw[s])[:n - sum(got.values())]:
+            got[s] += 1
+        out.update(got)
+    return out
+
+
+def slots(form: str, module: int, subject: str = "math") -> list[tuple[str, str, str | None]]:
     """The (domain, difficulty, format) each position carries, in final order.
 
     Difficulty is sorted -- a module runs easiest to hardest -- and each domain
     is spread evenly across the positions, so every domain has easy, medium
     and hard questions in proportion.
+
+    R&W runs in Bluebook's question-type order instead: each position is (skill topic, tier, None),
+    the skills dealt their tiers from the module's mix the same way, then laid out skill by skill in
+    RW_ORDER, easiest to hardest inside each.
     """
     rank = {"easy": 0, "medium": 1, "hard": 2}
-    ladder = sorted([t for t, n in TIERS[form].items() for _ in range(n)],
+    spec = SPEC[subject]
+    ladder = sorted([t for t, n in spec["tiers"][form].items() for _ in range(n)],
                     key=lambda t: rank[t])
-    spread_ = spread(dict(DOMAIN_SPLIT[module]))
-    out = [(dom, tier, "spr" if i + 1 in SPR_AT else None)
-           for i, (dom, tier) in enumerate(zip(spread_, ladder))]
-    assert len(out) == MODULE_SIZE, f"{form} module {module}: {len(out)} slots"
+    if subject == "rw":
+        dealt = zip(spread(skill_counts(RW_DOMAIN_SPLIT[module])), ladder)
+        out = [(s, t, None) for s, t in sorted(dealt, key=lambda st: (RW_ORDER.index(st[0]), rank[st[1]]))]
+    else:
+        spread_ = spread(dict(DOMAIN_SPLIT[module]))
+        out = [(dom, tier, "spr" if i + 1 in SPR_AT else None)
+               for i, (dom, tier) in enumerate(zip(spread_, ladder))]
+    assert len(out) == spec["module_size"], f"{subject} {form} module {module}: {len(out)} slots"
     return out
 
 
@@ -315,9 +374,13 @@ def stored(cards: list[practice.Card], prefix: str, start: int = 1, sep: str = "
 
 
 def module(form: str, b: practice.Builder, log=lambda *_: None, order: str = "shuffle",
-           exposure: dict[str, int] | None = None) -> list[dict]:
-    """A module built now, as stored questions, ids prefixed by the form."""
-    cards = fill(slots(form, module_of(form)), by_domain(), b, abilities(), log, order, exposure)
+           exposure: dict[str, int] | None = None, subject: str = "math") -> list[dict]:
+    """A module built now, as stored questions, ids prefixed by the form. An R&W slot names its
+    skill, so its pool is that skill's templates.
+    ponytail: R&W items are fixed, so a learner who has seen every item of a skill gets a short
+    module; reuse seen items (never this sitting's) if that ever happens."""
+    pools = by_domain() if subject == "math" else practice.catalogue()["by_topic"]
+    cards = fill(slots(form, module_of(form), subject), pools, b, abilities(), log, order, exposure)
     return stored(cards, PREFIX[form])
 
 
@@ -349,6 +412,8 @@ def twin_slots(slot_list: list[list], b: practice.Builder, prefix: str, start: i
     used: dict[str, int] = {}
     for template, tier, fmt, *_ in slot_list:
         f = fmt if fmt in ("mcq", "spr") else None
+        # an R&W template's items are fixed and few: once its unseen ones at this tier are gone the
+        # twin is another template of the same skill (an R&W topic is one skill) at the tier
         card = draw_matching(b, template, tier, f, tries=40) or _fallback(b, template, tier, f, used) \
             or b.draw(template, practice.topic_of(template))
         if card is None:
@@ -372,7 +437,7 @@ def holds(questions: list[dict], subject: str = "math") -> dict:
     """What a module holds, in public counts only (the lobby's X2 facts)."""
     domains = Counter(q.get("domain") for q in questions)
     return {"subject": subject, "questions": len(questions),
-            "domains": {d: domains[d] for d in DOMAIN_SPLIT[1] if domains[d]},
+            "domains": {d: domains[d] for d in SPEC[subject]["domain_split"][1] if domains[d]},
             "grid_ins": sum(q.get("type") == "spr" for q in questions)}
 
 

@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>Tests · SAT Freshman admin</title>
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="icon" href="/assets/mark.svg" type="image/svg+xml">
+<link rel="manifest" href="/manifest.webmanifest">
+<meta name="theme-color" content="#FFFFFF">
+<script src="/assets/head.js"></script>
+<link rel="preload" href="/assets/fonts/Geist.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/assets/ui.css">
+<link rel="stylesheet" href="/admin/admin.css">
+</head>
+<body data-page="admin">
+<main class="page" data-nofold>
+  <div class="adm" id="root"></div>
+</main>
+<script src="/assets/ui.js"></script>
+<script src="/assets/kit.js"></script>
+<script src="/admin/admin.js"></script>
+<script>
+/* Tests and integrity: every test started in the chosen window, live ones too, flagged first. Refreshes every
+   30 s while open, so a teacher can watch a mock as it runs; a row opens that student's page. */
+(() => {
+  const { h, api, boot, num, day, ago, integrity, mmss } = AD;
+  const root = document.getElementById('root');
+  const WINDOWS = [[3, 'Last 3 hours'], [24, 'Last 24 hours'], [72, 'Last 3 days'], [168, 'Last 7 days']];
+  boot(root, 'Tests', async () => {
+    let hours = 24, onlyFlagged = false, q = '', d = await api(`/tests?hours=${hours}`);
+    const body = h('tbody'), tiles = h('div', { class: 'adm-tiles' }), stamp = h('p', { class: 'help', role: 'status' });
+    const subj = r => (r.subject === 'rw' ? 'R&W' : 'Math');
+    const label = r => `${r.full ? `Full SAT #${r.full} · ` : ''}${subj(r)} · ${r.kind}`;
+    // each event: what, how long, where (module and question): "other window 0:45 at M1 Q5"
+    const KIND = { blur: 'other window', hidden: 'tab hidden', fullscreen: 'left fullscreen', copy: 'copy', paste: 'paste' };
+    const timeline = ig => (ig.events || []).map(e => `${KIND[e.kind] || e.kind}${e.ms ? ` ${mmss(e.ms)}` : ''}`
+      + `${e.q && /\d+$/.test(e.q) ? ` at M${e.m || 1} Q${Number(String(e.q).match(/\d+$/)[0])}` : ''}`).join(' · ');
+    const draw = () => {
+      const rows = d.rows.filter(r => (!onlyFlagged || r.integrity.flagged) && (!q || `${r.name} ${r.email}`.toLowerCase().includes(q)));
+      body.replaceChildren(...rows.map(r => {
+        const ig = r.integrity || {};
+        const tr = h('tr', { class: 'row', tabindex: '0', onclick: () => { location.href = `/admin/student/?id=${encodeURIComponent(r.learner)}`; } },
+          h('td', {}, h('span', { class: 'adm-name', text: r.name || 'No name yet' }), h('span', { class: 'adm-sm', text: r.email || r.learner.slice(0, 14) })),
+          h('td', {}, h('span', { text: label(r) }), h('span', { class: 'adm-sm', text: `${ago(r.started)} · ${r.status}` })),
+          h('td', { class: 'n', text: r.low ? `${r.low}–${r.high}` : r.asked ? `${r.right} / ${r.asked}` : '-' }),
+          h('td', { class: ig.flagged ? 'low' : '' }, h('span', { class: 'adm-name', text: ig.flagged ? (ig.why || []).join(' · ') : integrity(ig) }),
+            (ig.events || []).length ? h('span', { class: 'adm-sm', text: timeline(ig) }) : null));
+        tr.addEventListener('keydown', e => { if (e.key === 'Enter') tr.click(); });
+        return tr;
+      }));
+      if (!rows.length) body.replaceChildren(h('tr', {}, h('td', { colspan: 4, class: 'adm-empty', text: onlyFlagged ? 'Nothing flagged.' : 'No tests in this window.' })));
+      const tile = (v, l) => h('div', { class: 'adm-tile' }, h('b', { text: v }), h('span', { text: l }));
+      tiles.replaceChildren(tile(num(d.rows.length), 'tests'), tile(num(d.live), 'in progress now'), tile(num(d.flagged), 'flagged'));
+      stamp.textContent = `Updated ${new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', second: '2-digit' })} · refreshes every 30 s`;
+    };
+    const reload = async () => { try { d = await api(`/tests?hours=${hours}`); draw(); } catch (_) { stamp.textContent = 'Could not refresh. Retrying in 30 s.'; } };
+    const sel = h('select', { class: 'field', 'aria-label': 'Window' }, WINDOWS.map(([v, l]) => h('option', { value: v, text: l, selected: v === hours || null })));
+    sel.addEventListener('change', () => { hours = +sel.value; reload(); });
+    const flagBox = h('label', { class: 'adm-check' }, h('input', { type: 'checkbox', onchange: e => { onlyFlagged = e.target.checked; draw(); } }), h('span', { text: 'Flagged only' }));
+    const search = h('input', { class: 'field', type: 'search', placeholder: 'Search name or email', 'aria-label': 'Search students' });
+    search.addEventListener('input', () => { q = search.value.trim().toLowerCase(); draw(); });
+    draw();
+    const timer = setInterval(() => { if (!document.hidden) reload(); }, 30000);
+    addEventListener('pagehide', () => clearInterval(timer));
+    root.replaceChildren(
+      h('a', { class: 'quiet adm-back', href: '/admin/students/', text: '← Students' }),
+      h('h1', { class: 'h1', text: 'Tests and integrity' }), tiles,
+      h('p', { class: 'help', text: 'Flagged: outside the test for over 2 minutes in total, left it 3 times or more, or tried to copy or paste. Copy and paste are blocked; leaving is timed and the student is told each time it is recorded.' }),
+      h('div', { class: 'adm-search' }, search, sel, flagBox), stamp,
+      h('div', { class: 'adm-card' }, h('div', { class: 'adm-wrap' }, h('table', { class: 'adm-t' },
+        h('thead', {}, h('tr', {}, ['Student', 'Test', 'Score', 'Integrity'].map((t, i) => h('th', { class: i === 2 ? 'n' : '', text: t })))), body))));
+  });
+})();
+</script>
+</body>
+</html>

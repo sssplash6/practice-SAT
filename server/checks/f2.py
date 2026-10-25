@@ -114,7 +114,8 @@ def check(c) -> None:
     fresh = c.get("/api/next", headers=FH)
     assert fresh.status_code == 200, fresh.text
     assert [x["kind"] for x in fresh.json()["items"][:2]] == ["start", "diagnostic"]
-    assert fresh.json()["items"][0]["start"]["body"] == {"source": "start"}
+    # every Up next body names its subject (DESIGN §1): one that names nothing runs as Math
+    assert fresh.json()["items"][0]["start"]["body"] == {"source": "start", "subject": "math"}
     assert c.get("/api/shell", headers=FH).json()["next"] == fresh.json()["items"]
     assert c.get("/api/shell", headers=FH).json()["has"]["next"]
 
@@ -122,7 +123,13 @@ def check(c) -> None:
     NH = {"X-Learner": learner, "X-Tz": "0"}
     now = dt.datetime.now(dt.timezone.utc)
     day = now.date().isoformat()
+    # fixed yesterday: review's frozen list is "as they stood at local midnight" (review.py
+    # _candidates), so a trap closed today never shows as a check-in due today
+    yesterday = (now - dt.timedelta(days=1)).isoformat()
     template = practice.catalogue()["by_topic"]["circles"][0]
+    # a different template: today's 8 warm-up attempts must not mark the check-in's own
+    # template "done today" (review.py _done_today), or the check-in is hidden as already met
+    check_template = practice.catalogue()["by_topic"]["circles"][1]
     db.ensure_learner(learner)
     db.run("INSERT INTO attempts(learner,template,seed,topic,difficulty,fmt,correct,at)"
            " VALUES (?,?,?,?,?,?,?,?)", learner, template, 1, "circles", "medium", "mcq", 1,
@@ -134,17 +141,19 @@ def check(c) -> None:
                    " VALUES (?,?,?,?,?,?,?,?)", learner, template, seed, "circles", "medium",
                    "mcq", 1, now.isoformat())
     db.run("INSERT INTO traps(learner,template,norm,reason,label,topic,hits,owed,opened,last,closed,closed_how,due)"
-           " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)", learner, template, "diameter", "diameter",
-           "Used diameter as radius", "circles", 2, 0, now.isoformat(), now.isoformat(),
-           now.isoformat(), "fixed", day)
+           " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)", learner, check_template, "diameter", "diameter",
+           "Used diameter as radius", "circles", 2, 0, yesterday, yesterday,
+           yesterday, "fixed", day)
     db.run("INSERT INTO traps(learner,template,norm,reason,label,topic,hits,owed,opened,last)"
            " VALUES (?,?,?,?,?,?,?,?,?,?)", learner, template, "radius", "radius",
            "Used radius as diameter", "circles", 3, 2, now.isoformat(), now.isoformat())
     listed = c.get("/api/next", headers=NH)
     assert listed.status_code == 200, listed.text
-    assert [x["kind"] for x in listed.json()["items"][:2]] == ["checks", "redo"]
+    # S10's review module owns the due reader now: a due check-in folds into one
+    # "review" row (source "due"), not next.py's own pre-S10 "checks" fallback
+    assert [x["kind"] for x in listed.json()["items"][:2]] == ["review", "redo"]
     assert listed.json()["items"][0]["pts"] is None
-    assert listed.json()["items"][0]["start"]["body"]["pool"] == "checks"
+    assert listed.json()["items"][0]["start"]["body"]["source"] == "due"
     assert c.get("/api/shell", headers=NH).json()["next"] == listed.json()["items"][:3]
     with patch.object(compete, "due_today", wraps=compete.due_today) as contests_due, \
          patch.object(plan, "today_summary", wraps=plan.today_summary) as plan_today:
@@ -162,7 +171,9 @@ def check(c) -> None:
         return original_part(module, name)
     with patch.object(next_actions.deps, "part", side_effect=with_plan):
         planned = next_actions.queue(learner, 0)
-    assert sum(x.get("start", {}).get("body", {}).get("pool") == "checks" for x in planned) == 1
+    # the real due check-in from above covers the same pool, so the plan's own "checks"
+    # row is deduped away; the due reader's row takes its place and says so
+    assert sum(x.get("start", {}).get("body", {}).get("pool") == "checks" for x in planned) == 0
     assert "also in today's plan" in planned[0]["reason"]
     prepared = next_actions.resolve_drill(learner, {"source": "next", "box": 15})
     assert prepared["count"] is None and prepared["segments"] and prepared["want"]
@@ -244,7 +255,9 @@ def check(c) -> None:
            (now.date() + dt.timedelta(days=1)).isoformat(), learner)
     eve = c.get("/api/next", headers=NH).json()["items"]
     assert len(eve) == 1 and eve[0]["title"].startswith("Rest"), eve
-    assert eve[0]["warmup"]["start"]["body"] == {"source": "warmup"}
+    # the warm-up names its subject (the day's: more due work, else Math), as every Up next body does
+    assert eve[0]["warmup"]["start"]["body"] == {"source": "warmup", "subject": eve[0]["warmup"]["subject"]}
+    assert eve[0]["warmup"]["subject"] in ("math", "rw")
     print("ok  /api/next: start, check-in priority, plan dedupe, points, chaining, mixed time box, contest,"
           " day done, saved, a failing queue, and the exam eve's rest with a warm-up")
 
@@ -405,7 +418,12 @@ def walk(b, base, http, sql) -> None:
         assert not pg.query_selector("a[href^='/class'], a[href^='/join']") and "class" not in pg.inner_text(".side").lower(), path
     assert meta(pg, "today") == "12/28", meta(pg, "today")
     assert f"{opened} open" in meta(pg, "review"), meta(pg, "review")
-    assert pg.is_visible(".now-strip") and "TODAY" in pg.inner_text(".now-strip").upper(), "medium height: the Today card is in the Now strip"
+    # medium height: Up next moves into the Now strip (ui.css); the Today card itself
+    # stays represented by the sidebar nav's own meta badge, just checked above, not by
+    # a second copy in the one-line strip (ui.js nowStrip, U26) -- matching the same
+    # kind/hgt split the sidebar-at-every-height walk below uses for this same element
+    assert pg.is_visible(".now-strip") and "UP NEXT" in pg.inner_text(".now-strip").upper(), \
+        "medium height: Up next is in the Now strip"
     print("ok  sidebar: 248px, R1's rows in order, no Class, one current item per page, Today 12/28, Review's open count")
 
     # ---- Shell 36: labels, the skip link, Esc returns focus (palette, quick sheet, ? sheet)

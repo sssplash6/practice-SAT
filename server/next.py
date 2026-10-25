@@ -13,7 +13,7 @@ import re
 import statistics
 from collections import Counter
 
-from . import db, deps, estimate, prefs, progress
+from . import db, deps, estimate, prefs, progress, scoring
 
 _UNSET = object()
 
@@ -36,23 +36,34 @@ def _pace(learner: str) -> int:
 
 def _item(kind: str, key: str, title: str, detail: str, reason: str, minutes: int,
           *, body: dict | None = None, href: str | None = None,
-          pts: int | None = None, urgent: bool = False, topic: str | None = None) -> dict:
+          pts: int | None = None, urgent: bool = False, topic: str | None = None,
+          subject: str | None = "math") -> dict:
+    """`subject` is the row's section (None for a row about neither, like the eve's rest); a drill
+    body always names it, since a body that names nothing would run as Math (drill.resolve)."""
     out = {"key": key, "kind": kind, "title": title, "detail": detail,
-           "reason": reason, "minutes": minutes, "pts": pts, "urgent": urgent, "topic": topic}
+           "reason": reason, "minutes": minutes, "pts": pts, "urgent": urgent, "topic": topic,
+           "subject": subject}
     if body is not None:
-        out["start"] = {"path": "/api/drill", "body": body}
+        out["start"] = {"path": "/api/drill", "body": {**body, "subject": body.get("subject") or subject or "math"}}
     elif href is not None:
         out["href"] = href
     return out
 
 
-def due(learner: str, tz: int = 0) -> dict:
-    """One Due reader for Up next. S10 owns its full, capped list."""
+def _body_subject(body: dict) -> str:
+    """A plan body's subject: its own, else what its topics or templates name, else Math."""
+    return body.get("subject") or deps.infer_subject(
+        body.get("topics"), body.get("templates"),
+        [s.get("template") for s in body.get("segments") or () if isinstance(s, dict)], default="math")
+
+
+def due(learner: str, tz: int = 0, subject: str = "math") -> dict:
+    """One Due reader for Up next, per subject. S10 owns its full, capped list."""
     reader = deps.part("review", "due")
     if reader:
-        return reader(learner, tz)
+        return reader(learner, tz, subject)
     day = _today(tz).isoformat()
-    checks = progress.due_rechecks(learner, day)
+    checks = progress.due_rechecks(learner, day, subject)
     snoozed = {key for key, until in (prefs.get(learner, tz).get("snooze") or {}).items()
                if until == day}
     items = [
@@ -70,6 +81,17 @@ def stage(learner: str, tz: int = 0) -> dict:
     return {"name": current["name"] if current else "learn", "days_to_exam": left,
             "final_week": left is not None and 0 <= left <= 7,
             "eve": left == 1}
+
+
+def box_subject(learner: str, tz: int = 0, due_left: dict | None = None) -> str:
+    """The day's time box (Study, the eve's warm-up) is one subject, as every set is: the one with
+    more due work (review due plus open mistakes), Math on a tie. `due_left` saves the review reads
+    when the caller has them."""
+    left = dict(due_left or {s: due(learner, tz, s).get("left", 0) for s in deps.SUBJECTS})
+    for t in progress.open_traps(learner):
+        s = deps.subject_of(t["topic"])
+        left[s] = left.get(s, 0) + 1
+    return "rw" if left.get("rw", 0) > left.get("math", 0) else "math"
 
 
 def _wrong(learner: str) -> tuple[Counter, Counter, list[dict]]:
@@ -98,7 +120,8 @@ def queue(learner: str, tz: int = 0, limit: int = 6, *, exclude=(), _plan=_UNSET
     """Return actions in priority order, keeping one row for each action key.
 
     `exclude` drops what a session just did (U1's chaining): each entry is a
-    key, a kind, or `kind:topic`."""
+    key, a kind, or `kind:topic`. Both subjects' rows (DESIGN §1): each kind lists
+    the day's subject first (box_subject), then the other."""
     if not 1 <= limit <= 20:
         raise ValueError("limit must be 1–20")
     today = _today(tz)
@@ -109,10 +132,11 @@ def queue(learner: str, tz: int = 0, limit: int = 6, *, exclude=(), _plan=_UNSET
     phase = stage(learner, tz)
     if phase["eve"]:
         rest = _item("rest", "rest:eve:math", "Rest. Nothing new today.", "Exam tomorrow",
-                     "A rested mind is part of your preparation", 0, href="/plan/")
+                     "A rested mind is part of your preparation", 0, href="/plan/", subject=None)
         if answered:
-            rest["warmup"] = {"title": "Warm-up · 5", "minutes": _minutes(5, seconds),
-                              "start": {"path": "/api/drill", "body": {"source": "warmup"}}}
+            warm = box_subject(learner, tz)
+            rest["warmup"] = {"title": "Warm-up · 5", "minutes": _minutes(5, seconds), "subject": warm,
+                              "start": {"path": "/api/drill", "body": {"source": "warmup", "subject": warm}}}
         return [rest]
     finished_start = db.one("SELECT 1 FROM sessions WHERE learner=? AND finished IS NOT NULL"
                             " AND json_extract(cfg,'$.source')='start' LIMIT 1", learner)
@@ -126,7 +150,7 @@ def queue(learner: str, tz: int = 0, limit: int = 6, *, exclude=(), _plan=_UNSET
                 return [_item("resume", f"resume:start:{resume['id']}",
                               f"Resume · {resume['answered']} of 8", "Finish your first eight",
                               "Your start set is waiting", _minutes(max(1, 8 - resume["answered"]), seconds),
-                              href=resume["href"], urgent=True)][:limit]
+                              href=resume["href"], urgent=True, subject=cfg.get("subject") or "math")][:limit]
         saved = deps.part("account", "saved")
         return [
             _item("start", "start:new:math", "Start with 8 questions",
@@ -139,27 +163,38 @@ def queue(learner: str, tz: int = 0, limit: int = 6, *, exclude=(), _plan=_UNSET
                   else "Asks for a name and email to show results",
                   _minutes(20, seconds), href="/diagnostic/")
         ][:limit]
-    due_list = due(learner, tz)
-    checks = [i for i in due_list.get("items", []) if i["kind"] == "check" and
-              not i.get("done") and not i.get("snoozed")]
+    due_by = {s: due(learner, tz, s) for s in deps.SUBJECTS}
+    first = box_subject(learner, tz, {s: d.get("left", 0) for s, d in due_by.items()})
+    order = [first] + [s for s in deps.SUBJECTS if s != first]
+    checks_by = {s: [i for i in due_by[s].get("items", []) if i["kind"] == "check" and
+                     not i.get("done") and not i.get("snoozed")] for s in order}
+    checks = [i for s in order for i in checks_by[s]]
     open_traps = progress.open_traps(learner)
     wrong_total, wrong_norm, wrong_rows = _wrong(learner)
-    gains = estimate.gains(learner) if answered >= estimate.MIN_ANSWERS else None
-    board = progress.board(learner) if _board is _UNSET else _board
-    names = progress.topics()
+    gains_by = {s: estimate.gains(learner, s) for s in order}      # None under 30 answers of that subject
+    if _board is _UNSET or not _board:
+        boards = {s: progress.board(learner, s) for s in order}
+    else:                                   # the shell's board may hold one subject: the other is read here
+        boards = {s: {k: v for k, v in _board.items() if v.get("subject", "math") == s} for s in order}
+        boards = {s: b or progress.board(learner, s) for s, b in boards.items()}
+    names = {**progress.topics("math"), **progress.topics("rw")}
     settings = prefs.get(learner, tz)
     length = settings.get("set_length", 10) or None
     rows = []
 
+    def gains_of(topic: str) -> dict | None:
+        return gains_by.get(deps.subject_of(topic))
+
     if resume and resume["kind"] in api_shell.RESUME_TESTS:
         remaining = resume["seconds_left"]
         if remaining is None or remaining > 0 or resume.get("paused"):
+            sub = db.one("SELECT subject FROM sessions WHERE id=?", resume["id"])
             rows.append(_item("resume", f"resume:test:{resume['id']}",
                               # the count once, in the detail ("Resume module · 0/22" over "0 of 22 answered" said it twice)
                               f"Resume your {resume['kind']}",
                               f"{resume['answered']} of {resume['total']} answered",
                               "Your clock is still running", math.ceil(remaining / 60) if remaining else 0,
-                              href=resume["href"], urgent=True))
+                              href=resume["href"], urgent=True, subject=(sub and sub["subject"]) or "math"))
 
     if _closing is _UNSET:
         closing = deps.part("compete", "closing_soon")
@@ -172,7 +207,8 @@ def queue(learner: str, tz: int = 0, limit: int = 6, *, exclude=(), _plan=_UNSET
                 if close.date() == today + dt.timedelta(days=1) else _day(close.date()))
         rows.append(_item("contest", f"contest:private:{contest['id']}", contest["title"],
                           "A private contest is waiting", f"Closes {when} {close:%H:%M}",
-                          _minutes(10, seconds), href=f"/compete/contest/?id={contest['id']}", urgent=True))
+                          _minutes(10, seconds), href=f"/compete/contest/?id={contest['id']}", urgent=True,
+                          subject=contest.get("subject") or "math"))
 
     if _plan is _UNSET:
         plan_fn = deps.part("plan", "today_summary")
@@ -190,9 +226,10 @@ def queue(learner: str, tz: int = 0, limit: int = 6, *, exclude=(), _plan=_UNSET
     plan_pools = {body.get("pool") for _, _, body in planned}
     plan_sources = {body.get("source") for _, _, body in planned}
     for task, start, body in planned:
-        if ((body.get("pool") == "checks" and checks) or
-            (body.get("pool") == "redo" and open_traps) or
-            (body.get("source") == "due" and due_list.get("left"))):
+        s = _body_subject(body)
+        if ((body.get("pool") == "checks" and checks_by.get(s)) or
+            (body.get("pool") == "redo" and any(deps.subject_of(t["topic"]) == s for t in open_traps)) or
+            (body.get("source") == "due" and due_by[s].get("left"))):
             continue
         if task.get("kind") == "words" and any(r["kind"] == "words" for r in rows):
             continue
@@ -202,49 +239,53 @@ def queue(learner: str, tz: int = 0, limit: int = 6, *, exclude=(), _plan=_UNSET
                      else f"Today's plan · {plan['tasks_counted']} {'task' if plan['tasks_counted'] == 1 else 'tasks'}"),
                     math.ceil(task.get("minutes") or _minutes(task.get("count") or 1, seconds)),
                     body=body if start.get("path") == "/api/drill" else None,
-                    href=start.get("path") if start.get("path") != "/api/drill" else None)
+                    href=start.get("path") if start.get("path") != "/api/drill" else None, subject=s)
         if start.get("path") != "/api/drill" and start.get("path"):
             row.pop("href", None)
             row["start"] = start
         rows.append(row)
 
-    if deps.part("review", "due") and due_list.get("left"):
-        count = due_list["left"]
-        rows.append(_item("review", "review:due:math", "Review what's due",
+    reviewing = [s for s in order if due_by[s].get("left")]
+    for s in reviewing if deps.part("review", "due") else ():
+        count = due_by[s]["left"]
+        both = len(reviewing) > 1
+        rows.append(_item("review", f"review:due:{s}", "Review what's due" + (f" · {scoring.SECTION_NAME[s]}" if both else ""),
                           f"{count} due",                   # the meta adds the minutes once
                           "Today's check-ins and spaced review" +
                           (" · also in today's plan" if "due" in plan_sources or "checks" in plan_pools else ""),
                           _minutes(count, seconds), body={"source": "due", "box": settings.get("review_minutes", 10) or None},   # 0 means all of it
-                          urgent=bool(checks)))
-    elif checks:
-        ids = [i["trap_id"] for i in checks[:3] if i.get("trap_id")]
+                          urgent=bool(checks_by[s]), subject=s))
+    for s in order if not deps.part("review", "due") else ():
+        ids = [i["trap_id"] for i in checks_by[s][:3] if i.get("trap_id")]
         if ids:
             count = min(3 * len(ids), 9)
-            title = f"Check-in: {checks[0]['label']}"
+            title = f"Check-in: {checks_by[s][0]['label']}"
             if len(ids) > 1:
                 title += f" (+{len(ids) - 1} more)"
-            rows.append(_item("checks", "checks:checks:math", title,
+            rows.append(_item("checks", f"checks:checks:{s}", title,
                               f"{count} questions", "Checking that the fix stuck" +
                               (" · also in today's plan" if "checks" in plan_pools else ""),
                               _minutes(count, seconds), body={"pool": "checks", "ids": ids,
-                                                             "count": count}, urgent=True))
+                                                             "count": count}, urgent=True, subject=s))
 
-    ranked_traps = sorted(open_traps, key=lambda t: (-(_points(gains, t["topic"],
-                       wrong_norm[(t["template"], t["norm"])] / wrong_total[t["topic"]]
-                       if wrong_total[t["topic"]] else 0) or 0), -t["hits"], t["id"]))
+    def trap_pts(t: dict) -> int | None:
+        hits = wrong_norm[(t["template"], t["norm"])]
+        return _points(gains_of(t["topic"]), t["topic"], hits / wrong_total[t["topic"]] if wrong_total[t["topic"]] else 0)
+
+    ranked_traps = sorted(open_traps, key=lambda t: (-(trap_pts(t) or 0), -t["hits"], t["id"]))
     for trap in ranked_traps[:3]:
-        hits = wrong_norm[(trap["template"], trap["norm"])]
-        pts = _points(gains, trap["topic"], hits / wrong_total[trap["topic"]]
-                      if wrong_total[trap["topic"]] else 0)
         rows.append(_item("redo", f"redo:redo:{trap['id']}", f"Fix: {trap['label']}",
                           "3 questions",
                           ("Caught you once" if trap["hits"] == 1 else "Caught you twice" if trap["hits"] == 2
                            else f"Caught you {trap['hits']} times") +
                           (" · also in today's plan" if "redo" in plan_pools else ""),
                           _minutes(3, seconds), body={"pool": "redo", "ids": [trap["id"]], "count": 3},
-                          pts=pts, topic=trap["topic"]))
+                          pts=trap_pts(trap), topic=trap["topic"], subject=deps.subject_of(trap["topic"])))
 
+    gains = gains_by.get("math")
     family_of = deps.part("habits", "family_of")
+    # habits are Math's named reasoning slips (habits.families is empty for R&W), so only Math misses count
+    wrong_rows = [r for r in wrong_rows if deps.subject_of(r["topic"]) == "math"]
     if family_of and len(wrong_rows) >= 4:
         recent = wrong_rows[:20]
         families = Counter((family_of(r["reason"] or "") or {}).get("id") for r in recent)
@@ -264,20 +305,27 @@ def queue(learner: str, tz: int = 0, limit: int = 6, *, exclude=(), _plan=_UNSET
                                   _minutes(8, seconds), body={"source": "habit", "habit": family, "count": 8},
                                   pts=points if gains and points and points >= 1 else None))
 
-    rough = [t for t, v in board.items() if v["evidence"] < 10]
-    if not phase["final_week"] and answered < 200 and len(rough) >= 4:
-        rows.append(_item("probe", "probe:new:math", "Sharpen · 12 q",
-                          "12 questions across your skills", "Find your weak skills first",
-                          _minutes(12, seconds), body={"source": "probe", "count": 12}))
+    answered_by = Counter()
+    for r in db.rows("SELECT topic, COUNT(*) AS n FROM attempts WHERE learner=? GROUP BY topic", learner):
+        answered_by[deps.subject_of(r["topic"])] += r["n"]
+    for s in order:
+        rough = [t for t, v in boards[s].items() if v["evidence"] < 10]
+        if not phase["final_week"] and answered_by[s] < 200 and len(rough) >= 4:
+            rows.append(_item("probe", f"probe:new:{s}", "Sharpen · 12 q",
+                              f"12 questions across your {scoring.SECTION_NAME[s]} skills", "Find your weak skills first",
+                              _minutes(12, seconds), body={"source": "probe", "count": 12}, subject=s))
 
-    candidates = sorted((gains or {}).get("skills", []), key=lambda x: -x["gain"])
-    topic = candidates[0]["topic"] if candidates else progress.coach(learner, k=1)["topics"][0]
     count = length or 10
-    pts = _points(gains, topic)
-    rows.append(_item("skill", f"skill:new:{topic}", f"{names[topic].name} · {count} q",
-                      f"{count} questions", "Most points on the table" if pts else
-                      "Your next useful skill", _minutes(count, seconds),
-                      body={"topics": [topic], "count": length}, pts=pts, topic=topic))
+    for s in order:
+        candidates = sorted((gains_by[s] or {}).get("skills", []), key=lambda x: -x["gain"])
+        topic = candidates[0]["topic"] if candidates else (progress.coach(learner, k=1, subject=s)["topics"] or [None])[0]
+        if topic not in names:
+            continue
+        pts = _points(gains_by[s], topic)
+        rows.append(_item("skill", f"skill:new:{topic}", f"{names[topic].name} · {count} q",
+                          f"{count} questions", "Most points on the table" if pts else
+                          "Your next useful skill", _minutes(count, seconds),
+                          body={"topics": [topic], "count": length}, pts=pts, topic=topic, subject=s))
 
     for saved in db.rows("SELECT template,seed,topic,at FROM saved WHERE learner=? ORDER BY at", learner):
         on = dt.date.fromisoformat(saved["at"][:10])
@@ -288,40 +336,43 @@ def queue(learner: str, tz: int = 0, limit: int = 6, *, exclude=(), _plan=_UNSET
                           f"Saved {_day(on)} · try a fresh one", "1 question",
                           "Saved questions come back twice", _minutes(1, seconds), topic=saved["topic"],
                           body={"pool": "saved", "ids": [[saved["template"], saved["seed"]]],
-                                "exact": False, "each": 1, "count": 1}))
+                                "exact": False, "each": 1, "count": 1}, subject=deps.subject_of(saved["template"])))
 
-    if settings.get("keep_warm"):
-        warm = [v for v in board.values() if v["fading"]]
+    for s in order if settings.get("keep_warm") else ():
+        warm = [v for v in boards[s].values() if v["fading"]]
         if warm:
             v = max(warm, key=lambda x: x["last"] or "")
             rows.append(_item("warm", f"warm:review:{v['topic']}",
                               f"Keep warm: {v['name']} · 3", "3 questions",
                               f"Strong, last practised {_day(dt.date.fromisoformat(v['last'][:10]))}",
                               _minutes(3, seconds), topic=v["topic"],
-                              body={"pool": "review", "topics": [v["topic"]], "count": 3}))
+                              body={"pool": "review", "topics": [v["topic"]], "count": 3}, subject=s))
 
     if not phase["final_week"]:
         seen = {r["template"] for r in db.rows("SELECT DISTINCT template FROM attempts WHERE learner=?", learner)}
         from . import practice
         cat = practice.catalogue()["by_topic"]
-        unseen = [(t, len(set(templates) - seen)) for t, templates in cat.items()]
-        unseen = [(t, n) for t, n in unseen if n]
-        if unseen:
-            shares = estimate.shares()
-            t, n = max(unseen, key=lambda x: (x[1] * shares.get(x[0], 0), x[1]))
-            rows.append(_item("untried", f"untried:untried:{t}",
-                              f"{min(5, n)} new kinds of {names[t].name} question",
-                              f"{n} types not met", "See a form you have not seen yet",
-                              _minutes(min(5, n), seconds), topic=t,
-                              body={"pool": "untried", "topics": [t], "count": min(5, n)}))
+        for s in order:
+            unseen = [(t, len(set(templates) - seen)) for t, templates in cat.items() if deps.subject_of(t) == s]
+            unseen = [(t, n) for t, n in unseen if n and t in names]
+            if unseen:
+                shares = estimate.shares(s)
+                t, n = max(unseen, key=lambda x: (x[1] * shares.get(x[0], 0), x[1]))
+                rows.append(_item("untried", f"untried:untried:{t}",
+                                  f"{min(5, n)} new kinds of {names[t].name} question",
+                                  f"{n} types not met", "See a form you have not seen yet",
+                                  _minutes(min(5, n), seconds), topic=t,
+                                  body={"pool": "untried", "topics": [t], "count": min(5, n)}, subject=s))
 
-    if not db.one("SELECT 1 FROM attempts WHERE learner=? AND session=?", learner,
-                  f"qotd:{today.isoformat()}"):
-        rows.append(_item("qotd", f"qotd:today:{today.isoformat()}", "Question of the day",
-                          "1 question", "Keep your day's-questions streak", _minutes(1, seconds), href="/#qotd"))
+    from . import daily
+    left = sum(m is None for m in daily.marks(learner, today.isoformat()).values())
+    if left:
+        rows.append(_item("qotd", f"qotd:today:{today.isoformat()}", "Questions of the day",
+                          f"{left} question{'s' if left > 1 else ''}", "Keep your day's-questions streak",
+                          _minutes(left, seconds), href="/#qotd", subject=None))
 
-    if plan and plan.get("status") == "done" and not any(r["urgent"] for r in rows):
-        skill = next(r for r in rows if r["kind"] == "skill")
+    skill = next((r for r in rows if r["kind"] == "skill"), None)
+    if skill and plan and plan.get("status") == "done" and not any(r["urgent"] for r in rows):
         skill["title"] = f"Day done · Another? {skill['title']}"
         rows.remove(skill)
         rows.insert(0, skill)
@@ -348,16 +399,18 @@ def resolve_drill(learner: str, body: dict) -> dict:
         from fastapi import HTTPException
         raise HTTPException(422, {"field": "box", "reason": "use 5–180 minutes"})
     tz = body.get("tz", 0)
+    # a set is one subject: the body's, else the day's (more due work, else Math)
+    subject = body.get("subject") if body.get("subject") in deps.SUBJECTS else box_subject(learner, tz)
     slots = []
     want = dict(body.get("want") or {})
     used = set()
-    for item in due(learner, tz)["items"]:
+    for item in due(learner, tz, subject)["items"]:
         if item["kind"] == "check" and not item.get("done") and not item.get("snoozed"):
             trap = db.one("SELECT * FROM traps WHERE id=? AND learner=?", item["trap_id"], learner)
             if not trap:
                 continue
             template = progress.checkin_template(trap)
-            if template in used:
+            if template in used or deps.subject_of(template) != subject:
                 continue
             used.add(template)
             slots.append({"template": template, "why": "A fix is due a check-in"})
@@ -366,8 +419,8 @@ def resolve_drill(learner: str, body: dict) -> dict:
         if len(slots) == 3:
             break
     wrong_total, wrong_norm, _ = _wrong(learner)
-    gains = estimate.gains(learner)
-    traps = sorted(progress.open_traps(learner), key=lambda t: (
+    gains = estimate.gains(learner, subject)
+    traps = sorted(progress.open_traps(learner, subject=subject), key=lambda t: (
         -(_points(gains, t["topic"], wrong_norm[(t["template"], t["norm"])] /
                   wrong_total[t["topic"]] if wrong_total[t["topic"]] else 0) or 0),
         -t["hits"], t["id"]))
@@ -380,7 +433,7 @@ def resolve_drill(learner: str, body: dict) -> dict:
             want[trap["template"]] = "^" + re.escape(trap["norm"]) + "$"
         if sum(x["why"] == "Fix an open mistake" for x in slots) == 4:
             break
-    board = progress.board(learner)
+    board = progress.board(learner, subject)
     weak = min(board.values(), key=lambda x: (x["mastery"], x["answered"]))
     from . import practice
     for template in practice.catalogue()["by_topic"][weak["topic"]][:3]:
@@ -399,5 +452,5 @@ def resolve_drill(learner: str, body: dict) -> dict:
         index = min(range(len(slots)), key=lambda i: (
             practice.topic_of(slots[i]["template"]) == prior, -left[practice.topic_of(slots[i]["template"])], i))
         mixed.append(slots.pop(index))
-    return {**body, "source": "next", "box": box, "count": None,
+    return {**body, "source": "next", "box": box, "count": None, "subject": subject,
             "order": "mixed", "segments": mixed[:30], "want": want}

@@ -19,6 +19,8 @@ import tempfile
 
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent.parent))
 
+# the flow's learners are anonymous codes: email-only access is off here and checked on its own (checks/email_only.py)
+os.environ["SATF_EMAIL_ONLY"] = "0"
 # point the store at a scratch file before anything imports it
 _tmp = tempfile.TemporaryDirectory()
 from server import db                                        # noqa: E402
@@ -42,9 +44,11 @@ def main() -> int:
     with TestClient(app) as c:
         # --- every form is a diagnostic, not just twenty questions -----------
         from server.app import FORMS
-        assert len(FORMS) == 10, f"{len(FORMS)} forms"
+        from server.api_tests import FORM_IDS
+        assert len(FORM_IDS["math"]) == 10 and len(FORMS) == 10 + len(FORM_IDS["rw"]), f"{len(FORMS)} forms"
         seen_stems = set()
-        for fid, qs in FORMS.items():
+        for fid in FORM_IDS["math"]:
+            qs = FORMS[fid]
             assert len(qs) == 20, f"form {fid} has {len(qs)}"
             for d in DOMAINS:
                 tiers = sorted(q["difficulty"] for q in qs if q["domain"] == d)
@@ -57,8 +61,26 @@ def main() -> int:
             for q in qs:
                 assert q["stem"] not in seen_stems, f"form {fid} repeats a stem"
                 seen_stems.add(q["stem"])
-        print(f"ok  {len(FORMS)} forms, 4 domains x (1 easy, 2 medium, 2 hard), "
+        print(f"ok  {len(FORM_IDS['math'])} Math forms, 4 domains x (1 easy, 2 medium, 2 hard), "
               f"{len(seen_stems)} distinct questions")
+        # the R&W forms: the same shape over R&W's four domains, in Bluebook's order (domain by
+        # domain, skill by skill, easiest to hardest inside each), no item on two forms
+        from server import blueprint
+        assert len(FORM_IDS["rw"]) >= 3 and all(fid > 100 for fid in FORM_IDS["rw"])
+        rw_seen = set()
+        for fid in FORM_IDS["rw"]:
+            qs = FORMS[fid]
+            assert len(qs) == 20 and all(q["type"] == "mcq" and q["text"] for q in qs), f"R&W form {fid}"
+            for d in scoring.RW_DOMAINS:
+                tiers = sorted(q["difficulty"] for q in qs if q["domain"] == d)
+                assert tiers == ["easy", "hard", "hard", "medium", "medium"], f"R&W form {fid} {d}: {tiers}"
+            rank = {"easy": 0, "medium": 1, "hard": 2}
+            order = [(blueprint.RW_ORDER.index(q["topic"]), rank[q["difficulty"]]) for q in qs]
+            assert order == sorted(order), f"R&W form {fid} is out of Bluebook's order"
+            for q in qs:
+                assert q["text"] + q["stem"] not in rw_seen, f"R&W form {fid} repeats an item"
+                rw_seen.add(q["text"] + q["stem"])
+        print(f"ok  {len(FORM_IDS['rw'])} R&W forms, 4 domains x (1 easy, 2 medium, 2 hard), Bluebook's order")
 
         # --- starting ---------------------------------------------------------
         s = c.post("/api/session").json()
@@ -97,7 +119,7 @@ def main() -> int:
         # --- answering, every one right --------------------------------------
         form = FORMS[s["form"]]
         for q in form:
-            right = "ABCD".index(q["answer"]) if q["type"] == "mcq" else q["answer"]
+            right = "ABCD".index(q["answer"]) if q["type"] == "mcq" else scoring.keys(q["answer"])[0]
             r = c.post(f"/api/session/{sid}/answer", headers=DH,
                        json={"question_id": q["id"], "answer": right})
             assert r.status_code == 200, r.text
@@ -141,12 +163,12 @@ def main() -> int:
         print("ok  the link verifies once and not twice")
 
         # --- results -------------------------------------------------------------
-        res = c.get(f"/api/session/{sid}/results").json()
+        res = c.get(f"/api/session/{sid}/results", headers=DH).json()
         assert res["right"] == 20 and res["verified"] is True
         assert [d["domain"] for d in res["domains"]] == list(DOMAINS)
         assert all(d["band"] == "Strong" and d["focus"] == [] for d in res["domains"])
         lo, hi = res["estimate"]["low"], res["estimate"]["high"]
-        assert hi - lo >= 100 and 200 <= lo < hi <= 800, f"band {lo}-{hi}"
+        assert hi - lo == 20 and 200 <= lo < hi <= 800, f"band {lo}-{hi}"     # the 20-point rule (scoring.band)
         assert len(res["review"]) == 20 and res["review"][0]["rationale"]
         print(f"ok  results release after signup: Math {lo}-{hi}, every domain Strong")
 
@@ -211,7 +233,7 @@ def main() -> int:
             c.post(f"/api/session/{pid['id']}/answer", headers={"X-Learner": "u:check2"},
                    json={"question_id": q["id"], "answer": 0})
         c.post(f"/api/session/{pid['id']}/finish", headers={"X-Learner": "u:check2"})
-        res = c.get(f"/api/session/{pid['id']}/results")
+        res = c.get(f"/api/session/{pid['id']}/results", headers={"X-Learner": "u:check2"})
         assert res.status_code == 200, "practice results were gated behind signup"
         assert res.json()["mode"] == "practice"
         print("ok  practice guards hold, and its results need no signup")
@@ -258,7 +280,7 @@ def main() -> int:
             def reply(qs, upto):
                 for i, q in enumerate(qs):
                     k = keyed[q["id"]]
-                    right = "ABCD".index(k["answer"]) if k["type"] == "mcq" else k["answer"]
+                    right = "ABCD".index(k["answer"]) if k["type"] == "mcq" else scoring.keys(k["answer"])[0]
                     wrong = ("ABCD".index(k["answer"]) + 1) % 4 if k["type"] == "mcq" else "0"
                     c.post(f"/api/session/{sid}/answer", headers=MH,
                            json={"question_id": q["id"],
@@ -271,7 +293,7 @@ def main() -> int:
             assert two["seconds"] > 2000, "module 2 did not get its own clock"
             reply(two["questions"], 22)
             c.post(f"/api/session/{sid}/finish", headers=MH)
-            return gate, c.get(f"/api/session/{sid}/results").json()
+            return gate, c.get(f"/api/session/{sid}/results", headers=MH).json()
 
         gate, res = sit("1.1", 22)
         assert res["estimate"]["route"] == "upper", res["estimate"]
@@ -280,8 +302,9 @@ def main() -> int:
 
         gate, res = sit("1.2", 8)
         assert res["estimate"]["route"] == "lower", res["estimate"]
-        assert res["estimate"]["capped"], "a low route has no ceiling"
+        # a 20-point band only meets the ceiling when its centre is near it; the rule is never above 580
         assert res["estimate"]["high"] <= 580, res["estimate"]
+        assert res["estimate"]["capped"] or res["estimate"]["high"] < 580, res["estimate"]
         print(f"ok  routing is adaptive: a strong module 1 reaches {top}, "
               f"a weak one is capped at {res['estimate']['high']}")
 
@@ -290,6 +313,7 @@ def main() -> int:
         print("ok  a perfect lower module 2 still scores under a strong route")
 
         check_learner(c)
+        check_rw(c)
         check_integrity(c)
         run_checks(c)
 
@@ -332,7 +356,7 @@ def keyed_answer(q: dict, right: bool):
             return k
         # a wrong option that names its mistake, so the trap has a label
         return next(i for i in range(4) if i != k and q["reasons"][i])
-    return q["answer"] if right else "-99999"
+    return scoring.keys(q["answer"])[0] if right else "-99999"
 
 
 def check_learner(c) -> None:
@@ -507,12 +531,18 @@ def check_learner(c) -> None:
             c.post(f"/api/session/{mid}/answer", headers=H,
                    json={"question_id": q["id"], "answer": keyed_answer(q, False)})
         c.post(f"/api/session/{mid}/finish", headers=H)
-        res = c.get(f"/api/session/{mid}/results").json()
+        res = c.get(f"/api/session/{mid}/results", headers=H).json()
         return mid, m1 + m2, res
 
     mid1, qs1, res1 = sit_fresh(20)
     assert res1["estimate"]["route"] == "upper" and res1["right"] == 20
-    assert any(r["mistake"] for r in res1["review"]), "the review names no mistakes"
+    # SR3 holds a miss's mistake back until its key is seen; reveal one first.
+    # An mcq miss always picks a named wrong option (keyed_answer); a grid-in
+    # miss is just "-99999" and may name no misconception.
+    a_miss = next(r["id"] for r in res1["review"] if r["status"] != "correct" and r["type"] == "mcq")
+    c.post(f"/api/session/{mid1}/seen", headers=H, json={"qids": [a_miss]})
+    res1 = c.get(f"/api/session/{mid1}/results", headers=H).json()
+    assert any(r.get("mistake") for r in res1["review"]), "the review names no mistakes"
     mid2, qs2, res2 = sit_fresh(5)
     assert res2["estimate"]["route"] == "lower" and res2["estimate"]["high"] <= 580, res2["estimate"]
     shared = {q["stem"] for q in qs1} & {q["stem"] for q in qs2}
@@ -649,6 +679,198 @@ def check_learner(c) -> None:
     assert len(same) == 1 and same[0]["hits"] == 2, same
     assert not c.get("/api/mistakes", headers=OLD).json()["traps"]
     print("ok  taking another device's code carries this one's answers, mistakes and profile over")
+
+
+def check_rw(c) -> None:
+    """Reading and Writing through the test kinds, and the full SAT (spec/full-sat/DESIGN.md section 2)."""
+    import datetime as dt
+    from collections import Counter
+
+    from server import api_tests, blueprint
+    H = {"X-Learner": "a:flowrw01"}
+
+    def live(sid):
+        return api_tests.questions_of(db.one("SELECT * FROM sessions WHERE id=?", sid))
+
+    def module(sid, right):
+        """Begin the live module and hand it in: the first `right` right, the rest wrong."""
+        c.post(f"/api/session/{sid}/begin", headers=H)
+        for i, q in enumerate(live(sid)):
+            c.post(f"/api/session/{sid}/answer", headers=H, json={"question_id": q["id"], "answer": keyed_answer(q, i < right)})
+        return c.post(f"/api/session/{sid}/finish", headers=H).json()
+
+    # --- an R&W section: 27 + 27 in Bluebook's order, 32 minutes a module, routed ----------------
+    st = c.post("/api/mock/new", headers=H, json={"kind": "section", "subject": "rw"}).json()
+    sid = st["id"]
+    assert st["subject"] == "rw" and st["duration"] == 32 * 60 and st["calculator"] is False, st
+    assert [m["questions"] for m in st["modules"]] == [27, 27] and st["holds"]["grid_ins"] == 0
+    m1 = live(sid)
+    assert Counter(q["domain"] for q in m1) == Counter(blueprint.RW_DOMAIN_SPLIT[1])
+    assert Counter(q["difficulty"] for q in m1) == blueprint.RW_TIERS["module1"]
+    assert all(q["type"] == "mcq" and q["text"] for q in m1) and len({(q["key"], q["seed"]) for q in m1}) == 27
+    rank = {"easy": 0, "medium": 1, "hard": 2}
+    order = [(blueprint.RW_ORDER.index(q["topic"]), rank[q["difficulty"]]) for q in m1]
+    assert order == sorted(order), "an R&W module runs skill by skill, easiest first inside each"
+    c.post(f"/api/session/{sid}/begin", headers=H)
+    mark = {"question_id": m1[0]["id"], "marks": [{"start": 0, "end": 5, "style": "highlight", "at": "p"}]}
+    assert c.post(f"/api/session/{sid}/state", headers=H, json=mark).status_code == 200, "a passage highlight"
+    gate = module(sid, 20)
+    assert gate["next_module"] == 2
+    up = live(sid)
+    assert len(up) == 27 and Counter(q["difficulty"] for q in up) == blueprint.RW_TIERS["module2_upper"]
+    assert not {(q["key"], q["seed"]) for q in up} & {(q["key"], q["seed"]) for q in m1}, "a repeat in one sitting"
+    done = module(sid, 0)["done"]
+    res = c.get(f"/api/session/{sid}/results", headers=H).json()
+    e = res["estimate"]
+    assert e["route"] == "upper" and e["section"] == "Reading and Writing" and e["high"] - e["low"] == 20, e
+    assert done["subject"] == "rw" and done["estimate"]["low"] == e["low"] and done["gate"]["needed"] == 17
+    assert res["clock_ms"] == 2 * 32 * 60 * 1000 and res["route_rule"]["half_band"] == 10
+    # an R&W sitting is measured against the R&W target, never the Math one
+    db.run("UPDATE learners SET target=750, rw_target=500 WHERE id=?", H["X-Learner"])
+    low = c.post("/api/mock/new", headers=H, json={"kind": "section", "subject": "rw"}).json()["id"]
+    module(low, 5)
+    low_done = module(low, 27)["done"]
+    rep = c.get(f"/api/session/{low}/results", headers=H).json()
+    lo = rep["estimate"]
+    assert lo["route"] == "lower" and lo["high"] <= 580 and lo["high"] - lo["low"] == 20, lo
+    assert low_done["estimate"]["target"] == 500 and rep["profile"]["target"] == 500, rep["profile"]
+    assert c.get("/api/stats?subject=rw", headers=H).json()["profile"]["target"] == 500, "the R&W results chart's target"
+    assert c.get("/api/tests?subject=rw", headers=H).json()["target"] == 500
+    assert rep["seq"] == 2, "the second R&W section is R&W Section #2"
+    assert not rep["path"] or rep["path"]["target"] == 500, rep["path"]
+    # an R&W item is one passage and question: its seeds wrap, so the same item under another seed
+    # must not come back (remembered by the whole question, as the builders dedupe it)
+    ident = lambda q: (q["text"], q["stem"])      # noqa: E731
+    seen = {ident(q) for q in m1 + up}
+    both = json.loads(db.one("SELECT questions FROM sessions WHERE id=?", low)["questions"])
+    assert not seen & {ident(q) for q in both["module1"] + both["module2"]}, "an R&W item came back"
+    seen |= {ident(q) for q in both["module1"] + both["module2"]}
+    # its twin: each slot's skill and tier, items this learner has not had
+    tw = c.post("/api/mock/new", headers=H, json={"kind": "twin", "twin_of": sid}).json()
+    t1 = live(tw["id"])
+    assert tw["subject"] == "rw" and [(q["topic"], q["difficulty"]) for q in t1] == [(q["topic"], q["difficulty"]) for q in m1]
+    assert not {ident(q) for q in t1} & seen, "an R&W twin repeated an item"
+    # a drill on the same skills while an R&W section is live serves none of its items
+    D = {"X-Learner": "a:flowrw02"}
+    s2 = c.post("/api/mock/new", headers=D, json={"kind": "section", "subject": "rw"}).json()["id"]
+    c.post(f"/api/session/{s2}/begin", headers=D)
+    on = {ident(q) for q in live(s2)}
+    dr = c.post("/api/drill", headers=D, json={"topics": ["rw_words_in_context", "rw_boundaries"], "count": 12}).json()
+    for _ in range(12):
+        cur = stored(dr["id"])[-1]
+        c.post(f"/api/drill/{dr['id']}/answer", headers=D, json={"question_id": cur["id"], "answer": keyed_answer(cur, True)})
+        if c.post(f"/api/drill/{dr['id']}/next", headers=D).json().get("done"):
+            break
+    assert len(stored(dr["id"])) >= 10 and not on & {ident(q) for q in stored(dr["id"])}, "a drill served a live test's item"
+    c.post(f"/api/session/{tw['id']}/discard", headers=H)
+    print(f"ok  R&W section: 27 + 27 in Bluebook's order, routed (upper {e['low']}-{e['high']}, lower capped at "
+          f"{lo['high']}), passage highlights kept, a twin of new items skill by skill")
+
+    # --- the R&W diagnostic and a custom test ------------------------------------------------------
+    dg = c.post("/api/session", headers=H, json={"subject": "rw"}).json()
+    assert dg["subject"] == "rw" and dg["form"] in api_tests.FORM_IDS["rw"] and dg["duration"] == 20 * 71, dg
+    c.post(f"/api/session/{dg['id']}/begin", headers=H)
+    for q in api_tests.FORMS[dg["form"]]:
+        c.post(f"/api/session/{dg['id']}/answer", headers=H, json={"question_id": q["id"], "answer": keyed_answer(q, True)})
+    assert c.post(f"/api/session/{dg['id']}/finish", headers=H).json()["right"] == 20
+    # (its report waits for a saved account, as Math's does: read the marked result itself)
+    res = json.loads(db.one("SELECT result FROM sessions WHERE id=?", dg["id"])["result"])
+    assert {d["domain"] for d in res["domains"]} == set(scoring.RW_DOMAINS), res["domains"]
+    assert res["estimate"]["section"] == "Reading and Writing" and res["estimate"]["high"] - res["estimate"]["low"] == 20
+    cu = c.post("/api/mock/new", headers=H, json={"kind": "custom", "custom": {
+        "topics": ["rw_boundaries", "rw_words_in_context"], "count": 10}}).json()
+    qs = live(cu["id"])
+    assert cu["subject"] == "rw" and len(qs) == 10 and cu["duration"] == 10 * 71, cu
+    assert {q["topic"] for q in qs} == {"rw_boundaries", "rw_words_in_context"} and all(q["type"] == "mcq" for q in qs)
+    assert c.post("/api/mock/new", headers=H, json={"kind": "custom", "custom": {
+        "topics": ["rw_boundaries", "circles"]}}).status_code == 422, "one subject per custom test"
+    c.post(f"/api/session/{cu['id']}/discard", headers=H)
+    print("ok  R&W diagnostic (20, 71 s each, R&W domains) and an R&W custom test (all multiple choice)")
+
+    # --- the full SAT: R&W, the break, Math, one total ----------------------------------------------
+    def full_rw(right):
+        f = c.post("/api/mock/new", headers=H, json={"kind": "full"}).json()
+        assert f["kind"] == "full" and f["subject"] == "rw" and f["full"] == {"id": f["id"], "part": 1, "of": 2,
+                                                                              "number": f["full"]["number"]}, f
+        assert f["section"] == "Section 1, Module 1: Reading and Writing"
+        module(f["id"], right)
+        return f["id"], module(f["id"], right)["done"]
+
+    fid, done = full_rw(27)
+    nxt = done["next"]["id"]
+    assert done["full"] == {"id": fid, "part": 1} and done["next"]["break_seconds"] == 600
+    assert c.post(f"/api/session/{fid}/finish", headers=H).json()["done"]["next"]["id"] == nxt, "a repeated hand-in"
+    lobby = c.get(f"/api/session/{nxt}", headers=H).json()
+    assert lobby["subject"] == "math" and lobby["section"] == "Section 2, Module 1: Math" and lobby["questions"] == []
+    assert lobby["full"]["break"]["seconds"] == 600 and lobby["ranked"], lobby["full"]
+    assert lobby["full"]["number"] == 1, "the Math half of the first full SAT is #1 too"
+    assert c.get(f"/api/full/{fid}", headers=H).json()["status"] == "break"
+    module(nxt, 22)
+    got = module(nxt, 22)["done"]["full"]
+    full = c.get(f"/api/full/{nxt}", headers=H).json()
+    rw_e, m_e = (s["estimate"] for s in full["sections"])
+    assert [s["subject"] for s in full["sections"]] == ["rw", "math"] and full["status"] == "done" and full["ranked"]
+    assert full["total"] == got["total"] == scoring.total_band(rw_e["mid"], m_e["mid"]), (full["total"], rw_e, m_e)
+    assert full["total"]["high"] - full["total"]["low"] == 20 and full["break"]["long"] is False
+    assert full["number"] == 1 and full["previous"] is None and full["ms"] is not None
+    st = c.get("/api/stats", headers=H).json()
+    assert st["total"], "Results' Both view has a total"
+    # one current score per subject on every page (estimate.current), never one sitting's band by itself
+    from server import estimate
+    over = c.get("/api/tests?subject=rw", headers=H).json()["estimate"]
+    cur = estimate.current(H["X-Learner"], "rw")
+    assert over["current"] == cur and (over["headline_parts"]["low"], over["headline_parts"]["high"]) == (cur["low"], cur["high"])
+    assert c.get("/api/stats?subject=rw", headers=H).json()["current"] == cur
+    # a full SAT counts once, never also as two sections; discarded sittings not at all
+    assert st["tests"] == {"mock": 2, "module": 0, "diagnostic": 1, "custom": 0, "full": 1}, st["tests"]
+    assert c.get(f"/api/full/{fid}", headers={"X-Learner": "a:someoneelse"}).status_code == 403
+    hist = c.get("/api/history", headers=H).json()["sessions"]
+    [entry] = [h for h in hist if h["kind"] == "full"]
+    assert entry["id"] == fid and [p["subject"] for p in entry["parts"]] == ["rw", "math"]
+    assert entry["full"]["number"] == 1 and all(p["full"]["number"] == 1 for p in entry["parts"])
+    # both halves are Full SAT #1, numbered apart from the plain sections, in history and the reports
+    assert [p["seq"] for p in entry["parts"]] == [1, 1], [p["seq"] for p in entry["parts"]]
+    assert c.get(f"/api/session/{nxt}/results", headers=H).json()["seq"] == 1
+    assert not any(h.get("full") and h["kind"] != "full" for h in hist), "a full SAT's sections listed twice"
+    assert sum(bool(h["full"]) for h in c.get("/api/history?subject=rw", headers=H).json()["sessions"]) == 1
+    kinds = {k["id"]: k for k in c.get("/api/tests?subject=rw", headers=H).json()["kinds"]}
+    assert kinds["full"]["yours"] == 1 and kinds["full"]["last"] == full["total"]["mid"] and kinds["section"]["yours"] == 2
+    print(f"ok  full SAT: R&W then Math in its lobby, total {full['total']['low']}-{full['total']['high']}"
+          " from the two centres, one history entry, its own kind")
+
+    # stopping after R&W leaves a scored R&W section; a break over 11:00 unranks the Math section only
+    stop, done = full_rw(10)
+    assert c.post(f"/api/session/{done['next']['id']}/discard", headers=H).status_code == 200
+    stopped = c.get(f"/api/full/{stop}", headers=H).json()
+    assert stopped["status"] == "stopped" and stopped["sections"][0]["estimate"] and stopped["total"] is None
+    slow, done = full_rw(27)
+    late = done["next"]["id"]
+    row = db.one("SELECT cfg FROM sessions WHERE id=?", late)
+    cfg = json.loads(row["cfg"])
+    cfg["full"]["after"] = (dt.datetime.now(dt.timezone.utc) - dt.timedelta(minutes=12)).isoformat(timespec="seconds")
+    db.run("UPDATE sessions SET cfg=?, started=? WHERE id=?", json.dumps(cfg), cfg["full"]["after"], late)
+    assert c.get(f"/api/session/{late}", headers=H).json()["why"] == "long break"
+    module(late, 22)
+    module(late, 22)
+    gone = c.get(f"/api/full/{slow}", headers=H).json()
+    assert gone["break"]["long"] and not gone["ranked"] and gone["unranked_why"] == "long break" and gone["total"]
+    assert gone["sections"][0]["ranked"] and not gone["sections"][1]["ranked"]
+    assert gone["number"] == 3 and gone["previous"] == full["total"], "the last full SAT with a total"
+    # the stopped one is its R&W section everywhere: stats, the overview's kinds, the Both list
+    st = c.get("/api/stats", headers=H).json()["tests"]
+    assert st["full"] == 2 and st["mock"] == 3, st
+    kinds = {k["id"]: k["yours"] for k in c.get("/api/tests?subject=rw", headers=H).json()["kinds"]}
+    assert kinds["full"] == 2 and kinds["section"] == 3, kinds
+    hist = c.get("/api/history?limit=50", headers=H).json()["sessions"]
+    [rw_only] = [h for h in hist if h["id"] == stop]
+    assert rw_only["kind"] == "mock" and rw_only["full"]["complete"] is False and rw_only["estimate"]
+    assert sum(h["kind"] == "full" for h in hist) == 2
+    high = c.get("/api/history?limit=50&sort=highest", headers=H).json()["sessions"]
+    place = [(h["estimate"]["mid"] - h["estimate"]["scale"][0]) / (h["estimate"]["scale"][1] - h["estimate"]["scale"][0])
+             for h in high if h.get("estimate")]
+    assert place == sorted(place, reverse=True), "highest first, each on its own scale"
+    assert db.one("SELECT unranked_why FROM sessions WHERE id=?", late)["unranked_why"] == "long break"
+    print("ok  full SAT: stopping after R&W keeps the R&W section; a long break unranks Math, both stay scored")
 
 
 def at_once(*calls):
@@ -799,11 +1021,23 @@ def check_integrity(c) -> None:
 
 
 def run_checks(c) -> None:
-    """Every task's own checks, server/checks/<task>.py, each a check(c)."""
+    """Every task's own checks, server/checks/<task>.py, each a check(c) (or a
+    zero-arg check() that opens its own client). A standalone script (its own
+    main(), no check at all) runs on its own instead.
+
+    rw_bank.py is excluded from this import-and-discover loop: it points
+    db.DB_PATH at its own scratch file as an unguarded module-level side effect
+    (no check(c), run on its own per its own docstring), which would otherwise
+    leak into every other check through db.conn()'s one-connection-per-thread
+    cache the moment any later check's work needs a thread that has not opened
+    a connection yet."""
     import importlib
+    import inspect
     for f in sorted((pathlib.Path(__file__).resolve().parent / "checks").glob("*.py")):
-        if f.stem != "__init__":
-            importlib.import_module(f"server.checks.{f.stem}").check(c)
+        if f.stem not in ("__init__", "rw_bank"):
+            check = getattr(importlib.import_module(f"server.checks.{f.stem}"), "check", None)
+            if check:
+                check(c) if inspect.signature(check).parameters else check()
 
 
 if __name__ == "__main__":

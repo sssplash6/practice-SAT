@@ -101,7 +101,7 @@
     if (cheap.length) {
       const list = h('div', { class: 'tk-cheap' });
       cheap.forEach(c => list.append(btn(`${slotName(c.slot)} · ${pct(c.right)} right · ${c.source === 'paper' ? 'this paper' : 'site-wide'}`, {
-        cls: 'tag tk-chip', aria: `${slotName(c.slot)}: ${pct(c.right)} got it right; you ${c.you === 'blank' ? 'left it blank' : 'missed it'}`,
+        cls: 'btn sm', aria: `${slotName(c.slot)}: ${pct(c.right)} got it right; you ${c.you === 'blank' ? 'left it blank' : 'missed it'}`,
         run: () => openRow(c.slot) })));
       tops.append(h('section', { class: 'tk-top' }, h('h3', { class: 'k', text: `Your cheapest points: ${plural(cheap.length, 'question')} 80% or more got right` }), list));
     }
@@ -158,7 +158,7 @@
     const srcText = s.n ? `${num(s.n)} ${s.source === 'paper' ? (s.n === 1 ? 'first sitting' : 'first sittings') : 'answers site-wide'}` : '';
     const bar = s.right === null || s.right === undefined ? null : h('span', { class: 'tk-bar-r', 'aria-hidden': 'true' }, h('i', { style: `width:${Math.round(s.right * 100)}%` }));
     const head = h('button', { type: 'button', class: 'tk-head', 'aria-expanded': 'false' },
-      h('span', { class: 'tk-slot mono', text: slotName(s.slot) }),
+      h('span', { class: 'tk-slot', text: slotName(s.slot) }),
       h('span', { class: 'tk-topic' }, h('b', { text: s.topic_name || s.topic || '' }),
         h('span', { class: 'tk-tier' }, UI.dbars ? UI.dbars(s.tier) : h('span', { text: TIER[s.tier] || s.tier || '' }), s.fmt === 'spr' ? h('span', { text: '· grid-in' }) : null)),
       h('span', { class: 'tk-right' }, h('span', { class: 'tk-rt', text: rightText }), bar, srcText ? h('span', { class: 'meta', text: srcText }) : null),
@@ -166,7 +166,7 @@
     li.append(head);
     const lines = h('div', { class: 'tk-lines' });
     const times = [s.median_right_ms ? `Median right ${mmss(s.median_right_ms)}` : null, you && you.ms ? `you ${mmss(you.ms)}` : null].filter(Boolean);
-    if (times.length) lines.append(h('p', { class: 'meta mono', text: times.join(' · ').replace(/^you/, 'You') }));
+    if (times.length) lines.append(h('p', { class: 'meta', text: times.join(' · ').replace(/^you/, 'You') }));
     const top = (s.spread || [])[0];
     if (top) lines.append(h('p', { class: 'tk-trap', text: `${pct(top.share)} · ${top.label}` }));
     else if ((s.designed || []).length) lines.append(h('p', { class: 'tk-trap soft', text: `Built to catch: ${s.designed.slice(0, 2).join(' · ')}` }));
@@ -234,7 +234,7 @@
     const count = UI.counter ? UI.counter(ta, 500) : null;
     const sel = h('select', { class: 'field sm', 'aria-label': 'About' }, h('option', { value: '', text: 'The whole paper' }),
       Object.keys(by).map(m => h('optgroup', { label: MODULE[m] || m }, by[m].map(s => h('option', { value: s.slot, text: slotName(s.slot) })))));
-    const send = h('button', { type: 'submit', class: 'pill tk-send', 'aria-label': 'Send', html: UI.svg && (UI.ICON || {}).arrow ? UI.svg(UI.ICON.arrow, 18) : 'Send' });
+    const send = h('button', { type: 'submit', class: 'btn icon', 'aria-label': 'Send', html: UI.svg && (UI.ICON || {}).arrow ? UI.svg(UI.ICON.arrow, 18) : 'Send' });
     const err = h('p', { class: 'error', role: 'alert', hidden: true });
     comp.append(nameLine, replyLine, h('div', { class: 'tk-comp-row' }, ta, send), h('div', { class: 'tk-comp-meta' }, sel, count), err);
     host.append(comp);
@@ -251,9 +251,9 @@
       nameLine.append(h('span', { class: 'k', text: 'Your name on the board' }), f, btn('Save', { cls: 'btn sm', run: async b => {
         const v = f.value.trim();
         if (!v) { f.focus(); return; }
-        b.setAttribute('aria-busy', 'true');
-        try { await api('/me', { method: 'PUT', body: { name: v } }); named = true; nameLine.hidden = true; toast('Name saved'); if (UI.me) UI.me(true); }
-        catch (x) { b.removeAttribute('aria-busy'); toast(`Name not saved: ${x.message}`); }
+        // Saving, then Saved with a drawn check in the button (no toast), then the line goes
+        try { await UI.saving(b, () => api('/me', { method: 'PUT', body: { name: v } })); named = true; setTimeout(() => { nameLine.hidden = true; }, 900); if (UI.me) UI.me(true); }
+        catch (x) { toast(`Name not saved: ${x.message}`); }
       } }));
       nameLine.hidden = false;
     }).catch(() => {});
@@ -301,11 +301,11 @@
     function postEl(t, reply) {
       const el = h('article', { class: 'tk-post' + (reply ? ' reply' : ''), 'data-id': String(t.id) });
       const when = [UI.relTime ? UI.relTime(t.at) : '', t.edited ? 'edited' : null].filter(Boolean).join(' · ');
-      const head = h('div', { class: 'tk-ph' }, h('b', { text: t.name || 'Student' }), h('span', { class: 'mono tk-when', text: when }));
+      const head = h('div', { class: 'tk-ph' }, h('b', { text: t.name || 'Student' }), h('span', { class: 'tk-when', text: when }));
       if (t.about) {
         const on = onRoute.has(t.about), q = qOf.get(t.about);
-        head.append(on && sid && q ? h('a', { class: 'tag sm', href: report(sid, q), text: slotName(t.about) })
-          : h('span', { class: 'tag sm', text: on ? slotName(t.about) : `${slotName(t.about)} · not on your route` }));
+        head.append(on && sid && q ? h('a', { class: 'badge soft', href: report(sid, q), text: slotName(t.about) })
+          : h('span', { class: 'badge soft', text: on ? slotName(t.about) : `${slotName(t.about)} · not on your route` }));
       }
       el.append(head);
       const text = h('p', { class: 'tk-text', text: t.text });

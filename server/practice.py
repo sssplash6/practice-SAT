@@ -134,7 +134,7 @@ def stem_hash(stem: str) -> str:
 
 def question_hash(item) -> str:
     """Identity of the whole rendered question, including a figure's numbers."""
-    data = (item.stem, list(item.choices), item.figure, item.table)
+    data = (item.stem, list(item.choices), item.figure, item.table) + ((item.text,) if item.text else ())
     return hashlib.sha1(json.dumps(data, ensure_ascii=False, sort_keys=True).encode()).hexdigest()[:16]
 
 
@@ -234,8 +234,7 @@ class Builder:
             except Exception:
                 log.exception("template %s failed at seed %d", key, seed)
                 return None
-            signature = question_hash(item) if self.dedupe == "question" else stem_hash(item.stem)
-            if signature in self.seen_stems:
+            if self.signature(item) in self.seen_stems:
                 continue
             self.cursor[key] = k
             return Card.of(key, seed, item, topic)
@@ -244,9 +243,13 @@ class Builder:
 
     def keep(self, card: Card) -> None:
         self.seen.add((card.key, card.seed))
-        self.seen_stems.add(question_hash(card.item) if self.dedupe == "question"
-                            else stem_hash(card.item.stem))
+        self.seen_stems.add(self.signature(card.item))
         self.stash.pop(card.key, None)
+
+    def signature(self, item) -> str:
+        """R&W stems repeat across passages ("Which choice completes the text ..."), so a
+        passage item is always told apart by the whole question, as the drill stores it."""
+        return question_hash(item) if self.dedupe == "question" or item.text else stem_hash(item.stem)
 
 
 def build(basket: dict[str, int], learner: str,
@@ -372,4 +375,6 @@ def to_question(card: Card, n: int) -> dict:
         "figure_alt": getattr(it, "figure_alt", None),
         "ask": getattr(it, "ask", None),
         "text": getattr(it, "text", None),
+        "table_title": getattr(it, "table_title", None),
+        "band": getattr(it, "band", None),
     }

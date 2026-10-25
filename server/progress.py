@@ -55,6 +55,9 @@ COUNTED = "repeat=0 AND disputed=0 AND void IS NULL"    # R8: what mastery and a
 BLUEPRINT = {"Algebra": 0.35, "Advanced Math": 0.35,
              "Problem-Solving and Data Analysis": 0.15, "Geometry and Trigonometry": 0.15}
 DOMAINS = tuple(BLUEPRINT)
+RW_BLUEPRINT = {"Information and Ideas": 0.26, "Craft and Structure": 0.28,
+                "Expression of Ideas": 0.20, "Standard English Conventions": 0.26}
+DOMAIN_WEIGHT = {**BLUEPRINT, **RW_BLUEPRINT}      # a domain's share of its own section
 
 # R47: a student-set cause wins; each maps to one of the causes below, and each
 # cause to an R9 kind.
@@ -77,9 +80,9 @@ def norm(reason: str) -> str:
     return " ".join(_NUMBER.sub("#", (reason or "").lower()).split())
 
 
-def trap_kind(normalized: str, miss_kind: str | None = None, spr: bool = False) -> str:
+def trap_kind(normalized: str, miss_kind: str | None = None, spr: bool = False, topic: str | None = None) -> str:
     """R9's kinds (misconception, gridin, slip, unsure), with R47's student-set
-    causes mapped on top."""
+    causes mapped on top. An R&W miss (topic rw_..., norm "") is a wrong choice, not a grid-in."""
     cause = MISS_KINDS.get(miss_kind or "")
     if cause:
         return KIND_OF_CAUSE[cause]
@@ -87,9 +90,32 @@ def trap_kind(normalized: str, miss_kind: str | None = None, spr: bool = False) 
         return "unsure"
     if normalized == FILLER:
         return "slip"
+    if normalized == "" and topic and deps.subject_of(topic) == "rw":
+        return "misconception"
     if normalized == "" or spr:
         return "gridin"
     return "misconception"
+
+
+@lru_cache(maxsize=1)
+def _rw_names() -> dict:
+    import pathlib
+    return json.loads((pathlib.Path(__file__).parent / "data" / "rw_type_names.json").read_text())
+
+
+def rw_label(template: str) -> str:
+    """An R&W question type's one student-facing name (server/data/rw_type_names.json): its
+    mistakes, the builder and every page show it (an item's subtype names one passage, and the
+    bank's own names are authoring taxonomy). A type missing from the map: the slug, humanised."""
+    name = _rw_names().get(template) or template.split(".", 1)[-1].replace("_", " ").strip()
+    return name[:1].upper() + name[1:]
+
+
+def miss_norm(q: dict, reason: str) -> str:
+    """The trap a wrong answer files under. An R&W distractor's reason belongs to one passage, which
+    is never served twice, so an R&W miss is unnamed: it closes on clean answers to the same type.
+    ponytail: per-type closing; name R&W traps by distractor recipe once the bank repeats recipes."""
+    return "" if q.get("text") else norm(reason)
 
 
 def named(normalized: str, miss_kind: str | None = None) -> bool:
@@ -122,6 +148,17 @@ def _self_check() -> None:
     assert len(quarter) == 2 and norm(quarter[0]) == norm(quarter[1]), quarter
     assert trap_kind(norm(FILLER)) == "slip" and not named(norm(FILLER))
     assert trap_kind("~unsure") == "unsure" and trap_kind("") == "gridin" and not named("")
+    assert trap_kind("", topic="rw_boundaries") == "misconception" and not named("")   # an R&W miss is no grid-in
+    assert rw_label("rw_boundaries.semicolon_between_independent_clauses") == "Semicolon joining two sentences"
+    assert rw_label("rw_gone.a_retired_type") == "A retired type"
+    # every R&W type has a short plain name (2 to 5 words, no parentheses), distinct within its skill
+    names = {t: rw_label(t) for k, ts in practice.catalogue()["by_topic"].items() if k.startswith("rw_") for t in ts}
+    assert set(names) <= set(_rw_names()), sorted(set(names) - set(_rw_names()))[:3]
+    for k, ts in practice.catalogue()["by_topic"].items():
+        if k.startswith("rw_"):
+            assert len({names[t] for t in ts}) == len(ts), k
+    assert all(1 <= len(n.split()) <= 5 and "(" not in n for n in names.values()), \
+        [n for n in names.values() if not 1 <= len(n.split()) <= 5 or "(" in n]
     assert trap_kind(norm(ten)) == "misconception" and named(norm(ten))
     assert trap_kind(norm(ten), "misread") == "slip" and trap_kind(norm(ten), "gap") == "unsure"
     assert [interval_for(k) for k in (1, 2, 3, 4, 5)] == [2, 5, 12, 30, 30]
@@ -233,7 +270,8 @@ def topic_mastery(learner: str, topic: str) -> float:
     return mastery_of([(r["difficulty"], _counts(r)) for r in got])
 
 
-def open_traps(learner: str, topic: str | None = None) -> list[dict]:
+def open_traps(learner: str, topic: str | None = None, subject: str | None = None) -> list[dict]:
+    """Open mistakes, newest first; `subject` keeps one section's (a Math page never lists R&W ones)."""
     sql = ("SELECT id, template, norm, reason, label, topic, hits, owed, opened, last,"
            " relapses, seed, session, due, checks, source, note, origin FROM traps"
            " WHERE learner=? AND closed IS NULL")
@@ -241,7 +279,11 @@ def open_traps(learner: str, topic: str | None = None) -> list[dict]:
     if topic:
         sql += " AND topic=?"
         args.append(topic)
-    return [dict(r) for r in db.rows(sql + " ORDER BY last DESC", *args)]
+    rows = [dict(r) for r in db.rows(sql + " ORDER BY last DESC", *args)]
+    for t in rows:                  # an R&W mistake reads as its type everywhere, rows stored before that too
+        if t["norm"] == "" and deps.subject_of(t["topic"]) == "rw":
+            t["label"] = rw_label(t["template"])
+    return [t for t in rows if deps.subject_of(t["topic"]) == subject] if subject else rows
 
 
 def board(learner: str, subject: str = "math") -> dict[str, dict]:
@@ -265,7 +307,7 @@ def board(learner: str, subject: str = "math") -> dict[str, dict]:
         if r["at"] < cutoff and len(before[r["topic"]]) < WINDOW:
             before[r["topic"]].append((r["difficulty"], _counts(r)))
     traps: dict[str, list] = defaultdict(list)
-    for t in open_traps(learner):
+    for t in open_traps(learner, subject=subject):
         traps[t["topic"]].append({"id": t["id"], "template": t["template"], "label": t["label"],
                                   "hits": t["hits"], "owed": t["owed"]})
     out = {}
@@ -369,7 +411,9 @@ def record_trap(learner: str, q: dict, reason: str, when: str, session: str | No
     mode files a later try's trap hit through this too."""
     if db.is_sample(learner):
         raise ValueError("the sample report is read-only")
-    key = "~unsure" if unsure else norm(reason)
+    key = "~unsure" if unsure else miss_norm(q, reason)
+    if q.get("text") and not unsure:        # R&W: the mistake is the question type, one stable name a type
+        label = rw_label(q["key"])
     if not (unsure or label or reason):
         try:
             label = practice.skill_of(q)
@@ -437,7 +481,7 @@ def record(learner: str, session: str | None, q: dict, given, ms: int | None = N
         or deps.access(learner, q["key"], q["seed"], exclude=session) == "reveal" \
         or deps.key_printed(session, when)
     unsure = ok and (flagged or conf == "unsure")
-    normalized = "~unsure" if unsure else (norm(reason) if not ok else None)
+    normalized = "~unsure" if unsure else (miss_norm(q, reason) if not ok else None)
     if revealed is None:
         revealed = _shows_key(session)
     struck_json = json.dumps(struck) if struck is not None else None
@@ -460,7 +504,7 @@ def record(learner: str, session: str | None, q: dict, given, ms: int | None = N
     opened_ids: list[int] = []
     closed_ids: list[int] = []
     clean = ok and not (repeat or flagged or guess or void or hints or conf == "unsure")
-    miss_key = None if ok else norm(reason)
+    miss_key = None if ok else miss_norm(q, reason)
     day = _local_day(when, tz).isoformat()
     with db.atomic():
         db.ensure_learner(learner)
@@ -473,8 +517,10 @@ def record(learner: str, session: str | None, q: dict, given, ms: int | None = N
             cur = db.run(insert + f"VALUES ({marks})", *values)
         attempt = cur.lastrowid
 
-        for t in db.rows("SELECT * FROM traps WHERE learner=? AND template=? AND (closed IS NULL"
-                         " OR (due IS NOT NULL AND closed_how IN ('fixed','transfer')))", learner, q["key"]):
+        # an R&W mistake (unnamed, miss_norm) is paid down by clean answers anywhere in its skill
+        for t in db.rows("SELECT * FROM traps WHERE learner=? AND (template=? OR (? AND topic=? AND norm=''))"
+                         " AND (closed IS NULL OR (due IS NOT NULL AND closed_how IN ('fixed','transfer')))",
+                         learner, q["key"], int(bool(q.get("text"))), q["topic"]):
             on_offer = t["norm"] in offered
             if t["closed"] is None:
                 if not clean:
@@ -759,6 +805,8 @@ def carry(frm: str, to: str) -> int:
                     c.execute(f"UPDATE learners SET {key}=? WHERE id=?", (s[key], to))
             if (s["rated"] or 0) > (t["rated"] or 0):
                 c.execute("UPDATE learners SET rating=?, rated=? WHERE id=?", (s["rating"], s["rated"], to))
+            if (s["rw_rated"] or 0) > (t["rw_rated"] or 0):        # R&W contests rate apart from Math
+                c.execute("UPDATE learners SET rw_rating=?, rw_rated=? WHERE id=?", (s["rw_rating"], s["rw_rated"], to))
             sp, tp = json.loads(s["prefs"] or "{}"), json.loads(t["prefs"] or "{}")
             c.execute("UPDATE learners SET prefs=?,ach_seen=MAX(COALESCE(ach_seen,''),?),"
                       "feed_seen=MAX(COALESCE(feed_seen,''),?),updated=? WHERE id=?",
@@ -822,7 +870,7 @@ def coach(learner: str, k: int = 3, count: int = 10, subject: str = "math") -> d
         s += {"focus": FOCUS_LIFT, "strong": -FOCUS_LIFT}.get(focus.get(t["domain"]), 0.0)
         since = _days_since(t["last"], today)
         if not t["answered"]:
-            s += 60.0 * BLUEPRINT.get(t["domain"], 0.15) / 0.35
+            s += 60.0 * DOMAIN_WEIGHT.get(t["domain"], 0.15) / 0.35
         else:
             s += (1.0 - t["mastery"]) * 50.0
             if keep_warm and t["mastery"] >= STRONG and since >= 10:
@@ -1079,13 +1127,15 @@ def _clean_rights(learner: str, subject: str = "math") -> dict[str, list[str]]:
     return out
 
 
-def due_rechecks(learner: str, day: str | None = None) -> list[dict]:
+def due_rechecks(learner: str, day: str | None = None, subject: str | None = None) -> list[dict]:
     """Fixed traps whose check-in is due by `day`, most overdue first, each with
-    the template its check-in is served on."""
+    the template its check-in is served on; `subject` keeps one section's (None: both)."""
     day = day or _local_today(learner).isoformat()
     out = []
     for t in db.rows("SELECT * FROM traps WHERE learner=? AND closed IS NOT NULL AND closed_how IN ('fixed','transfer')"
                      " AND due IS NOT NULL AND due<=? ORDER BY due, id", learner, day):
+        if subject and deps.subject_of(t["topic"]) != subject:
+            continue
         out.append({"kind": "check", "trap_id": t["id"], "template": t["template"], "topic": t["topic"],
                     "label": t["label"], "norm": t["norm"], "due": t["due"], "checks": t["checks"],
                     "serve": checkin_template(t),
@@ -1401,31 +1451,33 @@ def pace(learner: str, days: int = 60, subject: str = "math", only: str | None =
                          "median_ms": int(statistics.median([(r["ms"] if r["ms"] is not None else r["sms"]) for r in rs]))}
     mean = statistics.mean([s["accuracy"] for s in skills.values()]) if skills else None
     quadrants = {"slow_right": [], "fast_wrong": [], "slow_wrong": [], "fast_right": []}
+    per_q = deps.PACE.get(subject, deps.SECONDS_PER_QUESTION) * 1000      # the section's pace (95 s, 71 s)
     for topic, s in skills.items():
         speed = s["median_ms_right"] if s["median_ms_right"] is not None else s["median_ms"]
-        slow = speed > deps.SECONDS_PER_QUESTION * 1000
+        slow = speed > per_q
         right = s["accuracy"] >= mean
         s["quadrant"] = f"{'slow' if slow else 'fast'}_{'right' if right else 'wrong'}"
         quadrants[s["quadrant"]].append(topic)
     from . import blueprint
     names = topics(subject)
     domain_ms: dict[str, list] = defaultdict(list)
-    for topic, s in skills.items():
+    for topic, s in skills.items():          # Math's module slots name domains, R&W's name skills (blueprint.slots)
         if topic in names:
-            domain_ms[names[topic].domain].append(s["median_ms_right"] or s["median_ms"])
+            domain_ms[topic if subject == "rw" else names[topic].domain].append(s["median_ms_right"] or s["median_ms"])
     strip, total, runs_out = [], 0, None
-    for i, (domain, tier, _fmt) in enumerate(blueprint.slots("module1", 1)):
-        ms = int(statistics.median(domain_ms[domain])) if domain_ms.get(domain) else deps.SECONDS_PER_QUESTION * 1000
+    limit = blueprint.SPEC[subject]["module_seconds"]                   # a module: 35 min Math, 32 min R&W
+    for i, (domain, tier, _fmt) in enumerate(blueprint.slots("module1", 1, subject)):
+        ms = int(statistics.median(domain_ms[domain])) if domain_ms.get(domain) else per_q
         total += ms
         strip.append({"slot": i, "domain": domain, "tier": tier, "ms": ms})
-        if runs_out is None and total > blueprint.MODULE_SECONDS * 1000:
+        if runs_out is None and total > limit * 1000:
             runs_out = i
     blanks = 0 if runs_out is None else len(strip) - runs_out
     guesses = [r for r in rows if r["guess"] or r["conf"] == "guess"]
     struck2 = [r for r in rows if r["struck"] and len(json.loads(r["struck"])) >= 2]
     return {"subject": subject, "days": days, "only": only, "skills": skills, "mean_accuracy": mean,
             "quadrants": quadrants,
-            "forecast": {"seconds": round(total / 1000), "limit": blueprint.MODULE_SECONDS,
+            "forecast": {"seconds": round(total / 1000), "limit": limit,
                          "blanks": blanks, "runs_out_at": runs_out, "strip": strip},
             "guess": {"n": len(guesses), "right": sum(r["correct"] for r in guesses)},
             "struck2": {"n": len(struck2), "right": sum(r["correct"] for r in struck2)}}

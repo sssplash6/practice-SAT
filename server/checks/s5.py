@@ -20,7 +20,7 @@ from collections import Counter
 
 from fastapi.testclient import TestClient
 
-from server import api_tests, blueprint, db, deps, papers, practice, progress
+from server import api_tests, blueprint, db, deps, papers, practice, progress, scoring
 
 N = [0]
 LEAKS = {"answer", "rationale", "reasons", "distractor_reasons", "key", "seed", "template"}
@@ -79,7 +79,7 @@ def qstate(sid: str) -> dict:
 
 
 def key_of(q: dict):
-    return "ABCD".index(q["answer"]) if q["type"] == "mcq" else q["answer"]
+    return "ABCD".index(q["answer"]) if q["type"] == "mcq" else scoring.keys(q["answer"])[0]
 
 
 def wrong_of(q: dict, named: bool = False):
@@ -603,7 +603,7 @@ def papers_check(c) -> None:
     for i in range(25):
         who = code("fin")
         crowd.append(who)
-        est = {"low": 400 + 10 * i, "high": 540 + 10 * i}
+        est = {"low": 460 + 10 * i, "high": 480 + 10 * i}        # 20 wide (scoring.band), centres 470 + 10 i
         db.run("INSERT INTO sessions(id,kind,learner,started,finished,contest,ranked,result,cfg,subject)"
                " VALUES (?,?,?,?,?,?,?,?,?,?)", f"s5-final-{i}-{secrets.token_hex(3)}", "module", who, past, past,
                cid, 1, json.dumps({"estimate": est}), "{}", "math")
@@ -966,7 +966,9 @@ def overview(c) -> None:
     assert got["sittings"] == 2
     # X15 2-4
     assert tests(c, lv)["growth"] is None
-    last = api_tests.finished_sittings(lv)[0]
+    last, other = api_tests.finished_sittings(lv)[:2]
+    # 20-wide bands no longer overlap, so the score must pair with `last`: the other section two days earlier
+    back(other["id"], 2 * 86400, "finished")
     band = result(last["id"])["estimate"]
     day = (dt.date.fromisoformat(last["finished"][:10]) + dt.timedelta(days=3)).isoformat()
     db.run("INSERT INTO outside_scores(learner,day,math,source,at) VALUES (?,?,?,?,?)", lv, day,
@@ -1115,10 +1117,54 @@ def shell_resume(c) -> None:
     t = tests(c, me)
     assert t["in_progress"][0]["status"] == "paused" and t["in_progress"][0]["unranked_why"] == "paused once"
     r = c.get("/api/shell", headers=H(me))
-    items = (r.json().get("next") or {}).get("items") or [] if r.status_code == 200 else []
+    items = (r.json().get("next") or []) if r.status_code == 200 else []
     if not (items and items[0].get("kind") == "resume" and "Paused" in (items[0].get("title") or "")):
         wait("F2: /api/shell next.items[0] is kind 'resume' titled 'Paused · …' for a paused test (X23)")
     print("ok  S5 X23: a paused sitting is In progress with its rank line")
+
+
+def rw(c) -> None:
+    """Reading and Writing on the same server paths (spec/full-sat/DESIGN.md section 2): the pace
+    plan, a single module 2, the weekly R&W paper, the pressure check's re-draws, the overview."""
+    me = code("rw")
+    p = api_tests.pace_plan(me, "module1", 1, subject="rw")
+    assert p["subject"] == "rw" and len(p["budget_s"]) == 27 and abs(sum(p["budget_s"]) - (1920 - 180)) <= 1, p
+    m = new(c, me, {"kind": "module", "module": "m2u", "subject": "rw"})
+    assert m["subject"] == "rw" and m["duration"] == 1920 and m["section"] == "Reading and Writing · Module 2 (harder)"
+    assert Counter(q["difficulty"] for q in live(m["id"])) == blueprint.RW_TIERS["module2_upper"]
+    ok(c.post(f"/api/session/{m['id']}/discard", headers=H(me)))
+    shelf = tests(c, me)["papers"]
+    papers_rw = ok(c.get("/api/tests", params={"subject": "rw"}, headers=H(me)))["papers"]
+    assert {x["subject"] for x in papers_rw} == {"rw"} and {x["subject"] for x in shelf} == {"math"}
+    n = papers_rw[0]["n"]
+    assert c.post("/api/mock/new", headers=H(me), json={"kind": "paper", "paper": shelf[0]["n"], "subject": "rw"}
+                  ).status_code == 422, "a Math paper is not an R&W one"
+    # 3 wrong with a named mistake in module 1, so the pressure check has R&W items to re-draw
+    sid = new(c, me, {"kind": "paper", "paper": n})["id"]
+    assert row(sid)["subject"] == "rw" and len(live(sid)) == 27
+    begin(c, me, sid)
+    for i, q in enumerate(live(sid), 1):
+        answer(c, me, sid, q, wrong_of(q, True) if i in (3, 9, 15) else key_of(q))
+    finish(c, me, sid)
+    begin(c, me, sid)
+    fill(c, me, sid, 27)
+    finish(c, me, sid)
+    card = next(x for x in ok(c.get("/api/tests", params={"subject": "rw"}, headers=H(me)))["papers"] if x["n"] == n)
+    assert card["yours"]["status"] == "completed" and card["questions"] == 54
+    got = api_tests.resolve_drill(me, {"pressure": sid})
+    marked = {q["id"]: q for q in api_tests.marked_questions(row(sid))}
+    assert len(got["ids"]) == 3, got["ids"]
+    for (t, s), qid in zip(got["ids"], got["pressure_of"].values()):
+        q = marked[qid]
+        assert practice.topic_of(t) == q["topic"] and practice.generate(t, s).difficulty == q["difficulty"]
+        assert (t, s) != (q["key"], q["seed"]), "the pressure check re-served the lost item"
+    view = ok(c.get("/api/tests", params={"subject": "rw"}, headers=H(me)))
+    assert view["subject"] == "rw" and view["estimate"]["headline_parts"]["subject"] == "Reading and Writing"
+    assert view["estimate"]["latest"]["id"] == sid and view["levers"]["subject"] == "rw"
+    assert {k["id"]: k["yours"] for k in view["kinds"]}["section"] == 1
+    assert {k["id"]: k["yours"] for k in tests(c, me)["kinds"]}["section"] == 0, "a Math view counted an R&W section"
+    assert c.get("/api/tests", params={"subject": "both"}, headers=H(me)).status_code == 422
+    print("ok  S5 R&W: pace plan, single module 2, the weekly R&W paper, same-skill re-draws, a per-subject overview")
 
 
 def check(c, *, isolated: bool = False) -> None:
@@ -1154,6 +1200,7 @@ def check(c, *, isolated: bool = False) -> None:
     shares(c)
     security(c)
     shell_resume(c)
+    rw(c)
     for w in WAITING:
         print("waiting:", w)
     print("ok  S5 server checks")

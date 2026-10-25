@@ -1,0 +1,31 @@
+# web/test/test.js (810 lines) raw notes
+- 18: no ?s -> /tests/?start=diagnostic
+- 56-57 two()= S.modules.length>1; lastModule()= module>=modules.length. Module count from payload, generic.
+- 61-64 baseSeconds: S.duration/(factor) else custom/diagnostic question_count||22 *95 s, else 2100 (=35 min Math). MATH default.
+- 66-76 timingText: custom official "95 s a question" (math pace; RW is 32*60/27 = 71 s).
+- 36-43 TRAINING_AIDS: nudges mention "grid-in form" (math), cover choices (MC).
+- 85-93 marks: at 'stem' vs m.addr; addr 's' = stem. Passage marks would need addr for passage (check runner).
+- 196 boot: two() && module>1 && !begun -> between(). Assumes module index within one section.
+- 207 lobby title S.section (top bar). 216 "N modules · X questions each" uses S.modules[0].questions (assumes equal counts).
+- 217 "Module 2 is fixed/chosen by module 1": hard-coded "Module 2".
+- 224-226 holds.domains + grid_ins line (server-defined domains, math grid_ins).
+- 231 trainer line 0.6*n.
+- 234 "Module m of N".
+- 263 "Hand in module m".
+- 283 start over -> /tests/?start=modules|custom|section.
+- 290-296 settingsLine: "calculator"/"no calculator"/"scientific calculator" always shown (math-only concept); timingText ' a module'.
+- 341-345 Settings sheet Tools: Calculator switch always. predict "after each module".
+- 363-366 keysSheet: G calculator, F reference: math.
+- 419-431 items: q.type==='spr' -> value, else selected. passes q whole (incl text?) to runner.
+- 446-455 UI.runner(...): title S.section, short `M${module}`, calc: S.calculator!==false, ref: true (always), annotate, scratch, finishLabel lastModule? 'Hand in' : `Move on to module N+1`.
+- 479 nudge kinds 'sink'|'grid'|last_minute.
+- 489 report label `Module m · Qi`.
+- 539-556 snapshotM1 labels via UI.TOPIC slugs (math topic table?) -> check UI.TOPIC for rw.
+- 566-606 handIn: final = lastModule(); predict sheet only on final (and between for M1). res.next_module -> between(); else done(). Single section: next_module means module 2 of same section.
+- 581 'Handing in module 1…' hard-coded text when not final.
+- 614-627 timeUpScreen: m = final ? module : 1; button "Continue to module 2" hard-coded.
+- 630-682 between(): m = S.module||2; n2 fallback 22; tools text 'calculator and reference sheet on every question' (math), route 'harder/easier module 2'; UI.between(seconds:60?) ; pace chart "Module 1 pace". onBegin POST /begin with between_ms.
+- 683-688 gateLine: "harder module 2".
+- 691-761 done(): diag -> /diagnostic/signup.html; else /results/report/?id&fresh=1 unless contest/trainer/report_later. UI.scale min 200 max 800 (715) -> 400-1600 for full test. Route chip 'Harder module 2'.
+- 739 report_later qid regex /^m(\d)q0?(\d+)$/ -> "Module X · Qn" (no section prefix).
+- 784-788 trainer "Next module 1": /mock/new kind module m1 trainer route.

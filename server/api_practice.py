@@ -12,6 +12,7 @@ import datetime as dt
 import functools
 import json
 import logging
+import re
 import statistics
 from collections import Counter, defaultdict
 from typing import Literal
@@ -36,12 +37,13 @@ class Strict(BaseModel):
 
 
 @router.get("/api/map")
-def get_map(x_learner: str | None = Header(default=None)) -> dict:
-    """The 19 topics with mastery and open mistakes, and the mentor's pick."""
+def get_map(subject: str = "math", x_learner: str | None = Header(default=None)) -> dict:
+    """One subject's skills with mastery and open mistakes, and the mentor's pick."""
     learner = learner_of(x_learner)
-    board = progress.board(learner)
-    return {"topics": list(board.values()),
-            "coach": progress.coach(learner, count=per_session(profile(learner)))}
+    subject = deps.subject_param(subject)
+    board = progress.board(learner, subject)
+    return {"topics": list(board.values()), "subject": subject,
+            "coach": progress.coach(learner, count=per_session(profile(learner), subject), subject=subject)}
 
 
 # ------------------------------------------------------------------ /api/bank
@@ -59,7 +61,9 @@ def _catalogue(subject: str) -> dict:
     kinds = blueprint.kinds()
     cat = practice.catalogue()
     official = Counter(e["template"] for e in drill._official_map().values())
-    cb = Counter(x["topic"] for x in drill.cb_index().values() if x.get("topic"))
+    cb = Counter(x["topic"] for x in drill.cb_index().values() if x.get("topic") and x.get("subject") == "math")
+    cb.update("rw_" + re.sub(r"[^a-z0-9]+", "_", x["skill"].lower())             # R&W: by skill name
+              for x in drill.cb_index().values() if x.get("subject") == "rw")
     has_desmos, has_steps = drill._has("desmos"), drill._has("steps")
     skills, types = {}, {}
     for slug, tp in cat["topics"].items():
@@ -78,44 +82,24 @@ def _catalogue(subject: str) -> dict:
                         "axes": sorted(e.get("axes") or ()), "official": official.get(t, 0),
                         "desmos": t in has_desmos, "steps": t in has_steps,
                         "lookalikes": blueprint.lookalikes(t),
-                        "weight": round(progress.BLUEPRINT.get(tp.domain, .15) / max(len(names), 1), 5)}
+                        "weight": round(progress.DOMAIN_WEIGHT.get(tp.domain, .15) / max(len(names), 1), 5)}
         skills[slug] = {"slug": slug, "name": tp.name, "short": tp.name.split(":")[0],
                         "domain": tp.domain, "types": names, "cb_count": cb.get(slug, 0),
                         "labels": [{"label": k, "templates": v} for k, v in labels.items()]}
-    domains = [{"name": d, "weight": progress.BLUEPRINT.get(d, 0),
-                "skills": [s for s, x in skills.items() if x["domain"] == d]} for d in progress.DOMAINS]
+    domains = [{"name": d, "weight": progress.DOMAIN_WEIGHT[d],
+                "skills": [s for s, x in skills.items() if x["domain"] == d]} for d in progress.DOMAIN_WEIGHT]
     return {"skills": skills, "types": types, "domains": [d for d in domains if d["skills"]]}
 
 
-def _rw_bank(learner: str, tz: int) -> dict:
-    """P15: Reading & Writing before its bank -- College Board's R&W skills
-    with their counts, the Log it form's skills, and Words' drills (S9)."""
-    by_domain: dict[str, dict] = defaultdict(dict)
-    for x in drill.cb_index().values():
-        if x.get("subject") != "rw":
-            continue
-        key = x["skill"].lower()
-        row = by_domain[x.get("domain") or "Reading and Writing"].setdefault(
-            key, {"name": x["skill"], "cb_count": 0,
-                  # R57: Words in Context and Transitions are served now, by Words (S9)
-                  "available": key in ("words in context", "transitions"), "via": None})
-        row["cb_count"] += 1
-        if row["available"]:
-            row["via"] = "words"
-    words = None
+def _words(learner: str, tz: int) -> dict | None:
+    """Words' drills (S9), shown beside the R&W bank."""
     summary = deps.part("words", "today_summary")
     if summary:
         try:
-            words = summary(learner, tz)
+            return summary(learner, tz)
         except Exception:
-            log.exception("words.today_summary failed for the R&W panel")
-    return {"subject": "rw", "bank": False,
-            "totals": {"domains": len(by_domain), "skills": sum(len(v) for v in by_domain.values()),
-                       "types": 0, "measured": 0},
-            "domains": [{"name": d, "skills": sorted(v.values(), key=lambda s: s["name"])}
-                        for d, v in by_domain.items()],
-            "words": words,
-            "note": "R&W practice questions come with the R&W bank. What you log here is waiting for it."}
+            log.exception("words.today_summary failed for the R&W tab")
+    return None
 
 
 def _habits(learner: str, rows: list, traps: list) -> tuple[list[dict], dict | None]:
@@ -170,8 +154,6 @@ def _habits(learner: str, rows: list, traps: list) -> tuple[list[dict], dict | N
 def bank(learner: str, subject: str = "math", tz: int = 0) -> dict:
     """The builder's one read: the catalogue with this learner's record on
     every skill and type, the mentor, the pools' counts and the extras."""
-    if subject == "rw":
-        return _rw_bank(learner, tz)
     from . import estimate, ratings
     base = _catalogue(subject)
     rows = [r for r in db.rows(
@@ -187,7 +169,7 @@ def bank(learner: str, subject: str = "math", tz: int = 0) -> dict:
         pairs[(r["template"], r["seed"])].append(r["correct"])
     seen = Counter(t for t, _ in pairs)
     missed = Counter(t for (t, _), marks in pairs.items() if not marks[0] and not any(marks[1:]))
-    traps = progress.open_traps(learner)
+    traps = progress.open_traps(learner, subject=subject)
     traps_t: dict[str, list] = defaultdict(list)
     for t in traps:
         traps_t[t["template"]].append({"id": t["id"], "label": t["label"], "hits": t["hits"], "owed": t["owed"],
@@ -319,8 +301,8 @@ def bank(learner: str, subject: str = "math", tz: int = 0) -> dict:
             "traps": sum(len(s["traps"]) for s in sk), "gain": (gain_dom.get(d["name"]) or {}).get("gain"),
             "due_n": sum(s["due_n"] for s in sk), "ready_n": sum(s["ready_n"] for s in sk),
             "types_n": sum(s["types_n"] for s in sk), "skills": sk})
-    habit_rows, top = _habits(learner, counted, traps)
-    counts = drill.pool_counts(learner)
+    habit_rows, top = _habits(learner, counted, traps) if subject == "math" else ([], None)   # habits are Math's
+    counts = drill.pool_counts(learner, subject=subject)
     counts.update({"traps": counts["mistakes"], "due": counts["review"]})
     return {
         "subject": subject, "bank": True,
@@ -328,13 +310,14 @@ def bank(learner: str, subject: str = "math", tz: int = 0) -> dict:
                    "measured": sum(1 for t in types_out.values() if any(not v["rough"] for v in t["levels"].values())),
                    "answered": len(counted)},
         "domains": domains_out,
-        "coach": progress.coach(learner, count=per_session(profile(learner)), subject=subject),
+        "coach": progress.coach(learner, count=per_session(profile(learner), subject), subject=subject),
         "counts": counts, "forecast": progress.due_forecast(learner, tz, 14),
         "route": estimate.route(learner, subject),
         "gains": None if not gains else {"total": gains.get("total"), "top3": gains.get("top3"),
                                          "answers": gains.get("answers")},
         "habits": habit_rows, "top_habit": top,
-        "desmos_way": drill.desmos_on(), "today": today.isoformat()}
+        "desmos_way": drill.desmos_on(), "today": today.isoformat(),
+        **({"words": _words(learner, tz)} if subject == "rw" else {})}
 
 
 @router.get("/api/bank")
@@ -396,27 +379,6 @@ def your_sets(topic: str | None = Query(default=None, max_length=64),
               x_learner: str | None = Header(default=None)) -> dict:
     """Your sets: active, recent (200), shared, and official questions you brought."""
     return drill.listing(learner_of(x_learner), topic, kind, misses)
-
-
-@router.get("/api/history")
-def history_without_inline(x_learner: str | None = Header(default=None)) -> dict:
-    """R24's list rule, registered before the legacy history route."""
-    learner = learner_of(x_learner)
-    out = []
-    for row in db.rows("SELECT id,kind,mock_id,started,finished,result,cfg FROM sessions"
-                       " WHERE learner=? AND finished IS NOT NULL ORDER BY finished DESC LIMIT 300", learner):
-        cfg = json.loads(row["cfg"] or "{}")
-        result = json.loads(row["result"] or "{}")
-        if cfg.get("inline") or result.get("asked", 0) == 0:
-            continue
-        out.append({"id": row["id"], "kind": row["kind"], "started": row["started"],
-                    "finished": row["finished"], "right": result.get("right"),
-                    "asked": result.get("asked"), "estimate": result.get("estimate"),
-                    "topics": [t["topic"] for t in result.get("topics", ())] or cfg.get("topics", []),
-                    "label": "Quick questions" if cfg.get("source") == "quick" else None})
-        if len(out) >= 200:
-            break
-    return {"sessions": out}
 
 
 @router.get("/api/drill/{sid}")
@@ -608,5 +570,6 @@ def drill_finish(sid: str, x_learner: str | None = Header(default=None)) -> dict
         db.run("DELETE FROM sessions WHERE id=? AND learner=?", sid, learner)
         return {"deleted": True}
     out = drill.finish(row)
-    out["next"] = progress.coach(learner, count=per_session(profile(learner)))
+    subject = cfg.get("subject", "math")              # Keep going stays in the set's subject
+    out["next"] = {**progress.coach(learner, count=per_session(profile(learner), subject), subject=subject), "subject": subject}
     return out

@@ -22,11 +22,13 @@ BASE = [
     ("clean_set", "Clean sets", "Mistakes", (1, 5, 20)),
     ("never_twice", "Fixes that held", "Mistakes", (5, 25, 100)),
     ("explorer", "Question types met", "Skills", (50, 100, 200, 300, 386)),
+    ("explorer:rw", "R&W question types met", "Skills", (25, 50, 100, 150)),
     ("first_module", "First module", "Tests", (1,)),
     ("first_section", "First section", "Tests", (1,)),
     ("sections", "Sections completed", "Tests", (1, 5, 10)),
     ("upper_route", "Upper route", "Tests", (1, 5)),
     ("climbing", "Score climb", "Tests", (50, 100, 150, 200)),
+    ("climbing:rw", "R&W score climb", "Tests", (50, 100, 150, 200)),
     ("challenge", "Challenges played", "Compete", (1, 7, 30, 100)),
     ("podium", "Podium finishes", "Compete", (1, 5, 20)),
     ("first_place", "First place", "Compete", (1, 5)),
@@ -56,12 +58,15 @@ ADVENTURE = {
     "fixed": ("Bridge Builder", "Mistakes mended for good"),
     "clean_set": ("Flawless Crossing", "Sets finished with every answer right"),
     "never_twice": ("Anchor Down", "Fixes that stayed fixed"),
-    "explorer": ("Map Maker", "Question types discovered"),
+    # explorer and climbing keep their ids (earned rows stay valid) and read Math; the :rw twins read R&W
+    "explorer": ("Map Maker", "Math question types discovered"),
+    "explorer:rw": ("Map Maker · R&W", "Reading and Writing question types discovered"),
     "first_module": ("First Footprints", "Finish your first module"),
     "first_section": ("Base Camp", "Finish a full section"),
     "sections": ("Summit Attempts", "Full sections completed"),
     "upper_route": ("The High Road", "Earn the harder second module"),
-    "climbing": ("Ascent", "Points climbed since your first test"),
+    "climbing": ("Ascent", "Math points climbed since your first Math test"),
+    "climbing:rw": ("Ascent · R&W", "Reading and Writing points climbed since your first R&W test"),
     "challenge": ("Daily Quest", "Daily challenges played"),
     "podium": ("Podium Pioneer", "Finish in a contest's top three"),
     "first_place": ("Crowned", "Win a contest"),
@@ -86,10 +91,10 @@ ADVENTURE = {
 def rules() -> list[dict]:
     out = [{"id": key, "name": name, "group": group, "rule": name,
             "tiers": list(tiers)} for key, name, group, tiers in BASE]
-    for topic, item in progress.topics().items():
+    for topic, item in {**progress.topics("math"), **progress.topics("rw")}.items():
         out.append({"id": f"skill:{topic}", "name": item.name, "group": "Skills",
                     "rule": f"Reach Strong in {item.name}", "tiers": [1]})
-    for domain in progress.DOMAINS:
+    for domain in (*progress.DOMAINS, *progress.RW_BLUEPRINT):
         out.append({"id": f"domain:{domain}", "name": domain, "group": "Skills",
                     "rule": f"Reach Strong across {domain}", "tiers": [1]})
     for section in ("compete", "words"):
@@ -117,7 +122,7 @@ def rules() -> list[dict]:
 
 def _counts(learner: str, tz: int) -> tuple[dict, dict]:
     days = progress.days(learner, tz, 53)
-    board = progress.board(learner)
+    board = {**progress.board(learner, "math"), **progress.board(learner, "rw")}
     attempted = db.one(f"SELECT COUNT(*) AS answered, SUM(correct=1 AND difficulty='hard') AS hard_right"
                        f" FROM attempts WHERE learner=? AND {progress.COUNTED}", learner)
     traps = db.one("SELECT SUM(closed IS NOT NULL) AS fixed, SUM(closed IS NOT NULL AND relapses=0"
@@ -143,9 +148,10 @@ def _counts(learner: str, tz: int) -> tuple[dict, dict]:
         consistency = sum(len(lines) == 7 and all(x["rest"] or x["questions"] or x["words"] or x["tests"]
                                                     for x in lines) for lines in per_week.values())
     qotd = sum(any(x["qotd"].values()) for x in days["days"])
-    scored = estimate._sittings(learner)
-    latest, earliest = (scored[0], scored[-1]) if scored else (None, None)
-    climb = max(0, round(latest["mid"] - earliest["mid"])) if latest and earliest else 0
+    climb = {}
+    for subject in ("math", "rw"):         # each section against its own first test
+        scored = estimate._sittings(learner, subject)
+        climb[subject] = max(0, round(scored[0]["mid"] - scored[-1]["mid"])) if scored else 0
     podium = first_place = top_ten = 0
     contest_board = deps.part("compete", "board")
     if contest_board:
@@ -174,15 +180,16 @@ def _counts(learner: str, tz: int) -> tuple[dict, dict]:
               "qotd": qotd, "answered": attempted["answered"] or 0,
               "hard_right": attempted["hard_right"] or 0, "hours": days["minutes_total"] // 60,
               "fixed": traps["fixed"] or 0, "clean_set": clean, "never_twice": traps["held"] or 0,
-              "explorer": progress.types_met(learner)["met"], "first_module": int(tests["module"] > 0),
+              "explorer": progress.types_met(learner, "math")["met"],
+              "explorer:rw": progress.types_met(learner, "rw")["met"], "first_module": int(tests["module"] > 0),
               "first_section": int(sections > 0), "sections": sections,
               "upper_route": sum(s["route"] == "upper" for s in sittings),
-              "climbing": climb, "challenge": len(challenge),
+              "climbing": climb["math"], "climbing:rw": climb["rw"], "challenge": len(challenge),
               "podium": podium, "first_place": first_place, "perfect": perfect,
               "top-ten": top_ten}
     for topic, item in board.items():
         values[f"skill:{topic}"] = int(item["mastery"] >= progress.STRONG)
-    for domain in progress.DOMAINS:
+    for domain in (*progress.DOMAINS, *progress.RW_BLUEPRINT):
         members = [v for v in board.values() if v["domain"] == domain]
         values[f"domain:{domain}"] = int(bool(members) and all(v["mastery"] >= progress.STRONG for v in members))
     known = db.one("SELECT COUNT(*) AS n FROM word_state WHERE learner=? AND box>=4"
@@ -223,9 +230,12 @@ def _go(rule_id: str, learner: str) -> dict:
             return {"label": action.get("label") or action.get("action") or "Open Compete",
                     "href": action.get("href") or "/compete/"}
     if rule_id.startswith("skill:"):
-        return {"label": "Practise this skill", "body": {"topics": [rule_id[6:]], "count": 8}}
-    if rule_id == "explorer":
-        return {"label": "Try new types", "body": {"pool": "untried", "count": 8}}
+        topic = rule_id[6:]
+        return {"label": "Practise this skill",
+                "body": {"topics": [topic], "count": 8, "subject": deps.subject_of(topic)}}
+    if rule_id in ("explorer", "explorer:rw"):
+        return {"label": "Try new types", "body": {"pool": "untried", "count": 8,
+                                                     "subject": "rw" if rule_id == "explorer:rw" else "math"}}
     if rule_id in ("fixed", "never_twice"):
         return {"label": "Fix mistakes", "body": {"pool": "redo", "count": 8}}
     if rule_id == "clean_set":
