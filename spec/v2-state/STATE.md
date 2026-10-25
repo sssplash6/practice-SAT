@@ -1,4 +1,4 @@
-# v2 build state -- 2026-09-29T01:50:44+05:00
+# v2 build state -- 2026-10-07T20:07:21+05:00
 
 Written by `tools/v2_checkpoint.py`. Nothing below is lost on an interruption: finished
 agent results are in `runs/`, uncommitted worktree work in `wip/`.
@@ -34,13 +34,14 @@ agent results are in `runs/`, uncommitted worktree work in `wip/`.
 - `v2/ops-docs` at 99715ce, 1 commits ahead of master
 - `v2/page-asks` at 876a623, 3 commits ahead of master
 - `v2/perf` at 80676b3, 0 commits ahead of master
+- `v2/preview-fixes` at 5942c20, 352 commits ahead of master
 - `v2/s1` at 81129dd, 29 commits ahead of master
 - `v2/s1-old-server` at cf53af4, 1 commits ahead of master
 - `v2/s1-server` at 07a05aa, 14 commits ahead of master
 - `v2/s10` at 2bd6036, 20 commits ahead of master
 - `v2/s10-old-server` at 4611321, 2 commits ahead of master
 - `v2/s10-server` at 413a47d, 8 commits ahead of master
-- `v2/s3` at f382b55, 34 commits ahead of master
+- `v2/s3` at 0c51186, 39 commits ahead of master
 - `v2/s3-server` at 9c35fcc, 15 commits ahead of master
 - `v2/s4` at 5b22933, 0 commits ahead of master
 - `v2/s4-server` at 6259a3f, 1 commits ahead of master
@@ -104,7 +105,7 @@ agent results are in `runs/`, uncommitted worktree work in `wip/`.
 
 ## Worktrees
 
-- `/private/tmp/claude-501/-Users-workingmyassof-satbank/9030c288-6222-49fa-a25a-6e6802e22cd3/scratchpad/prev4` on `detached c3cd5a4`: 1 uncommitted (saved in wip/prev4/)
+- `/private/tmp/claude-501/-Users-workingmyassof-satbank/9030c288-6222-49fa-a25a-6e6802e22cd3/scratchpad/prev4` on `v2/preview-fixes`: 0 uncommitted
 - `/Users/workingmyassof/freshbot/satbank/.claude/worktrees/bank-figfix` on `detached a9561d6`: 0 uncommitted
 - `/Users/workingmyassof/freshbot/satbank/.claude/worktrees/bank-lint-fix` on `v2/bank-lint-fix`: 0 uncommitted
 - `/Users/workingmyassof/freshbot/satbank/.claude/worktrees/calm-shared` on `v2/calm-shared`: 0 uncommitted
