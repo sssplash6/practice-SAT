@@ -9,6 +9,14 @@ __pycache__/
 # the PDFs; the keys and transcripts are tracked because the gate reads them.
 material/*.pdf
 material/items/
+material/rw/*.pdf
+material/rw/items/
+# CB's raw question responses (1,845 files); `tools/cb_rw_fetch.py` rebuilds them,
+# and the readable per-skill files in material/rw/cb_api/ are tracked
+material/rw/cb_api/raw/
+# empty lock files the R&W writers and reviewers take while editing a JSON file
+*.json.lock
+spec/rw/fidelity/claims.txt.lock
 
 # The serving layer's runtime state: a student database and any copy of it,
 # the mail that had nowhere to go, and the files attached to reports.
@@ -23,3 +31,11 @@ server/reports/
 
 # v2 build checkpoints: work-in-progress snapshots are rewritten every few minutes
 spec/v2-state/wip/
+
+# macOS folder metadata
+.DS_Store
+# compete.py rebuilds the twin supply cache when it is missing
+server/cache/
+# third-party papers and pages the R&W fidelity writers downloaded as sources
+spec/rw/fidelity/work/*/src/
+spec/rw/fidelity/work/*/web/
