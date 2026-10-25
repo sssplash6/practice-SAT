@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Your traps · SAT Freshman</title>
+<link rel="icon" href="/favicon.ico" sizes="32x32">
 <link rel="icon" href="/assets/mark.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
 <link rel="manifest" href="/manifest.webmanifest">
@@ -11,62 +12,66 @@
 <script src="/assets/head.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800;900&family=DM+Mono:wght@400;500&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap">
+<link rel="preload" href="/assets/fonts/Geist.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap">
 <link rel="stylesheet" href="/assets/ui.css">
 <style>
   /* Review's paper for test week (review.md V19): ?sheet=traps, your traps sheet (the same list
      Plan prints), and ?sheet=log, the error log of every open mistake. Print CSS, and a
      readable phone view. */
   .pr { max-width: 920px; }
-  .pr-back { display: inline-flex; align-items: center; min-height: 44px; color: var(--ink-soft); text-decoration: none; font-weight: 600; }
-  .pr-back:hover { color: var(--ink); }
-  .pr h1 { font: 800 32px/1.15 var(--sans, 'Archivo'), sans-serif; margin: 4px 0 6px; }
-  .pr-sub { margin: 0 0 16px; color: var(--ink-soft); }
-  .pr-ctl { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin: 0 0 20px; }
+  .pr-top { display: flex; align-items: center; gap: 8px 16px; flex-wrap: wrap; }
+  .pr-top .h1 { flex: 1 1 auto; min-width: 0; }
+  .pr-back { gap: 4px; color: var(--soft); }
+  .pr-sub { margin: 4px 0 12px; font: 400 12.5px/1.5 var(--font); color: var(--soft); font-variant-numeric: tabular-nums; }
+  .pr-ctl { display: flex; flex-wrap: wrap; gap: 8px 12px; align-items: center; margin: 0 0 16px; }
   .pr-sec { margin: 0 0 20px; }
-  .pr-sec > h2 { font: 700 13px var(--mono, 'DM Mono'), monospace; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-soft); margin: 0 0 8px; }
+  @media screen {
+    #sheet:not(:empty):not(:has(.card, .card-err)) { padding: 32px 40px 12px; border-radius: var(--radius-card); background: var(--raised); box-shadow: var(--shadow-1); }
+  }
+  @media screen and (max-width: 759px) { #sheet:not(:empty):not(:has(.card, .card-err)) { padding: 16px 16px 4px; } }
+  .pr-sec > h2 { margin: 0 0 8px; font: 600 16px/1.3 var(--font); letter-spacing: -.01em; }
   .pr-habit { margin: 0 0 6px; }
-  .pr-habit b { font-weight: 700; }
-  .pr-trap { break-inside: avoid; padding: 14px 0; border-top: 1px solid var(--line, #e5e5e5); display: grid; grid-template-columns: 28px minmax(0, 1fr); gap: 4px 10px; }
-  .pr-trap .n { font: 700 15px var(--mono, 'DM Mono'), monospace; }
-  .pr-trap .lab { font-weight: 700; font-size: 16px; margin: 0; }
+  .pr-habit b { font-weight: 600; }
+  .pr-trap { break-inside: avoid; padding: 12px 0; border-top: 1px solid var(--line); display: grid; grid-template-columns: 28px minmax(0, 1fr); gap: 4px 8px; }
+  .pr-trap .n { font: 600 14.5px var(--font); font-variant-numeric: tabular-nums; }
+  .pr-trap .lab { margin: 0; font: 600 14.5px/1.4 var(--font); }
   .pr-trap .meta { margin: 0; }
   .pr-trap .tell, .pr-trap .rule { margin: 2px 0 0; }
   .pr-trap .rule b, .pr-trap .tell b { font-weight: 600; }
-  .pr-ex { grid-column: 2; margin-top: 6px; padding: 10px 12px; background: var(--tile); border-radius: 8px; }
-  .pr-ex .stem { font-family: 'Source Serif 4', Georgia, serif; font-size: 15px; margin: 0 0 6px; }
+  .pr-ex { grid-column: 2; margin-top: 6px; padding: 8px 12px; background: var(--tile-2); border-radius: 8px; }
+  .pr-ex .stem { margin: 0 0 6px; font-family: var(--serif); font-size: 15px; }
   .pr-ex .fig { max-width: 260px; max-height: 180px; overflow: hidden; margin: 4px 0 6px; }
   .pr-ex .fig svg { max-width: 100%; height: auto; max-height: 180px; }
-  .pr-ex table { border-collapse: collapse; margin: 4px 0 6px; font-size: 13px; }
-  .pr-ex td, .pr-ex th { border: 1px solid var(--line, #ccc); padding: 2px 8px; }
-  .pr-ch { display: flex; flex-wrap: wrap; gap: 4px 18px; margin: 0; padding: 0; list-style: none; }
+  .pr-ex table { border-collapse: collapse; margin: 4px 0 6px; font-size: 12.5px; }
+  .pr-ex td, .pr-ex th { border: 1px solid var(--line); padding: 2px 8px; }
+  .pr-ch { display: flex; flex-wrap: wrap; gap: 4px 16px; margin: 0; padding: 0; list-style: none; }
   .pr-ch li { display: inline-flex; gap: 6px; align-items: baseline; }
-  .pr-ch .l { font-weight: 700; }
-  .pr-ch .key { font-weight: 700; }
-  .pr-ch .tag { font: 600 11px var(--mono, 'DM Mono'), monospace; text-transform: uppercase; letter-spacing: .04em; border: 1px solid currentColor; border-radius: 4px; padding: 0 4px; }
-  .pr-ex .why { margin: 6px 0 0; color: var(--ink-soft); font-size: 14px; }
+  .pr-ch .l, .pr-ch .key { font-weight: 600; }
+  .pr-ch .tag { padding: 0 4px; border: 1px solid currentColor; border-radius: 4px; font: 600 11.5px var(--font); }
+  .pr-ex .why { margin: 6px 0 0; color: var(--soft); font-size: 14.5px; }
   .pr-log { width: 100%; border-collapse: collapse; font-size: 14px; }
-  .pr-log th { text-align: left; font: 600 11px var(--mono, 'DM Mono'), monospace; letter-spacing: .05em; text-transform: uppercase; color: var(--ink-soft); padding: 6px 8px; border-bottom: 1.5px solid var(--ink); }
-  .pr-log td { vertical-align: top; padding: 8px; border-bottom: 1px solid var(--line, #e5e5e5); }
+  .pr-log th { white-space: nowrap; text-align: left; padding: 6px 8px; border-bottom: 1.5px solid var(--ink); font: 600 11.5px var(--font); letter-spacing: .04em; text-transform: uppercase; color: var(--soft); }
+  .pr-log td { vertical-align: top; padding: 8px; border-bottom: 1px solid var(--line); }
   .pr-log tr { break-inside: avoid; }
-  .pr-log .q { font-family: 'Source Serif 4', Georgia, serif; }
-  .pr-log .sk { display: block; font-size: 12px; color: var(--ink-soft); font-family: var(--sans, 'Archivo'), sans-serif; }
-  .pr-log .pk { font-family: var(--mono, 'DM Mono'), monospace; white-space: nowrap; }
-  .pr-log .st { white-space: nowrap; }
-  .pr-empty { background: var(--tile); border-radius: 12px; padding: 20px; display: grid; gap: 12px; }
+  .pr-log .q { font-family: var(--serif); }
+  .pr-log .sk { display: block; font: 400 12.5px var(--font); color: var(--soft); }
+  .pr-log .pk { font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .pr-log .st, .pr-log td[data-k="Cause"] { white-space: nowrap; }
+  .pr-empty { display: grid; gap: 12px; }
+  .pr-empty p { margin: 0; }
   @media (max-width: 759px) {
-    .pr h1 { font-size: 26px; }
     .pr-log thead { display: none; }
     .pr-log, .pr-log tbody, .pr-log tr, .pr-log td { display: block; width: 100%; }
-    .pr-log tr { padding: 10px 0; border-bottom: 1px solid var(--line, #e5e5e5); }
+    .pr-log tr { padding: 8px 0; border-bottom: 1px solid var(--line); }
     .pr-log td { border: 0; padding: 2px 0; }
-    .pr-log td[data-k]::before { content: attr(data-k) ' · '; color: var(--ink-soft); font-size: 12px; }
+    .pr-log td[data-k]::before { content: attr(data-k) ' · '; color: var(--soft); font-size: 12.5px; }
   }
   @media print {
     .pr-back, .pr-ctl { display: none !important; }
     .pr { max-width: none; padding: 0; }
-    body { background: #fff; }
-    .pr-ex { background: none; border: 1px solid #ccc; }
+    body { background: var(--paper); }
+    .pr-ex { background: none; border: 1px solid var(--line); }
     @page { margin: 14mm; }
   }
 </style>
@@ -74,8 +79,10 @@
 <body>
 <header id="bar"></header>
 <main class="page pr" id="main" tabindex="-1">
-  <a class="pr-back" href="/review/">‹ Review</a>
-  <h1 id="title">Your traps</h1>
+  <header class="pr-top">
+    <a class="quiet pr-back" href="/review/">Review</a>
+    <h1 class="h1" id="title">Your traps</h1>
+  </header>
   <p class="pr-sub" id="sub"></p>
   <div class="pr-ctl" id="ctl"></div>
   <section id="sheet" aria-busy="true"></section>
@@ -84,29 +91,38 @@
 <script src="/assets/ui.js"></script>
 <script src="/assets/kit.js"></script>
 <script src="/assets/question.js"></script>
-<script>UI.shell('review');</script>
+<script>UI.shell({ page: 'review', ownPrimary: true });</script>
 <script>
 (() => {
   'use strict';
   const h = UI.h;
+  // the back link's caret is drawn (UI.ICON), not a text glyph
+  const backEl = document.querySelector('.pr-back');
+  if (backEl && UI.icon) backEl.prepend(UI.icon('caret_left', 16));
+  if (backEl) backEl.href = `/review/?subject=${UI.subject.get()}`;
   const $ = id => document.getElementById(id);
   const enc = encodeURIComponent;
   const Q = new URLSearchParams(location.search);
   const sheet = Q.get('sheet') === 'log' ? 'log' : 'traps';
+  // one subject a sheet: the link's (?subject=), else the one last picked; its links keep it
+  const subject = UI.subject.get();
+  const sub = p => `${p}${p.includes('?') ? '&' : '?'}subject=${subject}`;
+  const rw = subject === 'rw';
   const LET = 'ABCDE';
   const cap = s => (s ? s[0].toUpperCase() + s.slice(1) : '');
   const box = $('sheet');
   const CAUSE = { trap: 'Fell for a trap', slip: 'Slip: I knew it', misread: 'Misread the question', clock: 'Ran out of time', entry: 'Entered it wrong', gap: 'Didn’t know how to start', changed: 'Changed a right answer' };
-  const KIND = { gridin: 'Grid-in: a wrong value', slip: 'Arithmetic slip', unsure: 'Unsure: right, but flagged' };   // their label is the skill, already in Question
+  // their label is the skill, already in Question; an R&W row has no grid-in and no arithmetic
+  const KIND = rw ? { slip: 'A careless pick', unsure: 'Unsure: right, but flagged' } : { gridin: 'Grid-in: a wrong value', slip: 'Arithmetic slip', unsure: 'Unsure: right, but flagged' };
   const STATUS = { open: 'Open', half: 'Half fixed', relapsed: 'Relapsed', stuck: 'Stuck', unsure: 'Unsure' };
   // fractions in math text stack in the line when the kit offers it (the user's rule, 2026-09-28)
   const mtext = (el, t) => { const got = UI.fracText ? UI.fracText(String(t ?? '')) : null; if (got instanceof Node) el.replaceChildren(got); else el.textContent = String(t ?? ''); return el; };
   const firstSentence = t => { const m = String(t || '').match(/^.*?[.!?](\s|$)/); return (m ? m[0] : String(t || '')).trim(); };
-  const firstLine = t => { const s = String(t || '').split('\n')[0].trim(); return s.length > 140 ? s.slice(0, 137) + '…' : s; };
+  const firstLine = t => { const s = String(t || '').replace(/<\/?u>/g, '').split('\n')[0].trim(); return s.length > 140 ? s.slice(0, 137) + '…' : s; };
   const today = UI.date ? UI.date(new Date().toISOString(), 'short') : '';
 
   function controls() {
-    const other = sheet === 'traps' ? ['Error log', '/review/print.html?sheet=log'] : ['Your trap sheet', '/review/print.html?sheet=traps'];
+    const other = sheet === 'traps' ? ['Error log', sub('/review/print.html?sheet=log')] : ['Your trap sheet', sub('/review/print.html?sheet=traps')];
     $('ctl').replaceChildren(
       h('button', { type: 'button', class: 'pill', text: 'Print / Save as PDF', onclick: () => print() }),
       h('a', { class: 'btn', href: other[1], text: other[0] }));
@@ -114,8 +130,8 @@
   function empty(text) {
     box.removeAttribute('aria-busy');
     $('ctl').replaceChildren();
-    box.replaceChildren(h('div', { class: 'pr-empty' }, h('p', { style: 'margin:0', text }),
-      h('div', {}, h('a', { class: 'pill', href: '/review/', text: 'Open Review' }))));
+    box.replaceChildren(h('div', { class: 'card pr-empty' }, h('p', { text }),
+      h('div', {}, h('a', { class: 'pill', href: sub('/review/'), text: 'Open Review' }))));
   }
   function failed(retry) {
     box.removeAttribute('aria-busy');
@@ -126,6 +142,7 @@
   /* ------------------------------------------------------------ your traps (?sheet=traps) */
   function example(ex, e) {
     const el = h('div', { class: 'pr-ex' });
+    if (ex.text) ex.text.split(/\n{2,}/).forEach(p => el.append(h('p', { class: 'stem', text: p.replace(/<\/?u>/g, '') })));   // an R&W passage
     el.append(mtext(h('p', { class: 'stem' }), ex.stem));
     if (ex.figure) { const f = h('div', { class: 'fig', role: 'img', 'aria-label': ex.figure_alt || 'Figure' }); f.innerHTML = ex.figure; el.append(f); }
     if (Array.isArray(ex.table) && ex.table.length) {
@@ -150,11 +167,11 @@
   async function traps() {
     document.title = 'Your traps · SAT Freshman';
     let d;
-    try { d = await UI.api('/review/trapsheet'); } catch (_) { failed(traps); return; }
+    try { d = await UI.api(sub('/review/trapsheet')); } catch (_) { failed(traps); return; }
     const entries = d.entries || [], habits = d.habits || [];
     $('title').textContent = 'Your traps';
     if (!entries.length && !habits.length) { $('sub').textContent = ''; empty('No open traps right now. Miss a question and it lands here, named.'); return; }
-    $('sub').textContent = (d.title || '').replace(/^Your traps · /, '');
+    $('sub').textContent = `${UI.subjectLabel(subject)} · ${(d.title || '').replace(/^Your traps · /, '')}`;   // the printed page says which subject
     controls();
     const out = [];
     if (habits.length) {
@@ -186,7 +203,7 @@
     const out = [];
     let cursor = null;
     for (let guard = 0; guard < 10; guard++) {
-      const d = await UI.api(`/review/redo?limit=100&sort=recent${cursor !== null ? `&cursor=${enc(cursor)}` : ''}`);
+      const d = await UI.api(sub(`/review/redo?limit=100&sort=recent${cursor !== null ? `&cursor=${enc(cursor)}` : ''}`));
       out.push(...(d.items || []));
       if (d.next === null || d.next === undefined) break;
       cursor = d.next;
@@ -203,7 +220,8 @@
         if (!r.template || r.seed === null || r.seed === undefined) continue;
         try {
           const d = await UI.api(`/review/item?template=${enc(r.template)}&seed=${enc(r.seed)}`, { quiet: true });
-          got.set(r.id, { stem: d.question && d.question.stem, answer: d.answer });
+          // an R&W row opens with its passage (its question line reads the same on every passage of a type)
+          got.set(r.id, { stem: d.question && (d.question.text || d.question.stem), answer: d.answer });
         } catch (_) {}
       }
     };
@@ -216,7 +234,7 @@
     let rows;
     try { rows = await allOpen(); } catch (_) { failed(log); return; }
     if (!rows.length) { $('sub').textContent = ''; empty('No open mistakes. The log fills as you miss questions.'); return; }
-    $('sub').textContent = `${today} · ${rows.length} open`;
+    $('sub').textContent = `${UI.subjectLabel(subject)} · ${today} · ${rows.length} open`;
     controls();
     const more = await stems(rows);
     const tb = h('tbody');

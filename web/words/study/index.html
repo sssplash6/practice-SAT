@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Flashcards · SAT Freshman</title>
+<link rel="icon" href="/favicon.ico" sizes="32x32">
 <link rel="icon" href="/assets/mark.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
 <link rel="manifest" href="/manifest.webmanifest">
@@ -11,83 +12,83 @@
 <script src="/assets/head.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800;900&family=DM+Mono:wght@400;500&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap">
+<link rel="preload" href="/assets/fonts/Geist.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap">
 <link rel="stylesheet" href="/assets/ui.css">
 <style>
-  /* Study setup (spec 3.8 §5; words.md W6 W7 W8 W11 W15 W16, overrides 27-30). */
-  .st { padding-bottom: 140px; display: grid; gap: 20px; }
+  /* Study setup (spec 3.8 §5; words.md W6 W7 W8 W11 W15 W16, overrides 27-30). Pick a deck, set the options, Start:
+     decks as a radio list of rows in main, the glance with Start in the aside (a bar at the foot below 1280px). */
+  /* block, not a grid: the shell's banner and Up next strip sit inside main with their own margins, and grid gaps doubled them */
+  .st-head ~ * { margin-top: var(--card-gap); }
   .st * { min-width: 0; }
-  .st-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 16px; }
-  .st-grid { display: grid; grid-template-columns: minmax(0, 1fr) 320px; gap: 24px; align-items: start; }
-  .st-opts { display: grid; gap: 22px; }
-  .st-pair { display: flex; flex-wrap: wrap; gap: 0 32px; }
-  .st-sec { display: grid; gap: 10px; }
+  .st-head { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 16px; }
+  .st-title { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 12px; }
+  .st-opts { display: grid; gap: 16px; align-content: start; }
+  #today:empty, #finish:empty { display: none; }
+  .st-pair { display: flex; flex-wrap: wrap; gap: 16px 32px; }
+  .st-sec { display: grid; gap: 8px; }
   .st-sec > .k { display: block; }
   .st .seg { width: fit-content; max-width: 100%; }
-  .st-more > summary { cursor: pointer; font: 600 14px var(--font); min-height: 44px; display: flex; align-items: center; }
-  .st-more > summary::after, .deck-empty > summary::after { content: "▸"; margin-left: 8px; color: var(--soft); }
-  .st-more[open] > summary::after, .deck-empty[open] > summary::after { content: "▾"; }
-  .st-more-in { display: grid; gap: 22px; padding-top: 10px; }
-  .deck-empty > summary { cursor: pointer; font: 600 13.5px var(--font); color: var(--soft); min-height: 44px; display: flex; align-items: center; }
-  .deck-empty .decks { margin-top: 4px; }
-  .deck[aria-disabled="true"] { cursor: default; background: none; box-shadow: inset 0 0 0 1px var(--line); color: var(--soft); }
-  .decks { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); grid-auto-rows: 104px; gap: 8px; }
-  .deck { appearance: none; border: 0; cursor: pointer; text-align: left; display: grid; gap: 4px; align-content: start; min-height: 0; padding: 12px 14px; border-radius: 10px;
-    background: var(--tile); color: var(--ink); font: inherit; position: relative; }
-  .deck[aria-checked="true"] { background: var(--wash); box-shadow: inset 0 0 0 1.5px var(--amber); }
-  .deck b { font: 600 14.5px/1.3 var(--font); padding-right: 40px; }
-  .deck .n { position: absolute; top: 12px; right: 14px; font: 500 13px var(--mono); color: var(--soft); }
-  .deck .help { margin: 0; }
-  .deck select { margin-top: 4px; width: 100%; }
-  @media (hover: hover) and (pointer: fine) { .deck:not(:disabled):not([aria-checked="true"]):hover { background: var(--tile-2); } }
-  .st-note { font: 400 13px/1.45 var(--font); color: var(--soft); }
-  .glance { position: sticky; top: 24px; display: grid; gap: 12px; }
-  .glance .big { font: 500 28px/1.1 var(--mono); letter-spacing: -.02em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .glance .big + .meta { margin-top: -8px; }
-  .glance .line { font: 400 14px/1.5 var(--font); }
-  .glance .pill { width: 100%; height: 46px; min-height: 0; border-radius: 10px; font-size: 15px; }
-  .glance .pill .kbd { font-size: 11px; padding: 1px 6px; }
-  @media (min-width: 1000px) { .glance { margin-top: 24px; } }
-  .glance .err { font: 400 13px var(--font); color: var(--ink); }
-  .gl-print { display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: center; }
-  /* one column: the glance is a bar at the bottom, so Start is always in reach */
-  @media (max-width: 999px) {
-    .st-grid { grid-template-columns: 1fr; }
-    .glance { position: fixed; top: auto; left: 0; right: 0; bottom: env(safe-area-inset-bottom, 0px); z-index: 25; border-radius: 0; padding: 10px var(--gutter);
-      grid-template-columns: minmax(0, 1fr) auto; align-items: center; box-shadow: 0 -1px 0 var(--line); background: var(--paper); gap: 2px 12px; }
+  .st-more > .fold-s, .deck-more > .fold-s { font: 600 14px/1.3 var(--font); min-height: var(--row-h); color: var(--ink); }
+  .st-more-in { display: grid; gap: 16px; padding-top: 8px; }
+  .deck-more .decks { margin-top: 4px; }
+  /* the decks (premium): the three that start most days as 48px rows, the rest under "More decks · n" (remembered);
+     a radio list of the shared .choice-row, the count quiet on the right; the chosen one opens to its note and picker */
+  .decks { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 4px 12px; align-items: start; }
+  .decks.lead { grid-template-columns: minmax(0, 1fr); max-width: 520px; }
+  .decks.lead .choice-row { min-height: 48px; }
+  /* plain rows like the library's Collections: no fill until hover, the chosen one keeps the shared selected look */
+  .decks :where(.choice-row:not([aria-checked="true"])) { background: none; }
+  .decks .choice-row[aria-checked="true"] { box-shadow: none; }   /* the tint band and 600, no boxed edge */
+  @media (max-width: 399px) { .decks { grid-template-columns: 1fr; } }
+  .deck-i { display: grid; gap: 4px; }
+  .deck-x { display: grid; gap: 6px; padding: 2px 4px 6px; }
+  .deck-x .help { margin: 0; }
+  /* the glance: what Start will do, and Start */
+  .glance { display: grid; gap: 8px; align-content: start; }
+  .glance .stat-v { margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .glance .line { font: 400 12.5px/1.45 var(--font); color: var(--soft); }
+  .gl-print { display: flex; flex-wrap: wrap; gap: 8px 12px; align-items: center; }
+  /* the aside is the card here: no -8px shadow room (the card lines up with the content edge), and sticky as an aside
+     (.card's position: relative would otherwise win and shift it 16px down by the aside's top) */
+  /* below 1280px the glance is a bar at the foot (.st raises it over the hero card's own look) */
+  @media (max-width: 1279px) {
+    .st .glance { position: fixed; top: auto; left: 0; right: 0; bottom: env(safe-area-inset-bottom, 0px); z-index: 25; max-height: none; overflow: visible;
+      border: 0; border-radius: 0; padding: 8px var(--gutter); grid-template-columns: minmax(0, 1fr) auto; align-items: center;
+      box-shadow: 0 -1px 0 var(--line); background: var(--page); gap: 2px 12px; }
     body.has-side .glance { left: var(--side-w); }
     body.has-rail .glance { left: var(--rail-w); }
-    .glance .big { font-size: 17px; font-family: var(--font); font-weight: 600; }
-    .glance .big + .meta { margin-top: 0; }
-    .glance .line, .glance .k, .glance .gl-print { display: none; }
-    .glance .pill { width: auto; grid-row: 1 / span 2; grid-column: 2; height: 44px; }
-    .st { padding-bottom: 200px; }
+    .glance .stat-v { font-size: 16px; }
+    .glance .line, .glance .gl-print { display: none; }
+    .glance .pill { width: auto; grid-row: 1 / span 2; grid-column: 2; }
+    .glance .gl-fresh { grid-column: 1 / -1; justify-self: start; }
+    .st { padding-bottom: 96px; }
   }
   @media (max-width: 759px) {
-    .glance { bottom: calc(64px + env(safe-area-inset-bottom, 0px)); }
-    .st { padding-bottom: 240px; }
-    .decks { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-    .deck b { padding-right: 0; }
-    .deck .n { position: static; }
+    .st-head > #wtabs { flex: 1 1 100%; }
+    .st .glance { bottom: calc(64px + env(safe-area-inset-bottom, 0px)); }
+    .st { padding-bottom: calc(168px + env(safe-area-inset-bottom, 0px)); }
   }
 </style>
 </head>
 <body data-page="words-study">
 <header id="bar"></header>
 <main class="page st" id="main" tabindex="-1">
-  <header class="st-head"><h1 class="h1" id="h1">Flashcards</h1><p class="meta" id="meta"></p></header>
+  <header class="st-head">
+    <div class="st-title"><h1 class="h1" id="h1">Flashcards</h1><p class="meta" id="meta"></p></div>
+    <div id="wtabs"></div>
+  </header>
   <div id="today"></div>
-  <div id="wtabs"></div>
-  <div class="st-grid">
+  <div class="twocol">
     <div class="st-opts" id="opts"><p class="meta">Loading…</p></div>
-    <aside class="card glance" id="glance" aria-label="At a glance"></aside>
+    <aside class="twocol-side card hero glance" id="glance" aria-label="At a glance"></aside>
   </div>
 </main>
 <nav id="tabs"></nav>
 <script src="/assets/ui.js"></script>
 <script src="/assets/kit.js"></script>
 <script src="/assets/charts.js"></script>
-<script>UI.shell('words');</script>
+<script>UI.shell({ page: 'words', ownPrimary: true });   // the glance's Start is this page's orange</script>
 <script src="/assets/words-ui.js"></script>
 <script>
 (() => {
@@ -126,10 +127,11 @@
     (lib.groups || []).forEach(g => (g.collections || []).forEach(c => { W._coll[c.id] = c.name; }));
     W._lists = [...new Set(words.filter(w => w.own && w.collection).map(w => w.collection))];
     const c = lib.counts || {};
-    $('meta').textContent = [c.due ? `${num(c.due)} due` : null, c.known ? `${num(c.known)} known` : null, c.claimed ? `${num(c.claimed)} claimed` : null].filter(Boolean).join(' · ');
-    UI.todayWords($('today'), { lib, compact: true, onChange: load });
+    $('meta').textContent = [c.known ? `${num(c.known)} known` : null, c.claimed ? `${num(c.claimed)} claimed` : null].filter(Boolean).join(' · ');   // due is the Due today deck's
+    $('today').replaceChildren();   // the Today's words deck is the daily start here
     if (!S.deck) S.deck = P.get('words') ? 'from' : P.get('deck') || (c.due ? 'due' : 'new');
     paint();
+    $('opts').dataset.m = 'stagger';   // the first paint's sections rise once (kit, a fresh visit only)
   }
 
   /* ---------------- decks */
@@ -188,34 +190,41 @@
   };
 
   /* ---------------- the options */
-  const tip = (s, text) => { const k = s.querySelector('.k'); if (k && W.info) k.append(' ', W.info(text, k.textContent)); };
+  const tip = (s, text) => { const k = s.querySelector('.k'); if (k) k.append(' ', UI.why(text, { about: k.textContent.toLowerCase() })); };
   function paint() {
     const host = $('opts');
     host.replaceChildren();
     const sec = (k, ...kids) => { const s = h('section', { class: 'st-sec' }, h('span', { class: 'k', text: k })); kids.flat().filter(Boolean).forEach(x => s.append(x)); host.append(s); return s; };
     // DECK
-    const grid = h('div', { class: 'decks', role: 'radiogroup', 'aria-label': 'Deck' });
+    const LEAD = ['from', 'today', 'due', 'new'];
+    const LEAD_ICON = { from: 'list', today: 'today', due: 'review', new: 'plus' };
+    const grid = h('div', { class: 'decks lead', role: 'radiogroup', 'aria-label': 'Deck' });
+    const rest = h('div', { class: 'decks', role: 'radiogroup', 'aria-label': 'More decks' });
     const none = [];
     decks().forEach(d => {
-      const empty = d.n === 0;
-      const b = h('button', { type: 'button', class: 'deck', role: 'radio', 'aria-checked': String(S.deck === d.id), 'aria-disabled': empty ? 'true' : null,
-        'aria-description': empty && d.empty ? d.empty : null,
-        onclick: e => { if (empty || e.target.closest('select')) return; S.deck = d.id; paint(); } },
-        h('b', { text: d.label }), d.n ? h('span', { class: 'n', text: num(d.n) }) : null,
-        !empty && d.help ? h('p', { class: 'help', text: d.help }) : null);
-      if (empty) { if (d.empty && UI.tooltip) UI.tooltip(b, d.empty); none.push(b); return; }
-      if (d.select && d.select.length && !empty) {
-        const sel = h('select', { class: 'field sm', 'aria-label': d.label }, d.select.map(([v, l]) => h('option', { value: v, text: l, selected: S.value[d.id] === v ? true : null })));
-        sel.addEventListener('change', () => { S.value[d.id] = sel.value; S.deck = d.id; paint(); });
-        sel.addEventListener('click', e => e.stopPropagation());
-        b.append(sel);
-      }
-      grid.append(b);
+      const empty = d.n === 0, on = S.deck === d.id;
+      const b = h('button', { type: 'button', class: 'choice-row', role: 'radio', 'aria-checked': String(on), 'aria-disabled': empty ? 'true' : null,
+        'aria-description': empty && d.empty ? d.empty : !empty && d.help ? d.help : null,
+        // an empty deck says why on a tap (touch has no hover)
+        onclick: () => { if (empty) { if (d.empty) UI.toast(d.empty); return; } S.deck = d.id; paint(); } },
+        LEAD_ICON[d.id] ? UI.icon(LEAD_ICON[d.id], 18) : null, h('span', { text: d.label }), d.n ? h('span', { class: 'n', text: num(d.n) }) : null);
+      const item = h('div', { class: 'deck-i' }, b);
+      if (empty && !LEAD.includes(d.id)) { if (d.empty && UI.tooltip) UI.tooltip(b, d.empty); none.push(item); return; }
+      if (empty && d.empty && UI.tooltip) UI.tooltip(b, d.empty);
+      if (d.help && UI.tooltip && !on) UI.tooltip(b, d.help);
+      // the chosen deck: its note and its picker, beside the radio rather than inside it
+      const sel = d.select && d.select.length ? h('select', { class: 'field sm', 'aria-label': d.label }, d.select.map(([v, l]) => h('option', { value: v, text: l, selected: S.value[d.id] === v ? true : null }))) : null;
+      if (sel) sel.addEventListener('change', () => { S.value[d.id] = sel.value; S.deck = d.id; paint(); });
+      if (on && (d.help || sel)) item.append(h('div', { class: 'deck-x' }, d.help ? h('p', { class: 'help', 'data-nofold': '', text: d.help }) : null, sel));
+      (LEAD.includes(d.id) ? grid : rest).append(item);
     });
+    // the rest, then the empty ones (the shared disabled look), under one fold: open while the chosen deck is inside
+    rest.append(...none);
     let fold = null;
-    if (none.length) {
-      fold = h('details', { class: 'deck-empty' }, h('summary', { text: `${none.length} more ${none.length === 1 ? 'deck' : 'decks'} (empty)` }), h('div', { class: 'decks' }, none));
-      fold.open = none.some(b => b.getAttribute('aria-checked') === 'true');
+    if (rest.children.length) {
+      fold = h('details', { class: 'fold deck-more' }, h('summary', { class: 'fold-s', text: `More decks · ${rest.children.length}` }), rest);
+      fold.open = !!rest.querySelector('[aria-checked="true"]') || !!ls.get('satf.words.moreDecks', false);
+      fold.addEventListener('toggle', () => ls.set('satf.words.moreDecks', fold.open));
     }
     sec('Deck', grid, fold);
     const d = curDeck();
@@ -228,13 +237,14 @@
       UI.seg(s, opts.map(([v, l]) => ({ value: String(v), label: l })), { value: String(S.count), label: 'How many', onChange: v => { S.count = +v; glance(); } });
     }
     if (mode === 'cards') {
+      // Order and Show first wait under More options, as the quiz's extras do
       const s2 = sec('Order');
       UI.seg(s2, [['due', 'Due first'], ['shuffle', 'Shuffle'], ['az', 'A–Z']].map(([v, l]) => ({ value: v, label: l })), { value: S.order, label: 'Order', onChange: v => { S.order = v; glance(); } });
-      if (howSec) { const pair = h('div', { class: 'st-pair' }); howSec.before(pair); pair.append(howSec, s2); }   // Order beside How many
       const s1 = sec('Show first');
       UI.seg(s1, [['word', 'Word'], ['meaning', 'Meaning'], ['sentence', 'In a sentence'], ['commit', 'Commit first'], ['mixed', 'Mixed']].map(([v, l]) => ({ value: v, label: l })),
         { value: S.direction, label: 'Show first', onChange: v => { S.direction = v; glance(); } });
       tip(s1, 'Commit first shows three meanings before the flip; your pick grades the card.');
+      moreOptions([s2, s1]);
     } else {
       const s0 = sec('Mode');
       UI.seg(s0, [['quiz', 'Quiz'], ['sprint', 'Sprint'], ['check', 'Words check']].map(([v, l]) => ({ value: v, label: l })), { value: S.qmode, label: 'Mode', onChange: v => { S.qmode = v; paint(); } });
@@ -277,14 +287,17 @@
         UI.switch(an, { checked: !!pr.words_autonext, label: 'After a right answer, go on after 2.5 s', onChange: v => UI.prefs.set({ words_autonext: v }) });
         tip(an, 'Never after a guess, an answer under 3 s or a miss. Any key or a touch holds it.');
         extra.push(an);
-        // timer, Method and Move on wait under one fold, remembered open
-        const more = h('details', { class: 'st-more' }, h('summary', { text: 'More options' }), h('div', { class: 'st-more-in' }, extra));
-        more.open = !!ls.get('satf.words.studyMore', false);
-        more.addEventListener('toggle', () => ls.set('satf.words.studyMore', more.open));
-        host.append(more);
+        moreOptions(extra);   // timer, Method and Move on
       }
     }
     glance();
+  }
+  // one fold for the options a learner rarely changes, remembered open
+  function moreOptions(kids) {
+    const more = h('details', { class: 'fold st-more' }, h('summary', { class: 'fold-s', text: 'More options' }), h('div', { class: 'st-more-in' }, kids));
+    more.open = !!ls.get('satf.words.studyMore', false);
+    more.addEventListener('toggle', () => ls.set('satf.words.studyMore', more.open));
+    $('opts').append(more);
   }
 
   /* ---------------- at a glance and start */
@@ -307,15 +320,15 @@
     const per = mode === 'cards' ? 10 : S.timer || 20;
     const minutes = mode === 'quiz' && S.qmode === 'sprint' ? S.seconds / 60 : mode === 'quiz' && S.qmode === 'check' ? 14.2 : d.mix && today ? today.summary.minutes : n * per / 60;
     const what = mode === 'quiz' && S.qmode === 'sprint' ? `${S.seconds} s sprint` : `${num(n)} ${mode === 'cards' && !d.mix ? 'cards' : 'items'}`;
-    const orderText = { due: 'Due first', shuffle: 'Shuffled', az: 'A–Z' }[S.order];
-    const start = h('button', { type: 'button', class: 'pill', disabled: d.n === 0 ? true : null, onclick: go }, 'Start', h('span', { class: 'kbd', text: 'Enter' }));
-    el.replaceChildren(...[h('span', { class: 'k', text: 'At a glance' }),
-      h('p', { class: 'big', text: what }),
+    const start = h('button', { type: 'button', class: 'pill wide', disabled: d.n === 0 ? true : null, onclick: go }, 'Start', h('span', { class: 'kbd', text: 'Enter' }));
+    // a learner with nothing studied yet: placement sizes the first words
+    const c = lib.counts || {}, fresh = !c.learning && !c.known && !c.claimed && !c.due && !((today && today.summary) || {}).new_today;
+    el.replaceChildren(...[
+      h('p', { class: 'stat-v', text: what }),
       h('p', { class: 'meta', text: `about ${Math.max(1, Math.round(minutes))} min` }),
-      h('p', { class: 'line', text: [d.label, due && d.id !== 'due' ? `${num(due)} due` : null, nw && d.id !== 'new' ? `${num(nw)} new` : null,
-        mode === 'cards' && !d.mix ? `${orderText.toLowerCase()}, ${{ word: 'word first', meaning: 'meaning first', sentence: 'in a sentence', commit: 'commit first', mixed: 'mixed' }[S.direction]}` : null,
-        mode === 'quiz' && S.qmode === 'quiz' && !d.mix ? S.formats.map(f => (TYPES.find(t => t[0] === f) || [0, f])[1]).join(', ') + (S.timer ? `, ${S.timer} s each` : '') : null].filter(Boolean).join(' · ') }),
+      h('p', { class: 'line', text: [d.label, due && d.id !== 'due' ? `${num(due)} due` : null, nw && d.id !== 'new' ? `${num(nw)} new` : null].filter(Boolean).join(' · ') }),
       start,
+      fresh ? h('button', { type: 'button', class: 'btn sm gl-fresh', text: 'Find your level · 3 min', onclick: () => UI.startWords({ mode: 'placement' }) }) : null,
       // W20: the same deck, types and count on paper, with a key page; graded back by code
       mode === 'quiz' && S.qmode === 'quiz' && d.n !== 0 ? h('div', { class: 'gl-print' },
         h('button', { type: 'button', class: 'btn sm', text: 'Print a worksheet', onclick: () => W.print(deck(), { formats: S.formats, count: S.count }) }),

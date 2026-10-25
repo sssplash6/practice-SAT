@@ -5,46 +5,68 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="robots" content="noindex, nofollow">
 <title>Parent view · SAT Freshman</title>
+<!-- a parent opens this from the student's invite link: the preview shows the brand card -->
+<meta property="og:site_name" content="SAT Freshman">
+<meta property="og:type" content="website">
+<meta property="og:title" content="SAT Freshman">
+<meta property="og:description" content="Free SAT practice for Math and Reading &amp; Writing.">
+<meta property="og:image" content="https://prac.fsat.io/assets/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="/favicon.ico" sizes="32x32">
 <link rel="icon" href="/assets/mark.svg" type="image/svg+xml">
 <link rel="manifest" href="/manifest.webmanifest">
 <meta name="theme-color" content="#FFFFFF">
 <script src="/assets/head.js"></script>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800;900&family=DM+Mono:wght@400;500&display=swap">
+<link rel="preload" href="/assets/fonts/Geist.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/assets/ui.css">
 <style>
-  .par { max-width: 760px; margin: 0 auto; padding: 8px 0 80px; display: grid; grid-template-columns: minmax(0, 1fr); gap: 18px; }
-  .par-top { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 12px; }
-  .par-top svg { width: 30px; height: 30px; flex: none; }
-  .par-top .grow { flex: 1 1 200px; min-width: 0; }
-  .par-top h1 { margin: 0; font: 800 22px/1.15 var(--font); letter-spacing: -.02em; }
-  .par-lead { margin: 0; font: 400 15px/1.5 var(--font); color: var(--soft); }
-  .par-form { display: grid; gap: 12px; max-width: 420px; }
+  .par { max-width: 760px; margin: 0 auto; display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--card-gap); }
+  .par-top { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; margin-bottom: 4px; }
+  .par-top svg { width: 28px; height: 28px; flex: none; }
+  .par-top .grow { flex: 1 1 200px; min-width: 0; margin: 0; }
+  .par-lead { margin: 0; font: 400 14.5px/1.5 var(--font); color: var(--soft); text-wrap: pretty; }
+  .par-form { display: grid; gap: 12px; }
+  .par-in { display: grid; gap: 12px; max-width: 480px; }
+  .par-in > .h2 { margin: 0; }
+  .par-in .help { margin: 0; }
   .par-form .pill { justify-self: stretch; }
-  .par-tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; }
-  .par-tile { display: grid; gap: 4px; padding: 14px 16px; border-radius: var(--radius-card); background: var(--tile); }
-  .par-tile b { font: 600 24px/1.1 var(--mono); letter-spacing: -.02em; }
-  .par-tile span { font: 500 12.5px var(--font); color: var(--soft); }
-  .par-card { display: grid; gap: 12px; padding: 18px 20px; border-radius: var(--radius-card); background: var(--tile); }
-  .par-card h2 { margin: 0; font: 700 17px var(--font); letter-spacing: -.01em; }
-  .par-card .sub { margin: -6px 0 0; font: 400 13px var(--font); color: var(--soft); }
-  .par-cols { display: grid; grid-template-columns: minmax(0, 1fr); gap: 18px; }
+  .par-card { display: grid; gap: 12px; }
+  .par-card > .card-head { margin: 0; }
+  .par-fig { display: grid; gap: 4px; justify-items: start; }
+  .par-sub { display: flex; flex-wrap: wrap; gap: 2px 16px; margin: 4px 0 0; font: 500 14px/1.4 var(--font); font-variant-numeric: tabular-nums; color: var(--ink); }
+  .par-sub > span + span { color: var(--soft); }
+  .par-steps { margin: 0; padding-left: 22px; display: grid; gap: 6px; font: 400 14.5px/1.5 var(--font); color: var(--ink); }
+  .par-tot { --cols: 4; --cols-phone: 2; padding: 4px 0; }
+  .par-tot .stat { background: none; padding: 0; border-radius: 0; box-shadow: none; }   /* plain figures on the page, no tile edge */
+  .par-tot .stat-v { font-size: 16px; letter-spacing: -.01em; }
+  .par-cols { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--card-gap); }
   @media (min-width: 640px) { .par-cols { grid-template-columns: 1fr 1fr; } }
-  .par-bars { display: grid; grid-template-columns: repeat(14, minmax(0, 1fr)); gap: 4px; align-items: end; height: 90px; }
-  .par-bars i { display: block; border-radius: 3px 3px 0 0; background: var(--faint); }
+  .par-bars { display: grid; grid-template-columns: repeat(14, minmax(0, 1fr)); gap: 4px; align-items: end; height: 72px; }
+  .par-bars i { display: block; border-radius: 2px 2px 0 0; background: var(--faint); }
   .par-bars i.on { background: var(--amber); }
-  .par-axis { display: flex; justify-content: space-between; font: 500 11.5px var(--mono); color: var(--soft); }
-  .par-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; font: 400 14.5px/1.4 var(--font); }
-  .par-list li { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
-  .par-list li b { font: 600 13px var(--mono); white-space: nowrap; }
-  .par-meter { display: block; height: 6px; border-radius: 3px; background: var(--mat); margin-top: 5px; overflow: hidden; }
+  .par-bars i[data-at] { box-shadow: 0 0 0 1.5px var(--ink); }
+  .par-axis { display: flex; justify-content: space-between; gap: 12px; margin-top: -4px; font: 500 12.5px var(--font); font-variant-numeric: tabular-nums; color: var(--soft); }
+  .par-read { color: var(--ink); text-align: center; }
+  .par-list { list-style: none; margin: 0; padding: 0; display: grid; font: 400 14.5px/1.4 var(--font); }
+  .par-list li { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap; padding: 8px 0; border-top: 1px solid var(--line); }
+  .par-list li:first-child { border-top: 0; padding-top: 0; }
+  .par-list li b { margin-left: auto; font: 600 14.5px var(--font); font-variant-numeric: tabular-nums; white-space: nowrap; }   /* stays right when a long test name wraps it */
+  .par-sk { flex: 1; min-width: 0; }
+  .par-subj { color: var(--soft); font-size: 13px; }
+  .par-sc { display: grid; grid-template-columns: minmax(0, 1fr) auto auto; gap: 8px 24px; align-items: baseline; font: 400 14.5px/1.4 var(--font); font-variant-numeric: tabular-nums; }
+  .par-sc .k { margin: 0; }
+  .par-sc > :nth-child(3n+2), .par-sc > :nth-child(3n) { text-align: right; }
+  .par-sc b { font-weight: 600; }
+  .par-sc-t { font-weight: 600; }
+  .par-sc + .meta { margin: 0; }
+  .par-meter { display: block; height: 4px; border-radius: 2px; background: var(--track); margin-top: 6px; overflow: hidden; }
   .par-meter i { display: block; height: 100%; background: var(--ink); }
-  .par-kv { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px 18px; margin: 0; font: 400 14.5px/1.4 var(--font); }
-  .par-kv dt { color: var(--soft); } .par-kv dd { margin: 0; text-align: right; }
-  .par-empty { margin: 0; color: var(--soft); font: 400 14px var(--font); }
-  .par-mail { display: flex; align-items: center; gap: 10px; font: 400 14.5px/1.4 var(--font); }
-  .par-foot { display: flex; justify-content: center; }
+  .par-kv { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px 16px; margin: 0; font: 400 14.5px/1.4 var(--font); }
+  .par-kv dt { color: var(--soft); } .par-kv dd { margin: 0; text-align: right; font-variant-numeric: tabular-nums; }
+  .par-empty { margin: 0; color: var(--soft); font: 400 14.5px var(--font); }
+  .par-foot { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 16px; }
 </style>
 </head>
 <body data-page="parent">

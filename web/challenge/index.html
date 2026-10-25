@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Challenge · SAT Freshman</title>
+<link rel="icon" href="/favicon.ico" sizes="32x32">
 <link rel="icon" href="/assets/mark.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
 <link rel="manifest" href="/manifest.webmanifest">
@@ -11,51 +12,62 @@
 <script src="/assets/head.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800;900&family=DM+Mono:wght@400;500&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap">
+<link rel="preload" href="/assets/fonts/Geist.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap">
 <link rel="stylesheet" href="/assets/ui.css">
 <style>
   /* Ten questions, the same for everyone today, one sitting each. Ranked by
      how many are right, then by the clock. */
-  .head { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 24px; align-items: end; }
-  .head .num { font-size: clamp(64px, 10vw, 104px); display: block; margin-top: 8px; }
-  .head .meta { display: block; margin-top: 10px; color: var(--ink); }
-  .days { display: flex; gap: 2px; margin-top: 30px; }
-  .board { margin-top: 18px; display: grid; gap: 2px; }
-  .line { display: grid; grid-template-columns: 44px minmax(0, 1fr) 60px 64px; gap: 14px; align-items: center;
-          padding: 12px 16px; border-radius: 10px; }
-  .line:nth-child(odd) { background: var(--tile); }
-  .line.you { background: var(--wash); box-shadow: inset 0 0 0 1.5px var(--amber); }
-  .line .r { font: 800 16px var(--font); font-variant-numeric: tabular-nums; }
-  .line .nm { font: 600 15px var(--font); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .line .v { font: 500 13px var(--mono); text-align: right; font-variant-numeric: tabular-nums; }
-  .line .t { font: 500 13px var(--mono); color: var(--soft); text-align: right; font-variant-numeric: tabular-nums; }
-  .named { margin-top: 18px; display: flex; gap: 10px; max-width: 420px; }
+  /* the page's one hero: your rank (or today's count) at the hero step, its meta, Start; then the day switch and the board */
+  .ch-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px 24px; margin-top: 16px; }
+  .ch-sub { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 14px; margin: 0; min-height: 64px; }
+  .ch-sub .skel { width: 220px; align-self: center; }
+  .ch-big { font-size: var(--fs-hero); line-height: 1; letter-spacing: -.035em; color: var(--ink-strong); }
+  .ch-sub .meta { font-size: 14.5px; }
+  .ch-head .named { flex: 1 1 100%; margin: 0; }
+  .named { display: flex; gap: 8px; max-width: 420px; }
   .named .field { flex: 1; }
+  .named .quiet { margin: 0; }
+  .days { margin-top: 32px; }
+  .board { margin-top: 12px; display: grid; border-top: 1px solid var(--line); }
+  .ch-row { display: grid; grid-template-columns: 44px minmax(0, 1fr) 60px 64px; gap: 12px; align-items: center;
+            min-height: var(--row-h); padding: 4px 12px; border-bottom: 1px solid var(--line); }
+  /* yours: the wash band, the rank in amber-deep, the name at 600 and a "You" label; no stripe, the same height as
+     every row. It stays on screen:
+     scrolled past, it sticks to the top or the bottom edge (the phone's bar and tabs) */
+  .ch-row.you { position: sticky; top: 0; bottom: 0; z-index: 1; background: var(--wash); }
+  .ch-row.you .r { color: var(--amber-deep); }
+  .ch-row.you .nm { font-weight: 600; }
+  .ch-row .nm .badge { margin-left: 8px; vertical-align: 1px; }
+  .ch-row .r { font: 600 14.5px var(--font); font-variant-numeric: tabular-nums; }
+  .ch-row .nm { font: 500 14.5px var(--font); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .ch-row .v { font: 500 12.5px var(--font); text-align: right; font-variant-numeric: tabular-nums; }
+  .ch-row .t { font: 500 12.5px var(--font); color: var(--soft); text-align: right; font-variant-numeric: tabular-nums; }
+  .board > .empty { padding: 16px 0; }
+  .board .empty-sample .ch-row { border-bottom: 0; }
+  @media (max-width: 759px) {
+    .ch-row.you { top: calc(56px + env(safe-area-inset-top, 0px)); bottom: calc(64px + env(safe-area-inset-bottom, 0px)); }
+    .ch-head .pill { flex: 1 1 100%; justify-content: center; }
+  }
 </style>
 </head>
 <body data-page="challenge">
 <header id="bar"></header>
 
-<main class="page">
-  <div class="head rise">
-    <div>
-      <span class="k" id="day"></span>
-      <span class="num" id="big">10</span>
-      <span class="meta" id="sub">questions · 16 min</span>
-    </div>
+<main class="page" data-m="stagger">
+  <h1 class="h1">Daily challenge</h1>
+  <section class="card hero ch-head" aria-label="Today" data-m-now>
+    <p class="ch-sub" id="sub" aria-busy="true"><span class="skel line"></span></p>
     <div id="act"></div>
-  </div>
-  <form class="named rise rise-2" id="named" hidden>
-    <input class="field" id="name" maxlength="24" placeholder="Your name" autocomplete="nickname" aria-label="Your name on the board">
-    <button type="submit" class="quiet" style="margin:0">Save</button>
-  </form>
+    <form class="named" id="named" hidden>
+      <input class="field" id="name" maxlength="24" placeholder="Your name" autocomplete="nickname" aria-label="Your name on the board">
+      <button type="submit" class="quiet">Save</button>
+    </form>
+  </section>
   <p class="error" id="err" hidden></p>
 
-  <div class="choices days" id="days" role="group" aria-label="Day">
-    <button type="button" data-d="0" aria-pressed="true">Today</button>
-    <button type="button" data-d="1" aria-pressed="false">Yesterday</button>
-  </div>
-  <div class="board rise rise-2" id="board"></div>
+  <div class="days" id="days"></div>
+  <div class="board" id="board" aria-busy="true"></div>
 </main>
 
 <nav id="tabs"></nav>
@@ -68,51 +80,61 @@
   const { api, h, day, mmss, $ } = UI;
   UI.shell();
 
-  function local(offsetDays) {
-    const d = new Date(); d.setDate(d.getDate() - offsetDays);
-    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
-  }
+  const ymd = d => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+  function local(offsetDays) { const d = new Date(); d.setDate(d.getDate() - offsetDays); return ymd(d); }
 
   function paintBoard(b) {
     const host = $('#board');
-    if (!b.entries.length) { host.replaceChildren(h('p', { class: 'empty', text: 'No one yet.' })); return; }
-    host.replaceChildren(...b.entries.map(e => h('div', { class: 'line' + (e.you ? ' you' : '') },
+    host.removeAttribute('aria-busy');
+    const row = e => h('div', { class: 'ch-row' + (e.you ? ' you' : ''), 'data-key': `${e.rank}:${e.name}` },
       h('span', { class: 'r', text: e.rank }),
-      h('span', { class: 'nm', text: e.name }),
+      h('span', { class: 'nm' }, e.name, e.you ? h('span', { class: 'badge', text: 'You' }) : null),
       h('span', { class: 'v', text: `${e.right}/${e.asked}` }),
-      h('span', { class: 't', text: mmss(e.seconds) }))));
+      h('span', { class: 't', text: mmss(e.seconds) }));
+    // an empty board shows what a row will look like, dimmed, under the one line
+    if (!b.entries.length) { host.replaceChildren(); UI.empty(host, { sample: row({ rank: 1, name: 'Your name', right: 10, asked: 10, seconds: 570 }), text: 'No one yet.' }); return; }
+    // a day switch glides: rows that stay move to their place, the rest fade (UI.glide; the first paint is plain)
+    if (UI.glide && host.dataset.painted) UI.glide(host, () => host.replaceChildren(...b.entries.map(row)));
+    else host.replaceChildren(...b.entries.map(row));
+    host.dataset.painted = '1';
   }
-
-  async function showDay(offset) {
-    const d = local(offset);
-    try { paintBoard(await api(`/challenge/board?day=${d}`)); } catch (_) {}
+  // a day is 0 (today), 1 (yesterday) or a date, read when it is shown (a page left open past midnight)
+  async function showDay(d) {
+    try { paintBoard(await api(`/challenge/board?day=${typeof d === 'number' ? local(d) : d}`)); } catch (_) {}
   }
-  $('#days').addEventListener('click', e => {
-    const b = e.target.closest('button'); if (!b) return;
-    $('#days').querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', String(x === b)));
-    showDay(Number(b.dataset.d));
-  });
+  // ?day=YYYY-MM-DD (Today's "Yesterday: #4" link): that day's board, as its own option when it is older than yesterday
+  const want = new URLSearchParams(location.search).get('day');
+  const days = [{ value: 0, label: 'Today' }, { value: 1, label: 'Yesterday' }];
+  let start = 0;
+  if (want && /^\d{4}-\d{2}-\d{2}$/.test(want)) {
+    start = [local(0), local(1)].indexOf(want);
+    if (start < 0) { days.push({ value: want, label: day(want) }); start = want; }
+  }
+  const daySeg = UI.seg($('#days'), days, { value: start, label: 'Day', onChange: showDay });
+  showDay(daySeg.value);             // the one board fetch; the head's /api/challenge carries only the top five
 
   $('#named').addEventListener('submit', async e => {
     e.preventDefault();
     const name = $('#name').value.trim();
     if (!name) return;
-    try { await api('/me', { method: 'PUT', body: { name } }); $('#named').hidden = true; showDay(0); UI.me(true); }
+    try { await api('/me', { method: 'PUT', body: { name } }); $('#named').hidden = true; showDay(daySeg.value); UI.me(true); }
     catch (err) { $('#err').textContent = err.message; $('#err').hidden = false; }
   });
 
   (async () => {
     let c;
-    try { c = await api('/challenge'); } catch (e) { $('#err').textContent = 'The server is not answering.'; $('#err').hidden = false; return; }
-    $('#day').textContent = day(c.day);
-    const you = c.board.you;
+    try { c = await api('/challenge'); } catch (e) { $('#sub').replaceChildren(); $('#err').textContent = 'The server is not answering.'; $('#err').hidden = false; return; }
+    const sub = $('#sub');
+    sub.removeAttribute('aria-busy');
+    const board = c.board || {}, you = board.you;
     if (c.finished && you) {
-      $('#big').textContent = `#${you.rank}`;
-      $('#sub').textContent = `of ${c.board.players} · ${you.right}/${you.asked} · ${mmss(you.seconds)}`;
+      sub.replaceChildren(h('span', { class: 'num hero-num ch-big', text: `#${you.rank}` }),
+        h('span', { class: 'meta', text: [`of ${board.players}`, `${you.right}/${you.asked}`, mmss(you.seconds), c.day ? day(c.day) : null].filter(Boolean).join(' · ') }));
       const me = await UI.me().catch(() => null);
       if (me && !me.profile.name) $('#named').hidden = false;
     } else {
-      $('#sub').textContent = `questions · ${Math.round(c.seconds / 60)} min${c.board.players ? ` · ${c.board.players} in` : ''}`;
+      sub.replaceChildren(h('span', { class: 'num hero-num ch-big', text: String(c.count || 10) }),
+        h('span', { class: 'meta', text: ['questions', c.seconds ? `${Math.round(c.seconds / 60)} min` : null, board.players ? `${board.players} in` : null, c.day ? day(c.day) : null].filter(Boolean).join(' · ') }));
       const b = h('button', { type: 'button', class: 'pill', text: c.session ? 'Resume' : 'Start' });
       b.addEventListener('click', async () => {
         b.setAttribute('aria-busy', 'true');
@@ -123,8 +145,6 @@
       });
       $('#act').append(b);
     }
-    paintBoard(c.board);
-    showDay(0);
   })();
 })();
 </script>

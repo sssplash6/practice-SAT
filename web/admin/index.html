@@ -1,0 +1,13 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex, nofollow">
+<title>SAT Freshman admin</title>
+<!-- /admin opens the students board; without this page /admin fell to the 404 page, whose shell sent a
+     browser that is not signed in as a student to the email sign-in -->
+<meta http-equiv="refresh" content="0; url=/admin/students/">
+<script>location.replace('/admin/students/' + location.search);</script>
+</head>
+<body><p><a href="/admin/students/">Admin</a></p></body>
+</html>

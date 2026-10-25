@@ -15,6 +15,9 @@
   'use strict';
   const doc = document;
   const h = UI.h;
+  // the back link's caret is drawn (UI.ICON), not a text glyph
+  const backEl = document.querySelector('.wks-back');
+  if (backEl && UI.icon) backEl.prepend(UI.icon('caret_left', 16));
   const $ = id => doc.getElementById(id);
   const enc = encodeURIComponent;
   const Q = new URLSearchParams(location.search);
@@ -35,17 +38,20 @@
   };
   const DRAFT = `satf.sheet.${sid}`, PRINTED = `satf.sheet.key.${sid}`;
   const box = $('sheet');
-  let st = null, qs = [], answers = {}, minutes = '';
+  let st = null, qs = [], answers = {}, minutes = '', sent = false;
 
   const api = (p, o) => UI.api(`/drill/${enc(sid)}${p}`, o);
   const btn = (text, cls, onclick) => h('button', { type: 'button', class: cls, text, onclick });
-  function card(title, sub, acts) {
+  function card(title, sub, acts, big) {
     box.removeAttribute('aria-busy');
-    box.replaceChildren(h('div', { class: 'ws-card' }, h('p', { class: 't', text: title }), sub ? h('p', { class: 's', text: sub }) : null,
-      h('div', { class: 'ws-acts' }, ...acts.filter(Boolean))));
+    // the score after Submit is the page's hero: the raised card with the number at the hero size
+    box.replaceChildren(h('div', { class: big ? 'card hero wks-card' : 'card wks-card' }, h('p', { class: big ? 'hero-num' : 't', text: title }), sub ? h('p', { class: 's', text: sub }) : null,
+      h('div', { class: 'wks-acts' }, ...acts.filter(Boolean))));
   }
-  const toReview = () => h('a', { class: 'btn', href: '/review/', text: 'Back to Review' });
-  const topicName = t => (UI.TOPIC && UI.TOPIC[t] && UI.TOPIC[t].name) || cap(String(t || '').replace(/_/g, ' '));
+  // the worksheet's subject (its set says it once loaded): Review opens on it
+  const subj = () => (st && st.subject) || UI.subject.get();
+  const toReview = () => h('a', { class: 'btn', href: `/review/?subject=${subj()}`, text: 'Back to Review' });
+  const topicName = t => (UI.RW_SKILL && UI.RW_SKILL[t]) || (UI.TOPIC && UI.TOPIC[t] && UI.TOPIC[t].name) || cap(String(t || '').replace(/_/g, ' '));
 
   /* ------------------------------------------------------------ load */
   async function load() {
@@ -77,7 +83,7 @@
     answers = draft.answers || {};
     minutes = draft.minutes || '';
     const save = () => store.set(DRAFT, { answers, minutes });
-    const list = h('ol', { class: 'ws-list', 'aria-label': 'Your answers' });
+    const list = h('ol', { class: 'wks-list', 'aria-label': 'Your answers' });
     const count = h('span', { class: 'meta' });
     const recount = () => {
       const n = qs.filter(d => answers[d.qid] !== undefined && answers[d.qid] !== '').length;
@@ -85,11 +91,11 @@
     };
     qs.forEach((d, i) => {
       const q = d.question || {};
-      const row = h('li', { class: 'ws-row', 'data-i': String(i) }, h('span', { class: 'ws-n', text: `${i + 1}.` }),
-        h('span', { class: 'ws-skill', text: cap(q.skill || q.topic_name || '') }));
+      const row = h('li', { class: 'wks-row', 'data-i': String(i) }, h('span', { class: 'wks-n', text: `${i + 1}.` }),
+        h('span', { class: 'wks-skill', text: cap(q.skill || q.topic_name || '') }));
       if (q.type === 'spr') {
         const pv = h('span', { class: 'pvw', 'aria-live': 'polite' });
-        const inp = h('input', { type: 'text', inputmode: 'decimal', autocomplete: 'off', spellcheck: 'false', 'aria-label': `Answer ${i + 1}`, placeholder: 'e.g. 2/3', value: answers[d.qid] || '' });
+        const inp = h('input', { type: 'text', class: 'field', inputmode: 'decimal', autocomplete: 'off', spellcheck: 'false', 'aria-label': `Answer ${i + 1}`, placeholder: 'e.g. 2/3', value: answers[d.qid] || '' });
         let last = inp.value;
         const show = () => {
           const p = UI.spr ? UI.spr.preview(pv, inp.value) : { ok: true };
@@ -104,10 +110,10 @@
           save(); recount(); show();
         });
         show();
-        row.append(h('div', { class: 'ws-grid' }, inp, pv));
+        row.append(h('div', { class: 'wks-grid' }, inp, pv));
       } else {
         const n = Math.min((q.choices || []).length || 4, 5);
-        const grp = h('div', { class: 'ws-abcd', role: 'group', 'aria-label': `Answer ${i + 1}` });
+        const grp = h('div', { class: 'wks-abcd', role: 'group', 'aria-label': `Answer ${i + 1}` });
         for (let k = 0; k < n; k++) {
           const b = h('button', { type: 'button', text: LET[k], 'aria-pressed': String(answers[d.qid] === k), 'aria-label': `${i + 1}: ${LET[k]}` });
           b.addEventListener('click', () => pick(d, k, grp));
@@ -125,8 +131,8 @@
     // typing A-D (or 1-4) on a row picks it and moves to the next number
     list.addEventListener('keydown', e => {
       if (e.metaKey || e.ctrlKey || e.altKey || (e.target && e.target.tagName === 'INPUT')) return;
-      const row = e.target.closest && e.target.closest('.ws-row');
-      const grp = row && row.querySelector('.ws-abcd');
+      const row = e.target.closest && e.target.closest('.wks-row');
+      const grp = row && row.querySelector('.wks-abcd');
       if (!grp) return;
       const k = /^[a-e]$/i.test(e.key) ? LET.indexOf(e.key.toUpperCase()) : /^[1-5]$/.test(e.key) ? +e.key - 1 : -1;
       const btns = grp.querySelectorAll('button');
@@ -137,14 +143,15 @@
       const f = next && next.querySelector('button, input');
       if (f) f.focus();
     });
-    const mins = h('input', { type: 'number', min: '1', max: '600', inputmode: 'numeric', id: 'wsmin', value: minutes });
+    const mins = h('input', { type: 'number', class: 'field', min: '1', max: '600', inputmode: 'numeric', id: 'wsmin', value: minutes });
     mins.addEventListener('input', () => { minutes = mins.value; save(); });
     const submit = h('button', { type: 'button', class: 'pill', text: 'Submit answers' });
     submit.addEventListener('click', () => send(submit));
     recount();
-    box.replaceChildren(list,
-      h('p', { class: 'ws-min' }, h('label', { for: 'wsmin', text: 'Minutes taken' }), mins, h('span', { class: 'meta', text: 'optional' })),
-      h('div', { class: 'ws-foot' }, count, submit));
+    // from 1280px Minutes taken, the count and Submit sit in a sticky right column (index.html); below it the foot sticks
+    box.replaceChildren(h('div', { class: 'wks-form' }, list, h('div', { class: 'wks-side' },
+      h('p', { class: 'wks-min' }, h('label', { for: 'wsmin', text: 'Minutes taken' }), mins, h('span', { class: 'meta', text: 'optional' })),
+      h('div', { class: 'wks-foot' }, count, submit))));
     const first = list.querySelector('button, input');
     if (first && !matchMedia('(pointer: coarse)').matches) first.focus({ preventScroll: true });
   }
@@ -163,6 +170,7 @@
       }
       await api('/finish', { method: 'POST' });
       store.set(DRAFT, null);
+      sent = true;
       await start();
     } catch (e) {
       b.removeAttribute('aria-busy'); b.disabled = false;
@@ -174,11 +182,14 @@
   function paintDone() {
     const right = (st.marks || []).filter(x => x === true).length;
     const printed = store.get(PRINTED, false);
-    card(`${right} / ${qs.length}`, printed ? 'Key printed first: these answers don’t count as clean.' : 'Filed like online answers: misses are named in Review, clean rights fill their pips.', [
+    card(`${right} / ${qs.length}`, printed ? 'Key printed first: these answers don’t count as clean.' : 'Misses are in Review.', [
       h('a', { class: 'pill', href: `/review/sheet/?id=${enc(sid)}&key=1&print=1`, text: 'Print the key' }),
       h('a', { class: 'btn', href: `/practice/session/?id=${enc(sid)}`, text: 'See the summary' }),
       btn('Print another version', 'btn', e => another(e.currentTarget)),
-      h('a', { class: 'quiet', href: '/review/?tab=redo', text: 'Open Review' })]);
+      h('a', { class: 'quiet', href: `/review/?tab=redo&subject=${subj()}`, text: 'Open Review' })], true);
+    // just submitted: the score rolls up from 0 once (UI.roll); a later visit shows it still
+    const fig = box.querySelector('.hero-num');
+    if (sent && fig && UI.roll) { fig.textContent = `0 / ${qs.length}`; UI.roll(fig, `${right} / ${qs.length}`); }
     $('title').textContent = 'Worksheet answers';
   }
   async function another(b) {
@@ -188,13 +199,13 @@
       location.href = `/practice/session/?id=${enc(d.id)}&print=1`;
     } catch (e) { if (b) b.removeAttribute('aria-busy'); toast(reasonOf(e)); }
   }
-  // ⋯: print the key now (answers after it are not clean), the worksheet again, another version
+  // More (a quiet icon): print the key now (answers after it are not clean), the worksheet again, another version
   function paintMore() {
-    const more = h('button', { type: 'button', class: 'btn icon', 'aria-label': 'More', title: 'More', text: '⋯' });
+    const more = h('button', { type: 'button', class: 'ibtn', 'aria-label': 'More', title: 'More' }, UI.icon('more', 20));
     const items = () => [
       !st.finished ? { label: 'Print the key now', sub: 'Answers entered after this won’t count as clean', onClick: printKeyNow } : null,
       { label: 'Print the worksheet again', href: `/practice/session/?id=${enc(sid)}&print=1` },
-      { label: 'Print another version', sub: 'New numbers, for a second try or another student', onClick: () => another() },
+      { label: 'Print another version', sub: `${subj() === 'rw' ? 'New passages' : 'New numbers'}, for a second try or another student`, onClick: () => another() },
     ].filter(Boolean);
     if (UI.menu && UI.menu.bind) UI.menu.bind(more, items, { label: 'Worksheet', align: 'end' });
     $('more').replaceChildren(more);
@@ -224,9 +235,9 @@
     const wrap = h('div', {});
     qs.forEach((d, i) => {
       const q = Object.assign({}, d.question, { template: d.template, seed: d.seed });
-      const el = h('article', { class: 'ws-key-q' }, h('p', { class: 'ws-key-n', text: `${i + 1}.` }));
+      const el = h('article', { class: 'wks-key-q' }, h('p', { class: 'wks-key-n', text: `${i + 1}.` }));
       const g = d.given;
-      if (!d.feedback && g !== null && g !== undefined && g !== '' && g !== '_skip') el.append(h('p', { class: 'ws-key-yours', text: `Your answer: ${Number.isInteger(g) ? LET[g] : g}` }));
+      if (!d.feedback && g !== null && g !== undefined && g !== '' && g !== '_skip') el.append(h('p', { class: 'wks-key-yours', text: `Your answer: ${Number.isInteger(g) ? LET[g] : g}` }));
       const host = h('div');
       el.append(host);
       wrap.append(el);
@@ -235,7 +246,7 @@
         else host.append(h('p', { class: 'meta', text: 'Not in the key yet.' }));
       } catch (_) { host.append(h('p', { text: q.stem || '' })); }
     });
-    const ctl = h('div', { class: 'ws-acts ws-noprint', style: 'margin-bottom:12px' },
+    const ctl = h('div', { class: 'wks-acts wks-noprint wks-key-ctl' },
       btn('Print / Save as PDF', 'pill', () => print()),
       h('a', { class: 'btn', href: `/review/sheet/?id=${enc(sid)}`, text: st.finished ? 'Back to the answers' : 'Enter answers' }));
     box.replaceChildren(ctl, wrap);
@@ -257,6 +268,7 @@
     }
     head();
     paintMore();
+    if (backEl) backEl.href = `/review/?subject=${subj()}`;
     if (keyMode) paintKey();
     else if (st.finished) paintDone();
     else paintSheet();

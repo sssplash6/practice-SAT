@@ -1,11 +1,13 @@
 /* ============================================================================
    SAT Freshman -- the Review hub (/review/): spec 3.9, review.md V1-V19, R2, R5, R23.
 
-   One page: a header with today's review (the minutes seg and Start review), notes
-   (new misses to walk, a worksheet waiting), six tiles that are the tabs (Due, Redo,
-   Marked, Saved, History, Fixed; each number said once, decision 7), the open tab's head,
-   its filters, its list beside the question pane (UI.review mode 'pane', F3), and an
-   action bar that starts a set from the list or a selection (the drill body, R10).
+   One page: a header row with today's review (Start review; its ▾ holds the minutes and the
+   list preview), notes (new misses to walk, a worksheet waiting), a tab row with the counts
+   inline (Due, Redo, Marked, Saved, History, Fixed; each number said once, decision 7), the
+   open tab's head (short lines, and one closed Insights disclosure), its filters, its list
+   beside the question pane (UI.review mode 'pane', F3; a column from 1280px), and an action
+   bar that starts a set from the list or a selection (the drill body, R10), with its
+   options behind Options. One orange primary per screen: the bar's when it shows, else Start.
 
    Endpoints (S10's api_review.py): /api/review/{counts,due,snooze,redo,marked,saved,fixed,
    history,item,family,ledger,calibration,seen,why,walk,spot}, /api/session/{sid}/void,
@@ -21,11 +23,15 @@
   const phone = () => mq('(max-width: 759px)');
   const wide = () => mq('(min-width: 960px)');
   const fmtN = n => (typeof n === 'number' ? n.toLocaleString('en-US') : String(n ?? ''));
+  const ptsW = n => (Math.abs(n) === 1 ? 'pt' : 'pts');
   const cap = s => (s ? s[0].toUpperCase() + s.slice(1) : '');
   const plural = (n, one, many) => `${fmtN(n)} ${n === 1 ? one : (many || one + 's')}`;
   const day = d => (d ? UI.date(d, 'short') : '');
-  const mmss = ms => (ms ? UI.mmss(Math.round(ms / 1000)) : '—');
+  const mmss = ms => (ms ? UI.mmss(Math.round(ms / 1000)) : '–');
   const toast = (t, o) => UI.toast && UI.toast(t, o);
+  // a polite live line for what the screen already shows (the fix moment beside the pane)
+  let live = null;
+  const say = t => { if (!live) { live = h('p', { class: 'sr', role: 'status' }); $('main').append(live); } live.textContent = ''; setTimeout(() => { live.textContent = t; }, 50); };
   const reasonOf = e => {
     const d = e && e.detail;
     const r = (d && typeof d === 'object' && (d.reason || d.message)) || (typeof d === 'string' ? d : null);
@@ -52,6 +58,13 @@
   const LET = 'ABCDE';
   const TOPIC = t => (UI.TOPIC && UI.TOPIC[t]) || null;
   const dshort = d => ((UI.DOMAINS || []).find(x => x[0] === d) || [])[1] || d;
+  const tname = t => UI.topicName(t);   // a topic's short name, either subject
+
+  /* ------------------------------------------------------------ subject (one at a time, DESIGN 1)
+     Every list, count and set here is one subject's: each /review/* read carries it (sub), and so does each
+     drill body (start). Math's grid-in and habit tools and the Math samples stay off the R&W view (rw). */
+  const sub = p => `${p}${p.includes('?') ? '&' : '?'}subject=${S.subject}`;
+  const rw = () => S.subject === 'rw';
 
   /* ------------------------------------------------------------ state */
   const TABS = [
@@ -62,16 +75,19 @@
     tab: null, counts: null, countsErr: false, due: null, dueErr: false, prefs: {}, me: null, minutes: 10,
     lists: {}, filters: {}, bar: {}, player: null, playerTab: null, cache: new Map(), token: 0, ledger: null,
     fb: null, marked: 'miss', savedCard: 'all', savedView: new URLSearchParams(location.search).get('view') === 'rules' ? 'rules' : 'questions', sinceCal: '30', open: null,
+    subject: UI.subject.get(), sel: {},
   };
   const Q = () => new URLSearchParams(location.search);
-  const selKey = tab => `satf.review.sel.${tab}`;
+  // a selection is one subject's rows (trap ids and pairs never match the other subject's list)
+  const selKey = tab => `satf.review.sel.${S.subject}.${tab}`;
   const selDefaultAll = tab => tab === 'redo' || tab === 'fixed';
   function sel(tab) {
-    if (!S[`sel_${tab}`]) {
-      const s = ss.get(selKey(tab), null);
-      S[`sel_${tab}`] = s && typeof s === 'object' ? { all: !!s.all, ids: new Set(s.ids || []) } : { all: selDefaultAll(tab), ids: new Set() };
+    const k = selKey(tab);
+    if (!S.sel[k]) {
+      const s = ss.get(k, null);
+      S.sel[k] = s && typeof s === 'object' ? { all: !!s.all, ids: new Set(s.ids || []) } : { all: selDefaultAll(tab), ids: new Set() };
     }
-    return S[`sel_${tab}`];
+    return S.sel[k];
   }
   const saveSel = tab => { const s = sel(tab); ss.set(selKey(tab), { all: s.all, ids: [...s.ids].slice(0, 500) }); };
   const isSel = (tab, key) => { const s = sel(tab); return s.all ? !s.ids.has(key) : s.ids.has(key); };
@@ -86,7 +102,7 @@
     const s = sel(tab);
     return s.all ? Math.max(0, L.total - [...s.ids].filter(k => L.items.some(r => keyOf(tab, r) === k)).length) : s.ids.size;
   }
-  const selRows = tab => ((S.lists[tab] || {}).items || []).filter(r => isSel(tab, keyOf(tab, r)));
+  const selRows = tab => ((S.lists[tab] || {}).items || []).filter(r => !r._closed && isSel(tab, keyOf(tab, r)));
   function keyOf(tab, r) {
     if (tab === 'due') return r.key;
     if (tab === 'redo' || tab === 'fixed') return String(r.id);
@@ -97,6 +113,7 @@
 
   /* ------------------------------------------------------------ boot */
   async function boot() {
+    UI.subjectSeg($('subject'), { value: S.subject, onChange: switchSubject });
     paintStartSkeleton();
     paintTabs();
     const [prefs, me] = await Promise.all([UI.prefs().catch(() => ({})), (UI.me ? UI.me() : Promise.resolve(null)).catch(() => null)]);
@@ -109,6 +126,8 @@
     S.open = Q().get('open');
     openTab(tab, { push: false });
     registerKeys();
+    // the sticky list head takes the scroll shadow while rows slide under it (the list column scrolls from 1280px)
+    if (UI.scrolled) UI.scrolled($('listhead'), { root: $('panel') });
     addEventListener('popstate', () => {
       const t = Q().get('tab');
       if (t && t !== S.tab && TABS.some(x => x.id === t)) openTab(t, { push: false });
@@ -121,19 +140,38 @@
     });
   }
 
+  // the other subject: its counts, due list and the open tab's list load in place; the filters (a topic of the old
+  // subject) and the open question are left behind
+  async function switchSubject(v) {
+    if (v === S.subject) return;
+    S.subject = v;
+    S.counts = S.due = S.ledger = savedP = null;
+    S.lists = {}; S.filters = {}; S.open = null;
+    const u = new URL(location.href);
+    u.search = new URLSearchParams(Object.assign({ tab: S.tab, subject: v }, S.tab === 'saved' && S.savedView === 'rules' ? { view: 'rules' } : {})).toString();
+    history.replaceState(history.state, '', u);
+    dropPlayer();
+    paintStartSkeleton();
+    await Promise.all([loadCounts(), loadDue()]);
+    openTab(S.tab, { push: false });
+  }
   async function loadCounts() {
-    try { S.counts = await UI.api('/review/counts'); S.countsErr = false; }
-    catch (_) { S.countsErr = true; }
+    const s = S.subject;
+    try { const c = await UI.api(sub('/review/counts')); if (s !== S.subject) return; S.counts = c; S.countsErr = false; }
+    catch (_) { if (s !== S.subject) return; S.countsErr = true; }
     paintTabs(); paintNotes();
     if (S.due) paintStart();
   }
   async function loadDue() {
+    const s = S.subject;
     try {
-      S.due = await UI.api('/review/due');
+      const d = await UI.api(sub('/review/due'));
+      if (s !== S.subject) return;
+      S.due = d;
       S.dueErr = false;
       // the minutes seg re-cuts the same frozen order on the server (V1); the pref is what it reads
       if (S.due.minutes !== undefined && S.due.minutes !== null && S.due.minutes !== S.minutes) S.minutes = S.due.minutes;
-    } catch (_) { S.dueErr = true; }
+    } catch (_) { if (s !== S.subject) return; S.dueErr = true; }
     paintStart(); paintTabs();
   }
   function afterDue() {
@@ -152,10 +190,10 @@
   function paintStartSkeleton() {
     const box = $('start');
     box.replaceChildren();
-    if (UI.skel) { UI.skel(box, 'pill'); UI.skel(box, 'line'); }
+    if (UI.skel) UI.skel(box, 'pill');
   }
   const MINUTES = [5, 10, 15, 20, 30, 45, 60, 0];
-  function startBody(boxMin) { return { source: 'due', box: boxMin || null }; }
+  function startBody(boxMin) { return { source: 'due', box: boxMin || null, subject: S.subject }; }
   function startPlan() {
     const d = S.due, c = S.counts || {};
     const m = S.minutes;
@@ -164,8 +202,9 @@
       return { label: `Start review · ${m} min`, body: startBody(m) };
     }
     const box = m || 10;
-    if ((c.open || 0) > 0) return { label: `Fix ${fmtN(Math.min(c.open, (d && d.cap) || 6))} · ${box} min`, body: startBody(box) };
-    return { label: `Keep going · ${box} min`, body: { source: 'next', box } };
+    // nothing due: the box serves the open mistakes (a due box alone would have nothing to serve)
+    if ((c.open || 0) > 0) return { label: `Fix ${fmtN(Math.min(c.open, (d && d.cap) || 6))} · ${box} min`, body: Object.assign(startBody(box), { pool: 'redo' }) };
+    return { label: `Keep going · ${box} min`, body: { source: 'next', box, subject: S.subject } };
   }
   function paintStart() {
     const box = $('start');
@@ -175,38 +214,44 @@
     // a new student has one way in, the empty state's start (the user's rule, 2026-09-28)
     if (S.counts && !S.counts.answers && !d.total) { box.hidden = true; return; }
     box.hidden = false;
-    const segRow = h('div', { class: 'rh-opt' }, h('span', { class: 'k', text: 'Minutes' }));
-    UI.seg(segRow, MINUTES.map(v => ({ value: v, label: v ? String(v) : 'All' })), {
-      value: S.minutes, label: 'Review minutes',
-      onChange: async v => {
-        S.minutes = v;
-        try { await UI.prefs.set({ review_minutes: v }); } catch (_) { toast('Not saved. Try again.'); }
-        await loadDue();
-        afterDue();
-        paintTabs();
-      },
-    });
     const plan = startPlan();
-    const main = h('button', { type: 'button', class: 'pill', 'aria-keyshortcuts': 'Shift+R' }, h('span', { text: plan.label }));
+    const main = h('button', { type: 'button', class: 'pill rh-go', 'aria-keyshortcuts': 'Shift+R' }, h('span', { text: plan.label }));
     main.addEventListener('click', () => start(plan.body, main));
-    const more = h('button', { type: 'button', class: 'pill', 'aria-label': 'See today’s review before starting', 'aria-haspopup': 'dialog', title: 'See the list first' }, h('span', { 'aria-hidden': 'true', text: '▾' }));
-    more.addEventListener('click', () => previewSheet(plan.body));
-    const split = h('div', { class: 'rh-split' }, main, more);
-    const meta = h('p', { class: 'rh-startmeta' });
-    const bits = [];
-    if (d.left > 0) {
-      const k = d.kinds || {};
-      if (k.check) bits.push(plural(k.check, 'check-in'));
-      if (d.quick_wins) bits.push(plural(d.quick_wins, 'quick win'));
-      if (d.closes) bits.push(`closes up to ${plural(d.closes, 'mistake')}`);
-    }
-    meta.textContent = bits.join(' · ');
-    meta.hidden = !bits.length;
-    box.append(segRow, split);   // the small line under it (check-ins, quick wins, what it closes) is gone; meta stays detached for allLabel
-    if (plan.all) allLabel(main, meta);
+    // the ▾: the list first (what the set will serve), then the minutes as radio items
+    const more = h('button', { type: 'button', class: 'pill', 'aria-haspopup': 'menu', 'aria-label': 'Minutes, and the list before starting', title: 'Minutes and the list' }, UI.icon('caret_down', 16));
+    const k = d.kinds || {};
+    const bits = d.left > 0 ? [k.check && plural(k.check, 'check-in'), d.quick_wins && plural(d.quick_wins, 'quick win'), d.closes && `closes up to ${plural(d.closes, 'mistake')}`].filter(Boolean) : [];
+    // a printed worksheet waiting for its answers is one item here too, so every tab reaches it (Due and Redo pin it)
+    const ws = (S.counts && S.counts.worksheets_waiting) || 0;
+    UI.menu.bind(more, () => [
+      { label: 'See the list first', sub: bits.join(' · ') || undefined, onClick: () => previewSheet(plan.body) },
+      ...(ws ? [{ label: 'Enter worksheet answers', sub: `${plural(ws, 'worksheet')} waiting`, href: S.wsHref || '/practice/' }] : []),
+      { separator: true },
+      { group: 'Minutes' },
+      ...MINUTES.map(v => ({ label: v ? `${v} min` : 'All', radio: 'min', checked: v === S.minutes, close: true, onClick: () => setMinutes(v) })),
+    ], { label: 'Today’s review', align: 'end' });
+    box.append(h('div', { class: 'split-btn' }, main, more));
+    syncPrimary();
+    if (plan.all) allLabel(main);
+  }
+  async function setMinutes(v) {
+    if (v === S.minutes) return;
+    S.minutes = v;
+    try { await UI.prefs.set({ review_minutes: v }); } catch (_) { toast('Not saved. Try again.'); }
+    await loadDue();
+    afterDue();
+    paintTabs();
+  }
+  // one orange primary on the screen: the action bar's when it shows, else Start
+  function syncPrimary() {
+    const bar = !!$('actbar').firstChild;
+    $('start').querySelectorAll('.split-btn > button').forEach(b => { b.classList.toggle('pill', !bar); b.classList.toggle('btn', bar); });
+    // Redo's bar is its one primary (Fix the selected): the header's own Fix would be a second count beside it
+    const split = $('start').querySelector('.split-btn');
+    if (split) split.hidden = bar && S.tab === 'redo';
   }
   // All: every frozen key, then every open trap max(owed) times, at most 120 (V1): the preview counts it
-  async function allLabel(btn, meta) {
+  async function allLabel(btn) {
     try {
       const p = await UI.api('/drill/preview', { method: 'POST', body: startBody(0), quiet: true });
       const n = p.count ?? p.total ?? (p.blocks ? p.blocks.length : null);
@@ -217,7 +262,8 @@
   async function start(body, btn) {
     if (btn) btn.setAttribute('aria-busy', 'true');
     try {
-      const d = await UI.api('/drill', { method: 'POST', body });
+      // every set started here is this view's subject (a body that names nothing would be Math's)
+      const d = await UI.api('/drill', { method: 'POST', body: Object.assign({ subject: S.subject }, body) });
       location.href = `/practice/session/?id=${encodeURIComponent(d.id)}`;
     } catch (e) {
       if (btn) btn.removeAttribute('aria-busy');
@@ -251,12 +297,19 @@
       const paintSum = () => { sum.textContent = `${plural(total(), 'question')}${data.minutes ? ` · about ${Math.round(data.minutes)} min` : ''}`; };
       blocks.forEach(x => {
         const label = x.label || x.skill || x.name || x.template || '';
-        const li = h('li', { class: 'rh-row has-x', style: 'grid-template-columns: 12px minmax(0,1fr)' }, h('span'),
-          h('div', { class: 'rh-rb', style: 'cursor: default; grid-template-columns: minmax(0,1fr)' },
+        const li = h('li', { class: 'rh-row plain has-x' }, h('span'),
+          h('div', { class: 'rh-rb' },
             h('div', {}, mtext(h('div', { class: 'l1' }), label), h('div', { class: 'l2' }, x.kind ? h('span', { text: KIND[x.kind] ? KIND[x.kind].text : cap(x.kind) }) : null, x.skill && x.skill !== label ? h('span', { text: x.skill }) : null))));
         if (x.key) {
-          const xb = h('button', { type: 'button', class: 'x', 'aria-label': `Drop: ${label}`, text: '×' });
-          xb.addEventListener('click', () => { if (drop.has(x.key)) { drop.delete(x.key); li.style.opacity = ''; xb.textContent = '×'; } else { drop.add(x.key); li.style.opacity = '.45'; xb.textContent = '↺'; } paintSum(); });
+          const xb = h('button', { type: 'button', class: 'x', 'aria-label': `Drop: ${label}` }, UI.icon('x', 18));
+          xb.addEventListener('click', () => {
+            const was = drop.has(x.key);
+            if (was) drop.delete(x.key); else drop.add(x.key);
+            li.toggleAttribute('data-dropped', !was);
+            xb.replaceChildren(UI.icon(was ? 'x' : 'again', 18));
+            xb.setAttribute('aria-label', `${was ? 'Drop' : 'Put back'}: ${label}`);
+            paintSum();
+          });
           li.append(xb);
         }
         list.append(li);
@@ -267,7 +320,7 @@
     return sheet;
   }
 
-  /* ------------------------------------------------------------ notes under the header (V2, V18, V19) */
+  /* ------------------------------------------------------------ notes pinned atop the Due and Redo lists (V2, V18, V19) */
   let notesToken = 0;
   async function paintNotes() {
     const box = $('notes');
@@ -276,21 +329,18 @@
     if (!c) { box.replaceChildren(); return; }
     const out = [];
     if (c.new > 0) {
-      const card = h('section', { class: 'card rh-walk', 'aria-label': 'New misses' });
-      const txt = h('p', { text: `${plural(c.new, 'new miss', 'new misses')}` });
-      const meta = h('span', { class: 'meta', text: `about ${Math.max(1, Math.round(c.new * 1.5))} min` });
-      txt.append(meta);
-      const go = h('button', { type: 'button', class: 'pill', text: 'Walk them · name each, then prove it' });
-      go.addEventListener('click', () => walk({ new: true }, go));
-      card.append(h('div', {}, txt), go);
-      out.push(card);
+      const txt = h('span', { text: `${plural(c.new, 'new miss', 'new misses')}` });
+      const go = h('button', { type: 'button', class: 'quiet', title: `Name each mistake, then prove it on ${rw() ? 'another one' : 'new numbers'}`, text: 'Walk them' });
+      go.addEventListener('click', () => walk({ new: true, subject: S.subject }, go));
+      out.push(h('p', { class: 'rh-line', 'aria-label': 'New misses' }, h('span', { class: 'dot', 'aria-hidden': 'true' }), txt,
+        h('span', { class: 'meta', text: `about ${Math.max(1, Math.round(c.new * 1.5))} min` }), go));
       // where they came from: one sitting reads "from Section · Sep 21"
-      UI.api('/review/redo?lens=new&sort=recent&limit=100', { quiet: true }).then(r => {
+      UI.api(sub('/review/redo?lens=new&sort=recent&limit=100'), { quiet: true }).then(r => {
         if (my !== notesToken) return;
         const ss_ = new Map();
         (r.items || []).forEach(x => { if (x.session && !ss_.has(x.session)) ss_.set(x.session, x); });
-        if (ss_.size === 1) { const x = [...ss_.values()][0]; txt.firstChild.textContent = `${plural(c.new, 'new miss', 'new misses')} from ${srcWord(x.source)} · ${day(x.last)}`; }
-        else if (ss_.size > 1) txt.firstChild.textContent = `${plural(c.new, 'new miss', 'new misses')} from ${ss_.size} sittings`;
+        if (ss_.size === 1) { const x = [...ss_.values()][0]; txt.textContent = `${plural(c.new, 'new miss', 'new misses')} from ${srcWord(x.source)} · ${day(x.last)}`; }
+        else if (ss_.size > 1) txt.textContent = `${plural(c.new, 'new miss', 'new misses')} from ${ss_.size} sittings`;
       }).catch(() => {});
     }
     if (c.worksheets_waiting > 0) {
@@ -300,7 +350,7 @@
       out.push(line);
       UI.api('/drill', { quiet: true }).then(r => {
         const w = (r.active || []).find(x => (x.source || (x.cfg && x.cfg.source)) === 'worksheet');
-        if (w && w.id) a.href = `/review/sheet/?id=${encodeURIComponent(w.id)}`;
+        if (w && w.id) a.href = S.wsHref = `/review/sheet/?id=${encodeURIComponent(w.id)}`;
       }).catch(() => {});
     }
     box.replaceChildren(...out);
@@ -320,13 +370,13 @@
     const bits = a => a.filter(Boolean).join(' · ');
     if (id === 'due') {
       if (!d) return { v: null, sub: '' };
-      if (d.left > 0) return { v: `${fmtN(d.left)}/${fmtN(d.total)}`, sub: d.left_minutes ? `about ${d.left_minutes} min` : '' };
-      if (d.total > 0) return { v: '✓', sub: 'Done for today', short: '✓' };
+      if (d.left > 0) return { v: `${fmtN(d.left)}/${fmtN(d.total)}`, sub: d.left_minutes ? `about ${d.left_minutes} min left today` : '' };
+      if (d.total > 0) return { v: '✓', sub: 'Done for today' };
       return { v: '', sub: 'Nothing due' };
     }
     if (!S.counts) return { v: null, sub: '' };
     if (id === 'redo') {
-      return { v: c.open || '', sub: bits([c.half && `${fmtN(c.half)} half fixed`, c.relapsed && `${fmtN(c.relapsed)} relapsed`, c.stake_total && `≈ ${fmtN(c.stake_total)} pts at stake`]) };
+      return { v: c.open || '', sub: bits([c.half && `${fmtN(c.half)} half fixed`, c.relapsed && `${fmtN(c.relapsed)} relapsed`, c.stake_total && `≈ ${fmtN(c.stake_total)} ${ptsW(c.stake_total)} at stake`]) };
     }
     if (id === 'marked') return { v: c.marked || '', sub: bits([c.marked_right && `${fmtN(c.marked_right)} right`]) };
     if (id === 'saved') return { v: c.saved || '', sub: bits([c.noted && `${fmtN(c.noted)} with notes`, c.saved_unanswered && `${fmtN(c.saved_unanswered)} not answered`]) };
@@ -334,51 +384,57 @@
     if (id === 'fixed') return { v: c.fixed || '', sub: bits([c.held && `${fmtN(c.held)} held a check-in`]) };
     return { v: '', sub: '' };
   }
+  // the tab row: UI.tabs in #rhtabs (arrows, Home, End; one amber underline slides to the open tab), label and count
+  // inline (a phone stacks a short label over the count); each tab's sub-line is its title, the open one's leads its list head.
+  // openTab owns the URL and the panel (one #panel for every tab), so UI.tabs gets neither param nor panel.
+  let T = null;
   function paintTabs() {
-    const host = $('rhtabs');
-    if (!host.children.length) {
+    if (!T) {
+      const want = Q().get('tab');
+      T = UI.tabs($('rhtabs'), TABS.map(t => ({ id: t.id, label: t.k, tabId: `tab-${t.id}` })),
+        { value: TABS.some(t => t.id === want) ? want : TABS[0].id, label: 'Review lists', onChange: id => openTab(id, { push: true }) });
       TABS.forEach(t => {
-        const b = h('button', { type: 'button', role: 'tab', class: 'rh-tab', id: `tab-${t.id}`, 'aria-controls': 'panel', 'aria-selected': 'false', tabindex: '-1', 'data-tab': t.id },
-          h('span', { class: 'stat-k', text: t.k }), h('span', { class: 'rh-tl', text: t.short }), h('span', { class: 'stat-v' }), h('span', { class: 'stat-sub' }));
-        b.addEventListener('click', () => openTab(t.id, { push: true }));
-        host.append(b);
+        const b = $(`tab-${t.id}`);
+        b.classList.add('rh-tab');
+        b.dataset.tab = t.id;
+        b.setAttribute('aria-controls', 'panel');
+        b.querySelector('span:not(.n)').replaceChildren(h('span', { class: 'rh-tk', text: t.k }), h('span', { class: 'rh-ts', text: t.short }));
       });
-      host.addEventListener('keydown', e => {
-        const btns = [...host.children];
-        const i = btns.indexOf(doc.activeElement);
-        if (i < 0) return;
-        const j = { ArrowRight: i + 1, ArrowLeft: i - 1, Home: 0, End: btns.length - 1 }[e.key];
-        if (j === undefined) return;
-        e.preventDefault();
-        const b = btns[(j + btns.length) % btns.length];
-        b.focus();
-        openTab(b.dataset.tab, { push: true });
-      });
+      // a click on the open tab reloads it, as it always did (UI.tabs ignores it); capture runs before its own click
+      T.el.addEventListener('click', e => { const b = e.target.closest('[role="tab"]'); if (b && b.getAttribute('aria-selected') === 'true') openTab(b.dataset.tab, { push: false }); }, true);
+      if (UI.edgeFade) UI.edgeFade(T.el, true);
     }
+    if (S.tab && T.value !== S.tab) T.set(S.tab, true);   // only on a change: a set() mid-slide would stop the slide
+    const fresh = (S.counts && S.counts.new) || 0;
     TABS.forEach(t => {
       const b = $(`tab-${t.id}`);
       const x = tileData(t.id);
-      const v = b.querySelector('.stat-v'), sub = b.querySelector('.stat-sub');
-      v.textContent = x.v === null ? '—' : typeof x.v === 'number' ? fmtN(x.v) : x.v;
-      sub.textContent = x.sub || '';
-      sub.hidden = !x.sub;
-      const on = t.id === S.tab;
-      b.setAttribute('aria-selected', String(on));
-      b.tabIndex = on ? 0 : -1;
-      b.setAttribute('aria-label', `${t.k}${x.v !== '' && x.v !== null ? `, ${x.v === '✓' ? 'done' : x.v}` : ''}${x.sub ? `, ${x.sub}` : ''}`);
+      // History's lifetime figure asks for nothing: it stays in the aria-label only
+      // a roll still running holds its target in .roll-t (the overlay digits would garble textContent)
+      const n = b.querySelector('.n'), was = n.hidden ? '' : (n.querySelector('.roll-t') || n).textContent;
+      const v = t.id === 'history' || x.v === '' ? null : x.v === null ? '–' : x.v;
+      T.count(t.id, v);
+      // Due done for today: a check, not a glyph; a count that changes (a fix, a snooze) rolls to its new figure
+      if (v === '✓') n.replaceChildren(UI.icon('check', 14));
+      else if (v !== null && /\d/.test(was) && n.textContent !== was) { n.textContent = was; UI.roll(n, v); }
+      b.title = x.sub || '';
+      const unread = t.id === 'redo' && fresh > 0;
+      b.toggleAttribute('data-new', unread);   // index.html: an unread dot while new misses wait
+      b.setAttribute('aria-label', `${t.k}${x.v !== '' && x.v !== null ? `, ${x.v === '✓' ? 'done' : x.v}` : ''}${unread ? `, ${fmtN(fresh)} new` : ''}${x.sub ? `, ${x.sub}` : ''}`);
     });
-    const cur = S.tab && tileData(S.tab);
-    $('tabsub').textContent = cur ? cur.sub : '';
   }
 
   /* ------------------------------------------------------------ tabs */
   function openTab(id, o = {}) {
     const was = S.tab;
+    $('main').classList.add('rh-ready');   // index.html: from here the open tab shows as open
     if (was && was !== id) { S.filters[was] = currentFilterValues(); }
     S.tab = id;
+    $('main').dataset.tab = id;   // index.html: the pinned notes show on Due and Redo only
     const u = new URL(location.href);
     const keep = new URLSearchParams();
     keep.set('tab', id);
+    keep.set('subject', S.subject);   // links and reloads open the same subject
     if (was === id || !was) { for (const [k, v] of u.searchParams) if (k !== 'tab') keep.set(k, v); }
     else {
       const saved = S.filters[id] || {};
@@ -393,22 +449,24 @@
     paintFilters();
     if (id === 'due') { paintList(); syncPane(); paintBar(); paintListHead(); }
     else loadList(id);
-    if (!S.ledger) UI.api('/review/ledger?weeks=12', { quiet: true }).then(l => { S.ledger = l; paintTabs(); if (S.tab === 'fixed') paintHead(); }).catch(() => {});
+    if (!S.ledger) { const s = S.subject; UI.api(sub('/review/ledger?weeks=12'), { quiet: true }).then(l => { if (s !== S.subject) return; S.ledger = l; paintTabs(); if (S.tab === 'fixed') paintHead(); }).catch(() => {}); }
   }
 
   /* ------------------------------------------------------------ filters (UI.filterBar, URL state) */
   let FB = null;
   function topicGroups() {
+    if (rw()) return UI.RW_DOMAINS.map(d => ({ label: d.name, options: d.skills.map(s => ({ value: s, label: tname(s) })) }));
     return (UI.DOMAINS || []).map(([d, ds]) => ({ label: ds, options: (UI.TOPICS || []).filter(t => t.domain === d).map(t => ({ value: t.slug, label: t.short })) }))
       .filter(g => g.options.length);
   }
   const DATE = { key: 'date', label: 'Date', type: 'date' };
   function filterDefs(tab) {
     const common = [
-      { key: 'topics', label: 'Topic', type: 'multi', groups: topicGroups() },
-      { key: 'difficulty', label: 'Difficulty', type: 'multi', options: [{ value: 'easy', label: 'Easy' }, { value: 'medium', label: 'Medium' }, { value: 'hard', label: 'Hard' }] },
-      { key: 'fmt', label: 'Format', type: 'select', all: 'Any format', options: [{ value: 'mcq', label: 'Multiple choice' }, { value: 'spr', label: 'Grid-in' }] },
-    ];
+      { key: 'topics', label: rw() ? 'Skill' : 'Topic', type: 'multi', groups: topicGroups() },
+      // chips in the Filters sheet, orange while pressed; a set tier shows as a token in the list head
+      { key: 'difficulty', label: 'Difficulty', type: 'pills', options: [{ value: 'easy', label: 'Easy' }, { value: 'medium', label: 'Medium' }, { value: 'hard', label: 'Hard' }] },
+      rw() ? null : { key: 'fmt', label: 'Format', type: 'select', all: 'Any format', options: [{ value: 'mcq', label: 'Multiple choice' }, { value: 'spr', label: 'Grid-in' }] },
+    ].filter(Boolean);   // R&W is all multiple choice: no Format
     const c = S.counts || {};
     const search = { key: 'q', label: 'Search', type: 'search', placeholder: tab === 'redo' ? 'Search mistakes' : 'Search questions' };
     const source = { key: 'source', label: 'Source', type: 'select', all: 'Any source', options: ['practice', 'due', 'section', 'module', 'diagnostic', 'challenge', 'qotd', 'review', 'shared', 'worksheet'].map(v => ({ value: v, label: srcWord(v) })) };
@@ -417,14 +475,16 @@
       const pts = c.stake_total !== null && c.stake_total !== undefined;
       return [
         ...common,
-        { key: 'kind', label: 'Kind', type: 'select', all: 'Any kind', options: [{ value: 'misconception', label: 'Misconception' }, { value: 'gridin', label: 'Grid-in' }, { value: 'slip', label: 'Slip' }, { value: 'unsure', label: 'Unsure' }] },
+        { key: 'kind', label: 'Kind', type: 'select', all: 'Any kind', options: [{ value: 'misconception', label: 'Misconception' }, rw() ? null : { value: 'gridin', label: 'Grid-in' }, { value: 'slip', label: 'Slip' }, { value: 'unsure', label: 'Unsure' }].filter(Boolean) },
         { key: 'status', label: 'Status', type: 'select', all: 'Any status', options: [{ value: 'new', label: 'New', n: c.new || null }, { value: 'blind', label: 'Blind spots · sure and wrong', n: c.blind || null },
           { value: 'open', label: 'Open' }, { value: 'half', label: 'Half fixed', n: c.half || null }, { value: 'relapsed', label: 'Relapsed', n: c.relapsed || null }, { value: 'stuck', label: 'Stuck', n: c.stuck || null }] },
-        { key: 'cause', label: 'Cause', type: 'select', all: 'Any cause', options: CAUSES.map(([v, l]) => ({ value: v, label: l })) },
+        { key: 'cause', label: 'Cause', type: 'select', all: 'Any cause', options: CAUSES.filter(([v]) => !(rw() && v === 'entry')).map(([v, l]) => ({ value: v, label: l })) },
         conf,
         { key: 'sort', label: 'Sort', type: 'sort', options: [...(pts ? [{ value: 'worth', label: 'Most points' }] : []), { value: 'recent', label: 'Most recent' }, { value: 'blind', label: 'Blind spots first' },
-          { value: 'hits', label: 'Most missed' }, { value: 'near', label: 'Closest to fixed' }, { value: 'oldest', label: 'Oldest' }, { value: 'topic', label: 'Topic order' }] },
-        { key: 'group', label: 'Group by', type: 'sort', options: [{ value: 'topic', label: 'Topic' }, { value: 'domain', label: 'Domain' }, { value: 'habit', label: 'Habit' }, { value: 'norm', label: 'Mistake type' }, { value: 'none', label: 'None' }] },
+          { value: 'hits', label: 'Most missed' }, { value: 'near', label: 'Closest to fixed' }, { value: 'oldest', label: 'Oldest' }, { value: 'topic', label: rw() ? 'Skill order' : 'Topic order' }] },
+        // habits are Math's; an R&W type holds one open mistake (named by the type), so grouping by it adds nothing
+        { key: 'group', label: 'Group by', type: 'sort', options: rw() ? [{ value: 'topic', label: 'Skill' }, { value: 'domain', label: 'Domain' }, { value: 'none', label: 'None' }]
+          : [{ value: 'topic', label: 'Topic' }, { value: 'domain', label: 'Domain' }, { value: 'habit', label: 'Habit' }, { value: 'norm', label: 'Mistake type' }, { value: 'none', label: 'None' }] },
         search,
       ];
     }
@@ -451,7 +511,9 @@
     const whole = { redo: c.open, marked: c.marked, saved: c.saved, history: c.answers, fixed: (c.fixed || 0) + (c.dismissed || 0) }[S.tab];
     const urlSet = defs.some(f => f.type !== 'sort' && Q().get(f.key));
     if (!defs.length || (S.counts && !whole && !urlSet)) return;
-    FB = UI.filterBar(host, defs, { url: true, label: 'Filter this list', onChange: () => { if (S.tab !== 'due') loadList(S.tab); } });
+    // Search and Sort (data-fkey, index.html) stay in the row; the rest sit behind "Filters · n", and each one set shows as a
+    // token in the list head (paintListHead)
+    FB = UI.filterBar(host, defs, { url: true, label: 'Filter this list', onChange: () => { if (S.tab !== 'due') loadList(S.tab, { glide: true }); } });
   }
   function currentFilterValues() { return FB ? FB.values() : {}; }
   function activeFilters() {
@@ -483,6 +545,7 @@
     Object.entries(dateParams(v.date)).forEach(([k, x]) => p.set(k, x));
     p.set('limit', tab === 'fixed' || tab === 'saved' ? '100' : '50');
     if (cursor !== null && cursor !== undefined) p.set('cursor', cursor);
+    p.set('subject', S.subject);
     return `/review/${tab}?${p}`;
   }
 
@@ -490,9 +553,12 @@
   async function loadList(tab, o = {}) {
     const L = S.lists[tab] || (S.lists[tab] = { items: [], total: 0, next: null, data: null });
     const my = ++S.token;
-    if (!o.more && !o.quiet) { paintSkeleton(); }
+    // a filter or sort change keeps the rows (dimmed) until the new list lands, then glides them; else the skeleton
+    const glide = o.glide && L.data && $('list').querySelector('.rh-row');
+    if (glide) $('list').setAttribute('aria-busy', 'true');
+    else if (!o.more && !o.quiet) paintSkeleton();
     try {
-      const d = await UI.api(listPath(tab, o.more ? L.next : null));
+      const [d, saved] = await Promise.all([UI.api(listPath(tab, o.more ? L.next : null)), PIN.includes(tab) ? savedSet() : null]);
       if (my !== S.token || S.tab !== tab) return;
       L.items = o.more ? L.items.concat(d.items || []) : (d.items || []);
       L.total = d.total ?? L.items.length;
@@ -500,6 +566,7 @@
       if (!o.more) L.data = d; else if (d.sittings) L.data.sittings = (L.data.sittings || []).concat(d.sittings.filter(s => !(L.data.sittings || []).some(x => x.session === s.session)));
       if (tab === 'fixed') clientFixed(L);
       if (tab === 'saved') clientSaved(L);
+      if (saved) pinSaved(L, saved, tab !== 'marked');
       L.err = false;
     } catch (e) {
       if (my !== S.token || S.tab !== tab) return;
@@ -507,7 +574,11 @@
       if (!L.data) { const box = $('list'); box.replaceChildren(); box.removeAttribute('aria-busy'); UI.cardError(box, () => loadList(tab), 'This list didn’t load.'); return; }
       toast('Couldn’t refresh the list.');
     }
-    paintListHead(); paintList(); syncPane(); paintBar();
+    paintListHead();
+    if (glide) glideRows(paintList); else paintList();
+    // a tab's first list fades in over its placeholder (no shimmer); a key-driven switch is instant (UI.motion)
+    if (!glide && !o.quiet && !o.more && UI.motion) UI.motion.enter($('list'), 'fade');
+    syncPane(); paintBar();
     if (tab === 'redo' || tab === 'history' || tab === 'marked' || tab === 'saved' || tab === 'fixed') paintHeadFromList(tab);
   }
   // Fixed's status and sort are not on the server yet: they order and filter the rows loaded (up to 100)
@@ -527,6 +598,18 @@
     if (v.status) L.total = rows.length;
     L.items = rows;
   }
+  // saved first (a pinned list): rows whose question you saved lead Redo and Fixed (inside each Redo group) and each
+  // Marked sitting, in the list's own order, so its sort and filters still apply and nothing is hidden. History stays a
+  // log, Due keeps the order it serves, Saved is all saved. The list head counts them; each carries a Saved tag.
+  const PIN = ['redo', 'fixed', 'marked'];
+  let savedP = null;
+  // ponytail: the newest 100 saved questions (the endpoint's page cap); older ones are not pinned, never hidden
+  const savedSet = () => (!(S.counts && S.counts.saved) ? Promise.resolve(new Set()) : savedP || (savedP = UI.api(sub('/review/saved?limit=100'), { quiet: true })
+    .then(d => new Set((d.items || []).map(r => `${r.template}:${r.seed}`)), () => { savedP = null; return new Set(); })));
+  function pinSaved(L, set, lead) {
+    L.items.forEach(r => { r._saved = set.has(`${r.template}:${r.seed}`); });
+    if (lead) L.items = [...L.items.filter(r => r._saved), ...L.items.filter(r => !r._saved)];
+  }
   function clientSaved(L) {
     L.all = L.items;
     const f = S.savedCard;
@@ -537,6 +620,9 @@
     if (S.prefs.saved_spaced !== false) L.items = L.items.map((r, i) => [r.due ? 0 : 1, i, r]).sort((a, b) => a[0] - b[0] || a[1] - b[1]).map(x => x[2]);
   }
 
+  // the list glides (a filter, a sort, a row that leaves): UI.glide over every row by its data-key, group sections
+  // included (rows that stay slide, new ones nudge in, rows that left fade where they stood; keys and reduced motion instant)
+  function glideRows(paint) { return UI.glide($('list'), paint, { rows: '.rh-row[data-key]' }); }
   function paintSkeleton() {
     const box = $('list');
     box.setAttribute('aria-busy', 'true');
@@ -546,16 +632,26 @@
     box.append(sk);
   }
 
-  /* ------------------------------------------------------------ the list head: select all, counts, secondary actions */
+  /* ------------------------------------------------------------ the list head: select all, the tab's figures, set filters, More */
+  // the selection differs from the tab's default: every row shows its box (index.html .rh-selmode)
+  const selChanged = tab => { const s = sel(tab); return s.ids.size > 0 || s.all !== selDefaultAll(tab); };
   function paintListHead() {
     const host = $('listhead');
     host.replaceChildren();
     const tab = S.tab;
     if (!tab) return;
-    const L = tab === 'due' ? null : S.lists[tab];
-    if (tab === 'due' || !L || !L.data) { host.hidden = true; return; }
+    $('main').classList.toggle('rh-selmode', tab !== 'due' && selChanged(tab));
+    // the open tab's figures lead its list ("≈ 140 pts at stake", "about 12 min left today"); the tab's tooltip keeps them all
+    const c = S.counts || {};
+    const sub = tab === 'redo' && c.stake_total ? `≈ ${fmtN(c.stake_total)} ${ptsW(c.stake_total)} at stake` : tileData(tab).sub;
+    if (tab === 'due') {
+      host.hidden = !(S.due && (S.due.items || []).length && sub);
+      if (!host.hidden) host.append(h('span', { class: 'rh-lh-m', text: sub }));
+      return;
+    }
+    const L = S.lists[tab];
+    if (!L || !L.data || !L.total) { host.hidden = true; return; }
     host.hidden = false;
-    if (!L.total) { host.hidden = true; return; }
     const n = selCount(tab);
     const all = h('input', { type: 'checkbox', 'aria-label': 'Select every row' });
     all.checked = n > 0 && n >= L.total;
@@ -567,11 +663,43 @@
     });
     const lab = h('label', { class: 'check' }, all, h('span', { text: n ? `${fmtN(n)} of ${fmtN(L.total)} selected` : `Select all ${fmtN(L.total)}` }));
     host.append(lab);
-    const c = S.counts || {};
     const whole = { redo: c.open, marked: c.marked, saved: c.saved, history: c.answers, fixed: c.fixed }[tab];
-    if (activeFilters() && whole && L.total !== whole) host.append(h('span', { class: 'meta', text: `${fmtN(L.total)} of ${fmtN(whole)} match` }));
-    const acts = secondaryActions(tab);
-    if (acts.length) host.append(h('div', { class: 'rh-acts', role: 'group', 'aria-label': 'More with these' }, ...acts));
+    const pinned = PIN.includes(tab) ? L.items.filter(r => r._saved && !r._closed).length : 0;
+    const lm = [activeFilters() && whole && L.total !== whole ? `${fmtN(L.total)} of ${fmtN(whole)} match` : sub || null, pinned ? `${fmtN(pinned)} saved${tab === 'marked' ? '' : ' first'}` : null].filter(Boolean);
+    if (lm.length) host.append(h('span', { class: 'rh-lh-m', text: lm.join(' · ') }));
+    if (secondaryActions(tab).length) {
+      const more = h('button', { type: 'button', class: 'btn sm rh-lh-more', text: 'More' });
+      UI.menu.bind(more, () => secondaryActions(tab), { label: 'More with these', align: 'end' });
+      host.append(more);
+    }
+    const toks = filterTokens(tab);
+    if (toks) host.append(toks);
+    // the sticky group heads sit under the list head (index.html --rh-lh), which grows a line while tokens show
+    requestAnimationFrame(() => { if (host.offsetHeight) $('main').style.setProperty('--rh-lh', `${host.offsetHeight}px`); });
+  }
+  // a set filter as a token ("Medium ×", "Half fixed ×"): its × clears that value; Clear clears them all (two or more)
+  const DATE_WORD = { today: 'Today', 7: 'Last 7 days', 30: 'Last 30 days' };
+  function filterTokens(tab) {
+    if (!FB) return null;
+    const v = currentFilterValues();
+    const out = [];
+    filterDefs(tab).forEach(f => {
+      if (f.type === 'sort' || f.type === 'search') return;
+      const x = v[f.key];
+      const opts = f.groups ? f.groups.flatMap(g => g.options) : (f.options || []);
+      const word = y => (f.type === 'date' ? DATE_WORD[y] || String(y).split('..').map(d => (d ? day(d) : '…')).join(' – ')
+        : (opts.find(o => String(o.value) === String(y)) || {}).label || String(y));
+      const tok = (y, next) => {
+        const b = h('button', { type: 'button', class: 'btn sm', 'aria-label': `Remove filter ${f.label}: ${word(y)}` }, word(y), UI.icon('x', 14));
+        b.addEventListener('click', () => FB.set(f.key, next));
+        out.push(b);
+      };
+      if (Array.isArray(x)) x.forEach(y => tok(y, x.filter(z => z !== y)));
+      else if (x !== '' && x !== null && x !== undefined) tok(x, '');
+    });
+    if (!out.length) return null;
+    if (out.length > 1) out.push(h('button', { type: 'button', class: 'quiet', text: 'Clear', onclick: () => FB.clear() }));
+    return h('div', { class: 'rh-toks', role: 'group', 'aria-label': 'Filters set' }, ...out);
   }
 
   /* ------------------------------------------------------------ the list */
@@ -592,7 +720,7 @@
     else if (tab === 'fixed') paintFixed(box, L);
     box.querySelectorAll('.rh-rb').forEach(flatten);
     if (L.next !== null && L.next !== undefined) {
-      const more = h('button', { type: 'button', class: 'btn rh-more', text: `Load 50 more · ${fmtN(L.items.length)} of ${fmtN(L.total)}` });
+      const more = h('button', { type: 'button', class: 'btn sm rh-more', text: `Load 50 more · ${fmtN(L.items.length)} of ${fmtN(L.total)}` });
       more.addEventListener('click', () => { more.setAttribute('aria-busy', 'true'); loadList(tab, { more: true }); });
       box.append(more);
     }
@@ -619,7 +747,7 @@
       return;
     }
     const text = {
-      redo: c.answers ? 'Nothing open. Every wrong answer lands here, named by the mistake behind it.' : 'Every wrong answer lands here, named by the mistake behind it.',
+      redo: c.answers ? 'Nothing open.' : 'Every wrong answer lands here, named by the mistake behind it.',
       marked: 'Flag a question in practice or a test and it waits here.',
       saved: 'Tap the bookmark on any question to keep it.',
       history: 'Every answer you give shows up here.',
@@ -627,22 +755,44 @@
     }[tab];
     const host = h('div', { class: 'rh-empty' });
     box.append(host);
-    const sample = tab === 'redo' && !c.answers ? exampleRow : null;
+    const sample = tab === 'redo' && !c.answers ? exampleRow : tab === 'marked' ? () => sampleRow('marked') : tab === 'saved' ? () => sampleRow('saved') : null;
     const nothingOpen = tab === 'redo' && c.answers > 0;
+    // UI.empty swaps in its START (Math's body) when answered is 0: R&W hands its own START, with the subject, and skips the swap
+    const first = rw() ? Object.assign({}, UI.empty.START, { body: { source: 'start', subject: 'rw' } }) : UI.empty.START;
     UI.empty(host, {
       sample: sample ? sample() : null, text,
-      action: nothingOpen ? { label: `Keep going · ${S.minutes || 10} min`, body: { source: 'next', box: S.minutes || 10 } } : (!c.answers ? UI.empty.START : null),
-      answered: c.answers || 0,
+      // a secondary: the header's Start is this screen's primary
+      action: nothingOpen ? { label: `Keep going · ${S.minutes || 10} min`, body: { source: 'next', box: S.minutes || 10, subject: S.subject }, primary: false } : (!c.answers ? first : null),
+      answered: rw() ? 1 : c.answers || 0,
     });
-    if (sample) fillExample(host);
+    // a drawing where no sample row shows: all clear on Redo, first use on History and Fixed (never on a filtered empty)
+    const art = nothingOpen ? 'clear' : !sample && (tab === 'history' || tab === 'fixed') ? 'start' : null;
+    const em = host.querySelector('.empty');
+    if (art && em) em.prepend(spotEl(art));
+    if (sample && !rw()) fillExample(host);   // an R&W example would spend an unseen bank item: its sample stays as drawn
+  }
+  // UI.spotArt's svg string as a node
+  function spotEl(kind) {
+    const t = doc.createElement('template');
+    t.innerHTML = (UI.spotArt && UI.spotArt(kind)) || '';
+    return t.content.firstElementChild || '';
   }
   // V16: a sample row built from a real reserved item, tagged Example
   let exampleCache = null;
   function exampleRow() {
-    const r = h('div', { class: 'rh-row' }, h('span', { class: 'lead', style: 'display:grid;place-items:center' }, UI.pips ? UI.pips(2, 2) : null),
-      h('div', { class: 'rh-rb' }, h('span'), h('div', {}, h('div', { class: 'l1', text: 'Used the diameter where the radius was needed' }), h('div', { class: 'l2' }, h('span', { text: 'Circles' }), h('span', { text: 'Arc length' }), tierBit('medium'), h('span', { text: 'picked C' })))));
+    const r = h('div', { class: 'rh-row' }, h('div', { class: 'rh-rb' }, h('span', { class: 'lead' }, UI.pips ? UI.pips(2, 2) : null),
+      rw() ? h('div', {}, h('div', { class: 'l1', text: 'Blank completion, negated frame' }), h('div', { class: 'l2' }, h('span', { text: 'Words in Context' }), h('span', {}, tierBit('medium')), h('span', { text: 'picked C' })))
+        : h('div', {}, h('div', { class: 'l1', text: 'Used the diameter where the radius was needed' }), h('div', { class: 'l2' }, h('span', { text: 'Circles' }), h('span', { text: 'Arc length' }), h('span', {}, tierBit('medium')), h('span', { text: 'picked C' })))));
     r.dataset.example = '';
     return r;
+  }
+  // Marked and Saved when empty: a dimmed row of what lands here (UI.empty tags it Example)
+  function sampleRow(tab) {
+    const marked = tab === 'marked';
+    const lead = UI.cell ? UI.cell(marked ? 'incorrect' : 'correct', marked ? 7 : '', { static: true, size: 'sm', flag: marked || null, saved: !marked || null }) : null;
+    return h('div', { class: 'rh-row' }, h('div', { class: 'rh-rb' }, h('span', { class: 'lead' }, lead),
+      h('div', {}, h('div', { class: 'l1 stem', text: rw() ? 'Which choice completes the text with the most logical and precise word or phrase?' : 'If 3x + 5 = 20, what is the value of 6x?' }),
+        h('div', { class: 'l2' }, h('span', { text: rw() ? 'Words in Context' : 'Linear equations' }), h('span', {}, tierBit('medium')), h('span', { text: marked ? 'Section · picked B' : 'saved today · due in 2 days' })))));
   }
   async function fillExample(host) {
     try {
@@ -650,13 +800,13 @@
       const q = exampleCache.question || {};
       const i = (q.reasons || []).findIndex((x, j) => x && j !== q.answer_index);
       const row = host.querySelector('[data-example] .l1');
-      if (row && i >= 0) { row.textContent = cap(q.reasons[i]); const l2 = host.querySelector('[data-example] .l2'); l2.replaceChildren(...[h('span', { text: (TOPIC(q.topic) || {}).short || q.topic_name || '' }), h('span', { text: cap(q.skill || '') }), tierBit(q.difficulty), h('span', { text: `picked ${LET[i]}` })].filter(Boolean)); }
+      if (row && i >= 0) { row.textContent = cap(q.reasons[i]); const l2 = host.querySelector('[data-example] .l2'); l2.replaceChildren(...[h('span', { text: (TOPIC(q.topic) || {}).short || q.topic_name || '' }), h('span', { text: cap(q.skill || '') }), TIER[q.difficulty] ? h('span', {}, tierBit(q.difficulty)) : null, h('span', { text: `picked ${LET[i]}` })].filter(Boolean)); }
     } catch (_) {}
   }
 
   function rowShell(tab, r, i, o = {}) {
     const key = keyOf(tab, r);
-    const row = h('div', { class: 'rh-row' + (o.cls ? ' ' + o.cls : '') + (o.select === false ? ' nosel' : ''), role: 'listitem', 'data-i': String(i), 'data-key': key });
+    const row = h('div', { class: 'rh-row' + (o.cls ? ' ' + o.cls : '') + (o.select === false ? ' nosel' : ''), role: 'listitem', 'data-i': String(i), 'data-key': key, 'data-saved': r._saved ? '' : null });
     if (o.select !== false) {
       const cb = h('input', { type: 'checkbox', 'aria-label': `Select: ${o.label || ''}` });
       cb.checked = isSel(tab, key);
@@ -680,16 +830,34 @@
     ['pointerup', 'pointercancel', 'pointerleave'].forEach(ev => row.addEventListener(ev, () => clearTimeout(t)));
     row.addEventListener('click', e => { if (fired) { e.preventDefault(); e.stopPropagation(); fired = false; } }, true);
   }
+  // a row's status tags: the shared .badge (ink for the hard ones, plain for half-way and due, soft for the rest)
+  // counts and statuses that are not alerts stay neutral (orange is the one thing to do and the selection)
+  const BADGE = { ink: 'badge ink', amber: 'badge line', new: 'badge line', soft: 'badge line' };
+  // a row's tags: badges as [text, look], or a node (the Saved bookmark)
   function tagsEl(list) {
     const t = h('span', { class: 'tags' });
-    list.filter(Boolean).forEach(([text, cls]) => t.append(h('span', { class: 'tag' + (cls ? ' ' + cls : ''), text })));
+    list.filter(Boolean).forEach(x => t.append(x instanceof Node ? x : h('span', { class: BADGE[x[1]] || 'badge soft', text: x[0] })));
     return t.children.length ? t : h('span');
   }
-  const l2 = bits => { const el = h('div', { class: 'l2' }); bits.filter(Boolean).forEach(b => el.append(b instanceof Node ? (b.tagName === 'SPAN' ? b : h('span', {}, b)) : h('span', { text: b }))); return el; };
+  // a saved question: the bookmark outline in soft ink (the row's label says "saved")
+  const savedMark = () => { const s = UI.icon('bookmark', 16); if (s) { s.classList.add('rh-saved'); s.setAttribute('aria-label', 'Saved'); s.setAttribute('role', 'img'); s.removeAttribute('aria-hidden'); } return s || null; };
+  // a row's actions: on a mouse they sit over the row's end while it is hovered or focused; on touch one ⋯ opens
+  // them as a menu (index.html). Each menu item clicks its button, so both paths run the same code
+  function rowActs(row, label, btns) {
+    btns = btns.filter(Boolean);
+    if (!btns.length) return null;
+    const acts = h('div', { class: 'ract reveal' }, ...btns);
+    const more = h('button', { type: 'button', class: 'ibtn rh-rmore', 'aria-haspopup': 'menu', 'aria-label': `Actions: ${label || ''}` }, UI.icon('more', 18));
+    more.addEventListener('click', () => UI.menu(more, btns.map(b => ({ label: b.dataset.menu || b.textContent, onClick: () => b.click() })), { label: 'Actions', align: 'end' }));
+    row.append(acts, more);
+    return acts;
+  }
+  // each fact is one span (its dot is drawn before it); the tier bars sit in a span of their own, since .dbars::before is the bars
+  const l2 = bits => { const el = h('div', { class: 'l2' }); bits.filter(Boolean).forEach(b => el.append(b instanceof Node ? (b.tagName === 'SPAN' && !b.classList.contains('dbars') ? b : h('span', {}, b)) : h('span', { text: b }))); return el; };
 
   /* Due (V1) */
   const KIND = {
-    check: { text: 'Check-in ✓' }, relapsed: { text: 'Relapsed', cls: 'ink' }, sure: { text: 'Sure ✕', cls: 'ink' }, half: { text: 'Half fixed ●○', cls: 'amber' },
+    check: { text: 'Check-in' }, relapsed: { text: 'Relapsed', cls: 'ink' }, sure: { text: 'Blind spot', cls: 'ink' }, half: { text: 'Half fixed', cls: 'amber' },
     saved: { text: 'Saved' }, fading: { text: 'Fading' }, marked: { text: 'Marked' }, mistake: { text: 'Mistake' }, keep_warm: { text: 'Keep warm' },
   };
   function paintDueList(box) {
@@ -701,6 +869,8 @@
       $('body').classList.add('no-pane');
       const c = S.counts || {};
       if (!c.answers) return paintEmpty(box, 'redo');
+      // the line the tab's sub-line used to carry; Start (Fix, or Keep going) is the way on
+      box.append(h('div', { class: 'rh-empty' }, h('div', { class: 'empty' }, spotEl('clear'), h('p', { class: 'empty-text', text: 'Nothing due today.' }))));
       return;
     }
     const ol = h('div', { class: 'rh-list' });
@@ -708,15 +878,19 @@
       const { row, btn } = rowShell('due', it, i, { select: false, label: it.label, cls: 'has-x' });
       if (it.done) row.dataset.done = '';
       if (it.snoozed) row.dataset.snoozed = '';
-      const lead = h('span', { class: 'lead', 'aria-hidden': 'true' }, it.done ? h('span', { text: '✓', style: 'font: 700 16px var(--font)' }) : it.owed ? UI.pips(it.owed, 2) : null);
+      const lead = h('span', { class: 'lead', 'aria-hidden': 'true' }, it.done ? h('span', { class: 'tick' }, UI.icon('check', 18)) : it.owed ? UI.pips(it.owed, 2) : null);
       const k = KIND[it.kind] || { text: cap(it.kind) };
-      const main = h('div', {}, mtext(h('div', { class: 'l1' }), it.label || ''),
-        l2([it.domain && dshort(it.domain), it.skill && it.skill !== it.label ? it.skill : null, tierBit(it.tier), it.pts ? h('span', { class: 'pts', text: `≈ ${fmtN(it.pts)} pts` }) : null]),
+      // trimmed like Redo's: the tier and the points (right); the domain and the question type ride on the tooltip and label
+      const where = [it.domain && dshort(it.domain), it.skill && it.skill !== it.label ? it.skill : null].filter(Boolean).join(' · ');
+      const meta = l2([tierBit(it.tier), it.pts ? h('span', { class: 'pts', text: `≈ ${fmtN(it.pts)} ${ptsW(it.pts)}` }) : null]);
+      meta.classList.add('trim');
+      const main = h('div', {}, mtext(h('div', { class: 'l1' }), it.label || ''), meta,
         it.why ? h('div', { class: 'l3 why', text: it.why }) : null);
-      btn.append(lead, main, tagsEl([[k.text, k.cls], it.done ? ['Done', 'soft'] : null]));
-      btn.setAttribute('aria-label', `${k.text}: ${it.label}${it.done ? ', done' : ''}${it.snoozed ? ', not today' : ''}`);
-      const x = h('button', { type: 'button', class: 'x', 'aria-label': it.snoozed ? `Undo not today: ${it.label}` : `Not today: ${it.label}`, title: it.snoozed ? 'Undo' : 'Not today' }, it.snoozed ? 'Undo' : '×');
-      if (it.snoozed) { x.style.width = 'auto'; x.style.padding = '0 10px'; x.style.font = '600 12.5px var(--font)'; main.append(h('div', { class: 'l3', text: 'Not today' })); }
+      btn.append(lead, main, tagsEl([it.kind === 'half' ? null : [k.text, k.cls]]));
+      if (where) btn.title = where;
+      btn.setAttribute('aria-label', `${k.text}: ${it.label}${where ? `, ${where}` : ''}${it.done ? ', done' : ''}${it.snoozed ? ', not today' : ''}`);
+      const x = h('button', { type: 'button', class: it.snoozed ? 'x undo' : 'x reveal','aria-label': it.snoozed ? `Undo not today: ${it.label}` : `Not today: ${it.label}`, title: it.snoozed ? 'Undo' : 'Not today' }, it.snoozed ? 'Undo' : UI.icon('x', 18));
+      if (it.snoozed) main.append(h('div', { class: 'l3', text: 'Not today' }));
       x.addEventListener('click', () => snooze(it, !!it.snoozed, x));
       if (!it.done) row.append(x);
       ol.append(row);
@@ -728,7 +902,7 @@
   async function snooze(it, undo, btn) {
     btn.setAttribute('aria-busy', 'true');
     try {
-      await UI.api('/review/snooze', { method: 'POST', body: undo ? { key: it.key, undo: true } : { key: it.key } });
+      await UI.api(sub('/review/snooze'), { method: 'POST', body: undo ? { key: it.key, undo: true } : { key: it.key } });
       await Promise.all([loadDue(), loadCounts()]);
       afterDue();
       if (!undo) toast('Not today', { undo: () => snooze(it, true, h('button')) });
@@ -747,7 +921,7 @@
   function paintRedo(box, L) {
     const g = currentFilterValues().group || 'topic';
     const groups = g === 'none' ? null : (L.data.groups || []);
-    const rows = L.items.map((r, i) => [r, i]);
+    const rows = L.items.map((r, i) => [r, i]).filter(([r]) => !r._closed);   // a mistake fixed in the pane leaves (paneOn closed)
     if (!groups) { const ol = h('div', { class: 'rh-list' }); rows.forEach(([r, i]) => ol.append(redoRow(r, i, g))); box.append(ol); return; }
     const order = [];
     const by = new Map();
@@ -763,14 +937,13 @@
       const on = members.filter(([r]) => isSel('redo', keyOf('redo', r))).length;
       cb.checked = on === members.length; cb.indeterminate = on > 0 && on < members.length;
       cb.addEventListener('change', () => { members.forEach(([r]) => setSel('redo', keyOf('redo', r), cb.checked)); paintList(); paintListHead(); paintBar(); });
-      const head = h('div', { class: 'rh-gh' }, h('label', { class: 'sel', style: 'display:grid;place-items:center;width:44px;height:44px;margin-left:0' }, cb));
-      head.append(g === 'topic' && UI.glyph ? UI.glyph(k) : h('span'));
-      const gt = h('div', { class: 'gt' }, h('span', { class: 't', text: meta.name }));
+      const head = h('div', { class: 'rh-gh' }, h('label', { class: 'sel' }, cb));
+      head.append(g === 'topic' && UI.glyph && !rw() ? UI.glyph(k) : h('span'));   // the glyphs are the Math topics'
+      // the head reads "4 open · ≈ 24 pts"; the domain and the per-test figure ride on the title's tooltip
+      const more = [g !== 'domain' && meta.domain ? dshort(meta.domain) : null, g === 'topic' && meta.per_test ? `≈ ${fmtN(Math.round(meta.per_test * 10) / 10)} a test` : null].filter(Boolean).join(' · ');
+      const gt = h('div', { class: 'gt' }, h('span', { class: 't', text: meta.name, title: more || null }));
       head.append(gt);
-      const bits = [plural(meta.count, 'open', 'open'), meta.pts ? `≈ ${fmtN(meta.pts)} pts` : null,
-        g === 'topic' && meta.per_test ? `about ${fmtN(Math.round(meta.per_test * 10) / 10)} of 44 a test` : null];
-      if (g === 'topic' || g === 'habit' || g === 'norm') { if (meta.domain && g !== 'domain') bits.unshift(dshort(meta.domain)); }
-      gt.append(h('span', { class: 'meta', text: bits.filter(Boolean).join(' · ') }));
+      gt.append(h('span', { class: 'meta' }, [plural(meta.count, 'open', 'open'), meta.pts ? `≈ ${fmtN(meta.pts)} ${ptsW(meta.pts)}` : null].filter(Boolean).join(' · '), more ? h('span', { class: 'sr', text: ` · ${more}` }) : null));
       const act = h('span', { class: 'act' });
       if (g === 'habit' && k !== 'other') {
         const b = h('button', { type: 'button', class: 'btn sm', text: 'Drill this habit · 8' });
@@ -779,12 +952,19 @@
       } else {
         const ids = members.map(([r]) => r.id);
         const qn = members.reduce((s, [r]) => s + (r.owed || 0), 0);
-        const b = h('button', { type: 'button', class: 'quiet', text: `Fix · ${plural(qn, 'question')}` });
+        const b = h('button', { type: 'button', class: 'quiet', text: `Fix ${plural(qn, 'question')}` });
         b.addEventListener('click', () => start(redoBody({ ids }), b));
         act.append(b);
       }
-      const fold = h('button', { type: 'button', class: 'quiet fold', 'aria-label': `Fold ${meta.name}`, 'aria-expanded': 'true' }, h('span', { 'aria-hidden': 'true', text: '▾' }));
-      fold.addEventListener('click', () => { const f = sec.toggleAttribute('data-folded'); fold.setAttribute('aria-expanded', String(!f)); });
+      const fold = h('button', { type: 'button', class: 'quiet rh-gfold', 'aria-label': `Fold ${meta.name}`, 'aria-expanded': 'true' }, UI.icon('caret_down', 16));
+      // the group closes and opens in height (UI.motion.grow); folding flips its state at the end of the close
+      fold.addEventListener('click', () => {
+        const open = !sec.hasAttribute('data-folded'), from = sec.offsetHeight;
+        fold.setAttribute('aria-expanded', String(!open));
+        if (UI.motion.kb()) sec.toggleAttribute('data-folded', open);   // keys are instant
+        else if (open) UI.motion.grow(sec, from, { to: head.offsetHeight, then: () => sec.setAttribute('data-folded', '') });
+        else { sec.removeAttribute('data-folded'); UI.motion.grow(sec, from); }
+      });
       act.append(fold);
       head.append(act);
       if (meta.tell) head.append(h('span', { class: 'tell', text: meta.tell }));
@@ -793,38 +973,49 @@
       box.append(sec);
     });
   }
+  // a Redo row, trimmed: the title (New as an unread dot before it), one status badge (Blind spot, else Relapsed, Stuck,
+  // Half fixed), and three facts: tier bars, the last date, the points as a figure on the right. Everything else (skill,
+  // format, times missed, source, your pick, kind, cause, other types) is in the pane head and in the row's tooltip and label
   function redoRow(r, i, g) {
     const { row, btn } = rowShell('redo', r, i, { label: r.label });
     const of = (r.clean || 0) + (r.owed || 0) || (r.kind === 'unsure' ? 1 : 2);
     const pips = UI.pips ? UI.pips(r.owed, of) : null;
     if (pips) { pips.setAttribute('aria-label', `${of - r.owed} of ${of} correct answers`); pips.title = `${of - r.owed} of ${of} correct answers`; }
     const status = r.stuck ? 'stuck' : r.status;
-    const tags = [
-      r.new ? ['New', 'new'] : null,
-      r.blind ? [r.blind_assumed ? 'Sure ✕ (assumed)' : 'Sure ✕', 'ink'] : null,
-      status === 'stuck' ? ['Stuck', 'ink'] : status === 'relapsed' ? [`Relapsed${r.relapses > 1 ? ' ×' + r.relapses : ''}`, 'ink'] : status === 'half' ? ['Half fixed', 'amber'] : null,
-      r.kind === 'gridin' ? ['Grid-in'] : r.kind === 'slip' ? ['Slip'] : r.kind === 'unsure' ? ['Unsure'] : null,
-      r.kind === 'misconception' && r.cause && r.cause !== 'trap' && CAUSES.find(c => c[0] === r.cause) ? [CAUSES.find(c => c[0] === r.cause)[1], 'soft'] : null,
-      r.source === 'outside' ? ['Logged by you'] : null,
-      r.elsewhere && r.elsewhere.length ? [`+${r.elsewhere.length} elsewhere`, 'soft'] : null,
-    ];
-    const bits = [
+    const badge = r.blind ? [r.blind_assumed ? 'Blind spot (assumed)' : 'Blind spot', 'ink']
+      : status === 'relapsed' ? [`Relapsed${r.relapses > 1 ? ' ×' + r.relapses : ''}`, 'ink'] : status === 'stuck' ? ['Stuck', 'ink'] : null;   // half fixed: the pips say it
+    const facts = [
       g !== 'topic' && g !== 'domain' && r.domain ? dshort(r.domain) : null,
       r.skill && r.skill !== r.label ? r.skill : null,
-      tierBit(r.difficulty),
-      r.fmt ? (r.fmt === 'spr' ? 'Grid-in' : 'MC') : null,
+      r.fmt && !rw() ? (r.fmt === 'spr' ? 'Grid-in' : 'MC') : null,
       r.hits > 1 ? `missed ${r.hits}×` : null,
-      r.last ? `last ${day(r.last)}` : null,
-      r.source && r.source !== 'outside' ? srcWord(r.source) : null,
+      r.source === 'outside' ? 'logged by you' : r.source ? srcWord(r.source) : null,
       r.given_label ? `picked ${r.given_label}` : null,
-      r.dodged_elsewhere ? `dodged in ${plural(r.dodged_elsewhere, 'other type')}` : null,
-      r.pts ? h('span', { class: 'pts', text: `≈ ${fmtN(r.pts)} pts` }) : null,
+      r.dodged_elsewhere ? `avoided in ${plural(r.dodged_elsewhere, 'other type')}` : null,
+      r.kind === 'gridin' ? 'grid-in entry' : r.kind === 'slip' ? 'slip' : r.kind === 'unsure' ? 'unsure' : null,
+      r.kind === 'misconception' && r.cause && r.cause !== 'trap' && CAUSES.find(c => c[0] === r.cause) ? `cause: ${CAUSES.find(c => c[0] === r.cause)[1].toLowerCase()}` : null,
+      r.elsewhere && r.elsewhere.length ? `a trap in ${plural(r.elsewhere.length, 'other type')} too` : null,
+    ].filter(Boolean);
+    const bits = [
+      // a flat or habit list has no topic head over the row: its topic stays in sight
+      g !== 'topic' && g !== 'domain' && r.topic ? tname(r.topic) || null : null,
+      tierBit(r.difficulty),
+      r.last ? `last ${day(r.last)}` : null,
+      r.pts ? h('span', { class: 'pts', text: `≈ ${fmtN(r.pts)} ${ptsW(r.pts)}` }) : null,
     ];
-    btn.append(h('span', { class: 'lead' }, pips), h('div', {}, mtext(h('div', { class: 'l1' }), r.label || ''), l2(bits), r.note ? h('div', { class: 'l3 note', text: r.note }) : null), tagsEl(tags));
+    const meta = l2(bits);
+    meta.classList.add('trim');
+    const title = mtext(h('div', { class: 'l1' }), r.label || '');
+    if (r.new) title.prepend(h('span', { class: 'dot', 'aria-hidden': 'true' }));
+    btn.title = facts.join(' · ');
+    btn.setAttribute('aria-label', [`${r.new ? 'New: ' : ''}${r.label || ''}`, badge ? badge[0] : status === 'half' ? 'Half fixed' : null, `${of - r.owed} of ${of} correct answers`, TIER[r.difficulty],
+      r.last && `last ${day(r.last)}`, r.pts && `about ${fmtN(r.pts)} points`, ...facts, r._saved && 'saved', r.note && `your note: ${r.note}`].filter(Boolean).join(', '));
+    btn.append(h('span', { class: 'lead' }, pips), h('div', {}, title, meta, r.note ? h('div', { class: 'l3 note', text: r.note }) : null), tagsEl([badge, r._saved ? savedMark() : null]));
     if (r.stuck) {
       const lb = UI.verb ? UI.verb('learn', { sm: true }) : h('button', { type: 'button', class: 'btn sm', text: 'Learn this type' });
+      lb.dataset.menu = 'Learn this type';
       lb.addEventListener('click', () => start({ source: 'learn', templates: [r.template], example: true, count: 3 }, lb));
-      row.append(h('div', { class: 'ract' }, lb));
+      rowActs(row, r.label, [lb]);
     }
     return row;
   }
@@ -845,7 +1036,8 @@
   function paintMarked(box, L) {
     const by = new Map();
     L.items.forEach((r, i) => { const k = r.session || 'none'; if (!by.has(k)) by.set(k, []); by.get(k).push([r, i]); });
-    for (const [sid, members] of by) {
+    for (const [sid, all] of by) {
+      const members = [...all.filter(([r]) => r._saved), ...all.filter(([r]) => !r._saved)];   // saved first in each sitting
       const r0 = members[0][0];
       const sec = h('section', { class: 'rh-group', 'aria-label': `${srcWord(r0.source)} · ${day(r0.session_at)}` });
       const vis = members.filter(([r]) => r.visits !== undefined && r.visits !== null && r.session_kind !== 'drill');
@@ -858,12 +1050,12 @@
       members.forEach(([r, i]) => {
         const { row, btn } = rowShell('marked', r, i, { label: r.stem });
         const st = resultOf(r);
-        const bits = [r.skill, tierBit(r.difficulty), r.fmt === 'spr' ? 'Grid-in' : 'MC', r.ms ? `${mmss(r.ms)}${r.budget_ms ? ` · budget ${mmss(r.budget_ms)}` : ''}` : null, pickText(r)];
+        const bits = [r.skill, tierBit(r.difficulty), rw() ? null : r.fmt === 'spr' ? 'Grid-in' : 'MC', r.ms ? `${mmss(r.ms)}${r.budget_ms ? ` · budget ${mmss(r.budget_ms)}` : ''}` : null, pickText(r)];
         const hist = r.session_kind && r.session_kind !== 'drill' && r.flagged_at_ms !== undefined ? [
           r.flagged_at_ms ? `flagged at ${mmss(r.flagged_at_ms)}` : null, r.visits > 1 ? `came back ${r.visits - 1}×` : null, r.changes ? `changed ${r.changes}×` : null] : [];
         btn.append(h('span', { class: 'lead' }, UI.cell ? UI.cell(st, r.n, { static: true, size: 'sm', flag: true }) : null),
           h('div', {}, mtext(h('div', { class: 'l1 stem' }), r.stem || ''), l2(bits), hist.some(Boolean) ? h('div', { class: 'l3', text: hist.filter(Boolean).join(' · ') }) : null),
-          tagsEl([r.during === false ? ['flagged later', 'soft'] : null, r.visits === 1 && r.session_kind !== 'drill' ? ['Never came back', 'ink'] : null]));
+          tagsEl([r.during === false ? ['flagged later', 'soft'] : null, r.visits === 1 && r.session_kind !== 'drill' ? ['Never came back', 'ink'] : null, r._saved ? savedMark() : null]));
         sec.append(row);
       });
       box.append(sec);
@@ -876,18 +1068,18 @@
     L.items.forEach((r, i) => {
       const { row, btn } = rowShell('saved', r, i, { label: r.stem, cls: 'tall' });
       const st = r.answered === false ? 'unanswered' : resultOf(r);
-      const sched = S.prefs.saved_spaced === false ? null : r.learned ? 'Learned ✓' : r.due ? 'due today' : r.next ? `next ${day(r.next)}` : null;
-      const bits = [(TOPIC(r.topic) || {}).short || r.name, r.skill, tierBit(r.difficulty), r.fmt === 'spr' ? 'Grid-in' : 'MC', r.saved_at || r.at ? `saved ${day(r.saved_at || r.at)}` : null,
+      const sched = S.prefs.saved_spaced === false ? null : r.learned ? 'Learned' : r.due ? 'due today' : r.next ? `next ${day(r.next)}` : null;
+      const bits = [tname(r.topic) || r.name, r.skill, tierBit(r.difficulty), rw() ? null : r.fmt === 'spr' ? 'Grid-in' : 'MC', r.saved_at || r.at ? `saved ${day(r.saved_at || r.at)}` : null,
         r.answered === false ? 'not answered' : r.given_label ? `answered: ${r.correct ? 'Right' : 'Wrong'} (picked ${r.given_label})` : null,
         r.tries > 1 ? `${r.tries} tries` : null, sched, S.prefs.saved_spaced !== false && !r.learned && r.box !== undefined ? `box ${(r.box || 0) + 1} of 4` : null];
       btn.append(h('span', { class: 'lead' }, UI.cell ? UI.cell(st, '', { static: true, size: 'sm', saved: true }) : null),
         h('div', {}, mtext(h('div', { class: 'l1 stem' }), r.stem || ''), l2(bits), r.note ? h('div', { class: 'l3 note', text: r.note }) : null),
-        tagsEl([r.why === 'trick' ? ['Nice trick'] : r.why === 'hard' ? ['Hard'] : null, r.due && !r.learned ? ['Due', 'amber'] : null]));
+        tagsEl([r.why === 'trick' ? ['Nice trick'] : r.why === 'hard' ? ['Hard'] : null]));
       const noteB = h('button', { type: 'button', class: 'btn sm', text: r.note ? 'Edit note' : 'Note' });
       noteB.addEventListener('click', () => noteEditor(row, r, noteB));
       const unsave = h('button', { type: 'button', class: 'quiet', text: 'Unsave' });
       unsave.addEventListener('click', () => unsaveRows([r]));
-      row.append(h('div', { class: 'ract' }, noteB, unsave));
+      rowActs(row, r.stem, [noteB, unsave]);
       ol.append(row);
     });
     box.append(ol);
@@ -918,7 +1110,8 @@
     const before = L.items;
     L.items = L.items.filter(r => !keys.has(keyOf('saved', r)));
     L.total = Math.max(0, L.total - rows.length);
-    paintList(); paintListHead(); paintBar(); syncPane();
+    glideRows(paintList); paintListHead(); paintBar(); syncPane();   // the rows that left close their gap
+    savedP = null;
     try {
       await Promise.all(rows.map(r => UI.api('/saved', { method: 'POST', body: { template: r.template, seed: r.seed, on: false } })));
       rows.forEach(r => S.cache.delete(`${r.template}:${r.seed}`));
@@ -971,7 +1164,7 @@
     const { row, btn } = rowShell('history', r, i, { label: r.skill, cls: 'compact' });
     const st = resultOf(r);
     const over = r.ms && r.budget_ms && r.ms > r.budget_ms;
-    const time = r.ms ? h('span', { class: over ? 'over' : null, text: `${mmss(r.ms)}${r.budget_ms ? ` · budget ${mmss(r.budget_ms)}${over ? ' ▲' : ''}` : ''}` }) : null;
+    const time = r.ms ? h('span', { class: over ? 'over' : null, text: `${mmss(r.ms)}${r.budget_ms ? ` · budget ${mmss(r.budget_ms)}${over ? ', over' : ''}` : ''}` }) : null;
     const t = TOPIC(r.topic);
     const bits = [r.domain ? dshort(r.domain) : null, tierBit(r.difficulty), srcWord(r.source),
       r.correct ? (r.given_label ? `picked ${r.given_label}` : null) : r.given_label || r.answer ? `${r.given_label || '–'} → ${r.answer || ''}`.replace(/ → $/, '') : null, time,
@@ -982,21 +1175,23 @@
       tagsEl([r.result === 'mixed' ? ['Mixed'] : null, r.result === 'slow' ? ['Slow right'] : null, r.result === 'rushed' ? ['Rushed', 'ink'] : null,
         r.repeat ? ['Repeat', 'soft'] : null, r.void ? ['Discarded', 'soft'] : null]));
     if (r.tries && r.tries.length > 1) {
-      const tg = h('button', { type: 'button', class: 'quiet', 'aria-expanded': 'false', text: `▸ ${r.tries.length} tries` });
+      const tg = h('button', { type: 'button', class: 'quiet', 'aria-expanded': 'false', text: `${r.tries.length} tries` });
       const list = h('div', { class: 'rh-tries', hidden: true }, ...r.tries.map((x, j) => h('span', { text: `#${j + 1} · ${x.given_label || x.given || '–'} · ${mmss(x.ms)} · ${x.correct ? 'Right' : 'Wrong'}${x.reason ? ' · ' + x.reason : ''}` })));
-      tg.addEventListener('click', () => { const o = list.hidden; list.hidden = !o; tg.setAttribute('aria-expanded', String(o)); tg.textContent = `${o ? '▾' : '▸'} ${r.tries.length} tries`; });
-      row.append(h('div', { class: 'ract' }, tg), list);
+      tg.addEventListener('click', () => { const o = list.hidden; list.hidden = !o; tg.setAttribute('aria-expanded', String(o)); tg.textContent = o ? `Hide ${r.tries.length} tries` : `${r.tries.length} tries`; });
+      rowActs(row, r.skill, [tg]);
+      row.append(list);
     }
     return row;
   }
   function sittingCard(s, rows) {
     const card = h('section', { class: 'rh-sit', 'aria-label': `${srcWord(s.source || s.kind)} · ${day(s.at)}` });
     if (s.void) card.dataset.void = '';
-    const topics = (s.topics || []).map(t => (TOPIC(t) || {}).short || t);
+    const hd = h('div', { class: 'rh-sit-h' });
+    const topics = (s.topics || []).map(tname);
     const blanks = (s.blanks || []).length;
     const misses = (s.cells || []).filter(c => ['wrong', 'incorrect', 'rushed'].includes(c.result)).length;
     const asked = s.asked || (s.cells || []).length;
-    card.append(h('p', { class: 't' }, `${srcWord(s.source || s.kind)}${topics.length ? ' · ' + topics.slice(0, 3).join(', ') + (topics.length > 3 ? ` +${topics.length - 3}` : '') : ''}`,
+    hd.append(h('p', { class: 't' }, `${srcWord(s.source || s.kind)}${topics.length ? ' · ' + topics.slice(0, 3).join(', ') + (topics.length > 3 ? ` +${topics.length - 3}` : '') : ''}`,
       h('span', { class: 'meta', text: [day(s.at), `${fmtN(s.right || 0)} / ${fmtN(asked)}`, s.minutes ? (UI.dur ? UI.dur(Math.round(s.minutes)) : `${Math.round(s.minutes)} min`) : null, blanks ? `${blanks} blank` : null, s.void ? 'discarded' : null].filter(Boolean).join(' · ') })));
     if ((s.cells || []).length && UI.cell) {
       const cells = h('div', { class: 'cells', role: 'group', 'aria-label': 'Every question in this sitting' });
@@ -1005,49 +1200,50 @@
         const b = UI.cell(st, c.n + 1 || c.n, { size: 'sm', flag: c.flagged || null, onClick: () => openSittingCell(s, c) });
         cells.append(b);
       });
-      card.append(cells);
+      hd.append(cells);
     }
     if (!s.void) {
       const acts = h('div', { class: 'acts' });
       const types = new Set((s.cells || []).map(c => c.template).filter(Boolean)).size || asked;
-      const re = h('button', { type: 'button', class: 'pill sm', text: `Rematch · same ${fmtN(types)} types, new numbers · Then → Now` });
+      const re = h('button', { type: 'button', class: 'btn sm', title: `Same ${plural(types, 'type')}, ${rw() ? 'new passages' : 'new numbers'}`, text: 'Rematch' });
       re.addEventListener('click', () => start({ rematch: s.session }, re));
       acts.append(re);
       if (misses || blanks) {
-        const w = h('button', { type: 'button', class: 'btn sm', text: `Walk these misses · name each, then prove it · ~${Math.max(1, Math.round((misses + blanks) * 1.5))} min` });
+        const w = h('button', { type: 'button', class: 'btn sm', title: `Name each, then prove it · about ${Math.max(1, Math.round((misses + blanks) * 1.5))} min`, text: `Walk ${plural(misses + blanks, 'miss', 'misses')}` });
         w.addEventListener('click', () => walk({ session: s.session }, w));
         acts.append(w);
       }
       if (misses) {
-        const f = h('button', { type: 'button', class: 'btn sm', text: `Fix ${fmtN(misses)} · Then → Now` });
+        const f = h('button', { type: 'button', class: 'btn sm', title: 'Until each is fixed', text: `Fix ${fmtN(misses)}` });
         f.addEventListener('click', () => start({ rematch: s.session, scope: 'misses', until_fixed: true }, f));
-        const fm = h('button', { type: 'button', class: 'btn sm icon', 'aria-label': 'More ways to fix', 'aria-haspopup': 'menu', text: '▾' });
+        const fm = h('button', { type: 'button', class: 'btn sm icon', 'aria-label': 'More ways to fix', 'aria-haspopup': 'menu' }, UI.icon('caret_down', 16));
         fm.addEventListener('click', () => UI.menu(fm, [{ label: 'Fix the misses + slow rights', onClick: () => start({ rematch: s.session, scope: 'weak' }) }], { label: 'Fix' }));
-        acts.append(h('span', { class: 'rh-split' }, f, fm));
+        acts.append(h('span', { class: 'split-btn' }, f, fm));
       }
       if (blanks) {
-        const b = h('button', { type: 'button', class: 'btn sm', text: `Blanks · ${blanks} · fresh twins` });
+        const b = h('button', { type: 'button', class: 'btn sm', title: 'New versions of the ones left blank', text: `Redo ${plural(blanks, 'blank')}` });
         b.addEventListener('click', () => start({ rematch: s.session, scope: 'blanks' }, b));
         acts.append(b);
       }
       const href = sittingHref(s.kind, s.session);
       if (href) acts.append(h('a', { class: 'quiet', href, text: s.kind === 'drill' ? 'Summary' : 'Report' }));
-      const more = h('button', { type: 'button', class: 'btn sm icon', 'aria-label': 'More for this sitting', 'aria-haspopup': 'menu', text: '⋯' });
+      const more = h('button', { type: 'button', class: 'ibtn', 'aria-label': 'More for this sitting', 'aria-haspopup': 'menu' }, UI.icon('more', 18));
       more.addEventListener('click', () => UI.menu(more, [
-        { label: 'Again, exactly (tests memory)', onClick: () => start({ retake: s.session }) },
+        { label: 'Same questions again', sub: 'Tests memory', onClick: () => start({ retake: s.session }) },
         { separator: true },
         { label: 'Discard this sitting’s answers…', onClick: () => discard(s) },
       ], { label: 'More' }));
       acts.append(more);
-      card.append(acts);
+      hd.append(acts);
     } else {
       const r = h('button', { type: 'button', class: 'btn sm', text: 'Restore' });
       r.addEventListener('click', () => restore(s, r));
-      card.append(h('div', { class: 'acts' }, h('span', { class: 'meta', text: 'Not counted' }), r));
+      hd.append(h('div', { class: 'acts' }, h('span', { class: 'meta', text: 'Not counted' }), r));
     }
     if ((s.children || []).length) {
-      card.append(h('p', { class: 'kids', text: `Rematched ×${s.children.length}${s.best !== undefined && s.best !== null ? ` · best ${fmtN(s.best)} / ${fmtN(asked)}` : ''}` }));
+      hd.append(h('p', { class: 'kids', text: `Rematched ×${s.children.length}${s.best !== undefined && s.best !== null ? ` · best ${fmtN(s.best)} / ${fmtN(asked)}` : ''}` }));
     }
+    card.append(hd);
     if (rows.length) card.append(h('div', { class: 'rh-list' }, ...rows));
     return card;
   }
@@ -1083,35 +1279,37 @@
     if (st === 'dismissed') return ['Dismissed', 'soft'];
     if (st === 'due') return ['Check due', 'amber'];
     if (!held) return [`Not checked yet${next ? ' · first check ' + next : ''}`, 'amber'];
-    if (held >= 3) return ['Held all 3 ✓'];
-    return [`Held ${held === 1 ? '1 check' : held} ✓${next ? ' · next ' + next : ''}`];
+    if (held >= 3) return ['Held all 3'];
+    return [`Held ${held === 1 ? '1 check' : held}${next ? ' · next ' + next : ''}`];
   }
   function paintFixed(box, L) {
     const ol = h('div', { class: 'rh-list' });
     L.items.forEach((r, i) => {
       const { row, btn } = rowShell('fixed', r, i, { label: r.label });
+      // the badge names the state; its date ("first check Oct 22", "next Oct 30") joins the meta line (a long badge was clipped in the list column)
       const [stText, stCls] = checkState(r);
+      const [stWord, ...stWhen] = stText.split(' · ');
       const proven = new Set(r.tiers_proven || []);
       const avail = (r.tiers_available || []).slice().sort((a, b) => TIERS.indexOf(a) - TIERS.indexOf(b));
-      const provenEl = avail.length > 1 ? h('span', { title: 'Proven at', 'aria-label': `Proven at ${avail.filter(t => proven.has(t)).map(t => TIER[t]).join(', ') || 'no level yet'}` },
-        ...avail.map(t => h('span', { style: 'margin-right:8px' }, UI.dbars ? UI.dbars(t, { bare: true }) : TIER[t], proven.has(t) ? ' ✓' : ' ○'))) : null;
-      const bits = [(TOPIC(r.topic) || {}).short || r.name, r.closed ? `fixed ${day(r.closed)}` : null, r.days_to_fix !== undefined && r.days_to_fix !== null ? `took ${plural(r.days_to_fix, 'day')}` : null,
+      const provenEl = avail.length > 1 ? h('span', { class: 'proven', title: 'Proven at', 'aria-label': `Proven at ${avail.filter(t => proven.has(t)).map(t => TIER[t]).join(', ') || 'no level yet'}` },
+        ...avail.map(t => h('span', {}, UI.dbars ? UI.dbars(t, { bare: true }) : TIER[t], proven.has(t) ? ' ✓' : ' ○'))) : null;
+      const bits = [tname(r.topic) || r.name, r.closed ? `fixed ${day(r.closed)}` : null, r.days_to_fix !== undefined && r.days_to_fix !== null ? `took ${plural(r.days_to_fix, 'day')}` : null, stWhen.join(' · ') || null,
         r.hits > 1 ? `missed ${r.hits}×` : null, r.relapses ? `relapsed ${r.relapses}×` : null, provenEl];
-      btn.append(h('span', { class: 'lead', 'aria-hidden': 'true', text: fixedState(r) === 'dismissed' ? '–' : '✓', style: 'font: 700 15px var(--font)' }),
-        h('div', {}, mtext(h('div', { class: 'l1' }), r.label || ''), l2(bits)), tagsEl([[stText, stCls]]));
-      const acts = h('div', { class: 'ract' });
+      btn.append(h('span', { class: 'lead', 'aria-hidden': 'true' }, h('span', { class: 'tick' }, fixedState(r) === 'dismissed' ? '–' : UI.icon('check', 18))),
+        h('div', {}, mtext(h('div', { class: 'l1' }), r.label || ''), l2(bits)), tagsEl([[stWord, stCls], r._saved ? savedMark() : null]));
+      const acts = [];
       const up = avail.find(t => !proven.has(t) && TIERS.indexOf(t) > Math.max(...[...proven].map(x => TIERS.indexOf(x)), -1));
       if (up && fixedState(r) !== 'dismissed') {
         const b = h('button', { type: 'button', class: 'btn sm', text: `Prove it at ${TIER[up]}` });
         b.addEventListener('click', () => proveIt(r, up));
-        acts.append(b);
+        acts.push(b);
       }
       if (fixedState(r) === 'dismissed') {
         const b = h('button', { type: 'button', class: 'btn sm', text: 'Reopen' });
         b.addEventListener('click', async () => { b.setAttribute('aria-busy', 'true'); try { await UI.api('/mistakes/reopen', { method: 'POST', body: { id: r.id } }); toast('Back in Redo'); refreshSoon(true); } catch (e) { b.removeAttribute('aria-busy'); toast(reasonOf(e)); } });
-        acts.append(b);
+        acts.push(b);
       }
-      if (acts.children.length) row.append(acts);
+      rowActs(row, r.label, acts);
       ol.append(row);
     });
     box.append(ol);
@@ -1123,24 +1321,46 @@
   }
 
   /* ------------------------------------------------------------ tab heads (each part fails on its own, rule 8) */
+  // a tab's insights: one closed disclosure under the tools row, opened by the Insights button at the row's end (its title
+  // and figures are the button's tooltip); the open state is remembered per tab; both hide while it is empty (index.html)
+  const INS = 'satf.review.ins';
+  function insights(title) {
+    const tab = S.tab;
+    const body = h('div', { class: 'card line rh-ins-b' });
+    const d = h('details', { class: 'fold rh-ins', id: `rh-ins-${tab}`, 'aria-label': title }, h('summary', { class: 'fold-s', text: title }), body);
+    const btn = h('button', { type: 'button', class: 'btn', 'aria-controls': d.id, 'aria-expanded': 'false', 'aria-label': 'Insights', title }, UI.icon('results', 18), h('span', { text: 'Insights' }));
+    btn.addEventListener('click', () => { d.open = !d.open; });
+    d.addEventListener('toggle', () => {
+      btn.setAttribute('aria-expanded', String(d.open));
+      const m = ls.get(INS, {}) || {}; m[tab] = d.open; ls.set(INS, m);
+    });
+    if ((ls.get(INS, {}) || {})[tab]) { d.open = true; btn.setAttribute('aria-expanded', 'true'); }
+    $('insights').replaceChildren(d);
+    $('insbtn').replaceChildren(btn);
+    // the figures a summary line used to show ("Trap 5, Slip 3") now ride on the button's tooltip
+    const meta = { set textContent(v) { btn.title = v ? `${title} · ${v}` : title; } };
+    return { d, body, meta };
+  }
+  // one titled part of an insights card (hairlines between parts); fill() returning false drops it
   function part(host, title, fill) {
-    const card = h('section', { class: 'card rh-card', 'aria-label': title || null });
-    if (title) card.append(h('div', { class: 'card-head' }, h('h2', { class: 'rh-k', text: title })));
+    const sec = h('section', { class: 'rh-part', 'aria-label': title || null });
+    if (title) sec.append(h('h2', { class: 'rh-k', text: title }));
     const body = h('div');
-    card.append(body);
-    host.append(card);
+    sec.append(body);
+    host.append(sec);
     const run = async () => {
       body.replaceChildren();
       if (UI.skel) UI.skel(body, 'lines:2');
-      try { const keep = await fill(body, card); if (keep === false) card.remove(); }
+      try { const keep = await fill(body, sec); if (keep === false) sec.remove(); }
       catch (e) { body.replaceChildren(); UI.cardError(body, run, 'This part didn’t load.'); }
     };
     run();
-    return card;
+    return sec;
   }
   function paintHead() {
     const host = $('tabhead');
     host.replaceChildren();
+    $('insights').replaceChildren(); $('insbtn').replaceChildren();
     const tab = S.tab;
     $('main').classList.toggle('rh-rules', tab === 'saved' && S.savedView === 'rules');
     if (tab === 'due') dueHead(host);
@@ -1155,7 +1375,7 @@
     if (tab === 'fixed') paintHead();
   }
 
-  // Due: today's card (V1)
+  // Due: exam week (V19)
   function dueHead(host) {
     const d = S.due;
     if (!d) { if (S.dueErr) UI.cardError(host, () => loadDue().then(() => { paintHead(); afterDue(); }), 'Today’s review didn’t load.'); return; }
@@ -1164,13 +1384,15 @@
     if (soon) examCard(host, exam);
   }
 
-  // Redo: named rate, why you lose points, habits, worth the most (V2, V4, V6, V7)
+  // Redo: named rate, why you lose points, habits, worth the most (V2, V4, V6, V7), folded into Insights
   function redoHead(host) {
     const c = S.counts || {};
     if (!c.open) return;
-    if (c.diag_n >= 5) host.append(h('p', { class: 'rh-line' }, `You named your own mistake ${fmtN(c.diag_right)} of ${fmtN(c.diag_n)} times (${Math.round(100 * c.diag_right / c.diag_n)}%)`));
-    part(host, 'Why you lose points · last 30 days', async body => {
-      const d = await UI.api('/review/redo?limit=100&sort=worth', { quiet: true });
+    const ins = insights(rw() ? 'Why you lose points, worth the most' : 'Why you lose points, worth the most, habits');
+    if (c.diag_n >= 5) ins.body.append(h('p', { class: 'rh-part rh-big' }, `You named your own mistake ${fmtN(c.diag_right)} of ${fmtN(c.diag_n)} times`));
+    // every open mistake (the first 100), not a time window: the server sends no causes for Redo
+    part(ins.body, 'Why you lose points · open mistakes', async body => {
+      const d = await UI.api(sub('/review/redo?limit=100&sort=worth'), { quiet: true });
       let causes = d.causes || null;
       if (!causes && d.total <= (d.items || []).length) {
         causes = {};
@@ -1180,16 +1402,18 @@
       // one cause alone says nothing the Redo count doesn't: the bar shows once there are two
       if (causes && Object.keys(causes).filter(k => causes[k]).length > 1 && UI.stackBar) {
         const segs = CAUSES.filter(([k]) => causes[k]).map(([k, l]) => ({ key: k, label: l, value: causes[k] }));
-        const fixRow = h('div', { class: 'rh-row2', style: 'margin-top:12px' });
+        ins.meta.textContent = segs.slice().sort((a, b) => b.value - a.value).slice(0, 3).map(x => `${x.label} ${fmtN(x.value)}`).join(', ');
+        const fixRow = h('div', { class: 'rh-row2' });
         UI.stackBar(body, segs, { largest: true, legend: false, noun: 'misses', label: 'Why you lose points', onPick: seg => { if (FB) FB.set('cause', seg.key); causeFix(fixRow, seg.key); } });
         body.append(fixRow);
         const cur = currentFilterValues().cause;
         if (cur) causeFix(fixRow, cur);
       } else body.closest('section').remove();
-      worth(host, d);
+      worth(ins.body, d);
     });
-    part(host, 'Habits', async body => {
-      const d = await UI.api('/review/redo?group=habit&limit=1', { quiet: true });
+    if (rw()) return;   // habits and the Trap gauntlet are Math's (server/habits.py)
+    part(ins.body, 'Habits', async body => {
+      const d = await UI.api(sub('/review/redo?group=habit&limit=1'), { quiet: true });
       const gs = (d.groups || []).filter(g => g.key !== 'other' && g.count >= 2).sort((a, b) => (b.pts || 0) - (a.pts || 0) || b.count - a.count).slice(0, 3);
       if (!gs.length) return false;
       body.replaceChildren();
@@ -1197,12 +1421,12 @@
       gs.forEach(g => {
         const b = h('button', { type: 'button', class: 'btn sm', text: 'Drill this habit · 8' });
         b.addEventListener('click', () => start({ source: 'habit', habit: g.key, count: 8 }, b));
-        list.append(h('div', { class: 'rh-row2' }, h('b', { text: g.name }), g.tell ? h('i', { class: 'meta', style: 'font-family: var(--font)', text: g.tell }) : null,
-          h('span', { class: 'meta', text: [plural(g.count, 'miss', 'misses'), g.pts ? `≈ ${fmtN(g.pts)} pts` : null].filter(Boolean).join(' · ') }), b));
+        list.append(h('div', { class: 'rh-row2' }, h('b', { text: g.name }), g.tell ? h('i', { class: 'rh-foot', text: g.tell }) : null,
+          h('span', { class: 'rh-foot', text: [plural(g.count, 'miss', 'misses'), g.pts ? `≈ ${fmtN(g.pts)} ${ptsW(g.pts)}` : null].filter(Boolean).join(' · ') }), b));
       });
       const gaunt = h('button', { type: 'button', class: 'btn sm', text: 'Trap gauntlet · 10' });
       gaunt.addEventListener('click', () => start({ source: 'gauntlet', count: 10 }, gaunt));
-      body.append(list, h('div', { class: 'rh-row2', style: 'margin-top:10px' }, gaunt));
+      body.append(list, h('div', { class: 'rh-row2' }, gaunt));
     });
   }
   function causeFix(host, k) {
@@ -1210,11 +1434,12 @@
     const b = (label, body) => { const x = h('button', { type: 'button', class: 'btn sm', text: label }); x.addEventListener('click', () => start(body, x)); return x; };
     const ids = selRows('redo').filter(r => (r.cause || 'trap') === k).map(r => r.id);
     const fixes = {
-      trap: [b('Fix these', redoBody({ ids: ids.length ? ids : null })), S.lists.redo && S.lists.redo.items[0] ? spotBtn() : null],
-      slip: [b('Careful set · 8', { pool: 'redo', ids: ids.length ? ids : null, count: 8, feedback: 'instant', source: 'mistakes' }), h('span', { class: 'meta', text: 'You know these. Reread the last line before Check.' })],
+      // Spot the trap needs a named trap: R&W misses are named by their type only
+      trap: [b('Fix these', redoBody({ ids: ids.length ? ids : null })), S.lists.redo && S.lists.redo.items[0] && !rw() ? spotBtn() : null],
+      slip: [b('Careful set · 8', { pool: 'redo', ids: ids.length ? ids : null, count: 8, feedback: 'instant', source: 'mistakes' }), h('span', { class: 'rh-foot', text: 'You know these. Reread the last line before Check.' })],
       misread: [b('Read the ask', { pool: 'redo', ids: ids.length ? ids : null, count: 8, feedback: 'instant', source: 'mistakes' })],
       clock: [b('Speed drill · 8', { pool: 'redo', ids: ids.length ? ids : null, count: 8, timing: 'pace', source: 'sprint' })],
-      entry: [b('Grid-in entry · 8', { formats: ['spr'], count: 8, source: 'mistakes' })],
+      entry: rw() ? [] : [b('Grid-in entry · 8', { formats: ['spr'], count: 8, source: 'mistakes' })],
       gap: [b('Learn this type', { source: 'learn', templates: [...new Set(selRows('redo').filter(r => (r.cause || 'trap') === k).map(r => r.template))].slice(0, 3), example: true, count: 3 })],
     }[k] || [];
     fixes.filter(Boolean).forEach(x => host.append(x));
@@ -1228,38 +1453,41 @@
     const c = S.counts || {};
     const top = (d.items || []).filter(x => x.pts).slice(0, 5);
     if ((c.open || 0) < 5 || top.length < 2) return;
-    const card = h('section', { class: 'card rh-card', 'aria-label': 'Worth the most' }, h('div', { class: 'card-head' }, h('h2', { class: 'rh-k', text: 'Worth the most' })));
-    const chips = h('div', { class: 'rh-chips' });
+    const sec = h('section', { class: 'rh-part', 'aria-label': 'Worth the most' }, h('h2', { class: 'rh-k', text: 'Worth the most' }));
+    const chips = h('div', { class: 'rh-chips rh-worth' });
     top.forEach(x => {
-      const b = h('button', { type: 'button', class: 'btn sm' }, h('span', { class: 'l', text: (x.label || '').length > 40 ? x.label.slice(0, 39) + '…' : x.label }), h('span', { class: 'pts', text: `≈ ${fmtN(x.pts)} pts` }));
+      const b = h('button', { type: 'button', class: 'btn sm' }, h('span', { class: 'l', text: (x.label || '').length > 40 ? x.label.slice(0, 39) + '…' : x.label }), h('span', { class: 'n', text: `≈ ${fmtN(x.pts)} ${ptsW(x.pts)}` }));
       b.addEventListener('click', () => { const i = S.lists.redo ? S.lists.redo.items.findIndex(y => y.id === x.id) : -1; if (i >= 0) openRow(i); else openSingle({ template: x.template, seed: x.seed, trap: x }); });
       chips.append(b);
     });
     const sum = top.reduce((s, x) => s + (x.pts || 0), 0);
-    const go = h('button', { type: 'button', class: 'pill sm', text: `Fix ${top.length} · about +${fmtN(sum)} pts` });
+    const go = h('button', { type: 'button', class: 'btn sm', text: `Fix ${top.length} · about +${fmtN(sum)} ${ptsW(sum)}` });
     go.addEventListener('click', () => start(redoBody({ ids: top.map(x => x.id) }), go));
-    chips.append(go);
-    card.append(chips);
-    host.append(card);
+    sec.append(chips, h('div', { class: 'rh-row2' }, go));
+    host.append(sec);
   }
 
-  // Marked: your instincts (V5)
+  // Marked: your instincts (V5), folded into Insights
   function markedHead(host) {
     const c = S.counts || {};
     if (!c.answers) return;
-    const card = part(host, 'Your instincts', async body => {
+    const ins = insights('Your instincts');
+    const seg = UI.seg(null, [{ value: '30', label: '30 days' }, { value: '90', label: '90 days' }, { value: 'all', label: 'All' }], { value: S.sinceCal, label: 'Since', onChange: v => { S.sinceCal = v; paintHead(); } });
+    ins.body.append(h('div', { class: 'rh-part rh-row2' }, seg.el));
+    part(ins.body, null, async body => {
       const since = S.sinceCal === 'all' ? '' : new Date(Date.now() - (+S.sinceCal) * 864e5).toISOString().slice(0, 10);
-      const d = await UI.api(`/review/calibration${since ? `?since=${since}` : ''}`, { quiet: true });
+      const d = await UI.api(sub(`/review/calibration${since ? `?since=${since}` : ''}`), { quiet: true });
       body.replaceChildren();
       const m = d.matrix || {};
       const total = ['sure', 'unsure', 'guess'].reduce((s, k) => s + ((m[k] || {}).right || 0) + ((m[k] || {}).wrong || 0), 0);
       const fl = d.flags || {};
       const ch = d.changes || {};
-      if (!total && !fl.n && !ch.n) { body.append(h('p', { class: 'help', text: 'Tag how sure you are, and flag in tests: this shows what each is worth.' })); return; }
+      if (!total && !fl.n && !ch.n) { body.append(h('p', { class: 'help', 'data-nofold': '', text: 'Tag how sure you are, and flag in tests: this shows what each is worth.' })); return; }
       const grid3 = h('div', { class: 'rh-grid3' });
       if (total) {
         const blind = (m.sure || {}).wrong || 0;
         const lucky = ((m.unsure || {}).right || 0) + ((m.guess || {}).right || 0);
+        ins.meta.textContent = [blind ? `${fmtN(blind)} blind spots` : null, lucky ? `${fmtN(lucky)} lucky` : null].filter(Boolean).join(', ');
         const mx = h('div', { class: 'rh-matrix', role: 'group', 'aria-label': 'How sure you were, against the result' }, h('span'), h('span', { class: 'h', text: 'Right' }), h('span', { class: 'h', text: 'Wrong' }));
         [['sure', 'Sure'], ['unsure', 'Unsure'], ['guess', 'Guess']].forEach(([k, l]) => {
           const row = m[k] || {};
@@ -1273,29 +1501,26 @@
             mx.append(b);
           });
         });
-        const colA = h('div', {}, h('p', { class: 'rh-big', style: 'margin-bottom:8px', text: [blind ? `Blind spots ${fmtN(blind)}: sure and wrong` : null, lucky ? `Lucky ${fmtN(lucky)}` : null].filter(Boolean).join(' · ') || 'Certainty' }), mx);
-        if (m.untagged) colA.append(h('p', { class: 'rh-foot', style: 'margin-top:6px', text: `untagged ${fmtN(m.untagged)}` }));
+        const colA = h('div', { class: 'rh-list-p' }, h('p', { class: 'rh-big', text: [blind ? `Blind spots ${fmtN(blind)}: sure and wrong` : null, lucky ? `Lucky ${fmtN(lucky)}` : null].filter(Boolean).join(' · ') || 'Certainty' }), mx);
+        if (m.untagged) colA.append(h('p', { class: 'rh-foot', text: `untagged ${fmtN(m.untagged)}` }));
         grid3.append(colA);
       }
       const colB = h('div', { class: 'rh-list-p' });
       (d.readings || []).forEach(t => colB.append(h('p', { text: t })));
       if (ch.n) {
-        colB.append(h('p', {}, h('b', { text: `${plural(ch.n, 'answer change')}` }), ` · ${fmtN(ch.wr)} wrong → right · ${fmtN(ch.rw)} right → wrong${ch.ww ? ` · ${fmtN(ch.ww)} wrong → wrong` : ''}${ch.pts ? ` · net ${ch.net > 0 ? '+' : ''}${fmtN(ch.net)} ≈ ${ch.pts > 0 ? '+' : ''}${fmtN(ch.pts)} pts` : ''}`));
+        colB.append(h('p', {}, h('b', { text: `${plural(ch.n, 'answer change')}` }), ` · ${fmtN(ch.wr)} wrong to right · ${fmtN(ch.rw)} right to wrong${ch.ww ? ` · ${fmtN(ch.ww)} wrong to wrong` : ''}${ch.pts ? ` · net ${ch.net > 0 ? '+' : ''}${fmtN(ch.net)} ≈ ${ch.pts > 0 ? '+' : ''}${fmtN(ch.pts)} ${ptsW(ch.pts)}` : ''}`));
         if (ch.net) colB.append(h('p', { class: 'help', text: ch.net > 0 ? 'Your second looks pay: keep flagging and returning.' : 'Your first answer is usually better: change only for a new reason.' }));
       }
       if (colB.children.length) grid3.append(colB);
       if (fl.n) {
         const colC = h('div', { class: 'rh-list-p' }, h('p', {}, h('b', { text: `${fmtN(fl.n)} flagged` }), ` · ${fmtN(fl.revisited)} came back${fl.never ? ` · ${fmtN(fl.never)} never came back${fl.never_wrong ? ` (${fmtN(fl.never_wrong)} of them wrong)` : ''}` : ''}`));
-        if (fl.misses) colC.append(h('p', { text: `Your flags caught ${fmtN(fl.caught)} of your ${fmtN(fl.misses)} test misses (${Math.round(100 * fl.caught / fl.misses)}%)` }));
+        if (fl.misses) colC.append(h('p', { text: `Your flags caught ${fmtN(fl.caught)} of your ${fmtN(fl.misses)} test misses` }));
         const low = (fl.by_topic || []).filter(t => t.misses >= 3).sort((a, b) => a.caught / a.misses - b.caught / b.misses)[0];
-        if (low) colC.append(h('p', { class: 'help', text: `${(TOPIC(low.topic) || {}).short || low.topic}: flags caught ${low.caught} of ${low.misses} misses. Flag more there.` }));
+        if (low) colC.append(h('p', { class: 'help', text: `${tname(low.topic)}: flags caught ${low.caught} of ${low.misses} misses. Flag more there.` }));
         grid3.append(colC);
       }
       body.append(grid3);
     });
-    const headEl = card.querySelector('.card-head');
-    const seg = UI.seg(null, [{ value: '30', label: '30 days' }, { value: '90', label: '90 days' }, { value: 'all', label: 'All' }], { value: S.sinceCal, label: 'Since', onChange: v => { S.sinceCal = v; paintHead(); } });
-    headEl.append(h('span', { class: 'card-act' }, seg.el));
   }
   function goHistory(params) {
     S.filters.history = Object.assign({}, params);
@@ -1305,7 +1530,7 @@
   // Saved: Questions · Your rules, and the deck cards (V3, V19)
   function savedHead(host) {
     const c = S.counts || {};
-    const view = h('div', { class: 'rh-row2', style: 'margin-bottom:12px' });
+    const view = h('div', { class: 'rh-row2' });
     UI.seg(view, [{ value: 'questions', label: 'Questions' }, { value: 'rules', label: 'Your rules' }], { value: S.savedView, label: 'Show', onChange: v => {
       S.savedView = v;
       const u = new URL(location.href);
@@ -1316,61 +1541,60 @@
     host.append(view);
     if (S.savedView === 'rules') { rulesCard(host); return; }
     if (!c.saved) return;
-    const row = h('div', { class: 'rh-row2' });
     const cards = [{ value: 'all', label: 'All', n: null }];
     if (S.prefs.saved_spaced !== false) {
       if (c.saved_due) cards.push({ value: 'due', label: 'Due today', n: c.saved_due });
       if (c.learned) cards.push({ value: 'learned', label: 'Learned', n: c.learned });
     }
     if (!cards.some(x => x.value === S.savedCard)) S.savedCard = 'all';
+    // the deck cards sit beside the view switch: one row of controls
     if (cards.length > 1) {
-      UI.seg(row, cards, { value: S.savedCard, label: 'Show', onChange: v => { S.savedCard = v; const L = S.lists.saved; if (L && L.all) { L.items = L.all; L.total = L.data.total; clientSaved(L); paintListHead(); paintList(); syncPane(); paintBar(); } } });
+      UI.seg(view, cards, { value: S.savedCard, label: 'Show', onChange: v => { S.savedCard = v; const L = S.lists.saved; if (L && L.all) { L.items = L.all; L.total = L.data.total; clientSaved(L); paintListHead(); paintList(); syncPane(); paintBar(); } } });
     }
-    if (row.children.length) host.append(row);
   }
 
-  // V19: Your SAT is days away: the trap sheet, and one fresh question per trap
+  // V19: your SAT is days away: the trap sheet, and one fresh question per trap
   function examCard(host, exam) {
     const when = new Date(`${String(exam).slice(0, 10)}T12:00:00`).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
     const n = Math.min(10, (S.counts && S.counts.open) || 0);
-    const card = h('section', { class: 'card rh-card', 'aria-label': 'Exam week' });
-    const acts = h('div', { class: 'rh-row2', style: 'margin-top:10px' });
-    acts.append(h('a', { class: 'btn', href: '/review/print.html?sheet=traps', text: 'Your trap sheet' }));
+    const line = h('p', { class: 'rh-line', 'aria-label': 'Exam week' }, h('span', { class: 'dot', 'aria-hidden': 'true' }), h('span', { text: `Your SAT is ${when}` }));
     if (n) {
-      const go = h('button', { type: 'button', class: 'pill', text: `Final check · one fresh question per trap · ${n} · about ${Math.max(1, Math.round((n * 95) / 60))} min` });
+      const go = h('button', { type: 'button', class: 'btn sm', title: 'One fresh question per trap, on the pace clock', text: `Final check · ${n} · about ${Math.max(1, Math.round((n * 95) / 60))} min` });
       go.addEventListener('click', async () => {
         go.setAttribute('aria-busy', 'true');
         try {
-          const t = await UI.api('/review/trapsheet');
+          const t = await UI.api(sub('/review/trapsheet'));
           const templates = [...new Set((t.entries || []).map(e => e.template))].slice(0, 10);
           if (!templates.length) throw new Error('none');
           start({ templates, count: templates.length, timing: 'pace', order: 'mixed', source: 'mistakes' }, go);
         } catch (_) { go.removeAttribute('aria-busy'); toast('The final check didn’t start. Try again.'); }
       });
-      acts.prepend(go);
+      line.append(go);
     }
-    card.append(h('p', { class: 'rh-big', text: `Your SAT is ${when}` }), acts);
-    host.append(card);
+    line.append(h('a', { class: 'quiet', href: sub('/review/print.html?sheet=traps'), text: 'Your trap sheet' }));
+    host.append(line);
   }
 
   // V19: Your rules (P21's store): the type's rule, its date, Try one, edit in place, Still useful?
   const RULE_MAX = 140;
   function rulesCard(host) {
     const kept = ls.get('satf.rules.kept', {}) || {};
-    part(host, null, async body => {
-      const b = await UI.api('/bank', { quiet: true });
+    const card = h('section', { class: 'card line', 'aria-label': 'Your rules' });
+    host.append(card);
+    part(card, null, async body => {
+      const b = await UI.api(sub('/bank'), { quiet: true });
       const rules = [];
       (b.domains || []).forEach(dm => (dm.skills || []).forEach(sk => (sk.types || []).forEach(t => {
         if (t.type_note) rules.push({ template: t.template, name: t.name || sk.name, note: t.type_note, at: t.type_note_at });
       })));
       rules.sort((x, y) => String(y.at || '').localeCompare(String(x.at || '')));
       if (!rules.length) {
-        body.replaceChildren(h('p', { class: 'meta', text: 'Write a rule after a miss (“Next time I will…”) and it waits here for test week.' }));
+        body.replaceChildren(h('p', { class: 'rh-foot', text: 'Write a rule after a miss (“Next time I will…”) and it waits here for test week.' }));
         return;
       }
       const list = h('div', { class: 'rh-rules-l', role: 'list' });
       rules.forEach(r => list.append(ruleRow(r, kept)));
-      body.replaceChildren(list, h('p', { class: 'rh-row2', style: 'margin-top:12px' }, h('a', { class: 'btn sm', href: '/practice/?print=rules', text: 'Print my rules' })));
+      body.replaceChildren(list, h('p', { class: 'rh-row2' }, h('a', { class: 'btn sm', href: sub('/practice/?print=rules'), text: 'Print my rules' })));
     });
   }
   // a rule is written against one of your own answers of that type (the server never takes a template from the page)
@@ -1393,7 +1617,7 @@
     });
     const editB = h('button', { type: 'button', class: 'quiet', text: 'Edit' });
     editB.addEventListener('click', () => {
-      const ta = h('textarea', { rows: '2', maxlength: String(RULE_MAX), 'aria-label': `Your rule for ${r.name}` });
+      const ta = h('textarea', { class: 'field', rows: '2', maxlength: String(RULE_MAX), 'aria-label': `Your rule for ${r.name}` });
       ta.value = r.note;
       const cnt = UI.counter ? UI.counter(ta, RULE_MAX) : null;
       const box = h('div', { class: 'rh-rule-ed' }, ta, cnt);
@@ -1418,7 +1642,7 @@
     });
     acts.append(tryB, editB);
     if (!kept[r.template]) {
-      const ask = h('span', { class: 'meta rh-rule-ask' }, 'Still useful? ');
+      const ask = h('span', { class: 'rh-foot rh-rule-ask' }, 'Still useful? ');
       const keep = h('button', { type: 'button', class: 'quiet', text: 'Keep' });
       keep.addEventListener('click', () => { kept[r.template] = 1; ls.set('satf.rules.kept', kept); ask.remove(); });
       const rm = h('button', { type: 'button', class: 'quiet', text: 'Remove' });
@@ -1431,12 +1655,13 @@
       ask.append(keep, ' · ', rm);
       acts.append(ask);
     }
-    row.append(h('p', { class: 'rh-rule-h' }, h('b', { text: r.name }), r.at ? h('span', { class: 'meta', text: ` · ${day(r.at)}` }) : null), text, acts, tryHost);
+    row.append(h('p', { class: 'rh-rule-h' }, h('b', { text: r.name }), r.at ? h('span', { class: 'rh-foot', text: ` · ${day(r.at)}` }) : null), text, acts, tryHost);
     return row;
   }
 
-  // History: the summary card, pace and the rushed line (V8, V12)
-  function historyHeadShell(host) { host.append(h('div', { id: 'histhead', class: 'rh-headbox', style: 'margin:0' })); }
+  // History: one summary line (with the tier figures) and the rushed line stay; Right but slow folds into Insights (V8, V12);
+  // Download CSV sits in the list head's More
+  function historyHeadShell(host) { host.append(h('div', { id: 'histhead', class: 'rh-hh' })); }
   function historyHead() {
     const host = $('histhead');
     const L = S.lists.history;
@@ -1444,7 +1669,6 @@
     host.replaceChildren();
     const s = L.data.summary;
     if (!s || !s.answers) return;
-    const card = h('section', { class: 'card rh-card', 'aria-label': 'These answers' });
     const bits = [];
     bits.push(h('span', {}, h('b', { text: `${fmtN(s.right ?? Math.round((s.accuracy || 0) * s.answers))} / ${fmtN(s.answers)}` }), ' right'));
     if (s.median_ms) bits.push(h('span', {}, 'median ', h('b', { text: mmss(s.median_ms) })));
@@ -1455,44 +1679,40 @@
     if (s.slow && s.slow.n) bits.push(`Slow right ${fmtN(s.slow.n)} · ${UI.dur ? UI.dur(Math.round(s.slow.over_ms / 60000)) : Math.round(s.slow.over_ms / 60000) + ' min'} over budget`);
     if (s.rushed) bits.push(`Rushed ${fmtN(s.rushed)}`);
     if (s.discarded) bits.push(`Discarded ${fmtN(s.discarded)}, not counted`);
-    const line = h('p', { class: 'rh-row2', style: 'font: 500 14px/1.5 var(--font)' });
-    bits.forEach((b, i) => { if (i) line.append(h('span', { class: 'meta', 'aria-hidden': 'true', text: '·' })); line.append(b instanceof Node ? b : h('span', { text: b })); });
+    const line = h('p', { class: 'rh-line', 'aria-label': 'These answers' });
+    bits.forEach(b => { const el = b instanceof Node ? b : h('span', { text: b }); el.classList.add('rh-bit'); line.append(el); });
     const bd = s.by_difficulty || {};
-    const diff = h('div', { class: 'rh-row2', style: 'margin-top:10px' });
     TIERS.forEach(t => {
       const v = bd[t];
       if (!v) return;
       const n = typeof v === 'object' ? v.n : v, r = typeof v === 'object' ? v.right : null;
-      diff.append(h('span', { class: 'rh-kind' }, tierBit(t), h('b', { text: r !== null && r !== undefined ? `${fmtN(r)} / ${fmtN(n)}` : fmtN(n) })));
+      line.append(h('span', { class: 'badge line lg' }, tierBit(t), h('b', { text: r !== null && r !== undefined ? `${fmtN(r)} / ${fmtN(n)}` : fmtN(n) })));
     });
-    const csv = h('button', { type: 'button', class: 'btn sm', text: 'Download CSV' });
-    csv.addEventListener('click', () => downloadCsv(csv));
-    diff.append(csv);
-    card.append(line, diff);
-    host.append(card);
-    const pace = L.data.pace || [];
-    if (pace.length) {
-      const pc = h('section', { class: 'card rh-card', 'aria-label': 'Right but slow' }, h('div', { class: 'card-head' }, h('h2', { class: 'rh-k', text: 'Right but slow' })));
-      const list = h('div', { class: 'rh-list-p' });
-      pace.slice(0, 5).forEach(p => {
-        const b = h('button', { type: 'button', class: 'btn sm', text: 'Speed drill · 8' });
-        b.addEventListener('click', () => start({ templates: [p.template], count: 8, timing: 'pace', source: 'sprint' }, b));
-        list.append(h('div', { class: 'rh-row2' }, h('b', { text: cap(p.skill || p.template) }),
-          h('span', { class: 'meta', text: [p.median_ms ? `your median ${mmss(p.median_ms)}` : null, p.budget_ms ? `budget ${mmss(p.budget_ms)}` : null, p.right !== undefined && p.n ? `right ${Math.round(100 * p.right / p.n)}%` : p.accuracy !== undefined ? `right ${Math.round(p.accuracy * 100)}%` : null].filter(Boolean).join(' · ') }), b));
-      });
-      const sprint = h('button', { type: 'button', class: 'pill sm', text: `Fluency sprint · ${plural(Math.min(5, pace.length), 'type')}` });
-      sprint.addEventListener('click', () => start({ templates: pace.slice(0, 5).map(p => p.template), count: 10, timing: 'pace', source: 'sprint' }, sprint));
-      pc.append(list, h('div', { class: 'rh-row2', style: 'margin-top:10px' }, sprint));
-      host.append(pc);
-    }
+    host.append(line);
     if (s.rushed >= 3 && currentFilterValues().result !== 'rushed') {
       const see = h('button', { type: 'button', class: 'btn sm', text: 'See them' });
       see.addEventListener('click', () => FB && FB.set('result', 'rushed'));
       host.append(h('p', { class: 'rh-line' }, `${plural(s.rushed, 'miss', 'misses')} in under a quarter of the time: slow down on these`, see));
     }
+    const pace = L.data.pace || [];
+    if (pace.length) {
+      const ins = insights('Right but slow');
+      ins.meta.textContent = plural(Math.min(5, pace.length), 'type');
+      const list = h('div', { class: 'rh-part rh-list-p' });
+      pace.slice(0, 5).forEach(p => {
+        const b = h('button', { type: 'button', class: 'btn sm', text: 'Speed drill · 8' });
+        b.addEventListener('click', () => start({ templates: [p.template], count: 8, timing: 'pace', source: 'sprint' }, b));
+        list.append(h('div', { class: 'rh-row2' }, h('b', { text: cap(p.skill || p.template) }),
+          h('span', { class: 'rh-foot', text: [p.median_ms ? `your median ${mmss(p.median_ms)}` : null, p.budget_ms ? `budget ${mmss(p.budget_ms)}` : null, p.right !== undefined && p.n ? `right ${fmtN(p.right)} of ${fmtN(p.n)}` : p.accuracy !== undefined ? `right ${Math.round(p.accuracy * 100)}%` : null].filter(Boolean).join(' · ') }), b));
+      });
+      const sprint = h('button', { type: 'button', class: 'btn sm', text: `Fluency sprint · ${plural(Math.min(5, pace.length), 'type')}` });
+      sprint.addEventListener('click', () => start({ templates: pace.slice(0, 5).map(p => p.template), count: 10, timing: 'pace', source: 'sprint' }, sprint));
+      list.append(h('div', { class: 'rh-row2' }, sprint));
+      ins.body.append(list);
+    }
   }
   async function downloadCsv(btn) {
-    btn.setAttribute('aria-busy', 'true');
+    if (btn) btn.setAttribute('aria-busy', 'true');
     try {
       const path = listPath('history', null).replace('/review/history?', '/api/review/history.csv?');
       const r = await fetch(path, { headers: { 'X-Learner': UI.learner(), 'X-Tz': String(new Date().getTimezoneOffset()) } });
@@ -1502,87 +1722,86 @@
       doc.body.append(a); a.click(); a.remove();
       setTimeout(() => URL.revokeObjectURL(url), 2000);
     } catch (_) { toast('The download didn’t start. Try again.'); }
-    btn.removeAttribute('aria-busy');
+    if (btn) btn.removeAttribute('aria-busy');
   }
 
-  // Fixed: the ledger and the stat line (V9, V10, V4)
+  // Fixed: the headline and the stat line stay; the week-by-week chart and the forecast fold into Insights (V9, V10, V4)
   function fixedHead(host) {
     const c = S.counts || {};
     if (!c.fixed && !(S.ledger && S.ledger.weeks && S.ledger.weeks.some(w => w.opened || w.fixed))) return;
     const l = S.ledger;
-    const card = h('section', { class: 'card rh-card', 'aria-label': 'Made and fixed, week by week' });
-    host.append(card);
-    if (!l) { if (UI.skel) UI.skel(card, 'chart'); return; }
+    if (!l) { if (UI.skel) UI.skel(host, 'line'); return; }
     const weeks = (l.weeks || []).slice(phone() ? -8 : -12);
     const withData = weeks.filter(w => w.opened || w.fixed);
     const cur = weeks[weeks.length - 1] || {};
     const net = (cur.fixed || 0) - (cur.opened || 0);
-    const head = h('div', { class: 'card-head' }, h('h2', { class: 'rh-k', text: 'Made and fixed' }));
-    card.append(head);
     if (withData.length < 2) {
       const made = weeks.reduce((s, w) => s + (w.opened || 0), 0), fixed = weeks.reduce((s, w) => s + (w.fixed || 0), 0);
-      card.append(h('p', { class: 'rh-big', text: fixed ? `${fmtN(made)} made · ${fmtN(fixed)} fixed so far` : `${fmtN(made)} made so far` }));
+      host.append(h('p', { class: 'rh-big', text: fixed ? `${fmtN(made)} made · ${fmtN(fixed)} fixed so far` : `${fmtN(made)} made so far` }));
     } else {
-      card.append(h('p', { class: 'rh-big', text: `This week: fixed ${fmtN(cur.fixed || 0)}, made ${fmtN(cur.opened || 0)}, net ${net > 0 ? '−' : net < 0 ? '+' : ''}${fmtN(Math.abs(net))}${c.median_days !== null && c.median_days !== undefined ? ` · median ${plural(c.median_days, 'day')} to fix` : ''}` }));
-      if ((cur.fixed || 0) > (cur.opened || 0)) card.append(h('p', { class: 'help', text: 'Fixing them faster than you make them.' }));
-      if (UI.barChart) {
-        const ch = h('div', { style: 'margin-top:12px' });
-        UI.barChart(ch, weeks.map(w => ({ key: w.week, label: day(w.week), fixed: w.fixed || 0, made: Math.max(0, (w.opened || 0) - (w.relapsed || 0)), relapsed: w.relapsed || 0, open: w.open_end || 0,
-          tip: `${day(w.week)} week · ${fmtN(w.opened || 0)} made · ${fmtN(w.fixed || 0)} fixed · open ${fmtN(w.open_end || 0)}` })), {
-          // a series only when it has something to draw: no "Fixed 0" or "Relapsed 0" in the legend (decision 7)
-          series: weeks.some(w => w.fixed) ? [{ key: 'fixed', label: 'Fixed', look: 'amber' }] : [],
-          down: [{ key: 'made', label: 'Made', look: 'ink' }, ...(weeks.some(w => w.relapsed) ? [{ key: 'relapsed', label: 'Relapsed', look: 'hatch' }] : [])],
-          line: { key: 'open', label: 'Open' }, labels: 'label', height: phone() ? 150 : 180, legend: true, label: 'Mistakes made and fixed, week by week',
-          onPick: row => { const d0 = row.key; const e = new Date(Date.parse(d0) + 6 * 864e5).toISOString().slice(0, 10); if (FB) FB.set('date', `${d0}..${e}`); } });
-        card.append(ch);
-      }
+      host.append(h('p', { class: 'rh-big', text: `This week: fixed ${fmtN(cur.fixed || 0)}, made ${fmtN(cur.opened || 0)}, net ${net > 0 ? '−' : net < 0 ? '+' : ''}${fmtN(Math.abs(net))}${c.median_days !== null && c.median_days !== undefined ? ` · median ${plural(c.median_days, 'day')} to fix` : ''}` }));
+    }
+    const st = (S.lists.fixed && S.lists.fixed.data && S.lists.fixed.data.stats) || {};
+    const bits = [c.unchecked && `${fmtN(c.unchecked)} not checked yet`, st.relapsed && (c.fixed ? `${fmtN(st.relapsed)} of ${fmtN(c.fixed)} relapsed` : `${fmtN(st.relapsed)} relapsed`),
+      (st.recovered_month || c.recovered_month) && `recovered ≈ +${fmtN(st.recovered_month || c.recovered_month)} ${ptsW(st.recovered_month || c.recovered_month)} this month`, (st.dismissed || c.dismissed) && `${fmtN(st.dismissed || c.dismissed)} dismissed`].filter(Boolean);
+    if (bits.length) host.append(h('p', { class: 'rh-foot', text: bits.join(' · ') }));
+    const ins = insights('Made and fixed, week by week');
+    if (withData.length >= 2 && UI.barChart) {
+      const ch = h('div', { class: 'rh-part' });
+      UI.barChart(ch, weeks.map(w => ({ key: w.week, label: day(w.week), fixed: w.fixed || 0, made: Math.max(0, (w.opened || 0) - (w.relapsed || 0)), relapsed: w.relapsed || 0, open: w.open_end || 0,
+        tip: `${day(w.week)} week · ${fmtN(w.opened || 0)} made · ${fmtN(w.fixed || 0)} fixed · open ${fmtN(w.open_end || 0)}` })), {
+        // a series only when it has something to draw: no "Fixed 0" or "Relapsed 0" in the legend (decision 7)
+        series: weeks.some(w => w.fixed) ? [{ key: 'fixed', label: 'Fixed', look: 'amber' }] : [],
+        down: [{ key: 'made', label: 'Made', look: 'ink' }, ...(weeks.some(w => w.relapsed) ? [{ key: 'relapsed', label: 'Relapsed', look: 'hatch' }] : [])],
+        line: { key: 'open', label: 'Open' }, labels: 'label', height: phone() ? 150 : 180, legend: true, label: 'Mistakes made and fixed, week by week',
+        onPick: row => { const d0 = row.key; const e = new Date(Date.parse(d0) + 6 * 864e5).toISOString().slice(0, 10); if (FB) FB.set('date', `${d0}..${e}`); } });
+      ins.body.append(ch);
     }
     const f = l.forecast || {}, rate = l.rate || {};
     if (f.zero_on) {
       const exam = S.me && ((S.me.profile && S.me.profile.exam_date) || S.me.exam_date);
       const gap = exam ? Math.round((Date.parse(exam) - Date.parse(f.zero_on)) / 864e5) : null;
-      card.append(h('p', { style: 'margin-top:10px', text: `At this pace (${fmtN(Math.round(rate.fixed_week || 0))} fixed a week, ${fmtN(Math.round(rate.made_week || 0))} made) open mistakes reach 0 around ${day(f.zero_on)}${gap !== null && gap > 0 ? `, ${plural(gap, 'day')} before your SAT` : ''}.` }));
-      if (f.after_exam && f.extra_minutes) card.append(h('p', { class: 'help', text: `That’s after your SAT. About ${fmtN(f.extra_minutes)} more minutes a day clears them in time.` }));
+      ins.meta.textContent = `open mistakes reach 0 around ${day(f.zero_on)}${f.after_exam ? ', after your SAT' : ''}`;
+      const fc = h('div', { class: 'rh-part' }, h('p', { text: `At this pace (${fmtN(Math.round(rate.fixed_week || 0))} fixed a week, ${fmtN(Math.round(rate.made_week || 0))} made) open mistakes reach 0 around ${day(f.zero_on)}${gap !== null && gap > 0 ? `, ${plural(gap, 'day')} before your SAT` : ''}.` }));
+      if (f.after_exam && f.extra_minutes) fc.append(h('p', { class: 'rh-foot', text: `That’s after your SAT. About ${fmtN(f.extra_minutes)} more minutes a day clears them in time.` }));
+      ins.body.append(fc);
     }
-    const st = (S.lists.fixed && S.lists.fixed.data && S.lists.fixed.data.stats) || {};
-    const bits = [c.unchecked && `${fmtN(c.unchecked)} not checked yet`, st.relapsed && `${fmtN(st.relapsed)} relapsed${c.fixed ? ` (${Math.round(100 * st.relapsed / c.fixed)}%)` : ''}`,
-      (st.recovered_month || c.recovered_month) && `recovered ≈ +${fmtN(st.recovered_month || c.recovered_month)} pts this month`, (st.dismissed || c.dismissed) && `${fmtN(st.dismissed || c.dismissed)} dismissed`].filter(Boolean);
-    if (bits.length) card.append(h('p', { class: 'rh-foot', style: 'margin-top:10px', text: bits.join(' · ') }));
   }
 
-  /* ------------------------------------------------------------ secondary actions (visible, never behind a disclosure) */
+  /* ------------------------------------------------------------ secondary actions: the list head's More menu */
   function secondaryActions(tab) {
     const rows = selRows(tab);
     const n = selCount(tab);
     const out = [];
-    const btn = (label, fn, cls = 'btn sm') => { const b = h('button', { type: 'button', class: cls, text: label }); b.addEventListener('click', () => fn(b)); return b; };
+    const it = (label, fn, sub) => ({ label, sub, onClick: () => fn(null) });
     if (tab === 'redo' && n) {
-      out.push(btn(`Walk these · ${fmtN(n)} · ~${Math.max(1, Math.round(n * 1.5))} min`, b => walk({ ids: rows.map(r => r.id) }, b)));
+      out.push(it(`Walk these · ${fmtN(n)}`, b => walk({ ids: rows.map(r => r.id) }, b), `Name each, then prove it · about ${Math.max(1, Math.round(n * 1.5))} min`));
       const blind = rows.filter(r => r.blind);
-      if (blind.length) out.push(btn(`Drill my blind spots · ${fmtN(blind.length)}`, b => start({ pool: 'redo', ids: blind.map(r => r.id), level: 'as_missed', source: 'mistakes', feedback: 'instant' }, b)));
-      out.push(btn('Print worksheet', () => worksheet('redo', rows.map(r => r.id))));
-      out.push(btn(`Ask for help · ${fmtN(Math.min(n, 40))}`, () => askHelp(rows.slice(0, 40).map(r => [r.template, r.seed]))));
-      out.push(btn('Share', () => share(rows.slice(0, 40).map(r => [r.template, r.seed]))));
-      out.push(h('a', { class: 'quiet', href: '/review/print.html?sheet=log', text: 'Error log' }));
+      if (blind.length) out.push(it(`Drill my blind spots · ${fmtN(blind.length)}`, b => start({ pool: 'redo', ids: blind.map(r => r.id), level: 'as_missed', source: 'mistakes', feedback: 'instant' }, b)));
+      out.push(it('Print worksheet', () => worksheet('redo', rows.map(r => r.id))));
+      out.push(it(`Ask for help · ${fmtN(Math.min(n, 40))}`, () => askHelp(rows.slice(0, 40).map(r => [r.template, r.seed]))));
+      out.push(it('Share', () => share(rows.slice(0, 40).map(r => [r.template, r.seed]))));
+      out.push({ separator: true }, { label: 'Error log', sub: 'Every open mistake, to print', href: sub('/review/print.html?sheet=log') });
     }
     if (tab === 'marked') {
       const pick = n ? rows : (S.lists.marked || {}).items || [];
       const answered = pick.filter(r => r.answered).length;
-      out.push(btn(`Again, exactly${answered ? ` · ${plural(answered, 'will be a repeat', 'will be repeats')}` : ''}`, b => start(barBody('marked', true, pick.length), b)));
-      out.push(btn('Share', () => share(pick.slice(0, 40).map(r => [r.template, r.seed]))));
-      if (n) out.push(btn('Unmark', () => unmark(rows), 'quiet'));
+      out.push(it('Same questions again', b => start(barBody('marked', true, pick.length), b), answered ? plural(answered, 'will be a repeat', 'will be repeats') : undefined));
+      out.push(it('Share', () => share(pick.slice(0, 40).map(r => [r.template, r.seed]))));
+      if (n) out.push({ separator: true }, it('Unmark', () => unmark(rows)));
     }
     if (tab === 'saved') {
       const pick = n ? rows : (S.lists.saved || {}).items || [];
-      out.push(btn('Again, exactly', b => start(barBody('saved', true, pick.length), b)));
-      out.push(btn('Print worksheet', () => worksheet('saved', pick.map(r => [r.template, r.seed]))));
-      out.push(btn('Share', () => share(pick.slice(0, 40).map(r => [r.template, r.seed]))));
-      if (n) out.push(btn('Unsave', () => unsaveRows(rows), 'quiet'));
+      out.push(it('Same questions again', b => start(barBody('saved', true, pick.length), b)));
+      out.push(it('Print worksheet', () => worksheet('saved', pick.map(r => [r.template, r.seed]))));
+      out.push(it('Share', () => share(pick.slice(0, 40).map(r => [r.template, r.seed]))));
+      if (n) out.push({ separator: true }, it('Unsave', () => unsaveRows(rows)));
     }
     if (tab === 'history' && n) {
-      out.push(btn('Again, exactly', b => start(barBody('history', true, n), b)));
-      out.push(btn('Share', () => share(rows.slice(0, 40).map(r => [r.template, r.seed]))));
+      out.push(it('Same questions again', b => start(barBody('history', true, n), b)));
+      out.push(it('Share', () => share(rows.slice(0, 40).map(r => [r.template, r.seed]))));
     }
+    if (tab === 'history') out.push(...(out.length ? [{ separator: true }] : []), it('Download CSV', () => downloadCsv(null)));
     return out;
   }
   async function unmark(rows) {
@@ -1592,7 +1811,7 @@
     L.items = L.items.filter(r => !keys.has(keyOf('marked', r)));
     L.total = Math.max(0, L.total - rows.length);
     sel('marked').ids.clear(); saveSel('marked');
-    paintList(); paintListHead(); paintBar(); syncPane();
+    glideRows(paintList); paintListHead(); paintBar(); syncPane();   // the rows that left close their gap
     try {
       await Promise.all(rows.map(r => UI.api('/flags', { method: 'POST', body: { session: r.session, question_id: r.qid, on: false } })));
       refreshSoon(false);
@@ -1604,7 +1823,7 @@
   }
   async function worksheet(pool, ids) {
     const each = (S.bar[S.tab] || {}).each || 1;
-    const body = { pool, ids: ids.slice(0, 40), exact: false, each, feedback: 'end', source: 'worksheet' };
+    const body = { pool, ids: ids.slice(0, 40), exact: false, each, feedback: 'end', source: 'worksheet', subject: S.subject };
     try {
       const d = await UI.api('/drill', { method: 'POST', body });
       const w = open(`/practice/session/?id=${encodeURIComponent(d.id)}&print=1`, '_blank');
@@ -1631,7 +1850,7 @@
       body: b => {
         UI.switch(b, { checked: true, label: 'Include my answer and the mistake behind it', onChange: v => { ans = v; } });
         UI.switch(b, { checked: false, label: 'Include my note', onChange: v => { note = v; } });
-        b.append(h('p', { class: 'help', style: 'margin-top:8px', text: 'The link shows the question with answers hidden. After they try it, they see your pick.' }));
+        b.append(h('p', { class: 'help', text: 'The link shows the question with answers hidden. After they try it, they see your pick.' }));
       },
       actions: [{ label: 'Copy link', primary: true, onClick: async api => {
         try {
@@ -1647,10 +1866,30 @@
   function barState(tab) {
     return S.bar[tab] || (S.bar[tab] = { volume: 10, clock: 'off', minutes: 16, level: 'as_missed', feedback: 'instant', each: 1, err: '' });
   }
+  // the set options (Questions, Clock, Feedback, Each, Level) sit behind Options: a popover, a sheet on a phone
+  // the bar rises in when a selection first shows it and nudges out when the selection empties (its old content
+  // stays, inert, while it leaves); repaints while it shows do not move it
   function paintBar() {
     const bar = $('actbar');
-    const box = $('optsbox');
-    bar.replaceChildren(); box.replaceChildren();
+    if (bar._out) { bar._out = false; bar.inert = false; if (bar.getAnimations) bar.getAnimations().forEach(a => a.cancel()); }
+    const old = [...bar.childNodes];
+    bar.replaceChildren();
+    paintBarIn(bar);
+    if (!old.length && bar.firstChild && UI.motion) UI.motion.enter(bar, 'nudge');
+    if (old.length && !bar.firstChild && UI.motion && !UI.motion.off()) {
+      bar.replaceChildren(...old);
+      bar._out = true; bar.inert = true;
+      UI.motion.exit(bar, 'nudge').then(() => {
+        if (!bar._out) return;
+        bar._out = false; bar.inert = false; bar.replaceChildren();
+        if (bar.getAnimations) bar.getAnimations().forEach(a => a.cancel());
+        syncPrimary();
+      });
+      return;
+    }
+    syncPrimary();
+  }
+  function paintBarIn(bar) {
     const tab = S.tab;
     if (!tab || tab === 'due') return;
     const L = S.lists[tab];
@@ -1658,20 +1897,18 @@
     const b = barState(tab);
     const n = selCount(tab);
     if (!n && (tab === 'redo' || tab === 'fixed' || tab === 'history')) return;
-    const opts = h('div', { class: 'rh-optrow', role: 'group', 'aria-label': 'Set options' });
-    const opt = (k, el) => opts.append(h('span', { class: 'rh-opt' }, h('span', { class: 'k', text: k }), el));
+    const opts = h('div', { class: 'rh-opts', role: 'group', 'aria-label': 'Set options' });
+    const opt = (k, ...el) => opts.append(h('div', { class: 'rh-opt' }, h('span', { class: 'k', text: k }), h('div', {}, ...el)));
     // Volume: 5 · 10 · 20 · 30 · 40 · 50 · All, and any count
-    const vol = h('span', { class: 'rh-opt' });
     const volSeg = UI.seg(null, [5, 10, 20, 30, 40, 50, 0].map(v => ({ value: v, label: v ? String(v) : 'All' })), { value: b.volume || 0, label: 'How many', onChange: v => { b.volume = v || null; field.value = ''; paintSummary(); } });
     const field = h('input', { type: 'number', class: 'field sm', min: '1', max: '120', inputmode: 'numeric', 'aria-label': 'Or type how many', placeholder: '#' });
     if (b.volume && ![5, 10, 20, 30, 40, 50].includes(b.volume)) field.value = b.volume;
     field.addEventListener('input', () => { const v = Math.max(1, Math.min(120, parseInt(field.value, 10) || 0)); if (field.value) { b.volume = v; volSeg.set(-1, true); } else { b.volume = null; volSeg.set(0, true); } paintSummary(); });
-    vol.append(h('span', { class: 'k', text: 'Questions' }), volSeg.el, field);
-    opts.append(vol);
+    opt('Questions', volSeg.el, field);
     const clockSeg = UI.seg(null, [{ value: 'off', label: 'Off' }, { value: 'pace', label: 'Pace' }, { value: 'custom', label: 'Custom' }], { value: b.clock, label: 'Clock', onChange: v => { b.clock = v; mins.hidden = v !== 'custom'; paintSummary(); } });
     const mins = h('input', { type: 'number', class: 'field sm', min: '1', max: '180', value: String(b.minutes), 'aria-label': 'Minutes on the clock', hidden: b.clock !== 'custom' });
     mins.addEventListener('input', () => { b.minutes = Math.max(1, Math.min(180, parseInt(mins.value, 10) || 16)); paintSummary(); });
-    opts.append(h('span', { class: 'rh-opt' }, h('span', { class: 'k', text: 'Clock' }), clockSeg.el, mins));
+    opt('Clock', clockSeg.el, mins);
     if (tab === 'marked' || tab === 'saved' || tab === 'history') {
       opt('Feedback', UI.seg(null, [{ value: 'instant', label: 'Instant' }, { value: 'end', label: 'At the end' }], { value: b.feedback, label: 'Feedback', onChange: v => { b.feedback = v; paintSummary(); } }).el);
       opt('Each', UI.seg(null, [1, 2, 3].map(v => ({ value: v, label: `${v}` })), { value: b.each, label: 'New questions per type', onChange: v => { b.each = v; paintSummary(); } }).el);
@@ -1680,30 +1917,38 @@
       const lvl = UI.seg(null, [{ value: 'as_missed', label: 'As missed' }, { value: 'any', label: 'Any' }, { value: 'harder', label: 'Harder' }], { value: b.level, label: 'Level', onChange: v => { b.level = v; paintSummary(); } });
       opt('Level', lvl.el);
     }
+    // one line: "23 selected · about 63 min" (a phone keeps "23 selected"); the set's full figures and the options set
+    // away from their defaults head the Options popover, and Options counts them ("Options · 2", named in its tooltip)
     const sum = h('div', { class: 'rh-sum', role: 'status' });
     const acts = h('div', { class: 'rh-acts' });
+    const ob = h('button', { type: 'button', class: 'quiet', 'aria-haspopup': 'dialog', text: 'Options' });
+    ob.addEventListener('click', () => UI.pop(ob, opts, { label: 'Set options' }));
+    const head = h('p', { class: 'rh-opt-h' });
+    opts.prepend(head);
     function paintSummary() {
       const p = primaryFor(tab);
-      sum.replaceChildren(h('span', { text: p.summary }));
+      const [first, ...rest] = String(p.short || p.summary).split(' · ');
+      sum.replaceChildren(h('span', { class: 'rh-sum-l', title: p.summary }, first, rest.length ? h('span', { class: 'rh-sum-x', text: rest.join(' · ') }) : null));
       const echo = [b.clock === 'pace' ? 'pace clock' : b.clock === 'custom' ? `${b.minutes} min clock` : null,
         (tab === 'redo' || tab === 'fixed') && b.level !== 'as_missed' ? (b.level === 'harder' ? 'harder' : 'any level') : null,
         (tab === 'marked' || tab === 'saved' || tab === 'history') && b.feedback === 'end' ? 'answers at the end' : null,
         (tab === 'marked' || tab === 'saved' || tab === 'history') && b.each > 1 ? `${b.each} each` : null].filter(Boolean);
-      if (echo.length) sum.append(h('small', { text: echo.join(' · ') }));
+      head.replaceChildren(p.summary, ...(echo.length ? [h('small', { text: echo.join(' · ') })] : []));
+      ob.textContent = echo.length ? `Options · ${echo.length}` : 'Options';
+      if (echo.length) ob.title = echo.join(' · '); else ob.removeAttribute('title');
       if (b.err) sum.append(h('span', { class: 'err', text: b.err }));
-      acts.replaceChildren();
-      const pb = h('button', { type: 'button', class: 'pill', text: p.label });
+      // with nothing selected the button selects; it starts nothing, so it is not the orange one
+      const pb = h('button', { type: 'button', class: p.run ? 'btn' : 'pill', text: p.label });
       pb.addEventListener('click', async () => {
         if (p.run) return p.run();
         b.err = '';
         const e = await start(p.body, pb);
         if (e) { b.err = reasonOf(e); paintSummary(); }
       });
-      acts.append(pb);
+      acts.replaceChildren(ob, pb);
     }
     paintSummary();
     bar.append(sum, acts);
-    box.append(opts);
     bar._repaint = paintSummary;
   }
   const count = (tab, questions) => { const b = barState(tab); return b.volume ? Math.min(b.volume, questions || b.volume) : questions; };
@@ -1754,35 +1999,36 @@
       const types = new Set(rows.map(r => r.template)).size;
       const q = count(tab, qs);
       const harder = b.level === 'harder' ? rows.filter(r => r.difficulty === 'hard').length : 0;
-      return { label: `Fix ${fmtN(q)}`, body: redoBody({ ids: idsFor('redo') }),
+      // the count is questions (owed answers, capped by the set length), so it says so beside "N selected"
+      return { label: `Fix · ${plural(q, 'question')}`, body: redoBody({ ids: idsFor('redo') }), short: `${fmtN(n)} selected · about ${mins(q)} min`,
         summary: `${fmtN(n)} selected · ${plural(types, 'question type')} · ${plural(q, 'question')} · about ${mins(q)} min${harder ? ` · ${harder} can’t go harder` : ''}` };
     }
     if (tab === 'fixed') {
       if (!n) return { label: `Select all ${fmtN(L.total)}`, summary: 'None selected', run: () => { const s = sel('fixed'); s.all = true; s.ids.clear(); saveSel('fixed'); paintList(); paintListHead(); paintBar(); } };
       const q = count(tab, new Set(rows.map(r => r.template)).size || n);
-      return { label: `Check these now · ${fmtN(q)}`, body: barBody('fixed', false, q), summary: `${fmtN(n)} selected · ${plural(q, 'question')} · one new one per type` };
+      return { label: `Check these now · ${fmtN(q)}`, body: barBody('fixed', false, q), short: `${fmtN(n)} selected · about ${mins(q)} min`, summary: `${fmtN(n)} selected · ${plural(q, 'question')} · one new one per type` };
     }
     if (tab === 'saved') {
       const c = S.counts || {};
       const due = (S.lists.saved.all || L.items).filter(r => r.due);
       if ((S.savedCard === 'due' || !n) && due.length && S.prefs.saved_spaced !== false) {
         const body = Object.assign({ pool: 'saved', ids: due.map(r => [r.template, r.seed]), exact: false, each: 1, source: 'map', feedback: b.feedback }, clockBody(tab));
-        return { label: `Practise due · ${fmtN(due.length)}`, body, summary: n ? `${fmtN(n)} selected · ${plural(due.length, 'due question')}` : `${plural(due.length, 'saved question')} due today` };
+        return { label: `Practise due · ${fmtN(due.length)}`, body, short: `${n ? `${fmtN(n)} selected` : `${fmtN(due.length)} due`} · about ${mins(due.length)} min`, summary: n ? `${fmtN(n)} selected · ${plural(due.length, 'due question')}` : `${plural(due.length, 'saved question')} due today` };
       }
       const k = n || L.total;
       const q = count(tab, k * b.each);
-      return { label: n ? `Twin this set · ${fmtN(n)} selected` : `Twin this set · all ${fmtN(c.saved || L.total)}`, body: barBody('saved', false, q), summary: `${n ? `${fmtN(n)} selected · ` : ''}${plural(q, 'new question')} · about ${mins(q)} min` };
+      return { label: 'Twin this set', body: barBody('saved', false, q), short: `${n ? `${fmtN(n)} selected` : `all ${fmtN(c.saved || L.total)}`} · about ${mins(q)} min`, summary: `${n ? `${fmtN(n)} selected` : `all ${fmtN(c.saved || L.total)}`} · ${plural(q, 'new question')} · about ${mins(q)} min` };
     }
     if (tab === 'marked') {
       const k = n || L.total;
       const q = count(tab, k * b.each);
-      return { label: n ? `Twin this set · ${fmtN(n)} selected` : `Twin this set · all ${fmtN(L.total)}`, body: barBody('marked', false, q), summary: `${n ? `${fmtN(n)} selected · ` : ''}${plural(q, 'new question')} · about ${mins(q)} min` };
+      return { label: 'Twin this set', body: barBody('marked', false, q), short: `${n ? `${fmtN(n)} selected` : `all ${fmtN(L.total)}`} · about ${mins(q)} min`, summary: `${n ? `${fmtN(n)} selected` : `all ${fmtN(L.total)}`} · ${plural(q, 'new question')} · about ${mins(q)} min` };
     }
     if (tab === 'history') {
       if (!n) return { label: `Select all ${fmtN(Math.min(L.total, 120))}`, summary: 'Select answers to practise them again', run: () => { const s = sel('history'); s.all = true; s.ids.clear(); saveSel('history'); paintList(); paintListHead(); paintBar(); } };
       const types = new Set(rows.map(r => r.template)).size;
       const q = count(tab, types * b.each);
-      return { label: `Twin this set · ${fmtN(n)} selected`, body: barBody('history', false, q), summary: `${fmtN(n)} selected · ${plural(types, 'question type')} · ${plural(q, 'new question')}${L.total > 120 && sel('history').all ? ' · first 120' : ''}` };
+      return { label: 'Twin this set', body: barBody('history', false, q), short: `${fmtN(n)} selected · about ${mins(q)} min`, summary: `${fmtN(n)} selected · ${plural(types, 'question type')} · ${plural(q, 'new question')}${L.total > 120 && sel('history').all ? ' · first 120' : ''}` };
     }
     return { label: '', summary: '' };
   }
@@ -1896,7 +2142,7 @@
       if (a) return { template: r.template, seed: a.seed };
     }
     if (r.topic) {
-      const hst = await UI.api(`/review/history?topics=${encodeURIComponent(r.topic)}&limit=1`, { quiet: true });
+      const hst = await UI.api(sub(`/review/history?topics=${encodeURIComponent(r.topic)}&limit=1`), { quiet: true });
       const a = (hst.items || [])[0];
       if (a) return { template: a.template, seed: a.seed };
     }
@@ -1952,6 +2198,7 @@
       },
       save: async (item, on) => {
         await UI.api('/saved', { method: 'POST', body: { template: item.q.template, seed: item.q.seed, on } });
+        savedP = null;   // the pins follow on the list's next load, not under the open row
         dropCache(item); refreshSoon(tab === 'saved');
       },
       savedWhy: async (item, why) => { await UI.api('/saved', { method: 'PATCH', body: { template: item.q.template, seed: item.q.seed, why } }); },
@@ -1970,7 +2217,7 @@
         return toItem(d, Object.assign({}, item._row, { template: item.q.template, seed: a.seed }), tab);
       },
       related: item => start({ pool: 'related', ids: item.norm, each: 1, source: 'mistakes', feedback: 'instant' }),
-      spot: item => spot({ trap_id: item.trap_id, label: item.mistake && item.mistake.label }),
+      spot: rw() ? undefined : item => spot({ trap_id: item.trap_id, label: item.mistake && item.mistake.label }),   // no Spot for an unnamed R&W trap
       share: item => share([[item.q.template, item.q.seed]]),
       help: item => askHelp([[item.q.template, item.q.seed]]),
       addRedo: async item => { await UI.api('/mistakes/add', { method: 'POST', body: { template: item.q.template, seed: item.q.seed } }); toast('Added to Redo'); dropCache(item); refreshSoon(false); },
@@ -1982,11 +2229,34 @@
         toast('Removed from Redo', { undo: async () => { await UI.api('/mistakes/restore', { method: 'POST', body: { id } }).catch(() => {}); refreshSoon(true); } });
         refreshSoon(true);
       },
+      // the mistake closed in the pane: its row leaves, and the group head, list head and bar count it out at once. The
+      // list is not refetched (the pane keeps showing the verdict; a refetch would move it to the next mistake)
       closed: (item, fb) => {
         dropCache(item);
-        toast(`Fixed: ${(item.mistake && item.mistake.label) || 'your mistake'}`);
-        const row = doc.querySelector(`#list .rh-row[data-i="${S.player ? S.player.at : -1}"]`);
-        if (row && tab === 'redo') { if (matchMedia('(prefers-reduced-motion: reduce)').matches) row.remove(); else { row.style.transition = 'opacity .25s, max-height .25s'; row.style.overflow = 'hidden'; row.style.maxHeight = row.offsetHeight + 'px'; requestAnimationFrame(() => { row.style.opacity = '0'; row.style.maxHeight = '0px'; }); } }
+        // beside the pane the reward lands in the pane and on the row (a live line says it, no toast); the phone's
+        // dialog covers the list, so it keeps the toast, with a check
+        const said = `Fixed: ${(item.mistake && item.mistake.label) || 'your mistake'}`;
+        if (wide()) say(said); else toast(said, { icon: 'check' });
+        const L = S.lists.redo, k = item && item._row;
+        const r = tab === 'redo' && L && k && L.items.find(x => x === k || (x.id && x.id === k.id));   // never a single opened outside the list
+        const at = r ? L.items.indexOf(r) : -1;
+        if (r && !r._closed) {
+          r._closed = true;
+          L.total = Math.max(0, L.total - 1);
+          sel('redo').ids.delete(keyOf('redo', r)); saveSel('redo');
+          const g = currentFilterValues().group || 'topic';
+          const meta = g !== 'none' && ((L.data && L.data.groups) || []).find(x => x.key === groupKey(r, g));
+          if (meta) { meta.count = Math.max(0, (meta.count || 1) - 1); if (meta.pts && r.pts) meta.pts = Math.max(0, meta.pts - r.pts); }
+          // the row glows amber and leaves (UI.fx.glow: its gap closes by glide); then the heads and the bar count it out
+          const row = doc.querySelector(`#list .rh-row[data-i="${at}"]`);
+          const after = () => {
+            if (S.tab !== 'redo') return;
+            glideRows(() => { if (L.items.some(x => !x._closed)) paintList(); });
+            paintListHead(); paintBar();
+          };
+          // the open row already wears the amber tint: it steps out of the selected look so the glow shows
+          if (row) { row.removeAttribute('aria-current'); UI.fx.glow(row).then(after); } else after();
+        }
         refreshSoon(false);
         loadCounts();
       },
@@ -2006,19 +2276,20 @@
     UI.sheet({
       title: 'Spot the trap', size: 'm',
       body: b => {
-        b.append(h('p', { class: 'rh-big', style: 'margin-bottom:10px' }, 'Which choice comes from: ', h('i', { text: d.prompt || o.label || '' }), '?'));
-        b.append(mtext(h('p', { class: 'q-stem', style: 'font: 400 var(--q-size, 18px)/1.5 var(--serif); margin-bottom: 12px' }), q.stem || ''));
-        const list = h('div', { class: 'rh-list-p', role: 'group', 'aria-label': 'Choices' });
-        const out = h('p', { class: 'help', role: 'status', style: 'margin-top:10px' });
+        b.append(h('p', { class: 'rh-big' }, 'Which choice comes from: ', h('i', { text: d.prompt || o.label || '' }), '?'));
+        b.append(mtext(h('p', { class: 'q-stem rh-spot-q' }), q.stem || ''));
+        const list = h('div', { class: 'rh-list-p rh-spot-c', role: 'group', 'aria-label': 'Choices' });
+        const out = h('p', { class: 'help', role: 'status' });
         (q.choices || []).forEach((c, i) => {
-          const btn = h('button', { type: 'button', class: 'btn', style: 'justify-content:flex-start; text-align:left; height:auto; min-height:44px; padding:8px 12px' }, h('b', { text: `${LET[i]}  ` }), mtext(h('span'), c));
+          const btn = h('button', { type: 'button', class: 'btn' }, h('b', { text: `${LET[i]}  ` }), mtext(h('span'), c));
           btn.addEventListener('click', async () => {
             list.querySelectorAll('button').forEach(x => { x.disabled = true; });
             try {
               const r = await UI.api(`/review/spot/${encodeURIComponent(d.id)}`, { method: 'POST', body: { answer: i } });
               const ti = r.trap_index;
-              list.querySelectorAll('button').forEach((x, j) => { if (j === ti) x.style.boxShadow = 'inset 0 0 0 1.5px var(--amber)'; if (j === i && j !== ti) x.style.boxShadow = 'inset 0 0 0 1.5px var(--ink)'; });
+              list.querySelectorAll('button').forEach((x, j) => { if (j === ti) x.dataset.trap = ''; if (j === i && j !== ti) x.dataset.pick = ''; });
               out.textContent = r.correct ? `Yes: ${LET[ti]} is the trap.` : `Not quite: the trap is ${LET[ti]}.`;
+              if (r.correct) UI.fx.check(out);   // a right pick: a check draws after the line
             } catch (e) { out.textContent = reasonOf(e); }
           });
           list.append(btn);
@@ -2033,7 +2304,7 @@
   function registerKeys() {
     try {
       UI.keys.register('review', {
-        'Shift+R': { does: 'Start review', run: () => { const b = $('start').querySelector('.rh-split .pill'); if (b) b.click(); } },
+        'Shift+R': { does: 'Start review', run: () => { const b = $('start').querySelector('.rh-go'); if (b) b.click(); } },
         '/': { does: 'Search this list', run: () => { const i = $('filters').querySelector('input[type=search]'); if (i) i.focus(); } },
         X: { does: 'Select the open row', run: () => { const r = doc.querySelector('#list .rh-row[aria-current] .sel input') || (doc.activeElement && doc.activeElement.closest && doc.activeElement.closest('.rh-row') && doc.activeElement.closest('.rh-row').querySelector('.sel input')); if (r) r.click(); } },
       }, { label: 'Review' });

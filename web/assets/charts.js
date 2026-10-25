@@ -21,6 +21,10 @@
 
    Days are local 'YYYY-MM-DD' strings (X-Tz); times are ISO strings, Dates or ms.
 
+   Motion (premium A2): an svg chart draws in once, the first time it is seen (UI.motion.draw on its [data-m]
+   marks: trend lines draw, bars and bands rise, the amber fade wipes in); redraws (a resize, a filter) never
+   replay. The gauge sweeps with its figure when asked (animate), and What if's dashed band glides.
+
    UI.bandChart(host, points, opts)                    also UI.trend, UI.scoreChart
      points: [{id, at | finished | day, low, high (or estimate {low, high}, or value for
        one number), mid?, kind: mock | paper | custom | module | diagnostic | outside,
@@ -28,12 +32,14 @@
        detail ('31/44 · harder M2'), right, asked, href, tip}]
      opts: {height (200; 160 on a phone; under 110 draws the mini trend), min, max, grid,
        fit (y fitted to the data ±50, gridlines every 50), x: 'sitting' | 'time', from, to,
-       target, exam, estimate {low, high}, outside (false hides added scores), now,
+       target, exam, estimate {low, high}, outside (false hides added scores), now, onFocus(point | null) (a sitting
+       hovered or focused: the others dim; the page shows it, as Results' hero figure does, so its tooltip stays quiet),
        projection {low, high, mid, to, label} | null (null: the "three modules" line),
        pace {from {day, value}, to {day, value}, aims [{day, value, beaten}]},
        gaps [{from, to, text | questions, minutes, fixed, moved, delta}] (ids or indexes),
        pairs [[idA, idB]], rw [{day, value, source}], onPick(point), compare(newer, older),
-       filters (Range and kind controls), store (localStorage key for them), legend,
+       filters (Range and Kinds: one button.dd.chart-view over a menu), store (localStorage key for them), ctlHost (an element
+       that takes those controls, such as the card head), legend (true, false or 'fold': behind a Key toggle; a chart under 360px wide folds a key of 3+ items),
        empty {text, action {label, href, onClick}}, label}
    UI.gauge(host, {band {low, high}, target, previous {low, high, label}, today, second,
        whatif, subject, sub, caption, animate, min, max}) -> {el, set}
@@ -52,14 +58,16 @@
        legend, label}
    UI.calendar(host, {month, days, plan, marks {exam, start, end, today}, onPick(day, row),
        onMonth(month), min, max, goal, metric: minutes | questions | accuracy | fixed,
-       metrics (the metric seg), look: heat | plan, compact, selected, legend})
+       metrics (the metric seg), look: heat | plan, compact, selected, legend (false, or 'why': the key
+       behind a "?" on the title), nav (false: no previous / next / Today), tasks (false: no done/of chip per day)})
        -> {el, go(month), select(day), set}                          also UI.monthGrid
      days: [{day, minutes, questions, right, fixed, rest, spare_used, due {checks},
        load}]; plan: [{day, kind: practice | test | rest | off | eve, state: done |
        partial | missed | skipped | madeup | future, minutes, tasks {done, of}, own,
        phase, phase_start, load}]
    UI.heatmap(host, days, {weeks, end, onPick(day, row), range, onRange(weeks), stats
-       {active_days, streak, best, minutes}, legend})
+       {active_days, streak, best, minutes}, legend})   a .heat-readout line under the grid names the
+       hovered or focused day, else the latest active day
    UI.lineChart(host, series, {bands [{from, to, label}], height, invert, log, min, max,
        grid [values], x: time | index, format(y), xFormat(x), onPick(point, series),
        annotate [{x, text}], label})
@@ -128,7 +136,10 @@
     get(k, d) { try { const v = localStorage.getItem(k); return v === null ? d : JSON.parse(v); } catch (_) { return d; } },
     set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (_) {} },
   };
-  const textW = (s, px = 11) => String(s).length * px * 0.62;       // DM Mono is about 0.6em a glyph
+  // gridlines: one dashed group per chart (a presentation attribute, so a ui.css stroke-dasharray would win);
+  // horizontal only, and no axis line under the bars (the 0 gridline is the baseline)
+  const gridG = svg => sv('g', { class: 'ch-grid', 'stroke-dasharray': '3 3' }, svg);
+  const textW = (s, px = 11.5) => String(s).length * px * 0.62;     // svg text is Geist 11.5 tabular (ui.css); its figures run about 0.6em, letters less, so 0.62 errs wide
   // labels keep clear of the drawing: the first candidate [x, baseline, anchor] whose text box
   // meets no obstacle box [x0, y0, x1, y1] (placed labels join obs), else null
   function clearOf(cands, text, obs, px = 11) {
@@ -172,7 +183,7 @@
   const ym = d => iso(d).slice(0, 7);
   const fdate = d => (UI.date ? UI.date(d) : `${MON[toDate(d).getMonth()]} ${toDate(d).getDate()}`);
   const flong = d => (UI.date ? UI.date(d, 'long') : `${DOW[toDate(d).getDay()]}, ${fdate(d)}`);
-  const fnum = v => (v === null || v === undefined || v === '' || !isFinite(v) ? '—' : (UI.num ? UI.num(v) : String(Math.round(v))));
+  const fnum = v => (v === null || v === undefined || v === '' || !isFinite(v) ? '–' : (UI.num ? UI.num(v) : String(Math.round(v))));
   const fdur = m => (UI.dur ? UI.dur(m) : `${Math.round(m)}m`);
   const fmin = m => (Math.round(m) < 60 ? `${Math.round(m)} min` : fdur(m));
   const fmmss = s => (UI.mmss ? UI.mmss(s) : `${Math.floor(s / 60)}:${String(Math.round(s % 60)).padStart(2, '0')}`);
@@ -221,7 +232,7 @@
     return h('div', { class: 'sr chart-data' }, h('table', {},
       h('caption', { text: caption }),
       h('thead', {}, h('tr', {}, head.map(c => h('th', { scope: 'col', text: c })))),
-      h('tbody', {}, rows.map(r => h('tr', {}, r.map((c, i) => h(i ? 'td' : 'th', i ? {} : { scope: 'row' }, c === null || c === undefined || c === '' ? '—' : String(c))))))));
+      h('tbody', {}, rows.map(r => h('tr', {}, r.map((c, i) => h(i ? 'td' : 'th', i ? {} : { scope: 'row' }, c === null || c === undefined || c === '' ? '–' : String(c))))))));
   }
   function setTable(el, t) {
     const old = el.querySelector(':scope > .chart-data');
@@ -239,7 +250,31 @@
     };
     if (window.ResizeObserver) new ResizeObserver(() => requestAnimationFrame(() => run(false))).observe(plot);
     else addEventListener('resize', () => run(false));
+    firstView(plot);
     return { redraw: () => run(true) };
+  }
+  // D5-D8: the drawing in view the first time draws itself in (its [data-m] marks: lines draw, bars rise, areas
+  // wipe), once; a chart below the fold or in a closed tab waits until it is seen. Redraws never replay.
+  function firstView(plot) {
+    const M = UI.motion;
+    if (!M || !M.draw || typeof IntersectionObserver !== 'function') return;
+    const io = new IntersectionObserver(es => {
+      if (!es.some(e => e.isIntersecting)) return;
+      io.disconnect();
+      const svg = plot.querySelector(':scope > svg');
+      if (svg && svg.querySelector('[data-m]')) M.draw(svg);
+    }, { threshold: .25 });
+    io.observe(plot);
+  }
+  // the amber fade under a trend line (gradient 2 of 3; ui.css .ch-area, .ch-fade): the line's points closed down to y0
+  function area(svg, pts, y0) {
+    if (pts.length < 2) return null;
+    const id = uid('f');
+    const g = sv('linearGradient', { id, class: 'ch-fade', x1: 0, y1: 0, x2: 0, y2: 1 }, sv('defs', {}, svg));
+    sv('stop', { offset: 0 }, g);
+    sv('stop', { offset: 1 }, g);
+    return sv('path', { class: 'ch-area', fill: `url(#${id})`, 'data-m': 'wipe',
+      d: `M${pts.map(([x, y]) => `${r1(x)} ${r1(y)}`).join(' L')} L${r1(pts[pts.length - 1][0])} ${r1(y0)} L${r1(pts[0][0])} ${r1(y0)} Z` }, svg);
   }
 
   // the controls over a drawing: one Tab stop, arrows move, Enter picks; a tap shows the tip with its action
@@ -255,7 +290,7 @@
         'aria-pressed': it.pressed === undefined ? null : String(!!it.pressed),
         style: `left:${r1(it.x)}px;top:${r1(it.y)}px;width:${r1(Math.max(1, it.w))}px;height:${r1(Math.max(1, it.h))}px`,
       });
-      if (it.tip && UI.tooltip) UI.tooltip(b, it.tip, { delay: 60 });
+      if (it.tip && UI.tooltip && !it.quiet) UI.tooltip(b, it.tip, { delay: 60 });     // quiet: the page shows the point itself (Results' hero)
       b.addEventListener('pointerdown', e => { ptr = e.pointerType; });
       b.addEventListener('focus', () => { cur = i; btns.forEach((x, k) => { x.tabIndex = k === i ? 0 : -1; }); if (o.onFocus) o.onFocus(it, i); });
       b.addEventListener('blur', () => { if (o.onFocus) o.onFocus(null); });
@@ -335,11 +370,12 @@
     return `M${p.join(' L')} Z`;
   }
   const emptyAct = a => (a ? h(a.href ? 'a' : 'button', { class: 'btn sm', href: a.href || null, type: a.href ? null : 'button', onclick: a.onClick || null }, a.label) : null);
-  function emptyNote(plot, e = {}, def) {
+  // inset {l, b}: keep the note over the drawing, clear of a y scale on the left and x labels below
+  function emptyNote(plot, e = {}, def, inset) {
     const old = plot.querySelector(':scope > .chart-empty');
     if (old) old.remove();
     if (!e) return;
-    plot.append(h('div', { class: 'chart-empty' }, h('p', { text: e.text || def }), emptyAct(e.action)));
+    plot.append(h('div', { class: 'chart-empty', style: inset ? `left:${Math.round(inset.l || 0)}px;bottom:${Math.round(inset.b || 0)}px` : null }, h('p', { text: e.text || def }), emptyAct(e.action)));
   }
   // the same, in flow, for a chart with no plot to lay it over (spread, stackBar)
   const emptyBlock = (e = {}, def) => h('div', { class: 'empty' }, h('p', { class: 'empty-text', text: e.text || def }), emptyAct(e.action));
@@ -401,7 +437,7 @@
     let all = [];
     const ctl = h('div', { class: 'chart-ctl' });
     const foot = h('div', { class: 'chart-foot' });
-    el.prepend(ctl);
+    if (opts.ctlHost) opts.ctlHost.append(ctl); else el.prepend(ctl);
     el.append(foot);
     const filt = { range: 'all', off: [], ...(opts.store ? ls.get(opts.store, {}) : {}) };
     let comparing = false, picked = [];
@@ -415,20 +451,39 @@
       else if (filt.range === '30') { const cut = Date.now() - 30 * 864e5; p = p.filter(x => +x.at >= cut); }
       return p;
     }
+    // Range and Kinds: one button named for what it shows ("All sittings", "Last 10 · Sections") over one menu,
+    // each kind with its band's swatch; the last kind left on cannot be turned off
     function buildCtl() {
       ctl.replaceChildren();
       ctl.hidden = !opts.filters;
-      if (!opts.filters || !UI.seg) return;
-      const save = () => { if (opts.store) ls.set(opts.store, filt); sz.redraw(); };
-      UI.seg(ctl, [{ value: '10', label: 'Last 10' }, { value: '30', label: '30 days' }, { value: 'all', label: 'All' }],
-        { value: filt.range, label: 'Range', onChange: v => { filt.range = v; save(); } });
+      if (!opts.filters || !UI.menu) return;
+      const RANGES = [['10', 'Last 10'], ['30', '30 days'], ['all', 'All sittings']];
       const count = k => all.filter(x => bandKind(x) === k).length;
-      const kinds = [['sec', 'Sections'], ['mod', 'Modules'], ['diag', 'Diagnostic'], ['dia', 'Added']].filter(([k]) => count(k));
-      if (kinds.length > 1) {
-        UI.seg(ctl, kinds.map(([value, label]) => ({ value, label, n: count(value) })),
-          { multi: true, value: kinds.map(k => k[0]).filter(k => !(filt.off || []).includes(k)), label: 'Kinds',
-            onChange: on => { filt.off = kinds.map(k => k[0]).filter(k => !on.includes(k)); save(); } });
-      }
+      const kinds = [['sec', 'Sections', 'band'], ['mod', 'Modules', 'mod'], ['diag', 'Diagnostic', 'diag'], ['dia', 'Added', 'diamond']].filter(([k]) => count(k));
+      const on = () => kinds.filter(([k]) => !(filt.off || []).includes(k));
+      const b = h('button', { type: 'button', class: 'btn sm dd chart-view' }, h('span'));
+      const label = () => {
+        const r = (RANGES.find(([v]) => v === filt.range) || RANGES[2])[1], k = on();
+        const t = kinds.length > 1 && k.length < kinds.length ? `${r} · ${k.map(x => x[1]).join(', ')}` : r;
+        b.firstChild.textContent = t;
+        b.setAttribute('aria-label', `Showing ${t}. Range and kinds`);
+        b.classList.toggle('on', filt.range !== 'all' || k.length < kinds.length);
+      };
+      const save = () => { if (opts.store) ls.set(opts.store, filt); label(); sz.redraw(); };
+      UI.menu.bind(b, () => [
+        { group: 'Range' },
+        ...RANGES.map(([value, text]) => ({ label: text === 'All sittings' ? 'All' : text, radio: 'range', checked: filt.range === value, close: true, onClick: () => { filt.range = value; save(); } })),
+        ...(kinds.length > 1 ? [{ separator: true }, { group: 'Kinds' }, ...kinds.map(([k, text, sw]) => ({ label: text, icon: keySwatch(sw), meta: fnum(count(k)), checked: on().some(x => x[0] === k),
+          onClick: (v, e) => {
+            if (!v && on().length === 1) { e.currentTarget.setAttribute('aria-checked', 'true'); return; }
+            const off = new Set(filt.off || []);
+            if (v) off.delete(k); else off.add(k);
+            filt.off = [...off];
+            save();
+          } }))] : []),
+      ], { label: 'Range and kinds', align: 'end' });
+      label();
+      ctl.append(b);
     }
 
     function draw(W) {
@@ -457,6 +512,8 @@
         hi = Math.min(opts.max ?? 800, Math.ceil((Math.max(...vals) + 50) / step) * step);
         if (hi - lo < step * 2) hi = lo + step * 2;
       }
+      // a short chart thins its scale (labels at least 18px apart: 200 to 800 by 200 at a 110px height), unless the page set the step
+      if (opts.grid === undefined && !mini) while ((H - T - B) * step / (hi - lo) < 18) step *= 2;
       const y = v => T + (H - T - B) * (1 - (clamp(v, lo, hi) - lo) / (hi - lo));
       const plotW = W - L - R;
 
@@ -492,8 +549,8 @@
       const sumBits = [];
       const svg = svgRoot(W, TH, '');
       const hatchFill = rw.length ? hatch(svg, 'rw') : null;
-      // gridlines and the scale
-      const grid = sv('g', { class: 'ch-grid' }, svg);
+      // gridlines and the scale (the mini trend's one baseline is dashed too)
+      const grid = gridG(svg);
       if (!mini) for (let v = Math.ceil(lo / step) * step; v <= hi; v += step) {
         sv('line', { x1: L, x2: W - R, y1: r1(y(v)), y2: r1(y(v)) }, grid);
         tx(grid, L - 7, y(v) + 3.5, v, { 'text-anchor': 'end', class: 'ch-ytick' });
@@ -532,9 +589,14 @@
         const xn = xOf(opts.now === true ? Date.now() : opts.now);
         sv('line', { x1: r1(xn), x2: r1(xn), y1: T, y2: H - B, class: 'ch-now' }, svg);
       }
-      // the trend through our sittings' middles
-      if (scored.length > 1) sv('polyline', { class: 'ch-trend', points: scored.map(p => `${r1(xs[pts.indexOf(p)])},${r1(y(p.mid))}`).join(' ') }, svg);
+      // the trend through our sittings' middles, the amber fade under it
+      if (scored.length > 1) {
+        const tp = scored.map(p => [xs[pts.indexOf(p)], y(p.mid)]);
+        area(svg, tp, H - B);
+        sv('polyline', { class: 'ch-trend', 'data-m': 'line', points: tp.map(([a, b]) => `${r1(a)},${r1(b)}`).join(' ') }, svg);
+      }
       // bands, middles, added scores
+      const bandEl = [];
       pts.forEach((p, i) => {
         const x = xs[i], now = p === last;
         if (p.outside) {
@@ -544,8 +606,8 @@
           return;
         }
         const yt = y(p.high), yb = y(p.low);
-        sv('rect', { class: `ch-band ${bandKind(p)}${now ? ' now' : ''}`, x: r1(x - bw / 2), width: r1(bw), y: r1(yt), height: r1(Math.max(3, yb - yt)), rx: r1(Math.min(bw / 2, 4)) }, svg);
-        sv('circle', { class: 'ch-mid' + (now ? ' now' : ''), cx: r1(x), cy: r1(y(p.mid)), r: mini ? 3 : now ? 4.5 : 4 }, svg);
+        bandEl[i] = [sv('rect', { class: `ch-band ${bandKind(p)}${now ? ' now' : ''}`, 'data-m': 'bar', x: r1(x - bw / 2), width: r1(bw), y: r1(yt), height: r1(Math.max(3, yb - yt)), rx: r1(Math.min(bw / 2, 4)) }, svg),
+          sv('circle', { class: 'ch-mid' + (now ? ' now' : ''), 'data-m': 'bar', cx: r1(x), cy: r1(y(p.mid)), r: mini ? 3 : now ? 4.5 : 4 }, svg)];
       });
       // twin brackets
       const byId = new Map(pts.map(p => [String(p.id), p]));
@@ -578,20 +640,25 @@
           let m = new Date(t0.getFullYear(), t0.getMonth() + (t0.getDate() > 1 ? 1 : 0), 1, 12), lastX = -99;
           for (; m <= t1; m = new Date(m.getFullYear(), m.getMonth() + 1, 1, 12)) {
             const x = xOf(m);
-            sv('line', { x1: r1(x), x2: r1(x), y1: H - B, y2: H - B + 4, class: 'ch-tick' }, xl);
-            const satX = examT ? xOf(examT) : null, satW = examT ? textW(`SAT ${fdate(examT)}`, 11) + 8 : 0;
+            const satX = examT ? xOf(examT) : null, satW = examT ? textW(`SAT ${fdate(examT)}`, 11.5) + 8 : 0;
             const clash = satX !== null && x + 3 < satX && x + 30 > satX - satW;
             if (x - lastX > 34 && !clash && x + 24 < W) { tx(xl, x + 3, H - 8, MON[m.getMonth()], { class: 'ch-xtick' }); lastX = x; }
           }
         } else {
           const every = Math.max(1, Math.ceil(52 / slot));
           const days = pts.map(p => iso(p.at));
-          pts.forEach((p, i) => {
-            if ((pts.length - 1 - i) % every) return;
-            const same = days.filter(d => d === days[i]).length > 1 && slot >= 72;
-            if (examT && xs[i] > xOf(examT) - textW(`SAT ${fdate(examT)}`, 11) - 30 && xs[i] < xOf(examT)) return;
-            tx(xl, xs[i], H - 8, same ? `${fdate(p.at)} ${hm(p.at)}` : fdate(p.at), { 'text-anchor': 'middle', class: 'ch-xtick' });
-          });
+          // from the newest leftwards: a day's run of sittings is labelled once (under its newest), and a label never
+          // runs into the one to its right
+          let rx = Infinity, rw = 0, rt = '';
+          for (let i = pts.length - 1; i >= 0; i--) {
+            if ((pts.length - 1 - i) % every) continue;
+            const p = pts[i], same = days.filter(d => d === days[i]).length > 1 && slot >= 72;
+            if (examT && xs[i] > xOf(examT) - textW(`SAT ${fdate(examT)}`, 11.5) - 30 && xs[i] < xOf(examT)) continue;
+            const t = same ? `${fdate(p.at)} ${hm(p.at)}` : fdate(p.at), w = textW(t, 11.5);
+            if (t === rt || rx - xs[i] < (w + rw) / 2 + 6) continue;
+            tx(xl, xs[i], H - 8, t, { 'text-anchor': 'middle', class: 'ch-xtick' });
+            rx = xs[i]; rw = w; rt = t;
+          }
         }
       }
       // R&W you entered: a hatched step line in its own 200-800 lane
@@ -626,7 +693,7 @@
       }
       const oldSvg = plot.querySelector(':scope > svg');
       if (oldSvg) oldSvg.replaceWith(svg); else plot.prepend(svg);
-      emptyNote(plot, pts.length ? null : (opts.empty || {}), 'Your first test puts a point here.');
+      emptyNote(plot, pts.length ? null : (opts.empty || {}), 'Your first test puts a point here.', mini ? null : { l: L + 32, b: B });   // clear of the scale and the ghost band
 
       // controls: a point per sitting, a strip per gap
       const items = [];
@@ -636,7 +703,7 @@
         const hw = Math.min(22, Math.max(2, (g && slot >= 30 ? slot - 16 : slot) / 2));
         const tip = pointTip(p, sameDay[i]);
         items.push({
-          _p: p, x: xs[i] - hw, y: T - 4, w: hw * 2, h: H - T - B + 4, label: tip, tip, action: 'Open report',
+          _p: p, x: xs[i] - hw, y: T - 4, w: hw * 2, h: H - T - B + 4, label: tip, tip, action: 'Open report', quiet: !!opts.onFocus,
           pressed: opts.compare && comparing ? picked.includes(p) : undefined,
           pick: () => {
             if (comparing) {
@@ -665,7 +732,9 @@
         const t = `R&W ${r.value} · ${fdate(r.at)}${r.source ? ` · ${r.source}` : ''} · entered by you`;
         items.push({ x: xOf(r.at) - 12, y: H + 12, w: 24, h: laneH, label: t, tip: t });
       });
-      hitLayer(plot, items, { label: 'Sittings', start: Math.max(0, items.findIndex(it => it._p && it._p === last)) });
+      // hovering or focusing a sitting: the others dim, and the page may show it (o.onFocus(point | null))
+      const hot = p => { bandEl.forEach((els, i) => (els || []).forEach(e => { e.style.transition = 'opacity .15s'; e.style.opacity = p && pts[i] !== p ? '.55' : ''; })); if (opts.onFocus) opts.onFocus(p); };
+      hitLayer(plot, items, { label: 'Sittings', start: Math.max(0, items.findIndex(it => it._p && it._p === last)), onFocus: it => hot(it && it._p ? it._p : null) });
 
       // the hidden table
       const rows = pts.map((p, i) => [sameDay[i] ? `${fdate(p.at)} ${hm(p.at)}` : fdate(p.at), pointName(p), fband(p.low, p.high),
@@ -682,10 +751,10 @@
       rw.forEach(r => rows.push(['R&W (yours)', fdate(r.at), r.value, '', r.source || 'entered by you']));
       setTable(el, dataTable(sumTxt, ['Date', 'Sitting', 'Band', 'Middle', 'Detail'], rows));
 
-      footer(pts, { tgt, est, proj, pace, rw, examT, mini, scored });
+      footer(pts, { tgt, est, proj, pace, rw, examT, mini, scored, W });
     }
 
-    let lastFoot = null;
+    let lastFoot = null, keyOpen = false;
     function footer(pts, f) {
       if (pts) lastFoot = { pts, f }; else if (lastFoot) ({ pts, f } = lastFoot); else return;
       foot.replaceChildren();
@@ -695,14 +764,19 @@
       const items = [
         k('sec') && { key: 'band', label: 'Section', n: k('sec') }, k('mod') && { key: 'mod', label: 'Module', n: k('mod') },
         k('diag') && { key: 'diag', label: 'Diagnostic', n: k('diag') }, f.scored.length && { key: 'now', label: 'Newest' },
-        k('dia') && { key: 'diamond', label: 'A score you added', n: k('dia') },
-        f.scored.length > 1 && { key: 'line', label: 'Trend of the middles' },
-        f.tgt !== null && { key: 'target', label: `Target ${f.tgt}` }, f.est && { key: 'zone', label: 'Current estimate' },
+        k('dia') && { key: 'diamond', label: 'Added', n: k('dia') },
+        f.scored.length > 1 && { key: 'line', label: 'Trend' },
+        f.tgt !== null && { key: 'target', label: `Target ${f.tgt}` }, f.est && { key: 'zone', label: 'Estimate' },
         f.proj && { key: 'cone', label: f.proj.label || `If this pace held: ${fband(f.proj.low, f.proj.high)}${f.proj.to || f.examT ? ` on ${fdate(f.proj.to || f.examT)}` : ''}` }, f.pace && { key: 'pace', label: 'Plan pace' },
         (opts.pairs || []).length && { key: 'bracket', label: 'Twin pair' }, f.rw.length && { key: 'rw', label: 'R&W you entered', n: f.rw.length },
       ];
       const key = chartKey(items);
-      foot.append(key);
+      if (opts.legend === 'fold' || (f.W < 360 && items.filter(Boolean).length > 2)) {
+        const d = h('details', { class: 'fold chart-keyfold' }, h('summary', { class: 'fold-s', text: 'Key' }), key);
+        d.open = keyOpen;
+        d.addEventListener('toggle', () => { keyOpen = d.open; });
+        foot.append(d);
+      } else foot.append(key);
       if (opts.compare && f.scored.length > 1) {
         const b = h('button', { type: 'button', class: 'quiet sm chart-compare', 'aria-pressed': String(comparing) },
           comparing ? (picked.length ? 'Pick one more' : 'Pick two points') : 'Compare two');
@@ -775,7 +849,7 @@
       // 3-5. today (dotted), with a second look (hollow), what if (dashed)
       if (todayB) sv('path', { class: 'g-out dotted', d: sector(todayB.low, todayB.high, RR - SW / 2 - 3, RR + SW / 2 + 3) }, svg);
       if (second) sv('path', { class: 'g-out', d: sector(second.low, second.high, RR - SW / 2 - 3, RR + SW / 2 + 3) }, svg);
-      if (whatif) sv('path', { class: 'g-out dashed', d: sector(whatif.low, whatif.high, RR - SW / 2 - 3, RR + SW / 2 + 3) }, svg);
+      const wiP = whatif ? sv('path', { class: 'g-out dashed', d: sector(whatif.low, whatif.high, RR - SW / 2 - 3, RR + SW / 2 + 3) }, svg) : null;
       // 6. this sitting, with its middle
       const bandP = sv('path', { class: 'g-band', d: band ? sector(band.low, band.high) : '' }, svg);
       const midP = sv('path', { class: 'g-mid', d: band ? radial((band.low + band.high) / 2, RR - SW / 2 - 3, RR + SW / 2 + 3) : '' }, svg);
@@ -793,7 +867,7 @@
       }
       const old = plot.querySelector(':scope > svg');
       if (old) old.replaceWith(svg); else plot.prepend(svg);
-      refs = { bandP, midP };
+      refs = { bandP, midP, wiP };
 
       const prevName = (opts.previous && opts.previous.label) || 'Previous';
       const mid = band ? Math.round((band.low + band.high) / 2) : null;
@@ -804,14 +878,15 @@
         tgt !== null && `target ${tgt}`].filter(Boolean).join('; ') + '.';
       svg.setAttribute('aria-label', summary);
       sub.textContent = opts.sub ?? (band ? `${subject()} · middle ${mid}` : 'No score yet');
-      key.replaceChildren(chartKey([
-        band && { swatch: gSw('g-band'), label: 'This sitting', n: fband(band.low, band.high) },
+      // the band is the centre figure and the target is labelled on the dial: the key lists only the other layers
+      const layers = [
         prev && { swatch: gSw('g-prev'), label: prevName, n: fband(prev.low, prev.high) },
         second && { swatch: gSw('g-out'), label: 'With a second look', n: fband(second.low, second.high) },
         todayB && { swatch: gSw('g-out dotted'), label: 'Today ≈', n: fband(todayB.low, todayB.high) },
         whatif && { swatch: gSw('g-out dashed'), label: 'What if', n: fband(whatif.low, whatif.high) },
-        tgt !== null && { swatch: gSw('g-target', true), label: 'Target', n: String(tgt) },
-      ]));
+      ].filter(Boolean);
+      key.replaceChildren(layers.length ? chartKey(layers) : '');
+      key.hidden = !layers.length;
       cap.textContent = opts.caption || '';
       cap.hidden = !opts.caption;
       setTable(el, dataTable(summary, ['Layer', 'Low', 'High', 'Middle'], [
@@ -836,10 +911,8 @@
     }
     function show(animate) {
       const { band, prev } = render();
-      if (!band) { big.textContent = '—'; return; }
-      el.removeAttribute('data-animate');
+      if (!band) { big.textContent = '–'; return; }
       if (!animate || still()) { big.textContent = fband(band.low, band.high); return; }
-      el.setAttribute('data-animate', '');
       const from = prev || { low: lo(), high: lo() }, t0 = performance.now();
       const step = t => {
         const k = Math.min(1, (t - t0) / 1200), e = 1 - Math.pow(1 - k, 3);
@@ -849,8 +922,27 @@
       paint(from.low, from.high);
       requestAnimationFrame(step);
     }
+    // What if: the dashed band glides from the last answer (or from the sitting's band) to the new one, 240ms
+    function glide(from, to) {
+      const p = refs && refs.wiP, M = UI.motion;
+      if (!p || !M || !M.ok || !M.ok() || typeof requestAnimationFrame !== 'function') return;
+      const t0 = performance.now(), at = (a, b, e) => a + (b - a) * e;
+      p.setAttribute('d', sector(from.low, from.high, RR - SW / 2 - 3, RR + SW / 2 + 3));
+      const step = t => {
+        const k = Math.min(1, (t - t0) / 240), e = 1 - Math.pow(1 - k, 3);
+        p.setAttribute('d', sector(at(from.low, to.low, e), at(from.high, to.high, e), RR - SW / 2 - 3, RR + SW / 2 + 3));
+        if (k < 1 && p.isConnected) requestAnimationFrame(step);
+      };
+      requestAnimationFrame(step);
+    }
     show(!!opts.animate);
-    return { el, set(o2 = {}) { Object.assign(opts, o2); show(!!o2.animate); } };
+    return { el, set(o2 = {}) {
+      const was = okBand(opts.whatif) ? bOf(opts.whatif) : okBand(opts.band) ? bOf(opts.band) : null;
+      Object.assign(opts, o2);
+      show(!!o2.animate);
+      const now = okBand(opts.whatif) ? bOf(opts.whatif) : null;
+      if (was && now && (was.low !== now.low || was.high !== now.high)) glide(was, now);
+    } };
   }
 
   /* ============================================================ UI.scale */
@@ -992,14 +1084,14 @@
       const yv = v => y0 - (H - T - B) * (v / span);
       const ticks = opts.norm ? [0, 50, 100] : [0, maxUp / 2, maxUp];
       const tickText = v => (opts.norm ? `${v}%` : fmt(v));
-      if (!mini) L = Math.max(L, 10 + Math.max(0, ...ticks.filter(Boolean).map(v => textW(tickText(v), 10.5)), dn ? textW(fmt(dn), 10.5) : 0));
+      if (!mini) L = Math.max(L, 10 + Math.max(0, ...ticks.filter(Boolean).map(v => textW(tickText(v), 11.5)), dn ? textW(fmt(dn), 11.5) : 0));
       const plotW = W - L - R;
       const slot = plotW / Math.max(n, 1);
       const k = stacked ? 1 : S.length;
       const bw = Math.max(2, Math.min(24, (slot - 2) * (stacked ? .64 : .8) / k));
       const svg = svgRoot(W, H, '');
       const hf = hatch(svg);
-      const grid = sv('g', { class: 'ch-grid' }, svg);
+      const grid = gridG(svg);
       if (!mini) {
         ticks.forEach(v => {
           sv('line', { x1: L, x2: W - R, y1: r1(yv(v)), y2: r1(yv(v)) }, grid);
@@ -1007,7 +1099,7 @@
         });
         if (dn) { sv('line', { x1: L, x2: W - R, y1: r1(yv(-dn)), y2: r1(yv(-dn)) }, grid); tx(grid, L - 6, yv(-dn) + 3.5, fmt(dn), { 'text-anchor': 'end', class: 'ch-ytick' }); }
       }
-      sv('line', { x1: L, x2: W - R, y1: r1(y0), y2: r1(y0), class: 'ch-base' }, svg);
+      if (mini) sv('line', { x1: L, x2: W - R, y1: r1(y0), y2: r1(y0), class: 'ch-base' }, svg);   // a full chart's 0 gridline is its baseline
       const look = (s, r) => (r && r.status ? null : r && r.today && opts.today === 'amber' ? 'amber' : s.look || (S.length === 1 && !D.length ? 'ink' : null));
       const LOOKS = ['ink', 'soft', 'hatch', 'mat'];
       const lookOf = (s, i, r) => look(s, r) || LOOKS[i % LOOKS.length];
@@ -1030,7 +1122,7 @@
             const ya = yv(a) - (m ? 1 : 0), yb = yv(b) + (top ? 0 : 1);
             if (ya - yb > .5) {
               const l = lookOf(s, j, r);
-              const e = sv('path', { class: r.status ? 'ch-bar ch-st' : cls(l), d: barPath(x - bw / 2, ya, yb, bw, top), 'data-status': r.status || null }, svg);
+              const e = sv('path', { class: r.status ? 'ch-bar ch-st' : cls(l), d: barPath(x - bw / 2, ya, yb, bw, top), 'data-status': r.status || null, 'data-m': 'bar' }, svg);
               if (l === 'hatch' && !r.status) e.setAttribute('fill', hf);
             }
             acc += v;
@@ -1041,7 +1133,7 @@
             if (!v) return;
             const bx = x - (bw * k) / 2 + bw * j + (j ? 1 : 0);
             const l = lookOf(s, j, r);
-            const e = sv('path', { class: cls(l), d: barPath(bx, y0, yv(v), bw - (j ? 1 : 0), true) }, svg);
+            const e = sv('path', { class: cls(l), d: barPath(bx, y0, yv(v), bw - (j ? 1 : 0), true), 'data-m': 'bar' }, svg);
             if (l === 'hatch') e.setAttribute('fill', hf);
           });
         }
@@ -1083,7 +1175,7 @@
         const lf = typeof opts.labels === 'function' ? opts.labels
           : opts.labels === 'weekday' || (!opts.labels && data.every(r => r.day) && n <= 14) ? r => (r.day ? DOW[toDate(r.day).getDay()][0] : '')
           : opts.labels === 'date' || (!opts.labels && data.every(r => r.day)) ? r => fdate(r.day) : r => String(r.label ?? r.key ?? '');
-        const every = Math.max(1, Math.ceil(Math.max(...data.map(r => textW(lf(r), 10.5)), 8) / (slot - 2)));
+        const every = Math.max(1, Math.ceil(Math.max(...data.map(r => textW(lf(r), 11.5)), 8) / (slot - 2)));
         data.forEach((r, i) => {
           if ((n - 1 - i) % every) return;
           tx(svg, cx(i), H - (mini ? 3 : 6), lf(r), { 'text-anchor': 'middle', class: 'ch-xtick' + (r.today ? ' on' : '') });
@@ -1212,13 +1304,15 @@
       const weeks = Math.ceil((lead + days) / 7);
       el.className = `chart cal${planLook() ? ' plan' : ''}${opts.compact ? ' compact' : ''}`;
       // header
-      const prevB = h('button', { type: 'button', class: 'ibtn cal-nav', 'aria-label': 'Previous month', disabled: !inRange(shiftM(month, -1)) || null, text: '‹' });
-      const nextB = h('button', { type: 'button', class: 'ibtn cal-nav', 'aria-label': 'Next month', disabled: !inRange(shiftM(month, 1)) || null, text: '›' });
+      const caret = (n, t) => (UI.icon ? UI.icon(n, 18) : t);
+      const prevB = h('button', { type: 'button', class: 'ibtn cal-nav', 'aria-label': 'Previous month', disabled: !inRange(shiftM(month, -1)) || null }, caret('caret_left', '‹'));
+      const nextB = h('button', { type: 'button', class: 'ibtn cal-nav', 'aria-label': 'Next month', disabled: !inRange(shiftM(month, 1)) || null }, caret('caret_right', '›'));
       const title = h('h3', { class: 'cal-title', 'aria-live': 'polite', text: `${MONTH[mm - 1]} ${yy}` });
       prevB.addEventListener('click', () => go(shiftM(month, -1)));
       nextB.addEventListener('click', () => go(shiftM(month, 1)));
-      const head = h('div', { class: 'cal-head' }, prevB, title, nextB);
-      if (ym(td) !== month && inRange(ym(td))) head.append(h('button', { type: 'button', class: 'quiet sm cal-jump', text: 'Today', onclick: () => { sel = td; focusDay = td; go(ym(td), true); } }));
+      // nav: false keeps the month still (no previous, next or Today)
+      const head = opts.nav === false ? h('div', { class: 'cal-head' }, title) : h('div', { class: 'cal-head' }, prevB, title, nextB);
+      if (opts.nav !== false && ym(td) !== month && inRange(ym(td))) head.append(h('button', { type: 'button', class: 'quiet sm cal-jump', text: 'Today', onclick: () => { sel = td; focusDay = td; go(ym(td), true); } }));
       const parts = [head];
       if (opts.metrics && !planLook() && UI.seg) {
         const box = h('div', { class: 'cal-metric' });
@@ -1256,7 +1350,7 @@
           if (!planLook() && r && r.rest && !q) b.append(h('i', { class: 'cal-shield', 'aria-hidden': 'true' }));
           if (planLook() && p) {
             if (isNum(+p.minutes) && p.minutes > 0 && !exam && !['rest', 'off', 'eve'].includes(p.kind)) b.append(h('span', { class: 'cal-meta', 'aria-hidden': 'true', text: `${p.minutes}m` }));
-            if (p.tasks && isNum(+p.tasks.of) && p.tasks.of > 0 && d <= td) b.append(h('span', { class: 'cal-tk', 'aria-hidden': 'true', text: `${n0(p.tasks.done)}/${p.tasks.of}`, style: `--p: ${Math.min(1, (p.tasks.done || 0) / p.tasks.of)}` }));
+            if (opts.tasks !== false && p.tasks && isNum(+p.tasks.of) && p.tasks.of > 0 && d <= td) b.append(h('span', { class: 'cal-tk', 'aria-hidden': 'true', text: `${n0(p.tasks.done)}/${p.tasks.of}`, style: `--p: ${Math.min(1, (p.tasks.done || 0) / p.tasks.of)}` }));
             if (p.own) b.append(h('i', { class: 'cal-own', 'aria-hidden': 'true' }));
             if (p.phase_start && p.phase) b.append(h('span', { class: 'cal-phase', 'aria-hidden': 'true', text: p.phase }));
             if (p.phase) b.dataset.phase = p.current_phase ? 'now' : 'other';
@@ -1284,7 +1378,10 @@
       const summary = planLook()
         ? `${MONTH[mm - 1]} ${yy} plan: ${[...P.values()].filter(p => p.day.startsWith(month) && ['practice', 'test'].includes(p.kind)).length} study days${mk.exam && iso(mk.exam).startsWith(month) ? `, SAT on ${fdate(mk.exam)}` : ''}.`
         : `${MONTH[mm - 1]} ${yy}: ${activeDays} active day${activeDays === 1 ? '' : 's'}, ${fdur(totMin)}, ${fnum(totQ)} questions${mk.exam && iso(mk.exam).startsWith(month) ? `, SAT on ${fdate(mk.exam)}` : ''}.`;
-      if (opts.legend !== false) parts.push(calLegend(summary, D, P));
+      // legend: 'why' puts the key behind the title's "?" (the summary stays in the data table)
+      // (inside a wrapper with the figure's look classes, so each swatch takes the same style as the mark it explains)
+      if (opts.legend === 'why' && UI.why) title.after(UI.why(() => h('div', { class: `cal${planLook() ? ' plan' : ''}${opts.compact ? ' compact' : ''}` }, calLegend(summary, D, P, true)), { about: 'the calendar’s marks' }));
+      else if (opts.legend !== false) parts.push(calLegend(summary, D, P));
       parts.push(dataTable(summary, planLook() ? ['Date', 'Kind', 'Minutes', 'Tasks', 'State'] : ['Date', 'Minutes', 'Questions', 'Right', 'Fixed', 'Plan'],
         [...Array(days).keys()].map(i => {
           const d = `${month}-${String(i + 1).padStart(2, '0')}`, r = D.get(d) || {}, p = P.get(d) || {};
@@ -1296,9 +1393,9 @@
       el.replaceChildren(...parts);
       if (focus && cells[active]) cells[active].focus();
     }
-    function calLegend(summary, D, P) {
+    function calLegend(summary, D, P, inPop) {
       const sc = h('span', { class: 'cal-scale', role: 'img', 'aria-label': summary });
-      const box = h('div', { class: 'cal-key' });
+      const box = h('div', { class: 'cal-key', style: inPop ? 'margin-top:0' : null });
       if (planLook()) {
         const items = [['practice', 'Practice'], ['test', 'Test'], ['rest', 'Rest'], ['off', 'Day off'], ['done', 'Done'], ['partial', 'Partly done'], ['missed', 'Missed'], ['skipped', 'Skipped'], ['madeup', 'Made up'], ['sat', 'SAT']];
         sc.append(...items.map(([k, t]) => h('span', { class: 'cal-k' }, h('i', { class: `cal-sw ${k}`, 'aria-hidden': 'true' }), t)));
@@ -1449,7 +1546,7 @@
         });
         parts.push(box);
       }
-      parts.push(h('div', { class: 'heat-wrap' }, grid));
+      parts.push(h('div', { class: 'heat-wrap' }, grid), readout(grid, cells));
       const vals = [...data.values()];
       const scale = h('span', { class: 'heat-scale', role: 'img', 'aria-label': summary },
         h('span', { text: 'Less' }), [0, 1, 2, 3, 4].map(k => h('i', { 'data-h': k || null })), h('span', { text: 'More' }));
@@ -1473,6 +1570,25 @@
     let wasPhone = phone();
     addEventListener('resize', () => { if (phone() !== wasPhone) { wasPhone = phone(); draw(); } });
     return { el, set(d, o2) { if (o2) Object.assign(opts, o2); if (d) data = byDay(d); draw(); } };
+  }
+
+  // the readout under the grid: the hovered or focused day (its cell's own aria-label), else the latest day with
+  // activity; a mouse leaving the grid goes back to that, a tap keeps its day. aria-hidden: the cells say it already
+  function readout(grid, cells) {
+    const line = h('p', { class: 'heat-readout', 'aria-hidden': 'true', 'data-nofold': '' });
+    const latest = cs => cs.reduce((a, c) => (!a || c.dataset.day > a.dataset.day ? c : a), null);
+    const say = c => { c = c || latest(cells.filter(x => x.dataset.h)) || latest(cells); line.textContent = c ? c.getAttribute('aria-label') : ''; };
+    const cellOf = t => (t && t.closest ? t.closest('.heat-c[data-day]') : null);
+    grid.addEventListener('pointerover', e => { const c = cellOf(e.target); if (c) say(c); });
+    grid.addEventListener('focusin', e => { const c = cellOf(e.target); if (c) say(c); });
+    grid.addEventListener('pointerout', e => {
+      if (e.pointerType !== 'mouse' || grid.contains(e.relatedTarget)) return;
+      const f = cellOf(doc.activeElement);
+      say(f && grid.contains(f) ? f : null);
+    });
+    grid.addEventListener('focusout', e => { if (!grid.contains(e.relatedTarget)) say(); });
+    say();
+    return line;
   }
 
   /* ============================================================ UI.lineChart */
@@ -1506,7 +1622,7 @@
       const t = v => (opts.log ? (Math.log(Math.max(v, 1e-9)) - Math.log(lo)) / (Math.log(hi) - Math.log(lo)) : (v - lo) / (hi - lo));
       const yOf = v => T + (H - T - B) * (opts.invert ? t(clamp(v, lo, hi)) : 1 - t(clamp(v, lo, hi)));
       const gv = opts.grid || (() => { const m = niceMax((hi - lo) / 3); const out = []; for (let v = Math.ceil(lo / m) * m; v <= hi; v += m) out.push(v); return out; })();
-      if (!mini) L = Math.max(L, 10 + Math.max(0, ...gv.map(v => textW(fy(v), 10.5))));
+      if (!mini) L = Math.max(L, 10 + Math.max(0, ...gv.map(v => textW(fy(v), 11.5))));
       const plotW = W - L - R;
       const svg = svgRoot(W, H, '');
       // every series as boxes, and the labels to draw over them once the lines are down
@@ -1519,7 +1635,7 @@
         if (mini || !b.label || bot - top <= 12) return;
         bandReq.push([[[L + 4, top + 11, 'start'], [W - R - 4, top + 11, 'end'], [L + 4, bot - 4, 'start'], [W - R - 4, bot - 4, 'end'], [L + plotW / 2, top + 11, 'middle']], b.label]);
       });
-      const grid = sv('g', { class: 'ch-grid' }, svg);
+      const grid = gridG(svg);
       let lastY = null;
       if (!mini) [...gv].sort((a, b) => yOf(a) - yOf(b)).forEach(v => { sv('line', { x1: L, x2: W - R, y1: r1(yOf(v)), y2: r1(yOf(v)) }, grid); if (lastY === null || yOf(v) - lastY >= 12) { tx(grid, L - 6, yOf(v) + 3.5, fy(v), { 'text-anchor': 'end', class: 'ch-ytick' }); lastY = yOf(v); } });
       (opts.annotate || []).forEach(a => {
@@ -1531,7 +1647,8 @@
       S.forEach((s, j) => {
         if (!s.points.length) return;
         const d = s.points.map((p, k) => `${k ? 'L' : 'M'}${r1(xOf(p.x))} ${r1(yOf(p.y))}`).join(' ');
-        sv('path', { d, class: `ch-line${s.dashed ? ' dashed' : ''}${s.you ? ' you' : ''}${j && !s.you && !s.dashed ? ' soft' : ''}` }, svg);
+        if (s.you && !opts.invert) area(svg, s.points.map(p => [xOf(p.x), yOf(p.y)]), H - B);
+        sv('path', { d, 'data-m': s.dashed ? null : 'line', class: `ch-line${s.dashed ? ' dashed' : ''}${s.you ? ' you' : ''}${j && !s.you && !s.dashed ? ' soft' : ''}` }, svg);
         const dots = !mini && s.points.length <= 40;
         s.points.forEach((p, k) => {
           const x = xOf(p.x), yy = yOf(p.y);
@@ -1549,10 +1666,10 @@
       bandReq.forEach(([c, text]) => labels.push([clearOf(c, text, obs) || c[0], text, 'ch-lab']));
       labels.forEach(([[x, y, a], text, cls]) => tx(svg, x, y, text, { 'text-anchor': a, class: cls }));
       if (!mini && xsAll.length) {
-        const every = Math.max(1, Math.ceil((Math.max(...xsAll.map(x => textW(fx(x), 10.5))) + 10) / Math.max(1, plotW / xsAll.length)));
+        const every = Math.max(1, Math.ceil((Math.max(...xsAll.map(x => textW(fx(x), 11.5))) + 10) / Math.max(1, plotW / xsAll.length)));
         xsAll.forEach((x, i) => {
           if ((xsAll.length - 1 - i) % every) return;
-          const half = textW(fx(x), 10.5) / 2;
+          const half = textW(fx(x), 11.5) / 2;
           const a = xsAll.length > 1 && i === 0 && xOf(x) - half < 0 ? 'start' : xOf(x) + half > W ? 'end' : 'middle';
           tx(svg, a === 'start' ? Math.max(0, xOf(x) - half) : a === 'end' ? W : xOf(x), H - 5, fx(x), { 'text-anchor': a, class: 'ch-xtick' });
         });
@@ -1663,7 +1780,7 @@
         tx(svg, zx, zy, zt, { 'text-anchor': za, class: 'ch-lab q-name' });
         textBox(zx, zy, zt, za);
       });
-      const grid = sv('g', { class: 'ch-grid' }, svg);
+      const grid = gridG(svg);
       [0, .25, .5, .75, 1].forEach(v => { sv('line', { x1: L, x2: W - R, y1: r1(yOf(v)), y2: r1(yOf(v)) }, grid); tx(grid, L - 6, yOf(v) + 3.5, pct(v), { 'text-anchor': 'end', class: 'ch-ytick' }); });
       const xt = opts.x === 'ratio' ? [.5, 1, 2] : (() => { const m = niceMax(xMax / 4); const out = []; for (let v = 0; v <= xMax; v += m) out.push(v); return out; })();
       xt.forEach(v => tx(grid, xOf(v), H - B + 14, opts.x === 'ratio' ? `${v}×` : fmmss(v), { 'text-anchor': 'middle', class: 'ch-xtick' }));
@@ -1966,7 +2083,6 @@
         const inBand = band && mid >= band.low && mid <= band.high;
         for (let k = 0; k < c; k++) sv('circle', { cx: r1(cx), cy: r1(H - B - r - 2 - k * stepV), r: r1(r), class: 'ds-dot' + (inBand ? ' in' : '') }, svg);
       });
-      sv('line', { x1: L, x2: W - R, y1: H - B, y2: H - B, class: 'ch-base' }, svg);
       for (let v = lo; v <= hi; v += 200) tx(svg, xOf(v), H - 6, v, { 'text-anchor': v === lo ? 'start' : v === hi ? 'end' : 'middle', class: 'ch-xtick' });
       if (isNum(+opts.avg) && opts.avg !== null) sv('line', { x1: r1(xOf(opts.avg)), x2: r1(xOf(opts.avg)), y1: 4, y2: H - B, class: 'ch-pace' }, svg);
       if (isNum(+opts.you) && opts.you !== null) {

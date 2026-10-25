@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Leaderboard · SAT Freshman</title>
+<link rel="icon" href="/favicon.ico" sizes="32x32">
 <link rel="icon" href="/assets/mark.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
 <link rel="manifest" href="/manifest.webmanifest">
@@ -11,37 +12,46 @@
 <script src="/assets/head.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800;900&family=DM+Mono:wght@400;500&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap">
+<link rel="preload" href="/assets/fonts/Geist.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap">
 <link rel="stylesheet" href="/assets/ui.css">
 <link rel="stylesheet" href="/compete/compete.css">
 <style>
-  /* The leaderboard (spec 3.7 §5, compete.md): controls → podium → your path → find → table */
-  .lb-ctl .lb-filters { display: inline-flex; flex-wrap: wrap; gap: 8px 12px; margin-left: auto; }
-  .lb-ctl .lb-fbtn { display: none; }
+  /* The leaderboard (spec 3.7 §5, compete.md): the podium (the page's hero) and the table in main. From 1280px the
+     side column holds metric, period, who and Find; below that one summary button on the title row opens them in a sheet */
+  .lb-main { display: grid; gap: 16px; align-content: start; }
+  .lb-ctl .k-row { margin-bottom: 4px; }
+  .lb-metrics { display: grid; gap: 2px; margin-bottom: 12px; }
+  .lb-metrics > .choice-row:not([aria-pressed="true"]) { box-shadow: none; }   /* a list to pick from: plain rows and the hover band, the pick in the one selected look */
+  .lb-ctl .lb-period .seg > button { padding: 0 8px; }   /* five periods on one line in 300px */
+  .lb-ctl .lb-filters { display: grid; gap: 8px; width: 100%; }
+  .lb-ctl .lb-filters select.field, .find .field { width: 100%; max-width: none; }
   .lb-ctl .resets { color: var(--soft); font-weight: 400; }
-  .lb-sheet { display: grid; gap: 12px; }
-  .lb-sheet select.field { width: 100%; }
-  @media (max-width: 759px) {
-    /* the metrics scroll sideways on one line, full labels, ending with their i */
-    .lb-ctl .lb-metrics { flex-wrap: nowrap; overflow-x: auto; scroll-snap-type: x proximity; scroll-padding-inline: calc(var(--gutter) - 9px); margin: 0 calc(-1 * var(--gutter)); padding: 0 var(--gutter); scrollbar-width: none; }
-    .lb-ctl .lb-metrics::-webkit-scrollbar { display: none; }
-    .lb-ctl .lb-metrics .choices { flex-wrap: nowrap; }
-    .lb-ctl .lb-metrics .choices button { flex: none; white-space: nowrap; scroll-snap-align: start; }
-    .lb-ctl .lb-filters { display: none; }
-    .lb-ctl .lb-fbtn { display: inline-flex; }
-  }
+  .lb-sum { margin-left: auto; max-width: 100%; }
+  .lb-sum > span { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  @media (min-width: 1280px) { .lb-sum { display: none; } }
+  @media (max-width: 1279px) { .lb-side { display: none; } }
 </style>
 </head>
 <body data-page="compete">
 <header id="bar"></header>
 <main class="page cx" id="main" tabindex="-1">
-  <h1 class="h1">Leaderboard</h1>
-  <div id="subnav"></div>
-  <section class="lb-ctl" id="ctl" aria-label="Board controls"></section>
-  <section id="podium" aria-label="Podium"></section>
-  <p class="path-line" id="path"></p>
-  <div class="find" id="find"></div>
-  <section id="table" aria-label="Board"></section>
+  <header class="cx-head">
+    <h1 class="h1">Leaderboard</h1>
+    <div id="subnav"></div>
+    <button type="button" class="btn sm lb-sum" id="lb-sum" aria-haspopup="dialog">Board</button>
+  </header>
+  <div class="cx-subject" id="subject"></div>
+  <div class="twocol">
+    <div class="lb-main" data-m="stagger">
+      <section id="podium" aria-label="Podium"></section>
+      <section class="card" id="table" aria-label="Board"></section>
+    </div>
+    <aside class="twocol-side lb-side" aria-label="Board controls">
+      <section class="lb-ctl" id="ctl" aria-label="Metric, period and who"></section>
+      <div class="find" id="find"></div>
+    </aside>
+  </div>
 </main>
 <nav id="tabs"></nav>
 <script src="/assets/ui.js"></script>

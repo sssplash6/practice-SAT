@@ -1,243 +1,231 @@
-/* Me, Settings and the shared view (Shell 3, 4, 6; shell-me U4-U14, U21, U22, U26, U29).
-   Everything shared (cards, tiles, seg, skill rows, the atlas, charts) is ui.css; these
-   rules only lay the pages out. Tokens only, so dark and print need nothing here. */
-.me { padding-bottom: 96px; }
-.me * { min-width: 0; }
-.me-grid { display: grid; grid-template-columns: 320px minmax(0, 1fr); gap: 20px; align-items: start; }
-.me-col { display: grid; gap: 20px; align-content: start; }
-@media (max-width: 1023px) {
-  .me-grid { display: flex; flex-direction: column; gap: 16px; }
-  .me-col { display: contents; }
-  .me-grid .card { order: var(--o); }
-}
-.card-act:empty { display: none; }
-.card-act:empty + .card-fold, .card-head > .card-fold:first-child { margin-left: auto; }
-.me .card-fold svg { transform: rotate(90deg); }
-.me .card[data-collapsed] .card-fold svg { transform: none; }
-.card-head > h2 { scroll-margin-top: 72px; }
-.me .card { scroll-margin-top: 64px; }
-.me p { margin: 0; }
+/* Me, Settings, Sign in, Welcome, Pair, Help and the shared view (Shell 3-6; shell-me U4-U29).
+   Everything shared (cards, tiles, seg, skill rows, the atlas, charts, .twocol) is ui.css. The first block
+   is the few helpers these account pages share, their sheets and popovers included; the Me cards are
+   scoped to .me-grid, Settings to .set, Sign in and Welcome to .si. Tokens only, so dark and print need nothing. */
+
+/* ---- shared by the account pages */
 .soft { color: var(--soft); }
 .gap { display: grid; gap: 12px; }
+.gap.tight { gap: 4px; }
+.gap.tight > .help { margin-top: 0; }
 .acts { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; }
+.acts.mt { margin-top: 12px; }
+.acts.full { flex: 1 0 100%; }
 .odot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--amber); margin-right: 6px; vertical-align: 1px; flex: none; }
 .chk { display: inline-block; margin-right: 6px; color: var(--ink); }
-
-/* rows inside a card: label, value, action; a 1px line between */
-.rows { display: grid; }
-.row { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 12px; padding: 12px 0; border-top: 1px solid var(--line); }
-.rows > .row:first-child { border-top: 0; padding-top: 0; }
-.row > .grow { flex: 1 1 180px; }
-.row .v { font: 600 15px/1.35 var(--font); }
-.row .v b, .v .n { font: 500 15px var(--mono); font-variant-numeric: tabular-nums; }
-.row .s { flex: 1 0 100%; font: 400 13px/1.45 var(--font); color: var(--soft); }
-.row .k { flex: 1 0 100%; }
-
-/* the identity card (Shell 3.1, U10, U22, U29) */
-.id-card { background: var(--wash); }
-.id-top { display: grid; grid-template-columns: 72px minmax(0, 1fr); gap: 16px; align-items: center; }
-.av { position: relative; width: 72px; height: 72px; }
-.av-edit {
-  position: absolute; right: -4px; bottom: -4px; width: 26px; height: 26px; border-radius: 50%; border: 0; padding: 0;
-  display: grid; place-items: center; background: var(--paper); color: var(--ink); box-shadow: 0 0 0 1px var(--line); cursor: pointer;
-}
-.av-edit svg { width: 14px; height: 14px; }
-.id-name { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 10px; }
-.id-name h1 { font: 800 24px/1.15 var(--font); letter-spacing: -.02em; overflow-wrap: anywhere; }
-.id-name .field { max-width: 100%; }
-.id-lines { display: grid; gap: 4px; margin-top: 8px; font: 400 12.5px/1.45 var(--mono); color: var(--soft); }
-.id-lines a, .id-lines button { font: inherit; }
-.id-board { display: flex; flex-wrap: wrap; align-items: center; gap: 2px 8px; }
-.id-board b { color: var(--ink); font-weight: 500; }
-.id-board .quiet { margin-block: 0; }
-.outs { display: grid; gap: 8px; margin: 18px 0 14px; }
-.out {
-  appearance: none; border: 0; width: 100%; text-align: left; cursor: pointer; color: var(--ink);
-  display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 8px; padding: 10px 12px; border-radius: var(--radius);
-  background: var(--paper); font: 400 13.5px/1.4 var(--font); text-decoration: none;
-}
-.out b { font: 600 16px var(--mono); font-variant-numeric: tabular-nums; }
-.out .meta { font-size: 12px; }
-@media (hover: hover) and (pointer: fine) { .out:hover { background: var(--tile); } }
-.id-card .stats { --cols: 2; --cols-phone: 2; gap: 10px; }
-.id-card .stat { background: var(--paper); }
-.id-card .stat-v { font-size: 22px; }
-@media (min-width: 600px) and (max-width: 1023px) { .id-card .stats { --cols: 4; } }
-
-/* the avatar picker (U22) */
-.av-pick { display: grid; gap: 12px; max-width: 330px; }
-.av-grid { display: grid; grid-template-columns: repeat(5, 48px); gap: 8px; }
-.av-grid > button {
-  appearance: none; border: 0; padding: 0; width: 48px; height: 48px; border-radius: 12px; cursor: pointer;
-  display: grid; place-items: center; background: var(--tile); color: var(--ink); position: relative;
-}
-.av-grid > button[aria-pressed="true"] { box-shadow: inset 0 0 0 2px var(--ink); }
-.av-grid > button .glyph { width: 26px; height: 26px; }
-.av-grid > button[data-ring]::after {
-  content: "\2713"; position: absolute; right: 2px; top: 2px; width: 14px; height: 14px; border-radius: 50%;
-  display: grid; place-items: center; background: var(--amber); color: var(--ink-deep); font: 700 9px/1 var(--font);
-}
-.av-grid > button[data-ring] { box-shadow: inset 0 0 0 2px var(--amber); }
-.av-grid > button[data-ring][aria-pressed="true"] { box-shadow: inset 0 0 0 2px var(--amber), 0 0 0 2px var(--ink); }
-.av-grid .wide { grid-column: span 5; width: auto; height: 44px; justify-content: start; display: flex; gap: 10px; padding: 0 12px; font: 500 13.5px var(--font); }
-.av-grid .wide small { color: var(--soft); font: inherit; }
-.av-grid .mk { width: 26px; height: 26px; }
-
+.chk > svg { display: block; width: 16px; height: 16px; }
+.me-grid .lrow > .chk { margin: 2px 0 0; }
+.sub-h { margin: 20px 0 4px; font: 600 14.5px/1.35 var(--font); }
+.sub-h:first-child { margin-top: 0; }
+.code-big { font: 500 28px/1.1 var(--mono); letter-spacing: .08em; font-variant-numeric: tabular-nums; }
+.chips-host { margin-bottom: 12px; }
+.me .card .otp input { background: var(--paper); }
+.me .card-foot .quiet { margin-block: 0; }
 /* small forms inside a popover */
-.pop-form { display: grid; gap: 10px; width: min(320px, calc(100vw - 48px)); }
+.pop-form { display: grid; gap: 8px; width: min(320px, calc(100vw - 48px)); }
 .pop-form .field { width: 100%; }
-.field-err { font: 500 13px/1.4 var(--font); color: var(--ink); }
 .country { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
 .country select { flex: 1 1 200px; max-width: 320px; }
 
-/* goals (Shell 3.3, U4) */
-.gbar { position: relative; height: 10px; margin: 10px 0 6px; border-radius: 5px; background: var(--track); }
-.gbar .bd { position: absolute; top: 0; bottom: 0; border-radius: 5px; background: var(--ink); opacity: .25; }
+/* ---- Me and the shared view: the work in the main column, who you are in the aside from 1280px; below
+   that one column in the phone order (--o) */
+[data-page="me"] .me-grid { --twocol-top: 60px; }
+.me-grid * { min-width: 0; }
+.me-col { display: grid; gap: var(--card-gap); align-content: start; }
+@media (min-width: 1280px) {
+  .me-grid > .twocol-side { grid-column: 2; grid-row: 1; }
+  .me-grid > .me-main { grid-column: 1; grid-row: 1; }
+}
+@media (max-width: 1279px) {
+  .me-grid { display: flex; flex-direction: column; align-items: stretch; gap: var(--card-gap); }   /* .twocol's start would shrink each card to its content */
+  .me-grid > .me-col { display: contents; }
+  .me-grid .card { order: var(--o); }
+}
+/* the subject switch sits in the Skills card's header, after its title: it scopes Skills and the cards under it */
+.me-subj { display: flex; margin-left: 8px; }
+.me-grid .card { scroll-margin-top: 64px; }
+.me-grid .card-head > h2 { scroll-margin-top: 72px; }
+.me-grid .card-act:empty { display: none; }
+.me-grid .card-act:empty + .card-fold, .me-grid .card-head > .card-fold:first-child { margin-left: auto; }
+.me-grid .push { margin-left: auto; }
+/* a second list inside a card (Habits in Mistakes, Recent in Activity) */
+.card-part { margin-top: 16px; padding-top: 12px; border-top: 1px solid var(--line); scroll-margin-top: 72px; }
+.part-head { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 12px; margin-bottom: 8px; }
+.part-head > .sub-h { margin: 0; }
+.part-head > .card-act:empty { display: none; }
+
+/* rows inside a card: label, value, action; a hairline between */
+.me-grid .rows { display: grid; }
+.me-grid .row { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 12px; padding: 12px 0; border-top: 1px solid var(--line); }
+.me-grid .rows > .row:first-child { border-top: 0; padding-top: 0; }
+.me-grid .row.sub { padding: 4px 0; border: 0; }
+.me-grid .rline { flex: 1 1 auto; }
+.me-grid .row > .full { flex: 1 0 100%; }
+.me-grid .row > .grow { flex: 1 1 180px; }
+.me-grid .row .v { font: 600 14.5px/1.4 var(--font); }
+.me-grid .row .v b, .me-grid .v .n { font-weight: 600; font-variant-numeric: tabular-nums; }
+.me-grid .row .s { flex: 1 0 100%; font: 400 12.5px/1.45 var(--font); color: var(--soft); }
+.me-grid .row .s.help { margin-top: 0; }
+.me-grid .row .k { flex: 1 0 100%; }
+.me-grid .prefs-row { margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--line); }
+
+/* the identity plate (Shell 3.1, U10, U22, U29; premium 2026-10-19): the page's one hero, full width above both
+   columns (.me-plate): the mark at 72, the name at 28 with one meta line and what you've gained, the last three
+   badges at the right, then the four figures as one row */
+.me-plate { margin-bottom: 32px; }
+.me-plate .card { scroll-margin-top: 64px; }
+.id-card > .card-head { position: absolute; top: 12px; right: 12px; margin: 0; }
+.id-card .id-top { display: grid; grid-template-columns: 72px minmax(0, 1fr) auto; gap: 8px 20px; align-items: center; padding-right: 32px; }
+.id-card .av { position: relative; width: 72px; height: 72px; align-self: start; }
+.id-who { display: grid; gap: 4px; min-width: 0; }
+.id-who > .outs { margin: 4px 0 0; }
+.shelf { display: grid; justify-items: end; gap: 6px; }
+.shelf-row { display: flex; gap: 8px; }
+.shelf .quiet { font-size: 12.5px; }
+@media (max-width: 759px) {
+  .id-card .id-top { grid-template-columns: 56px minmax(0, 1fr); }
+  .id-card .av { width: 56px; height: 56px; }
+  .id-card .av > .avatar { width: 100%; height: 100%; font-size: 20px; }
+  .shelf { grid-column: 1 / -1; justify-items: start; grid-template-columns: auto auto; align-items: center; }
+}
+.av-edit { --ib: 28px; position: absolute; right: -6px; bottom: -6px; border-radius: 8px; background: var(--face, var(--paper)); color: var(--ink); box-shadow: var(--shadow-btn, 0 0 0 1px var(--line)); }
+.av-edit svg { width: 14px; height: 14px; }
+@media (max-width: 759px), (pointer: coarse) { .id-card .av-edit { width: 28px; height: 28px; } }   /* ui.css's ::before keeps the 44px hit area */
+.id-name { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 8px; }
+.id-name h1 { font: 600 28px/1.15 var(--font); letter-spacing: -.02em; overflow-wrap: anywhere; color: var(--ink-strong, var(--ink)); }
+@media (max-width: 759px) { .id-name h1 { font-size: 22px; } }
+.id-name .field { max-width: 100%; }
+.id-lines { display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 16px; font: 400 12.5px/1.45 var(--font); color: var(--soft); }
+.id-lines a, .id-lines button { font: inherit; }
+.id-board { display: flex; flex-wrap: wrap; align-items: center; gap: 2px 8px; }
+.id-board b { color: var(--ink); font-weight: 500; }
+.id-board { column-gap: 12px; }
+.id-board-acts { display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; }
+/* the outcomes: one wrapping line of figures under the name, the figure first */
+.outs { display: flex; flex-wrap: wrap; gap: 4px 24px; margin: 12px 0; }
+.outs > .out {
+  appearance: none; border: 0; background: none; padding: 0; text-align: left; color: var(--ink);
+  display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 6px; font: 400 14px/1.4 var(--font); text-decoration: none;
+}
+button.out, a.out { cursor: pointer; }
+.out b { font-weight: 600; font-variant-numeric: tabular-nums; }
+.out .meta { flex: 1 0 100%; font-size: 12px; }
+@media (hover: hover) and (pointer: fine) { a.out:hover, button.out:hover { color: var(--ink); text-decoration: underline; text-decoration-color: var(--line); text-underline-offset: 3px; } }
+/* the four figures: one row under the plate's top, a hairline above; label and value at rest, the rest on hover */
+.id-card .stats { --cols: 2; --cols-phone: 2; gap: 4px 24px; align-items: start; margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--line); }
+.id-card .stat-v { font-size: 22px; }
+@media (min-width: 600px) { .id-card .stats { --cols: 4; } }
+.id-card .more-stats .stats { margin-top: 4px; padding-top: 0; border-top: 0; }
+.more-stats { margin-top: 4px; }
+.more-stats > summary { cursor: pointer; padding: 8px 0; font: 500 14px var(--font); color: var(--soft); }
+/* every "More ..." disclosure on these pages draws its chevron (as ui.css .fold-s), never the device's triangle */
+:is(.more-stats, .set-more, .keys-more) > summary { display: flex; align-items: center; gap: 8px; list-style: none; }
+:is(.more-stats, .set-more, .keys-more) > summary::-webkit-details-marker { display: none; }
+:is(.more-stats, .set-more, .keys-more) > summary::before { content: ""; flex: none; width: 6px; height: 6px; margin: 0 2px 2px 1px;
+  border-right: 1.5px solid currentColor; border-bottom: 1.5px solid currentColor; transform: rotate(-45deg); transition: transform .15s var(--ease); }
+:is(.more-stats, .set-more, .keys-more)[open] > summary::before { transform: rotate(45deg); }
+.more-stats[open] > summary { color: var(--ink); }
+
+/* the Your week sheet's goals (week.js): the shared outlined rows with their drawn checkbox showing, so "pick up to
+   three" reads as a choice */
+.wk-pick > .choice-row > input { position: static; opacity: 1; pointer-events: auto; flex: none; }
+
+/* the avatar picker (U22), a popover */
+.av-pick { display: grid; gap: 12px; max-width: 330px; }
+.av-grid { display: grid; grid-template-columns: repeat(5, 48px); gap: 8px; }
+.av-grid > button {
+  appearance: none; border: 0; padding: 0; width: 48px; height: 48px; border-radius: 10px; cursor: pointer;
+  display: grid; place-items: center; background: var(--well); color: var(--ink); position: relative;
+}
+.av-grid > button[aria-pressed="true"] { background: var(--sel-bg, var(--wash-2)); box-shadow: var(--sel-edge, inset 0 0 0 1.5px var(--amber)); }   /* the one selected look */
+.av-grid > button .glyph { width: 26px; height: 26px; }
+.av-grid > button[data-ring]::after {
+  content: "\2713"; position: absolute; right: 2px; top: 2px; width: 14px; height: 14px; border-radius: 50%;
+  display: grid; place-items: center; background: var(--amber); color: var(--ink-deep); font: 600 11.5px/1 var(--font);
+}
+.av-grid > button[data-ring] { box-shadow: inset 0 0 0 2px var(--amber); }
+.av-grid > button[data-ring][aria-pressed="true"] { box-shadow: inset 0 0 0 2px var(--amber); }
+.av-grid .wide { grid-column: span 5; width: auto; height: 44px; justify-content: start; display: flex; gap: 8px; padding: 0 12px; font: 500 14px var(--font); }
+.av-grid .wide small { color: var(--soft); font: inherit; }
+.av-grid .mk { width: 26px; height: 26px; }
+
+/* goals and this week (Shell 3.3, U4, U14) */
+.gbar { position: relative; height: 8px; margin: 8px 0 4px; border-radius: 4px; background: var(--track); }
+.gbar .bd { position: absolute; top: 0; bottom: 0; border-radius: 4px; background: var(--ink); opacity: .25; }
 .gbar .tk { position: absolute; top: -4px; bottom: -4px; width: 3px; margin-left: -1.5px; border-radius: 2px; background: var(--amber); }
-.gbar.thin { height: 6px; }
-.gbar .fill { position: absolute; left: 0; top: 0; bottom: 0; border-radius: 5px; background: var(--ink); }
+.gbar.thin { height: 4px; }
+/* Snapshot's scores: Total, R&W, Math, one row each, the names in one column */
+.sc { display: grid; gap: 6px; }
+.sc-row { display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 10px; }
+.sc-k { flex: none; width: 48px; font: 500 12.5px var(--font); color: var(--soft); }
+.sc-row .n { font: 600 16px/1.3 var(--font); font-variant-numeric: tabular-nums; }
+.gbar .fill { position: absolute; left: 0; top: 0; bottom: 0; border-radius: 4px; background: var(--ink); }
 .dots7 { display: flex; gap: 8px; margin-top: 8px; }
-.dots7 span { width: 24px; height: 24px; border-radius: 50%; display: grid; place-items: center; font: 500 10px var(--mono); color: var(--soft); }
+.dots7 span { width: 24px; height: 24px; border-radius: 50%; display: grid; place-items: center; font: 500 11.5px var(--font); color: var(--soft); }
 .dots7 .study { box-shadow: inset 0 0 0 1.5px var(--ink); color: var(--ink); }
 .dots7 .done { background: var(--amber); color: var(--ink-deep); }
 .dots7 .rest::after { content: ""; width: 8px; height: 1.5px; background: var(--faint); }
 .dots7 .rest { font-size: 0; }
-.dots7 .today { outline: 2px solid var(--ink); outline-offset: 2px; }
-.target-pop { display: grid; gap: 14px; width: min(380px, calc(100vw - 48px)); }
-.target-pop .total { font: 500 13px var(--mono); color: var(--soft); }
-.target-pop .total b { font: 600 22px var(--mono); color: var(--ink); }
-.target-pop .chips { gap: 6px; }
-
-/* skills (Shell 3.5, U4, U5) */
-.dom { display: grid; margin-top: 12px; }
-.dom:first-child { margin-top: 0; }
-.dom-h {
-  appearance: none; border: 0; background: none; color: var(--ink); width: 100%; text-align: left; cursor: pointer; padding: 10px 0;
-  display: grid; grid-template-columns: minmax(0, 1fr) 90px auto; gap: 4px 12px; align-items: center; border-top: 1px solid var(--line);
+.dots7 span { position: relative; }
+.dots7 .today::before { content: ""; position: absolute; left: 50%; bottom: -6px; width: 12px; height: 2px; margin-left: -6px; border-radius: 1px; background: var(--amber-deep); }
+/* This week: the goals, then one row that opens Your week (the study days, the weeks met, last week) */
+.wk-sum {
+  appearance: none; display: grid; grid-template-columns: auto minmax(0, 1fr) 16px; align-items: baseline; gap: 2px 12px;
+  width: 100%; margin-top: 12px; padding: 12px 0 0; border: 0; border-top: 1px solid var(--line); background: none;
+  color: var(--ink); text-align: left; font: inherit; cursor: pointer;
 }
-.dom:first-child .dom-h { border-top: 0; }
-.dom-h .nm { font: 600 15px var(--font); }
-.dom-h .meta { font-size: 12px; }
-.dom-h .weak { grid-column: 1 / -1; font: 400 12.5px var(--font); color: var(--soft); }
-.dom-h svg { width: 16px; height: 16px; transition: transform .2s var(--ease); }
-.dom[data-open] .dom-h svg { transform: rotate(90deg); }
-.dom:not([data-open]) > .skill-row, .dom:not([data-open]) > .sk-x { display: none; }
-@media (min-width: 760px) { .dom-h { cursor: default; } .dom-h svg, .dom-h .weak { display: none; } .dom > .skill-row, .dom > .sk-x { display: grid !important; } }
-.mbar6 { display: block; height: 6px; border-radius: 3px; background: var(--m-track); overflow: hidden; }
-.mbar6 i { display: block; height: 100%; width: calc(var(--m, 0) * 100%); background: var(--m-fill); }
-.sk-x { display: flex; flex-wrap: wrap; gap: 4px 12px; align-items: center; padding: 0 0 10px; font: 400 12.5px var(--font); color: var(--soft); }
-.last5 { display: inline-flex; gap: 3px; }
-.last5 i { width: 14px; height: 14px; border-radius: 3px; display: grid; place-items: center; font: 700 9px/1 var(--font); font-style: normal; }
-.last5 .y { background: var(--amber); color: var(--ink-deep); }
-.last5 .n { background: var(--ink); color: var(--on-ink); }
-.card-foot { margin-top: 16px; }
-.card-foot .quiet { margin-block: 0; }
-
-/* list rows: mistakes, habits, feed */
-.lrow { display: grid; grid-template-columns: 18px minmax(0, 1fr) auto; gap: 4px 12px; align-items: start; padding: 12px 0; border-top: 1px solid var(--line); }
-.list > .lrow:first-child { border-top: 0; padding-top: 2px; }
-.lrow .t { font: 600 14.5px/1.35 var(--font); }
-.lrow .d { font: 400 13px/1.45 var(--font); color: var(--soft); display: flex; flex-wrap: wrap; gap: 2px 10px; align-items: center; }
-.lrow .fx { grid-column: 2 / -1; display: flex; flex-wrap: wrap; gap: 6px 26px; align-items: center; margin-top: 6px; }
-.lrow .ic { display: grid; place-items: center; margin-top: 3px; color: var(--soft); }
-.lrow .ic svg { width: 16px; height: 16px; }
-.lrow em { font: italic 400 13.5px/1.45 var(--serif); color: var(--ink); }
-.lrow > .lside { justify-self: end; }
-.tag { display: inline-flex; align-items: center; gap: 5px; font: 500 12px var(--font); color: var(--ink); }
-.tag .glyph { width: 16px; height: 16px; }
-.feed-day { margin: 16px 0 2px; }
-.feed-day:first-child { margin-top: 0; }
-a.lrow { color: inherit; text-decoration: none; }
-@media (hover: hover) and (pointer: fine) { a.lrow:hover .t { text-decoration: underline; text-underline-offset: 3px; } }
-
-/* achievements (Shell 3.8, U13) */
-.bgrid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
-@media (max-width: 759px) { .bgrid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-.btile { display: grid; gap: 6px; align-content: start; padding: 14px; border-radius: var(--radius); background: var(--paper); }
-.bcirc { width: 44px; height: 44px; border-radius: 50%; display: grid; place-items: center; background: var(--tile-2); color: var(--faint); }
-.bcirc > * { display: grid; place-items: center; width: 24px; height: 24px; line-height: 0; }   /* the icon box is the same square for every badge, dead centre */
-.bcirc svg, .bcirc .glyph { width: 22px; height: 22px; display: block; margin: 0; }
-.bcirc.on { background: var(--amber); color: var(--ink-deep); }
-.btile .nm { font: 600 14px/1.3 var(--font); }
-.btile .meta { font-size: 12px; }
-.bprog { display: block; height: 3px; border-radius: 2px; background: var(--track); overflow: hidden; }
-.bprog i { display: block; height: 100%; width: calc(var(--p, 0) * 100%); background: var(--ink); }
-.ladder { display: flex; flex-wrap: wrap; gap: 4px 8px; font: 500 12px var(--mono); color: var(--faint); }
-.ladder .on { color: var(--ink); }
-.brow { display: grid; grid-template-columns: 44px minmax(0, 1fr); gap: 4px 14px; padding: 12px 0; border-top: 1px solid var(--line); align-items: start; }
-
-/* readiness (U8) */
-.big { font: 900 34px/1 var(--font); letter-spacing: -.04em; font-variant-numeric: tabular-nums; }
-.ready-dom { margin-top: 14px; }
-.ready-dom > .k { display: block; margin-bottom: 2px; }
-.atlas-row .quiet { font: 500 12.5px var(--font); }
-.atlas-row > :last-child { display: flex; gap: 8px; align-items: center; }
-@media (max-width: 759px) { .atlas-row { grid-template-columns: minmax(0, 1fr) auto; } .atlas-row > .atlas { grid-column: 1 / -1; grid-row: 2; } }
-.ex-q { font: 400 17px/1.5 var(--serif); }
-.ex-q ol { margin: 10px 0 0; padding-left: 24px; }
-.ex-fig svg { max-width: 100%; height: auto; }
-
-/* the section bar sits over cards; Settings reuses rows */
-.set-sec .pref { padding: 14px 0; border-top: 1px solid var(--line); }
-.set-sec .pref:first-of-type { border-top: 0; }
-.set { display: grid; gap: 20px; max-width: 820px; padding-bottom: 96px; }
-.set-h { margin: 4px 0 4px; }
-.sub-h { margin: 22px 0 6px; font: 700 15px var(--font); }
-.sub-h:first-child { margin-top: 0; }
-.dev { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 2px 12px; align-items: center; padding: 12px 0; border-top: 1px solid var(--line); }
-.dev .t { font: 600 14.5px var(--font); }
-.dev .d { grid-column: 1; font: 400 12.5px var(--font); color: var(--soft); }
-.dev > button, .dev > .acts { grid-column: 2; grid-row: 1 / span 2; }
-.code-big { font: 500 30px/1.1 var(--mono); letter-spacing: .08em; font-variant-numeric: tabular-nums; }
-.preview-q { font: 400 var(--q-size)/1.45 var(--serif); padding: 12px 14px; border-radius: var(--radius); background: var(--paper); box-shadow: inset 0 0 0 1px var(--line); }
-.rep { display: grid; gap: 4px; padding: 12px 0; border-top: 1px solid var(--line); }
-.rep .t { display: flex; flex-wrap: wrap; gap: 4px 10px; align-items: center; font: 600 14.5px var(--font); }
-.rep details { font: 400 13.5px/1.5 var(--font); }
-.rep summary { cursor: pointer; color: var(--ink); }
-
-@media print { .card-fold, .av-edit { display: none !important; } }
-
-/* fixes after the first look */
-.id-card > .card-head { position: absolute; top: 12px; right: 12px; margin: 0; }
-.id-card .id-top { padding-right: 34px; }
-.outs > .out { background: var(--paper); padding: 10px 12px; width: 100%; text-align: left; font: 400 13.5px/1.4 var(--font); }
-.rline { flex: 1 1 auto; }
-.skills-rest { margin-top: 14px; }
-.skills-rest > summary { cursor: pointer; font: 600 14px var(--font); padding: 8px 0; }
-.ready-dom .atlas-row { grid-template-columns: 170px minmax(0, 1fr) auto; }
-.atlas-row > :first-child { display: grid; gap: 2px; justify-items: start; }
-.atlas-row > :first-child .quiet { font: 500 12.5px var(--font); color: var(--soft); padding: 4px 8px; margin: -4px -8px; }
-@media (max-width: 759px) { .ready-dom .atlas-row { grid-template-columns: minmax(0, 1fr) auto; } }
-.set-sec .card-body > div + div:not(:empty) { margin-top: 26px; }
-.set-sec .acts > .field { flex: 1 1 220px; max-width: 360px; width: auto; }
-.set-sec .pref-ctl .acts { justify-content: flex-end; }
-@media (max-width: 759px) { .set-sec .pref-ctl .acts { justify-content: flex-start; } }
-.fieldrow { display: grid; gap: 8px; padding: 14px 0 0; }
-.fieldrow .acts > .field { flex: 1 1 220px; max-width: 360px; }
-/* unit 2: help, the feed's rows, the identity lines, skill rows in a narrow column, code boxes */
-.help-q {
-  appearance: none; border: 0; padding: 0; width: 22px; height: 22px; border-radius: 50%; flex: none; align-self: center;
-  display: inline-grid; place-items: center; background: var(--tile-2); color: var(--soft); font: 600 12px/1 var(--font); cursor: pointer;
-}
-@media (hover: hover) and (pointer: fine) { .help-q:hover { color: var(--ink); } }
-.help-q[aria-expanded="true"] { color: var(--ink); }
-.help-pop { display: grid; gap: 8px; width: min(340px, calc(100vw - 48px)); font: 400 14px/1.5 var(--font); }
-.help-pop .q { font-weight: 600; }
-.feed-link { color: inherit; text-decoration: none; display: block; }
-@media (hover: hover) and (pointer: fine) { .feed-link:hover { text-decoration: underline; text-decoration-color: var(--amber); text-underline-offset: 3px; } }
-.feed-go { width: 32px; height: 32px; margin: -4px -6px 0 0; color: var(--soft); }
-.feed-go svg { width: 16px; height: 16px; }
-.id-card .id-lines { margin-top: 14px; }
-.sharpen { margin: 0 0 12px; display: flex; flex-wrap: wrap; align-items: center; gap: 2px 8px; }
-.me .card .otp input { background: var(--paper); }
-.wk-hist { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 6px 12px; margin: 12px 0 4px; }
+.wk-sum-t { font: 600 14px/1.35 var(--font); }
+.wk-sum .meta { min-width: 0; }
+.wk-sum-c { align-self: center; display: grid; color: var(--soft); }
+.wk-sum-c svg { width: 16px; height: 16px; }
+@media (hover: hover) and (pointer: fine) { .wk-sum:hover .wk-sum-t { text-decoration: underline; text-decoration-color: var(--amber); text-underline-offset: 3px; } .wk-sum:hover .wk-sum-c { color: var(--ink); } }
+@media (max-width: 759px) { .wk-sum { grid-template-columns: minmax(0, 1fr) 16px; } .wk-sum .meta { grid-column: 1; } .wk-sum-c { grid-row: 1 / span 2; grid-column: 2; } }
+.wk-line { margin-top: 12px; }
+/* inside the Your week sheet */
+.wk-days { display: grid; gap: 8px; }
+.wk-days .k { color: var(--soft); }
+.wk-days b { font-weight: 600; }
+.wk-hist { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 4px 12px; margin: 12px 0 4px; }
 .wk-bars { display: inline-flex; align-items: flex-end; gap: 3px; height: 18px; }
 .wk-bars i { width: 8px; height: calc(3px + var(--h, 0) * 15px); border-radius: 2px; background: var(--mat); }
 .wk-bars i.met { background: var(--ink); }
-/* the type sheet's example: the question only, no entry, hints or verdict */
-.ex-q .spr, .ex-q .ws-hintbox, .ex-q .ws-under, .ex-q .ws-err, .ex-q .ws-verdict, .ex-q .strike, .ex-q .undo,
-.ex-q .opt-why, .ex-q .opt-crowd, .ex-q .ws-whyhead { display: none !important; }
-/* the Skills card's column is ~570px at 1280: name and gain on one line, the bars under them */
+/* the target popover */
+.target-pop { display: grid; gap: 12px; width: min(348px, calc(100vw - 48px)); }   /* inside .popover's 380 less its padding */
+.target-pop .total { font: 500 12.5px var(--font); color: var(--soft); }
+.target-pop .total b { font: 600 22px var(--font); font-variant-numeric: tabular-nums; color: var(--ink); }
+.target-pop .chips { gap: 6px; }
+
+/* skills (Shell 3.5, U4, U5) */
+.me-grid .dom { display: grid; margin-top: 12px; }
+.me-grid .dom:first-child { margin-top: 0; }
+.dom-h {
+  appearance: none; border: 0; background: none; color: var(--ink); width: 100%; text-align: left; cursor: pointer; padding: 8px 0;
+  display: grid; grid-template-columns: minmax(0, 1fr) 90px auto; gap: 4px 12px; align-items: center; border-top: 1px solid var(--line);
+}
+.me-grid .dom:first-child .dom-h { border-top: 0; }
+.dom-h .nm { font: 600 14.5px var(--font); }
+.dom-h .weak { grid-column: 1 / -1; font: 400 12.5px var(--font); color: var(--soft); }
+.dom-h svg { width: 16px; height: 16px; transition: transform .2s var(--ease); }
+.me-grid .dom[data-open] .dom-h svg { transform: rotate(90deg); }
+.me-grid .dom:not([data-open]) > .skill-row, .me-grid .dom:not([data-open]) > .sk-x { display: none; }
+@media (min-width: 760px) { .dom-h { cursor: default; } .dom-h svg, .dom-h .weak { display: none; } .me-grid .dom > .skill-row, .me-grid .dom > .sk-x { display: grid !important; } }
+.mbar6 { display: block; height: 6px; border-radius: 3px; background: var(--m-track); overflow: hidden; }
+.mbar6 i { display: block; height: 100%; width: calc(var(--m, 0) * 100%); background: var(--m-fill); }
+.sk-x { display: flex; flex-wrap: wrap; gap: 4px 12px; align-items: center; padding: 0 0 8px; font: 400 12.5px var(--font); color: var(--soft); }
+/* the line under a skill (trend, last five, Fading, Try 5 more) shows with its row on hover or focus, like .reveal */
+@media (hover: hover) and (pointer: fine) {
+  .me-grid .skill-row + .sk-x { opacity: 0; transition: opacity .16s var(--ease); }
+  .me-grid .skill-row:is(:hover, :focus-within) + .sk-x, .me-grid .sk-x:is(:hover, :focus-within) { opacity: 1; }
+}
+.last5 { display: inline-flex; gap: 3px; }
+.last5 i { width: 14px; height: 14px; border-radius: 3px; display: grid; place-items: center; font: 600 11.5px/1 var(--font); font-style: normal; }
+.last5 .y { background: var(--amber); color: var(--ink-deep); }
+.last5 .n { background: var(--ink); color: var(--on-ink); }
+.sharpen { margin: 0 0 12px; display: flex; flex-wrap: wrap; align-items: center; gap: 2px 8px; }
+.skills-rest { margin-top: 12px; }
+.skills-rest > summary { cursor: pointer; font: 600 14px var(--font); padding: 8px 0; }
+.more-row { display: flex; justify-content: center; gap: 16px; margin: 4px 0; }
+/* the Skills card's column is ~600px at 1280: name and gain on one line, the bars under them */
 @media (min-width: 760px) {
   #skills .skill-row.gain { grid-template-columns: minmax(0, 1fr) 76px 176px; row-gap: 6px; }
   #skills .skill-row.gain > .skill-name { grid-column: 1; grid-row: 1; }
@@ -246,21 +234,167 @@ a.lrow { color: inherit; text-decoration: none; }
   #skills .skill-row.gain > .skill-m { grid-column: 1 / span 2; grid-row: 2; }
   #skills .skill-row.gain > .skill-track-wrap, #skills .skill-row.gain > .skill-meta, #skills .skill-row.gain > .skill-tiers { grid-column: 1 / span 2; grid-row: auto; }
 }
-/* phone: the title and its fold share the first line; the card's own controls go under it */
-@media (max-width: 759px) {
-  .me .card-head > h2 { flex: 0 1 auto; }
-  .me .card-head > .card-fold { order: 1; margin-left: auto; }
-  .me .card-head > .card-act:not(:empty) { order: 2; flex: 1 0 100%; margin-left: 0; }
-}
 
+/* list rows: mistakes, habits, feed */
+.me-grid .lrow { display: grid; grid-template-columns: 18px minmax(0, 1fr) auto; gap: 4px 12px; align-items: start; padding: 12px 0; border-top: 1px solid var(--line); }
+.me-grid .list > .lrow:first-child { border-top: 0; padding-top: 2px; }
+.me-grid .lrow > .odot { margin-top: 6px; }
+.me-grid .lrow .t { font: 600 14.5px/1.35 var(--font); }
+.me-grid .lrow .d { font: 400 12.5px/1.45 var(--font); color: var(--soft); display: flex; flex-wrap: wrap; gap: 2px 8px; align-items: center; }
+.me-grid .lrow .fx { grid-column: 2 / -1; display: flex; flex-wrap: wrap; gap: 4px 24px; align-items: center; margin-top: 4px; }
+/* a session in Recent: one row, the title and its result on one line (the result in the right-hand slot), what it
+   changed under it, Again / Follow up beside that (.reveal: on hover or focus, always on touch) */
+.me-grid .feed-row { grid-template-columns: minmax(0, 1fr) minmax(0, max-content); align-items: baseline; gap: 2px 16px; padding: 8px 0; min-height: var(--row-h); }
+.feed-n { max-width: 16em; font: 500 12.5px/1.4 var(--font); font-variant-numeric: tabular-nums; color: var(--soft); text-align: right; }
+.feed-sub { grid-column: 1 / -1; display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 16px; }
+.feed-sub > .d { flex: 1 1 200px; }
+.me-grid .feed-sub > .fx { grid-column: auto; margin: 0 0 0 auto; gap: 4px 16px; }
+.me-grid .feed-sub .fx .quiet { margin-block: -4px; }
+.me-grid .lrow .ic { display: grid; place-items: center; margin-top: 3px; color: var(--soft); }
+.me-grid .lrow .ic svg { width: 16px; height: 16px; }
+.me-grid .lrow em { font: italic 400 14px/1.45 var(--serif); color: var(--ink); }
+.me-grid .lrow > .lside { justify-self: end; }
+.me-grid .tag { display: inline-flex; align-items: center; gap: 4px; font: 500 12.5px var(--font); color: var(--ink); }
+.me-grid .tag .glyph { width: 16px; height: 16px; }
+.me-grid .feed-day { margin: 16px 0 2px; }
+.me-grid .feed-day:first-child { margin-top: 0; }
+.feed-link { color: inherit; text-decoration: none; display: block; }
+@media (hover: hover) and (pointer: fine) { .feed-link:hover { text-decoration: underline; text-decoration-color: var(--amber); text-underline-offset: 3px; } }
+
+/* achievements (Shell 3.8, U13): rows in the card, the full list in a sheet */
+.me-grid .bgrid { display: grid; }
+.btile { display: grid; grid-template-columns: 36px minmax(0, 1fr); column-gap: 12px; row-gap: 4px; align-items: center; padding: 8px 0; border-top: 1px solid var(--line); }
+.bgrid > .btile:first-child { border-top: 0; padding-top: 0; }
+.btile > .bcirc { grid-row: 1 / span 4; align-self: start; width: 36px; height: 36px; }
+.btile > :not(.bcirc) { grid-column: 2; }
+.btile > .quiet { justify-self: start; margin-block: 0; }
+.btile .bcirc > * { width: 20px; height: 20px; }
+.btile .bcirc svg, .btile .bcirc .glyph { width: 18px; height: 18px; }
+.btile .nm { font: 600 14px/1.3 var(--font); }
+.bprog { display: block; height: 4px; border-radius: 2px; background: var(--track); overflow: hidden; }
+.bprog i { display: block; height: 100%; width: calc(var(--p, 0) * 100%); background: var(--ink); }
+.ach-list .nm { font: 600 14.5px/1.35 var(--font); }
+.ach-list .ladder { display: flex; flex-wrap: wrap; gap: 4px 8px; font: 500 12.5px var(--font); font-variant-numeric: tabular-nums; color: var(--faint); }
+.ach-list .ladder .on { color: var(--ink); }
+.brow { display: grid; grid-template-columns: 44px minmax(0, 1fr); gap: 4px 12px; padding: 12px 0; border-top: 1px solid var(--line); align-items: start; }
+
+/* readiness (U8) */
+.me-grid .big { font: 600 28px/1.05 var(--font); letter-spacing: -.02em; font-variant-numeric: tabular-nums; }
+.atlas-row .quiet { font: 500 12.5px var(--font); }
+.atlas-row > :last-child { display: flex; gap: 8px; align-items: center; }
+@media (max-width: 759px) { .atlas-row { grid-template-columns: minmax(0, 1fr) auto; } .atlas-row > .atlas { grid-column: 1 / -1; grid-row: 2; } }
 .ready-dom { border-top: 1px solid var(--line); margin-top: 0; }
 .ready-dom[open] { padding-bottom: 8px; }
+.ready-dom > .k { display: block; margin-bottom: 2px; }
+.ready-dom .atlas-row { grid-template-columns: 170px minmax(0, 1fr) auto; }
+@media (max-width: 759px) { .ready-dom .atlas-row { grid-template-columns: minmax(0, 1fr) auto; } }
+.atlas-row > :first-child { display: grid; gap: 2px; justify-items: start; }
+.atlas-row > :first-child .quiet { font: 500 12.5px var(--font); color: var(--soft); padding: 4px 8px; margin: -4px -8px; }
 .rd-sum { display: grid; grid-template-columns: minmax(0, 1fr) 72px auto 14px; align-items: center; gap: 12px; padding: 12px 0; cursor: pointer; list-style: none; }
 .rd-sum::-webkit-details-marker { display: none; }
-.rd-nm { font: 700 15px/1.3 var(--font); }
-.rd-bar { height: 5px; border-radius: 3px; background: var(--mat); overflow: hidden; }
+.rd-nm { font: 600 14.5px/1.35 var(--font); }
+.rd-bar { height: 4px; border-radius: 2px; background: var(--track); overflow: hidden; }
 .rd-bar > i { display: block; height: 100%; background: var(--ink); }
-.rd-n { font: 500 12.5px var(--mono); color: var(--soft); text-align: right; white-space: nowrap; }
-.rd-chev { width: 8px; height: 8px; border-right: 1.5px solid var(--soft); border-bottom: 1.5px solid var(--soft); transform: rotate(-45deg); transition: transform .16s; }
+.rd-n { font: 500 12.5px var(--font); font-variant-numeric: tabular-nums; color: var(--soft); text-align: right; white-space: nowrap; }
+.rd-chev { width: 8px; height: 8px; border-right: 1.5px solid var(--soft); border-bottom: 1.5px solid var(--soft); transform: rotate(-45deg); transition: transform .16s var(--ease); }
 .ready-dom[open] .rd-chev { transform: rotate(45deg); }
 @media (max-width: 759px) { .rd-sum { grid-template-columns: minmax(0, 1fr) auto 14px; } .rd-bar { display: none; } }
+/* the type sheet's example: the question only, no entry, hints or verdict */
+.ex-q { font: 400 17px/1.5 var(--serif); }
+.ex-q ol { margin: 8px 0 0; padding-left: 24px; }
+.ex-fig svg { max-width: 100%; height: auto; }
+.ex-q .spr, .ex-q .ws-hintbox, .ex-q .ws-under, .ex-q .ws-err, .ex-q .ws-verdict, .ex-q .strike, .ex-q .undo,
+.ex-q .opt-why, .ex-q .opt-crowd, .ex-q .ws-whyhead { display: none !important; }
+
+/* phone: the title and its fold share the first line; the card's own controls go under it */
+@media (max-width: 759px) {
+  .me-grid .card-head > h2 { flex: 0 1 auto; }
+  .me-grid .card-head > .card-fold { order: 1; margin-left: auto; }
+  .me-grid .card-head > .card-act:not(:empty) { order: 2; flex: 1 0 100%; margin-left: 0; }
+}
+
+/* ---- Settings: the sections in the main column, an index of them in the aside from 1280px */
+.set { --twocol-top: 60px; }
+.set-main { display: grid; gap: var(--card-gap); max-width: 820px; }
+.set-side { display: none; }
+@media (min-width: 1280px) { .set-side { display: grid; } }
+.set-index { display: grid; gap: 2px; }
+.set-index a {
+  display: grid; grid-template-columns: 18px minmax(0, 1fr); align-items: center; gap: 2px 10px; padding: 8px 12px; border-radius: 8px;
+  color: var(--ink); text-decoration: none; font: 500 14px/1.35 var(--font);
+}
+.set-index a > .ic { display: grid; color: var(--soft); }
+.set-index a > .ic svg { width: 18px; height: 18px; }
+.set-index a > .meta { grid-column: 2; }
+.set-index a .meta:empty { display: none; }
+@media (hover: hover) and (pointer: fine) { .set-index a:hover { background: var(--hover, var(--tile-2)); } }
+.set-sec { scroll-margin-top: 64px; }
+.set-sec * { min-width: 0; }
+.set-sec .pref { padding: 12px 0; border-top: 1px solid var(--line); }
+.set-sec .pref:first-of-type { border-top: 0; }
+.set-sec .card-body > div + div:not(:empty) { margin-top: 20px; }
+.set-sec .acts > .field { flex: 1 1 220px; max-width: 360px; width: auto; }
+.set-sec .pref-ctl .acts { justify-content: flex-end; }
+@media (max-width: 759px) {
+  .set-sec .pref-ctl .acts { justify-content: flex-start; }
+  .set-sec .pref-state { order: 1; }   /* stacked: "Saved" wraps under the control, so the control never drops a line while it shows */
+}
+.set-more { border-top: 1px solid var(--line); }
+.set-more > summary { cursor: pointer; padding: 12px 0; font: 600 14px var(--font); }
+.set-more > div > .pref:first-of-type { border-top: 1px solid var(--line); }
+.set-intro { margin: 0 0 8px; }
+.set-sec .grow { flex: 1 1 auto; }
+.quiet-line { margin: -4px 0 8px; }
+.code-out { margin-top: 12px; justify-items: start; }
+.si-google-host { min-height: 44px; }
+.fieldrow { display: grid; gap: 8px; padding: 12px 0 0; }
+.fieldrow .acts > .field { flex: 1 1 220px; max-width: 360px; }
+.dev { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 2px 12px; align-items: center; padding: 12px 0; border-top: 1px solid var(--line); }
+.dev .t { font: 600 14.5px var(--font); }
+.dev .d { grid-column: 1; font: 400 12.5px var(--font); color: var(--soft); }
+.dev > button, .dev > .acts { grid-column: 2; grid-row: 1 / span 2; }
+.preview-q { font: 400 var(--q-size)/1.45 var(--serif); padding: 8px 0 4px; }
+.rep { display: grid; gap: 4px; padding: 12px 0; border-top: 1px solid var(--line); }
+.rep .t { display: flex; flex-wrap: wrap; gap: 4px 8px; align-items: center; font: 600 14.5px var(--font); }
+.rep details { font: 400 14px/1.5 var(--font); }
+.rep summary { cursor: pointer; color: var(--ink); }
+
+/* ---- Sign in, Welcome and Pair (Shell 5; shell-me U19-U21): one centred raised card (.card.hero), the mark at
+   40, the title, one line, one full-width primary; the rest quiet under it */
+.si, .pair { max-width: 440px; margin: clamp(8px, 7vh, 72px) auto 0; }
+.si .card, .pair .card { display: grid; gap: 20px; }
+.si-head { display: grid; justify-items: start; gap: 16px; }
+.si-head svg { width: 40px; height: 40px; }
+.si-panel { display: grid; gap: 12px; align-content: start; }
+.si-panel:focus { outline: none; }
+.si-panel .field { width: 100%; }
+#si-panel > p:first-child { margin: 0; color: var(--soft); }   /* a way's one line; the signed-in and email-link panels keep ink */
+/* the QR is its own white tile (scanners read dark on light in either theme): one frame, a fine edge, no box around it */
+.si-qr { justify-self: center; line-height: 0; }
+.si-qr svg { width: 180px; height: 180px; box-shadow: var(--edge); }
+.si-c { margin: 0; text-align: center; }
+.si .code-big { text-align: center; }
+/* Google's button is its own iframe: a fixed 44px slot at the pill's width, nothing else styled */
+.si-google { min-height: 44px; }
+.si-google:empty { display: none; }
+.si-foot { display: grid; gap: 8px; justify-items: start; }
+.si-ways { display: grid; gap: 2px; justify-self: stretch; }
+/* the ways read as a short menu: plain rows with an icon, the hover band, the current way the one selected look */
+.si-ways > .choice-row:not([aria-current="true"]) { box-shadow: none; }   /* no shared hairline: a menu, not a stack of boxes */
+.si-ways > .choice-row > svg { color: var(--soft); }
+/* a phone: the way's one line goes under its name (beside it, "Use your phone" wrapped onto two lines) */
+@media (max-width: 479px) { .si-ways > .choice-row { flex-wrap: wrap; row-gap: 0; } .si-ways .choice-meta { flex-basis: 100%; margin-left: 28px; white-space: normal; } }
+.si #body { display: grid; gap: 20px; }
+.si-ways[hidden] { display: none; }
+.si .check { font-size: 13px; color: var(--soft); }
+@media (max-width: 759px) { .si, .pair { margin-top: 0; } }
+/* the focus chrome (UI.shell({ chrome: 'focus' })): no sidebar, so the card sits in the middle of the screen,
+   a little above centre; on a phone it stays at the top, where the keyboard leaves it in view */
+@media (min-width: 760px) {
+  body.has-focus main.page { display: grid; align-content: center; min-height: calc(100dvh - 56px); }
+  body.has-focus :is(.si, .pair) { width: 100%; margin: 0 auto 6vh; }
+}
+/* the code boxes: all six take the amber edge on a wash when the code is right (UI.otp has no state of its own) */
+.otp.ok input, .otp.ok input:disabled { border-color: var(--amber); background: var(--wash); color: var(--ink); box-shadow: none; }
+
+@media print { .card-fold, .av-edit { display: none !important; } }

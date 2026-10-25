@@ -4,25 +4,34 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Contest · SAT Freshman</title>
+<link rel="icon" href="/favicon.ico" sizes="32x32">
 <link rel="icon" href="/assets/mark.svg" type="image/svg+xml">
+<meta property="og:site_name" content="SAT Freshman">
+<meta property="og:type" content="website">
+<meta property="og:title" content="An SAT contest on SAT Freshman">
+<meta property="og:description" content="Timed SAT questions and a live board: see where you place. Free.">
+<meta property="og:image" content="https://prac.fsat.io/assets/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
 <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
 <link rel="manifest" href="/manifest.webmanifest">
 <meta name="theme-color" content="#FFFFFF">
 <script src="/assets/head.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800;900&family=DM+Mono:wght@400;500&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap">
+<link rel="preload" href="/assets/fonts/Geist.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap">
 <link rel="stylesheet" href="/assets/ui.css">
 <link rel="stylesheet" href="/compete/compete.css">
 <style>
-  /* The contest page (spec 3.7 §4, compete.md "Contest page"): header, then 2fr 1fr.
-     Main: state panel → Debrief → Time → Board → Review → Traps. Side: entrants, owner, QOTD, rules. */
+  /* The contest page (spec 3.7 §4, compete.md "Contest page"): header (back, title, one meta row), then 2fr 1fr.
+     Main: state panel → Debrief → Time → Board → Review → Traps. Side: your days (Daily), entrants, owner, QOTD, rules. */
   .cx section[hidden] { display: none; }
-  .ct-count { font: 800 clamp(34px, 5vw, 52px)/1 var(--mono); letter-spacing: -.03em; }
-  .race-row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; }
+  .race-row { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; }
   .time-rows { display: grid; gap: 8px; }
-  .time-row { display: grid; grid-template-columns: 34px minmax(0, 1fr) 64px; align-items: center; gap: 10px; font: 500 12px var(--mono); }
-  .time-row .tb { position: relative; height: 8px; border-radius: 4px; background: var(--mat); }
+  .time-row { display: grid; grid-template-columns: 34px minmax(0, 1fr) 64px; align-items: center; gap: 10px; font: 500 12.5px var(--font); font-variant-numeric: tabular-nums; }
+  .time-row .tb { position: relative; height: 8px; border-radius: 4px; background: var(--track); }
   .time-row .tb > i { position: absolute; top: 0; bottom: 0; left: 0; border-radius: inherit; background: var(--ink); }
   .time-row .tb > i.right { background: var(--amber); }
   .time-row .tb > b { position: absolute; top: -4px; bottom: -4px; width: 2px; margin-left: -1px; background: var(--ink); }
@@ -40,15 +49,16 @@
 <main class="page cx" id="main" tabindex="-1">
   <div id="head" class="ct-head"></div>
   <div class="cx-grid" id="grid">
-    <div class="cx-main">
-      <section class="card" id="state" style="--o:1" aria-label="Your sitting"></section>
+    <div class="cx-main" data-m="stagger">
+      <section class="card hero" id="state" data-m-now style="--o:1" aria-label="Your sitting"></section>
       <section class="card" id="debrief" style="--o:2" hidden></section>
       <section class="card" id="time" style="--o:3" hidden aria-label="Time"></section>
       <section class="card" id="board" style="--o:5" hidden aria-labelledby="board-h"></section>
       <section class="card" id="review" style="--o:6" hidden aria-labelledby="review-h"></section>
       <section class="card" id="traps" style="--o:7" hidden aria-labelledby="traps-h"></section>
     </div>
-    <aside class="cx-side">
+    <aside class="cx-side" data-m="stagger">
+      <section class="card" id="days" style="--o:4" hidden aria-labelledby="days-h"></section>
       <section class="card" id="owner" style="--o:9" hidden aria-label="Contest settings"></section>
       <section class="card" id="entrants" style="--o:4" hidden aria-label="Entrants"></section>
       <section class="card" id="qotd" style="--o:8" hidden aria-label="Question of the day"></section>
@@ -61,7 +71,7 @@
 <script src="/assets/ui.js"></script>
 <script src="/assets/kit.js"></script>
 <script src="/assets/charts.js"></script>
-<script>UI.shell('compete');</script>
+<script>UI.shell({ page: 'compete', now: false, ownPrimary: true });   /* the lobby's Start (or the thumb bar's, or See the board) is the one orange: no Now strip on a phone, the sidebar's Start quiet */</script>
 <script src="/assets/question.js"></script>
 <script src="/assets/compete-ui.js"></script>
 <script src="/compete/contest/contest.js"></script>

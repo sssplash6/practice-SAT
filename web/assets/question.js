@@ -99,40 +99,10 @@
     doc.head.append(h('link', { rel: 'stylesheet', href: me ? new URL('runner.css', me).href : '/assets/runner.css' }));
   }
 
-  /* icons: 24px strokes in currentColor */
-  const L = 'fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"';
-  const I = {
-    eliminate: `<path d="M3.5 17l3-9 3 9M4.6 14h3.8" ${L}/><path d="M12.5 8h3a2.2 2.2 0 0 1 0 4.4h-3zM12.5 12.4h3.4a2.3 2.3 0 0 1 0 4.6h-3.4z" ${L}/><path d="M3 20.5L21 3.5" ${L}/>`,
-    cover:     `<path d="M2.5 12s3.6-6.5 9.5-6.5S21.5 12 21.5 12s-3.6 6.5-9.5 6.5S2.5 12 2.5 12z" ${L}/><circle cx="12" cy="12" r="2.6" ${L}/><path d="M4 20L20 4" ${L}/>`,
-    eye:       `<path d="M2.5 12s3.6-6.5 9.5-6.5S21.5 12 21.5 12s-3.6 6.5-9.5 6.5S2.5 12 2.5 12z" ${L}/><circle cx="12" cy="12" r="2.6" ${L}/>`,
-    hint:      `<path d="M9.2 17.5h5.6M10 20.5h4M12 3.5a5.8 5.8 0 0 0-3.4 10.5c.6.5 1 1.3 1 2.1v1.4h4.8v-1.4c0-.8.4-1.6 1-2.1A5.8 5.8 0 0 0 12 3.5z" ${L}/>`,
-    speak:     `<path d="M4 9.5h3.5L12 6v12l-4.5-3.5H4z" ${L}/><path d="M15.5 9.2a4 4 0 0 1 0 5.6M18 6.7a7.5 7.5 0 0 1 0 10.6" ${L}/>`,
-    stop:      `<rect x="6.5" y="6.5" width="11" height="11" rx="2" ${L}/>`,
-    graph:     `<path d="M4 3.5V20h16.5" ${L}/><path d="M6.5 17.5C9 9 12.5 7 19 6" ${L}/><circle cx="13" cy="8.4" r="1.5" fill="currentColor"/>`,
-    calc:      `<rect x="5" y="3.5" width="14" height="17" rx="2.5" ${L}/><path d="M8.5 7.5h7" ${L}/><circle cx="9" cy="12" r=".9" fill="currentColor"/><circle cx="12" cy="12" r=".9" fill="currentColor"/><circle cx="15" cy="12" r=".9" fill="currentColor"/><circle cx="9" cy="15.5" r=".9" fill="currentColor"/><circle cx="12" cy="15.5" r=".9" fill="currentColor"/><circle cx="15" cy="15.5" r=".9" fill="currentColor"/>`,
-    ref:       `<path d="M4.5 5.5h6a2 2 0 0 1 2 2v12a2 2 0 0 0-2-2h-6zM19.5 5.5h-6a2 2 0 0 0-2 2v12a2 2 0 0 1 2-2h6z" ${L}/>`,
-    flag:      `<path d="M6 20.5V4M6 4.5h11l-2.2 4.2L17 13H6" ${L}/>`,
-    bookmark:  `<path d="M7 4.5h10v15l-5-3.6-5 3.6z" ${L}/>`,
-    report:    `<path d="M5 5h14a1.5 1.5 0 0 1 1.5 1.5v8.5A1.5 1.5 0 0 1 19 16.5h-7.5L7 20v-3.5H5A1.5 1.5 0 0 1 3.5 15V6.5A1.5 1.5 0 0 1 5 5z" ${L}/><path d="M12 8.3v4" ${L} stroke-width="1.9"/><circle cx="12" cy="14.4" r=".95" fill="currentColor"/>`,
-    note:      `<path d="M6 3.5h8.5l3.5 3.5v13.5H6z" ${L}/><path d="M9 11h6M9 14.5h6M9 7.5h3" ${L}/>`,
-    history:   `<path d="M4.6 12a7.4 7.4 0 1 0 2.2-5.3" ${L}/><path d="M4.4 4v3.6H8" ${L}/><path d="M12 8.2v4.1l2.8 1.8" ${L}/>`,
-    book:      `<path d="M4.5 5.5h6a2 2 0 0 1 2 2v12a2 2 0 0 0-2-2h-6zM19.5 5.5h-6a2 2 0 0 0-2 2v12a2 2 0 0 1 2-2h6z" ${L}/>`,
-    twin:      `<rect x="4" y="8" width="11" height="11" rx="2.2" ${L}/><path d="M9 5.5A1.5 1.5 0 0 1 10.5 4H18.5A1.5 1.5 0 0 1 20 5.5V13.5A1.5 1.5 0 0 1 18.5 15" ${L}/>`,
-    chev:      `<path d="M7 10l5 5 5-5" ${L} stroke-width="1.8"/>`,
-    check:     `<path d="M5 12.5l4.5 4.5L19 7.5" ${L} stroke-width="2"/>`,
-    x:         `<path d="M6 6l12 12M18 6L6 18" ${L} stroke-width="1.8"/>`,
-    skip:      `<path d="M5.5 6l6 6-6 6M12.5 6l6 6-6 6" ${L}/>`,
-    dock:      `<rect x="3.5" y="4.5" width="17" height="15" rx="2" ${L}/><path d="M9.5 4.5v15" ${L}/>`,
-    float:     `<rect x="3.5" y="4.5" width="17" height="15" rx="2" ${L}/><rect x="11" y="11" width="7" height="6" rx="1" ${L}/>`,
-    expand:    `<path d="M14 4.5h5.5V10M10 19.5H4.5V14M19.5 4.5L13 11M4.5 19.5L11 13" ${L}/>`,
-    shrink:    `<path d="M19 10h-5V5M5 14h5v5M14 10l6-6M10 14l-6 6" ${L}/>`,
-  };
-  const svgHTML = (inner, size = 18) => `<svg width="${size}" height="${size}" viewBox="0 0 24 24" aria-hidden="true" focusable="false">${inner}</svg>`;
-  function icon(name, size = 18) {
-    const t = doc.createElement('template');
-    t.innerHTML = svgHTML(I[name] || '', size);
-    return t.content.firstElementChild;
-  }
+  /* icons: the shared set (UI.icon, ui.js; Phosphor at one stroke weight, filled twins for "on" toggles).
+     UI.qicon stays as its alias for older callers. A name the set lacks draws nothing (and warns on localhost). */
+  const icon = (name, size = 18) => (UI.icon ? UI.icon(name, size) : '');
+  const markIcon = (name, size = 18) => { const s = icon(name, size); return s || h('span', { text: name === 'check' ? '✓' : '✕' }); };
   const kbd = k => h('kbd', { class: 'kbd', text: k });
   const quiet = (text, onClick, o = {}) => h('button', { type: 'button', class: 'quiet' + (o.cls ? ' ' + o.cls : ''), 'aria-label': o.label, title: o.title, onclick: onClick }, o.icon && icon(o.icon, 16), text);
 
@@ -312,6 +282,7 @@
 
   /* ------------------------------------------------------------ the grid-in rules */
   const num = x => /^(\d+\.?\d*|\.\d+)$/.test(x);
+  const DIGIT_ZEROS = [0x660, 0x6f0, 0x966, 0x9e6, 0xa66, 0xae6, 0xb66, 0xbe6, 0xc66, 0xce6, 0xd66, 0xe50, 0xed0, 0xf20, 0x1040];
   const spr = {
     RULE: 'Up to 5 characters, 6 with a minus. Fractions with /, no mixed numbers. Long decimals may be cut or rounded.',
     PLACEHOLDER: 'e.g. 2/3, −1.5, 12',
@@ -321,7 +292,8 @@
     ZERO: 'A fraction can’t have 0 below the bar',
     HINT_BAD: 'Only digits, one decimal point or fraction bar, and a leading minus',
     HINT_LONG: '5 characters at most, 6 with a minus sign',
-    clean: s => String(s ?? '').replace(/[−–—]/g, '-').replace(/\s+/g, ''),
+    clean: s => String(s ?? '').normalize('NFKC').replace(/[\u00ad\u200b-\u200f\u202a-\u202e\u2060\u2066-\u2069\ufeff]/g, '')
+      .replace(/[\u2044\u2215\u29f8\u00f7]/g, '/').replace(/\u066b/g, '.').replace(/\p{Nd}/gu, d => { const c = d.codePointAt(0), z = DIGIT_ZEROS.find(z => c >= z && c < z + 10); return z === undefined ? d : c - z; }).replace(/[\u2212\u2010-\u2015\u207b\u208b\u02d7\ufe58\ufe63\uff0d\u2796]/g, '-').replace(/\s+/g, ''),
     cap: s => (spr.clean(s).startsWith('-') ? 6 : 5),
     charsOk: s => /^-?[0-9./]*$/.test(s) && (s.match(/\./g) || []).length <= 1 && (s.match(/\//g) || []).length <= 1,
     parse(raw) {
@@ -424,8 +396,10 @@
     const synth = window.speechSynthesis;
     if (!canSpeak()) return false;
     if (speaking) { const done = speaking.done; speaking = null; synth.cancel(); if (done) done(); return false; }
-    const text = [q.stem, q.figure && (q.figure_alt || 'There is a figure.'), q.table && q.table.length && 'There is a table.',
-      ...(q.choices || []).map((c, i) => `${LETTERS[i]}, ${c}.`)].filter(Boolean).map(speakable).join(' ');
+    // R&W reads its passage first, as prose: no maths words for dashes or symbols
+    const say = q.text ? t => String(t || '').replace(/<\/?u>/g, '').replace(/_{3,}/g, ' blank ').replace(/\s+/g, ' ').trim() : speakable;
+    const text = [q.text, q.stem, q.figure && (q.figure_alt || 'There is a figure.'), q.table && q.table.length && 'There is a table.',
+      ...(q.choices || []).map((c, i) => `${LETTERS[i]}, ${c}.`)].filter(Boolean).map(say).join(' ');
     const u = new SpeechSynthesisUtterance(text);
     u.rate = 0.95;
     const me = { done: onEnd };
@@ -452,10 +426,34 @@
     }
     return fig;
   }
+  // an R&W passage: paragraphs on blank lines, lines kept (poems, notes), <u> underlined, ______ a blank
+  function passage(q) {
+    // 'p': highlights and notes anchor here; never folded, read before answering
+    const el = h('div', { class: 'q-passage', 'data-addr': 'p', 'data-nofold': '' });
+    // the text is never changed, only wrapped: highlights and notes are offsets into textContent
+    q.text.split(/\n{2,}/).forEach(par => {
+      const p = h('p', { class: /^Text \d$/.test(par.trim()) ? 'q-tlabel' : null });
+      par.split('\n').forEach((line, i) => {
+        // a notes bullet is its own hanging line; any other line break stays a <br>
+        const li = /^• /.test(line) ? h('span', { class: 'q-li' }) : null;
+        if (i && !li && !(p.lastChild && p.lastChild.classList && p.lastChild.classList.contains('q-li'))) p.append(h('br', {}));
+        const host = li || p;
+        if (li) { li.append(h('span', { class: 'q-bul', 'aria-hidden': 'true' }, '• ')); line = line.slice(2); }
+        line.split(/(<u>.*?<\/u>|_{3,})/).forEach(bit => {
+          if (/^_{3,}$/.test(bit)) host.append(h('span', { class: 'blank', role: 'img', 'aria-label': 'blank' }, bit));
+          else if (bit.startsWith('<u>')) host.append(h('u', { text: bit.slice(3, -4) }));
+          else if (bit) host.append(bit);
+        });
+        if (li) p.append(li);
+      });
+      el.append(p);
+    });
+    return el;
+  }
   function dataTable(q) {
     const [head, ...rows] = q.table;
     return h('div', { class: 'q-table' }, h('table', {},
-      h('caption', { class: 'sr', text: `Table for question${q.number ? ' ' + q.number : ''}` }),
+      h('caption', { class: q.table_title ? 'q-table-title' : 'sr', text: q.table_title || `Table for question${q.number ? ' ' + q.number : ''}` }),
       h('thead', {}, h('tr', {}, head.map((c, j) => h('th', { scope: 'col', 'data-addr': `t:0:${j}`, text: c })))),
       h('tbody', {}, rows.map((r, i) => h('tr', {}, r.map((c, j) => h('td', { 'data-addr': `t:${i + 1}:${j}`, text: c })))))));
   }
@@ -569,8 +567,13 @@
     if (mc) buildChoices(); else buildField();
 
     el.append(...[headEl, ruleTip].filter(Boolean));
-    if (q.figure) el.append(figure(q));
-    if (q.table && q.table.length) el.append(dataTable(q));
+    // figure, table and passage render inline here by default; the practice runner moves
+    // these same nodes into its .rn-passage pane on wide screens (ws.passageNodes below)
+    // rather than building them twice
+    const figEl = q.figure ? figure(q) : null;
+    const tableEl = q.table && q.table.length ? dataTable(q) : null;
+    const passEl = q.text ? passage(q) : null;
+    el.append(...[figEl, tableEl, passEl].filter(Boolean));
     el.append(stemEl, ...[watchEl, hintBox].filter(Boolean));
     if (stageEl) el.append(stageEl);
     if (whyToggle) el.append(whyToggle);
@@ -595,8 +598,9 @@
         const d = UI.dbars ? UI.dbars(q.difficulty) : h('span', { text: cap1(q.difficulty) });
         hd.append(h('span', { class: 'ws-diff' }, d));       // the difficulty only: the internal level stays off screen (the user)
       }
-      if (!mc && o.fmt !== false) hd.append(h('span', { class: 'ws-fmt', text: 'Grid-in' }));   // fmt: false when the page labels the format
-      if (q.repair || o.again) hd.append(h('span', { class: 'again', text: 'Again', title: q.repair_of ? `Same trap as question ${q.repair_of}, new numbers` : 'Same trap, new numbers' }));
+      if (!mc && o.fmt !== false) hd.append(h('span', { class: 'badge soft ws-fmt', text: 'Grid-in' }));   // fmt: false when the page labels the format
+      if (q.repair || o.again) hd.append(h('span', { class: 'again', text: 'Again', title: q.text ? 'Another one like the one you missed'
+        : q.repair_of ? `Same trap as question ${q.repair_of}, new numbers` : 'Same trap, new numbers' }));
       return hd;
     }
     function unhideSkill() {
@@ -613,8 +617,8 @@
       if (!tn) return null;
       const text = typeof tn === 'string' ? tn : tn.text;
       const day = tn.day && UI.date ? UI.date(tn.day, 'short') : tn.day;
-      const d = h('details', { class: 'ws-rule' },
-        h('summary', {}, h('b', { text: `Your rule${day ? ' · ' + day : ''}: ` }), text),
+      const d = h('details', { class: mode === 'exam' ? 'ws-rule' : 'fold ws-rule' },   // .fold opens in height; the test window keeps still
+        h('summary', {}, h('b', { text: `Your rule${day ? ' · ' + day : ''}: ` }), text, icon('caret_down', 14)),
         h('p', { class: 'ws-rule-q' }, 'Still useful? ',
           quiet('Keep', () => { d.open = false; if (o.onRule) o.onRule('keep', text); }),
           ' · ',
@@ -634,7 +638,8 @@
       list = h('ol', { class: 'opts', role: 'radiogroup', 'aria-label': 'Answer choices' });
       rows = choices.map((c, i) => {
         const Lt = LETTERS[i];
-        const t = tex(h('span', { class: 't', 'data-addr': `o:${i}` }), c, (q.latex || [])[i]);
+        const t = q.text ? h('span', { class: 't', 'data-addr': `o:${i}`, text: c })      // R&W options are prose, never maths
+          : tex(h('span', { class: 't', 'data-addr': `o:${i}` }), c, (q.latex || [])[i]);
         const mk = h('span', { class: 'mk', 'aria-hidden': 'true' });
         const cap = h('span', { class: 'opt-cap' });
         const b = h('button', { type: 'button', class: 'opt', role: 'radio', 'aria-checked': 'false', 'data-i': i }, h('span', { class: 'l', text: Lt }), t, cap, mk);
@@ -679,7 +684,7 @@
         const off = ls.get('satf.whyoff', false);
         el.classList.toggle('why-off', !!off);
         whyToggle = h('button', { type: 'button', class: 'quiet ws-whyhead', 'aria-expanded': String(!off) },
-          h('span', { text: 'Why each wrong answer is wrong' }), icon('chev', 16));
+          h('span', { text: 'Why each wrong answer is wrong' }), icon('caret_down', 16));
         whyToggle.addEventListener('click', () => {
           const now = !el.classList.contains('why-off');
           el.classList.toggle('why-off', now);
@@ -1082,7 +1087,19 @@
     }
     function take(fb, a) {
       if (fbMode === 'retry' && live && fb.correct === false && fb.final === false) return wrongTry(fb, a);
-      reveal(Object.assign({ given: a, conf: S.tries.length ? null : S.lastConf }, fb));
+      reveal(Object.assign({ given: a, conf: S.tries.length ? null : S.lastConf }, fb), { fresh: true });
+    }
+    // the answer lands: the key fills (its CSS transition), its letter pops once and its check draws; a wrong pick
+    // dims, is struck and its cross draws; the verdict's disc draws its mark. UI.fx is a no-op under reduced
+    // motion and in the test window (which never reveals anyway)
+    function land(key, g, right) {
+      if (!UI.fx || !live) return;
+      const r = rows[key];
+      if (r) { r.b.classList.add('land'); UI.fx.pop(r.b.querySelector('.l')); UI.fx.check(r.mk, { delay: 60 }); }
+      const w = g !== null && g !== key ? rows[g] : null;
+      if (w) { w.b.classList.add('land'); UI.fx.check(w.mk); }
+      const vg = verdictEl.querySelector('.v-glyph');
+      if (vg && vg.querySelector('svg')) UI.fx.check(vg, { delay: right ? 120 : 60 });
     }
     function wrongTry(fb, a) {
       S.tries.push({ given: a, reason: fb.mistake || fb.reason || null, filler: !!fb.filler });
@@ -1092,7 +1109,11 @@
       if (mc) {
         S.selected = null;
         const r = rows[a];
-        if (r) { r.mk.textContent = '✕'; r.why.replaceChildren(h('p', { class: 'opt-why-l mine', text })); r.why.hidden = false; }
+        if (r) {
+          r.mk.replaceChildren(markIcon('x'));
+          r.why.replaceChildren(h('p', { class: 'opt-why-l mine', text })); r.why.hidden = false;
+          if (UI.fx) UI.fx.check(r.mk);              // the cross draws on the try (no shake)
+        }
       } else {
         field.classList.add('tried');
         showLocal(fb.mistake ? `${cap1(fb.mistake)}.` : 'Not right.');
@@ -1136,8 +1157,10 @@
       S.hints++;
       if (r.kind === 'strike' && Number.isInteger(r.choice)) {
         strike(r.choice, true, 'hint');
-        hintMsg(`Struck ${LETTERS[r.choice]}`, r.reason ? `that’s what you get if you ${low1(r.reason)}.` : 'a trap, not the answer.');
+        // a passage question's reason is the option's own sentence, not a step that went wrong
+        hintMsg(`Struck ${LETTERS[r.choice]}`, !r.reason ? 'a trap, not the answer.' : q.text ? r.reason : `that’s what you get if you ${low1(r.reason)}.`);
       } else if (r.kind === 'step') hintMsg('First step', r.step);
+      else if (r.kind === 'example' && !r.example) hintMsg('No worked example left', 'you have met every question of this kind.');
       else if (r.kind === 'example') {
         const open = () => (o.onExample ? o.onExample(r.example) : r.example && exampleSheet(r.example));
         open();
@@ -1222,6 +1245,8 @@
       paintStem(fb.spans);
       verdictSlot(fb, ro);
       paint();
+      if (ro.fresh && mc) land(key, g, fb.correct === true);
+      else if (ro.fresh && UI.fx && live) { const vg = verdictEl.querySelector('.v-glyph'); if (vg && vg.querySelector('svg')) UI.fx.check(vg, { delay: 60 }); }
       if (!ro.keepLocal) showLocal('');
       const keyText = mc && key !== null ? LETTERS[key] : minus(fb.answer);
       status.textContent = fb.correct ? 'Right' : (fb.given === null || fb.given === undefined) ? `The answer is ${keyText}` : `Wrong. The answer is ${keyText}`;
@@ -1238,7 +1263,7 @@
         r.b.classList.toggle('no', i === g && i !== key);
         const tried = S.tries.some(t => t.given === i);
         r.b.classList.toggle('tried', tried && i !== g);
-        r.mk.textContent = i === key ? '✓' : (i === g || tried) ? '✕' : '';
+        r.mk.replaceChildren(...(i === key ? [markIcon('check')] : (i === g || tried) ? [markIcon('x')] : []));
         r.cap.textContent = i === key ? (i === g ? `${mine} · Correct` : 'Correct answer') : i === g ? mine : tried ? 'Tried' : '';
         r.b.setAttribute('aria-label', `${LETTERS[i]}, ${choices[i]}${i === key ? ', the answer' : ''}${i === g ? `, ${mine.toLowerCase()}` : ''}`);
       });
@@ -1254,12 +1279,11 @@
         const reason = reasons[i];
         const filler = (fb.filler && fb.filler[i]) || (!reason && i !== key);
         if (i === key && !reason) { r.why.hidden = true; return; }
-        const val = /\d/.test(choices[i]) && String(choices[i]).length <= 10 ? choices[i] : null;   // a value, not a word
         const mine = i === g && i !== key && mode === 'review';
         const share = fb.crowd && Array.isArray(fb.crowd.option_share) && i !== key ? fb.crowd.option_share[i] : null;   // SR12, n >= 20
         const line = h('p', { class: 'opt-why-l' + (i === g ? ' mine' : '') + (i === key ? ' key' : '') },
-          mine ? 'Your pick · ' : null, h('b', { text: LETTERS[i] }), ' · ', val !== null ? [minus(val), ' · '] : null,
-          filler ? 'a nearby value, not tied to a specific mistake' : cap1(reason),
+          // just the reason: the letter and the value sit right above it, rendered (a raw "w^2" here read as a bug)
+          mine ? 'Your pick · ' : null, cap1(filler ? 'a nearby value, not tied to a specific mistake' : reason),
           mine && fb.pick_note ? h('span', { class: 'opt-why-note', text: ` · ${fb.pick_note}` }) : null,
           share !== null && share !== undefined ? h('span', { class: 'opt-why-share', text: ` · ${pct(share)}% of students who miss it pick this one` }) : null);
         // V6: the student corrects the label on their own filed pick (not a local pick made while hidden)
@@ -1298,7 +1322,7 @@
 
     function addLine(cls, ...kids) {
       const p = h('p', { class: 'v-line ' + cls }, ...kids);
-      const x = verdictEl.querySelector('.x-card, .x-toggle, .q-actions');
+      const x = verdictEl.querySelector(':scope > .x-fold, :scope > .ws-actions');
       if (x) x.before(p); else verdictEl.append(p);
       return p;
     }
@@ -1314,34 +1338,37 @@
 
       // 1. verdict and key
       v.append(vHead(fb, right, blank));
-      if (fb.mastery && UI.masteryWord) v.append(masteryLine(fb.mastery));
+      freshNow = !!ro.fresh;
       if (!mc) v.append(...gridLines(fb, right, blank));
       // the options carry Your answer and Correct answer; the boxes only say what they can't: that nothing was picked
       else if (mode === 'review' && blank) v.append(answerBoxes(fb, key, g, blank));
 
       // 2. a mistake that closed
       const closed = (fb.closed || []).map(c => (typeof c === 'string' ? { label: c } : c)).filter(c => c && c.label);
-      closed.forEach(c => {
+      // the server's next step ("That closes it: X is fixed · a check-in comes back in 3 days") would repeat the line
+      // above it: its check-in joins the Fixed line and the next-step line goes
+      const closesStep = !!closed.length && /^That closes it:/.test(fb.next_step || '');
+      const checkIn = closesStep ? (String(fb.next_step).match(/check-in comes back in (.+)$/) || [])[1] : null;
+      closed.forEach((c, ci) => {
         const bits = [c.hits ? `caught you ${c.hits}×${c.since ? ' since ' + (UI.date ? UI.date(c.since, 'short') : c.since) : ''}` : null,
           c.days !== undefined || c.questions !== undefined ? [c.days !== undefined ? `${c.days} day${c.days === 1 ? '' : 's'}` : null, c.questions !== undefined ? `${c.questions} question${c.questions === 1 ? '' : 's'}` : null].filter(Boolean).join(', ') : null].filter(Boolean);
-        v.append(h('p', { class: 'v-fixed' + (still() ? '' : ' pop') }, icon('check', 16), h('b', { text: 'Fixed' }), ` · ${low1(c.label)}`, bits.map(b => ` · ${b}`)));
+        v.append(h('p', { class: 'v-fixed' + (still() ? '' : ' pop') }, icon('check', 16), h('b', { text: 'Fixed' }), ` · ${low1(c.label)}`, bits.map(b => ` · ${b}`),
+          checkIn && ci === 0 ? ` · check-in in ${checkIn}` : null));
       });
 
       // 3. the named mistake, confidence, traps on offer, causes, habit
       if (!right && !blank) {
         const reason = mc ? (fb.mistake || (fb.reasons && fb.reasons[g])) : null;
         // the pick's own reason already sits under its option (optionLines): the line would say it twice
-        const onOption = mc && fb.reasons && fb.reasons[g] === reason && !fb.trap && !fb.trap_check && mode !== 'quiz' && !(prefs.option_reasons === false && live);
+        const same = (x, y) => String(x || '').trim().replace(/\.$/, '').toLowerCase() === String(y || '').trim().replace(/\.$/, '').toLowerCase();   // case and a full stop aside
+        const onOption = mc && fb.reasons && same(fb.reasons[g], reason) && !fb.trap && !fb.trap_check && mode !== 'quiz' && !(prefs.option_reasons === false && live);
         if (mc && reason && !onOption) {
           v.append(h('p', { class: 'mistake' },
-            fb.trap ? h('span', { class: 'trap-chip', text: String(fb.trap).replace(/_/g, ' ').toUpperCase() }) : null,
+            fb.trap ? h('span', { class: 'badge soft trap-chip', text: cap1(String(fb.trap).replace(/_/g, ' ')) }) : null,
             h('span', { text: cap1(reason) }),
             fb.trap_check ? h('span', { class: 'mistake-check', text: fb.trap_check }) : null));
         }
-        if (fb.sure_miss || fb.conf === 'sure') {
-          v.append(h('p', { class: 'v-note' }, h('b', { text: 'You were sure, and it’s wrong: ' }),
-            'this kind costs points on test day, because you wouldn’t re-check it. It comes back first.'));
-        }
+        if (fb.sure_miss || fb.conf === 'sure') v.append(h('p', { class: 'v-note' }, h('b', { text: 'Sure, but wrong.' }), ' It comes back first.'));
       }
       if (fb.cover === 'key') v.append(h('p', { class: 'v-line v-ok', text: 'Solved without the choices' }));
       else if (fb.cover === 'distractor' && g !== null && S.own) {
@@ -1357,21 +1384,25 @@
         v.append(h('p', { class: 'v-line v-new' }, h('b', { text: same ? 'New mistake to fix' : 'New mistake to fix: ' }), same ? '' : cap1(x.label),
           ` · ${x.clean ?? 0} of ${x.of ?? 2} correct answers · `, h('a', { class: 'qlink', href: x.href || '/review/?tab=redo', text: 'See it in Review' })));
       });
-      if (fb.repair_next) v.append(h('p', { class: 'v-line', text: 'Next: one like this, with new numbers' }));
+      if (fb.repair_next) v.append(h('p', { class: 'v-line', text: q.text ? 'Next: another one like this' : 'Next: one like this, with new numbers' }));
 
-      // 4. the next step, then vs now, the formula, everyone, and offers
+      // 4. the next step; then the tail (mastery, then vs now, the saved note, the formula, everyone), one group
+      // that a wide practice runner shows in its Details column instead (.v-tail is display: contents here)
       const openedNow = (fb.opened || []).map(x => String((typeof x === 'string' ? x : x && x.label) || '').toLowerCase()).filter(Boolean);
-      if (fb.next_step && !openedNow.some(l => fb.next_step.toLowerCase().startsWith(l))) v.append(h('p', { class: 'v-line v-next', text: fb.next_step }));
-      if (fb.then) v.append(h('p', { class: 'v-line v-then', text: fb.then }));
+      if (fb.next_step && !closesStep && !openedNow.some(l => fb.next_step.toLowerCase().startsWith(l))) v.append(h('p', { class: 'v-line v-next', text: fb.next_step }));
+      const tail = h('div', { class: 'v-tail' });
+      if (fb.mastery && UI.masteryWord) tail.append(masteryLine(fb.mastery));
+      if (fb.then) tail.append(h('p', { class: 'v-line v-then', text: fb.then }));
       // V3: a fresh version from the Saved pool brings back the note on the saved one
       const sn = typeof fb.saved_note === 'string' ? { text: fb.saved_note } : fb.saved_note;
-      if (sn && sn.text) v.append(h('p', { class: 'v-line v-snote' }, h('b', { text: `Your note on the saved one${sn.at ? ' · ' + (UI.date ? UI.date(sn.at, 'short') : sn.at) : ''}: ` }), sn.text));
-      (fb.formula || []).forEach(f => v.append(formulaLine(f)));
+      if (sn && sn.text) tail.append(h('p', { class: 'v-line v-snote' }, h('b', { text: `Your note on the saved one${sn.at ? ' · ' + (UI.date ? UI.date(sn.at, 'short') : sn.at) : ''}: ` }), sn.text));
+      (fb.formula || []).forEach(f => tail.append(formulaLine(f)));
       if (fb.crowd && fb.crowd.first_rate !== undefined && (fb.crowd.n === undefined || fb.crowd.n >= 20)) {
         const top = fb.crowd.top;
-        v.append(h('p', { class: 'v-line v-crowd' }, `Everyone: ${pct(fb.crowd.first_rate)}% right on the first try`,
+        tail.append(h('p', { class: 'v-line v-crowd' }, `Everyone: ${pct(fb.crowd.first_rate)}% right on the first try`,
           top && top.label ? ` · most common mistake: ${low1(top.label)}${top.share !== undefined ? ` (${pct(top.share)}% of misses)` : ''}` : ''));
-      } else if (fb.crowd && fb.crowd.text) v.append(h('p', { class: 'v-line v-crowd', text: fb.crowd.text }));
+      } else if (fb.crowd && fb.crowd.text) tail.append(h('p', { class: 'v-line v-crowd', text: fb.crowd.text }));
+      if (tail.children.length) v.append(tail);
       if (fb.twice && o.onLadder) {
         v.append(h('p', { class: 'v-line v-ladder' }, h('button', { type: 'button', class: 'btn sm', onclick: () => o.onLadder() },
           icon('book', 16), 'Missed this type twice. Learn it step by step'), h('span', { class: 'meta', text: ' 3 questions · ~4 min' })));
@@ -1407,7 +1438,7 @@
       const hints = fb.hints ?? S.hints;
       if (mode === 'example') {
         const k = keyIndex(fb);
-        return h('p', { class: 'v-head ok' }, h('span', { class: 'v-glyph', 'aria-hidden': 'true', text: '✓' }),
+        return h('p', { class: 'v-head ok' }, h('span', { class: 'v-glyph', 'aria-hidden': 'true' }, markIcon('check', 16)),
           h('b', { text: 'Worked example' }), h('span', { class: 'v-bit', text: ` · the answer is ${k !== null && mc ? LETTERS[k] : minus(fb.answer)}` }));
       }
       if (blank && !right) word = fb.shown ? 'Answer shown' : 'Not answered';
@@ -1420,23 +1451,31 @@
       if (fb.budget_ms) bits.push(fb.fluency === 'fluent' ? `fluent (budget ${mmss(fb.budget_ms)})` : `budget ${mmss(fb.budget_ms)}`);
       else if (fb.avg_ms) bits.push(`your average on this type ${mmss(fb.avg_ms)}`);
       if (right && fb.conf === 'guess') bits.push('a guess counts half');
-      if (fb.best) bits.push('New best on this type');
+      const best = fb.best ? h('span', { class: 'badge soft v-best' }, icon('trophy', 14), 'New best on this type') : null;
       return h('p', { class: 'v-head ' + (right ? 'ok' : blank ? 'blank' : 'no') },
-        h('span', { class: 'v-glyph', 'aria-hidden': 'true', text: right ? '✓' : blank ? '–' : '✕' }),
-        h('b', { text: word }), bits.map(b => h('span', { class: 'v-bit', text: ` · ${b}` })));
+        h('span', { class: 'v-glyph', 'aria-hidden': 'true' }, right ? markIcon('check', 16) : blank ? '–' : markIcon('x', 14)),
+        h('b', { text: word }), bits.map(b => h('span', { class: 'v-bit', text: ` · ${b}` })), best);
     }
+    // mastery moves: on a fresh verdict the bar slides from where it was to where it is (runner.css times it) and
+    // the word changes as it lands (Developing to Proficient); a revisit draws it where it is
+    let freshNow = false;
     function masteryLine(m) {
       const t = UI.TOPIC && UI.TOPIC[m.topic];
       const i = h('i');
-      i.style.setProperty('--m', (m.before || 0).toFixed(3));
-      const word = h('span', { class: 'v-mword', text: UI.masteryWord(m.after, 1) });
-      const line = h('p', { class: 'v-mastery' }, UI.glyph ? UI.glyph(m.topic) : '', h('span', { text: t ? t.short : m.topic }), ' · ', word,
+      const was = UI.masteryWord(m.before, 1), now = UI.masteryWord(m.after, 1);
+      const moving = freshNow && live && !(UI.motion && UI.motion.off && UI.motion.off());
+      i.style.setProperty('--m', ((moving ? m.before : m.after) || 0).toFixed(3));
+      const word = h('span', { class: 'v-mword', text: moving ? was : now });
+      const line = h('p', { class: 'v-mastery' }, UI.glyph ? UI.glyph(m.topic) : '', h('span', { text: t ? t.short : UI.topicName ? UI.topicName(m.topic) : m.topic }), ' · ', word,
         h('span', { class: 'mbar', 'aria-hidden': 'true' }, i));
-      requestAnimationFrame(() => requestAnimationFrame(() => i.style.setProperty('--m', (m.after || 0).toFixed(3))));
+      if (moving) {
+        requestAnimationFrame(() => requestAnimationFrame(() => i.style.setProperty('--m', (m.after || 0).toFixed(3))));
+        if (was !== now) setTimeout(() => { word.textContent = now; if (UI.motion) UI.motion.enter(word, 'nudge', { force: true }); }, 700);
+      }
       return line;
     }
     function answerBoxes(fb, key, g, blank) {
-      const opt = i => h('span', {}, h('b', { text: LETTERS[i] }), ' · ', tex(h('span'), choices[i], (q.latex || [])[i]));
+      const opt = i => h('span', {}, h('b', { text: LETTERS[i] }), ' · ', q.text ? h('span', { text: choices[i] }) : tex(h('span'), choices[i], (q.latex || [])[i]));
       return h('div', { class: 'abox-pair' },
         h('div', { class: 'abox mine' + (fb.correct ? ' ok' : blank ? ' blank' : ' no') }, h('span', { class: 'k', text: 'Your answer' }),
           h('span', { class: 'abox-v' }, blank ? 'Not answered' : opt(g))),
@@ -1537,8 +1576,7 @@
       if (!steps && !method && !short && !dz && !(fb.typed && fb.typed.length)) return null;
       const card = h('section', { class: 'x-card', 'aria-label': 'Explanation' });
       const name = fb.type_name || q.name, about = fb.about || q.about;
-      card.append(h('div', { class: 'x-head' }, h('h3', { class: 'x-title', text: 'Explanation' }),
-        name || about ? h('p', { class: 'x-type' }, name ? h('b', { text: name }) : null, name && about ? ' · ' : '', about || '') : null));
+      if (name || about) card.append(h('div', { class: 'x-head' }, h('p', { class: 'x-type' }, name ? h('b', { text: name }) : null, name && about ? ' · ' : '', about || '')));
       const panels = [];
       if (steps) panels.push({ id: 'steps', label: 'Steps', panel: stepsPanel(fb, steps, right) });
       else if (method) panels.push({ id: 'method', label: 'Method', panel: h('div', { class: 'x-panel' }, texText(h('p', { class: 'why' }), method)) });
@@ -1556,11 +1594,19 @@
       }
       const open = ro.open || mode === 'review' || mode === 'example' || mode === 'quiz' || prefs.open_explanations || prefs.rationale === 'always'
         || fb.conf === 'guess' || fb.sure_miss || (!right && prefs.rationale !== 'tap');
-      if (open) return [card];
-      card.hidden = true;
-      const tog = h('button', { type: 'button', class: 'quiet x-toggle', 'aria-expanded': 'false' }, h('span', { text: 'Explanation' }), icon('chev', 16));
-      tog.addEventListener('click', () => { card.hidden = !card.hidden; tog.setAttribute('aria-expanded', String(!card.hidden)); });
-      return [tog, card];
+      // one control, the shared fold's own look (details.fold, .fold-s): open where the card must show, else closed
+      // unless an Explanation was left open before (satf.fold 'explanation', the id ui.js's fold remembers it by)
+      const d = h('details', { class: 'fold x-fold' }, h('summary', { class: 'fold-s', text: 'Explanation' }), card);
+      let was = d.open = !!open || foldKept();
+      d.addEventListener('toggle', () => { if (d.open !== was) { was = d.open; foldKeep(was); } });   // the student's taps, not the first open
+      return [d];
+    }
+    const foldList = () => { const a = ls.get('satf.fold', []); return Array.isArray(a) ? a : []; };
+    const foldKept = () => foldList().includes('explanation');
+    function foldKeep(on) {
+      const a = foldList().filter(x => x !== 'explanation');
+      if (on) a.push('explanation');
+      ls.set('satf.fold', a.slice(-300));
     }
     function stepsPanel(fb, steps, right) {
       const box = h('div', { class: 'x-panel' });
@@ -1599,9 +1645,8 @@
     function outlineStep(i) {
       const card = verdictEl.querySelector('.x-card');
       if (!card) return;
-      card.hidden = false;
-      const tog = verdictEl.querySelector('.x-toggle');
-      if (tog) tog.setAttribute('aria-expanded', 'true');
+      const d = card.closest('details');
+      if (d) d.open = true;
       if (card._tabs) card._tabs.set('steps');
       stepRows.forEach(r => r.classList.remove('see'));
       const r = stepRows[i];
@@ -1706,7 +1751,10 @@
     }
 
     const ws = {
-      el, q, key, check, select, strike, eliminate, cover, hint, skip, reveal, tools, renderTools, setHidden, state, value, canCheck,
+      el, q, key, check, select, strike, eliminate, cover, hint, skip, tools, renderTools, setHidden, state, value, canCheck,
+      // a page that reveals for itself (the verdict came back) gets the same landing as a Check here
+      reveal: (fb, ro) => reveal(fb, Object.assign({ fresh: true }, ro)),
+      passageNodes: [figEl, tableEl, passEl].filter(Boolean),
       choose(i) { if (select(i) && live && !endMode) check('auto'); },
       unlock() { S.busy = false; S.pending = false; paint(); },
       answered: () => S.answered,
@@ -1745,9 +1793,10 @@
     const el = h('div', { class: 'split-check', role: 'group', 'aria-label': 'Check your answer' });
     const main = h('button', { type: 'button', class: 'pill sc-main', 'data-conf': 'auto', disabled: true }, h('span', { class: 'sc-l' }), h('kbd', { class: 'kbd', text: 'Enter' }));
     // D: the rating is the button, three of one shape
-    const sure = h('button', { type: 'button', class: 'pill sc-part', 'data-conf': 'sure' }, 'Sure', h('kbd', { class: 'kbd', text: 'Enter' }));
-    const unsure = h('button', { type: 'button', class: 'btn sc-part', 'data-conf': 'unsure' }, 'Not sure', h('kbd', { class: 'kbd', text: '⇧Enter' }));
-    const guess = h('button', { type: 'button', class: 'btn sc-part', 'data-conf': 'guess' }, 'Guessing', h('kbd', { class: 'kbd', text: 'I' }));
+    // the key is in each tooltip too: the runner shows the chips only on hover, focus and a learner's first sets
+    const sure = h('button', { type: 'button', class: 'pill sc-part', 'data-conf': 'sure', title: 'Sure (Enter)' }, 'Sure', h('kbd', { class: 'kbd', text: 'Enter' }));
+    const unsure = h('button', { type: 'button', class: 'btn sc-part', 'data-conf': 'unsure', title: 'Not sure (Shift+Enter)' }, 'Not sure', h('kbd', { class: 'kbd', text: '⇧Enter' }));
+    const guess = h('button', { type: 'button', class: 'btn sc-part', 'data-conf': 'guess', title: 'Guessing (I)' }, 'Guessing', h('kbd', { class: 'kbd', text: 'I' }));
     el.append(main, sure, unsure, guess);
     let enabled = false;
     [main, sure, unsure, guess].forEach(b => b.addEventListener('click', () => { if (enabled && o.onSubmit) o.onSubmit(b.dataset.conf); }));
@@ -1759,6 +1808,7 @@
       main.hidden = split;
       main.disabled = !enabled;
       main.querySelector('.sc-l').textContent = o.save ? 'Save & next' : 'Check';
+      main.title = `${o.save ? 'Save & next' : 'Check'} (Enter)`;
       el.classList.toggle('split', split);
     }
     set({});
@@ -1777,7 +1827,7 @@
       const b = e.target.closest('.pad-k');
       if (!b || field.readOnly || field.disabled) return;
       const k = b.dataset.k;
-      let v = field.value.replace(/−/g, '-');
+      let v = spr.clean(field.value);
       if (k === '⌫') v = v.slice(0, -1);
       else if (k === 'Clear') v = '';
       else if (k === '−') v = v.startsWith('-') ? v.slice(1) : '-' + v;
@@ -1820,35 +1870,39 @@
     if (ctx.challengeOpen) { if (host) host.append(row); return { el: row, run: () => false, has: () => false }; }   // R19
     const liveNow = !!ctx.live;
     if (!liveNow && (on.twin || ctx.more || ctx.body || q.template || ctx.trap_id)) {
-      // the verdict region's primary after a miss; a .btn after a right answer, where Next leads
-      const tw = twin(null, Object.assign({ primary: !!ctx.missed, template: q.template, question_id: q.id }, ctx));
+      // the verdict region's primary after a miss; a .btn after a right answer, and always in the practice runner,
+      // whose footer Next is the screen's one orange
+      const tw = twin(null, Object.assign({ primary: !!ctx.missed && ctx.surface !== 'runner', template: q.template, question_id: q.id, q }, ctx));
       row.append(tw.el);
       acts.twin = () => tw.run('same');
       acts.twin_menu = () => tw.menu();
     }
     const dz = ctx.desmos || fb.desmos;
     if (!liveNow && dz && dz.exprs) put('desmos', btn('Desmos way', 'graph', { id: 'desmos', key: K.desmos || 'Shift+G' }, () => calc.walkthrough(dz)));
-    // V3: a save asks why, in one optional 5 s toast (the player's top-bar Save does the same)
-    const saveThen = async v => { const r = await on.save(v); if (v) savedToast(q, { text: 'Saved to Review', revealed: ctx.revealed !== false, onNote: on.note || null, onAsk: on.help || null, onWhy: on.savedWhy || null, onLucky: on.lucky || null }); return r; };
-    if (!liveNow && on.save) put('save', toggle('save', 'Save', 'Saved', 'bookmark', K.save || 'B', ctx.saved, saveThen));
-    if (on.mark && (ctx.session || ctx.inSitting)) put('mark', toggle('mark', 'Mark', 'Marked', 'flag', K.mark || 'M', ctx.marked, on.mark));
-    if (on.note) put('note', btn(ctx.rule ? 'My rule' : ctx.hasNote ? 'My note' : 'Note', 'note', { id: 'note', key: K.note || 'O' }, () => on.note()));
-    if (!liveNow) {
-      const hist = on.history || (UI.history && (q.template || ctx.session) ? () => UI.history(q.template ? { template: q.template } : { session: ctx.session, question_id: q.id }) : null);
-      if (hist) put('history', btn('History', 'history', { id: 'history', key: K.history || 'Y' }, () => hist()));
-      if (on.again && ctx.surface !== 'runner' && ctx.surface !== 'inline') {
-        const b = UI.verb ? UI.verb('again', { sm: true, onClick: () => on.again() }) : btn('Again, exactly', 'history', { id: 'again', key: 'E' }, () => on.again());
-        put('again', b);
+    // compact (the practice runner): its question strip already has Mark, Note, History and Report, one of each
+    if (!ctx.compact) {
+      // V3: a save asks why, in one optional 5 s toast (the player's top-bar Save does the same)
+      const saveThen = async v => { const r = await on.save(v); if (v) savedToast(q, { text: 'Saved to Review', revealed: ctx.revealed !== false, onNote: on.note || null, onAsk: on.help || null, onWhy: on.savedWhy || null, onLucky: on.lucky || null }); return r; };
+      if (!liveNow && on.save) put('save', toggle('save', 'Save', 'Saved', 'bookmark', K.save || 'B', ctx.saved, saveThen));
+      if (on.mark && (ctx.session || ctx.inSitting)) put('mark', toggle('mark', 'Mark', 'Marked', 'flag', K.mark || 'M', ctx.marked, on.mark));
+      if (on.note) put('note', btn(ctx.rule ? 'My rule' : ctx.hasNote ? 'My note' : 'Note', 'note', { id: 'note', key: K.note || 'O' }, () => on.note()));
+      if (!liveNow) {
+        const hist = on.history || (UI.history && (q.template || ctx.session) ? () => UI.history(q.template ? { template: q.template } : { session: ctx.session, question_id: q.id }) : null);
+        if (hist) put('history', btn('History', 'history', { id: 'history', key: K.history || 'Y' }, () => hist()));
+        if (on.again && ctx.surface !== 'runner' && ctx.surface !== 'inline') {
+          const b = UI.verb ? UI.verb('again', { sm: true, onClick: () => on.again() }) : btn('Again, exactly', 'history', { id: 'again', key: 'E' }, () => on.again());
+          put('again', b);
+        }
+        // "About this type" pointed at /types/, a page that does not exist (404), so it is gone until that page is built
       }
-      // "About this type" pointed at /types/, a page that does not exist (404), so it is gone until that page is built
+      const report = () => {
+        const f = on.report || UI.report;
+        if (!f) return null;
+        return f(on.report ? undefined : Object.assign({ kind: 'question', source: ctx.source, session: ctx.session, question_id: q.id,
+          revealed: !!ctx.revealed, live: liveNow, template: q.template, seed: q.seed }, ctx.report || {}));
+      };
+      put('report', btn('Report', 'report', { id: 'report', key: K.report || 'R' }, report), report);
     }
-    const report = () => {
-      const f = on.report || UI.report;
-      if (!f) return toast('Reports open here soon. Use Send feedback in the menu for now.');
-      return f(on.report ? undefined : Object.assign({ kind: 'question', source: ctx.source, session: ctx.session, question_id: q.id,
-        revealed: !!ctx.revealed, live: liveNow, template: q.template, seed: q.seed }, ctx.report || {}));
-    };
-    put('report', btn('Report', 'report', { id: 'report', key: K.report || 'R' }, report), report);
     if (host) host.append(row);
     return { el: row, run: id => (acts[id] ? (acts[id](), true) : false), has: id => !!acts[id] };
   }
@@ -1859,20 +1913,22 @@
     ask: 'Same setup, a different question', related: 'Same trap, other types',
   };
   function twin(host, ctx = {}) {
-    const wrapEl = h('span', { class: 'split twin' + (ctx.primary ? ' primary' : '') });
+    const wrapEl = h('span', { class: 'split split-btn twin' + (ctx.primary ? ' primary' : '') });
     const main = UI.verb
-      ? UI.verb('twin', { primary: !!ctx.primary, sm: true, subject: ctx.subject, onClick: () => run('same') })
+      ? UI.verb('twin', { primary: !!ctx.primary, sm: true, subject: written() ? 'rw' : ctx.subject, onClick: () => run('same') })
       : h('button', { type: 'button', class: ctx.primary ? 'pill sm' : 'btn sm', onclick: () => run('same') }, icon('twin', 16), 'Twin');
     main.setAttribute('aria-keyshortcuts', 'T');
-    const caret = h('button', { type: 'button', class: (ctx.primary ? 'pill sm' : 'btn sm') + ' split-caret', 'aria-label': 'More ways to twin', 'aria-haspopup': 'menu', title: 'Shift+T' }, icon('chev', 16));
+    const caret = h('button', { type: 'button', class: (ctx.primary ? 'pill sm' : 'btn sm') + ' split-caret', 'aria-label': 'More ways to twin', 'aria-haspopup': 'menu', 'aria-expanded': 'false', title: 'Shift+T' }, icon('caret_down', 16));
     caret.addEventListener('click', () => menu());
     wrapEl.append(main, caret);
     function items() {
-      const ax = new Set(ctx.axes || []);
+      // a written (R&W) item has no new-numbers version, grid-in form or second ask on its setup
+      const rw = written();
+      const ax = new Set((ctx.axes || []).filter(a => !rw || (a !== 'grid' && a !== 'ask')));
       const sib = ctx.siblings || {};
-      const list = [{ label: 'Twin', sub: 'same kind, new numbers', kbd: 'T', onClick: () => run('same') }];
+      const list = [{ label: 'Twin', sub: rw ? 'same kind, another passage' : 'same kind, new numbers', kbd: 'T', onClick: () => run('same') }];
       // SR16, V11: on a trap or gap miss, a worked example first (never filed), then Your turn
-      if (ctx.onSolved) list.push({ label: 'See one solved first', sub: 'your mistake marked on new numbers', onClick: () => ctx.onSolved() });
+      if (ctx.onSolved) list.push({ label: 'See one solved first', sub: rw ? 'one worked, then your turn' : 'your mistake marked on new numbers', onClick: () => ctx.onSolved() });
       if (ax.has('easier')) list.push({ label: sib.easier ? `Easier: ${sib.easier}` : 'Easier', onClick: () => run('easier') });
       if (ax.has('harder')) list.push({ label: sib.harder ? `Harder: ${sib.harder}` : 'Harder', onClick: () => run('harder') });
       if (ax.has('grid')) list.push({ label: AXIS.grid, onClick: () => run('grid') });
@@ -1883,6 +1939,7 @@
       if (ctx.template && ctx.print !== false) list.push({ label: 'Print 10 with key', onClick: () => run('print') });
       return list;
     }
+    function written() { return ctx.subject ? ctx.subject === 'rw' : !!(ctx.q && ctx.q.text) || UI.subjectOf(ctx.template) === 'rw'; }
     function menu() { return UI.menu ? UI.menu(caret, items(), { label: 'Twin' }) : null; }
     async function run(axis, n = 1) {
       try {
@@ -1990,11 +2047,12 @@
     const foot = h('div', { class: 'twin-foot' });
     const done = h('button', { type: 'button', class: 'pill', text: 'Done' });
     foot.append(done);
+    const kicker = h('p', { class: 'k twin-k', text: 'Same kind of question' });
     const sheet = UI.sheet({
       title: o.title || 'Twin', size: 'l', className: 'twin-sheet',
       body: b => {
         if (o.recall) b.append(recallBox(o.recall));
-        b.append(h('p', { class: 'k twin-k', text: 'Same kind of question, new numbers' }), qhost, msg, foot);
+        b.append(kicker, qhost, msg, foot);
         UI.skel ? UI.skel(qhost, 'lines:3') : qhost.append(h('p', { class: 'meta', text: 'Loading…' }));
       },
       onClose: () => { if (run) { run.finish(); if (o.onDone) o.onDone({ right: run.right, answered: run.answered, session: run.sid }); } },
@@ -2009,16 +2067,21 @@
       return d;
     }
     done.addEventListener('click', () => sheet.close());
-    run = twinRun(qhost, msg, foot, Object.assign({}, o, { focusAfter: () => done }));
+    // the kicker says what changed once the twin is on screen: a written item is another passage
+    run = twinRun(qhost, msg, foot, Object.assign({}, o, { focusAfter: () => done, onShow: (q, w) => {
+      kicker.textContent = q && q.text ? 'Same kind of question, another passage' : 'Same kind of question, new numbers';
+      if (o.onShow) o.onShow(q, w);
+    } }));
     return sheet;
   }
   // the players' tile (Report 1.13) and the pane's mini-session (Review 8): the same run, in a host
   function twinInline(host, o = {}) {
-    const el = h('section', { class: 'twin-tile', 'aria-label': o.caption || 'Same question type, new numbers' });
+    const el = h('section', { class: 'twin-tile', 'aria-label': o.caption || 'Same question type' });
     const qhost = h('div', { class: 'twin-q' });
     const msg = h('p', { class: 'twin-msg', role: 'status' });
     const foot = h('div', { class: 'twin-foot' });
-    if (o.caption !== false) el.append(h('p', { class: 'k twin-k', text: o.caption || 'Same question type, new numbers' }));
+    const kicker = o.caption !== false ? h('p', { class: 'k twin-k', text: o.caption || 'Same question type' }) : null;
+    if (kicker) el.append(kicker);
     el.append(qhost, msg, foot);
     const keep = o.session !== false ? h('a', { class: 'quiet twin-keep', hidden: true, text: 'Keep going in a session' }) : null;
     if (o.onBack) foot.append(h('button', { type: 'button', class: 'quiet twin-back', text: o.backLabel || 'Back to the original', onclick: () => o.onBack() }));
@@ -2027,15 +2090,20 @@
     if (host) { if (o.prepend) host.prepend(el); else host.append(el); }
     let run = null;
     run = twinRun(qhost, msg, foot, Object.assign({ againLabel: 'Another like this' }, o, {
-      onShow: (q, w) => { if (keep && run && run.sid) { keep.href = `/practice/session/?id=${encodeURIComponent(run.sid)}`; keep.hidden = false; } if (o.onShow) o.onShow(q, w); },
+      onShow: (q, w) => {
+        if (kicker && !o.caption) kicker.textContent = q && q.text ? 'Same question type, another passage' : 'Same question type, new numbers';
+        if (keep && run && run.sid) { keep.href = `/practice/session/?id=${encodeURIComponent(run.sid)}`; keep.hidden = false; }
+        if (o.onShow) o.onShow(q, w);
+      },
     }));
     return Object.assign(run, { el, destroy() { run.finish(); if (run.ws) run.ws.destroy(); el.remove(); } });
   }
 
   function exampleSheet(ex) {
     if (!UI.sheet || !ex) return null;
+    const exQ = ex.question || ex;
     return UI.sheet({ title: 'A worked twin', size: 'l', className: 'twin-sheet',
-      body: b => { b.append(h('p', { class: 'k', text: 'Solved on other numbers' })); const hst = h('div'); b.append(hst);
+      body: b => { b.append(h('p', { class: 'k', text: exQ.text ? 'Solved on another passage' : 'Solved on other numbers' })); const hst = h('div'); b.append(hst);
         workspace(hst, ex.question || ex, { mode: 'example', fb: ex.feedback || ex, bar: false }); } });
   }
 
@@ -2053,7 +2121,7 @@
       titleEl = h('span', { class: 'calc-title', text: 'Desmos' });
       modeBtn = h('button', { type: 'button', class: 'calc-btn' }, icon('dock', 16), h('span', { text: 'Dock' }));
       expandBtn = h('button', { type: 'button', class: 'calc-btn' }, icon('expand', 16), h('span', { text: 'Expand' }));
-      const x = h('button', { type: 'button', class: 'x', 'aria-label': 'Close calculator', html: svgHTML(I.x, 18) });
+      const x = h('button', { type: 'button', class: 'x', 'aria-label': 'Close calculator' }, icon('x', 18));
       const bar = h('div', { class: 'calc-bar' }, h('span', { class: 'calc-grab', 'aria-hidden': 'true' }), titleEl, h('span', { class: 'calc-acts' }, modeBtn, expandBtn, x));
       walkNote = h('span', { class: 'calc-walk-note' });
       walkBar = h('div', { class: 'calc-walk', hidden: true }, walkNote, h('button', { type: 'button', class: 'btn sm', text: 'Back to my graph', onclick: () => walkBack() }));

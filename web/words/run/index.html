@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Words run · SAT Freshman</title>
+<link rel="icon" href="/favicon.ico" sizes="32x32">
 <link rel="icon" href="/assets/mark.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
 <link rel="manifest" href="/manifest.webmanifest">
@@ -11,7 +12,8 @@
 <script src="/assets/head.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800;900&family=DM+Mono:wght@400;500&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap">
+<link rel="preload" href="/assets/fonts/Geist.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap">
 <link rel="stylesheet" href="/assets/ui.css">
 <link rel="stylesheet" href="/assets/runner.css">
 <style>
@@ -26,63 +28,79 @@
   .wr-title { font: 600 14px var(--font); display: flex; gap: 10px; align-items: baseline; flex-wrap: wrap; }
   .wr-title .meta { font-size: 12.5px; }
   .wr-prog { display: flex; gap: 3px; align-items: center; }
-  .wr-prog i { flex: 1; height: 6px; border-radius: 3px; background: var(--mat); max-width: 32px; }
+  .wr-prog i { flex: 1; height: 6px; border-radius: 3px; background: var(--track); max-width: 32px; }
   .wr-prog i.know, .wr-prog i.right { background: var(--amber); }
   .wr-prog i.dont, .wr-prog i.wrong { background: var(--ink); }
   .wr-prog i.done { background: var(--tile-2); box-shadow: inset 0 0 0 1px var(--faint); }
-  .wr-prog i.cur { box-shadow: 0 0 0 1.5px var(--paper), 0 0 0 3px var(--ink); }
+  .wr-prog i.cur { background: var(--faint); }   /* where you are: a step darker, no ring */
   .wr-prog i.grow { animation: wgrow .3s var(--ease) both; }
   @keyframes wgrow { from { transform: scaleX(0); } }
-  .wr-prog .n { font: 500 12.5px var(--mono); color: var(--soft); white-space: nowrap; }
-  .wr-clock { font: 500 13px var(--mono); color: var(--ink); white-space: nowrap; }
-  .wr-clock.low { color: var(--ink-deep); font-weight: 700; }
+  .wr-prog .n { font: 500 12.5px var(--font); color: var(--soft); white-space: nowrap; font-variant-numeric: tabular-nums; }
+  .wr-clock { font: 500 12.5px var(--font); color: var(--ink); white-space: nowrap; font-variant-numeric: tabular-nums; }
+  .wr-clock.low { color: var(--ink-deep); font-weight: 600; }
   .wr-tools { display: flex; gap: 2px; }
-  .wr-tools .btn.icon { background: none; }
-  .wr-tools .btn[aria-pressed="true"] svg path { fill: var(--amber); stroke: var(--amber-deep); }
-  .wr-tbar { height: 3px; background: var(--mat); border-radius: 2px; overflow: hidden; margin-top: 6px; }
+  .wr-tbar { height: 3px; background: var(--track); border-radius: 2px; overflow: hidden; margin-top: 6px; }
   .wr-tbar i { display: block; height: 100%; background: var(--ink); transform-origin: left; }
   .wr-stage { padding-top: 24px; display: grid; gap: 16px; }
   .wr-status { min-height: 22px; font: 500 14px var(--font); text-align: center; color: var(--ink); }
-  .wr-left { font: 500 12.5px var(--mono); color: var(--soft); text-align: center; }
+  .wr-left { font: 500 12.5px var(--font); color: var(--soft); text-align: center; font-variant-numeric: tabular-nums; }
   /* the flashcard */
-  .fstack { position: relative; width: 100%; max-width: 620px; margin: 8px auto 0; perspective: 1400px; }
-  .fstack::before, .fstack::after { content: ""; position: absolute; left: 16px; right: 16px; height: 100%; border-radius: 16px; z-index: -1; }
-  .fstack::before { top: 8px; background: var(--tile-2); left: 8px; right: 8px; }
-  .fstack::after { top: 16px; background: var(--mat); }
-  .fcard { position: relative; min-height: 340px; transition: transform .45s var(--ease); transform-style: preserve-3d; touch-action: pan-y; }
-  .fcard.flipped { transform: rotateY(180deg); }
-  .fface { position: absolute; inset: 0; backface-visibility: hidden; -webkit-backface-visibility: hidden; border-radius: 16px; background: var(--tile);
+  /* the flashcard is the page's one raised surface (premium): paper with a warm layered shadow; while 2 or more cards are
+     left, the deck shows as up to two edges under it (data-left, a real count) */
+  .fstack { position: relative; width: 100%; max-width: 620px; margin: 8px auto 0; perspective: 1400px; isolation: isolate; }
+  /* the edges shrink toward the card's foot (transform-origin bottom), so 6px and 12px of each actually show under it */
+  .fstack[data-left]::before, .fstack[data-left="2"]::after { content: ""; position: absolute; inset: 0; z-index: -1; border-radius: var(--radius-card);
+    background: var(--paper); box-shadow: var(--shadow-1); transform-origin: 50% 100%; transform: translateY(7px) scale(.96); }
+  .fstack[data-left="2"]::after { z-index: -2; transform: translateY(14px) scale(.92); }
+  .fstack[data-left] { margin-bottom: 14px; }   /* the edges hang below the box: keep "4 left" clear of them */
+  .fcard { position: relative; min-height: 340px; transition: transform 360ms var(--ease-move); transform-style: preserve-3d; touch-action: pan-y; }
+  .fcard.flipped { transform: rotateY(180deg); cursor: grab; }
+  .fcard.dragging { transition: none; cursor: grabbing; -webkit-user-select: none; user-select: none; }   /* follows the finger 1:1 (premium bug 7) */
+  .fface { position: absolute; inset: 0; backface-visibility: hidden; -webkit-backface-visibility: hidden; border-radius: var(--radius-card); background: var(--paper); box-shadow: var(--shadow-3);
     padding: 24px 28px; display: grid; align-content: center; gap: 10px; overflow-y: auto; }
   .fface.back { transform: rotateY(180deg); align-content: start; }
+  /* the swipe says what it will do: Know (amber edge) as the card goes right, Again (ink) as it goes left */
+  .stamp { position: absolute; top: 16px; left: 50%; translate: -50% 0; padding: 4px 12px; border-radius: 8px; background: var(--paper);
+    font: 600 16px var(--font); opacity: 0; pointer-events: none; }
+  .stamp.know { color: var(--amber-deep); box-shadow: inset 0 0 0 2px var(--amber); rotate: -6deg; }
+  .stamp.again { color: var(--ink); box-shadow: inset 0 0 0 2px var(--ink); rotate: 6deg; }
   .fcard.tall { min-height: 460px; }
   .fface.learnc { position: relative; inset: auto; min-height: 300px; }
   .ffront { text-align: center; justify-items: center; }
-  .fword { font: 800 clamp(36px, 6vw, 56px)/1.05 var(--font); letter-spacing: -.03em; overflow-wrap: anywhere; }
+  .fword { font: 600 clamp(36px, 6vw, 56px)/1.05 var(--font); letter-spacing: -.03em; overflow-wrap: anywhere; }
+  .fword.sm { font-size: clamp(32px, 5vw, 44px); }
+  .learn-h { display: flex; gap: 10px; align-items: center; }
+  .center { text-align: center; }
   .fmean { font: 400 24px/1.4 var(--serif); }
+  .fmean.sm { font-size: 20px; }
   .fsent { font: 400 21px/1.5 var(--serif); }
   .fchips { display: flex; gap: 6px; flex-wrap: wrap; justify-content: center; }
-  .fback-w { font: 700 18px var(--font); }
+  .fback-w { font: 600 16px var(--font); }
   .fback .k { margin-top: 8px; }
   .fback .meaning { font: 400 19px/1.45 var(--serif); }
   .fback .ex { font: 400 16px/1.5 var(--serif); }
-  .fback details summary { cursor: pointer; font: 600 13px var(--font); margin-top: 6px; }
-  .fpicks { font: 500 13px var(--mono); color: var(--ink); }
+  .fback details.fold { margin-top: 6px; }
+  .fpicks { font: 500 12.5px var(--font); color: var(--ink); }
   @media (prefers-reduced-motion: reduce) { .fcard { transition: none; transform: none !important; } .fface.back { transform: none; opacity: 0; transition: opacity .15s; } .fcard.flipped .fface.back { opacity: 1; } .fcard.flipped .fface.ffront { opacity: 0; } .wr-prog i.grow { animation: none; } }
   html[data-motion="reduce"] .fcard { transition: none; transform: none !important; }
   html[data-motion="reduce"] .fface.back { transform: none; opacity: 0; }
   html[data-motion="reduce"] .fcard.flipped .fface.back { opacity: 1; }
   html[data-motion="reduce"] .fcard.flipped .fface.ffront { opacity: 0; }
   .wr-ctl { display: flex; gap: 10px; justify-content: center; align-items: center; flex-wrap: wrap; max-width: 620px; margin: 0 auto; width: 100%; }
-  .wr-ctl .grade { flex: 1; min-height: 44px; }
+  /* one height per control row: the pill's */
+  .wr-ctl > :is(.btn, .quiet) { min-height: 42px; }
+  .wr-ctl > .quiet { margin: 0; }
+  @media (max-width: 759px), (pointer: coarse) { .wr-ctl > .pill { height: var(--touch); } }
+  .wr-ctl .grade { flex: 1; }
   .wr-ctl .nav { min-width: var(--touch); }
   .wr-ctl .kbd { margin-left: 6px; }
-  /* a touch screen has no keys to hint at */
-  @media (hover: none) and (pointer: coarse) { .wr .kbd, .wr .keys { display: none; } }
+  /* a touch screen has no keys to hint at (ui.css hides the .kbd caps; .keys is this page's "Space" line) */
+  @media (hover: none) and (pointer: coarse) { .wr .keys { display: none; } }
   /* sorting and placement */
   .sortw { text-align: center; display: grid; gap: 18px; justify-items: center; padding: 40px 0 16px; }
   .sortw .fword { font-size: clamp(40px, 7vw, 64px); }
   .sort-btns { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; width: 100%; max-width: 480px; }
-  .sort-btns button { min-height: 52px; padding: 0 8px; }
+  .sort-btns button { min-height: 48px; padding: 0 8px; }
   /* staged items, quick options, order, typed */
   .wtext { font: 400 var(--q-size, 20px)/1.6 var(--serif); }
   .wtext .blank { display: inline-block; width: 4em; border-bottom: 1.5px solid var(--ink); }
@@ -91,42 +109,65 @@
   .ws-actions { display: flex; flex-wrap: wrap; gap: 8px 10px; align-items: center; }
   .wsrc { font: italic 400 13px var(--font); color: var(--soft); }
   .wstage { display: grid; gap: 8px; }
-  .wstage .btn, .wquick .btn { justify-content: flex-start; min-height: 52px; text-align: left; white-space: normal; padding: 10px 16px; font: 500 16px/1.35 var(--font); }
+  .wstage .btn, .wquick .btn { justify-content: flex-start; min-height: 48px; text-align: left; white-space: normal; padding: 8px 16px; font: 500 16px/1.35 var(--font); }
+  .wstage .quiet { justify-self: start; }
   .wstage .btn .kbd, .wquick .btn .kbd { flex: none; }
   .wquick { display: grid; gap: 8px; }
-  .wquick .btn[aria-pressed="true"] { background: var(--wash); box-shadow: inset 0 0 0 1.5px var(--amber); }
+  .wquick .btn[aria-pressed="true"] { background: var(--sel-bg); box-shadow: var(--sel-edge); }
   .wtray { display: flex; flex-wrap: wrap; gap: 6px; }
-  .word-order { display: grid; gap: 8px; list-style: none; padding: 0; }
-  .word-order li { display: flex; align-items: center; gap: 12px; min-height: 52px; padding: 0 14px; border-radius: 10px; background: var(--tile); font: 600 17px var(--font); cursor: grab; }
-  .word-order li[aria-selected="true"] { background: var(--wash); box-shadow: inset 0 0 0 1.5px var(--amber); }
-  .word-order li.dragging { opacity: .6; }
-  .word-order .hd { width: 44px; height: 44px; display: grid; place-items: center; color: var(--soft); touch-action: none; }
-  .word-order .n { font: 500 12px var(--mono); color: var(--soft); width: 18px; }
+  .word-order { position: relative; display: grid; gap: 8px; list-style: none; padding: 0; }
+  /* the ladder's rows are keys you move: the control face, the one selected look when picked */
+  .word-order li { display: flex; align-items: center; gap: 12px; min-height: 48px; padding: 0 12px; border-radius: 10px; background: var(--face); box-shadow: var(--shadow-btn); font: 600 16px var(--font); cursor: grab; }
+  .word-order li[aria-selected="true"] { background: var(--sel-bg); box-shadow: var(--sel-edge); }
+  .word-order li.dragging { position: relative; z-index: 1; box-shadow: var(--shadow-3); scale: 1.02; }   /* the row in your hand lifts; the others glide */
+  .word-order .hd { width: 44px; height: 44px; display: grid; place-items: center; color: var(--soft); touch-action: none; cursor: grab; }
+  .word-order .n { font: 500 12.5px var(--font); color: var(--soft); width: 18px; font-variant-numeric: tabular-nums; }
   .word-order li.ok { box-shadow: inset 0 0 0 1.5px var(--amber-deep); }
   .typed { display: flex; gap: 8px; flex-wrap: wrap; }
-  .typed .field { flex: 1 1 240px; font: 500 18px var(--font); }
+  .typed .field { flex: 1 1 240px; font: 500 16px var(--font); }
   .typed .btn { min-height: var(--touch); }
-  .wverd { display: grid; gap: 8px; padding: 14px 16px; border-radius: 12px; background: var(--tile); }
-  .wverd .head { font: 700 16px var(--font); display: flex; gap: 8px; align-items: center; }
+  .wverd { display: grid; gap: 8px; padding: 12px 16px; border-radius: var(--radius-card); background: var(--tile); }
+  .wverd .head { font: 600 16px var(--font); display: flex; gap: 8px; align-items: center; }
   .wverd .line { font: 400 14.5px/1.5 var(--font); }
   .wverd-acts { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
   .wr-oot { font: 600 14px var(--font); }
   .ws-next.autonext { position: relative; }
-  .ws-next.autonext::after { content: ""; position: absolute; inset: -4px; border-radius: 999px; border: 2px solid var(--amber); animation: wdrain 2.5s linear forwards; }
+  .ws-next.autonext::after { content: ""; position: absolute; inset: -4px; border-radius: 14px; border: 2px solid var(--amber); animation: wdrain 2.5s linear forwards; }
   @keyframes wdrain { from { clip-path: inset(0 0 0 0); } to { clip-path: inset(0 100% 0 0); } }
-  .guess-chip { font: 500 12px var(--mono); padding: 3px 8px; border-radius: 999px; background: var(--wash); box-shadow: inset 0 0 0 1px var(--amber); }
+  .ws-headline { display: flex; gap: 10px; align-items: center; }
+  .wr-q { outline: none; }
+  .wr-push { margin: 0 0 0 auto; }
   /* summary */
   .wsum { display: grid; gap: 20px; padding-top: 24px; }
-  .wsum .score { font: 800 clamp(44px, 8vw, 64px)/1 var(--font); letter-spacing: -.03em; font-variant-numeric: tabular-nums; }
-  .wsum .score small { font-size: .35em; color: var(--soft); letter-spacing: 0; }
-  .wsum h2 { font: 700 15px var(--font); margin-bottom: 8px; }
-  .wsum .rows { display: grid; gap: 6px; }
-  .wsum .row { display: flex; flex-wrap: wrap; gap: 6px 12px; align-items: center; justify-content: space-between; padding: 10px 14px; border-radius: 10px; background: var(--tile); font: 400 14.5px var(--font); }
+  /* the summary's hero: the score at the hero step, this run's strip under it (a segment per item, each opens its word) */
+  .wsum-hero { display: grid; gap: 8px; }
+  .wsum .score { font-variant-numeric: tabular-nums; }   /* .hero-num: the step, the ink, the unit small on the baseline */
+  .wsum .score-l { display: flex; flex-wrap: wrap; gap: 4px 8px; align-items: center; }
+  .wsum-strip { display: flex; gap: 3px; margin-top: 8px; }
+  .wsum-strip > button { appearance: none; border: 0; padding: 0; flex: 1; max-width: 40px; height: 10px; border-radius: 3px; background: var(--track); cursor: pointer; }
+  .wsum-strip > .know, .wsum-strip > .right { background: var(--amber); }
+  .wsum-strip > .dont, .wsum-strip > .wrong { background: var(--ink); }
+  .wsum-strip > .done { background: var(--tile-2); box-shadow: inset 0 0 0 1px var(--faint); }
+  .wsum-strip > :disabled { cursor: default; }
+  .wsum h2 { font: 600 16px/1.3 var(--font); margin-bottom: 8px; }
+  .wsum .rows { display: grid; }
+  .wsum .row { display: flex; flex-wrap: wrap; gap: 4px 12px; align-items: center; justify-content: space-between; min-height: var(--row-h); padding: 8px 0; border-top: 1px solid var(--line); font: 400 14.5px var(--font); }
+  .wsum .row:last-child { border-bottom: 1px solid var(--line); }
   .wsum .row .meta { font-size: 12.5px; }
   .wsum .chips { display: flex; flex-wrap: wrap; gap: 6px; }
-  .wsum .upnext { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
-  .band { display: grid; grid-template-columns: 180px 1fr auto; gap: 10px; align-items: center; font: 400 13.5px var(--font); }
-  .band .b { height: 8px; border-radius: 4px; background: var(--mat); overflow: hidden; }
+  .wsum .upnext { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+  .wsum .upnext > .btn { min-height: 42px; }
+  .wsum .upnext > .quiet { margin: 0 0 0 4px; }
+  /* phone: the pill takes the row, the button and More share the next one (More never wraps alone) */
+  @media (max-width: 759px) { .wsum .upnext { display: grid; grid-template-columns: minmax(0, 1fr) auto; } .wsum .upnext > :first-child { grid-column: 1 / -1; } }
+  .wsum-place { display: grid; gap: 14px; }
+  .wsum-act { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+  .wsum .study { margin-top: 8px; justify-self: start; }
+  .wr-msg { display: grid; gap: 12px; justify-items: start; padding-top: 24px; }
+  .wsum .chips .wchip svg { color: var(--ink); }
+  .wr-acts { display: flex; gap: 10px; flex-wrap: wrap; }
+  .band { display: grid; grid-template-columns: 180px 1fr auto; gap: 10px; align-items: center; font: 400 14px var(--font); }
+  .band .b { height: 8px; border-radius: 4px; background: var(--track); overflow: hidden; }
   .band .b i { display: block; height: 100%; background: var(--ink); }
   .band .meta { font-size: 12.5px; }
   @media (max-width: 759px) {
@@ -143,7 +184,7 @@
 <body data-page="words-run">
 <main class="wr" id="main" tabindex="-1">
   <header class="wr-top">
-    <button type="button" class="btn icon" id="exit" aria-label="End this run"></button>
+    <button type="button" class="ibtn" id="exit" aria-label="End this run"></button>
     <div class="wr-mid">
       <p class="wr-title" id="title">Words</p>
       <div class="wr-prog" id="prog" aria-hidden="true"></div>
@@ -170,8 +211,7 @@
   const put = (el, ...kids) => { el.replaceChildren(...kids.flat().filter(k => k !== null && k !== undefined && k !== false)); return el; };
   const MODE = { cards: 'Flashcards', quiz: 'Quiz', mix: 'Today’s words', placement: 'Find your level', sort: 'Sort what you know', sprint: 'Sprint', check: 'Words check', print: 'Worksheet' };
   const CARDS = new Set(['card', 'fix']);
-  const XICON = '<svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>';
-  $('exit').innerHTML = XICON;
+  $('exit').replaceChildren(UI.icon('x', 20));
 
   const P = new URLSearchParams(location.search);
   let id = P.get('id');
@@ -205,7 +245,7 @@
         run = { ...kept, next: (kept.items || []).find(x => !done.has(x.item_id)) || null, finished: false };
         R.offline = true;
         W.offline.pending().then(n => W.offline.banner(n || 0));
-      } else return fail(e.status === 403 ? 'This run belongs to someone else.' : e.status === 404 ? 'No such run.' : 'This run did not load.', e.status >= 500 || e.offline);
+      } else return fail(e.status === 403 ? 'This run belongs to someone else.' : e.status === 404 ? 'No such run.' : 'This run did not load.', e.status >= 500 || e.offline, e.status === 404);
     }
     if (run.mode === 'print' && !run.finished) { location.replace(`/words/print/?id=${enc(id)}`); return; }
     R.run = run;
@@ -232,20 +272,22 @@
       collection: W._coll[d.value] || { 'sat-core': 'SAT core', 'sat-advanced': 'SAT advanced', transitions: 'Transitions', 'second-sense': 'Second meanings', 'answer-choice': 'Answer-choice language' }[d.value] || d.value,
       topic: cap(String(d.value || '').replace(/-/g, ' ')), root: `Root · ${d.value}`, words: d.words ? `${d.words.length} words` : '', mine: 'My words', list: d.value }[s] ?? '';
   }
-  function fail(text, retry) {
-    put($('stage'), h('div', { class: 'wl-msg', style: 'display:grid;gap:12px;justify-items:start;padding-top:24px' }, h('p', { text }),
-      h('div', { style: 'display:flex;gap:10px' }, retry ? h('button', { type: 'button', class: 'btn', text: 'Retry', onclick: boot }) : null, h('a', { class: 'btn', href: '/words/', text: 'Words' }))));
+  function fail(text, retry, lost) {
+    put($('stage'), h('div', { class: 'wr-msg' }, lost ? h('span', { 'aria-hidden': 'true', html: UI.spotArt('lost') }) : null, h('p', { text }),
+      h('div', { class: 'wr-acts' }, retry ? h('button', { type: 'button', class: 'btn', text: 'Retry', onclick: boot }) : null, h('a', { class: 'btn', href: '/words/', text: 'Words' }))));
   }
   function nothingHere() {
-    put($('stage'), h('div', { style: 'display:grid;gap:12px;justify-items:start;padding-top:24px' }, h('p', { text: 'Start a run from the Words library, Flashcards or Quiz.' }),
-      h('div', { style: 'display:flex;gap:10px;flex-wrap:wrap' }, h('a', { class: 'pill sm', href: '/words/run/?today=1', text: 'Today’s words' }), h('a', { class: 'btn', href: '/words/', text: 'Library' }))));
+    put($('stage'), h('div', { class: 'wr-msg' }, h('span', { 'aria-hidden': 'true', html: UI.spotArt('start') }), h('p', { text: 'Start a run from the Words library, Flashcards or Quiz.' }),
+      h('div', { class: 'wr-acts' }, h('a', { class: 'pill sm', href: '/words/run/?today=1', text: 'Today’s words' }), h('a', { class: 'btn', href: '/words/', text: 'Library' }))));
   }
 
   /* ---------------- top bar: tools, progress, clocks */
   function tools() {
-    const b = (label, icon, fn, o = {}) => { const x = h('button', { type: 'button', class: 'btn icon', 'aria-label': label, title: label + (o.key ? ` (${o.key})` : ''), onclick: fn }, W.icon(icon)); if (o.id) x.id = o.id; return x; };
-    put($('tools'), b('Say it', 'speak', speakCur, { key: 'P' }), b('Save', 'star', saveCur, { key: 'B', id: 'saveBtn' }), b('Report a problem', 'flag', reportCur));
+    const b = (label, icon, fn, o = {}) => { const x = h('button', { type: 'button', class: 'ibtn', 'aria-label': label, title: label + (o.key ? ` (${o.key})` : ''), onclick: fn }, W.icon(icon)); if (o.id) x.id = o.id; return x; };
+    const open = h('button', { type: 'button', class: 'ibtn', 'aria-label': 'Open the word', title: 'Open the word (O)', onclick: openCur, html: UI.svg(UI.ICON.words, 18) });
+    put($('tools'), b('Say it', 'speak', speakCur, { key: 'P' }), b('Save', 'star', saveCur, { key: 'B', id: 'saveBtn' }), open, b('Report a problem', 'flag', reportCur));
   }
+  function openCur() { const s = curSlug(); if (s && (isCard() || answered())) W.open(s); else UI.toast('Answer first: the word is hidden until the verdict.'); }
   const curSlug = () => { const it = R.viewing || R.cur; if (!it) return null; const v = R.verdicts.get(it.item_id); return it.word || (v && v.word) || null; };
   function speakCur() { const it = R.viewing || R.cur; const s = curSlug(); const t = it && CARDS.has(it.kind) ? it.text : s ? wordOf(s) : null; if (t) UI.speak(t); else UI.toast('Answer first: the word is hidden until the verdict.'); }
   async function saveCur() {
@@ -275,12 +317,12 @@
     }
     put(el, items.map((it, i) => {
       const v = R.verdicts.get(it.item_id);
-      const cls = v ? (v.skipped ? 'done' : v.correct === true ? (CARDS.has(it.kind) ? 'know' : 'right') : v.correct === false ? (CARDS.has(it.kind) ? 'dont' : 'wrong') : 'done')
-        : i < at && i < nAns + R.graded ? 'done' : '';
+      const cls = v ? seg(it, v) : i < at && i < nAns + R.graded ? 'done' : '';
       return h('i', { class: [cls, i === at ? 'cur' : '', it._new ? 'grow' : ''].filter(Boolean).join(' ') });
     }), count);
     items.forEach(it => { delete it._new; });
   }
+  const seg = (it, v) => (v.skipped ? 'done' : v.correct === true ? (CARDS.has(it.kind) ? 'know' : 'right') : v.correct === false ? (CARDS.has(it.kind) ? 'dont' : 'wrong') : 'done');
   function tick() {
     clearInterval(R.timer);
     R.timer = setInterval(() => {
@@ -313,6 +355,7 @@
     progress();
     itemTimer(item);
     const k = item.kind;
+    if (!CARDS.has(k)) { R.said = null; R.fromDeck = false; }   // the last grade's line and the deck rise belong to cards only
     if (CARDS.has(k)) return card(item);
     if (k === 'learn') return learn(item);
     if (k === 'commit') return commit(item);
@@ -348,21 +391,21 @@
     progress();
   }
   function advance(v) {
-    if (v && v.summary) return summary(v.summary);
+    if (v && v.summary) return summary(v.summary, true);
     if (R.boxOver || !v || !v.next) return finish();
     show(v.next);
   }
   async function finish() {
     clearInterval(R.timer); clearTimeout(R.autoT);
     put($('stage'), h('p', { class: 'meta', text: 'Adding it up…' }));
-    try { summary(await UI.api(`/words/run/${enc(id)}/finish`, { method: 'POST', quiet: R.stored })); }
+    try { summary(await UI.api(`/words/run/${enc(id)}/finish`, { method: 'POST', quiet: R.stored }), true); }
     catch (e) {
       if (e.offline && R.stored) {
         const n = await W.offline.pending();
-        return put($('stage'), h('div', { class: 'wl-msg', style: 'display:grid;gap:12px;justify-items:start;padding-top:24px' },
+        return put($('stage'), h('div', { class: 'wr-msg' },
           h('p', { text: n ? `Done · ${n === 1 ? '1 grade' : `${n} grades`} will sync when you’re back online.` : 'Done.' }),
           h('p', { class: 'help', text: 'The summary comes with the signal. Quizzes need a connection.' }),
-          h('div', { style: 'display:flex;gap:10px' }, h('button', { type: 'button', class: 'btn', text: 'Try again', onclick: finish }), h('a', { class: 'btn', href: '/words/', text: 'Words' }))));
+          h('div', { class: 'wr-acts' }, h('button', { type: 'button', class: 'btn', text: 'Try again', onclick: finish }), h('a', { class: 'btn', href: '/words/', text: 'Words' }))));
       }
       fail(e.status === 409 ? 'This run is finished.' : 'The summary did not load.', true);
     }
@@ -411,14 +454,14 @@
     const picks = item.picks || [];
     return h('div', { class: 'fface back fback', 'aria-hidden': 'true' },
       h('p', { class: 'fback-w', text: item.text }),
-      h('span', { class: 'k', text: 'Meaning' }), h('p', { class: 'meaning', text: b.meaning || b.short || '' }),
+      h('p', { class: 'meaning', text: b.meaning || b.short || '' }),
       b.sentence && b.sentence.text ? [h('span', { class: 'k', text: 'In a new sentence' }), W.markWord(b.sentence.text, [item.text], 'ex'),
         b.sentence.source ? h('p', { class: 'wsrc', text: `Adapted from ${b.sentence.source.author}, ${b.sentence.source.title}, ${b.sentence.source.year}` }) : null] : null,
-      (b.examples || []).length ? h('details', {}, h('summary', { text: 'More examples' }), b.examples.map(e => W.marked(e))) : null,
+      (b.examples || []).length ? h('details', { class: 'fold' }, h('summary', { class: 'fold-s', text: 'More examples' }), b.examples.map(e => W.marked(e))) : null,
       b.hook ? [h('span', { class: 'k', text: 'My hook' }), h('p', { class: 'ex', text: b.hook })] : null,
       picks.length ? h('p', { class: 'fpicks', text: `Last time you picked “${typeof picks[0] === 'string' ? picks[0] : picks[0].given || picks[0].word}”` }) : null,
-      h('button', { type: 'button', class: 'quiet', style: 'justify-self:start;margin-top:6px', text: 'Open word', onclick: () => W.open(item.word) }),
-      v && v.status ? h('p', { class: 'meta', text: W.statusLine(v.status) }) : null);
+      v && v.status ? h('p', { class: 'meta', text: W.statusLine(v.status) }) : null,
+      h('span', { class: 'stamp know', 'aria-hidden': 'true', text: 'Know' }), h('span', { class: 'stamp again', 'aria-hidden': 'true', text: 'Again' }));
   }
   function card(item, o = {}) {
     const v = o.review ? R.verdicts.get(item.item_id) : null;
@@ -429,19 +472,26 @@
       h('span', { class: 'keys meta', text: 'Space' }));
     const bk = backFace(item, v);
     const cardEl = h('div', { class: 'fcard' + ((item.back && (item.back.examples || []).length > 1) || item.kind === 'fix' ? ' tall' : ''), role: 'group', 'aria-label': `Card: ${item.text}` }, fr, bk);
-    const stack = h('div', { class: 'fstack' }, cardEl);
-    const status = h('p', { class: 'wr-status', id: 'status', 'aria-live': 'polite' });
     const left = R.items.length - pos(item) - 1;
+    const stack = h('div', { class: 'fstack', 'data-left': !o.review && left > 0 ? String(Math.min(2, left)) : null }, cardEl);
+    const status = h('p', { class: 'wr-status', id: 'status', 'aria-live': 'polite' });
+    // the grade just given rides under the new card for a moment (the old card no longer waits 900 ms)
+    if (R.said && !o.review) { const said = status.textContent = R.said; setTimeout(() => { if (status.textContent === said) status.textContent = ''; }, 1600); }
+    R.said = null;
     const ctl = h('div', { class: 'wr-ctl grades' });
     put($('stage'), stack, h('p', { class: 'wr-left', text: left > 0 ? `${left} left` : 'Last one' }), status, ctl);
+    // after a grade the next card comes up from the deck's first edge (a pointer; keys stay instant)
+    if (R.fromDeck && !o.review && UI.motion.ok() && cardEl.animate) cardEl.animate([{ transform: 'translateY(6px) scale(.97)', opacity: .6, offset: 0 }], { duration: 160, easing: 'cubic-bezier(.23, 1, .32, 1)' });
+    R.fromDeck = false;
     const flip = () => {
       if (R.flipped) return;
       R.flipped = true; cardEl.classList.add('flipped'); fr.setAttribute('aria-hidden', 'true'); bk.setAttribute('aria-hidden', 'false');
+      if (UI.motion.ok() && stack.animate) stack.animate([{ transform: 'scale(1)' }, { transform: 'scale(1.03)', offset: .5 }, { transform: 'scale(1)' }], { duration: 360, easing: 'ease-in-out' });
       status.textContent = ''; controls();
     };
     function controls() {
-      const prev = h('button', { type: 'button', class: 'btn nav', 'aria-label': 'Previous card', disabled: !R.prevStack.length && !o.review, onclick: back }, '‹', h('span', { class: 'kbd', text: '←' }));
-      const next = h('button', { type: 'button', class: 'btn nav', 'aria-label': o.review ? 'Back to the current card' : 'Next card without grading', onclick: o.review ? forward : skip }, '›', h('span', { class: 'kbd', text: '→' }));
+      const prev = h('button', { type: 'button', class: 'btn nav', 'aria-label': 'Previous card', title: 'Previous card (←)', disabled: !R.prevStack.length && !o.review, onclick: back }, UI.icon('caret_left', 18));
+      const next = h('button', { type: 'button', class: 'btn nav', 'aria-label': o.review ? 'Back to the current card' : 'Next card without grading', title: `${o.review ? 'Back to the current card' : 'Next card without grading'} (→)`, onclick: o.review ? forward : skip }, UI.icon('caret_right', 18));
       if (o.review) {
         const was = v && v.correct;
         put(ctl, prev, v && v.review_id ? h('button', { type: 'button', class: 'btn grade', onclick: () => regrade(item, !was) }, was ? 'Change to Don’t know' : 'Change to Know') : h('span', { class: 'meta', text: v ? (v.correct ? 'Know' : v.skipped ? 'Skipped' : 'Don’t know') : '' }), next);
@@ -455,7 +505,7 @@
     if (o.review) { R.flipped = true; cardEl.classList.add('flipped'); fr.setAttribute('aria-hidden', 'true'); bk.setAttribute('aria-hidden', 'false'); }
     controls();
     cardEl.addEventListener('click', e => { if (!R.flipped && !e.target.closest('button, a, summary')) flip(); });
-    swipe(cardEl, ok => { if (R.flipped && !o.review) grade(ok); });
+    swipe(cardEl, (ok, wait) => (R.flipped && !o.review ? grade(ok, wait) : false));
   }
   const fixLine = picks => {
     if (!picks.length) return 'This one keeps slipping: a different drill';
@@ -464,31 +514,78 @@
     const total = [...counts.values()].reduce((a, b) => a + b, 0);
     return `Missed ${total} ${total === 1 ? 'time' : 'times'} · ` + [...counts.entries()].map(([g, n]) => `picked “${g}” ${n}×`).join(' · ');
   };
+  // the swipe (premium bug 7, MOTION): the card follows the pointer 1:1 (no transition while held), turning up to 10deg,
+  // its Know or Again stamp fading in with the distance; past 80px or on a flick (0.11 px/ms) it flies out and grades,
+  // short of that it springs back with the finger's speed (UI.motion.spring). Reduced motion: no follow, a release grades
   function swipe(el, fn) {
-    let x0 = null, y0 = 0, dx = 0;
-    el.addEventListener('pointerdown', e => { if (e.pointerType === 'mouse') return; x0 = e.clientX; y0 = e.clientY; dx = 0; });
-    el.addEventListener('pointermove', e => {
-      if (x0 === null || !R.flipped) return;
-      dx = e.clientX - x0;
-      if (Math.abs(e.clientY - y0) > Math.abs(dx)) return;
-      if (!reduced()) el.style.transform = `rotateY(180deg) translateX(${-dx}px) rotate(${-Math.max(-8, Math.min(8, dx / 12))}deg)`;
+    let x0 = null, y0 = 0, dx = 0, drag = false, lastX = 0, lastT = 0, vx = 0;
+    const at = d => `rotateY(180deg) translateX(${-d}px) rotate(${-Math.max(-10, Math.min(10, d / 20))}deg)`;
+    const stamp = d => {
+      const p = Math.min(1, Math.abs(d) / 80);
+      el.querySelectorAll('.stamp').forEach(x => { x.style.opacity = x.classList.contains('know') === d > 0 && d ? p : 0; });
+    };
+    el.addEventListener('pointerdown', e => {
+      if (!R.flipped || e.button > 0 || e.target.closest('button, a, summary, input')) return;
+      x0 = e.clientX; y0 = e.clientY; dx = 0; drag = false; lastX = e.clientX; lastT = e.timeStamp; vx = 0;
     });
-    const end = () => { if (x0 === null) return; el.style.transform = ''; const d = dx; x0 = null; if (Math.abs(d) > 80) fn(d > 0); };
-    el.addEventListener('pointerup', end); el.addEventListener('pointercancel', () => { x0 = null; el.style.transform = ''; });
+    el.addEventListener('pointermove', e => {
+      if (x0 === null) return;
+      dx = e.clientX - x0;
+      if (!drag) {
+        if (Math.abs(dx) < 6 || Math.abs(e.clientY - y0) > Math.abs(dx)) return;   // a tap, or a scroll
+        drag = true; el.classList.add('dragging'); el.style.transition = '';
+        try { el.setPointerCapture(e.pointerId); } catch (_) {}
+      }
+      if (e.timeStamp > lastT) { vx = (e.clientX - lastX) / (e.timeStamp - lastT); lastX = e.clientX; lastT = e.timeStamp; }
+      if (UI.motion.off()) return;
+      el.style.transform = at(dx);
+      stamp(dx);
+    });
+    const back = () => {
+      el.classList.remove('dragging'); stamp(0);
+      if (!el.style.transform) return;
+      if (UI.motion.off()) { el.style.transform = ''; return; }
+      const sp = UI.motion.spring(.3, .15, Math.min(4, Math.abs(vx) * 1000 / Math.max(1, Math.abs(dx))));
+      el.style.transition = `transform ${sp.duration}ms ${sp.easing}`;
+      el.style.transform = '';
+      setTimeout(() => { if (!el.classList.contains('dragging')) el.style.transition = ''; }, sp.duration);
+    };
+    const end = () => {
+      if (x0 === null) return;
+      const d = drag ? dx : 0, fling = Math.abs(vx) > .11 && Math.sign(vx) === Math.sign(d) && Math.abs(d) > 24;
+      x0 = null; drag = false;
+      if (Math.abs(d) <= 80 && !fling) { back(); return; }
+      el.classList.remove('dragging');
+      const dir = d > 0 ? 1 : -1;
+      const fly = !UI.motion.off() && el.animate ? el.animate([{ transform: el.style.transform || at(0) }, { transform: `rotateY(180deg) translateX(${-dir * (el.offsetWidth + 80)}px) rotate(${-dir * 12}deg)`, opacity: 0 }],
+        { duration: 220, easing: 'cubic-bezier(.215, .61, .355, 1)', fill: 'forwards' }) : null;
+      Promise.resolve(fn(dir > 0, fly ? fly.finished.catch(() => {}) : null)).then(ok => { if (!ok) { if (fly) fly.cancel(); back(); } });   // graded: it stays out until the next card replaces it
+    };
+    el.addEventListener('pointerup', end); el.addEventListener('pointercancel', () => { x0 = null; drag = false; back(); });
   }
-  async function grade(ok) {
-    if (R.busy || R.viewing) return;
+  // Know / Don't know by a pointer: the card moves 24px toward its side and fades while the grade saves (keys: instant)
+  function cardOut(ok) {
+    const c = $('stage').querySelector('.fcard.flipped');
+    return c && c.animate && UI.motion.ok() ? c.animate([{ transform: 'rotateY(180deg)' }, { transform: `rotateY(180deg) translateX(${ok ? -24 : 24}px)`, opacity: 0 }], { duration: 140, easing: 'cubic-bezier(.23, 1, .32, 1)', fill: 'forwards' }) : null;
+  }
+  // wait: the swipe's fly-out, so the next card comes once this one has gone
+  async function grade(ok, wait) {
+    if (R.busy || R.viewing) return false;
     R.busy = true;
     const item = R.cur;
+    const out = wait ? null : cardOut(ok);
     let v;
     try { v = await post({ answer: ok ? 'know' : 'dontknow' }); }
-    catch (e) { R.busy = false; if (!e.offline) UI.toast('Not saved. Try again.'); return; }
+    catch (e) { R.busy = false; if (out) out.cancel(); if (!e.offline) UI.toast('Not saved. Try again.'); return false; }
+    await (wait || (out ? out.finished.catch(() => {}) : null));
+    R.fromDeck = true;
     took(v);
     R.prevStack.push(item);
-    const st = $('status');
     const line = v.offline ? 'Saved on this device' : v.requeued ? 'Again in 3 cards' : W.statusLine(v.status);
-    if (st) st.textContent = `${ok ? 'Know' : 'Don’t know'} · ${line}`;
-    setTimeout(() => { R.busy = false; advance(v); }, 900);
+    R.said = `${item.text}: ${[ok ? 'Know' : 'Don’t know', line].filter(Boolean).join(' · ')}`;   // said under the next card (card())
+    R.busy = false;
+    advance(v);
+    return true;
   }
   async function skip() {
     if (R.busy || R.viewing) return;
@@ -504,7 +601,7 @@
     R.viewing = it;
     if (CARDS.has(it.kind)) card(it, { review: true });
     else put($('stage'), h('div', { class: 'wverd' }, h('p', { class: 'head', text: `${it.text || ''}` }), h('p', { class: 'line', text: (R.verdicts.get(it.item_id) || {}).correct ? 'Right' : 'Wrong' })),
-      h('div', { class: 'wr-ctl' }, h('button', { type: 'button', class: 'btn', onclick: back, text: '‹ Previous' }), h('button', { type: 'button', class: 'pill sm', onclick: forward, text: 'Back to the current one' })));
+      h('div', { class: 'wr-ctl' }, h('button', { type: 'button', class: 'btn', onclick: back }, UI.icon('caret_left', 18), 'Previous'), h('button', { type: 'button', class: 'pill sm', onclick: forward, text: 'Back to the current one' })));
     R.viewing = it;
   }
   function forward() {
@@ -531,7 +628,7 @@
     const b = item.back || {};
     put($('stage'), h('div', { class: 'fstack' }, h('div', { class: 'fface fback learnc' },
       h('span', { class: 'k', text: 'New word' }),
-      h('div', { style: 'display:flex;gap:10px;align-items:center' }, h('p', { class: 'fword', style: 'font-size:clamp(32px,5vw,44px)', text: item.text }), W.speakBtn(item.text)),
+      h('div', { class: 'learn-h' }, h('p', { class: 'fword sm', text: item.text }), W.speakBtn(item.text)),
       h('p', { class: 'meaning', text: b.meaning || '' }),
       b.sentence && b.sentence.text ? W.markWord(b.sentence.text, [item.text], 'ex') : (b.examples || [])[0] ? W.marked(b.examples[0]) : null,
       h('p', { class: 'help', text: 'A quick check on it comes a few cards later.' }))),
@@ -547,10 +644,10 @@
   /* ---------------- Commit first (W7): 3 meanings and No idea, then the back */
   function commit(item) {
     const opts = item.choices || [];
-    put($('stage'), h('p', { class: 'fword', style: 'text-align:center', text: item.text }), h('p', { class: 'wask', style: 'text-align:center', text: item.stem || 'Which meaning is it?' }),
+    put($('stage'), h('p', { class: 'fword center', text: item.text }), h('p', { class: 'wask center', text: item.stem || 'Which meaning is it?' }),
       h('div', { class: 'wquick' }, opts.map((c, i) => h('button', { type: 'button', class: 'btn', onclick: () => commitPick(i) }, h('span', { class: 'kbd', text: String(i + 1) }), c)),
         h('button', { type: 'button', class: 'btn', onclick: () => commitPick(null) }, h('span', { class: 'kbd', text: '0' }), 'No idea')),
-      h('p', { class: 'help', text: 'Commit first: pick before you see the back. The pick grades the card.' }));
+      h('p', { class: 'help', text: 'Pick before you see the back. The pick grades the card.' }));
   }
   async function commitPick(i) {
     if (R.busy) return;
@@ -578,7 +675,8 @@
       h('div', { class: 'sort-btns' }, opts.map(([a, l], i) => h('button', { type: 'button', class: 'btn', onclick: () => sortPick(a) }, l, h('span', { class: 'kbd', text: String(i + 1) })))),
       !place ? h('p', { class: 'meta', text: `${done + 1} of ${tot} · about ${Math.max(1, Math.round((tot - done) * 1.5 / 60))} min left` }) : null,
       !place && R.prevStack.length ? h('button', { type: 'button', class: 'quiet', onclick: undoSort }, 'Undo the last', h('span', { class: 'kbd', text: 'Z' })) : null,
-      h('p', { class: 'help', text: place ? 'Say yes only if you could use it in a sentence. A few are checked.' : 'Know it: it comes back once as a question in context. Not sure: starred for soon.' })));
+      place ? h('p', { class: 'help', text: 'Say yes only if you could use it in a sentence. A few are checked.' })
+        : h('details', { class: 'fold' }, h('summary', { class: 'fold-s', text: 'What each answer does' }), h('p', { class: 'help', text: 'Know it: it comes back once as a question in context. Not sure: starred for soon.' }))));
     const w = $('stage').querySelector('.fword');
     let x0 = null, y0 = 0;
     w.parentElement.addEventListener('pointerdown', e => { if (e.pointerType !== 'mouse') { x0 = e.clientX; y0 = e.clientY; } });
@@ -608,8 +706,9 @@
     put($('stage'), head(item), passage(item),
       h('div', { class: 'wstage' }, h('p', { class: 'wask', text: logic ? 'How does the second sentence relate to the first?' : 'Before the choices: what does the blank need?' }),
         opts.map((p, i) => h('button', { type: 'button', class: 'btn', onclick: () => predict(i) }, h('span', { class: 'kbd', text: String(i + 1) }), cap(p))),
-        h('button', { type: 'button', class: 'quiet', style: 'justify-self:start', onclick: () => predict('skip') }, 'Skip to the choices', h('span', { class: 'kbd', text: 'Enter' }))),
-      h('p', { class: 'help', text: logic ? 'Relationship first: name the logic, then pick the word. It turns off once your logic picks are reliable.' : 'Method: predict what the blank needs before you look. It turns off once your predictions are reliable.' }));
+        h('button', { type: 'button', class: 'quiet', onclick: () => predict('skip') }, 'Skip to the choices', h('span', { class: 'kbd', text: 'Enter' }))),
+      h('details', { class: 'fold' }, h('summary', { class: 'fold-s', text: logic ? 'Relationship first' : 'Method' }),
+        h('p', { class: 'help', text: logic ? 'Name the logic, then pick the word. It turns off once your logic picks are reliable.' : 'Predict what the blank needs before you look. It turns off once your predictions are reliable.' })));
   }
   async function predict(i) {
     if (R.busy) return;
@@ -618,8 +717,8 @@
     catch (e) { R.busy = false; if (!e.offline) UI.toast('Not saved. Try again.'); }
   }
   function head(item) {
-    return h('div', { class: 'q-skill ws-headline', style: 'display:flex;gap:10px;align-items:center' }, h('span', { class: 'ws-skill', text: W.kindLabel(item) }),
-      R.guess ? h('span', { class: 'guess-chip', text: 'Guessing' }) : null);
+    return h('div', { class: 'q-skill ws-headline' }, h('span', { class: 'ws-skill', text: W.kindLabel(item) }),
+      R.guess ? h('span', { class: 'badge', text: 'Guessing' }) : null);
   }
   function passage(item) {
     const p = h('p', { class: 'wtext' });
@@ -629,7 +728,7 @@
 
   /* ---------------- a quiz item through UI.workspace (§7, W1, W2) */
   function quiz(item) {
-    const host = h('div', { tabindex: '-1', style: 'outline:none' });
+    const host = h('div', { class: 'wr-q', tabindex: '-1' });
     const q = { id: item.item_id, type: 'mcq', stem: item.text || '', choices: item.choices || [], latex: [] };
     put($('stage'), host);
     const ws = R.ws = UI.workspace(host, q, { mode: 'quiz', head: { label: W.kindLabel(item) },
@@ -662,16 +761,16 @@
     if (fb.status) slot.append(h('span', { class: 'meta', text: W.statusLine(fb.status) }));
     if (twinable(item)) {
       const t = UI.verb ? UI.verb('twin', { subject: 'rw', sm: true, onClick: () => twin('word') }) : h('button', { type: 'button', class: 'btn sm', text: 'Twin', onclick: () => twin('word') });
-      const menu = h('button', { type: 'button', class: 'btn sm', 'aria-haspopup': 'menu', text: 'Twin ▾', title: 'Shift+T' });
+      const menu = h('button', { type: 'button', class: 'btn sm dd', 'aria-haspopup': 'menu', text: 'More', 'aria-label': 'More twins', title: 'More twins (Shift+T)' });
       menu.addEventListener('click', () => UI.menu(menu, [
         { label: logic ? 'Same logic, new text' : 'Same word, new text', kbd: 'T', onClick: () => twin('word') },
         { label: logic ? 'Same mix-up, new text' : 'Same trap, new word', kbd: 'Shift+T', onClick: () => twin('trap') }]));
       R.twinMenu = () => menu.click();
       slot.append(t, menu);
     }
-    if (fb.word) slot.append(h('button', { type: 'button', class: 'btn sm', onclick: () => W.open(fb.word) }, 'Open word', h('span', { class: 'kbd', style: 'font-family:var(--font)', text: 'O' })));
+    if (fb.word) slot.append(h('button', { type: 'button', class: 'btn sm', onclick: () => W.open(fb.word) }, 'Open word', h('span', { class: 'kbd', text: 'O' })));
     if (gen && fb.correct === false && fb.given !== null && fb.given !== undefined) {
-      slot.append(h('button', { type: 'button', class: 'quiet', style: 'margin:0 0 0 auto', text: 'Another choice also fits', onclick: async e => {
+      slot.append(h('button', { type: 'button', class: 'quiet wr-push', text: 'Another choice also fits', onclick: async e => {
         e.target.disabled = true;
         try { await UI.api(`/words/run/${enc(id)}/also-fits`, { method: 'POST', body: { item_id: item.item_id } }); UI.toast('Sent · thank you, a person checks every one'); }
         catch (x) { e.target.disabled = false; if (!x.offline) UI.toast('Not sent. Try again.'); }
@@ -710,35 +809,37 @@
     const words = (item.choices || []).map((w, i) => ({ w, i }));
     R.order = { words, sel: 0, done: false };
     const ol = h('ol', { class: 'word-order', 'aria-label': 'Weakest to strongest' });
-    const draw = () => {
-      put(ol, words.map((x, k) => {
-        const li = h('li', { 'aria-selected': String(R.order.sel === k), tabindex: '-1' }, h('span', { class: 'hd', 'aria-hidden': 'true', text: '⠿' }), h('span', { class: 'n', text: String(k + 1) }), x.w);
-        li.addEventListener('click', () => { R.order.sel = k; draw(); });
-        dragRow(li, k);
-        return li;
-      }));
-    };
+    // rows are keyed, so a move glides them to their place (a key move stays instant); the held row lifts
+    const draw = () => UI.glide(ol, () => put(ol, words.map((x, k) => {
+      const li = h('li', { 'data-key': String(x.i), class: R.order.held && R.order.sel === k ? 'dragging' : null, 'aria-selected': String(R.order.sel === k), tabindex: '-1' },
+        h('span', { class: 'hd', 'aria-hidden': 'true' }, UI.icon('grip', 18)), h('span', { class: 'n', text: String(k + 1) }), x.w);
+      li.addEventListener('click', () => { R.order.sel = k; draw(); });
+      dragRow(li, k);
+      return li;
+    })));
+    // the list holds the pointer (a rebuilt row would lose it); rows are found by their layout box, not their glide
     function dragRow(li, k) {
-      const hd = li.querySelector('.hd');
-      hd.addEventListener('pointerdown', e => {
-        e.preventDefault(); hd.setPointerCapture(e.pointerId); li.classList.add('dragging');
+      li.querySelector('.hd').addEventListener('pointerdown', e => {
+        e.preventDefault();
+        try { ol.setPointerCapture(e.pointerId); } catch (_) {}
+        R.order.held = true; R.order.sel = k; draw();
         const move = ev => {
-          const rows = [...ol.children];
-          const to = rows.findIndex(r => { const b = r.getBoundingClientRect(); return ev.clientY < b.top + b.height / 2; });
-          const j = to < 0 ? rows.length - 1 : to;
-          const from = words.findIndex(x => x === words[k]);
-          if (j !== from && j >= 0) { const [m] = words.splice(from, 1); words.splice(j, 0, m); k = j; R.order.sel = j; draw(); }
+          const y = ev.clientY - ol.getBoundingClientRect().top, rows = [...ol.children].filter(r => !r._mGhost);
+          const to = rows.findIndex(r => y < r.offsetTop + r.offsetHeight / 2);
+          const j = to < 0 ? rows.length - 1 : to, from = R.order.sel;
+          if (j !== from && j >= 0) { const [m] = words.splice(from, 1); words.splice(j, 0, m); R.order.sel = j; draw(); }
         };
-        const up = () => { hd.removeEventListener('pointermove', move); li.classList.remove('dragging'); };
-        hd.addEventListener('pointermove', move);
-        hd.addEventListener('pointerup', up, { once: true });
+        const up = () => { ol.removeEventListener('pointermove', move); ol.removeEventListener('pointerup', up); ol.removeEventListener('pointercancel', up); R.order.held = false; draw(); };
+        ol.addEventListener('pointermove', move);
+        ol.addEventListener('pointerup', up);
+        ol.addEventListener('pointercancel', up);
       });
     }
     R.order.draw = draw;
     draw();
     put($('stage'), head(item), h('p', { class: 'wask', text: item.stem || 'Put them in order, weakest to strongest.' }), ol,
       h('div', { class: 'wr-ctl' }, h('button', { type: 'button', class: 'pill', onclick: checkOrder }, 'Check', h('span', { class: 'kbd', text: 'Enter' }))),
-      h('p', { class: 'help', text: '1–4 pick a word · ↑ ↓ move it · or drag the handle. Order items never move a box.' }));
+      h('p', { class: 'help', text: '1–4 pick · ↑ ↓ move · or drag the handle. Never moves a box.' }));
   }
   function moveOrder(d) {
     const o = R.order; if (!o || o.done) return;
@@ -784,7 +885,7 @@
       if (e.key === 'Enter') { e.preventDefault(); if (R.verdicts.has(item.item_id)) next(); else submit(); }
       if (e.altKey && (e.code === 'KeyW')) { e.preventDefault(); useHint(); }
     });
-    put($('stage'), head(item), item.stem ? h('p', { class: 'fmean', style: 'font-size:20px', text: item.stem }) : null, passage(item), h('div', { class: 'typed' }, inp, hint, go));
+    put($('stage'), head(item), item.stem ? h('p', { class: 'fmean sm', text: item.stem }) : null, passage(item), h('div', { class: 'typed' }, inp, hint, go));
     setTimeout(() => inp.focus(), 30);
   }
 
@@ -818,27 +919,48 @@
   }
 
   /* ---------------- the summary (§8, W5-W7, W10, W13, W15, W16) */
-  async function summary(s) {
+  // live: the run just ended here, so the known total rolls from before the run to now (a finished run reopened does not)
+  async function summary(s, live = false) {
     clearInterval(R.timer); clearInterval(itemT); clearTimeout(R.autoT);
     R.cur = null; R.viewing = null;
     $('tbar').hidden = true; $('clock').textContent = ''; put($('tools'));
     try { if (!ix) ix = await W.index(); } catch (_) {}
+    const c = await UI.api('/words', { quiet: true }).then(d => d.counts).catch(() => null);
+    const moved = (s.moved_known || []).length;
+    const rolls = live && moved > 0 && c && Number.isFinite(c.known);
+    let known = null;
     const mode = R.run.mode;
     const mins = Math.max(1, Math.round((s.ms || 0) / 60000));
-    const chip = slug => h('button', { type: 'button', class: 'wchip', onclick: () => W.open(slug) }, wordOf(slug));
+    const chip = (slug, mark) => h('button', { type: 'button', class: 'wchip', onclick: () => W.open(slug) }, mark ? UI.icon('check', 14) : null, wordOf(slug));
+    let scoreN = null;
     const out = h('div', { class: 'wsum' });
-    // the score
-    if (mode === 'placement' && s.estimate) out.append(placementResult(s));
-    else if (mode === 'sprint') out.append(h('div', {}, h('p', { class: 'score' }, String(s.score ?? 0), h('small', { text: ' points' })),
-      h('p', { class: 'meta', text: `best ${s.best ?? 0} · today ${s.score ?? 0}${s.new_best ? ' · New best' : ''}` })));
-    else if (mode === 'sort') out.append(h('p', { class: 'score' }, String(R.graded), h('small', { text: ' sorted' })));
+    // the score: the page's one hero, with this run's strip under it when it ran here
+    const hero = h('div', { class: 'card hero wsum-hero' });
+    out.append(hero);
+    if (mode === 'placement' && s.estimate) hero.append(placementResult(s));
+    else if (mode === 'sprint') hero.append(h('p', { class: 'score hero-num' }, String(s.score ?? 0), h('small', { text: ' points' })),
+      h('p', { class: 'score-l' }, h('span', { class: 'meta', text: `best ${s.best ?? 0} · today ${s.score ?? 0}` }), s.new_best ? h('span', { class: 'badge', text: 'New best' }) : null));
+    else if (mode === 'sort') hero.append(h('p', { class: 'score hero-num' }, String(R.graded), h('small', { text: ' sorted' })));
     else {
       const cards = mode === 'cards';
-      out.append(h('div', {}, h('p', { class: 'score' }, `${s.right ?? 0}`, h('small', { text: cards ? ` known / ${s.asked ?? 0}` : ` / ${s.asked ?? 0}` })), h('p', { class: 'meta', text: `${mins} min` })));
+      if (c && Number.isFinite(c.known)) known = h('span', { text: num(rolls ? Math.max(0, c.known - moved) : c.known) });
+      hero.append(h('p', { class: 'score hero-num' }, scoreN = h('span', { text: `${s.right ?? 0}` }), h('small', { text: cards ? ` known / ${s.asked ?? 0}` : ` / ${s.asked ?? 0}` })),
+        h('p', { class: 'meta' }, `${mins} min`, known ? [' · ', known, ' known in all'] : null));
+    }
+    // a receipt of the run: a segment per item, in order; each opens its word (only for a run that ended on this screen)
+    const graded = R.items.filter(it => R.verdicts.has(it.item_id));
+    if (live && graded.length && R.items.length > 1 && R.items.length <= 60 && !['placement', 'sort', 'check'].includes(mode)) {
+      const SAID = { know: 'Know', dont: 'Don’t know', right: 'Right', wrong: 'Wrong', done: 'Skipped' };
+      hero.append(h('div', { class: 'wsum-strip', role: 'group', 'aria-label': 'This run, item by item' }, R.items.map(it => {
+        const v = R.verdicts.get(it.item_id), slug = it.word || (v && v.word), cls = v ? seg(it, v) : '';
+        return h('button', { type: 'button', class: cls || null, disabled: !slug, 'aria-label': `${slug ? wordOf(slug) : 'An item'}: ${cls ? SAID[cls] : 'not reached'}`,
+          title: slug ? wordOf(slug) : null, onclick: () => W.open(slug) });
+      })));
     }
     // moved to Known, still learning, next reviews
-    if ((s.moved_known || []).length) out.append(sec('Moved to Known', h('div', { class: 'chips' }, s.moved_known.map(chip))));
-    const learning = (s.learning || []).slice(0, 40);
+    const movedEl = (s.moved_known || []).length ? h('div', { class: 'chips' }, s.moved_known.map(x => chip(x, true))) : null;
+    if (movedEl) out.append(sec('Moved to Known', movedEl));
+    const learning = [...new Map((s.learning || []).map(l => [l.slug, l])).values()].slice(0, 40);   // a requeued word is one chip
     // one date for all of them is said once, in the heading; the dates are the scheduled ones
     const days = new Set(learning.map(l => l.due || ''));
     const one = days.size === 1 && learning[0].due ? backOn(learning[0].due) : '';
@@ -860,48 +982,65 @@
     // how you missed (W5)
     const mix = (s.mixups || []).filter(m => m.n);
     if (mix.length) out.append(sec('How you missed', h('div', { class: 'rows' }, mix.map(m => h('div', { class: 'row trap-row' }, h('span', {}, h('b', { text: W.TRAP[m.kind] || m.kind }), ` ×${m.n}`),
-      h('button', { type: 'button', class: 'btn sm', text: 'Twin ×10', onclick: () => UI.startWords({ mode: 'quiz', deck: { source: 'trap', value: m.kind }, formats: ['incontext'], count: 10 }) }))))));
+      h('button', { type: 'button', class: 'btn sm', text: 'Twin ×10', title: 'Ten in-context questions with this trap', onclick: () => UI.startWords({ mode: 'quiz', deck: { source: 'trap', value: m.kind }, formats: ['incontext'], count: 10 }) }))))));
     if (s.caution && mode !== 'placement') out.append(h('p', { class: 'help', text: s.caution }));
     // sprint tray
     if (mode === 'sprint' && R.miss.length) out.append(sec('Missed', [h('div', { class: 'rows' }, [...new Set(R.miss)].map(sl => h('div', { class: 'row' }, h('b', { text: wordOf(sl) }), h('span', { class: 'meta', text: shortOf(sl) })))),
-      h('button', { type: 'button', class: 'btn', style: 'margin-top:8px', text: 'Study these', onclick: () => UI.startWords({ mode: 'cards', deck: { source: 'words', words: [...new Set(R.miss)] } }) })]));
+      h('button', { type: 'button', class: 'btn study', text: 'Study these', onclick: () => UI.startWords({ mode: 'cards', deck: { source: 'words', words: [...new Set(R.miss)] } }) })]));
     // skipped
     if ((s.skipped || []).length) out.append(h('p', { class: 'line' }, `${s.skipped.length} skipped · `, h('button', { type: 'button', class: 'quiet', text: 'Study them', onclick: () => UI.startWords({ mode: 'cards', deck: { source: 'words', words: [...new Set(s.skipped)] } }) })));
     // up next
-    out.append(await upNext(s));
+    out.append(await upNext(s, c));
     put($('stage'), out);
     put($('prog'));
     const title = $('title').firstChild; if (title) title.textContent = `${MODE[mode] || 'Words'} · done`;
+    // the words this run moved to Known join the total on screen
+    // a run that just ended here (pointer or not: this is the result, not a control): the score rolls up from 0,
+    // the Known chips land 40ms apart (at most 12), then the total rolls (never on a reopened run)
+    let after = 400;
+    if (live && scoreN && s.right) { scoreN.textContent = '0'; requestAnimationFrame(() => UI.roll(scoreN, s.right)); }
+    if (live && movedEl && !UI.motion.off()) { [...movedEl.children].forEach((x, i) => UI.motion.enter(x, 'nudge', { delay: 200 + Math.min(i, 12) * 40, force: true })); after = 200 + Math.min(12, movedEl.children.length) * 40 + 200; }
+    if (known && rolls) setTimeout(() => UI.roll(known, c.known), after);
   }
   const sec = (t, body) => h('section', {}, h('h2', { text: t }), body);
   const backOn = day => { const n = W.dayDiff(W.today(), day); return n <= 0 ? 'today' : n === 1 ? 'tomorrow' : n < 7 ? `in ${n} days` : `on ${W.shortDate(day)}`; };
   function placementResult(s) {
     const e = s.estimate || {};
     const BAND = b => { const [tier, lv] = String(b).split(':'); return `SAT ${tier} · ${lv}`; };
-    return h('div', { style: 'display:grid;gap:14px' },
-      h('p', { class: 'score' }, `~${num(e.n || 0)}`, h('small', { text: ` words (±${Math.max(0, (e.hi || 0) - (e.n || 0))})` })),
+    return h('div', { class: 'wsum-place' },
+      h('p', { class: 'score hero-num' }, `~${num(e.n || 0)}`, h('small', { text: ` words (±${Math.max(0, (e.hi || 0) - (e.n || 0))})` })),
       h('p', { class: 'line', text: `You know about ${num(e.n || 0)} of the SAT words.` }),
       s.caution ? h('p', { class: 'help', text: s.caution }) : null,
       h('div', { class: 'rows' }, (e.bands || []).map(b => h('div', { class: 'band' }, h('span', { text: BAND(b.band) }), h('span', { class: 'b', role: 'img', 'aria-label': `${Math.round(b.rate * 100)}%` }, h('i', { style: `width:${Math.round((b.rate || 0) * 100)}%` })), h('span', { class: 'meta', text: `about ${num(b.n)} of ${num(b.size)}` })))),
       s.claimed_n ? h('p', { class: 'line', text: `The ${s.claimed_n} placement words you said you know come back once each as an in-context question over the next 2 weeks.` }) : null,
-      s.probable_n ? h('div', { style: 'display:flex;gap:10px;flex-wrap:wrap;align-items:center' }, h('p', { class: 'line', text: `${num(s.probable_n)} more are probably known: 1–2 a day come back as one in-context question each.` }),
+      s.probable_n ? h('div', { class: 'wsum-act' }, h('p', { class: 'line', text: `${num(s.probable_n)} more are probably known: 1–2 a day come back as one in-context question each.` }),
         h('button', { type: 'button', class: 'btn', text: `Confirm the rest · ${num(s.probable_n)} words · ~${Math.max(1, Math.round(s.probable_n * 1.5 / 60))} min`, onclick: () => UI.startWords({ mode: 'sort', deck: { source: 'probable' } }) })) : null);
   }
-  async function upNext(s) {
+  async function upNext(s, c) {
     const row = h('div', { class: 'upnext' });
     let item = null;
     try { await UI.refresh(); item = (UI.nextItems() || [])[0] || null; } catch (_) {}
+    const acts = [];
     if (item) {
       const words = item.start && /\/words\/run/.test(item.start.path || '');
-      row.append(h('button', { type: 'button', class: 'pill', text: `Next: ${item.title || 'Up next'}`, onclick: () => words ? UI.startWords(item.start.body) : UI.start(item) }));
+      acts.push({ label: `Next: ${item.title || 'Up next'}`, onClick: () => (words ? UI.startWords(item.start.body) : UI.start(item)) });
     }
-    const c = await UI.api('/words', { quiet: true }).then(d => d.counts).catch(() => null);
-    if (c && c.due) row.append(h('button', { type: 'button', class: item ? 'btn' : 'pill', text: `Review ${c.due} due`, onclick: () => UI.startWords({ mode: 'cards', deck: { source: 'due' } }) }));
-    row.append(h('button', { type: 'button', class: item || (c && c.due) ? 'btn' : 'pill', text: `${(c && c.goal) || 10} new`, onclick: () => UI.startWords({ mode: 'cards', deck: { source: 'new' }, count: (c && c.goal) || 10 }) }));
+    if (c && c.due) acts.push({ label: `Review ${c.due} due`, onClick: () => UI.startWords({ mode: 'cards', deck: { source: 'due' } }) });
+    acts.push({ label: `Learn ${(c && c.goal) || 10} new`, onClick: () => UI.startWords({ mode: 'cards', deck: { source: 'new' }, count: (c && c.goal) || 10 }) });
     const played = R.items.map(x => x.word).filter(Boolean).concat((s.learning || []).map(l => l.slug), s.moved_known || []);
     const uniq = [...new Set(played)].slice(0, 200);
-    if (uniq.length >= 4 && R.run.mode === 'cards') row.append(h('button', { type: 'button', class: 'btn', text: `Quiz these ${uniq.length}`, onclick: () => W.quizStart({ source: 'words', words: uniq }, Math.min(20, uniq.length)) }));
-    row.append(h('a', { class: 'btn', href: '/words/', text: 'Library' }));
+    if (uniq.length >= 4 && R.run.mode === 'cards') acts.push({ label: `Quiz these ${uniq.length}`, onClick: () => W.quizStart({ source: 'words', words: uniq }, Math.min(20, uniq.length)) });
+    acts.push({ label: 'Library', href: '/words/' });
+    const btn = (a, cls) => (a.href ? h('a', { class: cls, href: a.href, text: a.label }) : h('button', { type: 'button', class: cls, text: a.label, onclick: a.onClick }));
+    const [first, second, ...rest] = acts;
+    row.append(btn(first, 'pill'));
+    if (second) row.append(btn(second, 'btn'));
+    if (rest.length === 1 && rest[0].href) row.append(btn(rest[0], 'quiet'));   // only Library left: a link, not a one-item menu
+    else if (rest.length) {
+      const more = h('button', { type: 'button', class: 'btn dd' }, 'More');
+      UI.menu.bind(more, rest, { label: 'More ways on' });
+      row.append(more);
+    }
     return sec('Up next', row);
   }
 

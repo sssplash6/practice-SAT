@@ -16,7 +16,8 @@
 </script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800;900&family=DM+Mono:wght@400;500&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap">
+<link rel="preload" href="/assets/fonts/Geist.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap">
 <link rel="stylesheet" href="/assets/ui.css">
 <style>
   /* the kit page's own layout; every component below is ui.css, kit.js or charts.js */
@@ -267,7 +268,7 @@
     <div class="kit-sub"><h2 class="h2">UI.skel · loading</h2><span class="meta">static, at the final size, no shimmer</span></div>
     <div class="kit-grid" id="x-skel"></div>
 
-    <div class="kit-sub"><h2 class="h2">UI.tile · .stats</h2><span class="meta">count-up once; a filter, a link, a fact; missing reads —</span></div>
+    <div class="kit-sub"><h2 class="h2">UI.tile · .stats</h2><span class="meta">count-up when asked; a filter, a link, a fact; missing reads an en dash</span></div>
     <div class="stats" id="x-tiles"></div>
 
     <div class="kit-sub"><h2 class="h2">UI.meter</h2><span class="meta">goal fill orange · .ink · a tick · done · .lg</span></div>
@@ -604,7 +605,7 @@
     two.append(UI.verb('twin', { primary: true, onClick: () => say('Twin') }), UI.verb('twin', { count: 3, onClick: () => say('Twin ×3') }),
       UI.verb('fix', { count: 4, sm: true, onClick: () => say('Fix 4') }), UI.verb('twin', { subject: 'rw', sm: true }), UI.verb('learn', { href: '#controls' }));
     $('x-verbs-table').tBodies[0].append(...Object.entries(UI.VERBS).map(([id, v]) => el('tr', {},
-      el('td', { class: 'mono', text: id }), el('td', { text: v.label }), el('td', { text: v.sub }), el('td', { text: v.helper }), el('td', { class: 'n', text: v.key || '—' }))));
+      el('td', { class: 'mono', text: id }), el('td', { text: v.label }), el('td', { text: v.sub }), el('td', { text: v.helper }), el('td', { class: 'n', text: v.key || UI.NONE }))));
   });
   demo('UI.seg', 'x-segs', host => {
     UI.seg(host, [{ value: 'instant', label: 'Instant', n: 12 }, { value: 'retry', label: 'Retry' }, { value: 'end', label: 'At the end' }], { label: 'Feedback', onChange: v => say(`Feedback: ${v}`) });

@@ -5,38 +5,50 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Diagnostic · SAT Freshman</title>
 <meta name="description" content="Find the level to start from, in one sitting.">
+<link rel="icon" href="/favicon.ico" sizes="32x32">
 <link rel="icon" href="/assets/mark.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
 <link rel="manifest" href="/manifest.webmanifest">
 <meta name="theme-color" content="#FFFFFF">
 <script src="/assets/head.js"></script>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800;900&family=DM+Mono:wght@400;500&display=swap">
+<link rel="preload" href="/assets/fonts/Geist.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/assets/ui.css">
 <style>
-  .door { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 24px; align-items: end;
-          border-radius: 14px; padding: 28px; background: var(--wash); max-width: 760px; }
-  .door .num { font-size: clamp(64px, 10vw, 104px); display: block; margin-top: 8px; }
-  .door .meta { display: block; margin-top: 10px; color: var(--ink); }
-  .door-facts { margin: 16px 0 0; padding: 0 0 0 18px; display: grid; gap: 6px; font: 400 15px/1.45 var(--font); color: var(--ink); }
-  @media (max-width: 560px) { .door { grid-template-columns: 1fr; padding: 20px 16px; } .door .pill { width: 100%; justify-content: center; } }
+  /* the page's one hero (.card.hero): the h1, its one fact line, Start, and a dimmed sample of the band it gives;
+     then what it gives as hairline rows */
+  .door { max-width: 760px; display: grid; gap: 32px; }
+  .door-hero { display: grid; gap: 20px; }
+  .door-head { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 12px 24px; }
+  .door-head .h1 { margin: 0; }
+  .door-head .meta { margin: 6px 0 0; }
+  .door-sample { max-width: 520px; }
+  .door-sample .scale { margin: 0; }
+  .door-facts { margin: 0; padding: 0; list-style: none; display: grid; border-top: 1px solid var(--line); }
+  .door-facts li { display: flex; align-items: center; min-height: var(--row-h); padding: 8px 0; border-bottom: 1px solid var(--line); font: 400 14.5px/1.45 var(--font); color: var(--ink); }
+  @media (max-width: 559px) { .door-head .pill { width: 100%; justify-content: center; } }
 </style>
 </head>
 <body data-page="diagnostic">
 <header id="bar"></header>
 
 <main class="page">
-  <div class="door rise">
-    <div>
-      <span class="k">Diagnostic</span><span class="num">20</span><span class="meta">questions · 32 min · all four domains evenly</span>
-      <ul class="door-facts">
-        <li>A first band, about 200 points wide, and where your points went</li>
-        <li>No answers until you hand in, like a real module</li>
-        <li>Asks for your name and email before the result</li>
-      </ul>
-    </div>
-    <div><a class="pill" href="/tests/?start=diagnostic" id="diagStart">Start</a></div>
+  <div class="door" data-m="stagger">
+    <section class="card hero door-hero" data-m-now>
+      <div class="door-head">
+        <div>
+          <h1 class="h1">Diagnostic</h1>
+          <p class="meta" id="diagFacts">20 questions · 32 min · all four domains evenly</p>
+        </div>
+        <a class="pill" href="/tests/?start=diagnostic" id="diagStart">Start</a>
+      </div>
+      <div id="subject"></div>
+      <div class="empty-sample door-sample" id="doorSample" aria-hidden="true" inert></div>
+    </section>
+    <ul class="door-facts">
+      <li>A first score range and where your points went</li>
+      <li>No answers until you hand in, like a real module</li>
+      <li>Asks for your name and email before the result</li>
+    </ul>
   </div>
 </main>
 
@@ -46,7 +58,23 @@
 <script src="/assets/charts.js"></script>
 <script src="/tests/start.js"></script>
 <script>
-UI.shell();
+UI.shell({ ownPrimary: true });   // the page has its own orange; Up next’s Start goes .btn
+// the hero's picture: what a first result looks like, a range 20 points wide on the 200-800 scale, dimmed
+(() => {
+  const box = document.getElementById('doorSample');
+  if (!UI.scale) { box.remove(); return; }
+  UI.scale(box, { band: { low: 570, high: 590 }, label: true, min: 200, max: 800 });
+  box.append(UI.h('span', { class: 'badge soft', text: 'Example' }));
+})();
+// Math or Reading and Writing (the site's one subject choice); Start builds that subject's diagnostic, 20 questions at
+// its pace (95 s Math, 71 s R&W)
+(() => {
+  const facts = document.getElementById('diagFacts');
+  const say = s => { facts.textContent = `20 questions · ${Math.round(20 * TestStart.spec(s).pace / 60)} min · all four domains evenly`; };
+  if (!window.TestStart || !UI.subjectSeg) return;
+  say(TestStart.subject);
+  UI.subjectSeg(document.getElementById('subject'), { value: TestStart.subject, onChange: v => { TestStart.subject = v; say(v); } });
+})();
 // Start builds the diagnostic in one tap (the same call Up next makes) and lands in its lobby:
 // no Tests page, no start sheet. The href stays as the fallback if a script is blocked.
 document.getElementById('diagStart').addEventListener('click', e => {

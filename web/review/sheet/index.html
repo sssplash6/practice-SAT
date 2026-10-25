@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Worksheet answers · SAT Freshman</title>
+<link rel="icon" href="/favicon.ico" sizes="32x32">
 <link rel="icon" href="/assets/mark.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
 <link rel="manifest" href="/manifest.webmanifest">
@@ -11,74 +12,90 @@
 <script src="/assets/head.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800;900&family=DM+Mono:wght@400;500&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap">
+<link rel="preload" href="/assets/fonts/Geist.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap">
 <link rel="stylesheet" href="/assets/ui.css">
 <link rel="stylesheet" href="/assets/runner.css">
 <style>
-  /* The worksheet's answer sheet and its key (review.md V18). A row per number: A-D, or a
-     grid-in field with the usual filter and preview. Answers entered here are filed like
-     online ones; the key prints after Submit (or earlier, and then nothing counts as clean). */
-  .ws { max-width: 760px; padding-bottom: 120px; }
-  .ws-back { display: inline-flex; align-items: center; min-height: 44px; color: var(--ink-soft); text-decoration: none; font-weight: 600; }
-  .ws-back:hover { color: var(--ink); }
-  .ws-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; }
-  .ws h1 { font: 800 36px/1.1 var(--sans, 'Archivo'), sans-serif; margin: 4px 0 6px; }
-  .ws-sub { margin: 0 0 20px; color: var(--ink-soft); }
-  .ws-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
-  .ws-row { display: grid; grid-template-columns: 44px minmax(0, 1fr) auto; align-items: center; gap: 12px; padding: 10px 14px; background: var(--tile); border-radius: 10px; }
-  .ws-row:focus-within { box-shadow: inset 0 0 0 1.5px var(--ink); }
-  .ws-n { font: 700 18px var(--mono, 'DM Mono'), monospace; }
-  .ws-skill { color: var(--ink-soft); font-size: 14px; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .ws-abcd { display: flex; gap: 8px; }
-  .ws-abcd button { width: 44px; height: 44px; border-radius: 50%; border: 1.5px solid var(--ink); background: var(--bg, #fff); color: var(--ink); font: 700 16px var(--sans, 'Archivo'), sans-serif; cursor: pointer; }
-  .ws-abcd button[aria-pressed="true"] { background: var(--ink); color: var(--bg, #fff); }
-  .ws-grid { display: grid; gap: 4px; justify-items: end; }
-  .ws-grid input { width: 132px; min-height: 44px; font: 600 18px var(--mono, 'DM Mono'), monospace; text-align: center; border: 1.5px solid var(--ink); border-radius: 8px; background: var(--bg, #fff); color: var(--ink); }
-  .ws-grid .pvw { min-height: 18px; font-size: 13px; color: var(--ink-soft); }
-  .ws-grid .pvw.err { color: var(--ink); font-weight: 600; }
-  .ws-min { display: flex; align-items: center; gap: 12px; margin: 20px 0 0; }
-  .ws-min input { width: 96px; min-height: 44px; font: 600 16px var(--mono, 'DM Mono'), monospace; text-align: center; border: 1.5px solid var(--line, #ccc); border-radius: 8px; background: var(--bg, #fff); color: var(--ink); }
-  .ws-foot { position: sticky; bottom: 0; margin-top: 24px; padding: 12px 0; background: var(--bg, #fff); border-top: 1px solid var(--line, #e5e5e5); display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
-  .ws-card { background: var(--tile); border-radius: 12px; padding: 20px; display: grid; gap: 12px; }
-  .ws-card .t { font-weight: 700; font-size: 20px; margin: 0; }
-  .ws-card .s { margin: 0; color: var(--ink-soft); }
-  .ws-acts { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
-  .ws-key-q { break-inside: avoid; padding: 16px 0; border-bottom: 1px solid var(--line, #e5e5e5); }
-  .ws-key-n { font: 700 16px var(--mono, 'DM Mono'), monospace; margin: 0 0 6px; }
-  .ws-key-yours { margin: 0 0 8px; color: var(--ink-soft); }
+  /* The worksheet's answer sheet and its key (review.md V18). A row per number: A-D, or a grid-in field with the
+     usual filter and preview. Answers entered here are filed like online ones; the key prints after Submit (or
+     earlier, and then nothing counts as clean). From 1280px Minutes taken and Submit sit in a sticky right column. */
+  .wks { max-width: 760px; }
+  .wks-top { display: flex; align-items: center; gap: 8px 16px; flex-wrap: wrap; }
+  .wks-top .h1 { flex: 1 1 auto; min-width: 0; }
+  .wks-back { gap: 4px; color: var(--soft); }
+  .wks-sub { margin: 4px 0 16px; font: 400 12.5px/1.5 var(--font); color: var(--soft); }
+  .wks-list { list-style: none; margin: 0; padding: 0; border-radius: var(--radius-card); background: var(--raised); box-shadow: var(--shadow-1); overflow: clip; }
+  .wks-row { display: grid; grid-template-columns: 40px minmax(0, 1fr) auto; align-items: center; gap: 12px; min-height: 60px; padding: 8px 16px;
+    border-top: 1px solid var(--line); }
+  .wks-row:first-child { border-top: 0; }
+  .wks-row:focus-within { background: var(--hover); }   /* the row being answered: the hover band, no side stripe */
+  .wks-n { font: 600 14.5px var(--font); font-variant-numeric: tabular-nums; }
+  .wks-skill { color: var(--soft); font-size: 14.5px; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .wks-abcd { display: flex; gap: 8px; }
+  /* answer bubbles, as on the paper sheet: round on purpose */
+  .wks-abcd button { width: 44px; height: 44px; border-radius: 50%; /* check-ui: round-ok */ border: 1.5px solid var(--ink); background: var(--face); color: var(--ink);
+    font: 600 16px var(--font); cursor: pointer; }
+  .wks-abcd button[aria-pressed="true"] { background: var(--ink); color: var(--on-ink); }
+  .wks-grid { display: flex; flex-direction: row-reverse; align-items: center; gap: 12px; }
+  .wks-grid input.field { width: 132px; height: 44px; padding: 0 8px; font-weight: 600; text-align: center; font-variant-numeric: tabular-nums; }
+  .wks-grid .pvw { font-size: 12.5px; color: var(--soft); }
+  .wks-grid .pvw.err { color: var(--ink); font-weight: 600; }
+  .wks-form { display: flex; flex-direction: column; gap: 16px; }   /* flex below 1280: the foot's sticky spans the rows */
+  .wks-side { display: contents; }
+  .wks-min { display: flex; align-items: center; gap: 12px; }
+  .wks-side .wks-min { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 6px 12px; margin: 0; }
+  .wks-side .wks-min > .meta { grid-column: 2; grid-row: 1; }
+  .wks-side .wks-min input.field { grid-column: 1 / -1; grid-row: 2; width: 100%; }
+  .wks-min input.field { width: 96px; height: 44px; text-align: center; font-variant-numeric: tabular-nums; }
+  .wks-foot { position: sticky; bottom: 0; padding: 12px 0; background: var(--page); border-top: 1px solid var(--line);
+    display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+  @media (min-width: 1280px) {
+    .wks:has(.wks-form) { max-width: calc(760px + 300px + 16px); }
+    .wks-form { display: grid; grid-template-columns: minmax(0, 1fr) 300px; align-items: start; }
+    .wks-side { display: grid; gap: 12px; position: sticky; top: 16px; padding: var(--card-pad); border-radius: var(--radius-card); background: var(--raised); box-shadow: var(--shadow-1); }
+    .wks-side .wks-foot { position: static; padding: 0; border: 0; background: none; }
+    .wks-side .wks-foot .pill { flex: 1 1 100%; }
+  }
+  .wks-card { display: grid; gap: 12px; }
+  .wks-card .t { margin: 0; font: 600 16px/1.3 var(--font); }
+  .wks-card .hero-num { margin: 0; font-variant-numeric: tabular-nums; }   /* the score, the one number this page is about */
+  .wks-card .s { margin: 0; color: var(--soft); }
+  .wks-acts { display: flex; flex-wrap: wrap; gap: 8px 12px; align-items: center; }
+  .wks-key-ctl { margin-bottom: 12px; }
+  .wks-key-q { break-inside: avoid; padding: 16px 0; border-bottom: 1px solid var(--line); }
+  .wks-key-n { margin: 0 0 6px; font: 600 14.5px var(--font); font-variant-numeric: tabular-nums; }
+  .wks-key-yours { margin: 0 0 8px; color: var(--soft); }
   @media (max-width: 759px) {
-    .ws h1 { font-size: 28px; }
-    .ws-row { grid-template-columns: 32px minmax(0, 1fr); }
-    .ws-row > .ws-abcd, .ws-row > .ws-grid { grid-column: 1 / -1; justify-content: flex-start; justify-items: start; }
-    .ws-abcd { gap: 10px; }
-    .ws-foot { bottom: calc(62px + env(safe-area-inset-bottom)); }
-    .ws-foot .pill { flex: 1 1 100%; justify-content: center; }
+    .wks-row { grid-template-columns: 32px minmax(0, 1fr); }
+    .wks-row > .wks-abcd, .wks-row > .wks-grid { grid-column: 1 / -1; justify-content: flex-start; }
+    .wks-row > .wks-grid { flex-direction: row; }
+    .wks-foot { bottom: calc(64px + env(safe-area-inset-bottom, 0px)); }
+    .wks-foot .pill { flex: 1 1 100%; }
   }
   @media print {
-    #bar, #tabs, .ws-back, .ws-noprint, .ws-foot { display: none !important; }
-    .ws { max-width: none; padding: 0; }
-    body { background: #fff; }
+    #bar, #tabs, .wks-back, .wks-noprint, .wks-foot, .wks-side { display: none !important; }
+    .wks { max-width: none; padding: 0; }
+    body { background: var(--paper); }
   }
 </style>
 </head>
 <body>
 <header id="bar"></header>
-<main class="page ws" id="main" tabindex="-1">
-  <a class="ws-back" href="/review/">‹ Review</a>
-  <div class="ws-top">
-    <div>
-      <h1 id="title">Enter your answers</h1>
-      <p class="ws-sub" id="sub"></p>
-    </div>
-    <div class="ws-noprint" id="more"></div>
-  </div>
+<main class="page wks" id="main" tabindex="-1">
+  <header class="wks-top">
+    <a class="quiet wks-back" href="/review/">Review</a>
+    <h1 class="h1" id="title">Enter your answers</h1>
+    <div class="wks-noprint" id="more"></div>
+  </header>
+  <p class="wks-sub" id="sub"></p>
   <section id="sheet" aria-busy="true"></section>
 </main>
 <nav id="tabs"></nav>
 <script src="/assets/ui.js"></script>
 <script src="/assets/kit.js"></script>
 <script src="/assets/question.js"></script>
-<script>UI.shell('review');</script>
+<script>UI.shell({ page: 'review', ownPrimary: true });</script>
 <script src="/review/sheet/sheet.js"></script>
 </body>
 </html>

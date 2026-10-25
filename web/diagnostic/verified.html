@@ -4,25 +4,25 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Email confirmed · SAT Freshman</title>
+<link rel="icon" href="/favicon.ico" sizes="32x32">
 <link rel="icon" href="/assets/mark.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
 <link rel="manifest" href="/manifest.webmanifest">
 <meta name="theme-color" content="#FFFFFF">
 <script src="/assets/head.js"></script>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800;900&family=DM+Mono:wght@400;500&display=swap">
+<link rel="preload" href="/assets/fonts/Geist.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/assets/ui.css">
 <style>
-  .done { display: grid; gap: 18px; justify-items: start; max-width: 520px; }
-  .done .acts { display: flex; flex-wrap: wrap; gap: 12px 20px; align-items: center; }
+  .done { display: grid; gap: 16px; justify-items: start; max-width: 520px; }
+  .done .h1 { margin: 0; }
+  .done .acts { display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: center; }
 </style>
 </head>
 <body data-page="diagnostic">
 <header id="bar"></header>
 
 <main class="page" id="main" tabindex="-1">
-  <div class="done rise">
+  <div class="done">
     <h1 class="h1" id="title">Email confirmed</h1>
     <p id="text">Your progress is saved. The page where you took the diagnostic opens your results by itself.</p>
     <div class="acts"><a class="pill" href="/">Today</a><a class="quiet" href="/signin/" id="other">Sign in on this device</a></div>
@@ -34,7 +34,7 @@
 <script src="/assets/kit.js"></script>
 <script src="/assets/charts.js"></script>
 <script>
-  UI.shell();
+  UI.shell({ ownPrimary: true });   // the page has its own orange; Up next’s Start goes .btn
   if (new URL(location.href).searchParams.get('state') === 'bad') {
     document.title = 'Link expired · SAT Freshman';
     UI.$('#title').textContent = 'That link has expired';

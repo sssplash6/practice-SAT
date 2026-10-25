@@ -1,0 +1,70 @@
+/* ------------------------------------------------------------------ icons (premium build A3, 2026-10-19)
+   For ui.css. Pairs with build/icons.js (UI.ICON in Phosphor), build/glyphs.js (topic glyphs, spots) and
+   web/assets/fonts/Marks.woff2. Merge notes are in BUILD.md "## A3 icons".
+   Reduced motion: the global rule at the end of ui.css already zeroes these transitions and animations. */
+
+/* 1. the Marks font: the marks Geist lacks (✓ ✕ ✗ ⋯ ▾ ▴ ▸ ⌄ ⓘ ↻ ↺ ⊘ ⊖ ◐ ★ ✎ ⚑ ■ □ ⌫ ⌇ ⠿ ⁻), drawn the same on
+   every device. Goes beside Geist's @font-face. One weight serves all (100 900), so 9px/700 cells get no
+   faux bold. block, not swap: it is 2 KB, and a mark that swaps shape mid-load is the bug being fixed. */
+@font-face {
+  font-family: "Marks"; src: url("/assets/fonts/Marks.woff2") format("woff2"); font-weight: 100 900; font-display: block;
+  unicode-range: U+00AB, U+00B7, U+00BB, U+2039-203A, U+207B, U+21BA-21BB, U+22EF, U+2296, U+2298, U+2304, U+2307,
+    U+232B, U+24D8, U+25A0-25A1, U+25B4, U+25B8, U+25BE, U+25CB, U+25CF-25D0, U+2605, U+2691, U+270E, U+2713,
+    U+2715, U+2717, U+283F;
+}
+/* the three stacks in :root: Marks right after the brand face, before any system font can claim the mark */
+:root {
+  --font:  "Geist", "Marks", "Helvetica Neue", system-ui, sans-serif;
+  --mono:  "Geist Mono", "Marks", ui-monospace, SFMono-Regular, Menlo, monospace;
+  --serif: "Source Serif 4", "Marks", Georgia, "Times New Roman", serif;
+}
+
+/* 2. one stroke, held in screen pixels: 1.4px at 16-24, 1.25px at 14 and below, a hair lighter on dark.
+   g.ph is the wrapper every UI.ICON entry carries; its stroke-width="16" attribute is only a no-CSS fallback. */
+:root { --i-sw: 1.4px; }
+@media screen { :root[data-theme="dark"] { --i-sw: 1.3px; } }
+svg:is([width="12"], [width="13"], [width="14"]), :is(.badge, .thumbs, .meter, thead) svg { --i-sw: 1.25px; }
+g.ph { stroke-width: var(--i-sw, 1.4px); }
+g.ph *, svg.glyph *, svg.spot * { vector-effect: non-scaling-stroke; }
+
+/* 3. twins: an entry with a filled twin holds <g class="ph ph-f" opacity="0">fill</g><g class="ph ph-o">outline</g>.
+   The fill shows for "you are here" and "on": the current nav item (sidebar, phone tabs, menu rows), a pressed
+   toggle, a checked menu item (Dark mode), a selected tab. The svg must be the control's child, or sit in a
+   page helper's span.ic. Nav fills stay in ink; the orange bar beside them stays the one orange mark. */
+g.ph-f { opacity: var(--i-on, 0); transition: opacity var(--i-t, 110ms) var(--ease); }
+g.ph-o { opacity: calc(1 - var(--i-on, 0)); transition: opacity var(--i-t, 110ms) var(--ease); }
+/* in over 150ms, back over 110ms (exits about 75% of entries) */
+:is([aria-current="page"], [aria-current="true"], [aria-pressed="true"], [aria-checked="true"], [role="tab"][aria-selected="true"]) > svg,
+:is([aria-current="page"], [aria-current="true"], [aria-pressed="true"], [aria-checked="true"], [role="tab"][aria-selected="true"]) > .ic > svg {
+  --i-on: 1; --i-t: 150ms;
+}
+/* status toggles (Mark for review: flag, Save: bookmark, Star a word: star): an amber fill with the outline
+   kept as its amber-deep edge (orange alone on paper is 2.4:1, the deep edge 3.2:1). Replaces the CSS fill
+   hacks at runner.css .rn-mark / .rn-markfoot [aria-pressed="true"] svg. */
+g.ph-amber { color: var(--amber); }
+g.ph-amber + g.ph-o { opacity: 1; }
+[aria-pressed="true"] > svg > g.ph-amber + g.ph-o, [aria-pressed="true"] > .ic > svg > g.ph-amber + g.ph-o { color: var(--amber-deep); }
+
+/* 4. disclosure: UI.icon('caret_down', 16) turns over when its control opens (replaces ▾ ▴ ▸ ⌄ as text) */
+svg:has(> g.ph-turn) { transition: rotate 150ms var(--ease); }
+[aria-expanded="true"] > svg:has(> g.ph-turn) { rotate: 180deg; }
+
+/* 5. topic glyphs (build/glyphs.js, viewBox -12 -12 24 24): replaces ui.css's .glyph, .stk, .stki, .stkl,
+   .stkd rules. Two tiers: primary in currentColor, secondary (axes, risers, pans) at full width in --faint.
+   No --gb fill: delete it from .glyph, .q-skill .glyph, .toast > .glyph and .palette [role="option"] > .glyph.
+   Smallest size 20px (.q-skill .glyph is 18 today). */
+.glyph { width: 22px; height: 22px; flex: none; color: var(--soft); }
+.stk, .stkl, .stki, .stkb { fill: none; stroke: currentColor; stroke-width: var(--i-sw, 1.4px); stroke-linecap: round; stroke-linejoin: round; }
+.stki { stroke: var(--faint); }
+.stkb { stroke-width: calc(var(--i-sw, 1.4px) * 2); }
+.stkd { fill: currentColor; }
+
+/* 6. spot drawings (build/glyphs.js SPOT): left-aligned above an empty state's line */
+.spot { display: block; width: 72px; height: 72px; flex: none; }
+@media (max-width: 759px) { .spot { width: 56px; height: 56px; } }
+.spot .sp-o { fill: none; stroke: var(--faint); stroke-width: var(--i-sw, 1.4px); stroke-linejoin: round; }
+.spot .sp-on { fill: var(--amber); }
+/* done: each mastered corner fills in turn, 240ms each, 40ms apart (it is drawn after the student's action) */
+.spot .sp-in { transform-box: view-box; transform-origin: 50px 50px; animation: sp-in 240ms var(--ease) calc(var(--i, 0) * 40ms) both; }
+@keyframes sp-in { from { opacity: 0; scale: .6; } }
+@media print { .spot { display: none; } }

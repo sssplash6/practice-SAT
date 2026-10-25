@@ -30,24 +30,42 @@
          items: {label, icon, sub, kbd, meta, href, onClick, disabled, checked, radio,
                  close} | {separator: true} | {group: 'Label'} | {head: Node} | Node
          Up/Down, Home/End, letters, Enter/Space; Tab and Esc close and return focus
-     UI.tooltip(el, text | fn, {kbd, delay}) -> {hide, set, destroy}   hover and focus
+     UI.tooltip(el, text | fn, {kbd, delay}) -> {hide, set, destroy}   hover and focus; on touch a
+         tap on a trigger with no action of its own (no link, button, field, role or pointer
+         cursor on it, in it or around it) opens the same text in UI.pop
+     UI.why(text, {about, label, anchored, className}) -> button.why-q   the one "?" that explains:
+         click, tap, Enter or Space opens text in UI.pop (again closes it); a string or Node text
+         is also the mouse hover tooltip. text: string | Node | [string | Node] (a paragraph each) |
+         () => any of those or a Promise of them (shows Loading, then fills). label shows a word
+         instead of "?" (.why-q.word, named by that word); about names it "About <about>"
+         ("More about this" without). The click never reaches a label, link or row around it.
      UI.toast(text, {action, href, undo, ms, icon, wait}) -> {el, close}
          at most 3, polite; undo adds Undo (Z) for 6s; wait holds it while a sheet is open
      UI.toast.undo()                         runs the newest visible Undo (F2 binds Z)
      UI.banner(kind, text, actions, {host, dismiss, onDismiss, sys}) -> {close}
          one shows, by priority: retired, offline, storage, first, nudge, then others
      UI.banner.clear(kind)
+     UI.saving(btn, work, {busy, done, fail}) -> Promise   the button says busy ('Saving') while
+         work (a promise, or a function returning one) runs, then done ('Saved') with a check for
+         1200ms, or fail ('Couldn’t save') for 2400ms and rethrows; then its own content again.
+         Width held (min-width from its first layout), aria-busy while running, done and fail said
+         in the toasts' live region; a press while it runs gets the same promise. [data-saving]
+         Pass work as a function, so a second press does not start a second request
    Controls
      UI.seg(host, options, {value, multi, onChange, label, full}) -> {el, help, value, set, count, disable}
      UI.chips(host, options, {...same})      radio chips; options: {value, label, n, disabled, why, icon}
      UI.tabs(host, tabs, {counts, value, onChange, label, param}) -> {el, value, set, count}
          tabs: {id, label, n, href, panel (Element | id), disabled}; arrows move and select
+         UI.tabs and a single UI.seg carry one sliding mark (.tab-ind underline, .seg-ind thumb)
+         while the row is on one line; a click slides it 200ms, keys move it at once, a wrapped
+         row keeps the static mark (the control has [data-ind] while the slider shows);
+         {mark: 'clip'} on either draws it as a clipped orange copy of the row instead (Paco)
      UI.switch(host, {checked, label, onChange, disabled}) -> {el, value, set}
          onChange may return a Promise; a rejection flips it back
      UI.triCheck(host, {label, checked, mixed, n, onChange}) -> {el, input, set(true | false | 'mixed')}
      UI.dropdown(host, {label, options, groups, multi, counts, value, all, onChange, key, url, store})
          -> {el, value, set, counts, open}   a listbox (single) or checkboxes (multi)
-     UI.filterBar(host, filters, {url, store, sheet, onChange}) -> {el, values, set, clear, counts}
+     UI.filterBar(host, filters, {url, store, sheet, keep, onChange}) -> {el, values, set, clear, counts}
          filters: {key, label, type: select | multi | pills | date | sort | search,
                    options, groups, value, counts}; "Filters · n" sheet under 760px
      UI.otp(host, onComplete, {length, label}) -> {el, value, clear, invalid, focus}
@@ -61,8 +79,18 @@
      UI.selbar(host, {actions, onClear}) -> {el, update(n)}      "4 selected" + actions(n)
    Data
      UI.tile(host, {label, value, unit, sub, href, filter, pressed, onClick, delta,
-         spark, fact, format}) -> {el, set}   numbers count up once; null reads "—"
-     UI.meter(host, {label, value, max, unit, text, ink, lg, tick}) -> {el, set}
+         spark, fact, format}) -> {el, set}   a null value reads an en dash
+     UI.meter(host, {label, value, max, unit, text, ink, lg, tick, ticks, tickStates, done}) -> {el, set}
+         ticks: n draws the bar as n blocks (.meter.ticks), floor(value / max * n) lit, all of
+         them at the goal; .meter-n and the aria values are the same as the plain bar.
+         tickStates: a state per block instead of the lit count (n = its length unless ticks is
+         given): 'done' lit (amber, graphite with ink), 'partial' half lit, 'today' outlined, 'missed'
+         a faint mark, 'off' empty (a day with nothing planned); anything else is a plain block.
+         Blocks carry data-s; set({tickStates}) lights new done blocks 20ms apart like ticks
+     UI.roll(el, to, {format})   a figure that changed on screen (never on load) rolls each changed
+         digit to its new value (up from below on a rise), --m-roll on --spring; the text is set at once, the moving copy is aria-hidden;
+         plain text under reduced motion. Numbers use format, else UI.num. el holds only the
+         figure (its textContent is the old value; a unit or other child would be replaced)
      UI.skel(host, shape)   line | lines[:n] | num | circle | pill | tile | card | row | rows:n
                             | table:n | chart | cells:n | {w, h, r}
      UI.cardError(host, retry, text)
@@ -88,9 +116,27 @@
      UI.empty(host, {sample, text, action, tag, answered})   UI.empty.START; with 0 answers
          (o.answered, else UI.answered, which the shell sets from /api/me) the action is START (R55)
      UI.SUBJECT      UI.qlabel(item, sitting); UI.qlabel.addr(item)
+   Motion (premium/MOTION.md; CSS in premium/build/motion.css, merged into ui.css)
+     UI.motion.{off, kb, ok(e), calm}   reduced or the test window; the last input was a key; play movement
+     UI.motion.enter(el, 'rise' | 'nudge' | 'fade' | 'pop' | 'up' | 'slide', {delay, duration, dir, dx}) -> Animation | null
+     UI.motion.exit(el, 'nudge' | 'pop' | 'down' | 'fade' | 'slide', {duration, dir, dx}) -> Promise (remove el after)
+         'slide' is sideways: dir 1 (forward) enters from the right and leaves to the left, -1 the other way,
+         dx px (10; 8 to 12); enter(el, {axis: 'x', dir}) is the same. Every kind moves the element's own
+         translate / scale properties, never transform, so a box centred with translateX(-50%) keeps its place
+     UI.motion.stagger(host)   [data-m="stagger"] children rise once (kit runs it by itself on a fresh visit)
+     UI.motion.vt(update, {cls, names})   a same-document view transition, or update() at once
+     UI.motion.draw(svg)       a chart's first draw: [data-m="line"] [data-m="bar"] [data-m="wipe"]
+     UI.motion.grow(el, fromHeight) -> Promise   UI.motion.once(key, 'local')   UI.motion.spring(d, bounce, v0)
+     UI.glide(list, mutate, {key, enter, rows}) -> Promise   FLIP: rows enter, leave and reorder (= UI.motion.flip);
+         rows: a selector for rows nested anywhere in list (rows inside group sections), else list's children
+     UI.fx.check(el)  UI.fx.ring(ringEl, p)  UI.fx.flame(el)  UI.fx.pop(el)  UI.fx.glow(row, {remove})
+     UI.scrolled(bar, {edge: 'bottom', root}) -> {stop}   .scrolled while content slides under a sticky bar;
+         [data-scrolled] (="bottom" for a footer) is wired by itself
    Formatters
      UI.dur(minutes)  UI.mmss(sec)  UI.num(n)  UI.date(d, 'long' | 'short' | 'eyebrow')
-     UI.relTime(d)  UI.KIND; UI.KIND.label(row)  UI.copyText(text, {toast})
+     UI.relTime(d)  UI.KIND; UI.KIND.label(row)  UI.copyText(text, {toast, button, fail}) -> Promise<bool>
+         toast: a string, or false for none; button: the button says Copying, then Copied (UI.saving)
+         instead of a toast, or fail ('Not copied'); a refused copy opens a sheet to copy from
      UI.ics(event) -> text  (one event, or repeat: 'daily' | 'weekly' | an RRULE)
    ========================================================================== */
 
@@ -152,30 +198,15 @@
     location.href = `/practice/session/?id=${encodeURIComponent(s.id)}`;
   }
 
-  /* icons: 24px strokes in currentColor */
-  const L = 'fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"';
-  const ICON = {
-    x:        `<path d="M6 6l12 12M18 6L6 18" ${L} stroke-width="1.7"/>`,
-    check:    `<path d="M5 12.5l4.5 4.5L19 7.5" ${L} stroke-width="1.8"/>`,
-    calendar: `<rect x="4" y="5.5" width="16" height="14.5" rx="2.5" ${L}/><path d="M4 10h16M8.5 3.5v4M15.5 3.5v4" ${L}/>`,
-    image:    `<rect x="4" y="5" width="16" height="14" rx="2.5" ${L}/><circle cx="9.5" cy="10" r="1.6" ${L}/><path d="M5 17l4.5-4.5 3.5 3.5 2.5-2.5 3.5 3.5" ${L}/>`,
-    plus:     `<path d="M12 5v14M5 12h14" ${L} stroke-width="1.8"/>`,
-    filter:   `<path d="M4.5 6.5h15M7.5 12h9M10.5 17.5h3" ${L} stroke-width="1.8"/>`,
-    search:   `<circle cx="10.5" cy="10.5" r="6" ${L}/><path d="M15 15l4.5 4.5" ${L} stroke-width="1.8"/>`,
-    twin:     `<rect x="4" y="8" width="11" height="11" rx="2.2" ${L}/><path d="M9 5.5A1.5 1.5 0 0 1 10.5 4H18.5A1.5 1.5 0 0 1 20 5.5V13.5A1.5 1.5 0 0 1 18.5 15" ${L}/>`,
-    twin_test:`<rect x="4" y="8" width="11" height="11" rx="2.2" ${L}/><path d="M9 5.5A1.5 1.5 0 0 1 10.5 4H18.5A1.5 1.5 0 0 1 20 5.5V9" ${L}/><circle cx="18" cy="16" r="3.6" ${L} stroke-width="1.4"/><path d="M18 14.2V16l1.1.9" ${L} stroke-width="1.3"/>`,
-    again:    `<path d="M5.5 12a6.5 6.5 0 1 0 2-4.7" ${L}/><path d="M7.5 3.8v3.7h3.7" ${L}/>`,
-    fix:      `<path d="M18.5 12a6.5 6.5 0 1 1-2-4.7" ${L}/><path d="M16.5 3.8v3.7h-3.7" ${L}/>`,
-    learn:    `<path d="M4.5 5.5h6a2 2 0 0 1 2 2v12a2 2 0 0 0-2-2h-6zM19.5 5.5h-6a2 2 0 0 0-2 2v12a2 2 0 0 1 2-2h6z" ${L}/>`,
-    copy:     `<rect x="8.5" y="8.5" width="11" height="11" rx="2" ${L}/><path d="M15.5 8.5V6a1.5 1.5 0 0 0-1.5-1.5H6A1.5 1.5 0 0 0 4.5 6v8A1.5 1.5 0 0 0 6 15.5h2.5" ${L}/>`,
-    camera:   `<path d="M4.5 8.5A1.5 1.5 0 0 1 6 7h2l1.5-2h5L16 7h2a1.5 1.5 0 0 1 1.5 1.5v9A1.5 1.5 0 0 1 18 19H6a1.5 1.5 0 0 1-1.5-1.5z" ${L}/><circle cx="12" cy="12.5" r="3.2" ${L}/>`,
-  };
-  const svgHTML = (inner, size = 18) => `<svg width="${size}" height="${size}" viewBox="0 0 24 24" aria-hidden="true" focusable="false">${inner}</svg>`;
+  /* icons: ui.js's UI.ICON (Phosphor, premium A3). The admin pages load kit without ui.js: there only the
+     close mark is drawn (xBtn), every other kit icon is empty */
+  const ICON = UI.ICON || { x: '<path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>' };
+  const svgHTML = (inner, size = 18) => `<svg width="${size}" height="${size}" viewBox="0 0 24 24" aria-hidden="true" focusable="false">${inner || ''}</svg>`;
   function icon(i, size = 18) {
     if (!i) return null;
     if (i instanceof Node) return i;
     const t = doc.createElement('template');
-    t.innerHTML = typeof i === 'string' && i.trim().startsWith('<svg') ? i : svgHTML(ICON[i] || (UI.ICON && UI.ICON[i]) || '', size);
+    t.innerHTML = typeof i === 'string' && i.trim().startsWith('<svg') ? i : svgHTML(ICON[i], size);
     return t.content.firstElementChild;
   }
   const xBtn = (label, onClick) => h('button', { type: 'button', class: 'x', 'aria-label': label, html: svgHTML(ICON.x, 18), onclick: onClick });
@@ -194,9 +225,262 @@
   }
   const fmtN = n => typeof n === 'number' && isFinite(n) ? n.toLocaleString('en-US') : (n ?? '');
 
+  /* ------------------------------------------------------------ motion (premium/MOTION.md 4.1)
+     Movement plays only when ok(): not reduced (the OS or html[data-motion="reduce"]), not the test
+     window, and the last input was not a key (html[data-input], kept below), since a key is
+     instant. Under reduced motion an entry or exit is a short fade. Durations and curves come from
+     the tokens in premium/build/motion.css (merged into ui.css), with these fallbacks. Every helper
+     works in a browser without the Web Animations API: it just does nothing. */
+  const rootEl = doc.documentElement;
+  const markInput = k => { if (rootEl.dataset.input !== k) rootEl.dataset.input = k; };
+  addEventListener('keydown', e => { if (!/^(Shift|Control|Alt|Meta|CapsLock)$/.test(e.key)) markInput('key'); }, true);
+  addEventListener('pointerdown', () => markInput('pointer'), true);
+  const calm = () => !!doc.body && doc.body.dataset.page === 'test';     // the test window is Bluebook: nothing new moves there
+  const off = () => still() || calm();
+  const kb = () => rootEl.dataset.input === 'key';
+  const ok = e => !off() && !kb() && !(e && e.detail === 0 && /^(click|pointerup)$/.test(e.type));
+  const tok = (name, d) => { try { return getComputedStyle(doc.body || rootEl).getPropertyValue(name).trim() || d; } catch (_) { return d; } };
+  const ms = (name, d) => { const v = tok(name, ''); const n = parseFloat(v); return isNaN(n) ? d : /ms$/.test(v) ? n : n * 1000; };
+  const EASE = 'cubic-bezier(.23, 1, .32, 1)', MOVE = 'cubic-bezier(.77, 0, .175, 1)', DRAWER = 'cubic-bezier(.32, .72, 0, 1)';
+  let linearOk = null;
+  const linOk = () => {
+    if (linearOk === null) { try { linearOk = CSS.supports('animation-timing-function', 'linear(0, 1)'); } catch (_) { linearOk = false; } }
+    return linearOk;
+  };
+  const curve = (name, d) => { const v = tok(name, ''); return v && (linOk() || !/^linear\(/.test(v)) ? v : d; };
+  const play = (el, kf, o) => (el && typeof el.animate === 'function' ? el.animate(kf, { easing: EASE, ...o }) : null);
+  const done = a => (a ? a.finished.then(() => {}, () => {}) : Promise.resolve());
+  // entries: 'rise' (8px, page blocks), 'nudge' (4px, rows, toasts), 'fade', 'pop' (.96, from its origin),
+  // 'up' (a phone sheet, from the bottom edge), 'slide' (sideways, o.dir 1 from the right, -1 from the left,
+  // o.dx px, 10 by default; also enter(el, {axis: 'x', dir})); under reduced motion all of them are a 120ms fade.
+  // They move the element's own translate and scale, never its transform, so a box centred with
+  // translateX(-50%) (or the toast stack's offsets) stays where it is
+  const slideBy = (o, sign) => `${sign * (o.dir < 0 ? -1 : 1) * (o.dx || 10)}px 0`;
+  const kindOf = (kind, o) => (kind && typeof kind === 'object' ? [kind.axis === 'x' ? 'slide' : 'rise', kind] : [kind, o]);
+  function enter(el, kind = 'rise', o = {}) {
+    [kind, o] = kindOf(kind, o);
+    if (!el || calm() || (kb() && !o.force) || (o.event && o.event.detail === 0)) return null;
+    if (still()) return play(el, [{ opacity: 0, offset: 0 }], { duration: 120, delay: o.delay || 0, fill: 'backwards' });
+    const kf = { offset: 0 };
+    if (kind !== 'up' || o.fade) kf.opacity = 0;
+    const ty = { rise: tok('--m-rise', '8px'), nudge: tok('--m-nudge', '4px'), up: '100%' }[kind];
+    if (kind === 'pop') kf.scale = tok('--m-pop-from', '.96');
+    else if (kind === 'slide') kf.translate = slideBy(o, 1);
+    else if (ty) kf.translate = `0 ${ty}`;
+    const dur = o.duration || (kind === 'up' ? ms('--m-drawer', 500) : kind === 'pop' ? ms('--m-pop', 160) : kind === 'fade' ? 160 : ms('--m-base', 200));
+    return play(el, [kf], { duration: dur, delay: o.delay || 0, easing: o.easing || (kind === 'up' ? curve('--ease-drawer', DRAWER) : EASE), fill: 'backwards' });
+  }
+  // exits run at about 75% of the entry and resolve when it ends; a key, the test window or a
+  // browser without WAAPI resolves at once. The caller removes the node after. 'slide' leaves the
+  // other way (o.dir 1, forward: to the left), so the old and the new view travel together
+  function exit(el, kind = 'nudge', o = {}) {
+    [kind, o] = kindOf(kind, o);
+    if (!el || calm() || (kb() && !o.force) || typeof el.animate !== 'function') return Promise.resolve();
+    if (still()) return done(play(el, [{ opacity: 0 }], { duration: 100, fill: 'forwards' }));
+    const kf = { opacity: kind === 'down' && !o.fade ? 1 : 0 };
+    if (kind === 'pop') kf.scale = '.97';
+    else if (kind === 'slide') kf.translate = slideBy(o, -1);
+    else if (kind === 'nudge' || kind === 'down') kf.translate = `0 ${kind === 'down' ? '100%' : tok('--m-nudge', '4px')}`;
+    const dur = o.duration || { pop: ms('--m-pop-out', 120), down: ms('--m-drawer-out', 375), fade: 120 }[kind] || ms('--m-fast', 140);
+    return done(play(el, [kf], { duration: dur, easing: o.easing || (kind === 'down' ? curve('--ease-drawer', DRAWER) : EASE), fill: 'forwards' }));
+  }
+  // M1, once per visit: the first screen's direct children of host rise 8px and fade in, 30ms apart, at
+  // most 6 steps (later ones arrive with the 6th); the block holding the primary ([data-m-now]) is never delayed
+  function stagger(host) {
+    if (!host || calm()) return [];
+    host.setAttribute('data-m-done', '');
+    let i = 0;
+    return [...host.children].filter(k => k.getClientRects().length && k.getBoundingClientRect().top < innerHeight).map(k => {
+      const now = k.hasAttribute('data-m-now') || !!k.querySelector('[data-m-now]');
+      return enter(k, 'rise', { delay: still() || now ? 0 : Math.min(i++, 5) * ms('--m-step', 30) });
+    }).filter(Boolean);
+  }
+  // FLIP for a list (L1 to L3): measure, mutate(), then what moved slides from where it was (200 ease-move,
+  // at most 40 rows), what is new rises 4px, and what left fades to .98 where it stood while the gap closes.
+  // Rows are matched by data-key, then id, then identity, so a list rebuilt from new nodes still glides.
+  // o.rows (a selector) takes the rows from anywhere inside list instead of its children: rows grouped in
+  // sections glide across them. Moves use the rows' own translate, so their transforms are left alone
+  function glide(list, mutate, o = {}) {
+    const keyOf = o.key || (k => (k.dataset && k.dataset.key) || k.id || k);
+    const rows = () => (o.rows ? list.querySelectorAll(o.rows) : list.children);
+    const at = new Map();
+    const move = list && !off() && !kb();
+    const box = () => list.getBoundingClientRect();
+    if (move) {
+      const b = box();
+      for (const k of rows()) { if (k._mGhost) continue; const r = k.getBoundingClientRect(); at.set(keyOf(k), { k, x: r.left - b.left, y: r.top - b.top, w: r.width, h: r.height }); }
+    }
+    const res = mutate ? mutate() : undefined;
+    if (!move || !list.isConnected) return Promise.resolve(res);
+    const b = box(), runs = [], moved = [];
+    for (const k of rows()) {
+      if (k._mGhost) continue;
+      const key = keyOf(k), was = at.get(key);
+      if (!was) { if (o.enter !== false) runs.push(enter(k, 'nudge')); continue; }
+      at.delete(key);
+      const r = k.getBoundingClientRect(), dx = was.x - (r.left - b.left), dy = was.y - (r.top - b.top);
+      if (Math.abs(dx) + Math.abs(dy) > .5) moved.push([k, dx, dy]);
+    }
+    if (moved.length <= 40) moved.forEach(([k, dx, dy]) => runs.push(play(k, [{ translate: `${dx}px ${dy}px`, offset: 0 }], { duration: ms('--m-base', 200), easing: curve('--ease-move', MOVE) })));
+    if (!/^(TABLE|THEAD|TBODY|TR)$/.test(list.tagName) && at.size && at.size <= 40) {
+      let pos = null;
+      at.forEach(({ k, x, y, w, h: ht }) => {
+        if (k.isConnected || !k.cloneNode) return;            // moved somewhere else, not gone
+        if (pos === null) { pos = list.style.position; if (getComputedStyle(list).position === 'static') list.style.position = 'relative'; }
+        const g = k.cloneNode(true);
+        g._mGhost = true;
+        [g, ...g.querySelectorAll('[id]')].forEach(x => x.removeAttribute && x.removeAttribute('id'));
+        g.setAttribute('aria-hidden', 'true');
+        g.inert = true;
+        g.style.cssText += `;position:absolute;margin:0;box-sizing:border-box;pointer-events:none;left:${x - list.clientLeft + list.scrollLeft}px;top:${y - list.clientTop + list.scrollTop}px;width:${w}px;height:${ht}px`;
+        list.append(g);
+        runs.push({ finished: exit(g, 'pop', { duration: ms('--m-fast', 140) }).then(() => g.remove()) });
+      });
+      if (pos !== null) Promise.all(runs.map(done)).then(() => { list.style.position = pos; });
+    }
+    return Promise.all(runs.map(done)).then(() => res);
+  }
+  // a box that changes height (a fold opening or closing, a card opening): from -> o.to (its height now),
+  // 260 ease, 195 when it shrinks; the content is clipped meanwhile. o.then runs at the end, before the
+  // box lets go of the height (a close flips its state there). Resolves when it ends.
+  function grow(el, from, o = {}) {
+    const fin = () => { if (o.then) o.then(); };
+    if (!el || off() || typeof el.animate !== 'function') { fin(); return Promise.resolve(); }
+    const to = o.to ?? el.offsetHeight;
+    if (Math.abs(to - from) < 1) { fin(); return Promise.resolve(); }
+    const ov = el.style.overflow;
+    el.style.overflow = 'clip';
+    const a = play(el, [{ height: `${from}px` }, { height: `${to}px` }], { duration: o.duration || (to > from ? ms('--m-fold', 260) : ms('--m-fold-out', 195)), fill: 'forwards' });
+    return done(a).then(() => { fin(); el.style.overflow = ov; a.cancel(); });
+  }
+  // a same-document view transition (B1, B2): o.cls on <html> for the run, o.names {selector: name} on
+  // the elements before and after the change (and nowhere else); without support, or by key, update() at once
+  function vt(update, o = {}) {
+    if (!doc.startViewTransition || off() || kb() || (o.event && o.event.detail === 0)) { update(); return null; }
+    const named = [];
+    const name = () => { for (const [sel, n] of Object.entries(o.names || {})) { const el = doc.querySelector(sel); if (el && el.getClientRects().length) { el.style.viewTransitionName = n; named.push(el); } } };
+    const clear = () => named.splice(0).forEach(el => { el.style.viewTransitionName = ''; });
+    if (o.cls) rootEl.classList.add(o.cls);
+    name();
+    let t;
+    try { t = doc.startViewTransition(() => { clear(); update(); name(); }); } catch (_) { clear(); if (o.cls) rootEl.classList.remove(o.cls); update(); return null; }
+    quietVT(t);
+    const end = () => { clear(); if (o.cls) rootEl.classList.remove(o.cls); };
+    t.finished.then(end, end);
+    return t;
+  }
+  // first chart draw (D5, D6, D8): [data-m="line"] strokes draw, [data-m="bar"] bars rise from the
+  // baseline 16ms apart (at most 14 steps), [data-m="wipe"] reveals left to right. Call it on the first
+  // draw only, never on a resize redraw.
+  function draw(svg) {
+    if (!svg || calm()) return;
+    const fade = still() || kb();
+    if (fade) { play(svg, [{ opacity: 0, offset: 0 }], { duration: 120 }); return; }
+    const dur = ms('--m-reveal', 480);
+    svg.querySelectorAll('[data-m="line"]').forEach(p => {
+      p.setAttribute('pathLength', '1');
+      p.style.strokeDasharray = '1';
+      play(p, [{ strokeDashoffset: 1 }, { strokeDashoffset: 0 }], { duration: dur });
+    });
+    svg.querySelectorAll('[data-m="bar"]').forEach((b, i) => {
+      b.style.transformBox = 'fill-box';
+      b.style.transformOrigin = '50% 100%';
+      play(b, [{ transform: 'scaleY(0)', offset: 0 }], { duration: 360, delay: Math.min(i, 14) * 16, fill: 'backwards' });
+    });
+    svg.querySelectorAll('[data-m="wipe"]').forEach(g => play(g, [{ clipPath: 'inset(0 100% 0 0)' }, { clipPath: 'inset(0 0 0 0)' }], { duration: dur }));
+  }
+  // true the first time per tab (or per day on this device with 'local')
+  function once(key, store) {
+    const k = `satf.m.${key}`;
+    try {
+      const s = store === 'local' ? localStorage : sessionStorage, v = store === 'local' ? isoDay(new Date()) : '1';
+      if (s.getItem(k) === v) return false;
+      s.setItem(k, v);
+      return true;
+    } catch (_) { return true; }
+  }
+  // the spring solver behind the tokens (perceptual duration d seconds, bounce 0 to 1, starting
+  // velocity v0 in distances a second) -> {easing: 'linear(...)', duration ms}; the phone sheet's release
+  function spring(d = .37, bounce = 0, v0 = 0) {
+    const w = 2 * Math.PI / d, z = 1 - bounce, dt = 1 / 600, pts = [0];
+    let x = 0, v = v0, t = 0, next = 1 / 60;
+    while (t < 4 * d) {
+      v += (-w * w * (x - 1) - 2 * z * w * v) * dt; x += v * dt; t += dt;
+      if (t >= next) { pts.push(+x.toFixed(4)); next += 1 / 60; if (Math.abs(1 - x) < .001 && Math.abs(v) < .05) break; }
+    }
+    pts[pts.length - 1] = 1;
+    return { easing: `linear(${pts.join(', ')})`, duration: Math.round((pts.length - 1) * 1000 / 60) };
+  }
+  // one-shot feedback for pages to call (practice, review, Today; never the test window)
+  const fx = {
+    // a check that draws itself (stroke-dashoffset, 240): el is the svg, holds one, or gets kit's check
+    check(el, o = {}) {
+      if (!el) return null;
+      let s = el.matches && el.matches('svg') ? el : el.querySelector('svg');
+      if (!s) { s = icon('check', o.size || 16); el.append(s); }
+      if (calm()) return null;
+      if (still()) return play(s, [{ opacity: 0, offset: 0 }], { duration: 120 });
+      const paths = [...s.querySelectorAll('path, polyline, line')];
+      paths.forEach(p => { p.setAttribute('pathLength', '1'); p.style.strokeDasharray = '1'; });
+      return paths.map(p => play(p, [{ strokeDashoffset: 1 }, { strokeDashoffset: 0 }], { duration: o.duration || 240, delay: o.delay || 0, fill: 'backwards' }))[0] || null;
+    },
+    // a .ring's arc sweeps from where it is to p (0 to 1) in 600; closing it (p 1) adds one beat
+    ring(el, p, o = {}) {
+      if (!el) return Promise.resolve();
+      const set = v => el.style.setProperty('--p', String(+v.toFixed(4)));
+      const from = parseFloat(el.style.getPropertyValue('--p') || getComputedStyle(el).getPropertyValue('--p')) || 0;
+      if (off() || Math.abs(p - from) < .001 || typeof requestAnimationFrame !== 'function') { set(p); return Promise.resolve(); }
+      return new Promise(res => {
+        const t0 = performance.now(), d = o.duration || ms('--m-moment', 600);
+        const step = t => {
+          const k = Math.min(1, (t - t0) / d);
+          set(from + (p - from) * (1 - Math.pow(1 - k, 3)));
+          if (k < 1) { requestAnimationFrame(step); return; }
+          if (p >= 1 && from < 1 && o.beat !== false) play(el, [{ scale: '1' }, { scale: '1.06' }, { scale: '1' }], { duration: 400 });
+          res();
+        };
+        requestAnimationFrame(step);
+      });
+    },
+    // the streak flame fills soft to amber (300) and settles from .85 on the pop spring, once (F5)
+    flame(el) {
+      const s = el && (el.matches && el.matches('svg') ? el : el.querySelector('svg'));
+      if (!s || off()) return null;
+      play(s.querySelector('.flame, path'), [{ fillOpacity: 0, offset: 0 }], { duration: 300 });
+      return play(s, [{ scale: '.85', offset: 0 }], { duration: ms('--spring-pop-d', 570), easing: curve('--spring-pop', EASE) });
+    },
+    // one small pop: .85 to 1 on the pop spring (a reward, never a control)
+    pop(el) { return off() || !el ? null : play(el, [{ scale: '.85', offset: 0 }], { duration: ms('--spring-pop-d', 570), easing: curve('--spring-pop', EASE) }); },
+    // a row glows amber, fades back, then leaves its list by glide (o.remove false keeps it) -> Promise
+    glow(row, o = {}) {
+      if (!row) return Promise.resolve();
+      const c = tok('--wash-2', '#FDEBD3');
+      const a = off() ? null : play(row, [{ backgroundColor: c, offset: .15 }, { backgroundColor: c, offset: .5 }], { duration: 900 });
+      return done(a).then(() => (o.remove === false || !row.parentNode ? undefined : glide(row.parentNode, () => row.remove())));
+    },
+  };
+  // .scrolled on a sticky bar while content slides under it (A1's scroll shadows): a top bar by default,
+  // o.edge 'bottom' (or data-scrolled="bottom") for a footer; o.root for a bar inside a scroll box
+  function scrolled(el, o = {}) {
+    if (!el || el._mScrolled || !el.isConnected || typeof IntersectionObserver !== 'function') return null;
+    const bottom = o.edge === 'bottom' || (el.dataset && el.dataset.scrolled === 'bottom');
+    const s = h('div', { 'aria-hidden': 'true', style: 'height: 1px; margin-bottom: -1px; pointer-events: none' });
+    el[bottom ? 'after' : 'before'](s);
+    const inset = (parseFloat(getComputedStyle(el)[bottom ? 'bottom' : 'top']) || 0) + 1;
+    const io = new IntersectionObserver(([e]) => {
+      const rb = e.rootBounds || { top: 0, bottom: innerHeight };
+      el.classList.toggle('scrolled', !e.isIntersecting && (bottom ? e.boundingClientRect.top >= rb.bottom - 1 : e.boundingClientRect.bottom <= rb.top + 1));
+    }, { root: o.root || null, rootMargin: bottom ? `0px 0px -${inset}px 0px` : `-${inset}px 0px 0px 0px` });
+    io.observe(s);
+    el._mScrolled = { stop() { io.disconnect(); s.remove(); delete el._mScrolled; } };
+    return el._mScrolled;
+  }
+  const motion = { off, kb, ok, enter, exit, stagger, flip: glide, vt, draw, once, spring, grow, calm };
+
   /* ------------------------------------------------------------ formatters */
   const MON = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
   const DOW = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+  const NONE = '\u2013';                // a missing value: an en dash (UI.NONE), never an em dash
   function toDate(d) {
     if (d instanceof Date) return d;
     if (typeof d === 'number') return new Date(d);
@@ -207,17 +491,17 @@
   const isoDay = d => { d = toDate(d); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`; };
   const dayDiff = (a, b) => Math.round((toDate(isoDay(b)) - toDate(isoDay(a))) / 864e5);
   function date(d, style = 'short') {
-    if (d === null || d === undefined || d === '') return '—';
+    if (d === null || d === undefined || d === '') return NONE;
     d = toDate(d);
-    if (isNaN(d)) return '—';
+    if (isNaN(d)) return NONE;
     const yr = d.getFullYear() !== new Date().getFullYear() ? `, ${d.getFullYear()}` : '';
     const mon = MON[d.getMonth()], dow = DOW[d.getDay()];
-    if (style === 'eyebrow') return `${dow}, ${mon} ${d.getDate()}${yr}`.toUpperCase();
+    if (style === 'eyebrow') return `${dow}, ${mon} ${d.getDate()}${yr}`;
     if (style === 'long') return `${dow.slice(0, 3)}, ${mon.slice(0, 3)} ${d.getDate()}${yr}`;
     return `${mon.slice(0, 3)} ${d.getDate()}${yr}`;
   }
   function dur(min) {
-    if (min === null || min === undefined || isNaN(min)) return '—';
+    if (min === null || min === undefined || isNaN(min)) return NONE;
     const m = Math.max(0, Math.round(min)), hr = Math.floor(m / 60), r = m % 60;
     return hr ? (r ? `${hr}h ${r}m` : `${hr}h`) : `${r}m`;
   }
@@ -226,9 +510,9 @@
     const p2 = n => String(n).padStart(2, '0');
     return sec >= 3600 ? `${Math.floor(sec / 3600)}:${p2(Math.floor(sec / 60) % 60)}:${p2(sec % 60)}` : `${Math.floor(sec / 60)}:${p2(sec % 60)}`;
   };
-  const num = n => n === null || n === undefined || n === '' || isNaN(n) ? '—' : Number(n).toLocaleString('en-US', { maximumFractionDigits: 1 });
+  const num = n => n === null || n === undefined || n === '' || isNaN(n) ? NONE : Number(n).toLocaleString('en-US', { maximumFractionDigits: 1 });
   function relTime(d) {
-    if (d === null || d === undefined || d === '') return '—';
+    if (d === null || d === undefined || d === '') return NONE;
     const t = toDate(d), s = Math.round((Date.now() - t) / 1000), a = Math.abs(s), fut = s < 0;
     const say = (n, u) => fut ? `in ${n} ${u}` : `${n} ${u} ago`;
     if (a < 45) return fut ? 'in a moment' : 'just now';
@@ -266,6 +550,11 @@
   });
 
   function copyText(text, o = {}) {
+    // o.button: the button says Copying, then Copied with a check (or Not copied) in place, no toast
+    if (o.button) {
+      return saving(o.button, () => copyText(text, { ...o, button: null, toast: false }).then(ok => { if (!ok) throw new Error('not copied'); return ok; }),
+        { busy: 'Copying', done: 'Copied', fail: o.fail || 'Not copied' }).then(() => true, () => false);
+    }
     const done = ok => { if (ok && o.toast !== false) toast(o.toast || 'Copied'); return ok; };
     const fallback = () => {
       const f = h('textarea', { readonly: true, class: 'sr', 'aria-hidden': 'true' });
@@ -370,6 +659,10 @@
     left = Math.max(m, Math.min(left, innerWidth - w - m));
     el.style.left = `${Math.round(left)}px`;
     el.style.top = `${Math.round(top)}px`;
+    // it grows from its trigger: the anchor's middle, on the side facing it (MOTION S3)
+    const below = top >= r.bottom;
+    el.dataset.side = below ? 'bottom' : 'top';
+    el.style.transformOrigin = `${Math.round(Math.max(0, Math.min(w, (r.left + r.right) / 2 - left)))}px ${below ? 0 : Math.round(ht)}px`;
   }
   function layer({ el, trigger, kind, restore, onClose }) {
     const L = {
@@ -381,16 +674,26 @@
         layers.splice(layers.indexOf(L), 1);
         L.open = false;
         const had = el.contains(doc.activeElement);
-        try { if (el.matches(':popover-open')) el.hidePopover(); } catch (_) {}
-        el.remove();
         if (trigger && trigger.setAttribute && trigger.hasAttribute('aria-expanded')) trigger.setAttribute('aria-expanded', 'false');
         const lost = had || doc.activeElement === doc.body || doc.activeElement === null;
         if (o.focus !== false && restore && restore.isConnected && (lost || o.focus === true)) restore.focus({ preventScroll: true });
+        // the state is closed (stack, focus, onClose); the node then fades out and goes (S3, S4)
+        leave(el, kind);
         if (onClose) onClose(o.value);
       },
     };
     layers.push(L);
     return L;
+  }
+  // a closed layer's node: inert at once, then its exit (a popover or menu shrinks to .97 toward its
+  // trigger in 120, a phone sheet drops, a tip fades in 90), then hidden and removed
+  function leave(el, kind) {
+    const gone = () => { try { if (el.matches(':popover-open')) el.hidePopover(); } catch (_) {} el.remove(); };
+    if (!el.isConnected) { gone(); return; }
+    el.inert = true;
+    el.style.pointerEvents = 'none';
+    const sheetLike = phone() && el.classList.contains('popover') && !el.classList.contains('anchored');
+    exit(el, kind === 'tip' ? 'fade' : sheetLike ? 'down' : 'pop', kind === 'tip' ? { duration: 90 } : {}).then(gone);
   }
   // opening a popover or menu from outside the open ones closes them
   const closeOthers = from => layers.filter(L => L.kind !== 'tip' && !(from instanceof Node && L.el.contains(from))).reverse().forEach(L => L.close({ focus: false }));
@@ -444,7 +747,8 @@
     const closed = new Promise(r => { resolve = r; });
     let value, closing = false, guarding = false;
     const apiObj = { el: d, body: bodyEl, foot: null, closed,
-      close(v) { value = v; closing = true; if (d.open) d.close(); },
+      // a key closes at once; otherwise the sheet leaves (S1: fades 4px down in 195; S2: drops from where it is)
+      close(v) { value = v; closing = true; if (!d.open) return; if (!ok()) d.setAttribute('data-m-instant', ''); d.removeAttribute('data-m-drag'); d.close(); },
       busy(on) { d.querySelectorAll('.sheet-foot > :is(button, a)').forEach(b => { if (on) b.setAttribute('aria-busy', 'true'); else b.removeAttribute('aria-busy'); }); },
       setTitle(t) { head.firstChild.textContent = t; } };
     const tryClose = async v => {
@@ -493,16 +797,46 @@
       const r = d.getBoundingClientRect();
       if (e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom) tryClose();
     });
-    // drag the handle down to close (a bottom sheet under 760px)
-    let y0 = null, dy = 0;
+    // a bottom sheet under 760px follows the finger from its handle (Vaul, DISCOVER-BROWSE 5): 1:1 down, damped
+    // up; the backdrop thins with the distance. Let go past 90px or with a flick (over .5px/ms) and it leaves
+    // from where it is; short and slow, it springs back carrying the finger's speed (MOTION S2)
+    let y0 = null, dy = 0, last = null, vy = 0;
+    const setDy = v => { d.style.setProperty('--m-dy', `${v}px`); d.style.setProperty('--m-bd', String(Math.max(0, 1 - Math.max(0, v) / (d.offsetHeight || 600)).toFixed(3))); };
     d.addEventListener('pointerdown', e => {
-      if (!phone() || o.dismiss === false || e.button > 0) return;
+      if (!phone() || o.dismiss === false || e.button > 0 || y0 !== null) return;
       const r = d.getBoundingClientRect();
       if (e.clientY - r.top > 48 || e.target.closest('button, a, input, select, textarea')) return;
-      y0 = e.clientY; dy = 0; d.setPointerCapture(e.pointerId);
+      y0 = e.clientY; dy = 0; vy = 0; last = { y: e.clientY, t: e.timeStamp };
+      d.setPointerCapture(e.pointerId);
+      d.getAnimations ? d.getAnimations().forEach(a => a.cancel()) : 0;
+      d.setAttribute('data-m-drag', '');
     });
-    d.addEventListener('pointermove', e => { if (y0 === null) return; dy = Math.max(0, e.clientY - y0); d.style.transform = dy ? `translateY(${dy}px)` : ''; });
-    const drop = () => { if (y0 === null) return; y0 = null; d.style.transform = ''; if (dy > 90) tryClose(); };
+    d.addEventListener('pointermove', e => {
+      if (y0 === null) return;
+      const raw = e.clientY - y0;
+      dy = raw >= 0 ? raw : -Math.max(0, 8 * (Math.log(1 - raw) - 2));     // up: friction, a few px at most
+      if (e.timeStamp > last.t) { vy = (e.clientY - last.y) / (e.timeStamp - last.t); last = { y: e.clientY, t: e.timeStamp }; }
+      setDy(dy);
+    });
+    const drop = () => {
+      if (y0 === null) return;
+      y0 = null;
+      if (dy > 90 || (vy > .5 && dy > 8)) {
+        d.removeAttribute('data-m-drag');            // the close transition starts from where the finger left it
+        tryClose().then(() => { if (d.open) settle(); });
+        return;
+      }
+      settle();
+    };
+    const settle = () => {
+      const from = dy;
+      const free = () => { d.removeAttribute('data-m-drag'); d.style.removeProperty('--m-bd'); };   // the backdrop eases back
+      d.style.removeProperty('--m-dy');
+      if (Math.abs(from) < 1 || off() || typeof d.animate !== 'function') { free(); return; }
+      const sp = spring(.37, 0, from > 0 ? Math.max(0, -vy * 1000 / from) : 0);
+      // the spring alone moves it back (data-m-drag keeps the CSS transition off meanwhile)
+      done(play(d, [{ transform: `translateY(${from}px)`, offset: 0 }], { duration: sp.duration, easing: linOk() ? sp.easing : EASE })).then(() => { if (y0 === null) free(); });
+    };
     d.addEventListener('pointerup', drop);
     d.addEventListener('pointercancel', drop);
     head.style.touchAction = 'none';
@@ -515,14 +849,26 @@
         if (o.dismiss !== false) tryClose();
         return;
       }
-      d.remove();
+      // the node stays for its exit (motion.css: a transition on display and overlay), then goes
+      d.inert = true;
+      let exitMs = 0;
+      try { if (!d.hasAttribute('data-m-instant') && CSS.supports('overlay', 'auto')) exitMs = phone() ? ms('--m-drawer-out', 375) : ms('--m-sheet-out', 195); } catch (_) {}
+      if (exitMs) setTimeout(() => d.remove(), exitMs + 60); else d.remove();
       const back = opener && opener.isConnected ? opener : backup;
       if (back && back.isConnected && typeof back.focus === 'function') back.focus({ preventScroll: true });
       if (o.onClose) o.onClose(value);
       resolve(value);
     });
+    // the head and foot carry .scrolled while the body has more above or below them (A1's scroll shadows)
+    const edge = () => {
+      head.classList.toggle('scrolled', bodyEl.scrollTop > 2);
+      if (apiObj.foot) apiObj.foot.classList.toggle('scrolled', bodyEl.scrollHeight - bodyEl.clientHeight - bodyEl.scrollTop > 2);
+    };
+    bodyEl.addEventListener('scroll', edge, { passive: true });
+    if (typeof ResizeObserver === 'function') new ResizeObserver(edge).observe(bodyEl);
     doc.body.append(d);
     d.showModal();
+    edge();
     const first = o.focus || bodyEl.querySelector('[autofocus]') || bodyEl.querySelector('input:not([type=hidden]):not(:disabled), select, textarea');
     (first || d).focus({ preventScroll: true });
     return apiObj;
@@ -582,6 +928,7 @@
     mount(el, trigger);
     if (trigger && trigger.setAttribute) { trigger.setAttribute('aria-expanded', 'true'); if (el.id) trigger.setAttribute('aria-controls', el.id); }
     L.reposition();
+    enter(el, !o.anchored && phone() ? 'up' : 'pop');
     if (o.focus !== false) {
       const f = role === 'listbox' ? el : (el.querySelector('[autofocus]') || focusables(el).find(x => !x.classList.contains('x')) || el);
       f.focus({ preventScroll: true });
@@ -700,6 +1047,7 @@
           if (it.close) L.close();
           return;
         }
+        if (ok(e)) b.setAttribute('data-m-picked', '');     // the pick shows on the row as the menu fades
         L.close();                  // focus goes back first, so what opens next returns there
         if (it.onClick) it.onClick(e);
       });
@@ -727,6 +1075,7 @@
     if (trigger) trigger.setAttribute('aria-expanded', 'true');
     L.reposition = () => place(el, trigger || o.anchor, { align: o.align });
     L.reposition();
+    enter(el, 'pop');                // opened by a key: at once (S4)
     const list = live();
     (o.last ? list[list.length - 1] : list[0] || el).focus({ preventScroll: true });
     return res;
@@ -746,40 +1095,117 @@
   };
 
   /* ------------------------------------------------------------ tooltip */
+  // the warm window (MOTION C11, Emil): for 500ms after a tip closes, the next one opens at once and unfaded
+  let tipShut = 0;
   function tooltip(el, text, o = {}) {
     let L = null, timer = 0;
     const tid = uid('tip');
     if (typeof text === 'string' && !el.getAttribute('aria-label') && !el.textContent.trim()) el.setAttribute('aria-label', text);
     const show = now => {
       clearTimeout(timer);
+      const warm = Date.now() - tipShut < 500;
       timer = setTimeout(() => {
         if (L || !el.isConnected) return;
         const t = typeof text === 'function' ? text() : text;
         if (!t) return;
         const tip = h('div', { class: 'tip', role: 'tooltip', id: tid }, t instanceof Node ? t : String(t), o.kbd && keycaps(o.kbd));
-        L = layer({ el: tip, trigger: el, kind: 'tip', onClose: () => { L = null; el.removeAttribute('aria-describedby'); } });
+        L = layer({ el: tip, trigger: el, kind: 'tip', onClose: () => { L = null; tipShut = Date.now(); el.removeAttribute('aria-describedby'); } });
         L.reposition = () => place(tip, el, { gap: 8, align: 'center' });
         mount(tip, el);
         if (el.getAttribute('aria-label') !== t) el.setAttribute('aria-describedby', tid);
         L.reposition();
-      }, now ? 0 : (o.delay ?? 350));
+        if (!warm) enter(tip, 'fade', { duration: 120 });
+      }, now || warm ? 0 : (o.delay ?? ms('--m-tip', 400)));
     };
     const hide = () => { clearTimeout(timer); if (L) L.close({ focus: false }); };
+    // touch has no hover: a tap on a trigger with no action of its own (a span, an icon, a figure)
+    // opens the tip in a popover; links, buttons, fields and anything clickable keep their action
+    const tap = e => {
+      if (e._kitTip || !(e.pointerType ? /touch|pen/.test(e.pointerType) : e.detail && coarse())) return;
+      if (el.closest(TAPPY) || el.querySelector(TAPPY) || getComputedStyle(e.target).cursor === 'pointer') return;
+      e._kitTip = true;                    // the innermost tip wins
+      setTimeout(() => {
+        if (e._tip || !el.isConnected) return;     // practice/builder.js shows its own tip on a tap
+        const t = typeof text === 'function' ? text() : text;
+        if (!t) return;
+        hide();
+        pop(el, h('div', { class: 'why-pop' }, t instanceof Node ? t.cloneNode(true) : h('p', { text: String(t) })), {
+          label: 'Details', onClose: () => { el.removeAttribute('aria-expanded'); el.removeAttribute('aria-controls'); },
+        });
+      });
+    };
     const on = [
       ['pointerenter', e => { if (e.pointerType === 'mouse') show(false); }],
       ['pointerleave', hide],
       ['focus', () => { try { if (el.matches(':focus-visible')) show(true); } catch (_) { show(true); } }],
       ['blur', hide],
+      ['click', tap],
     ];
     on.forEach(([k, f]) => el.addEventListener(k, f));
     return { hide, set(t) { text = t; }, destroy() { hide(); on.forEach(([k, f]) => el.removeEventListener(k, f)); } };
+  }
+  const TAPPY = 'a[href], button:not([aria-disabled="true"]), input, select, textarea, summary, label, [contenteditable], [data-fact], '
+    + '[role=button], [role=link], [role=tab], [role=option], [role=menuitem], [role=switch], [role=checkbox], [role=radio]';
+
+  /* ------------------------------------------------------------ why: the one "?" that explains */
+  // text: a string, a Node, a list of them (one paragraph each), or a function returning any of
+  // those or a Promise of them (a fetched Help answer). A string or a Node is also the hover tooltip.
+  const paras = t => [].concat(t ?? []).map(x => x instanceof Node ? x : h('p', { text: String(x) }));
+  function why(text, o = {}) {
+    const name = o.about ? `About ${o.about}` : 'More about this';
+    const b = h('button', { type: 'button', class: 'why-q' + (o.label ? ' word' : '') + (o.className ? ' ' + o.className : ''),
+      'aria-label': o.label ? null : name, 'aria-haspopup': 'dialog', 'aria-expanded': 'false', text: o.label || '?' });
+    if (typeof text === 'string' || text instanceof Node) tooltip(b, () => (findOpen(b, 'pop') ? null : typeof text === 'string' ? text : text.cloneNode(true)));
+    b.addEventListener('click', e => {
+      e.preventDefault();                  // it may sit in a label, a link or a clickable row
+      e.stopPropagation();
+      pop(b, (el, res) => {
+        const box = h('div', { class: 'why-pop' });
+        const t = typeof text === 'function' ? text() : text;
+        if (t && typeof t.then === 'function') {
+          box.append(h('p', { class: 'meta', text: 'Loading' }));
+          t.then(v => { box.replaceChildren(...paras(v)); res.reposition(); }, () => box.replaceChildren(...paras('Couldn’t load this. Try again.')));
+        } else box.append(...paras(t));
+        return box;
+      }, { label: name, anchored: o.anchored });
+    });
+    return b;
   }
 
   /* ------------------------------------------------------------ toasts */
   let toastHost = null;
   const shown = [], waiting = [];
+  // the stack (Sonner, DISCOVER-BROWSE 5): the newest in front and in the flow; each older one sits 14px
+  // higher at 5% smaller with its content hidden; hover or focus fans them out (each its own height and
+  // 14px apart) and holds every timer. The transforms are CSS transitions on --m-y and --m-s, so a stack
+  // that changes mid-move retargets (motion.css, "toast stack").
+  function stack() {
+    if (!toastHost) return;
+    const open = toastHost.hasAttribute('data-m-open');
+    let y = 0;
+    for (let i = shown.length - 1, n = 0; i >= 0; i--, n++) {
+      const t = shown[i].el;
+      t.dataset.mI = String(n);
+      t.toggleAttribute('data-m-back', n > 0);
+      t.style.setProperty('--m-y', `${open ? -y : -14 * n}px`);
+      t.style.setProperty('--m-s', String(open ? 1 : +(1 - .05 * n).toFixed(2)));
+      y += (shown[i].h || t.offsetHeight) + 14;
+    }
+  }
+  function fan(on) {
+    if (!toastHost || toastHost.hasAttribute('data-m-open') === on) return;
+    toastHost.toggleAttribute('data-m-open', on);
+    shown.forEach(e => (on ? e.pause() : e.run()));
+    stack();
+  }
   function toastRoot() {
-    if (!toastHost) toastHost = h('div', { class: 'toasts', 'aria-live': 'polite', role: 'region', 'aria-label': 'Notifications' });
+    if (!toastHost) {
+      toastHost = h('div', { class: 'toasts', 'aria-live': 'polite', role: 'region', 'aria-label': 'Notifications' });
+      toastHost.addEventListener('pointerenter', e => { if (e.pointerType === 'mouse') fan(true); });
+      toastHost.addEventListener('pointerleave', () => fan(toastHost.contains(doc.activeElement)));
+      toastHost.addEventListener('focusin', () => fan(true));
+      toastHost.addEventListener('focusout', e => { if (!toastHost.contains(e.relatedTarget)) fan(false); });
+    }
     const parent = topModal() || doc.body;
     if (toastHost.parentNode !== parent) {
       parent.append(toastHost);
@@ -794,11 +1220,27 @@
     if (typeof text === 'string' && !o.undo) shown.filter(e => e.text === text).forEach(e => e.close());
     const host = toastRoot();
     const el = h('div', { class: 'toast' }, icon(o.icon, 22), h('span', { class: 'toast-t' }, text instanceof Node ? text : String(text)));
-    let timer = 0, left = o.ms ?? (o.undo ? 6000 : 4000), since = 0;
+    let timer = 0, left = o.ms ?? (o.undo ? 6000 : 4000), since = 0, cd = null;
     const entry = {
-      el, undo: o.undo || null, text: typeof text === 'string' ? text : null,
-      close() { clearTimeout(timer); const i = shown.indexOf(entry); if (i >= 0) shown.splice(i, 1); el.remove(); },
+      el, undo: o.undo || null, text: typeof text === 'string' ? text : null, h: 0,
+      // closed at once (the stack closes up); the front one slides down and fades, an older one fades (S6)
+      close() {
+        clearTimeout(timer);
+        if (cd) cd.cancel();
+        const i = shown.indexOf(entry);
+        if (i < 0) return;
+        const front = i === shown.length - 1;
+        shown.splice(i, 1);
+        el.inert = true;
+        el.style.pointerEvents = 'none';
+        el.dataset.mI = 'out';
+        el.removeAttribute('data-m-back');
+        stack();
+        if (!shown.length) fan(false);
+        exit(el, front ? 'down' : 'fade', { duration: ms('--m-toast-out', 300), fade: true, force: true, easing: 'ease' }).then(() => el.remove());
+      },
       async doUndo() { entry.close(); try { await o.undo(); } catch (_) { toast('Couldn’t undo that.'); } },
+      run: () => run(), pause: () => pause(),
     };
     if (o.undo) el.append(h('button', { type: 'button', class: 'act', onclick: () => entry.doUndo() }, 'Undo', h('kbd', { class: 'kbd', text: 'Z' })));
     else if (o.action || o.href) {
@@ -808,14 +1250,16 @@
       el.append(act);
     }
     el.append(xBtn('Dismiss', () => entry.close()));
-    const run = () => { if (left > 0) { since = Date.now(); timer = setTimeout(() => entry.close(), left); } };
-    const pause = () => { clearTimeout(timer); if (since) left -= Date.now() - since; since = 0; };
-    el.addEventListener('pointerenter', pause);
-    el.addEventListener('pointerleave', run);
-    el.addEventListener('focusin', pause);
-    el.addEventListener('focusout', e => { if (!el.contains(e.relatedTarget)) run(); });
+    // an Undo toast carries its timer as a 2px line running out; it holds with the timer (S6)
+    if (o.undo && left > 0) cd = play(el.appendChild(h('i', { class: 'm-cd', 'aria-hidden': 'true' })), [{ transform: 'scaleX(1)' }, { transform: 'scaleX(0)' }], { duration: left, easing: 'linear', fill: 'forwards' });
+    if (cd) cd.pause();
+    const run = () => { if (left > 0 && !since && shown.includes(entry) && !(toastHost && toastHost.hasAttribute('data-m-open'))) { since = Date.now(); timer = setTimeout(() => entry.close(), left); if (cd) cd.play(); } };
+    const pause = () => { clearTimeout(timer); if (since) left -= Date.now() - since; since = 0; if (cd) cd.pause(); };
     host.append(el);
+    entry.h = el.offsetHeight;
     shown.push(entry);
+    stack();
+    enter(el, 'up', { duration: ms('--m-toast', 400), fade: true, easing: 'ease', force: true });   // a toast is not what the key moved
     while (shown.length > 3) shown[0].close();
     run();
     return entry;
@@ -826,6 +1270,49 @@
     t.doUndo();
     return true;
   };
+
+  /* ------------------------------------------------------------ saving: Save, Saving, Saved in place */
+  let sayEl = null;
+  function announce(text) {                // the toasts' polite live region, with no toast drawn
+    const host = toastRoot();
+    if (!sayEl) sayEl = h('span', { class: 'sr' });
+    if (sayEl.parentNode !== host) host.append(sayEl);
+    sayEl.textContent = '';
+    setTimeout(() => { sayEl.textContent = text; }, 50);
+  }
+  function saving(btn, work, o = {}) {
+    if (btn._saving) return btn._saving;               // a second press while it runs waits for the same work
+    clearTimeout(btn._savingT);
+    if (!btn._savingKeep) btn._savingKeep = [...btn.childNodes];
+    if (!btn._savingW && btn.offsetWidth) { btn.style.minWidth = `${btn.offsetWidth}px`; btn._savingW = true; }
+    const show = (state, text) => {
+      btn.dataset.saving = state;
+      // busy: A1's .spin before the label (the spinner turns after 300ms and the label stays); done: a check that draws
+      btn.replaceChildren(...(state === 'done' ? [icon('check', 16)] : state === 'busy' ? [h('span', { class: 'spin', 'aria-hidden': 'true' })] : []),
+        h('span', { class: 'saving-l', text }));
+      if (state === 'done') fx.check(btn.firstChild);         // the check draws (C3)
+    };
+    const back = ms => {
+      btn._savingT = setTimeout(() => { delete btn.dataset.saving; btn.replaceChildren(...btn._savingKeep); btn._savingKeep = null; }, ms);
+    };
+    show('busy', o.busy || 'Saving');
+    btn.setAttribute('aria-busy', 'true');
+    btn._saving = (async () => {
+      try {
+        const v = await (typeof work === 'function' ? work() : work);
+        show('done', o.done || 'Saved');
+        announce(o.done || 'Saved');
+        back(1200);
+        return v;
+      } catch (e) {
+        show('fail', o.fail || 'Couldn’t save');
+        announce(o.fail || 'Couldn’t save');
+        back(2400);
+        throw e;
+      } finally { btn.removeAttribute('aria-busy'); btn._saving = null; }
+    })();
+    return btn._saving;
+  }
 
   /* ------------------------------------------------------------ banner */
   const BANNER_ORDER = ['retired', 'offline', 'storage', 'first', 'nudge'];
@@ -860,6 +1347,74 @@
     (top.o.host || doc.querySelector('main') || doc.body).prepend(bannerEl);
   }
 
+  /* ------------------------------------------------------------ sliding indicator (tabs, seg)
+     One mark (.tab-ind underline, .seg-ind thumb) that moves to the selected item. It shows only
+     while every item sits on one line and ui.css styles it (its --ind sentinel); a wrapped row,
+     a hidden control or missing CSS keeps the static mark ([data-ind] on the control hides that).
+     A click slides it 200ms; keys, set() and resizes move it at once. Returns move(slide).
+     clip (UI.seg / UI.tabs {mark: 'clip'}, Paco's exclusion tabs): a copy of the row in the active colours
+     (orange fill, dark text) lies over it, clipped to the picked item; the clip slides, so the text turns
+     dark exactly under the moving edge. motion.css styles .m-clip. */
+  function slideMark(el, cls, btns, isOn, thumb, clip) {
+    if (typeof ResizeObserver !== 'function') return () => {};
+    const ind = h('span', { class: cls, 'aria-hidden': 'true', style: 'position:absolute' });
+    el.append(ind);                        // last: page rules count the options with :nth-child
+    let ov = null;
+    if (clip) {
+      el.setAttribute('data-m-clip', '');
+      ov = el.cloneNode(false);
+      ['id', 'aria-label', 'data-m-clip', 'data-ind'].forEach(a => ov.removeAttribute(a));
+      ov.classList.add('m-clip');
+      ov.setAttribute('aria-hidden', 'true');
+      ov.inert = true;
+      el.append(ov);
+    }
+    const paintClip = (b, run) => {
+      const sig = btns.map(x => `${x.textContent}${x.hidden ? 0 : 1}`).join('|');
+      if (ov._sig !== sig) {
+        ov._sig = sig;
+        ov.replaceChildren(...btns.map(x => {
+          const c = x.cloneNode(true);
+          [c, ...c.querySelectorAll('[id]')].forEach(y => y.removeAttribute('id'));
+          ['aria-checked', 'aria-selected', 'aria-pressed', 'aria-controls', 'tabindex', 'href'].forEach(a => c.removeAttribute(a));
+          return c;
+        }));
+      }
+      ov.style.width = `${el.scrollWidth}px`;
+      ov.style.transition = run ? '' : 'none';
+      ov.style.clipPath = `inset(${b.offsetTop}px ${ov.offsetWidth - b.offsetLeft - b.offsetWidth}px ${ov.offsetHeight - b.offsetTop - b.offsetHeight}px ${b.offsetLeft}px round 8px)`;
+    };
+    let ok = null, slide = false, last = '', slidAt = 0;
+    const place = () => {
+      if (!ind.isConnected) return;
+      if (ok === null) ok = !!getComputedStyle(ind).getPropertyValue('--ind').trim();
+      if (!ok) { ro.disconnect(); ind.remove(); return; }
+      const b = btns.find(isOn), shown = btns.filter(x => x.offsetWidth);
+      const flat = b && b.offsetWidth && shown.every(x => Math.abs(x.offsetTop - shown[0].offsetTop) < 2);
+      if (!flat) { el.removeAttribute('data-ind'); slide = false; last = ''; return; }
+      // a resize that moves nothing (the picked option turning bold, a count) must not cut a slide in flight
+      const at = `${b.offsetWidth}|${b.offsetLeft}|${thumb ? `${b.offsetHeight}|${b.offsetTop}` : ''}${ov ? btns.map(x => x.textContent).join('|') : ''}`;
+      if (!slide && at === last && el.hasAttribute('data-ind')) return;
+      last = at;
+      // the picked option turning bold widens it a frame after the click: that resize keeps the slide going
+      // (the transition retargets) instead of cutting it with transition: none
+      const run = (slide || Date.now() - slidAt < 250) && el.hasAttribute('data-ind') && !off();
+      if (slide) slidAt = Date.now();
+      slide = false;
+      ind.style.transition = run ? '' : 'none';
+      ind.style.width = `${b.offsetWidth}px`;
+      if (thumb) ind.style.height = `${b.offsetHeight}px`;
+      ind.style.transform = `translate(${b.offsetLeft}px, ${thumb ? b.offsetTop : 0}px)`;
+      el.setAttribute('data-ind', '');
+      if (ov) paintClip(b, run);
+      if (!run) void ind.offsetWidth;      // settle here, so the next click slides from this place
+    };
+    const ro = new ResizeObserver(() => place());
+    ro.observe(el);
+    btns.forEach(b => ro.observe(b));      // a count or the font swap changes a width, not the row
+    return s => { slide = !!s; place(); };
+  }
+
   /* ------------------------------------------------------------ choices: seg, chips */
   const normOpt = x => typeof x === 'object' && x !== null ? x : { value: x, label: String(x) };
   function choices(cls, host, options, o = {}) {
@@ -878,6 +1433,7 @@
     });
     el.append(...btns);
     const isOn = b => multi ? value.has(b._opt.value) : value === b._opt.value;
+    const move = cls === 'seg' && !multi ? slideMark(el, 'seg-ind', btns, isOn, true, o.mark === 'clip') : () => {};
     function sync() {
       btns.forEach(b => {
         b.setAttribute(multi ? 'aria-pressed' : 'aria-checked', String(isOn(b)));
@@ -894,6 +1450,7 @@
       if (multi) value.has(b._opt.value) ? value.delete(b._opt.value) : value.add(b._opt.value);
       else { if (value === b._opt.value) return; value = b._opt.value; }
       sync();
+      move(!fromKey);
       if (o.onChange) o.onChange(multi ? [...value] : value, b._opt);
     }
     el.addEventListener('keydown', e => {
@@ -916,8 +1473,8 @@
     return {
       el, help, btns,
       get value() { return multi ? [...value] : value; },
-      set(v, silent) { value = multi ? new Set([].concat(v ?? [])) : v; sync(); if (!silent && o.onChange) o.onChange(multi ? [...value] : value); },
-      count(v, n) { const b = btns.find(x => x._opt.value === v); if (b) { const c = b.querySelector('.n'); c.textContent = fmtN(n); c.hidden = n === null || n === undefined; } },
+      set(v, silent) { value = multi ? new Set([].concat(v ?? [])) : v; sync(); move(false); if (!silent && o.onChange) o.onChange(multi ? [...value] : value); },
+      count(v, n) { const b = btns.find(x => x._opt.value === v); if (b) { const c = b.querySelector('.n'); c.textContent = fmtN(n); c.hidden = n === null || n === undefined; move(false); } },
       disable(v, why) { const opt = opts.find(x => x.value === v); if (opt) { opt.disabled = !!why || why === ''; opt.why = typeof why === 'string' ? why : ''; sync(); } },
     };
   }
@@ -944,16 +1501,18 @@
         p.setAttribute('aria-labelledby', b.id);
         if (!p.hasAttribute('tabindex')) p.tabIndex = 0;
       }
-      if (!t.href) b.addEventListener('click', () => select(t.id, false));
+      if (!t.href) b.addEventListener('click', () => select(t.id, false, false, true));
       return b;
     });
     el.append(...btns);
+    const move = slideMark(el, 'tab-ind', btns, b => b._t.id === value, false, o.mark === 'clip');
     function count(id, n) {
       const b = btns.find(x => x._t.id === id);
       if (!b) return;
       const c = b.querySelector('.n');
       c.textContent = fmtN(n);
       c.hidden = n === null || n === undefined;
+      if (move) move(false);
     }
     list.forEach(t => count(t.id, (o.counts && o.counts[t.id] !== undefined) ? o.counts[t.id] : t.n));
     function sync() {
@@ -965,11 +1524,12 @@
         if (p) p.hidden = !on;
       });
     }
-    function select(id, focus, silent) {
+    function select(id, focus, silent, click) {
       if (!ok(id)) return;
       const changed = id !== value;
       value = id;
       sync();
+      move(click);
       if (focus) btns.find(b => b._t.id === id).focus();
       if (o.param && changed) {
         const u = new URL(location.href);
@@ -1140,6 +1700,8 @@
     const isSet = f => { const v = state[f.key]; return Array.isArray(v) ? v.length > 0 : String(v ?? '') !== String(dflt(f) ?? ''); };
     const el = h('div', { class: 'filters', role: 'search', 'aria-label': o.label || 'Filters' });
     const keep = o.sheet === false ? ' filters-keep' : '';
+    // o.keep: keys that stay in the row on a phone too; every control carries data-fkey, so a page can pick by key
+    const kept = f => (o.keep || []).includes(f.key);
     const clearBtn = h('button', { type: 'button', class: 'quiet' + keep, text: o.clear || 'Clear', onclick: () => api_.clear() });
     const openBtn = h('button', { type: 'button', class: 'btn filters-open', 'aria-haspopup': 'dialog', hidden: o.sheet === false }, icon('filter'), h('span'));
     function commit(key) {
@@ -1166,13 +1728,14 @@
         const inp = h('input', { type: 'search', class: 'field sm', placeholder: f.placeholder || f.label || 'Search', 'aria-label': f.label || 'Search' });
         let t = 0;
         inp.addEventListener('input', () => { clearTimeout(t); t = setTimeout(() => change(f.key, inp.value.trim()), 250); });
-        el.append(h('span', { class: 'filters-keep filters-search' }, inp));
+        el.append(h('span', { class: 'filters-keep filters-search', 'data-fkey': f.key }, inp));
         ctl[f.key] = () => { if (doc.activeElement !== inp) inp.value = state[f.key] || ''; };
       } else if (f.type === 'pills') {
         const nOf = x => (counts[f.key] && counts[f.key][x.value] !== undefined ? counts[f.key][x.value] : x.n);
         const opts = f.options.map(normOpt);
         const c = chips(null, opts.map(x => ({ ...x, n: nOf(x) })), { multi: true, value: state[f.key], label: f.label, onChange: v => change(f.key, v) });
-        if (keep) c.el.classList.add('filters-keep');
+        if (keep || kept(f)) c.el.classList.add('filters-keep');
+        c.el.dataset.fkey = f.key;
         el.append(c.el);
         ctl[f.key] = () => { c.set(state[f.key], true); opts.forEach(x => c.count(x.value, nOf(x))); };   // the same counts as the phone sheet
       } else {
@@ -1181,7 +1744,8 @@
           multi: f.type === 'multi', counts: counts[f.key], default: f.type === 'sort' ? dflt(f) : f.default, noAll: f.type === 'sort',
           all: f.all, plain: f.type === 'sort', value: state[f.key],
           onChange: v => { if (isDate && v === 'custom') customDate(d.el, f); else change(f.key, v); } });
-        if (keep) d.el.classList.add('filters-keep');
+        if (keep || kept(f)) d.el.classList.add('filters-keep');
+        d.el.dataset.fkey = f.key;
         el.append(d.el);
         ctl[f.key] = () => {
           d.counts(counts[f.key]);
@@ -1230,7 +1794,7 @@
         }, { label: o.title || 'Filters', anchored: true, onClose: () => moved.forEach(x => el.insertBefore(x, openBtn)) });
         return;
       }
-      sheet({ title: o.title || 'Filters', size: 'm', body: b => { body = b; fill(); },
+      sheet({ title: o.title || 'Filters', size: 'm', className: 'filters-sheet', body: b => { body = b; fill(); },
         actions: [{ label: o.clear || 'Clear', quiet: true, onClick: () => { api_.clear(); fill(); return false; } }, { label: 'Show results', primary: true }] });
     });
     const api_ = {
@@ -1452,6 +2016,7 @@
     };
     set(o.text, o.n);
     put(host, el);
+    scrolled(el, { edge: 'bottom' });      // stuck over the list: .scrolled while rows slide under it
     return { el, set };
   }
   function selbar(host, o = {}) {
@@ -1462,23 +2027,62 @@
   /* ------------------------------------------------------------ tile, meter, skeleton, card error */
   // the count runs once, when the tile first shows. The real number stays in the text (screen
   // readers, print, anything reading textContent); the moving one is drawn over it (.counting in ui.css)
-  function countUp(el, to, fmt) {
+  function countUp(el, to, fmt, from = 0) {
     el.textContent = fmt(to);
-    if (still() || !Number.isInteger(to) || to <= 0 || typeof IntersectionObserver !== 'function') return;
+    if (off() || !Number.isInteger(to) || to <= from || typeof IntersectionObserver !== 'function') return;
     el.classList.add('counting');
-    el.dataset.n = fmt(0);
+    el.dataset.n = fmt(from);
     const io = new IntersectionObserver(es => {
       if (!es.some(e => e.isIntersecting)) return;
       io.disconnect();
       const t0 = performance.now();
       const step = t => {
         const k = Math.min(1, (t - t0) / 600);
-        if (k < 1) { el.dataset.n = fmt(Math.round(to * (1 - Math.pow(1 - k, 3)))); requestAnimationFrame(step); }
+        if (k < 1) { el.dataset.n = fmt(Math.round(from + (to - from) * (1 - Math.pow(1 - k, 3)))); requestAnimationFrame(step); }
         else { el.classList.remove('counting'); delete el.dataset.n; }
       };
       requestAnimationFrame(step);
     });
     io.observe(el);
+  }
+  // a figure that changes on screen rolls (never on load: the caller rolls only a change). Only the
+  // changed digits move: on a rise the new digit comes up from below and the old one leaves upward, on a
+  // fall the other way (R14, the demo's D6), --m-roll on the no-overshoot --spring. The new text is set at
+  // once, in the element's accessible text; the moving copy over it is aria-hidden. Plain text under
+  // reduced motion or before ui.css styles .roll.
+  let rollCSS = null;
+  function roll(el, to, o = {}) {
+    if (el._roll) el._roll();              // one still running ends where it was going
+    const text = typeof to === 'number' ? (o.format || num)(to) : String(to ?? '');
+    const from = el.textContent, shift = from.length - text.length, moving = [];
+    const val = t => +String(t).replace(/[^\d]/g, '') || 0;
+    const dir = (typeof to === 'number' && o.from !== undefined ? to >= o.from : val(text) >= val(from)) ? 1 : -1;
+    const cols = [...text].map((ch, i) => {
+      const was = from[i + shift];
+      if (!/\d/.test(ch) || ch === was) return h('span', { text: ch });
+      const nw = h('span', { text: ch, style: 'display: block' });
+      const old = h('span', { text: /\d/.test(was || '') ? was : '', style: 'display: block; position: absolute; left: 0; top: 0' });
+      moving.push([nw, old]);
+      return h('span', { class: 'roll-c', style: 'position: relative' }, nw, old);
+    });
+    if (rollCSS === null && doc.body) {
+      const p = doc.body.appendChild(h('span', { class: 'roll', hidden: true }));
+      rollCSS = getComputedStyle(p).position === 'absolute';
+      p.remove();
+    }
+    if (!moving.length || !rollCSS || off() || !el.getClientRects().length || typeof el.animate !== 'function') { el.textContent = text; return; }
+    const over = h('span', { class: 'roll', 'aria-hidden': 'true' }, cols);
+    const wrap = h('span', { class: 'roll-w rolling' }, h('span', { class: 'roll-t', text }), over);
+    el.replaceChildren(wrap);
+    const easing = curve('--spring', EASE), duration = ms('--m-roll', 600);
+    const anims = moving.flatMap(([nw, old]) => [
+      nw.animate([{ transform: `translateY(${.6 * dir}em)`, opacity: 0 }, { transform: 'none', opacity: 1 }], { duration, easing, fill: 'forwards' }),
+      old.animate([{ transform: 'none', opacity: 1 }, { transform: `translateY(${-.6 * dir}em)`, opacity: 0 }], { duration, easing, fill: 'forwards' }),
+    ]);
+    // the wrapper stays: swapping the text node again would make a live region say it twice
+    const end = () => { if (el._roll === end) el._roll = null; anims.forEach(x => x.cancel()); over.remove(); wrap.classList.remove('rolling'); };
+    el._roll = end;
+    Promise.all(anims.map(x => x.finished)).then(end, () => {});
   }
   function spark(values, label) {
     const v = values.map(Number).filter(x => isFinite(x));
@@ -1504,11 +2108,12 @@
       const missing = o.value === null || o.value === undefined || o.value === '';
       const valSpan = h('span');
       vEl.replaceChildren(valSpan, o.unit && !missing ? h('small', { text: ` ${o.unit}` }) : '');
-      if (missing) valSpan.textContent = '—';
-      else if (first && typeof o.value === 'number' && o.countUp !== false) countUp(valSpan, o.value, fmt);
+      if (missing) valSpan.textContent = NONE;
+      // counting up is opt-in (countUp: true): nothing animates on load for its own sake
+      else if (first && typeof o.value === 'number' && o.countUp === true) countUp(valSpan, o.value, fmt, o.countFrom || 0);
       else valSpan.textContent = fmt(o.value);
       first = false;
-      if (o.fact && tag === 'div') fact(vEl, o.fact, { label: o.label, value: missing ? '—' : fmt(o.value) + (o.unit ? ` ${o.unit}` : '') });
+      if (o.fact && tag === 'div') fact(vEl, o.fact, { label: o.label, value: missing ? NONE : fmt(o.value) + (o.unit ? ` ${o.unit}` : '') });
       subEl.textContent = missing && o.missing !== false ? (o.missing || o.sub || '') : (o.sub || '');
       subEl.hidden = !subEl.textContent;
       const d = o.delta;
@@ -1532,18 +2137,40 @@
     const k = h('span', { class: 'meter-k', id: lid }), n = h('span', { class: 'meter-n' }), fill = h('i'), tick = h('b', { hidden: true });
     const bar = h('div', { class: 'meter-bar', role: 'meter', 'aria-labelledby': lid, 'aria-valuemin': '0' }, fill, tick);
     const el = h('div', { class: 'meter' + (o.ink ? ' ink' : '') + (o.lg ? ' lg' : '') }, k, n, bar);
+    let first = true;
+    // a change (never the first paint) moves: the fill grows to its new place (motion.css, a clip-path
+    // transition), new ticks light left to right 20ms apart (MOTION D3)
     function set(p = {}) {
       Object.assign(o, p);
       const max = o.max || 0, v = o.value || 0;
       k.textContent = o.label || '';
       n.textContent = o.text || (max ? `${fmtN(v)} of ${fmtN(max)}${o.unit ? ' ' + o.unit : ''}` : `${fmtN(v)}${o.unit ? ' ' + o.unit : ''}`);
       bar.style.setProperty('--p', max ? Math.min(1, v / max) : 0);
+      // ticks: n blocks, the whole ones done lit (floor; all of them once the goal is met); tickStates
+      // names each block instead (done, partial, today, missed, off; anything else is a plain block)
+      const states = Array.isArray(o.tickStates) ? o.tickStates : null;
+      el.classList.toggle('ticks', !!(o.ticks || states));
+      if (o.ticks || states) {
+        const t = Math.max(1, Math.round(o.ticks || states.length)), lit = max ? (v >= max ? t : Math.floor(v * t / max + 1e-9)) : 0;
+        const on = j => (states ? states[j] === 'done' : j < lit);
+        let blocks = [...bar.querySelectorAll(':scope > i')];
+        const keep = !first && blocks.length === t && fill.parentNode !== bar, step = keep && ok();
+        if (!keep) { blocks = Array.from({ length: t }, () => h('i')); bar.replaceChildren(...blocks, tick); }
+        let k = 0;      // blocks that light now follow each other 20ms apart
+        blocks.forEach((x, j) => {
+          const lights = step && on(j) && !x.hasAttribute('data-on');
+          x.toggleAttribute('data-on', on(j));
+          if (states && states[j]) x.dataset.s = states[j]; else delete x.dataset.s;
+          x.style.transitionDelay = lights ? `${k++ * 20}ms` : '';
+        });
+      } else if (fill.parentNode !== bar) bar.replaceChildren(fill, tick);
       bar.setAttribute('aria-valuemax', String(max || 1));
       bar.setAttribute('aria-valuenow', String(Math.min(v, max || v)));
       bar.setAttribute('aria-valuetext', n.textContent);
-      el.classList.toggle('done', !!max && v >= max);
+      el.classList.toggle('done', o.done !== false && !!max && v >= max);     // done: false where passing max is no win (a pace)
       tick.hidden = o.tick === undefined || o.tick === null;
       if (!tick.hidden) bar.style.setProperty('--t', max ? o.tick / max : o.tick);
+      first = false;
     }
     set();
     put(host, el);
@@ -1633,18 +2260,20 @@
         };
         data = data.map((r, i) => [r, i]).sort((a, b) => f(a[0], b[0]) || a[1] - b[1]).map(x => x[0]);   // stable
       }
-      draw();
+      // a sort the student asked for: the rows glide to their new places (L3, at most 40 moved)
+      if (silent) draw(); else glide(tbody, draw, { key: k => k._mk || k, enter: false });
     }
     function draw() {
       ths.forEach((th, i) => { if (sort && cols[i].key === sort.key) th.setAttribute('aria-sort', sort.dir === 'desc' ? 'descending' : 'ascending'); else th.removeAttribute('aria-sort'); });
       if (!data.length) { tbody.replaceChildren(h('tr', {}, h('td', { colspan: cols.length, class: 'empty-cell', text: o.empty || 'Nothing here yet.' }))); edges(); return; }
       tbody.replaceChildren(...data.map(r => {
         const row = h('tr', { class: o.you && o.you(r) ? 'you' : null });
+        row._mk = r;
         cols.forEach((c, i) => {
           const v = c.render ? c.render(r) : val(c, r);
           row.append(h(c.header ? 'th' : 'td', { class: [c.num && 'n', ...stickCls(c, i)].filter(Boolean).join(' ') || null,
             scope: c.header ? 'row' : null, title: c.cellTitle ? c.cellTitle(r) : null },
-            v instanceof Node ? v : (v === null || v === undefined || v === '' ? '—' : (typeof v === 'number' ? num(v) : String(v)))));
+            v instanceof Node ? v : (v === null || v === undefined || v === '' ? NONE : (typeof v === 'number' ? num(v) : String(v)))));
         });
         if (o.onRow) {
           row.tabIndex = 0;
@@ -2006,11 +2635,28 @@
       doc.querySelectorAll('.avatar[data-self]').forEach(a => a.dispatchEvent(new Event('satf:photo')));
     },
   };
-  function domainMastery(p) {
-    const d = p.domains;
+  // R&W domains in Bluebook's order, as /api/shell sends them: each shares the Math corner in its place
+  const RW_DOMAIN_KEYS = [['Craft and Structure'], ['Information and Ideas'], ['Standard English Conventions'], ['Expression of Ideas']];
+  function fourOf(d, keys) {
     if (!d) return [0, 0, 0, 0];
     if (Array.isArray(d)) return [0, 1, 2, 3].map(i => +(d[i] && typeof d[i] === 'object' ? d[i].mastery : d[i]) || 0);
-    return DOMAIN_KEYS.map(keys => { const k = keys.find(x => d[x] !== undefined); const v = k ? d[k] : 0; return +(v && typeof v === 'object' ? v.mastery : v) || 0; });
+    return keys.map(ks => { const k = ks.find(x => d[x] !== undefined); const v = k ? d[k] : 0; return +(v && typeof v === 'object' ? v.mastery : v) || 0; });
+  }
+  // p.domains: four Math masteries (a list or by name), or {math, rw}: then each corner is the mean of the
+  // sections that have begun, so the mark grows with both and a Math-only start does not shrink it
+  function domainMastery(p) {
+    const d = p.domains;
+    if (!d || Array.isArray(d) || !(d.math || d.rw)) return fourOf(d, DOMAIN_KEYS);
+    const parts = [fourOf(d.math, DOMAIN_KEYS), fourOf(d.rw, RW_DOMAIN_KEYS)].filter(ms => ms.some(m => m > 0));
+    return parts.length ? [0, 1, 2, 3].map(i => parts.reduce((s, ms) => s + ms[i], 0) / parts.length) : [0, 0, 0, 0];
+  }
+  // the mark's spoken line: each section's domains by name, R&W only once it has begun
+  function markSay(p) {
+    const d = p.domains;
+    const line = (keys, ms) => keys.map((k, i) => `${k[0]} ${masteryWord(ms[i], ms[i] > 0 ? 1 : 0)}`).join(' · ');
+    if (!d || Array.isArray(d) || !(d.math || d.rw)) return line(DOMAIN_KEYS, domainMastery(p));
+    const rw = fourOf(d.rw, RW_DOMAIN_KEYS);
+    return `Math: ${line(DOMAIN_KEYS, fourOf(d.math, DOMAIN_KEYS))}` + (rw.some(m => m > 0) ? `. Reading and Writing: ${line(RW_DOMAIN_KEYS, rw)}` : '');
   }
   function livingMark(ms, plain) {
     const s = sv('svg', { viewBox: '0 0 100 100', 'aria-hidden': 'true', class: 'mark-live' });
@@ -2046,15 +2692,17 @@
       if (choice === 'mark') {
         el.replaceChildren(livingMark(ms, false));
         el.classList.add('mark');
-        const say = DOMAIN_KEYS.map((k, i) => `${k[0]} ${masteryWord(ms[i], ms[i] > 0 ? 1 : 0)}`).join(' · ');
+        const say = markSay(p);
         el.setAttribute('aria-label', say);
         el.title = say;
         return;
       }
-      if (choice !== 'initial' && UI.glyph && (!UI.TOPIC || UI.TOPIC[choice])) {
+      // a Math skill's own glyph; an R&W skill (no glyph of its own yet) draws the shared default one
+      if (choice !== 'initial' && UI.glyph && (!UI.TOPIC || UI.TOPIC[choice] || (UI.RW_SKILL && UI.RW_SKILL[choice]))) {
         el.replaceChildren(UI.glyph(choice));
         if (p.ring === true || (Array.isArray(p.ring) && p.ring.includes(choice))) el.setAttribute('data-ring', '');
-        el.setAttribute('aria-label', p.name ? `${p.name}, ${(UI.TOPIC && UI.TOPIC[choice] && UI.TOPIC[choice].short) || choice}` : choice);
+        const named = UI.topicName ? UI.topicName(choice) : (UI.TOPIC && UI.TOPIC[choice] && UI.TOPIC[choice].short) || choice;
+        el.setAttribute('aria-label', p.name ? `${p.name}, ${named}` : named);
         return;
       }
       el.replaceChildren(initial);
@@ -2233,7 +2881,14 @@
     e.preventDefault();
     openFact(el);
   });
-  const decorateAll = root => { if (root.querySelectorAll) root.querySelectorAll('[data-fact]:not([data-fact-ready])').forEach(decorate); };
+  // [data-scrolled] (a sticky bar; "bottom" for a footer) gets .scrolled wired as it lands
+  const decorateAll = root => {
+    if (!root.querySelectorAll) return;
+    root.querySelectorAll('[data-fact]:not([data-fact-ready])').forEach(decorate);
+    if (root.matches && root.matches('[data-scrolled]')) scrolled(root);
+    root.querySelectorAll('[data-scrolled]').forEach(x => scrolled(x));
+  };
+
   if (typeof MutationObserver === 'function') {
     const mo = new MutationObserver(ms => ms.forEach(m => {
       if (m.type === 'attributes') { if (m.target.dataset.fact !== undefined) decorate(m.target); }
@@ -2243,12 +2898,33 @@
     if (doc.body) start(); else doc.addEventListener('DOMContentLoaded', start);
   }
 
+  /* ------------------------------------------------------------ page entry (M1): once per visit
+     A page marks the container of its top blocks with data-m="stagger" (and the block holding its primary
+     with data-m-now). On a fresh visit (not a reload, not back or forward, not a bfcache restore) its
+     children rise as soon as they are there: at once for markup, or when the page first fills it, within
+     3s of the page being shown (a prerendered page waits until it is). Later repaints never replay. */
+  (() => {
+    let fresh = true;
+    try { const n = performance.getEntriesByType('navigation')[0]; fresh = !n || n.type === 'navigate' || n.type === 'prerender'; } catch (_) {}
+    if (!fresh || !doc.body) return;
+    const scan = () => doc.querySelectorAll('[data-m="stagger"]:not([data-m-done])').forEach(x => { if (x.children.length) stagger(x); });
+    const start = () => {
+      scan();
+      if (typeof MutationObserver !== 'function') return;
+      const mo = new MutationObserver(scan);
+      mo.observe(doc.body, { childList: true, subtree: true });
+      setTimeout(() => mo.disconnect(), 3000);
+    };
+    if (UI.whenVisible) UI.whenVisible(start); else start();
+  })();
+
   /* ------------------------------------------------------------ empty states (G12, R55) */
   function empty(host, o = {}) {
     const el = h('div', { class: 'empty' });
     if (o.sample) {
       const s = typeof o.sample === 'function' ? o.sample() : o.sample;
-      el.append(h('div', { class: 'empty-sample', 'aria-hidden': 'true', inert: '' }, s, o.tag === false ? null : h('span', { class: 'badge soft', text: o.tag || 'Example' })));
+      // the tag first: its own line above the sample, never over what the sample draws
+      el.append(h('div', { class: 'empty-sample', 'aria-hidden': 'true', inert: '' }, o.tag === false ? null : h('span', { class: 'badge soft', text: o.tag || 'Example' }), s));
     }
     if (o.text) el.append(h('p', { class: 'empty-text', text: o.text }));
     const a = o.action && (o.answered ?? UI.answered) === 0 ? empty.START : o.action;   // the action follows the learner (R55)
@@ -2270,7 +2946,9 @@
     }
     return put(host, el);
   }
-  empty.START = { label: 'Start with 8', cost: 'about 10 min', body: { source: 'start' } };
+  // the subject on screen (or the last one picked), so an empty R&W page starts an R&W set
+  Object.defineProperty(empty, 'START', { get: () => ({ label: 'Start with 8', cost: 'about 10 min',
+    body: { source: 'start', subject: UI.subject ? UI.subject.get() : 'math' } }) });
 
   /* ------------------------------------------------------------ subject (G11) and question labels (SR16) */
   const SUBJECT = {
@@ -2293,9 +2971,11 @@
 
   /* ------------------------------------------------------------ export */
   Object.assign(UI, {
-    sheet, confirm, pop, menu, tooltip, toast, banner,
+    NONE,
+    sheet, confirm, pop, menu, tooltip, why, toast, banner, saving,
     seg, chips, tabs, switch: switchCtl, triCheck, dropdown, filterBar, otp, counter, scoreSlider, images, examDate, actionBar, selbar,
-    tile, meter, skel, cardError, table, pips, dbars, cell, legend, strip, nearTap, atlas, masteryWord, STRONG, skillRow, avatar, localPhoto, countdown, STATES,
+    tile, meter, roll, skel, cardError, table, pips, dbars, cell, legend, strip, nearTap, atlas, masteryWord, STRONG, skillRow, avatar, localPhoto, countdown, STATES,
+    motion, glide, fx, scrolled,
     VERBS, verb, KEYS, pts, fact, empty, SUBJECT, qlabel,
     dur, mmss, num, date, relTime, KIND, copyText, ics,
   });

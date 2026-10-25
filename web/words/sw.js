@@ -5,9 +5,9 @@
    A page's query is ignored for the fallback, so /words/run/?id=… opens the cached runner,
    which reads its cards from IndexedDB. /api/ is never cached: the cards live in IndexedDB,
    and grades queue there until the signal comes back. */
-const CACHE = 'satf-words-1';
+const CACHE = 'satf-words-2';
 const SHELL = ['/words/run/', '/words/', '/assets/ui.css', '/assets/runner.css', '/assets/head.js', '/assets/ui.js', '/assets/kit.js',
-  '/assets/charts.js', '/assets/question.js', '/assets/words-ui.js', '/assets/mark.svg', '/manifest.webmanifest'];
+  '/assets/charts.js', '/assets/question.js', '/assets/words-ui.js', '/assets/mark.svg', '/assets/fonts/Geist.woff2', '/manifest.webmanifest'];
 
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(SHELL)).catch(() => {}).then(() => self.skipWaiting()));

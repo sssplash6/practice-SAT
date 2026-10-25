@@ -13,22 +13,24 @@
        badge (drawn, never filled, C11). ring: a champion's 2px orange ring (C27).
    UI.board(host, data, {columns, label, value(e), pars, mine, rowMenu(e), onFollow(e),
        onMore(offset) -> Promise<data>, onJump(you), youBar, youText(you), empty, find})
-       -> {el, update(data), append(data), jump(), highlight(pid)}
+       -> {el, update(data[, opts]), append(data), jump(), highlight(pid)}   update glides moved rows; a poll says "Up N" once
        data: {players, entries [{pid, rank, tie, name, anon, level, ring, title, you, mark,
        n, ...metric}], you, next_offset, marks}. Ties read "=4"; par rows (dashed, a flag,
        no rank) sit at their points and never count (C6); your row is wash + amber edge;
        J K / arrows move rows, Enter opens the row menu, F follows, Esc leaves (C24).
-   UI.podium(host, entries, {value(e), sub(e), pars}) -> {el}      2 · 1 · 3
+   UI.podium(host, entries, {value(e), sub(e), pars, rise}) -> {el}      2 · 1 · 3; rise: the pedestals rise 3, 2, 1 (a change, never on load)
    UI.debrief(host, data, {onFilter(qids, label), onFix(row), onRematch(when), sid, reached, label(norm)}) -> {el}
        reached: the Set of slots a run served (the rest read "Not reached"); label: a trap's words
        "Where your points went" (C1): the points bar, the headline, one row per lost item
    UI.pacer(host, pacer, you) -> {el, set(pacer, you)}             the race rail (C8)
    UI.compete  KINDS, kind(c), icon(kind), href(cid, q), runner(res), start(cid, o),
        rulesSeen(kind), markRules(kind), windowLine(c), clockText(c), facts(c), marks(result),
-       copyResult(c, result, place, pid), under(host, options, o), subnav(page),
+       copyResult(c, result, place, pid), copy(button, text), info(text, label), under(host, options, o), subnav(page),
        join(), create(prefill), reminder(), LADDER, levelOf(r), levelIn(r, provisional),
-       step(gap, metric, pace), left(iso), when(iso), dayLabel(day), trapWords(items) -> Map,
+       step(gap, metric, pace), left(iso), when(iso), dayLabel(day), periodText(kind, period), trapWords(items) -> Map,
        trapLabel(norm, words): "Stopped at 2b rather than dividing by 2", never the raw "#" key
+       moved(n, cap): a rank's move in words, "up 3" / "Down 2" (no ▲▼ glyphs)
+       badgeIcon(achievement, earned, {size: 'sm'}) -> span.bcirc: the one badge art, Profile's and Compete's
    UI.board columns: {label, value(e), phone, par, num, unit, meta, title, head() -> Node, sorted}
        head: a header button (ui.css's sortable th); sorted marks the ordering column (aria-sort)
    ========================================================================== */
@@ -46,7 +48,7 @@
     for (const k of kids.flat(3)) if (k !== null && k !== undefined && k !== false) e.append(k);
     return e;
   };
-  const num = n => (n === null || n === undefined || n === '' || isNaN(n) ? '—' : Number(n).toLocaleString('en-US', { maximumFractionDigits: 1 }));
+  const num = n => (n === null || n === undefined || n === '' || isNaN(n) ? '–' : Number(n).toLocaleString('en-US', { maximumFractionDigits: 1 }));
   const mmss = s => { s = Math.max(0, Math.round(s || 0)); return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`; };
   const tip = (el, t) => { if (!t) return el; if (UI.tooltip) UI.tooltip(el, t); else el.title = t; return el; };
   const api = (p, o) => UI.api(p, o);
@@ -59,114 +61,130 @@
 .lvl svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
 .lvl path { fill: none; stroke-width: 2.4; }
 .lvl .t { stroke: var(--mat); } .lvl .f { stroke: var(--amber); } .lvl.outline .t { stroke: var(--soft); }
-.lvl b { position: relative; font: 500 calc(var(--s) * .46)/1 var(--mono); color: var(--ink); font-variant-numeric: tabular-nums; }
+.lvl b { position: relative; font: 600 calc(var(--s) * .46)/1 var(--font); color: var(--ink); font-variant-numeric: tabular-nums; }
 .lvl.top { background: var(--amber); border-radius: 28%; }
-.lvl.top b { color: var(--ink-deep); font-size: calc(var(--s) * .4); font-weight: 700; }
+.lvl.top b { color: var(--ink-deep); font-size: calc(var(--s) * .4); }
 .lvl.ring { box-shadow: 0 0 0 1.5px var(--paper), 0 0 0 3.5px var(--amber); }
 .board { position: relative; min-width: 0; }
 .board-t { table-layout: auto; }
 .board-t :is(th, td) { padding-left: 8px; padding-right: 8px; }
 .board-t td { padding-top: 8px; padding-bottom: 8px; }
-.board-t td.rk, .board-t th.rk { width: 1%; white-space: nowrap; font: 500 13px var(--mono); padding-right: 6px; }
+.board-t td.rk, .board-t th.rk { width: 1%; white-space: nowrap; font: 500 13px var(--font); font-variant-numeric: tabular-nums; padding-right: 6px; }
 .board-t td.who { width: 100%; max-width: 0; }
-.board-t :is(th, td).n { white-space: nowrap; }
+.board-t :is(th, td).n { white-space: nowrap; font-variant-numeric: tabular-nums; }
 .board-t .who-l { display: flex; align-items: center; gap: 8px; min-width: 0; }
 .board-t .who-n { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 600; }
-.board-t .who-t, .board-t .who-m { display: block; margin-top: 2px; font: 500 12px var(--mono); color: var(--soft); }
+.board-t .who-t, .board-t .who-m { display: block; margin-top: 2px; font: 500 12.5px var(--font); font-variant-numeric: tabular-nums; color: var(--soft); }
 .board-t .who-m { display: none; }
-.board-t .you-tag { font: 500 10.5px var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--ink); padding: 2px 6px; border-radius: 5px; background: var(--paper); }
-.board-t .mk { display: inline-flex; align-items: center; color: var(--soft); font: 500 11.5px var(--mono); }
+.board-t .mk { display: inline-flex; align-items: center; color: var(--soft); font: 500 11.5px var(--font); font-variant-numeric: tabular-nums; }
 .board-t .mk svg { width: 14px; height: 14px; }
-.board-t .rowmenu { margin-left: auto; flex: none; width: 32px; height: 32px; border: 0; border-radius: 8px; background: none; color: var(--soft); cursor: pointer; font: 700 16px/1 var(--font); letter-spacing: .05em; }
+.board-t .rowmenu { margin-left: auto; flex: none; width: 32px; height: 32px; border: 0; border-radius: 8px; background: none; color: var(--soft); cursor: pointer; }
 .board-t tr { scroll-margin-top: calc(var(--bar, 64px) + 72px); scroll-margin-bottom: 24px; }
 /* the row menu shows on hover or focus where there is a mouse, always on touch */
 @media (hover: hover) and (pointer: fine) {
   .board-t .rowmenu { opacity: 0; transition: opacity .12s; }
   .board-t tr:hover .rowmenu, .board-t tr:focus-within .rowmenu, .board-t .rowmenu[aria-expanded="true"] { opacity: 1; }
-  .board-t .rowmenu:hover { background: var(--tile-2); color: var(--ink); }
+  .board-t .rowmenu:hover { background: var(--well); color: var(--ink); }
 }
-.board-t tr:focus-visible { outline: 2px solid var(--ink); outline-offset: -2px; }
+.board-t tr:focus-visible { outline-offset: -2px; }
+/* yours (ui.css .table tr.you): the same height as every row, a wash, 600, the .rank cell amber-deep; no tag, no mark */
 .board-t tr.par > * { color: var(--soft); background: none; }
 .board-t tr.par > td { border-top: 1px dashed var(--faint); border-bottom: 1px dashed var(--faint); }
 .board-t tr.par svg { width: 14px; height: 14px; color: var(--soft); vertical-align: -2px; }
-.board-t tr.sep > td { padding: 4px 12px; font: 500 11px var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--soft); background: none; }
+.board-t tr.sep > td { padding: 4px 8px; font: 500 12.5px var(--font); color: var(--soft); background: none; }
 .board-t tr.hl > * { background: var(--wash-2, var(--wash)); }
 .board-foot { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; margin-top: 14px; }
 .board-empty { margin: 14px 0 0; color: var(--soft); }
-/* the You strip: in the flow above the table; sticky under the top bar only while your own row is out of view */
-.youbar { z-index: 5; display: flex; flex-wrap: wrap; align-items: center; gap: 6px 28px; margin-bottom: 12px; padding: 10px 14px; border-radius: 10px; background: linear-gradient(var(--wash), var(--wash)), var(--paper); box-shadow: inset 3px 0 0 var(--amber); font: 500 13px var(--mono); color: var(--ink); }
-.youbar.stuck { position: sticky; top: calc(var(--bar, 64px) + 8px); box-shadow: inset 3px 0 0 var(--amber), 0 8px 16px -12px rgba(30, 30, 30, .35); }
+/* the You strip: in the flow above the table; sticky only while your own row is out of view, under the
+   section bar when that sticks (desktop: 52px from the top; phone: the 56px top bar and the 44px section bar) */
+.youbar { z-index: 5; display: flex; flex-wrap: wrap; align-items: center; gap: 6px 24px; margin-bottom: 12px; padding: 10px 14px; border-radius: 10px; background: var(--wash); font: 500 14px var(--font); font-variant-numeric: tabular-nums; color: var(--ink); }
+.youbar.stuck { position: sticky; top: 60px; background: color-mix(in srgb, var(--amber) 10%, var(--raised, var(--paper))); box-shadow: var(--shadow-2, 0 1px 0 var(--line)); }
 .youbar > span { flex: 1 1 240px; min-width: 0; }
+.board-t .up-n { flex: none; }
 .youbar[hidden], .debrief-rows li[hidden] { display: none; }
 @media (max-width: 759px) {
+  .youbar.stuck { top: calc(108px + env(safe-area-inset-top, 0px)); }
   .board-t .who-m { display: block; }
   .board-t :is(th, td).off-phone { display: none; }
 }
 .podium { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); align-items: end; gap: 12px; }
-.pod { display: grid; align-content: end; justify-items: center; gap: 6px; min-width: 0; padding: 14px 10px 16px; border-radius: 12px; background: var(--tile); text-align: center; }
-.pod.p1 { min-height: 156px; background: var(--tile-2); } .pod.p2 { min-height: 132px; } .pod.p3 { min-height: 116px; }
-.pod.you { background: var(--wash); box-shadow: inset 0 0 0 1.5px var(--amber); }
-.pod.open, .pod.parp { background: none; box-shadow: inset 0 0 0 1.5px var(--line); }
-.pod.parp { box-shadow: none; border: 1.5px dashed var(--faint); }
-.pod .num { font-size: 30px; }
-.pod .pod-n { max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 700; }
-.pod .pod-v { font: 500 14px var(--mono); } .pod .pod-s { font: 500 11.5px var(--mono); color: var(--soft); }
-.pod svg.tro { width: 18px; height: 18px; color: var(--ink); }
+/* stepped pedestals on the page (the leaderboard's hero): raised, #1 the tallest and one shadow step higher */
+.pod { display: grid; align-content: end; justify-items: center; gap: 4px; min-width: 0; padding: 12px 8px 14px; border-radius: 12px; background: var(--raised, var(--paper)); box-shadow: var(--shadow-1, inset 0 0 0 1px var(--line)); text-align: center; }
+.pod.p1 { min-height: 136px; box-shadow: var(--shadow-2, inset 0 0 0 1px var(--line)); } .pod.p2 { min-height: 112px; } .pod.p3 { min-height: 96px; }
+.pod.you { background: var(--wash); }
+.pod.you .num { color: var(--amber-deep); }
+.pod.open, .pod.parp { background: none; box-shadow: inset 0 0 0 1px var(--line); color: var(--soft); }   /* an open place: a hairline on the page, no dashes */
+.pod .num { font-size: 22px; }
+.pod.p1 .num { font-size: 28px; }
+.pod .pod-r { display: inline-flex; align-items: center; gap: 4px; }
+.pod .pod-who { display: inline-flex; align-items: center; gap: 6px; max-width: 100%; min-width: 0; }
+.pod .pod-n { max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 600; }
+.pod .pod-v { font: 600 14px var(--font); font-variant-numeric: tabular-nums; } .pod .pod-s { font: 500 12.5px var(--font); font-variant-numeric: tabular-nums; color: var(--soft); }
+.pod svg.tro { width: 16px; height: 16px; color: var(--ink); }
 .debrief { display: grid; gap: 14px; }
 .debrief-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 12px; }
-.debrief-line { font: 600 15px/1.4 var(--font); }
+.debrief-line { font: 600 14.5px/1.4 var(--font); }
 .debrief-rows { display: grid; gap: 0; margin: 0; padding: 0; list-style: none; }
 .debrief-rows li { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 4px 14px; padding: 10px 0; border-top: 1px solid var(--line); }
 .debrief-rows .dr-t { font: 500 14px/1.4 var(--font); }
-.debrief-rows .dr-m { display: block; margin-top: 2px; font: 500 12px var(--mono); color: var(--soft); }
-.debrief-rows .chip-s { display: inline-block; margin-left: 6px; padding: 1px 6px; border-radius: 5px; background: var(--tile-2); font: 500 11px var(--mono); color: var(--ink); vertical-align: 1px; }
+.debrief-rows .dr-m { display: block; margin-top: 2px; font: 500 12.5px var(--font); font-variant-numeric: tabular-nums; color: var(--soft); }
+.debrief-rows .badge { margin-left: 6px; }
 .debrief-act { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 28px; }
-.debrief-act .quiet { margin: 0 -12px; }
 .debrief .sb-l { display: none; }   /* each part is named once, in the legend */
+.debrief .sb-bar { height: 12px; }   /* a slim bar, like every meter; the legend under it names the parts */
 .ladder-row { display: flex; align-items: center; gap: 10px; }
 .ladder-row > .ladder { flex: 1 1 auto; min-width: 0; max-width: calc(var(--cols, 10) * 76px); }
 .pacer { display: grid; gap: 4px; }
-.pacer-tr { position: relative; height: 6px; border-radius: 3px; background: var(--mat); }
+.pacer-tr { position: relative; height: 6px; border-radius: 3px; background: var(--track); }
 .pacer-tr > i { position: absolute; inset: 0 auto 0 0; border-radius: inherit; background: var(--amber); }
 .pacer-tr.them > i { background: var(--ink); }
-.pacer-l { font: 500 12px var(--mono); color: var(--soft); text-align: right; }
-.subnav { display: flex; flex-wrap: wrap; gap: 0 4px; margin: 10px 0 22px -9px; }
-.subnav a { position: relative; display: inline-flex; align-items: center; height: 38px; padding: 0 9px; font: 600 15px var(--font); color: var(--faint); text-decoration: none; }
-.subnav a[aria-current="page"] { color: var(--ink); }
+.pacer-l { font: 500 12.5px var(--font); font-variant-numeric: tabular-nums; color: var(--soft); text-align: right; }
+/* the Compete tabs sit on the title's row (.cx-head); on a phone they wrap under it, first label flush */
+.subnav { display: flex; flex-wrap: wrap; gap: 0 4px; margin: 0; }
+@media (max-width: 759px) { .subnav { flex: 1 0 100%; margin-left: -9px; } }
+.subnav a { position: relative; display: inline-flex; align-items: center; height: 36px; padding: 0 9px; font: 500 14px var(--font); color: var(--soft); text-decoration: none; }
+.subnav a[aria-current="page"] { color: var(--ink); font-weight: 600; }
 .subnav a[aria-current="page"]::after { content: ""; position: absolute; left: 9px; right: 9px; bottom: 4px; height: 2px; border-radius: 2px; background: var(--amber); }
 @media (hover: hover) and (pointer: fine) { .subnav a:hover { color: var(--ink); } }
 .cx-form { display: grid; gap: 18px; }
 .cx-form fieldset { margin: 0; padding: 0; border: 0; min-width: 0; }
-.cx-form legend { padding: 0; margin-bottom: 6px; font: 600 13.5px/1.3 var(--font); }
+.cx-form legend { padding: 0; margin-bottom: 6px; font: 600 14px/1.3 var(--font); }
 .cx-skills { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px 18px; }
 .cx-skills .dom { display: grid; gap: 4px; align-content: start; }
 .cx-skills label { display: flex; align-items: center; gap: 8px; min-height: 30px; font: 500 14px var(--font); }
-.cx-skills .dom > label:first-child { font-weight: 700; }
-.cx-radio { display: grid; gap: 6px; } .cx-radio label { display: flex; align-items: flex-start; gap: 8px; font: 500 14px/1.4 var(--font); }
-.cx-sum { font: 500 13px var(--mono); color: var(--soft); }
-.cx-code { font: 500 44px/1 var(--mono); letter-spacing: .12em; }
+.cx-skills .dom > label:first-child { font-weight: 600; }
+.cx-radio { display: grid; gap: 4px; }   /* rows of label.choice-row: the radio inside, the row shows it picked */
+.cx-sum { font: 500 12.5px var(--font); font-variant-numeric: tabular-nums; color: var(--soft); }
+.cx-code { font: 500 28px/1.1 var(--mono); letter-spacing: .12em; }
 .cx-err { color: var(--ink); font-weight: 600; }
+.cx-code-in { font-family: var(--mono); letter-spacing: .2em; text-transform: uppercase; max-width: 220px; }   /* a code input keeps its caps */
+.cx-num { max-width: 120px; } .cx-time { max-width: 160px; }
 @media (max-width: 759px) { .cx-skills { grid-template-columns: minmax(0, 1fr); } }
+/* one badge style for Profile and Compete (UI.compete.badgeIcon): a 44px disc, the drawing dead centre; earned is a warm
+   wash with an amber-deep drawing and a fine amber edge (a solid amber disc per badge made the shelf shout) */
+.bcirc { width: 44px; height: 44px; border-radius: 50%; display: grid; place-items: center; flex: none; background: var(--well); color: var(--soft); }
+.bcirc > * { display: grid; place-items: center; width: 24px; height: 24px; line-height: 0; }
+.bcirc svg, .bcirc .glyph { width: 22px; height: 22px; display: block; margin: 0; }
+.bcirc.on { background: var(--wash-2, var(--wash)); color: var(--amber-deep); box-shadow: inset 0 0 0 1px rgb(from var(--amber) r g b / .45), 0 1px 2px rgb(140 70 0 / .12); }
+/* the spot-check sits where the runner was (any host layout): its own width, the page's column */
+.spot { box-sizing: border-box; display: grid; gap: 14px; align-content: start; align-self: start; justify-self: center; width: min(760px, calc(100vw - 32px)); height: auto; margin: 24px auto; }
+.bcirc.sm { width: 32px; height: 32px; } .bcirc.sm > * { width: 18px; height: 18px; } .bcirc.sm svg, .bcirc.sm .glyph { width: 16px; height: 16px; }
 `;
   if (!doc.getElementById('compete-ui-css')) doc.head.append(h('style', { id: 'compete-ui-css', text: CSS }));
 
   /* ------------------------------------------------------------ icons */
-  const L = 'fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"';
-  const SVG = {
-    flag: `<path ${L} d="M6 21V4M6 4h10l-2 4 2 4H6"/>`,
-    sheet: `<path ${L} d="M7 3h7l4 4v14H7zM14 3v4h4M10 12h5M10 16h5"/>`,
-    trap: `<circle ${L} cx="12" cy="12" r="8"/><path ${L} d="M8 8l8 8M12 4v4"/>`,
-    strikes: `<path ${L} d="M4 9l4 6M8 9l-4 6M10 9l4 6M14 9l-4 6M16 9l4 6M20 9l-4 6"/>`,
-    star: `<path ${L} d="M12 4l2.4 5 5.4.6-4 3.7 1.1 5.3L12 16l-4.9 2.6 1.1-5.3-4-3.7 5.4-.6z"/>`,
-    clean: `<circle ${L} cx="12" cy="12" r="8"/><path ${L} d="M8.5 12.2l2.4 2.4 4.6-5"/>`,
-    dots: `<circle cx="6" cy="12" r="1.6" fill="currentColor"/><circle cx="12" cy="12" r="1.6" fill="currentColor"/><circle cx="18" cy="12" r="1.6" fill="currentColor"/>`,
-  };
-  const svgOf = (inner, size = 18, cls = '') => `<svg width="${size}" height="${size}" viewBox="0 0 24 24" aria-hidden="true" focusable="false"${cls ? ` class="${cls}"` : ''}>${inner}</svg>`;
+  // the shared map (ui.js UI.ICON, Phosphor); UI.compete.SVG keeps its old names for callers (dots is more)
+  const I = UI.ICON || {};
+  const SVG = { flag: I.flag, sheet: I.sheet, trap: I.trap, strikes: I.strikes, star: I.star, clean: I.clean, dots: I.more };
+  const svgOf = (inner, size = 18, cls = '') => `<svg width="${size}" height="${size}" viewBox="0 0 24 24" aria-hidden="true" focusable="false"${cls ? ` class="${cls}"` : ''}>${inner || ''}</svg>`;
+  // Rush ends after three misses: three rings, its three chances (the shared "strikes" read as a typed "xxx" at 20px)
+  const OWN = { chances: '<g class="ph" fill="none" stroke="currentColor" stroke-width="16" transform="scale(.09375)"><circle cx="44" cy="128" r="26"/><circle cx="128" cy="128" r="26"/><circle cx="212" cy="128" r="26"/></g>' };
   function icon(kind, size = 20) {
     const k = KINDS[kind] || KINDS.daily;
-    const inner = SVG[k.icon] || (UI.ICON && UI.ICON[k.icon]) || SVG.flag;
-    return h('span', { class: 'kind-ic', 'aria-hidden': 'true', html: svgOf(inner, size) });
+    return h('span', { class: 'kind-ic', 'aria-hidden': 'true', html: svgOf(OWN[k.icon] || I[k.icon] || I.flag, size) });
   }
+  // a rank's move in words ("up 3", "down 2"; Up/Down to start a cell): the ▲▼ triangles came from the device's font
+  const moved = (n, cap) => (!n ? null : `${n > 0 ? (cap ? 'Up' : 'up') : (cap ? 'Down' : 'down')} ${Math.abs(n)}`);
 
   /* ------------------------------------------------------------ the contest model on screen */
   const KINDS = {
@@ -176,7 +194,7 @@
     final: { label: 'Season Final', icon: 'flag', clock: 'wall', twins: true },
     private: { label: 'Private contest', icon: 'users', clock: 'answer', pace: true },
     trap: { label: 'Trap of the week', icon: 'trap', clock: 'answer', pace: true, twins: true },
-    rush: { label: 'Rush', icon: 'strikes', clock: 'none', runs: true },
+    rush: { label: 'Rush', icon: 'chances', clock: 'none', runs: true },
     words: { label: 'Word Sprint', icon: 'words', clock: 'answer', runs: true },
   };
   const kind = c => KINDS[(c && c.kind) || 'daily'] || KINDS.daily;
@@ -215,6 +233,10 @@
 
   const when = iso => { try { return new Date(iso).toLocaleString('en-US', { weekday: 'short', hour: 'numeric', minute: '2-digit' }); } catch (_) { return ''; } };
   const dayLabel = (day, o = {}) => { try { return new Date(`${day}T12:00:00`).toLocaleDateString('en-US', { weekday: o.weekday === false ? undefined : 'short', month: 'short', day: 'numeric' }); } catch (_) { return day; } };
+  // a timestamp's day where the learner is (the server's are UTC: 01:00 in Tashkent is the day before in UTC);
+  // a plain YYYY-MM-DD (a Daily's id, a period) is already a day and stays as it is
+  const pad2 = n => String(n).padStart(2, '0');
+  const localDay = iso => { const s = String(iso || ''), d = new Date(s); return !s.includes('T') || isNaN(d) ? s.slice(0, 10) : `${d.getFullYear()}-${pad2(d.getMonth() + 1)}-${pad2(d.getDate())}`; };
   function left(iso, now = Date.now()) {
     let s = Math.max(0, Math.round((new Date(iso) - now) / 1000));
     const d = Math.floor(s / 86400); s -= d * 86400;
@@ -241,13 +263,15 @@
     if (k.clock === 'wall') return `${Math.round((c.seconds || 2100) / 60)} min${c.kind === 'final' ? ' · 2 modules' : ''}`;
     return c.seconds ? `${mmss(c.seconds)} to answer` : 'answer time';
   }
+  // what each entrant gets: a twin with its own numbers, or (R&W, written items) their own item of the same skill and tier
+  const ownWords = c => (c.subject === 'rw' ? 'a different passage for everyone' : 'different numbers for everyone');
   function facts(c) {
     const out = [];
     if (c.kind === 'sprint') out.push('as many as you answer');
     else if (c.kind === 'rush') out.push('difficulty climbs with you');
     else if (c.count) out.push(`${c.count} questions`);
     out.push(clockText(c));
-    if (kind(c).twins || (c.kind === 'private' && c.spec && c.spec.twin)) out.push('different numbers for everyone');
+    if (kind(c).twins || (c.kind === 'private' && c.spec && c.spec.twin)) out.push(ownWords(c));
     const n = c.field && c.field.players;
     if (n) out.push(`${num(n)} entered`);
     return out.join(' · ');
@@ -260,18 +284,19 @@
   const glyphOf = s => ({ correct: '■', incorrect: '□' }[s] || '·');
   function copyResult(c, r, place = {}, pid = null) {
     const k = kind(c);
-    const day = c.kind === 'daily' ? ` · ${dayLabel(String(c.id).slice(6), { weekday: false })}` : '';
+    // daily-YYYY-MM-DD, R&W's with -rw after the date
+    const day = c.kind === 'daily' ? ` · ${dayLabel(String(c.id).slice(6, 16), { weekday: false })}` : '';
     const clock = r && r.secs !== undefined ? ` · ${mmss(r.secs)}` : '';
     const rank = place.rank ? ` · #${place.rank} of ${num(place.players)}` : '';
     const url = `${location.origin}${href(c.id, pid ? { race: pid } : {})}`;
-    return [`SAT Freshman · ${k.label}${day}`,
+    return [`SAT Freshman · ${k.label}${c.subject === 'rw' ? ' · R&W' : ''}${day}`,
       `${num(r.right)}/${num(r.asked || c.count)} · ${num(r.points)} pts${clock}${rank}`,
       marks(r).map(m => glyphOf(m.status)).join(''),
       pid ? `Beat ${num(r.points)}: ${url}` : url].join('\n');
   }
 
   /* ------------------------------------------------------------ the ladder, par and field lines (C5, C7) */
-  const pct = x => (x === null || x === undefined ? '—' : `${Math.round(x * 100)}%`);
+  const pct = x => (x === null || x === undefined ? '–' : `${Math.round(x * 100)}%`);
   function ladder(host, c) {
     const n = (c.ladder || []).length;
     const cells = h('div', { class: 'ladder', role: 'list', style: n !== 10 && n ? `--cols:${Math.min(11, n)}` : null, 'aria-label': 'The questions: skill, difficulty and your chance' });
@@ -279,8 +304,8 @@
       const name = topicName(q.topic);
       const label = [`Q${q.slot}`, name, TIER[q.tier] || q.tier, q.format === 'spr' ? 'grid-in' : null,
         q.chance !== undefined && q.chance !== null ? `your chance ${pct(q.chance)}` : null].filter(Boolean).join(' · ');
+      // a well per slot: the skill and its difficulty; Q3 is in the label and the tip, your chance fills the well's floor
       const cell = h('div', { class: 'lad', role: 'listitem', tabindex: '0', 'aria-label': label },
-        h('span', { class: 'n', text: String(q.slot) }),
         UI.glyph ? UI.glyph(q.topic) : null,
         UI.dbars ? UI.dbars(q.tier, { bare: true }) : null,
         q.chance !== undefined && q.chance !== null ? h('span', { class: 'ch', 'aria-hidden': 'true' }, h('i', { style: `width:${Math.round(q.chance * 100)}%` })) : null);
@@ -367,7 +392,13 @@
     const hard = tiers[2][0];
     return `${Math.ceil(gap / hard)} hard rights`;
   }
-  const titleText = t => t ? `Champion · ${t.period_label || t.period || ''}${t.board ? ` · ${{ points: 'Points', net: 'Over expected', change: 'Most improved' }[t.board] || t.board}` : ''}${t.place ? ` #${t.place}` : ''}` : '';
+  // a champion's title as students read it: the server sends raw ids ("road-2026-10-03", "2026-W39", board "band")
+  const periodText = (kind, p) => { p = p || ''; const road = /^road-(\d{4}-\d{2}-\d{2})$/.exec(p), wk = /^\d{4}-W(\d{2})$/.exec(p);
+    return road ? `Road to ${dayLabel(road[1], { weekday: false })}` : wk ? `Week ${+wk[1]}` : kind === 'final' && /^\d{4}-\d{2}-\d{2}$/.test(p) ? `Final ${dayLabel(p, { weekday: false })}` : p; };
+  // R&W's podiums are its boards with an rw: prefix (rw:points)
+  const BOARD_NAMES = { points: 'Points', net: 'Over expected', change: 'Most improved', band: 'Level band' };
+  const boardName = b => { const rw = /^rw:/.test(b || ''), k = String(b || '').replace(/^rw:/, ''); return `${rw ? 'R&W ' : ''}${BOARD_NAMES[k] || k}`; };
+  const titleText = t => t ? `Champion · ${t.period_label || periodText(t.kind, t.period)}${t.board ? ` · ${boardName(t.board)}` : ''}${t.place ? ` #${t.place}` : ''}` : '';
 
   /* ------------------------------------------------------------ underline choice (the .choices style) */
   function under(host, options, o = {}) {
@@ -431,7 +462,8 @@
 
     // only the exception is marked: a clean run is the default and shows nothing (decision 7)
     function markEl(e) {
-      if (e.mark === 'confirmed') return tip(h('span', { class: 'mk', text: `✓${e.n || ''}` }), `${e.n || 'All'} answer${e.n === 1 ? '' : 's'} confirmed on new numbers`);
+      if (e.mark === 'confirmed') return tip(h('span', { class: 'mk', text: `✓${e.n || ''}` }), `Left or copied, then kept ${e.n || 'every'} answer${e.n === 1 ? '' : 's'} by the spot-check`);
+      if (e.mark === 'voided') return tip(h('span', { class: 'mk', text: `⊘${e.n || ''}` }), `${e.n} answer${e.n === 1 ? '' : 's'} not counted: left or copied, and not kept by the spot-check`);
       return null;
     }
     function menuBtn(e) {
@@ -445,17 +477,16 @@
       const tr = h('tr', { class: [e.you && 'you', e.par && 'par'].filter(Boolean).join(' ') || null, tabindex: '-1',
         'aria-current': e.you ? 'true' : null, 'data-pid': e.pid || null });
       tr._e = e;
-      const rank = e.par ? h('td', { class: 'rk', html: FLAG, title: 'Par: never ranked' }) : h('td', { class: 'rk', text: `${e.tie ? '=' : ''}${e.rank ?? ''}` });
+      const rank = e.par ? h('td', { class: 'rk', html: FLAG, title: 'Par: never ranked' }) : h('td', { class: 'rk rank', text: `${e.tie ? '=' : ''}${e.rank ?? ''}` });
       const off = cs.filter(c => !c.phone && c.meta !== false).map(c => { const v = c.value(e); return v === null || v === undefined || v === '' ? null : c.unit ? `${v} ${c.unit}` : `${v}`; }).filter(Boolean);
       const who = h('td', { class: 'who' },
         h('span', { class: 'who-l' },
           e.par ? null : level(null, false, 20, { level: e.level, ring: e.ring, ringTitle: titleText(e.title) }),
-          h('span', { class: 'who-n', text: e.par ? e.label : e.name }),
-          e.you ? h('span', { class: 'you-tag', text: 'You' }) : null,
-          markEl(e), menuBtn(e)),
+          h('span', { class: 'who-n', text: e.par ? e.label : e.you ? `${e.name} (you)` : e.name }),
+          e.you ? null : markEl(e), menuBtn(e)),
         e.title && !e.par ? h('span', { class: 'who-t', text: titleText(e.title) }) : null,
         off.length ? h('span', { class: 'who-m', text: off.join(' · ') }) : null);
-      tr.append(rank, who, ...cs.map(c => { const v = e.par && !c.par ? '' : c.value(e); return h('td', { class: (c.num !== false ? 'n' : '') + (c.phone ? '' : ' off-phone'), text: v === null || v === undefined ? '—' : String(v) }); }));
+      tr.append(rank, who, ...cs.map(c => { const v = e.par && !c.par ? '' : c.value(e); return h('td', { class: (c.num !== false ? 'n' : '') + (c.phone ? '' : ' off-phone'), text: v === null || v === undefined ? '–' : String(v) }); }));
       return tr;
     }
     function withPars(entries) {
@@ -470,12 +501,15 @@
       });
       return out;
     }
-    function draw() {
+    // g: {glide, was} from update(): rows that moved slide to their place (UI.glide, keyed by player), and a rise
+    // since the last poll (was: your old rank) says "Up N" on your row, once
+    function draw(g = {}) {
       list = withPars((d.entries || []).slice());
       const cs = cols();
       thead.replaceChildren(h('tr', {}, h('th', { scope: 'col', class: 'rk', text: 'Rank' }), h('th', { scope: 'col', text: 'Student' }),
         cs.map(c => { const th = h('th', { scope: 'col', class: (c.num !== false ? 'n' : '') + (c.phone ? '' : ' off-phone'), 'aria-sort': c.sorted ? 'descending' : null }, c.head ? c.head() : c.label); if (c.title && !c.head) tip(th, c.title); return th; })));
-      tbody.replaceChildren(...list.map(e => row(e, cs)));
+      const fill = () => tbody.replaceChildren(...list.map(e => row(e, cs)));
+      if (g.glide && UI.glide && tbody.rows.length) UI.glide(tbody, fill, { key: k => (k.dataset && k.dataset.pid) || k, enter: false }); else fill();
       const rows = [...tbody.rows].filter(r => r._e);
       rows.forEach((r, i) => { r.tabIndex = i === 0 ? 0 : -1; });
       const real = (d.entries || []).length;
@@ -491,6 +525,12 @@
         foot.append(b);
       } else if (real) foot.append(h('p', { class: 'meta', text: `That’s everyone: ${num(d.players ?? real)} student${(d.players ?? real) === 1 ? '' : 's'}.` }));
       youRow = rows.find(r => r._e.you) || null;
+      const now = youRow && youRow._e.rank;
+      if (g.was && now && now < g.was) {
+        const up = h('span', { class: 'badge soft up-n', text: `Up ${g.was - now}` });
+        youRow.querySelector('.who-l').append(up);
+        if (UI.fx) UI.fx.pop(up);
+      }
       drawBar();
     }
     // at rest the strip sits in the flow above the table and covers nothing; it sticks under the
@@ -507,7 +547,11 @@
       bar.replaceChildren(h('span', { text }), ...(youRow || o.onJump ? [jump] : []));
       bar.hidden = false;
       if (youRow && 'IntersectionObserver' in window) {
-        obs = new IntersectionObserver(es => { bar.classList.toggle('stuck', !es.some(x => x.isIntersecting)); }, { rootMargin: '-72px 0px 0px 0px' });
+        obs = new IntersectionObserver(es => {
+          const stuck = !es.some(x => x.isIntersecting), was = bar.classList.contains('stuck');
+          bar.classList.toggle('stuck', stuck);
+          if (stuck && !was && UI.motion) UI.motion.enter(bar, 'nudge');   // it slides in as it sticks
+        }, { rootMargin: '-110px 0px 0px 0px' });
         obs.observe(youRow);
       }
     }
@@ -549,10 +593,20 @@
     }
     const api0 = {
       el,
-      update(nd) { d = nd || {}; draw(); },
+      // update(data) after a poll (rows glide, "Up N" once); update(data, opts) after a control change (new columns or
+      // label: rows glide, no "Up N", since a different board is no move)
+      update(nd, opts) {
+        const was = opts ? null : (d.you && d.you.rank) || null;
+        d = nd || {};
+        if (opts) { Object.assign(o, opts); table.setAttribute('aria-label', o.label || 'Board'); }
+        draw({ glide: true, was });
+      },
       append(more) { d = { ...d, ...more, entries: [...(d.entries || []), ...((more && more.entries) || [])] }; draw(); },
       jump() {
-        if (youRow) { youRow.scrollIntoView({ block: 'center', behavior: UI.reduced && UI.reduced() ? 'auto' : 'smooth' }); youRow.tabIndex = 0; youRow.focus({ preventScroll: true }); }
+        if (youRow) {
+          youRow.scrollIntoView({ block: 'center', behavior: UI.reduced && UI.reduced() ? 'auto' : 'smooth' }); youRow.tabIndex = 0; youRow.focus({ preventScroll: true });
+          if (UI.fx) [...youRow.cells].forEach(c => UI.fx.glow(c, { remove: false }));   // the row's wash flares and fades back
+        }
         else if (o.onJump && d.you) o.onJump(d.you);
       },
       highlight(pid) {
@@ -583,25 +637,25 @@
       const p = !e && o.pars && o.pars[i];
       const card = h('div', { role: 'listitem', class: `pod p${i + 1}${e && e.you ? ' you' : ''}${!e ? (p ? ' parp' : ' open') : ''}` });
       if (e) {
-        if (i === 0 && TROPHY) card.append(h('span', { html: TROPHY }));
         card.append(
-          h('span', { class: 'num', text: `${e.tie ? '=' : ''}${e.rank}` }),
-          level(null, false, 32, { level: e.level, ring: e.ring, ringTitle: titleText(e.title) }),
-          h('span', { class: 'pod-n', text: e.you ? `${e.name} (you)` : e.name }),
+          h('span', { class: 'pod-r' }, i === 0 && TROPHY ? h('span', { html: TROPHY }) : null, h('span', { class: 'num', text: `${e.tie ? '=' : ''}${e.rank}` })),
+          h('span', { class: 'pod-who' }, level(null, false, 20, { level: e.level, ring: e.ring, ringTitle: titleText(e.title) }),
+            h('span', { class: 'pod-n', text: e.you ? `${e.name} (you)` : e.name })),
           h('span', { class: 'pod-v', text: value(e) }),
           ...(o.sub && o.sub(e) ? [h('span', { class: 'pod-s', text: o.sub(e) })] : []));
-      } else if (p) card.append(h('span', { html: FLAG }), h('span', { class: 'pod-n', text: p.label }), h('span', { class: 'pod-v', text: num(p.value) }), h('span', { class: 'pod-s', text: 'par' }));
+      } else if (p) card.append(h('span', { html: FLAG }), h('span', { class: 'pod-n', text: p.label }), h('span', { class: 'pod-v', text: num(p.value) }));
       else card.append(h('span', { class: 'num', text: String(i + 1) }), h('span', { class: 'pod-s', text: 'Open' }));
       el.append(card);
     });
     put(host, el);
+    if (o.rise && UI.motion) [[2, 0], [0, 60], [1, 120]].forEach(([i, delay]) => UI.motion.enter(el.children[i], 'rise', { delay }));
     return { el };
   }
 
   /* ------------------------------------------------------------ UI.debrief (C1) */
   const CAUSE = { trap: 'Traps', slip: 'Slips', clock: 'Clock', entry: 'Entry', gap: 'Gaps', skip: 'Skipped', void: 'Voided', pace: 'Over budget', finish: 'Finish bonus', reach: 'Not reached' };
   const TIER = { easy: 'Easy', medium: 'Medium', hard: 'Hard' };
-  const topicName = t => (UI.TOPIC && UI.TOPIC[t] ? UI.TOPIC[t].short : String(t || '').replace(/_/g, ' '));
+  const topicName = t => (UI.topicName ? UI.topicName(t) : String(t || '').replace(/_/g, ' '));   // Math and R&W skills
   // a trap's name as the student reads it: the server folds numbers into # (progress.norm); the
   // student's own choices still carry the numbers, so a matching reason gives the wording back
   const normOf = r => String(r || '').toLowerCase().replace(/[-−]?\d[\d.,/]*/g, '#').split(/\s+/).filter(Boolean).join(' ');
@@ -663,6 +717,7 @@
     if (ranked) {
       el.append(h('p', { class: 'debrief-line', text: best
         ? `Q${best.slot} right would have put you #${best.rank_if}${podium ? ': one fix from the podium.' : '.'}`
+        : d.rank && d.all_right_rank >= d.rank ? `Fixes add points here, not places: you hold #${d.rank}.`   // "all right → #1" read oddly at #1
         : `All of them right → #${d.all_right_rank} of ${num(d.players)}.` }));
     }
     const unreached = lost.filter(r => r.kind === 'reach');
@@ -678,7 +733,7 @@
         const label = ['trap', 'slip', 'gap', 'entry'].includes(r.kind) ? 'Fix it · 3' : r.kind === 'clock' || r.kind === 'pace' ? 'Speed drill · 8' : r.kind === 'skip' ? 'Try it now' : null;
         if (label) { act = h('button', { type: 'button', class: 'quiet', text: label }); act.addEventListener('click', () => o.onFix(r, label)); }
       }
-      ul.append(h('li', {}, h('span', { class: 'dr-t' }, text, r.rushed ? tip(h('span', { class: 'chip-s', text: 'rushed' }), 'Answered in under a quarter of its time budget') : null,
+      ul.append(h('li', {}, h('span', { class: 'dr-t' }, text, r.rushed ? tip(h('span', { class: 'badge soft', text: 'Rushed' }), 'Answered in under a quarter of its time budget') : null,
         sub ? h('span', { class: 'dr-m', text: sub }) : null), act));
     });
     if (unreached.length) ul.append(h('li', {}, h('span', { class: 'dr-t', text: `Not reached · ${num(unreached.length)} question${unreached.length === 1 ? '' : 's'} · −${num(unreached.reduce((x, r) => x + r.pts, 0))}` })));
@@ -701,7 +756,8 @@
         go.addEventListener('click', async () => { go.disabled = true; try { await o.onRematch(whenV); } finally { go.disabled = false; } });
         act.append(go);
         under(act, [{ value: 'later', label: 'In 2 days' }, { value: 'now', label: 'Now' }], { value: 'later', label: 'When', onChange: v => { whenV = v; } });
-        act.append(info('Same types, new numbers, the same traps. Coming back in 2 days fixes them for longer.', 'About rematches'));
+        act.append(info(d.subject === 'rw' ? 'Same skills and difficulty, passages you haven’t seen. Coming back in 2 days fixes them for longer.'
+          : 'Same types, new numbers, the same traps. Coming back in 2 days fixes them for longer.', 'About rematches'));
         el.append(act);
       }
     }
@@ -728,7 +784,7 @@
 
   /* ------------------------------------------------------------ sheets: join, create, reminder */
   function join() {
-    const field = h('input', { class: 'field', id: 'cx-code', maxlength: '6', autocomplete: 'off', autocapitalize: 'characters', spellcheck: 'false', inputmode: 'text', style: 'font-family: var(--mono); letter-spacing: .2em; text-transform: uppercase; max-width: 220px' });
+    const field = h('input', { class: 'field cx-code-in', id: 'cx-code', maxlength: '6', autocomplete: 'off', autocapitalize: 'characters', spellcheck: 'false', inputmode: 'text' });
     const msg = h('p', { class: 'cx-err', role: 'alert', hidden: true });
     const sheet = UI.sheet({
       title: 'Join with a code', size: 's',
@@ -756,8 +812,14 @@
     return sheet;
   }
 
+  // seconds a question on the auto clock (the server's deps.PACE)
+  const PACE = { math: 95, rw: 71 };
+  // every skill of a subject, by slug: the create sheet's default pick
+  const skillsOf = s => (s === 'rw' ? (UI.RW_DOMAINS || []).flatMap(d => d.skills) : (UI.TOPICS || []).map(t => t.slug));
   function create(prefill = {}) {
-    const f = { title: prefill.title || '', count: prefill.count || 10, source: 'skills', topics: new Set(prefill.topics || (UI.TOPICS || []).map(t => t.slug)),
+    // one subject a contest: the friend challenge's skills say which, else the subject in use
+    const subject = prefill.subject || (prefill.topics && prefill.topics.length && UI.subjectOf ? UI.subjectOf(prefill.topics[0]) : UI.subject ? UI.subject.get() : 'math');
+    const f = { subject, title: prefill.title || '', count: prefill.count || 10, source: 'skills', topics: new Set(prefill.topics || skillsOf(subject)),
       difficulty: 'all', format: 'both', clock: prefill.minutes ? 'custom' : 'auto', minutes: prefill.minutes || 16, open_for: 24, repeat: 'once', rounds: 7,
       twin: prefill.twin ?? false, reveal: 'each', strict: false, mode: 'custom', paper: null };
     const form = h('div', { class: 'cx-form' });
@@ -767,7 +829,10 @@
     const title = h('input', { class: 'field', id: 'cx-title', maxlength: '40', value: f.title, placeholder: 'Your name’s challenge', autocomplete: 'off' });
     title.addEventListener('input', () => { f.title = title.value; });
     form.append(h('div', {}, h('label', { class: 'label', for: 'cx-title', text: 'Title' }), title, h('p', { class: 'help', text: '3–40 characters. Empty: “{your name}’s challenge”.' })));
-    // Papers or Custom: a race on one of the weekly papers, or on skills you pick
+    const subjRow = row('Subject');
+    under(subjRow, ['math', 'rw'].map(v => ({ value: v, label: UI.subjectLabel ? UI.subjectLabel(v) : v })), { value: f.subject, label: 'Subject', onChange: v => setSubject(v) });
+    form.append(subjRow);
+    // Papers or Custom: a race on one of the weekly papers, or on skills you pick (papers are Math)
     const modeRow = row('Contest on');
     under(modeRow, [{ value: 'custom', label: 'Custom' }, { value: 'papers', label: 'Papers' }], { value: 'custom', onChange: v => setMode(v) });
     form.append(modeRow);
@@ -789,18 +854,22 @@
     const cnt = row('Questions');
     under(cnt, [5, 10, 15, 22].map(n => ({ value: n, label: String(n) })), { value: f.count, onChange: v => { f.count = v; draw(); } });
     form.append(cnt);
-    // the skill picker: 4 domains, select-all per domain
+    // the skill picker: the subject's 4 domains, select-all per domain
     const skillsBox = row('Skills');
     const grid = h('div', { class: 'cx-skills' });
-    (UI.DOMAINS || []).forEach(([dname, dshort]) => {
-      const topics = (UI.TOPICS || []).filter(t => t.domain === dname);
-      const all = h('input', { type: 'checkbox' });
-      const boxes = topics.map(t => { const c = h('input', { type: 'checkbox', value: t.slug }); c.checked = f.topics.has(t.slug); c.addEventListener('change', () => { c.checked ? f.topics.add(t.slug) : f.topics.delete(t.slug); syncAll(); draw(); }); return [c, t]; });
-      const syncAll = () => { const on = boxes.filter(([c]) => c.checked).length; all.checked = on === boxes.length; all.indeterminate = on > 0 && on < boxes.length; };
-      all.addEventListener('change', () => { boxes.forEach(([c, t]) => { c.checked = all.checked; all.checked ? f.topics.add(t.slug) : f.topics.delete(t.slug); }); draw(); });
-      syncAll();
-      grid.append(h('div', { class: 'dom' }, h('label', {}, all, dshort), boxes.map(([c, t]) => h('label', {}, c, t.short))));
-    });
+    function drawSkills() {
+      const groups = f.subject === 'rw' ? (UI.RW_DOMAINS || []).map(d => [d.name, d.skills.map(s => ({ slug: s, short: topicName(s) }))])
+        : (UI.DOMAINS || []).map(([dname, dshort]) => [dshort, (UI.TOPICS || []).filter(t => t.domain === dname)]);
+      grid.replaceChildren(...groups.map(([dshort, topics]) => {
+        const all = h('input', { type: 'checkbox' });
+        const boxes = topics.map(t => { const c = h('input', { type: 'checkbox', value: t.slug }); c.checked = f.topics.has(t.slug); c.addEventListener('change', () => { c.checked ? f.topics.add(t.slug) : f.topics.delete(t.slug); syncAll(); draw(); }); return [c, t]; });
+        const syncAll = () => { const on = boxes.filter(([c]) => c.checked).length; all.checked = on === boxes.length; all.indeterminate = on > 0 && on < boxes.length; };
+        all.addEventListener('change', () => { boxes.forEach(([c, t]) => { c.checked = all.checked; all.checked ? f.topics.add(t.slug) : f.topics.delete(t.slug); }); draw(); });
+        syncAll();
+        return h('div', { class: 'dom' }, h('label', {}, all, dshort), boxes.map(([c, t]) => h('label', {}, c, t.short)));
+      }));
+    }
+    drawSkills();
     skillsBox.append(grid);
     form.append(skillsBox);
     const diff = row('Difficulty');
@@ -810,16 +879,17 @@
     under(fmt, [{ value: 'both', label: 'Both' }, { value: 'mcq', label: 'Multiple choice' }, { value: 'spr', label: 'Grid-in' }], { value: 'both', onChange: v => { f.format = v; } });
     form.append(fmt);
     const clock = row('Clock');
-    const mins = h('input', { class: 'field', type: 'number', min: '5', max: '70', value: String(f.minutes), style: 'max-width: 120px', 'aria-label': 'Minutes', hidden: f.clock !== 'custom' });
+    const mins = h('input', { class: 'field cx-num', type: 'number', min: '5', max: '70', value: String(f.minutes), 'aria-label': 'Minutes', hidden: f.clock !== 'custom' });
     mins.addEventListener('input', () => { f.minutes = Math.max(5, Math.min(70, parseInt(mins.value, 10) || 16)); draw(); });
-    under(clock, [{ value: 'auto', label: 'Auto (95 s a question)' }, { value: 'custom', label: 'Minutes' }], { value: f.clock, onChange: v => { f.clock = v; mins.hidden = v !== 'custom'; draw(); } });
+    const autoText = () => `Auto (${PACE[f.subject]} s a question)`;
+    const clockCtl = under(clock, [{ value: 'auto', label: autoText() }, { value: 'custom', label: 'Minutes' }], { value: f.clock, onChange: v => { f.clock = v; mins.hidden = v !== 'custom'; draw(); } });
     clock.append(mins);
     form.append(clock);
     const openFor = row('Open for');
     const openCtl = under(openFor, [{ value: 1, label: '1 hour' }, { value: 24, label: '24 hours' }, { value: 72, label: '3 days' }, { value: 168, label: '7 days' }], { value: 24, onChange: v => { f.open_for = v; draw(); } });
     form.append(openFor);
     const rep = row('Repeat');
-    const rounds = h('input', { class: 'field', type: 'number', min: '2', max: '30', value: String(f.rounds), style: 'max-width: 120px', 'aria-label': 'Rounds', hidden: true });
+    const rounds = h('input', { class: 'field cx-num', type: 'number', min: '2', max: '30', value: String(f.rounds), 'aria-label': 'Rounds', hidden: true });
     rounds.addEventListener('input', () => { f.rounds = Math.max(2, Math.min(30, parseInt(rounds.value, 10) || 2)); draw(); });
     const repCtl = under(rep, [{ value: 'once', label: 'Once' }, { value: 'day', label: 'Every day' }, { value: 'week', label: 'Every week' }], { value: 'once', onChange: v => {
       f.repeat = v; rounds.hidden = v === 'once';
@@ -832,22 +902,40 @@
     form.append(rep);
     const radios = (name, opts, v, set) => h('div', { class: 'cx-radio' }, opts.map(([val0, label]) => {
       const r = h('input', { type: 'radio', name, value: String(val0) }); r.checked = v === val0; r.addEventListener('change', () => set(val0));
-      return h('label', {}, r, h('span', { text: label }));
+      return h('label', { class: 'choice-row' }, r, h('span', { text: label }));
     }));
-    form.append(row('Questions for each student', radios('cx-twin', [[false, 'Same questions for everyone: good for going over them together'], [true, 'Everyone gets their own twin: same skills and difficulty, different numbers']], f.twin, v => { f.twin = v; })));
+    // a twin has its own numbers; a written R&W item has none, so each student gets their own item instead
+    const twinText = () => (f.subject === 'rw' ? 'Everyone gets their own questions: same skills and difficulty, a different passage'
+      : 'Everyone gets their own twin: same skills and difficulty, different numbers');
+    const twinBox = radios('cx-twin', [[false, 'Same questions for everyone: good for going over them together'], [true, twinText()]], f.twin, v => { f.twin = v; });
+    form.append(row('Questions for each student', twinBox));
     form.append(row('Show answers', radios('cx-reveal', [['each', 'After each question'], ['end', 'At the end']], 'each', v => { f.reveal = v; })));
     const strictRow = row('Strict');
     if (UI.switch) UI.switch(strictRow, { checked: false, label: 'Strict', onChange: v => { f.strict = v; } });
-    strictRow.append(h('p', { class: 'help', text: 'Leaving the tab or window, or copying the question and leaving, means a quick confirm on new numbers at the end.' }));
+    const strictText = () => 'Leaving the tab or window, or copying or pasting, flags the question. Before finishing, each flagged right answer gets one more question of the same skill and difficulty; a wrong one scores 0.';
+    const strictHelp = h('p', { class: 'help', text: strictText() });
+    strictRow.append(strictHelp);
     form.append(strictRow);
     const customRows = [src, cnt, skillsBox, diff, fmt];
     let papersLoaded = false;
     function setMode(v) {
       f.mode = v;
       customRows.forEach(x => { x.hidden = v === 'papers'; });
-      if (v === 'custom') skillsBox.hidden = f.source === 'my_traps';
+      if (v === 'custom') { skillsBox.hidden = f.source === 'my_traps'; fmt.hidden = f.subject === 'rw'; }
       papersBox.hidden = v !== 'papers';
       if (v === 'papers') { f.count = 22; f.twin = true; if (!papersLoaded) loadPapers(); }
+      draw();
+    }
+    // R&W: its own skills, no grid-ins (no Format), no papers, 71 s a question
+    function setSubject(v) {
+      f.subject = v; f.topics = new Set(skillsOf(v));
+      if (v === 'rw' && f.mode === 'papers') setMode('custom');
+      modeRow.hidden = v === 'rw';
+      fmt.hidden = v === 'rw' || f.mode === 'papers';
+      drawSkills();
+      clockCtl.el.querySelector('button').firstChild.textContent = autoText();
+      twinBox.querySelector('input[value="true"] + span').textContent = twinText();
+      strictHelp.textContent = strictText();
       draw();
     }
     async function loadPapers() {
@@ -863,13 +951,14 @@
             const r = h('input', { type: 'radio', name: 'cx-paper', value: String(p.n) });
             r.addEventListener('change', () => { f.paper = p.n; });
             const st = ((p.yours || {}).status);
-            return h('label', {}, r, h('span', { text: `Paper #${p.n} · ${p.label || ''}${st === 'completed' ? ' · sat' : st === 'in_progress' ? ' · in progress' : ''}` }));
+            return h('label', { class: 'choice-row' }, r, h('span', { text: `Paper #${p.n} · ${p.label || ''}${st === 'completed' ? ' · sat' : st === 'in_progress' ? ' · in progress' : ''}` }));
           })));
       } catch (e) { papersLoaded = false; papersBox.replaceChildren(h('legend', { text: 'Papers' }), h('p', { class: 'help', text: 'Couldn’t load the papers. Switch to Custom and back to retry.' })); }
     }
     form.append(sum, err);
+    modeRow.hidden = fmt.hidden = f.subject === 'rw';
     function draw() {
-      const secs = f.clock === 'auto' ? f.count * 95 : f.minutes * 60;
+      const secs = f.clock === 'auto' ? f.count * PACE[f.subject] : f.minutes * 60;
       const closes = new Date(Date.now() + (f.repeat === 'once' ? f.open_for : f.repeat === 'day' ? 24 : 168) * 3600e3);
       const whenS = closes.toLocaleString('en-US', { weekday: 'short', hour: 'numeric', minute: '2-digit' });
       const src0 = f.source === 'skills' ? '' : f.source === 'my_traps' ? ' · from your open mistakes' : ' · from the mistakes you hold open together (round 2 on)';
@@ -882,7 +971,7 @@
     });
     async function submit() {
       err.hidden = true;
-      const body = { count: f.count, source: f.source, twin: f.twin, reveal: f.reveal, strict: f.strict, format: f.format,
+      const body = { subject: f.subject, count: f.count, source: f.source, twin: f.twin, reveal: f.reveal, strict: f.strict, format: f.subject === 'rw' ? 'mcq' : f.format,
         difficulty: f.difficulty === 'all' ? ['easy', 'medium', 'hard'] : [f.difficulty] };
       if (f.title.trim()) body.title = f.title.trim();
       if (f.mode === 'papers') {
@@ -911,8 +1000,8 @@
       const link = `${location.origin}${r.link || `/compete/contest/?code=${r.code}`}`;
       const copyCode = h('button', { type: 'button', class: 'btn', text: 'Copy code' });
       const copyLink = h('button', { type: 'button', class: 'btn', text: 'Copy link' });
-      copyCode.addEventListener('click', () => UI.copyText(r.code));
-      copyLink.addEventListener('click', () => UI.copyText(link));
+      copyCode.addEventListener('click', () => copy(copyCode, r.code));
+      copyLink.addEventListener('click', () => copy(copyLink, link));
       const body = sheet.body || sheet.el.querySelector('.sheet-body');
       body.replaceChildren(h('div', { class: 'cx-form' },
         h('p', { class: 'k', text: r.rounds > 1 ? `Code for all ${r.rounds} rounds` : 'Code' }),
@@ -925,7 +1014,7 @@
   }
 
   function reminder() {
-    const t = h('input', { class: 'field', type: 'time', id: 'cx-rem', value: '17:00', style: 'max-width: 160px' });
+    const t = h('input', { class: 'field cx-time', type: 'time', id: 'cx-rem', value: '17:00' });
     return UI.sheet({
       title: 'Daily reminder', size: 's',
       body: b => b.append(h('label', { class: 'label', for: 'cx-rem', text: 'Time' }), t, h('p', { class: 'help', text: 'A calendar event that repeats every day and links to the Daily Challenge.' })),
@@ -937,18 +1026,103 @@
     });
   }
 
-  // an explanation on demand (decision 7): an i that shows it on hover or focus, and in a pop on tap
-  function info(text, label = 'More about this') {
-    const b = h('button', { class: 'quiet info-i', type: 'button', 'aria-label': label, text: 'ⓘ' });
-    if (UI.tooltip) UI.tooltip(b, text);
-    b.addEventListener('click', () => (UI.pop ? UI.pop(b, h('p', { class: 'help pop-help', text }), { label, anchored: true }) : toast(text)));
-    return b;
+  /* ------------------------------------------------------------ badge art (Profile and Compete draw achievements the same)
+     one drawing per achievement on a 24 grid in the app's 1.6 stroke; a skill badge uses its topic glyph */
+  const BADGE_PATHS = {
+    streak: 'M12 3c1 3.2 4.5 5.2 4.5 9.2a4.5 4.5 0 0 1-9 0c0-2 1-3.2 2.2-4.4.1 1.8.9 2.6 1.8 2.8C11 7.8 11 5.4 12 3z',
+    on_target: 'M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM12 7.5a4.5 4.5 0 1 0 0 9 4.5 4.5 0 0 0 0-9zM12 11a1 1 0 1 0 0 2 1 1 0 0 0 0-2z',
+    consistency: 'M4 6l5-2 6 2 5-2v14l-5 2-6-2-5 2zM9 4v14M15 6v14',
+    qotd: 'M3 17h18M7 17a5 5 0 0 1 10 0M12 5v3M5.2 9.2l1.8 1.8M18.8 9.2L17 11M2 21h20',
+    answered: 'M6 21V4M6 5h12l-3 3.5L18 12H6',
+    hard_right: 'M2.5 19L9 8l4.5 7.5 2-3L21.5 19zM9 8V4l3.5 1.5L9 7',
+    hours: 'M7 3.5h10M7 20.5h10M8 3.5c0 5 8 5.5 8 8.5s-8 3.500-8 8.500M16 3.5c0 5-8 5.5-8 8.5s8 3.500 8 8.500',
+    fixed: 'M3 20h18M5 20v-4M19 20v-4M5 16a7 7 0 0 1 14 0M9 16v-6M12 16V8.500M15 16v-6',
+    clean_set: 'M5 7h14M5 12h9M5 17h6M14.500 16.500l2 2 4-4.500',
+    never_twice: 'M12 7.500a2.500 2.500 0 1 0 0-5 2.500 2.500 0 0 0 0 5zM12 7.500V21M7 12h10M4.500 15c0 3.500 3.500 6 7.500 6s7.500-2.500 7.500-6',
+    explorer: 'M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM15.700 8.300l-2.200 5.200-5.200 2.200 2.200-5.200z',
+    first_module: 'M12 21v-9M12 12C12 8 9 6 5 6c0 4 3 6 7 6zM12 15c0-3 2.500-5 6.500-5 0 3-2.500 5-6.500 5z',
+    first_section: 'M2.500 20L12 4l9.500 16zM12 4v16M8.500 20L12 13l3.500 7',
+    sections: 'M8 9a4 4 0 0 1 8 0v11H8zM8 14h8M10 9V6.500M14 9V6.500M16 12h2.500a1 1 0 0 1 1 1v7H16',
+    upper_route: 'M6 21L10 4M18 21L14 4M12 21v-3M12 14.500v-3.500M12 8V6',
+    climbing: 'M3.500 17.500l6-6 4 4 7-8.500M15 7h5.500v5.500',
+    challenge: 'M7 3.500h10a2 2 0 0 1 2 2v13a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-13a2 2 0 0 1 2-2zM8.500 9h7M8.500 13h7M8.500 17h4',
+    podium: 'M3 20.500h18M4 20.500v-5h5v5M9.500 20.500V10.500h5v10M15 20.500v-3h5v3M12 4.500l.7 1.500 1.600.2-1.200 1.100.3 1.600-1.400-.8-1.400.8.3-1.600L9.700 6.200 11.300 6z',
+    first_place: 'M3.500 18.500l1.800-9.500 4.700 4 2-7 2 7 4.700-4 1.800 9.500zM4.500 21h15',
+    perfect: 'M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM8 12.500l2.700 2.700L16.300 9',
+    'pace-setter': 'M12 21a8 8 0 1 0 0-16 8 8 0 0 0 0 16zM12 13l3-3M10 2.500h4M12 5V2.500',
+    'top-ten': 'M12 3l2.700 5.600 6.100.9-4.400 4.300 1 6.100L12 17l-5.400 2.900 1-6.100L3.200 9.500l6.100-.9z',
+    'weekly-4': 'M5 5h14a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1zM8 3v4M16 3v4M4 10h16M8 14h2M14 14h2M8 17h2M14 17h2',
+    sprinter: 'M13.500 3L5 14h6l-1 7 8.500-11h-6z',
+    'dress-rehearsal': 'M6 21V4M6 5h12v8H6M10 5v8M14 5v8M6 9h12',
+    'season-top-10': 'M12 20a5.500 5.500 0 1 0 0-11 5.500 5.500 0 0 0 0 11zM9 9L7 3h4l1 3.500M15 9l2-6h-4l-1 3.500',
+    'level-5': 'M6 14l6-6 6 6M6 19l6-6 6 6',
+    'level-8': 'M6 8l6-6 6 6M6 13l6-6 6 6M6 18l6-6 6 6',
+    'all-rounder': 'M9 3.500a5.500 5.500 0 1 0 0 11 5.500 5.500 0 0 0 0-11zM15 3.500a5.500 5.500 0 1 0 0 11 5.500 5.500 0 0 0 0-11zM12 9.500a5.500 5.500 0 1 0 0 11 5.500 5.500 0 0 0 0-11z',
+    'words-50': 'M4 20l6-16 6 16M6.500 14.500h7M19 3v5M16.500 5.500h5',
+    'words-250': 'M20 4c-9 0-14 5-14 12v4.500l4.500-4.500c6.500 0 9.500-6.500 9.500-12zM6 20.500L16 10.500',
+    'words-1000': 'M12 6c-2.500-2-5.500-2-8.500-1v13c3-1 6-1 8.500 1 2.500-2 5.500-2 8.500-1V5c-3-1-6-1-8.500 1zM12 6v13',
+    'words-collection': 'M4 4v16M9 4v16M13 6.500l5 13.500M17 4.500l-1.500 1',
+    'words-review-streak': 'M5 5h14a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1zM8 3v4M16 3v4M4 10h16M8.500 15l2.500 2.500 4.500-5',
+    'domain:Algebra': 'M6 6l12 12M18 6L6 18M20 4v.01M4 20v.01',
+    'domain:Advanced Math': 'M18 5H6.500L13 12l-6.500 7H18',
+    'domain:Problem-Solving and Data Analysis': 'M4 20.500h16M6 20.500v-8M11 20.500V5M16 20.500v-10M21 20.500v-6',
+    'domain:Geometry and Trigonometry': 'M4 19.500L15 5v14.500zM9.500 19.500a5.500 5.500 0 0 0 1-3.200',
+  };
+  const badgeSvg = (id, size) => `<svg viewBox="0 0 24 24" width="${size}" height="${size}" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="${BADGE_PATHS[id]}"/></svg>`;
+  // badgeIcon({id, icon}, earned, {size: 'sm'}) -> span.bcirc
+  function badgeIcon(a, on, o = {}) {
+    const id = String((a && a.id) || ''), topic = id.startsWith('skill:') ? id.slice(6) : null;
+    const T = UI.TOPIC || {};
+    const inner = topic && T[topic] && UI.glyph ? UI.glyph(topic)
+      : BADGE_PATHS[id] ? h('span', { class: 'ic', html: badgeSvg(id, 24) })
+      : a && BADGE_PATHS[a.icon] ? h('span', { class: 'ic', html: badgeSvg(a.icon, 24) })   // explorer:rw draws as explorer
+      : a && T[a.icon] && UI.glyph ? UI.glyph(a.icon)
+      : h('span', { class: 'ic', html: UI.svg ? UI.svg((UI.ICON && UI.ICON[a && a.icon]) || (UI.ICON && UI.ICON.trophy) || '', 22) : '' });
+    return h('span', { class: 'bcirc' + (on ? ' on' : '') + (o.size === 'sm' ? ' sm' : ''), 'aria-hidden': 'true' }, inner);
   }
+
+  /* ------------------------------------------------------------ strict mode (the runner's integrity seam)
+     A runner's integrity event as compete.flag's vocabulary; the flag's body for /spot. */
+  const SPOT_WHY = { blur: 'blur', hidden: 'left', fullscreen: 'left', copy: 'copyleave', paste: 'paste' };
+  const spotBody = (qid, e) => ({ question_id: qid, why: SPOT_WHY[e.kind] || 'left', secs: Math.min(3600, Math.round((e.ms || 0) / 100) / 10) });
+  // UI.compete.spotCheck(host, post): the spot-check before a strict contest finishes (compete.confirm_next).
+  // post(body) is the sitting's /confirm. For each question answered right while the student was away, one
+  // more of the same skill and difficulty: right keeps that question's points, wrong or skipped voids them.
+  // Resolves once none is due (at once when nothing was flagged); never blocks a finish on an error.
+  async function spotCheck(host, post) {
+    let r;
+    try { r = await post({}); } catch (_) { return; }
+    let n = 0;
+    while (r && r.due && r.question) {
+      n += 1;
+      const of = n + (r.left || 1) - 1;
+      const answer = await new Promise(res => {
+        let picked = null;
+        const box = h('div', { class: 'spot-q' });
+        const go = h('button', { type: 'button', class: 'pill', text: 'Submit', disabled: true });
+        const skip = h('button', { type: 'button', class: 'quiet', text: 'Skip' });
+        host.replaceChildren(h('section', { class: 'card spot', 'aria-labelledby': 'spot-h' },
+          h('h2', { class: 'h2', id: 'spot-h', text: of > 1 ? `Spot-check · ${n} of ${of}` : 'Spot-check' }),
+          h('p', { class: 'line', 'data-nofold': '', text: `You left the contest or copied during Q${r.slot || '?'}. Answer one more question of the same skill and difficulty: right keeps Q${r.slot || '?'}’s points; wrong or skipped, they don’t count.` }),
+          box, h('div', { class: 'row-act' }, go, skip)));
+        (UI.workspace || UI.question)(box, r.question, { mode: 'exam', onSelect: a => { picked = a; go.disabled = a === null || a === undefined || a === ''; } });
+        go.addEventListener('click', () => res(picked));
+        skip.addEventListener('click', () => res('_skip'));
+      });
+      try { r = await post({ answer }); } catch (_) { return; }
+      if (r && r.last) toast(r.last.kept ? 'Kept: those points stand' : 'Not kept: that question’s points don’t count');
+    }
+  }
+
+  // an explanation on demand (decision 7): the shared "?" (kit.js UI.why); "About the clock" names it
+  // Copy says Copied in place (kit.js UI.saving announces it); a refused copy gets kit's copy sheet
+  const copy = (b, text) => UI.copyText(text, { button: b });
+  const info = (text, label) => UI.why(text, { about: label && label !== 'More about this' ? label.replace(/^About /, '') : null, anchored: true });
 
   Object.assign(UI, {
     level, board, podium, debrief, pacer,
     compete: { KINDS, kind, title, icon, svg: svgOf, SVG, href, runner, start, rulesSeen, markRules, windowLine, clockText, facts, marks,
-      copyResult, under, subnav, join, create, reminder, ladder, parLine, fieldLine, pct, LADDER, levelOf, rangeOf, levelIn, step, left, when, dayLabel, titleText, topicName, TIER, num, mmss, info,
-      trapWords, trapLabel, normOf, streakBefore, DAY_WORD },
+      copyResult, under, subnav, join, create, reminder, ladder, parLine, fieldLine, pct, LADDER, levelOf, rangeOf, levelIn, step, left, when, dayLabel, localDay, titleText, periodText, topicName, TIER, num, mmss, info, copy,
+      trapWords, trapLabel, normOf, streakBefore, DAY_WORD, badgeIcon, BADGE_PATHS, moved, spotBody, spotCheck },
   });
 })();

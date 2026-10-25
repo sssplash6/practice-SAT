@@ -41,13 +41,25 @@
                                     registers /sw.js and asks the browser, from a tap only
      UI.skip()                      the skip link, first on every page with a <main>
    The chrome (Shell 2-2.6, R1, U1, U25, U26):
-     UI.shell(page | {page, sections, now})   the sidebar, rail and overlay, the phone top bar,
+     UI.shell(page | {page, sections, now, nowBlock, chrome, ownPrimary}) or UI.shell(page, {...})   the sidebar, rail and overlay, the phone top bar,
                                     tabs, grip and hold menus, the Now strip and the section bar,
-                                    every meta from /api/shell; UI.shell.toggle() is [
+                                    every meta from /api/shell; UI.shell.toggle() is [ (a click glides it);
+                                    chrome: 'focus' (Sign in, Welcome, Pair) draws only a slim brand bar
+                                    (mark and wordmark home, Help, the account menu) and sets body.has-focus;
+                                    ownPrimary: true (a page whose hero carries its own orange Start: Practice,
+                                    Today, Tests) makes the Now strip's, the sidebar's and the section bar's Up next Start a .btn,
+                                    so the page shows one orange button (the menu sheet's stays orange)
+     Motion here (premium/MOTION.md): the current nav item's .nav-mark and tab's .tab-mark slide on a page
+                                    change; the rail collapse and the Now card fold glide (UI.motion.vt);
+                                    keycaps flash when their shortcut fires; details.fold and a
+                                    .card[data-collapsed] grow open; the sidebar's ring, meter and streak
+                                    move when fresh data changes them
      UI.NAV, UI.SECTION             the nine items and the page -> item mapping
      UI.nowStrip(host)              Up next and the Today card as a block (Today places its own
                                     and passes {now: false})
-     UI.sections([{id, label}])     the section bar's chips, with scroll-spy
+     UI.sections([{id, label}])     the section bar's chips, with scroll-spy; they wait until the page's header has
+                                    scrolled away and fade in as the bar sticks (UI.shell({sectionsAlways: true}):
+                                    from the top); a chip that gets focus brings them out at once
      UI.menuSheet(trigger)          the phone's menu sheet; UI.accountMenu() the account items
      UI.signOut()                   sign out (saved: Undo for 8 s; shared computer: at once) or,
                                     unsaved, the Leave this device dialog
@@ -67,6 +79,9 @@
      UI.boxChips(onTile, [minutes])  "Got time? 5 · 10 · 15 … min", each starting a time box
    Kept for the pages until they are rebuilt: UI.question, UI.calc, UI.ref, UI.plan,
    UI.snap, the topics and glyphs.
+   Icons (premium A3, Phosphor): UI.ICON[name] inner strings for UI.svg(inner, size); UI.icon(name, size) -> svg
+   node ('' and a warning on localhost for an unknown name); UI.ICON_FILL the fills alone; UI.spotArt(kind, ms)
+   -> svg string for an empty state ('start', 'clear', 'lost', 'done' with the four masteries 0..1).
    ========================================================================== */
 
 (() => {
@@ -189,8 +204,9 @@
     if (!r.ok) {
       const d = data && data.detail;
       const e = new Error(typeof d === 'string' ? d : (d ? JSON.stringify(d) : `HTTP ${r.status}`));
-      Object.assign(e, { status: r.status, data, detail: d, retired: !!(r.status === 401 && d && d.retired) });
+      Object.assign(e, { status: r.status, data, detail: d, retired: !!(r.status === 401 && d && d.retired), signin: !!(r.status === 401 && d && d.signin) });
       if (e.retired) retired();
+      if (e.signin) toSignin();
       throw failed(e, revert, o);
     }
     return data;
@@ -251,6 +267,12 @@
     return { start, stop, get on() { return on; } };
   })();
 
+  /* email-only access (2026-10-20): a browser that never signed in has no learner on the server,
+     which answers 401 {signin}; every page but Sign in, Help and a tutor's progress link sends it there, then back */
+  function toSignin() {
+    if (/^\/(signin|help|share)\//.test(location.pathname)) return;
+    location.replace('/signin/?go=' + encodeURIComponent(location.pathname + location.search + location.hash));
+  }
   /* retired (Shell 1, U21): a rotated-away code, a signed-out device, an ended shared
      session. No cached card of that student is painted after it. */
   let retiredShown = false;
@@ -343,6 +365,7 @@
   const shellSubs = [];
   function takeShell(d, fromCache) {
     if (d && d.retired) { retired(); return; }
+    if (d && d.signin) { toSignin(); return; }
     shellData = d;
     UI.answered = d.answered;
     // upcoming official dates with their deadlines, for every date picker (R15)
@@ -425,7 +448,6 @@
   }
   const svg = (inner, size = 24, cls = '') =>
     `<svg width="${size}" height="${size}" viewBox="0 0 24 24" aria-hidden="true" focusable="false"${cls ? ` class="${cls}"` : ''}>${inner}</svg>`;
-  const L = 'fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"';
 
   /* ------------------------------------------------------------ the mark
      A rounded square with four gaps cut mid-edge: one corner, rotated. */
@@ -434,46 +456,195 @@
     `<svg width="${size}" height="${size}" viewBox="0 0 100 100" role="img" aria-label="SAT Freshman"><g fill="${fill}">${
       [0, 90, 180, 270].map(a => `<path d="${CORNER}"${a ? ` transform="rotate(${a} 50 50)"` : ''}/>`).join('')}</g></svg>`;
 
-  /* ------------------------------------------------------------ icons */
-  const ICON = {
-    today:    `<rect x="4" y="5" width="16" height="15" rx="3" ${L}/><path d="M4 10h16" ${L}/><circle cx="12" cy="15" r="1.7" fill="currentColor"/>`,
-    practice: `<rect x="4" y="4" width="7" height="7" rx="2" ${L}/><rect x="13" y="4" width="7" height="7" rx="2" ${L}/><rect x="4" y="13" width="7" height="7" rx="2" ${L}/><rect x="13" y="13" width="7" height="7" rx="2" ${L}/>`,
-    tests:    `<path d="M6.5 3.5h8l4 4v13h-12z" ${L}/><path d="M14.5 3.5v4h4" ${L}/><path d="M9.5 12.5h5M9.5 16.5h5" ${L}/>`,
-    plan:     `<circle cx="6" cy="18" r="2" ${L}/><circle cx="18" cy="6" r="2" ${L}/><path d="M8 18h6.5a3 3 0 0 0 0-6h-5a3 3 0 0 1 0-6H16" ${L}/>`,
-    results:  `<path d="M5.5 20v-8M12 20V5M18.5 20v-5.5" ${L} stroke-width="1.9"/>`,
-    flame:    `<path class="flame" d="M12 3.2c.9 2.9 4.6 4.6 4.6 9a4.6 4.6 0 0 1-9.2 0c0-2.1 1-3.5 2.2-4.5-.1 1.6.8 2.7 1.8 2.9-.5-3.2-.3-5.4.6-7.4z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>`,
-    x:        `<path d="M6 6l12 12M18 6L6 18" ${L} stroke-width="1.7"/>`,
-    calc:     `<rect x="5" y="3.5" width="14" height="17" rx="2.5" ${L}/><path d="M8.5 7.5h7" ${L}/><circle cx="9" cy="12" r=".9" fill="currentColor"/><circle cx="12" cy="12" r=".9" fill="currentColor"/><circle cx="15" cy="12" r=".9" fill="currentColor"/><circle cx="9" cy="15.5" r=".9" fill="currentColor"/><circle cx="12" cy="15.5" r=".9" fill="currentColor"/><circle cx="15" cy="15.5" r=".9" fill="currentColor"/>`,
-    ref:      `<path d="M4.5 5.5h6a2 2 0 0 1 2 2v12a2 2 0 0 0-2-2h-6zM19.5 5.5h-6a2 2 0 0 0-2 2v12a2 2 0 0 1 2-2h6z" ${L}/>`,
-    bookmark: `<path d="M7 4.5h10v15l-5-3.6-5 3.6z" ${L}/>`,
-    clock:    `<circle cx="12" cy="13.6" r="7.3" ${L} stroke-width="1.5"/><path d="M9.8 3.2h4.4M12 3.2v3.1M18.2 6.9l1.2-1.2" ${L} stroke-width="1.5"/><path class="hand" d="M12 13.6V9.4" ${L}/>`,
-    arrow:    `<path d="M5 12h13M13 6.5l5.5 5.5-5.5 5.5" ${L}/>`,
-    trophy:   `<path d="M8 4.5h8v4a4 4 0 0 1-8 0zM8 6H5.5a2.5 2.5 0 0 0 2.6 3.5M16 6h2.5a2.5 2.5 0 0 1-2.6 3.5M12 12.5V16M8.5 19.5h7M9.5 19.5c0-2 1-3.5 2.5-3.5s2.5 1.5 2.5 3.5" ${L}/>`,
-    // the shell's (Shell 11)
-    review:   `<path d="M5.5 12a6.5 6.5 0 1 0 2-4.7" ${L}/><path d="M7.5 3.8v3.7h3.7" ${L}/>`,
-    words:    `<path d="M5 18.5 9.5 5.5h1L15 18.5M6.8 13.5h6.4" ${L}/><path d="M16 9.5h4M16 13.5h4" ${L}/>`,
-    profile:  `<circle cx="12" cy="8.5" r="3.6" ${L}/><path d="M5 19.5c1.2-3.3 3.9-5 7-5s5.8 1.7 7 5" ${L}/>`,
-    search:   `<circle cx="10.5" cy="10.5" r="6" ${L}/><path d="M15 15l4.5 4.5" ${L} stroke-width="1.8"/>`,
-    bolt:     `<path d="M13 3.5 6 13.5h5.5l-1 7 7-10H12z" ${L}/>`,
-    help:     `<circle cx="12" cy="12" r="8" ${L}/><path d="M9.8 9.6a2.3 2.3 0 1 1 3.2 2.1c-.6.3-1 .8-1 1.5v.4" ${L}/><circle cx="12" cy="16.6" r=".9" fill="currentColor"/>`,
-    chat:     `<path d="M5 6.5h14v9H10l-4 3v-3H5z" ${L}/>`,
-    chev:     `<path d="M9 6l6 6-6 6" ${L}/>`,
-    panel:    `<rect x="4" y="5" width="16" height="14" rx="2.5" ${L}/><path d="M9.5 5v14" ${L}/>`,
-    play:     `<path d="M8 5.5v13l10-6.5z" fill="currentColor"/>`,
-    settings: `<path d="M5 7h8.5M17.5 7H19M5 12h2.5M11.5 12H19M5 17h8.5M17.5 17H19" ${L}/><circle cx="15.5" cy="7" r="2" ${L}/><circle cx="9.5" cy="12" r="2" ${L}/><circle cx="15.5" cy="17" r="2" ${L}/>`,
-    signin:   `<path d="M14 4.5h3.5a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H14" ${L}/><path d="M10 8l4 4-4 4M14 12H4.5" ${L}/>`,
-    signout:  `<path d="M10 4.5H6.5a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2H10" ${L}/><path d="M15 8l4 4-4 4M19 12H9.5" ${L}/>`,
-    devices:  `<rect x="3.5" y="6" width="12" height="9" rx="1.5" ${L}/><path d="M2.5 18.5h14" ${L}/><rect x="17.5" y="9" width="4" height="10" rx="1.2" ${L}/>`,
-    moon:     `<path d="M19 14.5A7.5 7.5 0 0 1 9.5 5a7.5 7.5 0 1 0 9.5 9.5z" ${L}/>`,
-    text:     `<path d="M3.5 18l4.5-12h1L13.5 18M5.2 14h6.6M15 18l2.6-7h.8L21 18M15.8 15.8h4.4" ${L}/>`,
-    keyboard: `<rect x="3" y="6.5" width="18" height="11" rx="2" ${L}/><path d="M7 10.5h.5M10.5 10.5h.5M14 10.5h.5M17 10.5h.5M8 14.2h8" ${L} stroke-width="1.8"/>`,
-    save:     `<path d="M7.5 18.5a4 4 0 0 1-.6-7.95 5.5 5.5 0 0 1 10.7 1.2A3.5 3.5 0 0 1 17 18.5z" ${L}/><path d="M12 16.2v-5M9.8 13.2 12 11l2.2 2.2" ${L}/>`,
-    users:    `<circle cx="9" cy="9" r="3" ${L}/><path d="M3.5 18.5c.9-2.8 3-4.2 5.5-4.2s4.6 1.4 5.5 4.2" ${L}/><circle cx="16.5" cy="9.5" r="2.4" ${L}/><path d="M16 14.3c2.1 0 3.8 1.2 4.5 3.7" ${L}/>`,
-    plus:     `<path d="M12 5v14M5 12h14" ${L} stroke-width="1.8"/>`,
-    bell:     `<path d="M6.5 16.5V11a5.5 5.5 0 0 1 11 0v5.5l1.5 2h-14z" ${L}/><path d="M10 20.5a2 2 0 0 0 4 0" ${L}/>`,
-    dot:      `<circle cx="12" cy="12" r="4" fill="var(--amber)"/>`,
-    check:    `<path d="M5 12.5l4.5 4.5L19 7.5" ${L} stroke-width="1.8"/>`,
+  /* SPOT: the mark's four corners as the only illustration (ICONS.md 9). UI.spotArt(kind[, ms]) returns an svg
+     string; icons.css sizes it (72px, 56px on phones), outlines in --faint at the icon weight, one piece amber.
+     Corners: 0 top-left, 1 top-right, 2 bottom-right, 3 bottom-left (CORNER rotated 0/90/180/270).
+     Never in sheets, popovers, filtered empties ("No X match these filters": one line plus Clear) or print. */
+  const corner = (i, cls, extra = '') => `<path class="${cls}" d="${CORNER}"${i ? ` transform="rotate(${i * 90} 50 50)"` : ''}${extra}/>`;
+  const spotSvg = (kind, inner, box = '0 0 100 100') => `<svg class="spot spot-${kind}" viewBox="${box}" aria-hidden="true" focusable="false">${inner}</svg>`;
+  const SPOT = {
+    // first use (empty lists before any data): words/index.html, tests.js, me.js, plan.js, compete/overview.js
+    start: spotSvg('start', [0, 1, 2].map(i => corner(i, 'sp-o')).join('') + corner(3, 'sp-on')),
+    // all clear (nothing due, every mistake fixed, the day done): review.js, results/page.js, words-ui.js, Today
+    clear: spotSvg('clear', [0, 1, 2, 3].map(i => corner(i, 'sp-on')).join('')),
+    // 404: the corners drifted apart and slightly turned (404.html)
+    lost: spotSvg('lost', [[-4, -4, -6, 26, 26], [4, -4, 4, 74, 26], [4, 4, -3, 74, 74], [-4, 4, 8, 26, 74]].map(([dx, dy, t, cx, cy], i) =>
+      `<g transform="translate(${dx} ${dy}) rotate(${t} ${cx} ${cy})">${corner(i, i === 3 ? 'sp-on' : 'sp-o')}</g>`).join(''), '-8 -8 116 116'),
   };
+  /* set done (runner summary) and test done (test.js finished): the living mark filling to the new mastery,
+     corners in turn (icons.css: 240ms each, 40ms apart), only after the student's action. ms: the four
+     domains' mastery in kit's livingMark order (Algebra, Advanced Math, PSDA, Geometry), already divided by
+     its STRONG, so 0..1. Same geometry as livingMark; kit may call this instead of keeping its own. */
+  let spotN = 0;
+  SPOT.done = ms => {
+    const id = `spot${++spotN}`;
+    return spotSvg('done', [ms[0], ms[1], ms[3], ms[2]].map((m, i) => {
+      const r = (7 + Math.min(1, Math.max(0, m || 0)) * 53).toFixed(1);
+      return `<clipPath id="${id}-${i}"><circle cx="50" cy="50" r="${r}"/></clipPath>` + corner(i, 'sp-o') +
+        (m > 0 ? corner(i, 'sp-on sp-in', ` clip-path="url(#${id}-${i})" style="--i:${i}"`) : '');
+    }).join(''));
+  };
+  const spot = (kind, ms) => (kind === 'done' ? SPOT.done(ms || [0, 0, 0, 0]) : SPOT[kind] || '');
+
+  /* ------------------------------------------------------------ icons (premium build A3, 2026-10-19)
+     Drop-in for ui.js's `const ICON = {...}` block (ui.js:438-476). Same call shape: every entry is still
+     an inner string for a 24 viewBox, so svg(ICON.x, 18), UI.svg(UI.ICON.x, n) and kit's icon('x') work as
+     they are. Every name ui.js, kit.js, runner.js, question.js, words-ui.js, compete-ui.js and contest.js
+     draw today is here, plus the missing ones (more, compete, grip, phone, link, calendar_check, caret_*).
+
+     Source: Phosphor Icons, github.com/phosphor-icons/core, raw/regular and raw/fill at commit
+     2b75f3ad12b420c9504ef05df8d2564a28f8500e (package 2.1.1). MIT licence, Copyright (c) 2023 Phosphor
+     Icons: web/assets/LICENSE-phosphor.txt. Ours, on the same weight rule: dot, eliminate, strikes (24 grid),
+     twin_test (Phosphor copy plus a small timer, 256 grid).
+
+     Markup: Phosphor entries sit in <g class="ph" transform="scale(.09375)"> (256 to 24). The one
+     stroke-width="16" on that g is only a no-CSS fallback; icons.css sets the real width (1.4px, held in
+     screen pixels). No element carries its own stroke-width, so the old duplicate attributes are gone (bug 1).
+     Round 3 (same source and commit): external (arrow-up-right; a link that leaves the app, after its text),
+     key, envelope, fingerprint, shield and medal (twins; key's dot filled like ours).
+     Twins (nine nav items, note, bell, moon, key, envelope, fingerprint, shield, medal; flag, bookmark, star
+     in amber): the entry holds two layers,
+     <g class="ph ph-f" opacity="0">fill</g><g class="ph ph-o">outline</g>; icons.css shows the fill under
+     aria-current, aria-pressed="true", aria-checked="true" or a selected tab. ICON_FILL holds the fills alone.
+     flame keeps one layer with class="flame" on its outline (ui.css:413 fills it, ui.js:1545 looks it up).
+
+     Names that do not exist in UI.ICON today: more (index.html:1246 falls back to a local copy).
+     Names whose meaning changes, so the caller must switch: question.js `chev` (down) -> caret_down;
+     words-ui.js `left`/`right` (carets) -> caret_left/caret_right (here left/right are arrows, as in
+     runner.js); ui.js:1426 NAV compete `trophy` -> compete; ui.js:2100 "Save your progress" `dot` -> save. */
+
+  const PHF = {
+    today:    '<path d="M208,32H184V24a8,8,0,0,0-16,0v8H88V24a8,8,0,0,0-16,0v8H48A16,16,0,0,0,32,48V208a16,16,0,0,0,16,16H208a16,16,0,0,0,16-16V48A16,16,0,0,0,208,32ZM128,168a16,16,0,1,1,16-16A16,16,0,0,1,128,168Zm80-88H48V48H72v8a8,8,0,0,0,16,0V48h80v8a8,8,0,0,0,16,0V48h24Z"/>',
+    practice: '<path d="M120,56v48a16,16,0,0,1-16,16H56a16,16,0,0,1-16-16V56A16,16,0,0,1,56,40h48A16,16,0,0,1,120,56Zm80-16H152a16,16,0,0,0-16,16v48a16,16,0,0,0,16,16h48a16,16,0,0,0,16-16V56A16,16,0,0,0,200,40Zm-96,96H56a16,16,0,0,0-16,16v48a16,16,0,0,0,16,16h48a16,16,0,0,0,16-16V152A16,16,0,0,0,104,136Zm96,0H152a16,16,0,0,0-16,16v48a16,16,0,0,0,16,16h48a16,16,0,0,0,16-16V152A16,16,0,0,0,200,136Z"/>',
+    review:   '<path d="M224,128A96,96,0,0,1,62.11,197.82a8,8,0,1,1,11-11.64A80,80,0,1,0,71.43,71.43C67.9,75,64.58,78.51,61.35,82L77.66,98.34A8,8,0,0,1,72,112H32a8,8,0,0,1-8-8V64a8,8,0,0,1,13.66-5.66L50,70.7c3.22-3.49,6.54-7,10.06-10.55A96,96,0,0,1,224,128ZM128,72a8,8,0,0,0-8,8v48a8,8,0,0,0,3.88,6.86l40,24a8,8,0,1,0,8.24-13.72L136,123.47V80A8,8,0,0,0,128,72Z"/>',
+    words:    '<rect x="24" y="72" width="176" height="144" rx="16"/><path d="M216,40H64a8,8,0,0,0,0,16H216V176a8,8,0,0,0,16,0V56A16,16,0,0,0,216,40Z"/>',
+    tests:    '<path d="M200,32H163.74a47.92,47.92,0,0,0-71.48,0H56A16,16,0,0,0,40,48V216a16,16,0,0,0,16,16H200a16,16,0,0,0,16-16V48A16,16,0,0,0,200,32Zm-72,0a32,32,0,0,1,32,32H96A32,32,0,0,1,128,32Zm32,128H96a8,8,0,0,1,0-16h64a8,8,0,0,1,0,16Zm0-32H96a8,8,0,0,1,0-16h64a8,8,0,0,1,0,16Z"/>',
+    plan:     '<path d="M228,200a28,28,0,0,1-54.83,8H72a48,48,0,0,1,0-96h96a24,24,0,0,0,0-48H72a8,8,0,0,1,0-16h96a40,40,0,0,1,0,80H72a32,32,0,0,0,0,64H173.17A28,28,0,0,1,228,200Z"/>',
+    results:  '<path d="M216,40H40A16,16,0,0,0,24,56V200a16,16,0,0,0,16,16H216a16,16,0,0,0,16-16V56A16,16,0,0,0,216,40ZM200,192H56a8,8,0,0,1-8-8V72a8,8,0,0,1,16,0v76.69l34.34-34.35a8,8,0,0,1,11.32,0L128,132.69,172.69,88H144a8,8,0,0,1,0-16h48a8,8,0,0,1,8,8v48a8,8,0,0,1-16,0V99.31l-50.34,50.35a8,8,0,0,1-11.32,0L104,131.31l-40,40V176H200a8,8,0,0,1,0,16Z"/>',
+    compete:  '<path d="M240,200h-8V144a16,16,0,0,0-16-16H176V56a16,16,0,0,0-16-16H96A16,16,0,0,0,80,56V88H40a16,16,0,0,0-16,16v96H16a8,8,0,0,0,0,16H240a8,8,0,0,0,0-16ZM80,200H40V104H80Zm60-64a8,8,0,0,1-16,0V107.1l-1.47.49a8,8,0,0,1-5.06-15.18l12-4A8,8,0,0,1,140,96Zm76,64H176V144h40Z"/>',
+    profile:  '<path d="M172,120a44,44,0,1,1-44-44A44.05,44.05,0,0,1,172,120Zm60,8A104,104,0,1,1,128,24,104.11,104.11,0,0,1,232,128Zm-16,0a88.09,88.09,0,0,0-91.47-87.93C77.43,41.89,39.87,81.12,40,128.25a87.65,87.65,0,0,0,22.24,58.16A79.71,79.71,0,0,1,84,165.1a4,4,0,0,1,4.83.32,59.83,59.83,0,0,0,78.28,0,4,4,0,0,1,4.83-.32,79.71,79.71,0,0,1,21.79,21.31A87.62,87.62,0,0,0,216,128Z"/>',
+    note:     '<path d="M224,128v80a16,16,0,0,1-16,16H48a16,16,0,0,1-16-16V48A16,16,0,0,1,48,32h80a8,8,0,0,1,0,16H48V208H208V128a8,8,0,0,1,16,0Zm5.66-58.34-96,96A8,8,0,0,1,128,168H96a8,8,0,0,1-8-8V128a8,8,0,0,1,2.34-5.66l96-96a8,8,0,0,1,11.32,0l32,32A8,8,0,0,1,229.66,69.66Zm-17-5.66L192,43.31,179.31,56,200,76.69Z"/>',
+    bell:     '<path d="M168,224a8,8,0,0,1-8,8H96a8,8,0,1,1,0-16h64A8,8,0,0,1,168,224Zm53.81-48.06C216.25,166.38,208,139.33,208,104a80,80,0,1,0-160,0c0,35.34-8.26,62.38-13.81,71.94A16,16,0,0,0,48,200H208a16,16,0,0,0,13.8-24.06Z"/>',
+    moon:     '<path d="M235.54,150.21a104.84,104.84,0,0,1-37,52.91A104,104,0,0,1,32,120,103.09,103.09,0,0,1,52.88,57.48a104.84,104.84,0,0,1,52.91-37,8,8,0,0,1,10,10,88.08,88.08,0,0,0,109.8,109.8,8,8,0,0,1,10,10Z"/>',
+    flag:     '<path d="M232,56V176a8,8,0,0,1-2.76,6c-15.28,13.23-29.89,18-43.82,18-18.91,0-36.57-8.74-53-16.85C105.87,170,82.79,158.61,56,179.77V224a8,8,0,0,1-16,0V56a8,8,0,0,1,2.77-6h0c36-31.18,68.31-15.21,96.79-1.12C167,62.46,190.79,74.2,218.76,50A8,8,0,0,1,232,56Z"/>',
+    bookmark: '<path d="M184,32H72A16,16,0,0,0,56,48V224a8,8,0,0,0,12.24,6.78L128,193.43l59.77,37.35A8,8,0,0,0,200,224V48A16,16,0,0,0,184,32Z"/>',
+    star:     '<path d="M234.29,114.85l-45,38.83L203,211.75a16.4,16.4,0,0,1-24.5,17.82L128,198.49,77.47,229.57A16.4,16.4,0,0,1,53,211.75l13.76-58.07-45-38.83A16.46,16.46,0,0,1,31.08,86l59-4.76,22.76-55.08a16.36,16.36,0,0,1,30.27,0l22.75,55.08,59,4.76a16.46,16.46,0,0,1,9.37,28.86Z"/>',
+    flame:    '<path d="M143.38,17.85a8,8,0,0,0-12.63,3.41l-22,60.41L84.59,58.26a8,8,0,0,0-11.93.89C51,87.53,40,116.08,40,144a88,88,0,0,0,176,0C216,84.55,165.21,36,143.38,17.85Zm40.51,135.49a57.6,57.6,0,0,1-46.56,46.55A7.65,7.65,0,0,1,136,200a8,8,0,0,1-1.32-15.89c16.57-2.79,30.63-16.85,33.44-33.45a8,8,0,0,1,15.78,2.68Z"/>',
+    play:     '<path d="M240,128a15.74,15.74,0,0,1-7.6,13.51L88.32,229.65a16,16,0,0,1-16.2.3A15.86,15.86,0,0,1,64,216.13V39.87a15.86,15.86,0,0,1,8.12-13.82,16,16,0,0,1,16.2.3L232.4,114.49A15.74,15.74,0,0,1,240,128Z"/>',
+    key:      '<path d="M216.57,39.43A80,80,0,0,0,83.91,120.78L28.69,176A15.86,15.86,0,0,0,24,187.31V216a16,16,0,0,0,16,16H72a8,8,0,0,0,8-8V208H96a8,8,0,0,0,8-8V184h16a8,8,0,0,0,5.66-2.34l9.56-9.57A79.73,79.73,0,0,0,160,176h.1A80,80,0,0,0,216.57,39.43ZM180,92a16,16,0,1,1,16-16A16,16,0,0,1,180,92Z"/>',
+    envelope: '<path d="M224,48H32a8,8,0,0,0-8,8V192a16,16,0,0,0,16,16H216a16,16,0,0,0,16-16V56A8,8,0,0,0,224,48ZM98.71,128,40,181.81V74.19Zm11.84,10.85,12,11.05a8,8,0,0,0,10.82,0l12-11.05,58,53.15H52.57ZM157.29,128,216,74.18V181.82Z"/>',
+    fingerprint: '<path d="M126.42,24C70.73,24.85,25.21,70.09,24,125.81a103.53,103.53,0,0,0,13.52,53.54,4,4,0,0,0,7.1-.3,119.35,119.35,0,0,0,11.37-51A71.77,71.77,0,0,1,83,71.83a8,8,0,1,1,9.86,12.61A55.82,55.82,0,0,0,72,128.07a135.28,135.28,0,0,1-18.45,68.35,4,4,0,0,0,.61,4.85c2,2,4.09,4,6.25,5.82a4,4,0,0,0,6-1A151.18,151.18,0,0,0,85,158.49a8,8,0,1,1,15.68,3.19,167.33,167.33,0,0,1-21.07,53.64,4,4,0,0,0,1.6,5.63c2.47,1.25,5,2.41,7.57,3.47a4,4,0,0,0,5-1.61A183,183,0,0,0,120,128.28a8.16,8.16,0,0,1,7.44-8.21,8,8,0,0,1,8.56,8,198.94,198.94,0,0,1-25.21,97.16,4,4,0,0,0,2.95,5.92q4.55.63,9.21.86a4,4,0,0,0,3.67-2.1A214.88,214.88,0,0,0,152,128.8c.05-13.25-10.3-24.49-23.54-24.74A24,24,0,0,0,104,128a8.1,8.1,0,0,1-7.29,8,8,8,0,0,1-8.71-8,40,40,0,0,1,40.42-40c22,.23,39.68,19.17,39.57,41.16a231.37,231.37,0,0,1-20.52,94.57,4,4,0,0,0,4.62,5.51,103.49,103.49,0,0,0,10.26-3,4,4,0,0,0,2.35-2.22,243.76,243.76,0,0,0,11.48-34,8,8,0,1,1,15.5,4q-1.12,4.37-2.4,8.7a4,4,0,0,0,6.46,4.17A104,104,0,0,0,126.42,24ZM198,161.08a8,8,0,0,1-7.92,7,8.39,8.39,0,0,1-1-.06,8,8,0,0,1-6.95-8.93,252.57,252.57,0,0,0,1.92-31,56.08,56.08,0,0,0-56-56,56.78,56.78,0,0,0-7,.43,8,8,0,0,1-2-15.89,72.1,72.1,0,0,1,81,71.49A266.93,266.93,0,0,1,198,161.08Z"/>',
+    shield:   '<path d="M224,56v56c0,52.72-25.52,84.67-46.93,102.19-23.06,18.86-46,25.27-47,25.53a8,8,0,0,1-4.2,0c-1-.26-23.91-6.67-47-25.53C57.52,196.67,32,164.72,32,112V56A16,16,0,0,1,48,40H208A16,16,0,0,1,224,56Z"/>',
+    medal:    '<path d="M216,96A88,88,0,1,0,72,163.83V240a8,8,0,0,0,11.58,7.16L128,225l44.43,22.21A8.07,8.07,0,0,0,176,248a8,8,0,0,0,8-8V163.83A87.85,87.85,0,0,0,216,96ZM56,96a72,72,0,1,1,72,72A72.08,72.08,0,0,1,56,96Zm16,0a56,56,0,1,1,56,56A56.06,56.06,0,0,1,72,96Z"/>',
+  };
+  const PH = 'transform="scale(.09375)"';     // Phosphor's 256 grid inside our 24 viewBox
+  const ph = (s, c = '') => `<g class="ph${c}" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16" ${PH}>${s}</g>`;
+  const phf = (s, c = '') => `<g class="ph${c}" fill="currentColor" ${PH}>${s}</g>`;
+  // a twin: the fill (hidden until active, icons.css) under the outline; amber for the status toggles
+  const twin = (n, s, amber) => `<g class="ph ph-f${amber ? ' ph-amber' : ''}" fill="currentColor" opacity="0" ${PH}>${PHF[n]}</g>` + ph(s, ' ph-o');
+  const ICON = {
+    today:          twin('today', '<rect x="40" y="40" width="176" height="176" rx="8"/><line x1="176" y1="24" x2="176" y2="56"/><line x1="80" y1="24" x2="80" y2="56"/><line x1="40" y1="88" x2="216" y2="88"/><circle cx="128" cy="152" r="16" fill="currentColor" stroke="none"/>'),
+    practice:       twin('practice', '<rect x="48" y="48" width="64" height="64" rx="8"/><rect x="144" y="48" width="64" height="64" rx="8"/><rect x="48" y="144" width="64" height="64" rx="8"/><rect x="144" y="144" width="64" height="64" rx="8"/>'),
+    review:         twin('review', '<polyline points="128 80 128 128 168 152"/><polyline points="72 104 32 104 32 64"/><path d="M67.6,192A88,88,0,1,0,65.77,65.77C54,77.69,44.28,88.93,32,104"/>'),
+    words:          twin('words', '<rect x="32" y="80" width="160" height="128" rx="8"/><path d="M64,48H216a8,8,0,0,1,8,8V176"/>'),
+    tests:          twin('tests', '<line x1="96" y1="152" x2="160" y2="152"/><line x1="96" y1="120" x2="160" y2="120"/><path d="M160,40h40a8,8,0,0,1,8,8V216a8,8,0,0,1-8,8H56a8,8,0,0,1-8-8V48a8,8,0,0,1,8-8H96"/><path d="M88,72V64a40,40,0,0,1,80,0v8Z"/>'),
+    plan:           twin('plan', '<circle cx="200" cy="200" r="24"/><path d="M72,56h96a32,32,0,0,1,0,64H72a40,40,0,0,0,0,80H176"/>'),
+    results:        twin('results', '<polyline points="224 208 32 208 32 48"/><polyline points="200 72 128 144 96 112 32 176"/><polyline points="200 112 200 72 160 72"/>'),
+    compete:        twin('compete', '<path d="M32,208V104a8,8,0,0,1,8-8H88"/><path d="M88,208V56a8,8,0,0,1,8-8h64a8,8,0,0,1,8,8V208"/><path d="M224,208V144a8,8,0,0,0-8-8H168"/><polyline points="120 100 132 96 132 136"/><line x1="16" y1="208" x2="240" y2="208"/>'),
+    profile:        twin('profile', '<circle cx="128" cy="128" r="96"/><circle cx="128" cy="120" r="40"/><path d="M63.8,199.37a72,72,0,0,1,128.4,0"/>'),
+    note:           twin('note', '<polygon points="128 160 96 160 96 128 192 32 224 64 128 160"/><line x1="168" y1="56" x2="200" y2="88"/><path d="M216,128v80a8,8,0,0,1-8,8H48a8,8,0,0,1-8-8V48a8,8,0,0,1,8-8h80"/>'),
+    bell:           twin('bell', '<line x1="96" y1="224" x2="160" y2="224"/><path d="M56,104a72,72,0,0,1,144,0c0,35.82,8.3,64.6,14.9,76A8,8,0,0,1,208,192H48a8,8,0,0,1-6.88-12C47.71,168.6,56,139.81,56,104Z"/>'),
+    moon:           twin('moon', '<path d="M108.11,28.11A96.09,96.09,0,0,0,227.89,147.89,96,96,0,1,1,108.11,28.11Z"/>'),
+    flag:           twin('flag', '<line x1="48" y1="224" x2="48" y2="56"/><path d="M48,176c64-55.43,112,55.43,176,0V56C160,111.43,112,.57,48,56"/>', 1),
+    bookmark:       twin('bookmark', '<path d="M192,224l-64-40L64,224V48a8,8,0,0,1,8-8H184a8,8,0,0,1,8,8Z"/>', 1),
+    star:           twin('star', '<path d="M128,189.09l54.72,33.65a8.4,8.4,0,0,0,12.52-9.17l-14.88-62.79,48.7-42A8.46,8.46,0,0,0,224.27,94L160.36,88.8,135.74,29.2a8.36,8.36,0,0,0-15.48,0L95.64,88.8,31.73,94a8.46,8.46,0,0,0-4.79,14.83l48.7,42L60.76,213.57a8.4,8.4,0,0,0,12.52,9.17Z"/>', 1),
+    flame:          ph('<path class="flame" d="M112,96l26.27-72C159.86,41.92,208,88.15,208,144a80,80,0,0,1-160,0c0-30.57,14.42-58.26,31-80Z"/><path d="M136,192c20-3.37,36.61-20,40-40"/>'),
+    play:           phf(PHF.play),
+    x:              ph('<line x1="200" y1="56" x2="56" y2="200"/><line x1="200" y1="200" x2="56" y2="56"/>'),
+    check:          ph('<polyline points="40 144 96 200 224 72"/>'),
+    plus:           ph('<line x1="40" y1="128" x2="216" y2="128"/><line x1="128" y1="40" x2="128" y2="216"/>'),
+    arrow:          ph('<line x1="40" y1="128" x2="216" y2="128"/><polyline points="144 56 216 128 144 200"/>'),
+    right:          ph('<line x1="40" y1="128" x2="216" y2="128"/><polyline points="144 56 216 128 144 200"/>'),
+    left:           ph('<line x1="216" y1="128" x2="40" y2="128"/><polyline points="112 56 40 128 112 200"/>'),
+    chev:           ph('<polyline points="96 48 176 128 96 208"/>'),
+    caret_right:    ph('<polyline points="96 48 176 128 96 208"/>'),
+    caret_left:     ph('<polyline points="160 208 80 128 160 48"/>'),
+    caret_down:     ph('<polyline points="208 96 128 176 48 96"/>', ' ph-turn'),
+    caret_up:       ph('<polyline points="48 160 128 80 208 160"/>'),
+    up:             ph('<polyline points="48 160 128 80 208 160"/>'),
+    down:           ph('<polyline points="208 96 128 176 48 96"/>'),
+    skip:           ph('<polyline points="56 48 136 128 56 208"/><polyline points="136 48 216 128 136 208"/>'),
+    more:           ph('<circle cx="128" cy="128" r="12" fill="currentColor" stroke="none"/><circle cx="196" cy="128" r="12" fill="currentColor" stroke="none"/><circle cx="60" cy="128" r="12" fill="currentColor" stroke="none"/>'),
+    dots:           ph('<circle cx="128" cy="128" r="12" fill="currentColor" stroke="none"/><circle cx="196" cy="128" r="12" fill="currentColor" stroke="none"/><circle cx="60" cy="128" r="12" fill="currentColor" stroke="none"/>'),
+    grip:           ph('<circle cx="92" cy="60" r="12" fill="currentColor" stroke="none"/><circle cx="164" cy="60" r="12" fill="currentColor" stroke="none"/><circle cx="92" cy="128" r="12" fill="currentColor" stroke="none"/><circle cx="164" cy="128" r="12" fill="currentColor" stroke="none"/><circle cx="92" cy="196" r="12" fill="currentColor" stroke="none"/><circle cx="164" cy="196" r="12" fill="currentColor" stroke="none"/>'),
+    search:         ph('<circle cx="112" cy="112" r="80"/><line x1="168.57" y1="168.57" x2="224" y2="224"/>'),
+    bolt:           ph('<polygon points="160 16 144 96 208 120 96 240 112 160 48 136 160 16"/>'),
+    help:           ph('<circle cx="128" cy="180" r="12" fill="currentColor" stroke="none"/><path d="M128,144v-8c17.67,0,32-12.54,32-28s-14.33-28-32-28S96,92.54,96,108v4"/><circle cx="128" cy="128" r="96"/>'),
+    chat:           ph('<line x1="96" y1="112" x2="160" y2="112"/><line x1="96" y1="144" x2="160" y2="144"/><path d="M79.93,211.11a96,96,0,1,0-35-35h0L32.42,213.46a8,8,0,0,0,10.12,10.12l37.39-12.47Z"/>'),
+    panel:          ph('<line x1="88" y1="48" x2="88" y2="208"/><rect x="32" y="48" width="192" height="160" rx="8"/>'),
+    dock:           ph('<line x1="88" y1="48" x2="88" y2="208"/><rect x="32" y="48" width="192" height="160" rx="8"/>'),
+    float:          ph('<rect x="32" y="56" width="192" height="144" rx="8"/><polyline points="136 200 136 128 224 128"/>'),
+    settings:       ph('<circle cx="104" cy="80" r="24"/><circle cx="168" cy="176" r="24"/><line x1="128" y1="80" x2="216" y2="80"/><line x1="40" y1="80" x2="80" y2="80"/><line x1="192" y1="176" x2="216" y2="176"/><line x1="40" y1="176" x2="144" y2="176"/>'),
+    signin:         ph('<line x1="24" y1="128" x2="136" y2="128"/><polyline points="96 88 136 128 96 168"/><polyline points="136 40 200 40 200 216 136 216"/>'),
+    signout:        ph('<polyline points="112 40 48 40 48 216 112 216"/><line x1="112" y1="128" x2="224" y2="128"/><polyline points="184 88 224 128 184 168"/>'),
+    devices:        ph('<rect x="136" y="104" width="128" height="80" rx="16" transform="translate(344 -56) rotate(90)"/><line x1="128" y1="208" x2="88" y2="208"/><path d="M160,176H40a16,16,0,0,1-16-16V64A16,16,0,0,1,40,48H184a16,16,0,0,1,16,16V80"/><line x1="192" y1="112" x2="208" y2="112"/>'),
+    phone:          ph('<rect x="64" y="24" width="128" height="208" rx="16"/><line x1="64" y1="56" x2="192" y2="56"/><line x1="64" y1="200" x2="192" y2="200"/>'),
+    text:           ph('<polyline points="144 192 80 56 16 192"/><ellipse cx="200" cy="164" rx="32" ry="28"/><path d="M232,192V132c0-15.46-14.33-28-32-28-9.56,0-18.14,2.18-24,8"/><line x1="125.18" y1="152" x2="34.82" y2="152"/>'),
+    keyboard:       ph('<rect x="24" y="56" width="208" height="144" rx="8"/><line x1="56" y1="128" x2="200" y2="128"/><line x1="56" y1="96" x2="200" y2="96"/><line x1="56" y1="160" x2="64" y2="160"/><line x1="96" y1="160" x2="160" y2="160"/><line x1="192" y1="160" x2="200" y2="160"/>'),
+    save:           ph('<path d="M112,208H72A56,56,0,1,1,85.92,97.74"/><polyline points="120 160 152 128 184 160"/><line x1="152" y1="208" x2="152" y2="128"/><path d="M80,128a80,80,0,1,1,112,73.34"/>'),
+    users:          ph('<circle cx="84" cy="108" r="52"/><path d="M10.23,200a88,88,0,0,1,147.54,0"/><path d="M172,160a87.93,87.93,0,0,1,73.77,40"/><path d="M152.69,59.7A52,52,0,1,1,172,160"/>'),
+    pause:          ph('<rect x="152" y="40" width="56" height="176" rx="8"/><rect x="48" y="40" width="56" height="176" rx="8"/>'),
+    stop:           ph('<rect x="48" y="48" width="160" height="160" rx="8"/>'),
+    clock:          ph('<circle cx="128" cy="136" r="88"/><line x1="128" y1="136" x2="168" y2="96"/><line x1="104" y1="16" x2="152" y2="16"/>'),
+    calendar:       ph('<rect x="40" y="40" width="176" height="176" rx="8"/><line x1="176" y1="24" x2="176" y2="56"/><line x1="80" y1="24" x2="80" y2="56"/><line x1="40" y1="88" x2="216" y2="88"/>'),
+    calendar_check: ph('<rect x="40" y="40" width="176" height="176" rx="8"/><line x1="176" y1="24" x2="176" y2="56"/><line x1="80" y1="24" x2="80" y2="56"/><line x1="40" y1="88" x2="216" y2="88"/><polyline points="92 152 116 176 164 128"/>'),
+    calc:           ph('<rect x="80" y="64" width="96" height="48"/><rect x="32" y="48" width="192" height="160" rx="8" transform="translate(256) rotate(90)"/><circle cx="88" cy="148" r="12" fill="currentColor" stroke="none"/><circle cx="128" cy="148" r="12" fill="currentColor" stroke="none"/><circle cx="168" cy="148" r="12" fill="currentColor" stroke="none"/><circle cx="88" cy="188" r="12" fill="currentColor" stroke="none"/><circle cx="128" cy="188" r="12" fill="currentColor" stroke="none"/><circle cx="168" cy="188" r="12" fill="currentColor" stroke="none"/>'),
+    graph:          ph('<line x1="72" y1="128" x2="184" y2="128"/><path d="M56,216H85.29a32,32,0,0,0,31.49-26.28L139.22,66.28A32,32,0,0,1,170.71,40H200"/>'),
+    ref:            ph('<line x1="40" y1="72" x2="104" y2="72"/><line x1="72" y1="152" x2="72" y2="216"/><line x1="40" y1="184" x2="104" y2="184"/><line x1="152" y1="168" x2="216" y2="168"/><line x1="152" y1="200" x2="216" y2="200"/><line x1="160" y1="48" x2="208" y2="96"/><line x1="208" y1="48" x2="160" y2="96"/>'),
+    learn:          ph('<path d="M128,88a32,32,0,0,1,32-32h72V200H160a32,32,0,0,0-32,32"/><path d="M24,200H96a32,32,0,0,1,32,32V88A32,32,0,0,0,96,56H24Z"/><line x1="160" y1="96" x2="200" y2="96"/><line x1="160" y1="128" x2="200" y2="128"/><line x1="160" y1="160" x2="200" y2="160"/>'),
+    book:           ph('<path d="M128,88a32,32,0,0,1,32-32h72V200H160a32,32,0,0,0-32,32"/><path d="M24,200H96a32,32,0,0,1,32,32V88A32,32,0,0,0,96,56H24Z"/><line x1="160" y1="96" x2="200" y2="96"/><line x1="160" y1="128" x2="200" y2="128"/><line x1="160" y1="160" x2="200" y2="160"/>'),
+    hint:           ph('<line x1="88" y1="232" x2="168" y2="232"/><path d="M78.7,167A79.87,79.87,0,0,1,48,104.45C47.76,61.09,82.72,25,126.07,24a80,80,0,0,1,51.34,142.9A24.3,24.3,0,0,0,168,186v6a8,8,0,0,1-8,8H96a8,8,0,0,1-8-8v-6A24.11,24.11,0,0,0,78.7,167Z"/><path d="M136,56c20,3.37,36.61,20,40,40"/>'),
+    speak:          ph('<path d="M80,168H32a8,8,0,0,1-8-8V96a8,8,0,0,1,8-8H80l72-56V224Z"/><line x1="80" y1="88" x2="80" y2="168"/><path d="M192,106.85a32,32,0,0,1,0,42.3"/><path d="M221.67,80a72,72,0,0,1,0,96"/>'),
+    report:         ph('<circle cx="128" cy="128" r="96" stroke-miterlimit="10"/><line x1="128" y1="136" x2="128" y2="80"/><circle cx="128" cy="172" r="12" fill="currentColor" stroke="none"/>'),
+    history:        ph('<polyline points="128 80 128 128 168 152"/><polyline points="72 104 32 104 32 64"/><path d="M67.6,192A88,88,0,1,0,65.77,65.77C54,77.69,44.28,88.93,32,104"/>'),
+    eye:            ph('<path d="M128,56C48,56,16,128,16,128s32,72,112,72,112-72,112-72S208,56,128,56Z"/><circle cx="128" cy="128" r="40"/>'),
+    eyeoff:         ph('<line x1="48" y1="40" x2="208" y2="216"/><path d="M154.91,157.6a40,40,0,0,1-53.82-59.2"/><path d="M135.53,88.71a40,40,0,0,1,32.3,35.53"/><path d="M208.61,169.1C230.41,149.58,240,128,240,128S208,56,128,56a126,126,0,0,0-20.68,1.68"/><path d="M74,68.6C33.23,89.24,16,128,16,128s32,72,112,72a118.05,118.05,0,0,0,54-12.6"/>'),
+    cover:          ph('<line x1="48" y1="40" x2="208" y2="216"/><path d="M154.91,157.6a40,40,0,0,1-53.82-59.2"/><path d="M135.53,88.71a40,40,0,0,1,32.3,35.53"/><path d="M208.61,169.1C230.41,149.58,240,128,240,128S208,56,128,56a126,126,0,0,0-20.68,1.68"/><path d="M74,68.6C33.23,89.24,16,128,16,128s32,72,112,72a118.05,118.05,0,0,0,54-12.6"/>'),
+    expand:         ph('<polyline points="160 48 208 48 208 96"/><line x1="144" y1="112" x2="208" y2="48"/><polyline points="96 208 48 208 48 160"/><line x1="112" y1="144" x2="48" y2="208"/>'),
+    shrink:         ph('<polyline points="144 64 144 112 192 112"/><line x1="208" y1="48" x2="144" y2="112"/><polyline points="64 144 112 144 112 192"/><line x1="48" y1="208" x2="112" y2="144"/>'),
+    marker:         ph('<polyline points="88 128 24 192 96 216 136 176"/><path d="M184,160l-26.34,26.34a8,8,0,0,1-11.32,0L77.66,117.66a8,8,0,0,1,0-11.32L104,80"/><path d="M248,112l-50.34,50.34a8,8,0,0,1-11.32,0L101.66,77.66a8,8,0,0,1,0-11.32L152,16"/>'),
+    pen:            ph('<path d="M92.69,216H48a8,8,0,0,1-8-8V163.31a8,8,0,0,1,2.34-5.65L165.66,34.34a8,8,0,0,1,11.31,0L221.66,79a8,8,0,0,1,0,11.31L98.34,213.66A8,8,0,0,1,92.69,216Z"/><line x1="136" y1="64" x2="192" y2="120"/>'),
+    edit:           ph('<path d="M92.69,216H48a8,8,0,0,1-8-8V163.31a8,8,0,0,1,2.34-5.65L165.66,34.34a8,8,0,0,1,11.31,0L221.66,79a8,8,0,0,1,0,11.31L98.34,213.66A8,8,0,0,1,92.69,216Z"/><line x1="136" y1="64" x2="192" y2="120"/>'),
+    erase:          ph('<line x1="96" y1="104" x2="160" y2="168"/><path d="M112,216,219.31,108.69a16,16,0,0,0,0-22.63L177.94,44.69a16,16,0,0,0-22.63,0L36.69,163.31a16,16,0,0,0,0,22.63L66.75,216H216"/>'),
+    hl:             ph('<circle cx="128" cy="128" r="96"/><path d="M176,211.16V176a8,8,0,0,0-8-8H88a8,8,0,0,0-8,8v35.16"/><path d="M96,168V144a8,8,0,0,1,8-8h48a8,8,0,0,1,8,8v24"/><path d="M147.84,136l-12-57.63c-1.77-8.49-13.89-8.49-15.66,0l-12,57.63"/>'),
+    list:           ph('<line x1="88" y1="64" x2="216" y2="64"/><line x1="88" y1="128" x2="216" y2="128"/><line x1="88" y1="192" x2="216" y2="192"/><circle cx="44" cy="64" r="12" fill="currentColor" stroke="none"/><circle cx="44" cy="128" r="12" fill="currentColor" stroke="none"/><circle cx="44" cy="192" r="12" fill="currentColor" stroke="none"/>'),
+    grid:           ph('<rect x="48" y="48" width="64" height="64" rx="8"/><rect x="144" y="48" width="64" height="64" rx="8"/><rect x="48" y="144" width="64" height="64" rx="8"/><rect x="144" y="144" width="64" height="64" rx="8"/>'),
+    queue:          ph('<line x1="40" y1="64" x2="216" y2="64"/><line x1="40" y1="128" x2="136" y2="128"/><line x1="40" y1="192" x2="136" y2="192"/><polygon points="240 160 176 200 176 120 240 160"/>'),
+    filter:         ph('<line x1="64" y1="136" x2="192" y2="136"/><line x1="24" y1="88" x2="232" y2="88"/><line x1="104" y1="184" x2="152" y2="184"/>'),
+    image:          ph('<rect x="32" y="48" width="192" height="160" rx="8"/><circle cx="156" cy="100" r="12" fill="currentColor" stroke="none"/><path d="M147.31,164,173,138.34a8,8,0,0,1,11.31,0L224,178.06"/><path d="M32,168.69l54.34-54.35a8,8,0,0,1,11.32,0L191.31,208"/>'),
+    camera:         ph('<path d="M208,208H48a16,16,0,0,1-16-16V80A16,16,0,0,1,48,64H80L96,40h64l16,24h32a16,16,0,0,1,16,16V192A16,16,0,0,1,208,208Z"/><circle cx="128" cy="132" r="36"/>'),
+    twin:           ph('<polyline points="168 168 216 168 216 40 88 40 88 88"/><rect x="40" y="88" width="128" height="128"/>'),
+    copy:           ph('<polyline points="168 168 216 168 216 40 88 40 88 88"/><rect x="40" y="88" width="128" height="128"/>'),
+    link:           ph('<line x1="96" y1="160" x2="160" y2="96"/><path d="M112,76.11l30.06-30a48,48,0,0,1,67.88,67.88L179.88,144"/><path d="M76.11,112l-30,30.06a48,48,0,0,0,67.88,67.88L144,179.88"/>'),
+    external:       ph('<line x1="64" y1="192" x2="192" y2="64"/><polyline points="88 64 192 64 192 168"/>'),
+    key:            twin('key', '<path d="M93.17,122.83A71.68,71.68,0,0,1,88,95.91c0-38.58,31.08-70.64,69.64-71.87A72,72,0,0,1,232,98.36C230.73,136.92,198.67,168,160.09,168a71.68,71.68,0,0,1-26.92-5.17h0L120,176H96v24H72v24H40a8,8,0,0,1-8-8V187.31a8,8,0,0,1,2.34-5.65l58.83-58.83Z"/><circle cx="180" cy="76" r="12" fill="currentColor" stroke="none"/>'),
+    envelope:       twin('envelope', '<polyline points="224 56 128 144 32 56"/><path d="M32,56H224a0,0,0,0,1,0,0V192a8,8,0,0,1-8,8H40a8,8,0,0,1-8-8V56A0,0,0,0,1,32,56Z"/><line x1="110.55" y1="128" x2="34.47" y2="197.74"/><line x1="221.53" y1="197.74" x2="145.45" y2="128"/>'),
+    fingerprint:    twin('fingerprint', '<path d="M50.69,184.92A127.52,127.52,0,0,0,64,128a63.85,63.85,0,0,1,24-50"/><path d="M128,128a191.11,191.11,0,0,1-24,93"/><path d="M96,128a32,32,0,0,1,64,0,223.12,223.12,0,0,1-21.28,95.41"/><path d="M218.56,184A289.45,289.45,0,0,0,224,128a96,96,0,0,0-192,0,95.8,95.8,0,0,1-5.47,32"/><path d="M92.81,160a158.92,158.92,0,0,1-18.12,47.84"/><path d="M120,64.5a66,66,0,0,1,8-.49,64,64,0,0,1,64,64,259.86,259.86,0,0,1-2,32"/><path d="M183.94,192q-2.28,8.88-5.18,17.5"/>'),
+    shield:         twin('shield', '<path d="M216,112V56a8,8,0,0,0-8-8H48a8,8,0,0,0-8,8v56c0,96,88,120,88,120S216,208,216,112Z"/>'),
+    medal:          twin('medal', '<circle cx="128" cy="96" r="80"/><circle cx="128" cy="96" r="48"/><polyline points="176 160 176 240 127.99 216 80 240 80 160.01"/>'),
+    again:          ph('<polyline points="24 56 24 104 72 104"/><path d="M67.59,192A88,88,0,1,0,65.77,65.77L24,104"/>'),
+    fix:            ph('<polyline points="184 104 232 104 232 56"/><path d="M188.4,192a88,88,0,1,1,1.83-126.23L232,104"/>'),
+    info:           ph('<circle cx="128" cy="128" r="96"/><path d="M120,120a8,8,0,0,1,8,8v40a8,8,0,0,0,8,8"/><circle cx="124" cy="84" r="12" fill="currentColor" stroke="none"/>'),
+    trap:           ph('<circle cx="128" cy="128" r="96"/><line x1="128" y1="32" x2="128" y2="72"/><line x1="128" y1="184" x2="128" y2="224"/><line x1="32" y1="128" x2="72" y2="128"/><line x1="184" y1="128" x2="224" y2="128"/>'),
+    clean:          ph('<polyline points="88 136 112 160 168 104"/><circle cx="128" cy="128" r="96"/>'),
+    sheet:          ph('<path d="M200,224H56a8,8,0,0,1-8-8V40a8,8,0,0,1,8-8h96l56,56V216A8,8,0,0,1,200,224Z"/><polyline points="152 32 152 88 208 88"/><line x1="96" y1="136" x2="160" y2="136"/><line x1="96" y1="168" x2="160" y2="168"/>'),
+    trophy:         ph('<line x1="96" y1="224" x2="160" y2="224"/><line x1="128" y1="184" x2="128" y2="224"/><path d="M58,128H48A32,32,0,0,1,16,96V80a8,8,0,0,1,8-8H56"/><path d="M198,128h10a32,32,0,0,0,32-32V80a8,8,0,0,0-8-8H200"/><path d="M56,48H200v63.1c0,39.7-31.75,72.6-71.45,72.9A72,72,0,0,1,56,112Z"/>'),
+    twin_test:      ph('<polyline points="88 88 88 40 216 40 216 120"/><rect x="40" y="88" width="104" height="128"/><circle cx="192" cy="180" r="40"/><polyline points="192 156 192 180 208 192"/>'),
+    eliminate:      '<g class="ph" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"><path d="M3.5 17l3-9 3 9M4.6 14h3.8M12.5 8h3a2.2 2.2 0 0 1 0 4.4h-3zM12.5 12.4h3.4a2.3 2.3 0 0 1 0 4.6h-3.4zM3 20.5L21 3.5"/></g>',
+    strikes:        '<g class="ph" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"><path d="M4 9l4 6M8 9l-4 6M10 9l4 6M14 9l-4 6M16 9l4 6M20 9l-4 6"/></g>',
+    dot:            '<circle cx="12" cy="12" r="4" fill="var(--amber)"/>',
+  };
+  const ICON_FILL = Object.fromEntries(Object.keys(PHF).filter(n => n !== 'play').map(n => [n, phf(PHF[n])]));
 
   /* ------------------------------------------------------------ topics
      The nineteen SAT Math topics, in the bank's slugs, with the short name a
@@ -506,6 +677,65 @@
     ['circles', 'Circles', 'dotcircle', 3],
   ].map(([slug, short, shape, d]) => ({ slug, short, shape, domain: DOMAINS[d][0], dshort: DOMAINS[d][1] }));
   const TOPIC = Object.fromEntries(TOPICS.map(t => [t.slug, t]));
+  // the ten Reading and Writing skills, by the bank's topic slug (a set's title, never the raw slug)
+  const RW_SKILL = {
+    rw_central_ideas_and_details: 'Central Ideas and Details', rw_inferences: 'Inferences',
+    rw_command_of_evidence: 'Command of Evidence', rw_words_in_context: 'Words in Context',
+    rw_text_structure_and_purpose: 'Text Structure and Purpose', rw_cross_text_connections: 'Cross-Text Connections',
+    rw_rhetorical_synthesis: 'Rhetorical Synthesis', rw_transitions: 'Transitions', rw_boundaries: 'Boundaries',
+    rw_form_structure_and_sense: 'Form, Structure, and Sense',
+  };
+  // the four R&W domains in Bluebook's order, each with its skills in that order (blueprint.RW_ORDER)
+  const RW_DOMAINS = [
+    ['Craft and Structure', ['rw_words_in_context', 'rw_text_structure_and_purpose', 'rw_cross_text_connections']],
+    ['Information and Ideas', ['rw_central_ideas_and_details', 'rw_command_of_evidence', 'rw_inferences']],
+    ['Standard English Conventions', ['rw_boundaries', 'rw_form_structure_and_sense']],
+    ['Expression of Ideas', ['rw_transitions', 'rw_rhetorical_synthesis']],
+  ].map(([name, skills]) => ({ name, skills }));
+
+  /* ------------------------------------------------------------ subject
+     Math or Reading and Writing, one choice for the whole site: ?subject= wins (links and reloads
+     agree), else the last one picked (satf.subject), else Math. subjectSeg draws the same switch on
+     every page that shows one subject at a time; both: true adds "Both" first, for lists. */
+  const SUBJECTS = ['math', 'rw'];
+  const SUBJECT_NAME = { math: ['Math', 'Math'], rw: ['Reading and Writing', 'R&W'], both: ['Both', 'Both'] };
+  const subjectLabel = (s, short) => (SUBJECT_NAME[s] || SUBJECT_NAME.math)[short ? 1 : 0];
+  const subjectOf = topic => (/^rw[_.]/.test(String(topic || '')) ? 'rw' : 'math');
+  const topicName = t => RW_SKILL[t] || (TOPIC[t] && TOPIC[t].short) || String(t || '').replace(/^rw_/, '').replace(/_/g, ' ');
+  const subject = {
+    get(opts = {}) {
+      const q = new URLSearchParams(location.search).get('subject');
+      // a link that names a subject is a choice too: the next page opens on it
+      if (SUBJECTS.includes(q)) { try { localStorage.setItem('satf.subject', q); } catch (_) {} }
+      if (SUBJECTS.includes(q) || (opts.both && q === 'both')) return q;
+      if (opts.both) return 'both';             // a list opens on everything unless the link says otherwise
+      let v = null;
+      try { v = localStorage.getItem('satf.subject'); } catch (_) {}
+      return SUBJECTS.includes(v) ? v : 'math';
+    },
+    set(s, opts = {}) {
+      try { if (SUBJECTS.includes(s)) localStorage.setItem('satf.subject', s); } catch (_) {}
+      if (opts.url !== false) {
+        const u = new URL(location.href);
+        u.searchParams.set('subject', s);
+        history.replaceState(history.state, '', u);
+      }
+    },
+  };
+  function subjectSeg(host, o = {}) {
+    const opts = (o.both ? ['both'] : []).concat(SUBJECTS).map(v => ({ value: v, label: subjectLabel(v, o.short) }));
+    const value = o.value || subject.get({ both: o.both });
+    // the page's address carries the subject from the start, so a copied link opens the same view
+    if (o.url !== false && !new URLSearchParams(location.search).get('subject')) {
+      const u = new URL(location.href);
+      u.searchParams.set('subject', value);
+      history.replaceState(history.state, '', u);
+    }
+    return UI.seg(host, opts, {
+      value, label: o.label || 'Subject',
+      onChange: v => { subject.set(v, { url: o.url }); if (o.onChange) o.onChange(v); },
+    });
+  }
 
   /* ------------------------------------------------------------ aliases and the set parser
      (Shell 2.8, practice.md P15). Skills match on a word prefix of their names or on these
@@ -526,6 +756,15 @@
     one_variable_data: ['mean', 'median', 'histogram', 'outlier', 'deviation'],
     two_variable_data: ['scatter', 'scatterplot', 'regression'],
     lines_angles_and_triangles: ['angle', 'angles', 'triangle', 'triangles', 'parallel', 'transversal'],
+    // Reading and Writing: the words students use for each skill
+    rw_words_in_context: ['vocab', 'vocabulary', 'wic'],
+    rw_command_of_evidence: ['evidence', 'coe'],
+    rw_central_ideas_and_details: ['main idea', 'central idea'],
+    rw_text_structure_and_purpose: ['purpose'],
+    rw_cross_text_connections: ['cross text', 'paired'],
+    rw_rhetorical_synthesis: ['synthesis', 'notes'],
+    rw_boundaries: ['punctuation', 'comma', 'commas', 'semicolon'],
+    rw_form_structure_and_sense: ['grammar', 'verb', 'verbs', 'agreement', 'tense'],
   };
   const words = s => String(s || '').toLowerCase().replace(/&/g, ' and ').replace(/[‐-―-]/g, ' ')
     .replace(/[^a-z0-9∞\s]/g, ' ').split(/\s+/).filter(Boolean);
@@ -533,7 +772,9 @@
   function phrases() {                    // every way to name a skill, longest first
     if (!PHRASES) {
       PHRASES = TOPICS.flatMap(t => [t.short, t.slug.replace(/_/g, ' '), ...(ALIASES[t.slug] || [])]
-        .map(n => ({ w: words(n), slug: t.slug })));
+        .map(n => ({ w: words(n), slug: t.slug })))
+        .concat(Object.entries(RW_SKILL).flatMap(([slug, name]) => [name, ...(ALIASES[slug] || [])]
+          .map(n => ({ w: words(n), slug }))));
       PHRASES.sort((a, b) => b.w.length - a.w.length);
     }
     return PHRASES;
@@ -603,6 +844,7 @@
       if (type) { unknown.length = 0; body.templates = [type.template]; }
     }
     if (topics.length) body.topics = topics;
+    if (topics.length && topics.every(t => subjectOf(t) === 'rw')) body.subject = 'rw';
     if (tiers) body.tiers = ['easy', 'medium', 'hard'].filter(x => tiers.has(x));
     const inTime = box && count;                  // "10 in 10 min": the count, with the minutes as its limit
     if (inTime) { body.count = count; body.timing = 'custom'; body.minutes = box; body.timed = true; }
@@ -614,7 +856,7 @@
     if (box && !inTime && !any) { for (const k in body) delete body[k]; Object.assign(body, { source: 'next', box }); }
 
     // chips and the composed line: "Practise Circles · Hard · 5 questions · timed"
-    topics.forEach(s => chips.push({ key: 'topic:' + s, label: TOPIC[s].short }));
+    topics.forEach(s => chips.push({ key: 'topic:' + s, label: topicName(s) }));
     if (type) chips.push({ key: 'type', label: type.name });
     const POOL = { redo: 'My mistakes', checks: 'Check-ins due', untried: 'Types I haven’t met', marked: 'Marked', saved: 'Saved' };
     if (body.pool) chips.push({ key: 'pool', label: POOL[body.pool] });
@@ -663,38 +905,59 @@
     return (r * Math.cos(a)).toFixed(2) + ',' + (r * Math.sin(a)).toFixed(2);
   }).join(' ');
 
+  /* ------------------------------------------------------------ topic glyphs and spot drawings
+     (premium build A3, 2026-10-19; ICONS.md 7 and 9). For ui.js, which owns s(), poly() and CORNER.
+
+     SHAPES: drop-in for ui.js's `const SHAPES = {...}` (same shape: SHAPES[name] = g => draws into g with
+     s(tag, attrs, parent)). The grid is now 24 units centred on 0, live area +-9 like the icons, so glyph()
+     sets viewBox "-12 -12 24 24" (was "-13 -13 26 26"). Classes: .stk closed shape, .stkl line, .stki
+     secondary (axes, risers, pans: --faint at full width), .stkb the bold part, .stkd dot. Widths and colours
+     come from icons.css (1.4px, held in screen pixels): no stroke-width attributes here (bug 1), and no
+     --gb sticker fill, so nothing shows a pale box inside a selected chip (bug 4).
+     Kept and re-weighed (12): percent bars die right cross balance cube curveline parabola scatter angle
+     (arc now primary) dotcircle (radius added). Redrawn (7): numberline ray errorbar equiv magnifier
+     graphline slope. */
   const SHAPES = {
-    numberline: g => { s('path', { class: 'stkl', d: 'M-10 2 H10 M-6 -1 V5 M0 -1 V5 M6 -1 V5' }, g); s('circle', { class: 'stkd', cx: 3, cy: 2, r: 2.6 }, g); },
-    graphline:  g => { s('path', { class: 'stki', d: 'M-9 7 H9 M-7 9 V-9' }, g); s('path', { class: 'stkl', d: 'M-9 6 L9 -7' }, g); },
-    slope:      g => { s('path', { class: 'stkl', d: 'M-9 7 L9 -7' }, g); s('path', { class: 'stki', d: 'M-3 2.3 H4.6 V-3.6' }, g); },
-    cross:      g => { s('path', { class: 'stkl', d: 'M-9 -6 L9 8 M-9 8 L9 -6' }, g); s('circle', { class: 'stkd', cx: 0, cy: 1, r: 2.4 }, g); },
-    ray:        g => { s('path', { class: 'stkl', d: 'M-10 2 H10' }, g); s('path', { class: 'stkl', d: 'M-.4 2 H9', 'stroke-width': 3.2 }, g); s('circle', { class: 'stk', cx: -3, cy: 2, r: 2.8 }, g); },
-    equiv:      g => s('path', { class: 'stkl', d: 'M-7 -5 H7 M-7 0 H7 M-7 5 H7', 'stroke-width': 1.8 }, g),
-    curveline:  g => { s('path', { class: 'stkl', d: 'M-9 8 Q0 -14 9 8' }, g); s('path', { class: 'stkl', d: 'M-10 1 H10' }, g); s('circle', { class: 'stkd', cx: -5.4, cy: 1, r: 2.1 }, g); s('circle', { class: 'stkd', cx: 5.4, cy: 1, r: 2.1 }, g); },
-    parabola:   g => { s('path', { class: 'stki', d: 'M-9 6 H9 M0 9 V-9' }, g); s('path', { class: 'stkl', d: 'M-8 -8 Q0 14 8 -8' }, g); },
-    balance:    g => { s('path', { class: 'stkl', d: 'M0 -8 V8 M-8 -5 H8 M-5 9 H5' }, g); s('path', { class: 'stki', d: 'M-8 -5 L-10.5 1 M-8 -5 L-5.5 1 M8 -5 L10.5 1 M8 -5 L5.5 1 M-11 1.5 H-5 M5 1.5 H11' }, g); },
-    percent:    g => { s('circle', { class: 'stk', cx: -5, cy: -5, r: 3 }, g); s('circle', { class: 'stk', cx: 5, cy: 5, r: 3 }, g); s('path', { class: 'stkl', d: 'M-8 9 L8 -9' }, g); },
-    bars:       g => { s('rect', { class: 'stk', x: -9, y: 1, width: 5, height: 8 }, g); s('rect', { class: 'stk', x: -2.5, y: -6, width: 5, height: 15 }, g); s('rect', { class: 'stk', x: 4, y: -2, width: 5, height: 11 }, g); s('path', { class: 'stki', d: 'M-11 9.5 H11' }, g); },
-    scatter:    g => { s('path', { class: 'stki', d: 'M-9 8 H9 M-9 8 V-9' }, g); s('path', { class: 'stki', d: 'M-8 6 L8 -6' }, g); [[-5, 4], [-2, 1.5], [1, -.5], [3, -4], [6, -2.5]].forEach(([x, y]) => s('circle', { class: 'stkd', cx: x, cy: y, r: 1.7 }, g)); },
-    die:        g => { s('rect', { class: 'stk', x: -9, y: -9, width: 18, height: 18, rx: 3 }, g); [[-4.5, -4.5], [0, 0], [4.5, 4.5]].forEach(([x, y]) => s('circle', { class: 'stkd', cx: x, cy: y, r: 1.8 }, g)); },
-    errorbar:   g => { s('path', { class: 'stkl', d: 'M-9 0 H9 M-9 -3.5 V3.5 M9 -3.5 V3.5' }, g); s('circle', { class: 'stkd', cx: 0, cy: 0, r: 2.8 }, g); },
-    magnifier:  g => { s('circle', { class: 'stk', cx: -2, cy: -2, r: 6.5 }, g); s('path', { class: 'stkl', d: 'M2.8 2.8 L9 9', 'stroke-width': 2.4 }, g); },
-    cube:       g => { s('polygon', { class: 'stk', points: poly(6, 10.5, -90) }, g); s('path', { class: 'stki', d: 'M0 0 L0 10.5 M0 0 L-9.1 -5.25 M0 0 L9.1 -5.25' }, g); },
-    angle:      g => { s('path', { class: 'stk', d: 'M-9 8 L2 -9 L9 8 z', 'fill-opacity': 0 }, g); s('path', { class: 'stki', d: 'M-1.26 -3.96 A6 6 0 0 0 4.29 -3.45' }, g); },
-    right:      g => { s('polygon', { class: 'stk', points: '-9,9 9,9 9,-9' }, g); s('path', { class: 'stki', d: 'M9 5 h-4 v4' }, g); },
-    dotcircle:  g => { s('circle', { class: 'stk', r: 9.5 }, g); s('circle', { class: 'stkd', r: 1.6 }, g); },
+    // an R&W skill: lines of text
+    lines: g => { s('path', { class: 'stkl', d: 'M-8 -5.5 H8 M-8 0 H8 M-8 5.5 H3' }, g); },
+    // a number line with taller ticks; the solution dot sits on the middle tick
+    numberline: g => { s('path', { class: 'stkl', d: 'M-9 0 H9 M-6 -3.5 V3.5 M0 -3.5 V3.5 M6 -3.5 V3.5' }, g); s('circle', { class: 'stkd', cx: 0, cy: 0, r: 2.3 }, g); },
+    // two marked points on the axes (the intercepts) and the line through them
+    graphline:  g => { s('path', { class: 'stki', d: 'M-9 5 H9 M-5 -9 V9' }, g); s('path', { class: 'stkl', d: 'M-8 -6 L6 8' }, g); s('circle', { class: 'stkd', cx: -5, cy: -3, r: 1.9 }, g); s('circle', { class: 'stkd', cx: 3, cy: 5, r: 1.9 }, g); },
+    // the line with its rise and run
+    slope:      g => { s('path', { class: 'stkl', d: 'M-7.7 6 L7.7 -6' }, g); s('path', { class: 'stki', d: 'M-2.6 2 H3.9 V-3' }, g); },
+    cross:      g => { s('path', { class: 'stkl', d: 'M-7.7 -5.1 L7.7 6.9 M-7.7 6.9 L7.7 -5.1' }, g); s('circle', { class: 'stkd', cx: 0, cy: .9, r: 2.1 }, g); },
+    // closed dot, the bold solution ray, an arrowhead; the rest of the line faint
+    ray:        g => { s('path', { class: 'stki', d: 'M-9 0 H-3.5' }, g); s('path', { class: 'stkb', d: 'M-3.5 0 H8 M4.5 -3.5 L8 0 L4.5 3.5' }, g); s('circle', { class: 'stkd', cx: -3.5, cy: 0, r: 2.4 }, g); },
+    // an equals sign whose lower bar is split: the same value in another form
+    equiv:      g => s('path', { class: 'stkl', d: 'M-7 -3 H7 M-7 3 H-1.5 M1.5 3 H7' }, g),
+    curveline:  g => { s('path', { class: 'stkl', d: 'M-7.7 6.9 Q0 -12 7.7 6.9' }, g); s('path', { class: 'stkl', d: 'M-8.6 .9 H8.6' }, g); s('circle', { class: 'stkd', cx: -4.6, cy: .9, r: 1.8 }, g); s('circle', { class: 'stkd', cx: 4.6, cy: .9, r: 1.8 }, g); },
+    parabola:   g => { s('path', { class: 'stki', d: 'M-7.7 5.1 H7.7 M0 7.7 V-7.7' }, g); s('path', { class: 'stkl', d: 'M-6.9 -6.9 Q0 12 6.9 -6.9' }, g); },
+    balance:    g => { s('path', { class: 'stkl', d: 'M0 -6.9 V6.9 M-6.9 -4.3 H6.9 M-4.3 7.7 H4.3' }, g); s('path', { class: 'stki', d: 'M-6.9 -4.3 L-9 .9 M-6.9 -4.3 L-4.7 .9 M6.9 -4.3 L9 .9 M6.9 -4.3 L4.7 .9 M-9.4 1.3 H-4.3 M4.3 1.3 H9.4' }, g); },
+    percent:    g => { s('circle', { class: 'stk', cx: -4.3, cy: -4.3, r: 2.6 }, g); s('circle', { class: 'stk', cx: 4.3, cy: 4.3, r: 2.6 }, g); s('path', { class: 'stkl', d: 'M-6.9 7.7 L6.9 -7.7' }, g); },
+    bars:       g => { s('rect', { class: 'stk', x: -7.7, y: .9, width: 4.3, height: 6.9 }, g); s('rect', { class: 'stk', x: -2.1, y: -5.1, width: 4.3, height: 12.9 }, g); s('rect', { class: 'stk', x: 3.4, y: -1.7, width: 4.3, height: 9.4 }, g); s('path', { class: 'stki', d: 'M-9.4 8.1 H9.4' }, g); },
+    scatter:    g => { s('path', { class: 'stki', d: 'M-7.7 6.9 H7.7 M-7.7 6.9 V-7.7' }, g); s('path', { class: 'stki', d: 'M-6.9 5.1 L6.9 -5.1' }, g); [[-4.3, 3.4], [-1.7, 1.3], [.9, -.4], [2.6, -3.4], [5.1, -2.1]].forEach(([x, y]) => s('circle', { class: 'stkd', cx: x, cy: y, r: 1.5 }, g)); },
+    die:        g => { s('rect', { class: 'stk', x: -7.7, y: -7.7, width: 15.4, height: 15.4, rx: 2.6 }, g); [[-3.9, -3.9], [0, 0], [3.9, 3.9]].forEach(([x, y]) => s('circle', { class: 'stkd', cx: x, cy: y, r: 1.5 }, g)); },
+    // a vertical interval with caps over a short baseline (no longer a twin of numberline and ray)
+    errorbar:   g => { s('path', { class: 'stki', d: 'M-6 8 H6' }, g); s('path', { class: 'stkl', d: 'M0 -7 V4 M-3 -7 H3 M-3 4 H3' }, g); s('circle', { class: 'stkd', cx: 0, cy: -1.5, r: 2.3 }, g); },
+    // a speech bubble holding two bars: a claim about data (no longer the search icon)
+    magnifier:  g => { s('path', { class: 'stk', d: 'M-6 -7.5 H6 A2.5 2.5 0 0 1 8.5 -5 V2 A2.5 2.5 0 0 1 6 4.5 H-1 L-5 8.5 V4.5 H-6 A2.5 2.5 0 0 1 -8.5 2 V-5 A2.5 2.5 0 0 1 -6 -7.5 Z' }, g); s('path', { class: 'stkl', d: 'M-2.5 1.5 V-1 M2.5 1.5 V-4' }, g); },
+    cube:       g => { s('polygon', { class: 'stk', points: poly(6, 9, -90) }, g); s('path', { class: 'stki', d: 'M0 0 V9 M0 0 L-7.8 -4.5 M0 0 L7.8 -4.5' }, g); },
+    angle:      g => { s('path', { class: 'stk', d: 'M-7.7 6.9 L1.7 -7.7 L7.7 6.9 Z' }, g); s('path', { class: 'stkl', d: 'M-1.1 -3.4 A5.1 5.1 0 0 0 3.7 -3' }, g); },
+    right:      g => { s('polygon', { class: 'stk', points: '-7.7,7.7 7.7,7.7 7.7,-7.7' }, g); s('path', { class: 'stki', d: 'M7.7 4.3 h-3.4 v3.4' }, g); },
+    dotcircle:  g => { s('circle', { class: 'stk', r: 8.1 }, g); s('path', { class: 'stkl', d: 'M0 0 L5.7 -5.7' }, g); s('circle', { class: 'stkd', r: 1.6 }, g); },
   };
   function glyph(slug) {
     const g = document.createElementNS(NS, 'svg');
-    g.setAttribute('viewBox', '-13 -13 26 26');
+    g.setAttribute('viewBox', '-12 -12 24 24');
     g.setAttribute('aria-hidden', 'true');
     g.setAttribute('focusable', 'false');
     g.setAttribute('class', 'glyph');
     const t = TOPIC[slug];
-    (SHAPES[t ? t.shape : 'dotcircle'])(g);
+    (SHAPES[t ? t.shape : RW_SKILL[slug] ? 'lines' : 'dotcircle'])(g);
     return g;
   }
-  const chip = slug => h('span', { class: 'chip' }, glyph(slug), (TOPIC[slug] || {}).short || slug);
+  const chip = slug => h('span', { class: 'chip' }, glyph(slug), topicName(slug));
 
   /* ------------------------------------------------------------ helpers */
   const mmss = sec => {
@@ -705,7 +968,7 @@
   const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
   const day = iso => { const d = new Date(iso.length === 10 ? iso + 'T12:00:00' : iso); return `${MONTHS[d.getMonth()]} ${d.getDate()}`; };
   const cap = t => t ? t[0].toUpperCase() + t.slice(1) : t;
-  const band = e => e ? `${e.low}–${e.high}` : '—';
+  const band = e => e ? `${e.low}–${e.high}` : '\u2013';
   const reduced = () => media('(prefers-reduced-motion: reduce)') || doc.documentElement.dataset.motion === 'reduce';
 
   /* what a day of the plan holds, from three answers: the exam date, a study
@@ -998,7 +1261,7 @@
     pending = null;
     const b = (seq && find(seq)) || find(c);
     if (b) {
-      if (b.run(e) !== false) e.preventDefault();
+      if (b.run(e) !== false) { e.preventDefault(); flashKeys(b.key); }
       return;
     }
     if (c !== 'Escape' && active.some(r => [...r.map.keys()].some(k => k.startsWith(c + ' ')))) {
@@ -1007,6 +1270,23 @@
     }
   }
   doc.addEventListener('keydown', onKey);
+  // the keycaps on screen that show a shortcut flash once when it fires (ui.css .m-kflash, motion.css)
+  function flashKeys(c) {
+    if (UI.motion && UI.motion.calm()) return;
+    const parts = combo(c).split(' ').flatMap(st => st.split('+'));
+    const want = [parts.map(x => String(CAP[x] || x).toLowerCase()), parts.map(x => x.toLowerCase())];
+    const seen = new Set(), lit = [];
+    doc.querySelectorAll('kbd').forEach(k => {
+      const p = k.parentElement;
+      if (!p || seen.has(p)) return;
+      seen.add(p);
+      const caps = [...p.children].filter(x => x.tagName === 'KBD');
+      const got = caps.map(x => x.textContent.trim().toLowerCase());
+      if (!want.some(w => w.length === got.length && w.every((x, i) => x === got[i])) || !caps[0].getClientRects().length) return;
+      caps.forEach(x => { x.classList.remove('m-kflash'); void x.offsetWidth; x.classList.add('m-kflash'); lit.push(x); });
+    });
+    if (lit.length) setTimeout(() => lit.forEach(x => x.classList.remove('m-kflash')), 400);
+  }
 
   // the ? sheet: This page, then every other scope in play, then Global and the verbs
   function keysSheet() {
@@ -1423,7 +1703,7 @@
     { id: 'tests', href: '/tests/', label: 'Tests', key: 'E', icon: 'tests', tab: true, group: 'Study' },
     { id: 'plan', href: '/plan/', label: 'Plan', key: 'L', icon: 'plan', tab: true, group: 'Study' },
     { id: 'results', href: '/results/', label: 'Results', key: 'R', icon: 'results', tab: true, group: 'Progress' },
-    { id: 'compete', href: '/compete/', label: 'Compete', key: 'C', icon: 'trophy', group: 'Progress' },
+    { id: 'compete', href: '/compete/', label: 'Compete', key: 'C', icon: 'compete', group: 'Progress' },
     { id: 'me', href: '/me/', label: 'Profile', key: 'U', icon: 'profile', group: 'Progress' },
   ];
   // the section mapping (Shell 2.2, R1, U26): a page's data-page, and the item it lights
@@ -1434,7 +1714,11 @@
   const fmt = n => Number(n || 0).toLocaleString('en-US');
   const cap99 = n => n > 999 ? '999+' : fmt(n);
   const plural = (n, one, many = one + 's') => `${fmt(n)} ${n === 1 ? one : many}`;
-  const icon = (name, size = 20) => { const t = doc.createElement('template'); t.innerHTML = svg(ICON[name] || '', size); return t.content.firstElementChild; };
+  // UI.icon(name, size) -> svg node; an unknown name draws nothing ('' appends as nothing) and warns on localhost
+  const icon = (name, size = 20) => {
+    if (!ICON[name]) { if (/^(localhost|127\.0\.0\.1)$/.test(location.hostname)) console.warn(`UI.icon: no icon "${name}"`); return ''; }
+    const t = doc.createElement('template'); t.innerHTML = svg(ICON[name], size); return t.content.firstElementChild;
+  };
   const dot = () => h('i', { class: 'dot', 'aria-hidden': 'true' });
   const shown = el => !!el && el.offsetWidth > 1;
   const lget = (k, d) => { try { const v = JSON.parse(sget(LS(), k) || 'null'); return v === null ? d : v; } catch (_) { return d; } };
@@ -1488,7 +1772,7 @@
       }
       case 'practice': {
         const r = d.resume && d.resume.kind === 'drill' ? d.resume : null;
-        return r ? { node: h('span', { class: 'badge', text: 'Resume' }), say: 'Resume', rail: 'dot',
+        return r ? { node: h('span', { class: 'badge soft', text: 'Resume' }), say: 'Resume', rail: 'dot',
                      tip: `Resume your set${r.total ? ` · ${fmt(r.answered)}/${fmt(r.total)}` : ''}` } : null;
       }
       case 'review': {
@@ -1506,7 +1790,7 @@
         const r = testResume(d);
         if (r) {
           const left = r.seconds_left ? ` · ${mmss(r.seconds_left)} left` : r.paused ? ' · paused' : '';
-          return { node: h('span', { class: 'badge', text: 'Resume' }), say: 'Resume', rail: 'dot',
+          return { node: h('span', { class: 'badge soft', text: 'Resume' }), say: 'Resume', rail: 'dot',
                    tip: `Resume ${(UI.KIND && UI.KIND[r.kind] || r.kind).toLowerCase()} · ${fmt(r.answered)}/${fmt(r.total)}${left}` };
         }
         return dayKind(d) === 'test' && !d.tested_today ? { text: 'Test day', rail: 'dot', tip: 'Today is a test day in your plan' } : null;
@@ -1591,10 +1875,25 @@
       Array.from({ length: d.spares || 0 }, () => flame(12, true)),
       o.compact && d.spares ? h('span', { class: 'sr', text: ` · ${plural(d.spares, 'spare')}` }) : null);
     st.style.whiteSpace = 'nowrap';
-    card.append(h('div', { class: 'side-day-head' }, h('a', { class: 'k', href: '/plan/', text: 'Today', style: 'text-decoration: none' }), st));
+    // the sidebar's card (compact) says the goal as a small ring beside Today, minutes inside, instead of a meter
+    // that says the same thing (BUILD A1 hand-off); the menu sheet and Now strip keep the meter
+    const ringGoal = o.compact && goal && goal.minutes && (d.answered || t.minutes);
+    const today = h('a', { class: 'k', href: '/plan/', text: 'Today', style: 'text-decoration: none' });
+    let lead = today;
+    if (ringGoal) {
+      const say = `${fmt(t.minutes || 0)} of ${fmt(goal.minutes)} min`;
+      const gr = h(facts ? 'button' : 'a', { type: facts ? 'button' : null, href: facts ? null : '/plan/', class: 'ring side-goal',
+        style: `--p: ${Math.min(1, (t.minutes || 0) / goal.minutes)}; text-decoration: none`, 'aria-label': `Study time: ${say}`,
+        ...fact('minutes:today', 'Study time today', say) }, h('span', { 'aria-hidden': 'true', text: fmt(t.minutes || 0) }));
+      if (UI.tooltip) UI.tooltip(gr, `Study time · ${say}`);
+      lead = h('span', { class: 'side-day-goal' }, gr, today);
+    }
+    card.append(h('div', { class: 'side-day-head' }, lead, st));
     if (!d.answered && !t.minutes) {
       card.append(h('p', { text: 'Nothing yet today' }));
       if (!goal) card.append(h('a', { class: 'link', href: '/plan/', text: 'Set a daily goal' }));
+    } else if (ringGoal) {
+      // the ring in the head carries it
     } else if (goal && goal.minutes && UI.meter) {
       const m = UI.meter(card, { label: 'Study time', value: t.minutes || 0, max: goal.minutes, unit: 'min' });
       const n = m.el.querySelector('.meter-n');
@@ -1605,7 +1904,7 @@
       if (!goal) card.append(h('a', { class: 'link', href: '/plan/', text: 'Set a daily goal' }));
     }
     const reg = regLine(d);
-    if (reg) card.append(h('a', { class: 'link', href: 'https://satsuite.collegeboard.org/sat/registration', target: '_blank', rel: 'noopener' }, reg, ' ↗'));
+    if (reg) card.append(h('a', { class: 'link', href: 'https://satsuite.collegeboard.org/sat/registration', target: '_blank', rel: 'noopener' }, reg, ' ', icon('external', 14)));
     contestLines(d).forEach(c => card.append(h('p', {}, c.text, ' · ', h('a', { class: 'link', href: c.href, text: 'Start' }))));
     const ex = examLine(d);
     if (ex) card.append(h('a', { class: 'side-day-foot', href: '/plan/', text: ex, style: 'text-decoration: none' }));
@@ -1638,8 +1937,8 @@
     try { await start(it); }
     catch (e) { btn.removeAttribute('aria-busy'); if (UI.toast && !e.offline) UI.toast('Couldn’t start it. Try again.'); }
   }
-  const startBtn = (it, label = 'Start', kbd) => {
-    const b = h(it.href ? 'a' : 'button', { class: 'pill sm', href: it.href || null, type: it.href ? null : 'button' }, label, kbd && !media('(pointer: coarse)') ? keycaps(kbd) : null);
+  const startBtn = (it, label = 'Start', kbd, cls = 'pill sm') => {
+    const b = h(it.href ? 'a' : 'button', { class: cls, href: it.href || null, type: it.href ? null : 'button' }, label, kbd && !media('(pointer: coarse)') ? keycaps(kbd) : null);
     if (!it.href) b.addEventListener('click', () => go(b, it));
     return b;
   };
@@ -1686,7 +1985,7 @@
     el.title = nextTip(it);   // the title and Start are enough; the check-ins, minutes and reason are a tooltip
     const more = h('button', { type: 'button', class: 'ibtn', 'aria-label': 'More up next', 'aria-haspopup': 'dialog' }, icon('chev', 18));
     more.addEventListener('click', () => morePop(more));
-    el.append(h('div', { class: 'nextup-go' }, startBtn(it, 'Start', o.kbd === false ? null : 'G N'), more));
+    el.append(h('div', { class: 'nextup-go' }, startBtn(it, 'Start', o.kbd === false ? null : 'G N', o.quiet ? 'btn sm' : undefined), more));
     if (o.boxes) el.append(boxChips(true));
     return el;
   }
@@ -1705,8 +2004,11 @@
     });
   }
   function navItem(n) {
+    // the current item carries the one .nav-mark (motion.css names it), so a page change slides it from
+    // the old item to the new (MOTION N2)
     const a = h('a', { class: 'side-item', href: n.href, 'data-id': n.id, 'aria-current': n.id === here ? 'page' : null },
-      icon(n.icon), h('span', { class: 'side-text', text: n.label }), h('span', { class: 'side-meta' }));
+      icon(n.icon), h('span', { class: 'side-text', text: n.label }), h('span', { class: 'side-meta' }),
+      n.id === here ? h('span', { class: 'nav-mark', 'aria-hidden': 'true' }) : null);
     refs.items[n.id] = { el: a, meta: null };
     // the rail's tooltip: name, meta, shortcut; the expanded sidebar's: what the meta stands for
     tip(a, () => {
@@ -1765,11 +2067,12 @@
       if (d.device && d.device.session_only) return 'Shared computer: ends 15 minutes after you stop, or about a minute after you close the browser.';
       return shown(user.querySelector('.side-name')) ? '' : `${(d.me && d.me.label) || 'You'} · account`;
     });
-    sideEl = h('nav', { class: 'side', 'aria-label': 'Main' },
+    sideEl = h('nav', { class: 'side' + (sget(LS(), 'satf.nowfold') === '1' ? ' now-folded' : ''), 'aria-label': 'Main' },
       h('div', { class: 'side-brand' }), search, h('div', { class: 'nextup' }), play, quick,
       h('div', { class: 'side-nav' }, groups), h('div', { class: 'side-day' }),
       h('div', { class: 'side-foot' }, help, fb), user);
     Object.assign(refs, { search, quick, play, user });
+    edgeFade(sideEl.querySelector('.side-nav'));
     // close the overlay when a link in it is followed; peek on a 400 ms rest (U26)
     sideEl.addEventListener('click', e => { if (overlay && e.target.closest('a[href]')) closeOverlay(); });
     sideEl.addEventListener('pointerenter', e => {
@@ -1811,7 +2114,7 @@
     if (!overlay) return;
     const had = sideEl.contains(doc.activeElement);
     overlay = null;
-    if (scrimEl) scrimEl.remove();
+    if (scrimEl) { const sc = scrimEl; if (UI.motion) UI.motion.exit(sc, 'fade').then(() => sc.remove()); else sc.remove(); }
     scrimEl = null;
     sideEl.classList.remove('open');
     sideEl.classList.add('rail');
@@ -1819,11 +2122,13 @@
     if (focus && had) { const b = sideEl.querySelector('.side-mark'); if (b) b.focus({ preventScroll: true }); }
   }
   // the toggle and [: collapse or expand (1100px wide and up), or open the overlay (760-1099)
-  function toggle() {
+  // a click glides the edge between 248 and 68 (a same-document view transition, motion.css vt-rail); [ is instant
+  function toggle(e) {
     if (!sideEl || media(W_PHONE)) return;
     const wide = media(W_SIDE);
-    if (overlay) { if (wide) { sput(LS(), 'satf.rail', null); layout(); } else closeOverlay(); return; }
-    if (wide) { sput(LS(), 'satf.rail', sideEl.classList.contains('rail') ? null : '1'); layout(); focusToggle(); return; }
+    const glide = fn => (UI.motion ? UI.motion.vt(fn, { cls: 'vt-rail', event: e }) : fn());
+    if (overlay) { if (wide) glide(() => { sput(LS(), 'satf.rail', null); layout(); }); else closeOverlay(); return; }
+    if (wide) { glide(() => { sput(LS(), 'satf.rail', sideEl.classList.contains('rail') ? null : '1'); layout(); focusToggle(); }); return; }
     openOverlay('toggle');
   }
   const focusToggle = () => { const b = sideEl.querySelector(sideEl.classList.contains('rail') ? '.side-mark' : '.side-toggle'); if (b && sideEl.contains(doc.activeElement)) b.focus({ preventScroll: true }); };
@@ -1850,7 +2155,7 @@
   }, true);
 
   function paintSide(d) {
-    if (!sideEl) return;
+    if (!sideEl) { paintUser(d); return; }           // the focus chrome: only its account button
     const rail = sideEl.classList.contains('rail');
     for (const n of NAV) {
       const r = refs.items[n.id], m = d ? metaOf(n.id, d) : null;
@@ -1868,13 +2173,63 @@
         else { delete r.el.dataset.ring; r.el.style.removeProperty('--p'); }
       }
     }
-    const nb = sideEl.querySelector('.nextup');
-    nb.replaceWith(nextBlock(d));
+    const nb = nextBlock(d, { quiet: ownPrimary });
+    sideEl.querySelector('.nextup').replaceWith(nb);
+    // the Now card folds to one line (title and Start) and remembers it (satf.nowfold); the Today card leaves with it
+    if (d && !nb.hidden) {
+      const folded = sideEl.classList.contains('now-folded');
+      const fold = h('button', { type: 'button', class: 'ibtn now-fold', 'aria-expanded': String(!folded),
+        'aria-label': folded ? 'Show Up next and Today in full' : 'Fold Up next and Today to one line' }, icon('chev', 16));
+      // the card folds to one line in a glide: Today leaves, the nav slides up (B1, motion.css vt-fold)
+      fold.addEventListener('click', e => {
+        const go = () => {
+          sideEl.classList.toggle('now-folded', !folded);
+          sput(LS(), 'satf.nowfold', folded ? '' : '1');
+          paintSide(shellData);
+          const again = sideEl.querySelector('.now-fold');
+          if (again) again.focus();
+        };
+        if (UI.motion) UI.motion.vt(go, { cls: 'vt-fold', event: e, names: { '.side .nextup': 'm-nextup', '.side .side-day': 'm-day', '.side .side-nav': 'm-nav' } });
+        else go();
+      });
+      tip(fold, () => folded ? 'Show in full' : 'Fold to one line');
+      nb.append(fold);
+    }
     const it = d && nextItems()[0];
     refs.play.hidden = !it;
+    refs.play.classList.toggle('own', ownPrimary);
     if (it) refs.play.setAttribute('aria-label', `Start Up next: ${it.title}`);
-    sideEl.querySelector('.side-day').replaceWith(todayCard(d, { compact: true }));
+    const was = sideEl.querySelector('.side-day'), card = todayCard(d, { compact: true });
+    was.replaceWith(card);
+    carry(was, card, d);
     paintUser(d);
+  }
+  // a repaint that moved a figure (fresh data on this page, never the first paint): the ring and the study
+  // time sweep from where they were (D4, D3), a goal met beats once a day (F6), a longer streak rolls its
+  // number and fills its flame (F5)
+  let lastStreak = null;
+  function carry(was, card, d) {
+    const streak = d ? d.streak || 0 : null, grew = lastStreak !== null && streak > lastStreak;
+    if (d) lastStreak = streak;
+    if (!d || !UI.fx || !was.querySelector('.streak')) return;
+    const r0 = [...was.querySelectorAll('.ring')], r1 = [...card.querySelectorAll('.ring')];
+    const met = r0.length === r1.length && r1.some((r, i) => (parseFloat(r0[i].style.getPropertyValue('--p')) || 0) < 1 && (parseFloat(r.style.getPropertyValue('--p')) || 0) >= 1);
+    const beat = met && UI.motion.once('goal', 'local');
+    if (r0.length === r1.length) r1.forEach((r, i) => {
+      const a = parseFloat(r0[i].style.getPropertyValue('--p')) || 0, b = parseFloat(r.style.getPropertyValue('--p')) || 0;
+      if (Math.abs(a - b) > .001) { r.style.setProperty('--p', a); UI.fx.ring(r, b, { beat }); }
+    });
+    const m0 = was.querySelector('.meter-bar'), m1 = card.querySelector('.meter-bar');
+    if (m0 && m1) {
+      const a = m0.style.getPropertyValue('--p'), b = m1.style.getPropertyValue('--p');
+      if (a && a !== b && UI.motion.ok()) { m1.style.setProperty('--p', a); void m1.offsetWidth; m1.style.setProperty('--p', b); }
+    }
+    if (grew) {
+      const st = card.querySelector('.streak'), n0 = was.querySelector('.streak > span'), n1 = st && st.querySelector(':scope > span');
+      if (n0 && n1 && UI.roll) { const to = n1.textContent; n1.textContent = n0.textContent; UI.roll(n1, to); }
+      if (st) UI.fx.flame(st);
+      if (refs.streak && !refs.streak.hidden) UI.fx.flame(refs.streak);
+    }
   }
   function paintUser(d) {
     const u = refs.user;
@@ -1886,19 +2241,19 @@
     const sharedPc = d && d.device && d.device.session_only;
     const unread = unreadOf(d && d.inbox);
     if (!d) sub.textContent = '';
-    else if (sharedPc) sub.replaceChildren('Shared computer · Sign out');
+    else if (sharedPc) sub.replaceChildren('Shared computer');   // one line; the tooltip and the menu's Sign out say the rest
     else if (me.linked) sub.replaceChildren(me.email_masked || 'Saved');
     else sub.replaceChildren(dot(), 'Not saved yet');
     const old = u.querySelector('.badge.n');
     if (old) old.remove();
-    if (unread) u.querySelector('.side-name').append(' ', h('span', { class: 'badge n', text: cap99(unread), 'aria-label': `${plural(unread, 'unread item')}` }));
+    if (unread) u.querySelector('.side-name').append(' ', h('span', { class: 'badge n soft', text: cap99(unread), 'aria-label': `${plural(unread, 'unread item')}` }));
     u.setAttribute('aria-label', `${me.label || 'You'}${d && !me.linked && !sharedPc ? ', not saved yet' : ''}${unread ? `, ${plural(unread, 'unread item')}` : ''}, account menu`);
   }
   function avatarOf(d, size) {
     const me = (d && d.me) || {}, a = me.avatar || {};
     if (!UI.avatar || !d) return h('span', { class: 'avatar' + (size >= 40 ? ' lg' : ''), html: mark(size >= 40 ? 22 : 16, 'var(--soft)') });
     return UI.avatar({ name: me.name || me.label, avatar: a.kind === 'glyph' ? a.glyph : a.kind === 'initial' ? 'initial' : 'mark',
-      ring: a.ring, domains: me.domains && me.domains.math, self: true, learner: learner() }, size);
+      ring: a.ring, domains: me.domains, self: true, learner: learner() }, size);
   }
 
   /* ---- the phone: the top bar, the five tabs, the grip and the hold menus (Shell 2.4, U26) */
@@ -1935,7 +2290,7 @@
     st.setAttribute('aria-label', `Streak: ${streakText(d)}`);
     const me = refs.meBtn, unread = unreadOf(d.inbox), c = d.challenge || {};
     me.replaceChildren(avatarOf(d, 32));
-    if (unread) me.append(h('span', { class: 'badge n', text: cap99(unread), style: 'position: absolute; top: -2px; right: -4px; box-shadow: 0 0 0 2px var(--paper)' }));
+    if (unread) me.append(h('span', { class: 'badge n ink', text: cap99(unread), style: 'position: absolute; top: -2px; right: -4px; box-shadow: 0 0 0 2px var(--paper)' }));
     else if (!c.started) me.append(dot());
     me.setAttribute('aria-label', `Menu${unread ? `, ${plural(unread, 'unread item')}` : !c.started ? ', today’s challenge is new' : ''}`);
   }
@@ -1945,7 +2300,8 @@
     const grip = h('button', { type: 'button', class: 'tabs-grip', 'aria-label': 'Open menu', 'aria-haspopup': 'dialog' });
     grip.addEventListener('click', () => menuSheet(grip));
     tabs.replaceChildren(grip, ...NAV.filter(n => n.tab).map(n => {
-      const a = h('a', { href: n.href, 'aria-current': n.id === here ? 'page' : null }, icon(n.icon, 22), h('span', { text: n.label }));
+      const a = h('a', { href: n.href, 'aria-current': n.id === here ? 'page' : null }, icon(n.icon, 22), h('span', { text: n.label }),
+        n.id === here ? h('span', { class: 'tab-mark', 'aria-hidden': 'true' }) : null);
       refs.tabs[n.id] = a;
       holdable(a, n.id);
       return a;
@@ -2011,10 +2367,20 @@
   }
   function hint() {
     if (!tabsEl || lget('satf.hint.hold', 0) || !media(W_PHONE)) return;
-    const x = h('button', { type: 'button', class: 'x', 'aria-label': 'Dismiss' }, icon('x', 16));
-    const el = h('div', { class: 'tabs-hint', role: 'note' }, 'Hold a tab for shortcuts', x);
-    x.addEventListener('click', () => { lput('satf.hint.hold', 1); el.remove(); });
-    doc.body.append(el);
+    // after the page has painted; a page with a docked bar above the tabs (Practice's Start, Plan's builder foot) skips
+    // it this visit, since the hint would sit on that bar. Shown, it leaves after 8 s and counts as seen
+    setTimeout(() => {
+      if (doc.querySelector('.tabs-hint')) return;
+      const y = innerHeight - 64 - 40, docked = [innerWidth * .2, innerWidth / 2, innerWidth * .8].some(x =>
+        (doc.elementsFromPoint ? doc.elementsFromPoint(x, y) : []).some(e => !e.closest('.tabs, .pbar') && /^(fixed|sticky)$/.test(getComputedStyle(e).position)));
+      if (docked) return;
+      const x = h('button', { type: 'button', class: 'x', 'aria-label': 'Dismiss' }, icon('x', 16));
+      const el = h('div', { class: 'tabs-hint', role: 'note' }, 'Hold a tab for shortcuts', x);
+      const done = () => { lput('satf.hint.hold', 1); el.remove(); };
+      x.addEventListener('click', done);
+      doc.body.append(el);
+      setTimeout(done, 8000);
+    }, 1500);
   }
 
   /* ---- the account menu (Shell 2.6, U21, U25, U26): valid menu ARIA, from kit's UI.menu */
@@ -2081,16 +2447,14 @@
       items.push({ label: `See all (${fmt(d.inbox)})`, icon: 'bell', href: '/me/?feed=unread#recent' });
       markSeen();
     }
-    if (!saved && !shared) items.push({ label: 'Save your progress', sub: 'So clearing this browser can’t lose it', icon: 'dot', href: '/me/settings/#account' });
+    if (!saved && !shared) items.push({ label: 'Save your progress', sub: 'So clearing this browser can’t lose it', icon: 'save', href: '/me/settings/#account' });
     items.push(...studentsItems());
     items.push({ separator: true },
       { label: 'Profile', icon: 'profile', href: '/me/', kbd: 'G U' },
       { label: d.report_replies ? ['Settings ', dot(), h('span', { class: 'sr', text: `, ${plural(d.report_replies, 'unread reply', 'unread replies')}` })] : 'Settings',
         icon: 'settings', href: '/me/settings/', kbd: 'G S' });
     if (!saved) items.push({ label: 'Sign in', icon: 'signin', href: '/signin/' });
-    items.push({ label: 'Sign in another device', icon: 'devices', href: '/pair/' },
-      has('pair') ? { label: 'Continue on your phone', icon: 'devices', onClick: () => UI.continueOnPhone() } : null,
-      { label: 'Help & FAQ', icon: 'help', href: '/help/', kbd: 'G H' },
+    items.push({ label: 'Help & FAQ', icon: 'help', href: '/help/', kbd: 'G H' },
       tourItem(),
       { label: 'Send feedback', icon: 'chat', onClick: feedback },
       { group: 'Display' },
@@ -2164,8 +2528,6 @@
       row('Settings', 'settings', { href: '/me/settings/', current: here === 'me' && page() === 'settings', meta: d && d.report_replies ? dot() : null }),
       !saved && !shared ? row('Save your progress', 'save', { href: '/me/settings/#account', meta: dot() }) : null,
       !saved ? row('Sign in', 'signin', { href: '/signin/' }) : null,
-      row('Sign in another device', 'devices', { href: '/pair/' }),
-      has('pair') ? row('Continue on your phone', 'devices', { onClick: () => UI.continueOnPhone() }) : null,
       row('Help & FAQ', 'help', { href: '/help/', current: here === 'help' }),
       tourPage ? row('Show this page’s tour', 'help', { onClick: () => need('tour').then(() => UI.tour.start(tourPage, { force: true })).catch(() => {}) }) : null,
       row('Send feedback', 'chat', { onClick: feedback })),
@@ -2187,15 +2549,40 @@
         meta: rc.due ? `${cap99(rc.due)} due · ${cap99(rc.open)} open` : rc.open ? [dot(), `${cap99(rc.open)} open`] : null,
         aria: `Review${rc.due ? `, ${fmt(rc.due)} due today` : ''}${rc.open ? `, ${fmt(rc.open)} open` : ''}` }),
       cell('Words', 'words', { href: '/words/', current: here === 'words', meta: wm ? wm.text : null }),
-      cell('Compete', 'trophy', { href: '/compete/', current: here === 'compete', meta: cm ? cm.text : null }),
+      cell('Compete', 'compete', { href: '/compete/', current: here === 'compete', meta: cm ? cm.text : null }),
       cell('Quick', 'bolt', { onClick: () => UI.quick() }));
     dlg.append(body, foot);
     dlg.addEventListener('click', e => { if (e.target === dlg) dlg.close(); });
-    dlg.addEventListener('close', () => { dlg.remove(); if (trigger && trigger.isConnected) trigger.focus({ preventScroll: true }); });
+    // it drops away (motion.css, a transition on display and overlay), then goes; a key closes it at once
+    dlg.addEventListener('close', () => {
+      let t = 0;
+      try { if (UI.motion && UI.motion.ok() && CSS.supports('overlay', 'auto')) t = 440; } catch (_) {}
+      dlg.inert = true;
+      if (t) setTimeout(() => dlg.remove(), t); else dlg.remove();
+      if (trigger && trigger.isConnected) trigger.focus({ preventScroll: true });
+    });
     doc.body.append(dlg);
     dlg.showModal();
     body.scrollTop = 0;
     return dlg;
+  }
+
+  /* ---- a scroll box shows a soft edge where there is more to scroll (ui.css .fade-s / .fade-e; x: across) */
+  function edgeFade(el, x) {
+    if (!el) return null;
+    if (el._fade) { el._fade(); return el._fade; }
+    if (x) el.classList.add('fade-x');
+    const paint = () => {
+      const pos = x ? el.scrollLeft : el.scrollTop;
+      const max = x ? el.scrollWidth - el.clientWidth : el.scrollHeight - el.clientHeight;
+      el.classList.toggle('fade-s', pos > 2);
+      el.classList.toggle('fade-e', max - pos > 2);
+    };
+    el._fade = paint;
+    el.addEventListener('scroll', paint, { passive: true });
+    try { new ResizeObserver(paint).observe(el); } catch (_) {}
+    paint();
+    return paint;
   }
 
   /* ---- the Now strip (U26): Up next as one line at the top of main, as text, wherever the
@@ -2204,7 +2591,7 @@
   function nowStrip(host) {
     const el = h('section', { class: 'now-strip', 'aria-label': 'Up next' });
     el._paint = d => {
-      const nb = nextBlock(d);
+      const nb = here1(nextItems(d)[0]) ? h('div', { hidden: true }) : nextBlock(d, { quiet: ownPrimary });
       // one line: the reason moves to the title's tooltip; the Today card stays in the sidebar, the hero and the phone's menu sheet
       const r = nb.querySelector('.nextup-r');
       if (r) nb.querySelector('.nextup-t').title = r.textContent;
@@ -2217,41 +2604,61 @@
     return el;
   }
   const paintStrip = () => strips.forEach(el => el._paint(shellData));     // every shell paint and layout change
+  // an Up next that is a link to the page already open: the page shows it, the strip and the bar don't repeat it
+  const here1 = it => { try { return !!(it && it.href && new URL(it.href, location.href).pathname === location.pathname); } catch (_) { return false; } };
+  let ownStart = false;                  // UI.shell({ now: false }): the page carries its own Start
+  let ownPrimary = false;                // UI.shell({ ownPrimary: true }): the page's hero has the orange Start; Up next's goes .btn
 
   /* ---- the section bar (U26): UI.sections([{id, label}]) renders a page's cards as chips,
      sticky at the top of main, with scroll-spy; "Up next: ... · Start" shows at its end once
      the Now strip has scrolled away, on pages with sections or without */
-  let barEl = null, sentinel = null, stuckIO = null, spyIO = null;
+  // The bar is the only thing the shell puts in main's flow (with the Now strip and a banner, which are content): no
+  // sentinel, it watches itself, and while it waits it takes back main's gap too, so a page laying main out with a
+  // gap gets no dead air above its header
+  let barEl = null, stuckIO = null, spyIO = null, sectionsAlways = false;
   function sectionBar() {
     if (barEl) return barEl;
     barEl = h('nav', { class: 'sections', 'aria-label': 'On this page' });
-    sentinel = h('div', { 'aria-hidden': 'true', style: 'height: 1px; margin-bottom: -1px' });
+    // a chip that takes focus while the bar waits brings it out at once (keyboard users never tab into nothing)
+    barEl.addEventListener('focusin', () => paintBarNext());
+    barEl.addEventListener('focusout', e => { if (!barEl.contains(e.relatedTarget)) setTimeout(paintBarNext); });
     return barEl;
   }
   function paintBarNext() {
     if (!barEl) return;
     const old = barEl.querySelector('.sections-next');
     if (old) old.remove();
-    // Today has its own Up next card: the bar doesn't say it a second time (the user)
-    const it = shellData && doc.body.dataset.page !== 'today' && nextItems()[0];
-    if (it) barEl.append(h('span', { class: 'sections-next' }, 'Up next: ', h('b', { text: it.title }), startBtn(it)));
-    const chips = barEl.querySelectorAll(':scope > a').length;
+    // a page with its own Start (now: false: Today, Plan, Tests) or one Up next points at: the bar doesn't say it again
+    const it = shellData && !ownStart && !here1(nextItems()[0]) && nextItems()[0];
+    if (it) barEl.append(h('span', { class: 'sections-next' }, 'Up next: ', h('b', { text: it.title }), startBtn(it, 'Start', null, ownPrimary ? 'btn sm' : undefined)));
+    const chips = barEl.querySelectorAll(':scope > a').length, stuck = barEl.classList.contains('stuck');
     barEl.hidden = !chips && !it;
-    // without chips the bar takes no room until it sticks: one Start's height, pulled up by it
+    // the chips wait until the page's header has scrolled away (SUGGESTIONS Recommended 6), then fade in as the bar
+    // sticks; UI.shell({ sectionsAlways: true }) shows them from the top. Waiting, the bar takes no room and is
+    // clear but keeps its landmark, and a chip that gets focus (Tab) brings it out where it is.
+    // Without chips it is one Start's height, pulled up by it, and hidden until it sticks.
+    const open = !!chips && (sectionsAlways || barEl.contains(doc.activeElement));
+    barEl.toggleAttribute('data-m-wait', !!chips && !stuck && !open);
     barEl.style.minHeight = chips ? '' : '40px';
-    barEl.style.visibility = chips || barEl.classList.contains('stuck') ? '' : 'hidden';
-    if (chips || barEl.hidden) barEl.style.marginBottom = '';
-    else if (!barEl.classList.contains('stuck')) barEl.style.marginBottom = `-${barEl.offsetHeight}px`;
+    barEl.style.visibility = chips || stuck ? '' : 'hidden';
+    if (open || barEl.hidden) barEl.style.marginBottom = '';
+    else if (!stuck) {
+      const gap = barEl.parentElement ? parseFloat(getComputedStyle(barEl.parentElement).rowGap) || 0 : 0;   // a flex / grid main's gap
+      barEl.style.marginBottom = `-${barEl.offsetHeight + gap}px`;
+    }
   }
   function observeStuck() {
-    if (!barEl || !sentinel || typeof IntersectionObserver !== 'function') return;
+    if (!barEl || typeof IntersectionObserver !== 'function') return;
     if (stuckIO) stuckIO.disconnect();
-    const top = media(W_PHONE) ? 56 : 0;
+    // where it sticks, as the CSS says (the phone's 56px bar plus the notch's safe area under viewport-fit=cover)
+    const top = parseFloat(getComputedStyle(barEl).top) || 0;
+    // the bar is its own sentinel: stuck at `top`, its first pixel sits above the line 1px under it, so it is no longer whole
     stuckIO = new IntersectionObserver(([e]) => {
-      barEl.classList.toggle('stuck', !e.isIntersecting && e.boundingClientRect.top < top + 1);
+      barEl.classList.toggle('stuck', e.boundingClientRect.height > 0 && e.intersectionRatio < 1 && e.boundingClientRect.top < top + 1);   // a display: none bar is not stuck
+      barEl.classList.toggle('scrolled', barEl.classList.contains('stuck'));      // A1's scroll shadow
       paintBarNext();
-    }, { rootMargin: `-${top + 1}px 0px 0px 0px` });
-    stuckIO.observe(sentinel);
+    }, { rootMargin: `-${top + 1}px 200px 0px 200px`, threshold: [1] });   // side slack: a bar overhanging the page by a
+    stuckIO.observe(barEl);                                                 // pixel must still read whole while it is not stuck
   }
   function sections(list) {
     sectionBar();
@@ -2274,6 +2681,7 @@
       return a;
     });
     barEl.prepend(...chips);
+    edgeFade(barEl, true);               // the phone scrolls the chips sideways: soft edges where more are
     const current = a => {
       chips.forEach(c => c.toggleAttribute('aria-current', false));
       if (!a) return;
@@ -2387,29 +2795,51 @@
   let tourPage = null;
   const tourSeen = p => { try { return !!localStorage.getItem(`satf.tour.${p}`); } catch (_) { return true; } };
   const tourItem = () => (tourPage ? { label: 'Show this page’s tour', icon: 'help', onClick: () => need('tour').then(() => UI.tour.start(tourPage, { force: true })).catch(() => {}) } : null);
+  /* ---- the focus chrome (chrome: 'focus'; Sign in, Welcome, Pair): a slim brand bar instead of the sidebar,
+     rail, tabs and Now strip. The mark and wordmark go home; Help and the account menu sit at the right; the
+     body gets .has-focus so the page centres its card. The shortcuts stay (G H, Mod+K, ?). */
+  function buildFocus() {
+    const help = h('a', { class: 'ibtn', href: '/help/', 'aria-label': 'Help & FAQ' }, icon('help'));
+    tip(help, 'Help & FAQ', 'G H');
+    const user = h('button', { type: 'button', class: 'side-user focus-user', 'aria-haspopup': 'menu', 'aria-expanded': 'false' },
+      h('span', { class: 'avatar' }), h('span', { class: 'side-name', text: '' }), h('span', { class: 'side-sub', text: '' }), icon('chev', 16));
+    menuTrigger(user);
+    refs.user = user;
+    return h('div', { class: 'focus-bar' },
+      h('a', { class: 'focus-brand', href: '/', 'aria-label': 'SAT Freshman, Today', html: mark(26) }, h('span', { class: 'focus-word', text: 'SAT Freshman' })),
+      h('span', { class: 'focus-grow' }), help, user);
+  }
   /* ---- UI.shell */
   let shellOn = false;
-  function shell(o = {}) {
-    if (typeof o === 'string') o = { page: o };
+  function shell(o = {}, more) {
+    if (typeof o === 'string') o = { ...more, page: o };       // UI.shell('words', { now: false }) keeps its options
+    if (o.sectionsAlways !== undefined) sectionsAlways = !!o.sectionsAlways;
+    if (o.ownPrimary !== undefined) ownPrimary = !!o.ownPrimary;
     if (shellOn) { if (o.sections) sections(o.sections); return; }
     shellOn = true;
     const pg = o.page || page();
+    const focus = o.chrome === 'focus';
     here = SECTION[pg] || pg;
-    if (TOUR_PAGES.has(pg) && !(typeof RO !== 'undefined' && RO)) { tourPage = pg; if (!tourSeen(pg) && !new URLSearchParams(location.search).has('print')) { UI.__tourPage = pg; need('tour').catch(() => {}); } }
+    if (!focus && TOUR_PAGES.has(pg) && !(typeof RO !== 'undefined' && RO)) { tourPage = pg; if (!tourSeen(pg) && !new URLSearchParams(location.search).has('print')) { UI.__tourPage = pg; need('tour').catch(() => {}); } }
     keys.chrome = true;
+    doc.body.classList.toggle('has-focus', focus);
     const bar = $('#bar');
     if (bar) {
       bar.className = '';
-      bar.replaceChildren(buildSide(), buildPbar());
+      bar.replaceChildren(...(focus ? [buildFocus()] : [buildSide(), buildPbar()]));
+      if (focus && UI.scrolled) UI.scrolled(bar);
     }
     const tabs = $('#tabs');
-    if (tabs) buildTabs(tabs);
-    const main = doc.querySelector('main');
+    if (tabs) { if (focus) tabs.hidden = true; else buildTabs(tabs); }
+    const main = focus ? null : doc.querySelector('main');
     if (main) {
       if (!main.id) main.id = 'main';
       sectionBar();
-      main.prepend(sentinel, barEl);
-      if (o.now !== false && !doc.querySelector('.now-strip')) sentinel.before(nowStrip(null));
+      main.prepend(barEl);
+      ownStart = o.now === false;
+      // nowBlock: false (Today, Plan): the sidebar's Up next and Today card leave too, the page carries both
+      doc.body.classList.toggle('no-now', o.nowBlock === false);
+      if (o.now !== false && !doc.querySelector('.now-strip')) barEl.before(nowStrip(null));
       if (o.sections) sections(o.sections); else paintBarNext();
     }
     if (!storable && UI.banner) UI.banner('storage', 'This browser is blocking site data, so progress can’t be kept here.',
@@ -2417,7 +2847,7 @@
     for (const q of [W_SIDE, W_PHONE]) { try { matchMedia(q).addEventListener('change', layout); } catch (_) {} }
     layout();
     onShell(paintAll);
-    onShell(notices);
+    if (!focus) onShell(notices);
     // the first hover on the sidebar in a session fetches the palette's type index (U23)
     if (sideEl) sideEl.addEventListener('pointerenter', () => { types().catch(() => {}); }, { once: true });
     // no shell data at all: Up next and the Today card leave, the nav still works (Shell 2.12)
@@ -2425,7 +2855,7 @@
     const gone = () => {
       if (shellData) return;
       paintSide(null);
-      sideEl.querySelectorAll('.nextup, .side-day').forEach(e => { e.hidden = true; });
+      if (sideEl) sideEl.querySelectorAll('.nextup, .side-day').forEach(e => { e.hidden = true; });
       strips.forEach(el => { el.hidden = true; });
       if (refs.chip) refs.chip.hidden = true;
       if (refs.streak) refs.streak.hidden = true;
@@ -2486,7 +2916,7 @@
           prefs.set({ registered: r.day }).then(() => { UI.banner.clear('deadline'); if (shellData) shellData.registration = null; },
             () => { b.removeAttribute('aria-busy'); if (UI.toast) UI.toast('Not saved. Try again.'); });
         } },
-        { label: 'Register at College Board ↗', onClick: () => { window.open(COLLEGE_BOARD, '_blank', 'noopener'); } },
+        { label: ['Register at College Board', icon('external', 14)], onClick: () => { window.open(COLLEGE_BOARD, '_blank', 'noopener'); } },
         UI.ics ? { label: 'Add deadline to calendar', icon: 'calendar', onClick: () => UI.ics({
           title: `Register for the SAT on ${day(r.day)}`, start: r.late ? r.late_by : r.register_by, allDay: true,
           alarm: 9 * 60, url: COLLEGE_BOARD, description: `Registration for the ${day(r.day)} SAT closes this day.` }) } : null,
@@ -2513,9 +2943,10 @@
       ] };
     }
     if (d.answered >= 50 && Date.now() - (Number(lget('satf.nudge', 0)) || 0) > WEEK_MS) {
-      return { kind: 'nudge', text: 'Your progress is only in this browser. Save it to an email so clearing the browser can’t lose it.',
+      // one short line (under the fold's 70 characters, so no toggle), beside its icon even on a phone
+      return { kind: 'nudge', text: 'Your progress is only in this browser.',
         o: { icon: 'save' }, actions: [
-          { label: 'Save progress', primary: true, href: '/me/settings/#account' },
+          { label: 'Save to email', href: '/me/settings/#account' },   // a .btn: the page's own Start stays its one orange
           { label: 'Not now', quiet: true, dismiss: true, onClick: () => lput('satf.nudge', Date.now()) },
         ] };
     }
@@ -2573,8 +3004,7 @@
      what an answer does; reveal() paints what the server said about it. */
   function question(host, q, { onAnswer, again = false } = {}) {
     host.replaceChildren();
-    const t = TOPIC[q.topic];
-    const skill = h('p', { class: 'q-skill' }, glyph(q.topic), h('span', { text: t ? t.short : (q.topic_name || '') }));
+    const skill = h('p', { class: 'q-skill' }, glyph(q.topic), h('span', { text: TOPIC[q.topic] || RW_SKILL[q.topic] ? topicName(q.topic) : (q.topic_name || '') }));
     if (again || q.repair) skill.append(h('span', { class: 'again', text: 'Again' }));
     host.append(skill);
 
@@ -2595,6 +3025,7 @@
       q.table.forEach((row, i) => tb.append(h('tr', {}, row.map(c => h(i ? 'td' : 'th', { text: c })))));
       host.append(h('div', { class: 'q-table' }, tb));
     }
+    if (q.text) host.append(h('div', { class: 'q-passage', text: q.text }));     // an R&W item's passage, above its stem
     host.append(h('div', { class: 'q-stem', text: q.stem || '' }));
 
     const verdict = h('div', { class: 'verdict', hidden: true });
@@ -2786,13 +3217,15 @@
   if (doc.body) skip(); else doc.addEventListener('DOMContentLoaded', skip);
 
   /* ------------------------------------------------------------ fold: extra detail behind a small toggle
-     Long helper text, intro lines, notes, banner text and the Explanation cards are wrapped in a closed <details> whose
-     one-line label is the start of the text. The element itself is moved, not rebuilt, so the pages' references and
+     Long helper text, intro lines, notes and banner text are wrapped in a closed <details> whose one-line label is the
+     start of the text (question.js folds the Explanation card itself, as 'explanation' in the same memory). The element itself is moved, not rebuilt, so the pages' references and
      listeners stay valid. Open boxes are remembered per page and text (satf.fold). Opt out with data-nofold. */
-  const FOLD_SEL = '.help, .lead, .lead-t, .wz-note, .rp-helper, .rs-helper, .chart-note, .calc-note, .tw-lead, .tw-note, .v-note, .ts-sub, .spr-rule, .banner-t, .x-card';
-  const FOLD_SKIP = 'dialog, [inert], [hidden], [data-nofold], details, .pref, [role=alert], [aria-live], .field-err, .sr, #bar, #tabs, nav, .skel, .tour';
+  const FOLD_SEL = '.help, .lead, .lead-t, .wz-note, .rp-helper, .rs-helper, .chart-note, .calc-note, .tw-lead, .tw-note, .v-note, .banner-t';
+  // a sheet folds only when it asks to (dialog[data-fold]); aria-live="off" is not live; popovers never fold
+  const FOLD_SKIP = 'dialog:not([data-fold]), [inert], [hidden], [data-nofold], details, .pref, [role=alert], [aria-live]:not([aria-live="off"]), .field-err, .sr, #bar, #tabs, nav, .skel, .tour, .popover, .tip';
   const FOLD_MIN = 70;
-  const FOLD_OFF = /\/(print|report|help)\b/;
+  const FOLD_OFF = /\/(print|help)\b|\/words\/run\b/;
+  const foldOff = () => FOLD_OFF.test(location.pathname) || /[?&]print\b/.test(location.search);
   const foldMem = (() => {
     const read = () => { try { return JSON.parse(localStorage.getItem('satf.fold') || '[]'); } catch (_) { return []; } };
     return {
@@ -2806,15 +3239,15 @@
   })();
   function foldOne(el) {
     const text = (el.textContent || '').replace(/\s+/g, ' ').trim();
-    const card = el.matches('.x-card');
-    if (!text || (!card && text.length < FOLD_MIN)) return;
-    if (el.closest('.ws') && !el.matches('.spr-rule, .x-card')) return;
-    if (el.closest('.x-card') && el !== el.closest('.x-card')) return;
+    if (!text || text.length < FOLD_MIN) return;
+    if (el.querySelector('button, input, select, textarea, .pill, .btn')) return;      // never hide a control
+    if (el.closest('.ws, .x-card')) return;     // the question workspace; question.js folds its own Explanation
     const first = text.match(/^.{16,64}?(?=[.:;!?]\s|$)/);
-    const label = card ? 'Explanation' : first && first[0].length < text.length - 1 ? first[0] : text.slice(0, 56).replace(/\s\S*$/, '') + '…';
-    const id = card ? 'explanation' : `${location.pathname}|${text.slice(0, 48).replace(/\d+/g, '#')}`;
+    const label = first && first[0].length < text.length - 1 ? first[0] : text.slice(0, 56).replace(/\s\S*$/, '') + '…';
+    const id = `${location.pathname}|${text.slice(0, 48).replace(/\d+/g, '#')}`;
     const cs = getComputedStyle(el);
     const d = h('details', { class: 'fold' }, h('summary', { class: 'fold-s', text: label }));
+    if (foldMem.has(id)) d.open = true;       // open before it lands, so a remembered box never animates on load
     el.replaceWith(d);
     d.append(el);
     d.style.margin = `${cs.marginTop} ${cs.marginRight} ${cs.marginBottom} ${cs.marginLeft}`;
@@ -2823,17 +3256,47 @@
       if (v && !['auto', 'normal', '0', '0px', '0 1 auto', ''].includes(v)) d.style[p] = v;
     }
     el.style.margin = '6px 0 0';
-    if (foldMem.has(id)) d.open = true;
     d.addEventListener('toggle', () => foldMem.set(id, d.open));
   }
+  /* folds move (SUGGESTIONS "Folds open smoothly"): details.fold opens and closes in height and fade; where
+     CSS can animate to auto (interpolate-size, motion.css) that is all CSS, elsewhere this does the height.
+     A .card[data-collapsed] that opens grows to its height and its content rises 4px; a close is instant. */
+  let foldCss = false;
+  try { foldCss = CSS.supports('interpolate-size', 'allow-keywords'); } catch (_) {}
+  if (!foldCss) doc.addEventListener('click', e => {
+    const sm = e.target.closest && e.target.closest('details.fold > summary');
+    const d = sm && sm.parentElement;
+    if (!d || d._mFold || !UI.motion || !UI.motion.ok(e)) return;
+    e.preventDefault();
+    d._mFold = true;
+    const shut = sm.getBoundingClientRect().bottom - d.getBoundingClientRect().top;
+    if (!d.open) { d.open = true; UI.motion.grow(d, shut).then(() => { d._mFold = false; }); return; }
+    UI.motion.grow(d, d.offsetHeight, { to: shut, then: () => { d.open = false; } }).then(() => { d._mFold = false; });
+  });
+  if (typeof MutationObserver === 'function') {
+    const cardMo = new MutationObserver(rs => rs.forEach(r => {
+      const c = r.target;
+      if (r.oldValue === null || c.hasAttribute('data-collapsed') || !UI.motion || !UI.motion.ok()) return;
+      const to = c.offsetHeight;
+      c.setAttribute('data-collapsed', '');
+      const from = c.offsetHeight;
+      c.removeAttribute('data-collapsed');
+      cardMo.takeRecords();
+      UI.motion.grow(c, from, { to });
+      [...c.children].filter(k => !k.matches('.card-head, .card-sum')).forEach(k => UI.motion.enter(k, 'nudge'));
+    }));
+    const watch = () => cardMo.observe(doc.body, { subtree: true, attributes: true, attributeFilter: ['data-collapsed'], attributeOldValue: true });
+    if (doc.body) watch(); else doc.addEventListener('DOMContentLoaded', watch);
+  }
   function foldScan() {
-    if (FOLD_OFF.test(location.pathname)) return;
+    if (foldOff()) return;
     doc.querySelectorAll(FOLD_SEL).forEach(el => { if (!el.closest(FOLD_SKIP) && !el.parentElement.closest('.fold') && !el.matches(FOLD_SKIP)) foldOne(el); });
   }
   (() => {
     let t = 0;
     const later = () => { clearTimeout(t); t = setTimeout(foldScan, 180); };
-    const start = () => { foldScan(); new MutationObserver(later).observe(doc.body, { childList: true, subtree: true, characterData: true }); };
+    const ticking = r => { const n = r.target.nodeType === 1 ? r.target : r.target.parentElement; return !!(n && n.closest('.timer, .rn-watch, .t-digits, .rn-between-clock, .rn-segs')); };
+    const start = () => { foldScan(); new MutationObserver(rs => { if (!rs.every(ticking)) later(); }).observe(doc.body, { childList: true, subtree: true, characterData: true }); };
     if (doc.readyState === 'loading') doc.addEventListener('DOMContentLoaded', start); else start();
     let was = [];
     window.addEventListener('beforeprint', () => { was = [...doc.querySelectorAll('details.fold')].filter(d => !d.open); was.forEach(d => { d.open = true; }); });
@@ -2844,10 +3307,11 @@
   Object.assign(UI, {
     learner, useLearner, freshLearner, shared: () => shared, stored: () => storable, ready,
     api, cached, whenVisible, refresh, onShell, shellData: () => shellData, me, prefs, prefRow, look,
-    keys, ROUTES, start, nextItems, skip, need, has, types, parseSet, ALIASES, boxChips, feedback, run, autoSheet, share, notify,
+    keys, ROUTES, start, nextItems, nextMeta, edgeFade, skip, need, has, types, parseSet, ALIASES, boxChips, feedback, run, autoSheet, share, notify,
     NAV, SECTION, shell, nowStrip, sections, menuSheet, accountMenu: accountItems,
     signOut: () => (shellData && shellData.me && shellData.me.linked) || shared ? signOut() : leave(),
-    h, s, svg, mark, ICON, TOPICS, TOPIC, DOMAINS, glyph, chip,
+    h, s, svg, mark, ICON, ICON_FILL, icon, spotArt: spot, TOPICS, TOPIC, RW_SKILL, RW_DOMAINS, DOMAINS, glyph, chip,
+    SUBJECTS, subject, subjectSeg, subjectLabel, subjectOf, topicName,
     question, calc, ref, snap, mmss, minutesFor, day, cap, band, reduced, plan, $,
   });
 })();

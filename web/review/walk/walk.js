@@ -2,7 +2,7 @@
    SAT Freshman -- the walk (/review/walk/?id=<drill id>): review.md V2.
 
    Each miss runs up to four steps in UI.review mode 'walk' (F3): Try again (only while its
-   key was never shown), What happened?, The trap, Prove it on new numbers. The walk drill's
+   key was never shown), What happened?, The trap, Prove it (new numbers, or another passage for R&W). The walk drill's
    cfg.walk {items, i, step} is the position; every move posts /api/review/walk/{id}/at, so a
    reload or another device comes back to the same mistake and step.
 
@@ -14,6 +14,9 @@
   'use strict';
   const doc = document;
   const h = UI.h;
+  // the back link's caret is drawn (UI.ICON), not a text glyph
+  const backEl = document.querySelector('.rw-back');
+  if (backEl && UI.icon) backEl.prepend(UI.icon('caret_left', 16));
   const $ = id => doc.getElementById(id);
   const enc = encodeURIComponent;
   const Q = new URLSearchParams(location.search);
@@ -34,13 +37,17 @@
   const norm = t => String(t || '').toLowerCase().replace(/[-−]?\d[\d.,/]*/g, '#').split(/\s+/).filter(Boolean).join(' ');
   const box = $('walk');
   let sid = Q.get('id'), entries = [], items = [], pos = { i: 0, step: 1 }, summary = null, prefs = {};
+  // a walk is one subject: the link's (or the one last picked) until the walk's own questions say which
+  let subject = UI.subject.get();
+  const redoHref = () => `/review/?tab=redo&subject=${subject}`;
+  if (backEl) backEl.href = redoHref();
 
   const btn = (text, cls, onclick) => h('button', { type: 'button', class: cls, text, onclick });
   const link = (text, href, cls = 'btn') => h('a', { class: cls, href, text });
-  const toReview = () => link('Back to Review', '/review/?tab=redo', 'btn');
+  const toReview = () => link('Back to Review', redoHref(), 'btn');
   function card(title, sub, acts, extra) {
     box.removeAttribute('aria-busy');
-    box.replaceChildren(h('div', { class: 'rw-card' }, h('p', { class: 't', text: title }), sub ? h('p', { class: 's', text: sub }) : null, extra || null,
+    box.replaceChildren(h('div', { class: 'card rw-card' }, h('p', { class: 't', text: title }), sub ? h('p', { class: 's', text: sub }) : null, extra || null,
       h('div', { class: 'rw-acts' }, ...acts.filter(Boolean))));
   }
   function fail(retry, text) {
@@ -52,9 +59,10 @@
   /* ------------------------------------------------------------ create, read */
   async function create() {
     const s = Q.get('session'), ids = Q.get('ids');
-    const body = s ? { session: s } : ids ? { ids: ids.split(',').map(Number).filter(n => n > 0) } : { new: true };
+    // a sitting and trap ids name their subject (the server reads it from them); new misses are the subject's
+    const body = s ? { session: s } : ids ? { ids: ids.split(',').map(Number).filter(n => n > 0) } : { new: true, subject };
     if (body.new) {                                          // nothing new: say so without asking for a walk
-      const c = await UI.api('/review/counts', { quiet: true }).catch(() => null);
+      const c = await UI.api(`/review/counts?subject=${subject}`, { quiet: true }).catch(() => null);
       if (c && !c.new) { nothing(); return false; }
     }
     try {
@@ -63,9 +71,13 @@
       history.replaceState(null, '', `/review/walk/?id=${enc(sid)}`);
       return true;
     } catch (e) {
-      if (e.status === 409 && !e.offline) {
+      // only "no missed questions" is nothing to walk; another 409 (a test not handed in yet) says what it is
+      const why = String((e.detail && e.detail.reason) || e.detail || '');
+      if (e.status === 409 && !e.offline && /no missed/i.test(why)) {
         if (s) card('No misses in this sitting.', null, [link('See its report', `/results/report/?id=${enc(s)}`, 'pill'), toReview()]);
         else nothing();
+      } else if (e.status === 409 && !e.offline && /after the test/i.test(why)) {
+        card('This test isn’t handed in yet.', 'Its misses can be walked once it’s finished.', [toReview()]);
       } else fail(boot, reasonOf(e));
       return false;
     }
@@ -169,15 +181,21 @@
     const n = entries.length;
     if (summary) {
       const s = summary;
-      const line = [`${s.n} reviewed`, s.n - s.blanks ? `you named ${s.named} of ${s.n - s.blanks}` : null, `${s.proven} proven on new numbers`,
-        s.open ? `${s.open} still open` : null, s.blanks ? plural(s.blanks, 'blank') : null].filter(Boolean).join(' · ');
-      card('Walk done', line, [link('Back to Review', '/review/?tab=redo', 'pill')]);   // Walk the n still open is on the end card
+      const named = s.n - s.blanks;
+      // the hero: how many you named, at the hero size; the rest of the walk in one line under it
+      const line = [`${s.n} reviewed`, `${s.proven} proven on ${subject === 'rw' ? 'another one' : 'new numbers'}`, s.open ? `${s.open} still open` : null, s.blanks ? plural(s.blanks, 'blank') : null].filter(Boolean).join(' · ');
+      card('Walk done', named ? null : line, [link('Back to Review', redoHref(), 'pill')],   // Walk the n still open is on the end card
+        named ? h('div', { class: 'rw-done' }, h('p', { class: 'hero-num' }, h('span', { text: '0' }), h('small', { text: `of ${named} named` })), h('p', { class: 's', text: line })) : null);
+      box.firstChild.classList.add('hero');
+      const fig = box.querySelector('.hero-num > span');
+      if (fig && UI.roll) UI.roll(fig, s.named);   // the walk just ended: the figure rolls up from 0 once
       return;
     }
     const dots = h('div', { class: 'rw-dots', 'aria-hidden': 'true' });
-    entries.forEach((_, i) => dots.append(h('i', { 'data-on': i === pos.i ? '' : null })));
-    card(`Mistake ${pos.i + 1} of ${n}`, `Step ${pos.step} of 4 · you can come back to it any time`,
+    entries.forEach((_, i) => dots.append(h('i', { 'data-on': i === pos.i ? '' : null, 'data-done': i < pos.i ? '' : null })));
+    card(`Mistake ${pos.i + 1} of ${n}`, `Step ${pos.step} of 4`,
       [btn('Resume the walk', 'pill', () => play(pos.i, pos.step)), toReview()], dots);
+    box.firstChild.classList.add('hero');
   }
   async function again(open) {
     const ids = [...new Set(open.map(x => x.trap_id).filter(Boolean))];
@@ -201,11 +219,13 @@
       return;
     }
     if (!w || !w.items.length) {
-      card('This walk can’t be opened yet.', 'The same steps run in Review’s pane: open a new miss there.', [link('Open new misses', '/review/?tab=redo&lens=new', 'pill'), toReview()]);
+      card('This walk can’t be opened yet.', 'The same steps run in Review’s pane: open a new miss there.', [link('Open new misses', `${redoHref()}&lens=new`, 'pill'), toReview()]);
       return;
     }
     entries = w.items;
-    if (w.step === 'done') { card('Walk done', 'What’s still open waits in Review’s Redo tab.', [link('Back to Review', '/review/?tab=redo', 'pill')]); return; }
+    subject = UI.subjectOf(entries[0].template);   // the walk's questions are one subject: Review opens on it
+    if (backEl) backEl.href = redoHref();
+    if (w.step === 'done') { card('Walk done', 'What’s still open waits in Review’s Redo tab.', [link('Back to Review', redoHref(), 'pill')]); return; }
     items = new Array(entries.length).fill(null);
     const blanks = entries.filter(e => e.blank).length, misses = entries.length - blanks;
     $('sub').textContent = [misses ? plural(misses, 'miss', 'misses') : null, blanks ? `${blanks} not answered` : null, `about ${Math.max(1, Math.round(entries.length * 1.5))} min`].filter(Boolean).join(' · ');

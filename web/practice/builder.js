@@ -7,20 +7,27 @@
    ========================================================================== */
 (() => {
   const h = UI.h, $ = s => document.querySelector(s);
-  const icon = (name, size = 18) => h('span', { class: 'ic', 'aria-hidden': 'true', html: UI.svg(UI.ICON[name] || UI.ICON.dot, size) });
+  // the shared icon set (UI.icon); an unknown name draws nothing (it used to draw the orange dot, which hid typos)
+  const icon = (name, size = 18) => { const svg = UI.icon(name, size); return svg ? h('span', { class: 'ic', 'aria-hidden': 'true' }, svg) : null; };
   const url = new URLSearchParams(location.search);
   const ls = {
     get(k, d) { try { const v = localStorage.getItem(k); return v === null ? d : JSON.parse(v); } catch (_) { return d; } },
     set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (_) {} },
   };
-  const pct = x => (x === null || x === undefined ? '—' : `${Math.round(x * 100)}%`);
+  const NONE = UI.NONE;   // the missing-value glyph, an en dash (kit)
+  const pct = x => (x === null || x === undefined ? NONE : `${Math.round(x * 100)}%`);
   const n0 = n => (n === null || n === undefined ? '…' : UI.num ? UI.num(n) : String(n));
   const plural = (n, one, many) => `${n} ${n === 1 ? one : many || one + 's'}`;
   const mmss = ms => UI.mmss(Math.round((ms || 0) / 1000));
   const cap = t => (t ? t[0].toUpperCase() + t.slice(1) : '');
+  // the app's short names (UI.TOPIC, as the palette and the sidebar say them), so a tree row is one line; the full name
+  // stays the row's tooltip and accessible name and the skill window's title
+  const label = s => (((UI.TOPIC || {})[s.slug] || {}).short) || s.short || s.name;
+  const skName = slug => { const s = B.skills.get(slug); return s ? label(s) : UI.topicName(slug); };   // the other subject's skill too (Your sets lists both)
+  const dlabel = d => (((UI.TOPIC || {})[((d.skills || [])[0] || {}).slug] || {}).dshort) || d.name;
   const DAY = 864e5;
   function ago(iso) {
-    if (!iso) return '—';
+    if (!iso) return NONE;
     const d = Math.floor((Date.now() - new Date(iso).getTime()) / DAY);
     if (d < 1) return 'today';
     if (d < 14) return `${d}d ago`;
@@ -73,7 +80,7 @@
     pool_empty: 'Nothing in that pool for these skills',
     no_desmos_types: 'No type here has a Desmos way yet',
     no_official_types: 'No type here is built from official questions',
-    no_bank: 'That subject’s bank is coming',
+    no_lookalikes: 'No type here has look-alikes to mix with',
     finish_that_sitting_first: 'Finish that sitting first',
   };
   const reasonText = r => (r ? REASON[r] || cap(String(r).replace(/_/g, ' ')) : '');
@@ -86,12 +93,18 @@
     feedback: 'instant', confidence: 'ask', hints: true, cover: 'off', worked_first: true,
     repairs: 'next', final_round: true, review_mix: 20, review_from: 'picked', words_mix: 'off', order: 'mixed', mix: 'even',
   };
+  // the site's one subject choice (UI.subject); a link that names skills or types but no subject (Today's "More
+  // options" sends ?topics=) opens on their subject
+  const linked = ['skills', 'topics', 'topic', 'types'].map(k => (url.get(k) || '').split(',')[0]).find(Boolean);
   const B = {
     bank: null, byT: new Map(), skills: new Map(), sel: new Set(), st: Object.assign({}, DEF), prefs: {}, saved: null,
     preset: 'coach', source: null, fromLink: false, preview: null, search: '',
     sort: ls.get('satf.tree.sort', null), view: 'skills', sets: null, owned: null,
-    subject: url.get('subject') === 'rw' ? 'rw' : 'math', presetBody: null, me: null,
+    subject: linked && !url.get('subject') ? UI.subjectOf(linked) : UI.subject.get(), presetBody: null, me: null,
   };
+  const isRW = (s = B.subject) => s === 'rw';
+  // R&W items are written passages, not generated numbers: the "one like it" copy says so
+  const fresh = s => (isRW(s) ? 'fresh passages' : 'new numbers');
 
   // a typed number is for this set only (the user: the box should just say Other): only the chip values are remembered as defaults
   const CHIP_COUNTS = [10, 30, 50], CHIP_MINS = [10, 30, 60];
@@ -105,20 +118,25 @@
     ['adaptive', 'pace_alert'].forEach(k => { if (typeof p[k] === 'boolean') st[k] = p[k]; });
     ['feedback', 'repairs', 'order', 'mix', 'confidence'].forEach(k => { if (p[k]) st[k] = p[k]; });
     if (p.pool) st.pool = p.pool === 'checks' ? 'checks' : p.pool;
-    const pm = ((p.practice || {}).math) || {};
-    ['zone', 'review_mix', 'review_from', 'cover', 'words_mix'].forEach(k => { if (pm[k] !== undefined) st[k] = pm[k]; });
-    ['final_round', 'hints', 'worked_first', 'two_passes'].forEach(k => { if (typeof pm[k] === 'boolean') st[k] = pm[k]; });
+    const pm = ((p.practice || {})[B.subject]) || {};   // the server resolves both subjects' keys, defaults included
+    SUBJ_KEYS.forEach(k => { if (pm[k] !== undefined && pm[k] !== null) st[k] = pm[k]; });
     return st;
   }
+  // the settings each subject keeps for itself (prefs.practice.math / .rw); the rest are shared
+  const SUBJ_KEYS = ['zone', 'review_mix', 'review_from', 'cover', 'words_mix', 'final_round', 'hints', 'worked_first', 'two_passes'];
   function toPrefs(st) {
     return {
       set_length: st.count === null ? 0 : CHIP_COUNTS.includes(st.count) ? st.count : DEF.count ?? 10,
       clock: st.timing === 'custom' && !CHIP_MINS.includes(st.minutes) ? (DEF.timing || 'pace') : st.timing, clock_minutes: CHIP_MINS.includes(st.minutes) ? st.minutes : (DEF.minutes ?? 10), tiers: st.tiers, adaptive: st.adaptive,
       levels: st.levels, unmeasured: st.unmeasured, formats: st.formats, feedback: st.feedback, repairs: st.repairs,
       order: st.order === 'mixup' ? 'mixed' : st.order, mix: st.mix, pool: st.pool, confidence: st.confidence, pace_alert: st.pace_alert,
-      practice: { math: { zone: st.zone, review_mix: st.review_mix, review_from: st.review_from, final_round: st.final_round, hints: st.hints,
-        worked_first: st.worked_first, two_passes: st.two_passes, cover: st.cover, words_mix: st.words_mix } },
+      practice: Object.fromEntries(SUBJ_KEYS.map(k => [k, st[k]])),
     };
+  }
+  // a subject switch: that subject's own settings and their saved copy; the shared ones stay
+  function subjectSettings() {
+    const p = fromPrefs(B.prefs);
+    SUBJ_KEYS.forEach(k => { B.st[k] = p[k]; if (B.saved) B.saved[k] = p[k]; });
   }
   let saveT = 0;
   function savePrefs() {
@@ -127,14 +145,13 @@
     saveT = setTimeout(async () => {
       const now = toPrefs(B.st), was = B.saved ? toPrefs(B.saved) : {};
       const diff = {};
-      Object.keys(now).forEach(k => {
-        if (k === 'practice') {
-          const cur = Object.assign({}, ((B.prefs.practice || {}).math) || {}, now.practice.math);
-          if (JSON.stringify(now.practice.math) !== JSON.stringify((was.practice || {}).math)) diff.practice = Object.assign({}, B.prefs.practice || {}, { math: cur });
-        } else if (JSON.stringify(now[k]) !== JSON.stringify(was[k])) diff[k] = now[k];
-      });
+      const same = (a, z) => JSON.stringify(a) === JSON.stringify(z);
+      Object.keys(now).forEach(k => { if (k !== 'practice' && !same(now[k], was[k])) diff[k] = now[k]; });
+      // only the keys that changed, under this subject (the server merges them key by key)
+      const sub = SUBJ_KEYS.filter(k => !same(now.practice[k], (was.practice || {})[k]));
+      if (sub.length) diff.practice = { [B.subject]: Object.fromEntries(sub.map(k => [k, now.practice[k]])) };
       if (!Object.keys(diff).length) return;
-      try { await UI.prefs.set(diff); B.saved = Object.assign({}, B.st); footNote('Saved as your defaults'); }
+      try { const pr = await UI.prefs.set(diff); B.prefs = (pr && pr.prefs) || B.prefs; B.saved = Object.assign({}, B.st); footNote('Saved as your defaults'); }
       catch (_) { footNote('Not saved as your defaults. They apply to this set.'); }
     }, 600);
   }
@@ -155,15 +172,16 @@
     if (L && !B.st.levels.includes(L)) return false;
     return true;
   }
+  const fmts = () => (B.subject === 'rw' ? ['mcq'] : B.st.formats);
   function fits(t) {
-    if (!t.formats.some(f => B.st.formats.includes(f))) return false;
+    if (!t.formats.some(f => fmts().includes(f))) return false;
     if (B.st.has.includes('desmos') && !t.desmos) return false;
     if (B.st.has.includes('official') && !t.official) return false;
     return (t.tiers || []).some(d => tierOk(t, d));
   }
   function whyNot(ts) {
     if (!ts.length || ts.some(fits)) return '';
-    if (!ts.some(t => t.formats.some(f => B.st.formats.includes(f)))) return B.st.formats.includes('spr') ? 'no grid-in types' : 'no multiple-choice types';
+    if (!ts.some(t => t.formats.some(f => fmts().includes(f)))) return B.st.formats.includes('spr') ? 'no grid-in types' : 'no multiple-choice types';
     if (B.st.has.includes('desmos') && !ts.some(t => t.desmos)) return 'no Desmos-way types';
     if (B.st.has.includes('official') && !ts.some(t => t.official)) return 'no types built from official questions';
     if (standard() && !ts.some(t => (t.tiers || []).some(d => B.st.tiers.includes(d)))) return `no ${B.st.tiers.map(d => TIER_WORD[d]).join(' or ')} types`;
@@ -182,7 +200,7 @@
   }
   function body(extra = {}) {
     const st = B.st;
-    const b = Object.assign({ subject: 'math', source: B.source || 'builder' }, selectionBody());
+    const b = Object.assign({ subject: B.subject, source: B.source || 'builder' }, selectionBody());
     if (B.presetBody) Object.assign(b, B.presetBody);
     b.count = st.box ? null : st.count;
     if (st.box) b.box = st.box;
@@ -191,7 +209,7 @@
     if (st.pool === 'seen') { b.result = st.result; b.from = st.from; }
     b.zone = st.zone;
     if (standard()) Object.assign(b, { tiers: st.tiers, adaptive: st.adaptive && st.order !== 'ramp', tier_mix: st.tier_mix, levels: st.levels, unmeasured: st.unmeasured });
-    b.formats = st.formats;
+    b.formats = fmts();
     if (st.has.length) b.has = st.has;
     const endless = b.count === null;
     b.timing = endless && st.timing === 'pace' ? 'off' : st.timing;
@@ -209,7 +227,7 @@
     paintBar();
     pvT = setTimeout(async () => {
       const k = ++pvN;
-      if (!B.bank || B.subject !== 'math') return;
+      if (!B.bank) return;
       let p = null;
       if (!B.sel.size && !B.presetBody) p = { servable: false, reason: 'no_templates', pools: (B.preview && B.preview.pools) || B.bank.counts };
       else {
@@ -228,7 +246,7 @@
     const pts = $('#points');
     const g = b.gains;
     pts.replaceChildren();
-    if (g && (g.total || g.points)) pts.append(h('a', { href: '/results/', class: 'qlink', text: `${g.range ? `Math ${g.range} · ` : ''}≈ ${Math.round(g.total || g.points)} points on the table` }));
+    if (g && (g.total || g.points)) pts.append(h('a', { href: '/results/', class: 'qlink', text: `${g.range ? `${UI.subjectLabel(B.subject, true)} ${g.range} · ` : ''}≈ ${Math.round(g.total || g.points)} points on the table` }));
     pts.hidden = !pts.childNodes.length;
     const route = $('#route');
     route.replaceChildren();
@@ -238,70 +256,30 @@
       route.hidden = false;
     } else route.hidden = true;
     const c = b.counts || {};
-    const act = (B.sets && B.sets.active) || [];
-    const link = (label, n, href, onClick, dot) => {
-      const inner = [dot && n ? h('span', { class: 'dot', 'aria-hidden': 'true' }) : null, h('span', { text: label }), n ? h('span', { class: 'n on', text: `· ${n}` }) : null];
-      return href ? h('a', { href }, inner) : h('button', { type: 'button', onclick: onClick }, inner);
+    // the lists, as icon rows with the count at the end (neutral: a count, not an alarm); a set in progress is the
+    // resume row's to say, not repeated here
+    const link = (label, n, href, onClick, ic) => {
+      const inner = [UI.icon(ic, 18), h('span', { text: label }), n ? h('span', { class: 'n', text: n0(n) }) : null];
+      return href ? h('a', { class: 'pr-li', href }, inner) : h('button', { type: 'button', class: 'pr-li', onclick: onClick }, inner);
     };
     $('#links').replaceChildren(
-      link('Mistakes', c.mistakes, '/mistakes/', null, true),
-      link('Saved', c.saved, null, () => { setPool('saved'); openStart('set'); }),
-      h('button', { type: 'button', onclick: () => showSets() }, h('span', { text: 'Your sets' }), act.length ? h('span', { class: 'n on', text: `· ${act.length} in progress` }) : null));
+      link('Mistakes', c.mistakes, '/mistakes/', null, 'review'),
+      link('Saved', c.saved, null, () => { setPool('saved'); openStart('set'); }, 'bookmark'),
+      link('Your sets', 0, null, () => showSets(), 'list'));
   }
+  // the site's subject switch (UI.subjectSeg: remembered, kept in the URL); each subject has its own tree and settings
   function paintSubject() {
     const host = $('#subject');
     host.replaceChildren();
-    UI.seg(host, [{ value: 'math', label: 'Math' }, { value: 'rw', label: 'Reading & Writing' }], {
-      value: B.subject, label: 'Subject',
-      onChange: v => { B.subject = v; const u = new URL(location.href); if (v === 'rw') u.searchParams.set('subject', 'rw'); else u.searchParams.delete('subject'); history.replaceState(null, '', u); showSubject(); },
-    });
-  }
-  function showSubject() {
-    const math = B.subject === 'math';
-    ['#ready', '#presetSec', '#searchSec', '#grid', '#sets'].forEach(s => { const e = $(s); if (e) e.hidden = !math || (s === '#ready' && !$('#ready').childNodes.length); });
-    $('#abar').hidden = !math;
-    $('#rw').hidden = math;
-    if (!math) rwPanel();
-  }
-
-  /* ---------------------------------------------------------------- R&W (P15): no dead end */
-  let rwBank = null;
-  async function rwPanel() {
-    const host = $('#rw');
-    if (!rwBank) {
-      host.replaceChildren(h('div', { class: 'card line' }, UI.skel ? UI.skel(null, 'lines:4') : 'Loading…'));
-      try { rwBank = await UI.api('/bank?subject=rw', { quiet: true }); } catch (_) { host.replaceChildren(); UI.cardError(host, () => { rwBank = null; rwPanel(); }, 'The server is not answering.'); return; }
-    }
-    const b = rwBank;
-    const skills = [];
-    const off = h('div', { class: 'card line' }, h('h3', { class: 'h2', text: 'Practise official Reading & Writing questions now' }),
-      h('p', { class: 'help', text: 'College Board’s own bank, by skill. Our R&W questions come with the R&W bank.' }),
-      (b.domains || []).map(d => h('div', { class: 'rwd' }, h('b', { text: d.name }), (d.skills || []).map(s => {
-        skills.push(s.name);
-        return h('div', { class: 'rws' }, h('span', { text: s.name }), h('a', { class: 'qlink', target: '_blank', rel: 'noopener', href: 'https://satsuitequestionbank.collegeboard.org/digital/search', text: `Official on College Board · ${s.cb_count ?? '—'}` }));
-      }))));
-    const form = h('form', {});
-    const idF = h('input', { class: 'field', id: 'rwId', placeholder: 'A College Board question ID, or paste the question' });
-    const skF = h('select', { class: 'field', id: 'rwSkill' }, h('option', { value: '', text: 'Skill' }), skills.map(s => h('option', { value: s, text: s })));
-    const leF = h('select', { class: 'field', id: 'rwLetter' }, h('option', { value: '', text: 'The letter you picked' }), ['A', 'B', 'C', 'D'].map(l => h('option', { value: l, text: l })));
-    const msg = h('p', { class: 'help', 'aria-live': 'polite' });
-    form.append(h('label', { class: 'k', for: 'rwId', text: 'Log a missed R&W question' }), idF, skF, leF, h('button', { type: 'submit', class: 'btn', text: 'Log it' }), msg);
-    form.addEventListener('submit', async e => {
-      e.preventDefault();
-      const v = idF.value.trim();
-      if (!v) { msg.textContent = 'Paste an ID or the question first.'; return; }
-      const isId = /^[0-9a-f]{8}$/i.test(v);
-      try {
-        await UI.api('/mistakes/log', { method: 'POST', body: Object.assign({ subject: 'rw', skill: skF.value || null, letter: leF.value || null }, isId ? { cb_id: v } : { text: v }) });
-        msg.textContent = 'Logged. It waits in Review’s Outside list for the R&W bank.'; idF.value = '';
-      } catch (err) { msg.textContent = `Not logged: ${err.message}`; }
-    });
-    const w = b.words || {};
-    const words = h('div', { class: 'card line' }, h('h3', { class: 'h2', text: 'Words drills ready now' }),
-      h('div', { class: 'rws' }, h('span', { text: w.title || `SAT words · ${w.due || 0} due` }), h('a', { class: 'btn sm', href: '/words/', text: 'Start' })),
-      h('div', { class: 'rws' }, h('span', { text: `Transitions · ${((w.preview || {}).transitions) ?? ''}`.replace(/ · $/, '') }), h('a', { class: 'btn sm', href: '/words/', text: 'Start' })));
-    host.replaceChildren(off, h('div', { class: 'card line' }, form), words,
-      h('p', { class: 'help', text: b.note || 'R&W practice questions come with the R&W bank. What you log here is waiting for it.' }));
+    UI.subjectSeg(host, { value: B.subject, onChange: v => {
+      B.subject = v;
+      if (B.fromLink) { B.fromLink = false; linkNote(null); B.st = fromPrefs(B.prefs); B.saved = Object.assign({}, B.st); }   // a link's settings were for the other subject
+      else subjectSettings();
+      B.st.has = [];   // Desmos and official filters are Math's, and only for this visit
+      if (B.view === 'habits' && isRW()) B.view = 'skills';
+      useSubject();
+      paintReady();
+    } });
   }
 
   /* ---------------------------------------------------------------- banners: resume and shared */
@@ -311,7 +289,7 @@
     const act = (B.sets && B.sets.active) || [];
     if (act.length) {
       const s = act[0];
-      const names = (s.topics || []).map(t => (B.skills.get(t) || {}).name || t).slice(0, 3).join(', ');
+      const names = (s.topics || []).map(skName).slice(0, 3).join(', ');
       const clock = s.paused ? 'paused' : s.timed && Number.isFinite(s.seconds_left) ? `${UI.mmss(s.seconds_left)} left` : `untimed · ${mmss(s.ms)} so far`;
       const endB = h('button', { type: 'button', class: 'quiet', text: 'End it' });
       endB.addEventListener('click', async () => {
@@ -320,9 +298,11 @@
         try { await UI.api(`/drill/${s.id}/finish`, { method: 'POST', body: {} }); location.href = `/practice/session/?id=${encodeURIComponent(s.id)}`; }
         catch (e) { UI.toast(`Couldn’t end it: ${e.message}`); }
       });
-      host.append(h('div', { class: 'pr-banner', role: 'region', 'aria-label': 'Set in progress' },
-        h('p', { text: `Set in progress · ${names || 'Practice'} · ${s.answered} of ${s.total ?? '∞'} answered · ${clock}` }),
-        h('div', { class: 'acts' }, h('a', { class: 'pill sm', href: `/practice/session/?id=${encodeURIComponent(s.id)}`, text: 'Resume' }), endB,
+      // the one place a set in progress shows on this page (the sidebar's Resume badge is the shell's)
+      host.append(h('div', { class: 'card pr-box', role: 'region', 'aria-label': 'Set in progress' },
+        h('p', {}, h('b', { text: 'Set in progress' })),
+        h('p', { class: 'meta', text: `${names || 'Practice'} · ${s.total ? `${s.answered} of ${s.total}` : s.answered} answered · ${clock}` }),
+        h('div', { class: 'acts' }, h('a', { class: 'btn sm', href: `/practice/session/?id=${encodeURIComponent(s.id)}`, text: 'Resume' }), endB,
           act.length > 1 ? h('button', { type: 'button', class: 'qlink', text: `+${act.length - 1} more`, onclick: () => { setsTab('active'); showSets(); } }) : null)));
     }
     const code = url.get('share');
@@ -330,7 +310,7 @@
     host.hidden = !host.childNodes.length && !code;
   }
   async function sharedBanner(host, code) {
-    const box = h('div', { class: 'pr-banner', role: 'region', 'aria-label': 'Shared set' }, h('p', { text: 'Loading the shared set…' }));
+    const box = h('div', { class: 'card pr-box', role: 'region', 'aria-label': 'Shared set' }, h('p', { text: 'Loading the shared set…' }));
     host.append(box); host.hidden = false;
     let s;
     try { s = await UI.api(`/sets/${encodeURIComponent(code)}`, { quiet: true }); }
@@ -342,21 +322,21 @@
     const me = B.me || {};
     const name = ((me.profile || me).name || '').trim();
     const show = h('input', { type: 'checkbox', id: 'showName', disabled: name ? null : true });
-    const topics = (s.topics || []).map(t => (B.skills.get(t) || {}).name || t).join(', ');
+    const topics = (s.topics || []).map(t => (typeof t === 'string' ? skName(t) : skName(t.topic) || t.name)).join(', ');   // /sets sends {topic, name, n}
     const fb = { instant: 'answers after each', retry: 'answers after a retry', end: 'answers at the end' }[s.feedback] || 'answers after each';
     const start = h('button', { type: 'button', class: 'pill sm', text: 'Start this set' });
     start.addEventListener('click', async () => {
-      start.setAttribute('aria-busy', 'true'); start.textContent = 'Building…';
+      start.setAttribute('aria-busy', 'true');   // the pill's spinner after 300ms, same width (ui.css)
       try {
         const r = await UI.api(`/sets/${encodeURIComponent(code)}/start`, { method: 'POST', body: { show_name: show.checked } });
         location.href = `/practice/session/?id=${encodeURIComponent(r.id || r.session)}`;
-      } catch (e) { start.removeAttribute('aria-busy'); start.textContent = 'Start this set'; UI.toast(e.status === 410 ? 'Whoever shared this set has stopped sharing it.' : `Couldn’t start it: ${e.message}`); }
+      } catch (e) { start.removeAttribute('aria-busy'); UI.toast(e.status === 410 ? 'Whoever shared this set has stopped sharing it.' : `Couldn’t start it: ${e.message}`); }
     });
     box.replaceChildren(
       h('p', {}, h('b', { text: `Shared set · ${plural(s.count || 0, 'question')}` }), topics ? ` · ${topics}` : '', s.timed ? ` · timed ${s.minutes || ''} min` : ' · untimed', ` · ${fb}`),
-      h('p', { class: 'meta', text: [s.by ? `from ${s.by}` : null, s.n !== undefined ? `taken by ${s.n}` : null, s.fresh ? 'each taker gets their own twins' : 'the exact questions'].filter(Boolean).join(' · ') }),
+      h('p', { class: 'meta', text: [s.by ? `from ${s.by}` : null, s.taken ? `taken by ${s.taken}` : null, s.fresh ? 'each taker gets their own twins' : 'the exact questions'].filter(Boolean).join(' · ') }),
       h('label', { class: 'check' }, show, h('span', { text: 'Show my name to the person who shared this' })),
-      name ? null : h('p', { class: 'help' }, 'Set a board name on ', h('a', { href: '/me/', text: 'Me' }), ' first.'),
+      name ? '' : h('p', { class: 'help' }, 'Set a board name on ', h('a', { href: '/me/', text: 'Me' }), ' first.'),   // replaceChildren prints a null
       h('p', { class: 'help', text: 'Uses the sharer’s questions and settings, not yours.' }),
       h('div', { class: 'acts' }, start, h('button', { type: 'button', class: 'quiet', text: 'Dismiss', onclick: () => dismissShare(box) })));
   }
@@ -366,35 +346,63 @@
     $('#banners').hidden = !$('#banners').childNodes.length;
   }
 
-  /* ---------------------------------------------------------------- Ready row (P15) */
-  let ready = [];
+  /* ---------------------------------------------------------------- Ready rows (P15) */
+  // Up next's other items and your last set, as rows in the aside. Up next's first item is the shell's to show (the
+  // sidebar or the Now strip), so it is left out here; the empty search's Enter still starts it.
+  let ready = [], readyAll = [], nextIn = false, readyRows = null;   // readyRows: the list, kept so a change glides   // nextIn: Up next has answered (or failed), so the Diagnostic line can decide
   async function paintReady() {
-    const host = $('#ready');
-    const last = ((B.sets && B.sets.recent) || []).find(r => r.kind !== 'challenge');
+    // Up next holds both subjects: this tab lists its own subject's (an item without one is anyone's)
+    const mine = x => !x.subject || x.subject === B.subject;
+    const last = ((B.sets && B.sets.recent) || []).find(r => r.kind !== 'challenge' && mine({ subject: r.subject || 'math' }));
     let next = [];
     const shell = UI.shellData ? UI.shellData() : null;   // GET /api/next only once the server has it (U1), as the shell does
-    if (!(shell && shell.has && !shell.has.next)) try { const r = await UI.api('/next?limit=3', { quiet: true }); next = (Array.isArray(r) ? r : r.items || []).slice(0, 3); } catch (_) { next = []; }
-    ready = next.map(x => ({ title: x.title, meta: x.meta || [x.count ? `${x.count} q` : null, x.minutes ? `${Math.round(x.minutes)} min` : null, x.points ? `≈ ${x.points} pts` : null].filter(Boolean).join(' · '),
-      why: x.reason || x.why || '', body: x.start || x.body, reason: x.unavailable || null }));
-    if (last) ready.push({ title: 'Again: your last set', meta: `${(last.topics || []).map(t => (B.skills.get(t) || {}).short || t).slice(0, 2).join(', ')} · ${last.total ?? last.answered} q`, why: `${last.right}/${last.answered} right`, body: { again: last.id, source: 'builder' } });
-    host.replaceChildren();
-    if (!ready.length) { host.hidden = true; return; }
-    const row = h('div', { class: 'pr-ready' });
-    ready.forEach(c => {
-      const go = h('button', { type: 'button', class: 'pill sm', text: 'Start' });
-      go.addEventListener('click', () => create(c.body, go));
-      const more = e => e.currentTarget.classList.toggle('open');   // a cut-off line opens in full on a tap (the user)
-      row.append(h('div', { class: 'pr-card' }, h('b', { text: c.title, title: c.title, tabindex: '0', onclick: more }), [c.meta, c.why].filter(Boolean).length ? h('span', { class: 'meta', tabindex: '0', onclick: more, text: [c.meta, c.why].filter(Boolean).join(' · ') }) : null,   // one muted line, not two
-        h('div', { class: 'acts' }, c.reason ? h('span', { class: 'help', text: c.reason }) : go)));   // no Edit: the builder below already tweaks a set
+    if (!(shell && shell.has && !shell.has.next)) try { const r = await UI.api('/next?limit=8', { quiet: true }); next = (Array.isArray(r) ? r : r.items || []).filter(mine).slice(0, 3); } catch (_) { next = []; }
+    readyAll = next.map(x => ({ title: x.title, key: x.key, href: x.href, meta: x.meta || UI.nextMeta(x),   // the shell's own meta line
+      why: x.reason || x.why || '', item: x.start || x.href ? x : null, body: x.body, reason: x.unavailable || null }));
+    nextIn = true;
+    if (last) readyAll.push({ title: 'Your last set again', meta: `${(last.topics || []).map(skName).slice(0, 2).join(', ')} · ${last.total ?? last.answered}\u00a0q`, why: `${last.right}/${last.answered} right`, body: { again: last.id, source: 'builder' } });
+    renderReady();
+  }
+  const sameItem = (a, z) => !!(a && z && (a.key && z.key ? a.key === z.key : a.title === z.title));
+  const hereHref = it => { try { return !!(it && it.href && new URL(it.href, location.href).pathname === location.pathname); } catch (_) { return false; } };
+  function renderReady() {
+    paintDiag();
+    const host = $('#ready');
+    const first = UI.nextItems ? UI.nextItems()[0] : null;
+    // the shell shows Up next's first item everywhere, except the Now strip's skip of a link to this page: then only
+    // the sidebar shows it, so the row stays and CSS hides it where the sidebar does ([data-upnext])
+    ready = readyAll.filter(c => !(UI.shellData && UI.shellData() && sameItem(c, first) && !hereHref(first)));
+    if (!ready.length) { host.replaceChildren(); readyRows = null; host.hidden = true; return; }
+    const rows = () => ready.map(c => {
+      const go = h('button', { type: 'button', class: 'quiet go', 'aria-label': `Start ${c.title}` }, 'Start', UI.icon('arrow', 16));
+      go.addEventListener('click', () => startReady(c, go));
+      const row = h('div', { class: 'pr-row', 'data-key': c.key || c.title, 'data-upnext': sameItem(c, first) ? '' : null },
+        h('div', {}, h('b', { text: c.title }), c.meta ? h('span', { class: 'meta', text: c.meta }) : null),
+        c.reason ? h('span', { class: 'help', text: c.reason }) : go);   // no Edit: the builder already tweaks a set
+      return c.why ? tip(row, c.why) : row;   // the reason: hover, a tap, or Start's focus and description
     });
-    // a heading folds the cards (the user); remembered on this device
-    const open = ls.get('satf.pr.ready', true);
-    const tg = h('button', { type: 'button', class: 'pr-fold', 'aria-expanded': String(open) }, h('span', { text: 'Ready to start' }), h('span', { class: 'chev', 'aria-hidden': 'true', html: '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>' }));
-    row.hidden = !open;
-    tg.addEventListener('click', () => { row.hidden = !row.hidden; tg.setAttribute('aria-expanded', String(!row.hidden)); ls.set('satf.pr.ready', !row.hidden); });
-    host.append(tg, row);
-    host.hidden = B.subject !== 'math';
+    if (readyRows && readyRows.isConnected) {   // Up next changed: rows that stay slide, new ones rise, gone ones fade
+      const list = readyRows;
+      UI.glide(list, () => list.replaceChildren(...rows()));
+    } else {
+      readyRows = h('div', { class: 'pr-rows' }, rows());
+      // a heading folds the rows (the user); remembered on this device; it opens and closes in height (details.fold)
+      const d = h('details', { class: 'pr-fold fold', open: ls.get('satf.pr.ready', true) ? true : null }, h('summary', { text: 'Ready to start' }), readyRows);
+      d.addEventListener('toggle', () => ls.set('satf.pr.ready', d.open));
+      host.replaceChildren(d);
+    }
+    host.hidden = false;   // Up next and your last set hold both subjects: the rows show on either tab
     paintSearchHelp();
+  }
+  if (UI.onShell) UI.onShell(() => { if (readyAll.length) renderReady(); });
+  // an Up next item starts as the shell starts it (its path and body, or its link); your last set through the builder
+  async function startReady(c, btn) {
+    if (!c.item) { if (c.body) create(c.body, btn); return; }
+    if (starting) return;
+    starting = true;
+    btn.setAttribute('aria-busy', 'true');
+    try { await UI.start(c.item); }
+    catch (e) { starting = false; btn.removeAttribute('aria-busy'); UI.toast(`Couldn’t start it: ${e.message}`); }
   }
 
   /* ---------------------------------------------------------------- presets and mentor line */
@@ -418,59 +426,74 @@
       { id: 'marked', label: 'Marked', why: c.marked ? null : 'Nothing marked yet' },
       { id: 'saved', label: 'Saved', why: c.saved ? null : 'Nothing saved yet' },
       { id: 'due', label: `Due for review${c.review || c.due ? ` · ${c.review || c.due}` : ''}`, why: c.review || c.due ? null : 'Nothing due for review' },
-      { id: 'solve', label: 'Solve first · 10' },
-      { id: 'probe', label: `Check ${untried.length || 3} skills I haven’t tried`, why: untried.length ? null : 'Every skill has answers', skills: untried },
+      // R&W's cover has no answer field: predict the answer, then show the choices (the Feedback tab's control says the same)
+      { id: 'solve', label: isRW() ? 'Predict first · 10' : 'Solve first · 10' },
+      { id: 'probe', label: `Check ${plural(untried.length || 3, 'skill')} I haven’t tried`, why: untried.length ? null : 'Every skill has answers', skills: untried },
     ];
-    if (b.top_habit) list.push({ id: 'habit', label: `Your top habit · ${b.top_habit.name || b.top_habit.id}` });
+    if (b.top_habit) list.push({ id: 'habit', label: `Top habit · ${b.top_habit.name || b.top_habit.id}` });
     if (b.desmos_way) { const n = allTypes().filter(t => t.desmos).length; list.push({ id: 'desmos', label: `Desmos drills${n ? ` · ${n}` : ''}`, why: n ? null : 'No Desmos-way types yet' }); }
-    ((((B.prefs.practice || {}).math) || {}).presets || []).forEach((p, i) => list.push({ id: `mine:${i}`, label: p.name, mine: p }));
+    myPresets().forEach((p, i) => list.push({ id: `mine:${i}`, label: p.name, mine: p }));
     list.push({ id: 'custom', label: 'Custom', inert: true });
-    return list;
+    return list.filter(Boolean);
+  }
+  // the presets live behind one trigger at the head of Your set (pages/practice.md 2): it reads the preset that is on
+  // ("Mentor's pick", "Custom") and opens one menu: Suggested, From your history, Yours, then save, share and reset.
+  // A preset that can't run yet is listed, dimmed, with its reason under it. The trigger is made once (index.html):
+  // a repaint only renames it, so the menu's focus comes back to it
+  const HISTORY = ['mistakes', 'missed', 'marked', 'saved', 'due'];
+  function presetLabel() {
+    const p = presets().find(x => x.id === B.preset);
+    return p ? p.label : B.preset === 'route' ? 'Harder module’s mix' : 'Custom';
   }
   function paintPresets() {
-    const host = $('#presets');
-    host.replaceChildren();
-    // decision 7: the chips that can't run yet wait behind More, each with its reason one tap away
-    const all = presets(), later = p => (p.why || p.inert) && B.preset !== p.id;
-    const nLater = all.filter(later).length;
-    const chips = all.filter(p => !later(p)).concat(B.morePresets ? all.filter(later) : []);
-    chips.forEach(p => {
-      const on = B.preset === p.id;
-      const chip = h('button', { type: 'button', class: 'pr-chip', 'aria-pressed': String(on), 'aria-disabled': p.why || p.inert ? 'true' : null, 'data-preset': p.id },
-        h('span', { text: p.label }));
-      // decision 7: a dimmed chip says why on hover or focus, not in a second line
-      const about = p.why || p.about;
-      if (about) { chip.setAttribute('aria-description', about); tip(chip, about); }
-      if (!p.why && !p.inert) chip.addEventListener('click', () => applyPreset(p.id, p));
-      else if (p.href) chip.addEventListener('click', () => { location.href = p.href; });
-      host.append(chip);
-      if (p.mine) {
-        const more = h('button', { type: 'button', class: 'quiet', 'aria-label': `${p.label}: rename or delete`, text: '⋯' });
-        UI.menu.bind(more, () => [{ label: 'Rename', onClick: () => renamePreset(+p.id.split(':')[1]) }, { label: 'Delete', onClick: () => deletePreset(+p.id.split(':')[1]) }], { label: p.label });
-        host.append(more);
-      }
-    });
-    if (nLater) host.append(h('button', { type: 'button', class: 'quiet', 'aria-expanded': String(!!B.morePresets), 'data-more': '', text: B.morePresets ? 'Fewer presets' : 'More presets',
-      onclick: () => { B.morePresets = !B.morePresets; paintPresets(); const m = host.querySelector('[data-more]'); if (m) m.focus(); } }));
-    host.append(h('button', { type: 'button', class: 'quiet', text: 'Save as preset', onclick: savePreset }),
-      h('button', { type: 'button', class: 'quiet', text: 'Copy link', onclick: () => UI.copyText(deepLink(), { toast: 'Link copied: it opens these settings' }) }),
-      h('button', { type: 'button', class: 'quiet', text: 'Reset', onclick: () => { B.st = fromPrefs(B.prefs); B.fromLink = false; applyPreset('coach'); linkNote(null); } }));
-    if (!(B.bank.totals || {}).answered) host.append(tip(h('a', { class: 'quiet', href: '/diagnostic/', text: 'Diagnostic' }), 'A starting score in 20 questions'));
+    const t = $('#presets');
+    t.disabled = false;
+    t.textContent = presetLabel();
+    t.setAttribute('aria-label', `Preset: ${t.textContent}`);
+    paintDiag();
+  }
+  function presetItems() {
+    if (!B.bank) return [];
+    const all = presets().filter(p => !p.inert);
+    const item = p => (p.why && p.href
+      ? { label: p.label, sub: p.why, href: p.href }           // Plan focus with no focus yet: set one in Plan
+      : { label: p.label, sub: p.why || p.about || null, disabled: !!p.why, radio: 'preset', checked: B.preset === p.id, close: true, onClick: () => { const was = picked(); applyPreset(p.id, p); cascade(was); } });
+    const group = (name, list) => (list.length ? [{ group: name }, ...list.map(item)] : []);
+    const mine = all.filter(p => p.mine);
+    return [
+      ...group('Suggested', all.filter(p => !p.mine && !HISTORY.includes(p.id))),
+      ...group('From your history', all.filter(p => HISTORY.includes(p.id))),
+      ...group('Yours', mine),
+      { separator: true },
+      { label: 'Save as preset', onClick: savePreset },
+      { label: 'Copy link', onClick: () => UI.copyText(deepLink(), { toast: 'Link copied: it opens these settings' }) },
+      { label: 'My defaults', sub: 'Back to your saved settings', onClick: () => { B.st = fromPrefs(B.prefs); B.fromLink = false; applyPreset('coach'); linkNote(null); } },
+      ...mine.flatMap(p => [{ label: `Rename ${p.label}`, onClick: () => renamePreset(+p.id.split(':')[1]) }, { label: `Delete ${p.label}`, onClick: () => deletePreset(+p.id.split(':')[1]) }]),
+    ];
+  }
+  UI.menu.bind($('#presets'), presetItems, { label: 'Presets', wide: true, align: 'end' });
+  // a new student's way to a starting score: one quiet line at the foot of Your set, unless Up next already offers the
+  // Diagnostic (the sidebar, the Now strip or a Ready row shows it then). Repainted when Up next arrives
+  function paintDiag() {
+    const diag = $('#diag');
+    const inNext = readyAll.some(c => { try { return !!c.href && new URL(c.href, location.href).pathname === '/diagnostic/'; } catch (_) { return false; } });
+    diag.hidden = !nextIn || !B.bank || !!(B.bank.totals || {}).answered || inNext;
   }
   // why the mentor picked these skills: the Mentor's pick chip's tooltip, not a permanent line
   function coachWhy() {
     const b = B.bank;
     if (!b.coach) return null;
-    const R = b.coach.reasons || {};
+    const R = b.coach.reasons || {}, mis = [];
     const bits = (b.coach.topics || []).map(t => {
-      const r = R[t] || {}, s = B.skills.get(t) || {}, name = s.name || t;
-      if (r.kind === 'mistakes' || r.traps) return `${name}: ${plural(r.traps || 0, 'open mistake')}`;
+      const r = R[t] || {}, s = B.skills.get(t) || {}, name = s.slug ? label(s) : t;
+      if (r.kind === 'mistakes' || r.traps) { mis.push(`${name} ${r.traps || 0}`); return null; }   // one clause for all of them
       if (r.kind === 'weak') return `${name}: weakest, ${UI.masteryWord(r.mastery, s.answered)}, ${pct(r.first_try_rate)} first try`;
       if (r.kind === 'review' && r.since_days) return `${name}: not practised for ${r.since_days} days`;
       if (r.kind === 'focus') return `${name}: in your plan’s focus`;
       if (s.gain) return `${name} ≈ +${Math.round(s.gain)} (${s.per_test ? `${s.per_test} a test, ` : ''}${pct(s.accuracy)} first try)`;
       return null;
     }).filter(Boolean);
+    if (mis.length) bits.unshift(`Open mistakes: ${mis.join(', ')}`);
     if (bits.length) return bits.join(' · ');
     const d = [...b.domains].sort((a, z) => z.weight - a.weight)[0];
     return d ? `Where the test puts the most questions: ${d.name}, ${Math.round(d.weight * 100)}% of it` : null;
@@ -482,7 +505,7 @@
     st.pool = 'new'; st.exact = false; st.box = null;
     if (id === 'coach') { pickSkills((b.coach.topics || []).map(t => B.skills.get(t)).filter(Boolean)); if (b.coach.count) st.count = b.coach.count; }
     else if (id === 'weak' || id === 'focus' || id === 'gains') pickSkills(p.skills);
-    else if (id === 'full') { pickSkills([...B.skills.values()]); st.count = 44; st.mix = 'blueprint'; st.order = 'mixed'; }
+    else if (id === 'full') { pickSkills([...B.skills.values()]); st.count = B.subject === 'rw' ? 54 : 44; st.mix = 'blueprint'; st.order = 'mixed'; }
     else if (id === 'mistakes') { pickSkills([...B.skills.values()].filter(s => (s.traps || []).length || s.open_n)); if (!B.sel.size) pickSkills([...B.skills.values()]); st.pool = 'redo'; }
     else if (id === 'missed') { pickSkills([...B.skills.values()]); st.pool = 'seen'; st.result = 'missed'; st.exact = true; }
     else if (id === 'marked') { pickSkills([...B.skills.values()]); st.pool = 'marked'; st.exact = true; }
@@ -498,28 +521,34 @@
     paintAll();
   }
   function markCustom() { if (B.preset !== 'custom') { B.preset = 'custom'; B.source = null; B.presetBody = null; paintPresets(); } }
+  // each subject keeps its own presets (prefs.practice.math.presets / .rw.presets)
+  const myPresets = () => ((((B.prefs.practice || {})[B.subject]) || {}).presets || []).slice();
   async function savePreset() {
-    const name = await UI.confirm({ title: 'Save as preset', text: 'These skills and settings become a chip in the preset bar.', confirm: 'Save', input: { label: 'Name', value: '', maxlength: 24 } });
+    const name = await UI.confirm({ title: 'Save as preset', text: 'These skills and settings join your presets, in the menu at the head of Your set.', confirm: 'Save', input: { label: 'Name', value: '', maxlength: 24 } });
     if (!name) return;
-    const pm = Object.assign({}, ((B.prefs.practice || {}).math) || {});
-    const list = (pm.presets || []).slice();
+    const list = myPresets();
     if (list.length >= 8) { UI.toast('You have 8 presets. Delete one first.'); return; }
     list.push({ name: String(name).slice(0, 24), body: body() });
-    await putPresets(list);
+    if (await putPresets(list, `mine:${list.length - 1}`)) paintPresets();
   }
-  async function putPresets(list) {
-    const practice = Object.assign({}, B.prefs.practice || {}, { math: Object.assign({}, ((B.prefs.practice || {}).math) || {}, { presets: list }) });
-    try { const pr = await UI.prefs.set({ practice }); B.prefs = pr.prefs || B.prefs; paintPresets(); }
-    catch (e) { UI.toast(`Not saved: ${e.message}`); }
+  // on: the preset that is on afterwards (a save turns the new one on; a delete shifts the ones after it)
+  async function putPresets(list, on) {
+    try { const pr = await UI.prefs.set({ practice: { [B.subject]: { presets: list } } }); B.prefs = pr.prefs || B.prefs; if (on !== undefined) B.preset = on; paintPresets(); return true; }
+    catch (e) { UI.toast(`Not saved: ${e.message}`); return false; }
   }
   async function renamePreset(i) {
-    const list = ((((B.prefs.practice || {}).math) || {}).presets || []).slice();
+    const list = myPresets();
     const name = await UI.confirm({ title: 'Rename preset', confirm: 'Rename', input: { label: 'Name', value: list[i].name, maxlength: 24 } });
     if (!name) return;
     list[i] = Object.assign({}, list[i], { name: String(name).slice(0, 24) });
     putPresets(list);
   }
-  function deletePreset(i) { const list = ((((B.prefs.practice || {}).math) || {}).presets || []).slice(); list.splice(i, 1); putPresets(list); }
+  function deletePreset(i) {
+    const list = myPresets();
+    list.splice(i, 1);
+    const m = /^mine:(\d+)$/.exec(B.preset), j = m ? +m[1] : -1;
+    putPresets(list, j < 0 || j < i ? undefined : j === i ? 'custom' : `mine:${j - 1}`);
+  }
   function linkNote(text) {
     const el = $('#linkNote');
     el.replaceChildren();
@@ -536,7 +565,7 @@
     const hit = new Set();
     allTypes().forEach(t => {
       const sk = B.skills.get(t.topic) || {};
-      const hay = norm(`${t.name} ${t.about} ${(t.labels || []).join(' ')} ${sk.name} ${t.template}`);
+      const hay = norm(`${t.name} ${t.about} ${(t.labels || []).join(' ')} ${sk.name} ${sk.slug ? label(sk) : ''} ${t.template}`);
       if (words.every(w => hay.includes(w))) hit.add(t.template);
     });
     return hit;
@@ -554,11 +583,11 @@
     const hits = matches(q);
     paintSearch(hits);
     if (hits) {
-      if (hits.size) line.append(h('span', { class: 'mono', text: `${plural(hits.size, 'type')} match` }), h('button', { type: 'button', class: 'btn sm', text: `Select all ${hits.size}`, onclick: () => { hits.forEach(t => B.sel.add(t)); markCustom(); paintSel(); preview(); } }));
+      if (hits.size) line.append(h('span', { class: 'meta', text: `${plural(hits.size, 'type')} match` }), h('button', { type: 'button', class: 'btn sm', text: `Select all ${hits.size}`, onclick: () => { hits.forEach(t => B.sel.add(t)); markCustom(); paintSel(); preview(); } }));
       else if (!(parsed && parsed.chips && parsed.chips.length)) line.append(h('span', { class: 'help', text: `No question type matches “${q.trim()}”. Try a skill name.` }));
     }
     if (parsed && parsed.chips && parsed.chips.length) {
-      line.append(...parsed.chips.map(c => h('span', { class: 'chipx', text: typeof c === 'string' ? c : c.label || c.text || '' })));
+      line.append(...parsed.chips.map(c => h('span', { class: 'badge soft', text: typeof c === 'string' ? c : c.label || c.text || '' })));
       line.append(h('span', { class: 'meta', text: 'Enter to start · Shift+Enter applies it below' }));   // the chips already say the set
     }
     if (!q.trim()) paintSearchHelp();
@@ -575,7 +604,7 @@
       const sk = B.skills.get(r.dataset.s);
       r.hidden = !!hits && !typesOf(sk).some(t => hits.has(t.template));
       const nm = r.querySelector('.sname');
-      if (nm) highlight(nm, sk.name, B.search);
+      if (nm) highlight(nm, label(sk), B.search);
     });
     document.querySelectorAll('.trow .tname').forEach(n => highlight(n, (B.byT.get(n.closest('.trow').dataset.t) || {}).name, B.search));
     document.querySelectorAll('.dcard').forEach(c => {
@@ -602,12 +631,13 @@
     if (e.key !== 'Enter') return;
     e.preventDefault();
     const v = f.value.trim();
-    if (!v) { if (ready[0] && ready[0].body) create(ready[0].body); return; }
+    if (!v) { const c = readyAll[0]; if (c) startReady(c, $('#start')); return; }
     const hist = [v, ...ls.get('satf.cmd', []).filter(x => x !== v)].slice(0, 10);
     ls.set('satf.cmd', hist);
     if (parsed && parsed.body && parsed.chips && parsed.chips.length) {
       if (e.shiftKey) { loadBody(parsed.body); f.value = ''; onSearch(); return; }
-      create(Object.assign({ subject: 'math', source: 'builder' }, parsed.body));
+      // a typed skill or type says its subject (the server infers it); a line that names none is this tab's
+      create(Object.assign({ source: 'builder' }, parsed.body.topics || parsed.body.templates ? {} : { subject: B.subject }, parsed.body));
     }
   }
 
@@ -623,39 +653,74 @@
     if (key) s.sort((a, z) => key(a) - key(z));
     return s;
   }
+  // the tree head is one line (pages/practice.md 2): a master box (all, some, none; it was Select all and Clear), the
+  // title, "3 of 19 selected" with Clear while something is picked, and one View trigger at the right that holds
+  // what was the Skills / Map / Habits switch and the sort select. The trigger reads the order, or Map or Habits
+  const SORTS = [['points', 'Most points'], ['test', 'Test order'], ['weak', 'Weakest first'], ['mistakes', 'Most mistakes'], ['overdue', 'Most overdue'], ['slow', 'Slowest vs budget'], ['least', 'Least practised'], ['recent', 'Recently practised']];
+  const VIEWS = { skills: 'Skills', map: 'Map', habits: 'Habits' };
+  const hasPts = () => [...B.skills.values()].some(s => s.gain);
+  function selChanged() { markCustom(); if (B.view === 'map') paintTree(); else paintSel(); preview(); }
+  // the preset cascade (pages/practice.md 5): skills that just got picked fill in tree order, 20ms apart (at most
+  // 240ms), so a preset or a box shows where it went. A pointer pick only: a key or reduced motion fills at once
+  const picked = () => new Set(selectedSkills().map(s => s.slug));
+  function cascade(was) {
+    const M = UI.motion;
+    if (!M || M.off() || M.kb()) return;
+    const rows = [...document.querySelectorAll('#treeBody .srow')].filter(r => !was.has(r.dataset.s) && r._tri && r._tri.getAttribute('aria-checked') !== 'false');
+    if (rows.length < 2) return;
+    rows.forEach(r => r.classList.add('pr-pre'));
+    void getComputedStyle(rows[0]).backgroundColor;   // the unpicked look is where each fill starts
+    rows.forEach((r, i) => setTimeout(() => r.classList.remove('pr-pre'), Math.min(i * 20, 240)));
+  }
   function paintTreeHead() {
     const host = $('#thead');
-    host.replaceChildren();
-    const count = h('span', { class: 'pr-count', id: 'treeCount' });
-    const sort = h('select', { id: 'sort', 'aria-label': 'Sort' });
-    const hasPts = [...B.skills.values()].some(s => s.gain);
-    [['points', 'Most points'], ['test', 'Test order'], ['weak', 'Weakest first'], ['mistakes', 'Most mistakes'], ['overdue', 'Most overdue'], ['slow', 'Slowest vs budget'], ['least', 'Least practised'], ['recent', 'Recently practised']]
-      .filter(([v]) => v !== 'points' || hasPts).forEach(([v, l]) => sort.append(h('option', { value: v, text: l })));
-    if (!B.sort) B.sort = hasPts ? 'points' : 'test';
-    sort.value = B.sort;
-    sort.addEventListener('change', () => { B.sort = sort.value; ls.set('satf.tree.sort', B.sort); paintTree(); });
-    const viewHost = h('div', {});
-    UI.seg(viewHost, [{ value: 'skills', label: 'Skills' }, { value: 'map', label: 'Map' }, { value: 'habits', label: 'Habits' }], { value: B.view, label: 'Show', onChange: v => { B.view = v; paintTree(); } });
-    host.append(h('div', { class: 'ttl' }, h('h2', { class: 'h2', text: 'Domains' }), count),
-      h('div', { class: 'ctl' }, viewHost,
-        h('button', { type: 'button', class: 'quiet', text: 'Select all', onclick: () => { B.skills.forEach(s => setSkill(s, true)); markCustom(); paintSel(); preview(); } }),
-        h('button', { type: 'button', class: 'quiet', text: 'Clear', onclick: () => { B.sel.clear(); markCustom(); paintSel(); preview(); } }),
-        h('label', { class: 'sr', for: 'sort', text: 'Sort' }), sort));
+    if (!B.sort || (B.sort === 'points' && !hasPts())) B.sort = hasPts() ? 'points' : 'test';
+    const all = tri('Select every skill', on => { const was = picked(); B.skills.forEach(s => setSkill(s, on)); selChanged(); cascade(was); });
+    all.id = 'treeAll';
+    const view = h('button', { type: 'button', class: 'btn sm dd', id: 'view' });
+    UI.menu.bind(view, viewItems, { label: 'View and order', align: 'end' });
+    host.replaceChildren(all, h('h2', { class: 'h2', text: 'Skills' }), h('span', { class: 'pr-count', id: 'treeCount' }),
+      h('button', { type: 'button', class: 'quiet', id: 'treeClear', text: 'Clear', hidden: true, onclick: () => { B.sel.clear(); selChanged(); } }), view);
+    paintViewBtn();
   }
-  // wide: four columns, one per domain, always open. Narrow: a 2x2 grid of tiles; a tile opens a window of that domain's skills.
-  const wideMQ = matchMedia('(min-width: 1040px)');
-  const wide = () => wideMQ.matches;
-  try { wideMQ.addEventListener('change', () => { if (B.bank && B.view === 'skills') paintTree(); }); } catch (_) {}
+  function paintViewBtn() {
+    const v = $('#view');
+    if (!v) return;
+    v.textContent = B.view === 'skills' ? (SORTS.find(([k]) => k === B.sort) || SORTS[1])[1] : VIEWS[B.view];
+    v.setAttribute('aria-label', `View and order: ${v.textContent}`);
+  }
+  function viewItems() {
+    if (!B.bank) return [];
+    const habits = (B.bank.habits || []).length;
+    const show = (v, sub) => ({ label: VIEWS[v], sub, radio: 'view', checked: B.view === v, close: true, onClick: () => { B.view = v; paintTree(); } });
+    return [{ group: 'Show' }, show('skills', null), show('map', 'Every question type as a cell'),
+      // listed before it has rows (its empty state says when): the switch it replaces showed it from the start.
+      // Habits are Math's named traps; R&W has none
+      isRW() ? null : show('habits', habits ? 'The kinds of trap you fall for across skills, and the ones you reliably rule out' : 'After about 30 answers'),
+      { separator: true }, { group: 'Order skills' },
+      ...SORTS.filter(([v]) => v !== 'points' || hasPts()).map(([v, l]) => ({ label: l, radio: 'sort', checked: B.view === 'skills' && B.sort === v, close: true,
+        onClick: () => { B.sort = v; ls.set('satf.tree.sort', v); B.view = 'skills'; paintTree(); } }))].filter(Boolean);
+  }
+  // wide: always-open domain columns (two, four from 1000px: the CSS container query). Narrow: a 2x2 grid of tiles; a
+  // tile opens a window of that domain's skills. The tree's own width decides (the aside takes 312px from 1280px).
+  const WIDE = 560;
+  const wide = () => $('#tree').clientWidth >= WIDE;
+  let wasWide = null;
+  try { new ResizeObserver(() => { if (B.bank && B.view === 'skills' && wide() !== wasWide) paintTree(); }).observe($('#tree')); } catch (_) {}
   function paintTree() {
     const host = $('#treeBody');
     host.className = B.view === 'skills' ? 'dgrid' : '';
     host.replaceChildren();
-    if (B.view === 'map') return paintMap(host);
-    if (B.view === 'habits') return paintHabits(host);
-    // side by side the shortest column comes first (fewest skills), the rest in order; on tiles the natural order
-    (wide() ? [...B.bank.domains].sort((x, y) => x.skills.length - y.skills.length) : B.bank.domains).forEach(d => host.append(domainCard(d)));
-    paintSel(); paintAvail();
-    if (B.search) paintSearch(matches(B.search));
+    if (B.view === 'map') paintMap(host);
+    else if (B.view === 'habits') paintHabits(host);
+    else {
+      // test order, reading down each column (CSS columns) or across the tiles
+      wasWide = wide();
+      B.bank.domains.forEach(d => host.append(domainCard(d)));
+      paintAvail();
+      if (B.search) paintSearch(matches(B.search));
+    }
+    paintSel(); paintViewBtn();   // the head's box and count follow every view
   }
   function tri(label, onClick) {
     const b = h('button', { type: 'button', class: 'tri', role: 'checkbox', 'aria-checked': 'false', 'aria-label': label });
@@ -663,16 +728,18 @@
     b.addEventListener('pointerdown', e => e.stopPropagation());
     return b;
   }
-  // a small orange count, only when something is open (decision 7)
+  // a small neutral count, only when something is open (decision 7; the critic: not orange, it is not the thing to do)
   function openBadge(n) {
     if (!n) return null;
-    const b = h('span', { class: 'obadge' }, String(n), h('span', { class: 'sr', text: ` open ${n === 1 ? 'mistake' : 'mistakes'}` }));
+    const b = h('span', { class: 'badge n soft' }, String(n), h('span', { class: 'sr', text: ` open ${n === 1 ? 'mistake' : 'mistakes'}` }));
     return tip(b, plural(n, 'open mistake'));
   }
-  const bar = (m, answered) => h('span', { class: 'mbar', 'aria-hidden': 'true' }, h('i', { style: `--m:${answered ? Math.max(0, Math.min(1, m || 0)) : 0}` }));
+  // a bar only where there is data: no grey track on a skill with no answers (a bar always means something)
+  const bar = (m, answered) => (answered ? h('span', { class: 'mbar', 'aria-hidden': 'true' }, h('i', { style: `--m:${Math.max(0, Math.min(1, m || 0))}` })) : null);
   // the facts the column header no longer shows: a tooltip on the header, a line in the phone's domain window, a block in each skill window
+  const testN = () => (isRW() ? 54 : 44);   // the section's questions: R&W 2 x 27, Math 2 x 22
   const domFacts = d => [
-    ['On the test', `about ${Math.round(d.weight * 44)} of 44`],
+    ['On the test', `about ${Math.round(d.weight * testN())} of ${testN()}`],
     d.answered ? ['Answered', String(d.answered)] : null,
     d.answered ? ['First try', pct(d.right / Math.max(1, d.answered))] : null,
     d.gain ? ['On the table', `≈ +${Math.round(d.gain)} points`] : null,
@@ -683,14 +750,16 @@
     const isWide = wide();
     const card = h('section', { class: 'dcard', 'data-d': d.name, 'aria-label': d.name });
     const skills = skillOrder(d.skills);
-    const tb = tri(`Select every skill in ${d.name}`, on => { skills.forEach(s => setSkill(s, on)); markCustom(); paintSel(); preview(); });
+    const tb = tri(`Select every skill in ${d.name}`, on => { const was = picked(); skills.forEach(s => setSkill(s, on)); markCustom(); paintSel(); preview(); cascade(was); });
     tb.dataset.dtri = d.name;
     const traps = d.skills.reduce((a, s) => a + ((s.traps || []).length || s.open_n || 0), 0);
     const pts = Math.round(d.gain || 0);
-    const inner = [h('span', { class: 'dname', text: d.name }),
+    // wide: one heading row (the bar small at its right, as on the skill rows); a tile: the bar across its foot
+    const dn = dlabel(d);
+    const inner = [h('span', { class: 'dname', text: dn, title: dn !== d.name ? d.name : null }),
       isWide ? null : h('span', { class: 'dsel', 'data-dsel': d.name }),
-      h('span', { class: 'dright' }, pts > 0 ? h('span', { class: 'dpts', text: `+${pts} pts` }) : null, openBadge(traps)),
-      bar(d.mastery, d.answered)];
+      h('span', { class: 'dright' }, pts > 0 ? h('span', { class: 'dpts', text: `+${pts} pts` }) : null, isWide ? null : openBadge(traps), isWide ? bar(d.mastery, d.answered) : null),
+      isWide ? null : bar(d.mastery, d.answered)];
     const open = isWide ? h('div', { class: 'dopen' }, inner) : h('button', { type: 'button', class: 'dopen', 'aria-haspopup': 'dialog', onclick: () => openDomain(d) }, inner);
     const head = h('div', { class: 'dhead' }, tb, open);
     if (isWide) tip(head, domFacts(d).map(([k, v]) => `${k} ${v}`).join(' · '));
@@ -717,10 +786,10 @@
     const tb = tri(`Select ${s.name}`, on => { setSkill(s, on); markCustom(); paintSel(); preview(); });
     const traps = (s.traps || []).length || s.open_n || 0;
     const nm = h('button', { type: 'button', class: 'snm', 'aria-haspopup': 'dialog', 'aria-label': `${s.name}, details and question types` },
-      h('span', { class: 'sname', text: s.name }), h('span', { class: 'reason', 'data-reason': '' }));
+      h('span', { class: 'sname', text: label(s), title: label(s) !== s.name ? s.name : null }), h('span', { class: 'reason', 'data-reason': '' }));
     const row = h('div', { class: 'srow', 'data-s': s.slug }, tb, nm,
-      h('span', { class: 'sright' }, bar(s.mastery, s.answered), s.answered ? h('span', { class: 'sr', text: UI.masteryWord(s.mastery, s.answered) }) : null, openBadge(traps)),
-      h('span', { class: 'go', 'aria-hidden': 'true', html: UI.svg(UI.ICON.chev, 16) }));
+      h('span', { class: 'sright' }, openBadge(traps), bar(s.mastery, s.answered), s.answered ? h('span', { class: 'sr', text: UI.masteryWord(s.mastery, s.answered) }) : null),
+      h('span', { class: 'go', 'aria-hidden': 'true' }, UI.icon('caret_right', 16)));
     row._tri = tb;
     nm.addEventListener('click', () => openSkill(s));
     row.addEventListener('click', e => { if (!e.target.closest('.tri, .snm')) openSkill(s); });
@@ -738,36 +807,39 @@
   function fillPanel(s, panel) {
     const types = typesOf(s);
     const bt = s.by_tier || {};
-    const d = B.bank.domains.find(x => x.name === s.domain);
     const tierN = x => types.filter(t => (t.tiers || []).includes(x)).length;
     const grid = types.filter(t => t.formats.includes('spr')).length;
     const held = s.mastery >= UI.STRONG && s.answered ? (s.held_after ? `held after ${s.held_after} days` : 'not yet tested after a gap') : null;
     const kv = rows => { const r = rows.filter(x => x && x[1] !== null && x[1] !== undefined && x[1] !== ''); return r.length ? h('dl', { class: 'kv' }, r.map(([k, v]) => [h('dt', { text: k }), h('dd', { text: v })])) : null; };
-    const block = (title, node) => (node ? h('section', { class: 'sblock' }, h('h3', { class: 'sh', text: title }), node) : null);
     const cs = s.calc_split;
-    const record = s.answered ? kv([
+    const record = s.answered ? [
       ['Answered', String(s.answered)], ['First try', pct(s.accuracy ?? s.right / Math.max(1, s.answered))], ['Last practised', s.last ? ago(s.last) : null],
       ...TIERS.filter(x => (bt[x] || [0, 0])[1]).map(x => [`${TIER_WORD[x]} right`, `${bt[x][0]} of ${bt[x][1]}`]),
       ['Average time', s.avg_ms ? `${mmss(s.avg_ms)} a question` : null], ['Over time', held],
       ['Fluent types', s.fluent_n ? `${s.fluent_n} of ${types.length}` : null], ['Solve-first', s.solve_first ? pct(s.solve_first) : null],
       ['Sure-accuracy', s.sure_rate && s.sure_rate.n ? `${pct(s.sure_rate.rate)} (${s.sure_rate.n})` : null],
       ['With Desmos', cs ? `${pct(cs.with)} (${cs.with_n ?? ''})` : null], ['Without Desmos', cs ? `${pct(cs.without)} (${cs.without_n ?? ''})` : null],
-    ]) : h('p', { class: 'help', text: 'Nothing answered in this skill yet.' });
-    const worth = kv([['On the table', s.gain ? `≈ +${Math.round(s.gain)} points` : null], ['On the test', s.per_test ? `about ${s.per_test} of 44` : null],
-      ['You miss', s.gain && s.to_strong ? `~${s.to_strong}` : null], ['Due for review', s.due_n ? String(s.due_n) : null]]);
-    const about = kv([['Question types', String(types.length)], ['By difficulty', TIERS.filter(tierN).map(x => `${TIER_WORD[x]} ${tierN(x)}`).join(' · ')],
-      ['Grid-in', grid ? String(grid) : null], ['Everyone', s.crowd_rate !== null && s.crowd_rate !== undefined ? `${pct(s.crowd_rate)} first try` : null]]);
-    panel.append(h('p', { class: 'help', 'data-sreason': s.slug }),
-      h('div', { class: 'sgrid2' }, block('Your record', record), block('Points and review', worth), block('This skill', about), d ? block(`In ${d.name}`, kv(domFacts(d))) : null));
+    ] : [];
+    const worth = [['On the table', s.gain ? `≈ +${Math.round(s.gain)} points` : null], ['On the test', s.per_test ? `about ${s.per_test} of ${testN()}` : null],
+      ['You miss', s.gain && s.to_strong ? `~${s.to_strong}` : null], ['Due for review', s.due_n ? String(s.due_n) : null]];
+    const about = [['Question types', String(types.length)], ['By difficulty', TIERS.filter(tierN).map(x => `${TIER_WORD[x]} ${tierN(x)}`).join(' · ')],
+      ['Grid-in', grid ? String(grid) : null], ['Everyone', s.crowd_rate !== null && s.crowd_rate !== undefined ? `${pct(s.crowd_rate)} first try` : null]];
+    // the window leads with what the student came for: Check my level and the types; the record folds (remembered).
+    // The domain's facts are its header's tooltip and the domain window's line.
+    panel.append(h('p', { class: 'help', 'data-sreason': s.slug, 'data-nofold': '' }));
+    // one way in from the skill (the user: keep Check my level only; Finish, Mix it up and the College Board link went)
+    panel.append(h('div', { class: 'btns' },
+      h('button', { type: 'button', class: 'btn', text: 'Check my level · 8 questions', onclick: () => create({ subject: B.subject, source: 'probe', topics: [s.slug], count: 8 }) })));
+    const rec = h('details', { class: 'pr-fold fold srec', open: ls.get('satf.pr.record', false) ? true : null }, h('summary', { text: 'Your record' }),
+      s.answered ? null : h('p', { class: 'help', text: 'Nothing answered in this skill yet.' }), kv([...record, ...worth, ...about]));
+    rec.addEventListener('toggle', () => ls.set('satf.pr.record', rec.open));
+    panel.append(rec);
     const traps = s.traps || [];
     if (traps.length) {
       panel.append(h('h3', { class: 'sh', text: 'Open mistakes in this skill' }), ...traps.map(t => h('div', { class: 'omis' },
         h('span', {}, h('span', { class: 'dot', 'aria-hidden': 'true' }), ` ${cap(t.label)} · ${(B.byT.get(t.template) || {}).name || t.template} · ${plural(t.owed ?? 2, 'correct answer')} left`),
-        h('button', { type: 'button', class: 'quiet', text: 'Fix', onclick: () => create({ subject: 'math', source: 'mistakes', pool: 'redo', templates: [t.template] }) }))));
+        h('button', { type: 'button', class: 'quiet', text: 'Fix', onclick: () => create({ subject: B.subject, source: 'mistakes', pool: 'redo', templates: [t.template] }) }))));
     }
-    // one way in from the skill (the user: keep Check my level only; Finish, Mix it up and the College Board link went)
-    panel.append(h('div', { class: 'btns' },
-      h('button', { type: 'button', class: 'btn', text: 'Check my level · 8 questions', onclick: () => create({ subject: 'math', source: 'probe', topics: [s.slug], count: 8 }) })));
     const all = tri(`Select every type in ${s.name}`, on => { setSkill(s, on); markCustom(); paintSel(); preview(); });
     all.dataset.stri = s.slug;
     panel.append(h('div', { class: 'tthead' }, all, h('h3', { class: 'sh', text: `Question types · ${types.length}` })));
@@ -787,28 +859,34 @@
     });
     panel.append(tt);
   }
+  const bare = s => norm(s).replace(/[^a-z0-9]/g, '');
   function typeRow(t) {
     const tb = tri(`Select ${t.name}`, on => { on ? B.sel.add(t.template) : B.sel.delete(t.template); markCustom(); paintSel(); preview(); });
     const tiers = t.tiers || [];
-    const tryB = h('button', { type: 'button', class: 'quiet', text: 'Try one ▾' });
+    const tryB = h('button', { type: 'button', class: 'quiet', text: 'Try one' });
     UI.menu.bind(tryB, () => [
       { label: 'Try one, these settings', onClick: () => create(Object.assign(body(), { templates: [t.template], topics: undefined, count: 1, pool: 'new', box: undefined })) },
-      ...tiers.map(d => ({ label: `Try one · ${TIER_WORD[d]}`, onClick: () => create({ subject: 'math', source: 'builder', templates: [t.template], count: 1, zone: 'off', tiers: [d] }) })),
-      ...(t.formats.includes('spr') && t.formats.includes('mcq') ? [{ label: 'Try one · as a grid-in', onClick: () => create({ subject: 'math', source: 'builder', templates: [t.template], count: 1, formats: ['spr'] }) }] : []),
+      ...tiers.map(d => ({ label: `Try one · ${TIER_WORD[d]}`, onClick: () => create({ subject: B.subject, source: 'builder', templates: [t.template], count: 1, zone: 'off', tiers: [d] }) })),
+      ...(t.formats.includes('spr') && t.formats.includes('mcq') ? [{ label: 'Try one · as a grid-in', onClick: () => create({ subject: B.subject, source: 'builder', templates: [t.template], count: 1, formats: ['spr'] }) }] : []),
     ], { label: `Try ${t.name}` });
-    const more = h('button', { type: 'button', class: 'quiet', 'aria-label': `More for ${t.name}`, text: '⋯' });
-    UI.menu.bind(more, () => [
-      { label: 'See the traps', onClick: () => traps_(t) },
-      { label: 'Mix it up with look-alikes', disabled: !(t.lookalikes || []).length, onClick: () => create({ subject: 'math', source: 'mixup', order: 'mixup', templates: [t.template, ...(t.lookalikes || [])].slice(0, 6), count: 8 }) },
-    ], { label: t.name });
+    // R&W has no named-traps catalogue (its wrong choices are argued per passage), and most types have no look-alikes:
+    // offer only what the type has, and no menu at all when that is nothing
+    const moreItems = [
+      isRW() ? null : { label: 'See the traps', onClick: () => traps_(t) },
+      (t.lookalikes || []).length ? { label: 'Mix it up with look-alikes', onClick: () => create({ subject: B.subject, source: 'mixup', order: 'mixup', templates: [t.template, ...t.lookalikes].slice(0, 6), count: 8 }) } : null,
+    ].filter(Boolean);
+    const more = moreItems.length ? h('button', { type: 'button', class: 'ibtn', 'aria-label': `More for ${t.name}` }, UI.icon('more', 18)) : null;
+    if (more) UI.menu.bind(more, moreItems, { label: t.name });
     // the row's one detail line is its difficulty, only when it isn't all three (the user: keep the difficulty, remove
     // everything else: format, level, odds, record, everyone, open mistakes, marked, ready, due, fluent, Desmos, official, note)
     const chips = [tiers.length < 3 ? h('span', { text: `${tiers.map(d => TIER_WORD[d]).join(' + ')} only` }) : null].filter(Boolean);
     const row = h('div', { class: 'trow', 'data-t': t.template }, tb,
-      h('div', { class: 'tmain' }, h('span', { class: 'tname', text: t.name }), t.about ? h('span', { class: 'tabout', text: t.about }) : null,
+      // most R&W types' about is their name again, punctuated: shown only when it says more
+      h('div', { class: 'tmain' }, h('span', { class: 'tname', text: t.name }), t.about && bare(t.about) !== bare(t.name) ? h('span', { class: 'tabout', text: t.about }) : null,
         chips.length ? h('span', { class: 'tchips' }, chips) : null, h('span', { class: 'reason help', 'data-reason': '' })),
-      h('div', { class: 'tacts' }, tryB,
-        h('button', { type: 'button', class: 'quiet', text: 'Learn', 'aria-label': `Learn ${t.name}`, onclick: () => create({ subject: 'math', source: 'learn', templates: [t.template] }) }), more));
+      h('div', { class: 'tacts reveal' }, tryB,
+        // Learn: one worked, then on your own, then a tier up (R&W's worked one is an unseen bank question)
+        h('button', { type: 'button', class: 'quiet', text: 'Learn', 'aria-label': `Learn ${t.name}`, onclick: () => create({ subject: B.subject, source: 'learn', templates: [t.template], count: 3 }) }), more));
     row._tri = tb;
     return row;
   }
@@ -819,7 +897,7 @@
       b.append(h('p', { class: 'help', text: t.about || '' }));
       if (!list.length) b.append(h('p', { text: 'Its wrong choices are near values, not named traps.' }));
       else b.append(h('ul', {}, list.map(m => h('li', { text: cap(typeof m === 'string' ? m : m.label || m.reason || '') }))));
-    }, actions: [{ label: 'Practise this type', primary: true, onClick: () => { create({ subject: 'math', source: 'builder', templates: [t.template], count: 5 }); } }, { label: 'Close', quiet: true }] });
+    }, actions: [{ label: 'Practise this type', primary: true, onClick: () => { create({ subject: B.subject, source: 'builder', templates: [t.template], count: 5 }); } }, { label: 'Close', quiet: true }] });
   }
   function paintSel() {
     const q = (a, v) => document.querySelectorAll(`[${a}="${CSS.escape(v)}"]`);
@@ -832,19 +910,22 @@
         q('data-stri', s.slug).forEach(b => b.setAttribute('aria-checked', triOf(n, of)));
       });
       q('data-dtri', d.name).forEach(b => b.setAttribute('aria-checked', triOf(dn, dof)));
-      q('data-dsel', d.name).forEach(c => { c.textContent = sOn ? `${sOn} of ${d.skills.length} selected` : plural(d.skills.length, 'skill'); });
+      q('data-dsel', d.name).forEach(c => { c.replaceChildren(...(sOn ? [`${sOn} of ${d.skills.length}`, h('span', { class: 'sr', text: ' selected' })] : [plural(d.skills.length, 'skill')])); });
     });
+    const all = $('#treeAll'), clr = $('#treeClear');
+    if (all) all.setAttribute('aria-checked', triOf(B.sel.size, B.byT.size));
+    if (clr) clr.hidden = !B.sel.size;
     document.querySelectorAll('.trow').forEach(r => r._tri.setAttribute('aria-checked', String(B.sel.has(r.dataset.t))));
     document.querySelectorAll('.lhead .tri').forEach(b => { const ts = b.dataset.group.split(' '); b.setAttribute('aria-checked', triOf(ts.filter(x => B.sel.has(x)).length, ts.length)); });
     paintCount();
     paintBar();
   }
-  // "3 skills"
+  // a count, not a percentage: "3 of 19 selected", or "19 skills" with none
   function paintCount() {
     const c = $('#treeCount');
     if (!c) return;
     const n = selectedSkills().length;
-    c.textContent = n ? plural(n, 'skill') : '';
+    c.replaceChildren(...(n ? [`${n} of ${B.skills.size}`, h('span', { class: 'w', text: ' selected' })] : [plural(B.skills.size, 'skill')]));
   }
   function paintAvail() {
     B.skills.forEach(s => {
@@ -853,6 +934,9 @@
         row.classList.toggle('dim', !!why);
         row.querySelector('[data-reason]').textContent = text;
         if (text) row.title = text; else row.removeAttribute('title');
+        // the name's own tooltip (nearest wins) carries the full name and the reason, so a dimmed row still says why
+        const nm = row.querySelector('.sname'), tt = [label(s) !== s.name ? s.name : null, text].filter(Boolean).join(' · ');
+        if (nm) { if (tt) nm.title = tt; else nm.removeAttribute('title'); }
       });
       document.querySelectorAll(`[data-sreason="${CSS.escape(s.slug)}"]`).forEach(p => { p.textContent = text; });
     });
@@ -860,13 +944,18 @@
   }
   function paintMap(host) {
     const box = h('div', { class: 'pr-map' });
-    box.append(h('p', { class: 'help', text: 'Every question type as a cell: filled when you have met it, ringed when ready. Tap a cell to select it.' }));
+    box.append(h('p', { class: 'help', text: 'Every question type as a cell: filled with a tick when ready, a dot once met, dashed until you meet it; an orange corner dot is an open mistake. Tap a cell to pick it; picked cells are ringed in orange.' }));
     B.bank.domains.forEach(d => d.skills.forEach(s => {
       const r = h('div', { class: 'mrow' }, h('div', { class: 'mh' }, h('span', { text: s.name }), h('span', { class: 'meta', text: `${s.ready_n || 0} of ${typesOf(s).length} ready` })));
-      const cells = h('div', { class: 'quick' });
-      typesOf(s).forEach(t => cells.append(UI.cell(t.state === 'ready' ? 'correct' : t.state === 'met' ? 'mixed' : 'unanswered', null, {
-        label: `${t.name}, ${t.state || 'unmet'}${B.sel.has(t.template) ? ', selected' : ''}`, current: B.sel.has(t.template), size: 18,
-        onClick: () => { B.sel.has(t.template) ? B.sel.delete(t.template) : B.sel.add(t.template); markCustom(); preview(); paintTree(); } })));
+      const cells = h('div', { class: 'mcells' });
+      // the type map's own looks (as Me's UI.atlas): an open type is met with its dot
+      typesOf(s).forEach(t => {
+        const c = UI.cell(t.state === 'ready' ? 'ready' : t.state === 'met' || t.state === 'open' ? 'met' : 'unmet', null, {
+          label: `${t.name}, ${t.state === 'open' ? 'open mistake' : t.state || 'unmet'}`, open: t.state === 'open' || null, size: 'sm',
+          onClick: () => { B.sel.has(t.template) ? B.sel.delete(t.template) : B.sel.add(t.template); markCustom(); preview(); paintTree(); } });
+        c.setAttribute('aria-pressed', String(B.sel.has(t.template)));
+        cells.append(c);
+      });
       r.append(cells);
       box.append(r);
     }));
@@ -876,9 +965,12 @@
   function paintHabits(host) {
     const list = B.bank.habits || [];
     const box = h('div', { class: 'pr-habits' });
-    if (!list.length) box.append(h('p', { class: 'pr-new', text: 'Habits show up after about 30 answers: the kinds of trap you fall for across skills, and the ones you reliably rule out.' }));
+    // first use: the start drawing (the mark's corners, one lit) over its line
+    if (!list.length) box.append(h('div', { class: 'pr-first' }, h('span', { 'aria-hidden': 'true', html: UI.spotArt ? UI.spotArt('start') : '' }),
+      UI.empty(null, { text: 'Habits show up after about 30 answers.' })));
     list.forEach(x => box.append(h('div', { class: 'hrow' }, h('div', {}, h('b', { text: x.name || x.id }), h('p', { class: 'help', text: [x.tell, x.week ? `${x.week} this week` : null, x.here ? `${x.here} in your picks` : null].filter(Boolean).join(' · ') })),
-      h('button', { type: 'button', class: 'btn sm', text: 'Drill it', onclick: () => create({ subject: 'math', source: 'habit', habits: [x.id] }) }))));
+      // a quiet way forward at the row's end, as Ready's Start (ten white buttons down the page read as a wall)
+      h('button', { type: 'button', class: 'quiet go', onclick: () => create({ subject: B.subject, source: 'habit', habits: [x.id] }) }, 'Drill it', UI.icon('arrow', 16)))));
     host.append(box);
   }
 
@@ -891,14 +983,12 @@
     host.append(g);
     return g;
   }
-  // a switch with a small (i) beside it that says what it does
+  // a switch with the shared ? beside it that says what it does
   function swInfo(host, o, text) {
     const row = h('div', { class: 'pr-swrow' });
     host.append(row);
     const sw = UI.switch(row, o);
-    const i = h('button', { type: 'button', class: 'pr-i', text: 'i', 'aria-label': `About: ${o.label}`, 'aria-haspopup': 'dialog', 'aria-expanded': 'false' });
-    i.addEventListener('click', () => UI.pop(i, () => h('div', { class: 'info-pop' }, h('p', { text })), { label: o.label }));
-    row.append(i);
+    row.append(UI.why(text, { about: o.label }));
     return sw;
   }
   const helpLine = (host, text) => { const p = h('p', { class: 'help', text: text || '' }); host.append(p); return p; };
@@ -921,6 +1011,10 @@
       w.panel = h('div', { class: 'pset-panel sset', role: 'tabpanel' });
       b.append(w.panel);
       w.tabs = UI.tabs(th, SET_TABS.map(t => ({ id: t.id, label: t.label, tabId: `pt-${t.id}` })), { label: 'Settings', value: w.tab, onChange: id => { w.tab = id; b.scrollTop = 0; paintSettings(); } });
+      if (UI.edgeFade) UI.edgeFade(w.tabs.el, true);   // a phone scrolls the tabs sideways: soft edges where more are
+      // under the close button: the same set as a printable worksheet (questions, then the key)
+      th.append(h('button', { type: 'button', class: 'quiet', id: 'worksheet', text: 'Print PDF', onclick: worksheet }));
+      paintWorksheet();
       paintSettings();
     }, actions: [{ label: 'Cancel', quiet: true }, { label: 'Start', primary: true, onClick: () => { launch(); } }] });
     const foot = w.sheet.foot;
@@ -935,7 +1029,7 @@
   function syncWin() {
     if (!win || !win.sum) return;
     const startB = $('#start'), off = startB.disabled && !starting, why = $('#reason').textContent;
-    win.l1.textContent = $('#l1').textContent;
+    win.l1.textContent = B.l1Text || '';
     win.l2.textContent = off ? why : B.setText || '';
     win.l2.title = off ? '' : B.setText || '';
     win.l2.classList.toggle('why', !!off);
@@ -985,12 +1079,13 @@
     const g1 = group(colL, 'Questions from', 'sPool');
     const P = (B.preview && B.preview.pools) || B.bank.counts || {};
     const seen = P.seen || {};
+    const F = isRW() ? 'Fresh passages' : 'Fresh numbers';
     const rows = [
-      ['new', `New questions`, 'types', P.new, 'Generated for you now. You have never seen any of them.'],
-      ['redo', 'Fresh numbers on my open mistakes', 'types', P.mistakes, 'Each type you fell for, twice. Two correct answers close a mistake.'],
+      ['new', `New questions`, 'types', P.new, isRW() ? 'Questions you have never seen, each on its own passage.' : 'Generated for you now. You have never seen any of them.'],
+      ['redo', `${F} on my open mistakes`, 'types', P.mistakes, 'Each type you fell for, twice. Two correct answers close a mistake.'],
       ['checks', 'Check-ins on mistakes you fixed', 'due', P.checks, 'A fixed mistake comes back once to prove it stayed fixed.'],
-      ['review', 'Fresh numbers on types due for review', 'types', P.review, forecastText()],
-      ['untried', 'Fresh numbers on types I’ve never tried', 'types', P.untried, null],
+      ['review', `${F} on types due for review`, 'types', P.review, forecastText()],
+      ['untried', `${F} on types I’ve never tried`, 'types', P.untried, null],
       ['seen', 'Questions I’ve seen', '', seen.any, null],
       ['marked', 'Marked for review', '', P.marked, 'A marked question you get right here leaves your Marked list, unless you tick Keep marked on it.'],
       ['saved', 'Saved', '', P.saved, 'Questions you saved for good. Twins test the skill; Exactly replays the question.'],
@@ -999,13 +1094,13 @@
       const off = n === 0 && st.pool !== v;
       const inp = h('input', { type: 'radio', name: 'pool', value: v, checked: st.pool === v ? true : null, disabled: off ? true : null });
       inp.addEventListener('change', () => setPool(v));
-      const row = h('label', { class: 'radio-row' + (off ? ' off' : ''), 'data-pool': v, 'data-unit': unit ? ' ' + unit : '' }, inp,
-        h('span', { class: 'rl', text: label }), h('span', { class: 'rn', text: n ? `${n0(n)}${unit ? ' ' + unit : ''}` : '' }));
+      const row = h('label', { class: 'choice-row' + (off ? ' off' : ''), 'aria-disabled': off ? 'true' : null, 'data-pool': v, 'data-unit': unit ? ' ' + unit : '' }, inp,
+        h('span', { class: 'rl', text: label }), h('span', { class: 'rn choice-meta', text: n ? `${n0(n)}${unit ? ' ' + unit : ''}` : '' }));
       g1.append(tip(row, () => (row.classList.contains('off') ? reasonText('pool_empty') : helper)));   // a greyed pool says why on hover
       if (st.pool === v && ['seen', 'marked', 'saved'].includes(v)) {
         const sub = h('div', { class: 'sub' });
         const how = UI.seg(sub, [{ value: false, label: 'Fresh twins' }, { value: true, label: 'Exactly as they were' }], { value: !!st.exact, label: 'How', onChange: x => { st.exact = x; changed(); } });
-        tip(how.btns[0], 'Each one comes back as a twin: the same type and trap, new numbers.');
+        tip(how.btns[0], isRW() ? 'Each one comes back as another one like it: the same type, a fresh passage.' : 'Each one comes back as a twin: the same type and trap, new numbers.');
         tip(how.btns[1], 'The same questions again, exactly as they were.');
         if (v === 'seen') {
           UI.seg(sub, [{ value: 'any', label: 'Any', n: seen.any }, { value: 'missed', label: 'Missed', n: seen.missed }, { value: 'right', label: 'Right', n: seen.right }, { value: 'guessed', label: 'Guessed', n: seen.guessed }],
@@ -1015,8 +1110,8 @@
         g1.append(sub);
       }
     });
-    // Questions: three kinds of set (the user): a number of questions, a number in a time limit, or a time limit alone
-    const g2 = group(colR, 'Questions', 'sCount');
+    // Length: three kinds of set (the user): a number of questions, a number in a time limit, or a time limit alone
+    const g2 = group(colR, 'Length', 'sCount');
     // an endless set on a clock (the old Sprint) is a time-only set now
     if (st.count === null && !st.box && st.timing !== 'off') { st.box = Math.max(5, Math.min(180, st.minutes || 15)); st.timing = 'off'; }
     const kind = st.box ? 'time' : st.timing === 'off' || st.count === null ? 'count' : 'both';
@@ -1048,14 +1143,14 @@
       const COUNTS = [10, 30, 50];
       const cv = st.count === null ? 'inf' : COUNTS.includes(st.count) ? st.count : null;   // null: a typed number
       const own = ownIn(() => ctl.count, 1, 120, cv === null && typed.has('count') ? st.count : '', 'How many questions (1–120)', n => { st.count = n; typed.add('count'); });
-      ctl.count = UI.seg(g2, COUNTS.map(n => ({ value: n, label: String(n) })).concat(kind === 'count' ? [{ value: 'inf', label: '∞' }] : []),
+      ctl.count = UI.seg(g2, COUNTS.map(n => ({ value: n, label: String(n) })).concat(kind === 'count' ? [{ value: 'inf', label: 'Endless' }] : []),
         { value: cv, label: 'How many questions', onChange: v => {
           own.value = ''; own.classList.remove('on'); typed.delete('count');
           st.count = v === 'inf' ? null : v; changed(); paintSettings();
         } });
       ctl.count.el.append(own);
       const inf = ctl.count.btns.find(x => x._opt.value === 'inf');
-      if (inf) tip(inf, 'Endless: stop whenever you like.');
+      if (inf) tip(inf, 'Stop whenever you like.');
     }
     if (kind === 'both') {
       const MINS = [10, 30, 60];
@@ -1089,8 +1184,8 @@
       ['80% or more likely right', '60–80% likely right', '35–60% likely right'].forEach((t, i) => tip(aim.btns[i], t));
       const unplaced = selectedSkills().filter(s => !s.placed);
       if (unplaced.length) {   // just "practice more"; the skills and counts are the hover text
-        const tipTxt = `For me starts after 8 answers in a skill. Not placed yet: ${unplaced.slice(0, 4).map(s => `${s.short || s.name} (${s.to_place ?? 8} to go)`).join(', ')}${unplaced.length > 4 ? ` +${unplaced.length - 4}` : ''}. Those are served like module 1 (7 Easy · 8 Medium · 7 Hard).`;
-        helpLine(g3, 'Practice more to unlock.').title = tipTxt;
+        const tipTxt = `For me starts after 8 answers in a skill. Not placed yet: ${unplaced.slice(0, 4).map(s => `${s.short || s.name} (${s.to_place ?? 8} to go)`).join(', ')}${unplaced.length > 4 ? ` +${unplaced.length - 4}` : ''}. Those are served like module 1${isRW() ? '' : ' (7 Easy · 8 Medium · 7 Hard)'}.`;
+        helpLine(g3, 'Practice more to unlock. ').append(UI.why(tipTxt, { about: 'For me' }));
       }
     } else {
       const tierCount = d => [...B.sel].filter(t => ((B.byT.get(t) || {}).tiers || []).includes(d)).length;
@@ -1099,8 +1194,10 @@
         st.tiers = v; tierHelp.textContent = ''; changed();
       } });
       const tierHelp = helpLine(g3, '');
-      const tmix = UI.seg(g3, [{ value: 'any', label: 'Any' }, { value: 'module1', label: 'Like module 1 (7/8/7)' }, { value: 'module2_upper', label: 'Like the harder module 2 (3/8/11)' }], { value: st.tier_mix, label: 'Mix', onChange: v => { st.tier_mix = v; changed(); } });
-      tip(tmix.btns[2], 'Aiming above 580? The harder module 2 is 11 Hard of 22.');
+      // the counts are Math's 22-question modules; the server plans R&W sets on the same shares, so R&W shows no counts
+      const rw = isRW();
+      const tmix = UI.seg(g3, [{ value: 'any', label: 'Any' }, { value: 'module1', label: rw ? 'Like module 1 (9/9/9)' : 'Like module 1 (7/8/7)' }, { value: 'module2_upper', label: rw ? 'Like the harder module 2 (4/10/13)' : 'Like the harder module 2 (3/8/11)' }], { value: st.tier_mix, label: 'Mix', onChange: v => { st.tier_mix = v; changed(); } });
+      tip(tmix.btns[2], rw ? 'Aiming above 580? The harder module 2 is about half Hard.' : 'Aiming above 580? The harder module 2 is 11 Hard of 22.');
       UI.switch(g3, { checked: st.adaptive && st.order !== 'ramp', label: 'Adaptive: step up a tier after 2 first-try rights in a skill, down after a miss', disabled: st.order === 'ramp', onChange: v => { st.adaptive = v; changed(); } });
       if (st.order === 'ramp') helpLine(g3, 'Off while Order is Easiest first.');
     }
@@ -1115,16 +1212,19 @@
       ['end', 'At the end, like a test', 'No feedback until you finish. Change answers, skip around, Check Your Work.']].forEach(([v, l, help]) => {
       const inp = h('input', { type: 'radio', name: 'feedback', value: v, checked: st.feedback === v ? true : null });
       inp.addEventListener('change', () => { st.feedback = v; if (v === 'end' && st.repairs === 'next') st.repairs = 'end'; changed(); paintSettings(); });
-      g6.append(tip(h('label', { class: 'radio-row', 'data-feedback': v }, inp, h('span', { class: 'rl', text: l })), help));
+      g6.append(tip(h('label', { class: 'choice-row', 'data-feedback': v }, inp, h('span', { class: 'rl', text: l })), help));
     });
     const g6b = group(host, 'Asking how sure', 'sSure');
     tip(UI.seg(g6b, [{ value: 'ask', label: 'Ask' }, { value: 'off', label: 'Off' }], { value: st.confidence, label: 'Check asks how sure (Sure · Unsure · Guess)', onChange: v => { st.confidence = v; savePrefs(); } }).el,
       'Check asks how sure (Sure · Unsure · Guess). A Guess counts half and opens the explanation.');
     const g6c = group(host, 'While I solve', 'sSolve');
     UI.switch(g6c, { checked: st.hints, label: 'Hints before I answer', onChange: v => { st.hints = v; changed(); } });
-    lab(g6c, 'Solve before seeing choices');
-    tip(UI.seg(g6c, [{ value: 'off', label: 'Off' }, { value: 'hard', label: 'Medium and Hard' }, { value: 'all', label: 'All' }], { value: st.cover, label: 'Solve before seeing choices', onChange: v => { st.cover = v; changed(); } }).el,
-      'The options stay covered until you type what you got.');
+    // R&W's prose choices cover with no answer field (question.js): predict, then show them
+    const coverL = isRW() ? 'Predict before seeing choices' : 'Solve before seeing choices';
+    lab(g6c, coverL);
+    tip(UI.seg(g6c, [{ value: 'off', label: 'Off' }, { value: 'hard', label: 'Medium and Hard' }, { value: 'all', label: 'All' }], { value: st.cover, label: coverL, onChange: v => { st.cover = v; changed(); } }).el,
+      isRW() ? 'The choices stay covered while you read and predict the answer in your own words.' : 'The options stay covered until you type what you got.');
+    // per subject (prefs.practice): R&W's is off by default, its worked example being a bank question shown with its answer
     UI.switch(g6c, { checked: st.worked_first, label: 'New types: show me one worked first', onChange: v => { st.worked_first = v; changed(); } });
     // pace: moved here from the Set tab (the user); shown for timed sets only, as before
     if (st.box || (st.timing !== 'off' && st.count !== null)) {
@@ -1142,12 +1242,13 @@
     const g7 = group(host, 'After a miss', 'sRepairs');
     const endM = st.feedback === 'end';
     tip(UI.seg(g7, [{ value: 'next', label: 'Next question', disabled: endM, why: endM ? 'In test mode, misses become a Fix set at the end.' : null }, { value: 'later', label: '3 questions later', disabled: endM }, { value: 'end', label: 'At the end' }, { value: 'off', label: 'Off' }],
-      { value: st.repairs, label: 'After a miss', onChange: v => { st.repairs = v; changed(); } }).el, 'One like it follows a miss: the same trap, new numbers.');
-    UI.triCheck(g7, { label: 'Final round: re-ask what I missed at the end, new numbers', checked: st.final_round, onChange: v => { st.final_round = v; changed(); } });
+      { value: st.repairs, label: 'After a miss', onChange: v => { st.repairs = v; changed(); } }).el, isRW() ? 'Another one like it follows a miss: the same type, a fresh passage.' : 'One like it follows a miss: the same trap, new numbers.');
+    UI.triCheck(g7, { label: `Final round: re-ask what I missed at the end, ${fresh()}`, checked: st.final_round, onChange: v => { st.final_round = v; changed(); } });
     const g7a = group(host, 'Mix in reviews', 'sReviews');
     UI.seg(g7a, [{ value: 'off', label: 'Off' }, { value: 2, label: '2 per set' }, { value: 20, label: '20%' }], { value: st.review_mix, label: 'Mix in reviews', onChange: v => { st.review_mix = v; changed(); } });
     UI.triCheck(g7a, { label: 'Only from the skills I picked', checked: st.review_from === 'picked', onChange: v => { st.review_from = v ? 'picked' : 'all'; changed(); } });
     helpLine(g7a, forecastText());
+    if (isRW()) return;   // word cards join Math sets only (drill.py)
     const g7b = group(host, 'Mix in due SAT words', 'sWords');
     tip(UI.seg(g7b, [{ value: 'off', label: 'Off' }, { value: 2, label: '2 per set' }, { value: 'all', label: 'All due' }], { value: st.words_mix, label: 'Mix in due SAT words', onChange: v => { st.words_mix = v; changed(); } }).el,
       'Reviewed at set breaks, filed to Words, never counted in Math.');
@@ -1157,29 +1258,36 @@
   function paintMoreTab(host) {
     const st = B.st;
     const endless = st.count === null;   // a time-only set has no end to ramp to
+    const selT = () => [...B.sel].map(t => B.byT.get(t)).filter(Boolean);
+    // Mix-up interleaves look-alike types: offered only when the pick has some (most R&W types have none)
+    const look = st.order === 'mixup' || selT().some(t => (t.lookalikes || []).length);
     const g8 = group(host, 'Order', 'sOrder');
-    const ord = UI.seg(g8, [{ value: 'mixed', label: 'Mixed' }, { value: 'grouped', label: 'Grouped by skill' }, { value: 'ramp', label: 'Easiest first', disabled: endless, why: endless ? 'An endless set has no end to ramp to' : null }, { value: 'mixup', label: 'Mix-up' }],
+    const ord = UI.seg(g8, [{ value: 'mixed', label: 'Mixed' }, { value: 'grouped', label: 'Grouped by skill' }, { value: 'ramp', label: 'Easiest first', disabled: endless, why: endless ? 'An endless set has no end to ramp to' : null },
+      look ? { value: 'mixup', label: 'Mix-up' } : null].filter(Boolean),
       { value: st.order, label: 'Order', onChange: v => { st.order = v; changed(); paintSettings(); } });
     ['Never serves 3 questions of one type in a row.', 'One skill at a time.', 'By level where measured, by tier otherwise.', 'Look-alike types interleaved, so you learn which method applies.'].forEach((t, i) => tip(ord.btns[i], t));
     const g9 = group(host, 'Spread', 'sSpread');
     const oneDomain = new Set(selectedSkills().map(s => s.domain)).size <= 1;
     const spr = UI.seg(g9, [{ value: 'even', label: 'Even across skills' }, { value: 'blueprint', label: 'Like the test', disabled: oneDomain, why: oneDomain ? 'Your pick sits in one domain' : null }],
       { value: oneDomain ? 'even' : st.mix, label: 'Spread', onChange: v => { st.mix = v; changed(); } });
-    tip(spr.btns[1], 'Algebra and Advanced Math 35% each, the other two 15%.');
-    const g4 = group(host, 'Format', 'sFormat');
-    const fv = st.formats.length === 2 ? 'both' : st.formats[0];
-    UI.seg(g4, [{ value: 'both', label: 'Both' }, { value: 'mcq', label: 'Multiple choice' }, { value: 'spr', label: 'Grid-in' }], { value: fv, label: 'Format', onChange: v => { st.formats = v === 'both' ? ['mcq', 'spr'] : [v]; changed(); paintFormatHelp(); } });
-    ctl.fmtHelp = helpLine(g4, '');
-    const selT = () => [...B.sel].map(t => B.byT.get(t)).filter(Boolean);
-    const hasBox = (key, label) => UI.triCheck(g4, { label, checked: st.has.includes(key), onChange: v => { st.has = v ? [...st.has, key] : st.has.filter(x => x !== key); changed(); } });
-    if (B.bank.desmos_way) hasBox('desmos', `Only types with a Desmos way (${selT().filter(t => t.desmos).length})`);
-    hasBox('official', `Only types built from official questions (${allTypes().filter(t => t.official).length} of ${B.byT.size})`);
+    tip(spr.btns[1], B.subject === 'rw' ? 'Information and Ideas 26%, Craft and Structure 28%, Expression of Ideas 20%, Standard English Conventions 26%.' : 'Algebra and Advanced Math 35% each, the other two 15%.');
+    // Format, Desmos and official-question filters are Math's: R&W is all multiple choice, with no calculator and no
+    // types built from official questions, so its tab has no Format group
+    const official = allTypes().filter(t => t.official).length;
+    if (!isRW()) {
+      const g4 = group(host, 'Format', 'sFormat');
+      const fv = st.formats.length === 2 ? 'both' : st.formats[0];
+      UI.seg(g4, [{ value: 'both', label: 'Both' }, { value: 'mcq', label: 'Multiple choice' }, { value: 'spr', label: 'Grid-in' }], { value: fv, label: 'Format', onChange: v => { st.formats = v === 'both' ? ['mcq', 'spr'] : [v]; changed(); paintFormatHelp(); } });
+      ctl.fmtHelp = helpLine(g4, '');
+      const hasBox = (key, label) => UI.triCheck(g4, { label, checked: st.has.includes(key), onChange: v => { st.has = v ? [...st.has, key] : st.has.filter(x => x !== key); changed(); } });
+      if (B.bank.desmos_way) hasBox('desmos', `Only types with a Desmos way (${selT().filter(t => t.desmos).length})`);
+      if (official) hasBox('official', `Only types built from official questions (${official} of ${B.byT.size})`);
+    }
     const g11 = group(host, 'Defaults', 'sDefaults');
     g11.append(tip(h('p', { class: 'lock' }, icon('save', 16), h('span', { text: 'Never repeats a question you were shown' })),
       'Nothing you were shown in a set, a test or the diagnostic comes back, except the exact replays you ask for. No practice question copies a College Board question.'));
     g11.append(h('div', { class: 'sfoot' }, h('span', { class: 'help', id: 'sfootNote', text: B.foot || (B.fromLink ? 'Settings from the link, not your defaults' : 'Saved as your defaults') }),
-      h('button', { type: 'button', class: 'quiet', text: 'Reset to defaults', onclick: () => { B.st = Object.assign({}, DEF); B.fromLink = false; B.foot = null; changed(); paintSettings(); } }),
-      h('button', { type: 'button', class: 'btn sm', id: 'worksheet', text: 'Printable worksheet', disabled: $('#start').disabled || null, onclick: worksheet })));
+      h('button', { type: 'button', class: 'quiet', text: 'Reset to defaults', onclick: () => { B.st = Object.assign({}, DEF, isRW() ? { worked_first: false } : null); B.fromLink = false; B.foot = null; changed(); paintSettings(); } })));   // R&W's worked-first default is off (prefs.py)
   }
   function footNote(text) { B.foot = text; const e = $('#sfootNote'); if (e) e.textContent = text; }
   function forecastText() {
@@ -1198,12 +1306,13 @@
     const P = (B.preview && B.preview.pools) || null;
     if (!P) return;
     const map = { new: P.new, redo: P.mistakes, checks: P.checks, review: P.review, untried: P.untried, seen: (P.seen || {}).any, marked: P.marked, saved: P.saved };
-    document.querySelectorAll('#sPool .radio-row').forEach(r => {
+    document.querySelectorAll('#sPool [data-pool]').forEach(r => {
       const v = r.dataset.pool, n = map[v];
       const rn = r.querySelector('.rn');
       if (rn) rn.textContent = n ? `${n0(n)}${r.dataset.unit || ''}` : '';
       const off = n === 0 && B.st.pool !== v;
       r.classList.toggle('off', off);
+      if (off) r.setAttribute('aria-disabled', 'true'); else r.removeAttribute('aria-disabled');
       r.querySelector('input').disabled = off;
     });
   }
@@ -1221,38 +1330,72 @@
   const FB_WORD = { instant: 'answers after each', retry: 'answers after a retry', end: 'answers at the end' };
   const REP_WORD = { next: 'repairs next', later: 'repairs 3 later', end: 'repairs at the end', off: 'repairs off' };
   const dur = m => (m < 60 ? `~${Math.max(1, Math.round(m))} min` : `~${Math.round(m / 30) / 2} h`);
-  // Line 1: how many and how long. Line 2: the skills and types picked. The rest is the window's footer (B.setText) and this line's tooltip (B.sumText).
+  // Line 1: how many and how long. Line 2: what is picked (B.sumText, also line 1's tooltip; the phone hides it). The choices are the window's footer (B.setText).
+  function paintWorksheet() {   // a worksheet needs a fixed number of questions to print
+    const ws = $('#worksheet');
+    if (!ws) return;
+    const open = B.st.count === null || !!B.st.box;
+    ws.disabled = $('#start').disabled || open;
+    ws.title = open ? 'Pick a number of questions to print' : 'Print this set with an answer key, or save it as a PDF';
+  }
   function paintBar() {
     if (!B.bank) return;
     const st = B.st, p = B.preview;
     const skills = selectedSkills();
     const sprint = st.count === null && !st.box && st.timing === 'custom';
-    const cnt = st.box ? `${st.box}-minute set` : sprint ? 'Sprint' : st.count === null ? 'Endless' : plural(st.count, 'question');
+    // the set as a figure: "10" large (from 1280px, the hero's number), then the rest of the line on its baseline;
+    // the text reads the same as before ("10 questions · ~14 min"), which the Start window's footer copies
+    const [fig, unit] = st.box ? [String(st.box), '-minute set'] : sprint ? ['Sprint', ''] : st.count === null ? ['Endless', ''] : [String(st.count), st.count === 1 ? ' question' : ' questions'];
     const long = st.box ? (p && p.count ? `about ${plural(p.count, 'question')}` : null)
       : sprint || (st.timing === 'custom' && st.count !== null) ? `${st.minutes} min` : st.count !== null && p && p.minutes ? dur(p.minutes) : null;
-    $('#l1').textContent = [cnt, long].filter(Boolean).join(' · ');
+    paintFig(fig, unit + (long ? ` · ${long}` : ''));
     const ts = [...B.sel].map(t => B.byT.get(t)).filter(Boolean).filter(fits).length;
     const diff = standard() ? (st.tiers.length === 3 ? 'all levels' : st.tiers.map(d => TIER_WORD[d]).join(' + ')) : `For me: ${{ warm: 'Warm-up', stretch: 'Stretch', challenge: 'Challenge' }[st.zone]}`;
-    const fmt = st.formats.length === 2 ? 'both formats' : st.formats[0] === 'spr' ? 'grid-ins only' : 'multiple choice only';
+    const fmt = B.subject === 'rw' ? null : st.formats.length === 2 ? 'both formats' : st.formats[0] === 'spr' ? 'grid-ins only' : 'multiple choice only';
     const gain = skills.reduce((a, s) => a + (s.gain || 0), 0);
     B.sumText = [plural(skills.length, 'skill'), plural(ts, 'type'), diff, fmt, gain ? `works on ≈ +${Math.round(gain)}` : null].filter(Boolean).join(' · ');
+    paintGlyphs(skills);
     const time = st.timing === 'off' ? 'Untimed' : st.timing === 'pace' ? 'Test pace' : sprint ? `Sprint ${st.minutes} min` : `Timed ${st.minutes} min`;
     B.setText = [time, FB_WORD[st.feedback], REP_WORD[st.repairs], st.final_round ? 'final round on' : null, st.review_mix !== 'off' ? `${st.review_mix === 2 ? '2 reviews' : '20% reviews'} mixed in` : null,
       { mixed: 'mixed', grouped: 'grouped', ramp: 'easiest first', mixup: 'mix-up' }[st.order]].filter(Boolean).join(' · ');
-    $('#l2').textContent = B.sel.size ? [plural(skills.length, 'skill'), plural(ts, 'type')].join(' · ') : '';   // the choices behind it are the window's footer
+    // the line under the set: the skills are the chips and the tree head's count, so it starts at the types
+    $('#l2').textContent = B.sel.size ? B.sumText.split(' · ').slice(1).join(' · ') : '';
     const startB = $('#start'), reason = $('#reason');
     if (starting) return;
     let why = '';
     if (!B.sel.size && !B.presetBody) why = 'Pick at least one skill';
     else if (!p) why = '';
     else if (!p.servable) why = p.reason === 'offline' ? 'The server is not answering.' : reasonText(p.reason);
-    startB.disabled = !!why || !p;
-    startB.textContent = p || why ? 'Start practice' : 'Loading…';
+    startB.disabled = !!why || !p;   // disabled, not "Loading…", until the first preview answers
+    startB.textContent = 'Start practice';
     reason.textContent = why;
     reason.hidden = !why;
-    const ws = $('#worksheet');
-    if (ws) ws.disabled = startB.disabled;
+    paintWorksheet();
     syncWin();
+  }
+
+  // the set's skills as topic glyph chips in the hero, on one line then "+3" (the critic: no chip alone on a line):
+  // as many as fit whole, so a name never ends in an ellipsis (only a lone chip may); shown from 1280px (CSS)
+  function paintGlyphs(skills) {
+    const host = $('#glyphs');
+    const fit = n => host.replaceChildren(...skills.slice(0, n).map(sk => h('span', { class: 'chip', title: sk.name }, UI.glyph(sk.slug), h('span', { text: label(sk) }))),
+      skills.length > n ? h('span', { class: 'more', text: `+${skills.length - n}` }) : '');
+    let n = Math.min(3, skills.length);
+    fit(n);
+    while (n > 1 && [...host.querySelectorAll('.chip > span')].some(x => x.scrollWidth > x.clientWidth)) fit(--n);
+  }
+  // the hero's figure: a change of number rolls (UI.roll: only the digits that changed, up on a rise), a word swaps;
+  // the first paint just shows it. B.l1Text is the line as text, for the Start window's footer
+  function paintFig(fig, rest) {
+    const l1 = $('#l1');
+    let f = l1.querySelector('.fig');
+    if (!f) { l1.replaceChildren(f = h('b', { class: 'fig' }), ''); B.fig = null; }
+    if (B.fig !== fig) {
+      if (B.fig && /^\d+$/.test(B.fig) && /^\d+$/.test(fig)) UI.roll(f, +fig); else f.textContent = fig;
+      B.fig = fig;
+    }
+    l1.lastChild.nodeValue = rest;
+    B.l1Text = fig + rest;
   }
 
   /* ---------------------------------------------------------------- starting */
@@ -1261,8 +1404,9 @@
     if (starting) return;
     starting = true;
     const startB = btn || $('#start');
-    const label = startB.textContent;
-    startB.setAttribute('aria-busy', 'true'); startB.textContent = 'Building…';
+    const kids = [...startB.childNodes], own = startB.matches('.pill, .btn');   // a pill or button spins after 300ms (ui.css)
+    startB.setAttribute('aria-busy', 'true');
+    if (!own) startB.textContent = 'Building…';
     $('#abarErr').hidden = true;
     try {
       const r = await UI.api('/drill', { method: 'POST', body: b });
@@ -1270,7 +1414,7 @@
       location.href = `/practice/session/?id=${encodeURIComponent(id)}${b.source === 'worksheet' ? '&print=1' : ''}`;
     } catch (e) {
       starting = false;
-      startB.removeAttribute('aria-busy'); startB.textContent = label;
+      startB.removeAttribute('aria-busy'); if (!own) startB.replaceChildren(...kids);
       const msg = e.detail && e.detail.reason ? reasonText(e.detail.reason) : e.message;
       const err = $('#abarErr');
       err.replaceChildren(h('span', { text: `Couldn’t start: ${msg}` }), ' ', h('button', { type: 'button', class: 'quiet', text: 'Try again', onclick: () => create(b, btn) }));
@@ -1286,9 +1430,12 @@
     if (![...url.keys()].some(k => !['share', 'subject', 'search', 'theme'].includes(k))) return false;
     const st = B.st;
     const list = k => (g(k) || '').split(',').map(x => x.trim()).filter(Boolean);
-    if (g('skills') || g('types')) {
+    // ?topics= (Today, Plan, Results, the runner) and ?topic= (/s) are other names for ?skills=; ?domain= (Today) is its skills
+    const skills = [...list('skills'), ...list('topics'), ...list('topic'),
+      ...(g('domain') ? [...B.skills.values()].filter(sk => sk.domain === g('domain')).map(sk => sk.slug) : [])];
+    if (skills.length || g('types')) {
       B.sel.clear();
-      list('skills').forEach(s => { const sk = B.skills.get(s); if (sk) setSkill(sk, true); });
+      skills.forEach(s => { const sk = B.skills.get(s); if (sk) setSkill(sk, true); });
       list('types').forEach(t => { if (B.byT.has(t)) B.sel.add(t); });
     }
     if (g('count')) st.count = g('count') === '0' || g('count') === 'inf' ? null : Math.max(1, Math.min(120, +g('count') || 10));
@@ -1332,7 +1479,7 @@
     const st = B.st, u = new URL('/practice/', location.origin);
     const sb = selectionBody();
     if (sb.topics) u.searchParams.set('skills', sb.topics.join(',')); else u.searchParams.set('types', sb.templates.join(','));
-    u.searchParams.set('subject', 'math');
+    u.searchParams.set('subject', B.subject);
     u.searchParams.set('count', st.count === null ? '0' : st.count);
     if (st.box) u.searchParams.set('box', st.box);
     u.searchParams.set('pool', st.pool);
@@ -1350,45 +1497,74 @@
 
   /* ---------------------------------------------------------------- Your sets */
   let setsTabV = 'active', setsLimit = 10, setsFilter = { topic: '', kind: '', misses: false };
-  // Your sets lives inside the presets fold: open it, then scroll
-  function showSets() { if ($('#presetBody').hidden) $('#presetTog').click(); $('#sets').scrollIntoView({ behavior: 'smooth' }); }
-  function setsTab(v) { setsTabV = v; setsLimit = 10; paintSets(); }
+  // Your sets is its own fold under the tree: open it, then scroll
+  function showSets() { $('#setsFold').open = true; $('#setsSec').scrollIntoView({ behavior: 'smooth' }); }
+  function setsTab(v) { setsTabV = v; setsLimit = 10; paintSets(true); }
   async function loadSets() {
     try { B.sets = await UI.api('/drill', { quiet: true }); } catch (_) { B.sets = { active: [], recent: [], shared: [], error: true }; }
     try { B.owned = await UI.api('/sets', { quiet: true }); } catch (_) { B.owned = []; }
   }
-  const setTitle = r => (r.topics || []).map(t => (B.skills.get(t) || {}).short || (B.skills.get(t) || {}).name || t);
-  function paintSets() {
+  const setTitle = r => (r.topics || []).map(skName);
+  // the rows sit in one list that is kept between paints, so a change made here (a tab, a filter, Show more, Stop
+  // sharing) glides: rows that stay slide, new ones rise, gone ones fade (UI.glide); the first paint just shows
+  let setList = null;
+  function paintSets(move) {
     const host = $('#sets');
-    host.replaceChildren(h('h2', { class: 'h2', text: 'Your sets' }));
-    if (!B.sets) { host.append(UI.skel(null, 'rows:3')); return; }
+    if (!B.sets) { host.replaceChildren(UI.skel(null, 'rows:3')); setList = null; return; }
     const S = B.sets;
     const owned = (B.owned || []).filter(x => x.kind === 'set' && !x.revoked);
     const recent = (S.recent || []).filter(r => r.answered > 0);
     const tabHost = h('div', {});
-    UI.seg(tabHost, [{ value: 'active', label: 'In progress', n: (S.active || []).length }, { value: 'recent', label: 'Finished', n: recent.length }, { value: 'shared', label: 'Shared by me', n: owned.length }, { value: 'official', label: 'Official questions you brought', n: (S.official || []).length }],
+    UI.seg(tabHost, [{ value: 'active', label: 'In progress', n: (S.active || []).length }, { value: 'recent', label: 'Finished', n: recent.length }, { value: 'shared', label: 'Shared by me', n: owned.length }, { value: 'official', label: 'Official questions', n: (S.official || []).length }],
       { value: setsTabV, label: 'Your sets', onChange: setsTab });
-    host.append(tabHost);
-    if (S.error) { UI.cardError(host, async () => { await loadSets(); paintSets(); }, 'Your sets didn’t load.'); return; }
+    const segEl = tabHost.querySelector('.seg');
+    if (segEl && UI.edgeFade) UI.edgeFade(segEl, true);   // a phone scrolls the tabs sideways: soft edges where more are
+    if (S.error) { host.replaceChildren(tabHost); setList = null; UI.cardError(host, async () => { await loadSets(); paintSets(); }, 'Your sets didn’t load.'); return; }
+    const head = [tabHost];
     let rows = [];
     if (setsTabV === 'active') rows = S.active || [];
-    else if (setsTabV === 'recent') {
-      const f = h('div', { class: 'filters' });
-      const skSel = h('select', { 'aria-label': 'Skill' }, h('option', { value: '', text: 'All skills' }), [...B.skills.values()].map(s => h('option', { value: s.slug, text: s.name, selected: setsFilter.topic === s.slug ? true : null })));
-      const kind = h('select', { 'aria-label': 'Kind' }, [['', 'All'], ['drill', 'Practice'], ['shared', 'Shared with me'], ['challenge', 'Challenge']].map(([v, l]) => h('option', { value: v, text: l, selected: setsFilter.kind === v ? true : null })));
-      const res = h('select', { 'aria-label': 'Result' }, [['', 'All'], ['1', 'With misses']].map(([v, l]) => h('option', { value: v, text: l, selected: (setsFilter.misses ? '1' : '') === v ? true : null })));
-      [skSel, kind, res].forEach(x => x.addEventListener('change', () => { setsFilter = { topic: skSel.value, kind: kind.value, misses: res.value === '1' }; paintSets(); }));
+    else if (setsTabV === 'recent' && recent.length) {   // filters only once there is something to filter
+      const f = h('div', { class: 'pr-filt' });
+      const skSel = h('select', { class: 'field sm', 'aria-label': 'Skill' }, h('option', { value: '', text: 'All skills' }), [...B.skills.values()].map(s => h('option', { value: s.slug, text: s.name, selected: setsFilter.topic === s.slug ? true : null })));
+      const kind = h('select', { class: 'field sm', 'aria-label': 'Kind' }, [['', 'All'], ['drill', 'Practice'], ['shared', 'Shared with me'], ['challenge', 'Challenge']].map(([v, l]) => h('option', { value: v, text: l, selected: setsFilter.kind === v ? true : null })));
+      const res = h('select', { class: 'field sm', 'aria-label': 'Result' }, [['', 'All'], ['1', 'With misses']].map(([v, l]) => h('option', { value: v, text: l, selected: (setsFilter.misses ? '1' : '') === v ? true : null })));
+      [skSel, kind, res].forEach(x => x.addEventListener('change', () => { setsFilter = { topic: skSel.value, kind: kind.value, misses: res.value === '1' }; paintSets(true); }));
       f.append(skSel, kind, res);
-      host.append(f);
+      head.push(f);
       rows = recent.filter(r => (!setsFilter.topic || (r.topics || []).includes(setsFilter.topic)) && (!setsFilter.kind || (setsFilter.kind === 'shared' ? r.source === 'shared' : r.kind === setsFilter.kind))
         && (!setsFilter.misses || r.right < r.answered));
-    } else if (setsTabV === 'shared') rows = owned;
+    } else if (setsTabV === 'recent') rows = [];
+    else if (setsTabV === 'shared') rows = owned;
     else rows = S.official || [];
-    const empty = { active: 'Nothing in progress. A set you leave halfway waits here, on any device with your code.', recent: 'Sets you finish show up here, with their review.',
-      shared: 'Share a finished set so friends each get their own twins of it, then see how they did.', official: 'College Board questions you log from Review show up here, each with twins to practise.' }[setsTabV];
-    if (!rows.length) { host.append(h('p', { class: 'help', text: empty })); return; }
-    rows.slice(0, setsLimit).forEach(r => host.append(setsTabV === 'shared' ? ownedRow(r) : setRow(r)));
-    if (rows.length > setsLimit) host.append(h('button', { type: 'button', class: 'quiet', text: `Show ${Math.min(20, rows.length - setsLimit)} more`, onclick: () => { setsLimit += 20; paintSets(); } }));
+    const filtered = setsTabV === 'recent' && recent.length > 0 && !rows.length;
+    const empty = { active: 'Nothing in progress. A set you leave halfway waits here.', recent: 'Sets you finish show up here, with their review.',
+      shared: 'Share a finished set, then see how friends did.', official: 'College Board questions you log from Review show up here.' }[setsTabV];
+    const list = setList && setList.isConnected ? setList : (setList = h('div', { class: 'pr-setlist' }));
+    const fill = () => {
+      host.replaceChildren(...head, list);
+      const kids = [];
+      // a filter that leaves nothing says so, with Clear (no drawing, no sample); a first-use empty (nothing finished
+      // or shared yet) shows kit's empty state with one dimmed example of the row to come; the others one line
+      if (filtered) kids.push(h('div', { class: 'pr-none', 'data-key': 'none' }, h('p', { class: 'help', text: 'No finished set matches these filters.' }),
+        h('button', { type: 'button', class: 'quiet', text: 'Clear filters', onclick: () => { setsFilter = { topic: '', kind: '', misses: false }; paintSets(true); } })));
+      else if (!rows.length) {
+        const first = setsTabV === 'shared' ? !owned.length : setsTabV === 'recent';
+        const e = UI.empty(null, { text: empty, sample: first ? () => sampleRow(setsTabV) : null });
+        e.dataset.key = `empty-${setsTabV}`;
+        kids.push(e);
+      } else {
+        rows.slice(0, setsLimit).forEach(r => kids.push(setsTabV === 'shared' ? ownedRow(r) : setRow(r)));
+        if (rows.length > setsLimit) kids.push(h('button', { type: 'button', class: 'quiet', 'data-key': 'more', text: `Show ${Math.min(20, rows.length - setsLimit)} more`, onclick: () => { setsLimit += 20; paintSets(true); } }));
+      }
+      list.replaceChildren(...kids);
+    };
+    if (move && list.isConnected) UI.glide(list, fill); else fill();
+  }
+  function sampleRow(tab) {
+    const cells = tab === 'shared' ? ['Oct 12, 18:40', h('span', { class: 'skills', text: '10 questions' }), h('span', { class: 'meta', text: 'Twins for each person' }), 'Opened 3', '', '', '']
+      : ['Oct 12, 18:40', h('span', { class: 'skills' }, h('span', { class: 'badge soft', text: 'Circles' }), h('span', { class: 'badge soft', text: 'Percentages' })),
+        h('span', { class: 'meta', text: 'Untimed · After each' }), '10 / 10', '8 right · 80%', '12:30', h('span', { class: 'acts', text: 'Review' })];
+    return h('div', { class: 'setrow' }, cells.map(c => (typeof c === 'string' ? h('span', { text: c }) : c)));
   }
   function setRow(r) {
     const chips = setTitle(r);
@@ -1397,62 +1573,66 @@
     const acts = h('div', { class: 'acts' });
     const go = `/practice/session/?id=${encodeURIComponent(r.id)}`;
     if (!r.finished) {
-      acts.append(h('a', { class: 'pill sm', href: go, text: 'Resume' }), h('button', { type: 'button', class: 'quiet', text: 'End', onclick: async () => {
+      acts.append(h('a', { class: 'btn sm', href: go, text: 'Resume' }), h('button', { type: 'button', class: 'quiet', text: 'End', onclick: async () => {
         if (!(await UI.confirm({ title: 'End this set?', text: 'End this set and see its summary?', confirm: 'End set' }))) return;
         try { await UI.api(`/drill/${r.id}/finish`, { method: 'POST', body: {} }); location.href = go; } catch (e) { UI.toast(`Couldn’t end it: ${e.message}`); }
       } }));
     } else if (ch) acts.append(h('a', { class: 'quiet', href: '/challenge/', text: 'Challenge' }), h('a', { class: 'quiet', href: go, text: 'Review' }));
     else {
-      acts.append(h('a', { class: 'quiet', href: go, text: 'Review' }),
-        h('button', { type: 'button', class: 'quiet', text: 'Rematch', onclick: () => confirmCopy(r.id, 'rematch') }),
-        h('button', { type: 'button', class: 'quiet', text: 'Retake exact', onclick: () => confirmCopy(r.id, 'retake') }),
-        h('button', { type: 'button', class: 'quiet', text: 'Same settings', onclick: () => create({ again: r.id, source: 'builder', subject: 'math' }) }),
-        h('button', { type: 'button', class: 'quiet', text: 'Share', onclick: () => shareSheet(r.id) }),
-        h('a', { class: 'quiet', href: `${go}&print=1`, text: 'Print' }));
+      const more = h('button', { type: 'button', class: 'ibtn', 'aria-label': 'More for this set' }, UI.icon('more', 18));
+      // the list holds both subjects: each row's actions follow its own set's subject, never the tab's
+      UI.menu.bind(more, () => [
+        { label: 'Rematch', sub: `Same types, ${fresh(r.subject)}`, onClick: () => confirmCopy(r.id, 'rematch', r.subject) },
+        { label: 'Retake exact', onClick: () => confirmCopy(r.id, 'retake', r.subject) },
+        { label: 'Same settings', onClick: () => create({ again: r.id, source: 'builder', subject: r.subject }) },
+        { label: 'Share', onClick: () => shareSheet(r.id, r.subject) },
+        { label: 'Print', href: `${go}&print=1` },
+      ], { label: 'This set' });
+      acts.append(h('a', { class: 'quiet', href: go, text: 'Review' }), more);
     }
-    return h('div', { class: 'setrow' },
-      h('span', { class: 'mono', text: `${ch ? '🏆 ' : ''}${when(r.started)}` }),
-      h('span', { class: 'skills' }, chips.slice(0, 3).map(c => h('span', { text: c })), chips.length > 3 ? h('span', { text: `+${chips.length - 3}` }) : null),
+    return h('div', { class: 'setrow', 'data-key': r.id },
+      h('span', { text: when(r.started) }),
+      h('span', { class: 'skills' }, ch ? h('span', { class: 'badge', text: 'Challenge' }) : null, chips.slice(0, 3).map(c => h('span', { class: 'badge soft', text: c })), chips.length > 3 ? h('span', { class: 'badge soft', text: `+${chips.length - 3}` }) : null),
       h('span', { class: 'meta', text: mode }),
-      h('span', { class: 'mono', text: r.total ? `${r.answered} / ${r.total}` : `${r.answered} answered` }),
-      h('span', { class: 'mono', text: r.answered ? `${r.right} right · ${pct(r.right / r.answered)}` : '—' }),
-      h('span', { class: 'mono', text: mmss(r.ms) }), acts);
+      h('span', { text: r.total ? `${r.answered} / ${r.total}` : `${r.answered} answered` }),
+      h('span', { text: r.answered && Number.isFinite(r.right) ? `${r.right} right · ${pct(r.right / r.answered)}` : NONE }),   // a set in progress may have no tally yet
+      h('span', { text: mmss(r.ms) }), acts);
   }
-  async function confirmCopy(sid, kind) {
+  async function confirmCopy(sid, kind, subject) {
     const retake = kind === 'retake';
     const clean = h('input', { type: 'checkbox', checked: retake ? true : null });
-    UI.sheet({ title: retake ? 'Retake these exact questions?' : 'Rematch: same types, new numbers?', size: 's', body: b => {
-      b.append(h('p', { text: retake ? 'Starts a new copy of this set with the same questions. It tests memory as much as skill. This one stays in your history.' : 'The same types in the same order, with new numbers. We compare the two question by question.' }),
+    UI.sheet({ title: retake ? 'Retake these exact questions?' : `Rematch: same types, ${fresh(subject)}?`, size: 's', body: b => {
+      b.append(h('p', { text: retake ? 'Starts a new copy of this set with the same questions. It tests memory as much as skill. This one stays in your history.' : `The same types in the same order, with ${fresh(subject)}. We compare the two question by question.` }),
         h('label', { class: 'check' }, clean, h('span', { text: 'Start clean: hide my highlights, notes, strikes and rules on this copy' })));
-    }, actions: [{ label: 'Cancel', quiet: true }, { label: retake ? 'Retake' : 'Rematch', primary: true, onClick: () => { create({ subject: 'math', source: retake ? 'builder' : 'rematch', [kind]: sid, clean: clean.checked }); } }] });
+    }, actions: [{ label: 'Cancel', quiet: true }, { label: retake ? 'Retake' : 'Rematch', primary: true, onClick: () => { create({ subject, source: retake ? 'builder' : 'rematch', [kind]: sid, clean: clean.checked }); } }] });
   }
-  function shareSheet(sid) {
+  function shareSheet(sid, subject) {
     let exact = false;
     UI.sheet({ title: 'Share this set', size: 's', body: b => {
       UI.seg(b, [{ value: false, label: 'Twins for each person' }, { value: true, label: 'Exactly these questions' }], { value: false, label: 'What they get', onChange: v => { exact = v; } });
-      b.append(h('p', { class: 'help', text: 'Twins: each friend gets their own numbers on the same types in the same order, so answers can’t be passed around. You see how they did per question.' }),
+      b.append(h('p', { class: 'help', text: `Twins: each friend gets their own ${isRW(subject) ? 'questions' : 'numbers'} on the same types in the same order, so answers can’t be passed around. You see how they did per question.` }),
         h('p', { class: 'help' }, 'Want to race on the clock? ', h('a', { href: '/compete/', text: 'Race friends on this instead' }), '.'));
     }, actions: [{ label: 'Cancel', quiet: true }, { label: 'Copy link', primary: true, onClick: async () => {
       try {
         const r = await UI.api('/sets', { method: 'POST', body: { kind: 'set', session: sid, cfg: { fresh: !exact } } });
         UI.copyText(r.url || `${location.origin}/practice/?share=${r.code}`, { toast: exact ? 'Link copied: friends get these exact questions' : 'Link copied: each friend gets their own twins' });
-        loadSets().then(paintSets);
+        loadSets().then(() => paintSets(true));
       } catch (e) { UI.toast(`Couldn’t share it: ${e.message}`); return false; }
     } }] });
   }
   function ownedRow(r) {
     const link = r.url || `${location.origin}/practice/?share=${r.code}`;
-    return h('div', { class: 'setrow' },
-      h('span', { class: 'mono', text: when(r.created) }),
-      h('span', { text: r.title || `${plural(r.count || 0, 'question')}` }),
+    return h('div', { class: 'setrow', 'data-key': r.code },
+      h('span', { text: when(r.created) }),
+      h('span', { class: 'skills', text: r.title || `${plural(r.count || 0, 'question')}` }),
       h('span', { class: 'meta', text: r.fresh ? 'Twins for each person' : 'Exact questions' }),
-      h('span', { class: 'mono', text: `Opened ${r.opened || 0}` }), h('span', {}), h('span', {}),
+      h('span', { text: `Opened ${r.opened || 0}` }), h('span', {}), h('span', {}),
       h('div', { class: 'acts' },
         h('button', { type: 'button', class: 'quiet', text: 'Results', onclick: () => sharedResults(r.code) }),
         h('button', { type: 'button', class: 'quiet', text: 'Copy link', onclick: () => UI.copyText(link, { toast: 'Link copied' }) }),
         h('button', { type: 'button', class: 'quiet', text: 'Stop sharing', onclick: async () => {
           if (!(await UI.confirm({ title: 'Stop sharing?', text: 'The link stops working for everyone. Results stay yours.', confirm: 'Stop sharing', destructive: true }))) return;
-          try { await UI.api(`/sets/${r.code}`, { method: 'DELETE' }); await loadSets(); paintSets(); } catch (e) { UI.toast(`Couldn’t stop it: ${e.message}`); }
+          try { await UI.api(`/sets/${r.code}`, { method: 'DELETE' }); await loadSets(); paintSets(true); } catch (e) { UI.toast(`Couldn’t stop it: ${e.message}`); }
         } })));
   }
   async function sharedResults(code) {
@@ -1463,12 +1643,12 @@
       if (!takers.length) { b.append(h('p', { text: 'Nobody has taken this set yet. Copy the link to send it.' })); return; }
       const tiles = h('div', { class: 'tiles' });
       UI.tile(tiles, { label: 'Taken', value: takers.length });
-      UI.tile(tiles, { label: 'Average', value: d.avg_right !== undefined && d.avg_right !== null ? `${(+d.avg_right).toFixed(1)} / ${d.count}` : '—' });
-      UI.tile(tiles, { label: 'Median time', value: d.median_ms ? mmss(d.median_ms) : '—' });
+      UI.tile(tiles, { label: 'Average', value: d.avg_right !== undefined && d.avg_right !== null ? `${(+d.avg_right).toFixed(1)} / ${d.count}` : NONE });
+      UI.tile(tiles, { label: 'Median time', value: d.median_ms ? mmss(d.median_ms) : NONE });
       b.append(tiles);
       UI.table(b, [{ key: 'n', label: '#', num: true }, { key: 'type_name', label: 'Type' }, { key: 'difficulty', label: 'Difficulty' },
         { key: 'right', label: 'Right', render: q => `${q.right}/${q.asked}` },
-        { key: 'top', label: 'Most common wrong answer', render: q => (q.top_wrong ? `${cap(q.top_wrong.reason || q.top_wrong.norm || '')} (${q.top_wrong.count})` : '—') }], d.questions || [], { compact: true, label: 'Per question' });
+        { key: 'top', label: 'Most common wrong answer', render: q => (q.top_wrong ? `${cap(q.top_wrong.reason || q.top_wrong.norm || '')} (${q.top_wrong.count})` : NONE) }], d.questions || [], { compact: true, label: 'Per question' });
       UI.table(b, [{ key: 'name', label: 'Taker', render: (t, i) => t.name || `Student ${i + 1}` }, { key: 'right', label: 'Score', render: t => `${t.right} / ${t.asked}` }, { key: 'ms', label: 'Time', render: t => mmss(t.ms) }],
         takers.map((t, i) => Object.assign({ _i: i }, t)).map(t => Object.assign(t, { name: t.name || `Student ${t._i + 1}` })), { compact: true, label: 'Takers' });
     } });
@@ -1484,6 +1664,7 @@
   }
   async function load() {
     skeleton();
+    UI.subject.set(B.subject);   // remembered and in the URL, so Review, Tests and a reload open on it too
     paintSubject();
     let prefs = {};
     try { prefs = await UI.prefs(); } catch (_) {}
@@ -1491,37 +1672,52 @@
     B.st = fromPrefs(B.prefs);
     B.saved = Object.assign({}, B.st);
     try { B.me = await UI.me(); } catch (_) { B.me = null; }
+    if (!(await useSubject(true))) return;
+    await loadSets();
+    paintHead(); paintBanners(); paintSets(); paintReady();
+  }
+  const banks = {}, QPH = $('#q').placeholder;
+  // load (once) and show the bank of the tab's subject; first: the page's opening load, which honours a shared link
+  async function useSubject(first = false) {
+    skeleton();
     let bank;
-    try { bank = await UI.api('/bank?subject=math', { quiet: true }); }
+    try { bank = banks[B.subject] || (banks[B.subject] = await UI.api(`/bank?subject=${B.subject}`, { quiet: true })); }
     catch (e) {
       const host = $('#treeBody');
       host.className = '';
       host.replaceChildren();
       UI.cardError(host, () => load(), 'The server is not answering.');
       $('#start').disabled = true; $('#start').textContent = 'Start practice';
+      $('#l1').replaceChildren();   // no skeleton left behind: the reason says why
       $('#reason').textContent = 'The server is not answering.'; $('#reason').hidden = false;
-      return;
+      return false;
     }
     B.bank = bank;
-    B.byT.clear(); B.skills.clear();
+    // the command line's skill words are Math's (UI.parseSet): R&W's box offers the search alone
+    $('#q').placeholder = isRW() ? 'Search a skill or a question type' : QPH;
+    B.byT.clear(); B.skills.clear(); B.sel.clear();
     bank.domains.forEach(d => d.skills.forEach(s => { s.domain = s.domain || d.name; B.skills.set(s.slug, s); (s.types || []).forEach(t => { t.topic = t.topic || s.slug; B.byT.set(t.template, t); }); }));
-    B.fromLink = fromLink();
+    B.fromLink = first && fromLink();
     if (!B.fromLink) applyPreset('coach', null);
     else { B.preset = 'custom'; linkNote('Settings from the link, not your defaults'); }
     paintHead(); paintTreeHead(); paintAll();
-    if (url.get('search')) { $('#q').value = url.get('search'); onSearch(); }
-    await loadSets();
-    paintHead(); paintBanners(); paintSets(); paintReady();
-    showSubject();
+    UI.motion.enter($('#treeBody'), 'fade');   // the skills fade in over their skeleton (MOTION M2), on load and on a subject switch
+    if (first && url.get('search')) { $('#q').value = url.get('search'); onSearch(); }
+    return true;
   }
 
+  $('.pr-sicon').append(UI.icon('search', 20));
   $('#q').addEventListener('input', onSearch);
   $('#q').addEventListener('keydown', searchKeys);
-  { // the presets fold: closed until asked for, remembered
-    const tg = $('#presetTog'), body = $('#presetBody'), open = ls.get('satf.pr.presets', false);
-    body.hidden = !open; tg.setAttribute('aria-expanded', String(open));
-    tg.addEventListener('click', () => { body.hidden = !body.hidden; tg.setAttribute('aria-expanded', String(!body.hidden)); ls.set('satf.pr.presets', !body.hidden); });
-  }
+  // Your sets' fold, remembered (first time: as the old Presets fold was, since it lived inside it)
+  [['#setsFold', 'satf.pr.sets', ls.get('satf.pr.presets', false)]].forEach(([sel, key, def]) => {
+    const d = $(sel);
+    d.open = !!ls.get(key, def);
+    d.addEventListener('toggle', () => ls.set(key, d.open));
+  });
+  // below 1280px the bar is fixed: the page keeps its height free at the bottom
+  try { new ResizeObserver(() => $('#main').style.setProperty('--abar-h', `${$('#abar').offsetHeight}px`)).observe($('#abar')); } catch (_) {}
+  // the search's edge sweeps once on load and then rests lit (CSS, BUILD rule 13): nothing to pause any more
   $('#start').addEventListener('click', () => { if (!$('#start').disabled) openStart(); });   // the bar's Start opens the window; the quick paths (Ready cards, the search's Enter, Your sets) still create directly
   tip($('#l1'), () => B.sumText || '');
   if (UI.keys && UI.keys.register) {

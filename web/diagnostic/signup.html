@@ -5,24 +5,26 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Your results · SAT Freshman</title>
 <meta name="description" content="Where to send your diagnostic results.">
+<link rel="icon" href="/favicon.ico" sizes="32x32">
 <link rel="icon" href="/assets/mark.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
 <link rel="manifest" href="/manifest.webmanifest">
 <meta name="theme-color" content="#FFFFFF">
 <script src="/assets/head.js"></script>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800;900&family=DM+Mono:wght@400;500&display=swap">
+<link rel="preload" href="/assets/fonts/Geist.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/assets/ui.css">
 <style>
   /* The diagnostic's one gate: the paper is marked, and the results go to a
      name and an address before they are shown. */
-  .gate { max-width: 460px; display: grid; gap: 18px; }
-  .gate .h1 { margin: 6px 0 10px; }
-  .gate label .k { display: block; margin-bottom: 8px; }
+  .gate { max-width: 460px; display: grid; gap: 16px; }
+  .gate .h1 { margin: 0; }
+  .gate .skel.line.lg { width: 60%; }
   .pair { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
   .field[aria-invalid="true"] { box-shadow: inset 0 0 0 1.5px var(--ink); }
-  .go { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; margin-top: 6px; }
+  .go { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; margin-top: 4px; }
+  /* the page is waiting on the email's link: a quiet live dot beside the line that says so */
+  #sentState { display: flex; align-items: baseline; gap: 8px; }
+  #sentState::before { content: ""; flex: none; width: 7px; height: 7px; border-radius: 50%; background: var(--amber); transform: translateY(-1px); }
   @media (max-width: 420px) { .pair { grid-template-columns: 1fr; } }
 </style>
 </head>
@@ -30,26 +32,26 @@
 <header id="bar"></header>
 
 <main class="page" id="main" tabindex="-1">
-  <div class="gate rise" id="wait"><span class="skel line lg" style="width: 60%"></span><span class="skel line"></span></div>
-  <form class="gate rise" id="form" novalidate hidden>
-    <div><span class="k">Diagnostic</span><h1 class="h1">Where should the results go?</h1></div>
+  <div class="gate" id="wait" aria-busy="true"><span class="skel line lg"></span><span class="skel line"></span></div>
+  <form class="gate" id="form" novalidate hidden>
+    <h1 class="h1">Where should the diagnostic results go?</h1>
     <div class="pair">
-      <label><span class="k">First name</span><input class="field" id="first" autocomplete="given-name" required maxlength="60"></label>
-      <label><span class="k">Last name</span><input class="field" id="last" autocomplete="family-name" required maxlength="60"></label>
+      <label><span class="label">First name</span><input class="field" id="first" autocomplete="given-name" required maxlength="60"></label>
+      <label><span class="label">Last name</span><input class="field" id="last" autocomplete="family-name" required maxlength="60"></label>
     </div>
-    <label><span class="k">Email</span><input class="field" id="email" type="email" autocomplete="email" required inputmode="email" spellcheck="false"></label>
+    <label><span class="label">Email</span><input class="field" id="email" type="email" autocomplete="email" required inputmode="email" spellcheck="false"></label>
     <p class="error" id="err" role="alert" hidden></p>
     <div class="go"><button class="pill" type="submit" id="go">See my results</button><span class="note">One email, to confirm it</span></div>
     <p class="note" id="pk" hidden>Or <button type="button" class="quiet" id="pkgo">save with a passkey</button>: no email, and the results open at once.</p>
   </form>
-  <div class="gate rise" id="sent" hidden>
-    <div><span class="k">Diagnostic</span><h1 class="h1">Check your email</h1></div>
+  <div class="gate" id="sent" hidden>
+    <h1 class="h1">Check your email</h1>
     <p id="sentText"></p>
     <p class="note" role="status" id="sentState">This page opens your results as soon as you confirm.</p>
     <div class="go"><button type="button" class="pill" id="pkgo2" hidden>Save with a passkey</button><button type="button" class="quiet" id="again">Use a different email</button></div>
   </div>
-  <div class="gate rise" id="later" hidden>
-    <div><span class="k">Diagnostic</span><h1 class="h1">Finish the test first</h1></div>
+  <div class="gate" id="later" hidden>
+    <h1 class="h1">Finish the diagnostic first</h1>
     <p>Your results are ready once the last module is handed in.</p>
     <div class="go"><a class="pill" href="/diagnostic/">Back to the diagnostic</a></div>
   </div>
@@ -67,7 +69,7 @@
 (() => {
   'use strict';
   const { $ } = UI;
-  UI.shell();
+  UI.shell({ ownPrimary: true });   // the page has its own orange; Up next’s Start goes .btn
   const sid = new URL(location.href).searchParams.get('s');
   if (!sid) { location.replace('/diagnostic/'); return; }
   const report = `/results/report/?id=${encodeURIComponent(sid)}`;

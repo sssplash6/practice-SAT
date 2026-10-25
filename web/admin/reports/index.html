@@ -5,40 +5,41 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="robots" content="noindex, nofollow">
 <title>Reports admin · SAT Freshman</title>
+<link rel="icon" href="/favicon.ico" sizes="32x32">
 <link rel="icon" href="/assets/mark.svg" type="image/svg+xml">
 <link rel="manifest" href="/manifest.webmanifest">
 <meta name="theme-color" content="#FFFFFF">
 <script src="/assets/head.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800;900&family=DM+Mono:wght@400;500&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap">
+<link rel="preload" href="/assets/fonts/Geist.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap">
 <link rel="stylesheet" href="/assets/ui.css">
 <style>
   /* Shell §10, U3, V6, W18, U2: the reports inbox behind SATF_ADMIN_TOKEN. The token is
      asked once and kept in sessionStorage; every call sends it as X-Admin. */
-  .ad { display: grid; grid-template-columns: minmax(0, 1fr); gap: 22px; }
-  .ad-head { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 10px 20px; }
-  .ad-head h1 { font: 800 30px/1.1 var(--font); letter-spacing: -.02em; margin: 0; }
-  .ad-head .meta { font-size: 12.5px; }
+  .ad { display: grid; grid-template-columns: minmax(0, 1fr); gap: 16px; }
+  .ad-head { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 8px 20px; }
+  .ad-head h1 { font: 600 22px/1.2 var(--font); letter-spacing: -.02em; margin: 0; }
   .ad-head .grow { flex: 1 1 auto; }
   .ad .stats { --cols: 5; --cols-phone: 2; }
   .ad-gate { max-width: 420px; display: grid; gap: 12px; }
   .ad-row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; }
   .ad-row .field { flex: 1 1 200px; min-width: 0; }
   .ad-filters { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; }
-  .ad-filters select.field, .ad-filters input.field { width: auto; min-width: 170px; flex: 0 1 220px; height: var(--ctl); font-size: 14.5px; }
+  .ad-filters select.field, .ad-filters input.field { width: auto; min-width: 170px; flex: 0 1 220px; height: var(--ctl); }
   .ad-flag { display: grid; gap: 8px; }
   .ad-sum { font: 500 14.5px/1.35 var(--font); color: var(--ink); }
-  .ad-sub { display: block; margin-top: 2px; font: 500 12px var(--mono); color: var(--soft); }
+  .ad-sub { display: block; margin-top: 2px; font: 500 12.5px var(--font); color: var(--soft); }
   .ad-more { justify-self: start; }
   .ad-msg { font: 400 14.5px/1.5 var(--font); color: var(--ink); }
-  .ad-cols { display: grid; grid-template-columns: minmax(0, 1fr); gap: 18px; }
+  .ad-cols { display: grid; grid-template-columns: minmax(0, 1fr); gap: 16px; }
   .ad-sec { display: grid; grid-template-columns: minmax(0, 1fr); gap: 8px; min-width: 0; }
   .ad-scroll { max-width: 100%; overflow-x: auto; scrollbar-width: none; }
   .ad-fold > summary { cursor: pointer; padding: 6px 0; }
   .ad-fold[open] > summary { margin-bottom: 6px; }
   .ad-sec > .k { margin: 0; }
-  .ad-text { white-space: pre-wrap; font: 400 15px/1.55 var(--font); color: var(--ink); overflow-wrap: anywhere; }
+  .ad-text { white-space: pre-wrap; font: 400 14.5px/1.5 var(--font); color: var(--ink); overflow-wrap: anywhere; }
   .ad-dl { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: 3px 14px; margin: 0;
     font: 400 12.5px/1.5 var(--mono); overflow-wrap: anywhere; }
   .ad-dl dt { color: var(--soft); }
@@ -46,10 +47,11 @@
   .ad-dl ol { margin: 0; padding-left: 18px; }
   .ad-files { display: flex; flex-wrap: wrap; gap: 10px; }
   .ad-files figure { margin: 0; display: grid; gap: 4px; max-width: 100%; }
-  .ad-files img, .ad-files video { display: block; max-width: min(100%, 360px); max-height: 260px; border-radius: var(--radius); background: var(--tile); }
-  .ad-files figcaption { font: 500 12px var(--mono); color: var(--soft); }
-  .aq { display: grid; gap: 12px; padding: 16px 18px; border-radius: var(--radius-card); background: var(--tile); }
+  .ad-files img, .ad-files video { display: block; max-width: min(100%, 360px); max-height: 260px; border-radius: var(--radius); background: var(--well); }
+  .ad-files figcaption { font: 500 12.5px var(--font); color: var(--soft); }
+  .aq { display: grid; gap: 12px; padding: var(--card-pad); border-radius: var(--radius-card); background: var(--raised, var(--paper)); box-shadow: var(--shadow-1, inset 0 0 0 1px var(--line)); }
   .aq-stem { font: 400 17px/1.55 var(--serif); color: var(--ink); white-space: pre-wrap; }
+  .aq-text { margin: 0; padding: 12px 14px; border-radius: var(--radius); background: var(--paper); font: 400 16px/1.6 var(--serif); color: var(--ink); white-space: pre-wrap; }
   .aq-fig { color: var(--ink); overflow-x: auto; }
   .aq-fig svg { max-width: 100%; height: auto; }
   .aq table { border-collapse: collapse; font: 400 14px/1.4 var(--font); }
@@ -57,25 +59,26 @@
   .aq-opts { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
   .aq-opts li { display: grid; grid-template-columns: 30px minmax(0, 1fr); gap: 2px 10px; padding: 8px 10px; border-radius: var(--radius); background: var(--paper); }
   .aq-opts li[data-key] { box-shadow: inset 0 0 0 1.5px var(--amber); background: var(--wash); }
-  .aq-opts b { font: 600 14px var(--mono); }
+  .aq-opts b { font: 600 14px var(--font); }
   .aq-opts .t { font: 400 15.5px/1.45 var(--serif); }
-  .aq-opts .r { grid-column: 2; font: 400 13px/1.4 var(--font); color: var(--soft); }
+  .aq-opts .r { grid-column: 2; font: 400 12.5px/1.45 var(--font); color: var(--soft); }
   .aq-opts li[data-key] .r { color: var(--ink); font-weight: 600; }
   .aq-why { font: 400 15px/1.55 var(--serif); color: var(--ink); }
-  .ad-act { display: grid; gap: 14px; padding: 16px 18px; border-radius: var(--radius-card); box-shadow: inset 0 0 0 1px var(--line); }
+  .ad-act { display: grid; gap: 16px; padding: var(--card-pad); border-radius: var(--radius-card); background: var(--raised, var(--paper)); box-shadow: var(--shadow-1, inset 0 0 0 1px var(--line)); }
   .ad-kids { display: grid; gap: 8px; }
-  .ad-kid { padding: 10px 12px; border-radius: var(--radius); background: var(--tile); font: 400 14px/1.45 var(--font); }
+  .ad-kid { padding: 10px 12px; border-radius: var(--radius); background: var(--well); font: 400 14px/1.45 var(--font); }
   .ad-check { padding: 12px 14px; border-radius: var(--radius); background: var(--wash); display: grid; gap: 6px; font: 400 14.5px/1.5 var(--font); }
-  .ad-check ul { margin: 0; padding-left: 18px; font: 400 12.5px/1.5 var(--mono); }
+  .ad-check ul { margin: 0; padding-left: 18px; font: 400 12.5px/1.5 var(--font); }
   @media (min-width: 980px) { .ad-cols { grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); align-items: start; } }
-  @media (max-width: 759px) { .ad-head h1 { font-size: 24px; } .ad-filters select.field, .ad-filters input.field { flex: 1 1 100%; } }
+  @media (max-width: 759px) { .ad-filters select.field, .ad-filters input.field { flex: 1 1 100%; } }
 </style>
 </head>
 <body data-page="admin">
-<main class="page">
+<main class="page" data-nofold>
   <div class="ad" id="root"></div>
 </main>
 
+<script src="/assets/ui.js"></script>
 <script src="/assets/kit.js"></script>
 <script>
 (() => {
@@ -100,9 +103,9 @@
   }
   const btn = (label, onclick, cls = 'btn sm') => h('button', { type: 'button', class: cls, onclick }, label);
   const badge = (text, cls = '') => h('span', { class: `badge ${cls}`.trim(), text });
-  const pct = x => (x === null || x === undefined ? '—' : `${Math.round(100 * x)}%`);
+  const pct = x => (x === null || x === undefined ? '–' : `${Math.round(100 * x)}%`);
   const bytes = n => (n >= 1048576 ? `${(n / 1048576).toFixed(1)} MB` : `${Math.max(1, Math.round(n / 1024))} KB`);
-  const fmtDay = d => (d ? UI.date(d) : '—');
+  const fmtDay = d => (d ? UI.date(d) : '–');
   const n = (k, word) => `${UI.num(k)} ${word}${k === 1 ? '' : 's'}`;
 
   class Off extends Error {}
@@ -220,11 +223,11 @@
     { key: 'id', label: '#', num: true, render: r => `#${r.id}` },
     { key: 'category_label', label: 'Category', render: r => h('span', {}, r.category_label,
       r.dispute ? h('span', {}, ' ', badge('Dispute', 'ink')) : r.disputed ? h('span', {}, ' ', badge('Not counted', 'soft')) : null) },
-    { key: 'summary', label: 'Summary', render: r => h('span', { class: 'ad-sum' }, r.summary || '—',
+    { key: 'summary', label: 'Summary', render: r => h('span', { class: 'ad-sum' }, r.summary || '–',
       r.children ? h('span', {}, ' ', badge(`+${r.children} me too`)) : null, r.files ? h('span', {}, ' ', badge(`${r.files} file${r.files > 1 ? 's' : ''}`, 'soft')) : null) },
     { key: 'context_chip', label: 'About', render: r => h('span', {}, r.context_chip,
       r.template ? h('span', { class: 'ad-sub', text: `${r.template} · ${r.seed}` }) : h('span', { class: 'ad-sub', text: r.kind })) },
-    { key: 'check', label: 'Check', render: r => r.pending ? 'held till the end' : r.awaiting ? `${r.check} · student deciding` : r.signal || r.check || '—' },
+    { key: 'check', label: 'Check', render: r => r.pending ? 'held till the end' : r.awaiting ? `${r.check} · student deciding` : r.signal || r.check || '–' },
     { key: 'status', label: 'Status', render: r => meta.statuses[r.status] || r.status },
     { key: 'at', label: 'Age', num: true, render: r => UI.relTime(r.at) },
   ];
@@ -266,6 +269,7 @@
     const el = h('div', { class: 'aq' });
     el.append(h('p', { class: 'meta', text: [q.template, `seed ${q.seed}`, q.skill, q.difficulty, q.fmt === 'mcq' ? 'multiple choice' : 'grid-in', q.source_id && `from ${q.source_id}`].filter(Boolean).join(' · ') }));
     if (q.quarantined) el.append(h('p', {}, badge('Stopped serving', 'ink')));
+    if (q.text) el.append(h('p', { class: 'aq-text', text: q.text }));     // an R&W item's passage, read before its question
     el.append(h('p', { class: 'aq-stem', text: q.stem }));
     if (q.figure) { const f = h('div', { class: 'aq-fig' }); f.innerHTML = q.figure; el.append(f); }   // the bank's own SVG
     if (q.table && q.table.length) {
@@ -324,7 +328,7 @@
     const right = h('div', { class: 'ad-sec' });
     left.append(h('p', { class: 'meta', text: [meta.statuses[r.status] || r.status, UI.date(r.at, 'long'), `${r.kind} from ${r.source}`,
       `learner …${r.learner}`, r.parent ? `joined to #${r.parent}` : null].filter(Boolean).join(' · ') }));
-    left.append(h('p', { class: 'ad-sum', text: r.title || '—' }));
+    left.append(h('p', { class: 'ad-sum', text: r.title || '–' }));
     if (r.details) left.append(h('p', { class: 'ad-text', text: r.details }));
     if (r.answer || r.given) left.append(h('p', { class: 'meta', text: [r.answer && `They get: ${r.answer}`, r.given && `They answered: ${r.given}`].filter(Boolean).join(' · ') }));
     if (r.email) left.append(h('p', { class: 'meta' }, 'Reply to: ', h('a', { class: 'link', href: `mailto:${r.email}`, text: r.email })));

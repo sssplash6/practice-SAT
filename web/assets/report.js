@@ -102,52 +102,55 @@ dialog.sheet.rp { max-width: min(560px, calc(100vw - 32px)); }
   dialog.sheet.rp, dialog.sheet.rp[data-size] { inset: 0; margin: 0; width: 100%; max-width: 100%; height: 100dvh; max-height: 100dvh; border-radius: 0; }
   dialog.sheet.rp::before { display: none; }
 }
-.rp .sheet-body { display: grid; gap: 18px; align-content: start; }
-.rp-sec { display: grid; gap: 8px; min-width: 0; }
-.rp-sec > .label, .rp-sec > .help, .rp-sec > .k { margin: 0; }
-.rp-req { font-weight: 500; color: var(--soft); }
-.rp-box { display: grid; gap: 3px; padding: 12px 14px; border-radius: var(--radius); background: var(--tile);
-  font: 400 12.5px/1.55 var(--mono); color: var(--ink); overflow-wrap: anywhere; font-variant-numeric: tabular-nums; }
-.rp-box .rp-skill { font: 600 13px/1.4 var(--font); display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; }
-.rp-box .check { min-height: 34px; font: 500 13.5px/1.35 var(--font); }
-.rp-show { appearance: none; border: 0; background: none; padding: 4px 2px; cursor: pointer; font: 500 13px var(--font); color: var(--soft);
+dialog.sheet.rp .sheet-body { display: grid; gap: 16px; align-content: start; }
+dialog.sheet.rp .rp-sec { display: grid; gap: 8px; min-width: 0; }
+dialog.sheet.rp .rp-sec > .label, dialog.sheet.rp .rp-sec > .help, dialog.sheet.rp .rp-sec > .k { margin: 0; }
+dialog.sheet.rp .rp-req { font-weight: 500; color: var(--soft); }
+dialog.sheet.rp .counter:not(.near, .over) { display: none; }   /* not ui.css's held line: in these gap columns it left ~28px of air under Summary and Details */
+dialog.sheet.rp .rp-box { display: grid; gap: 4px; padding: 12px; border-radius: var(--radius); background: var(--well);
+  font: 400 12.5px/1.5 var(--font); color: var(--ink); overflow-wrap: anywhere; font-variant-numeric: tabular-nums; }
+dialog.sheet.rp .rp-box .rp-skill { font: 600 14px/1.4 var(--font); display: flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; }
+dialog.sheet.rp .rp-box .check { min-height: 34px; font: 500 14px/1.35 var(--font); }
+dialog.sheet.rp .rp-show { appearance: none; border: 0; background: none; padding: 4px 2px; cursor: pointer; font: 500 12.5px var(--font); color: var(--soft);
   text-decoration: underline; text-underline-offset: 3px; }
-.rp-show:hover { color: var(--ink); }
-.rp-dev { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: 2px 12px; margin: 2px 0 4px; }
-.rp-dev dt { color: var(--soft); }
-.rp-dev dd { margin: 0; min-width: 0; }
-.rp-dev ol { margin: 0; padding-left: 18px; }
-.rp-live { display: grid; gap: 10px; padding: 14px 16px; border-radius: 12px; background: var(--wash); }
-.rp-live .pill { justify-self: start; }
-.rp-metoo { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; padding: 12px 14px; border-radius: var(--radius);
+dialog.sheet.rp .rp-show:hover { color: var(--ink); }
+dialog.sheet.rp .rp-dev { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: 2px 12px; margin: 2px 0 4px; }
+dialog.sheet.rp .rp-dev dt { color: var(--soft); }
+dialog.sheet.rp .rp-dev dd { margin: 0; min-width: 0; }
+dialog.sheet.rp .rp-dev ol { margin: 0; padding-left: 18px; }
+dialog.sheet.rp .rp-live { display: grid; gap: 8px; padding: 12px 16px; border-radius: var(--radius-card); background: var(--wash); }
+dialog.sheet.rp .rp-live .pill { justify-self: start; }
+dialog.sheet.rp .rp-metoo { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; padding: 12px; border-radius: var(--radius);
   background: var(--wash); font: 500 14px/1.4 var(--font); color: var(--ink); }
-.rp-metoo > span { flex: 1 1 220px; min-width: 0; }
-.rp-files { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
-.rp-file { display: grid; grid-template-columns: 44px minmax(0, 1fr) auto; align-items: center; gap: 4px 12px; padding: 6px;
-  border-radius: var(--radius); background: var(--tile); }
-.rp-file .th { width: 44px; height: 44px; border-radius: 8px; object-fit: cover; background: var(--tile-2);
-  display: grid; place-items: center; font: 600 10px var(--mono); color: var(--soft); text-transform: uppercase; }
-.rp-file .nm { min-width: 0; font: 500 13.5px/1.3 var(--font); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.rp-file .sz { display: block; font: 500 12px var(--mono); color: var(--soft); }
-.rp-file[data-bad] { background: var(--paper); box-shadow: inset 0 0 0 1px var(--line); }
-.rp-file .why { grid-column: 2 / -1; font: 500 12.5px/1.4 var(--font); color: var(--ink); }
-.rp-drop { border-radius: var(--radius); transition: box-shadow .16s var(--ease), background-color .16s var(--ease); }
-.rp-drop.drag { background: var(--wash); box-shadow: 0 0 0 1.5px var(--amber); }
-.rp-row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; }
-.rp-pv { min-height: 22px; font: 500 14px var(--font); color: var(--soft); }
-.rp-pv .frac { display: inline-flex; flex-direction: column; vertical-align: middle; text-align: center; line-height: 1.05; }
-.rp-pv .fd { border-top: 1.5px solid currentColor; }
-.rp-ans > button { min-width: 52px; justify-content: center; font-family: var(--mono); }
-.rp-out { font: 400 15.5px/1.55 var(--font); color: var(--ink); text-wrap: pretty; }
-.rp-out a, .rp-thanks a { color: inherit; text-underline-offset: 3px; }
-.rp-why { padding: 12px 14px; border-radius: var(--radius); background: var(--tile); font: 400 15px/1.55 var(--serif); color: var(--ink); }
-.rp-acts { display: grid; gap: 8px; justify-items: start; }
-.rp-err { margin: 0; }
+dialog.sheet.rp .rp-metoo > span { flex: 1 1 220px; min-width: 0; }
+dialog.sheet.rp .rp-files { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; }
+dialog.sheet.rp .rp-file { display: grid; grid-template-columns: 44px minmax(0, 1fr) auto; align-items: center; gap: 4px 12px; padding: 4px;
+  border-radius: var(--radius); background: var(--well); }
+dialog.sheet.rp .rp-file .th { width: 44px; height: 44px; border-radius: 8px; object-fit: cover; background: var(--tile-2);
+  display: grid; place-items: center; font: 500 11.5px var(--font); color: var(--soft); }
+dialog.sheet.rp .rp-file .nm { min-width: 0; font: 500 14px/1.3 var(--font); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+dialog.sheet.rp .rp-file .sz { display: block; font: 500 12.5px var(--font); color: var(--soft); font-variant-numeric: tabular-nums; }
+dialog.sheet.rp .rp-file[data-bad] { background: var(--paper); box-shadow: inset 0 0 0 1px var(--line); }
+dialog.sheet.rp .rp-file .why { grid-column: 2 / -1; font: 500 12.5px/1.4 var(--font); color: var(--ink); }
+dialog.sheet.rp .rp-drop { border-radius: var(--radius); transition: box-shadow .16s var(--ease), background-color .16s var(--ease); }
+dialog.sheet.rp .rp-drop.drag { background: var(--wash); box-shadow: 0 0 0 1.5px var(--amber); }
+dialog.sheet.rp .rp-row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; }
+dialog.sheet.rp .rp-pv { min-height: 22px; font: 500 14px var(--font); color: var(--soft); }
+dialog.sheet.rp .rp-pv .frac { display: inline-flex; flex-direction: column; vertical-align: middle; text-align: center; line-height: 1.05; }
+dialog.sheet.rp .rp-pv .fd { border-top: 1.5px solid currentColor; }
+dialog.sheet.rp .rp-ans > button { min-width: 52px; justify-content: center; font-variant-numeric: tabular-nums; }
+dialog.sheet.rp .rp-out { font: 400 14.5px/1.5 var(--font); color: var(--ink); text-wrap: pretty; }
+dialog.sheet.rp .rp-out a, dialog.sheet.rp .rp-thanks a { color: inherit; text-underline-offset: 3px; }
+dialog.sheet.rp .rp-sent { display: flex; align-items: center; gap: 8px; font: 600 16px/1.3 var(--font); color: var(--ink-strong); }
+dialog.sheet.rp .rp-sent > svg { flex: none; color: var(--amber-deep); }
+dialog.sheet.rp .rp-why { padding: 12px; border-radius: var(--radius); background: var(--well); font: 400 14.5px/1.5 var(--serif); color: var(--ink); }
+dialog.sheet.rp .rp-acts { display: grid; gap: 8px; justify-items: start; }
+dialog.sheet.rp .rp-err { margin: 0; }
 .rp-rec { position: fixed; z-index: 90; left: 50%; bottom: calc(20px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%);
-  display: flex; align-items: center; gap: 12px; padding: 6px 6px 6px 16px; border-radius: 999px;
-  background: var(--ink); color: var(--on-ink); box-shadow: var(--shadow-pop); font: 600 14px var(--font); }
-.rp-rec .dot { width: 9px; height: 9px; border-radius: 50%; background: var(--amber); }
-.rp-rec .t { font-family: var(--mono); font-variant-numeric: tabular-nums; }
+  display: flex; align-items: center; gap: 12px; padding: 6px 6px 6px 16px; border-radius: var(--radius-card);
+  background: var(--ink); color: var(--on-ink); box-shadow: var(--shadow-float); font: 600 14px var(--font); }
+.rp-rec .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--amber); }
+.rp-rec .t { font-variant-numeric: tabular-nums; }
 .rp-rec button { min-height: 34px; }
 @media print { .rp-rec { display: none; } }
 `;
@@ -169,7 +172,7 @@ dialog.sheet.rp { max-width: min(560px, calc(100vw - 32px)); }
   doc.addEventListener('click', e => {
     const c = e.target instanceof Element && e.target.closest(
       'button, a[href], summary, [role="button"], [role="tab"], [role="radio"], [role="option"], [role="menuitem"], [role="switch"], input[type="checkbox"], input[type="radio"]');
-    if (c && !c.closest('.rp, .rp-rec')) note({ control: labelOf(c) });
+    if (c && !c.closest('dialog.rp, .rp-rec')) note({ control: labelOf(c) });
   }, true);
   // long codes in a path (share codes, tokens) never leave in the breadcrumb
   const bare = p => p.replace(/\/[A-Za-z0-9:_-]{16,}(?=\/|$)/g, '/…');
@@ -226,7 +229,7 @@ dialog.sheet.rp { max-width: min(560px, calc(100vw - 32px)); }
         dl.append(h('dt', { text: DEVICE_LABEL[k] }), h('dd', {}, v.length
           ? h('ol', {}, v.map(x => h('li', { text: [x.at, x.path, x.control, x.api, x.status].filter(y => y !== undefined && y !== null).join(' · ') })))
           : 'none yet'));
-      } else dl.append(h('dt', { text: DEVICE_LABEL[k] || k }), h('dd', { text: String(v || '—') }));
+      } else dl.append(h('dt', { text: DEVICE_LABEL[k] || k }), h('dd', { text: String(v || '–') }));
     }
     return dl;
   }
@@ -283,7 +286,7 @@ dialog.sheet.rp { max-width: min(560px, calc(100vw - 32px)); }
           if (x.url) URL.revokeObjectURL(x.url);
           draw();
           addBtn.focus();
-        } }, h('span', { 'aria-hidden': 'true', text: '×' }));
+        } }, UI.icon ? UI.icon('x', 14) : h('span', { 'aria-hidden': 'true', text: '×' }));
         return h('li', { class: 'rp-file', 'data-bad': x.err ? '' : null }, th,
           h('span', { class: 'nm', title: x.name }, x.name, h('span', { class: 'sz', text: x.err ? 'not sent' : bytes(x.size) })), rm,
           x.err ? h('span', { class: 'why', text: x.err }) : null);
@@ -366,6 +369,7 @@ dialog.sheet.rp { max-width: min(560px, calc(100vw - 32px)); }
     rec.start(1000);
     recording = rec;
     doc.body.append(bar);
+    if (UI.motion) UI.motion.enter(bar, 'nudge');      // enter moves translate now, so the centred pill keeps its place
     bar.querySelector('button').focus({ preventScroll: true });
     return true;
   }
@@ -715,15 +719,16 @@ dialog.sheet.rp { max-width: min(560px, calc(100vw - 32px)); }
 
     /* ---------- after sending: the check (U3), or thanks */
     function thanks(res, extra = {}) {
-      const p = h('p', { class: 'rp-out rp-thanks' });
-      if (extra.parent) p.append(`Thanks. You’re added to report #${extra.parent}. `);
-      else p.append(`Thanks. Report #${res.id} is in. `);
-      p.append('You’ll see our answer under ', h('a', { href: '/me/settings/#reports' }, 'Settings › Your reports'),
+      // a drawn check and "Report #n is in" lead; where the answer lands sits under it
+      const mark = UI.icon ? UI.icon('check', 20) : null;
+      const lead = h('p', { class: 'rp-sent' }, mark, extra.parent ? `You’re added to report #${extra.parent}` : `Report #${res.id} is in`);
+      const p = h('p', { class: 'rp-out rp-thanks' }, 'Thanks. You’ll see our answer under ', h('a', { href: '/me/settings/#reports' }, 'Settings › Your reports'),
         ', and fixes are listed at ', h('a', { href: '/help/#fixed' }, 'Help › Fixed from your reports'), '.');
-      const out = [p];
+      const out = [lead, p];
       if (extra.live) out.push(h('p', { class: 'help', text: 'Nothing is checked until you hand in. The clock kept running.' }));
       if (extra.disputed) out.push(h('p', { class: 'help', text: 'It doesn’t count against you while it’s checked.' }));
       s.body.replaceChildren(...out);
+      if (mark && UI.fx) UI.fx.check(mark);
       setFoot(closeBtn());
       foot.querySelector('button').focus({ preventScroll: true });
     }

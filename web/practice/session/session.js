@@ -17,8 +17,9 @@
     get(k, d) { try { const v = localStorage.getItem(k); return v === null ? d : JSON.parse(v); } catch (_) { return d; } },
     set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (_) {} },
   };
-  const icon = (name, size = 18) => h('span', { class: 'ic', 'aria-hidden': 'true', html: UI.svg(UI.ICON[name] || UI.ICON.dot, size) });
-  const pct = x => (x === null || x === undefined ? '—' : `${Math.round(x * 100)}%`);
+  // an unknown name draws nothing (it drew an orange dot, which hid typos)
+  const icon = (name, size = 18) => h('span', { class: 'ic', 'aria-hidden': 'true', html: UI.ICON[name] ? UI.svg(UI.ICON[name], size) : '' });
+  const pct = x => (x === null || x === undefined ? '–' : `${Math.round(x * 100)}%`);
   const mmss = ms => UI.mmss(Math.round((ms || 0) / 1000));
   const cap = t => (t ? t[0].toUpperCase() + t.slice(1) : '');
   const plural = (n, one, many) => `${n} ${n === 1 ? one : many || one + 's'}`;
@@ -26,7 +27,7 @@
   const when = iso => { try { return new Date(iso).toLocaleDateString(undefined, { month: 'short', day: 'numeric' }); } catch (_) { return ''; } };
   const day = iso => { try { return new Date(iso).toLocaleDateString(undefined, { month: 'short', day: 'numeric' }); } catch (_) { return ''; } };
   const TIER = { easy: 'Easy', medium: 'Medium', hard: 'Hard' };
-  const topicName = t => (UI.TOPIC[t] || {}).short || t;
+  const topicName = t => (UI.TOPIC[t] || {}).short || (UI.RW_SKILL || {})[t] || t;
   const api = (path, o) => UI.api(path, o);
   const toast = (t, o) => (UI.toast ? UI.toast(t, o) : null);
   // hide_timer and open_explanations are not server prefs (§2.7): this viewer's, in localStorage
@@ -35,7 +36,8 @@
 
   const runHost = $('#run'), view = $('#view');
   let sid = url.get('id');
-  let st = null, run = null, total = null, ending = false, exhausted = false;
+  let st = null, run = null, total = null, asides = 0, ending = false, exhausted = false;
+  const notQ = q => !!q && (q.kind === 'example' || q.kind === 'word');
   let ids = [];                        // qid per slot, in served order
   const answered = new Set();          // qids with an answer on the server
   let frontier = null;                 // a pending POST /next (a skip already asked for it)
@@ -44,6 +46,11 @@
   const counted = [], sent = [];
   let closed = false;
   const challenge = () => st && st.kind === 'challenge';
+  // an R&W set: no Math tools, and its "one like it" is a fresh passage, not new numbers
+  const rw = () => !!st && st.subject === 'rw';
+  // a strict contest (Compete): the runner reports leaving and copying, and the set ends with the spot-check
+  const strict = () => !!(st && st.contest && st.contest.strict && !st.finished);
+  const fresh = () => (rw() ? 'fresh passages' : 'new numbers');
   const endMode = () => st && st.feedback === 'end';
   const drillPath = p => `/drill/${encodeURIComponent(sid)}${p || ''}`;
 
@@ -54,18 +61,21 @@
     view.replaceChildren(h('div', { class: 'ps-state', role: 'alert' }, h('p', { text }),
       h('div', { class: 'acts' }, h('a', { class: 'pill', href: '/practice/', text: 'Back to Practice' }), extra)));
   }
+  // the runner's frame (its 64px bar and its column), so nothing jumps when the set arrives
   function skeleton() {
-    const box = h('div', { class: 'ps-skel', 'aria-busy': 'true', 'aria-label': 'Loading the set' });
-    if (UI.skel) { UI.skel(box, 'lines:3'); for (let k = 0; k < 4; k++) UI.skel(box, { w: '100%', h: 56, r: 12 }); }
-    runHost.replaceChildren(box);
+    const col = h('div', { class: 'ps-skel-col' });
+    if (UI.skel) { UI.skel(col, 'lines:3'); for (let k = 0; k < 4; k++) UI.skel(col, { w: '100%', h: 56, r: 12 }); }
+    runHost.replaceChildren(h('div', { class: 'ps-skel', 'aria-busy': 'true', 'aria-label': 'Loading the set' }, h('div', { class: 'ps-skel-top' }), col));
   }
   async function create(body, suffix = '') {
     try {
       const s = await api('/drill', { method: 'POST', body: Object.assign({ subject: (st && st.subject) || 'math' }, body) });
       location.href = `/practice/session/?id=${encodeURIComponent(s.id)}${suffix}`;
+      return true;                      // the button keeps its spinner while the next page loads
     } catch (e) {
       const d = e && e.detail;
       toast(`Couldn’t start it: ${(d && (d.reason || d.detail)) || e.message}`);
+      return false;
     }
   }
 
@@ -114,7 +124,7 @@
   }
   // until S10's flag endpoint lands, a mark is kept here too (state reads the flags table)
   const localMarks = () => new Set(ls.get(`satf.marks.${sid}`, []));
-  const cellOf = s => ({ status: s.status, flag: !!s.marked || localMarks().has(s.id), note: !!s.has_note, tier: s.difficulty, level: s.level, topic: s.topic,
+  const cellOf = s => ({ n: s.n, aside: notQ(s), status: s.status, flag: !!s.marked || localMarks().has(s.id), note: !!s.has_note, tier: s.difficulty, level: s.level, topic: s.topic,
     topic_name: topicName(s.topic), ms: s.ms || 0, budget_ms: s.budget_ms, conf: s.conf, repair: !!s.repair });
 
   function setTitle() {
@@ -148,7 +158,9 @@
       return state(e.offline ? 'You’re offline. The set will load when you’re back.' : 'That set didn’t load.', [h('button', { type: 'button', class: 'btn', text: 'Try again', onclick: () => location.reload() })]);
     }
     ids = (st.served || []).map(s => s.id);
-    total = st.total ?? null;
+    // a worked example or a word card takes a position but not one of the set's questions
+    asides = (st.served || []).filter(s => notQ(s)).length;
+    total = st.total == null ? null : st.total + asides;
     if (url.get('print')) return printView();
     if (st.finished) return endSet(true);
     start();
@@ -174,6 +186,8 @@
       clock: st.timed ? { secondsLeft: st.seconds_left ?? 0, paused: !!st.paused } : { elapsed: st.elapsed || 0 },
       pausable: !!(can.pause && st.timed && !challenge()), challenge: challenge(), resumed: st.answered > 0,
       prefs, confActive: !!st.conf_active, hideSkill: st.hide_skill ? 'Mix-up' : false, source: 'drill',
+      subject: st.subject || 'math', calc: !rw(), ref: !rw(),          // the calculator and the reference sheet are Math's
+      integrity: strict(),
       workspace: {
         coverTool: !challenge(),
         onHint: can.hint ? async () => api(drillPath('/hint'), { method: 'POST', body: { question_id: ids[run.at] } }) : null,
@@ -183,14 +197,14 @@
         onOwn: (own, meta) => check(run.at, null, Object.assign({}, meta, { own })),
       },
       actions: can.more ? {
-        source: 'drill', session: sid, axes: ['easier', 'harder', 'grid', 'ask'],
+        source: 'drill', session: sid, axes: rw() ? ['easier', 'harder'] : ['easier', 'harder', 'grid', 'ask'],   // R&W has no grid-ins and no "same setup"
         more: (axis, n) => twinAxis(axis, n),
       } : null,
       more: () => moreItems(),
       on: {
         load: (i, how) => load(i, how),
         check: (i, a, meta) => check(i, a, meta),
-        show: (i, it) => { const id = it && it.q && it.q.id; if (id && !ids.includes(id)) commit(i, id); },
+        show: (i, it) => { const id = it && it.q && it.q.id; if (id && !ids.includes(id)) { commit(i, id); if (notQ(it.q)) bump(); } },
         time: (i, ms) => {
           counted[i] = (counted[i] || 0) + Math.max(0, Math.round(ms));
           const add = counted[i] - (sent[i] || 0);
@@ -204,6 +218,8 @@
         marks: (i, m) => { api('/notes', { method: 'POST', body: { session: sid, question_id: ids[i], marks: marksOut(m) }, quiet: true }).catch(() => toast('Highlight not saved. Try again.')); },
         skip: i => { if (i === ids.length - 1) frontier = api(drillPath('/next'), { method: 'POST', body: { skip: true } }); },
         pref: (key, v) => pref(key, v),
+        // strict contest: each leave or copy flags the question on screen (compete.flag, via /spot)
+        integrity: e => { if (strict() && ids[e.at]) UI.need('compete-ui').then(() => api(drillPath('/spot'), { method: 'POST', quiet: true, body: UI.compete.spotBody(ids[e.at], e) })).catch(() => {}); },
         pause: () => api(drillPath('/pause'), { method: 'POST' }),
         resume: () => api(drillPath('/resume'), { method: 'POST' }),
         exit: how => exit(how),
@@ -227,7 +243,8 @@
     const known = ids.indexOf(q.id);
     if (known >= 0 && known !== i) { setTimeout(() => run.go(known, 'jump'), 0); return new Promise(() => {}); }
     ids[i] = q.id;
-    if (r.total !== undefined && r.total !== null && total !== null && r.total > total) grow(r.total);
+    if (notQ(q)) bump();
+    if (r.total !== undefined && r.total !== null && total !== null && r.total + asides > total) grow(r.total + asides);
     return itemOf(await api(drillPath(`/q/${encodeURIComponent(q.id)}`)));
   }
   // a preloaded preview goes into served when it shows (P23)
@@ -235,6 +252,7 @@
     ids[i] = qid;
     api(drillPath('/time'), { method: 'POST', body: { question_id: qid, ms: 0 }, quiet: true }).catch(() => {});
   }
+  function bump() { asides++; if (total !== null) grow(total + 1); }
   function grow(to) {
     if (total === null || !run) return;
     while (total < to) { run.addSlot({}); total++; }
@@ -251,9 +269,10 @@
       const fb = await api(drillPath('/answer'), { method: 'POST', body });
       sent[i] = Math.max(sent[i] || 0, spent);
       if (fb.saved || fb.final !== false) answered.add(qid);
-      if (fb.total !== undefined && fb.total !== null) grow(fb.total);
+      if (fb.total !== undefined && fb.total !== null) grow(fb.total + asides);
       // G9 / P23: the next question came with the verdict; render it now, commit it when shown
-      if (fb.next && i === ids.length - 1 && (total === null || i + 1 < total) && run) run.preload(i + 1, itemOf({ question: fb.next, marks: [], strikes: [] }));
+      // a worked example is not preloaded: it comes with its key from /next then /q
+      if (fb.next && !notQ(fb.next) && i === ids.length - 1 && (total === null || i + 1 < total) && run) run.preload(i + 1, itemOf({ question: fb.next, marks: [], strikes: [] }));
       return fb;
     } catch (e) {
       const d = e && e.detail;
@@ -264,9 +283,9 @@
 
   async function more(body) {
     const r = await api(drillPath('/more'), { method: 'POST', body });
-    if (r.total !== undefined && r.total !== null) grow(r.total);
+    if (r.total !== undefined && r.total !== null) grow(r.total + asides);
     if (run) run.discardPreload(run.at + 1);
-    toast(body.ladder ? 'Next: Learn this type, step by step' : 'Next: one like this, with new numbers');
+    toast(body.ladder ? 'Next: Learn this type, step by step' : rw() ? 'Next: another one like it' : 'Next: one like this, with new numbers');
     return r;
   }
   function twinAxis(axis, n = 1) {
@@ -299,11 +318,11 @@
   function copySheet(kind) {
     const retake = kind === 'retake';
     const clean = h('input', { type: 'checkbox', checked: true });
-    UI.sheet({ title: retake ? 'Start over with these exact questions?' : 'Rematch: same types, new numbers?', size: 's', body: b => {
+    UI.sheet({ title: retake ? 'Retake these exact questions?' : `Rematch: same types, ${fresh()}?`, size: 's', body: b => {
       b.append(h('p', { text: retake ? 'Starts a new copy of this set with the same questions. It tests memory as much as skill. This one stays in your history.'
-        : 'The same types in the same order, with new numbers. We compare the two question by question.' }));
+        : `The same types in the same order, with ${fresh()}. We compare the two question by question.` }));
       b.append(h('label', { class: 'check' }, clean, retake ? 'Start clean: hide my highlights, notes, strikes and rules on this copy' : 'Start clean: hide my notes and highlights on this copy'));
-    }, actions: [{ label: 'Cancel', quiet: true }, { label: retake ? 'Start over' : 'Rematch', primary: true,
+    }, actions: [{ label: 'Cancel', quiet: true }, { label: retake ? 'Retake' : 'Rematch', primary: true,
       onClick: () => { create({ [kind]: sid, clean: clean.checked, source: retake ? 'builder' : 'rematch' }); } }] });
   }
   async function share() {
@@ -315,8 +334,8 @@
   function moreItems() {
     if (challenge()) return [];
     return [
-      { label: 'Rematch: same types, new numbers', onClick: () => copySheet('rematch') },
-      { label: 'Start over with these exact questions (tests memory)', onClick: () => copySheet('retake') },
+      { label: `Rematch: same types, ${fresh()}`, onClick: () => copySheet('rematch') },
+      { label: 'Retake these exact questions (tests memory)', onClick: () => copySheet('retake') },
       { label: 'New set, same settings', onClick: () => create({ again: sid, source: 'builder' }) },
       { label: 'Share this set', onClick: () => share() },
       { label: 'Print this set', onClick: () => { location.href = `/practice/session/?id=${encodeURIComponent(sid)}&print=1`; } },
@@ -335,6 +354,14 @@
   async function endSet(already) {
     if (ending) return;
     ending = true;
+    // a strict contest's spot-check comes before its finish (the finish freezes the points)
+    if (!already && strict()) {
+      try {
+        await UI.need('compete-ui');
+        if (run) { try { run.destroy(); } catch (_) {} run = null; }
+        await UI.compete.spotCheck(runHost, body => api(drillPath('/confirm'), { method: 'POST', body }));
+      } catch (_) {}
+    }
     let r;
     try { r = await api(drillPath('/finish'), { method: 'POST' }); }
     catch (e) {
@@ -355,10 +382,13 @@
   const has = x => x !== null && x !== undefined;
   const FOLDS = 'satf.summary.open';               // the breakdowns this viewer keeps open
   const keptOpen = () => { const v = ls.get(FOLDS, []); return Array.isArray(v) ? v : []; };
-  function fold(key, title, fill) {
+  // filled at once so it opens in height (details.fold); a chart (lazy) fills on its first open, so it measures a
+  // visible box, and opens without the height motion (its content arrives after the open)
+  function fold(key, title, fill, lazy) {
     const body = h('div', { class: 'sm-fold-b' });
-    const d = h('details', { class: 'sm-fold' }, h('summary', { text: title }), body);
+    const d = h('details', { class: lazy ? 'sm-fold' : 'fold sm-fold' }, h('summary', { text: title }), body);
     let filled = false;
+    if (!lazy) { filled = true; fill(body); }
     d.addEventListener('toggle', () => {
       if (d.open && !filled) { filled = true; fill(body); }   // on first open, so a chart measures a visible box
       const keep = new Set(keptOpen());
@@ -376,30 +406,61 @@
     const qs = (r.questions || []).map(q => (lm.has(q.id) ? Object.assign({}, q, { marked: true }) : q));
     const endless = st.total === null || st.total === undefined;
     const n = qs.length;
-    const col = h('div', { class: 'psum' });
+    // from 1100 wide two columns: the score, what changed and the next step stay put (sticky); Review and the breakdowns scroll
+    const lead = h('div', { class: 'sm-lead', 'data-m': 'stagger' }), main = h('div', { class: 'sm-main' });
+    const col = h('div', { class: 'psum' }, lead, main);
     view.hidden = false;
-    view.replaceChildren(h('header', { class: 'sm-top' },
-      h('a', { class: 'sm-exit', href: '/practice/', 'aria-label': 'Exit' }, icon('x', 20), h('span', { text: 'Exit' })),
-      h('span', { class: 'sm-title', text: setTitle() })), col);
+    view.replaceChildren(h('header', { class: 'sm-top', 'data-scrolled': '' },
+      h('a', { class: 'rn-exit', href: '/practice/', 'aria-label': 'Exit' }, icon('x', 20), h('span', { class: 'rn-exit-l', text: 'Exit' })),
+      h('h1', { class: 'sm-title', text: setTitle() })), col);
 
-    // 1. The score, then what changed
-    const head = h('section', { class: 'sm-head', 'aria-label': 'Your score' },
-      h('p', { class: 'k', text: `Set complete · ${when(st.finished || new Date().toISOString())}` }));
+    // 1. The score card, the page's one hero: the figure, the first-try line, the set's own strip (the receipt), time
+    // and pace as two figures; what changed sits under it, flat
+    const head = h('section', { class: 'sm-head card hero', 'aria-label': 'Your score' });
     const answeredN = qs.filter(q => !['unanswered', 'skipped'].includes(q.status)).length;
     const acc = r.accuracy, before = r.before_accuracy, P = x => Math.round(x * 100);
-    // first-try accuracy is said only when it adds something: it moved, or it differs from the score
+    // first-try accuracy is said only when it adds something: it moved, or it differs from the score; a clean set says so in fact
     const move = has(acc) && has(before) ? (P(acc) > P(before) ? `up from ${pct(before)}` : P(acc) < P(before) ? `down from ${pct(before)}` : 'same as before') : null;
     const same = !endless && n && has(acc) && P(acc) === P(r.right / n);
     const lines = [];
     if (has(acc) && (move || (!endless && !same))) lines.push(h('span', { class: 'acc' }, `${pct(acc)} first try`, move ? h('span', { class: 'was', text: ` · ${move}` }) : null));
-    head.append(h('div', { class: 'sm-score' }, h('span', { class: 'num', text: `${r.right} / ${endless ? answeredN : n}` }),
-      lines.length ? h('span', { class: 'accs' }, lines) : null));
+    else if (!endless && n && r.right === n && has(acc) && P(acc) === 100) lines.push(h('span', { class: 'acc', text: `${n} of ${n}, first try` }));
+    // the first view of a finished set (once per set on this device): the score rolls up, the receipt fills, the drawing fills in
+    const seen = [].concat(ls.get('satf.sumseen', []) || []);
+    const firstView = !seen.includes(sid);
+    if (firstView) ls.set('satf.sumseen', [...seen, sid].slice(-60));
+    const score = `${r.right} / ${endless ? answeredN : n}`;
+    const num = h('span', { class: 'num hero-num', text: firstView ? score.replace(/^\d+/, '0') : score });
+    const art = h('span', { class: 'sm-art' + (firstView ? '' : ' seen') });
+    head.append(h('div', { class: 'sm-score' }, num, lines.length ? h('span', { class: 'accs' }, lines) : null, art));
+    if (firstView) setTimeout(() => (UI.roll ? UI.roll(num, score) : (num.textContent = score)), 120);
+    if (n && UI.strip) {
+      const rc = UI.strip(head, qs.map(q => ({ status: q.status, flag: q.marked || undefined, note: q.has_note || undefined })), { fit: true });
+      if (firstView && rc && rc.el) { rc.el.classList.add('fill-in'); [...rc.el.children].forEach((x, i) => x.style.setProperty('--i', i)); }
+    }
+    // the set-done drawing: the four domains' mastery as the mark's corners (UI.spotArt 'done'), from the shell's
+    // fresh copy (the set just moved them); drawn again only when the numbers change
+    if (UI.spotArt && UI.onShell) {
+      if (firstView || !(UI.shellData && UI.shellData())) { try { UI.refresh(); } catch (_) {} }
+      let drawn = '';
+      UI.onShell(d => {
+        const ms = d && d.me && d.me.domains && d.me.domains[rw() ? 'rw' : 'math'];   // the set's own subject's four domains
+        if (!Array.isArray(ms) || !art.isConnected) return;
+        const v = ms.slice(0, 4).map(x => Math.min(1, (+x || 0) / (UI.STRONG || 0.8)));
+        if (JSON.stringify(v) === drawn) return;
+        drawn = JSON.stringify(v);
+        art.innerHTML = UI.spotArt('done', v);
+      });
+    }
     const spent = qs.reduce((s, q) => s + (q.ms || 0), 0);
     const budgetAvg = n ? qs.reduce((s, q) => s + (q.budget_ms || 0), 0) / n : 0;
-    const meta = [spent ? `${mmss(spent)} in all` : null, r.avg_ms ? `${mmss(r.avg_ms)} a question${budgetAvg ? `, pace ${mmss(budgetAvg)}` : ''}` : null,
+    const pairs = [spent ? [mmss(spent), 'in all'] : null, r.avg_ms ? [mmss(r.avg_ms), `a question${budgetAvg ? ` · pace ${mmss(budgetAvg)}` : ''}`] : null].filter(Boolean);
+    if (pairs.length) head.append(h('div', { class: 'sm-pairs' }, pairs.map(([v, k]) => h('span', { class: 'sm-pair' }, h('b', { class: 'num', text: v }), h('span', { text: k })))));
+    const meta = [`Set complete ${when(st.finished || new Date().toISOString())}`,
       r.guessed_right ? `${r.guessed_right} right but guessed` : null, r.helped ? `${r.helped} right with help` : null].filter(Boolean);
-    if (meta.length) head.append(h('p', { class: 'sm-meta', text: meta.join(' · ') }));
+    head.append(h('p', { class: 'sm-meta', text: meta.join(' · ') }));
     if (exhausted || r.exhausted) head.append(h('p', { class: 'sm-note', text: 'We ran out of unseen questions for these settings. Widen the levels or skills to keep going.' }));
+    lead.append(head);
     const changed = h('ul', { class: 'sm-changed', 'aria-label': 'What changed' });
     (r.topics || []).forEach(t => {
       const a = UI.masteryWord(t.before, 1), b = UI.masteryWord(t.after, t.asked);
@@ -409,24 +470,23 @@
     const opened = r.opened || [], fixed = r.closed || [];
     if (opened.length || fixed.length) changed.append(h('li', {}, h('span'), h('span', { class: 'nm', text: 'Mistakes' }),
       h('span', { class: 'w' }, [opened.length ? h('b', { text: `${opened.length} new` }) : null, opened.length && fixed.length ? ' · ' : null, fixed.length ? `${fixed.length} fixed` : null])));
-    if (changed.children.length) head.append(changed);
-    col.append(head);
+    if (changed.children.length) lead.append(changed);
 
     // 2. Next
-    col.append(nextActions(r, qs));
+    lead.append(nextActions(r, qs));
 
     // 3. Review
-    if (n) col.append(reviewList(qs));
+    if (n) main.append(reviewList(qs));
 
     // 4. The breakdowns, each one tap away
     const folds = h('div', { class: 'sm-folds' });
     if (opened.length || fixed.length) folds.append(fold('mistakes', 'Mistakes', b => {
       if (opened.length) b.append(h('div', { class: 'sm-mist' }, h('h3', { text: 'New' }), h('ul', { class: 'sm-new' }, opened.map(o => h('li', {},
         h('span', { text: cap(o.label) }), h('span', { class: 's', text: topicName(o.topic) }),
-        h('button', { type: 'button', class: 'btn sm', text: 'Fix now', onclick: () => create({ pool: 'mistakes', templates: [o.template], source: 'mistakes' }) }))))));
+        h('button', { type: 'button', class: 'btn sm', text: 'Fix now', onclick: e => { const b = e.currentTarget; b.setAttribute('aria-busy', 'true'); create({ pool: 'mistakes', templates: [o.template], source: 'mistakes' }).then(ok => { if (!ok) b.removeAttribute('aria-busy'); }); } }))))));
       if (fixed.length) b.append(h('div', { class: 'sm-mist' }, h('h3', { text: 'Fixed' }), h('ul', {}, fixed.map(o => h('li', {},
         icon('check', 16), h('span', { text: cap(o.label) }), h('span', { class: 's', text: topicName(o.topic) }))))));
-      b.append(h('a', { class: 'link', href: '/mistakes/', text: 'Still open from before · see Mistakes' }));
+      b.append(h('a', { class: 'link', href: '/mistakes/', text: 'Older open mistakes' }));
     }));
 
     const byType = r.by_type || [];
@@ -481,12 +541,12 @@
           { unit: 's', labels: 'label', height: 160, label: 'Time per question', budget: true });
         } catch (e) { console.error(e); }
       }
-    }));
+    }, true));
 
     // ("More from this set" was removed at the user's word, 2026-09-28: "remove this fully")
-    if ((r.slots || []).length) folds.append(fold('then', 'Then → Now', b => b.append(h('ul', { class: 'sm-lines' }, r.slots.map(s => h('li', {}, h('b', { text: `Q${s.n} · ${s.type_name || ''}: ` }),
+    if ((r.slots || []).length) folds.append(fold('then', 'Then and now', b => b.append(h('ul', { class: 'sm-lines' }, r.slots.map(s => h('li', {}, h('b', { text: `Q${s.n} · ${s.type_name || ''}: ` }),
       `${cap(s.then.status)}${s.then.ms ? ` ${mmss(s.then.ms)}` : ''} → ${cap(s.now.status || '')}${s.now.ms ? ` ${mmss(s.now.ms)}` : ''}${s.change ? ` · ${s.change}` : ''}`))))));
-    if (folds.children.length) col.append(folds);
+    if (folds.children.length) main.append(folds);
   }
 
   function reviewList(qs) {
@@ -499,19 +559,27 @@
     // the cell carries status, mark and note; the row adds the type, difficulty, time and the mistake named
     const rows = qs.map((q, i) => {
       const b = h('button', { type: 'button', class: 'sm-rl-row', 'data-status': q.status },
-        UI.cell(q.status, q.n ?? i + 1, { static: true, flag: q.marked || null, note: q.has_note || null, tier: q.difficulty, repair: q.repair || null }),
+        UI.cell(q.status, q.n ?? i + 1, { static: true, size: 'sm', flag: q.marked || null, note: q.has_note || null, tier: q.difficulty, repair: q.repair || null }),
         h('span', { class: 'ty' }, UI.glyph ? UI.glyph(q.topic) : null, h('span', { text: q.type_name || topicName(q.topic) })),
-        h('span', { class: 'd', text: `${TIER[q.difficulty] || ''}${q.level ? ` · L${q.level}` : ''}` }),
+        h('span', { class: 'd', text: TIER[q.difficulty] || '' }),   // no level: internal calibration stays off screen (the user)
         h('span', { class: 't', text: q.ms ? mmss(q.ms) : '' }),
         h('span', { class: 'm', text: q.mistake ? cap(q.mistake) : '' }));
       b.addEventListener('click', () => openReview(qs, i));
       return b;
     });
     const list = h('div', { class: 'sm-rl', role: 'list' }, rows);
+    rows.forEach((r, i) => { r.dataset.key = String(qs[i].id || i); });
     const opts = Object.keys(F).map(k => ({ value: k, label: LABEL[k], n: qs.filter(F[k]).length })).filter(o => o.value === 'all' || o.n);
-    const segHost = h('div', { class: 'sm-filter' });
     const apply = v => { rows.forEach((row, i) => { row.hidden = !F[v](qs[i]); }); };
-    if (opts.some(o => o.value !== 'all' && o.n < qs.length)) UI.chips(segHost, opts, { value: 'all', label: 'Show', onChange: v => apply(v) });
+    // one "Show" menu (it was a row of up to eight chips over the list)
+    let showB = null, cur = 'all';
+    if (opts.some(o => o.value !== 'all' && o.n < qs.length)) {
+      const lab = h('span', { text: 'Show: All' });
+      showB = h('button', { type: 'button', class: 'btn sm sm-show', 'aria-haspopup': 'menu', 'aria-expanded': 'false' }, lab);   // ui.css draws the caret
+      // the rows that stay close their gaps, the ones that come back nudge in (UI.glide)
+      showB.addEventListener('click', () => UI.menu(showB, opts.map(o => ({ label: o.label, meta: String(o.n), radio: 'show', checked: cur === o.value, close: true,
+        onClick: () => { cur = o.value; lab.textContent = `Show: ${o.label}`; if (UI.glide) UI.glide(list, () => apply(cur)); else apply(cur); } })), { label: 'Show' }));
+    }
     const incorrect = qs.filter(F.incorrect);
     const markAll = incorrect.length ? h('button', { type: 'button', class: 'quiet', text: 'Mark all incorrect for review', onclick: async e => {
       const btn = e.currentTarget;
@@ -522,7 +590,7 @@
         toast(`${plural(incorrect.length, 'question')} marked for review`);
       } catch (_) { toast('Not saved. Try again.'); btn.disabled = false; }
     } }) : null;
-    return h('section', { class: 'sm-sec' }, h('div', { class: 'sm-rl-head' }, h('h2', { text: 'Review' }), markAll), segHost, list);
+    return h('section', { class: 'sm-sec' }, h('div', { class: 'sm-rl-head' }, h('h2', { text: 'Review' }), h('div', { class: 'sm-rl-acts' }, showB, markAll)), list);
   }
   function openReview(qs, at) {
     if (!UI.review) return;
@@ -539,28 +607,34 @@
   }
   // the one next step as the pill, the two most used beside it, everything else under More
   function nextActions(r, qs) {
-    const box = h('section', { class: 'sm-next', 'aria-label': 'Next' });
+    const box = h('section', { class: 'sm-next', 'aria-label': 'Next', 'data-m-now': '' });   // the page entry never delays the primary
     const misses = qs.filter(q => q.status === 'incorrect' || q.status === 'mixed').length;
     if (challenge()) {
-      box.append(h('a', { class: 'pill', href: '/compete/', text: 'Board' }));
+      box.append(h('a', { class: 'pill', href: '/challenge/', text: 'Board' }));
       if (r.contest && r.contest.rank) box.append(h('span', { class: 'sm-rank', text: `#${r.contest.rank} of ${r.contest.of || r.contest.n || '?'}` }));
     } else if (r.next_set) {
       const ns = r.next_set;   // its title already counts the questions: one twin each
-      box.append(h('button', { type: 'button', class: 'pill', title: plural(ns.count, 'question'), onclick: () => create(ns.body) }, `${ns.title} · ≈ ${ns.minutes} min`));
+      box.append(h('button', { type: 'button', class: 'pill', title: plural(ns.count, 'question'), onclick: e => { const b = e.currentTarget; b.setAttribute('aria-busy', 'true'); create(ns.body).then(ok => { if (!ok) b.removeAttribute('aria-busy'); }); } }, `${ns.title} · ≈ ${ns.minutes} min`));
     } else if (r.next && (r.next.topics || []).length) {
       box.append(h('button', { type: 'button', class: 'pill', title: `${r.next.topics.map(topicName).join(' · ')} · ${r.next.count || 10} questions`,
-        onclick: () => create({ topics: r.next.topics, count: r.next.count || 10, source: 'coach' }) }, 'Keep going'));
+        onclick: e => { const b = e.currentTarget; b.setAttribute('aria-busy', 'true'); create({ topics: r.next.topics, count: r.next.count || 10, source: 'coach', subject: r.next.subject || 'math' }).then(ok => { if (!ok) b.removeAttribute('aria-busy'); }); } }, 'Keep going'));
     }
-    const btn = (label, onClick, href) => box.append(href ? h('a', { class: 'btn', href, text: label }) : h('button', { type: 'button', class: 'btn', text: label, onclick: onClick }));
-    if (!challenge()) {
-      if (misses && !r.next_set) btn(`Fix my ${plural(misses, 'miss', 'misses')}`, () => create({ from_session: sid, source: 'result' }));
-      btn('Same settings, new questions', () => create({ again: sid, source: 'builder' }));
-    }
-    if (r.words_due) btn(`SAT words · ${r.words_due} due`, null, '/words/');
+    // one pill, one button (Same settings when it is free), the rest in More: a phone shows the pill, then one row
+    const pill = box.querySelector('.pill');
+    const fixIt = misses ? { label: `Fix my ${plural(misses, 'miss', 'misses')}`, onClick: () => create({ from_session: sid, source: 'result' }) } : null;
+    const sameIt = challenge() ? null : { label: 'Same settings, new questions', onClick: () => create({ again: sid, source: 'builder' }) };
+    const wordsIt = r.words_due ? { label: `SAT words · ${r.words_due} due`, href: '/words/' } : null;
+    const cands = [challenge() || r.next_set ? null : fixIt, sameIt, wordsIt].filter(Boolean);
+    const busy = fn => e => { const b = e.currentTarget; b.setAttribute('aria-busy', 'true'); Promise.resolve(fn()).then(ok => { if (!ok) b.removeAttribute('aria-busy'); }); };
+    const put = (it, cls) => box.append(it.href ? h('a', { class: cls, href: it.href, text: it.label }) : h('button', { type: 'button', class: cls, text: it.label, onclick: busy(it.onClick) }));
+    if (!pill && cands.length) put(cands.shift(), 'pill');
+    const second = cands.includes(sameIt) ? sameIt : cands[0];
+    if (second) { put(second, 'btn'); cands.splice(cands.indexOf(second), 1); }
     const items = challenge() ? [] : [
+      ...cands,
       // the pill is already the fix set, so the plain fix waits here: one count, said once
-      misses && r.next_set ? { label: `Fix my ${plural(misses, 'miss', 'misses')}`, onClick: () => create({ from_session: sid, source: 'result' }) } : null,
-      { label: 'Rematch · same types, new numbers', onClick: () => copySheet('rematch') },
+      misses && r.next_set ? fixIt : null,
+      { label: `Rematch: same types, ${fresh()}`, onClick: () => copySheet('rematch') },
       { label: 'Rematch in 3 days', onClick: async () => { try { await api(drillPath('/rematch-due'), { method: 'POST', body: { days: 3 } }); toast('It comes back in Up next in 3 days'); } catch (_) { toast('Not saved. Try again.'); } } },
       { label: 'Retake these exact questions (tests memory)', onClick: () => create({ retake: sid, clean: true, source: 'builder' }) },
       { label: 'Share this set', onClick: () => share() },
@@ -568,7 +642,7 @@
       { separator: true },
     ].filter(Boolean);
     items.push({ label: 'Back to Practice', href: '/practice/' });
-    const moreB = h('button', { type: 'button', class: 'btn sm-more', 'aria-haspopup': 'menu' }, h('span', { text: 'More' }), icon('chev', 16));
+    const moreB = h('button', { type: 'button', class: 'btn sm-more', 'aria-haspopup': 'menu', 'aria-expanded': 'false' }, h('span', { text: 'More' }));   // ui.css draws the caret
     UI.menu.bind(moreB, items, { label: 'More ways to go on' });
     box.append(moreB);
     return box;
@@ -578,7 +652,7 @@
   async function printView() {
     runHost.replaceChildren();
     view.hidden = false;
-    const wrap = h('div', { class: 'pv' });
+    const wrap = h('div', { class: 'pv-page' });
     const status = h('p', { class: 'meta', text: 'Getting every question…' });
     view.replaceChildren(wrap);
     wrap.append(status);
@@ -596,7 +670,11 @@
     for (const id of ids) { try { details.push(await api(drillPath(`/q/${encodeURIComponent(id)}`))); } catch (_) {} }
     const withKey = details.some(d => d.feedback);
     const include = h('input', { type: 'checkbox', checked: true, id: 'pvKey' });
-    include.addEventListener('change', () => wrap.classList.toggle('nokey', !include.checked));
+    const keyed = [];                  // the answered questions' workspaces: unticked, they print as a clean worksheet
+    include.addEventListener('change', () => {
+      wrap.classList.toggle('nokey', !include.checked);
+      keyed.forEach(w => w.setHidden(!include.checked));
+    });
     const ctl = h('div', { class: 'pv-ctl' },
       h('label', { class: 'check', for: 'pvKey' }, include, 'Include answer key and explanations'),
       h('button', { type: 'button', class: 'pill', text: 'Print / Save as PDF', onclick: () => window.print() }),
@@ -612,15 +690,16 @@
       qsBox.append(box);
       try {
         const fb = d.feedback ? Object.assign({ given: d.given }, d.feedback) : null;
-        UI.workspace(box, q, fb ? { mode: 'review', fb, bar: false, toolbar: false, head: false, prefs: { open_explanations: true, option_reasons: true } }
+        const w = UI.workspace(box, q, fb ? { mode: 'review', fb, bar: false, toolbar: false, head: false, prefs: { open_explanations: true, option_reasons: true } }
           : { mode: 'exam', bar: false, toolbar: false, head: false, pad: false });
+        if (fb) keyed.push(w);
       } catch (e) { box.append(h('p', { text: q.stem || '' })); }
     });
     const key = h('div', { class: 'pv-key' }, h('h2', { text: 'Answer key and explanations' }));
     if (withKey) {
       key.append(h('ol', {}, details.map(d => {
         const f = d.feedback;
-        if (!f) return h('li', { text: '—' });
+        if (!f) return h('li', { text: '–' });
         const L = 'ABCD';
         return h('li', {}, h('b', { text: `Answer: ${f.answer}${f.accepted && f.accepted.length ? ` (also ${f.accepted.join(', ')})` : ''}` }),
           f.rationale ? h('p', { text: f.rationale }) : null,

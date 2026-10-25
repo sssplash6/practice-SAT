@@ -28,7 +28,13 @@
   const today = () => isoOf(new Date());
   const D = (s, style) => UI.date(s, style || 'short');
   const dayName = s => `${DOW[dow(s)]} ${D(s)}`;
-  const tn = slug => (UI.TOPIC[slug] || {}).short || String(slug || '').replace(/_/g, ' ');
+  // a run of days said once: "Oct 13–19", "Oct 27–Nov 2"
+  const span = (a, b) => (a.slice(0, 7) === b.slice(0, 7) ? `${D(a)}–${+b.slice(8)}` : `${D(a)}–${D(b)}`);
+  const tn = slug => UI.topicName(slug);
+  // what is on Focus: Math domains and skills, then R&W domains
+  const onFocus = c => Object.entries(c.focus || {}).filter(([, v]) => (v.state || v) === 'focus').map(([k]) => k)
+    .concat(Object.entries(c.skills || {}).filter(([, v]) => (v.state || v) === 'focus').map(([k]) => tn(k)),
+      Object.entries(c.rw_focus || {}).filter(([, v]) => v === 'focus').map(([k]) => k));
   const pl = (n, w, ws) => `${UI.num(n)} ${n === 1 ? w : (ws || w + 's')}`;
   const enc = encodeURIComponent;
   const api = (p, o) => UI.api(p, o);
@@ -46,15 +52,17 @@
   const CB = 'https://satsuite.collegeboard.org/sat/registration';
   // the server's week themes still carry slugs and ISO dates: say them as words
   const TASKNAME = { fix: 'Fix mistakes', recheck: 'Warm-up', focus: 'Focus set', test: 'Test', learn: 'Learn it', check: 'Check', habit: 'Habit task', pace: 'Pace set', map: 'Map', sweep: 'Sweep', words: 'Words', custom: 'Own task', extra: 'Extra set' };
+  const skill = m => UI.TOPIC[m] || /^rw_[a-z_]+$/.test(m);        // a Math or an R&W skill's slug
   const pretty = text => String(text || '').replace(/\bpt:[\w-]+/g, 'your own task')
-    .replace(/\b(\d{4}-\d{2}-\d{2}):([a-z]+)(?::([a-z_]+))?/g, (m, dd, k, tp) => `${DOW[dow(dd)]}’s ${TASKNAME[k] || k}${tp && UI.TOPIC[tp] ? ` on ${UI.TOPIC[tp].short}` : ''}`)
-    .replace(/\b\d{4}-\d{2}-\d{2}\b/g, m => DOW[dow(m)]).replace(/\b[a-z]+(?:_[a-z]+)*\b/g, m => UI.TOPIC[m] ? UI.TOPIC[m].short : m);
+    .replace(/\b(\d{4}-\d{2}-\d{2}):([a-z]+)(?::([a-z_]+))?/g, (m, dd, k, tp) => `${DOW[dow(dd)]}’s ${tp === 'rw' ? 'R&W ' : ''}${TASKNAME[k] || k}${tp && skill(tp) ? ` on ${tn(tp)}` : ''}`)
+    .replace(/\b\d{4}-\d{2}-\d{2}\b/g, m => DOW[dow(m)]).replace(/\b[a-z]+(?:_[a-z]+)*\b/g, m => skill(m) ? tn(m) : m);
   const rowErr = text => Object.assign(new Error(text), { rowText: text });
   const btn = (label, cls, onClick, attrs = {}) => h('button', { type: 'button', class: cls, onclick: onClick, ...attrs }, label);
   async function busy(b, fn) {
     if (b) b.setAttribute('aria-busy', 'true');
     try { return await fn(); } finally { if (b) b.removeAttribute('aria-busy'); }
   }
+  const ic = (n, size) => UI.icon(n, size);      // the shared icon set (ui.js)
   const dayOf = date => (S.d && S.d.days || []).find(x => x.date === date) || null;
   const questionTask = t => UI.taskQuestion(t);
   const fine = () => { try { return matchMedia('(hover: hover) and (pointer: fine)').matches; } catch (_) { return false; } };
@@ -71,13 +79,15 @@
   function go(params) { url(params, true); route(); scrollTo(0, 0); }
   addEventListener('popstate', () => { Q = new URLSearchParams(location.search); S.tab = Q.get('tab') || 'plan'; S.sel = Q.get('day') || S.sel; route(); });
 
+  // the page's shape while /api/plan loads: the title, the day and the month in main, the status beside them
   function skeleton() {
     root.replaceChildren(
       h('div', { class: 'pl-title' }, h('span', { class: 'skel line lg', style: 'width: 240px' })),
-      h('div', { class: 'pl-tiles' }, [0, 1, 2, 3].map(() => h('div', { class: 'stat' }, h('span', { class: 'skel line', style: 'width: 60%' }), h('span', { class: 'skel num' })))),
-      h('div', { class: 'pl-cols' }, h('div', { class: 'pl-stack' }, h('div', { class: 'card' }, h('span', { class: 'skel', style: 'height: 180px' })),
-        h('div', { class: 'card' }, h('span', { class: 'skel', style: 'height: 90px' }))), h('div', { class: 'card' }, h('span', { class: 'skel', style: 'height: 180px' }))),
-      h('div', { class: 'card pl-sec' }, h('div', { class: 'pl-skcal' }, Array.from({ length: 35 }, () => h('span', { class: 'skel' })))));
+      h('div', { class: 'twocol pl-sec' },
+        h('div', { class: 'pl-main' }, h('div', { class: 'card' }, h('span', { class: 'skel', style: 'height: 180px' })),
+          h('div', { class: 'card' }, h('div', { class: 'pl-skcal' }, Array.from({ length: 35 }, () => h('span', { class: 'skel' }))))),
+        h('aside', { class: 'twocol-side' }, h('div', { class: 'card' }, h('span', { class: 'skel', style: 'height: 220px' })),
+          h('div', { class: 'card' }, h('span', { class: 'skel', style: 'height: 120px' })))));
   }
   function failPage() {
     root.replaceChildren();
@@ -94,7 +104,8 @@
   // after a change: the whole payload again, so tiles, week and stats agree
   let reloading = null;
   function reload() {
-    reloading = api('/plan').then(d => { S.d = d; route(true); return d; }).catch(() => null).finally(() => { reloading = null; });
+    const settle = () => Promise.race([R.settle, new Promise(res => setTimeout(res, 1000))]);
+    reloading = api('/plan').then(d => settle().then(() => { S.d = d; route(true); return d; })).catch(() => null).finally(() => { reloading = null; });
     return reloading;
   }
 
@@ -128,6 +139,7 @@
         route();
         scrollTo(0, 0);
         focusStart();
+        if (how === 'create') madeEntrance();
       },
       onExit: () => { history.length > 1 && doc.referrer.includes(location.host) ? history.back() : go({}); },
       step2url: (step, replace) => url({ ...(Q.get('edit') ? { edit: Q.get('edit') } : { setup: 1 }), step }, !replace),
@@ -146,40 +158,48 @@
     doc.title = 'Plan · SAT Freshman';
     const withData = !!(pc && pc.current !== null && pc.current !== undefined) || (UI.answered || 0) >= 30;
     const draft = d.draft && d.draft.fields ? d.draft : null;
-    const left = h('div', {},
-      h('p', { class: 'k', text: 'Study plan' }),
-      h('h1', { text: 'A plan to your score, one day at a time' }),
-      h('p', { class: 'lead', text: 'Mistakes first, then your focus skills, and a fresh test each week, up to exam day.' }));
-    const acts = h('div', { class: 'row' });
-    if (withData && pc) {
-      const use = btn('Use this plan', 'pill', () => busy(use, () => useProposal(pc)));
-      acts.append(use, btn('Adjust…', 'btn', () => go({ setup: 1, step: 1, from: 'proposal' })));
-    } else acts.append(btn(draft ? 'Start over' : 'Create my plan', draft ? 'btn' : 'pill', () => go({ setup: 1, step: 1, ...(draft ? { fresh: 1 } : {}) })));
-    left.append(acts, h('p', { class: 'meta', text: 'About a minute · free · as many plans as you like' }));
-    const right = withData && pv ? readyPanel(pc, pv) : miniTiles(pc);
-    const hero = h('section', { class: 'pl-hero', 'aria-label': 'Study plan' }, left, right);
-    if (draft) hero.append(draftTile(draft));
-    const parts = [hero];
-    const pts = pv && pv.points && pv.points.math;
-    if (withData && pts) parts.push(numbersCard(pts));
-    // the most telling part first: what a day holds (numbered, it's a preview)
-    if (!withData && pv && pv.sample_day && pv.sample_day.tasks.length) {
-      const c = h('section', { class: 'card pl-sec' }, h('div', { class: 'card-head' }, h('h2', { text: 'A day in your plan' }),
-        pv.sample_day.date && h('span', { class: 'meta', text: `day 1 · ${D(pv.sample_day.date, 'long')}` })));
+    // the header: the page's name and its one primary; a draft's Continue comes first
+    const acts = h('div', { class: 'row pl-acts' });
+    const use = cls => { const b = btn('Use this plan', cls, () => busy(b, () => useProposal(pc))); return b; };
+    if (draft) {
+      acts.append(btn('Continue', 'pill', () => go({ setup: 1, step: draft.step || 1 })));
+      if (withData && pc) acts.append(use('btn'), btn('Adjust…', 'quiet', () => go({ setup: 1, step: 1, from: 'proposal' })));
+      else acts.append(btn('Start over', 'quiet', () => go({ setup: 1, step: 1, fresh: 1 })));
+    } else if (withData && pc) acts.append(use('pill'), btn('Adjust…', 'btn', () => go({ setup: 1, step: 1, from: 'proposal' })));
+    else acts.append(btn('Create my plan', 'pill', () => go({ setup: 1, step: 1 })));
+    const head = h('header', { class: 'pl-title pl-hero', 'aria-label': 'Study plan' },
+      h('div', {}, h('h1', { class: 'h1', text: 'Study plan' }), draft ? draftLine(draft) : null), acts);
+    // main: the plan you'd get (or what a day holds), then your plans; beside it, your numbers and how it works
+    const main = [];
+    if (withData && pv) main.push(readyPanel(pc, pv));
+    else if (pv && pv.sample_day && pv.sample_day.tasks.length) {
+      const c = h('section', { class: 'card hero' }, h('div', { class: 'card-head' }, h('h2', { text: 'A day in your plan' }),
+        pv.sample_day.date && h('span', { class: 'meta', text: `Day 1 · ${D(pv.sample_day.date, 'long')}` })));
       const list = h('div', { class: 'trows' });
       pv.sample_day.tasks.forEach((t, i) => UI.taskRow(list, t, { readonly: true, n: i + 1 }));
       c.append(list);
-      parts.push(c);
+      main.push(c);
     }
-    parts.push(howItWorks(), bankStats(d.bank || {}));
-    if ((d.plans || []).length) parts.push(plansCard(d.plans, null));
-    root.replaceChildren(...parts);
+    if ((d.plans || []).length) main.push(plansCard(d.plans, null));
+    const side = [];
+    const pts = pv && pv.points && pv.points.math;
+    if (withData && pts) side.push(numbersCard(pts));
+    if (!(withData && pv)) side.push(miniTiles(pc));
+    side.push(howItWorks(d.bank || {}));
+    const land = h('div', { class: 'pl-land' }, head, main.length
+      ? h('div', { class: 'twocol pl-sec' }, h('div', { class: 'pl-main' }, main), h('aside', { class: 'twocol-side', 'aria-label': 'About your plan' }, side))
+      : h('div', { class: 'pl-main pl-sec' }, side));
+    head.setAttribute('data-m-now', '');
+    entry(land);
+    root.replaceChildren(land);
   }
   function planLine(c) {
     const days = c.days.split('').map((x, i) => x === '1' ? DOW[i] : null).filter(Boolean);
-    const focus = Object.entries(c.focus || {}).filter(([, v]) => (v.state || v) === 'focus').map(([k]) => k)
-      .concat(Object.entries(c.skills || {}).filter(([, v]) => (v.state || v) === 'focus').map(([k]) => tn(k)));
-    return [D(c.exam_date), c.current !== null && c.current !== undefined ? `${c.current} → ${c.target}` : `? → ${c.target}`,
+    const focus = onFocus(c);
+    const known = v => v !== null && v !== undefined;
+    // the total when the plan has both targets (each start measured or typed), else Math alone
+    const from = c.rw_target ? (known(c.current) && known(c.rw_current) ? c.current + c.rw_current : '?') : known(c.current) ? c.current : '?';
+    return [D(c.exam_date), `${from} → ${c.rw_target ? c.target + c.rw_target : c.target}`,
       `${c.minutes} min × ${days.length === 5 && c.days === '1111100' ? 'Mon–Fri' : days.join(', ')}`, testsLabel(c),
       focus.length ? `Focus ${focus.join(', ')}` : null].filter(Boolean).join(' · ');
   }
@@ -188,44 +208,48 @@
     const size = c.test_size === 'section' ? 'section' : 'module';
     return c.tests === 'weekly' ? `${size} weekly${c.test_day !== null && c.test_day !== undefined ? ` · ${DOW[c.test_day]}` : ''}` : c.tests === 'twice' ? `${size} twice a week` : `${size} every study day`;
   }
+  // the plan you'd get: its settings, the month and day 1 side by side
   function readyPanel(pc, pv) {
-    const box = h('div', { class: 'pl-ready' }, h('p', { class: 'k', text: 'Your plan, ready' }), h('p', { class: 'line-t', text: planLine(pc) }));
+    const box = h('section', { class: 'card hero pl-ready', 'aria-label': 'Your plan, ready' },
+      h('div', { class: 'card-head' }, h('h2', { text: 'Your plan, ready' }), h('span', { class: 'meta', text: planLine(pc) })));
+    const body = h('div', { class: 'pl-ready-b' });
     const cal = h('div');
-    box.append(cal);
+    body.append(cal);
     const rows = (pv.calendar || []).map(x => ({ day: x.date, kind: x.kind, minutes: x.minutes, phase: x.phase }));
     if (UI.calendar && rows.length) UI.calendar(cal, { look: 'plan', compact: true, plan: rows, legend: false,
       marks: { start: today(), end: pc.exam_date, exam: pc.exam_date, today: today() }, min: today(), max: pc.exam_date });
     if (pv.sample_day && pv.sample_day.tasks.length) {
       const list = h('div', { class: 'trows' });
       pv.sample_day.tasks.slice(0, 5).forEach((t, i) => UI.taskRow(list, t, { readonly: true, compact: true, n: i + 1 }));
-      box.append(h('p', { class: 'k', text: `Day 1 · ${D(pv.sample_day.date, 'long')}` }), list);
+      body.append(h('div', {}, h('p', { class: 'k', text: `Day 1 · ${D(pv.sample_day.date, 'long')}` }), list));
     }
+    box.append(body);
     return box;
   }
   function miniTiles(pc) {
     const sh = (UI.shellData && UI.shellData()) || {};
     const open = sh.mistakes && typeof sh.mistakes === 'object' ? sh.mistakes.open : sh.mistakes;
     const box = h('div', { class: 'pl-mini' });
-    const now = pc && pc.current;
-    // no score yet: the tile is the way to one
-    if (now) UI.tile(box, { label: 'Math now', value: now, sub: 'your starting point' });
-    else box.append(h('a', { class: 'stat pl-find', href: '/tests/' }, h('span', { class: 'stat-k', text: 'Math score' }), h('span', { class: 'pl-find-t', text: 'Find it in 30 min ›' })));
+    const m = pc && pc.current, r = pc && pc.rw_current;
+    // the total when both sections have a start, else the one there is; no score yet: the tile is the way to one
+    if (m && r) UI.tile(box, { label: 'Score now', value: m + r, sub: `R&W ${r} · Math ${m}` });
+    else if (m || r) UI.tile(box, { label: m ? 'Math now' : 'R&W now', value: m || r, sub: 'your starting point' });
+    else UI.tile(box, { label: 'Score', value: null, missing: 'Find it in 30 min', href: '/tests/' });
     if (pc && pc.exam_date) UI.tile(box, { label: 'Next SAT', value: D(pc.exam_date), sub: `${pl(diff(today(), pc.exam_date), 'day')}` });
     if (open) UI.tile(box, { label: 'Open mistakes', value: open, href: '/review/' });
     return box;
   }
-  function draftTile(draft) {
+  // a draft in the builder, said under the title; Discard asks first
+  function draftLine(draft) {
     const f = draft.fields || {};
     const bits = [`Draft · step ${draft.step || 1} of 4`, f.exam_date && D(f.exam_date), f.target && `${f.current || '?'} → ${f.target}`].filter(Boolean);
-    const box = h('div', { class: 'pl-draft' }, h('p', { text: bits.join(' · ') }));
-    const cont = btn('Continue', 'pill sm', () => go({ setup: 1, step: draft.step || 1 }));
-    const discard = btn('Discard', 'quiet', () => {
-      box.replaceChildren(h('p', { text: 'Discard draft?' }),
+    const line = h('p', { class: 'meta pl-draft' }, h('span', { text: bits.join(' · ') }));
+    line.append(btn('Discard', 'quiet', () => {
+      line.replaceChildren(h('span', { text: 'Discard draft?' }),
         btn('Discard', 'btn sm ink', async e => busy(e.currentTarget, async () => { await api('/plan/draft', { method: 'DELETE' }); S.d.draft = null; landing(); })),
-        btn('Keep', 'quiet', () => box.replaceWith(draftTile(draft))));
-    });
-    box.append(cont, discard);
-    return box;
+        btn('Keep', 'quiet', () => line.replaceWith(draftLine(draft))));
+    }));
+    return line;
   }
   function numbersCard(pts) {
     const top = (pts.skills || []).slice().sort((a, b) => (b.v || 0) - (a.v || 0)).slice(0, 3).map(s => tn(s.topic));
@@ -233,22 +257,18 @@
     const lines = [pts.total ? `≈ +${Math.round(pts.total)} on the table${top.length ? ` · ${top.join(', ')}` : ''}` : null,
       route && route.m1 !== null && route.m1 !== undefined ? `First modules about ${Math.round(route.m1 * 100)}% · 14 of 22 routes up` : null].filter(Boolean);
     if (!lines.length) return h('span', { hidden: true });
-    return h('section', { class: 'card pl-sec' }, h('div', { class: 'card-head' }, h('h2', { text: 'Your numbers' })),
+    return h('section', { class: 'card' }, h('div', { class: 'card-head' }, h('h2', { text: 'Your numbers' })),
       lines.map(t => h('p', { class: 'line-t', text: t })));
   }
-  // what the plan draws on, as one quiet line of numbers
-  function bankStats(b) {
+  // how it works and what it draws on: one paragraph, folded to its first words (ui.js fold)
+  function howItWorks(b) {
     const w = b.words || {};
-    const bits = [`${UI.num(b.templates || 386)} question types`, `${b.topics || 19} skills`, 'a new section every sitting', 'every wrong answer named',
-      w.known ? `≈ ${UI.num(w.known)} SAT words you know` : 'SAT words and transitions'];
-    return h('div', { class: 'pl-sec pl-bank', role: 'note', 'aria-label': 'What the plan draws on' }, bits.join(' · '));
-  }
-  function howItWorks() {
-    const step = (n, t, p) => h('li', {}, h('span', { class: 'num-c', text: String(n) }), h('span', {}, h('b', { text: t }), ` · ${p}`));
-    return h('section', { class: 'pl-how pl-sec', 'aria-label': 'How it works' }, h('ol', {},
-      step(1, 'Four questions', 'your score, target and date, time, focus'),
-      step(2, 'Every day planned', 'to exam day, harder and timed near the end'),
-      step(3, 'It keeps up', 'skip, move or add; miss a day and it redraws')));
+    const bank = [`${UI.num(b.templates || 386)} question types`, `${b.topics || 19} skills`, 'a new section every sitting', 'every wrong answer named',
+      w.known ? `≈ ${UI.num(w.known)} SAT words you know` : 'SAT words and transitions'].join(' · ');
+    return h('p', { class: 'help pl-how' }, 'How the plan works. Four questions: your score, target and date, time, focus. ',
+      'Every day is planned to exam day: mistakes first, then your focus skills, and a fresh test each week, harder and timed near the end. ',
+      'It keeps up: skip, move or add, and a missed day redraws it. About a minute to make, as many plans as you like. ',
+      `It draws on ${bank}.`);
   }
   async function useProposal(pc) {
     try {
@@ -259,11 +279,22 @@
       UI.toast(`Plan made · ${pl(r.stats.study_days_total, 'study day')} to ${D(r.active.cfg.exam_date)}`);
       route();
       focusStart();
-      if (!UI.reduced || !UI.reduced()) root.querySelectorAll('.cal-d[data-kind]').forEach((c, i) => c.animate &&
-        c.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 160, delay: Math.min(240, i * 6), fill: 'backwards' }));
+      madeEntrance();
     } catch (e) { UI.toast(e.status === 422 ? e.message : 'Couldn’t make the plan. Try again.'); }
   }
+  // a plan just made: the day's card rises 8px, the month's weeks fade in 30ms apart (both create paths)
+  function madeEntrance() {
+    if (!UI.motion || UI.motion.off()) return;
+    if (R.day) UI.motion.enter(R.day, 'rise');
+    root.querySelectorAll('#week .cal-row').forEach((row, i) => row.querySelectorAll('.cal-d').forEach(c => UI.motion.enter(c, 'fade', { delay: Math.min(i, 6) * 30 })));
+  }
 
+  // the page entry (kit's data-m="stagger"): once per visit, on the first blocks drawn; later redraws are marked done
+  function entry(...hosts) {
+    const first = !doc.body.hasAttribute('data-pl-in');
+    doc.body.setAttribute('data-pl-in', '');
+    hosts.forEach(x => { x.setAttribute('data-m', 'stagger'); if (!first) x.setAttribute('data-m-done', ''); });
+  }
   // after a create: Start today, or the day itself on a rest day
   function focusStart() {
     const el = R.start || R.day;
@@ -275,7 +306,7 @@
   /* ------------------------------------------------------------ the plan view */
   function titleOf() {
     const a = S.d.active, c = a.cfg;
-    const total = c.rw_target && c.rw_current !== null && c.rw_current !== undefined ? c.target + c.rw_target : null;
+    const total = c.rw_target ? c.target + c.rw_target : null;
     const auto = !a.name || /^Plan for \d{4}-\d{2}-\d{2}$/.test(a.name);
     return auto ? `${D(c.exam_date)} · ${total || c.target}` : a.name;
   }
@@ -285,10 +316,12 @@
     if (!S.sel || !dayOf(S.sel)) S.sel = dayOf(t) ? t : t < a.start ? a.start : c.exam_date;
     doc.title = `${titleOf()} · Plan · SAT Freshman`;
     const had = keep && R.shell && R.shell.isConnected;
+    if (!had) { S.phOpen = {}; S.bSeen = new Set(); S.fig = {}; }   // open phases, banners shown, figures: kept through a redraw, not across plans
+    R.rolls = [];
     const scrollY = window.scrollY;
     const focusId = doc.activeElement && doc.activeElement.closest && doc.activeElement.closest('[data-task]') ? doc.activeElement.closest('[data-task]').dataset.task : null;
-    const title = titleRow();
-    R.tiles = h('div', { class: 'pl-tiles' });
+    // the status (days to exam, score, plan done, this week): beside the day from 1280px, under it below that
+    R.tiles = h('section', { class: 'card pl-tiles', 'aria-label': 'Plan status' });
     R.banners = h('div', { class: 'pl-banners' });
     R.upd = h('p', { class: 'meta', role: 'status', hidden: !S.stale || null, text: 'Updating…' });
     R.pPlan = h('div', { class: 'pl-panel' }); R.pProg = h('div', { class: 'pl-panel' }); R.pPlans = h('div', { class: 'pl-panel' });
@@ -299,17 +332,34 @@
       { id: 'plans', label: 'Plans', panel: R.pPlans, n: (d.plans || []).length > 1 ? d.plans.length : null }].filter(x => !(x.id === 'plans' && Q.get('view'))),
     { value: S.tab, label: 'Plan views', onChange: id => { S.tab = id; url(paramsNow(), true); drawTab(); } });
     R.thumb = h('div', { class: 'pl-thumb' });
-    R.shell = h('div', {}, R.upd, title, R.tiles, R.banners, bar, R.pPlan, R.pProg, R.pPlans, R.print, R.thumb, R.live);
+    R.shell = h('div', { class: 'pl-view' }, R.upd, titleRow(bar), R.banners, R.pPlan, R.pProg, R.pPlans, R.print, R.thumb, R.live);
     root.replaceChildren(R.shell);
     const seen = Object.fromEntries(Object.entries(ls.get('satf.plan.seen', {})).filter(([, v]) => v === t));
     if (seen[S.sel] !== t) { seen[S.sel] = t; ls.set('satf.plan.seen', seen); }
     drawTiles(); drawBanners(); drawPlanTab(); drawTab();
+    // the status figures a change moved (a tick, a save) roll to their new value once they are on the page
+    R.rolls.forEach(([el, from, to]) => { el.textContent = from; UI.roll(el, to); });
+    R.rolls = [];
     if (had) {
       scrollTo(0, scrollY);
       const back = focusId && root.querySelector(`[data-task="${CSS.escape(focusId)}"] button`);
       if (back) back.focus({ preventScroll: true });
-    }
+    } else if (!S.hashed) { S.hashed = true; toHash(); }
   }
+  // /plan/#today and /plan/#week (the Plan tab's hold menu): the page draws after load, so the jump is ours
+  function toHash() {
+    const id = location.hash.slice(1);
+    if ((id !== 'today' && id !== 'week') || !S.d || !S.d.active || S.readonly || !R.tabs) return;
+    if (S.tab !== 'plan') { S.tab = 'plan'; R.tabs.set('plan', true); url(paramsNow()); drawTab(); }
+    if (S.sel !== today() && dayOf(today())) pick(today());
+    const el = doc.getElementById(id);
+    if (!el) return;
+    el.scrollIntoView({ block: 'start' });
+    const hd = el.querySelector('h2') || el;
+    if (!hd.hasAttribute('tabindex')) hd.tabIndex = -1;
+    hd.focus({ preventScroll: true });
+  }
+  addEventListener('hashchange', toHash);
   function paramsNow() {
     const p = {};
     if (S.tab !== 'plan') p.tab = S.tab;
@@ -322,24 +372,23 @@
     if (S.tab === 'plans') drawPlansTab();
     drawThumb();
   }
-  function titleRow() {
+  // one row: the plan's name, the three tabs, Edit and the menu; under it the plan's settings in a line
+  function titleRow(bar) {
     const a = S.d.active, c = a.cfg;
     const days = c.days.split('').filter(x => x === '1').length;
-    const focus = Object.entries(c.focus || {}).filter(([, v]) => (v.state || v) === 'focus').map(([k]) => k)
-      .concat(Object.entries(c.skills || {}).filter(([, v]) => (v.state || v) === 'focus').map(([k]) => tn(k)));
+    const focus = onFocus(c);
     const sub = [`${days} ${days === 1 ? 'day' : 'days'}`, `${c.minutes} min`, testsLabel(c), focus.length ? `Focus ${focus.join(', ')}` : null].filter(Boolean).join(' · ');
-    const total = c.rw_target && c.rw_current !== null && c.rw_current !== undefined;
-    const left = h('div', {}, h('h1', { text: titleOf(), title: total ? `Math ${c.target} · ${sub}` : sub }),   // the plan's settings in a line: a tooltip, the Edit link has the rest
-     
-      S.shared ? h('p', { class: 'pl-shared', text: 'Shared plan · view only' }) : null);
-    const right = h('div', { class: 'row' });
+    const total = !!c.rw_target;
+    const right = h('div', { class: 'row pl-acts' });
     if (!S.readonly) {
       right.append(h('a', { class: 'quiet', href: `/plan/?edit=${enc(a.id)}&step=1`, text: 'Edit' }));
-      const more = h('button', { type: 'button', class: 'btn sm icon', 'aria-label': 'Plan menu', 'aria-haspopup': 'menu', html: '<svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="6" cy="12" r="1.6" fill="currentColor"/><circle cx="12" cy="12" r="1.6" fill="currentColor"/><circle cx="18" cy="12" r="1.6" fill="currentColor"/></svg>' });
+      const more = h('button', { type: 'button', class: 'ibtn', 'aria-label': 'Plan menu', 'aria-haspopup': 'menu' }, ic('more', 20));
       more.addEventListener('click', () => UI.menu(more, planMenu(), { label: 'Plan' }));
       right.append(more);
     }
-    return h('header', { class: 'pl-title' }, left, right);
+    return h('header', { class: 'pl-title pl-head' }, h('div', { class: 'pl-name' }, h('h1', { class: 'h1', text: titleOf() }), right),
+      h('p', { class: 'meta pl-set', text: total ? `R&W ${c.rw_target} · Math ${c.target} · ${sub}` : sub }),
+      S.shared ? h('p', { class: 'pl-shared', text: 'Shared plan · view only' }) : null, bar);
   }
   function planMenu() {
     const a = S.d.active;
@@ -382,10 +431,26 @@
     return out;
   }
 
-  /* ---- stat tiles (3b, L13, L16, L21) */
+  /* ---- the status block (3b, L13, L16, L21): four tiles, each a figure and one line; the rest of a tile one tap away */
   const smooth = () => (UI.reduced && UI.reduced() ? 'auto' : 'smooth');
-  // a whole-tile tap target behind the tile's text, so a link or button in the tile is its own
+  // a whole-row tap target behind the row's text, so a link or button in the row is its own
   const tap = (label, on) => h('button', { type: 'button', class: 'pl-tap', 'aria-label': label, onclick: on });
+  const sub = (text, cls) => h('p', { class: `stat-sub${cls ? ` ${cls}` : ''}`, text });
+  // a tile's details: a popover by the tile (its lines also print, .print-only); none when there is nothing to say
+  function detailTap(label, lines, acts) {
+    if (!lines.length && !acts.length) return null;
+    const b = tap(label, () => UI.pop(b, (p, res) => h('div', { class: 'pl-det' }, lines.map(x => h('p', { text: x })),
+      acts.length ? h('div', { class: 'pl-links' }, acts.map(f => f(res))) : null), { label }));
+    b.setAttribute('aria-haspopup', 'dialog');
+    return b;
+  }
+  // a figure that changed since the last draw of this plan is queued to roll (never on a first draw)
+  function fig(key, el) {
+    const to = el.textContent, from = S.fig && S.fig[key];
+    if (S.fig) S.fig[key] = to;
+    if (from !== undefined && from !== to && UI.roll && R.rolls) R.rolls.push([el, from, to]);
+    return el;
+  }
   function drawTiles() {
     const d = S.d, a = d.active, c = a.cfg, st = d.stats, t = today();
     const days = d.days;
@@ -394,17 +459,20 @@
     const testsLeft = ahead.filter(x => x.kind === 'test').length;
     const left = diff(t, c.exam_date);
     const toCal = () => R.cal && R.cal.scrollIntoView({ behavior: smooth(), block: 'start' });
-    // 1 days to exam, with the time against the work left
-    const t1 = h('div', { class: 'stat pl-tile print-keep' },
-      tap(`${d.state === 'after' ? `SAT was ${D(c.exam_date, 'long')}` : `${left} days to the SAT`}; show the calendar`, toCal));
-    t1.append(h('span', { class: 'stat-k', text: 'Days to exam' }),
-      h('span', { class: 'pl-big', text: d.state === 'exam' ? 'SAT today' : d.state === 'after' ? 'Done' : String(left) }),
-      h('p', { class: 'stat-sub', text: d.state === 'eve' ? 'SAT tomorrow' : d.state === 'after' ? `SAT was ${D(c.exam_date, 'long')}` : `to ${D(c.exam_date, 'long')}` }),
-      studyLeft ? h('p', { class: 'stat-sub', text: [pl(studyLeft, 'study day'), testsLeft ? pl(testsLeft, 'test') + ' left' : null].filter(Boolean).join(' · ') }) : '');
+    // 1 days to exam: the date and the study days; the tests left and whether the work fits in its details
     const w = d.workload || {};
-    if (w.fits === true && w.spare_h) t1.append(h('p', { class: 'stat-sub', text: `fits with ${UI.num(w.spare_h)} h to spare` }));
+    const more1 = [testsLeft ? `${pl(testsLeft, 'test')} left` : null, w.fits === true && w.spare_h ? `Fits with ${UI.num(w.spare_h)} h to spare` : null].filter(Boolean);
+    const said1 = d.state === 'after' ? `SAT was ${D(c.exam_date, 'long')}` : `${left} days to the SAT`;
+    const t1 = h('div', { class: 'pl-tile print-keep' }, more1.length
+      ? detailTap(`${said1}: details`, more1, [res => btn('Show the calendar', 'quiet', () => { res.close(); toCal(); })])
+      : tap(`${said1}; show the calendar`, toCal));
+    const when = d.state === 'eve' ? 'SAT tomorrow' : d.state === 'after' ? `SAT was ${D(c.exam_date, 'long')}` : `to ${D(c.exam_date, 'long')}`;
+    t1.append(h('span', { class: 'stat-k' }, 'Days to exam', more1.length ? ic('caret_down', 14) : null),
+      h('span', { class: 'pl-big', text: d.state === 'exam' ? 'SAT today' : d.state === 'after' ? 'Done' : String(left) }),
+      sub([when, studyLeft ? pl(studyLeft, 'study day') : null].filter(Boolean).join(' · ')), ...more1.map(x => sub(x, 'print-only')));
+    // short of time, or not booked: said on the tile, with its one action
     if (w.fits === false) {
-      t1.append(h('p', { class: 'stat-sub ink', text: `short by ${UI.num(w.short_h)} h` }));
+      t1.append(sub(`Short by ${UI.num(w.short_h)} h`, 'ink'));
       if (w.suggest_minutes && !S.readonly) {
         const set = btn(`Set ${w.suggest_minutes} min`, 'btn sm', () => busy(set, () => patchPlan({ minutes: w.suggest_minutes }, `Days set to ${w.suggest_minutes} min`, undoOf({ minutes: 1 }))));
         t1.append(set);
@@ -414,169 +482,184 @@
     if (!c.booked && d.state !== 'after' && !S.readonly && !(d.banners || []).some(b => b.kind === 'registration')) {
       const sd = (UI.SAT_DATES || []).find(x => (x.date || x.day) === c.exam_date) || {};
       const by = sd.register_by && sd.register_by >= t ? sd.register_by : sd.late_by && sd.late_by >= t ? sd.late_by : null;
-      t1.append(h('a', { class: 'quiet pl-reg', href: CB, target: '_blank', rel: 'noopener', text: by ? `Register by ${D(by)} ›` : 'Not booked · register ›' }));
+      t1.append(h('a', { class: 'quiet pl-reg', href: CB, target: '_blank', rel: 'noopener', text: by ? `Register by ${D(by)}` : 'Not booked · register' }));
     }
-    // 2 score: the range, one status line, the next step
-    const t2 = h('div', { class: 'stat pl-score' });
-    const start = c.current, target = c.target;
-    t2.append(h('span', { class: 'stat-k', text: 'Score' }),
-      h('span', { class: 'pl-big' }, start === null || start === undefined ? '?' : String(start), h('small', { text: ' → ' }), String(target)));
-    const after = d.state === 'after';
-    const v = d.verdict && d.verdict.math;
-    const links = h('div', { class: 'pl-links' });
-    if (start === null || start === undefined) t2.append(h('p', { class: 'stat-sub', text: 'measured on day 1' }));
-    else {
-      const track = h('div', { class: 'pl-track', role: 'img', 'aria-label': `From ${start} to ${target} on a 200 to 800 scale` });
-      const x = val => `${(Math.max(200, Math.min(800, val)) - 200) / 6}%`;
+    // 2 score: the total now (the same range every page shows) toward its target, the start as context, then
+    // R&W and Math a line each (College Board's order); projections, weekly need and levers in its details
+    const t2 = h('div', { class: 'pl-tile pl-score' });
+    const sc = d.score || {}, after = d.state === 'after';
+    const has = v => v !== null && v !== undefined;
+    const tot = sc.total || {}, whole = has(tot.target);
+    const start = whole ? tot.start : c.current, target = whole ? tot.target : c.target;
+    const now = whole ? tot.now : sc.math && sc.math.now;          // the server's 20-point range
+    const known = now && has(now.low);
+    const lines2 = [], acts2 = [];
+    const head2 = [h('span', { class: 'stat-k', text: whole ? 'Total score' : 'Score' }),
+      known ? h('span', { class: 'pl-big', 'data-long': whole ? '' : null }, `${now.low}–${now.high}`)
+        : h('span', { class: 'pl-big', 'data-long': whole ? '' : null }, has(start) ? String(start) : '?', h('span', { class: 'pl-to', text: ' → ' }), String(target))];
+    if (known) head2.push(sub([`target ${target}`, has(start) ? `started ${start}` : null].filter(Boolean).join(' · ')));
+    const [lo, hi] = whole ? [400, 1600] : [200, 800];
+    const x = val => `${(Math.max(lo, Math.min(hi, val)) - lo) / (hi - lo) * 100}%`;
+    if (has(start)) {
+      const track = h('div', { class: 'pl-track', role: 'img', 'aria-label': `${known ? `Now ${now.low} to ${now.high}, from` : 'From'} ${start} to ${target} on a ${lo} to ${hi} scale` });
       track.append(h('b', { class: 'gap', style: `left: ${x(start)}; width: calc(${x(target)} - ${x(start)})` }));
-      const mean = d.pace && d.pace.math && d.pace.math.mean;
-      if (mean) track.append(h('b', { class: 'band', style: `left: ${x(mean - 35)}; width: calc(${x(mean + 35)} - ${x(mean - 35)})` }));
+      if (known) track.append(h('b', { class: 'band', style: `left: ${x(now.low)}; width: calc(${x(now.high)} - ${x(now.low)})` }));
       track.append(h('i', { style: `left: ${x(start)}` }), h('i', { class: 't', style: `left: ${x(target)}` }));
-      t2.append(track);
-      const p = d.pace && d.pace.math;
-      const togo = target - start > 0 ? `+${target - start} to go` : 'at your target';
-      if (!after) t2.append(!p ? h('p', { class: 'stat-sub', text: `No test yet · ${togo}` })
-        : h('p', { class: 'stat-sub' }, h('span', { class: p.status !== 'Behind' ? 'tag or' : 'tag', text: p.status === 'Ahead' ? `Ahead · +${p.delta}` : p.status === 'Behind' ? `Behind · ${Math.abs(p.delta)}` : p.status }), ` ${togo}`));
-      const proj = d.projection && d.projection.math;
-      if (!after && proj && proj.low) t2.append(h('p', { class: 'stat-sub', text: `At this pace ${Math.round(proj.low / 10) * 10}–${Math.round(proj.high / 10) * 10} on ${D(c.exam_date)}` }));
-      if (!after && !p && !S.readonly) {
-        const next = d.days.find(y => y.date >= t && y.kind === 'test');
-        const nt = next && next.tasks.find(k => k.kind === 'test' && undone(k));
-        if (nt) links.append(btn(next.date === t ? 'Take today’s test ›' : 'Take this week’s test ›', 'quiet', e => busy(e.currentTarget, () => startTask(nt, next.date))));
-      }
+      head2.push(track);
     }
-    const tot = d.score && d.score.rw && c.rw_current !== null && c.rw_current !== undefined && c.rw_target;
-    if (tot) t2.append(h('p', { class: 'stat-sub', text: `R&W ${c.rw_current} → ${c.rw_target} · Total ${(start || 0) + c.rw_current} → ${target + c.rw_target}` }));
-    if (!after && !S.readonly && ((d.levers || []).length || (v && v.needs_per_week))) {
-      const lv = btn('What changes it ›', 'quiet', () => leversPop(lv));
-      links.append(lv);
+    // a section's line: where it started, its target, and how its last tests sit against the line between them
+    // (the tile is narrow: the badge says the status, its points are in the details)
+    const PACE = p => h('span', { class: p.status !== 'Behind' ? 'badge' : 'badge ink', text: p.status });
+    let measured = false;
+    for (const s of ['rw', 'math']) {
+      const sec = sc[s] || {}, p = d.pace && d.pace[s], name = UI.subjectLabel(s, true);
+      const goal = has(sec.target) ? sec.target : null;
+      if (!has(goal) && s === 'rw') continue;            // a plan made before R&W: the line under Math offers it
+      measured = measured || !!p;
+      // each section: its range now (else where it started) and its pace; its start and target in the details
+      const at = sec.now && has(sec.now.low) ? `${sec.now.low}–${sec.now.high}` : sec.start;
+      if (!has(at)) head2.push(sub(`${name} ? → ${goal} · measured ${s === 'rw' && !has(c.current) && c.measure ? 'on day 2' : 'on day 1'}`));
+      else if (after || !p) head2.push(sub(`${name} ${at}`));
+      else head2.push(h('p', { class: 'stat-sub' }, `${name} ${at} `, PACE(p)));
+      lines2.push(`${name}: ${has(sec.start) ? `started ${sec.start} · ` : ''}target ${goal}`);
+      const proj = d.projection && d.projection[s];
+      if (!after && proj && proj.low) lines2.push(`${name} at this pace ${proj.low}–${proj.high} on ${D(c.exam_date)}`);
+      if (!after && p && (p.status === 'Ahead' || p.status === 'Behind')) lines2.push(`${name}: ${Math.abs(p.delta)} ${p.status === 'Ahead' ? 'ahead of' : 'behind'} the line to your target`);
+      const v = d.verdict && d.verdict[s], need = v && v.needs_per_week ? Math.round(v.needs_per_week) : null;
+      if (!after && need) lines2.push(`${name}: ${has(v.made_per_week) ? `making +${Math.round(v.made_per_week)} a week · needs +${need}` : `needs +${need} points a week`}`);
     }
-    if (links.childNodes.length) t2.append(links);
-    // 3 plan done, against the schedule; before a first full day, the days studied (no bare 0%)
+    if (!whole && !after && !S.readonly) head2.push(h('a', { class: 'quiet pl-reg', href: `/plan/?edit=${enc(a.id)}&step=2`, text: 'Add an R&W target' }));
+    if (!after && !measured && !S.readonly) {
+      const next = d.days.find(y => y.date >= t && y.kind === 'test');
+      const nt = next && next.tasks.find(k => k.kind === 'test' && undone(k));
+      if (nt) acts2.push(() => btn(next.date === t ? 'Take today’s test' : 'Take this week’s test', 'quiet', e => busy(e.currentTarget, () => startTask(nt, next.date)
+        .catch(err => UI.toast(err.rowText || 'Couldn’t start. Try again.')))));
+    }
+    let tap2 = null;
+    if (!after && !S.readonly && (d.levers || []).length) acts2.push(res => btn('What changes it', 'quiet', () => { res.close(); setTimeout(() => leversPop(tap2), 0); }, { 'aria-haspopup': 'menu' }));
+    tap2 = detailTap(`Score ${known ? `now ${now.low} to ${now.high}` : has(start) ? start : 'not measured yet'}, target ${target}: details`, lines2, acts2);
+    if (tap2) head2[0].append(ic('caret_down', 14));
+    t2.append(...[tap2, ...head2].filter(Boolean), ...lines2.map(x => sub(x, 'print-only')));
+    // 3 plan done, against the schedule, as a count (shown once a first full day is done: no bare zero)
     const pct = st.study_days_total ? Math.round(st.days_done / st.study_days_total * 100) : 0;
     const pastStudy = days.filter(x => x.date < t && STUDY.has(x.kind));
-    const studied = days.filter(x => x.date <= t && STUDY.has(x.kind) && ['done', 'partial', 'made_up'].includes(x.status)).length;
     const missed = pastStudy.filter(x => x.status === 'missed').length;
-    const t3 = h('div', { class: 'stat pl-tile print-keep' });
+    let t3 = null;
     if (st.days_done) {
-      t3.append(tap(`Plan ${pct}% done; show the calendar`, toCal), h('span', { class: 'stat-k', text: 'Plan done' }), h('span', { class: 'pl-big', text: `${pct}%` }),
-        h('p', { class: 'stat-sub', text: `${st.days_done} of ${pl(st.study_days_total, 'study day')}` }));
+      t3 = h('div', { class: 'pl-tile print-keep' }, tap(`Plan ${pct}% done, ${st.days_done} of ${st.study_days_total} study days; show the calendar`, toCal), h('span', { class: 'stat-k', text: 'Plan done' }),
+        h('span', { class: 'pl-big' }, fig('done', h('span', { text: String(st.days_done) })), h('small', { text: ` of ${pl(st.study_days_total, 'study day')}` })));
       UI.meter(t3, { label: '', value: st.days_done, max: st.study_days_total || 1, text: ' ', ink: true });
-    } else if (studied) {
-      t3.append(tap(`${pl(studied, 'day')} studied; show the calendar`, toCal), h('span', { class: 'stat-k', text: 'Days studied' }), h('span', { class: 'pl-big', text: String(studied) }),
-        h('p', { class: 'stat-sub', text: `of ${pl(st.study_days_total, 'study day')} in the plan` }));
-    } else {
-      t3.append(tap('The plan; show the calendar', toCal), h('span', { class: 'stat-k', text: 'The plan' }), h('span', { class: 'pl-big', text: String(st.study_days_total) }),
-        h('p', { class: 'stat-sub', text: 'study days' }));
+      if (pastStudy.length) t3.append(sub(missed ? `${missed} behind` : 'on schedule'));
     }
-    if (pastStudy.length) t3.append(h('p', { class: 'stat-sub', text: missed ? `${missed} behind` : 'on schedule' }));
     // 4 this week
     const wk = st.week || {};
     const mon = monday(t);
-    const t4 = h('div', { class: 'stat pl-tile print-keep' }, tap('This week; show the week', () => { pick(t); R.week && R.week.scrollIntoView({ behavior: smooth(), block: 'start' }); }));
+    const t4 = h('div', { class: 'pl-tile print-keep' }, tap('This week; show the week', () => { pick(t); R.cal && R.cal.scrollIntoView({ behavior: smooth(), block: 'start' }); }));
     t4.append(h('span', { class: 'stat-k', text: 'This week' }),
-      h('span', { class: 'pl-big' }, h('span', { style: 'white-space: nowrap', text: UI.dur(wk.minutes_done || 0) }), wk.minutes_planned ? h('small', { text: ` of ${UI.dur(wk.minutes_planned)}` }) : null));
-    if (wk.minutes_planned) UI.meter(t4, { label: '', value: wk.minutes_done || 0, max: wk.minutes_planned, text: ' ' });
-    const dots = h('div', { class: 'pl-dots', role: 'img' });
-    const said = [];
+      h('span', { class: 'pl-big' }, fig('week', h('span', { style: 'white-space: nowrap', text: UI.dur(wk.minutes_done || 0) })), wk.minutes_planned ? h('small', { text: ` of ${UI.dur(wk.minutes_planned)}` }) : null));
+    // a block a study day, each in its own state (done, partly, missed, today), its letter under it
+    const TICK = { done: 'done', made_up: 'done', partial: 'partial', missed: 'missed', skipped: 'missed' };
+    const days7 = h('div', { class: 'pl-wkl', role: 'img' });
+    const said = [], states = [];
     for (let i = 0; i < 7; i++) {
       const date = addDays(mon, i), x = dayOf(date);
       if (!x || !STUDY.has(x.kind)) continue;
       const s = date > t ? 'future' : x.status;
-      dots.append(h('span', { 'data-s': s, 'data-today': date === t ? '' : null }, h('i'), LETTER[i]));
+      states.push(TICK[s] || (date === t ? 'today' : 'future'));
+      days7.append(h('span', { 'data-today': date === t ? '' : null, text: LETTER[i] }));
       said.push(`${DOW[i]} ${STATUS[s] || (date === t ? 'today' : 'planned')}`);
     }
-    dots.setAttribute('aria-label', said.join(', ') || 'No study days this week');
-    if (said.length) t4.append(dots);
-    if (st.longest) t4.append(h('p', { class: 'stat-sub', text: !st.streak ? `Best streak ${st.longest}` : st.streak >= st.longest ? `Streak ${st.streak} · your best` : `Streak ${st.streak} · best ${st.longest}` }));
-    // each tile keeps its number and its one action; the sentences under it are a tooltip (warnings and the Ahead/Behind tag stay)
-    [t1, t2, t3, t4].forEach(t => {
-      const subs = [...t.querySelectorAll('.stat-sub')].filter(x => !x.classList.contains('ink') && !x.querySelector('.tag'));
-      if (!subs.length) return;
-      t.title = subs.map(x => x.textContent.trim()).filter(Boolean).join(' · ');
-      subs.forEach(x => x.remove());
-    });
-    // before a first full day, "days studied" says little: it's left out until the plan has progress to show
-    const shown = [t1, t2, st.days_done ? t3 : null, t4].filter(Boolean);
+    days7.setAttribute('aria-label', said.join(', ') || 'No study days this week');
+    if (wk.minutes_planned) UI.meter(t4, { label: '', value: wk.minutes_done || 0, max: wk.minutes_planned, text: ' ', ink: true, ...(states.length ? { tickStates: states } : { ticks: 1 }) });
+    if (said.length) t4.append(days7);
+    if (st.longest) t4.append(fig('streak', sub(!st.streak ? `Best streak ${st.longest}` : st.streak >= st.longest ? `Streak ${st.streak} · your best` : `Streak ${st.streak} · best ${st.longest}`)));
+    const shown = [t1, t2, t3, t4].filter(Boolean);
     R.tiles.style.setProperty('--n', String(shown.length));
     R.tiles.replaceChildren(...shown);
   }
-  // what moves the score tile: the pace it needs, and each lever said by what it changes
+  // beside the day from 1280px (the aside), under it below that: one node, moved, so every action stays in one place
+  const WIDE = matchMedia('(min-width: 1280px)');
+  function placeTiles() {
+    if (!R.tiles || !R.side || !R.day) return;
+    if (WIDE.matches) { if (R.tiles.parentNode !== R.side) R.side.prepend(R.tiles); }
+    else if (R.tiles.previousElementSibling !== R.day) R.day.after(R.tiles);
+  }
+  WIDE.addEventListener('change', placeTiles);
+  // what moves the score: each lever said by what it changes (a menu, so rows stay rows); the pace it needs is in the Score tile's details
   function leversPop(anchor) {
-    UI.pop(anchor, (p, res) => {
-      const c = cfg(), v = S.d.verdict && S.d.verdict.math;
-      const need = v && v.needs_per_week ? Math.round(v.needs_per_week) : null;
-      const n = c.days.split('').filter(x => x === '1').length;
-      const box = h('div', { style: 'display: grid; gap: 8px; max-width: 360px' }, h('p', { class: 'k', text: 'What changes it' }));
-      if (need) box.append(h('p', { class: 'line-t', text: v.made_per_week !== null && v.made_per_week !== undefined
-        ? `Making +${Math.round(v.made_per_week)} a week · needs +${need}` : `Needs +${need} points a week` }));
-      for (const lv of (S.d.levers || []).slice(0, 3)) {
-        const e = lv.effect || {}, pa = lv.patch || {};
-        const fit = e.fits === true ? (e.spare_h ? `fits · ${UI.num(e.spare_h)} h to spare` : 'fits') : e.fits === false ? `short by ${UI.num(e.short_h)} h` : null;
-        let what;
-        if (lv.kind === 'date' && pa.exam_date) {
-          const k = e.needs_per_week ? Math.round(e.needs_per_week) : null;
-          what = `Move to ${D(pa.exam_date)}${k && need ? ` · +${k} a week instead of +${need}` : k ? ` · +${k} a week` : ''}`;
-        } else if (lv.kind === 'minutes' && pa.minutes) what = `Add 15 min a day · +${UI.dur(15 * n)} a week`;
-        else if (lv.kind === 'days' && pa.days) {
-          const i = pa.days.split('').findIndex((x, j) => x === '1' && c.days[j] !== '1');
-          what = i >= 0 ? `Study ${DOW[i]}s too · +${UI.dur(c.minutes)} a week` : pretty(lv.label);
-        } else what = pretty(lv.label);
-        const b = btn([what, fit].filter(Boolean).join(' · '), 'btn', async () => busy(b, async () => { await patchPlan(pa, 'Plan updated', undoOf(pa)); res.close(); }),
-          { style: 'justify-content: flex-start; text-align: left; height: auto; padding: 10px 12px; white-space: normal' });
-        box.append(b);
-      }
-      return box;
-    }, { label: 'What changes it' });
+    const c = cfg(), v = S.d.verdict && S.d.verdict.math;
+    const need = v && v.needs_per_week ? Math.round(v.needs_per_week) : null;
+    const n = c.days.split('').filter(x => x === '1').length;
+    const items = [];
+    for (const lv of (S.d.levers || []).slice(0, 3)) {
+      const e = lv.effect || {}, pa = lv.patch || {};
+      const fit = e.fits === true ? (e.spare_h ? `fits · ${UI.num(e.spare_h)} h to spare` : 'fits') : e.fits === false ? `short by ${UI.num(e.short_h)} h` : null;
+      let what;
+      if (lv.kind === 'date' && pa.exam_date) {
+        const k = e.needs_per_week ? Math.round(e.needs_per_week) : null;
+        what = `Move to ${D(pa.exam_date)}${k && need ? ` · +${k} a week instead of +${need}` : k ? ` · +${k} a week` : ''}`;
+      } else if (lv.kind === 'minutes' && pa.minutes) what = `Add 15 min a day · +${UI.dur(15 * n)} a week`;
+      else if (lv.kind === 'days' && pa.days) {
+        const i = pa.days.split('').findIndex((x, j) => x === '1' && c.days[j] !== '1');
+        what = i >= 0 ? `Study ${DOW[i]}s too · +${UI.dur(c.minutes)} a week` : pretty(lv.label);
+      } else what = pretty(lv.label);
+      items.push({ label: what, sub: fit, onClick: () => busy(anchor, () => patchPlan(pa, 'Plan updated', undoOf(pa))).catch(err => UI.toast(err.message || 'Couldn’t save. Try again.')) });
+    }
+    UI.menu(anchor, items, { label: 'What changes it', wide: true });
   }
 
-  /* ---- banners (3c, L3, L6, L17) */
+  /* ---- banners (3c, L3, L6, L17): the most urgent one, the rest one tap away */
   const dismissed = () => ls.get('satf.plan.dismiss', {});
   function dismiss(key) { const m = dismissed(); m[key] = today(); ls.set('satf.plan.dismiss', m); drawBanners(); }
+  // the headline always shows (data-nofold); a longer detail is a .help, which folds to its first words
   function banner(key, text, actions = [], o = {}) {
     if (!o.keep && dismissed()[key]) return null;
-    const b = h('div', { class: 'pl-banner', role: 'region', 'aria-label': o.label || 'Plan notice' }, h('p', {}, text));
-    b.append(h('button', { type: 'button', class: 'x', 'aria-label': 'Dismiss', onclick: () => (o.onDismiss ? o.onDismiss() : dismiss(key)), html: '<svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>' }));
+    const b = h('div', { class: 'banner pl-banner', role: 'region', 'aria-label': o.label || 'Plan notice', 'data-key': key }, h('p', { class: 'banner-t', 'data-nofold': '' }, text));
+    if (actions.length) b.append(h('div', { class: 'banner-act' }, actions));
+    b.append(h('button', { type: 'button', class: 'x', 'aria-label': 'Dismiss', onclick: () => (o.onDismiss ? o.onDismiss() : dismiss(key)) }, ic('x', 18)));
     if (o.help) b.append(h('p', { class: 'help', text: o.help }));
-    if (actions.length) b.append(h('div', { class: 'acts' }, actions));
     return b;
   }
   function drawBanners() {
-    const d = S.d, c = cfg(), t = today(), out = [];
+    const d = S.d, c = cfg(), t = today(), by = {};
     if (S.readonly) { R.banners.replaceChildren(); return; }
     const built = ls.get('satf.plan.built', null);
     if (built && built.id === pid() && diff(built.day, t) < 3) {
       const chips = builtChips();
-      out.push(banner(`built:${pid()}`, 'Built from your results', [chips], { label: 'Built from your results', onDismiss: () => { ls.set('satf.plan.built', null); drawBanners(); } }));
+      by.built = [banner(`built:${pid()}`, 'Built from your results', [chips], { label: 'Built from your results', onDismiss: () => { ls.set('satf.plan.built', null); drawBanners(); } })];
     }
+    const server = by.server = [];
     for (const b of d.banners || []) {
       if (b.kind === 'drift') {
-        const s = b.suggest, n = (s.sessions || []).length;
+        // each section drifts on its own: its start and target keys, its name in the line
+        const s = b.suggest, n = (s.sessions || []).length, rw = s.subject === 'rw';
+        const tk = rw ? 'rw_target' : 'target', sk = rw ? 'rw_current' : 'current', what = rw ? 'R&W ' : '';
         const key = `drift:${(s.sessions || []).join(',')}`;
-        const notNow = btn(s.kind === 'target' ? `Keep ${c.target}` : 'Not now', 'quiet', e => busy(e.currentTarget, async () => {
-          await api(`/plan/${enc(pid())}/drift`, { method: 'POST', body: { dismiss: s.sessions || [] } }); dismiss(key); }));
+        const notNow = btn(s.kind === 'target' ? `Keep ${c[tk]}` : 'Not now', 'quiet', e => busy(e.currentTarget, async () => {
+          await api(`/plan/${enc(pid())}/drift`, { method: 'POST', body: { dismiss: s.sessions || [], subject: rw ? 'rw' : 'math' } }); dismiss(key); }));
         if (s.kind === 'target') {
-          const up = Math.min(800, Math.ceil((c.target + 50) / 10) * 10);
-          out.push(banner(key, `Your last ${pl(n, 'test')} average ${s.current}, past your ${c.target} target.`,
-            [btn(`Raise to ${up}`, 'pill sm', e => busy(e.currentTarget, () => patchPlan({ target: up }, `Target raised to ${up}`, { target: c.target }))), notNow]));
-        } else out.push(banner(key, `Your last ${pl(n, 'test')} average ${s.current}. The plan starts from ${c.current}.`,
-          [btn(`Start from ${s.current}`, 'pill sm', e => busy(e.currentTarget, () => patchPlan({ current: s.current }, `Starting score set to ${s.current}`, { current: c.current }))), notNow],
+          const up = Math.min(800, Math.ceil((c[tk] + 50) / 10) * 10);
+          (by.drift = by.drift || []).push(banner(key, `Your last ${what}${pl(n, 'test')} average ${s.current}, past your ${c[tk]} target.`,
+            [btn(`Raise to ${up}`, 'btn sm ink', e => busy(e.currentTarget, () => patchPlan({ [tk]: up }, `${rw ? 'R&W target' : 'Target'} raised to ${up}`, { [tk]: c[tk] }))), notNow]));
+        } else (by.drift = by.drift || []).push(banner(key, `Your last ${what}${pl(n, 'test')} average ${s.current}. The plan starts from ${c[sk]}.`,
+          [btn(`Start from ${s.current}`, 'btn sm ink', e => busy(e.currentTarget, () => patchPlan({ [sk]: s.current }, `${rw ? 'R&W starting score' : 'Starting score'} set to ${s.current}`, { [sk]: c[sk] }))), notNow],
           { help: s.preview || null }));
       } else if (b.kind === 'registration') {
-        const r = b.data || {}, by = r.register_by || r.deadline || null;
-        const text = [`${D(b.date)} isn’t booked yet`, by ? `register by ${D(by)}` : null, by && diff(t, by) >= 0 ? pl(diff(t, by), 'day') + ' left' : null].filter(Boolean).join(' · ');
-        out.push(banner(`reg:${b.date}`, text, [
+        const r = b.data || {}, reg = r.register_by || r.deadline || null;
+        const text = [`${D(b.date)} isn’t booked yet`, reg ? `register by ${D(reg)}` : null, reg && diff(t, reg) >= 0 ? pl(diff(t, reg), 'day') + ' left' : null].filter(Boolean).join(' · ');
+        (by.registration = by.registration || []).push(banner(`reg:${b.date}`, text, [
           btn('I’ve registered', 'btn sm', e => busy(e.currentTarget, async () => { await api('/me', { method: 'PUT', body: { prefs: { registered: b.date } } }); await reload(); UI.toast('Marked as booked'); })),
-          h('a', { class: 'quiet', href: CB, target: '_blank', rel: 'noopener', text: 'College Board ↗' })]));
-      } else if (b.text) out.push(banner(`${b.kind}:${b.topic || ''}`, b.text, (b.actions || []).map(x => x.patch
-        ? btn(x.label, x.primary ? 'pill sm' : 'btn sm', e => busy(e.currentTarget, () => patchPlan(x.patch, 'Plan updated', undoOf(x.patch)))) : null).filter(Boolean)));
+          h('a', { class: 'quiet pl-ext', href: CB, target: '_blank', rel: 'noopener' }, 'College Board', ic('external', 14))]));
+      } else if (b.text) server.push(banner(`${b.kind}:${b.topic || ''}`, b.text, (b.actions || []).map(x => x.patch
+        ? btn(x.label, x.primary ? 'btn sm ink' : 'btn sm', e => busy(e.currentTarget, () => patchPlan(x.patch, 'Plan updated', undoOf(x.patch)))) : null).filter(Boolean)));
     }
     const bh = d.behind;
     if (bh) {
       const miss = bh.planned - bh.done;
-      const acts = [btn('Catch up · 15 min', 'pill sm', e => busy(e.currentTarget, () => catchUp()))];
+      const acts = [btn('Catch up · 15 min', 'btn sm ink', e => busy(e.currentTarget, () => catchUp()))];
       for (const f of bh.fixes || []) acts.push(btn(f.label, 'btn sm', e => busy(e.currentTarget, () => patchPlan(f.patch, 'Plan updated', undoOf(f.patch)))));
-      out.push(banner(`behind:${t}`, `${miss} of ${pl(bh.planned, 'study day')} missed in the last 7 · you average ${bh.avg_minutes} min on a study day; the plan asks ${c.minutes}.`, acts));
+      by.behind = [banner(`behind:${t}`, `Behind: ${miss} of ${pl(bh.planned, 'study day')} missed in the last 7 days`, acts,
+        { help: `You average ${bh.avg_minutes} min on a study day; the plan asks ${c.minutes}.` })];
     }
     // the last study day, missed
     const last = [...d.days].reverse().find(x => x.date < t && STUDY.has(x.kind));
@@ -584,18 +667,34 @@
       const task = last.tasks.find(k => k.counted && questionTask(k) && undone(k));
       const what = task ? `${task.title}${task.topics && task.topics.length ? ` on ${task.topics.map(tn).join(', ')}` : ''}` : KIND[last.kind];
       const acts = task ? [btn('Do it now', 'btn sm', e => busy(e.currentTarget, () => startTask(task, last.date)))] : [];
-      out.push(banner(`missed:${last.date}`, `Missed ${D(last.date, 'long')} · ${what}`, acts,
-        { help: d.stats.streak ? `Make it up to keep your ${d.stats.streak}-day streak.` : null }));
+      by.missed = [banner(`missed:${last.date}`, `Missed ${D(last.date, 'long')} · ${what}`, acts,
+        { help: d.stats.streak ? `Make it up to keep your ${d.stats.streak}-day streak.` : null })];
     }
-    R.banners.replaceChildren(...out.filter(Boolean));
+    by.mapdone = [mapDone()];
+    // most urgent first; one shows, the rest behind "N more"
+    const all = ['missed', 'behind', 'drift', 'mapdone', 'registration', 'built', 'server'].flatMap(k => by[k] || []).filter(Boolean);
+    const more = all.length - 1;
+    if (more < 1) S.allBanners = false;
+    // the rest are a disclosure at the end of the first one's line, nothing on its own between the banner and the day
+    const tog = more > 0 ? btn([S.allBanners ? 'Show less' : `${more} more`, ic('caret_down', 14)], 'quiet pl-bmore', () => { S.allBanners = !S.allBanners; drawBanners(); }, { 'aria-expanded': String(!!S.allBanners) }) : null;
+    // a banner rises in once: drawn again after a change, one already shown this view stays put
+    const show = S.allBanners ? all : all.slice(0, 1);
+    S.bSeen = S.bSeen || new Set();
+    show.forEach(b => { if (S.bSeen.has(b.dataset.key)) b.style.animation = 'none'; else S.bSeen.add(b.dataset.key); });
+    if (tog) show[0].querySelector('.banner-t').append(' · ', tog);
+    R.banners.replaceChildren(...show);
   }
   function builtChips() {
     const c = cfg(), box = h('div', { class: 'chips' });
     const days = c.days.split('').map((x, i) => x === '1' ? DOW[i] : null).filter(Boolean).join(', ');
-    const focus = Object.entries(c.focus || {}).filter(([, v]) => (v.state || v) === 'focus').map(([k]) => k);
-    const chip = (text, edit) => { const b = h('button', { type: 'button', text: `${text} ✎` }); b.addEventListener('click', () => edit(b)); box.append(b); };
-    if (c.current !== null && c.current !== undefined) chip(`Start ${c.current}`, b => numberPop(b, 'Starting score', c.current, v => patchPlan({ current: v }, `Start ${v}`, { current: c.current })));
-    chip(`Target ${c.target}`, b => numberPop(b, 'Target', c.target, v => patchPlan({ target: v }, `Target ${v}`, { target: c.target })));
+    const focus = onFocus(c);
+    const chip = (text, edit) => { const b = h('button', { type: 'button', text }); b.addEventListener('click', () => edit(b)); box.append(b); };
+    // each section's start and target, R&W first (College Board's order)
+    for (const [s, sk, tk] of [['R&W', 'rw_current', 'rw_target'], ['Math', 'current', 'target']]) {
+      if (!c[tk]) continue;
+      if (c[sk] !== null && c[sk] !== undefined) chip(`${s} start ${c[sk]}`, b => numberPop(b, `${s} starting score`, c[sk], v => patchPlan({ [sk]: v }, `${s} start ${v}`, { [sk]: c[sk] })));
+      chip(`${s} target ${c[tk]}`, b => numberPop(b, `${s} target`, c[tk], v => patchPlan({ [tk]: v }, `${s} target ${v}`, { [tk]: c[tk] })));
+    }
     chip(`${D(c.exam_date)}${c.booked ? '' : ' · not booked'}`, b => UI.examDate(b, { value: c.exam_date, dates: UI.SAT_DATES, onSave: v => v && patchPlan({ exam_date: v }, `SAT on ${D(v)}`, { exam_date: c.exam_date }) }));
     chip(`${c.minutes} min × ${days}`, b => UI.pop(b, (p, res) => {
       const box2 = h('div', { style: 'display: grid; gap: 10px' }, h('p', { class: 'label', text: 'A study day' }));
@@ -633,18 +732,22 @@
     location.href = `/practice/session/?id=${enc(r.id)}`;
   }
 
-  /* ---- the Plan tab (3e-3i) */
+  /* ---- the Plan tab (3e-3i): the day and the month in main; status, coming up, phases and the rest beside */
   function drawPlanTab() {
-    R.log = null;   // the changes live in the plan menu
-    R.day = h('section', { class: 'card', 'aria-label': 'The day' });
-    R.week = h('div', { class: 'pl-wk', 'aria-label': 'The week' });
-    R.up = h('section', { class: 'card', 'aria-label': 'Coming up' });
-    R.side = h('aside', { class: 'pl-stack pl-side' }, R.up);
-    for (const c of [mapTile(), habitsCard(), sweepCard()]) if (c) R.side.append(c);
+    R.day = h('section', { class: 'card hero', id: 'today', 'aria-label': 'The day' });
+    R.week = h('div', { class: 'pl-wk' });
+    R.up = h('section', { class: 'pl-upbox', 'aria-label': 'Coming up' });
     R.phase = h('section', { class: 'card', 'aria-label': 'Phases' });
-    R.side.append(R.phase);
-    R.cal = h('section', { class: 'card pl-sec', 'aria-label': 'Calendar' });
-    R.pPlan.replaceChildren(mapDone() || '', R.log || '', h('div', { class: 'pl-cols' }, h('div', { class: 'pl-stack' }, R.day), R.side), R.cal);
+    R.side = h('aside', { class: 'twocol-side pl-side', 'aria-label': 'Plan at a glance' }, R.up, R.phase);
+    // what this phase adds (the Map, your habits, the sweep): one card, a group each, only the ones that apply
+    const groups = [mapTile(), habitsCard(), sweepCard()].filter(Boolean);
+    if (groups.length) R.side.append(h('section', { class: 'card', 'aria-label': 'This phase' }, h('div', { class: 'card-head' }, h('h2', { text: 'This phase' })), groups));
+    R.cal = h('section', { class: 'card', id: 'week', 'aria-label': 'Calendar' });
+    const main = h('div', { class: 'pl-main' }, R.day, R.cal);
+    entry(main, R.side);
+    R.day.setAttribute('data-m-now', '');
+    R.pPlan.replaceChildren(h('div', { class: 'twocol' }, main, R.side));
+    placeTiles();
     drawDay(); drawWeek(); drawUp(); drawPhase(); drawCal();
   }
   // L15: what the plan changed by itself (a redraw, an auto focus change); the student's own
@@ -657,13 +760,6 @@
       if (by.has(key)) by.get(key).n++; else { const line = { text, day: x.day, n: 1 }; by.set(key, line); lines.push(line); }
     }
     return lines;
-  }
-  function changeLog() {
-    const ch = S.d.changes, lines = changeLines();
-    if (!lines.length) return null;
-    const t = today(), n = lines.reduce((s, x) => s + x.n, 0);
-    const since = ch.since && diff(ch.since, t) > 1 ? `since ${DOW[dow(ch.since)]}` : 'today';
-    return h('div', { class: 'pl-log' }, btn(`${pl(n, 'change')} ${since} ›`, 'quiet', () => changesSheet(pid(), lines)));
   }
   // the changes: today's, each opening its day, then every change, 20 at a time
   function changesSheet(id, lines = []) {
@@ -688,22 +784,25 @@
   }
   function pick(date, reveal) {
     if (!dayOf(date)) return;
+    const moved = date !== S.sel, later = date > S.sel;
     S.sel = date; S.trim = null; S.kb = -1; S.open = null; S.err = null;
     const seen = Object.fromEntries(Object.entries(ls.get('satf.plan.seen', {})).filter(([, v]) => v === today()));
     if (seen[date] !== today()) { seen[date] = today(); ls.set('satf.plan.seen', seen); }
     url(paramsNow());
     drawDay(); drawWeek(); drawUp(); drawThumb();
     if (R.calApi) R.calApi.select(date);
+    // the day's content comes in from the side time moves to (a later day from the right); kit handles keys and reduced motion
+    if (moved && R.day && UI.motion) [...R.day.children].forEach(k => UI.motion.enter(k, { axis: 'x', dir: later ? 1 : -1, dx: 8 }));
     if (reveal) revealDay();
   }
-  // a day picked far from its card (the week, the calendar, Coming up): the card comes to it
+  // a day picked far from its card (the week, the calendar, Coming up): the card comes to it (pick slides it in)
   function revealDay() {
     const card = R.day;
     if (!card || !card.isConnected) return;
-    const bar = root.querySelector('.pl-tabbar'), r = card.getBoundingClientRect(), top = (bar ? bar.getBoundingClientRect().bottom : 0) + 8;
+    // the tab bar is sticky on a phone only: below it there, the top of the window elsewhere
+    const bar = root.querySelector('.pl-tabbar'), stuck = bar && getComputedStyle(bar).position === 'sticky';
+    const r = card.getBoundingClientRect(), top = (stuck ? bar.getBoundingClientRect().bottom : 0) + 8;
     if (r.top < top || r.top > innerHeight * 0.5) card.scrollIntoView({ behavior: smooth(), block: 'start' });
-    if (UI.reduced && UI.reduced()) return;
-    card.classList.remove('pl-flash'); void card.offsetWidth; card.classList.add('pl-flash');
   }
 
   // the day's tasks in the order they run, then the extras
@@ -722,64 +821,74 @@
     if (was) queueMicrotask(() => {
       const row = was.task && card.querySelector(`[data-task="${CSS.escape(was.task)}"]`);
       const pool = [...(row || card).querySelectorAll('button, a, input')];
-      const el = pool.find(x => x.textContent === was.text) || (row && (row.querySelector('.trow-act button') || row))
+      let el = pool.find(x => x.textContent === was.text) || (row && (row.querySelector('.trow-act button') || row))
         || card.querySelector('[aria-checked="true"]') || card;
+      const tucked = el.closest && el.closest('details:not([open])');   // a row just tucked into "N done": its summary
+      if (tucked) el = tucked.querySelector('summary');
       if (el === card) card.tabIndex = -1;
       if (!card.contains(doc.activeElement) || doc.activeElement === doc.body) el.focus({ preventScroll: true });
     });
     const isToday = day.date === t, past = day.date < t, future = day.date > t;
     const study = STUDY.has(day.kind);
-    const head = h('div', { class: 'pl-dayhead' });
-    const k = h('p', { class: 'k', text: isToday ? `${S.shared ? 'Their day' : 'Today'} · ${D(day.date, 'eyebrow')}` : D(day.date, 'eyebrow') });
-    const tags = h('div', { class: 'row' }, h('span', { class: day.kind === 'exam' ? 'tag or' : 'tag', text: KIND[day.kind] || day.kind }),
-      day.phase && study ? h('span', { class: 'tag', text: day.phase }) : null,
-      past && STATUS[day.status] ? h('span', { class: 'tag line', text: STATUS[day.status] }) : null,
-      day.overridden ? h('span', { class: 'meta', text: 'changed' }) : null);
-    const right = h('div', { class: 'row' });
-    if (day.minutes) right.append(h('span', { class: 'meta', text: `${day.minutes} min planned` }));
+    // the head, one line where it fits: the date as the title, its facts, the day's menu as an icon. The day's
+    // minutes are the "Today I have" trigger (L9), so Start stands alone
+    const own = !S.readonly && !past;
+    const facts = [KIND[day.kind] || day.kind, day.phase && study ? day.phase : null, own && study && day.minutes ? haveChips(day) : day.minutes ? `${day.minutes} min` : null,
+      c.place && study ? [c.time, c.place].filter(Boolean).join(' · ') : null, day.overridden ? 'changed' : null].filter(Boolean);
+    const head = h('div', { class: 'pl-dayhead' }, h('h2', { class: 'h2', text: isToday ? `${S.shared ? 'Their day' : 'Today'} · ${D(day.date, 'long')}` : D(day.date, 'long') }),
+      past && STATUS[day.status] ? h('span', { class: 'badge line', text: STATUS[day.status] }) : null, h('p', { class: 'meta pl-facts' }, facts.flatMap((x, i) => (i ? [' · ', x] : [x]))));
     if (!past && !S.readonly && day.kind !== 'exam' && day.kind !== 'after') {
-      const m = h('button', { type: 'button', class: 'btn sm', 'aria-haspopup': 'menu', text: 'Day ⋯' });
-      m.addEventListener('click', () => UI.menu(m, dayMenu(day), { label: 'Day' }));
-      right.append(m);
+      const m = h('button', { type: 'button', class: 'ibtn pl-dayopt', 'aria-label': 'Day options', 'aria-haspopup': 'menu' }, ic('more', 20));
+      m.addEventListener('click', () => UI.menu(m, dayMenu(day), { label: 'Day options' }));
+      head.append(m);
     }
-    head.append(h('div', { class: 'row spread' }, h('div', { style: 'display: grid; gap: 8px' }, k, tags), right));
-    if (c.place && study) head.append(h('p', { class: 'meta', text: `${c.time || ''}${c.time ? ' · ' : ''}${c.place}` }));
     card.append(head);
     R.start = null;
     const counted = day.tasks.filter(x => x.counted);
-    // Start today (L8) and Today I have (L9)
-    if (!S.readonly && !past && (study || day.kind === 'rest')) {
+    // Start today (L8), alone on its row (the task count is in the rows); a rest day offers Practice anyway
+    if (own && (study || day.kind === 'rest')) {
       const go2 = h('div', { class: 'pl-day-go' });
       const next = nextOf(day);
       if (isToday && next) {
-        const left = counted.filter(x => questionTask(x) && undone(x));
+        const left = Math.round(counted.filter(x => questionTask(x) && undone(x)).reduce((s, x) => s + (x.minutes || 0), 0));
         const mid = day.tasks.some(x => x.status === 'active') || counted.some(x => DONE.has(x.status));
-        const label = mid ? `Resume today · task ${counted.indexOf(next) + 1} of ${counted.length}` : `Start today · ${pl(left.length, 'task')} · ${Math.round(left.reduce((s, x) => s + (x.minutes || 0), 0))} min`;
-        R.start = btn(label, 'pill', e => busy(e.currentTarget, () => startTask(next, day.date).catch(err => { UI.toast(err.rowText || 'Couldn’t start. Try again.'); })), { 'aria-keyshortcuts': 'Shift+Enter' });
+        const label = !left ? (mid ? 'Resume' : 'Start') : mid ? `Resume · ${left} min left` : `Start · ${left} min`;
+        // with a keyboard, its shortcut shows inside it
+        R.start = btn([label, fine() && UI.keys && UI.keys.label ? h('span', { class: 'kbd', 'aria-hidden': 'true', text: UI.keys.label('Shift+Enter') }) : null], 'pill',
+          e => busy(e.currentTarget, () => startTask(next, day.date).catch(err => { UI.toast(err.rowText || 'Couldn’t start. Try again.'); })), { 'aria-keyshortcuts': 'Shift+Enter' });
         go2.append(R.start);
       }
-      go2.append(haveChips(day));   // Start and the minutes sit on one row
-      card.append(go2);
+      if (!study) go2.append(haveChips(day));
+      if (go2.childNodes.length) card.append(go2);
       if (S.trim && S.trim.date === day.date) card.append(trimBox(day));
     }
-    // progress on the day
+    // progress on the day, once there is some (a zero is not news)
     if (counted.length && (isToday || past)) {
       const done = counted.filter(x => DONE.has(x.status)).length;
       const mBox = h('div', { class: 'pl-meter' });
       const leftMin = Math.max(0, Math.round((day.minutes || 0) - (day.minutes_done || 0)));
-      UI.meter(mBox, { label: `${done} of ${pl(counted.length, 'task')}`, value: Math.round(day.minutes_done || 0), max: day.minutes || 1,
-        text: `${Math.round(day.minutes_done || 0)} of ${day.minutes} min${leftMin && !past ? ` · ${leftMin} min left` : ''}` });
-      if (day.questions) mBox.append(h('p', { class: 'meta', style: 'margin-top: 6px', text: `${pl(day.questions, 'question')} · ${day.right} right` }));
-      card.append(mBox);
+      // the same meter while the day stays on show, so a change sweeps it (UI.meter's set; the first paint never moves)
+      const mo = { label: `${done} of ${pl(counted.length, 'task')}`, value: Math.round(day.minutes_done || 0), max: day.minutes || 1,
+        text: `${Math.round(day.minutes_done || 0)} of ${day.minutes} min${leftMin && !past ? ` · ${leftMin} min left` : ''}` };
+      if (done || day.minutes_done) {
+        if (R.dayMeter && R.dayMeter.date === day.date) { R.dayMeter.m.set(mo); mBox.append(R.dayMeter.m.el); }
+        else R.dayMeter = { date: day.date, m: UI.meter(mBox, mo) };
+      }
+      if (day.questions) mBox.append(h('p', { class: 'meta', text: `${pl(day.questions, 'question')} · ${day.right} right` }));
+      if (mBox.childNodes.length) card.append(mBox);
     }
-    // the rows
-    const list = h('div', { class: 'trows', role: 'list', 'aria-label': 'Tasks' });
+    // the rows: what is left, then the done ones tucked into "N done" (open once opened, for this view). The list
+    // stays the same element while the day is on show, so a tick glides (glideDay)
+    const list = R.list && R.listDate === day.date ? R.list : (R.list = h('div', { class: 'trows', role: 'list', 'aria-label': 'Tasks' }));
+    R.listDate = day.date;
+    list.replaceChildren();
+    const doneList = h('div', { class: 'trows', role: 'list', 'aria-label': 'Done' });
     const primary = isToday ? nextOf(day) : null;
     let seenOwn = false;
     R.rows = {};
-    ordered(day).forEach((task, i) => {
+    ordered(day).forEach(task => {
       const can = movable(task, day);
-      const row = UI.taskRow(list, task, {
+      const row = UI.taskRow(DONE.has(task.status) ? doneList : list, task, {
         primary: primary && task.id === primary.id, led: !!R.start, future, past, readonly: S.readonly,
         open: S.open && S.open.id === task.id ? S.open.kind : null,
         on: (a, tk, arg) => onTask(a, tk, arg, day.date), menu: tk => taskMenu(tk, day),
@@ -790,34 +899,53 @@
       if (S.err && S.err.id === task.id) row.error(S.err.text);    // a failed move keeps saying so through a refresh
       if (can) longPress(row.el, () => moveMenu(row.task, day));
       row.el.dataset.task = task.id;
+      row.el.dataset.key = task.id;
       row.el.setAttribute('role', 'listitem');
       row.el.tabIndex = -1;
-      if (i === S.kb) row.el.dataset.kb = '';
       if (task.kind === 'custom' && !seenOwn && String(task.id).startsWith('pt:')) {
         seenOwn = true;
         if (!DONE.has(task.status)) row.el.querySelector('.trow-main').append(h('p', { class: 'help', text: 'Do this one on your own, then tick it.' }));
       }
     });
     if (day.tasks.length) card.append(list);
+    const nDone = doneList.childNodes.length, prev = R.doneN && R.doneN.date === day.date ? R.doneN.n : null;
+    R.doneN = { date: day.date, n: nDone };
+    if (nDone) {
+      const n = h('span', { class: 'pl-done-n', text: String(nDone) });
+      const fold = h('details', { class: 'pl-done', open: S.doneOpen || null }, h('summary', {}, n, ' done', ic('caret_down', 16)), doneList);
+      fold.addEventListener('toggle', () => { S.doneOpen = fold.open; });
+      card.append(fold);
+      // a tick: the count rolls up (never on a load or another day); the first one's fold rises into place
+      if (prev !== null && prev !== nDone) {
+        if (UI.roll) { n.textContent = String(prev); UI.roll(n, nDone); }
+        if (!prev && UI.motion) UI.motion.enter(fold, 'nudge');
+      }
+    }
+    if (S.kb >= 0) { const v = rows()[S.kb]; if (v) v.dataset.kb = ''; }
     card.append(dayFoot(day));
     drawThumb();
   }
-  // "Today I have 45 min": one small dropdown instead of a row of chips
+  // "Today I have 45 min": the day's minutes in its facts line open the same small menu; a rest day's Practice anyway
   function haveChips(day) {
     const rest = !STUDY.has(day.kind);
     const opts = [10, 15, 30, 45, 60, 90];
     const cur = rest ? null : (S.trim && S.trim.date === day.date ? S.trim.m : day.minutes);
     if (!rest && !opts.includes(day.minutes) && day.minutes) opts.push(day.minutes), opts.sort((a, b) => a - b);
     const who = rest ? 'Practice anyway' : day.date === today() ? 'Today I have' : `${DOW[dow(day.date)]} I have`;
-    const btn_ = h('button', { type: 'button', class: 'btn pl-have', 'aria-haspopup': 'menu', text: rest ? `${who} ▾` : `${who} ${cur || day.minutes} min ▾` });
+    const btn_ = h('button', { type: 'button', class: rest ? 'btn pl-have' : 'quiet pl-have', 'aria-haspopup': 'menu', 'aria-expanded': 'false',
+      'aria-label': rest ? null : `${who} ${cur || day.minutes} min: change` }, rest ? who : `${cur || day.minutes} min`, ic('caret_down', 16));
     btn_.addEventListener('click', () => UI.menu(btn_, opts.map(v => ({ label: `${v} min`, radio: 'have', checked: v === cur, onClick: () => (rest ? practiceAnyway(v) : chooseTrim(day, v)) })), { label: who }));
     return btn_;
   }
   async function practiceAnyway(m) {
     const t = today(), next = S.d.days.find(x => x.date > t && STUDY.has(x.kind));
-    const topics = next ? [...new Set(next.tasks.flatMap(k => k.topics || []))].slice(0, 3) : [];
+    // a set is one subject's: the next study day's first focus set, its skills and its pace (71 s R&W, 95 s Math)
+    const lead = next && next.tasks.find(k => ['focus', 'map'].includes(k.kind) && (k.topics || []).length);
+    const s = lead ? lead.subject || 'math' : 'math';
+    const topics = lead ? [...new Set(next.tasks.filter(k => (k.subject || 'math') === s).flatMap(k => k.topics || []))].slice(0, 3) : [];
     try {
-      const r = await api('/drill', { method: 'POST', body: { count: Math.max(3, Math.floor(m * 60 / 95)), source: 'plan', ...(topics.length ? { topics } : {}) } });
+      const r = await api('/drill', { method: 'POST', body: { count: Math.max(3, Math.floor(m * 60 / (s === 'rw' ? 71 : 95))), source: 'plan',
+        ...(topics.length ? { topics } : {}), ...(s === 'rw' ? { subject: 'rw' } : {}) } });
       location.href = `/practice/session/?id=${enc(r.id)}`;
     } catch (_) { UI.toast('Couldn’t start. Try again.'); }
   }
@@ -873,7 +1001,18 @@
       foot.append(h('div', { class: 'pl-rest' }, h('p', { text: day.kind === 'eve' ? 'Rest before the SAT' : 'SAT today · good luck' }),
         line ? h('p', { class: 'meta', text: line }) : null, checklist(), h('a', { class: 'quiet', href: '/plan/?print=sheet', text: 'Your test-day sheet' })));
     } else if (counted.length && counted.every(x => DONE.has(x.status))) {
-      const f = h('div', { class: 'pl-foot' }, h('p', { text: 'Day done ✓' }));
+      const ring = h('span', { class: 'ring pl-ring', 'aria-hidden': 'true', style: '--p: 1' }, ic('check', 16));
+      const f = h('div', { class: 'pl-foot' }, h('p', {}, ring, 'Day done'));
+      // the last tick: the ring sweeps closed, then its check draws (once; the reload after it draws it whole)
+      if (S.ringDay === day.date) {
+        S.ringDay = null;
+        if (UI.fx && !(UI.motion && UI.motion.off())) {
+          ring.style.setProperty('--p', String(Math.max(0, (counted.length - 1) / counted.length)));
+          const svg = ring.querySelector('svg');
+          if (svg) svg.style.opacity = '0';
+          R.ringP = new Promise(res => requestAnimationFrame(res)).then(() => UI.fx.ring(ring, 1)).then(() => { if (svg) { svg.style.opacity = ''; UI.fx.check(svg); } });
+        }
+      }
       if (day.date === t && !S.readonly) {
         const topics = [...new Set(day.tasks.flatMap(k => k.topics || []))].slice(0, 3);
         f.append(btn('Keep going · 10 more', 'quiet', e => busy(e.currentTarget, async () => {
@@ -933,7 +1072,7 @@
     }
     if (!t.start) throw rowErr('This one is done on your own.');
     const body = { ...(t.start.body || {}) };
-    if (date === today()) body.run = today();
+    if (date === today() && t.kind !== 'test') body.run = today();      // a test's body is exactly the test's
     if (t.kind === 'words') {
       const p = new URLSearchParams({ today: '1', task: t.id });
       if (body.run) p.set('run', body.run);
@@ -959,7 +1098,9 @@
     let r;
     const row = R.rows && R.rows[t.id];
     const was = row && row.task;
+    const wasAll = dayDone(dayOf(body.day));
     if (row && (body.to || body.status)) row.set({ ...t, status: body.to ? 'moved' : body.status, moved_to: body.to || null });
+    const drawn = row && body.status === 'done' && UI.fx ? UI.fx.check(row.el.querySelector('.trow-box svg')) : null;
     try { r = await api(taskPath(t), { method: 'PATCH', body }); }
     catch (e) {
       if (row && was) row.set(was);
@@ -968,10 +1109,22 @@
     // a toast is role=status already; without one, the change is said here
     if (R.live && !toast) R.live.textContent = `${t.title}: ${body.to ? `moved to ${D(body.to, 'long')}` : ({ done: 'done', skipped: 'skipped', todo: 'to do' }[body.status] || 'saved')}`;
     applyDays(r.days);
-    drawDay(); drawWeek();
-    if (toast) UI.toast(toast, undoBody ? { undo: async () => { const r2 = await api(taskPath(t), { method: 'PATCH', body: undoBody }); applyDays(r2.days); S.open = null; drawDay(); drawWeek(); reload(); } } : {});
+    if (drawn && drawn.finished) await drawn.finished.catch(() => {});
+    if (!wasAll && dayDone(dayOf(body.day))) S.ringDay = body.day;
+    glideDay(); drawWeek();
+    if (toast) UI.toast(toast, undoBody ? { undo: async () => { const r2 = await api(taskPath(t), { method: 'PATCH', body: undoBody }); applyDays(r2.days); S.open = null; glideDay(); drawWeek(); reload(); } } : {});
     reload();
     return r;
+  }
+  // every counted task of the day done
+  const dayDone = day => { const c = day ? day.tasks.filter(x => x.counted) : []; return !!c.length && c.every(x => DONE.has(x.status)); };
+  // the day drawn again with its rows gliding (a done row tucks away, the rest close the gap); the reload that
+  // follows waits for it (R.settle)
+  function glideDay() {
+    const list = R.list, g = list && list.isConnected && UI.glide ? UI.glide(list, () => drawDay()) : (drawDay(), null);
+    R.settle = Promise.all([g, R.ringP]).catch(() => {});
+    R.ringP = null;
+    return R.settle;
   }
   async function onTask(action, t, arg, date) {
     S.kb = -1; S.err = null;
@@ -1030,8 +1183,8 @@
     if (movable(t, day)) items.push({ label: 'Move to…', kbd: fine() ? 'M' : null, onClick: () => setTimeout(() => moveMenu(t, day), 0) });
     if (t.kind === 'focus' && (t.alternatives || []).length) items.push({ label: 'Swap topics', sub: t.alternatives[0].map ? t.alternatives[0].map(tn).join(', ') : null,
       onClick: () => patchTask(t, { day: day.date, swap: t.alternatives[0] }, 'Topics swapped').catch(e => UI.toast(e.rowText)) });
-    if (t.kind === 'test' && undone(t)) {
-      const section = /Section/.test(t.title) || (t.start && t.start.body && t.start.body.full);
+    if (t.kind === 'test' && undone(t) && !t.rehearsal && t.start && t.start.path === '/api/mock/new') {   // a full SAT or a diagnostic keeps its shape
+      const section = /section/i.test(t.title) || (t.start && t.start.body && t.start.body.full);
       if (section) items.push({ label: 'Make it a module', onClick: () => dayPut(day.date, { test: 'module' }, 'Now a module') });
       else if (day.minutes >= 70) items.push({ label: 'Make it a section', onClick: () => dayPut(day.date, { test: 'section' }, 'Now a section') });
     }
@@ -1080,12 +1233,12 @@
   }
   const cellDate = c => c.dataset.date || c.dataset.day;
   function markTargets(t, day, over) {
-    for (const c of root.querySelectorAll('.pl-wd[data-date], .cal-d[data-day]')) {
+    for (const c of root.querySelectorAll('.cal-d[data-day]')) {
       const date = cellDate(c), info = dropInfo(t, day, date);
       let tag = c.querySelector('.pl-drop');
       if (!info) { if (tag) tag.remove(); c.removeAttribute('data-drop'); c.removeAttribute('data-over'); continue; }
       if (!tag) {
-        tag = h('span', { class: 'pl-drop', id: `drop-${c.classList.contains('pl-wd') ? 'w' : 'c'}-${date}` });
+        tag = h('span', { class: 'pl-drop', id: `drop-c-${date}` });
         c.append(tag);
         c.setAttribute('aria-describedby', tag.id);
       }
@@ -1201,7 +1354,7 @@
     const items = [];
     const study = STUDY.has(day.kind);
     if (study) items.push({ label: day.date === today() ? 'Change today’s time…' : 'Change this day’s time…', onClick: () => setTimeout(() => {
-      const anchor = R.day.querySelector('[aria-haspopup="menu"]') || R.day;
+      const anchor = R.day.querySelector('.pl-dayopt') || R.day;
       UI.pop(anchor, (p, res) => {
         const box = h('div', { style: 'display: grid; gap: 10px' }, h('p', { class: 'label', text: 'Minutes this day' }));
         UI.chips(box, [15, 30, 45, 60, 90, 120, 150, 180].map(v => ({ value: v, label: UI.dur(v) })), { value: day.minutes, label: 'Minutes this day',
@@ -1226,9 +1379,9 @@
     if (!task) UI.seg(rep, [{ value: 'once', label: `Once · ${D(day.date)}` }, { value: 'study_days', label: 'Every study day' }, { value: `weekly:${dow(day.date)}`, label: `Weekly on ${DOW[dow(day.date)]}` }],
       { value: 'once', label: 'Repeat', onChange: v => { repeat = v; } });
     const quick = h('div', { class: 'chips' }, !task && [
-      ['+ Official Bluebook practice test · once', { type: 'bluebook', title: 'Official Bluebook practice test', minutes: 134 }],
-      ['+ Tutor session', { type: 'tutor', title: 'Tutor session', minutes: 60 }],
-    ].map(([label, v]) => btn(label, '', () => { title.value = v.title; minutes.value = String(v.minutes); quick.dataset.type = v.type; })));
+      ['Official Bluebook practice test · once', { type: 'bluebook', title: 'Official Bluebook practice test', minutes: 134 }],
+      ['Tutor session', { type: 'tutor', title: 'Tutor session', minutes: 60 }],
+    ].map(([label, v]) => btn([ic('plus', 16), label], '', () => { title.value = v.title; minutes.value = String(v.minutes); quick.dataset.type = v.type; }, { 'aria-label': `Add ${label}` })));
     const err = h('p', { class: 'field-err', hidden: true });
     UI.sheet({
       title: task ? 'Edit your task' : 'Add a task',
@@ -1278,7 +1431,7 @@
   // to /api/scores (S3's add_outside_score); the R&W misses by domain to the plan's rwlog.
   function scoreSheet(t, date) {
     const f = (label) => h('input', { type: 'number', class: 'field sm', min: '200', max: '800', step: '10', 'aria-label': label, placeholder: label });
-    const math = f('Math'), rw = f('Reading & Writing');
+    const math = f('Math'), rw = f('Reading and Writing');
     const doms = ['Information and Ideas', 'Craft and Structure', 'Expression of Ideas', 'Standard English Conventions'];
     const pairs = doms.map(dname => ({ dname, missed: h('input', { type: 'number', class: 'field sm', min: '0', max: '40', 'aria-label': `${dname} missed`, style: 'width: 70px' }),
       of: h('input', { type: 'number', class: 'field sm', min: '1', max: '40', 'aria-label': `${dname} questions`, style: 'width: 70px' }) }));
@@ -1301,36 +1454,82 @@
     });
   }
 
-  /* ---- week strip, coming up, map, phases, month (3g-3i, L2, L16) */
-  // the week of `at` (default: the chosen day); move mode shows the week it walks into
+  /* ---- the week head, coming up, map, phases, month (3g-3i, L2, L15, L16) */
+  // L15: the days the plan changed by itself, until each is opened
+  function changedDays() {
+    const seen = ls.get('satf.plan.seen', {}), t = today();
+    return new Set(((S.d.changes && S.d.changes.today) || []).filter(planMade).map(x => x.day).filter(x => x && seen[x] !== t));
+  }
+  // the week of `at` (default: the chosen day) heads the calendar card; move mode shows the week it walks into
   function drawWeek(at) {
     const d = S.d, a = d.active, t = today(), ref = at || S.sel;
     const mon = monday(ref), sun = addDays(mon, 6);
     const wk = (d.weeks || []).find(w => w.from <= ref && ref <= w.to) || null;
     const box = R.week;
-    // L15: a day the plan changed carries a dot until it is opened
-    const seen = ls.get('satf.plan.seen', {});
-    const changed = new Set(((d.changes && d.changes.today) || []).filter(planMade).map(x => x.day).filter(x => x && seen[x] !== t));
-    // L16: the week's goals (U14's week_goals), met ✓ · open ○ · missed –
+    // L16: the week's goals (U14's week_goals): met a filled dot, open a ring, missed a dash (drawn in CSS)
     const goals = (wk && wk.goals) || [];
     const met = goals.filter(g => g.state === 'met' || g.done).length;
-    const prev = h('button', { type: 'button', class: 'btn sm icon', 'aria-label': 'Previous week', text: '‹', disabled: mon <= a.start || null, onclick: () => pick(clampDay(addDays(S.sel, -7))) });
-    const next = h('button', { type: 'button', class: 'btn sm icon', 'aria-label': 'Next week', text: '›', disabled: sun >= a.cfg.exam_date || null, onclick: () => pick(clampDay(addDays(S.sel, 7))) });
-    const head = h('div', { class: 'pl-weekhead' }, h('h2', { class: 'h3', text: `${wk ? `Week ${wk.n} of ${d.weeks.length} · ` : ''}${D(mon)}–${D(sun)}${goals.length ? ` · Goals ${met}/${goals.length}` : ''}` }));
+    // the calendar's one nav: the week (the month follows the day picked, so its own arrows stay hidden)
+    const prev = h('button', { type: 'button', class: 'ibtn', 'aria-label': 'Previous week', disabled: mon <= a.start || null, onclick: () => pick(clampDay(addDays(S.sel, -7))) }, ic('caret_left', 18));
+    const next = h('button', { type: 'button', class: 'ibtn', 'aria-label': 'Next week', disabled: sun >= a.cfg.exam_date || null, onclick: () => pick(clampDay(addDays(S.sel, 7))) }, ic('caret_right', 18));
+    const head = h('div', { class: 'card-head pl-weekhead' }, h('h2', { text: `${wk ? `Week ${wk.n} of ${d.weeks.length} · ` : ''}${span(mon, sun)}` }),
+      goals.length ? h('span', { class: 'meta', text: `Goals ${met}/${goals.length}` }) : null);
     if (goals.length) head.append(h('span', { class: 'pl-goals', role: 'img', 'aria-label': goals.map(g => `${g.text || g.label}: ${g.state === 'met' || g.done ? 'met' : g.state === 'missed' ? 'missed' : 'open'}`).join(', ') },
-      goals.map(g => h('i', { 'data-s': g.state === 'met' || g.done ? 'met' : g.state === 'missed' ? 'missed' : 'open', text: g.state === 'met' || g.done ? '✓' : g.state === 'missed' ? '–' : '○' }))));
-    if (UI.weekReview && !S.readonly && mon <= t) head.append(btn('Review week', 'quiet', () => UI.weekReview({ monday: mon, plan: pid() })));
-    head.append(prev, next);
-    if (monday(t) !== mon && dayOf(t)) head.append(btn('This week', 'quiet', () => pick(t)));
+      goals.map(g => h('i', { 'data-s': g.state === 'met' || g.done ? 'met' : g.state === 'missed' ? 'missed' : 'open' }))));
+    const nav = h('span', { class: 'card-act' });
+    if (shapeable(mon)) nav.append(btn(mon === monday(t) ? 'Shape this week' : 'Shape week', 'quiet', () => openShape(mon)));
+    if (monday(t) !== mon && dayOf(t)) nav.append(btn('This week', 'quiet', () => pick(t)));
+    nav.append(prev, next);
+    head.append(nav);
     const kids = [head];
-    if (wk && wk.tasks_planned) {
-      const m = h('div', { style: 'margin-top: 8px' });
-      UI.meter(m, { label: 'Tasks', value: wk.tasks_done, max: wk.tasks_planned, text: `${wk.tasks_done} of ${wk.tasks_planned}`, ink: true });
+    markPhaseWeek(wk && wk.n);
+    // another week's tasks as blocks, one a task (the whole ones lit; past 40 a block stands for more than one);
+    // this week's figure is the status card's This week
+    if (wk && wk.tasks_planned && mon !== monday(t)) {
+      const m = h('div', { class: 'pl-wkm' });
+      UI.meter(m, { label: 'Tasks', value: wk.tasks_done, max: wk.tasks_planned, text: `${wk.tasks_done} of ${wk.tasks_planned}`, ink: true, ticks: Math.min(40, wk.tasks_planned) });
       kids.push(m);
     }
+    // the goals said in words and the week's theme: a line that folds when long
     const theme = [goals.length ? `Goals: ${goals.map(g => g.text || g.label).join(' · ')}` : null, wk && wk.theme ? pretty(wk.theme) : null].filter(Boolean);
-    markWeek(mon);
+    if (theme.length) kids.push(h('p', { class: 'help pl-theme', text: theme.join('. ') }));
     box.replaceChildren(...kids);
+    markWeek(mon);
+    // ?shape=1 (the Monday week sheet's link): the planner opens once, on this week or else the next
+    if (Q.get('shape') && !S.shapeAsked) {
+      S.shapeAsked = true;
+      const m = monday(t), at = shapeable(m) ? m : shapeable(addDays(m, 7)) ? addDays(m, 7) : null;
+      if (at) setTimeout(() => openShape(at));
+    }
+  }
+  // Shape the week (U14's planner, plan-ui.js): busy days, short days, a day's minutes, a focus skill swapped. The
+  // server takes days from today up to two days before the exam.
+  function lastDay() { return addDays(cfg().exam_date, -2); }
+  function weekDays(mon) { return (S.d.days || []).filter(x => x.date >= mon && x.date <= addDays(mon, 6)); }
+  function shapeable(mon) {
+    return !!(S.d && S.d.active && !S.readonly && !S.shared && UI.weekPlanner) &&
+      weekDays(mon).some(x => STUDY.has(x.kind) && x.date >= today() && x.date >= S.d.active.start && x.date <= lastDay());
+  }
+  function openShape(mon) {
+    const focusOf = x => [...new Set((x.tasks || []).filter(k => k.kind === 'focus').flatMap(k => k.topics || []))];
+    const wk = weekDays(mon);
+    const days = wk.map(x => ({ date: x.date, kind: x.kind, minutes: x.minutes, test: x.test, topics: focusOf(x) }));
+    const focus = [...new Set(days.flatMap(d => d.topics))];
+    const swaps = [...new Set(wk.flatMap(x => (x.tasks || []).filter(k => k.kind === 'focus').flatMap(k => (k.alternatives || []).flat())))]
+      .filter(x => typeof x === 'string' && !focus.includes(x)).map(x => ({ topic: x, name: tn(x) }));
+    const planner = UI.weekPlanner(null, { plan: pid(), monday: mon, today: today(), start: S.d.active.start, last: lastDay(), days, focus, swaps, button: false });
+    UI.sheet({ title: `Shape the week · ${span(mon, addDays(mon, 6))}`, body: planner.el,
+      actions: [{ label: 'Save the week', primary: true, onClick: async s => {
+        planner.error('');
+        // saved in place: Saving, then Saved with its check drawn, then the sheet closes (no toast)
+        const b = s.foot && s.foot.querySelector('.pill');
+        try {
+          const r = await (UI.saving && b ? UI.saving(b, () => planner.save()) : planner.save());
+          if (r) await reload();
+          if (UI.saving && b) await new Promise(res => setTimeout(res, 600));
+          return true;
+        } catch (e) { planner.error((e && e.message) || 'Couldn’t save the week. Try again.'); return false; }
+      } }] });
   }
   const clampDay = date => { const a = S.d.active; return date < a.start ? a.start : date > a.cfg.exam_date ? a.cfg.exam_date : date; };
   function drawUp() {
@@ -1341,10 +1540,12 @@
     for (const x of rows) {
       const main = x.tasks.find(k => ['test', 'focus', 'map'].includes(k.kind)) || x.tasks.find(k => k.counted);
       const topics = [...new Set(x.tasks.filter(k => ['focus', 'map', 'learn', 'check'].includes(k.kind)).flatMap(k => k.topics || []))].slice(0, 3);
-      const what = x.kind === 'test' ? (main ? main.title : 'Test') : main ? (main.kind === 'focus' ? 'Focus' : main.title) : 'Practice';
-      // date and kind only; the skills are a tooltip
-      list.append(h('button', { type: 'button', title: topics.map(tn).join(', ') || null, onclick: () => pick(x.date, true) }, h('span', { class: 'd', text: `${dayName(x.date)} · ${x.minutes}m` }),
-        h('span', { class: 't', text: what })));
+      // (a Map day still has its R&W focus set: both are said)
+      const what = x.kind === 'test' ? (main ? main.title : 'Test') : main ? (main.kind === 'focus' ? 'Focus'
+        : main.kind === 'map' && x.tasks.some(k => k.kind === 'focus') ? 'Map and focus' : main.title) : 'Practice';
+      // the date, then what it holds and its skills (said in full: no tooltip, so a phone has it too)
+      list.append(h('button', { type: 'button', onclick: () => pick(x.date, true) }, h('span', { class: 'd', text: `${dayName(x.date)} · ${x.minutes}m` }),
+        h('span', { class: 't', text: [what, topics.map(tn).join(', ')].filter(Boolean).join(' · ') })));
     }
     const notes = [];
     const rest = d.days.find(x => x.date > t && (x.kind === 'rest' || x.kind === 'off'));
@@ -1361,13 +1562,16 @@
     const skills = S.d.skills || [];
     // one square per skill, a gap between domains; each says its skill and whether it's measured
     const doms = [...new Set(UI.TOPICS.map(tp => tp.domain))];
-    const strip = h('div', { class: 'pl-map', role: 'img', 'aria-label': `${m.measured} of ${m.of} skills measured` },
+    // the Map is Math's probe: it counts Math skills (R&W meets its skills in the R&W focus sets)
+    const strip = h('div', { class: 'pl-map', role: 'img', 'aria-label': `${m.measured} of ${m.of} Math skills measured` },
       doms.map(dn => h('span', { class: 'pl-mapd', title: dn }, UI.TOPICS.filter(tp => tp.domain === dn).map(tp => {
         const s = skills.find(x => x.topic === tp.slug), on = s && s.answered >= 6;
         return h('i', { 'data-on': on ? '' : null, title: `${tp.short} · ${on ? 'measured' : 'not measured yet'}`, text: on ? '✓' : '' });
       }))));
-    return h('section', { class: 'card', 'aria-label': 'Map progress' }, h('div', { class: 'card-head' }, h('h2', { text: 'Map' }),
-      h('span', { class: 'meta pl-hmeta' }, `${m.measured} of ${m.of} skills measured`, UI.infoTip('Map days measure each skill with a few mixed questions, so focus goes where your points are.', 'About Map days'))), strip);
+    const not = UI.TOPICS.filter(tp => { const x = skills.find(y => y.topic === tp.slug); return !(x && x.answered >= 6); }).map(tp => tp.short);
+    return h('div', { class: 'pl-grp', role: 'group', 'aria-label': 'Map progress' }, h('div', { class: 'pl-grp-h' }, h('h3', { class: 'h3', text: 'Map' }),
+      h('span', { class: 'meta pl-hmeta' }, `${m.measured} of ${m.of} Math skills measured`, UI.why('Map days measure each Math skill with a few mixed questions, so focus goes where your points are. R&W skills get their first look in the R&W focus sets.', { about: 'Map days' }))), strip,
+      not.length ? h('p', { class: 'help', text: `Not measured yet: ${not.join(', ')}` }) : null);
   }
   function drawPhase() {
     const d = S.d, t = today(), parts = [];
@@ -1378,9 +1582,35 @@
     }
     const now = (dayOf(t) || {}).phase;
     const LINE = { Build: 'Weak skills and new ground, every difficulty.', Sharpen: 'Harder, mixed, on the clock.', Final: 'Full sections and your open mistakes.' };
+    // each phase is a group with its weeks nested under a guide line (a week goes under the phase of its first
+    // day that has one); a week opens on the Plan tab. The phase of the week on show is open; a toggle is remembered
+    const weeks = d.weeks || [];
+    const phaseOf = w => { const x = d.days.find(y => y.date >= w.from && y.date <= w.to && y.phase && y.kind !== 'exam'); return x ? x.phase : (parts[parts.length - 1] || {}).name; };
+    const shown = weeks.find(w => w.from <= S.sel && S.sel <= w.to);
+    S.phOpen = S.phOpen || {};
+    const weekRow = w => {
+      const planned = d.days.filter(x => x.date >= w.from && x.date <= w.to && STUDY.has(x.kind)).reduce((s, x) => s + (x.minutes || 0), 0);
+      const right = w.from > t ? (planned ? UI.dur(planned) : '') : w.tasks_planned ? `${w.tasks_done || 0}/${w.tasks_planned} tasks` : '';
+      return h('button', { type: 'button', class: 'pl-wkr', 'data-n': String(w.n), 'data-on': w === shown ? '' : null,
+        onclick: () => pick(w.from <= t && t <= w.to && dayOf(t) ? t : clampDay(w.from), true) },
+      h('span', { text: `Week ${w.n} · ${span(w.from, w.to)}` }), right ? h('span', { class: 'meta', text: right }) : null);
+    };
     R.phase.replaceChildren(h('div', { class: 'card-head' }, h('h2', { text: 'Phases' })),
-      h('div', { class: 'pl-phases' }, parts.map(p => h('div', { class: 'pl-ph', title: LINE[p.name] || null, 'data-now': p.name === now ? '' : null, 'aria-current': p.name === now ? 'step' : null },
-        h('b', { text: p.name }), h('span', { class: 'mono', text: `${D(p.from)} – ${D(p.to)}` })))));   // what each phase is for: the tooltip
+      h('div', { class: 'pl-phases' }, parts.map(p => {
+        const mine = weeks.filter(w => phaseOf(w) === p.name);
+        const head = h(mine.length ? 'summary' : 'div', { class: 'pl-ph-s' }, h('b', { text: p.name }), h('span', { class: 'meta', text: `${D(p.from)} – ${D(p.to)}${p.name === now ? ' · now' : ''}` }),
+          LINE[p.name] ? h('span', { text: LINE[p.name] }) : null);
+        const attrs = { class: 'pl-ph', 'data-now': p.name === now ? '' : null, 'aria-current': p.name === now ? 'step' : null };
+        if (!mine.length) return h('div', attrs, head);
+        const open = S.phOpen[p.name] ?? (shown ? phaseOf(shown) === p.name : p.name === now);
+        const box = h('details', { ...attrs, open: open || null }, head, h('div', { class: 'pl-wks', role: 'group', 'aria-label': `${p.name} weeks` }, mine.map(weekRow)));
+        box.addEventListener('toggle', () => { S.phOpen[p.name] = box.open; });
+        return box;
+      })));
+  }
+  // the week on show (the calendar card's week head) is the marked row under its phase
+  function markPhaseWeek(n) {
+    if (R.phase) R.phase.querySelectorAll('.pl-wkr').forEach(b => b.toggleAttribute('data-on', b.dataset.n === String(n)));
   }
   function drawCal() {
     const d = S.d, a = d.active, t = today(), now = (dayOf(t) || {}).phase;
@@ -1394,8 +1624,8 @@
     });
     R.planRows = plan;
     const host = h('div');
-    R.cal.replaceChildren(h('div', { class: 'card-head' }, h('h2', { text: 'Calendar' })), R.week, host);   // the week's header and progress sit on top of the month
-    R.calApi = UI.calendar(host, { look: 'plan', plan, selected: S.sel, legend: true,
+    R.cal.replaceChildren(R.week, host);   // the week's head and progress sit on top of the month
+    R.calApi = UI.calendar(host, { look: 'plan', plan, selected: S.sel, legend: 'why', nav: false, tasks: false,
       marks: { start: a.start, end: a.cfg.exam_date, exam: a.cfg.exam_date, today: t }, min: a.start, max: a.cfg.exam_date, onPick: day => pick(day, true), onMonth: () => tidyCal() });
     tidyCal();
     // arrow keys move the selection with the focus (28)
@@ -1407,23 +1637,27 @@
   function markWeek(mon) {
     if (!R.cal) return;
     const mo = mon || monday(S.sel), days = new Set(Array.from({ length: 7 }, (_, i) => addDays(mo, i)));
-    R.cal.querySelectorAll('.cal-d[data-day]').forEach(b => { if (days.has(b.dataset.day)) b.setAttribute('data-wk', ''); else b.removeAttribute('data-wk'); });
+    const chg = changedDays();
+    R.cal.querySelectorAll('.cal-d[data-day]').forEach(b => {
+      if (days.has(b.dataset.day)) b.setAttribute('data-wk', ''); else b.removeAttribute('data-wk');
+      // L15: a day the plan changed carries a dot (and says so) until it is opened
+      const on = chg.has(b.dataset.day);
+      if (on === b.hasAttribute('data-chg')) return;
+      b.toggleAttribute('data-chg', on);
+      const l = (b.getAttribute('aria-label') || '').replace(/, changed by the plan$/, '');
+      b.setAttribute('aria-label', on ? `${l}, changed by the plan` : l);
+    });
   }
   function tidyCal(el) {
     const box = el || (R.cal && R.cal.querySelector('.cal'));
     if (!box || !S.d || !S.d.active) return;
     const c = cfg(), usual = i => (c.day_minutes && c.day_minutes[i] !== null && c.day_minutes[i] !== undefined ? c.day_minutes[i] : c.minutes);
-    const seen = new Set();
     markWeek();
     box.querySelectorAll('.cal-d[data-day]').forEach(b => {
       const x = dayOf(b.dataset.day);
-      if (b.dataset.kind) seen.add(b.dataset.kind);
-      if (b.dataset.state) seen.add(b.dataset.state);
-      if (b.hasAttribute('data-exam')) seen.add('sat');
       const m = b.querySelector('.cal-meta');
       if (m && x && x.minutes === usual(dow(x.date))) m.remove();
     });
-    box.querySelectorAll('.cal-key .cal-k').forEach(k => { const sw = k.querySelector('.cal-sw'); const key = sw && [...sw.classList].find(y => y !== 'cal-sw'); k.style.display = key && !seen.has(key) ? 'none' : ''; });
   }
   function drawThumb() {
     if (!R.thumb) return;
@@ -1446,14 +1680,14 @@
     if (!hs.length) return null;
     const t = today();
     const next = S.d.days.find(x => x.date >= t && x.tasks.some(k => k.kind === 'habit' && undone(k)));
-    return h('section', { class: 'card', 'aria-label': 'Your habits' }, h('div', { class: 'card-head' }, h('h2', { text: 'Your habits' })),
+    return h('div', { class: 'pl-grp', role: 'group', 'aria-label': 'Your habits' }, h('div', { class: 'pl-grp-h' }, h('h3', { class: 'h3', text: 'Your habits' })),
       h('div', { class: 'pg-rows' }, hs.map(x => h('div', { class: 'pg-row' }, h('span', { class: 'line-t', text: x.label || x.name }),
         !S.readonly && (x.norm || x.label) ? btn('Drill · 8', 'btn sm', e => busy(e.currentTarget, async () => {
           try { const r = await api('/drill', { method: 'POST', body: { pool: 'related', ids: x.norm || x.label, count: 8, source: 'plan' } }); location.href = `/practice/session/?id=${enc(r.id)}`; }
           catch (_) { UI.toast('Couldn’t start. Try again.'); }
         })) : h('span'),
         x.tell && x.tell !== (x.label || x.name) ? h('p', { class: 'meta', text: x.tell }) : null))),
-      next ? h('p', { class: 'meta', style: 'margin-top: 8px', text: `Next habit task ${dayName(next.date)}` }) : null);
+      next ? h('p', { class: 'meta pl-after', text: `Next habit task ${dayName(next.date)}` }) : null);
   }
   // L19: the sweep re-asks every fixed mistake in Final; one square per question
   function sweepOf(d) {
@@ -1471,7 +1705,7 @@
     const sw = sweepOf(S.d);
     if (!sw) return null;
     const sq = (n, st, label, text) => Array.from({ length: n }, () => h('i', { 'data-s': st, role: 'img', 'aria-label': label, text }));
-    return h('section', { class: 'card', 'aria-label': 'Sweep' }, h('div', { class: 'card-head' }, h('h2', { text: 'Sweep' })),
+    return h('div', { class: 'pl-grp', role: 'group', 'aria-label': 'Sweep' }, h('div', { class: 'pl-grp-h' }, h('h3', { class: 'h3', text: 'Sweep' })),
       h('p', { class: 'line-t', text: [sw.fixed ? `Still fixed ${sw.fixed}` : null, sw.back ? `Back on the list ${sw.back}` : null, sw.togo ? `To go ${sw.togo}` : null].filter(Boolean).join(' · ') || 'Nothing to re-ask' }),
       h('div', { class: 'pl-sweep' }, sq(sw.fixed, 'ok', 'Still fixed', '✓'), sq(sw.back, 'back', 'Back on the list', '✕'), sq(sw.togo, 'togo', 'To go', '')));
   }
@@ -1486,28 +1720,25 @@
     const pts = d.points && d.points.math;
     const top = pts ? (pts.skills || []).filter(x => !x.floor && x.gain >= 5).slice(0, 3) : [];
     const rt = pts && pts.route;
-    const text = [`Map done · ${m.measured} of ${m.of} measured`, best ? `strongest ${tn(best.topic)} ${Math.round(best.right / best.answered * 100)}%` : null,
+    const detail = [best ? `Strongest ${tn(best.topic)} ${Math.round(best.right / best.answered * 100)}%` : null,
       top.length ? `most points: ${tn(top[0].topic)} ≈ +${Math.round(top[0].gain)}` : null,
       rt && rt.m1 !== null && rt.m1 !== undefined ? `first modules about ${Math.round(rt.m1 * 100)}%` : null].filter(Boolean).join(' · ');
-    let card = null;
-    const close = () => { const x = dismissed(); x[key] = today(); ls.set('satf.plan.dismiss', x); if (card) card.remove(); };
+    const close = () => { const x = dismissed(); x[key] = today(); ls.set('satf.plan.dismiss', x); drawBanners(); };
     const acts = [];
     if (top.length) {
       const was = Object.fromEntries(Object.entries(cfg().skills || {}).map(([k, v]) => [k, (v && v.state) || v]));
       const skills = { ...was };
       top.forEach(x => { skills[x.topic] = 'focus'; });
-      acts.push(btn(`Use the suggested focus · ${top.map(x => tn(x.topic)).join(', ')}`, 'pill sm', e => busy(e.currentTarget, async () => {
+      acts.push(btn(`Use the suggested focus · ${top.map(x => tn(x.topic)).join(', ')}`, 'btn sm ink', e => busy(e.currentTarget, async () => {
         close();
         try { await patchPlan({ skills }, 'Focus set from your Map', { skills: was }); } catch (err) { UI.toast(err.message || 'Couldn’t save. Try again.'); }
       })));
     }
     acts.push(btn('Keep mine', 'quiet', close));
-    card = banner(key, text, acts, { label: 'Map done', onDismiss: close, keep: true });
-    card.classList.add('pl-sec');
-    return card;
+    return banner(key, `Map done · ${m.measured} of ${m.of} skills measured`, acts, { label: 'Map done', onDismiss: close, keep: true, help: detail || null });
   }
 
-  /* ---- print (3l): the title, tiles, phases, every month and a week-by-week list */
+  /* ---- print (3l): the title, the status, phases, every month and a week-by-week list */
   const nextMonth = m => { const [y, mo] = m.split('-').map(Number); return mo === 12 ? `${y + 1}-01` : `${y}-${pad(mo + 1)}`; };
   function buildPrint() {
     if (!R.print || !R.print.isConnected || !S.d || !S.d.active) return;
@@ -1537,7 +1768,8 @@
         return h('li', {}, h('b', { text: dayName(x.date) }), ' · ', [KIND[x.kind] || x.kind, x.minutes ? `${x.minutes} min` : null, ...tests, topics.join(', ') || null,
           own.length ? `Your tasks: ${own.join(', ')}` : null, x.date < t && STATUS[x.status] ? STATUS[x.status] : null].filter(Boolean).join(' · '));
       }))));
-    R.print.replaceChildren(R.phase ? R.phase.cloneNode(true) : '', h('section', { class: 'card pl-sec' }, h('h2', { text: 'Calendar' }), months),
+    // the status rows live in the Plan tab, which print hides: a copy prints here
+    R.print.replaceChildren(R.tiles ? R.tiles.cloneNode(true) : '', R.phase ? R.phase.cloneNode(true) : '', h('section', { class: 'card pl-sec' }, h('h2', { text: 'Calendar' }), months),
       h('section', { class: 'card pl-sec' }, h('h2', { text: 'Week by week' }), weeks));
   }
   addEventListener('beforeprint', () => { if (!Q.get('print')) buildPrint(); });
@@ -1550,7 +1782,7 @@
     let d = S.d;
     try { if (!d) d = S.d = await api('/plan'); } catch (_) { failPage(); return; }
     const a = d.active;
-    const top = h('header', { class: 'pl-title' }, h('div', {}, h('h1', { text: 'Your test-day sheet' }),
+    const top = h('header', { class: 'pl-title' }, h('div', {}, h('h1', { class: 'h1', text: 'Your test-day sheet' }),
       a ? h('p', { class: 'meta', text: `The SAT · ${D(a.cfg.exam_date, 'long')}` }) : null),
       h('div', { class: 'row no-print' }, h('a', { class: 'quiet', href: '/plan/', text: 'Back to plan' }), btn('Print', 'btn sm', () => print())));
     if (!a) {
@@ -1585,14 +1817,14 @@
             const trap = ex.trap_index === i, right = key !== undefined && (String(c) === String(key) || L[i] === String(key));
             // the answer stands out; the trap is there to recognise, crossed through
             return h('li', { 'data-trap': trap ? '' : null, 'data-key': right ? '' : null }, h('b', { text: L[i] }), rich(h('span', { class: 'c', text: plain(c) })),
-              right ? h('span', { class: 'tag', text: '✓ Answer' }) : null, trap ? h('span', { class: 'tag', text: 'The trap' }) : null);
+              right ? h('span', { class: 'badge', text: 'Answer' }) : null, trap ? h('span', { class: 'badge line', text: 'The trap' }) : null);
           })));
         } else if (key !== undefined) item.append(h('p', { class: 'line-t', text: `Answer: ${plain(key)}` }));
         if (ex.rationale) item.append(rich(h('p', { class: 'help', text: plain(ex.rationale) })));
       }
       return item;
     });
-    traps.append(...(list.length ? list : [h('p', { class: 'line-t', text: 'No traps yet. Every mistake you make gets its name here.' })]));
+    traps.append(...(list.length ? list : [h('div', { class: 'pl-empty' }, h('span', { html: UI.spotArt ? UI.spotArt('start') : '' }), h('p', { class: 'line-t', text: 'No traps yet. Every mistake you make gets its name here.' }))]));
     if (location.hash === '#traps') traps.scrollIntoView({ block: 'start' });
   }
 
@@ -1601,19 +1833,19 @@
     R.pPlans.replaceChildren(plansCard(S.d.plans || [], S.d.active ? S.d.active.id : null, true));
   }
   function plansCard(plans, activeId, tab) {
-    const card = h('section', { class: 'card' + (tab ? '' : ' pl-sec') }, h('div', { class: 'card-head' }, h('h2', { text: 'Your plans' }),
-      h('span', { class: 'card-act pl-hmeta' }, UI.infoTip('Changing your date or target? Edit keeps this plan’s record. Save as new keeps this one here.', 'About Edit and Save as new'),
-        btn('New plan', 'pill sm', () => go({ setup: 1, step: 1, fresh: 1 })))));
+    const card = h('section', { class: 'card' }, h('div', { class: 'card-head' }, h('h2', { text: 'Your plans' }),
+      h('span', { class: 'card-act pl-hmeta' }, UI.why('Changing your date or target? Edit keeps this plan’s record. Save as new keeps this one here.', { about: 'Edit and Save as new' }),
+        btn('New plan', tab ? 'pill sm' : 'btn sm', () => go({ setup: 1, step: 1, fresh: 1 })))));   // the landing's header holds its one orange
     const list = h('div', { class: 'pl-plans' });
     // a draft in the builder is a plan too, one tap from where it stopped
     const dr = tab && S.d && S.d.draft && S.d.draft.fields ? S.d.draft : null;
     if (dr) {
       const f = dr.fields;
-      list.append(h('div', { class: 'pl-prow' }, h('div', { class: 'pl-pmain' }, h('h3', { class: 'h3' }, f.exam_date ? `${D(f.exam_date)} · ${f.target || ''}` : 'New plan', h('span', { class: 'tag', text: 'Draft' })),
+      list.append(h('div', { class: 'pl-prow' }, h('div', { class: 'pl-pmain' }, h('h3', { class: 'h3' }, f.exam_date ? `${D(f.exam_date)} · ${f.target || ''}` : 'New plan', h('span', { class: 'badge soft', text: 'Draft' })),
         h('p', { class: 'meta', text: `Step ${dr.step || 1} of 4` })),
-        h('div', { class: 'acts' }, btn('Resume ›', 'btn sm', () => go({ setup: 1, step: dr.step || 1 })))));
+        h('div', { class: 'acts' }, btn('Resume', 'btn sm', () => go({ setup: 1, step: dr.step || 1 })))));
     }
-    if (!plans.length && !dr) { card.append(h('p', { class: 'soft', text: 'No plans yet. Plans you make stay here, so you can switch when your date or target changes.' })); return card; }
+    if (!plans.length && !dr) { card.append(h('div', { class: 'pl-empty' }, h('span', { html: UI.spotArt ? UI.spotArt('start') : '' }), h('p', { class: 'soft', text: 'No plans yet. Plans you make stay here, so you can switch when your date or target changes.' }))); return card; }
     plans.slice(0, S.shown).forEach(p => list.append(planRow(p, activeId)));
     card.append(list);
     if (plans.length > S.shown) card.append(btn(`Show 20 more · ${plans.length - S.shown} left`, 'btn sm', () => { S.shown += 20; tab ? drawPlansTab() : landing(); }));
@@ -1622,7 +1854,7 @@
   function planRow(p, activeId) {
     const r = p.record || {};
     const finished = p.result && p.result.math;
-    const status = p.status === 'active' ? h('span', { class: 'tag or', text: 'Active' }) : finished ? h('span', { class: 'tag', text: `Finished · ${p.result.math}` }) : h('span', { class: 'tag', text: 'Archived' });
+    const status = p.status === 'active' ? h('span', { class: 'badge', text: 'Active' }) : finished ? h('span', { class: 'badge soft', text: `Finished · ${p.result.math}` }) : h('span', { class: 'badge soft', text: 'Archived' });
     const auto = !p.name || /^Plan for \d{4}-/.test(p.name);
     const name = auto ? `${D(p.exam)} · ${p.total_target || p.target}` : p.name;
     const line = [`Built ${D(p.built)}`, `${D(p.start)} → ${D(p.exam)}`, auto ? null : `target ${p.total_target || p.target}`,
@@ -1635,26 +1867,29 @@
       if ((r.by_dow || []).some(Boolean)) main.append(h('div', { class: 'pl-dow', role: 'img', 'aria-label': r.by_dow.map((v, i) => `${DOW[i]} ${v}%`).join(', ') },
         r.by_dow.map((v, i) => h('span', {}, h('b', { text: DOW[i] }), `${v}%`))));
     }
-    if (r.changes) main.append(h('div', { class: 'pl-links' }, btn(`All ${r.changes} changes ›`, 'quiet', () => changesSheet(p.id))));
+    if (r.changes) main.append(h('div', { class: 'pl-links' }, btn(`All ${r.changes} changes`, 'quiet', () => changesSheet(p.id))));
     const acts = h('div', { class: 'acts' });
     const row = h('div', { class: 'pl-prow' }, main, acts);
+    // Edit or Open shows; the rest shows on hover or focus (always on a touch screen)
     const drawActs = () => {
+      const more = h('span', { class: 'reveal pl-more2' });
       acts.replaceChildren();
       if (p.status === 'active') acts.append(h('a', { class: 'btn sm', href: `/plan/?edit=${enc(p.id)}&step=1`, text: 'Edit' }));
       else {
         acts.append(h('a', { class: 'btn sm', href: `/plan/?id=${enc(p.id)}`, text: 'Open' }));
-        acts.append(btn('Make active', 'btn sm', () => {
+        more.append(btn('Make active', 'btn sm', () => {
           acts.replaceChildren(h('span', { class: 'line-t', text: 'Switch to this plan? Your current one is kept.' }),
             btn('Switch', 'btn sm ink', e => busy(e.currentTarget, async () => { S.d = await api(`/plan/${enc(p.id)}/activate`, { method: 'POST' }); S.older = null; UI.toast('Switched to this plan'); go({}); })),
             btn('Keep', 'btn sm', drawActs));
         }));
       }
-      acts.append(btn('Duplicate', 'btn sm', () => duplicate(p.id)));
-      if (p.status !== 'active') acts.append(btn('Remove', 'btn sm', () => {
+      more.append(btn('Duplicate', 'btn sm', () => duplicate(p.id)));
+      if (p.status !== 'active') more.append(btn('Remove', 'btn sm', () => {
         acts.replaceChildren(h('span', { class: 'line-t', text: 'Remove this plan for good?' }),
           btn('Remove', 'btn sm ink', e => busy(e.currentTarget, async () => { await api(`/plan/${enc(p.id)}`, { method: 'DELETE' }); S.d = await api('/plan'); route(); })),
           btn('Keep', 'btn sm', drawActs));
       }));
+      acts.prepend(more);
     };
     drawActs();
     return row;
@@ -1704,9 +1939,8 @@
   function calendarSheet() {
     const a = S.d.active;
     const out = h('div', { style: 'display: grid; gap: 8px' });
-    const option = (title, text, action) => h('div', { style: 'display: grid; gap: 4px; padding: 12px 14px; border-radius: 12px; background: var(--tile)' },
-      h('div', { style: 'display: flex; align-items: center; justify-content: space-between; gap: 12px' }, h('b', { text: title }), action),
-      h('p', { class: 'help', style: 'margin: 0', text }));
+    // each way in is a row: its name and button, what it does under them; hairlines between
+    const option = (title, text, action) => h('div', { class: 'pl-opt' }, h('div', { class: 'pl-opt-h' }, h('b', { text: title }), action), h('p', { class: 'help', text }));
     const live = btn('Get the link', 'pill sm', e => busy(e.currentTarget, async () => {
       const r = await api(`/plan/${enc(a.id)}/links`, { method: 'POST', body: { cal: true } });
       const link = `${location.origin}${r.cal}`;
@@ -1722,11 +1956,11 @@
       } catch (_) { out.replaceChildren(h('p', { class: 'help', text: 'Couldn’t make the file. Try again.' })); }
     }));
     const offB = btn('Stop the live link', 'quiet', e => busy(e.currentTarget, async () => { await api(`/plan/${enc(a.id)}/links`, { method: 'POST', body: { cal: false } }); out.replaceChildren(h('p', { class: 'help', text: 'The live link is off. Calendars that used it stop updating.' })); }));
-    UI.sheet({ title: 'Add to your calendar', body: h('div', { style: 'display: grid; gap: 12px' },
+    UI.sheet({ title: 'Add to your calendar', body: h('div', { class: 'pl-opts' },
       option('Live calendar link', 'Add it once in Google Calendar, Apple Calendar or Outlook (“Add calendar from URL”). Your study days show up there and update by themselves when the plan changes.', live),
       out,
       option('Download a file (.ics)', 'A one-time copy you import. It won’t update later.', dl),
-      h('div', { style: 'border-top: 1px solid var(--line); padding-top: 8px' }, offB)) });
+      h('div', { class: 'pl-opt' }, offB)) });
   }
   function shareSheet() {
     const a = S.d.active;
@@ -1745,7 +1979,7 @@
   }
 
   /* ---- keys (L12, §2.8 scope plan) */
-  const rows = () => [...(R.day ? R.day.querySelectorAll('.trow') : [])];
+  const rows = () => [...(R.day ? R.day.querySelectorAll('.trow') : [])].filter(r => !r.closest('details:not([open])'));
   const selTask = () => { const r = rows()[S.kb]; if (!r) return null; const day = dayOf(S.sel); return day && day.tasks.find(x => x.id === r.dataset.task); };
   function kbMove(k) {
     const all = rows();

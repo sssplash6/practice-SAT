@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Compete · SAT Freshman</title>
+<link rel="icon" href="/favicon.ico" sizes="32x32">
 <link rel="icon" href="/assets/mark.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
 <link rel="manifest" href="/manifest.webmanifest">
@@ -11,15 +12,17 @@
 <script src="/assets/head.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800;900&family=DM+Mono:wght@400;500&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap">
+<link rel="preload" href="/assets/fonts/Geist.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap">
 <link rel="stylesheet" href="/assets/ui.css">
 <link rel="stylesheet" href="/compete/compete.css">
 <style>
-  /* Overview (spec 3.7 §3, compete.md layout): main A · B · C, side D · Rivals · H · E · Traps · Champions · F · G */
+  /* Overview (spec 3.7 §3, compete.md layout): main Daily · Contests; the side is one card (stats · Rivals · Season ·
+     This week · Next badges · Private), its parts split by hairlines */
   .ph-only { display: none; }
   @media (max-width: 759px) { .ph-only { display: inline-flex; } .dt-only { display: none; } }
   #recap:empty { display: none; }
-  #recap { margin-bottom: 20px; }
+  #recap { margin-bottom: var(--card-gap); }
 </style>
 </head>
 <body data-page="compete">
@@ -27,28 +30,29 @@
 <main class="page cx" id="main" tabindex="-1">
   <header class="cx-head">
     <h1 class="h1">Compete</h1>
+    <div id="subnav"></div>
     <div class="cx-head-act">
       <button type="button" class="quiet dt-only" id="join">Join with a code</button>
-      <button type="button" class="quiet dt-only" id="create">+ Create a contest</button>
+      <button type="button" class="quiet dt-only" id="create">Create a contest</button>
       <button type="button" class="quiet ph-only" id="join-create">Join or create</button>
     </div>
   </header>
-  <div id="subnav"></div>
+  <div class="cx-subject" id="subject"></div>
   <div id="recap"></div>
-  <div class="cx-grid">
-    <div class="cx-main">
-      <section class="card wash cx-daily" id="daily" style="--o:1" aria-label="Daily Challenge"></section>
-      <section class="card" id="contests" style="--o:5" aria-labelledby="contests-h"></section>
-      <section class="card" id="qotd" style="--o:9" aria-label="Question of the day"></section>
-      <section class="card" id="badges" style="--o:10" aria-label="Next badges"></section>
+  <div class="twocol">
+    <div class="cx-main" data-m="stagger">
+      <section class="card hero" id="daily" aria-labelledby="daily-h" data-m-now></section>
+      <section class="card" id="contests" aria-labelledby="contests-h"></section>
     </div>
-    <aside class="cx-side">
-      <section class="card" id="stats" style="--o:2" aria-label="Your stats"></section>
-      <section class="card" id="rivals" style="--o:3" aria-label="Rivals"></section>
-      <section class="card" id="season" style="--o:4" aria-label="Season"></section>
-      <section class="card" id="preview" style="--o:6" aria-label="This week’s board"></section>
-      <section class="card" id="champs" style="--o:8" aria-label="Champions"></section>
-      <section class="card" id="private" style="--o:11" aria-label="Your private contests"></section>
+    <aside class="twocol-side" aria-label="Your competition" data-m="stagger">
+      <div class="card cx-glance">
+        <section class="cx-part" id="stats" aria-label="Your stats"></section>
+        <section class="cx-part" id="rivals" aria-label="Rivals"></section>
+        <section class="cx-part" id="season" aria-label="Season"></section>
+        <section class="cx-part" id="preview" aria-label="This week’s board"></section>
+        <section class="cx-part" id="badges" aria-label="Next badges"></section>
+        <section class="cx-part" id="private" aria-label="Your private contests"></section>
+      </div>
     </aside>
   </div>
 </main>
@@ -56,7 +60,7 @@
 <script src="/assets/ui.js"></script>
 <script src="/assets/kit.js"></script>
 <script src="/assets/charts.js"></script>
-<script>UI.shell('compete');</script>
+<script>UI.shell({ page: 'compete', now: false, ownPrimary: true });   /* the Daily's Start is this page's one orange: no Now strip on a phone, the sidebar's Start quiet */</script>
 <script src="/assets/compete-ui.js"></script>
 <script src="/compete/overview.js"></script>
 </body>

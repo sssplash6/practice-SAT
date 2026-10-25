@@ -13,7 +13,8 @@
    Question types (386, Shift+Enter opens the type's page), Mistakes (named
    misconceptions across types), Pages, Actions, Settings (every registry key with its
    value), Help (answers.json). With no query: Suggested (Up next), Recent (the last 5
-   run, localStorage satf.palette), Skills, Pages, Actions.
+   run, localStorage satf.palette), Skills (5, then "All n skills"), Pages, Actions (6,
+   then "More actions").
    Keys: ↑ ↓ move, Enter runs, Shift+Enter the alternative, Tab the row's sub-actions,
    Esc closes and focus returns.
    ========================================================================== */
@@ -30,9 +31,26 @@
   const cap = t => t ? t[0].toUpperCase() + t.slice(1) : t;
   const words = s => String(s || '').toLowerCase().replace(/&/g, ' and ').replace(/[‐-―-]/g, ' ')
     .replace(/[^a-z0-9∞\s]/g, ' ').split(/\s+/).filter(Boolean);
-  const icon = (name, size = 20) => { const t = doc.createElement('template'); t.innerHTML = UI.svg(UI.ICON[name] || '', size); return t.content.firstElementChild; };
+  const icon = (name, size = 20) => UI.icon(name, size) || null;   // the shared set; nothing for an unknown name
+  // the letters typed, marked in a row's label: each word's matching start in <b> (ui.css underlines it in amber)
+  function marked(text, toks) {
+    if (typeof text !== 'string' || !toks.length) return text;
+    const out = [];
+    let last = 0, m;
+    const re = /[A-Za-z0-9]+/g;
+    while ((m = re.exec(text))) {
+      const w = m[0].toLowerCase(), t = toks.filter(x => w.startsWith(x)).sort((a, z) => z.length - a.length)[0];
+      if (!t) continue;
+      out.push(text.slice(last, m.index), h('b', { text: m[0].slice(0, t.length) }));
+      last = m.index + t.length;
+    }
+    return out.length ? h('span', {}, ...out, text.slice(last)) : text;
+  }
   const setLength = () => { const n = (UI.prefs.now() || {}).set_length; return n === 0 ? null : (n || 10); };
   const qn = n => n ? `${fmt(n)} ${n === 1 ? 'question' : 'questions'}` : 'Endless';
+  // two layout rules of the palette's own (ui.css is the shared layer's): a skill row's meta, the footer's status
+  const CSS = '.pal-meta { display: inline-flex; align-items: center; gap: 10px; } .pal-status { margin-left: auto; color: var(--ink); }';
+  if (!doc.getElementById('pal-css')) doc.head.append(h('style', { id: 'pal-css', text: CSS }));
 
   /* ---- matching: every typed word is a word prefix of the text, or (3+ letters) inside it */
   function score(toks, text, extra) {
@@ -180,9 +198,11 @@
     const hit = only ? all.filter(x => only.includes(x.t.slug)) : toks.length ? best(all, toks, x => x.t.short, 19) : all;
     return hit.map(({ t }) => {
       const m = topics.get(t.slug) || {}, open = (m.traps || []).length, n = setLength();
-      const meta = h('span', { style: 'display: inline-flex; align-items: center; gap: 10px' },
-        h('span', { class: 'mbar', role: 'img', 'aria-label': `Mastery ${Math.round((m.mastery || 0) * 100)}%` }, h('i', { style: `--m: ${Math.max(0, Math.min(1, m.mastery || 0))}` })),
-        open ? h('span', { 'aria-label': `${open} open mistakes` }, h('i', { class: 'dot', 'aria-hidden': 'true' }), ` ${fmt(open)}`) : null);
+      // a mastery bar only once the skill has answers: no empty grey track on an untouched skill
+      const meta = h('span', { class: 'pal-meta' },
+        m.answered ? h('span', { class: 'mbar', role: 'img', 'aria-label': `Mastery ${Math.round((m.mastery || 0) * 100)}%` }, h('i', { style: `--m: ${Math.max(0, Math.min(1, m.mastery || 0))}` })) : null,
+        // a neutral count, as the tree's (the critic: orange is for the one thing to do, not a count)
+        open ? h('span', { class: 'badge n soft', 'aria-label': `${open} open mistakes` }, fmt(open)) : null);
       const body = extra => ({ topics: [t.slug], count: n, source: 'palette', ...extra });
       const subs = [
         drillRow(`Practise · ${qn(n)}`, body(), { as: `${t.short} · Practise · ${qn(n)}` }),
@@ -206,8 +226,9 @@
     const count = typedCount(toks) && parse.body.count ? parse.body.count : 5;
     const rows = typeMatches(toks, parse, cap_);
     return rows.map(t => {
-      const body = { templates: [t.template], count, source: 'palette', ...set };
-      return { ...drillRow(t.name, body, { sub: [(UI.TOPIC[t.topic] || {}).short, t.about].filter(Boolean).join(' · '), icon: UI.glyph(t.topic), meta: `Practise this type · ${count}` }),
+      const rw = UI.subjectOf(t.topic) === 'rw';
+      const body = { templates: [t.template], count, source: 'palette', ...set, ...(rw ? { subject: 'rw' } : {}) };
+      return { ...drillRow(t.name, body, { sub: [UI.topicName(t.topic), t.about].filter(Boolean).join(' · '), icon: UI.glyph(t.topic), meta: `Practise this type · ${count}` }),
         alt: () => go(`/types/?t=${encodeURIComponent(t.template)}`) };
     });
   }
@@ -229,8 +250,7 @@
       .concat([{ label: 'Settings', href: '/me/settings/', icon: 'settings', kbd: 'G S' },
         { label: 'Help & FAQ', href: '/help/', icon: 'help', kbd: 'G H' },
         { label: 'Your reports', href: '/me/settings/#reports', icon: 'chat' },
-        saved ? null : { label: 'Sign in', href: '/signin/', icon: 'signin' },
-        { label: 'Sign in another device', href: '/pair/', icon: 'devices' }]).filter(Boolean);
+        saved ? null : { label: 'Sign in', href: '/signin/', icon: 'signin' }]).filter(Boolean);
     return pages.map(p => ({ label: p.label, icon: icon(p.icon, 18), kbd: p.kbd, also: 'page go open',
       run: () => go(p.href, { label: p.label, act: { href: p.href } }) }));
   }
@@ -254,7 +274,6 @@
       s.mistakes ? drillRow(`Fix all mistakes (${fmt(s.mistakes)})`, { pool: 'redo', source: 'palette' }, { icon: icon('review', 18), also: 'redo review' }) : null,
       drillRow('Practise types I haven’t met', { pool: 'untried', count: n || 10, source: 'palette' }, { icon: icon('practice', 18), also: 'new untried unseen' }),
       act('Send feedback', ACTIONS.feedback, { icon: 'chat', id: 'feedback', also: 'report a bug problem idea' }),
-      UI.has('pair') ? act('Continue on your phone', ACTIONS.phone, { icon: 'devices', id: 'phone', also: 'pair qr mobile' }) : null,
       saved ? null : { label: 'Save progress', icon: icon('save', 18), also: 'email account keep', run: () => go('/me/settings/#account') },
       UI.learner().startsWith('a:') ? act('Copy device code', () => UI.copyText && UI.copyText(UI.learner(), { toast: 'Copied' }), { icon: 'devices' }) : null,
       UI.has('share') ? { label: 'Copy progress link', icon: icon('arrow', 18), also: 'share parent tutor', run: shareLink } : null,
@@ -340,14 +359,32 @@
   const niceDay = iso => { const d = new Date(iso + 'T12:00:00'); return d.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' }); };
   function goalCommands(toks) {
     const p = (data.me && data.me.profile) || {}, out = [];
-    if (toks[0] === 'target' || toks[0] === 'goal') {
-      const n = Number(toks[1]);
-      if (toks.length === 2 && n >= 200 && n <= 800) {
-        const v = Math.round(n / 10) * 10, was = p.target ?? null;
-        out.push({ label: `Target: ${was ? fmt(was) : 'none'} → ${fmt(v)}`, icon: icon('plan', 18), sub: 'Math, 200 to 800',
-          run: () => change(() => UI.api('/me', { method: 'PUT', body: { target: v } }), () => UI.api('/me', { method: 'PUT', body: { target: was } }), `Target ${fmt(v)}`) });
-      } else if (toks.length === 2 && n > 800 && n <= 1600) {
-        out.push({ label: `Target ${fmt(n)} is a total: type the Math part, 200 to 800`, icon: icon('plan', 18), disabled: true });
+    // "target 650" is Math; "target rw 650", "R&W 650" or "reading 650" is Reading and Writing; "target 1400"
+    // (over 800) or "total 1400" is a 400-1600 total, split to keep each section's share of the scores now
+    // (the Math start and the R&W score on the profile; an even split until both are known), each part
+    // rounded to 10 and kept inside 200-800
+    const head = ['target', 'goal', 'total'].includes(toks[0]);
+    const said = toks.join(' ');
+    const subj = /\b(rw|r and w|reading|english)\b/.test(said) ? 'rw' : /\bmath\b/.test(said) ? 'math' : /\btotal\b/.test(said) ? 'total' : null;
+    const num = toks.length >= 2 && toks.length <= 5 && /^\d{3,4}$/.test(toks[toks.length - 1]) ? +toks[toks.length - 1] : NaN;
+    if ((head || subj === 'rw') && num) {
+      const r10 = x => Math.round(x / 10) * 10, clamp = x => Math.max(200, Math.min(800, x));
+      const was = { target: p.target ?? null, rw_target: p.rw_target ?? null };
+      const put = (body, text) => change(() => UI.api('/me', { method: 'PUT', body }), () => UI.api('/me', { method: 'PUT', body: was }), text);
+      if (subj === 'rw' && num >= 200 && num <= 800) {
+        const v = r10(num);
+        out.push({ label: `R&W target: ${was.rw_target ? fmt(was.rw_target) : 'none'} → ${fmt(v)}`, icon: icon('plan', 18), sub: 'Reading and Writing, 200 to 800',
+          run: () => put({ rw_target: v }, `R&W target ${fmt(v)}`) });
+      } else if (subj !== 'total' && subj !== 'rw' && num >= 200 && num <= 800) {
+        const v = r10(num);
+        out.push({ label: `Math target: ${was.target ? fmt(was.target) : 'none'} → ${fmt(v)}`, icon: icon('plan', 18), sub: 'Math, 200 to 800',
+          run: () => put({ target: v }, `Math target ${fmt(v)}`) });
+      } else if ((subj === 'total' || subj === null) && num >= 400 && num <= 1600 && (subj === 'total' || num > 800)) {
+        const n = r10(num), m0 = p.current, r0 = p.rw_now;
+        const share = m0 && r0 ? m0 / (m0 + r0) : 0.5;
+        const rw = clamp(r10(n - clamp(r10(n * share)))), math = clamp(n - rw);
+        out.push({ label: `Total target: ${was.target && was.rw_target ? fmt(was.target + was.rw_target) : 'none'} → ${fmt(math + rw)}`, icon: icon('plan', 18),
+          sub: `R&W ${rw} + Math ${math}`, run: () => put({ rw_target: rw, target: math }, `Total target ${fmt(math + rw)} · R&W ${rw} + Math ${math}`) });
       }
     }
     if ((toks[0] === 'exam' || toks[0] === 'sat' || toks[0] === 'test') && toks.length >= 2) {
@@ -401,21 +438,27 @@
     const input = h('input', { type: 'text', role: 'combobox', 'aria-expanded': 'true', 'aria-controls': listId, 'aria-autocomplete': 'list',
       'aria-label': 'Search skills, question types, pages and actions', placeholder: 'Search skills, question types, pages and actions',
       autocomplete: 'off', autocapitalize: 'off', spellcheck: 'false', enterkeyhint: 'go' });
-    const qbar = h('div', { class: 'palette-q' }, icon('search', 20), input);
+    const qbar = h('div', { class: 'palette-q' }, icon('search', 18), input);
     const list = h('div', { class: 'palette-list', role: 'listbox', id: listId, 'aria-label': 'Results' });
-    const status = h('span', { role: 'status', style: 'margin-left: auto; color: var(--ink)' });
+    const status = h('span', { role: 'status', class: 'pal-status' });
     const foot = h('div', { class: 'palette-foot' }, h('span', { text: '↑↓ move' }), h('span', { text: 'Enter run' }),
       h('span', { text: 'Tab more' }), h('span', { text: 'Esc close' }), status);
     dlg.append(qbar, list, foot);
+    // soft edges where the list has more above or below; repainted as results change
+    if (UI.edgeFade) { const fade = UI.edgeFade(list); if (fade) new MutationObserver(fade).observe(list, { childList: true }); }
     say = t => { status.textContent = t; };
-    let entries = [], active = 0, expanded = null, seq = 0, typeCap = 8;
+    let entries = [], active = 0, expanded = null, seq = 0, typeCap = 8, skillCap = 5, actCap = 6, toksNow = [];
 
     function groupsFor(q) {
       const toks = words(q);
       const parse = UI.parseSet(q, { count: setLength(), types: data.types ? data.types.list : null });
       if (!toks.length) {
         const recent = lget(RECENT, []).filter(x => x && x.label).map(x => ({ label: x.label, sub: x.sub, icon: icon('clock', 18), run: () => replay(x.act) }));
-        return [['Suggested', suggested()], ['Recent', recent], ['Skills', skillRows([])], ['Pages', pageRows()], ['Actions', actionRows()]];
+        // a long group shows its first rows and a row for the rest, so the empty list is a screen, not sixty rows
+        const capped = (rows, n, label, open) => rows.length > n ? rows.slice(0, n).concat({ label, icon: icon('chev', 18), keep: true, run: () => { open(); paint(); } }) : rows;
+        return [['Suggested', suggested()], ['Recent', recent],
+          ['Skills', capped(skillRows([]), skillCap, `All ${UI.TOPICS.length} skills`, () => { skillCap = 99; })], ['Pages', pageRows()],
+          ['Actions', capped(actionRows(), actCap, 'More actions', () => { actCap = 99; })]];
       }
       const types = typeRows(toks, parse, typeCap);
       const more = data.types && typeCap < 50 && typeMatches(toks, parse, 50).length > typeCap;
@@ -441,7 +484,7 @@
       const el = h('div', { role: 'option', id: `pal-o${++seq}`, 'aria-selected': 'false', 'aria-disabled': row.disabled ? 'true' : null,
         class: sub ? 'btn sm' : null },
         sub ? null : row.icon || null,
-        h('span', { class: 'opt-main' }, row.label, row.sub ? h('span', { class: 'opt-sub', text: row.sub }) : null),
+        h('span', { class: 'opt-main' }, marked(row.label, toksNow), row.sub ? h('span', { class: 'opt-sub', text: row.sub }) : null),
         row.meta ? h('span', { class: 'opt-meta' }, row.meta) : null,
         row.kbd && !sub ? h('span', { class: 'opt-meta' }, UI.keys.caps(row.kbd)) : null);
       const entry = { el, row };
@@ -452,6 +495,7 @@
     function paint() {
       const q = input.value;
       const groups = groupsFor(q).filter(([, rows]) => rows.length);
+      toksNow = words(q);
       list.replaceChildren();
       entries = [];
       groups.forEach(([label, rows], gi) => {
@@ -498,7 +542,7 @@
       const first = entries.findIndex((x, k) => k > at && x.parent);
       activate(expanded && first >= 0 ? first : at);
     }
-    input.addEventListener('input', () => { active = 0; expanded = null; typeCap = 8; say(''); paint(); });
+    input.addEventListener('input', () => { active = 0; expanded = null; typeCap = 8; skillCap = 5; actCap = 6; say(''); paint(); });
     input.addEventListener('keydown', e => {
       const n = entries.length;
       if (e.key === 'ArrowDown') { e.preventDefault(); if (n) activate((active + 1) % n); }

@@ -2,9 +2,12 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Review · SAT Freshman</title>
 <meta name="robots" content="noindex">
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="icon" href="/assets/mark.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
 <link rel="manifest" href="/manifest.webmanifest">
 <meta name="theme-color" content="#FFFFFF">
 <script src="/assets/head.js"></script>
@@ -17,8 +20,11 @@
   })();
 </script>
 <noscript><meta http-equiv="refresh" content="0; url=/review/?tab=redo"></noscript>
+<!-- after the redirect, so it never waits on the sheet; render-blocking, so the moment before the move paints the
+     warm page (and dark in dark mode), not a white flash -->
+<link rel="stylesheet" href="/assets/ui.css">
 </head>
 <body>
-<p><a href="/review/?tab=redo">Open Review</a></p>
+<main class="page"><p><a href="/review/?tab=redo">Open Review</a></p></main>
 </body>
 </html>

@@ -1,0 +1,108 @@
+/* Kit components, polish round (2026-10-19). For the lead to merge into web/assets/ui.css.
+   kit.js already makes this markup; until these rules land, every piece falls back to today's
+   look: the slider and the roll check for their own CSS (the --ind sentinel, .roll being absolute)
+   and stay off without it. Where each block goes in ui.css (line numbers as of today):
+
+   1  .why-q, .why-pop        after .tip (~2236); the touch hit area joins the touch block (~2485)
+   2  [data-saving]           after .quiet (~922), with the other button states
+   3  .meter.ticks            after .meter (~1273)
+   4  .roll                   after .counting (~1259); its print lines join the print block (~2533)
+   5  .heat-readout, .heat-d  after .heat-stats (~1865)
+   6  .seg-ind                after the .seg block (~1073)
+   7  .tab-ind                after the .tablist block (~1105)
+   The reduced-motion rules (~2470) already stop every transition and animation here; UI.roll
+   and the slider also check reduced motion in JS. */
+
+/* 1. UI.why: the one "?" that explains (a word with .word). 20px, 8px corners, never round */
+.why-q {
+  appearance: none; border: 0; padding: 0 5px; margin: 0 0 0 4px; position: relative; flex: none;
+  display: inline-grid; place-items: center; min-width: 20px; height: 20px; border-radius: 8px;
+  background: none; box-shadow: inset 0 0 0 1px var(--line); cursor: pointer; vertical-align: 2px;
+  font: 600 12.5px/1 var(--font); letter-spacing: 0; text-transform: none; color: var(--soft);
+  transition: background-color .16s var(--ease), color .16s var(--ease);
+}
+.why-q.word {
+  padding: 0 4px; box-shadow: none; font-weight: 500;
+  text-decoration: underline dotted var(--faint); text-underline-offset: 3px;
+}
+.why-q[aria-expanded="true"] { background: var(--well); color: var(--ink); }
+@media (hover: hover) and (pointer: fine) { .why-q:hover { background: var(--well); color: var(--ink); } }
+.why-pop { max-width: 320px; }
+.why-pop p { margin: 0; font: 400 14.5px/1.5 var(--font); color: var(--ink); text-wrap: pretty; }
+.why-pop > * + * { margin-top: 8px; }
+.why-pop .meta { color: var(--soft); }
+/* in the touch block (~2485): a centred 44px hit area, no layout shift */
+@media (max-width: 759px), (pointer: coarse) {
+  .why-q::before { content: ""; position: absolute; left: 50%; top: 50%; width: 44px; height: 44px; transform: translate(-50%, -50%); }
+}
+
+/* 2. UI.saving: the label swaps in place (busy, done with a check, fail); the width holds */
+[data-saving] > .saving-l, [data-saving] > svg { animation: saving-in .16s var(--ease); }
+[data-saving] > svg { width: 16px; height: 16px; flex: none; }
+@keyframes saving-in { from { opacity: 0; transform: translateY(3px); } }
+
+/* 3. UI.meter({ticks: n}): the bar as n blocks, the done ones amber (graphite with .ink) */
+.meter.ticks .meter-bar { display: flex; gap: 3px; background: none; }
+.meter.ticks .meter-bar > i {
+  flex: 1 1 0; min-width: 0; width: auto; border-radius: 2px; background: var(--track);
+  transition: background-color .16s var(--ease);
+}
+.meter.ticks .meter-bar > i[data-on] { background: var(--amber); }
+.meter.ink.ticks .meter-bar > i[data-on] { background: var(--ink); }
+
+/* 4. UI.roll: the moving copy sits over the real text (kept, transparent, for screen readers).
+   One 1.15em column per changed digit with an edge mask; tabular figures so nothing jumps */
+.roll-w { position: relative; display: inline-block; font-variant-numeric: tabular-nums; font-kerning: none; }
+.roll-w.rolling > .roll-t { opacity: 0; }
+.roll {
+  position: absolute;   /* kit.js checks this: without it UI.roll only sets the text. Keep it */
+  left: 0; top: 50%; transform: translateY(-50%);
+  display: flex; align-items: flex-start; white-space: pre; pointer-events: none;
+}
+.roll > span, .roll-s > span { display: block; height: 1.15em; line-height: 1.15em; }
+.roll-c { overflow: hidden; mask-image: linear-gradient(transparent, #000 18%, #000 82%, transparent); }
+.roll-s { display: block; }
+/* in the print block (~2533) */
+@media print {
+  .roll { display: none; }
+  .roll-w.rolling > .roll-t { opacity: 1; }
+}
+
+/* 5. heatmap readout: one fixed line under the grid (hovered or focused day, else the latest
+   active day). It names the weekday, so the M / W / F labels go to screen readers only
+   (INSPO-VISUAL row 14); their 12px column shrinks to 0 */
+.heat-readout {
+  min-height: 18px; margin-top: 8px; font: 500 12.5px/18px var(--font); font-variant-numeric: tabular-nums;
+  color: var(--soft); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.heatmap:has(.heat-readout) .heat { grid-template-columns: 0 repeat(var(--weeks, 26), minmax(0, var(--hc))); }
+.heatmap:has(.heat-readout) .heat-d { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+@media (max-width: 759px) {
+  .heat-readout { min-height: 36px; white-space: normal; }
+  .heatmap:has(.heat-readout) .heat { grid-template-columns: 0 repeat(var(--weeks, 20), minmax(0, 1fr)); max-width: calc(var(--weeks, 20) * 17px); }
+}
+
+/* 6. UI.seg: one paper thumb with the amber ring slides under the options (kit.js .seg-ind).
+   [data-ind] is set only while the options sit on one line; otherwise the static mark shows */
+.seg:has(> .seg-ind) { position: relative; isolation: isolate; }
+.seg:has(> .seg-ind) > :not(.seg-ind) { z-index: 1; }
+.seg-ind {
+  --ind: 1;   /* kit.js reads this sentinel: without it there is no slider. Keep it */
+  position: absolute; left: 0; top: 0; z-index: 0; display: none; pointer-events: none;
+  border-radius: 8px; background: var(--paper); box-shadow: inset 0 0 0 1.5px var(--amber);
+  transition: transform .2s var(--ease), width .2s var(--ease), height .2s var(--ease);
+}
+.seg[data-ind] > .seg-ind { display: block; }
+.seg[data-ind] > [aria-checked="true"] { background: none; box-shadow: none; }
+
+/* 7. UI.tabs: one amber 2px underline slides between tabs (kit.js .tab-ind), inset 12px like the
+   static ::after it replaces while the tabs sit on one line */
+.tablist:has(> .tab-ind) { position: relative; }
+.tab-ind {
+  --ind: 1;   /* kit.js reads this sentinel: without it there is no slider. Keep it */
+  position: absolute; left: 0; bottom: 0; height: 2px; display: none; pointer-events: none;
+  transition: transform .2s var(--ease), width .2s var(--ease);
+}
+.tab-ind::after { content: ""; position: absolute; left: 12px; right: 12px; bottom: 0; height: 2px; border-radius: 2px; background: var(--amber); }
+.tablist[data-ind] > .tab-ind { display: block; }
+.tablist[data-ind] [role="tab"][aria-selected="true"]::after { visibility: hidden; }

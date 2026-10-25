@@ -27,12 +27,14 @@
                                              a fine pointer only: touch long-presses, keys use M)
      A rejected on() keeps the row as it was and says why inside it.
    UI.taskTag(task) -> 'Focus' | 'Warm-up' | ...      UI.taskQuestion(task) -> bool
-   UI.infoTip(text, label) -> button   an (i) that says a help line on hover and focus, or on a
-                                        tap on a touch screen (help is on demand, decision 7)
-   UI.weekPlanner(host, week) -> {el, value()}   next week's plan, hosted by U14's sheet
-     week  {plan, monday, days [{date, kind, minutes, topics, test}], swaps [{topic, name, gain}],
-            focus [topic], onSaved(reply)}
-     "Looks good" sends PUT /api/plan/{plan}/week/{monday} {days, swap?}.
+   UI.infoTip(text, label) -> button   the shared "?" (UI.why, kit.js) under its old name: the plan's
+                                        callers use UI.why; label 'About X' becomes its about 'X'
+   UI.weekPlanner(host, week) -> {el, value(), save(), error(text)}   a week's shape (Plan › Shape week)
+     week  {plan, monday, today, start, last, days [{date, kind, minutes, topics, test}],
+            swaps [{topic, name, gain}], focus [topic], button, onSaved(reply)}
+     save(): a week not yet begun goes as PUT /api/plan/{plan}/week/{monday} {days}; otherwise each changed day
+     as PUT /api/plan/{plan}/day/{date}; a swap puts the new skill in place of the old on each day that holds it.
+     button: false leaves the Save to the host (a sheet's own action).
    ========================================================================== */
 (() => {
   'use strict';
@@ -50,21 +52,27 @@
     for (const c of kids.flat(3)) if (c !== null && c !== undefined && c !== false) e.append(c instanceof Node ? c : String(c));
     return e;
   };
-  const name = slug => (UI.TOPIC && UI.TOPIC[slug] && UI.TOPIC[slug].short) || String(slug || '').replace(/_/g, ' ');
+  const name = slug => (UI.topicName ? UI.topicName(slug) : (UI.TOPIC && UI.TOPIC[slug] && UI.TOPIC[slug].short) || String(slug || '').replace(/_/g, ' '));
   const mins = m => (UI.dur ? UI.dur(m) : `${Math.round(m)}m`);
   const plural = (n, w) => `${n} ${w}${n === 1 ? '' : 's'}`;
   // key hints only where there is a keyboard
   const fine = () => { try { return matchMedia('(hover: hover) and (pointer: fine)').matches; } catch (_) { return false; } };
+  const phone = () => { try { return matchMedia('(max-width: 759px)').matches; } catch (_) { return false; } };
 
   const CSS = `
   .trows { display: grid; gap: 0; }
   .trow { display: grid; grid-template-columns: 32px minmax(0, 1fr) auto; gap: 4px 12px; align-items: start;
-    padding: 14px 0; border-top: 1px solid var(--line); position: relative; }
+    padding: 10px 0; border-top: 1px solid var(--line); position: relative; }
   .trows > .trow:first-child { border-top: 0; }
   .trow-box { appearance: none; width: 28px; height: 28px; margin-top: 1px; border-radius: 50%; border: 1.5px solid var(--faint);
     background: var(--paper); display: grid; place-items: center; cursor: pointer; color: transparent; padding: 0; position: relative; }
   .trow-box::before { content: ""; position: absolute; inset: -8px; }
   .trow-box svg { width: 16px; height: 16px; }
+  .trow-box { transition: background-color .16s var(--ease), border-color .16s var(--ease), color .16s var(--ease); }
+  @media (hover: hover) and (pointer: fine) { .trow-box:not(:disabled):hover { border-color: var(--ink); } }
+  .trow-kind { display: inline-grid; place-items: center; width: 16px; height: 16px; flex: none; color: var(--soft); align-self: center; }
+  .trow-kind svg { width: 16px; height: 16px; }
+  .trow-head .trow-kind + .trow-title { margin-left: -2px; }
   .trow[data-status="active"] .trow-box { background: linear-gradient(90deg, var(--ink) 50%, var(--paper) 50%); border-color: var(--ink); }
   .trow[data-status="done"] .trow-box, .trow[data-status="marked"] .trow-box, .trow[data-status="made_up"] .trow-box { background: var(--ink); border-color: var(--ink); color: var(--on-ink); }
   .trow[data-status="skipped"] .trow-box::after { content: ""; width: 12px; height: 1.5px; background: var(--soft); }
@@ -75,39 +83,39 @@
   .trow-main { min-width: 0; display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 12px; }
   .trow-main > .trow-detail, .trow-main > .trow-why, .trow-main > .trow-sub, .trow-main > .trow-err, .trow-main > .help { flex: 1 0 100%; }
   .trow-main > .trow-detail { display: none; }
-  .trow[data-next] .trow-main > .trow-detail { display: flex; }   /* only the next task shows its detail: rows never change height under a drag */
-  .trow-head { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; min-height: 28px; }
+  /* only the next task shows its detail on a mouse (rows never change height under a drag); a focused row, and every
+     row on a touch screen, shows it too, so nothing lives only in the row's hover title */
+  .trow[data-next] .trow-main > .trow-detail, .trow:focus-within .trow-main > .trow-detail { display: flex; }
+  @media (pointer: coarse) { .trow-main > .trow-detail { display: flex; } }
+  /* one line: a long title wraps inside itself, never under its kind mark */
+  .trow-head { display: flex; align-items: center; gap: 4px 8px; min-height: 28px; }
+  .trow-head > :not(.trow-title) { flex: none; }
   .trow-n { width: 28px; height: 28px; border-radius: 50%; display: grid; place-items: center; background: var(--tile-2);
-    font: 500 12.5px var(--mono); color: var(--ink); }
-  .trow-title { font: 600 15px/1.3 var(--font); color: var(--ink); }
-  .trow[data-next] .trow-title { font-weight: 700; }
-  .trow[data-led]::before { content: ""; position: absolute; left: -12px; top: 14px; bottom: 14px; width: 3px; border-radius: 2px; background: var(--amber); }
-  .trow-detail { margin: 0; font: 400 13.5px/1.45 var(--font); color: var(--ink); display: flex; flex-wrap: wrap; gap: 4px 10px; align-items: center; }
-  .trow-detail .chip { height: 28px; padding: 0 9px 0 6px; gap: 6px; font-size: 13px; }
+    font: 500 12.5px var(--font); font-variant-numeric: tabular-nums; color: var(--ink); }
+  .trow-title { min-width: 0; font: 600 14.5px/1.35 var(--font); color: var(--ink); }
+  .trow-detail { margin: 0; font: 400 12.5px/1.45 var(--font); color: var(--ink); display: flex; flex-wrap: wrap; gap: 4px 10px; align-items: center; }
+  .trow-detail .chip { height: 28px; padding: 0 9px 0 6px; gap: 6px; }
   .trow-detail .chip .glyph { width: 16px; height: 16px; }
-  .trow-meta { margin: 0; font: 500 12.5px/1.4 var(--mono); color: var(--soft); font-variant-numeric: tabular-nums; }
+  .trow-meta { margin: 0; font: 500 12.5px/1.4 var(--font); color: var(--soft); font-variant-numeric: tabular-nums; }
   .trow-meta b { font-weight: 500; color: var(--ink); }
-  .trow-why { margin: 2px 0 0; padding: 0; list-style: none; display: grid; gap: 3px; font: 400 13px/1.45 var(--font); color: var(--soft); }
+  .trow-why { margin: 2px 0 0; padding: 0; list-style: none; display: grid; gap: 4px; font: 400 12.5px/1.45 var(--font); color: var(--soft); }
   .trow-why a { color: inherit; text-decoration: underline; text-decoration-color: var(--line); text-underline-offset: 3px; }
   .trow-why a:hover { color: var(--ink); }
   .trow-act { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; justify-content: flex-end; margin-top: -2px; }
-  .trow-act .quiet, .trow-sub .quiet, .trow-detail .quiet { margin: 0; padding: 6px 10px; min-height: 32px; font-size: 14px; }
-  .trow-detail .quiet { min-height: 28px; padding: 3px 8px; font-size: 13px; }
-  .trow-more { color: var(--soft); }
-  .trow-more:hover { color: var(--ink); }
-  /* the grip sits in the card's left gutter, shown on hover, so every title starts at the same x */
-  .trow-grip { display: none; position: absolute; left: -21px; top: 17px; width: 18px; height: 22px; place-items: center; color: var(--soft); cursor: grab; touch-action: none; opacity: 0; transition: opacity .12s; }
+  /* the grip sits in the card's left padding (16px), shown on hover, so every title starts at the same x */
+  .trow-grip { display: none; position: absolute; left: -16px; top: 13px; width: 16px; height: 22px; place-items: center; color: var(--soft); cursor: grab; touch-action: none; opacity: 0; transition: opacity .12s; }
+  .trow-grip svg { width: 16px; height: 16px; }
   .trow:hover .trow-grip, .trow:focus-within .trow-grip { opacity: 1; }
   @media (hover: hover) and (pointer: fine) { .trow-grip { display: grid; } }
   .trow-sub { display: flex; flex-wrap: wrap; gap: 6px 8px; align-items: center; margin-top: 4px; }
   .trow-sub .k { margin-right: 2px; }
-  .trow-sub .field { width: 76px; height: 34px; font: 500 14px var(--mono); text-align: center; }
-  .trow-sub .chips > button { min-height: 34px; padding: 0 12px; font-size: 13px; }
-  .trow-err { margin: 2px 0 0; font: 500 13px/1.4 var(--font); color: var(--ink); }
+  .trow-sub .field { width: 76px; height: 36px; font: 500 16px var(--font); font-variant-numeric: tabular-nums; text-align: center; }
+  .trow-sub .chips > button { min-height: 34px; padding: 0 12px; }
+  .trow-err { margin: 2px 0 0; font: 500 12.5px/1.4 var(--font); color: var(--ink); }
   .trow-err:empty { display: none; }
   .trow-err::before { content: ""; display: inline-block; width: 7px; height: 7px; margin-right: 7px; border-radius: 50%; background: var(--ink); vertical-align: 1px; }
   .trow[aria-busy="true"] .trow-act { opacity: .5; pointer-events: none; }
-  .trow.compact { padding: 9px 0; }
+  .trow.compact { padding: 8px 0; }
   @media (max-width: 759px) {
     .trow { grid-template-columns: 32px minmax(0, 1fr); }
     .trow-act { grid-column: 2; justify-content: flex-start; }
@@ -119,20 +127,42 @@
     .trow:has(.trow-more) .trow-main { padding-right: 40px; }
     .trow-act:has(> .trow-more:only-child) { height: 0; }
   }
-  .pl-i { appearance: none; border: 0; padding: 0; width: 20px; height: 20px; flex: none; border-radius: 50%; display: inline-grid; place-items: center;
-    background: none; box-shadow: inset 0 0 0 1.5px var(--soft); color: var(--soft); font: 700 11.5px/1 var(--serif, Georgia, serif); font-style: italic;
-    cursor: help; position: relative; vertical-align: middle; }
-  .pl-i:hover, .pl-i:focus-visible { color: var(--ink); box-shadow: inset 0 0 0 1.5px var(--ink); }
-  .pl-i::before { content: ""; position: absolute; inset: -12px; }
-  .wplan { display: grid; gap: 14px; }
-  .wplan-days { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 6px; }
-  .wplan-day { display: grid; gap: 6px; align-content: start; padding: 10px 8px; border-radius: 10px; background: var(--tile); min-width: 0; }
-  .wplan-day[data-off] { background: repeating-linear-gradient(-45deg, var(--tile) 0 5px, var(--mat) 5px 6px); }
-  .wplan-day .k { letter-spacing: .08em; }
-  .wplan-day p { margin: 0; font: 400 12px/1.35 var(--font); color: var(--ink); overflow-wrap: anywhere; }
-  .wplan-day select { width: 100%; height: 32px; border-radius: 8px; border: 0; background: var(--paper); font: 500 12.5px var(--mono); }
-  .wplan-day .btn.sm { width: 100%; justify-content: center; padding: 0 4px; }
-  @media (max-width: 759px) { .wplan-days { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+  .wplan { display: grid; gap: 16px; }
+  .wplan-key { margin: -4px 0 0; }
+  /* the week as seven bars (a day's minutes after the changes, a busy day a hatched stub) under its total */
+  .wplan-week { display: grid; gap: 8px; }
+  .wplan-total { margin: 0; display: flex; align-items: baseline; justify-content: space-between; gap: 12px;
+    font: 600 14.5px var(--font); font-variant-numeric: tabular-nums; color: var(--ink-strong, var(--ink)); }
+  .wplan-chart { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 8px; }
+  .wplan-bar { display: grid; grid-template-rows: 56px auto; gap: 4px; justify-items: center; }
+  /* the planned week in graphite; a day you change turns ink, so the chart shows the change */
+  .wplan-bar > i { align-self: end; width: 100%; max-width: 28px; border-radius: 6px 6px 3px 3px; background: color-mix(in srgb, var(--ink) 22%, transparent);
+    transition: height .2s var(--ease), background-color .2s var(--ease); }
+  .wplan-bar[data-ch] > i { background: var(--ink); }
+  .wplan-bar[data-zero] > i { height: 2px !important; background: var(--line); }
+  .wplan-bar[data-off] > i { background: repeating-linear-gradient(-45deg, var(--mat) 0 1.5px, transparent 1.5px 4px), var(--well); box-shadow: inset 0 0 0 1px var(--line); }
+  .wplan-bar[data-past] > i { background: color-mix(in srgb, var(--ink) 10%, transparent); }
+  .wplan-bar > b { font: 500 11.5px var(--font); color: var(--soft); }
+  .wplan-bar[data-ch] > b { color: var(--ink); font-weight: 600; }
+  .wplan-days { display: grid; }
+  .wplan-day { display: grid; grid-template-columns: 64px minmax(0, 1fr) auto; align-items: center; gap: 4px 12px; min-height: var(--row-h); padding: 6px 0; border-top: 1px solid var(--line); }
+  .wplan-day:first-child { border-top: 0; }
+  .wplan-d { font: 600 14px var(--font); font-variant-numeric: tabular-nums; }
+  .wplan-w { min-width: 0; font: 400 12.5px/1.4 var(--font); color: var(--soft); overflow-wrap: anywhere; }
+  .wplan-day[data-past] .wplan-d { color: var(--soft); font-weight: 500; }
+  .wplan-c { justify-self: end; }
+  .wplan-c.seg > button { padding: 0 10px; font-variant-numeric: tabular-nums; }
+  /* the day as planned: the shared thumb, its label a step quieter than a change (as the builder's Normal) */
+  .wplan-c.seg > [data-base][aria-pressed="true"] { font-weight: 500; }
+  .wplan-swap { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding-top: 12px; border-top: 1px solid var(--line); }
+  .wplan-swap .label { flex: 1 0 100%; margin: 0; }
+  .wplan-to { display: inline-grid; color: var(--soft); }
+  .wplan-to svg { width: 16px; height: 16px; }
+  .wplan-foot { display: flex; justify-content: flex-end; }
+  @media (max-width: 759px) {
+    .wplan-day { grid-template-columns: 56px minmax(0, 1fr); }
+    .wplan-c { grid-column: 1 / -1; justify-self: start; }
+  }
   `;
   if (!doc.getElementById('plan-ui-css')) doc.head.append(h('style', { id: 'plan-ui-css' }, CSS));
 
@@ -147,9 +177,11 @@
   const taskQuestion = t => !!t.start && t.kind !== 'custom';
   const DONE = new Set(['done', 'marked', 'made_up']);
   const TOPIC_KINDS = new Set(['focus', 'map', 'learn', 'check', 'pace', 'habit']);
-  const CHECK = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
-  const GRIP = '<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><g fill="currentColor"><circle cx="9" cy="6" r="1.6"/><circle cx="15" cy="6" r="1.6"/><circle cx="9" cy="12" r="1.6"/><circle cx="15" cy="12" r="1.6"/><circle cx="9" cy="18" r="1.6"/><circle cx="15" cy="18" r="1.6"/></g></svg>';
-  const DOTS = '<svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="5.5" cy="12" r="2" fill="currentColor"/><circle cx="12" cy="12" r="2" fill="currentColor"/><circle cx="18.5" cy="12" r="2" fill="currentColor"/></svg>';
+  const ic = (n, size) => (UI.icon ? UI.icon(n, size) : '');
+  // a task's kind as a 16px mark before its title (its word stays in the meta line, or for screen readers)
+  const KIND_ICON = { recheck: 'again', fix: 'fix', learn: 'learn', check: 'twin', habit: 'trap', pace: 'clock', map: 'grid', focus: 'bolt',
+    test: 'tests', sweep: 'clean', words: 'words', qotd: 'plus', challenge: 'plus', extra: 'plus' };
+  const kindIcon = t => (t.kind === 'custom' ? (t.type === 'rw' || t.subject === 'rw' ? 'book' : 'pen') : KIND_ICON[t.kind] || 'plus');
   const WHERE = [['bluebook', 'Bluebook'], ['khan', 'Khan Academy'], ['book', 'A book'], ['tutor', 'A tutor'], ['other', 'Other']];
   const WHERE_LABEL = Object.fromEntries(WHERE);
 
@@ -158,7 +190,9 @@
   // Fix mistakes: how many, the names one tap away (its why list)
   const fixCount = t => ((t.start && t.start.body && t.start.body.ids) || []).length || String(t.detail || '').split(', ').filter(Boolean).length;
   function detailOf(t, compact) {
-    if (t.topics && t.topics.length && TOPIC_KINDS.has(t.kind)) return compact || !UI.chip ? t.topics.map(name).join(', ') : t.topics.map(s => UI.chip(s));
+    // on a phone several topics are one line of text: their chips would stack one a line
+    // (R&W skills have no sticker glyph: their names are words)
+    if (t.topics && t.topics.length && TOPIC_KINDS.has(t.kind)) return compact || !UI.chip || t.subject === 'rw' || (t.topics.length > 1 && phone()) ? t.topics.map(name).join(', ') : t.topics.map(s => UI.chip(s));
     if (t.kind === 'fix' && t.detail) return plural(fixCount(t), 'open mistake');
     // a zero is not news (decision 7): "0 due · due first" says nothing
     const text = String(t.detail || '').split(' · ').filter(x => !/^0 /.test(x) && x !== 'due first')
@@ -217,7 +251,7 @@
       else {
         box = h('button', { type: 'button', class: 'trow-box', role: 'checkbox', 'aria-checked': String(done),
           'aria-label': `${t.title}: ${done ? 'mark as not done' : 'mark as done'}`, disabled: o.readonly || o.past || (!t.counted && !own && t.kind !== 'custom') || null });
-        box.innerHTML = CHECK;
+        box.append(ic('check', 16));
         box.addEventListener('click', () => {
           if (own) return run('tick', { done: !done });
           if (t.status === 'marked') return run('undo');
@@ -228,10 +262,12 @@
       }
       const grip = o.drag && !o.readonly && !o.past && !done && t.status !== 'skipped' && t.status !== 'moved'
         ? h('span', { class: 'trow-grip', 'aria-hidden': 'true', title: 'Drag to another day' }) : null;
-      if (grip) { grip.innerHTML = GRIP; grip.addEventListener('pointerdown', e => o.drag(t, e)); }
+      if (grip) { grip.append(ic('grip', 16)); grip.addEventListener('pointerdown', e => o.drag(t, e)); }
+      // the kind: a mark before the title, and the meta line's first word ("Focus · 10 questions · 15 min") where the
+      // title doesn't say it; a one-line row says it to a screen reader
       const tag = tagOf(t);
-      const head = h('div', { class: 'trow-head' }, grip, h('span', { class: 'trow-title', text: t.title }),
-        tag && h('span', { class: 'badge soft', text: tag }),
+      const head = h('div', { class: 'trow-head' }, grip, h('span', { class: 'trow-kind', 'aria-hidden': 'true', title: taskTag(t) }, ic(kindIcon(t), 16)),
+        h('span', { class: 'trow-title', text: t.title }), tag && o.compact && h('span', { class: 'sr', text: ` · ${tag}` }),
         t.status === 'skipped' && h('span', { class: 'badge line', text: 'Skipped' }),
         t.status === 'moved' && t.moved_to && h('span', { class: 'meta', text: `Moved to ${UI.date ? UI.date(t.moved_to, 'long') : t.moved_to}` }));
       const main = h('div', { class: 'trow-main' }, head);
@@ -251,9 +287,9 @@
         main.append(line);
         main.title = line.textContent.trim();   // the hidden detail of a row that isn't next
       }
-      const meta = o.compact ? '' : metaOf(t);
+      const meta = o.compact ? '' : [tag, metaOf(t)].filter(Boolean).join(' · ');
       const rec = !o.compact && done ? receiptOf(t) : null;
-      if (rec) main.append(h('p', { class: 'trow-meta' }, h('b', { text: rec })));
+      if (rec) main.append(h('p', { class: 'trow-meta' }, tag ? `${tag} · ` : null, h('b', { text: rec })));
       else if (meta) main.append(h('p', { class: 'trow-meta', text: meta }));
       if (whyList) main.append(whyList);
       if (open === 'skip') main.append(h('div', { class: 'trow-sub' }, h('span', { class: 'k', text: 'Why?' }),
@@ -274,8 +310,9 @@
       }
       if (o.extra && !o.readonly) { const x = o.extra(t); if (x) main.append(x); }
       main.append(err);
-      // one visible action (Start, Review, Undo), the rest in the ⋯ menu (decision 7)
-      const act = h('div', { class: 'trow-act' });
+      // one visible action (Start, Review, Undo), the rest in the ⋯ menu (decision 7); on a mouse, a row that isn't
+      // next shows them while hovered or focused (.reveal, always on touch)
+      const act = h('div', { class: o.primary ? 'trow-act' : 'trow-act reveal' });
       const mine = [];
       if (!o.readonly) {
         const miss = t.result && t.result.asked ? t.result.asked - t.result.right : 0;
@@ -295,7 +332,8 @@
         } else if (q) {
           const resume = t.status === 'active' && t.total;
           const label = o.future ? 'Start' : resume ? `Resume · ${t.answered} of ${t.total}` : 'Start';
-          if (!(o.primary && o.led)) act.append(h('button', { type: 'button', class: o.primary ? 'pill sm' : o.future ? 'quiet' : 'btn sm', text: label, onclick: e => run('start', null, e.currentTarget) }));
+          // a phone shows every row's Start (no hover to hide them): a quiet word, so the day's own Start stays the one button
+          if (!(o.primary && o.led)) act.append(h('button', { type: 'button', class: o.primary ? 'pill sm' : o.future || phone() ? 'quiet' : 'btn sm', text: label, onclick: e => run('start', null, e.currentTarget) }));
           mine.push({ label: 'Skip', kbd: fine() ? 'S' : null, onClick: () => run('skip') });
           if (!o.future) mine.push({ label: 'Mark done…', sub: 'Did it elsewhere', onClick: () => { open = 'done'; draw(); } });
         } else if (own && t.kind === 'custom' && t.counted !== false) {
@@ -304,8 +342,8 @@
         if (whyList && t.kind !== 'fix') mine.push({ label: whyList.hidden ? 'Why this task' : 'Hide why', onClick: toggleWhy });
         const page = () => (!o.past && o.menu ? (o.menu(t) || []).filter(Boolean) : []);
         if ((mine.length || page().length) && UI.menu) {
-          const more = h('button', { type: 'button', class: 'btn sm icon trow-more', 'aria-label': `More for ${t.title}`, 'aria-haspopup': 'menu' });
-          more.innerHTML = DOTS;
+          const more = h('button', { type: 'button', class: 'ibtn trow-more', 'aria-label': `More for ${t.title}`, 'aria-haspopup': 'menu' });
+          more.append(ic('more', 20));
           more.addEventListener('click', () => {
             const p = page();
             UI.menu(more, [...mine, ...(mine.length && p.length ? [{ separator: true }] : []), ...p], { label: t.title });
@@ -333,72 +371,117 @@
     };
   }
 
-  function infoTip(text, label) {
-    const b = h('button', { type: 'button', class: 'pl-i', 'aria-label': label || 'About this', text: 'i' });
-    if (UI.tooltip) UI.tooltip(b, text);
-    b.addEventListener('click', () => { if (!fine() && UI.pop) UI.pop(b, () => h('p', { class: 'line-t', style: 'max-width: 320px', text }), { label: label || 'About this' }); });
-    return b;
-  }
+  const infoTip = (text, label) => UI.why(text, { about: String(label || '').replace(/^About /, '') || null });
 
+  /* a week's shape: busy days, short days, a day's minutes, one focus skill swapped. Days already past, or
+     outside what the server takes (today up to two days before the exam), are shown and left alone. Each day is one
+     choice, Busy or its minutes: 15 (a short day) and its own minutes, 15 less and 15 more */
+  const DAY3 = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
   function weekPlanner(host, week = {}) {
-    const days = (week.days || []).map(d => ({ ...d, change: 0, off: d.kind === 'off', short: false }));
+    const iso = d => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+    const first = week.today || iso(new Date());
+    const editable = d => d.date >= first && (!week.last || d.date <= week.last) && (!week.start || d.date >= week.start);
+    const study = d => ['practice', 'test', 'off'].includes(d.kind);
+    const wasOff = d => d.kind === 'off';
+    const days = (week.days || []).map(d => ({ ...d, base: d.minutes || 0, to: d.minutes || 0, off: wasOff(d), edit: editable(d) }));
+    const changed = d => d.edit && study(d) && (d.off !== wasOff(d) || (!d.off && d.to !== d.base));
+    const minsOf = d => (study(d) && !d.off ? d.to : 0);
+    const label = d => (UI.date ? `${UI.date(d.date, 'long').replace(/,.*/, '').slice(0, 3)} ${+d.date.slice(8)}` : d.date);
     let swap = null;
     const el = h('div', { class: 'wplan' });
-    const grid = h('div', { class: 'wplan-days' });
+    const list = h('div', { class: 'wplan-days', role: 'list' });
+    // the bars stay put and change height (a day's change moves its bar); the total rolls
+    const bars = days.map(d => h('span', { class: 'wplan-bar' }, h('i'), h('b', { text: DAY3[(new Date(`${d.date}T12:00`).getDay() + 6) % 7] })));
+    const chart = h('div', { class: 'wplan-chart', role: 'img' }, bars);
+    const sum = h('span');
+    const total = h('p', { class: 'wplan-total' }, h('span', { class: 'meta', text: 'This week' }), sum);
+    // the week before and after the changes, said once
+    function drawWeek() {
+      const top = Math.max(15, ...days.map(d => Math.max(study(d) && !wasOff(d) ? d.base : 0, minsOf(d))));
+      const before = days.reduce((s, d) => s + (study(d) && !wasOff(d) ? d.base : 0), 0), after = days.reduce((s, d) => s + minsOf(d), 0);
+      days.forEach((d, i) => {
+        const b = bars[i];
+        b.toggleAttribute('data-off', d.off);
+        b.toggleAttribute('data-zero', !d.off && !minsOf(d));
+        b.toggleAttribute('data-past', !d.edit);
+        b.toggleAttribute('data-ch', changed(d));
+        b.firstChild.style.height = `${d.off ? 14 : Math.round(minsOf(d) / top * 100)}%`;
+      });
+      chart.setAttribute('aria-label', days.map(d => `${label(d)} ${d.off ? 'busy' : minsOf(d) ? mins(minsOf(d)) : 'rest'}`).join(', '));
+      const text = before === after ? mins(after) : `${mins(before)} → ${mins(after)}`;
+      if (sum.textContent && sum.textContent !== text && UI.roll) UI.roll(sum, text); else sum.textContent = text;
+    }
     function drawDays() {
-      grid.replaceChildren(...days.map(d => {
-        const study = ['practice', 'test', 'off'].includes(d.kind);
-        const tile = h('div', { class: 'wplan-day', 'data-off': d.off ? '' : null },
-          h('span', { class: 'k', text: UI.date ? UI.date(d.date, 'long').replace(/,.*/, '') + ' ' + d.date.slice(8).replace(/^0/, '') : d.date }),
-          h('p', { text: d.off ? 'Busy' : d.kind === 'test' ? 'Test day' : study ? (d.topics || []).map(name).join(', ') || 'Practice' : 'Rest' }));
-        if (study) {
-          const base = d.minutes || 0;
-          const sel = h('select', { 'aria-label': `Minutes on ${d.date}`, disabled: d.off || d.short || null },
-            [-15, 0, 15].map(k => h('option', { value: String(k), selected: d.change === k || null, text: k ? `${k > 0 ? '+' : '−'}15 · ${Math.max(5, base + k)}m` : `${base}m` })));
-          sel.addEventListener('change', () => { d.change = +sel.value; });
-          const busy = h('button', { type: 'button', class: 'btn sm', 'aria-pressed': String(d.off), text: 'Busy', onclick: () => { d.off = !d.off; if (d.off) d.short = false; drawDays(); } });
-          const short = h('button', { type: 'button', class: 'btn sm', 'aria-pressed': String(d.short), text: 'Short', disabled: d.off || null, onclick: () => { d.short = !d.short; drawDays(); } });
-          tile.append(sel, busy, short);
-        }
-        return tile;
+      list.replaceChildren(...days.map(d => {
+        const lab = label(d);
+        const what = d.off ? 'Busy' : d.kind === 'test' ? 'Test day' : study(d) ? (d.topics || []).map(name).join(', ') || 'Practice' : 'Rest';
+        const row = h('div', { class: 'wplan-day', role: 'listitem', 'data-past': d.edit ? null : '' },
+          h('span', { class: 'wplan-d', text: lab }), h('span', { class: 'wplan-w', text: what }));
+        if (study(d) && d.edit) {
+          // Busy, then the minutes up from 15; the seg's buttons are its only children (Busy first, 15 second)
+          const opts = [...new Set([15, d.base - 15, d.base, d.base + 15].filter(m => m >= 15).map(m => Math.min(240, m)))].sort((a, b) => a - b);
+          const set = (off, m) => { d.off = off; d.to = m; drawDays(); };
+          row.append(h('div', { class: 'seg wplan-c', role: 'group', 'aria-label': `${lab}: busy, or its minutes` },
+            h('button', { type: 'button', 'aria-pressed': String(d.off), 'data-base': wasOff(d) ? '' : null, text: 'Busy', onclick: () => set(!d.off, d.to) }),
+            opts.map((m, i) => h('button', { type: 'button', 'aria-pressed': String(!d.off && d.to === m), 'data-base': m === d.base && !wasOff(d) ? '' : null, 'aria-label': `${m} minutes${m === d.base && !wasOff(d) ? ', as planned' : ''}`,
+              text: i ? String(m) : `${m} min`, onclick: () => set(false, m) }))));
+        } else if (study(d)) row.append(h('span', { class: 'wplan-c meta', text: d.date < first ? 'Past' : 'Fixed' }));
+        return row;
       }));
+      drawWeek();
     }
     drawDays();
-    el.append(grid);
+    el.append(h('p', { class: 'meta wplan-key', text: 'Busy moves the day’s focus to the next study day. 15 min keeps a short day.' }),
+      h('div', { class: 'wplan-week' }, total, chart), list);
     if ((week.swaps || []).length && (week.focus || []).length) {
       const from = h('select', { class: 'field sm', 'aria-label': 'Focus skill to swap out' }, week.focus.map(t => h('option', { value: t, text: name(t) })));
       const to = h('select', { class: 'field sm', 'aria-label': 'Skill to put on Focus' },
-        h('option', { value: '', text: 'Keep' }), week.swaps.map(s => h('option', { value: s.topic, text: `${s.name || name(s.topic)}${s.gain ? ` · ≈ +${s.gain}` : ''}` })));
+        h('option', { value: '', text: 'Keep' }), week.swaps.map(x => h('option', { value: x.topic, text: `${x.name || name(x.topic)}${x.gain ? ` · ≈ +${x.gain}` : ''}` })));
       const sync = () => { swap = to.value ? { from: from.value, to: to.value } : null; };
       from.addEventListener('change', sync); to.addEventListener('change', sync);
-      el.append(h('div', { class: 'trow-sub' }, h('span', { class: 'label', text: 'Swap a focus skill' }), from, h('span', { text: '→' }), to));
+      el.append(h('div', { class: 'wplan-swap' }, h('span', { class: 'label', text: 'Swap a focus skill this week' }), from, h('span', { class: 'wplan-to', 'aria-hidden': 'true' }, ic('arrow', 16) || '→'), to));
     }
     const value = () => ({
-      days: days.filter(d => d.off !== (d.kind === 'off') || d.change || d.short).map(d => {
+      days: days.filter(changed).map(d => {
         const out = { date: d.date };
-        if (d.off !== (d.kind === 'off')) out.off = d.off;
-        if (d.short) out.minutes = 15;
-        else if (d.change) out.minutes = Math.max(5, (d.minutes || 0) + d.change);
+        if (d.off !== wasOff(d)) out.off = d.off;
+        if (!d.off && d.to !== d.base) out.minutes = d.to;
         return out;
       }),
       ...(swap ? { swap } : {}),
     });
-    const err = h('p', { class: 'trow-err', role: 'status' });
-    const save = h('button', { type: 'button', class: 'pill sm', text: 'Looks good' });
-    save.addEventListener('click', async () => {
-      if (!week.plan || !UI.api) return;
-      err.textContent = '';
-      save.setAttribute('aria-busy', 'true');
-      try {
-        const r = await UI.api(`/plan/${encodeURIComponent(week.plan)}/week/${week.monday}`, { method: 'PUT', body: value() });
-        if (UI.toast) UI.toast('Next week saved');
-        if (week.onSaved) week.onSaved(r);
-      } catch (e) { err.textContent = (e && e.message) || 'Couldn’t save the week. Try again.'; }
-      finally { save.removeAttribute('aria-busy'); }
-    });
-    el.append(h('div', { class: 'trow-sub' }, save), err);
+    // a week that has not begun goes in one call (one entry in the plan's history); otherwise day by day. The
+    // swap rides on the days: each day that holds the skill takes the new one in its place.
+    async function save() {
+      const v = value();
+      if (!v.days.length && !v.swap) return null;
+      if (!week.plan || !UI.api) throw new Error('There is no plan to save to.');
+      const base = `/plan/${encodeURIComponent(week.plan)}`;
+      const whole = !!week.monday && week.monday >= first;
+      let reply = null;
+      if (whole && v.days.length) reply = await UI.api(`${base}/week/${week.monday}`, { method: 'PUT', body: { days: v.days } });
+      const per = {};
+      if (!whole) v.days.forEach(d => { const b = {}; if ('off' in d) b.off = d.off; if ('minutes' in d) b.minutes = d.minutes; per[d.date] = b; });
+      if (v.swap) days.filter(d => d.edit && !d.off && (d.topics || []).includes(v.swap.from)).forEach(d => {
+        per[d.date] = { ...(per[d.date] || {}), topics: [...new Set(d.topics.map(t => (t === v.swap.from ? v.swap.to : t)))].slice(0, 3) };
+      });
+      for (const [date, body] of Object.entries(per)) reply = await UI.api(`${base}/day/${date}`, { method: 'PUT', body });
+      return reply;
+    }
+    const err = h('p', { class: 'trow-err', role: 'status', 'data-nofold': '' });
+    const error = msg => { err.textContent = msg || ''; };
+    if (week.button !== false) {
+      const btn = h('button', { type: 'button', class: 'pill sm', text: 'Save the week' });
+      btn.addEventListener('click', () => {
+        error('');
+        const work = () => save().then(r => { if (week.onSaved) week.onSaved(r); return r; });
+        (UI.saving ? UI.saving(btn, work) : work()).catch(e => error((e && e.message) || 'Couldn’t save the week. Try again.'));
+      });
+      el.append(h('div', { class: 'wplan-foot' }, btn));
+    }
+    el.append(err);
     if (host) host.append(el);
-    return { el, value };
+    return { el, value, save, error };
   }
 
   Object.assign(UI, { taskRow, taskTag, taskQuestion, weekPlanner, infoTip });

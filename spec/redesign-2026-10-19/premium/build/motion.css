@@ -1,0 +1,307 @@
+/* ============================================================================
+   SAT Freshman -- motion (premium/MOTION.md, BUILD.md rules 6 and 7; builder A2)
+
+   For the lead: merge this whole file into web/assets/ui.css, after A1's sections and before the
+   "touch targets" and "print" blocks (it must come after every rule it overrides). Each section says
+   which old ui.css rules it replaces; delete those when merging (they are harmless if left, since
+   these come later, except where noted). kit.js and ui.js read the tokens below; without them they
+   fall back to the same numbers. Class and attribute names here are new (m-*, data-m-*, nav-mark,
+   tab-mark, focus-*, has-focus): grep found no other use in web/.
+
+   Order: 1 tokens, 2 reduced, 3 the test window, 4 view transitions, 5 surfaces (popover, menu, tip,
+   sheet), 6 toast stack, 7 folds, 8 meters, 9 keycaps, 10 clip indicator (then the section bar's waiting
+   chips and the sidebar's goal ring), 11 focus chrome, 12 the reduced net (read before merging).
+   ========================================================================== */
+
+/* ------------------------------------------------------------------ 1. tokens (MOTION 2)
+   Exits run at about 75% of their entry. A1 may define the same speeds and springs (BUILD rule 11):
+   these are MOTION.md's exact values, so one copy can go. */
+:root {
+  --m-press: 100ms;  --m-fast: 140ms;   --m-base: 200ms;   --m-slow: 260ms;
+  --m-reveal: 480ms; --m-moment: 600ms; --m-tip: 400ms;    --m-step: 30ms;
+  --m-pop: 160ms;    --m-pop-out: 120ms;                  /* popover, menu (S3, S4) */
+  --m-sheet: 260ms;  --m-sheet-out: 195ms;                /* desktop sheet (S1) */
+  --m-drawer: 500ms; --m-drawer-out: 375ms;               /* phone sheet (S2, Vaul) */
+  --m-toast: 400ms;  --m-toast-out: 300ms;                /* toast stack (S6, Sonner) */
+  --m-fold: 260ms;   --m-fold-out: 195ms;                 /* details.fold, card collapse */
+  --m-roll: 600ms;                                        /* UI.roll (NumberFlow's no-overshoot roll, app pace) */
+  --m-meter: 240ms;                                       /* a meter's fill on change (D3) */
+  --m-press-in: 50ms; --m-release: 250ms;                 /* C1 press (Comeau), A1's values: .05s and .25s --ease-release */
+
+  --m-rise: 8px; --m-nudge: 4px;                          /* block entry; small entry and every exit */
+  --m-pop-from: .96; --m-sheet-from: .98; --m-press-s: .97; --m-press-l: .985;
+
+  --ease-move:    cubic-bezier(.77, 0, .175, 1);          /* on screen, A to B (nav mark, FLIP, rail) */
+  --ease-quad:    cubic-bezier(.25, .46, .45, .94);
+  --ease-drawer:  cubic-bezier(.32, .72, 0, 1);           /* phone sheets (Vaul) */
+  --ease-release: cubic-bezier(.3, .7, .4, 1);            /* a press letting go (Comeau) */
+
+  /* the three springs: each is right only at its own duration (MOTION 2). Without linear() they are --ease */
+  --spring: var(--ease);      --spring-d: 370ms;          /* indicators, phone sheet, folds, roll */
+  --spring-soft: var(--ease); --spring-soft-d: 420ms;     /* press release, seg thumb, tab underline */
+  --spring-pop: var(--ease);  --spring-pop-d: 570ms;      /* rewards only */
+}
+@supports (animation-timing-function: linear(0, 1)) {
+  :root {
+    --spring: linear(0, 0.004 1.3%, 0.02 2.8%, 0.048 4.5%, 0.085 6.3%, 0.16 9.3%, 0.45 19.8%, 0.54 23.5%, 0.615 27%, 0.681 30.5%, 0.737 34%, 0.787 37.8%, 0.829 41.5%, 0.871 46.3%, 0.905 51.2%, 0.932 56.8%, 0.954 63%, 0.981 76.8%, 1);
+    --spring-soft: linear(0, 0.006 1.5%, 0.026 3.3%, 0.057 5%, 0.103 7%, 0.201 10.5%, 0.525 21%, 0.62 24.5%, 0.704 28%, 0.771 31.3%, 0.827 34.5%, 0.877 38%, 0.917 41.5%, 0.951 45.5%, 0.979 50%, 0.998 55%, 1.009 60.5%, 1.015 73.8%, 1);
+    --spring-pop: linear(0, 0.008 1.5%, 0.032 3%, 0.067 4.5%, 0.12 6.3%, 0.232 9.3%, 0.504 15.8%, 0.613 18.5%, 0.721 21.5%, 0.806 24.3%, 0.879 27%, 0.937 29.8%, 0.987 32.8%, 1.023 35.8%, 1.058 41%, 1.068 47.3%, 1.06 52.5%, 1.021 67.3%, 1.004 76.3%, 0.996 89%, 1);
+  }
+}
+
+/* ------------------------------------------------------------------ 2. reduced motion
+   The OS setting or the in-app switch: no travel, no scale, springs become --ease, every speed at
+   most 120ms. Fades and fills that explain a state stay (kit.js plays its entries and exits as 120ms
+   fades). */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --m-rise: 0px; --m-nudge: 0px; --m-pop-from: 1; --m-sheet-from: 1; --m-press-s: 1; --m-press-l: 1;
+    --spring: var(--ease); --spring-soft: var(--ease); --spring-pop: var(--ease);
+    --m-base: 120ms; --m-slow: 120ms; --m-reveal: 120ms; --m-moment: 120ms; --m-pop: 120ms; --m-sheet: 120ms;
+    --m-drawer: 120ms; --m-drawer-out: 120ms; --m-toast: 120ms; --m-toast-out: 120ms; --m-fold: 120ms; --m-fold-out: 120ms;
+    --m-roll: 120ms; --m-meter: 120ms; --m-release: 120ms; --spring-d: 120ms; --spring-soft-d: 120ms; --spring-pop-d: 120ms;
+  }
+}
+:root[data-motion="reduce"] {
+  --m-rise: 0px; --m-nudge: 0px; --m-pop-from: 1; --m-sheet-from: 1; --m-press-s: 1; --m-press-l: 1;
+  --spring: var(--ease); --spring-soft: var(--ease); --spring-pop: var(--ease);
+  --m-base: 120ms; --m-slow: 120ms; --m-reveal: 120ms; --m-moment: 120ms; --m-pop: 120ms; --m-sheet: 120ms;
+  --m-drawer: 120ms; --m-drawer-out: 120ms; --m-toast: 120ms; --m-toast-out: 120ms; --m-fold: 120ms; --m-fold-out: 120ms;
+  --m-roll: 120ms; --m-meter: 120ms; --m-release: 120ms; --spring-d: 120ms; --spring-soft-d: 120ms; --spring-pop-d: 120ms;
+}
+
+/* ------------------------------------------------------------------ 3. the test window (MOTION 3.9)
+   Bluebook moves nothing new: every token is 0 under /test/ (kit.js also stops there, UI.motion.calm).
+   The navigator popover keeps a 120ms fade in and goes at once, as Bluebook's does. */
+body[data-page="test"] {
+  --m-press: 0ms; --m-fast: 0ms; --m-base: 0ms; --m-slow: 0ms; --m-reveal: 0ms; --m-moment: 0ms; --m-pop: 0ms; --m-pop-out: 0ms;
+  --m-sheet: 0ms; --m-sheet-out: 0ms; --m-drawer: 0ms; --m-drawer-out: 0ms; --m-toast: 0ms; --m-toast-out: 0ms;
+  --m-fold: 0ms; --m-fold-out: 0ms; --m-roll: 0ms; --m-meter: 0ms; --m-press-in: 0ms; --m-release: 0ms;
+  --m-rise: 0px; --m-nudge: 0px; --m-pop-from: 1; --m-sheet-from: 1;
+}
+body[data-page="test"] .popover { animation: fade 120ms var(--ease); }
+
+/* ------------------------------------------------------------------ 4. view transitions (MOTION 3.1)
+   Replaces ui.css's "::view-transition-group(main), -old(main), -new(main) { animation-duration: 120ms }".
+   The overlay never catches a click (it froze the page for 120ms); main leaves in 100 and arrives in
+   200 (the page entry, kit.js, gives the arrival its rise). */
+::view-transition { pointer-events: none; }
+::view-transition-group(main) { animation-duration: var(--m-base); }
+::view-transition-old(main) { animation-duration: 100ms; }
+::view-transition-new(main) { animation-duration: var(--m-base); }
+
+/* N2: the current nav item's wash lives on one .nav-mark span inside it (ui.js navItem), named, so a page
+   change slides and resizes it from the old item to the new (no side stripe: A1 took it out). In flight the
+   light wash multiplies over the labels so they stay readable; dark's wash is see-through already. The phone
+   tabs' top bar does the same as .tab-mark. Replaces the fill of ".side-item[aria-current="page"]". */
+.side-item:has(> .nav-mark) { background: none; isolation: isolate; }
+.side-item > .nav-mark {
+  position: absolute; inset: 0; z-index: -1; border-radius: inherit;
+  background: var(--wash); pointer-events: none; view-transition-name: nav-mark;
+}
+::view-transition-group(nav-mark) { mix-blend-mode: multiply; }
+:root[data-theme="dark"]::view-transition-group(nav-mark) { mix-blend-mode: normal; }
+.tab-mark { display: none; }
+@media (max-width: 759px) {
+  .tabs a > .tab-mark {
+    display: block; position: absolute; top: -6px; left: 50%; width: 18px; height: 2px; margin-left: -9px;
+    border-radius: 2px; background: var(--amber); pointer-events: none; view-transition-name: tab-mark;
+  }
+  .tabs a:has(> .tab-mark)::before { content: none; }
+}
+::view-transition-group(nav-mark), ::view-transition-group(tab-mark) {
+  animation-duration: var(--m-slow); animation-timing-function: var(--ease-move);
+}
+
+/* B2: the rail collapse and expand (ui.js toggle, html.vt-rail for the run). The side and main groups
+   are re-enabled for this run only (ui.css pins them with animation: none for page changes): the side
+   morphs 248 to 68 and back while its labels fade (old 100 out, new 160 in); main's new picture is drawn
+   at its final size from the left edge and clipped, so the content slides with the edge and never
+   stretches. Width and padding never animate. */
+html.vt-rail::view-transition-group(side), html.vt-rail::view-transition-group(main) {
+  animation: revert; animation-duration: var(--m-slow); animation-timing-function: var(--ease-move); overflow: clip;
+}
+html.vt-rail::view-transition-old(side), html.vt-rail::view-transition-new(side) {
+  animation: revert; height: 100%; width: auto; object-fit: none; object-position: left top;
+}
+html.vt-rail::view-transition-old(side) { animation-duration: 100ms; }
+html.vt-rail::view-transition-new(side) { animation-duration: 160ms; }
+html.vt-rail::view-transition-old(main) { animation: none; opacity: 0; }
+html.vt-rail::view-transition-new(main) { animation: none; height: 100%; width: auto; object-fit: none; object-position: left top; }
+html.vt-rail::view-transition-group(nav-mark) { animation-duration: var(--m-slow); }
+
+/* B1: the Now card folds to one line (ui.js paintSide, html.vt-fold): the card morphs, Today leaves in
+   140, the nav slides up; names m-nextup, m-day, m-nav exist only for this run */
+html.vt-fold::view-transition-group(m-nextup), html.vt-fold::view-transition-group(m-nav),
+html.vt-fold::view-transition-group(m-day), html.vt-fold::view-transition-group(nav-mark) {
+  animation-duration: var(--m-slow); animation-timing-function: var(--ease-move);
+}
+html.vt-fold::view-transition-old(m-day) { animation-duration: var(--m-fast); }
+html.vt-fold::view-transition-old(m-nextup), html.vt-fold::view-transition-new(m-nextup) { height: 100%; object-fit: none; object-position: left top; }
+html.vt-fold::view-transition-group(m-nextup) { overflow: clip; }
+
+/* ------------------------------------------------------------------ 5. surfaces (MOTION 3.5)
+   Popovers, menus and tooltips: kit.js plays their entry (scale .96 from the trigger side, which
+   place() writes as transform-origin; a phone popover rises from the bottom edge) and their exit
+   (120, toward the trigger) with the Web Animations API, so the old keyframes go.
+   Replaces: ".menu { animation: pop .15s }", ".popover { animation: pop .15s }", the phone
+   ".popover:not(.anchored) { animation: sheet-up .24s }" and ".tip { animation: fade .12s }". */
+.popover, .menu, .tip { animation: none; }
+@media (max-width: 759px) { .popover:not(.anchored) { animation: none; } }
+/* a menu pick shows on its row while the menu fades (DISCOVER H2) */
+.menu [data-m-picked] { background: var(--wash); }
+
+/* sheets (UI.sheet, the phone menu sheet): enter 260 from 8px below at .98, leave in 195 fading 4px down;
+   the backdrop fades with them. The exit is a transition on display and overlay, so the closed dialog
+   stays in the top layer while it leaves (Chromium, Safari 26; elsewhere it goes at once) and kit.js
+   removes the node after. A key closes at once ([data-m-instant]).
+   Replaces: "dialog.sheet[open] { animation: sheet-in .2s }", "dialog.sheet[open]::backdrop { animation:
+   fade .2s }", the phone "dialog.sheet[open] { animation-name: sheet-up }" and
+   "dialog.more[open] { animation: sheet-up .26s }". */
+dialog.sheet, dialog.more {
+  opacity: 0; transform: translateY(var(--m-nudge));
+  transition: opacity var(--m-sheet-out) var(--ease), transform var(--m-sheet-out) var(--ease),
+    overlay var(--m-sheet-out) allow-discrete, display var(--m-sheet-out) allow-discrete;
+}
+dialog.sheet[open], dialog.more[open] {
+  animation: none; opacity: 1; transform: translateY(var(--m-dy, 0px)); transition-duration: var(--m-sheet);
+}
+@starting-style {
+  dialog.sheet[open], dialog.more[open] { opacity: 0; transform: translateY(var(--m-rise)) scale(var(--m-sheet-from)); }
+}
+dialog.sheet::backdrop, dialog.more::backdrop {
+  opacity: 0;
+  transition: opacity var(--m-fast) var(--ease), overlay var(--m-sheet-out) allow-discrete, display var(--m-sheet-out) allow-discrete;
+}
+dialog.sheet[open]::backdrop, dialog.more[open]::backdrop { animation: none; opacity: var(--m-bd, 1); transition-duration: var(--m-base); }
+@starting-style { dialog.sheet[open]::backdrop, dialog.more[open]::backdrop { opacity: 0; } }
+dialog:is(.sheet, .more):is([data-m-instant], [data-m-drag]), dialog:is(.sheet, .more):is([data-m-instant], [data-m-drag])::backdrop { transition: none; }
+
+/* S2 phone: the sheet rises from the bottom edge on Vaul's curve (500) and drops back from wherever the
+   finger left it (375). While dragged it follows --m-dy 1:1 and the backdrop thins with --m-bd (kit.js) */
+@media (max-width: 759px) {
+  dialog.sheet, dialog.more {
+    opacity: 1; transform: translateY(100%);
+    transition-timing-function: var(--ease-drawer); transition-duration: var(--m-drawer-out);
+  }
+  dialog.sheet[open], dialog.more[open] { animation: none; transform: translateY(var(--m-dy, 0px)); transition-duration: var(--m-drawer); }
+  @starting-style { dialog.sheet[open], dialog.more[open] { opacity: 1; transform: translateY(100%); } }
+  dialog.sheet[open]::backdrop, dialog.more[open]::backdrop { transition-duration: var(--m-drawer); transition-timing-function: var(--ease-drawer); }
+}
+
+/* ------------------------------------------------------------------ 6. toast stack (S6, Sonner; DISCOVER-BROWSE 5)
+   The newest toast is in front and in the flow; each older one sits 14px higher at 5% smaller with its
+   content hidden; hover or focus fans them out 14px apart (kit.js sets --m-y and --m-s, data-m-i,
+   data-m-back, and [data-m-open] on .toasts) and holds every timer. A toast enters from below (400,
+   ease) and the front one leaves downward (300). Replaces: ".toasts { display: flex; flex-direction:
+   column; gap: 8px }" (the display and gap) and ".toast { animation: rise .24s }". */
+.toasts { display: block; }
+.toast {
+  position: absolute; left: 0; right: 0; bottom: 0; animation: none;
+  transform: translateY(var(--m-y, 0px)) scale(var(--m-s, 1)); transform-origin: 50% 0;
+  transition: transform var(--m-toast) ease, opacity var(--m-toast) ease;
+}
+.toast[data-m-i="0"] { position: relative; }
+.toast > * { transition: opacity var(--m-toast) ease; }
+.toasts:not([data-m-open]) .toast[data-m-back] > * { opacity: 0; }
+/* the fanned stack keeps its hover across the 14px gaps */
+.toasts[data-m-open] .toast[data-m-back]::before { content: ""; position: absolute; left: 0; right: 0; top: 100%; height: 14px; }
+/* an Undo toast's timer, running out as a 2px line (kit.js plays and holds it) */
+.toast > .m-cd {
+  position: absolute; left: 12px; right: 12px; bottom: 0; height: 2px; border-radius: 2px;
+  background: var(--amber); transform-origin: left; pointer-events: none;
+}
+
+/* ------------------------------------------------------------------ 7. folds (SUGGESTIONS "Folds open smoothly")
+   details.fold opens in height and fade, closes in 195, where CSS can size to auto (interpolate-size,
+   ::details-content: Chromium 131+). Elsewhere ui.js animates the height and this still fades. A key
+   opens it at once. The card collapse (.card[data-collapsed]) is ui.js's: it grows and its content
+   rises 4px; its close is instant. */
+details.fold { interpolate-size: allow-keywords; }
+details.fold::details-content {
+  block-size: 0; opacity: 0; overflow-y: clip;
+  transition: block-size var(--m-fold-out) var(--ease), opacity var(--m-fold-out) var(--ease), content-visibility var(--m-fold-out) allow-discrete;
+}
+details.fold[open]::details-content { block-size: auto; opacity: 1; transition-duration: var(--m-fold); }
+:root[data-input="key"] details.fold::details-content { transition: none; }
+
+/* ------------------------------------------------------------------ 8. meters (D3)
+   The fill is clipped to --p instead of sized, so a change slides it (240) with crisp rounded ends and
+   no reflow; the first paint has its value already, so nothing moves on load. New ticks light left to
+   right 20ms apart (kit.js sets their delays). Replaces ".meter-bar > i { width: calc(...);
+   transition: width .2s }" for the plain bar (ticks keep their own blocks). */
+.meter:not(.ticks) > .meter-bar > i {
+  width: 100%;
+  clip-path: inset(0 calc((1 - min(var(--p, 0), 1)) * 100%) 0 0 round 100px);   /* round ends at any height (4, 6, 8px) */
+  transition: clip-path var(--m-meter) var(--ease);
+}
+.meter.ticks > .meter-bar > i { transition: background-color var(--m-meter) var(--ease); }
+
+/* ------------------------------------------------------------------ 9. keycaps flash when their shortcut fires (ui.js keys) */
+@keyframes m-kflash { from { background: var(--wash-2); color: var(--ink); transform: scale(.92); } }
+:is(.kbd, kbd).m-kflash { animation: m-kflash 220ms var(--ease); }
+
+/* ------------------------------------------------------------------ 10. the clip indicator (UI.seg / UI.tabs {mark: 'clip'})
+   Paco's exclusion tabs: a copy of the row in the active colours, clipped to the picked item; the clip
+   slides (300 ease), so the text turns dark exactly under the moving edge. Opt-in; the sliding thumb
+   and underline stay the default. */
+[data-m-clip] { position: relative; }
+[data-m-clip] > :is(.seg-ind, .tab-ind) { visibility: hidden; }
+.m-clip {
+  position: absolute; left: 0; top: 0; height: 100%; z-index: 2; margin: 0; border: 0; overflow: hidden;
+  background: none; box-shadow: none; pointer-events: none; transition: clip-path 300ms ease;
+}
+.m-clip > * { background: var(--amber) !important; color: var(--ink-deep) !important; box-shadow: none !important; }   /* a copy: it must wear the active look */
+.m-clip > *::after { visibility: hidden; }
+:not([data-ind]) > .m-clip { display: none; }
+
+/* the section bar's chips wait until the page's header has scrolled away, then fade in as the bar sticks
+   (ui.js paintBarNext sets [data-m-wait]; UI.shell({ sectionsAlways: true }) opts out). Waiting, it is
+   clear and takes no room, but keeps its landmark and its chips stay in the Tab order: one that gets focus
+   brings the bar out. Merge: this transition replaces ".sections { transition: box-shadow .2s }". */
+.sections { transition: box-shadow var(--m-base) var(--ease), opacity var(--m-base) var(--ease); }
+.sections[data-m-wait] { opacity: 0; pointer-events: none; }
+
+/* the sidebar's Today card says the goal as a small ring beside "Today", minutes inside (ui.js todayCard,
+   compact; A1's hand-off). ".side-day .ring { display: none }" keeps hiding the rail's own ring there. */
+.side-day-goal { display: inline-flex; align-items: center; gap: 8px; min-width: 0; }
+.side-day-head .ring.side-goal {
+  display: inline-grid; --rs: 30px; --ring-w: 3.5px; padding: 0; border: 0; background: none; cursor: pointer;
+  font: 600 11px var(--font); color: var(--ink-strong, var(--ink)); text-decoration: none;
+}
+
+/* ------------------------------------------------------------------ 11. the focus chrome (UI.shell({ page, chrome: 'focus' }))
+   Sign in, Welcome and Pair: a slim brand bar instead of the sidebar, rail, tabs and Now strip. The
+   mark and wordmark go home; Help and the account menu sit at the right. body.has-focus lets the page
+   centre its card. The bar's line shows only while content slides under it (.scrolled). */
+body.has-focus #bar {
+  position: sticky; top: 0; z-index: 30; background: var(--paper);
+  padding-top: env(safe-area-inset-top, 0px); transition: box-shadow var(--m-fast) var(--ease);
+}
+body.has-focus #bar.scrolled { box-shadow: 0 1px 0 var(--line); }
+body.has-focus #tabs { display: none; }
+.focus-bar { display: flex; align-items: center; gap: 6px; height: 56px; max-width: var(--max); margin: 0 auto; padding: 0 var(--gutter); }
+.focus-brand {
+  display: inline-flex; align-items: center; gap: 10px; min-height: 40px; padding-right: 6px; border-radius: 8px;
+  color: var(--ink); text-decoration: none; font: 600 15px/1.1 var(--font); letter-spacing: -.01em;
+}
+.focus-brand svg { width: 26px; height: 26px; flex: none; display: block; }
+.focus-grow { flex: 1 1 auto; }
+.focus-user { width: auto; min-height: 40px; padding: 3px 6px 3px 3px; grid-template-columns: auto auto; column-gap: 6px; }
+.focus-user :is(.side-name, .side-sub) { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+.focus-user > svg { grid-column: 2; transform: rotate(90deg); }
+@media (max-width: 759px) { .focus-word { display: none; } .focus-bar { height: 52px; } body.has-focus .page { padding-bottom: 32px; } }   /* no tab bar to clear */
+
+/* ------------------------------------------------------------------ 12. the reduced net (MOTION 4.2 step 8): read before merging
+   ui.css's reduced block sets "transition-duration: .01ms !important" on everything. That makes every
+   CSS transition above instant under reduced motion (sheets, folds, the toast stack, meters), while
+   kit.js still plays its entries and exits as 120ms fades. Keep it until ui.css's literal durations
+   (.12s, .16s, .2s...) are tokens; then narrow it to animations only, so the 120ms tokens in section 2
+   govern transitions, by replacing both of its rules with:
+
+   @media (prefers-reduced-motion: reduce) {
+     *, *::before, *::after, ::backdrop { animation-duration: .01ms !important; animation-iteration-count: 1 !important; }
+   }
+   :root[data-motion="reduce"] *, :root[data-motion="reduce"] *::before, :root[data-motion="reduce"] *::after,
+   :root[data-motion="reduce"] ::backdrop { animation-duration: .01ms !important; animation-iteration-count: 1 !important; }
+*/

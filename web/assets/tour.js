@@ -27,8 +27,8 @@
     ],
     practice: [
       { sel: '#searchSec', title: 'Type a set', text: 'Describe what you want, like “circles hard 10 in 15 min”, and press Enter.' },
-      { sel: '#presetSec', title: 'Presets', text: 'Ready-made starting points. Open this to pick one, or save your own.' },
-      { sel: ['#tree', '#grid'], title: 'Pick your skills', text: 'Tick the skills you want to practise. Each row is a skill, and it opens to show its question types.' },
+      { sel: '#presetSec', title: 'Presets', text: 'Ready-made sets. Open this to pick one, or save your own.' },
+      { sel: '#tree', title: 'Pick your skills', text: 'Tick the skills you want to practise. Each row is a skill, and it opens to show its question types.' },
       { sel: '#abar', title: 'Start', text: 'Start opens the options (how many questions, timing, feedback), then you begin.' },
     ],
     tests: [
@@ -48,7 +48,7 @@
       { sel: '#plan .cal', title: 'Calendar', text: 'The whole plan on one page. Tap a day to see its tasks.' },
     ],
     review: [
-      { sel: '#start', title: 'Start a review', text: 'Choose how many minutes you have, then Start. What is due comes first.' },
+      { sel: '#start', title: 'Start a review', text: 'Start begins with what is due. The arrow beside it sets how many minutes you have.' },
       { sel: ['#rhtabs', '.rh-tabs'], title: 'Your lists', text: 'Due today, Redo (open mistakes), Marked, Saved, History and Fixed. Tap one to open it.' },
       { sel: '#list', title: 'The list', text: 'Tap a row to look at the question. Tick rows to practise several at once.' },
     ],
@@ -71,7 +71,7 @@
       { sel: '#contests', title: 'Contests', text: 'Tap a contest to see its details and start it. Each one has a live timer.' },
       { sel: '#join-create', title: 'Create or join', text: 'Make a private contest for friends, or join one with a code.' },
       { sel: '#rivals', title: 'Rivals', text: 'People you have played against. Race replays their run on today’s Daily.' },
-      { sel: '#badges', title: 'Next badges', text: 'Earn badges by playing. Go takes you straight to the next one.' },
+      { sel: '#badges', title: 'Next badges', text: 'Earn badges by playing. Each one links straight to where you earn it.' },
     ],
     me: [
       { sel: '#you', title: 'You', text: 'Your name, board name, goal and exam date.' },
@@ -92,17 +92,17 @@
 
   const CSS = `
 .tour-catch { position: fixed; inset: 0; z-index: 9990; background: transparent; }
-.tour-ring { position: fixed; z-index: 9991; pointer-events: none; border-radius: 14px; box-shadow: 0 0 0 2px var(--amber, #F28C18), 0 0 0 9999px rgba(10, 10, 10, .5); transition: top .25s, left .25s, width .25s, height .25s; }
+.tour-ring { position: fixed; z-index: 9991; pointer-events: none; border-radius: 14px; box-shadow: 0 0 0 2px var(--amber, #F18508), 0 0 0 9999px rgba(10, 10, 10, .5); transition: top .25s, left .25s, width .25s, height .25s; }
 .tour-card { position: fixed; z-index: 9992; width: min(340px, calc(100vw - 24px)); box-sizing: border-box; padding: 16px 18px 14px; border-radius: 16px; background: var(--paper, #fff); color: var(--ink, #111); box-shadow: 0 12px 40px rgba(0, 0, 0, .35), inset 0 0 0 1px var(--line, rgba(0,0,0,.12)); outline: none; font: 400 14.5px/1.5 var(--font, system-ui, sans-serif); }
 .tour-card h2 { margin: 0 0 6px; font: 700 17px/1.25 var(--font, system-ui, sans-serif); letter-spacing: -.01em; }
 .tour-card p { margin: 0; color: var(--soft, #555); }
 .tour-foot { display: flex; align-items: center; gap: 8px; margin-top: 14px; }
 .tour-dots { display: flex; gap: 5px; margin-right: auto; }
 .tour-dots i { width: 6px; height: 6px; border-radius: 50%; background: var(--faint, #bbb); }
-.tour-dots i.on { background: var(--amber, #F28C18); width: 16px; border-radius: 3px; }
+.tour-dots i.on { background: var(--amber, #F18508); width: 16px; border-radius: 3px; }
 .tour-card .tour-skip { margin-right: 4px; }
-.tour-chip { position: fixed; z-index: 9992; left: 50%; bottom: 20px; transform: translateX(-50%); display: flex; gap: 6px; align-items: center; padding: 6px 8px 6px 14px; border-radius: 999px; background: var(--ink, #111); color: var(--on-ink, #fff); font: 600 14px var(--font, system-ui, sans-serif); box-shadow: 0 8px 24px rgba(0, 0, 0, .35); }
-.tour-chip button { appearance: none; border: 0; cursor: pointer; padding: 6px 14px; border-radius: 999px; background: var(--amber, #F28C18); color: var(--ink-deep, #111); font: 700 13.5px var(--font, system-ui, sans-serif); }
+.tour-chip { position: fixed; z-index: 9992; left: 50%; bottom: 20px; transform: translateX(-50%); display: flex; gap: 6px; align-items: center; padding: 6px 8px 6px 14px; border-radius: 12px; background: var(--ink, #111); color: var(--on-ink, #fff); font: 600 14px var(--font, system-ui, sans-serif); box-shadow: 0 8px 24px rgba(0, 0, 0, .35); }
+.tour-chip button { appearance: none; border: 0; cursor: pointer; padding: 6px 14px; border-radius: 8px; background: var(--amber, #F18508); color: var(--ink-deep, #111); font: 700 13.5px var(--font, system-ui, sans-serif); }
 @media (max-width: 759px) { .tour-card { left: 12px !important; right: 12px; bottom: calc(12px + env(safe-area-inset-bottom, 0px)); top: auto !important; width: auto; } }
 @media (prefers-reduced-motion: reduce) { .tour-ring { transition: none; } }
 `;

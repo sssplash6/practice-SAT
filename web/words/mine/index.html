@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>My words · SAT Freshman</title>
+<link rel="icon" href="/favicon.ico" sizes="32x32">
 <link rel="icon" href="/assets/mark.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
 <link rel="manifest" href="/manifest.webmanifest">
@@ -11,71 +12,107 @@
 <script src="/assets/head.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800;900&family=DM+Mono:wght@400;500&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap">
+<link rel="preload" href="/assets/fonts/Geist.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap">
 <link rel="stylesheet" href="/assets/ui.css">
 <style>
-  /* My words (spec 3.8 §9, override 38; words.md W5 W6 W7 W9 W12 W13). */
-  .wm { padding-bottom: 150px; display: grid; gap: 22px; }
+  /* My words (spec 3.8 §9, override 38; words.md W5 W6 W7 W9 W12 W13). The list in main; the status filters, the
+     14-day forecast, By exam day, how you miss words and how your schedule works in the aside. */
+  /* block, not a grid: the shell's banner and Up next strip sit inside main with their own margins, and grid gaps doubled them */
+  .wm-head ~ * { margin-top: var(--card-gap); }
   .wm * { min-width: 0; }
-  .wm-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 16px; }
-  .wm-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
-  .wm-stats .stat:disabled { opacity: .5; }
-  .wm-stats .stat .btn { margin-top: 8px; align-self: flex-start; }
-  .wm-two { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); gap: 16px; align-items: start; }
-  .wm-card { display: grid; gap: 10px; }
-  .wm-card h2 { font: 700 16px var(--font); display: flex; justify-content: space-between; gap: 10px; align-items: baseline; flex-wrap: wrap; }
-  .wm-card h2 .meta { font-weight: 500; }
-  .wm-line { font: 400 14px/1.5 var(--font); }
-  .wm-line b { font-weight: 600; }
-  .trap-row, .mix-row { display: flex; flex-wrap: wrap; gap: 6px 12px; align-items: center; justify-content: space-between; padding: 9px 0; border-top: 1px solid var(--line); font: 400 14px var(--font); }
-  .trap-row .l, .mix-row .l { display: flex; flex-wrap: wrap; gap: 4px 10px; align-items: baseline; }
-  .trap-row .meta { font-size: 12.5px; }
+  .wm-head { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 16px; }
+  .wm-title { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 12px; }
+  .wm-head > .wm-tools { margin-left: auto; }
+  .wm-main { display: grid; gap: 12px; align-content: start; }
+  #today:empty, #finish:empty { display: none; }
   .wm-tools { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+  /* the page's one hero (premium): your known words as the figure, a stacked status bar with its key, then the status
+     filters: the shared .choice-row each (name, its note under it, the count quiet on the right), Review beside its row */
+  .wm-stats { display: grid; gap: 12px; }
+  .wm-fig { margin-top: -4px; }
+  .wm-bar { display: flex; gap: 2px; height: 8px; border-radius: 4px; overflow: hidden; background: var(--track); }
+  .wm-bar > i { display: block; height: 100%; }
+  .wm-rows { display: grid; gap: 4px; margin: 0 -8px; }
+  .wm-stats[hidden] { display: none; }
+  .wm-srow { display: flex; align-items: center; gap: 8px; }
+  .wm-srow > .choice-row { flex: 1; }
+  /* plain rows inside the hero (no grey slab in a card): a hover band, the picked one keeps the shared selected look */
+  .wm-rows :where(.choice-row:not([aria-pressed="true"])) { background: none; }
+  .wm-rows .choice-row[aria-pressed="true"] { box-shadow: none; }   /* the tint band and 600, no boxed edge */
+  .wm-sl { display: grid; min-width: 0; }
+  /* the aside's cards fold to their title below 1280px, open beside the list */
+  .wm-sec > .fold-s { display: flex; flex-wrap: wrap; width: 100%; align-items: center; gap: 4px 12px; color: var(--ink); }
+  .wm-sec > .fold-s h2 { font: 600 16px/1.3 var(--font); letter-spacing: -.01em; }
+  .wm-sec > .fold-s .meta { font-size: 12.5px; }
+  .wm-sec[open] > .fold-s { margin-bottom: 8px; }
+  .wm-sec-in { display: grid; gap: 8px; }
+  .wm-line { font: 400 14px/1.5 var(--font); }
+  .wm-fnum { display: flex; align-items: baseline; gap: 4px; }
+  .wm-fnum b { font: 600 16px/1.3 var(--font); font-variant-numeric: tabular-nums; }
+  .wm-fx { display: flex; justify-content: space-between; margin-top: -4px; padding: 0 2px; }
+  .wm-line b { font-weight: 600; }
+  .trap-row, .mix-row { display: flex; flex-wrap: wrap; gap: 4px 12px; align-items: center; justify-content: space-between; padding: 8px 0; border-top: 1px solid var(--line); font: 400 14px var(--font); }
+  .trap-row .l, .mix-row .l { display: flex; flex-wrap: wrap; gap: 4px 8px; align-items: baseline; }
+  .trap-row .meta { font-size: 12.5px; }
+  .wm-k { margin-top: 8px; }
+  /* one view row (premium): search, Filters · n (a popover here, the shared sheet on a phone), Table / Wall */
   .wm-view { display: flex; gap: 8px; align-items: center; flex-wrap: nowrap; }
-  .wm-view .filters { flex: 1 1 auto; }
+  .wm-view > input { flex: 1 1 200px; width: auto; max-width: 320px; }
+  .wm-fh { flex: 1 1 auto; }
+  .wm-view .filters { flex-wrap: nowrap; }
+  .wm-view .filters > :not(.filters-open):not(.filters-keep) { display: none; }
+  .wm-view .filters > .filters-open { display: inline-flex; }
   .wm-view > span:last-child { margin-left: auto; align-self: center; flex: none; }
-  .wm-empty .wm-tools > * { min-height: 44px; }
-  .wm-empty .wm-tools > .pill { height: 44px; }
-  .wm-empty h2 { font: 700 20px var(--font); letter-spacing: -.01em; }
-  .wm[data-empty] > :is(#stats, .wm-two, #tools, #view) { display: none; }
+  /* the three folded asides read as one list: one card, a hairline between them */
+  .wm-folds { display: grid; gap: 12px; }
+  .wm-folds > :not(:empty) ~ :not(:empty) { padding-top: 12px; border-top: 1px solid var(--line); }
+  .wm[data-empty] .wm-folds { display: none; }
+  .wm-empty h2 { font: 600 16px/1.3 var(--font); letter-spacing: -.01em; }
+  .wm[data-empty] :is(#stats, #forecast, #finish, #traps, #habits, #view) { display: none; }
   .wm-list .table td, .wm-list .table th { white-space: nowrap; }
   .wm-list .table .w { font-weight: 600; }
-  .wm-list .due { color: var(--amber-deep); font: 500 12.5px var(--mono); }
-  .wm-list input[type=checkbox] { width: 18px; height: 18px; accent-color: var(--amber); }
   .wm-more { justify-self: center; }
-  .wall { display: grid; gap: 10px; }
-  .wall-row { display: grid; grid-template-columns: 80px 1fr; gap: 10px; align-items: start; }
-  .wall-cells { display: flex; flex-wrap: wrap; gap: 3.3px; }
-  .wcell { appearance: none; border: 0; padding: 0; width: 13.2px; height: 13.2px; border-radius: 3.3px; cursor: pointer; position: relative; background: transparent; box-shadow: inset 0 0 0 1.2px var(--faint); }
-  .wcell.learning { background: rgba(63, 63, 63, .3); box-shadow: none; }
-  .wcell.claimed { background: var(--ink); box-shadow: none; }
-  .wcell.known { background: var(--amber); box-shadow: none; }
+  /* the wall (W13): one cell per word, one row per difficulty */
+  .wall { display: grid; gap: 12px; }
+  .wall-row { display: grid; grid-template-columns: 80px 1fr; gap: 12px; align-items: start; }
+  .wall-cells { display: flex; flex-wrap: wrap; gap: 4px; }
+  .wcell { appearance: none; border: 0; padding: 0; width: 12px; height: 12px; border-radius: 3px; cursor: pointer; position: relative; background: var(--track); }
+  .wcell.learning, .wall-legend i.learning, .wm-bar > i.learning { background: color-mix(in srgb, var(--ink) 30%, transparent); box-shadow: none; }
+  .wcell.claimed, .wall-legend i.claimed, .wm-bar > i.claimed { background: var(--ink); box-shadow: none; }
+  .wcell.known, .wall-legend i.known, .wm-bar > i.known { background: var(--amber); box-shadow: none; }
   .wcell.due::after { content: ""; position: absolute; top: -2px; right: -2px; width: 5px; height: 5px; border-radius: 50%; background: var(--amber-deep); box-shadow: 0 0 0 1px var(--paper); }
   .wcell.stubborn { outline: 1.5px dotted var(--ink); outline-offset: 1px; }
-  .wcell:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
-  .wall-row.big .wcell { width: 48.4px; height: 48.4px; }
-  .wall-legend { display: flex; flex-wrap: wrap; gap: 6px 16px; font: 500 12px var(--mono); color: var(--soft); align-items: center; }
-  .wall-legend i { display: inline-block; width: 12px; height: 12px; border-radius: 3px; vertical-align: -2px; margin-right: 5px; box-shadow: inset 0 0 0 1.2px var(--faint); }
-  .wall-legend i.learning { background: rgba(63, 63, 63, .3); box-shadow: none; }
-  .wall-legend i.claimed { background: var(--ink); box-shadow: none; }
-  .wall-legend i.known { background: var(--amber); box-shadow: none; }
-  .wm-empty { display: grid; gap: 12px; justify-items: start; padding: 24px 0; }
-  .wm-bulk .selbar, .wm-bulk { position: sticky; bottom: 0; }
-  @media (max-width: 999px) { .wm-two { grid-template-columns: 1fr; } }
+  .wall.big .wall-cells { gap: 4px; }
+  .wall.big .wcell { width: 44px; height: 44px; border-radius: 6px; }
+  .wall-legend { display: flex; flex-wrap: wrap; gap: 4px 16px; font: 500 12.5px var(--font); color: var(--soft); align-items: center; font-variant-numeric: tabular-nums; }
+  .wall-legend i { display: inline-block; width: 12px; height: 12px; border-radius: 3px; vertical-align: -2px; margin-right: 6px; background: var(--track); }
+  /* the legend wraps in its own column; Big cells stays at the right of its first line */
+  .wall-top { display: flex; align-items: flex-start; gap: 12px; }
+  .wall-top > .wall-legend { flex: 1; padding-top: 6px; }
+  .wall-top > .btn { flex: none; }
+  .wm-empty { display: grid; gap: 12px; justify-items: start; padding: 16px 0; }
+  /* the bulk bar: the shared .selbar, sticky at the foot of the list column (and above the phone tabs) */
+  .wm-bulk { display: contents; }
   @media (max-width: 759px) {
-    .wm-stats { grid-template-columns: repeat(2, 1fr); }
+    .wm-head > #wtabs { flex: 1 1 100%; order: 1; }   /* the tools stay beside the title (its meta wraps under it), the tabs take their own row */
+    .wm-title { flex: 1 1 0; }
+    .wm-view { flex-wrap: wrap; }
+    .wm-view > input { flex: 1 1 100%; max-width: none; }
     .wm-list .table thead { display: none; }
-    .wm-list .table tr { display: grid; grid-template-columns: auto 1fr auto; gap: 2px 10px; padding: 10px 0; border-bottom: 1px solid var(--line); }
-    .wm-list .table td { border: 0; padding: 0; white-space: normal; }
-    .wm-list .table td.c-sel { grid-row: 1 / span 2; align-self: center; }
-    .wm-list .table td.c-word { grid-column: 2; }
-    .wm-list .table td.c-str { grid-column: 3; grid-row: 1; }
-    .wm-list .table td.c-meta { grid-column: 2 / span 2; font-size: 12.5px; color: var(--soft); }
-    .wm-list .table td.c-hide { display: none; }
-    .wall-row { grid-template-columns: 1fr; }
+    .wm-list .table tr { display: flex; flex-wrap: wrap; align-items: center; gap: 2px 10px; position: relative; padding: 8px 0 8px 30px; border-bottom: 1px solid var(--line); }
+    .wm-list .table tr::after { content: ""; order: 1; flex-basis: 100%; }
+    .wm-list .table td { border: 0; padding: 0; height: auto; white-space: normal; }
+    .wm-list .table td.c-sel { position: absolute; left: 0; top: 50%; transform: translateY(-50%); }
+    .wm-list .table td.c-word { flex: 1 1 auto; }
+    .wm-list .table td.c-str { flex: none; }
+    .wm-list .table td.c-meta { order: 2; font-size: 12.5px; color: var(--soft); }
+    .wm-list .table td.c-meta:empty { display: none; }
+    .wm-list .table td[data-k]::before { content: attr(data-k) " "; }
+    .wall-row { grid-template-columns: 1fr; gap: 4px; }
   }
   @media print {
-    .wm > :not(.wm-list), .wm-view, .wm-tools { display: none !important; }
+    .wm-head, .twocol-side, #view, #bulk, .wm-more { display: none !important; }
     .wm-list .table { columns: 2; }
   }
 </style>
@@ -83,23 +120,34 @@
 <body data-page="words-mine">
 <header id="bar"></header>
 <main class="page wm" id="main" tabindex="-1">
-  <header class="wm-head"><h1 class="h1">My words</h1><p class="meta" id="meta">Loading…</p></header>
-  <div id="today"></div>
-  <div id="wtabs"></div>
-  <section class="wm-stats" id="stats" aria-label="Your words"></section>
-  <div class="wm-two">
-    <section class="card wm-card" id="traps" aria-label="How you miss words"></section>
-    <section class="card wm-card" id="habits" aria-label="Your schedule"></section>
+  <header class="wm-head">
+    <div class="wm-title"><h1 class="h1">My words</h1><p class="meta" id="meta">Loading…</p></div>
+    <div id="wtabs"></div>
+    <div class="wm-tools" id="tools"></div>
+  </header>
+  <div class="twocol side-first">
+    <div class="wm-main">
+      <div class="wm-view" id="view"></div>
+      <section class="wm-list" id="list" aria-live="polite"></section>
+      <div class="wm-bulk" id="bulk"></div>
+    </div>
+    <aside class="twocol-side" aria-label="About your words">
+      <section class="card hero wm-stats" id="stats" aria-label="Your words by status" data-m-now></section>
+      <section class="card" id="forecast" aria-label="Due in the next 14 days"></section>
+      <div class="card wm-folds">
+        <div id="finish"></div>
+        <section id="traps" aria-label="How you miss words"></section>
+        <section id="habits" aria-label="How your schedule is working"></section>
+      </div>
+      <div id="today"></div>
+    </aside>
   </div>
-  <div class="wm-view" id="view"></div>
-  <section class="wm-list" id="list" aria-live="polite"></section>
-  <div class="wm-bulk" id="bulk"></div>
 </main>
 <nav id="tabs"></nav>
 <script src="/assets/ui.js"></script>
 <script src="/assets/kit.js"></script>
 <script src="/assets/charts.js"></script>
-<script>UI.shell('words');</script>
+<script>UI.shell({ page: 'words', ownPrimary: true });   // the hero's Review is this page's orange</script>
 <script src="/assets/words-ui.js"></script>
 <script>
 (() => {
@@ -112,7 +160,7 @@
   const put = (el, ...kids) => { el.replaceChildren(...kids.flat().filter(k => k !== null && k !== undefined && k !== false)); return el; };
   const LIMIT0 = 120;
   let lib = null, ins = null, me = null, words = [], mine = [], fbar = null, tile = P().get('tile') || '', view = P().get('view') === 'table' ? 'table' : 'wall';
-  let limit = LIMIT0, selected = new Set(), table = null;
+  let limit = LIMIT0, selected = new Set(), table = null, qIn = null;
   UI.wordsTabs($('wtabs'), 'mine');
 
   // "my words": everything the student has touched, starred, placed or made
@@ -134,20 +182,32 @@
     (lib.groups || []).forEach(g => (g.collections || []).forEach(c => { W._coll[c.id] = c.name; }));
     W._lists = [...new Set(words.filter(w => w.own && w.collection).map(w => w.collection))];
     const c = lib.counts || {};
-    $('meta').textContent = [mine.length ? `${num(mine.length)} studied or saved` : null, c.known ? `${num(c.known)} known` : null, c.claimed ? `${num(c.claimed)} claimed` : null, c.due ? `${num(c.due)} due` : null].filter(Boolean).join(' · ');
+    $('meta').textContent = mine.length ? `${num(mine.length)} studied or saved` : '';   // known, claimed and due are the hero's
     UI.todayWords($('today'), { lib, compact: true, onChange: load });
-    // nothing touched yet: only the way in, at the top; the cards and tools come with the first word
+    // nothing touched yet: the way in and the tools; the aside's cards come with the first word
     if (mine.length) $('main').removeAttribute('data-empty'); else $('main').setAttribute('data-empty', '');
-    stats(); traps(); habits();
-    if (!fbar) filters();
+    stats(); forecast(); traps(); habits();
+    if (mine.length) document.querySelector('.wm .twocol-side').dataset.m = 'stagger';   // the aside's cards rise once (the hero never waits)
+    if (ins) UI.wordsFinish($('finish'), ins, { lib, card: false, collapsible: true, onChange: load }); else $('finish').replaceChildren();   // By exam day (W12), a row of the folds card
+    if (!fbar) { filters(); tools(); }
     paint();
   }
 
-  /* ---------------- the stat tiles (12) */
+  /* ---------------- the hero: known as the figure, the stacked status bar and its key, then the status filters (a row
+     each; Review sits beside Due today, not inside it) */
   function stats() {
     const host = $('stats');
-    put(host);
+    const st = w => { const s = W.status(w); return s === 'probable' ? 'new' : s; };
+    const by = { learning: 0, claimed: 0, known: 0, new: 0 };
+    mine.forEach(w => { by[st(w)]++; });
+    const known = (lib.counts || {}).known ?? by.known;
+    const parts = ['learning', 'claimed', 'known', 'new'].filter(k => by[k]);
+    const head = [h('p', { class: 'hero-num wm-fig' }, num(known), h('small', { text: 'known' })),
+      mine.length ? h('div', { class: 'wm-bar', role: 'img', 'aria-label': parts.map(k => `${(W.STATUS[k] || cap(k)).toLowerCase()} ${by[k]}`).join(', ') },
+        parts.filter(k => k !== 'new').map(k => h('i', { class: k, style: `width:${by[k] / mine.length * 100}%` }))) : null,
+      mine.length ? h('p', { class: 'wall-legend', 'aria-hidden': 'true' }, parts.map(k => h('span', {}, h('i', { class: k }), `${k === 'new' ? 'Not started' : W.STATUS[k]} ${num(by[k])}`))) : null];
     const exam = ins && ins.finish && ins.finish.exam;
+    const rowsEl = [];
     TILES.filter(t => ['due', 'learning', 'saved'].includes(t[0])).forEach(([id, label, fn, sub]) => {
       const n = words.filter(fn).length;
       let s = sub;
@@ -155,31 +215,52 @@
       if (id === 'atrisk') s = exam ? `before ${W.shortDate(exam)}` : 'Needs an exam date';
       if (id === 'due' && !n) { const nx = (lib.forecast || []).find(d => d.n > 0 && d.day > lib.today); s = nx ? `Next: ${nx.n} on ${W.dayName(nx.day, { plain: true })}` : null; }
       if (!n && tile !== id) return;
-      const t = UI.tile(host, { label, value: n, sub: s && s !== sub ? s : undefined, pressed: tile === id, onClick: () => { tile = tile === id ? '' : id; setUrl('tile', tile || null); stats(); limit = LIMIT0; paint(); } });
-      t.el.setAttribute('aria-pressed', String(tile === id));
-      if (sub && UI.tooltip) UI.tooltip(t.el, sub);
-      if (id === 'due' && n) t.el.append(h('button', { type: 'button', class: 'btn sm', text: 'Review', onclick: e => { e.stopPropagation(); UI.startWords({ mode: 'cards', deck: { source: 'due' } }); } }));
+      const b = h('button', { type: 'button', class: 'choice-row', 'aria-pressed': String(tile === id),
+        onclick: () => { tile = tile === id ? '' : id; setUrl('tile', tile || null); stats(); limit = LIMIT0; paint(); } },
+        h('span', { class: 'wm-sl' }, h('span', { class: 'l', text: label }), s ? h('span', { class: 'meta', text: s }) : null), h('span', { class: 'n', text: num(n) }));
+      if (sub && UI.tooltip) UI.tooltip(b, sub);
+      rowsEl.push(h('div', { class: 'wm-srow' }, b,
+        id === 'due' && n ? h('button', { type: 'button', class: 'pill sm', text: 'Review', onclick: () => UI.startWords({ mode: 'cards', deck: { source: 'due' } }) }) : null));
     });
+    put(host, head, rowsEl.length ? h('div', { class: 'wm-rows' }, rowsEl) : null);
+  }
+
+  // a card in the aside: its title and one fact always; the forecast opens beside the list (from 1280px), the others stay
+  // closed to title and fact until opened, and each remembers
+  const OPEN_KEY = 'satf.words.mineOpen';
+  const secOpen = (() => { try { return JSON.parse(localStorage.getItem(OPEN_KEY)) || {}; } catch (_) { return {}; } })();
+  function sec(el, title, meta) {
+    const inner = h('div', { class: 'wm-sec-in' });
+    const d = h('details', { class: 'fold wm-sec' }, h('summary', { class: 'fold-s' }, h('h2', { text: title }), meta ? h('span', { class: 'meta', text: meta }) : null), inner);
+    d.open = secOpen[el.id] ?? (el.id === 'forecast' && matchMedia('(min-width: 1280px)').matches);
+    d.addEventListener('toggle', () => { secOpen[el.id] = d.open; try { localStorage.setItem(OPEN_KEY, JSON.stringify(secOpen)); } catch (_) {} });
+    put(el, d);
+    return inner;
   }
 
   /* ---------------- forecast (14 bars, then weeks to the exam) */
   function forecast() {
-    const el = $('forecast');
+    const card = $('forecast');
     const f = lib.forecast || [];
     const days = (me && me.days && me.days.recent) || [];
     const todayRow = days.find(d => d.day === lib.today);
     const week = days.slice(-7).reduce((a, d) => a + (d.words || 0), 0);
     const rs = me && me.words ? me.words.reviews_week : week;
     const streak = me && me.days && me.days.streak;
-    put(el, h('h2', {}, 'Due in the next 14 days', h('span', { class: 'meta', text: [todayRow && todayRow.words ? `Reviewed today ${todayRow.words}` : null, rs ? `this week ${rs}` : null, streak ? `streak ${streak} ${streak === 1 ? 'day' : 'days'}` : null].filter(Boolean).join(' · ') })));
+    const el = sec(card, 'Due in the next 14 days', [todayRow && todayRow.words ? `Reviewed today ${todayRow.words}` : null, rs ? `this week ${rs}` : null, streak ? `streak ${streak} ${streak === 1 ? 'day' : 'days'}` : null].filter(Boolean).join(' · '));
     const dueNow = (lib.counts || {}).due || 0;
     const f2 = f.map(d => (d.day === lib.today ? { ...d, n: Math.max(d.n, dueNow) } : d));
     const total = f2.reduce((a, d) => a + d.n, 0);
-    if (!total) { el.append(h('p', { class: 'wm-line', text: 'Nothing is scheduled yet. Words you study come back here on their review days.' })); return; }
-    const top = Math.max(...f2.map(d => d.n)), wide = el.clientWidth >= 480;
-    const DOW = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
-    if (UI.barChart) UI.barChart(el, f2.map(d => ({ day: d.day, value: d.n, today: d.day === lib.today, exam: ins && ins.finish && d.day === ins.finish.exam })), { unit: 'q', noun: 'due',
-      labels: r => (r.today && wide ? 'Today' : DOW[new Date(r.day + 'T12:00:00').getDay()]), today: 'amber', height: 120, max: Math.max(4, Math.ceil(top / 2) * 2), label: 'Words due each day, next 14 days' });
+    if (!total) { el.append(h('p', { class: 'wm-line', text: 'Nothing is scheduled yet.' })); return; }
+    // the number leads; the bars are the evidence, with only their two ends dated (each bar's tooltip names its day)
+    const top = Math.max(...f2.map(d => d.n)), peak = f2.find(d => d.n === top);
+    const end = d => (d.day === lib.today ? 'Today' : W.shortDate(d.day));
+    el.append(h('p', { class: 'wm-fnum' }, h('b', { text: num(total) }), h('span', { class: 'meta', text: `due · most ${peak.day === lib.today ? 'today' : `on ${W.dayName(peak.day, { plain: true })}`} (${num(top)})` })));
+    if (UI.barChart) {
+      UI.barChart(el, f2.map(d => ({ day: d.day, value: d.n, today: d.day === lib.today, exam: ins && ins.finish && d.day === ins.finish.exam })), { unit: 'q', noun: 'due',
+        labels: false, today: 'amber', height: 64, max: Math.max(4, top), label: 'Words due each day, next 14 days' });
+      el.append(h('p', { class: 'wm-fx meta', 'aria-hidden': 'true' }, h('span', { text: end(f2[0]) }), h('span', { text: end(f2[f2.length - 1]) })));
+    }
     const wk = (ins && ins.finish && ins.finish.forecast_to_exam) || [];
     if (wk.length) {
       el.append(h('p', { class: 'k', text: 'Weeks to the exam' }));
@@ -189,29 +270,27 @@
 
   /* ---------------- how you miss words (W5), logic mix-ups, gaps (W6) */
   function traps() {
-    const el = $('traps');
     const t = (ins && ins.traps) || [], lg = (ins && ins.logic) || [], gaps = (ins && ins.gaps) || {};
-    put(el, h('h2', {}, 'How you miss words', t.length ? h('span', { class: 'meta', text: '60 days' }) : null));
-    if (!t.length) el.append(h('p', { class: 'wm-line', text: 'No trap has caught you in the last 60 days. In-context questions name the trap behind every miss.' }));
+    const el = sec($('traps'), 'How you miss words', t.length ? '60 days' : 'none in 60 days');
+    if (!t.length) el.append(h('p', { class: 'wm-line', text: 'No trap has caught you in the last 60 days.' }));
     t.forEach(x => el.append(h('div', { class: 'trap-row' },
-      h('span', { class: 'l' }, h('b', { text: x.name || W.TRAP[x.id] || x.id }), h('span', { class: 'meta', text: `${x.n}× · ${Math.round((x.share || 0) * 100)}% of misses${x.trend ? ` · ${x.trend > 0 ? '▲' : x.trend < 0 ? '▼' : '='}` : ''}` }),
+      h('span', { class: 'l' }, h('b', { text: x.name || W.TRAP[x.id] || x.id }), h('span', { class: 'meta', text: `${x.n}× · ${Math.round((x.share || 0) * 100)}% of misses${x.trend ? ` · ${x.trend > 0 ? 'rising' : x.trend < 0 ? 'falling' : 'steady'}` : ''}` }),
         x.last_word ? h('button', { type: 'button', class: 'wchip', onclick: () => W.open(x.last_word), text: x.last_word }) : null),
-      h('button', { type: 'button', class: 'btn sm', text: 'Twin ×10', onclick: () => UI.startWords({ mode: 'quiz', deck: { source: 'trap', value: x.id }, formats: ['incontext'], count: 10 }) }))));
+      h('button', { type: 'button', class: 'btn sm', text: 'Twin ×10', title: 'Ten in-context questions with this trap', onclick: () => UI.startWords({ mode: 'quiz', deck: { source: 'trap', value: x.id }, formats: ['incontext'], count: 10 }) }))));
     if (lg.length) {
-      el.append(h('p', { class: 'k', style: 'margin-top:8px', text: 'Logic mix-ups' }));
+      el.append(h('p', { class: 'k wm-k', text: 'Logic mix-ups' }));
       lg.slice().sort((a, b) => b.n - a.n).forEach(m => el.append(h('div', { class: 'mix-row' },
         h('span', { class: 'l', text: `You read ${m.needed} as ${m.picked} ${m.n}×` }),
         h('button', { type: 'button', class: 'btn sm', text: 'Quiz the pair · 8', onclick: () => UI.startWords({ mode: 'quiz', deck: { source: 'logic', value: `${m.needed}>${m.picked}` }, formats: ['transition'], count: 8 }) }))));
     }
     if (gaps.word || gaps.reading) {
-      el.append(h('p', { class: 'wm-line', style: 'margin-top:8px', text: `This week’s misses: ${gaps.word || 0} word gaps · ${gaps.reading || 0} reading gaps` }),
+      el.append(h('p', { class: 'wm-line wm-k', text: `This week’s misses: ${gaps.word || 0} word gaps · ${gaps.reading || 0} reading gaps` }),
         h('div', { class: 'wm-tools' },
           gaps.word ? h('button', { type: 'button', class: 'btn sm', text: `Learn these ${gaps.word}`, onclick: () => UI.startWords({ mode: 'cards', deck: { source: 'missed' }, count: gaps.word }) }) : null,
-          gaps.reading ? h('button', { type: 'button', class: 'btn sm', text: 'Practise finding the clue · 10', onclick: () => UI.startWords({ mode: 'quiz', deck: { source: 'readgap' }, formats: ['incontext'], count: 10 }) }) : null));
+          gaps.reading ? h('button', { type: 'button', class: 'btn sm', text: 'Practice finding the clue · 10', onclick: () => UI.startWords({ mode: 'quiz', deck: { source: 'readgap' }, formats: ['incontext'], count: 10 }) }) : null));
     }
   }
   function habits() {
-    const el = $('habits');
     const cal = (ins && ins.calibration) || {}, rc = (ins && ins.recall) || {};
     const lines = [];
     if (cal.n) lines.push(h('p', { class: 'wm-line' }, 'When you say Know, you’re right ', h('b', { text: `${cal.pct}%` }), ` of the time (last ${cal.n} ${cal.n === 1 ? 'check' : 'checks'})`));
@@ -221,28 +300,30 @@
     }
     const known = (lib.counts || {}).known;
     if (known && ins && ins.finish && ins.finish.exam) lines.push(h('p', { class: 'wm-line', text: `Ready for test day: ${num(ins.finish.likely || 0)}` }));
-    put(el, h('h2', { text: 'How your schedule is working' }),
-      lines.length ? lines : h('p', { class: 'wm-line', text: 'After a few due reviews this shows how often you recall them, and how well your Know holds up.' }));
+    const el = sec($('habits'), 'How your schedule is working', cal.n ? `Know right ${cal.pct}%` : rc.n ? `recall ${rc.pct}%` : null);
+    el.append(...(lines.length ? lines : [h('p', { class: 'wm-line', text: 'Shows after a few due reviews.' })]));
   }
 
-  /* ---------------- tools */
+  /* ---------------- tools: Add words (the library's menu) and ⋯ in the header, always */
   function tools() {
     const el = $('tools');
-    const bring = h('button', { type: 'button', class: 'btn', text: 'Bring words ▾', 'aria-haspopup': 'menu' });
-    UI.menu.bind(bring, bringItems);
-    const more = h('button', { type: 'button', class: 'btn icon', 'aria-label': 'Export, print, share or grade', 'aria-haspopup': 'menu', text: '⋯' });
+    const add = h('button', { type: 'button', class: 'btn dd', text: 'Add words', 'aria-haspopup': 'menu' });
+    UI.menu.bind(add, () => [{ label: 'A word', sub: 'Type one in yourself', kbd: 'N', onClick: () => UI.addWord() }, { separator: true }, ...bringItems()]);
+    const more = h('button', { type: 'button', class: 'ibtn', 'aria-label': 'Export, import, print, share or grade', title: 'More', 'aria-haspopup': 'menu' }, UI.icon('more', 20));
     UI.menu.bind(more, () => [
-      { label: 'Export CSV', onClick: exportCsv },
+      { label: 'Export your own words', sub: 'A CSV file: word, meaning, part of speech, example, list', onClick: exportCsv },
+      { label: 'Import a file or a paste', sub: 'Quizlet, CSV, one per line', onClick: () => UI.bringWords('import') },
+      { separator: true },
       { label: 'Print this list', onClick: () => print() },
       { label: 'Share a list', sub: 'A link anyone can open', onClick: () => setTimeout(() => UI.menu(more, shareItems(), { align: 'end', label: 'Share a list' }), 0) },
-      { label: 'Grade a worksheet', onClick: () => W.gradeSheet() }], { align: 'end' });
-    put(el, h('button', { type: 'button', class: 'btn', onclick: () => UI.addWord() }, W.icon('plus', 16), 'Add a word'), bring, more);
+      { label: 'Grade a worksheet', sub: 'The code and your letters', onClick: () => W.gradeSheet() }], { align: 'end' });
+    put(el, add, more);
   }
   const bringItems = () => [
-    { label: 'From a text', onClick: () => UI.bringWords ? UI.bringWords('text') : UI.toast('Bring words is not ready yet.') },
-    { label: 'A word list', onClick: () => UI.bringWords ? UI.bringWords('list') : UI.toast('Bring words is not ready yet.') },
-    { label: 'A question I missed', onClick: () => UI.bringWords ? UI.bringWords('missed') : UI.toast('Bring words is not ready yet.') },
-    { label: 'Import a file or a paste', sub: 'Quizlet, CSV, one per line', onClick: importSheet }];
+    { label: 'From a text', sub: 'Paste a passage; see which words are new', onClick: () => UI.bringWords('text') },
+    { label: 'A word list', sub: 'One per line or comma-separated', onClick: () => UI.bringWords('list') },
+    { label: 'A question I missed', sub: 'Log a Words in Context or Transitions miss', onClick: () => UI.bringWords('missed') },
+    { label: 'Import a file or a paste', sub: 'Quizlet, CSV, one per line', onClick: () => UI.bringWords('import') }];
   // W20: share any list; a list the server does not keep (own words' list) goes by its words
   function shareItems() {
     {
@@ -261,91 +342,24 @@
       document.body.append(a); a.click(); a.remove();
     } catch (_) { UI.toast('Export did not work. Try again.'); }
   }
-  function importSheet() {
-    const ta = h('textarea', { class: 'field', rows: '8', placeholder: 'One per line: word, then a tab, " - ", ":" or " — ", then the meaning' });
-    const list = h('input', { class: 'field sm', value: 'My words', maxlength: '30', 'aria-label': 'List', list: 'imp-lists' });
-    const dl = h('datalist', { id: 'imp-lists' }, [...new Set(['My words', ...(W._lists || [])])].map(n => h('option', { value: n })));
-    const prev = h('div', { 'aria-live': 'polite' });
-    const LABEL = { new: 'new', dup: 'duplicate', lib: 'in the library', bad: 'not understood' };
-    let ix = null, rows = [], done = false, sh = null;
-    W.index().then(x => { ix = x; upd(); }).catch(() => {});
-    const ownWords = () => new Set(words.filter(w => w.own).map(w => w.word.toLowerCase()));
-    // a tab, " - ", " — " or ":" splits word from meaning; a CSV with a word,meaning header too;
-    // a line with neither is a word to match against the library (W19)
-    const parse = () => {
-      const lines = ta.value.split('\n').map(l => l.trim()).filter(Boolean);
-      const csv = lines.length && /^word\s*,\s*meaning/i.test(lines[0]);
-      const own = ownWords();
-      return (csv ? lines.slice(1) : lines).map(l => {
-        const m = csv ? l.match(/^([^,]+),(.*)$/) : l.match(/^(.+?)(?:\t| - | — |:)\s*(.+)$/);
-        const word = (m ? m[1] : l).trim().replace(/^"|"$/g, ''), meaning = m ? m[2].trim().replace(/^"|"$/g, '') : '';
-        const hit = ix && ix.byWord.get(word.toLowerCase());
-        const st = meaning ? (own.has(word.toLowerCase()) ? 'dup' : 'new') : hit ? 'lib' : 'bad';
-        return { word, meaning, st, slug: hit && hit.slug };
-      });
-    };
-    const addBtn = () => sh && sh.foot && sh.foot.querySelector('.pill, [data-primary], button:last-child');
-    function upd() {
-      if (done) return;
-      rows = parse();
-      const n = rows.filter(r => r.st === 'new' || r.st === 'lib').length;
-      const b = addBtn();
-      if (b) { b.textContent = n ? `Add ${num(n)} ${n === 1 ? 'word' : 'words'}` : 'Add them'; b.disabled = !n; }
-      if (!rows.length) { put(prev, h('p', { class: 'help', text: 'A Quizlet export pastes in as is. A CSV with a word,meaning header works too.' })); return; }
-      put(prev, h('div', { class: 'table-wrap' }, h('table', { class: 'table compact' },
-        h('thead', {}, h('tr', {}, h('th', { text: 'Word' }), h('th', { text: 'Meaning' }), h('th', { text: '' }))),
-        h('tbody', {}, rows.slice(0, 60).map(r => h('tr', {}, h('td', { class: 'w', text: r.word }), h('td', { text: r.meaning || (r.st === 'lib' ? 'the library’s meaning' : '—') }),
-          h('td', { class: 'meta', text: LABEL[r.st] })))))),
-        rows.length > 60 ? h('p', { class: 'help', text: `and ${num(rows.length - 60)} more` }) : null);
-    }
-    async function addToList(name, slugs) {
-      try { await UI.api('/words/lists', { method: 'POST', body: { name, words: slugs } }); }
-      catch (e) {
-        if (e.status !== 409) throw e;
-        const had = words.filter(w => (w.lists || []).includes(name)).map(w => w.slug);
-        await UI.api(`/words/lists/${encodeURIComponent(name)}`, { method: 'PUT', body: { words: [...new Set([...had, ...slugs])] } });
-      }
-    }
-    ta.addEventListener('input', upd);
-    sh = UI.sheet({ title: 'Import words', size: 'm', body: h('div', { style: 'display:grid;gap:10px' }, ta, h('label', { class: 'label', text: 'List' }), list, dl, prev),
-      actions: [{ label: 'Cancel', quiet: true }, { label: 'Add them', primary: true, onClick: async () => {
-        if (done) return true;
-        rows = parse();
-        const name = list.value.trim().slice(0, 30) || 'My words';
-        const own = rows.filter(r => r.st === 'new'), lib = rows.filter(r => r.st === 'lib');
-        if (!own.length && !lib.length) return false;
-        let added = 0, skipped = rows.filter(r => r.st === 'dup' || r.st === 'bad').map(r => ({ word: r.word, why: r.st === 'dup' ? 'you already have it' : 'no meaning, and not in the library' }));
-        try {
-          if (own.length) {
-            const r = await UI.api('/words/mine/import', { method: 'POST', body: { text: own.map(x => `${x.word}\t${x.meaning}`).join('\n'), list: name } });
-            added += r.added || 0;
-            (r.skipped || []).forEach(s => skipped.push({ word: (own[(s.line || 1) - 1] || {}).word || `line ${s.line}`, why: /existing/.test(String(s.why)) ? 'you already have it' : String(s.why) }));
-          }
-          if (lib.length) { await addToList(name, [...new Set(lib.map(x => x.slug))]); added += lib.length; }
-        } catch (e) { if (!e.offline) put(prev, h('p', { class: 'field-err', text: 'Not added. Try again.' })); return false; }
-        done = true;
-        put(prev, h('p', { class: 'line' }, h('b', { text: `Added ${num(added)}` }), skipped.length ? ` · skipped ${num(skipped.length)}` : ''),
-          skipped.length ? h('ul', { class: 'help' }, skipped.slice(0, 30).map(s => h('li', { text: `${s.word}: ${s.why}` }))) : null);
-        const b = addBtn(); if (b) { b.textContent = 'Done'; b.disabled = false; }
-        sh.foot.querySelectorAll('button').forEach(x => { if (x !== b) x.hidden = true; });
-        ta.disabled = true;
-        load();
-        return false;
-      } }] });
-    upd();
-  }
-
   /* ---------------- filters and the list */
   function filters() {
     const collOpts = [];
     (lib.groups || []).forEach(g => (g.collections || []).forEach(c => { if (c.kind !== 'own') collOpts.push({ value: c.id, label: c.name }); }));
     (W._lists || []).forEach(l => collOpts.push({ value: 'own:' + l, label: l }));
-    fbar = UI.filterBar($('view'), [
-      { key: 'q', type: 'search', label: 'Search your words', placeholder: 'Search your words' },
+    // the search is the row's own field, so it stays in the row while the Filters popover holds the dropdowns
+    qIn = h('input', { type: 'search', class: 'field sm', placeholder: 'Search your words', 'aria-label': 'Search your words', autocomplete: 'off', spellcheck: 'false', value: P().get('q') || '' });
+    let qt = 0;
+    qIn.addEventListener('input', () => { clearTimeout(qt); qt = setTimeout(() => { setUrl('q', qIn.value.trim() || null); limit = LIMIT0; paint(); }, 250); });
+    const fh = h('span', { class: 'wm-fh' });
+    $('view').replaceChildren(qIn, fh);
+    fbar = UI.filterBar(fh, [
       { key: 'c', label: 'Collection', type: 'multi', options: collOpts },
       { key: 'd', label: 'Difficulty', type: 'multi', options: [{ value: 'easy', label: 'Easy' }, { value: 'medium', label: 'Medium' }, { value: 'hard', label: 'Hard' }, { value: 'hardforyou', label: 'Hard for you' }] },
       { key: 'p', label: 'Part of speech', type: 'multi', options: Object.entries(W.POS).filter(([k]) => k !== 'phrase').map(([v, l]) => ({ value: v, label: l })) },
-    ], { url: true, label: 'Filter your words', onChange: () => { limit = LIMIT0; paint(); } });
+    ], { url: true, label: 'Filter your words', title: 'Filter your words',
+      get pop() { return !matchMedia('(max-width: 759px)').matches; },   // a popover here, the shared sheet on a phone
+      onChange: () => { limit = LIMIT0; paint(); } });
     const tv = h('span', {});
     UI.seg(tv, [{ value: 'table', label: 'Table' }, { value: 'wall', label: 'Wall' }], { value: view, label: 'View', onChange: v => { view = v; setUrl('view', v === 'table' ? 'table' : null); paint(); } });
     $('view').append(tv);
@@ -354,7 +368,7 @@
   function rows() {
     const v = fbar ? fbar.values() : {};
     const t = TILES.find(x => x[0] === tile);
-    const q = fold(v.q || '');
+    const q = fold(qIn ? qIn.value.trim() : '');
     // the wall (W13) shows every word of the selected collection, not only the ones touched
     return (t ? words.filter(t[2]) : view === 'wall' ? words : mine).filter(w => {
       if ((v.c || []).length && !v.c.some(c => c.startsWith('own:') ? w.own && w.collection === c.slice(4) : w.collection === c || (w.lists || []).includes(c) || (c === 'roots' && (w.roots || []).length))) return false;
@@ -367,17 +381,16 @@
   function paint() {
     const host = $('list');
     const rs = rows();
+    // nothing touched yet: the first-use drawing, one line and one way in (Add words stays in the header)
     if (!mine.length && !tile) {
-      const bring = h('button', { type: 'button', class: 'btn', text: 'Bring words ▾', 'aria-haspopup': 'menu' });
-      UI.menu.bind(bring, bringItems);
-      put(host, h('div', { class: 'wm-empty' }, h('h2', { text: 'Your words live here' }),
-        h('p', { class: 'help', text: 'Words you study, star or add show up here with their schedule.' }),
-        h('div', { class: 'wm-tools' }, h('a', { class: 'pill', href: '/words/', text: 'Library' }), h('button', { type: 'button', class: 'btn', onclick: () => UI.addWord() }, W.icon('plus', 16), 'Add a word'), bring)));
+      put(host, h('div', { class: 'wm-empty' }, h('span', { 'aria-hidden': 'true', html: UI.spotArt('start') }), h('h2', { text: 'Your words live here' }),
+        h('p', { class: 'help', 'data-nofold': '', text: 'Words you study, star or add show up here with their schedule.' }),
+        h('a', { class: 'pill', href: '/words/', text: 'Library' })));
       bulk(); return;
     }
     if (!rs.length) {
       const empty = tile === 'trap' ? 'No trap has caught you in the last 60 days.' : tile === 'due' ? 'Nothing due.' : 'No words match these filters.';
-      put(host, h('div', { class: 'wm-empty' }, h('p', { text: empty }), h('button', { type: 'button', class: 'btn', text: 'Clear filters', onclick: () => { tile = ''; setUrl('tile', null); fbar.clear(); stats(); paint(); } })));
+      put(host, h('div', { class: 'wm-empty' }, h('p', { text: empty }), h('button', { type: 'button', class: 'btn', text: 'Clear filters', onclick: () => { tile = ''; setUrl('tile', null); qIn.value = ''; setUrl('q', null); fbar.clear(); stats(); paint(); } })));
       bulk(); return;
     }
     if (view === 'wall') { wall(host, rs); bulk(); return; }
@@ -388,7 +401,7 @@
       { key: 'coll', label: 'Collection · topic', sort: true, value: w => w.own ? w.collection : `${W._coll[w.collection] || w.collection}${(w.topics || [])[0] ? ' · ' + cap(w.topics[0]) : ''}` },
       { key: 'level', label: 'Level', sort: true, value: w => ({ easy: 1, medium: 2, hard: 3 })[W.level(w.measured, w.difficulty).tier], render: w => UI.dbars ? UI.dbars(W.level(w.measured, w.difficulty).tier) : W.level(w.measured).tier },
       { key: 'str', label: 'Strength', sort: true, value: w => (w.state || {}).box || 0, render: w => W.pips(w) },
-      { key: 'next', label: 'Next review', sort: true, value: w => (w.state || {}).due || 'z', render: w => w.is_due ? h('span', { class: 'due', text: 'Due' }) : (w.state || {}).due ? W.dayName(w.state.due, { plain: true }).replace(',', '') : '' },
+      { key: 'next', label: 'Next review', sort: true, value: w => (w.state || {}).due || 'z', render: w => w.is_due ? h('span', { class: 'badge line', text: 'Due' }) : (w.state || {}).due ? W.dayName(w.state.due, { plain: true }).replace(',', '') : '' },
       { key: 'quiz', label: 'Right / total', sort: true, value: kinds },
       { key: 'last', label: 'Last reviewed', sort: true, value: w => (w.state || {}).last || '', render: w => (w.state || {}).last ? W.shortDate(w.state.last) : '' },
       { key: 'star', label: '★', sort: true, value: w => (w.saved ? 1 : 0), render: w => h('span', w.saved ? { 'aria-label': 'saved', text: '★' } : {}) },
@@ -396,12 +409,14 @@
     const shown = rs.slice(0, limit);
     put(host);
     table = UI.table(host, cols, shown, { label: 'Your words', onRow: w => W.open(w.slug, { list: rs.map(x => x.slug), onChange: () => { dirty = true; }, onClose: () => { if (dirty) { dirty = false; load(); } } }), sort: { key: 'next', dir: 'asc' } });
-    // phone layout classes
-    host.querySelectorAll('tbody tr').forEach(tr => { const td = tr.children; ['c-sel', 'c-word', 'c-meta', 'c-hide', 'c-str', 'c-meta', 'c-hide', 'c-hide', 'c-hide'].forEach((c, i) => td[i] && td[i].classList.add(c)); });
+    // phone layout: the word and its strength on a line, every other column under it (named where a number alone is unclear)
+    const PHONE = [['c-sel'], ['c-word'], ['c-meta'], ['c-meta'], ['c-str'], ['c-meta'], ['c-meta', 'Right'], ['c-meta', 'Last'], ['c-meta']];
+    host.querySelectorAll('tbody tr').forEach(tr => { const td = tr.children; PHONE.forEach(([c, k], i) => { if (!td[i]) return; td[i].classList.add(c); if (k) td[i].dataset.k = k; }); });
     if (rs.length > limit) host.append(h('button', { type: 'button', class: 'btn wm-more', text: `Show ${Math.min(120, rs.length - limit)} more · ${num(rs.length - limit)} left`, onclick: () => { limit += 120; paint(); } }));
     bulk();
   }
   let dirty = false;
+  let bigCells = false;
   function wall(host, rs) {
     const lv = w => W.level(w.measured, w.difficulty).tier;
     const st = w => { const s = W.status(w); return s === 'probable' ? 'new' : s; };
@@ -416,27 +431,43 @@
         if (UI.tooltip) UI.tooltip(b, `${w.word} · ${W.STATUS[W.status(w)]}${w.proven ? ` since ${W.shortDate(w.proven)}` : ''}`);
         return b;
       }));
-      const row = h('div', { class: 'wall-row' }, h('span', { class: 'k', text: `${cap(l)} · ${ws.length}` }), cells);
-      if (matchMedia('(max-width: 759px)').matches) row.querySelector('.k').addEventListener('click', () => row.classList.toggle('big'));
-      return row;
+      return h('div', { class: 'wall-row' }, h('span', { class: 'k', text: `${cap(l)} · ${num(ws.length)}` }), cells);
     }).filter(Boolean);
     const all = () => [...host.querySelectorAll('.wcell')];
-    const w = h('div', { class: 'wall' },
-      h('p', { class: 'wall-legend' }, ['new', 'learning', 'claimed', 'known'].filter(s => counts[s]).map(s => h('span', {}, h('i', { class: s }), `${W.STATUS[s]} ${num(counts[s])}`)),
-        rs.some(w => w.is_due) ? h('span', { text: `• due today ${rs.filter(w => w.is_due).length}` }) : null, rs.some(w => w.stubborn) ? h('span', { text: `⌇ stubborn ${rs.filter(w => w.stubborn).length}` }) : null,
-        h('span', { text: 'Tap a word’s cell to open it' })),
+    // what the wall holds: the chosen status, or every word of the library (or the chosen collection), studied or not
+    const what = tile ? `${num(rs.length)} ${rs.length === 1 ? 'word' : 'words'}` : `${num(rs.length)} library words, studied or not`;
+    const size = h('button', { type: 'button', class: 'btn sm', 'aria-pressed': String(bigCells), text: 'Big cells',
+      onclick: () => { bigCells = !bigCells; size.setAttribute('aria-pressed', String(bigCells)); w.classList.toggle('big', bigCells); } });
+    const w = h('div', { class: 'wall' + (bigCells ? ' big' : '') },
+      h('div', { class: 'wall-top' }, h('p', { class: 'wall-legend' }, h('span', { text: what }), ['new', 'learning', 'claimed', 'known'].filter(s => counts[s]).map(s => h('span', {}, h('i', { class: s }), `${W.STATUS[s]} ${num(counts[s])}`)),
+        rs.some(x => x.is_due) ? h('span', { text: `• due today ${rs.filter(x => x.is_due).length}` }) : null, rs.some(x => x.stubborn) ? h('span', { text: `⌇ stubborn ${rs.filter(x => x.stubborn).length}` }) : null),
+        size),
       rowsEl);
     put(host, w);
     const cells = all();
     if (cells[0]) cells[0].tabIndex = 0;
+    // up and down go to the nearest cell on the next line, whatever the row length (and across the difficulty rows)
+    const line = (i, dir) => {
+      const r = cells[i].getBoundingClientRect();
+      let best = i, top = null, dx = Infinity;
+      for (let j = i + dir; j >= 0 && j < cells.length; j += dir) {
+        const b = cells[j].getBoundingClientRect();
+        if (dir > 0 ? b.top <= r.top + 1 : b.top >= r.top - 1) continue;
+        if (top === null) top = b.top;
+        if (Math.abs(b.top - top) > 1) break;
+        const d = Math.abs(b.left - r.left);
+        if (d < dx) { dx = d; best = j; }
+      }
+      return best;
+    };
     w.addEventListener('keydown', e => {
       const i = cells.indexOf(document.activeElement);
       if (i < 0) return;
-      const d = { ArrowRight: 1, ArrowLeft: -1, ArrowDown: 20, ArrowUp: -20 }[e.key];
-      if (!d) return;
+      const j = e.key === 'ArrowRight' ? i + 1 : e.key === 'ArrowLeft' ? i - 1 : e.key === 'ArrowDown' ? line(i, 1) : e.key === 'ArrowUp' ? line(i, -1) : null;
+      if (j === null) return;
       e.preventDefault();
-      const j = Math.max(0, Math.min(cells.length - 1, i + d));
-      cells[i].tabIndex = -1; cells[j].tabIndex = 0; cells[j].focus();
+      const k = Math.max(0, Math.min(cells.length - 1, j));
+      cells[i].tabIndex = -1; cells[k].tabIndex = 0; cells[k].focus();
     });
   }
 
@@ -476,7 +507,7 @@
     '/': { does: 'Search your words', run: () => { const i = $('view').querySelector('input[type=search]'); if (i) i.focus(); } },
     N: { does: 'Add a word', run: () => UI.addWord() },
   }, { label: 'My words' });
-  W.listKeys('wordsminelist', '.wm-list tr[tabindex], .wm-list .wall button', { label: 'Your words', select: el => { const cb = el.querySelector('input[type=checkbox]'); if (cb) { cb.click(); el.focus(); } } });
+  W.listKeys('wordsminelist', '.wm-list tr[tabindex], .wm-list .wall .wcell', { label: 'Your words', select: el => { const cb = el.querySelector('input[type=checkbox]'); if (cb) { cb.click(); el.focus(); } } });
   document.addEventListener('satf:words', load);
   load();
 })();

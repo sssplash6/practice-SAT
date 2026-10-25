@@ -5,7 +5,7 @@
    Six sections on the shell's section bar. Every pref row is UI.prefRow over the one
    registry (GET /api/prefs): it saves the moment it changes, says Saved, and reverts
    and says why when a save fails. Every registry key has a row, placed by its group.
-   Account & devices is account.py's: passkeys, email, devices, transfer codes.
+   Account & devices is account.py's: email (the one way in since 2026-10-20) and devices.
    ========================================================================== */
 (() => {
   'use strict';
@@ -27,10 +27,21 @@
     return b;
   }
   const errText = (e, fallback) => (e && e.offline ? 'You’re offline. Try again when you’re back.' : fallback);
+  // Copy says Copied in place (kit.js UI.copyText with its button); a browser that refuses gets kit's copy sheet
+  const copyIn = (b, text) => UI.copyText(text, { button: b });
 
-  UI.shell({ page: 'settings', sections: [
-    { id: 'practice', label: 'Practice' }, { id: 'display', label: 'Tools & display' }, { id: 'study', label: 'Study' },
-    { id: 'account', label: 'Account & devices' }, { id: 'reports', label: 'Your reports' }, { id: 'privacy', label: 'Privacy & data' }] });
+  const SECTIONS = [
+    { id: 'practice', label: 'Practice', icon: 'practice' }, { id: 'display', label: 'Tools & display', icon: 'settings' }, { id: 'study', label: 'Study', icon: 'calendar' },
+    { id: 'account', label: 'Account & devices', icon: 'devices' }, { id: 'reports', label: 'Your reports', icon: 'chat' }, { id: 'privacy', label: 'Privacy & data', icon: 'shield' }];
+  UI.shell({ page: 'settings', sections: SECTIONS });
+  // the aside from 1280px: the same sections as a list, each with its one-line state (the section bar has the chips)
+  const idxMeta = {};
+  document.getElementById('set-index').append(...SECTIONS.map(x => {
+    idxMeta[x.id] = h('span', { class: 'meta' });
+    return h('a', { href: `#${x.id}` }, h('span', { class: 'ic', 'aria-hidden': 'true', html: UI.ICON[x.icon] ? UI.svg(UI.ICON[x.icon], 18) : '' }),
+      h('span', { text: x.label }), idxMeta[x.id]);
+  }));
+  const idxSay = (id, text) => { if (idxMeta[id]) idxMeta[id].textContent = text || ''; };
 
   // each section's "?" opens its Help answer (U13)
   [['practice', 'stages'], ['study', 'reminders'], ['account', 'devices'], ['reports', 'report'], ['privacy', 'data']].forEach(([id, a]) => {
@@ -60,6 +71,12 @@
   };
   const GROUP_HOME = { practice: 'practice', session: 'display', look: 'display', words: 'words', reminders: 'study', tests: 'tests',
     review: 'practice', compete: 'display', plan: 'study' };
+  // four open per group (premium 2026-10-19: a calm first screen); the rest of each wait one tap away under "More ... options"
+  const OPEN = new Set(['mode', 'set_length', 'clock', 'tiers',
+    'test_timing', 'test_calculator', 'test_pace', 'test_fullscreen',
+    'theme', 'text', 'motion', 'show_timer',
+    'study_time', 'remind', 'quiet', 'registered',
+    'words_goal', 'words_from', 'gloss', 'words_method']);
   const hosts = {};
   function prefRows(listing) {
     const placed = new Set(Object.values(PLACE).flat());
@@ -69,43 +86,51 @@
       (extra[GROUP_HOME[p.group] || 'practice'] = extra[GROUP_HOME[p.group] || 'practice'] || []).push(p.key);
     });
     const known = new Set((listing || []).map(p => p.key));
-    const rows = (host, name) => [...PLACE[name], ...(extra[name] || [])].filter(k => !listing || known.has(k)).forEach(k => {
-      UI.prefRow(host, k, k === 'study_time' ? { onChange: v => { quietNote(); offerNudge(v); } } : k === 'quiet' ? { onChange: quietNote } : undefined);
-      if (k === 'text') host.append(h('p', { class: 'preview-q', 'aria-hidden': 'true', text: 'If 3x + 5 = 20, what is x?' }));
-      if (k === 'quiet') host.append(quietLine);
-    });
+    const rows = (host, name, more) => {
+      const keys = [...PLACE[name], ...(extra[name] || [])].filter(k => !listing || known.has(k));
+      const rest = more ? keys.filter(k => !OPEN.has(k)) : [];
+      const box = rest.length ? h('div') : null;
+      keys.forEach(k => {
+        const to = box && rest.includes(k) ? box : host;
+        UI.prefRow(to, k, k === 'study_time' ? { onChange: v => { quietNote(); offerNudge(v); } } : k === 'quiet' ? { onChange: quietNote } : undefined);
+        if (k === 'text') to.append(h('p', { class: 'preview-q', 'aria-hidden': 'true', text: 'If 3x + 5 = 20, what is x?' }));
+        if (k === 'quiet') to.append(quietLine);
+      });
+      if (box) host.append(h('details', { class: 'set-more' }, h('summary', { text: `${more} (${rest.length})` }), box));
+    };
     // Practice
     const pr = $('practice');
     pr.replaceChildren();
-    const stage = h('p', { class: 'help', hidden: true });
-    pr.append(h('p', { class: 'help', style: 'margin: 0 0 8px', text: 'The defaults a new set opens with. The Practice page can still change them for one set, and save them as your default.' }), stage);
-    hosts.practice = h('div'); pr.append(hosts.practice); rows(hosts.practice, 'practice');
-    sub(pr, 'Tests'); hosts.tests = h('div'); pr.append(hosts.tests); rows(hosts.tests, 'tests');
+    const stage = h('p', { class: 'help set-intro', hidden: true });
+    pr.append(stage);
+    hosts.practice = h('div'); pr.append(hosts.practice); rows(hosts.practice, 'practice', 'More practice options');
+    sub(pr, 'Tests'); hosts.tests = h('div'); pr.append(hosts.tests); rows(hosts.tests, 'tests', 'More test options');
     pr.append(h('div', { class: 'card-foot' },
       btn('Reset practice defaults', { quiet: true, onClick: () => resetPractice(false) }),
-      btn('Back to stage', { quiet: true, onClick: () => resetPractice(true) })));
+      btn('Use stage defaults', { quiet: true, onClick: () => resetPractice(true) })));
     const paintStage = () => {
       const s = UI.shellData() && UI.shellData().stage;
       const names = { learn: 'Learn', build: 'Build', test: 'Test-like', final: 'Final week' };
       stage.textContent = s && s.name ? [names[s.name] || s.name, s.days_to_exam !== undefined && s.days_to_exam !== null ? `${pl(s.days_to_exam, 'day')} to your exam` : null,
         s.next && s.next.on ? `${names[s.next.name] || s.next.name} starts ${day(s.next.on)}` : null].filter(Boolean).join(' · ') : '';
       stage.hidden = !stage.textContent;
+      idxSay('practice', s && s.name ? names[s.name] || s.name : '');
     };
     UI.onShell(paintStage);
     // Tools & display
     const ds = $('display');
     ds.replaceChildren();
-    hosts.display = h('div'); ds.append(hosts.display); rows(hosts.display, 'display');
+    hosts.display = h('div'); ds.append(hosts.display); rows(hosts.display, 'display', 'More display options');
     // Study keeps its plan and calendar block first, then the reminders and Words
     hosts.study = h('div'); hosts.words = h('div');
     const push = h('div');
     studyBody().append(push, hosts.study);
-    rows(hosts.study, 'study');
+    rows(hosts.study, 'study', 'More study options');
     quietNote();
     paintPush(push);
     sub(studyBody(), 'Words');
     studyBody().append(hosts.words);
-    rows(hosts.words, 'words');
+    rows(hosts.words, 'words', 'More Words options');
   }
   async function resetPractice(onlyStage) {
     const pr = UI.prefs.now(), src = (UI.shellData() && UI.shellData().pref_source) || {};
@@ -124,7 +149,7 @@
     return studyEl;
   }
   /* ---- quiet hours never hold back the reminder the student timed (U18b) */
-  const quietLine = h('p', { class: 'help', hidden: true, style: 'margin: -4px 0 8px' });
+  const quietLine = h('p', { class: 'help quiet-line', hidden: true });
   function quietNote() {
     const pr = UI.prefs.now() || {}, t = pr.study_time, q = pr.quiet;
     const inside = t && q && q.from && q.to && (q.from < q.to ? t >= q.from && t < q.to : t >= q.from || t < q.to);
@@ -208,11 +233,11 @@
     const p = P, pr = UI.prefs.now() || {};
     const bits = [p.exam_date && UI.date(p.exam_date, 'short'), p.target && String(p.target), p.minutes && `${p.minutes} min`, p.days && daysText(p.days)].filter(Boolean);
     host.replaceChildren(
-      h('div', { class: 'acts' }, h('span', { class: 'grow', style: 'flex: 1 1 auto', text: p.plan ? bits.join(' · ') || 'Your plan' : 'No plan yet.' }),
-        btn(p.plan ? 'Edit plan' : 'Build a plan', { quiet: !!p.plan, primary: !p.plan, href: '/plan/' })),
-      h('div', { class: 'acts', style: 'margin-top: 12px' }, p.plan
+      h('div', { class: 'acts' }, h('span', { class: 'grow', text: p.plan ? bits.join(' · ') || 'Your plan' : 'No plan yet.' }),
+        btn(p.plan ? 'Edit plan' : 'Build a plan', { quiet: !!p.plan, href: '/plan/' })),
+      h('div', { class: 'acts mt' }, p.plan
         ? btn('Add to calendar', { onClick: () => calendarSheet(p, pr) })
-        : h('p', { class: 'help', style: 'margin: 0', text: 'Build a plan first: the calendar follows your study days.' })));
+        : h('p', { class: 'soft', text: 'Build a plan first: the calendar follows your study days.' })));
   }
   const DAYS = ['MO', 'TU', 'WE', 'TH', 'FR', 'SA', 'SU'];
   function daysText(days) {
@@ -242,7 +267,7 @@
     const end = new Date(start.getTime() + mins * 60000);
     const byday = p.days ? DAYS.filter((_, i) => p.days[i] === '1').join(',') : DAYS.join(',');
     const tz = (() => { try { return Intl.DateTimeFormat().resolvedOptions().timeZone; } catch (_) { return ''; } })();
-    const google = 'https://calendar.google.com/calendar/render?' + new URLSearchParams({ action: 'TEMPLATE', text: `SAT Math · Up next · ${mins} min`,
+    const google = 'https://calendar.google.com/calendar/render?' + new URLSearchParams({ action: 'TEMPLATE', text: `SAT · Up next · ${mins} min`,
       dates: `${stamp(start)}/${stamp(end)}`, ctz: tz, details: `Open to see what's due now: ${location.origin}/?next=1`,
       recur: `RRULE:FREQ=WEEKLY;BYDAY=${byday}${p.exam_date ? `;UNTIL=${p.exam_date.replace(/-/g, '')}T235959Z` : ''}` });
     const pid = typeof p.plan === 'string' ? p.plan : p.plan && p.plan.id;
@@ -264,7 +289,7 @@
           h('p', { text: 'Download the recurring event: imported events keep their alert. Or subscribe and add a reminder in the calendar’s own settings.' }),
           h('div', { class: 'acts' }, btn('Download .ics', { primary: true, onClick: () => downloadPlan(p, pr, start, mins, byday) }),
             btn('Copy the feed link', { onClick: () => subscribe(pid, true) })));
-        panel.append(h('div', { class: 'acts', style: 'margin-top: 8px' }, btn('Test it: an event 2 minutes from now', { quiet: true, onClick: () => {
+        panel.append(h('div', { class: 'acts mt' }, btn('Test it: an event 2 minutes from now', { quiet: true, onClick: () => {
           const t = new Date(Date.now() + 2 * 60000);
           download('sat-freshman-test.ics', UI.ics({ title: 'SAT Freshman · test reminder', start: t, minutes: 5, alarm: 0 }), 'text/calendar');
         } })));
@@ -281,7 +306,7 @@
       if (!r.ok) throw new Error(String(r.status));
       download('sat-freshman-plan.ics', await r.text(), 'text/calendar');
     } catch (_) {
-      download('sat-freshman-plan.ics', UI.ics({ title: `SAT Math · Up next · ${mins} min`, start, minutes: mins, repeat: 'weekly', byday: byday.split(','),
+      download('sat-freshman-plan.ics', UI.ics({ title: `SAT · Up next · ${mins} min`, start, minutes: mins, repeat: 'weekly', byday: byday.split(','),
         until: p.exam_date || null, url: `${location.origin}/?next=1`, description: 'Open to see what’s due now.', alarm: pr.remind ?? 10 }), 'text/calendar');
     }
   }
@@ -296,73 +321,52 @@
 
   /* ================================================================ Account & devices (Shell 4.4, U11, U19, U20, U21, U29) */
   const acc = $('account');
-  const blocks = { boards: h('div'), google: h('div'), email: h('div'), passkeys: h('div'), devices: h('div', { id: 'devices' }), family: h('div'), move: h('div'), out: h('div') };
+  // email is the only way in (2026-10-20): no Google, passkey, phone or transfer-code blocks
+  const blocks = { boards: h('div'), email: h('div'), devices: h('div', { id: 'devices' }), family: h('div'), out: h('div') };
   acc.replaceChildren(...Object.values(blocks));
   blocks.devices.style.scrollMarginTop = '72px';
-  let ACC = null, DEV = null, PK = null;
+  let ACC = null, DEV = null;
   async function loadAccount() {
     try {
-      [ACC, DEV, PK] = await Promise.all([UI.api('/account'), UI.api('/devices').catch(() => null), UI.api('/passkeys').catch(() => null)]);
-      paintEmail(); paintPasskeys(); paintDevices(); paintFamily(); paintMove(); paintOut(); paintGoogle();
+      [ACC, DEV] = await Promise.all([UI.api('/account'), UI.api('/devices').catch(() => null)]);
+      paintEmail(); paintDevices(); paintFamily(); paintOut();
+      const w = ways();
+      idxSay('account', ACC && ACC.saved ? ['Saved', w.length ? `${pl(w.length, 'way')} to sign in` : null].filter(Boolean).join(' · ') : 'This device only');
     } catch (e) {
       if (e && e.retired) return;
       blocks.email.replaceChildren(UI.cardError(null, loadAccount));
     }
   }
-  const ways = () => [PK && PK.items && PK.items.length ? 'passkey' : null, ACC && ACC.verified ? 'email' : null,
-    ACC && ACC.google ? 'Google' : null].filter(Boolean);
-
-  /* ---- Google (U19b): only when the deploy has a client ID; never on a shared computer */
-  async function paintGoogle() {
-    const b = blocks.google, hl = await health();
-    b.replaceChildren();
-    if (!hl.google || !hl.google_client_id || UI.shared()) return;
-    sub(b, 'Google');
-    const g = ACC && ACC.google;
-    if (g) {
-      b.append(h('div', { class: 'dev' }, h('span', { class: 't', text: `Google · ${g.email_masked || g.email || 'connected'}` }),
-        btn('Disconnect', { quiet: true, onClick: async () => {
-          if (ways().length <= 1 && !(await UI.confirm({ title: 'Disconnect Google?', destructive: true, confirm: 'Disconnect anyway',
-            text: 'It’s your only way to sign in. Add a passkey or an email first, or a new device can’t reach this progress.' }))) return;
-          try { await UI.api('/google', { method: 'DELETE' }); UI.toast('Google disconnected'); loadAccount(); }
-          catch (e) { UI.toast(errText(e, 'Couldn’t disconnect. Try again.')); }
-        } }),
-        g.since ? h('span', { class: 'd', text: `connected ${day(g.since)}` }) : null));
-      return;
-    }
-    const host = h('div', { style: 'min-height: 44px' });
-    b.append(h('p', { class: 'help', text: 'Save with the Google account in this browser. We keep only its email and your name, never a Google password or token.' }), host);
-    A.googleButton(host, { clientId: hl.google_client_id, onResult: async res => {
-      if (res.learner && res.learner !== UI.learner()) return A.finish(res, { method: 'google', local: await A.localAnswers() });
-      UI.useLearner(res.credential, { same: true });                // a save: this progress, its own device key now
-      A.flash('Saved with Google. Your other browsers move to their own key on their next visit.');
-      location.reload();
-    }, onError: e => UI.toast(errText(e, 'Google didn’t work here. Try a passkey or email.')) }).catch(() => b.replaceChildren());
-  }
+  const ways = () => [ACC && ACC.verified ? 'email' : null].filter(Boolean);
 
   function paintBoards() {
     const b = blocks.boards, p = P;
     if (!p) return;
     b.replaceChildren();
     sub(b, 'Boards');
-    const field = (label, value, max, save, rule) => {
+    // Save says Saving, then Saved, in place (UI.saving announces it); the row stays, so nothing jumps
+    const field = (label, value, max, save, rule, after) => {
       const f = h('input', { class: 'field', value: value || '', maxlength: String(max), 'aria-label': label });
       const e = h('p', { class: 'field-err', role: 'alert', hidden: true });
-      const state = h('span', { class: 'pref-state', role: 'status' });
-      const go = btn('Save', { onClick: async () => {
+      const go = h('button', { type: 'button', class: 'btn sm', text: 'Save' });
+      go.addEventListener('click', () => {
         const v = f.value.trim();
         const bad = rule(v);
         if (bad) { e.textContent = bad; e.hidden = false; return; }
-        try { P = await save(v); e.hidden = true; state.textContent = 'Saved'; setTimeout(() => { state.textContent = ''; }, 2500); paintBoards(); }
-        catch (x) { e.textContent = label === 'Your name' ? A.nameError(x) : A.handleError(x); e.hidden = false; }
-      } });
+        e.hidden = true;
+        UI.saving(go, () => save(v)).then(r => { P = r; if (after) after(r); },
+          x => { e.textContent = label === 'Your name' ? A.nameError(x) : A.handleError(x); e.hidden = false; });
+      });
       f.addEventListener('keydown', ev => { if (ev.key === 'Enter') go.click(); });
-      return h('label', { class: 'fieldrow' }, h('span', { class: 'pref-k', text: label }), h('span', { class: 'acts' }, f, go, state), e);
+      return h('label', { class: 'fieldrow' }, h('span', { class: 'pref-k', text: label }), h('span', { class: 'acts' }, f, go), e);
     };
     b.append(field('Your name', p.name, 40, v => A.saveMe({ name: v || null }), v => (v && !A.NAME_OK.test(v) ? 'Names can’t contain digits, @, < or >.' : '')));
     help(b, 'Shown only to you: your profile, the menu, your emails and progress links you share.');
-    b.append(field('Board name', p.handle, 24, v => A.saveMe({ handle: v }), v => (A.HANDLE_OK.test(v) ? '' : A.handleError({ status: 422 }))));
-    help(b, p.handle ? `Boards, contests and ranks show ${p.handle}.` : 'Boards show a student number until you choose one.');
+    const shows = r => (r.handle ? `Boards, contests and ranks show ${r.handle}.` : 'Boards show a student number until you choose one.');
+    b.append(field('Board name', p.handle, 24, v => A.saveMe({ handle: v }), v => (A.HANDLE_OK.test(v) ? '' : A.handleError({ status: 422 })),
+      r => { handleHelp.textContent = shows(r); }));
+    const handleHelp = h('p', { class: 'help', text: shows(p) });
+    b.append(handleHelp);
     const vis = h('div', { class: 'pref' }, h('span', { class: 'pref-k', text: 'Show me on boards' }));
     const segHost = h('div', { class: 'pref-ctl' });
     UI.seg(segHost, [{ value: 'name', label: 'With my board name' }, { value: 'anon', label: 'Anonymously' }, { value: 'hidden', label: 'Don’t list me' }],
@@ -382,142 +386,30 @@
     b.append(h('p', { class: 'help' }, 'Avatar and photo: ', h('a', { class: 'link', href: '/me/#you', text: 'change them on your profile' }), '.'));
   }
 
-  /* ---- email, by state (Shell 4.4, U19) */
-  let emailState = { step: 'idle', email: '', masked: '', tries: 5, change: false };
-  const OUTBOX = 'Email codes aren’t switched on for this site yet. Save with a passkey here, or sign in with your phone from another device.';
+  /* ---- email (2026-10-20): the one way to sign in. A learner from before the switch adds an address here,
+     with no code (prod sends no mail): account.beta_account links it to this progress */
   function paintEmail() {
     const b = blocks.email;
     b.replaceChildren();
     sub(b, 'Email');
-    const st = emailState;
-    if (st.step === 'outbox') {
-      b.append(h('p', { text: OUTBOX }), h('div', { class: 'acts', style: 'margin-top: 10px' }, btn('Save with a passkey', { primary: true, onClick: savePasskey }),
-        btn('Back', { quiet: true, onClick: () => { emailState = { step: 'idle' }; paintEmail(); } })));
+    if (ACC && ACC.verified) {
+      b.append(h('p', {}, h('span', { class: 'chk', 'aria-hidden': 'true', text: '✓' }), `You sign in with ${ACC.email_masked || ACC.email}`,
+        ACC.since ? h('span', { class: 'soft', text: ` · since ${day(ACC.since)}` }) : null));
       return;
     }
-    if (st.step === 'code') { b.append(codeForm()); return; }
-    if (ACC && ACC.verified && !st.change) {
-      b.append(h('p', {}, h('span', { class: 'chk', 'aria-hidden': 'true', text: '✓' }), `Saved to ${ACC.email_masked || ACC.email}`,
-        ACC.since ? h('span', { class: 'soft', text: ` · since ${day(ACC.since)}` }) : null),
-      h('div', { class: 'acts', style: 'margin-top: 10px' },
-        btn('Change email', { onClick: () => { emailState = { step: 'idle', change: true }; paintEmail(); } }),
-        btn('Unlink email', { quiet: true, onClick: unlink })));
-      return;
-    }
-    b.append(h('p', { text: st.change ? 'The new address gets a code. Your progress stays where it is.' : 'Save your progress to an email. No password: we send a code.' }));
-    const f = h('input', { class: 'field', type: 'email', autocomplete: 'email', inputmode: 'email', spellcheck: 'false', 'aria-label': 'Email', value: st.email || '' });
+    b.append(h('p', { text: 'Add your email. It’s how you sign in now, on this device and any other.' }));
+    const f = h('input', { class: 'field', type: 'email', autocomplete: 'email', inputmode: 'email', spellcheck: 'false', 'aria-label': 'Email' });
     const e = h('p', { class: 'field-err', role: 'alert', hidden: true });
-    const send = btn('Send code', { primary: true, onClick: async () => {
+    const save = btn('Save', { primary: true, onClick: async () => {
       const email = f.value.trim();
       if (!email || !f.checkValidity()) { e.textContent = 'That email doesn’t look right.'; e.hidden = false; return; }
       try {
-        const r = await UI.api(st.change ? '/account/email' : '/account/link', { method: st.change ? 'PUT' : 'POST', body: { email } });
-        if (r.delivery === 'outbox') { emailState = { step: 'outbox' }; paintEmail(); return; }
-        if (r.sent === false) { UI.toast('That is already your email.'); return; }
-        emailState = { step: 'code', email, masked: r.email_masked || email, tries: 5, change: st.change, sentAt: Date.now() };
-        paintEmail();
-      } catch (x) {
-        e.textContent = x.status === 429 ? 'Wait a minute before asking for another code.'
-          : x.status === 409 ? 'That email already has its own progress. Sign in with it instead.' : errText(x, 'Couldn’t send a code. Try again.');
-        e.hidden = false;
-      }
+        const res = await UI.api('/account/beta', { method: 'POST', body: { email } });
+        await A.finish(res, { method: 'email', to: '/me/settings/#account', local: await A.localAnswers() });
+      } catch (x) { e.textContent = x.status === 429 ? 'Too many tries. Wait a while.' : errText(x, 'Couldn’t save it. Try again.'); e.hidden = false; }
     } });
-    f.addEventListener('keydown', ev => { if (ev.key === 'Enter') send.click(); });
-    b.append(h('div', { class: 'acts', style: 'margin-top: 10px' }, f, send,
-      st.change ? btn('Cancel', { quiet: true, onClick: () => { emailState = { step: 'idle' }; paintEmail(); } }) : null), e);
-  }
-  let poll = 0;
-  function codeForm() {
-    const st = emailState;
-    const box = h('div', { class: 'gap' });
-    const e = h('p', { class: 'field-err', role: 'alert', hidden: true });
-    const otpHost = h('div');
-    const otp = UI.otp(otpHost, code => verify(code), { length: 6, label: 'The 6-digit code' });
-    const resend = h('span', { class: 'help' });
-    const tick = () => {
-      const left = Math.max(0, 45 - Math.round((Date.now() - st.sentAt) / 1000));
-      resend.replaceChildren(left ? `Resend in ${left}s` : btn('Resend the code', { quiet: true, onClick: async () => {
-        try { await UI.api(st.change ? '/account/email' : '/account/link', { method: st.change ? 'PUT' : 'POST', body: { email: st.email } }); st.sentAt = Date.now(); st.tries = 5; UI.toast('Sent a new code'); }
-        catch (x) { UI.toast(x.status === 429 ? 'Wait a minute before asking for another code.' : 'Couldn’t send it. Try again.'); }
-      } }));
-      if (left && document.contains(resend)) setTimeout(tick, 1000);
-    };
-    async function verify(code) {
-      try {
-        const res = await UI.api('/account/verify', { method: 'POST', body: { code, carry: false } });
-        clearInterval(poll);
-        const mine = UI.learner();
-        if (res.learner && mine.startsWith('a:') && res.learner !== mine) {
-          // the email already had progress: this is a sign-in, with the carry choice (U19)
-          await A.finish(res, { method: 'email', local: await A.localAnswers() });
-          return;
-        }
-        if (res.credential) UI.useLearner(res.credential, { same: true });
-        try { ls.set('satf.lastMethod', 'email'); } catch (_) {}
-        emailState = { step: 'idle' };
-        UI.toast(`Saved to ${st.masked}. Your other browsers move to their own key on their next visit.`);
-        UI.refresh();
-        loadAccount();
-      } catch (x) {
-        otp.invalid && otp.invalid();
-        if (x.status === 410) e.textContent = 'That code is used up. Send a new one.';
-        else if (x.status === 400) { st.tries -= 1; e.textContent = `That code doesn’t match. ${pl(Math.max(0, st.tries), 'try', 'tries')} left.`; }
-        else e.textContent = errText(x, 'That didn’t work. Try again.');
-        e.hidden = false;
-      }
-    }
-    box.append(h('p', {}, 'Enter the 6-digit code we sent to ', h('b', { text: st.masked }), '.'), otpHost, e,
-      h('div', { class: 'acts' }, resend, btn('Use a different email', { quiet: true, onClick: () => { clearInterval(poll); emailState = { step: 'idle', email: st.email, change: st.change }; paintEmail(); } })),
-      h('p', { class: 'help', text: 'Or tap the link in the email on this device.' }));
-    tick();
-    // the link tapped in this browser finishes here too
-    clearInterval(poll);
-    poll = setInterval(async () => {
-      if (!document.contains(box)) { clearInterval(poll); return; }
-      try { const a = await UI.api('/account', { quiet: true }); if (a.verified && (!st.change || a.email === st.email)) { clearInterval(poll); emailState = { step: 'idle' }; ACC = a; UI.toast(`Saved to ${st.masked}`); loadAccount(); } } catch (_) {}
-    }, 3000);
-    setTimeout(() => otp.focus && otp.focus(), 50);
-    return box;
-  }
-  async function unlink() {
-    const last = ways().length <= 1;
-    const ok = await UI.confirm({ title: 'Unlink this email?', confirm: 'Unlink', destructive: true,
-      text: last ? 'This is your only way to sign in. This device keeps its progress, but you won’t be able to sign in anywhere else until you add a passkey or an email.'
-        : 'This device keeps its progress, but you won’t be able to sign in with this email.' });
-    if (!ok) return;
-    try { await UI.api('/account', { method: 'DELETE' }); UI.toast('Email unlinked'); loadAccount(); }
-    catch (e) { UI.toast(errText(e, 'Couldn’t unlink it. Try again.')); }
-  }
-
-  /* ---- passkeys (U19) */
-  async function savePasskey() {
-    try { await A.savePasskey(); UI.toast('Saved. This passkey signs you in wherever your passwords sync.'); loadAccount(); }
-    catch (e) { if (!e || e.name !== 'NotAllowedError') UI.toast('Couldn’t save a passkey here. Try email instead.'); }
-  }
-  function paintPasskeys() {
-    const b = blocks.passkeys;
-    b.replaceChildren();
-    sub(b, 'Passkeys');
-    const items = (PK && PK.items) || [];
-    items.forEach(k => b.append(h('div', { class: 'dev' }, h('span', { class: 't', text: k.label || 'Passkey' }),
-      btn('Remove', { quiet: true, onClick: async () => {
-        const last = ways().length <= 1 && items.length === 1;
-        const ok = await UI.confirm({ title: 'Remove this passkey?', confirm: 'Remove', destructive: true,
-          text: last ? 'It is your only way to sign in. Add an email or another passkey first, or you won’t be able to sign in on another device.' : 'You can still sign in the other ways.' });
-        if (!ok) return;
-        try { await UI.api(`/passkeys/${encodeURIComponent(k.cred_id)}`, { method: 'DELETE' }); UI.toast('Passkey removed'); loadAccount(); }
-        catch (e) { UI.toast(errText(e, 'Couldn’t remove it. Try again.')); }
-      } }),
-      h('span', { class: 'd', text: [k.created && `created ${day(k.created)}`, k.last_used && `last used ${UI.relTime(k.last_used)}`].filter(Boolean).join(' · ') }))));
-    const add = h('div', { class: 'acts', style: 'margin-top: 10px' });
-    b.append(add);
-    A.passkeyReady().then(ok => {
-      if (ok) add.append(btn(items.length ? 'Add another passkey' : 'Save with a passkey', { primary: !items.length, onClick: savePasskey }));
-      else if (!items.length) add.append(h('p', { class: 'help', style: 'margin: 0', text: 'This browser can’t make a passkey. Save by email, or add one from your phone.' }));
-    });
-    const w = ways();
-    if (ACC && ACC.saved) b.append(h('p', { class: 'help' }, w.length === 1 ? h('span', { class: 'odot', 'aria-hidden': 'true' }) : null,
-      w.length ? `You can sign in ${w.length === 1 ? 'one way' : `${w.length} ways`}: ${w.join(', ')}.${w.length === 1 ? ` Add ${w[0] === 'email' ? 'a passkey' : 'an email'} too.` : ''}` : ''));
+    f.addEventListener('keydown', ev => { if (ev.key === 'Enter') save.click(); });
+    b.append(h('div', { class: 'acts mt' }, f, save), e);
   }
 
   /* ---- devices (U21) */
@@ -545,7 +437,7 @@
       b.append(h('p', { class: 'help', text: `Your old code still works until ${day(DEV.old_code_until)} for browsers that haven’t visited since you saved. Sign out all other devices ends it now.` }));
     }
     if (live.filter(d => !d.this).length || (DEV && DEV.old_code_until && new Date(DEV.old_code_until) > new Date())) {
-      b.append(h('div', { class: 'acts', style: 'margin-top: 10px' }, btn('Sign out all other devices', { onClick: async () => {
+      b.append(h('div', { class: 'acts mt' }, btn('Sign out all other devices', { onClick: async () => {
         const ok = await UI.confirm({ title: 'Sign out all other devices?', text: 'Other devices will need to sign in again.', confirm: 'Sign them out', destructive: true });
         if (!ok) return;
         try { await UI.api('/devices/signout-others', { method: 'POST' }); UI.toast('Other devices signed out'); loadAccount(); }
@@ -585,31 +477,9 @@
     } });
     row.append(ctl);
     b.append(row);
-    help(b, 'On, Students on this device shows in the menu: up to four, each with their own progress.');
+    help(b, 'When on, the menu lists up to four students on this device, each with their own progress.');
   }
 
-  /* ---- other devices: the phone approves, or a one-time code (U20, U21) */
-  function paintMove() {
-    const b = blocks.move;
-    b.replaceChildren();
-    sub(b, 'Sign in another device');
-    b.append(h('p', { text: 'On the other device, open Sign in › Use your phone. Then scan its code or type its six digits here.' }),
-      h('div', { class: 'acts', style: 'margin-top: 10px' }, btn('Type the six digits', { href: '/pair/' })));
-    sub(b, 'Move to another device');
-    const out = h('div', { class: 'gap', style: 'margin-top: 10px; justify-items: start' });
-    b.append(h('p', { text: 'A one-time code for the other device’s Sign in › More. It works once, for 10 minutes.' }), out);
-    const get = btn('Get a transfer code', { onClick: async () => {
-      try {
-        const r = await UI.api('/transfer', { method: 'POST' });
-        const code = String(r.code);
-        const left = h('span', { class: 'meta' });
-        out.replaceChildren(h('div', { class: 'acts' }, h('span', { class: 'code-big', text: `${code.slice(0, 4)} ${code.slice(4)}` }),
-          btn('Copy', { quiet: true, onClick: () => UI.copyText(code, { toast: 'Copied' }) })), h('p', { class: 'meta' }, 'expires in ', left));
-        UI.countdown(left, r.expires, { label: 'Transfer code', onEnd: () => out.replaceChildren(h('p', { class: 'soft', text: 'That code has expired.' }), get) });
-      } catch (e) { UI.toast(errText(e, 'Couldn’t make a code. Try again.')); }
-    } });
-    out.append(get);
-  }
   function paintOut() {
     const b = blocks.out;
     b.replaceChildren();
@@ -630,6 +500,8 @@
     try {
       const list = await UI.api('/reports');
       if (!list.length) { b.replaceChildren(h('p', { class: 'soft', text: 'No reports yet. Use Report on any question, or Send feedback.' })); return; }
+      const fresh = list.filter(r => r.unread).length;
+      idxSay('reports', fresh ? `${pl(fresh, 'new reply', 'new replies')}` : pl(list.length, 'report'));
       b.replaceChildren(...list.map(r => h('div', { class: 'rep' },
         h('p', { class: 't' }, r.unread ? h('span', { class: 'odot', 'aria-label': 'New reply' }) : null, `#${r.id}`, h('span', { text: r.category_label || r.category }),
           r.context_chip ? h('span', { class: 'badge soft', text: r.context_chip }) : null, h('span', { class: 'badge', text: r.status_label || r.status })),
@@ -649,22 +521,22 @@
     const links = h('div');
     const fam = h('div');
     b.replaceChildren(h('h3', { class: 'sub-h', text: 'Parents' }),
-      h('p', { class: 'help', style: 'margin: 0 0 10px', text: 'Invite a parent with a link. They sign in with their own email and see a short summary: how much you practise, your score trend, strengths and what needs work. They can’t change anything, and you can remove them any time.' }), fam,
+      h('p', { class: 'help set-intro', text: 'Invite a parent with a link. They sign in with their own email and see a short summary: how much you practise, your score trend, strengths and what needs work. They can’t change anything, and you can remove them any time.' }), fam,
       h('h3', { class: 'sub-h', text: 'Share with a tutor' }),
-      h('p', { class: 'help', style: 'margin: 0 0 10px', text: 'They see your stats, skills, score trend, activity and open mistakes. Never your email or device code.' }), links,
+      h('p', { class: 'help set-intro', text: 'They see your stats, skills, score trend, activity and open mistakes. Never your email or device code.' }), links,
       h('h3', { class: 'sub-h', text: 'Your data' }),
       h('div', { class: 'acts' }, btn('Download my data', { onClick: exportData }), btn('Delete everything…', { quiet: true, onClick: deleteAll })));
     const draw = list => {
       links.replaceChildren(...list.map(l => {
         const url = `${location.origin}/share/?t=${encodeURIComponent(l.token)}`;
         return h('div', { class: 'dev' }, h('span', { class: 't', text: `Link created ${day(l.created)}` }),
-          h('span', { class: 'acts' }, btn('Copy', { quiet: true, onClick: () => UI.copyText(url, { toast: 'Link copied' }) }),
+          h('span', { class: 'acts' }, btn('Copy', { quiet: true, onClick: (e, b) => copyIn(b, url) }),
             btn('Turn off', { quiet: true, onClick: async () => {
               try { await UI.api(`/share/${encodeURIComponent(l.token)}`, { method: 'DELETE' }); UI.toast('Link turned off'); refresh(); }
               catch (e) { UI.toast(errText(e, 'Couldn’t turn it off. Try again.')); }
             } })),
           h('span', { class: 'd', text: l.views ? `Viewed ${pl(l.views, 'time')}${l.last_view ? `, last ${day(l.last_view)}` : ''}` : 'Not viewed yet' }));
-      }), h('div', { class: 'acts', style: 'margin-top: 10px' }, btn(list.length ? 'Create another link' : 'Create a link', { primary: !list.length, onClick: async () => {
+      }), h('div', { class: 'acts mt' }, btn(list.length ? 'Create another link' : 'Create a link', { onClick: async () => {
         try { const r = await UI.api('/share', { method: 'POST' }); UI.copyText(`${location.origin}${r.url}`, { toast: 'Link created and copied' }); refresh(); }
         catch (e) { UI.toast(errText(e, 'Couldn’t make a link. Try again.')); }
       } })));
@@ -681,12 +553,12 @@
             catch (e) { UI.toast(errText(e, 'Couldn’t remove them. Try again.')); }
           } })), h('span', { class: 'd', text: `Following you since ${day(p.since)}` }))),
         ...g.invites.map(i => h('div', { class: 'dev' }, h('span', { class: 't', text: 'Invite not used yet' }),
-          h('span', { class: 'acts' }, btn('Copy link', { quiet: true, onClick: () => UI.copyText(full(i.url), { toast: 'Invite link copied' }) }),
+          h('span', { class: 'acts' }, btn('Copy link', { quiet: true, onClick: (e, b) => copyIn(b, full(i.url)) }),
             btn('Cancel', { quiet: true, onClick: async () => {
               try { await UI.api(`/guardians/invites/${encodeURIComponent(i.code)}`, { method: 'DELETE' }); loadFam(); }
               catch (e) { UI.toast(errText(e, 'Couldn’t cancel it. Try again.')); }
             } })), h('span', { class: 'd', text: `Works until ${day(i.expires)}, for one parent` }))),
-        h('div', { class: 'acts', style: 'margin-top: 10px' }, btn('Invite a parent', { primary: !g.parents.length && !g.invites.length, onClick: async () => {
+        h('div', { class: 'acts mt' }, btn('Invite a parent', { onClick: async () => {
           try { const r = await UI.api('/guardians/invite', { method: 'POST' }); UI.copyText(full(r.url), { toast: 'Invite link copied. Send it to your parent' }); loadFam(); }
           catch (e) { UI.toast(errText(e, 'Couldn’t make an invite. Try again.')); }
         } })));

@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Practice · SAT Freshman</title>
+<link rel="icon" href="/favicon.ico" sizes="32x32">
 <link rel="icon" href="/assets/mark.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
 <link rel="manifest" href="/manifest.webmanifest">
@@ -11,55 +12,162 @@
 <script src="/assets/head.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800;900&family=DM+Mono:wght@400;500&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap">
+<link rel="preload" href="/assets/fonts/Geist.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap">
 <link rel="stylesheet" href="/assets/ui.css">
 <style>
-  /* The practice builder (spec 3.3 part 1, practice.md P1-P25). Everything shared
-     (seg, chips, sheets, cells, the atlas) is ui.css; these rules lay the page out. */
-  .pr { padding-bottom: 120px; }
+  /* The practice builder. Main column: the search, the skill tree and Your sets. The aside (.twocol-side): from 1280px
+     a sticky column led by Your set (#abar, the page's one hero: the preset, the set, the one Start), then the set in
+     progress, Ready rows and the list links, 24px apart. Below 1280 the aside dissolves into the page (display:
+     contents): the set in progress first, then the search and the skills, then Ready and the lists; #abar is the fixed
+     bottom bar. Shared pieces are ui.css. */
+  .pr { --twocol-top: 8px; }
   .pr * { min-width: 0; }
-  .pr-head { display: flex; flex-wrap: wrap; align-items: flex-start; justify-content: space-between; gap: 12px 24px; }
-  .pr-head-l { display: grid; gap: 6px; flex: 1 1 420px; }
-  .pr-head-l .seg { justify-self: start; }
-  .pr-head-l .help { margin: 0; }
-  .pr-links { display: flex; flex-wrap: wrap; gap: 4px 6px; align-items: center; }
-  .pr-links a, .pr-links button { display: inline-flex; align-items: center; gap: 7px; min-height: var(--ctl); padding: 0 10px; border-radius: 8px;
-    font: 600 14px var(--font); color: var(--ink); text-decoration: none; background: none; border: 0; cursor: pointer; }
-  .pr-links .n { font: 500 13px var(--mono); color: var(--soft); }
-  .pr-links .n.on { color: var(--ink); }
-  @media (hover: hover) and (pointer: fine) { .pr-links a:hover, .pr-links button:hover { background: var(--tile); } }
-  .pr-route { font: 400 13.5px/1.45 var(--font); color: var(--ink); display: flex; flex-wrap: wrap; gap: 6px 10px; align-items: center; }
-  .pr-route .btn { height: 34px; font-size: 13px; }
-  .pr-sec { margin-top: 18px; }
-  .pr-banner { display: flex; flex-wrap: wrap; gap: 10px 16px; align-items: center; justify-content: space-between; padding: 14px 16px; border-radius: 12px;
-    background: var(--wash); box-shadow: inset 3px 0 0 var(--amber); }
-  .pr-banner p { margin: 0; font: 500 14.5px/1.45 var(--font); }
-  .pr-banner .acts { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
-  .pr-banner .help { flex-basis: 100%; margin: 0; }
-  .pr-ready { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
-  /* equal cards: the title holds two lines, the meta and the note follow, and the actions sit on the bottom edge of every card */
-  .pr-card { display: flex; flex-direction: column; gap: 3px; padding: 10px 12px; border-radius: 12px; border: 1px solid var(--line); background: var(--paper); }
-  .pr-card b { font: 700 14.5px/1.3 var(--font); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-  .pr-card .meta { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-  .pr-card :is(b, .meta) { cursor: pointer; }
-  .pr-card :is(b, .meta).open { -webkit-line-clamp: unset; display: block; overflow: visible; }
-  .pr-card .acts { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-top: auto; padding-top: 6px; }
-  .pr-card .pill.sm { height: 34px; padding: 0 18px; border-radius: 10px; font-size: 14px; }
-  .pr-fold { display: flex; align-items: center; gap: 8px; appearance: none; border: 0; background: none; padding: 6px 0; font: 600 14px var(--font); color: var(--ink); cursor: pointer; }
-  .pr-fold .chev { display: inline-flex; color: var(--soft); transition: transform .16s; }
-  .pr-fold[aria-expanded="false"] .chev { transform: rotate(-90deg); }
-  .pr-ready[hidden], #presetBody[hidden] { display: none; }
-  #presetBody { margin-top: 6px; }
-  .pr-chips { display: flex; flex-wrap: wrap; gap: 8px; align-items: stretch; }
-  .pr-chip { display: inline-grid; align-content: center; gap: 2px; min-height: 36px; padding: 6px 12px; border-radius: 10px; border: 0; background: var(--tile);
-    font: 600 13.5px/1.2 var(--font); color: var(--ink); cursor: pointer; text-align: left; position: relative; }
-  .pr-chip[aria-pressed="true"] { background: var(--wash); box-shadow: inset 0 0 0 1.5px var(--amber); }
-  .pr-chip[aria-disabled="true"] { color: var(--faint); cursor: default; }
-  .pr-chip .why { font: 500 11px var(--mono); color: var(--soft); }
-  .pr-chip .x { margin-left: 4px; }
-  .pr-chips .quiet { min-height: 36px; margin: 0; padding: 0 10px; }
+  .pr-head { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 4px 16px; }
+  .pr-head > .h1 { margin: 0; }
+  .pr-head > #points { grid-column: 1 / -1; margin: 0; }
+  .pr-head > #subject { grid-column: 1 / -1; display: flex; margin: 8px 0 16px; }   /* 12px under the title, 20px above the content */
+  .pr-route { margin-top: 8px; display: flex; flex-wrap: wrap; gap: 8px 12px; align-items: center; font: 400 14.5px/1.5 var(--font); }
+  .pr-body { margin-top: 24px; }
+  .pr-main { display: grid; gap: 32px; align-content: start; }
+  .qlink { background: none; border: 0; padding: 0; color: var(--ink); text-decoration: underline; text-decoration-color: var(--faint); text-underline-offset: 3px; cursor: pointer; font: inherit; }
+  /* the letters a search matched: 600, underlined in amber (the palette's look, ui.css) */
+  mark.hit { background: none; color: inherit; font-weight: 600; text-decoration: underline 1.5px var(--amber); text-underline-offset: 3px; }
+
+  /* folds: a 36px heading row with a chevron; open state remembered per section (satf.pr.*) */
+  .pr-fold > summary { display: flex; align-items: center; gap: 8px; min-height: var(--ctl); list-style: none; cursor: pointer; font: 600 14px var(--font); color: var(--ink); }
+  .pr-fold > summary::-webkit-details-marker { display: none; }
+  .pr-fold > summary::after { content: ""; flex: none; order: 9; width: 6px; height: 6px; margin: -2px 2px 0 auto; border-right: 1.5px solid var(--soft); border-bottom: 1.5px solid var(--soft);
+    transform: rotate(-45deg); transition: transform .15s var(--ease); }
+  .pr-fold[open] > summary::after { transform: rotate(45deg); }
+  @media (prefers-reduced-motion: reduce) { .pr-fold > summary::after { transition: none; } }
+
+  /* the aside's sections: the set in progress (a card below 1280, plain in the column), Ready rows, the list links */
+  .pr-box p { margin: 0; }
+  .pr-box .acts { display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: center; margin-top: 12px; }
+  .pr-box .meta { margin-top: 2px; text-wrap: balance; }   /* no word left alone on a line */
+  .pr-box .check { margin-top: 8px; }
+  .pr-box .help { margin-top: 4px; }
+  #banners { display: grid; gap: var(--card-gap); }
+  .pr-rows { display: grid; position: relative; }   /* glide's leaving rows sit against it (never toggled by kit) */
+  .pr-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 0 12px; min-height: var(--row-h); padding: 6px 0; border-top: 1px solid var(--line); }
+  .pr-row b { display: block; font: 500 14px/1.35 var(--font); }
+  .pr-row .meta { display: block; text-wrap: balance; }
+  .pr-row .help { margin: 0; text-align: right; }
+  .pr-row .quiet svg { width: 16px; height: 16px; }
+  /* Up next's first item when the Now strip skipped it (a link to this page): the sidebar shows it from 1100x700 */
+  @media (min-width: 1100px) and (min-height: 700px) { body.has-side:not(.no-now) .pr-row[data-upnext] { display: none; } }
+  /* the lists: icon rows (the icon soft, ink on hover), a warm hover band, the count neutral at the end */
+  .pr-links { display: flex; flex-wrap: wrap; gap: 4px 8px; align-items: center; margin: 0 -8px; }
+  .pr-li { display: inline-flex; align-items: center; gap: 10px; min-height: var(--ctl); padding: 0 8px; border: 0; border-radius: 8px; background: none;
+    color: var(--ink); font: 500 14px var(--font); text-decoration: none; cursor: pointer; transition: background-color .14s var(--ease); }
+  .pr-li svg { width: 18px; height: 18px; flex: none; color: var(--soft); transition: color .14s var(--ease); }
+  .pr-li:focus-visible { outline-offset: -2px; }
+  @media (hover: hover) and (pointer: fine) { .pr-li:hover { background: var(--hover); } .pr-li:hover svg { color: var(--ink); } }
+  .pr-links .n { font: 500 12.5px var(--font); color: var(--soft); font-variant-numeric: tabular-nums; }
+  /* from 1280px the aside is one column: the hero, then plain sections 24px apart (space, no rules), the lists as
+     quiet rows with the count at the right, as the sidebar's nav (ui.css gives the column 8px of room for shadows) */
+  @media (min-width: 1280px) {
+    .pr-side { gap: 24px; }
+    .pr-side > #banners { gap: 24px; }
+    .pr-side .pr-box { padding: 0; border-radius: 0; background: none; box-shadow: none; --surface: var(--page); --well: var(--tile-2); }
+    .pr-links { display: grid; gap: 0; }
+    .pr-li { display: flex; }
+    .pr-links .n { margin-left: auto; }
+  }
+
+  /* Your set (#abar): the page's one hero from 1280px (.card.hero, the first card of the aside): the preset trigger,
+     the set as a figure, its skills as glyph chips, Start practice; below 1280 the fixed bottom bar, the preset as a
+     quiet line over the set and Start at the right */
+  .pr-abar .sum { display: grid; gap: 2px; min-width: 0; }
+  .pr-yhead { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+  .pr-yhead > .k { display: none; }
+  .pr-abar .l1 { font: 600 16px/1.35 var(--font); font-variant-numeric: tabular-nums; justify-self: start; }
+  .pr-abar .l1 > .skel { width: 140px; margin: 6px 0; }
+  .pr-abar .l2 { font: 400 12.5px/1.45 var(--font); color: var(--soft); }
+  .pr-abar .l2:empty { display: none; }
+  .pr-glyphs { display: none; }
+  .pr-abar .reason { font: 400 14px/1.4 var(--font); color: var(--ink); }
+  .pr-abar .error { margin: 0 0 4px; }
+  .pr-foot { margin: 0; font: 400 12.5px/1.45 var(--font); color: var(--soft); }
+  .pr-foot a { color: var(--ink); }
+  @media (min-width: 1280px) {
+    .pr-abar-in { display: grid; gap: 16px; }
+    .pr-abar .sum { gap: 12px; }
+    .pr-yhead > .k { display: block; }
+    .pr-abar .l1 { font: 400 14.5px/1.3 var(--font); color: var(--soft); }
+    .pr-abar .l1 .fig { font: 600 28px/1 var(--font); letter-spacing: -.02em; color: var(--ink-strong, var(--ink)); }
+    .pr-glyphs { display: flex; flex-wrap: nowrap; align-items: center; gap: 6px; }
+    .pr-glyphs:empty { display: none; }
+    .pr-glyphs .chip { flex: 0 1 auto; height: 30px; padding: 0 10px 0 6px; gap: 6px; font: 500 12.5px var(--font); }
+    .pr-glyphs .chip > span { overflow: hidden; text-overflow: ellipsis; }
+    .pr-glyphs .chip .glyph { width: 20px; height: 20px; }
+    .pr-glyphs .more { flex: none; font: 500 12.5px var(--font); color: var(--soft); font-variant-numeric: tabular-nums; }
+    .pr-abar .go { display: grid; gap: 8px; }
+    .pr-abar .go .pill { width: 100%; }
+    .pr-abar .reason { order: 1; }
+    .pr-abar .pr-note { margin: 0; }
+  }
+  @media (max-width: 1279px) {
+    .pr { padding-bottom: max(48px, calc(var(--abar-h, 72px) + 24px)); }
+    .pr-body { row-gap: 32px; }
+    /* the aside dissolves: the set in progress leads, the skills come next, Ready and the lists follow them */
+    .pr-side { display: contents; }
+    .pr-side > #banners { order: -1; }
+    .pr-side > #ready, .pr-side > #links { order: 1; }
+    /* the id beats .card.hero: here it is a bar, docked under the content as it scrolls */
+    #abar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 25; padding: 0; border-radius: 0; background: var(--page);
+      box-shadow: 0 -1px 0 var(--line), 0 -8px 24px -16px rgb(var(--sh, 60 52 44) / .22); }
+    body.has-side #abar { left: var(--side-w); }
+    body.has-rail #abar { left: var(--rail-w); }
+    .pr-abar-in { max-width: var(--max); margin: 0 auto; padding: 10px var(--gutter) calc(10px + env(safe-area-inset-bottom, 0px));
+      display: flex; flex-wrap: wrap; gap: 4px 20px; align-items: center; justify-content: space-between; }
+    .pr-abar .sum { flex: 1; }
+    .pr-abar .l2 { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .pr-abar .go { display: flex; gap: 12px; align-items: center; justify-content: flex-end; }
+    .pr-abar .reason { max-width: 300px; }
+    .pr-abar .pr-foot, .pr-abar .pr-note { flex-basis: 100%; margin: 0; }
+    #presets { min-height: 0; height: auto; padding: 2px 0; justify-self: start; background: none; box-shadow: none; font: 500 12.5px/1.4 var(--font); color: var(--soft); }
+    #presets:hover, #presets[aria-expanded="true"] { background: none; box-shadow: none; color: var(--ink); }
+  }
+  /* the sticky aside clears the section bar where it can stick (short windows, the collapsed rail) */
+  @media (max-height: 699px) { .pr { --twocol-top: 56px; } }
+  body.has-rail .pr { --twocol-top: 56px; }
+
+  /* the search: the one boxed, orange-edged thing above the skills (the user: no panel, the glowing box is enough).
+     BUILD rule 13: orange sweeps once round its edge on load, then the edge rests lit. Registered properties carry the
+     angle and the arc's colours; the base values are the resting lit ring, so reduced motion lands on it too */
+  .pr-search { position: relative; }
+  .pr-sicon { position: absolute; left: 16px; top: 14px; z-index: 1; display: grid; width: 20px; height: 20px; pointer-events: none; color: var(--soft); transition: color .14s var(--ease); }
+  .pr-sicon svg { width: 20px; height: 20px; }
+  .pr-search:focus-within .pr-sicon { color: var(--amber-deep); }
+  @property --sa { syntax: '<angle>'; initial-value: 0deg; inherits: false; }
+  @property --arc { syntax: '<color>'; initial-value: transparent; inherits: false; }
+  @property --arc-hi { syntax: '<color>'; initial-value: transparent; inherits: false; }
+  .pr-search .field { height: 48px; padding: 0 48px; border-radius: 12px; border: 2px solid transparent;
+    --lit: color-mix(in srgb, var(--amber) 55%, transparent); --arc: var(--lit); --arc-hi: var(--lit);
+    background: linear-gradient(var(--paper), var(--paper)) padding-box,
+      conic-gradient(from var(--sa), var(--lit) 0deg 200deg, var(--arc) 300deg, var(--arc-hi) 340deg, var(--lit) 360deg) border-box;
+    box-shadow: inset 0 1px 2px rgb(var(--sh, 60 52 44) / .07);
+    animation: pr-sweep 1.6s cubic-bezier(.45, 0, .25, 1) .2s 1 backwards; }
+  @keyframes pr-sweep {
+    0% { --sa: 0deg; --arc: var(--amber); --arc-hi: color-mix(in srgb, var(--amber), white 50%); }
+    70% { --arc: var(--amber); --arc-hi: color-mix(in srgb, var(--amber), white 50%); }
+    100% { --sa: 360deg; --arc: var(--lit); --arc-hi: var(--lit); }
+  }
+  @media (hover: hover) and (pointer: fine) { .pr-search .field:hover { --lit: color-mix(in srgb, var(--amber) 75%, transparent); } }
+  .pr-search .field:focus { outline: 0; --lit: var(--amber); box-shadow: var(--halo, 0 0 0 3px color-mix(in srgb, var(--amber) 40%, transparent)); }
+  @media (prefers-reduced-motion: reduce) { .pr-search .field { animation: none; } }
+  :root[data-motion="reduce"] .pr-search .field { animation: none; }
+  /* the / key's cap at the field's end while it is empty and unfocused (a touch screen hides keycaps, ui.css) */
+  .pr-kbd { position: absolute; right: 16px; top: 14px; pointer-events: none; }
+  .pr-search:focus-within .pr-kbd, .pr-search .field:not(:placeholder-shown) ~ .pr-kbd { display: none; }
+  .pr-sline { display: flex; flex-wrap: wrap; gap: 6px 12px; align-items: center; font: 400 14px/1.4 var(--font); }
+  .pr-sline:not(:empty) { margin-top: 8px; }
+  .pr-note { margin: 8px 0 0; font: 400 12.5px/1.45 var(--font); color: var(--soft); display: flex; gap: 8px 16px; flex-wrap: wrap; align-items: center; }
+
   /* the typed number sits in the segmented row as one more cell, empty until used, with a blinking caret */
-  .segfield { min-width: 0; width: auto; box-sizing: border-box; align-self: stretch; min-height: calc(var(--ctl, 44px) - 6px); padding: 0 8px; border: 0; border-radius: 9px; background: transparent; color: var(--ink);
+  .segfield { min-width: 0; width: auto; box-sizing: border-box; align-self: stretch; min-height: calc(var(--ctl) - 4px); padding: 0 8px; border: 0; border-radius: 8px; background: transparent; color: var(--ink);
     font: 500 14px var(--font); text-align: center; caret-color: var(--amber); -moz-appearance: textfield; appearance: textfield; }
   /* a row that ends in the typed field is a grid of equal cells, so "Other" is as wide as the chips and never cut */
   .sset .seg:has(> .segfield), .seg:has(> .segfield) { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); width: 100%; }   /* beats the later .sset .seg flex rule */
@@ -68,136 +176,157 @@
   .segfield:focus { outline: 0; background: var(--paper); box-shadow: inset 0 0 0 1.5px var(--faint); }
   .segfield::placeholder { color: var(--ink); opacity: 1; }
   .segfield.on { background: var(--paper); box-shadow: inset 0 0 0 1.5px var(--amber); }
-  .pr-swrow { display: flex; align-items: center; gap: 10px; }
-  .pr-i { position: relative; flex: none; appearance: none; border: 1.5px solid var(--faint); background: none; color: var(--soft); width: 18px; height: 18px; border-radius: 50%; padding: 0;
-    font: 600 11px/1 var(--font); cursor: pointer; display: inline-grid; place-items: center; }
-  .pr-i::before { content: ""; position: absolute; inset: -13px; }
-  .pr-i[aria-expanded="true"] { border-color: var(--ink); color: var(--ink); }
-  .info-pop p { margin: 0; max-width: 320px; font: 400 13.5px/1.45 var(--font); }
-  .pr-note { margin: 8px 0 0; font: 400 13px/1.45 var(--font); color: var(--soft); display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
-  /* the search is the product's own trick (type a set, get it), so it is the one boxed, orange-edged thing above the skills */
-  .pr-search { padding: 0; }   /* no panel behind it (the user): the glowing box is enough */
-  .pr-search label { display: block; margin: 0 0 10px; font: 700 17px/1.3 var(--font); letter-spacing: -.01em; color: var(--ink); }
-  /* orange runs slowly around the search box's edge: a conic gradient whose angle is animated (a registered property, so it can be) */
-  @property --sa { syntax: '<angle>'; initial-value: 0deg; inherits: false; }
-  .pr-search .field { width: 100%; height: 56px; font-size: 17px; padding-left: 50px; border-radius: 12px; border: 2px solid transparent;
-    background:
-      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23F18508' stroke-width='2' stroke-linecap='round'%3E%3Ccircle cx='11' cy='11' r='7'/%3E%3Cpath d='M20 20l-4-4'/%3E%3C/svg%3E") 16px 50% / 20px no-repeat padding-box,
-      linear-gradient(var(--paper), var(--paper)) padding-box,
-      conic-gradient(from var(--sa), rgba(241, 133, 8, .22) 0deg, rgba(241, 133, 8, .22) 190deg, rgba(241, 133, 8, .6) 255deg, #F18508 315deg, #FFC47A 346deg, rgba(241, 133, 8, .22) 360deg) border-box;
-    animation: pr-flow 4.5s linear infinite; }
-  @keyframes pr-flow { to { --sa: 360deg; } }
-  @media (prefers-reduced-motion: reduce) { .pr-search .field { animation: none; } }
-  :root[data-motion="reduce"] .pr-search .field { animation: none; }
-  .pr-search .field:focus { outline: 0; box-shadow: 0 0 0 3px color-mix(in srgb, var(--amber) 40%, transparent); }
-  .pr-sline { margin-top: 8px; display: flex; flex-wrap: wrap; gap: 6px 10px; align-items: center; font: 400 13.5px/1.4 var(--font); }
-  .pr-sline .chipx { display: inline-flex; align-items: center; gap: 4px; padding: 3px 8px; border-radius: 8px; background: var(--tile); font: 600 12.5px var(--font); border: 0; color: var(--ink); cursor: pointer; }
-  .pr-sline .meta { font-size: 12.5px; }
-  .pr-results { margin-top: 10px; display: grid; gap: 8px; }
-  .pr-res { display: flex; flex-wrap: wrap; gap: 6px 12px; align-items: center; justify-content: space-between; padding: 10px 12px; border-radius: 10px; background: var(--tile); font: 400 13.5px/1.4 var(--font); }
-  .pr-res .mono { font-size: 12.5px; }
-  .pr-res .acts { display: flex; flex-wrap: wrap; gap: 6px; }
+  .pr-swrow { display: flex; align-items: center; gap: 8px; }
 
-  .pr-grid { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 24px; align-items: start; margin-top: 18px; }
-  .pr-tree { grid-column: 1 / -1; }
-  .pr-thead { display: flex; flex-wrap: wrap; gap: 8px 12px; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+  /* the tree: its width, not the window's, decides the layout (#tree is a container). From 560px the domains are
+     plain titled lists on the page, no boxes: two columns reading down in test order (four from 1000px), one
+     hairline under each domain's head, 28px between domains, no rules between rows; a hover band and a picked band
+     in their place. Narrower, a 2x2 of tiles and a tile opens a window of its skills */
+  #tree { container: tree / inline-size; }
+  .pr-thead { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px; margin-bottom: 12px; }
   .pr-thead .h2 { margin: 0; }
-  .pr-thead .ttl { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 12px; }
-  .pr-thead .ctl { display: flex; flex-wrap: wrap; gap: 4px 8px; align-items: center; }
-  .pr-thead .ctl > .quiet { margin: 0; padding: 0 10px; min-height: var(--ctl); }
-  .pr-thead select { height: var(--ctl); border-radius: 10px; border: 1px solid var(--line); background: var(--paper); color: var(--ink); padding: 0 8px; font: 500 13.5px var(--font); max-width: 100%; }
-  .pr-new { margin: 0 0 10px; padding: 12px 14px; border-radius: 10px; background: var(--tile); font: 400 13.5px/1.45 var(--font); }
-  .pr-count { font: 400 14px var(--font); color: var(--soft); font-variant-numeric: tabular-nums; }
+  .pr-thead #view { margin-left: auto; }
+  .pr-count { font: 400 12.5px var(--font); color: var(--soft); font-variant-numeric: tabular-nums; }
+  @media (max-width: 479px) { .pr-count .w { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; } }
+  @container tree (min-width: 560px) { .pr-thead { padding: 0 8px; } }
 
-  .tri { flex: none; width: 20px; height: 20px; border-radius: 5px; border: 1.5px solid var(--ink); background: var(--paper); padding: 0; cursor: pointer; display: grid; place-items: center; position: relative; }
-  .tri::after { content: ''; }
-  .tri[aria-checked="true"], .tri[aria-checked="mixed"] { background: var(--amber); border-color: var(--amber); }
-  .tri[aria-checked="true"]::after { width: 9px; height: 5px; border: 2px solid var(--ink-deep); border-top: 0; border-right: 0; transform: translateY(-1px) rotate(-45deg); }
-  .tri[aria-checked="mixed"]::after { width: 10px; height: 2px; background: var(--ink-deep); }
-  .tri::before { content: ''; position: absolute; inset: -12px; }
+  /* the tree's tick box: the shared drawn checkbox (ui.css's native checkbox look) on a role=checkbox button: 18px,
+     a 3.6:1 edge, amber when picked with the check growing in, a bar for some; the edge darkens on the row's hover */
+  .tri { flex: none; width: 18px; height: 18px; border: 0; border-radius: 5px; padding: 0; cursor: pointer; position: relative;
+    background: var(--paper) no-repeat center / 0 0; box-shadow: inset 0 0 0 1.5px var(--off-fg), inset 0 1px 2px rgb(var(--sh) / .08);
+    transition: background-color .14s var(--ease), box-shadow .14s var(--ease), background-size .16s var(--ease); }
+  .tri[aria-checked="true"] { background-color: var(--amber); background-image: var(--check-ink); background-size: 13px 13px; box-shadow: inset 0 0 0 1px var(--pill-edge); }
+  /* some picked: a quiet ink bar on the white box (amber marks only what is picked, so a head never outshouts its rows) */
+  .tri[aria-checked="mixed"] { background-image: linear-gradient(var(--ink) 0 0); background-size: 10px 2px; box-shadow: inset 0 0 0 1.5px var(--soft), inset 0 1px 2px rgb(var(--sh) / .08); }
+  @media (hover: hover) and (pointer: fine) {
+    .tri[aria-checked="false"]:hover, .srow:hover > .tri[aria-checked="false"], .dhead:hover > .tri[aria-checked="false"] { box-shadow: inset 0 0 0 1.5px var(--soft), inset 0 1px 2px rgb(var(--sh) / .08); }
+  }
+  /* the hit area: 44px tall, reaching only 6px towards the name beside it */
+  .tri::before { content: ''; position: absolute; inset: -12px -6px -12px -12px; }
 
-  /* the Domains tree: four columns from 1040px (one per domain, always open), two tiles below it; a skill's detail is a window */
-  .dgrid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; align-items: start; }
-  .dcard { border: 1px solid var(--line); border-radius: 14px; background: var(--paper); overflow: clip; }
+  /* tiles (narrow): white on the page with a soft edge, no shadow (the hero is the page's one raised thing) */
+  .dgrid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }   /* one group: not --card-gap (32) */
+  .dcard { border-radius: var(--radius-card); background: var(--raised, var(--paper)); box-shadow: var(--edge, inset 0 0 0 1px var(--line)); overflow: clip; --surface: var(--raised, var(--paper)); --well: var(--tile-2); }
   .dhead { position: relative; }
-  .dhead > .tri { position: absolute; left: 12px; top: 15px; z-index: 1; }
+  .dhead > .tri { position: absolute; left: 13px; top: 13px; z-index: 1; }
   .dopen { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 8px; width: 100%; box-sizing: border-box; padding: 12px 12px 12px 44px; text-align: left; color: var(--ink); font: inherit; background: none; border: 0; }
   button.dopen { cursor: pointer; min-height: 44px; }
-  .dname { flex: 1 1 auto; font: 700 15px/1.3 var(--font); }
-  .dsel { flex: 1 1 0; font: 400 13.5px/1.35 var(--font); color: var(--soft); font-variant-numeric: tabular-nums; }
+  .dname { flex: 1 1 100%; font: 600 14.5px/1.3 var(--font); text-wrap: balance; }
+  .dsel { flex: 1 1 0; font: 500 11.5px/1.4 var(--font); color: var(--soft); font-variant-numeric: tabular-nums; }
   .dright { display: flex; align-items: center; gap: 8px; margin-left: auto; }
-  .dpts { font: 400 13.5px var(--font); color: var(--soft); font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .dpts { font: 500 11.5px var(--font); color: var(--soft); font-variant-numeric: tabular-nums; white-space: nowrap; }
   .dopen > .mbar { flex: 1 1 100%; height: 4px; margin-top: 4px; }
-  .obadge { display: inline-grid; place-items: center; min-width: 22px; height: 22px; padding: 0 7px; border-radius: 11px; background: var(--amber); color: var(--ink-deep); font: 600 12px/1 var(--mono); }
   .dbody { border-top: 1px solid var(--line); }
-  .srow { display: grid; grid-template-columns: 20px minmax(0, 1fr) auto auto; gap: 0 12px; align-items: center; min-height: 44px; padding: 0 14px; border-top: 1px solid var(--line); cursor: pointer; }
+  .srow { display: grid; grid-template-columns: 20px minmax(0, 1fr) auto auto; gap: 0 12px; align-items: center; min-height: 44px; padding: 0 12px; border-top: 1px solid var(--line); cursor: pointer;
+    transition: background-color .16s var(--ease); }
+  .srow > .tri { justify-self: center; }
   .srow:first-child { border-top: 0; }
+  /* a picked skill is a warm band (the box says it too) */
+  .srow:has(> .tri:is([aria-checked="true"], [aria-checked="mixed"])) { background: var(--wash); }
   .snm { align-self: stretch; display: flex; flex-direction: column; justify-content: center; gap: 2px; padding: 6px 0; text-align: left; background: none; border: 0; color: var(--ink); font: inherit; cursor: pointer; }
-  .srow .sname { font: 500 15px/1.3 var(--font); }
-  .srow .reason { font: 400 13px/1.35 var(--font); color: var(--soft); }
+  .srow .sname { font: 500 14.5px/1.3 var(--font); }
+  .srow .reason { font: 400 12.5px/1.4 var(--font); color: var(--soft); }
   .srow .reason:empty { display: none; }
   .sright { display: flex; align-items: center; gap: 8px; }
-  .sright .mbar { width: 48px; height: 4px; }
+  .sright .mbar { width: 40px; height: 4px; }
   .srow .go { color: var(--soft); display: grid; place-items: center; }
+  .srow .go svg { width: 16px; height: 16px; }
   .srow.dim .sname, .srow.dim .sright { opacity: .42; }
-  @media (hover: hover) and (pointer: fine) { .srow:hover, button.dopen:hover { background: var(--tile); } }
-  /* the phone/tablet domain window */
-  .dwin .dfacts { margin: 0 0 12px; font: 400 13.5px/1.5 var(--font); color: var(--soft); }
+  @media (hover: hover) and (pointer: fine) {
+    .srow:hover, button.dopen:hover { background: var(--hover); }
+    .srow:has(> .tri:is([aria-checked="true"], [aria-checked="mixed"])):hover { background: var(--wash-2); }
+  }
+  /* the preset cascade's start (builder.js cascade): a just-picked row looks unpicked until its turn */
+  .srow.pr-pre { background-color: transparent !important; }
+  .srow.pr-pre > .tri { background-color: var(--paper); background-size: 0 0; box-shadow: inset 0 0 0 1.5px var(--off-fg); }
+  @container tree (min-width: 560px) {
+    .dgrid { display: block; columns: 2; column-gap: 32px; }
+    .dgrid > .dcard { break-inside: avoid; margin-bottom: 28px; border-radius: 0; background: none; box-shadow: none; overflow: visible; --surface: var(--page, var(--paper)); }
+    .dhead > .tri { left: 9px; top: 11px; }
+    .dopen { flex-wrap: nowrap; align-items: center; min-height: var(--row-h); padding: 0 8px 0 38px; border-bottom: 1px solid var(--line); }
+    .dname { flex: 1 1 auto; }
+    .dright .mbar { width: 28px; height: 4px; }
+    .dbody { border-top: 0; padding-top: 4px; }
+    .dgrid .srow { min-height: var(--row-h); gap: 0 10px; padding: 0 8px; border-top: 0; border-radius: 8px; }
+    .dgrid .tri::before { inset: -10px -4px -10px -10px; }
+    .dgrid .snm { padding: 4px 0; }
+    .dgrid .srow .sname { font-size: 14px; line-height: 1.3; }
+    /* the details chevron shows on the row's hover or focus (always on touch): a row opens its skill window */
+    .dgrid .srow .go { opacity: 0; transition: opacity .14s var(--ease); }
+    .dgrid .srow:is(:hover, :focus-within) .go { opacity: 1; }
+    @media (hover: none), (pointer: coarse) { .dgrid .srow .go { opacity: 1; } }
+    /* a dimmed row's reason is its tooltip where there is hover; a touch screen shows it under the name */
+    @media (hover: hover) { .dgrid .srow .reason { display: none; } }
+    .dgrid .sright { gap: 6px; }
+    .dgrid .sright .mbar { width: 28px; }
+  }
+  @container tree (min-width: 560px) { .dgrid > .dcard:last-child { margin-bottom: 0; } }
+  @container tree (min-width: 1000px) {
+    .dgrid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0 32px; }
+    .dgrid > .dcard { margin-bottom: 0; }
+  }
+  /* the phone and tablet domain window */
+  .dwin .dfacts { margin: 0 0 12px; font: 400 12.5px/1.5 var(--font); color: var(--soft); }
   .dwin .dall { display: flex; align-items: center; gap: 12px; min-height: 44px; padding: 0 14px; font: 600 14px var(--font); }
-  .dwin .dlist { border: 1px solid var(--line); border-radius: 12px; overflow: clip; }
-  .dwin .dlist > .srow { padding-right: 10px; }
-  /* the skill window: small headed blocks, then the types */
-  .skwin .sgrid2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 12px; margin: 4px 0 6px; }
-  .sblock { padding: 12px 14px; border-radius: 12px; background: var(--tile); align-self: start; }
-  .sh { margin: 0 0 6px; font: 600 13px var(--font); color: var(--soft); }
-  .skwin > .sh, .skwin .sheet-body > .sh { margin-top: 18px; color: var(--ink); font-size: 14px; }
-  .kv { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 4px 12px; margin: 0; font: 400 13.5px/1.4 var(--font); font-variant-numeric: tabular-nums; }
+  /* the window's list: banded rows (hover, picked) with no rules between them (the critic: a band or a hairline) */
+  .dwin .dlist { display: grid; gap: 2px; }
+  .dwin .dlist > .srow { padding: 0 10px 0 14px; border-top: 0; border-radius: 8px; }
+
+  /* Habits' first use: the start drawing (UI.spotArt) over its line */
+  .pr-first { display: grid; justify-items: start; gap: 12px; padding: 8px 0; }
+
+  /* the skill window: Check my level, its record folded, open mistakes, then the types */
+  .skwin .help:empty { display: none; }
+  .skwin .btns { display: flex; flex-wrap: wrap; gap: 8px; margin: 4px 0 8px; }
+  .skwin .srec { border-bottom: 1px solid var(--line); padding-bottom: 4px; }
+  .skwin .srec .help { margin: 0 0 8px; }
+  .sh { margin: 16px 0 4px; font: 600 14.5px/1.35 var(--font); }
+  .kv { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 4px 16px; margin: 0 0 12px; font: 400 14px/1.45 var(--font); font-variant-numeric: tabular-nums; }
+  .skwin .kv { grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr) auto; column-gap: 24px; }
   .kv dt { color: var(--soft); }
   .kv dd { margin: 0; text-align: right; }
-  .skwin .help:empty { display: none; }
-  .skwin .btns { display: flex; flex-wrap: wrap; gap: 8px; margin: 14px 0 4px; }
-  .skwin .btns .btn { height: 36px; font-size: 13.5px; }
-  .skwin .tthead { display: flex; align-items: center; gap: 12px; margin-top: 18px; }
-  .skwin .tthead .sh { margin: 0; color: var(--ink); font-size: 14px; }
-  .omis { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 4px 16px; align-items: center; padding: 10px 0; font: 400 13.5px/1.45 var(--font); border-bottom: 1px solid var(--line); }
-  .omis .quiet { margin: 0; padding: 4px 10px; }
-  .lhead { position: sticky; top: 0; z-index: 1; display: flex; flex-wrap: wrap; gap: 4px 12px; align-items: center; padding: 12px 0 8px; background: var(--paper); border-bottom: 1px solid var(--line); font: 600 14px var(--font); }
-  .lhead .meta { font: 400 13px var(--font); color: var(--soft); }
-  .trow { display: flex; gap: 12px; align-items: flex-start; padding: 12px 0; min-height: 44px; border-bottom: 1px solid var(--line); }
+  .skwin .tthead { display: flex; align-items: center; gap: 12px; margin-top: 16px; }
+  .skwin .tthead .sh { margin: 0; }
+  .omis { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 4px 16px; align-items: center; min-height: var(--row-h); padding: 6px 0; font: 400 14.5px/1.45 var(--font); border-bottom: 1px solid var(--line); }
+  .lhead { position: sticky; top: 0; z-index: 1; display: flex; flex-wrap: wrap; gap: 4px 12px; align-items: center; padding: 12px 0 8px; background: var(--surface, var(--float)); border-bottom: 1px solid var(--line); font: 600 14px var(--font); }
+  .trow { display: flex; gap: 12px; align-items: flex-start; padding: 10px 0; min-height: 44px; border-bottom: 1px solid var(--line); }
   .trow.dim .tmain { opacity: .42; }
-  .trow .tmain { flex: 1; display: grid; gap: 4px; }
+  .trow .tmain { flex: 1; display: grid; gap: 2px; }
   .trow .tname { font: 500 14.5px/1.35 var(--font); }
-  .trow .tabout { font: 400 13.5px/1.45 var(--font); color: var(--soft); }
-  .trow .tchips { display: flex; flex-wrap: wrap; gap: 2px 14px; align-items: center; font: 400 12.5px/1.5 var(--font); color: var(--soft); }
-  .trow .tchips .mono { font: 500 12px var(--mono); color: var(--ink); }
-  .trow .tchips .obadge { min-width: 18px; height: 18px; padding: 0 5px; font-size: 11px; }
-  .trow .tacts { display: flex; flex-wrap: wrap; gap: 2px 6px; }
-  .trow .tacts .quiet { min-height: 32px; font-size: 13.5px; padding: 0 8px; margin: 0; }
-  mark.hit { background: var(--wash-2); color: inherit; border-radius: 2px; }
-  .qlink { background: none; border: 0; padding: 0; color: var(--ink); text-decoration: underline; text-underline-offset: 2px; cursor: pointer; font: inherit; }
-  .tiles { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px; margin-bottom: 14px; }
-  .skel-card { padding: 16px; }
-  .pr-map { display: grid; gap: 10px; }
+  .trow .tabout { font: 400 12.5px/1.45 var(--font); color: var(--soft); }
+  .trow .tchips { display: flex; flex-wrap: wrap; gap: 2px 16px; align-items: center; font: 400 12.5px/1.5 var(--font); color: var(--soft); }
+  .trow .tacts { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 16px; padding-top: 2px; }
+  .tiles { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; margin-bottom: 12px; }
+  .skel-card { padding: var(--card-pad); }
+  .pr-map { display: grid; gap: 12px; }
   .pr-map .mrow { display: grid; gap: 4px; }
-  .pr-map .mrow .mh { display: flex; justify-content: space-between; gap: 8px; font: 600 13px var(--font); }
-  .pr-map .atlas { --atlas: 16px; }
-  .pr-map .quick { display: flex; flex-wrap: wrap; gap: 6px; }
-  .pr-habits .hrow { display: flex; gap: 10px; align-items: flex-start; padding: 10px 0; border-bottom: 1px solid var(--line); }
-  .pr-habits .hrow p { margin: 2px 0 0; font: 400 13px/1.45 var(--font); }
+  .pr-map .mrow .mh { display: flex; justify-content: space-between; gap: 8px; font: 500 14px var(--font); }
+  .pr-map .mcells { display: flex; flex-wrap: wrap; gap: 6px; }
+  /* a picked type: a thin orange ring off the cell, as the tree's picked rows are orange (not the review's ink "on screen" ring) */
+  .pr-map .cell[aria-pressed="true"] { box-shadow: 0 0 0 1.5px var(--page), 0 0 0 3px var(--amber); }
+  .pr-habits .hrow { display: flex; gap: 16px; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--line); }
+  .pr-habits .hrow > div { flex: 1; }
+  .pr-habits .hrow .quiet svg { width: 16px; height: 16px; }
+  .pr-habits .hrow .help { margin: 2px 0 0; }
 
   /* the Start window (settings live here, not on the page): tabs, a scrolling panel, a sticky footer */
-  dialog.sheet.pset { height: min(720px, calc(100dvh - 48px)); }
-  .pset .pset-tabs { flex: none; padding: 0 16px; }
+  dialog.sheet.pset { height: min(680px, calc(100dvh - 48px)); }   /* the tallest tab (Feedback) and a little room; fixed, so tabs never jump */
+  .pset .pset-tabs { flex: none; padding: 0 16px; display: flex; align-items: center; gap: 8px; box-shadow: inset 0 -1px 0 var(--line); }
+  .pset .pset-tabs .tablist { flex: 1 1 auto; min-width: 0; }
+  #worksheet { flex: none; white-space: nowrap; }
   .pset .pset-panel, .pset .pset-panel * { min-width: 0; }
-  .pset .pset-panel { padding-top: 4px; }
+  .pset .pset-panel { padding-top: 20px; }
+  /* the pools and the feedback choices read as one list: plain rows, a hover band, the chosen one banded (no grey wells) */
+  .pset .choice-row { background: none; }
+  @media (hover: hover) and (pointer: fine) { .pset label.choice-row:not(:has(input:checked, input:disabled)):hover { background: var(--hover); } }
   .pset .sgrid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 32px; align-items: start; }
   .pset .sheet-foot { flex-wrap: nowrap; }
   .pset-sum { flex: 1 1 auto; display: grid; gap: 2px; min-width: 0; margin-right: auto; }
-  .pset-sum .l1 { font: 600 15px/1.35 var(--font); font-variant-numeric: tabular-nums; }
-  .pset-sum .l2 { font: 400 13px/1.35 var(--font); color: var(--soft); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .pset-sum .l1 { font: 600 14.5px/1.35 var(--font); font-variant-numeric: tabular-nums; }
+  .pset-sum .l2 { font: 400 12.5px/1.4 var(--font); color: var(--soft); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .pset-sum .l2:empty { display: none; }
   .pset-sum .l2.why { color: var(--ink); white-space: normal; }
-  .sset .sgrp { padding: 16px 0; border-top: 1px solid var(--line); display: grid; gap: 10px; }
+  .sset .sgrp { padding: 16px 0; border-top: 1px solid var(--line); display: grid; gap: 8px; }
   .sset .sgrp:first-of-type { border-top: 0; padding-top: 0; }
   .sset .sgrp > .k { display: block; }
   .sset .help { margin: 0; }
@@ -205,81 +334,43 @@
   .sset .seg { display: flex; flex-wrap: wrap; }
   .sset .seg > button { flex: 1 1 auto; }
   .sset .lab { font: 500 14px/1.35 var(--font); margin-top: 4px; }
-  .radio-row { display: flex; gap: 12px; align-items: center; min-height: 46px; padding: 8px 0; border-bottom: 1px solid var(--line); cursor: pointer; }
-  .radio-row:last-child { border-bottom: 0; }
-  .radio-row input { margin: 0; width: 18px; height: 18px; flex: none; accent-color: var(--amber); }
-  .radio-row .rl { flex: 1; font: 500 14.5px/1.35 var(--font); }
-  .radio-row .rn { font: 400 13px var(--font); color: var(--soft); white-space: nowrap; font-variant-numeric: tabular-nums; }
-  .radio-row.off { color: var(--faint); cursor: default; }
-  .sub { margin: 4px 0 8px 28px; display: grid; gap: 8px; }
-  .inline { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
-  .inline .field { height: 40px; width: 90px; }
-  .lvls { display: grid; grid-template-columns: repeat(7, 44px); gap: 6px; }
-  .lvls button { height: 44px; border-radius: 8px; border: 1px solid var(--line); background: var(--paper); font: 600 14px var(--mono); color: var(--ink); cursor: pointer; display: grid; place-items: center; line-height: 1; }
-  .lvls button small { font: 500 10px var(--mono); color: var(--soft); }
-  .lvls button[aria-pressed="true"] { background: var(--wash); box-shadow: inset 0 0 0 1.5px var(--amber); }
-  .lvls button[data-tier="easy"] { border-bottom: 3px solid var(--lvl-easy); }
-  .lvls button[data-tier="medium"] { border-bottom: 3px solid var(--lvl-med); }
-  .lvls button[data-tier="hard"] { border-bottom: 3px solid var(--lvl-hard); }
-  .lock { display: flex; gap: 8px; align-items: flex-start; font: 400 13px/1.45 var(--font); color: var(--soft); }
+  /* the pools and the feedback choices are the shared .choice-row (a label round a hidden radio), 4px apart */
+  .sset .choice-row + .choice-row { margin-top: -8px; }
+  .sub { margin: 0 0 4px 12px; display: grid; gap: 8px; }
+  .lock { display: flex; gap: 8px; align-items: flex-start; font: 400 12.5px/1.45 var(--font); color: var(--soft); }
   .sfoot { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; justify-content: space-between; padding-top: 12px; border-top: 1px solid var(--line); }
   .shake { animation: shake .3s; }
   @keyframes shake { 25% { transform: translateX(-3px); } 75% { transform: translateX(3px); } }
 
-  /* your sets */
-  .pr-sets .h2 { margin: 0 0 10px; }
-  .pr-sets .filters { display: flex; flex-wrap: wrap; gap: 8px; margin: 10px 0; }
-  .pr-sets select { height: var(--ctl); border-radius: 10px; border: 1px solid var(--line); background: var(--paper); color: var(--ink); padding: 0 8px; font: 500 13.5px var(--font); max-width: 100%; }
-  .setrow { display: grid; grid-template-columns: 130px minmax(0, 1.4fr) minmax(0, 1fr) 90px 110px 64px auto; gap: 10px; align-items: center; min-height: 56px; padding: 8px 0; border-bottom: 1px solid var(--line); font: 400 13.5px/1.35 var(--font); }
-  .setrow .mono { font-size: 12.5px; }
-  .setrow .acts { display: flex; flex-wrap: wrap; gap: 4px 6px; justify-content: flex-end; }
-  .setrow .acts .quiet, .setrow .acts .btn, .setrow .acts .pill { min-height: 34px; height: 34px; font-size: 13px; }
+  /* Your sets: its own folded section under the tree. Its width decides the row: a seven-column row from 700px,
+     below that the skills, one line of figures and the actions */
+  #setsSec { container: sets / inline-size; }
+  /* the four tabs stay one row: on a phone the row scrolls sideways (never wraps a tab onto a second line) */
+  .pr-sets .seg { max-width: 100%; flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; }
+  .pr-sets .seg > * { flex: none; }
+  .pr-sets .pr-filt { display: flex; flex-wrap: wrap; gap: 8px; margin: 8px 0; }
+  .pr-sets .pr-filt .field { width: auto; max-width: 100%; }
+  #sets { padding-top: 4px; }
+  .setrow { display: grid; grid-template-columns: 112px minmax(0, 1.4fr) minmax(0, 1fr) 64px 112px 52px auto; gap: 12px; align-items: center; min-height: var(--row-h); padding: 6px 0;
+    border-bottom: 1px solid var(--line); font: 400 14px/1.35 var(--font); font-variant-numeric: tabular-nums; }
+  .setrow .acts { display: flex; flex-wrap: wrap; gap: 4px 16px; justify-content: flex-end; align-items: center; }
   .setrow .skills { display: flex; flex-wrap: wrap; gap: 4px; }
-  .setrow .skills span { background: var(--tile); border-radius: 6px; padding: 2px 6px; font: 500 12px var(--font); }
-
-  /* the action bar */
-  .pr-abar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 25; background: var(--paper); box-shadow: 0 -1px 0 var(--line), 0 -12px 30px -18px rgba(0, 0, 0, .25); }
-  body.has-side .pr-abar { left: var(--side-w); }
-  body.has-rail .pr-abar { left: var(--rail-w); }
-  .pr-abar-in { max-width: var(--max); margin: 0 auto; min-height: 72px; padding: 10px var(--gutter) calc(10px + env(safe-area-inset-bottom, 0px)); display: flex; gap: 12px 20px; align-items: center; justify-content: space-between; }
-  .pr-abar .sum { display: grid; gap: 3px; flex: 1; min-width: 0; }
-  .pr-abar .l1 { font: 600 16px/1.35 var(--font); font-variant-numeric: tabular-nums; justify-self: start; }
-  .pr-abar .l2 { font: 400 13px/1.35 var(--font); color: var(--soft); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .pr-abar .l2:empty { display: none; }
-  .pr-abar .go { display: flex; gap: 12px; align-items: center; justify-content: flex-end; }
-  /* Start is the one solid button; it opens the Start window */
-  .pr-abar #start { height: 40px; padding: 0 24px; border-radius: 10px; font-size: 15px; }
-  .pr-abar .reason { font: 400 13.5px/1.4 var(--font); color: var(--ink); max-width: 300px; }
-  .pr-abar .error { margin: 0; }
-  .pr-rw { display: grid; gap: 16px; margin-top: 18px; }
-  .pr-rw .card h3 { margin: 0 0 8px; }
-  .pr-rw .rwd { margin-top: 10px; }
-  .pr-rw .rwd b { font: 700 14px var(--font); }
-  .pr-rw .rws { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 4px 10px; padding: 8px 0; border-bottom: 1px solid var(--line); font: 400 14px var(--font); }
-  .pr-rw form { display: grid; gap: 10px; }
-  .pr-rw form .field { width: 100%; }
-  .skel-tree .skel { margin-bottom: 10px; }
-
-  @media (min-width: 1040px) {
-    .dgrid { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
-    .dopen { padding: 11px 10px 10px 38px; }
-    .dhead > .tri { left: 10px; top: 13px; }
-    .dgrid .srow { min-height: 38px; gap: 0 8px; padding: 0 10px; }
-    .dgrid .snm { padding: 4px 0; }
-    .dgrid .srow .sname { font-size: 13.5px; line-height: 1.25; }
-    .dgrid .srow .reason, .dgrid .srow .go { display: none; }
-    .dgrid .sright { gap: 6px; }
-    .dgrid .sright .mbar { width: 28px; }
-    .dgrid .obadge { min-width: 20px; height: 20px; padding: 0 6px; font-size: 11px; }
+  .pr-setlist { position: relative; }   /* as .pr-rows: glide's ghosts sit against it */
+  .pr-setlist > .quiet { margin-top: 12px; }
+  .pr-none { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 16px; padding: 8px 0; }
+  .pr-none .help { margin: 0; }
+  @container sets (max-width: 699px) {
+    .setrow { display: flex; flex-wrap: wrap; gap: 4px 12px; padding: 8px 0; }
+    .setrow > .skills { order: -1; flex: 1 0 100%; }
+    .setrow > :not(.skills):not(.acts) { font-size: 12.5px; color: var(--soft); }
+    .setrow > :empty { display: none; }
+    .setrow .acts { flex: 1 0 100%; justify-content: flex-start; }
   }
-  @media (max-width: 1039px) {
-    .dname { flex-basis: 100%; }
-    .pr-grid { grid-template-columns: minmax(0, 1fr); }
-    .pr-tree { grid-column: 1 / -1; }
-    .pr-ready { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  }
+
+  .skel-tree .skel { margin-bottom: 8px; }
+
   @media (max-width: 759px) {
-    .pr { padding-bottom: 190px; }
+    .pr { padding-bottom: calc(var(--abar-h, 64px) + 64px + env(safe-area-inset-bottom, 0px) + 16px); }
     /* the Start window is a full-height sheet on a phone; its tabs scroll sideways */
     dialog.sheet.pset, dialog.sheet.pset[data-size] { height: 100dvh; max-height: 100dvh; border-radius: 0; }
     dialog.sheet.pset::before { display: none; }
@@ -288,24 +379,17 @@
     .pset .tablist [role="tab"] { flex: none; min-height: 44px; box-shadow: none; }
     .pset .sgrid { display: block; }
     .pset .seg > button, .pset .seg > label { min-height: 44px; }
-    .pset .inline .field { height: 44px; }
-    .pset .sfoot :is(.quiet, .btn) { min-height: 44px; }
     .pset .sheet-foot { flex-wrap: wrap; }
     .pset-sum { flex-basis: 100%; }
-    .pset .sheet-foot :is(.pill, .quiet) { min-height: 44px; }
     .pset .sheet-foot .pill { flex: 1 1 0; }
-    .trow .tacts .quiet { min-height: 44px; }
-    .skwin .btns .btn { height: 44px; }
-    .setrow { grid-template-columns: minmax(0, 1fr) auto; }
-    .setrow > :nth-child(n+3):not(.acts) { grid-column: 1; }
-    .setrow .acts { grid-column: 1 / -1; justify-content: flex-start; }
-    .pr-abar, body.has-side .pr-abar, body.has-rail .pr-abar { left: 0; bottom: calc(64px + env(safe-area-inset-bottom, 0px)); }
-    .pr-abar-in { flex-wrap: wrap; gap: 10px 12px; padding-bottom: 10px; min-height: 0; }
+    .skwin .btns .btn { min-height: 44px; }
+    .skwin .kv { grid-template-columns: minmax(0, 1fr) auto; }
+    /* the bar: one row (the preset over the set, and Start), the reason under it when there is one */
+    #abar, body.has-side #abar, body.has-rail #abar { left: 0; bottom: calc(64px + env(safe-area-inset-bottom, 0px)); }
+    .pr-abar-in { flex-wrap: wrap; gap: 4px 12px; padding: 8px var(--gutter); }
+    .pr-abar .l2 { display: none; }
     .pr-abar .go { display: contents; }
     .pr-abar .reason { order: 3; flex-basis: 100%; max-width: none; }
-    .pr-abar .go .pill { order: 4; flex-basis: 100%; height: 48px; }
-    .pr-ready { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-    .lvls { grid-template-columns: repeat(7, minmax(0, 44px)); }
   }
   @media print { .pr-abar { display: none; } }
 </style>
@@ -314,55 +398,58 @@
 <header id="bar"></header>
 <main class="page pr" id="main" tabindex="-1">
   <header class="pr-head">
-    <div class="pr-head-l">
-      <div id="subject"></div>
-      <h1 class="h1">Practice</h1>
-      <p class="meta" id="points"></p>
-      <div class="pr-route" id="route" hidden></div>
-    </div>
-    <nav class="pr-links" id="links" aria-label="Your lists"></nav>
+    <h1 class="h1">Practice</h1>
+    <div id="subject"></div>
+    <p class="meta" id="points"></p>
   </header>
-  <div id="banners" class="pr-sec" hidden></div>
-  <section id="ready" class="pr-sec" aria-label="Ready to start" hidden></section>
-  <section class="pr-sec pr-search" id="searchSec">
-    <label for="q">Build any set by typing it</label>
-    <input class="field" id="q" type="search" autocomplete="off" spellcheck="false"
-           placeholder="circles hard 10 in 15 min · a type name">
-    <div class="pr-sline" id="sline" aria-live="polite"></div>
-    <div class="pr-results" id="results"></div>
-  </section>
-  <section class="pr-sec" aria-label="Presets" id="presetSec">
-    <button type="button" class="pr-fold" id="presetTog" aria-expanded="false"><span>Presets</span><span class="chev" aria-hidden="true"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></span></button>
-    <div id="presetBody" hidden><div class="pr-chips" id="presets"></div>
-      <section class="pr-sec pr-sets" id="sets" aria-label="Your sets"></section></div>
-    <p class="pr-note" id="linkNote" hidden></p>
-  </section>
-  <div id="rw" class="pr-rw" hidden></div>
-  <div class="pr-grid" id="grid">
-    <section class="pr-tree" id="tree" aria-label="Skills">
-      <div class="pr-thead" id="thead"></div>
-      <div id="treeBody" class="skel-tree"></div>
-    </section>
+  <div class="pr-route" id="route" hidden></div>
+  <div class="twocol side-first pr-body">
+    <div class="pr-main" data-m="stagger">
+      <section class="pr-search" id="searchSec">
+        <span class="pr-sicon" aria-hidden="true"></span>
+        <label class="sr" for="q">Build a set by typing it</label>
+        <input class="field" id="q" type="search" autocomplete="off" spellcheck="false"
+               placeholder="Type a set: circles hard 10 in 15 min, or a type name">
+        <kbd class="kbd pr-kbd" aria-hidden="true">/</kbd>
+        <div class="pr-sline" id="sline" aria-live="polite"></div>
+      </section>
+      <section class="pr-tree" id="tree" aria-label="Skills">
+        <div class="pr-thead" id="thead"></div>
+        <div id="treeBody" class="skel-tree"></div>
+      </section>
+      <section class="pr-sets" id="setsSec" aria-label="Your sets">
+        <details class="pr-fold fold" id="setsFold"><summary id="setsTog">Your sets</summary><div id="sets"></div></details>
+      </section>
+    </div>
+    <aside class="twocol-side pr-side" aria-label="Your set and shortcuts" data-m="stagger">
+      <div class="card hero pr-abar" id="abar" role="region" aria-label="Your set" data-m-now>
+        <div class="pr-abar-in">
+          <div class="sum" id="abarSum">
+            <div class="pr-yhead" id="presetSec"><span class="k">Your set</span><button type="button" class="btn sm dd" id="presets" disabled>Presets</button></div>
+            <p class="error" id="abarErr" hidden></p>
+            <span class="l1" id="l1" tabindex="0"><span class="skel line"></span></span>
+            <span class="pr-glyphs" id="glyphs"></span>
+            <span class="l2" id="l2"></span>
+          </div>
+          <div class="go">
+            <span class="reason" id="reason" hidden></span>
+            <button type="button" class="pill" id="start" aria-haspopup="dialog" disabled>Start practice</button>
+          </div>
+          <p class="pr-foot" id="diag" hidden>New here? <a href="/diagnostic/">Diagnostic</a>: a starting score in 20 questions.</p>
+          <p class="pr-note" id="linkNote" hidden></p>
+        </div>
+      </div>
+      <div id="banners" hidden></div>
+      <section id="ready" aria-label="Ready to start" hidden></section>
+      <nav class="pr-links" id="links" aria-label="Your lists"></nav>
+    </aside>
   </div>
 </main>
-<div class="pr-abar" id="abar" role="region" aria-label="Start">
-  <div class="pr-abar-in">
-    <div class="sum" id="abarSum">
-      <p class="error" id="abarErr" hidden></p>
-      <span class="l1" id="l1" tabindex="0">Loading…</span>
-      <span class="l2" id="l2"></span>
-    </div>
-    <div class="go">
-      <span class="reason" id="reason" hidden></span>
-      <button type="button" class="pill" id="start" aria-haspopup="dialog" disabled>Loading…</button>
-    </div>
-  </div>
-</div>
 <nav id="tabs"></nav>
 <script src="/assets/ui.js"></script>
 <script src="/assets/kit.js"></script>
 <script src="/assets/charts.js"></script>
-<script>UI.shell('practice');</script>
+<script>UI.shell({ page: 'practice', ownPrimary: true });</script>
 <script src="/practice/builder.js"></script>
 </body>
 </html>

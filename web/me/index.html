@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Profile · SAT Freshman</title>
 <meta name="description" content="Your SAT progress: goals, skills, scores, mistakes and activity.">
+<link rel="icon" href="/favicon.ico" sizes="32x32">
 <link rel="icon" href="/assets/mark.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
 <link rel="manifest" href="/manifest.webmanifest">
@@ -12,16 +13,17 @@
 <script src="/assets/head.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800;900&family=DM+Mono:wght@400;500&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap">
+<link rel="preload" href="/assets/fonts/Geist.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap">
 <link rel="stylesheet" href="/assets/ui.css">
 <link rel="stylesheet" href="/me/me.css">
 </head>
 <body data-page="me">
 <header id="bar"></header>
 <main class="page me" id="main" tabindex="-1">
-  <div class="me-grid" id="grid">
-    <div class="me-col" id="colL"></div>
-    <div class="me-col" id="colR"></div>
+  <div class="me-grid twocol" id="grid">
+    <aside class="me-col twocol-side" id="colL" aria-label="You and your goals"></aside>
+    <div class="me-col me-main" id="colR"></div>
   </div>
 </main>
 <nav id="tabs"></nav>
@@ -29,6 +31,7 @@
 <script src="/assets/kit.js"></script>
 <script src="/assets/charts.js"></script>
 <script src="/me/account.js"></script>
+<script src="/assets/compete-ui.js"></script>
 <script src="/me/week.js"></script>
 <script src="/me/me.js"></script>
 </body>

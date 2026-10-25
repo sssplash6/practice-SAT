@@ -17,7 +17,7 @@
      UI.addWord(prefill)                     the Add sheet (§10, R29); prefill.id edits
      UI.addWordFromSelection(root, {source}) -> unbind   selecting 1–6 words in root floats
          Add to my words; source is a string or () => string ("From a Circles question")
-     UI.bringWords('text' | 'list' | 'missed')   Bring words (W19): matched in the browser
+     UI.bringWords('text' | 'list' | 'missed' | 'import')   Bring words (W19): matched in the browser
      UI.gloss(el, {exclude, ref})            tap-to-define in Words texts (§11)
      UI.speak(text) (UI.speak.ok())          the device's en-US voice
    ========================================================================== */
@@ -29,46 +29,64 @@
 
   /* ------------------------------------------------------------ styles */
   const CSS = `
-.wtabs { display: inline-flex; gap: 2px; padding: 3px; border-radius: 12px; background: var(--tile); max-width: 100%; overflow-x: auto; }
-.wtabs a { display: inline-flex; align-items: center; gap: 7px; min-height: calc(var(--ctl) - 6px); padding: 0 16px; border-radius: 9px;
-  font: 600 14px var(--font); color: var(--ink); text-decoration: none; white-space: nowrap; }
-.wtabs a[aria-current="page"] { background: var(--wash); box-shadow: inset 0 0 0 1.5px var(--amber); }
-.wtabs .n { font: 500 12px var(--mono); color: var(--soft); }
+.wtabs { display: inline-flex; gap: 2px; padding: 3px; border-radius: 10px; background: var(--well); box-shadow: inset 0 1px 2px rgb(var(--sh) / .08); max-width: 100%; overflow-x: auto; }
+.wtabs a { position: relative; isolation: isolate; display: inline-flex; align-items: center; gap: 6px; min-height: calc(var(--ctl) - 4px); padding: 0 12px; border-radius: 8px;
+  font: 500 14px var(--font); color: var(--ink); text-decoration: none; white-space: nowrap; }
+.wtabs a[aria-current="page"] { font-weight: 600; }
+/* the current tab's thumb (the .seg thumb) is its own named layer, so a page change slides it to the new tab */
+.wtabs .wt-mark { position: absolute; inset: 0; z-index: -1; border-radius: inherit; background: var(--thumb, var(--face)); box-shadow: var(--seg-thumb);
+  pointer-events: none; view-transition-name: wtab-mark; }
+::view-transition-group(wtab-mark) { animation-duration: var(--m-slow, 260ms); animation-timing-function: var(--ease-move, ease); }
+.wtabs .n { font: 500 12.5px var(--font); color: var(--soft); font-variant-numeric: tabular-nums; }
+.wtabs .dot { background: var(--ink-2); }   /* graphite, as the shell's count dots: the page's orange is its Start */
 .wtabs .s { display: none; }
-@media (hover: hover) and (pointer: fine) { .wtabs a:not([aria-current]):hover { background: var(--tile-2); } }
+@media (hover: hover) and (pointer: fine) { .wtabs a:not([aria-current]):hover { background: var(--hover); } }
 @media (max-width: 419px) { .wtabs { display: flex; } .wtabs a { flex: 1; justify-content: center; padding: 0 8px; } .wtabs .l { display: none; } .wtabs .s { display: inline; } }
 .today-words { display: grid; gap: 12px; }
-.tw-top { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 14px; }
-.tw-top h2 { font: 700 17px var(--font); letter-spacing: -.01em; }
-.tw-facts { font: 500 13px var(--mono); color: var(--soft); }
-.tw-row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px; }
-.tw-row .pill { min-width: 150px; }
-.tw-box { display: inline-flex; align-items: center; gap: 8px; margin-left: auto; }
-.tw-box .k { white-space: nowrap; }
-.tw-note { font: 400 13.5px/1.45 var(--font); color: var(--ink); }
+.tw-top { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 12px; }
+.tw-top h2, .tw-line h2 { font: 600 16px/1.3 var(--font); letter-spacing: -.01em; }
+.tw-facts { font: 500 12.5px var(--font); color: var(--soft); font-variant-numeric: tabular-nums; }
+.tw-fig { margin-top: -4px; }
+.tw-row { display: flex; align-items: center; gap: 8px; }
+/* the goal met: the ticks go to the calm amber tone, so Start under them is the one orange */
+.today-words .meter.done.ticks .meter-bar > i[data-on] { background: var(--amber-200); }
+.tw-row > .pill, .tw-row > .split-btn, .tw-row > .split-btn > .pill:first-child { flex: 1 1 auto; }
+.tw-done { display: flex; align-items: center; gap: 12px; }
+.tw-done .spot { width: 48px; height: 48px; }
+.tw-note { font: 400 14px/1.45 var(--font); color: var(--ink); }
 .tw-note b { font-weight: 600; }
-@media (max-width: 759px) { .tw-row .pill { flex: 1 1 100%; min-height: 48px; } .tw-row > .btn { flex: 1 1 auto; min-height: var(--touch); padding: 0 12px; } .tw-box { margin-left: 0; } }
-.wfin { display: grid; gap: 10px; }
+.tw-find { display: grid; gap: 6px; }
+.tw-find .field { width: 100%; }
+.tw-find-h { margin: 0; }
+.today-words .tw-off { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin: 0; padding-top: 12px; border-top: 1px solid var(--line); }
+.tw-line { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; }
+.tw-line .btn { margin-left: auto; }
+@media (max-width: 759px), (pointer: coarse) { .today-words .tw-row :is(.pill, .btn) { height: var(--touch); } }
+.wfin { display: grid; gap: 8px; }
+.wfin .tw-top { align-items: center; }
+.wfin .tw-top > .btn { margin-left: auto; }
 .wfin-l { font: 400 14px/1.5 var(--font); }
 .wfin-l b { font-weight: 600; }
-.wfin .chips { flex-wrap: wrap; }
-.wfin details summary { cursor: pointer; font: 600 13.5px var(--font); }
-.wfin details p { margin-top: 6px; font: 400 13px/1.5 var(--font); color: var(--soft); max-width: 70ch; }
+.wfin .chips { flex-wrap: wrap; margin-top: 8px; }
+.wfin > details > .fold-s { display: flex; flex-wrap: wrap; width: 100%; align-items: center; gap: 4px 12px; color: var(--ink); }
+.wfin .fold-s h2 { font: 600 16px/1.3 var(--font); letter-spacing: -.01em; }
+.wfin > details[open] > .fold-s { margin-bottom: 8px; }
+.wfin > details[open] > .fold-s .tw-facts { display: none; }
+.wfin-body { display: grid; gap: 8px; }
+.wfin-left { font: 500 12.5px var(--font); color: var(--soft); }
+@media (max-width: 759px) { .wfin .chips { flex-wrap: nowrap; overflow-x: auto; padding: 3px 2px; scrollbar-width: none; } .wfin .chips > * { flex: none; } }
 @media (min-width: 760px) { dialog.sheet.wsheet { max-width: min(720px, calc(100vw - 32px)); max-height: 88vh; } }
-@media (max-width: 759px) { .wsheet > .sheet-head { flex-wrap: wrap; } .wsheet .ws-tools { order: 3; flex-basis: 100%; margin: 0 0 0 -8px; } .wsheet > .sheet-head h2 { font-size: 28px !important; } }
+@media (max-width: 759px) { .wsheet > .sheet-head { flex-wrap: wrap; } .wsheet .ws-tools { order: 3; flex-basis: 100%; margin: 0 0 0 -8px; } }
 .wsheet > .sheet-head { position: sticky; top: 0; background: inherit; z-index: 1; }
-.wsheet > .sheet-head h2 { font: 800 32px/1.05 var(--font) !important; letter-spacing: -.03em; overflow-wrap: normal; word-break: normal; flex: 0 1 auto; }
+dialog.sheet.wsheet > .sheet-head > h2 { font: 600 22px/1.2 var(--font); letter-spacing: -.02em; overflow-wrap: normal; word-break: normal; flex: 0 1 auto; }
+.ws-mode { margin-left: auto; }
 .ws-mode .seg { --ctl: 30px; }
 .ws-tools { display: flex; flex: none; align-items: center; gap: 2px; margin-left: auto; }
-.ws-tools .btn.icon { background: none; }
-.ws-tools .btn[aria-pressed="true"] { color: var(--amber-deep); }
-.ws-tools .btn[aria-pressed="true"] svg path { fill: var(--amber); stroke: var(--amber-deep); }
-.ws-sub { display: flex; flex-wrap: wrap; gap: 4px 12px; align-items: center; margin: -4px 0 12px; font: 500 13px var(--mono); color: var(--soft); }
-.ws-chips { display: flex; flex-wrap: wrap; gap: 6px 8px; align-items: center; margin-bottom: 16px; }
-.wtag { display: inline-flex; align-items: center; gap: 6px; min-height: 26px; padding: 0 10px; border-radius: 999px; background: var(--tile); font: 500 12.5px var(--font); color: var(--ink); }
-.wtag.m { font-family: var(--mono); font-size: 12px; color: var(--soft); background: none; padding: 0; }
-.wb { padding: 14px 0; border-top: 1px solid var(--line); }
+.ws-sub { display: flex; flex-wrap: wrap; gap: 4px 8px; align-items: center; margin: -4px 0 12px; font: 500 12.5px var(--font); color: var(--soft); }
+.ws-lv { display: inline-flex; align-items: center; gap: 6px; }
+.wb { padding: 12px 0; border-top: 1px solid var(--line); }
 .wb:first-of-type { border-top: 0; }
+.wsheet.covered .wb.cov { border-top-color: transparent; }   /* the face-down plates separate the blocks; no hairline between them */
 .wb > .k { display: block; margin-bottom: 8px; }
 .wb .meaning { font: 400 19px/1.5 var(--serif); }
 .wb .ex { font: 400 16.5px/1.55 var(--serif); margin: 4px 0; }
@@ -76,112 +94,75 @@
 .wb .src { font: 400 12.5px var(--font); color: var(--soft); font-style: italic; }
 .wb .line { font: 400 14px/1.5 var(--font); }
 .wb .line + .line { margin-top: 4px; }
+.wb .acts { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+.wb details.fold { margin-top: 8px; }
 .wchips { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+.wchips + .wchips { margin-top: 6px; }
 .wchip { appearance: none; border: 0; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; min-height: 32px; padding: 0 12px;
-  border-radius: 8px; background: var(--tile); font: 600 14px var(--font); color: var(--ink); }
-.wchip.plain { cursor: default; font-weight: 500; background: none; padding: 0 6px; }
-.wchip[aria-current="true"] { background: var(--wash); box-shadow: inset 0 0 0 1.5px var(--amber); }
-.wchip small { font: 500 11.5px var(--mono); color: var(--soft); }
-@media (hover: hover) and (pointer: fine) { button.wchip:not([aria-current="true"]):hover { background: var(--tile-2); } }
-.shades .wchips + .wchips { margin-top: 6px; }
+  border-radius: 8px; background: var(--face); box-shadow: var(--shadow-btn); font: 500 14px var(--font); color: var(--ink);
+  transition: background-color .14s var(--ease), box-shadow .14s var(--ease); }
+button.wchip:not([aria-current="true"]):active { box-shadow: var(--shadow-btn-down); transition-duration: .05s; }
+.wchip.plain { cursor: default; background: none; box-shadow: none; padding: 0 6px; }
+.wchip[aria-current="true"] { background: var(--sel-bg); box-shadow: var(--sel-edge); font-weight: 600; }
+.wchip small { font: 500 11.5px var(--font); color: var(--soft); }
+@media (hover: hover) and (pointer: fine) { button.wchip:not([aria-current="true"]):hover { background: var(--face-hover); } }
 .shade-n { margin-top: 8px; font: 400 14px/1.5 var(--serif); }
-.confu { display: grid; gap: 4px; padding: 10px 0; }
-.confu + .confu { border-top: 1px dashed var(--line); }
+.shade-bar { height: 1px; margin-top: 8px; background: var(--line); }
+.confu { display: grid; gap: 4px; padding: 8px 0; }
+.confu + .confu { border-top: 1px solid var(--line); }
+.confu h3 { font: 600 14.5px var(--font); }
+.confu .wlink { margin: 0; padding: 0; font: inherit; }
 .confu .t { font: 400 15px/1.5 var(--serif); }
-.confu .fell { display: flex; align-items: center; gap: 6px; font: 500 12.5px var(--mono); color: var(--ink); }
-.confu .acts { display: flex; gap: 14px; margin-top: 12px; }
-.ladder { display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px; margin: 10px 0; }
+.confu .fell { display: flex; align-items: center; gap: 6px; font: 500 12.5px var(--font); color: var(--ink); }
+.confu .acts { display: flex; gap: 12px; margin-top: 8px; }
+.ladder { display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px; margin: 8px 0; }
 .ladder span { display: grid; gap: 4px; font: 500 11.5px var(--font); color: var(--soft); text-align: center; }
-.ladder span::before { content: ""; height: 6px; border-radius: 3px; background: var(--mat); }
+.ladder span::before { content: ""; height: 6px; border-radius: 3px; background: var(--track); }
 .ladder span.on { color: var(--ink); }
 .ladder span.on::before { background: var(--amber); }
 .journey { display: flex; flex-wrap: wrap; gap: 4px; align-items: center; margin: 8px 0; }
 .journey i { width: 12px; height: 12px; border-radius: 50%; box-shadow: inset 0 0 0 1.5px var(--ink); font-style: normal; }
 .journey i.ok { background: var(--amber); box-shadow: inset 0 0 0 1.5px var(--amber-deep); }
 .journey i.ctx { border-radius: 3px; }
-.journey .nx { font: 500 12px var(--mono); color: var(--soft); margin-left: 6px; }
+.journey .nx { font: 500 12.5px var(--font); color: var(--soft); margin-left: 6px; }
 .hook { display: flex; gap: 8px; align-items: center; margin-top: 8px; }
 .hook input { flex: 1; }
 .wsample .q-stem { font-size: 17.5px; }
 .wsample .ws-ask { margin: 6px 0 10px; font: 600 14px var(--font); }
-.ws-foot { position: sticky; bottom: 0; }
+.ws-foot { position: sticky; bottom: 0; flex-wrap: nowrap; }
 .ws-foot .grow { flex: 1; }
+.ws-foot > .btn.icon { flex: none; }
+@media (max-width: 419px) { .ws-foot .l { display: none; } }
 .wsheet.covered .cov { position: relative; }
 .wsheet.covered .cov > :not(.k) { visibility: hidden; }
-.wsheet.covered .cov::after { content: "Covered"; position: absolute; left: 0; top: 34px; font: 500 12px var(--mono); color: var(--faint); }
+/* a covered block reads as a face-down card: a plate where the text will be */
+.wsheet.covered .cov::after { content: "Covered"; position: absolute; inset: 32px 0 12px; min-height: 28px; display: grid; place-items: center; border-radius: 8px;
+  background: var(--well); font: 500 12.5px var(--font); color: var(--soft); }
 .wsheet.covered .cov-t { visibility: hidden; }
 .wsheet.covered .wsample .opt-why, .wsheet.covered .wsample .ws-verdict .mistake, .wsheet.covered .wsample .v-clue { visibility: hidden; }
-.ws-mode { font: 500 12px var(--mono); }
-.wmsg { padding: 18px 0; font: 400 15px var(--font); }
+.wmsg { padding: 16px 0; font: 400 14.5px var(--font); }
 button.term { appearance: none; border: 0; background: none; padding: 0; font: inherit; color: inherit; cursor: help;
   text-decoration: underline dotted var(--faint); text-decoration-thickness: 1.5px; text-underline-offset: 3px; }
 .gpop { display: grid; gap: 6px; max-width: 300px; }
-.gpop b { font: 700 16px var(--font); }
+.gpop b { font: 600 16px var(--font); }
 .gpop p { font: 400 14px/1.45 var(--font); }
 .gpop .acts { display: flex; gap: 8px; flex-wrap: wrap; }
 .addw { display: grid; gap: 12px; }
 .addw .two { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 @media (max-width: 559px) { .addw .two { grid-template-columns: 1fr; } }
 .addw .field-err { margin-top: 4px; }
-.addw .dup { font: 400 13.5px var(--font); }
-/* one height per control row; a quiet button in a row keeps its hover box inside itself */
-:is(.tw-row, .go, .ws-foot, .sheet-foot, .upnext, .wr-ctl, .hook) > :is(button, a, .btn, .pill, .quiet) { min-height: 44px; }
-:is(.tw-row, .go, .ws-foot, .sheet-foot, .upnext, .wr-ctl) > .pill { height: 44px; }
-:is(.tw-row, .go, .ws-foot, .sheet-foot, .upnext, .wr-ctl, .hook) > .quiet { margin: 0; }
-.hook > .field { height: 44px; }
-.winfo { appearance: none; border: 0; background: none; padding: 0 2px; margin: 0; position: relative; cursor: help;
-  font: 500 13px/1 var(--font); letter-spacing: 0; text-transform: none; color: var(--soft); vertical-align: baseline; }
-.winfo::before { content: ""; position: absolute; left: 50%; top: 50%; width: 32px; height: 32px; transform: translate(-50%, -50%); }
-@media (hover: hover) and (pointer: fine) { .winfo:hover { color: var(--ink); } }
-.tw-line { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; }
-.tw-line h2 { font: 700 15px var(--font); }
-.tw-line .btn { margin-left: auto; min-height: 44px; }
-/* Today's words: one solid Start, the three ways in as one connected group, the time box as its own group, the offline offer under a rule */
-.today-words .tw-row > .pill { height: 40px; min-height: 40px; min-width: 110px; padding: 0 24px; border-radius: 10px; font-size: 15px; }
-.tw-modes { display: inline-flex; border-radius: 10px; overflow: hidden; box-shadow: inset 0 0 0 1px var(--line); }
-.tw-modes > .btn { height: 40px; min-height: 40px; border-radius: 0; box-shadow: none; padding: 0 16px; }
-.tw-modes > .btn + .btn { box-shadow: inset 1px 0 0 var(--line); }
-.tw-box .btn.sm { height: 34px; min-height: 34px; }
-@media (max-width: 759px) { .tw-modes { flex: 1 1 100%; } .tw-modes > .btn { flex: 1 1 0; min-height: var(--touch); padding: 0 8px; } }
-.tw-find { display: grid; gap: 6px; margin-top: 14px; }
-.tw-find .field { width: 100%; height: 40px; }
-.tw-find-h { margin: 0; }
-.tw-find-out { margin-top: 12px; }
-.tw-find-out .tw-find { margin-top: 0; }
-.today-words .tw-off { display: flex; justify-content: flex-end; align-items: center; gap: 6px; margin: 14px 0 0; padding-top: 12px; border-top: 1px solid var(--line); }
-.wfin > details > summary { list-style: none; cursor: pointer; display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 14px; }
-.wfin > details > summary::-webkit-details-marker { display: none; }
-.wfin > details > summary::after { content: "▸"; margin-left: auto; color: var(--soft); }
-.wfin > details[open] > summary::after { content: "▾"; }
-.wfin > details[open] > summary { margin-bottom: 10px; }
-.wfin > details[open] > summary .tw-facts { display: none; }
-.wfin-body { display: grid; gap: 10px; }
-.wfin-left { font: 500 13px var(--mono); color: var(--soft); }
-.wfin .chips { margin-top: 8px; }
-@media (max-width: 759px) { .wfin .chips { flex-wrap: nowrap; overflow-x: auto; padding: 3px 2px; scrollbar-width: none; } .wfin .chips > * { flex: none; } }
-.shade-bar { height: 3px; border-radius: 2px; margin-top: 8px; background: linear-gradient(90deg, var(--mat), var(--amber)); }
-.confu h3 { font: 600 15px var(--font); }
+.addw .dup { font: 400 14px var(--font); }
+.addw .w-side { display: grid; gap: 8px; }
+.bm-grid { display: grid; grid-template-columns: 1fr auto auto; gap: 8px; align-items: center; }
 .wsample .trap-chip, .wr .trap-chip { display: none; }
-.ws-foot { flex-wrap: nowrap; }
-.ws-foot > .btn.icon { flex: 0 0 44px; width: 44px; }
-.ws-foot .pill { padding: 0 24px; }
-@media (max-width: 419px) { .ws-foot .l { display: none; } .ws-foot .pill { padding: 0 18px; } }
 `;
   if (!doc.getElementById('words-ui-css')) doc.head.append(h('style', { id: 'words-ui-css', text: CSS }));
 
   /* ------------------------------------------------------------ helpers */
-  const L = 'fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"';
-  const PATHS = {
-    speak: `<path d="M4.5 9.5h3l4.5-4v13l-4.5-4h-3z" ${L}/><path d="M15.5 9a4 4 0 0 1 0 6M17.8 6.5a7.5 7.5 0 0 1 0 11" ${L}/>`,
-    star: `<path d="M12 4.5l2.3 4.7 5.2.8-3.8 3.6.9 5.1L12 16.3l-4.6 2.4.9-5.1-3.8-3.6 5.2-.8z" ${L}/>`,
-    flag: `<path d="M6 20V4.5M6 5h10.5l-2 3.5 2 3.5H6" ${L}/>`,
-    left: `<path d="M14.5 6l-6 6 6 6" ${L} stroke-width="1.8"/>`,
-    right: `<path d="M9.5 6l6 6-6 6" ${L} stroke-width="1.8"/>`,
-    more: `<circle cx="6" cy="12" r="1.3" fill="currentColor"/><circle cx="12" cy="12" r="1.3" fill="currentColor"/><circle cx="18" cy="12" r="1.3" fill="currentColor"/>`,
-    plus: `<path d="M12 5v14M5 12h14" ${L} stroke-width="1.8"/>`,
-    edit: `<path d="M5 19l1-4 9.5-9.5 3 3L9 18z M13.5 7.5l3 3" ${L}/>`,
-  };
-  const ic = (n, size = 18) => { const t = doc.createElement('template'); t.innerHTML = `<svg width="${size}" height="${size}" viewBox="0 0 24 24" aria-hidden="true" focusable="false">${PATHS[n] || ''}</svg>`; return t.content.firstChild; };
+  // icons come from the shared map (UI.icon, Phosphor). Words' left / right were the steppers' chevrons; in the
+  // map left / right are arrows, so they read as the carets here
+  const ICON_AS = { left: 'caret_left', right: 'caret_right' };
+  const ic = (n, size = 18) => (UI.icon && UI.icon(ICON_AS[n] || n, size)) || null;
   const toast = (t, o) => UI.toast ? UI.toast(t, o) : null;
   const cap = s => (s ? String(s)[0].toUpperCase() + String(s).slice(1) : '');
   const plural = (n, one, many) => `${UI.num ? UI.num(n) : n} ${n === 1 ? one : (many || one + 's')}`;
@@ -209,13 +190,6 @@ button.term { appearance: none; border: 0; background: none; padding: 0; font: i
   // a second sense lives after the dot in its slug: account.explanation reads "account · explanation"
   const senseOf = slug => (/^(u:|root:)/.test(slug || '') ? '' : (/\.(.+)$/.exec(slug || '') || [0, ''])[1].replace(/[-_]/g, ' '));
   const nameOf = (slug, w) => (senseOf(slug) ? `${w} · ${senseOf(slug)}` : w);
-  // an ⓘ that holds the explanation a sentence used to take on screen
-  function info(text, label = 'About this') {
-    const b = h('button', { type: 'button', class: 'winfo', 'aria-label': `${label}: ${text}`, text: 'ⓘ' });
-    if (UI.tooltip) UI.tooltip(b, text); else b.title = text;
-    b.addEventListener('click', e => { e.preventDefault(); e.stopPropagation(); b.focus(); });
-    return b;
-  }
   const statusLine = s => String(s || '')
     .replace(/\bBack (\d{4}-\d{2}-\d{2})/, (m, d) => { const n = dayDiff(today(), d); return n <= 0 ? 'Back today' : n === 1 ? 'Back tomorrow' : n <= 21 ? `Back in ${n} days` : `Back ${dayName(d)}`; })
     .replace(/\d{4}-\d{2}-\d{2}/g, d => dayName(d));
@@ -297,11 +271,24 @@ button.term { appearance: none; border: 0; background: none; padding: 0; font: i
 
   /* ------------------------------------------------------------ start a run */
   function remember(from) { try { sessionStorage.setItem('satf.words.from', from || (location.pathname + location.search)); } catch (_) {} }
-  async function startWords(body, o = {}) {
+  // one start at a time (premium bug 8): the POST takes 200-600 ms, so the button that asked says busy (aria-busy, ui.css)
+  // and a second tap gets the same promise instead of a second run. window.event is the click that called us, if any.
+  let starting = null, busyBtn = null;
+  addEventListener('pageshow', e => { if (e.persisted && busyBtn) busyBtn.removeAttribute('aria-busy'); });   // back from the run
+  function busy(work, trigger) {
+    if (starting) return starting;
+    const ev = window.event;
+    const btn = trigger || (ev && ev.type === 'click' && ev.target instanceof Element ? ev.target.closest('button, a') : null);
+    if (btn) { btn.setAttribute('aria-busy', 'true'); busyBtn = btn; }
+    starting = work().then(r => { if (!r && btn) btn.removeAttribute('aria-busy'); return r; }).finally(() => { starting = null; });
+    return starting;
+  }
+  function startWords(body, o = {}) { return busy(() => postRun(body, o), o.trigger); }
+  async function postRun(body, o = {}) {
     let r;
     try { r = await UI.api('/words/run', { method: 'POST', body }); }
     catch (e) {
-      if (o.fallback && (e.status === 409 || e.status === 400)) return startWords(o.fallback, { ...o, fallback: null });
+      if (o.fallback && (e.status === 409 || e.status === 400)) return postRun(o.fallback, { ...o, fallback: null });
       if (!e.offline) toast(e.status === 409 || e.status === 400 || e.status === 422 ? cap(e.message) : 'Couldn’t start it. Try again.');
       return null;
     }
@@ -320,7 +307,7 @@ button.term { appearance: none; border: 0; background: none; padding: 0; font: i
     const T = [['library', '/words/', 'Library', 'Library'], ['cards', '/words/study/?mode=cards', 'Flashcards', 'Cards'],
       ['quiz', '/words/study/?mode=quiz', 'Quiz', 'Quiz'], ['mine', '/words/mine/', 'My words', 'Mine']];
     const el = h('nav', { class: 'wtabs', 'aria-label': 'Words' }, T.map(([id, href, l, s]) => h('a', { href, 'aria-current': id === active ? 'page' : null },
-      h('span', { class: 'l', text: l }), h('span', { class: 's', text: s }),
+      id === active ? h('span', { class: 'wt-mark', 'aria-hidden': 'true' }) : null, h('span', { class: 'l', text: l }), h('span', { class: 's', text: s }),
       id === 'mine' && due ? [h('span', { class: 'dot', 'aria-hidden': 'true' }), h('span', { class: 'n', text: String(due), 'aria-label': `${due} due` })] : null)));
     if (host) host.replaceChildren(el);
     return el;
@@ -348,9 +335,11 @@ button.term { appearance: none; border: 0; background: none; padding: 0; font: i
     return { mode, count: pick.length, label: rest, deck: { source: 'words', words: pick }, n: hit.length };
   }
   function todayWords(host, o = {}) {
-    const el = h('section', { class: 'card today-words', 'aria-label': 'Today’s words' });
+    // the full card is the library's hero (premium): the due figure, the new-words ticks, Start and one Other ways menu.
+    // o.card false: the page gives it its surface (the library wraps it with the daily questions and By exam day)
+    const el = h('section', { class: (o.card === false ? '' : 'card ') + 'today-words', 'aria-label': 'Today’s words' });
     if (host) host.replaceChildren(el);
-    let box = ls.get('satf.words.box', null);
+    let box = ls.get('satf.words.box', null), kept = null, taking = false;
     async function draw() {
       el.replaceChildren(h('div', { class: 'tw-top' }, h('h2', { text: 'Today’s words' })));
       if (UI.skel) UI.skel(el, 'line'); else el.append(h('p', { class: 'meta', text: 'Loading…' }));
@@ -358,69 +347,87 @@ button.term { appearance: none; border: 0; background: none; padding: 0; font: i
       try { d = await UI.api('/words/today', { quiet: true }); }
       catch (e) {
         el.replaceChildren(h('div', { class: 'tw-top' }, h('h2', { text: 'Today’s words' })));
-        const kept = e.offline ? await offline.stored() : null;
-        if (kept) {
-          el.append(h('div', { class: 'tw-row' }, h('a', { class: 'pill', href: `/words/run/?id=${encodeURIComponent(kept.id)}`, text: `Offline cards · ${kept.left} left` })),
-            h('p', { class: 'help', text: 'Grades wait on this device and sync when you’re back. Quizzes need a connection.' }));
+        const k = e.offline ? await offline.stored() : null;
+        if (k) {
+          el.append(h('div', { class: 'tw-row' }, h('a', { class: 'pill', href: `/words/run/?id=${encodeURIComponent(k.id)}`, text: `Offline cards · ${k.left} left` })),
+            h('p', { class: 'help', 'data-nofold': '', text: 'Grades wait on this device and sync when you’re back. Quizzes need a connection.' }));
           return;
         }
         if (UI.cardError) UI.cardError(el, draw, 'Today’s words did not load.');
         return;
       }
       paint(d.summary || {});
-//       if (offline.ok() && !o.compact) offlineRow(d.summary || {});
+      // W22: a line at the foot only while the day's cards are kept on this device; taking them is in Other ways
+      if (offline.ok() && !o.compact) offlineRow();
     }
-    async function offlineRow(s) {
-      const kept = await offline.stored();
-      const n = (s.due || 0) + Math.max(0, (s.new_goal || 0) - (s.new_today || 0));
-      if (!kept && !n) return;
-      const line = h('p', { class: 'help' });
-      const take = h('button', { type: 'button', class: 'quiet', text: 'Take today’s cards offline', onclick: async () => {
-        take.disabled = true;
-        const r = await offline.take();
-        take.disabled = false;
-        if (r) { toast(`${plural(r.items.length, 'card')} on this device · they work with no signal`); offlineRow(s); }
-      } });
-      if (kept) line.append(`${plural(kept.left, 'card')} on this device · `, h('a', { class: 'quiet', href: `/words/run/?id=${encodeURIComponent(kept.id)}`, text: 'Open' }), ' · ', take);
-      else line.append(take);
+    async function offlineRow() {
+      kept = await offline.stored();
       el.querySelectorAll('.tw-off').forEach(x => x.remove());
-      line.classList.add('tw-off');
-      el.append(line);
+      if (kept) el.append(h('p', { class: 'help tw-off', 'data-nofold': '' }, `${plural(kept.left, 'card')} on this device · `,
+        h('a', { class: 'quiet', href: `/words/run/?id=${encodeURIComponent(kept.id)}`, text: 'Open' })));
     }
-    let findOut = null;
+    async function takeOffline() {
+      if (taking) return;
+      taking = true;
+      const r = await offline.take();
+      taking = false;
+      if (r) { toast(`${plural(r.items.length, 'card')} on this device · they work with no signal`); offlineRow(); }
+    }
     function paint(s) {
       const lib = o.lib || null, c = (lib && lib.counts) || {};
-      const newLeft = Math.max(0, (s.new_goal || 0) - (s.new_today || 0));
-      const fresh = lib && !c.learning && !c.known && !c.claimed && !c.due && !s.new_today;
-      const facts = [s.due ? `${s.due} due` : null, s.proofs ? `${s.proofs} ${s.proofs === 1 ? 'proof' : 'proofs'}` : null,
-        newLeft ? `${newLeft} new` : null, s.minutes ? `about ${Math.max(1, Math.round(s.minutes))} min` : null].filter(Boolean);
+      const goal = s.new_goal || 10, nt = s.new_today || 0;
+      const newLeft = Math.max(0, (s.new_goal || 0) - nt);
+      const fresh = lib && !c.learning && !c.known && !c.claimed && !c.due && !nt;
+      // nothing due today: when the next ones come back (the library's forecast)
+      const nextDay = !s.due && lib ? (lib.forecast || []).find(x => x.n > 0 && x.day > lib.today) : null;
+      const newFact = nt ? (nt >= goal ? `${nt} new · goal met` : `${nt} of ${goal} new`) : newLeft ? `${newLeft} new` : null;
+      // the full card shows the daily new-words goal as a tick meter, so its figure leaves the facts line
+      const meterOn = !o.compact && !fresh && !!(s.new_goal || nt) && !!UI.meter;
+      const mins = s.minutes ? `about ${Math.max(1, Math.round(s.minutes))} min` : null;
       const debt = lib && lib.debt;
-      const top = h('div', { class: 'tw-top' }, h('h2', { text: 'Today’s words' }),
-        s.done ? h('span', { class: 'tw-facts', text: 'Done for today' }) : facts.length && !fresh ? h('span', { class: 'tw-facts', text: facts.join(' · ') }) : null);
-      const goal = s.new_goal || 10;
-      const learn = h('button', { type: 'button', class: 'btn', text: s.done && !newLeft ? `Learn ${goal} more` : `Learn ${goal}`,
-        onclick: () => startWords({ mode: 'cards', deck: { source: 'new' }, count: goal }) });
-      const review = h('button', { type: 'button', class: 'btn', disabled: !s.due, text: 'Review cards',
-        title: s.due ? null : 'Nothing is due', onclick: () => startWords({ mode: 'cards', deck: { source: 'due' }, order: 'due' }) });
-      const quiz = h('button', { type: 'button', class: 'btn', text: 'Quiz', onclick: () => quizStart({ source: 'today' }, 10) });
       const startBody = () => ({ mode: 'mix', deck: { source: 'today' }, ...(box ? { box } : {}) });
-      // compact (Study, My words): one line and a quiet button, so the page's own Start is the one orange button
+      // compact (My words): one line and a quiet button, so the page's own primary stays the one orange button
       if (o.compact) {
         const line = h('div', { class: 'tw-line' }, h('h2', { text: 'Today’s words' }),
-          h('span', { class: 'tw-facts', text: s.done ? 'Done for today' : [s.due ? `${s.due} due` : null, s.minutes ? `about ${Math.max(1, Math.round(s.minutes))} min` : null].filter(Boolean).join(' · ') }),
+          h('span', { class: 'tw-facts', text: s.done ? 'Done for today' : [s.due ? `${s.due} due` : null, mins].filter(Boolean).join(' · ') }),
           fresh ? h('button', { type: 'button', class: 'btn', text: 'Find your level · 3 min', onclick: () => startWords({ mode: 'placement' }) })
             : h('button', { type: 'button', class: 'btn', text: s.done ? 'Start again' : 'Start today’s words', onclick: () => startWords(startBody()) }));
         el.classList.add('compact');
         el.replaceChildren(line);
         return;
       }
-      const row = h('div', { class: 'tw-row' });
-      // the search: a typed request becomes a custom set on Enter
+      // the due count is the figure (the one number the library is about); everything else is one facts line
+      const fig = s.due && !s.done && !fresh ? h('p', { class: 'hero-num tw-fig' }, UI.num ? UI.num(s.due) : String(s.due), h('small', { text: 'due today' })) : null;
+      const top = h('div', { class: 'tw-top' }, h('h2', { text: 'Today’s words' }));
+      const doneEl = s.done ? h('div', { class: 'tw-done' }, UI.spotArt ? h('span', { 'aria-hidden': 'true', html: UI.spotArt('clear') }) : null,
+        h('span', { class: 'tw-facts', text: ['Done for today', meterOn ? null : newFact].filter(Boolean).join(' · ') })) : null;
+      const factsEl = h('p', { class: 'tw-facts' });
+      const setFacts = () => {
+        factsEl.textContent = (fresh ? [] : [s.done || s.due ? null : nextDay ? `${nextDay.n} due ${dayName(nextDay.day)}` : null,
+          s.done ? null : s.proofs ? `${s.proofs} ${s.proofs === 1 ? 'proof' : 'proofs'}` : null,
+          s.done || meterOn ? null : newFact, s.done ? null : mins, box ? `stops at ${box} min` : null]).filter(Boolean).join(' · ');
+        factsEl.hidden = !factsEl.textContent;
+      };
+      setFacts();
+      // the ticks learnt since this tab last showed them light in turn (UI.meter animates a change, never a first paint)
+      const seen = (() => { try { return JSON.parse(sessionStorage.getItem('satf.words.ticks')); } catch (_) { return null; } })();
+      const grew = meterOn && seen && seen.day === today() && nt > seen.n ? seen.n : null;
+      try { sessionStorage.setItem('satf.words.ticks', JSON.stringify({ day: today(), n: nt })); } catch (_) {}
+      // past the goal it says so plainly ("101 · goal 10" under "New words today"), not "101 of 10"
+      const goalText = v => (v > goal ? `${UI.num ? UI.num(v) : v} · goal ${goal}` : null);
+      const meter = meterOn ? UI.meter(null, { label: 'New words today', value: grew ?? nt, max: goal, ticks: Math.min(goal, 10), text: goalText(grew ?? nt) }) : null;
+      const target = meter ? meter.el : null;
+      if (target) {
+        target.querySelector('.meter-k').append(' ', UI.why('New words a day is your daily goal, set in Plan. It is never a cap.', { about: 'new words a day' }));
+        const bar = target.querySelector('.meter-bar');   // named by its label alone, not the ? inside it
+        bar.removeAttribute('aria-labelledby'); bar.setAttribute('aria-label', 'New words today');
+      }
+      // Make a set: a typed request becomes a custom set on Enter; the field opens from Other ways
       const words = lib && lib.words;
-      let find = null;
+      let find = null, input = null;
       if (words && words.length) {
-        const input = h('input', { type: 'search', class: 'field', 'aria-label': 'Make a set', placeholder: 'Make a set: “10 cards on transitions”, “quiz 5 saved”', autocomplete: 'off', enterkeyhint: 'go' });
-        const hint = h('p', { class: 'help tw-find-h', hidden: true });
+        input = h('input', { type: 'search', class: 'field sm', 'aria-label': 'Make a set', placeholder: 'Make a set: “10 cards on transitions”, “quiz 5 saved”', autocomplete: 'off', enterkeyhint: 'go' });
+        const hint = h('p', { class: 'help tw-find-h', hidden: true, 'data-nofold': '' });
         const plan = () => parseFind(input.value, words);
         input.addEventListener('input', () => {
           const pl_ = plan();
@@ -428,6 +435,7 @@ button.term { appearance: none; border: 0; background: none; padding: 0; font: i
           if (pl_) hint.textContent = pl_.none ? `No words match “${pl_.label}”` : `${pl_.mode === 'quiz' ? 'Quiz' : 'Cards'} · ${plural(pl_.count, 'word')} · ${pl_.label}${pl_.n ? ` (${pl_.n} match)` : ''} · Enter to start`;
         });
         input.addEventListener('keydown', e => {
+          if (e.key === 'Escape' && !input.value) { find.hidden = true; more.focus(); return; }
           if (e.key !== 'Enter') return;
           e.preventDefault();
           const p_ = plan();
@@ -436,34 +444,47 @@ button.term { appearance: none; border: 0; background: none; padding: 0; font: i
           if (p_.mode === 'quiz') quizStart(p_.deck, p_.count);
           else startWords({ mode: 'cards', deck: p_.deck, count: p_.count });
         });
-        find = h('div', { class: 'tw-find' }, input, hint);
+        find = h('div', { class: 'tw-find', hidden: true }, input, hint);
       }
+      const n = (s.due || 0) + newLeft;
       // a fresh learner has one way in: placement sizes the first words (the user: why is Learn 10 an option here)
-      if (fresh) {
-        row.append(h('button', { type: 'button', class: 'pill', text: 'Find your level · 3 min', onclick: () => startWords({ mode: 'placement' }) }));
-      } else {
-        const start = h('button', { type: 'button', class: 'pill', onclick: () => startWords(startBody()) },
-          s.done ? 'Start again' : 'Start', h('span', { class: 'kbd', text: 'Enter', hidden: !o.enter }));
-        row.append(start, h('span', { class: 'tw-modes', role: 'group', 'aria-label': 'Ways to practise' }, review, learn, quiz));
-        const chips = h('span', { class: 'tw-box' }, h('span', { class: 'k', text: 'Time box' }));
-        const seg = UI.chips(chips, [{ value: '5', label: '5 min' }, { value: '10', label: '10' }, { value: '15', label: '15' }],
-          { value: box ? String(box) : null, label: 'Time box, minutes', onChange: v => { box = box === +v ? null : +v; ls.set('satf.words.box', box); seg.set(box ? String(box) : null, true); } });
-        const prev = h('button', { type: 'button', class: 'btn sm', 'aria-label': 'Preview today’s words', title: 'Preview', onclick: () => preview(s, startBody) }, ic('right', 16));
-        chips.append(prev);
-        row.append(chips);
-      }
-      el.replaceChildren(top, row);
-      // the search is its own block under the card, not inside it
-      if (find && !fresh) { findOut = findOut || h('div', { class: 'tw-find-out' }); findOut.replaceChildren(find); if (!findOut.isConnected) el.after(findOut); }
-      else if (findOut) findOut.remove();
+      const ways = () => [
+        ...(fresh ? [] : [
+          { label: 'Review cards', sub: s.due ? `${UI.num ? UI.num(s.due) : s.due} due, as cards` : 'Nothing is due', disabled: !s.due, onClick: () => startWords({ mode: 'cards', deck: { source: 'due' }, order: 'due' }) },
+          { label: s.done && !newLeft ? `Learn ${goal} more` : `Learn ${goal}`, sub: 'New words as cards', onClick: () => startWords({ mode: 'cards', deck: { source: 'new' }, count: goal }) },
+          { label: 'Quiz', sub: '10 questions on today’s words', onClick: () => quizStart({ source: 'today' }, 10) },
+          { separator: true },
+          { group: 'Time box' },
+          ...[null, 5, 10, 15].map(v => ({ label: v ? `${v} min` : 'No time box', radio: 'box', checked: box === v,
+            onClick: () => { box = v; ls.set('satf.words.box', box); setFacts(); } })),
+          { separator: true },
+          { label: 'Preview today’s words', onClick: () => preview(s, startBody) }]),
+        find ? { label: 'Make a set', sub: 'Type what you want: “10 cards on transitions”', onClick: () => { find.hidden = false; input.focus(); } } : null,
+        offline.ok() && (kept || n) ? { label: 'Take today’s cards offline', sub: kept ? `${plural(kept.left, 'card')} on this device now` : 'They work with no signal', onClick: takeOffline } : null,
+      ];
+      // Start and its menu are one split button (A1 .split-btn); a fresh learner with nothing else to offer gets the one button
+      const more = h('button', { type: 'button', class: 'pill tw-more', 'aria-label': 'Other ways to practice', title: 'Other ways' }, UI.icon('caret_down', 16));
+      UI.menu.bind(more, ways, { align: 'end', label: 'Other ways to practice' });
+      const go = fresh ? h('button', { type: 'button', class: 'pill', text: 'Find your level · 3 min', onclick: () => startWords({ mode: 'placement' }) })
+        : h('button', { type: 'button', class: 'pill', onclick: () => startWords(startBody()) }, s.done ? 'Start again' : 'Start', h('span', { class: 'kbd', text: 'Enter', hidden: !o.enter }));
+      const row = h('div', { class: 'tw-row' }, ways().some(Boolean) ? h('div', { class: 'split-btn', role: 'group', 'aria-label': 'Start today’s words' }, go, more) : go);
+      el.replaceChildren(...[top, doneEl, fig, factsEl, target, row, find].filter(Boolean));
+      if (meter && grew !== null) ticksGrow(meter, nt, goal, grew, goalText(nt));   // grew is 0 on the day's first words
       if (debt && debt.due) {
         const days = Math.max(2, Math.ceil(debt.due / Math.max(1, debt.spread || 1)));
-        el.append(h('p', { class: 'tw-note' }, h('b', { text: `${debt.due} due` }), debt.away ? ` after ${plural(debt.away, 'day')} away · ` : ' · ',
+        el.append(h('p', { class: 'tw-note', 'data-nofold': '' }, h('b', { text: `${debt.due} due` }), debt.away ? ` after ${plural(debt.away, 'day')} away · ` : ' · ',
           h('button', { type: 'button', class: 'quiet', text: `Spread over ${days} days`, onclick: () => spread(days) }), ' · ',
           h('button', { type: 'button', class: 'quiet', text: 'Do all now', onclick: () => startWords({ mode: 'cards', deck: { source: 'due' }, count: Math.min(200, debt.due) }) })));
       }
       // the reason only when it says something the facts above do not ("52 come back today" restates "52 due")
       if (s.reason && !s.done && !fresh && s.due && !new RegExp(`\\b${s.due}\\b`).test(s.reason)) el.append(h('p', { class: 'help', text: s.reason }));
+    }
+    // the meter moves to today's count once it is on screen; reaching the goal just now draws a check by its label
+    function ticksGrow(m, nt, goal, from, text) {
+      requestAnimationFrame(() => {
+        m.set({ value: nt, text });
+        if (from < goal && nt >= goal && UI.fx) { const k = m.el.querySelector('.meter-k'); const c = UI.icon('check', 14); if (k && c) { k.append(' ', c); UI.fx.check(c); } }
+      });
     }
     async function spread(days) {
       try { await UI.prefs.set({ words_spread: addDays(today(), days) }); toast(`Spread over ${days} days · new words pause until you catch up`); draw(); if (o.onChange) o.onChange(); }
@@ -484,13 +505,14 @@ button.term { appearance: none; border: 0; background: none; padding: 0; font: i
 
   /* ------------------------------------------------------------ By exam day (W12) */
   function wordsFinish(host, ins, o = {}) {
-    const el = h('section', { class: 'card wfin', 'aria-label': 'By exam day' });
+    const el = h('section', { class: (o.card === false ? '' : 'card ') + 'wfin', 'aria-label': 'By exam day' });   // card false: a row in the page's own surface
     if (host) host.replaceChildren(el);
     const f = (ins && ins.finish) || {};
     if (!f.exam) {
-      const b = h('button', { type: 'button', class: 'btn', text: 'Set your SAT date' });
+      // no date yet: one line, the title and the way to set it
+      const b = h('button', { type: 'button', class: 'btn sm', text: 'Set your SAT date' });
       b.addEventListener('click', () => UI.examDate && UI.examDate(b, { onSave: async v => { await UI.api('/me', { method: 'PUT', body: { exam_date: v } }); if (o.onChange) o.onChange(); } }));
-      el.append(h('div', { class: 'tw-top' }, h('h2', { text: 'By exam day' })), h('p', { class: 'wfin-l', text: 'Set your SAT date to see your finish line.' }), h('div', {}, b));
+      el.append(h('div', { class: 'tw-top' }, h('h2', { text: 'By exam day' }), b));
       return el;
     }
     const left = f.left || {}, days = dayDiff(today(), f.exam), on = shortDate(f.exam);
@@ -503,7 +525,7 @@ button.term { appearance: none; border: 0; background: none; padding: 0; font: i
       h('p', { class: 'wfin-left', text: [left.core ? null : 'SAT core done', togo.length ? `To learn: ${togo.join(' · ')}` : null].filter(Boolean).join(' · ') }));
     if (o.collapsible) {
       // Library: one line until opened; the open state is remembered
-      const det = h('details', {}, h('summary', {}, h('h2', { text: 'By exam day' }), h('span', { class: 'tw-facts', text: f.at_risk ? `${UI.num(f.at_risk)} at risk` : on })), body);
+      const det = h('details', { class: 'fold' }, h('summary', { class: 'fold-s' }, h('h2', { text: 'By exam day' }), h('span', { class: 'tw-facts', text: f.at_risk ? `${UI.num(f.at_risk)} at risk` : on })), body);
       det.open = !!ls.get('satf.words.finOpen', false);
       det.addEventListener('toggle', () => ls.set('satf.words.finOpen', det.open));
       el.append(det);
@@ -537,7 +559,7 @@ button.term { appearance: none; border: 0; background: none; padding: 0; font: i
     try { const u = new SpeechSynthesisUtterance(String(text || '')); const v = voice(); if (v) u.voice = v; u.lang = 'en-US'; speechSynthesis.cancel(); speechSynthesis.speak(u); } catch (_) {}
   }
   speak.ok = () => { try { return 'speechSynthesis' in window && speechSynthesis.getVoices().length > 0; } catch (_) { return false; } };
-  function speakBtn(word, cls = 'btn icon') {
+  function speakBtn(word, cls = 'ibtn') {
     const b = h('button', { type: 'button', class: cls, 'aria-label': `Say ${word}`, title: 'Say it (P)', onclick: () => speak(word) }, ic('speak'));
     const upd = () => { b.hidden = !speak.ok(); };
     upd();
@@ -602,11 +624,18 @@ button.term { appearance: none; border: 0; background: none; padding: 0; font: i
     const api2 = { el: d, go, close: () => api.close() };
     openSheet = api2;
 
+    // paging slides the body 12px the way it went (a pointer; keys stay instant), once the next word has painted
+    let slide = 0;
+    const slideIn = () => {
+      if (slide && UI.motion && UI.motion.ok() && api.body.animate) api.body.animate([{ opacity: 0, transform: `translateX(${slide * 12}px)`, offset: 0 }], { duration: 160, easing: 'cubic-bezier(.23, 1, .32, 1)' });
+      slide = 0;
+    };
     function step(n) {
       if (!list.length) return;
       const i = list.indexOf(cur);
       const j = i < 0 ? 0 : i + n;
       if (j < 0 || j >= list.length) return;
+      slide = n;
       go(list[j], { covered: !!o.covered });   // W14: a covered grid pages front-first
     }
     function go(s, oo = {}) {
@@ -615,7 +644,11 @@ button.term { appearance: none; border: 0; background: none; padding: 0; font: i
       setW(s);
       load();
     }
-    function uncover() { covered = false; d.classList.remove('covered'); paintFoot(); }
+    // Show: the face-down blocks wipe open top to bottom (a pointer; Space stays instant)
+    function uncover() {
+      covered = false; d.classList.remove('covered'); paintFoot();
+      if (UI.motion && UI.motion.ok()) d.querySelectorAll('.cov > :not(.k)').forEach(x => x.animate && x.animate([{ clipPath: 'inset(0 0 100% 0)' }, { clipPath: 'inset(0 0 0 0)' }], { duration: 200, easing: 'cubic-bezier(.23, 1, .32, 1)' }));
+    }
     async function load() {
       api.body.replaceChildren(h('p', { class: 'meta', text: 'Loading…' }));
       foot.replaceChildren();
@@ -645,13 +678,13 @@ button.term { appearance: none; border: 0; background: none; padding: 0; font: i
     }
     function toolsRow() {
       const saved = !!(data.state && data.state.saved);
-      const star = h('button', { type: 'button', class: 'btn icon', 'aria-pressed': String(saved), 'aria-label': saved ? 'Saved' : 'Save', title: 'Save (B)', onclick: toggleSave }, ic('star'));
+      const star = h('button', { type: 'button', class: 'ibtn', 'aria-pressed': String(saved), 'aria-label': saved ? 'Saved' : 'Save', title: 'Save (B)', onclick: toggleSave }, ic('star'));
       const i = list.indexOf(cur);
       tools.replaceChildren(...[speakBtn(data.word), star,
-        h('button', { type: 'button', class: 'btn icon', 'aria-label': 'Report a problem with this word', title: 'Report',
+        h('button', { type: 'button', class: 'ibtn', 'aria-label': 'Report a problem with this word', title: 'Report',
           onclick: () => UI.report && UI.report({ kind: 'word', source: 'words', word: data.slug, meaning: data.meaning }) }, ic('flag')),
-        ...(list.length > 1 ? [h('button', { type: 'button', class: 'btn icon', 'aria-label': 'Previous word', title: 'Previous (←)', disabled: i <= 0, onclick: () => step(-1) }, ic('left')),
-          h('button', { type: 'button', class: 'btn icon', 'aria-label': 'Next word', title: 'Next (→)', disabled: i < 0 || i >= list.length - 1, onclick: () => step(1) }, ic('right'))] : [])]);
+        ...(list.length > 1 ? [h('button', { type: 'button', class: 'ibtn', 'aria-label': 'Previous word', title: 'Previous (←)', disabled: i <= 0, onclick: () => step(-1) }, ic('left')),
+          h('button', { type: 'button', class: 'ibtn', 'aria-label': 'Next word', title: 'Next (→)', disabled: i < 0 || i >= list.length - 1, onclick: () => step(1) }, ic('right'))] : [])]);
     }
     async function toggleSave() {
       if (!data || !data.slug) return;
@@ -680,19 +713,18 @@ button.term { appearance: none; border: 0; background: none; padding: 0; font: i
       api.setTitle(w.word);
       toolsRow();
       const body = [];
-      // sub line and chips
-      body.push(h('p', { class: 'ws-sub' }, w.pos ? h('span', { text: POS[w.pos] || w.pos }) : null,
-        (w.also || []).length ? h('span', { text: `also: ${w.also.join(', ')}` }) : null,
-        w.sense && w.sense !== 'main' && w.sense !== '' ? h('span', { class: 'wtag', text: w.sense.replace(/_/g, ' ') }) : null,
-        own ? h('span', { class: 'wtag', text: 'My word' }) : null,
-        coverSeg()));
+      // one meta line: part of speech, other forms, its tags, the level; Covered / Open at its end
       const lv = level(w.measured, w.level);
-      body.push(h('div', { class: 'ws-chips' },
-        w.collection ? h('span', { class: 'wtag', text: collName(w.collection) }) : null,
-        (w.lists || []).map(l => h('span', { class: 'wtag', text: collName(l) })),
-        (w.subjects || []).map(t => h('span', { class: 'wtag', text: cap(t) })),
-        !own ? h('span', { class: 'wtag' }, dbars(lv.tier), lv.text ? h('span', { class: 'meta', text: lv.text }) : null) : null,
-        w.corrected ? h('span', { class: 'wtag m', text: `Corrected ${shortDate(w.corrected)} after a student report` }) : null));
+      body.push(h('div', { class: 'ws-sub' }, w.pos ? h('span', { text: POS[w.pos] || w.pos }) : null,
+        (w.also || []).length ? h('span', { text: `also: ${w.also.join(', ')}` }) : null,
+        w.sense && w.sense !== 'main' && w.sense !== '' ? h('span', { class: 'badge soft', text: w.sense.replace(/_/g, ' ') }) : null,
+        own ? h('span', { class: 'badge soft', text: 'My word' }) : null,
+        w.collection ? h('span', { class: 'badge soft', text: collName(w.collection) }) : null,
+        (w.lists || []).map(l => h('span', { class: 'badge soft', text: collName(l) })),
+        (w.subjects || []).map(t => h('span', { class: 'badge soft', text: cap(t) })),
+        !own ? h('span', { class: 'ws-lv' }, dbars(lv.tier), lv.text ? h('span', { text: lv.text }) : null) : null,
+        w.corrected ? h('span', { text: `Corrected ${shortDate(w.corrected)} after a student report` }) : null,
+        coverSeg()));
       body.push(block('Meaning', h('p', { class: 'meaning', text: w.meaning || '' }), { cover: true }));
       // shades (W3)
       const sh = w.shades && w.shades.words || [];
@@ -704,7 +736,7 @@ button.term { appearance: none; border: 0; background: none; padding: 0; font: i
           h('div', { class: 'wchips', 'aria-label': 'Weakest to strongest' }, sh.map(x => wordChip({ slug: x.slug, word: x.word }, { current: x.slug === w.slug, small: mixed ? tone(x) : null }))),
           h('div', { class: 'shade-bar', 'aria-hidden': 'true' }),
           w.shade ? h('p', { class: 'shade-n', text: w.shade }) : null], { cover: true, cls: 'shades' });
-        shades.querySelector('.k').append(' ', info(`Weakest → strongest${mixed ? ' · + approving, 0 neutral, − critical' : ''}. The most precise word matches the text’s strength and tone.`, 'Shades'));
+        shades.querySelector('.k').append(' ', UI.why(`Weakest → strongest${mixed ? ' · + approving, 0 neutral, − critical' : ''}. The most precise word matches the text’s strength and tone.`, { about: 'shades' }));
         body.push(shades);
       }
       // built from (W4)
@@ -719,14 +751,12 @@ button.term { appearance: none; border: 0; background: none; padding: 0; font: i
       // examples
       const ex = (w.examples || []).map(e => marked(e));
       if (ex.length || w.partners) body.push(block(own ? 'Example' : 'Examples', [ex, w.partners ? h('p', { class: 'line', text: `Common partners: ${w.partners}` }) : null], { cover: true }));
-      // the sample (W1)
-      if (w.sample && w.sample.item) body.push(sampleBlock(w));
       // same / opposite
       const same = await resolveWords(w.same), opp = await resolveWords(w.opposite);
       if (same.length || opp.length || w.no_opposite) {
         body.push(block('Same as · opposite of', [
           same.length ? h('div', { class: 'wchips' }, h('span', { class: 'meta', text: '=' }), same.map(x => wordChip(x))) : null,
-          opp.length ? h('div', { class: 'wchips', style: 'margin-top:6px' }, h('span', { class: 'meta', text: '≠' }), opp.map(x => wordChip(x)))
+          opp.length ? h('div', { class: 'wchips' }, h('span', { class: 'meta', text: '≠' }), opp.map(x => wordChip(x)))
             : w.no_opposite ? h('p', { class: 'help', text: 'No single-word opposite' }) : null], { cover: true }));
       }
       // not the same as
@@ -738,11 +768,14 @@ button.term { appearance: none; border: 0; background: none; padding: 0; font: i
         const rows = conf.map(c => confRow(c.kind, c.other, c.tell, c, ix)).concat(looks.map(l => confRow('lookalike', l.word, l.tell, {}, ix)));
         body.push(block('Easy to mix up', rows));
       }
+      // the sample (W1), after what the word means and what it is not
+      if (w.sample && w.sample.item) body.push(sampleBlock(w));
       body.push(recordBlock(w, s));
       if (own) body.push(ownBlock(w));
       api.body.replaceChildren(...body.filter(Boolean));
       d.classList.toggle('covered', covered);
       paintFoot();
+      slideIn();
       if (UI.gloss) api.body.querySelectorAll('.wb .ex').forEach(p => UI.gloss(p, { exclude: [w.word], ref: 'sheet' }));
     }
     // W14: Covered · Open, remembered per browser
@@ -757,7 +790,7 @@ button.term { appearance: none; border: 0; background: none; padding: 0; font: i
       const hit = ix && ix.byWord.get(String(other).toLowerCase());
       const me = data.word;
       return h('div', { class: 'confu' },
-        h('h3', {}, `${me} or `, hit ? h('button', { type: 'button', class: 'quiet', style: 'margin:0;padding:0;font:inherit', onclick: () => go(hit.slug, { covered: false }) }, other) : other, '?'),
+        h('h3', {}, `${me} or `, hit ? h('button', { type: 'button', class: 'quiet wlink', onclick: () => go(hit.slug, { covered: false }) }, other) : other, '?'),
         h('p', { class: 't cov-t', text: tell || '' }),
         c.fell ? h('p', { class: 'fell' }, h('span', { class: 'dot' }), `You picked it for this ${c.fell}×${c.last ? ' · last ' + shortDate(c.last) : ''}`) : null,
         hit ? h('div', { class: 'acts' }, h('button', { type: 'button', class: 'quiet', text: `Quiz ${me} vs ${other} (6)`,
@@ -805,20 +838,21 @@ button.term { appearance: none; border: 0; background: none; padding: 0; font: i
       const kids = [
         h('p', { class: 'line' }, h('b', { text: STATUS[st] }), next ? ` · ${next}` : '', s.proven ? ` · proven ${shortDate(s.proven)}` : ''),
         h('div', { class: 'ladder', role: 'list', 'aria-label': 'Proof ladder' }, steps.map(([t, on]) => h('span', { role: 'listitem', class: on ? 'on' : null, 'aria-label': `${t}${on ? ', done' : ''}`, text: t }))),
-        r.n ? h('p', { class: 'line', text: `Reviews ${r.n} · right ${r.right}${byKind ? ' · ' + byKind : ''}` }) : null,
         j.length ? h('div', { class: 'journey', role: 'img', 'aria-label': `${j.length} reviews, ${j.filter(x => x.correct).length} right` },
           j.map(x => { const i = h('i', { class: (x.correct ? 'ok' : '') + (CONTEXT_KINDS.has(x.kind) ? ' ctx' : '') }); if (UI.tooltip) UI.tooltip(i, `${shortDate(x.at)} · ${KIND[x.kind] || x.kind} · ${x.correct ? 'right' : x.correct === null ? 'seen' : 'wrong'}${x.given && !x.correct ? ` · picked “${x.given}”` : ''}${x.trap ? ` · ${TRAP[x.trap] || x.trap}` : ''}`); return i; }),
           s.due ? h('span', { class: 'nx', text: `next ${shortDate(s.due)}` }) : null) : null,
         lastWrong && lastWrong.given && !['dontknow', 'know'].includes(lastWrong.given) ? h('p', { class: 'line', text: `Last time you picked “${lastWrong.given}”` }) : null,
-        [s.first ? `First seen ${shortDate(s.first)}` : null, w.record && w.record.lookups ? `Looked up ${w.record.lookups}× in Words texts` : null].some(Boolean)
-          ? h('p', { class: 'help', text: [s.first ? `First seen ${shortDate(s.first)}` : null, w.record && w.record.lookups ? `Looked up ${w.record.lookups}× in Words texts` : null].filter(Boolean).join(' · ') }) : null,
       ];
+      // the counts behind the record, one tap away
+      const more = [r.n ? `Reviews ${r.n} · right ${r.right}${byKind ? ' · ' + byKind : ''}` : null, s.first ? `First seen ${shortDate(s.first)}` : null,
+        w.record && w.record.lookups ? `Looked up ${w.record.lookups}× in Words texts` : null].filter(Boolean);
+      if (more.length) kids.push(h('details', { class: 'fold' }, h('summary', { class: 'fold-s', text: 'Reviews and history' }), more.map(t => h('p', { class: 'help', text: t }))));
       if (!w.own) kids.push(hookRow(w, s));
       return block('Your record', kids, { cls: 'record journey-wrap' });
     }
     function hookRow(w, s) {
       const inp = h('input', { class: 'field sm', maxlength: '140', placeholder: 'My hook: a memory aid in your own words', 'aria-label': 'My hook', value: s.hook || '' });
-      const save = h('button', { type: 'button', class: 'btn sm', text: 'Save hook', onclick: async () => {
+      const save = h('button', { type: 'button', class: 'btn', text: 'Save hook', onclick: async () => {
         try { await UI.api(`/words/${encodeURIComponent(w.slug)}/hook`, { method: 'PUT', body: { text: inp.value.trim() } }); toast(inp.value.trim() ? 'Hook saved · it shows on every card back' : 'Hook removed'); }
         catch (e) { if (!e.offline) toast(e.status === 422 ? cap(e.message) : 'Not saved. Try again.'); }
       } });
@@ -827,7 +861,7 @@ button.term { appearance: none; border: 0; background: none; padding: 0; font: i
     }
     function ownBlock(w) {
       return block('My word', [w.notes ? h('p', { class: 'line', text: w.notes }) : null, w.source ? h('p', { class: 'help', text: w.source }) : null,
-        h('div', { class: 'acts', style: 'display:flex;gap:10px;margin-top:6px' },
+        h('div', { class: 'acts' },
           h('button', { type: 'button', class: 'btn sm', text: 'Edit', onclick: () => { api.close(); addWord({ id: w.slug, word: w.word, meaning: w.meaning, pos: w.pos, example: (w.examples || [])[0], same: w.same, opposite: w.opposite, notes: w.notes, list: w.collection }); } }),
           h('button', { type: 'button', class: 'btn sm', text: 'Delete', onclick: async () => {
             if (!await UI.confirm({ title: `Delete “${w.word}”?`, text: `Delete “${w.word}” and its review history?`, confirm: 'Delete', destructive: true })) return;
@@ -839,8 +873,8 @@ button.term { appearance: none; border: 0; background: none; padding: 0; font: i
       if (!data || !data.slug) { foot.replaceChildren(); return; }
       const w = data;
       if (selftest) {
-        foot.replaceChildren(...[covered ? h('button', { type: 'button', class: 'btn', onclick: uncover }, 'Show', h('span', { class: 'kbd', text: 'Space' })) : null, h('span', { class: 'grow' }),
-          h('button', { type: 'button', class: 'btn', onclick: () => grade(false) }, 'Don’t know', h('span', { class: 'kbd', text: '1' })),
+        foot.replaceChildren(...[covered ? h('button', { type: 'button', class: 'btn sm', onclick: uncover }, 'Show', h('span', { class: 'kbd', text: 'Space' })) : null, h('span', { class: 'grow' }),
+          h('button', { type: 'button', class: 'btn sm', onclick: () => grade(false) }, 'Don’t know', h('span', { class: 'kbd', text: '1' })),
           h('button', { type: 'button', class: 'pill sm', onclick: () => grade(true) }, 'Know', h('span', { class: 'kbd', text: '2' }))].filter(Boolean));
         return;
       }
@@ -850,11 +884,11 @@ button.term { appearance: none; border: 0; background: none; padding: 0; font: i
         const slugs = [w.slug, ...lookalikes.map(x => ix && ix.byWord.get(String(x).toLowerCase())).filter(Boolean).map(x => x.slug)];
         quizStart({ source: 'words', words: [...new Set(slugs)] }, 6);
       };
-      const more = h('button', { type: 'button', class: 'btn icon', 'aria-label': 'More', 'aria-haspopup': 'menu' }, ic('more'));
+      const more = h('button', { type: 'button', class: 'ibtn', 'aria-label': 'More', 'aria-haspopup': 'menu' }, ic('more'));
       more.addEventListener('click', () => UI.menu(more, [lookalikes.length ? { label: 'Quiz with lookalikes', onClick: quizLooks } : null,
         { label: 'Reset progress', onClick: resetProgress }].filter(Boolean), { align: 'end' }));
       const primary = w.sample && !w.own;
-      const cardsHere = h('button', { type: 'button', class: primary ? 'btn' : 'pill',
+      const cardsHere = h('button', { type: 'button', class: primary ? 'btn sm' : 'pill sm',
         onclick: () => {
           // the list from this word on, wrapping round, so the deck always holds it
           const i = list.indexOf(w.slug);
@@ -862,7 +896,7 @@ button.term { appearance: none; border: 0; background: none; padding: 0; font: i
           startWords({ mode: 'cards', deck: { source: 'words', words: from.slice(0, 200), start: w.slug }, order: 'az', count: Math.min(200, from.length) });
         } }, h('span', {}, 'Flashcards', h('span', { class: 'l', text: ' from here' })));
       foot.replaceChildren(...[
-        primary ? h('button', { type: 'button', class: 'pill', title: 'Ten in-context questions on this word, each a new text', onclick: () => practise10(w) }, h('span', {}, 'Practice 10', h('span', { class: 'l', text: ' like this' }))) : null,
+        primary ? h('button', { type: 'button', class: 'pill sm', title: 'Ten in-context questions on this word, each a new text', onclick: () => practise10(w) }, h('span', {}, 'Practice 10', h('span', { class: 'l', text: ' like this' }))) : null,
         cardsHere, h('span', { class: 'grow' }), more].filter(Boolean));
     }
     const practise10 = w => startWords({ mode: 'quiz', deck: { source: 'words', words: [w.slug] }, formats: ['incontext', 'nearly'], count: 10 });
@@ -880,7 +914,7 @@ button.term { appearance: none; border: 0; background: none; padding: 0; font: i
         if (o.onChange) o.onChange(slug, { graded: true, box: r.box });
       } catch (e) { if (!e.offline) toast('Not saved. Try again.'); return; }
       const i = list.indexOf(slug);
-      if (i >= 0 && i < list.length - 1) go(list[i + 1], { covered: true }); else load();
+      if (i >= 0 && i < list.length - 1) { slide = 1; go(list[i + 1], { covered: true }); } else load();
     }
     function paintRoot() {
       const r = data;
@@ -923,7 +957,6 @@ button.term { appearance: none; border: 0; background: none; padding: 0; font: i
   word.nameOf = nameOf;
   word.kindLabel = kindLabel;
   word.stemOf = stemOf;
-  word.info = info;
   word.today = today;
   word.dayDiff = dayDiff;
   word.coverPref = () => ls.get(COVER_KEY, null);
@@ -942,7 +975,7 @@ button.term { appearance: none; border: 0; background: none; padding: 0; font: i
       field('word', 'Word', h('input', { class: 'field', maxlength: '60', value: pre.word || '', autocomplete: 'off' }), { req: true }),
       field('meaning', 'Meaning', h('textarea', { class: 'field', rows: '3', maxlength: '400' }, pre.meaning || ''), { req: true }),
       h('div', { class: 'two' },
-        field('pos', 'Part of speech', h('select', { class: 'field' }, ['', 'n.', 'v.', 'adj.', 'adv.', 'phrase'].map(p => h('option', { value: p, selected: (pre.pos || '') === p ? true : null, text: p ? POS[p] : '—' })))),
+        field('pos', 'Part of speech', h('select', { class: 'field' }, ['', 'n.', 'v.', 'adj.', 'adv.', 'phrase'].map(p => h('option', { value: p, selected: (pre.pos || '') === p ? true : null, text: p ? POS[p] : '\u2013' })))),
         field('list', 'List', h('input', { class: 'field', maxlength: '30', list: 'aw-lists', value: pre.list || 'My words' }))),
       field('example', 'Example', h('input', { class: 'field', maxlength: '300', value: pre.example || '' })),
       h('div', { class: 'two' },
@@ -960,31 +993,40 @@ button.term { appearance: none; border: 0; background: none; padding: 0; font: i
       if (!b.word) { f.wordErr.textContent = 'Add the word'; f.wordErr.hidden = false; bad = true; }
       if (!b.meaning) { f.meaningErr.textContent = 'Add what it means'; f.meaningErr.hidden = false; bad = true; }
       if (bad) return false;
-      let r;
-      try { r = await UI.api(editing ? `/words/mine/${encodeURIComponent(pre.id)}` : '/words/mine', { method: editing ? 'PUT' : 'POST', body: b }); }
-      catch (e) {
-        if (e.status === 409) {
-          const id = e.detail && e.detail.existing_id;
-          msg.append(`You already have “${b.word}”. `, id ? h('button', { type: 'button', class: 'quiet', text: 'Edit it', onclick: () => { sh.close(); word.open(id); } }) : null);
-          return false;
+      // the button says Adding, then Added (Saving, Saved when editing); a duplicate or a library word is "Not added"
+      const NOT = {};
+      const send = async () => {
+        let r;
+        try { r = await UI.api(editing ? `/words/mine/${encodeURIComponent(pre.id)}` : '/words/mine', { method: editing ? 'PUT' : 'POST', body: b }); }
+        catch (e) {
+          if (e.status === 409) {
+            const id = e.detail && e.detail.existing_id;
+            msg.append(`You already have “${b.word}”. `, id ? h('button', { type: 'button', class: 'quiet', text: 'Edit it', onclick: () => { sh.close(); word.open(id); } }) : null);
+            throw NOT;
+          }
+          throw new Error(e.status === 400 || e.status === 422 ? cap(e.message) : 'Not saved. Try again.');
         }
-        throw new Error(e.status === 400 || e.status === 422 ? cap(e.message) : 'Not saved. Try again.');
-      }
-      if (r && r.library_slug && !r.id) {
-        msg.append(`“${b.word}” is in the library. `, h('button', { type: 'button', class: 'btn sm', text: 'Save that one', onclick: async () => {
-          try { await UI.api(`/words/${encodeURIComponent(r.library_slug)}/save`, { method: 'POST', body: { on: true } }); toast(`Saved “${b.word}” from the library`); sh.close(); dispatch(); }
-          catch (e) { if (!e.offline) toast('Not saved. Try again.'); }
-        } }));
-        return false;
-      }
-      toast(editing ? `Saved “${b.word}”` : `Added “${b.word}” to ${b.list}`);
+        if (r && r.library_slug && !r.id) {
+          msg.append(`“${b.word}” is in the library. `, h('button', { type: 'button', class: 'btn sm', text: 'Save that one', onclick: async () => {
+            try { await UI.api(`/words/${encodeURIComponent(r.library_slug)}/save`, { method: 'POST', body: { on: true } }); toast(`Saved “${b.word}” from the library`); sh.close(); dispatch(); }
+            catch (e) { if (!e.offline) toast('Not saved. Try again.'); }
+          } }));
+          throw NOT;
+        }
+        return r;
+      };
+      const btn = sh.foot && sh.foot.querySelector(again ? '.aw-again' : '.aw-save');
+      try { await (btn && UI.saving ? UI.saving(btn, send, editing ? {} : { busy: 'Adding', done: 'Added', fail: 'Not added' }) : send()); }
+      catch (e) { if (e === NOT) return false; throw e; }
       dispatch();
+      // add another: the button's Added is the confirmation; Save closes the sheet, so a toast says it
       if (again) { f.word.value = ''; f.meaning.value = ''; f.example.value = ''; f.same.value = ''; f.opposite.value = ''; f.notes.value = ''; f.word.focus(); return false; }
+      toast(editing ? `Saved “${b.word}”` : `Added “${b.word}” to ${b.list}`);
       return true;
     }
     const dispatch = () => { try { doc.dispatchEvent(new CustomEvent('satf:words', { detail: { added: true } })); } catch (_) {} };
     const sh = UI.sheet({ title: editing ? `Edit “${pre.word}”` : 'Add a word', size: 'm', body,
-      actions: [{ label: 'Cancel', quiet: true }, ...(editing ? [] : [{ label: 'Save and add another', onClick: () => save(true) }]), { label: 'Save', primary: true, onClick: () => save(false) }] });
+      actions: [{ label: 'Cancel', quiet: true }, ...(editing ? [] : [{ label: 'Save and add another', className: 'aw-again', onClick: () => save(true) }]), { label: 'Save', primary: true, className: 'aw-save', onClick: () => save(false) }] });
     setTimeout(() => (pre.word ? f.meaning : f.word).focus(), 30);
     return sh;
   }
@@ -1071,7 +1113,90 @@ button.term { appearance: none; border: 0; background: none; padding: 0; font: i
   function bringWords(kind = 'text') {
     if (kind === 'list') return bringList();
     if (kind === 'missed') return bringMissed();
+    if (kind === 'import') return bringImport();
     return bringText();
+  }
+  // Import a file or a paste (W19): word and meaning per line become own words; a word alone matched in the
+  // library joins the list. Duplicates and lines it cannot read are named before anything is sent.
+  function bringImport() {
+    const fmt = n => (UI.num ? UI.num(n) : String(n));
+    const ta = h('textarea', { class: 'field', rows: '8', placeholder: 'One per line: the word, then a tab, a hyphen or a colon, then the meaning' });
+    const list = h('input', { class: 'field sm', value: 'My words', maxlength: '30', 'aria-label': 'List', list: 'imp-lists' });
+    const dl = h('datalist', { id: 'imp-lists' }, [...new Set(['My words', ...(word._lists || [])])].map(n => h('option', { value: n })));
+    const prev = h('div', { 'aria-live': 'polite' });
+    const show = (...kids) => prev.replaceChildren(...kids.flat().filter(Boolean));
+    const LABEL = { new: 'new', dup: 'duplicate', lib: 'in the library', bad: 'not understood' };
+    let ix = null, rows = [], done = false, sh = null, all = [];
+    index().then(x => { ix = x; upd(); }).catch(() => {});
+    UI.api('/words', { quiet: true }).then(d => { all = d.words || []; upd(); }).catch(() => {});
+    const ownWords = () => new Set(all.filter(w => w.own).map(w => w.word.toLowerCase()));
+    // a tab, " - ", a spaced em dash or ":" splits word from meaning; a CSV with a word,meaning header too;
+    // a line with neither is a word to match against the library
+    const SPLIT = /^(.+?)(?:\t| - | \u2014 |:)\s*(.+)$/;
+    const parse = () => {
+      const lines = ta.value.split('\n').map(l => l.trim()).filter(Boolean);
+      const csv = lines.length && /^word\s*,\s*meaning/i.test(lines[0]);
+      const own = ownWords();
+      return (csv ? lines.slice(1) : lines).map(l => {
+        const m = csv ? l.match(/^([^,]+),(.*)$/) : l.match(SPLIT);
+        const w = (m ? m[1] : l).trim().replace(/^"|"$/g, ''), meaning = m ? m[2].trim().replace(/^"|"$/g, '') : '';
+        const hit = ix && ix.byWord.get(w.toLowerCase());
+        const st = meaning ? (own.has(w.toLowerCase()) ? 'dup' : 'new') : hit ? 'lib' : 'bad';
+        return { word: w, meaning, st, slug: hit && hit.slug };
+      });
+    };
+    const addBtn = () => sh && sh.foot && sh.foot.querySelector('.pill, [data-primary], button:last-child');
+    function upd() {
+      if (done) return;
+      rows = parse();
+      const n = rows.filter(r => r.st === 'new' || r.st === 'lib').length;
+      const b = addBtn();
+      if (b) { b.textContent = n ? `Add ${fmt(n)} ${n === 1 ? 'word' : 'words'}` : 'Add them'; b.disabled = !n; }
+      if (!rows.length) { show(h('p', { class: 'help', 'data-nofold': '', text: 'A Quizlet export pastes in as is. A CSV with a word,meaning header works too.' })); return; }
+      show(h('div', { class: 'table-wrap' }, h('table', { class: 'table compact' },
+        h('thead', {}, h('tr', {}, h('th', { text: 'Word' }), h('th', { text: 'Meaning' }), h('th', { text: '' }))),
+        h('tbody', {}, rows.slice(0, 60).map(r => h('tr', {}, h('td', { class: 'w', text: r.word }), h('td', { text: r.meaning || (r.st === 'lib' ? 'the library’s meaning' : '\u2013') }),
+          h('td', { class: 'meta', text: LABEL[r.st] })))))),
+        rows.length > 60 ? h('p', { class: 'help', text: `and ${fmt(rows.length - 60)} more` }) : null);
+    }
+    async function addToList(name, slugs) {
+      try { await UI.api('/words/lists', { method: 'POST', body: { name, words: slugs } }); }
+      catch (e) {
+        if (e.status !== 409) throw e;
+        const had = all.filter(w => (w.lists || []).includes(name)).map(w => w.slug);
+        await UI.api(`/words/lists/${encodeURIComponent(name)}`, { method: 'PUT', body: { words: [...new Set([...had, ...slugs])] } });
+      }
+    }
+    ta.addEventListener('input', upd);
+    sh = UI.sheet({ title: 'Import words', size: 'm', body: h('div', { class: 'addw' }, ta, h('label', { class: 'label', text: 'List' }), list, dl, prev),
+      actions: [{ label: 'Cancel', quiet: true }, { label: 'Add them', primary: true, onClick: async () => {
+        if (done) return true;
+        rows = parse();
+        const name = list.value.trim().slice(0, 30) || 'My words';
+        const own = rows.filter(r => r.st === 'new'), lib = rows.filter(r => r.st === 'lib');
+        if (!own.length && !lib.length) return false;
+        let added = 0;
+        const skipped = rows.filter(r => r.st === 'dup' || r.st === 'bad').map(r => ({ word: r.word, why: r.st === 'dup' ? 'you already have it' : 'no meaning, and not in the library' }));
+        try {
+          if (own.length) {
+            const r = await UI.api('/words/mine/import', { method: 'POST', body: { text: own.map(x => `${x.word}\t${x.meaning}`).join('\n'), list: name } });
+            added += r.added || 0;
+            (r.skipped || []).forEach(x => skipped.push({ word: (own[(x.line || 1) - 1] || {}).word || `line ${x.line}`, why: /existing/.test(String(x.why)) ? 'you already have it' : String(x.why) }));
+          }
+          if (lib.length) { await addToList(name, [...new Set(lib.map(x => x.slug))]); added += lib.length; }
+        } catch (e) { if (!e.offline) show(h('p', { class: 'field-err', text: 'Not added. Try again.' })); return false; }
+        done = true;
+        show(h('p', { class: 'line' }, h('b', { text: `Added ${fmt(added)}` }), skipped.length ? ` · skipped ${fmt(skipped.length)}` : ''),
+          skipped.length ? h('ul', { class: 'help', 'data-nofold': '' }, skipped.slice(0, 30).map(x => h('li', { text: `${x.word}: ${x.why}` }))) : null);
+        const b = addBtn(); if (b) { b.textContent = 'Done'; b.disabled = false; }
+        sh.foot.querySelectorAll('button').forEach(x => { if (x !== b) x.hidden = true; });
+        ta.disabled = true;
+        try { doc.dispatchEvent(new CustomEvent('satf:words', { detail: { imported: added } })); } catch (_) {}
+        return false;
+      } }] });
+    upd();
+    setTimeout(() => ta.focus(), 30);
+    return sh;
   }
   function bringList() {
     const ta = h('textarea', { class: 'field', rows: '8', maxlength: '20000', placeholder: 'One word per line, or comma-separated (up to 1,000)' });
@@ -1095,7 +1220,7 @@ button.term { appearance: none; border: 0; background: none; padding: 0; font: i
   function bringText() {
     const ta = h('textarea', { class: 'field', rows: '7', maxlength: '20000', placeholder: 'Paste a passage (up to 20,000 characters). Nothing is sent until you save.' });
     const view = h('div', { class: 'wb' });
-    const side = h('div', {});
+    const side = h('div', { class: 'w-side' });
     const body = h('div', { class: 'addw' }, ta, view, side);
     let hits = new Map(), odd = [];
     // the index and the learner's statuses load when the sheet opens: matching the text sends nothing
@@ -1135,7 +1260,7 @@ button.term { appearance: none; border: 0; background: none; padding: 0; font: i
       const chosen = () => [...checks.entries()].filter(([, cb]) => cb.checked).map(([s]) => s);
       const name = h('input', { class: 'field sm', maxlength: '30', value: `From pasted text · ${dayLabel()}`, 'aria-label': 'List name' });
       side.replaceChildren(...[col('new', 'new'), col('learning', 'learning'), col('known', 'known'),
-        hits.size ? h('div', { class: 'wchips', style: 'margin-top:8px' },
+        hits.size ? h('div', { class: 'wchips' },
           groups.new.length ? h('button', { type: 'button', class: 'btn sm', text: `Star the ${groups.new.length} new`, onclick: async () => {
             await Promise.all(groups.new.map(w => UI.api(`/words/${encodeURIComponent(w.slug)}/save`, { method: 'POST', body: { on: true } }).catch(() => null)));
             toast(`Starred ${groups.new.length} · they go to the front of New`); } }) : null,
@@ -1154,7 +1279,7 @@ button.term { appearance: none; border: 0; background: none; padding: 0; font: i
     const keys = [0, 1, 2, 3].map(i => radio('bm-key', i)), picks = [0, 1, 2, 3].map(i => radio('bm-pick', i));
     const text = h('textarea', { class: 'field', rows: '3', maxlength: '2000', placeholder: 'The text (optional)' });
     const label = h('input', { class: 'field sm', maxlength: '30', placeholder: 'Bluebook · Test 4 · Q12', 'aria-label': 'Where it was from' });
-    const grid = h('div', { style: 'display:grid;grid-template-columns:1fr auto auto;gap:8px;align-items:center' },
+    const grid = h('div', { class: 'bm-grid' },
       h('span', { class: 'k', text: 'Choices' }), h('span', { class: 'k', text: 'Right' }), h('span', { class: 'k', text: 'I picked' }),
       inputs.map((inp, i) => [inp, keys[i], picks[i]]));
     const out = h('div', { 'aria-live': 'polite' });
@@ -1221,7 +1346,8 @@ button.term { appearance: none; border: 0; background: none; padding: 0; font: i
   /* ------------------------------------------------------------ worksheets (W20) */
   // the 4-option types a pencil can answer; Type it and Order the ladder stay on screen
   const PRINTABLE = ['incontext', 'transition', 'precise', 'meaning2word', 'word2meaning', 'nearly', 'cloze'];
-  async function printSheet(deck, o = {}) {
+  function printSheet(deck, o = {}) { return busy(() => postPrint(deck, o)); }
+  async function postPrint(deck, o = {}) {
     const formats = (o.formats || []).filter(f => PRINTABLE.includes(f));
     const body = { mode: 'print', deck, formats: formats.length ? formats : ['incontext', 'meaning2word'], count: Math.max(10, Math.min(40, o.count || 20)) };
     let r;

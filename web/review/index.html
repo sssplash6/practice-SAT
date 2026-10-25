@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Review · SAT Freshman</title>
+<link rel="icon" href="/favicon.ico" sizes="32x32">
 <link rel="icon" href="/assets/mark.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
 <link rel="manifest" href="/manifest.webmanifest">
@@ -11,281 +12,380 @@
 <script src="/assets/head.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800;900&family=DM+Mono:wght@400;500&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap">
+<link rel="preload" href="/assets/fonts/Geist.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap">
 <link rel="stylesheet" href="/assets/ui.css">
 <link rel="stylesheet" href="/assets/runner.css">
 <style>
-  /* The Review hub (spec 3.9, review.md V1-V19). Shared pieces (tiles, seg, cells, pips,
-     sheets, the pane player) are ui.css and runner.css; these rules lay the page out.
-     The six tiles are the tabs: each number is said once (decision 7). */
-  .rh { padding-bottom: 140px; }
+  /* The Review hub (spec 3.9, review.md V1-V19). Shared pieces (cells, pips, badges, sheets, the pane
+     player) are ui.css and runner.css; these rules lay the page out: a header row with Start, the tab row,
+     the tab's folded insights and filters, then the list beside the question pane and the action bar. */
+  /* a flex column, not a grid: a grid item's area is its containing block, which would stop the sticky tabs and bar.
+     The calm first screen (premium): the title and Start, the tabs, one tools row (Search; Sort, Filters · n, Insights),
+     then the flat list beside the one raised card, the question pane */
+  .rh { display: flex; flex-direction: column; gap: 16px; }
   .rh * { min-width: 0; }
-  .rh-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px 32px; }
-  .rh-head .h1 { font-size: 36px; }
-  .rh-helper { margin-top: 8px; max-width: 46ch; font: 500 14px/1.45 var(--font); color: var(--soft); }
-  .rh-start { display: grid; justify-items: end; gap: 8px; }
-  .rh-start .seg { font-size: 13px; }
-  .rh-split { display: inline-flex; align-items: stretch; }
-  /* compact: 40px, the same corners as every other Start, so the minutes row sits level with the title */
-  .rh-split > .pill { height: 40px; padding: 0 20px; border-radius: 10px; font-size: 15px; }
-  .rh-split > .pill:first-child { border-top-right-radius: 0; border-bottom-right-radius: 0; }
-  .rh-split > .pill + .pill { min-width: 44px; padding: 0 12px; border-top-left-radius: 0; border-bottom-left-radius: 0;
-    box-shadow: inset 1px 0 0 rgba(0, 0, 0, .18); }
-  .rh-startmeta { font: 500 12.5px var(--mono); color: var(--soft); text-align: right; }
-  .rh-notes { display: grid; gap: 10px; margin-top: 20px; }
-  .rh-notes:empty { display: none; }
-  .rh-walk { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px 20px; padding: 16px 20px; }
-  .rh-walk p { font: 600 15px/1.4 var(--font); }
-  .rh-walk .meta { display: block; margin-top: 2px; font-weight: 500; }
-  .rh-line { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 14px; font: 500 14px/1.4 var(--font); }
-  .rh-line .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--amber); flex: none; }
+  /* the tabs' 1px scroll-shadow sentinel (kit.js, before .rh-tabs) takes no gap of its own (the shell's section bar takes
+     back its own); the shell's banner and Up next strip bring their own room (12px, 16px), which the gap already gives */
+  .rh > div[aria-hidden="true"]:empty { margin-top: -16px; }
+  .rh > .banner { margin-bottom: -4px; }
+  .rh > .now-strip { margin-bottom: 0; }
+  .rh-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px 24px; min-height: 42px; margin-bottom: 8px; }
+  /* Math | Reading and Writing under the title: every list, count and action below is that subject's */
+  .rh-subject { display: flex; margin: -20px 0 4px; }     /* 12px under the title, 20px above the tabs (as Practice) */
 
-  /* the six tiles, one tablist */
-  .rh-tabs { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 10px; margin-top: 18px; }
-  .rh-tab { appearance: none; border: 0; font: inherit; cursor: pointer; text-align: left; display: flex; flex-direction: column;
-    min-height: 0; padding: 10px 12px; border-radius: var(--radius); background: var(--tile); color: var(--ink);
-    transition: background-color .16s var(--ease), box-shadow .16s var(--ease); }
-  .rh-tab .stat-k { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .rh-tab .stat-v { margin-top: 4px; font-size: 20px; }
-  .rh-tab .stat-sub { margin-top: 4px; }
-  .rh-tab[aria-selected="true"] { background: var(--paper); box-shadow: inset 0 0 0 1.5px var(--ink), inset 0 -3px 0 var(--amber); }
-  .rh-tab:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
-  @media (hover: hover) and (pointer: fine) { .rh-tab:not([aria-selected="true"]):hover { background: var(--tile-2); } }
-  .rh-tab .rh-tl { display: none; }
+  /* a short line with an amber dot (exam week, the History summary) */
+  .rh-line { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 12px; min-height: 36px; font: 500 14px/1.4 var(--font); }
+  .rh-line .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--ink-2); flex: none; }
+  /* marks stay graphite on this page (pips, a New row's dot): the orange is the selection band, the primary and the tab */
+  .rh .pips > i.on { background: var(--ink-2); box-shadow: inset 0 0 0 1.5px var(--ink-2); }
+  .rh .rh-row .l1 > .dot { background: var(--ink-2); }
+  .rh-line .meta { font-weight: 400; }
+  .rh-line > .rh-bit + .rh-bit::before { content: "·"; margin-right: 12px; color: var(--faint); }
+  @media (max-width: 759px) { .rh-line > .rh-bit + .rh-bit::before { content: none; } }
+  /* notes pinned at the top of the Due and Redo lists: new misses to walk, a worksheet waiting */
+  .rh-notes { display: grid; }
+  .rh-notes:empty, .rh:not([data-tab="due"]):not([data-tab="redo"]) .rh-notes { display: none; }
+  .rh-notes > .rh-line { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 0 12px;
+    min-height: var(--row-h); padding: 8px 12px 8px 20px; border-top: 1px solid var(--line); }
+  .rh-notes > .rh-line > .dot { grid-row: 1 / span 2; }
+  .rh-notes > .rh-line > .meta { grid-column: 2; grid-row: 2; font-size: 12.5px; }
+  .rh-notes > .rh-line > .btn { grid-column: 3; grid-row: 1 / span 2; }
 
-  .rh-headbox { display: grid; gap: 14px; margin-top: 18px; }
+  /* the tab row: UI.tabs inside #rhtabs (its amber underline slides to the open tab), label and count inline;
+     a phone stacks the short label over the count. Counts only where they ask for action: Due and Redo keep the
+     pill, Marked, Saved and Fixed show a plain soft figure, History none (every count stays in the aria-label) */
+  .rh-tabs .rh-ts { display: none; }
+  .rh-tabs :is(#tab-marked, #tab-saved, #tab-fixed) .n { min-width: 0; padding: 0; background: none; color: var(--soft); }
+  /* Redo carries an unread dot while new misses wait */
+  .rh-tabs [data-new] :is(.rh-tk, .rh-ts)::after { content: ""; display: inline-block; width: 6px; height: 6px; margin-left: 5px; border-radius: 50%; background: var(--amber); vertical-align: 2px;
+    animation: rh-ping .9s var(--ease) 1; }   /* one soft pulse when it first appears */
+  @keyframes rh-ping { 40% { transform: scale(1.7); } }
+  @media (prefers-reduced-motion: reduce) { .rh-tabs [data-new] :is(.rh-tk, .rh-ts)::after { animation: none; } }
+  /* until review.js opens the first tab (it may not be the one UI.tabs starts on), no tab reads as open */
+  .rh:not(.rh-ready) .rh-tabs [aria-selected="true"] { color: var(--soft); font-weight: 500; }
+  .rh:not(.rh-ready) .rh-tabs [aria-selected="true"] .n { background: var(--well); }
+  .rh:not(.rh-ready) .rh-tabs .tab-ind, .rh:not(.rh-ready) .rh-tabs [aria-selected="true"]::after { visibility: hidden; }
+
+  /* the tab's head: short lines that stay (exam week, the History summary, the Fixed headline, Saved's switches) */
+  .rh-headbox { display: grid; gap: 8px; }
   .rh-headbox:empty { display: none; }
-  .rh-tabsub { display: none; }
-  .rh-card { padding: 18px 20px; }
-  .rh-card .card-head { margin-bottom: 12px; }
-  .rh-card .rh-k { flex: 1 1 auto; font: 500 11px var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--soft); }
+  .rh-big { font: 600 14.5px/1.4 var(--font); }
   .rh-row2 { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; }
-  /* Saved · Your rules (V19): the rules replace the question list, its filters, pane and bar */
-  .rh.rh-rules #optsbox, .rh.rh-rules #filters, .rh.rh-rules #body, .rh.rh-rules #actbar { display: none; }
-  .rh-rules-l { display: grid; gap: 0; }
-  .rh-rule { padding: 12px 0; border-top: 1px solid var(--line); display: grid; gap: 6px; }
-  .rh-rule:first-child { border-top: 0; padding-top: 0; }
-  .rh-rule-h, .rh-rule-t { margin: 0; }
-  .rh-rule-t { font-size: 15px; }
-  .rh-rule-ed textarea { width: 100%; font: inherit; padding: 8px 10px; border: 1.5px solid var(--ink); border-radius: 8px; background: var(--bg); color: var(--ink); resize: vertical; }
-  .rh-rule-ask .quiet { min-height: 32px; }
-  .rh-kinds { display: flex; flex-wrap: wrap; gap: 6px; }
-  .rh-kind { display: inline-flex; align-items: center; gap: 5px; height: 26px; padding: 0 10px; border-radius: 999px;
-    background: var(--paper); box-shadow: inset 0 0 0 1px var(--line); font: 600 12.5px var(--font); color: var(--ink); white-space: nowrap; }
-  .rh-kind b { font: 500 12px var(--mono); }
-  .rh-kind.ink { background: var(--ink); color: var(--on-ink); box-shadow: none; }
-  .rh-kind.amber { background: var(--wash); box-shadow: inset 0 0 0 1px var(--amber); }
-  .rh-today { display: grid; grid-template-columns: auto minmax(0, 1fr) minmax(0, 300px); align-items: center; gap: 16px 24px; }
-  .rh-today .ring { --rs: 64px; font-size: 15px; }
-  .rh-today .rh-big { font: 700 17px/1.3 var(--font); }
-  .rh-wait { margin-top: 6px; font: 500 12.5px var(--mono); color: var(--soft); }
+  /* the tools row: the filters (Search left; Sort and Filters · n right) and the Insights toggle at the end */
+  .rh-tools { display: flex; align-items: center; justify-content: flex-end; gap: 8px 16px; }
+  .rh-tools > .rh-filters { flex: 1 1 auto; }
+  .rh-tools:has(> #filters:empty):has(> #insbtn:empty), .rh.rh-rules .rh-tools { display: none; }
+  .rh-insb { flex: none; }
+  @media (max-width: 759px) { .rh-insb .btn > span { display: none; } }   /* the icon alone on a phone (aria-label keeps the name) */
+  .rh:not(:has(.rh-ins-b > *)) .rh-insb, .rh:not(:has(.rh-ins-b > *)) .rh-tools:has(> #filters:empty) { display: none; }
+  /* Insights: the tab's closed disclosure (open state remembered), opened from the tools row; its own summary is hidden */
+  .rh-insights:not(:has(details[open])) { display: none; }
+  .rh-ins > .fold-s { display: none; }
+  .rh-ins-b { display: grid; }
+  .rh-ins:not(:has(.rh-ins-b > *)) { display: none; }
+  .rh-part { display: grid; gap: 8px; padding: 12px 0; border-top: 1px solid var(--line); }
+  .rh-part:first-child { padding-top: 0; border-top: 0; }
+  .rh-part:last-child { padding-bottom: 0; }
+  .rh-part > div:not([class]) { display: grid; gap: 8px; }
+  .rh-k { font: 600 14px/1.3 var(--font); }
   .rh-chips { display: flex; flex-wrap: wrap; gap: 8px; }
   .rh-chips .btn { max-width: 100%; }
   .rh-chips .btn span.l { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 36ch; }
-  .rh-chips .pts { margin-left: 6px; }
-  .rh-grid3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
-  .rh-matrix { display: grid; grid-template-columns: auto repeat(2, minmax(0, 1fr)); gap: 6px; align-items: stretch; }
-  .rh-matrix .h { font: 500 11px var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--soft); align-self: end; }
-  .rh-matrix .rl { font: 600 13.5px var(--font); align-self: center; padding-right: 8px; }
-  .rh-matrix .rl small { display: block; font: 500 11.5px var(--mono); color: var(--soft); }
-  .rh-matrix button { min-height: 44px; border: 0; border-radius: 10px; background: var(--paper); box-shadow: inset 0 0 0 1px var(--line);
-    font: 500 13px var(--mono); color: var(--ink); cursor: pointer; }
+  .rh-grid3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+  .rh-matrix { display: grid; grid-template-columns: auto repeat(2, minmax(0, 1fr)); gap: 4px; align-items: stretch; }
+  .rh-matrix .h { font: 500 12.5px var(--font); color: var(--soft); align-self: end; }
+  .rh-matrix .rl { font: 600 14px var(--font); align-self: center; padding-right: 8px; }
+  .rh-matrix .rl small { display: block; font: 400 12.5px var(--font); color: var(--soft); }
+  .rh-matrix button { min-height: 40px; border: 0; border-radius: 8px; background: var(--face); box-shadow: inset 0 0 0 1px var(--line);
+    font: 500 12.5px var(--font); font-variant-numeric: tabular-nums; color: var(--ink); cursor: pointer; }
   .rh-matrix button[data-hot] { box-shadow: inset 0 0 0 1.5px var(--ink); font-weight: 600; }
-  .rh-list-p { display: grid; gap: 6px; font: 400 14px/1.45 var(--font); }
-  .rh-foot { font: 500 12.5px var(--mono); color: var(--soft); }
+  .rh-list-p { display: grid; gap: 0; font: 400 14px/1.45 var(--font); }
+  .rh-list-p > .rh-row2:has(> b) { display: grid; grid-template-columns: minmax(0, 1fr) auto auto; align-items: center; gap: 2px 16px; padding: 10px 0; border-top: 1px solid var(--line); }
+  .rh-list-p > .rh-row2:has(> b):first-child { padding-top: 0; border-top: 0; }
+  .rh-list-p > .rh-row2 > b { grid-column: 1; grid-row: 1; font-weight: 600; }
+  .rh-list-p > .rh-row2 > i { grid-column: 1; grid-row: 2; font-style: normal; }
+  .rh-list-p > .rh-row2 > span.rh-foot { grid-column: 2; grid-row: 1 / span 2; }
+  .rh-list-p > .rh-row2 > .btn { grid-column: 3; grid-row: 1 / span 2; }
+  .rh-list-p > .rh-row2:not(:has(> b)) { padding-top: 12px; }
+  @media (max-width: 759px) {
+    .rh-list-p > .rh-row2:has(> b) { grid-template-columns: minmax(0, 1fr) auto; }
+    .rh-list-p > .rh-row2 > span.rh-foot { grid-column: 1; grid-row: auto; }
+    .rh-list-p > .rh-row2 > .btn { grid-column: 2; grid-row: 1 / span 3; }
+  }
+  /* Worth the most: equal keys in a grid, the label left and its points right */
+  .rh-chips.rh-worth { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); }
+  .rh-chips.rh-worth .btn { justify-content: space-between; gap: 12px; }
+  .rh-chips.rh-worth .btn .n { color: var(--soft); font-weight: 500; }
+  .rh-foot { font: 400 12.5px var(--font); color: var(--soft); font-variant-numeric: tabular-nums; }
+  .rh-hh { display: grid; gap: 8px; }
+  .rh-hh:empty { display: none; }
 
-  .rh-filters { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 18px; }
-  .rh-filters .filters { flex: 1 1 auto; margin: 0; }
+  /* Saved · Your rules (V19): the rules replace the question list, its filters, pane and bar */
+  .rh.rh-rules #filters, .rh.rh-rules #body, .rh.rh-rules #actbar { display: none; }
+  .rh-rules-l { display: grid; }
+  .rh-rule { padding: 12px 0; border-top: 1px solid var(--line); display: grid; gap: 6px; }
+  .rh-rule:first-child { border-top: 0; padding-top: 0; }
+  .rh-rule-h, .rh-rule-t { margin: 0; }
+  .rh-rule-ed textarea { min-height: 64px; resize: vertical; }
+
+  /* filters: Search on the left; Sort and Filters · n on the right. Difficulty, Status and the rest sit behind
+     Filters · n at every width; a set filter shows as a token in the list head */
   .rh-filters:empty { display: none; }
+  .rh-filters .filters { flex-wrap: nowrap; }
+  .rh-filters .filters > :not(.filters-open):not(.filters-search):not([data-fkey="sort"]) { display: none; }
+  .rh-filters .filters > .filters-open { display: inline-flex; }
+  .rh-filters .filters > .filters-search { order: -1; margin-right: auto; }
 
-  /* the list is a strip of cards that scrolls sideways; the open item's page fills the width beneath it */
-  .rh-body { display: block; margin-top: 30px; }
-  .rh-body.no-pane .rh-pane { display: none; }
-  .rh-pane { position: static; margin-top: 16px; border-radius: var(--radius-card);
-    box-shadow: inset 0 0 0 1px var(--line); background: var(--paper); }
-  .rh-pane:empty { display: none; }
+  /* the list and the pane: the list is one white card of hairline rows (.card at shadow 1), the question pane the one
+     hero (.card.hero); from 1280px the list is a column beside the pane, sticky with its own scroll, the action bar
+     docked at its foot. Below that .rh-col is display: contents and #body a flex column, so the bar's sticky spans it */
+  .rh-body { display: flex; flex-direction: column; gap: var(--card-gap); }
+  .rh-col { display: contents; }
+  .rh-panel { container-type: inline-size; }
+  .rh-panel.card { padding: 0; overflow: clip; }
+  .rh-panel:not(:has(#list > *, #notes > *)), .rh-pane:empty, .rh-body.no-pane .rh-pane { display: none; }
+  .rh-pane.card { padding: 0; overflow: clip; }
   .rh-pane .rv-pane { min-height: 300px; }
-  .rh-panenote { padding: 22px; font: 400 14.5px/1.5 var(--font); color: var(--soft); }
+  /* the pane's own frame gives way to the hero card around it, so its corner wash shows through */
+  .rh-pane > .rv-pane:not(.rv-dlg-in) { border: 0; border-radius: inherit; background: none; }
+  .rh-pane > .rv-pane:not(.rv-dlg-in) :is(.rv-top, .rv-foot) { background: none; }
+  .rh-listhead { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 12px; min-height: 44px; padding: 4px 4px 4px 12px; background: var(--raised); }
+  .rh[data-tab="due"] .rh-listhead { min-height: 36px; }   /* one figure, no controls */
+  .rh-listhead .rh-lh-m { font: 400 12.5px var(--font); color: var(--soft); font-variant-numeric: tabular-nums; }
+  .rh-listhead .rh-lh-more { margin-left: auto; }
+  @media (max-width: 759px) { .rh-listhead:has(> .check) .rh-lh-m { order: 2; flex: 1 1 100%; padding: 0 0 4px 30px; } }   /* More keeps the first line */
+  .rh-listhead .rh-toks { order: 3; flex: 1 1 100%; display: flex; flex-wrap: wrap; align-items: center; gap: 6px 12px; padding-bottom: 4px; }
+  #list { display: grid; }
+  /* a filter or sort change keeps the rows while the new list loads (they dim), then glides them (review.js glideRows) */
+  #list[aria-busy="true"] > :not(.rh-skel) { opacity: .55; transition: opacity .2s var(--ease); }
+  .rh-list { display: grid; }
+  @media (min-width: 1280px) {
+    .rh-body:not(.no-pane) { display: grid; grid-template-columns: minmax(320px, 380px) minmax(0, 1fr); align-items: start; }
+    .rh-body:not(.no-pane) > .rh-col { position: sticky; top: 16px; display: flex; flex-direction: column; gap: 8px; max-height: calc(100dvh - 32px); }
+    /* no overscroll containment: at its end the list hands the wheel to the page, so the column rises and the bar docks */
+    .rh-body:not(.no-pane) .rh-panel { flex: 0 1 auto; min-height: 0; overflow: hidden auto; scrollbar-width: thin; }
+    .rh-body:not(.no-pane) .rh-listhead { position: sticky; top: 0; z-index: 2; }   /* the first row's hairline is its edge */
+    /* group heads stay at the top of the column while their rows scroll (under the list head) */
+    .rh-body:not(.no-pane) .rh-gh { position: sticky; top: var(--rh-lh, 44px); z-index: 1; }
+    .rh-body:not(.no-pane) .rh-bar { position: sticky; bottom: 16px; flex: none; }
+  }
+  @media (min-width: 960px) and (max-width: 1279px) {
+    .rh-body:not(.no-pane) #list { max-height: min(50vh, 440px); overflow-y: auto; overscroll-behavior: contain; scrollbar-width: thin; }
+  }
 
-  .rh-listhead { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 14px; min-height: 44px; }
-  .rh-listhead .meta { margin-left: auto; }
-  .rh-list { display: flex; align-items: stretch; gap: 10px; overflow-x: auto; overscroll-behavior-x: contain; scroll-snap-type: x proximity; padding-bottom: 8px; scrollbar-width: thin; }
-  .rh-group { display: contents; }
-  .rh-list .rh-row { flex: 0 0 min(400px, 86vw); scroll-snap-align: start; }
-  .rh-list .rh-gh { flex: 0 0 auto; align-self: center; min-width: 220px; }
-  .rh-gh { display: grid; grid-template-columns: 44px auto minmax(0, 1fr) auto; align-items: center; column-gap: 8px; min-height: 48px; }
-  .rh-gh.plain { grid-template-columns: minmax(0, 1fr) auto; column-gap: 12px; }
+  /* a group, day or sitting head: a row header in the card, set off by its hairline and its title (no tinted band) */
+  .rh-gh, .rh-dayh, .rh-sit-h { background: var(--raised); border-top: 1px solid var(--line); }
+  .rh-gh { position: relative; display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; column-gap: 10px; min-height: 44px; padding: 0 4px 0 15px; }
+  .rh-gh.plain { grid-template-columns: minmax(0, 1fr) auto; column-gap: 12px; padding-left: 12px; }
+  .rh-gh > span:empty { width: 18px; }
   .rh-gh .glyph { width: 18px; height: 18px; flex: none; }
-  .rh-gh .gt { display: flex; flex-direction: column; min-width: 0; }
-  .rh-gh .t { font: 700 15px/1.3 var(--font); }
-  .rh-gh .meta { font-size: 12px; }
-  .rh-gh .tell { grid-column: 3 / -1; font: italic 400 13px/1.4 var(--font); color: var(--soft); }
-  .rh-gh .act { display: flex; flex-wrap: wrap; justify-content: flex-end; align-items: center; gap: 6px; }
-  .rh-gh .fold { width: 36px; height: 36px; }
-  .rh-gh .fold svg { transition: transform .2s var(--ease); }
-  .rh-group[data-folded] .fold svg { transform: rotate(-90deg); }
+  .rh-gh .gt { display: flex; flex-direction: column; min-width: 0; padding-block: 6px; }
+  .rh-gh .t { font: 600 14px/1.3 var(--font); }
+  .rh-gh .tell { grid-column: 2 / -1; padding-bottom: 8px; font: italic 400 12.5px/1.4 var(--font); color: var(--soft); }
+  .rh-gh .act .quiet { font-size: 14px; }
+  .rh-gh .act { display: flex; flex-wrap: wrap; justify-content: flex-end; align-items: center; gap: 4px 12px; }
+  .rh-gh .rh-gfold { justify-content: center; width: 36px; height: 36px; margin: 0; padding: 0; }   /* its caret turns by icons.css */
   .rh-group[data-folded] > .rh-row { display: none; }
+  /* a mouse: a group's Fix and fold show while its head is hovered or holds keyboard focus (always on touch) */
+  @media (hover: hover) and (pointer: fine) {
+    .rh-gh:not(.plain) > .act { opacity: 0; transition: opacity .14s var(--ease); }
+    .rh-gh:hover > .act, .rh-gh:has(:focus-visible) > .act, .rh-group[data-folded] .rh-gh > .act { opacity: 1; }
+  }
+  .rh-dayh { display: flex; align-items: baseline; gap: 8px; min-height: 36px; padding: 8px 12px; font: 600 14px var(--font); }
+  .rh-sit-h { display: grid; gap: 8px; padding: 12px; }
+  .rh-sit-h .t { font: 600 14px/1.35 var(--font); }
+  .rh-sit-h .t .meta { margin-left: 6px; font-weight: 400; }
+  .rh-sit-h .cells { display: flex; flex-wrap: wrap; gap: 4px; }
+  .rh-sit-h .acts { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+  .rh-sit-h .kids { font: 400 12.5px var(--font); color: var(--soft); font-variant-numeric: tabular-nums; }
+  .rh-sit[data-void] .t { color: var(--soft); }
 
-  .rh-row { position: relative; display: grid; grid-template-columns: 44px minmax(0, 1fr); align-items: stretch; border-radius: 10px;
-    background: var(--tile); transition: background-color .16s var(--ease), box-shadow .16s var(--ease); }
-  .rh-row[aria-current="true"] { box-shadow: inset 0 0 0 1.5px var(--amber); background: var(--paper); }
-  .rh-row.nosel { grid-template-columns: 14px minmax(0, 1fr); }
-  .rh-row > label.sel { display: grid; place-items: center; cursor: pointer; }
-  .rh-row > label.sel input { width: 18px; height: 18px; margin: 0; cursor: pointer; }
+  /* a row: lead mark, title and its one badge, then its meta line; actions show on hover or focus (always on touch).
+     The select box sits over the lead: it shows on hover or keyboard focus, and on every row once the selection is
+     changed (.rh-selmode); the lead's pips give way to it while it shows */
+  .rh-row { position: relative; display: grid; grid-template-columns: minmax(0, 1fr); align-items: stretch;
+    border-top: 1px solid var(--line); transition: background-color .16s var(--ease), box-shadow .16s var(--ease); }
+  /* the open row: the one selected look (no side stripe) */
+  .rh-row[aria-current="true"] { z-index: 1; background: var(--sel-bg); }
+  @media (hover: hover) and (pointer: fine) { .rh-row:not([aria-current="true"]):is(:hover, :has(:focus-visible)) { background: var(--hover); } }
+  .rh-row > span.sel { display: none; }
+  /* the box shares the button's cell (so it centres on the same rows as the lead); a group head's sits over its glyph */
+  .rh-row > :is(label.sel, .rh-rb) { grid-row: 1; grid-column: 1; }
+  .rh-row > label.sel { z-index: 1; justify-self: start; width: 48px; display: grid; place-items: center; cursor: pointer; }
+  .rh-gh > label.sel { position: absolute; z-index: 1; left: 0; top: 0; width: 48px; height: 44px; display: grid; place-items: center; cursor: pointer; }
+  .rh-gh:not(.plain) > :is(.glyph, span:empty) { align-self: start; margin-top: 13px; }
+  .rh-row > label.sel input, .rh-gh > label.sel input { width: 18px; height: 18px; margin: 0; cursor: pointer; opacity: 0; }
+  .rh.rh-selmode :is(.rh-row, .rh-gh) > label.sel input { opacity: 1; }
+  .rh.rh-selmode .rh-row:has(> label.sel) .lead, .rh.rh-selmode .rh-gh:has(> label.sel) > .glyph { visibility: hidden; }
+  @media (hover: hover) and (pointer: fine) {
+    :is(.rh-row, .rh-gh):is(:hover, :has(:focus-visible)) > label.sel input { opacity: 1; }
+    .rh-row:has(> label.sel):is(:hover, :has(:focus-visible)) .lead, .rh-gh:has(> label.sel):is(:hover, :has(:focus-visible)) > .glyph { visibility: hidden; }
+  }
+  /* touch: until the selection is changed (Select all, or a long press on a row) a tap on the lead opens the row */
+  @media (hover: none), (pointer: coarse) { .rh:not(.rh-selmode) :is(.rh-row, .rh-gh) > label.sel { pointer-events: none; } }
   .rh-row > .rh-rb { appearance: none; border: 0; background: none; font: inherit; color: inherit; text-align: left; cursor: pointer;
-    display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 2px 12px; min-height: 64px; padding: 10px 14px 10px 0; }
-  .rh-row.compact > .rh-rb { min-height: 48px; padding: 6px 12px 6px 0; }
-  .rh-row.tall > .rh-rb { min-height: 88px; align-items: start; padding-top: 14px; }
-  .rh-row > .rh-rb:focus-visible { outline: 2px solid var(--ink); outline-offset: -2px; border-radius: 10px; }
-  @media (hover: hover) and (pointer: fine) { .rh-row:not([aria-current="true"]):hover { background: var(--tile-2); } }
+    display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 2px 10px; min-height: var(--row-h); padding: 6px 12px 6px 10px; }
+  .rh-row.tall > .rh-rb { align-items: start; }
+  .rh-row > .rh-rb:focus-visible { outline-offset: -2px; border-radius: 6px; }   /* the shared amber-deep ring, inside the row */
   .rh-row .lead { display: grid; place-items: center; min-width: 28px; grid-row: 1 / span 2; align-self: center; }
-  .rh-row .rh-rb > .sub { grid-column: 2 / -1; min-width: 0; }
   .rh-row .lead .cell { width: 28px; height: 28px; min-width: 28px; min-height: 28px; }
-  .rh-row .l1 .glyph { display: inline-block; width: 16px; height: 16px; margin-right: 6px; vertical-align: -2px; }
+  .rh-row .lead .cell:has(> .n:empty) { width: 22px; height: 22px; min-width: 22px; min-height: 22px; border-radius: 6px; }
+  .rh-row .lead .tick { display: grid; place-items: center; font: 600 14.5px var(--font); color: var(--ink-2); }
   .rh-row .rh-rb > .l1 { align-self: end; }
   .rh-row .rh-rb > .tags { align-self: start; }
-  .rh-pane .rv-tools { flex-wrap: nowrap; justify-content: space-between; gap: 10px; width: 100%; }
-  .rh-pane .rv-tool { flex: 1 1 auto; min-width: 0; padding: 4px 8px; font-size: 11px; }
-  .rh-pane .cell[data-status="open"], .rh-pane .cell[data-status="half"] { background: var(--paper); box-shadow: inset 0 0 0 1.5px var(--line); }
-  .rh-pane .cell[data-status="relapsed"], .rh-pane .cell[data-status="stuck"], .rh-pane .cell[data-status="sure"] { background: var(--paper); box-shadow: inset 0 0 0 1.5px var(--ink); }
-  .rh-pane .cell[data-status="unchecked"], .rh-pane .cell[data-status="due"] { background: var(--paper); box-shadow: inset 0 0 0 1.5px var(--amber); }
-  .rh-pane .cell[data-status="held"] { background: var(--amber); color: var(--ink-deep); }
-  .rh-pane .cell[data-status="dismissed"] { background: var(--paper); box-shadow: inset 0 0 0 1px var(--line); color: var(--faint); }
-  .rh-row .l1 { font: 600 15px/1.35 var(--font); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-  .rh-row .l1.stem { font: 400 15.5px/1.4 var(--serif, 'Source Serif 4', serif); }
-  .rh-row.compact .l1 { -webkit-line-clamp: 1; font-size: 14.5px; }
-  .rh-row .l2 { display: block; margin-top: 3px; font: 500 12px/1.55 var(--mono); color: var(--soft); }
+  .rh-row .rh-rb > .sub { grid-column: 2 / -1; min-width: 0; }
+  .rh-row .l1 { font: 600 14.5px/1.35 var(--font); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+  .rh-row .l1 .glyph { display: inline-block; width: 16px; height: 16px; margin-right: 6px; vertical-align: -2px; }
+  .rh-row .l1 > .dot { margin-right: 6px; vertical-align: 2px; }   /* New: an unread dot before the title */
+  .rh-row .l1.stem { font: 400 15px/1.4 var(--serif); }
+  .rh-row.compact .l1 { -webkit-line-clamp: 1; }
+  .rh-row .l2 { display: block; margin-top: 2px; font: 400 12.5px/1.5 var(--font); color: var(--soft); font-variant-numeric: tabular-nums; }
   .rh-row .l2 > span + span::before { content: "·"; margin: 0 6px; color: var(--faint); }
+  /* a long meta wraps fact by fact (never "took 0 / days" or a mark alone), and a wrapped line starts clean: every
+     fact carries its dot, and the strip left of the box clips the dot of whichever fact begins a line */
+  .rh-row .l2:not(.trim) { display: flex; flex-wrap: wrap; align-items: baseline; margin-left: -14px; clip-path: inset(0 0 0 14px); }
+  .rh-row .l2:not(.trim) > span { white-space: nowrap; }
+  .rh-row .l2:not(.trim) > span::before, .rh-row .l2:not(.trim) > span + span::before { content: "·"; display: inline-block; width: 14px; margin: 0; text-align: center; color: var(--faint); }
   .rh-row .l2 .dbars { vertical-align: -1px; }
   .rh-row .l2 .pts { font-weight: 600; color: var(--ink); }
-  .rh-row .l2 .over { color: var(--ink); }
-  .rh-row .l3 { margin-top: 4px; font: 400 13px/1.4 var(--font); color: var(--soft); }
+  /* Redo's trimmed meta: tier bars and the last date on the left, the points as a figure on the right */
+  .rh-row .l2.trim { display: flex; align-items: center; }
+  .rh-row .l2.trim > .pts { margin-left: auto; padding-left: 12px; }
+  .rh-row .l2.trim > .pts::before { content: none; }
+  .rh-row .l2 .over { color: var(--ink); font-weight: 500; }
+  .rh-row .l2 .proven > span + span { margin-left: 8px; }
+  .rh-row .l3 { margin-top: 2px; font: 400 12.5px/1.4 var(--font); color: var(--soft); }
   .rh-row .l3.note { font-style: italic; }
-  /* the strip's cards: the title and the date only, short and wide */
-  .rh-list .rh-row > .rh-rb { min-height: 0; padding: 10px 14px 10px 0; align-items: center; }
-  .rh-list .rh-row .l2, .rh-list .rh-row .tags { display: none; }
-  .rh-list .rh-row .l1 { -webkit-line-clamp: 2; }
-  .rh-row .tags { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 4px; max-width: 220px; }
-  .rh-row .tag { display: inline-flex; align-items: center; gap: 4px; height: 22px; padding: 0 8px; border-radius: 999px; white-space: nowrap;
-    background: var(--paper); box-shadow: inset 0 0 0 1px var(--line); font: 600 11.5px var(--font); color: var(--ink); }
-  .rh-row .tag.ink { background: var(--ink); color: var(--on-ink); box-shadow: none; }
-  .rh-row .tag.new::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--ink); }
-  .rh-row .tag.amber { background: var(--wash); box-shadow: inset 0 0 0 1px var(--amber); }
-  .rh-row .tag.soft { color: var(--soft); }
-  .rh-row .x { position: absolute; top: 50%; right: 6px; transform: translateY(-50%); width: 40px; height: 40px; display: grid; place-items: center;
-    border: 0; border-radius: 10px; background: none; color: var(--soft); cursor: pointer; }
-  .rh-row .x:hover { background: var(--tile-2); color: var(--ink); }
-  .rh-row.has-x > .rh-rb { padding-right: 52px; }
+  .rh-row .tags { display: flex; flex-wrap: wrap; justify-content: flex-end; align-items: center; gap: 4px; max-width: 220px; }
+  .rh-row .tags .rh-saved { color: var(--soft); }   /* a saved question: the bookmark outline, quiet */
+  .rh-row .x { position: absolute; top: 50%; right: 4px; transform: translateY(-50%); font: 500 16px var(--font); }
+  .rh-row .x.undo { width: auto; padding: 0 10px; font: 600 12.5px var(--font); }
+  .rh-row.has-x > .rh-rb { padding-right: 44px; }
   .rh-row[data-done] .why { text-decoration: line-through; }
-  .rh-row[data-snoozed] { opacity: .55; }
-  .rh-row .ract { display: flex; flex-wrap: wrap; gap: 6px; padding: 0 14px 12px 0; grid-column: 2; }
-  .rh-row .rnote { grid-column: 2; padding: 0 14px 12px 0; display: grid; gap: 6px; }
+  .rh-row[data-snoozed], .rh-row[data-dropped] { opacity: .5; }
+  .rh-row .ract { grid-column: 1; display: flex; flex-wrap: wrap; gap: 6px; padding: 0 12px 10px 48px; }
+  /* a mouse: the row's actions (.reveal) sit over its top right end while it is hovered or focused, so they take no room */
+  @media (hover: hover) and (pointer: fine) {
+    .rh-row > .ract { position: absolute; top: 3px; right: 8px; z-index: 1; padding: 0 0 0 8px; background: linear-gradient(var(--hover), var(--hover)), var(--raised); }
+    .rh-row[aria-current="true"] > .ract { background: linear-gradient(var(--sel-bg), var(--sel-bg)), var(--raised); }
+    .rh-row > .rh-rmore { display: none; }
+  }
+  /* touch: one ⋯ at the row's end opens its actions as a menu (review.js rowActs) instead of a row of buttons under it */
+  @media (hover: none), (pointer: coarse) {
+    .rh-row > .ract { display: none; }
+    .rh-row > .rh-rmore { position: absolute; z-index: 1; top: 50%; right: 4px; translate: 0 -50%; }
+    .rh-row:has(> .rh-rmore) > .rh-rb { padding-right: 44px; }
+  }
+  .rh-row .rnote { grid-column: 1; padding: 0 12px 10px 48px; display: grid; gap: 6px; }
   .rh-row .rnote textarea { width: 100%; min-height: 72px; resize: vertical; }
-  .rh-tries { grid-column: 2; padding: 0 14px 10px 0; display: grid; gap: 2px; font: 500 12.5px var(--mono); color: var(--soft); }
-  .rh-sit { display: grid; gap: 10px; margin-top: 18px; padding: 14px 16px; border-radius: var(--radius); background: var(--paper); box-shadow: inset 0 0 0 1px var(--line); }
-  .rh-sit:first-child { margin-top: 4px; }
-  .rh-sit .t { font: 700 15px/1.35 var(--font); }
-  .rh-sit .t .meta { margin-left: 6px; font-weight: 500; }
-  .rh-sit .cells { display: flex; flex-wrap: wrap; gap: 4px; }
-  .rh-sit .acts { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
-  .rh-sit .kids { font: 500 12.5px var(--mono); color: var(--soft); }
-  .rh-sit[data-void] .t { color: var(--soft); }
-  .rh-dayh { display: flex; align-items: baseline; gap: 10px; margin-top: 16px; font: 700 14px var(--font); }
-  .rh-dayh:first-child { margin-top: 4px; }
-  .rh-dayh .meta { font-weight: 500; }
-  .rh-more { justify-self: center; margin-top: 10px; }
-  .rh-empty { padding: 8px 0; }
-  .rh-empty .empty-sample .rh-rb { padding-right: 84px; cursor: default; }
-  .rh-skel { display: grid; gap: 6px; }
+  .rh-tries { grid-column: 1; padding: 0 12px 10px 48px; display: grid; gap: 2px; font: 400 12.5px var(--font); color: var(--soft); font-variant-numeric: tabular-nums; }
+  /* a narrow list (the column beside the pane, a phone): tags go under the title */
+  @container (max-width: 560px) {
+    .rh-row .rh-rb > .tags { max-width: 120px; }
+    .rh-row .l1 { -webkit-line-clamp: 3; }
+  }
+  .rh-more { justify-self: center; margin: 8px; }
+  .rh-empty { padding: 16px; }
+  .rh-empty .rh-row { border-top: 0; }
+  .rh-empty .empty-sample .rh-rb { cursor: default; }
+  .rh-skel { display: grid; gap: 6px; padding: 12px; }
+  #list > .card-err { margin: 12px; }
 
-  /* the action bar: summary, options, primary (sticky at the bottom) */
-  .rh-bar { position: sticky; bottom: 16px; z-index: 25; display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; margin-top: 18px;
-    padding: 10px 12px 10px 16px; border-radius: var(--radius-card); background: var(--paper); box-shadow: 0 0 0 1px var(--line), var(--shadow-pop); }
+  /* the ▾ preview sheet's rows and Spot the trap's choices */
+  ul.rh-list { margin: 8px 0 0; padding: 0; list-style: none; }
+  .rh-row.plain > span:first-child { display: none; }
+  .rh-row.plain > .rh-rb { grid-template-columns: minmax(0, 1fr); padding-left: 12px; cursor: default; }
+  .rh-spot-q { margin-bottom: 12px; font: 400 var(--q-size, 18px)/1.5 var(--serif); }
+  .rh-spot-c > .btn { justify-content: flex-start; text-align: left; white-space: normal; min-height: 44px; padding: 8px 12px; }
+  .rh-spot-c > .btn[data-trap] { box-shadow: inset 0 0 0 1.5px var(--amber); }
+  .rh-spot-c > .btn[data-pick] { box-shadow: inset 0 0 0 1.5px var(--ink); }
+
+  /* mistake statuses on the pane's strip, its legend and the phone's player: page-local --st-* values (ui.css has none
+     for these). Never colour alone: each cell also carries its pips and its label. */
+  [data-status="open"], [data-status="half"] { --st-edge: var(--line); }
+  [data-status="relapsed"], [data-status="stuck"], [data-status="sure"] { --st-edge: var(--ink); }
+  [data-status="unchecked"], [data-status="due"] { --st-edge: var(--amber); }
+  [data-status="held"] { --st-fill: var(--amber); --st-fg: var(--ink-deep); --st-mark: var(--ink-deep); }
+  [data-status="dismissed"] { --st-edge: var(--line); --st-fg: var(--faint); --st-mark: var(--faint); }
+
+  /* the action bar, one line: "23 selected · about 63 min", Options, the primary. Docked under the list from 1280px,
+     sticky at the bottom below that, fixed above the tabs on a phone. The set's figures head the Options popover */
+  .rh-bar { order: 2; position: sticky; bottom: 16px; z-index: 25; display: flex; align-items: center; gap: 8px 12px;
+    padding: 8px 8px 8px 16px; border-radius: var(--radius-card); background: var(--float); box-shadow: var(--shadow-4); }
   .rh-bar:empty { display: none; }
-  .rh-sum { flex: 1 1 220px; font: 600 14px/1.35 var(--font); font-variant-numeric: tabular-nums; }
-  .rh-sum small { display: block; font: 500 12px var(--mono); color: var(--soft); }
+  .rh-sum { flex: 1 1 auto; font: 600 14px/1.35 var(--font); font-variant-numeric: tabular-nums; }
+  .rh-sum-l { display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .rh-sum-x::before { content: " · "; }
   .rh-sum .err { display: block; margin-top: 2px; font: 500 12.5px var(--font); color: var(--ink); }
-  .rh-optrow { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; }
-  .rh-opt { display: inline-flex; align-items: center; gap: 6px; }
-  .rh-opt > .k { font: 500 11px var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--soft); }
-  .rh-opt .seg { font-size: 12.5px; }
-  .rh-opt input.field { width: 64px; }
-  .rh-opt .help { display: none; }
-  .rh-acts { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
-  .rh-optsbox { display: grid; gap: 10px; margin-top: 14px; }
-  .rh-optsbox:empty { display: none; }
+  .rh-acts { display: flex; flex: none; align-items: center; gap: 8px 16px; }
+  .rh-opt-h { margin: 0; font: 600 14px/1.4 var(--font); font-variant-numeric: tabular-nums; }
+  .rh-opt-h small { display: block; font: 400 12.5px/1.4 var(--font); color: var(--soft); }
+  .rh-opts { display: grid; gap: 12px; }
+  .rh-opt { display: grid; gap: 6px; }
+  .rh-opt > div { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+  .rh-opt input.field { width: 72px; }
+  /* a seg with its own number field (Questions, the Clock's minutes): the field sits on the label's line, the seg under them */
+  .rh-opt:has(> div > input.field) { grid-template-columns: minmax(0, 1fr) auto; align-items: center; }
+  .rh-opt:has(> div > input.field) > div { display: contents; }
+  .rh-opt:has(> div > input.field) > div > .field { grid-column: 2; grid-row: 1; }
+  .rh-opt:has(> div > input.field) > div > :not(.field) { grid-column: 1 / -1; grid-row: 2; justify-self: start; }
 
   @media (max-width: 959px) {
     .rh-pane { display: none; }
-    .rh-today { grid-template-columns: auto minmax(0, 1fr); }
-    .rh-today .rh-fc { grid-column: 1 / -1; }
     .rh-grid3 { grid-template-columns: minmax(0, 1fr); }
   }
+  @media (min-width: 1280px) {
+    .rh-body:not(.no-pane) .rh-bar { box-shadow: var(--shadow-3); }
+    /* the narrow column: the count on top, the minutes under it (one line truncated beside a long primary) */
+    .rh-body:not(.no-pane) .rh-sum-x { display: block; overflow: hidden; text-overflow: ellipsis; font: 400 12.5px/1.4 var(--font); color: var(--soft); }
+    .rh-body:not(.no-pane) .rh-sum-x::before { content: none; }
+  }
   @media (max-width: 759px) {
-    .rh { padding-bottom: calc(200px + env(safe-area-inset-bottom, 0px)); }
-    .rh-head { display: grid; gap: 14px; }
-    .rh-head .h1 { font-size: 28px; }
-    .rh-start { justify-items: stretch; }
-    .rh-opt { flex-wrap: wrap; width: 100%; }
-    .rh-opt > .k { flex: 1 0 100%; }
-    .rh-opt .seg { display: flex; flex: 1 1 auto; }
-    .rh-opt .seg > * { flex: 1 1 0; min-width: 0; padding-left: 2px; padding-right: 2px; }
-    .rh-opt input.field { width: 56px; flex: none; }
-    .rh-split { display: flex; }
-    .rh-split > .pill:first-child { flex: 1 1 auto; justify-content: center; }
-    .rh-startmeta { text-align: left; }
-    .rh-tabs { position: sticky; top: var(--bar-h, 56px); z-index: 20; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 0; margin: 20px calc(-1 * var(--gutter)) 0;
-      padding: 0 var(--gutter); background: var(--paper); box-shadow: inset 0 -1px 0 var(--line); }
-    .rh-tab { min-height: 52px; padding: 6px 0; border-radius: 0; background: none; align-items: center; justify-content: center; text-align: center; gap: 2px; }
-    .rh-tab .stat-k, .rh-tab .stat-sub { display: none; }
-    .rh-tab .rh-tl { display: block; font: 600 13px/1.2 var(--font); }
-    .rh-tab .stat-v { margin: 0; font-size: 12px; line-height: 1.2; color: var(--soft); }
-    .rh-tab .stat-v:empty::before { content: "\00a0"; }
-    .rh-tab[aria-selected="true"] { box-shadow: inset 0 -2px 0 var(--amber); background: none; }
-    .rh-tabsub { display: block; font: 500 12.5px/1.5 var(--mono); color: var(--soft); }
-    .rh-tabsub:empty { display: none; }
-    .rh-card { padding: 16px; }
-    .rh-today { grid-template-columns: auto minmax(0, 1fr); gap: 12px 16px; }
-    .rh-row .rh-rb > .tags { grid-column: 2 / -1; grid-row: 3; justify-content: flex-start; max-width: none; margin-top: 4px; }
-    .rh-row > .rh-rb { grid-template-columns: auto minmax(0, 1fr); padding-right: 12px; }
-    .rh-row .lead { grid-row: 1 / span 3; }
-    .rh-row .l1 { -webkit-line-clamp: 3; }
-    .rh-bar { position: fixed; left: 8px; right: 8px; bottom: calc(72px + env(safe-area-inset-bottom, 0px)); margin: 0; }
-    .rh-bar .rh-sum { flex: 1 0 100%; }
-    .rh-bar .rh-acts { flex: 1 0 100%; }
-    .rh-bar .rh-acts > .pill { flex: 1 1 auto; justify-content: center; }
-    .rh-matrix button { min-height: 44px; }
+    .rh:has(#actbar:not(:empty)) { padding-bottom: calc(144px + env(safe-area-inset-bottom, 0px)); }
+    /* toasts rise above the bar while it shows (they sat under it) */
+    body:has(#actbar:not(:empty)) .toasts { bottom: calc(72px + 64px + 12px + env(safe-area-inset-bottom, 0px)); }
+    /* six equal columns keep the tabs on one line, so the underline still slides; labels top-aligned over the counts */
+    .rh-tabs { position: sticky; top: calc(56px + env(safe-area-inset-top, 0px)); z-index: 20;
+      margin: 0 calc(-1 * var(--gutter)); padding: 0 var(--gutter); background: var(--page); }
+    .rh-tabs .tablist { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); box-shadow: inset 0 -1px 0 var(--line); }
+    .rh-tabs [role="tab"] { flex-direction: column; justify-content: flex-start; gap: 2px; height: 48px; padding: 6px 0 0; box-shadow: none; }
+    .rh-tabs .rh-tk { display: none; }
+    .rh-tabs .rh-ts { display: block; }
+    .rh-bar { position: fixed; left: 8px; right: 8px; bottom: calc(72px + env(safe-area-inset-bottom, 0px)); }
+    .rh-bar .rh-sum-x { display: none; }
   }
   @media print {
-    .rh-bar, .rh-pane, .rh-filters, .rh-start, .rh-optsbox { display: none !important; }
+    .rh-bar, .rh-pane, .rh-tools, .rh-start { display: none !important; }
   }
-  /* the ▾ beside Fix keeps its own tap area */
-  .act .quiet.fold { margin-left: 4px; }
 </style>
 </head>
 <body>
 <header id="bar"></header>
-<main class="page rh" id="main" tabindex="-1">
-  <header class="rh-head">
-    <div>
-      <h1 class="h1">Review</h1>
-    </div>
+<main class="page rh" id="main" tabindex="-1" data-m="stagger">
+  <header class="rh-head" data-m-now>
+    <h1 class="h1">Review</h1>
     <div class="rh-start" id="start" aria-label="Today's review"></div>
   </header>
-  <div class="rh-notes" id="notes"></div>
-  <div class="rh-tabs" id="rhtabs" role="tablist" aria-label="Review lists"></div>
-  <p class="rh-tabsub" id="tabsub"></p>
+  <div class="rh-subject" id="subject"></div>
+  <div class="rh-tabs" id="rhtabs" data-scrolled></div>
   <div class="rh-headbox" id="tabhead"></div>
-  <div class="rh-optsbox" id="optsbox" aria-label="Set options"></div>
-  <div class="rh-filters" id="filters"></div>
-  <div class="rh-body" id="body">
-    <section id="panel" role="tabpanel" tabindex="-1">
-      <div class="rh-listhead" id="listhead"></div>
-      <div class="rh-list" id="list" role="list" aria-busy="true"></div>
-    </section>
-    <aside class="rh-pane" id="pane" aria-label="Question"></aside>
+  <div class="rh-tools">
+    <div class="rh-filters" id="filters"></div>
+    <span class="rh-insb" id="insbtn"></span>
   </div>
-  <div class="rh-bar" id="actbar" role="region" aria-label="Practise these"></div>
+  <div class="rh-insights" id="insights"></div>
+  <div class="rh-body" id="body">
+    <div class="rh-col">
+      <section class="rh-panel card" id="panel" role="tabpanel" tabindex="-1">
+        <div class="rh-listhead" id="listhead"></div>
+        <div class="rh-notes" id="notes"></div>
+        <div class="rh-list" id="list" role="list" aria-busy="true"></div>
+      </section>
+      <div class="rh-bar" id="actbar" role="region" aria-label="Practise these"></div>
+    </div>
+    <aside class="rh-pane card hero" id="pane" aria-label="Question"></aside>
+  </div>
 </main>
 <nav id="tabs"></nav>
 <script src="/assets/ui.js"></script>
@@ -293,7 +393,7 @@
 <script src="/assets/charts.js"></script>
 <script src="/assets/question.js"></script>
 <script src="/assets/runner.js"></script>
-<script>UI.shell('review');</script>
+<script>UI.shell({ page: 'review', ownPrimary: true });</script>
 <script src="/review/item.js"></script>
 <script src="/review/review.js"></script>
 </body>
