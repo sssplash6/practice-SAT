@@ -390,27 +390,79 @@ def link_email(body: LinkEmail, request: Request, x_learner: str | None = Header
 
 class BetaIn(BaseModel):
     email: EmailStr
+    name: str | None = Field(default=None, max_length=80)
+
+
+EMAIL_SHAPE = re.compile(r"^[a-z0-9._%+-]+@[a-z0-9-]+(\.[a-z0-9-]+)+$")
+
+
+def allow(email: str, name: str = "", grp: str = "", update: bool = True) -> str:
+    """Put an address on the approved list: 'added', 'already' or 'invalid'. Trimmed and lowercased,
+    a trailing full stop dropped (rosters are typed by hand). A listed address keeps its row unless
+    `update`, which fills in a new name or group (tools/allow_emails.py; the admin page never does)."""
+    email = (email or "").strip().lower().rstrip(".")
+    if not EMAIL_SHAPE.match(email):
+        return "invalid"
+    name, grp = " ".join((name or "").split())[:40], " ".join((grp or "").split())[:40]
+    if db.one("SELECT 1 FROM email_allow WHERE email=?", email):
+        if update:
+            db.run("UPDATE email_allow SET name=COALESCE(NULLIF(?,''),name), grp=COALESCE(NULLIF(?,''),grp)"
+                   " WHERE email=?", name, grp, email)
+        return "already"
+    db.run("INSERT OR IGNORE INTO email_allow(email,name,grp,added) VALUES (?,?,?,?)", email, name, grp, deps.now())
+    return "added"
+
+
+def listed(email: str) -> str | None:
+    """The approved list's name for this address ('' when it has none); None when it is not listed."""
+    row = db.one("SELECT name FROM email_allow WHERE email=?", email.strip().lower())
+    return None if row is None else (row["name"] or "")
 
 
 @router.post("/api/account/beta")
 def beta_account(body: BetaIn, request: Request, x_learner: str | None = Header(default=None)) -> dict:
-    """Closed-beta shortcut: an email makes (or opens) an account at once, with no code.
-    Off unless SATF_BETA_OPEN=1. Anyone who knows an address can open that account, so this is for
-    a small group of testers; switch it off and the emailed code is the only way in again."""
-    if os.environ.get("SATF_BETA_OPEN") != "1":
-        raise HTTPException(404, "not available")
-    source = deps.writer_of(x_learner)
+    """Email sign-in, the only way in since 2026-10-20 (the other ways need a learner already on this
+    browser, and deps.learner_of refuses a code with no learner row). An address on the approved list
+    (email_allow) or one already linked to a learner opens that account with no code: prod sends no
+    mail yet, so anyone who knows a listed address can open it. A new account asks for a full name
+    first: without `name` the answer is {needs_name, name} (the list's name, to prefill), and the same
+    call with the name makes it. A learner already on this browser (one from before the switch) may
+    link any free address to itself, so it can sign in elsewhere."""
+    raw = (x_learner or "").strip()
+    if not deps.LEARNER_OK.match(raw):
+        raise HTTPException(400, "send your learner token in the X-Learner header")
+    try:
+        source, known = deps.writer_of(raw), True
+    except HTTPException as exc:
+        # a browser that never signed in: its code has no learner row yet, and becomes the new one
+        if not (exc.status_code == 401 and isinstance(exc.detail, dict) and exc.detail.get("signin")):
+            raise
+        source, known = raw, False
     _limit("beta-ip", _ip(request), 30, 3600)
     email = str(body.email).strip().lower()
+    row = db.one("SELECT id,learner FROM users WHERE email=?", email)
+    linked = row["learner"] if row and row["learner"] else None
+    on_list = listed(email)
+    if linked is None and on_list is None and not known:
+        raise HTTPException(403, {"reason": "not_registered"})
+    target = linked or source
+    new = linked is None and not known
+    name = " ".join((body.name or "").split())
+    if new and not name:
+        return {"needs_name": True, "name": on_list or ""}
+    if new and (not deps.NAME_OK.fullmatch(name) or len(name) > 40):
+        raise HTTPException(422, {"reason": "name"})
     with db.transaction():
-        row = db.one("SELECT id,learner FROM users WHERE email=?", email)
         if row is None:
             uid = secrets.token_urlsafe(12)
             db.run("INSERT INTO users(id,first,last,email,created) VALUES (?,?,?,?,?)", uid, "", "", email, deps.now())
-            row = {"id": uid, "learner": None}
-        target = row["learner"] or source
-        db.run("UPDATE users SET verified=1, learner=?, last_login=? WHERE id=?", target, deps.now(), row["id"])
-    if row["learner"] is None:
+        else:
+            uid = row["id"]
+        db.run("UPDATE users SET verified=1, learner=?, last_login=? WHERE id=?", target, deps.now(), uid)
+        if new:
+            db.ensure_learner(target)
+            db.run("UPDATE learners SET name=?, updated=? WHERE id=?", name, deps.now(), target)
+    if linked is None:
         start_swap(target)
     return _credential(target, source, carry=False, session_only=False, method="email", request=request)
 

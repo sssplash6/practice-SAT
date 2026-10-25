@@ -12,7 +12,7 @@
    UI.acct.countrySelect(value, onChange) -> el        ISO alpha-2, blank by default (U11)
    UI.acct.nameError(e) / UI.acct.handleError(e)       the server's refusal, in words
    UI.acct.deviceLabel()                               "Chrome on Mac"
-   UI.acct.helpBtn(id, label) -> button                "?" that opens Help answer #id in a popover (U13)
+   UI.acct.helpBtn(id, label) -> button                UI.why "?" that opens Help answer #id (U13)
    UI.acct.googleButton(host, {clientId, text, body, onResult, onError})   the GIS button (U19b)
    ========================================================================== */
 (() => {
@@ -175,22 +175,15 @@
     location.href = o.to || '/';
   }
 
-  /* "?" beside a figure or a setting (U13): that Help answer in a popover, from the same
-     answers.json /help/ renders. F2's UI.help(id, anchor) wins once it exists. */
+  /* "?" beside a figure or a setting (U13): that Help answer in the shared UI.why popover, from the
+     same answers.json /help/ renders. A thin wrapper: me.js and settings.js call it by this name. */
   let answers = null;
   const loadAnswers = () => answers || (answers = fetch('/help/answers.json').then(r => r.json())
     .then(d => d.answers || [], () => { answers = null; return []; }));
-  function helpBtn(id, label) {
-    const b = h('button', { type: 'button', class: 'help-q', 'aria-label': `Help: ${label || id}`, 'aria-haspopup': 'dialog', text: '?' });
-    b.addEventListener('click', async e => {
-      e.stopPropagation();
-      if (UI.help) { UI.help(id, b); return; }
-      const a = (await loadAnswers()).find(x => x.id === id);
-      UI.pop(b, [h('div', { class: 'help-pop' }, h('p', { class: 'q', text: a ? a.q : label || 'Help' }),
-        a ? h('p', { text: a.a }) : null, h('a', { class: 'link', href: `/help/#${id}`, text: 'More in Help' }))], { label: a ? a.q : 'Help' });
-    });
-    return b;
-  }
+  const helpBtn = (id, label) => UI.why(() => loadAnswers().then(as => {
+    const a = as.find(x => x.id === id);
+    return [h('p', {}, h('b', { text: a ? a.q : label || 'Help' })), a && a.a, h('a', { class: 'link', href: `/help/#${id}`, text: 'More in Help' })].filter(Boolean);
+  }), { about: label || id });
 
   /* Google Identity Services (U19b), loaded on demand only where a button is drawn. The nonce is
      single use, so each drawn button asks for its own. */

@@ -7,6 +7,7 @@ import contextvars
 import datetime as dt
 import importlib
 import json
+import os
 import re
 import secrets
 
@@ -18,6 +19,8 @@ from . import db
 # Deriving the duration from the form means changing the blueprint cannot leave
 # a stale clock behind.
 SECONDS_PER_QUESTION = 95
+# The same per subject: R&W gives 32 minutes to 27 questions, about 71 seconds each.
+PACE = {"math": SECONDS_PER_QUESTION, "rw": 71}
 
 # A learner is the token in their browser, sent as X-Learner: an `a:` code
 # (minted on the client, checked for shape) or a `d:` device token (U21).
@@ -27,6 +30,10 @@ HANDLE_OK = db.HANDLE_OK
 TARGETS = range(200, 810, 10)
 DATE_OK = re.compile(r"^\d{4}-\d{2}-\d{2}$")
 DAYS_OK = re.compile(r"^[01]{7}$")
+
+# Email-only access (2026-10-20): on unless SATF_EMAIL_ONLY=0 (the test flow's anonymous learners turn it off;
+# server/checks/email_only.py turns it back on to check the gate itself).
+EMAIL_ONLY = os.environ.get("SATF_EMAIL_ONLY", "1") != "0"
 
 SUBJECTS = ("math", "rw")
 RW_TOPICS = frozenset({"words-in-context", "transitions", "rw.words_in_context", "rw.transitions",
@@ -85,6 +92,11 @@ def learner_of(x_learner: str | None, write: bool | None = None) -> str:
             raise _retired()
         return v
     row = db.one("SELECT swap_until FROM learners WHERE id=?", v)
+    # email-only access (2026-10-20): a code with no learner row is a browser that never signed in,
+    # since only email sign-in (account.beta_account) makes a row now; every learner from before keeps
+    # its row and so its access. 401 {signin} sends the browser to /signin/.
+    if EMAIL_ONLY and row is None and not db.is_sample(v):
+        raise HTTPException(401, {"signin": True})
     if row and row["swap_until"]:
         if dt.datetime.now(dt.timezone.utc) >= _at(row["swap_until"]):
             raise _retired()
@@ -152,9 +164,10 @@ def writer_of(x_learner: str | None) -> str:
 
 def subject_of(topic_or_template: str | None) -> str:
     """G11 / R51: template -> topic -> subject, no column. The 19 Math topics
-    are `math`; Words in Context and Transitions (R57) are `rw`."""
+    are `math`; Words in Context and Transitions (R57) are `rw`, and so is the
+    R&W bank, whose topics and templates start `rw_` (satbank/topics/rw.py)."""
     t = topic_or_template or ""
-    if t in RW_TOPICS or t.startswith("rw."):
+    if t in RW_TOPICS or t.startswith(("rw.", "rw_")):
         return "rw"
     if "." in t:
         try:
@@ -164,6 +177,36 @@ def subject_of(topic_or_template: str | None) -> str:
             return "math"
         return "rw" if topic in RW_TOPICS else "math"
     return "math"
+
+
+def _tells(name) -> str | None:
+    """The subject a topic or template name settles, or None when it settles nothing (a question
+    id like d004, a trap number, an unknown word)."""
+    if not isinstance(name, str) or not name:
+        return None
+    if subject_of(name) == "rw":
+        return "rw"
+    from .practice import catalogue
+    return "math" if name.split(".", 1)[0] in catalogue()["by_topic"] else None
+
+
+def infer_subject(*names, parent=None, default: str = "math") -> str:
+    """What a request is about when it does not say: the first topic or template among `names`
+    (strings or lists of them) that settles it, else the parent session's subject (a row or dict
+    with `subject`), else `default`. Math is only the answer when nothing tells."""
+    for n in names:
+        for x in (n if isinstance(n, (list, tuple, set, frozenset)) else (n,)):
+            s = _tells(x)
+            if s:
+                return s
+    if parent is not None:
+        try:
+            s = parent["subject"]
+        except (KeyError, IndexError, TypeError):
+            s = None
+        if s in SUBJECTS:
+            return s
+    return default
 
 
 def subject_param(subject: str | None) -> str:
@@ -234,6 +277,11 @@ def _protected(learner: str, template: str, seed: int) -> bool:
               " WHERE i.template=? AND i.seed=? AND (c.closes IS NULL OR c.closes>?)"
               " AND (c.opens IS NULL OR c.opens<=?)", template, seed, stamp, stamp):
         return True
+    # an R&W seed wraps round a few written items, so the same item can be live under another seed
+    if subject_of(template) == "rw":
+        from . import compete
+        if compete.live_item(template, seed):
+            return True
     for row in db.rows("SELECT * FROM sessions WHERE learner=? AND finished IS NULL AND abandoned IS NULL"
                        f" AND kind IN ({','.join('?' for _ in TEST_KINDS)})", learner, *TEST_KINDS):
         if _has_pair(paper_of(row), template, seed):

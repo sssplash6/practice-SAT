@@ -5,42 +5,39 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Welcome · SAT Freshman</title>
 <meta name="description" content="Make a free account or sign in with an email code. No password.">
+<link rel="icon" href="/favicon.ico" sizes="32x32">
 <link rel="icon" href="/assets/mark.svg" type="image/svg+xml">
+<meta property="og:site_name" content="SAT Freshman">
+<meta property="og:type" content="website">
+<meta property="og:title" content="SAT Freshman">
+<meta property="og:description" content="Free SAT practice for Math and Reading &amp; Writing.">
+<meta property="og:image" content="https://prac.fsat.io/assets/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
 <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
 <link rel="manifest" href="/manifest.webmanifest">
 <meta name="theme-color" content="#FFFFFF">
 <script src="/assets/head.js"></script>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800;900&family=DM+Mono:wght@400;500&display=swap">
+<link rel="preload" href="/assets/fonts/Geist.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/assets/ui.css">
 <link rel="stylesheet" href="/me/me.css">
 <style>
-  /* Sign in (Shell 5; shell-me U19, U19b, U20, U21): one centred card */
-  .si { max-width: 440px; margin: 8px auto 96px; }
-  .si .card { display: grid; gap: 16px; }
-  .si-head { display: flex; align-items: center; gap: 12px; }
-  .si-head svg { width: 32px; height: 32px; }
-  .si-panel { display: grid; gap: 12px; min-height: 120px; align-content: start; }
-  .si-panel .field { width: 100%; }
-  .si .qr { display: grid; justify-items: center; gap: 10px; padding: 16px; border-radius: var(--radius); background: var(--paper); }
-  .si .qr svg { width: 180px; height: 180px; }
-  .si .code-big { text-align: center; }
-  .si .check { font-size: 14px; }
-  .si-google:empty { display: none; }
-  .wl-lead { margin: 0; font: 400 15px/1.5 var(--font); color: var(--soft); }
+  /* Welcome: the Sign in card (.si, me.css) with a name and an email */
+  .wl-lead { margin: 0; font: 400 14.5px/1.5 var(--font); color: var(--soft); }
   .wl-form { display: grid; gap: 12px; }
-  .wl-form .pill { justify-self: stretch; height: 44px; border-radius: 10px; }
-  .wl-skip { text-align: center; padding-top: 4px; }
+  .wl-form .pill { justify-self: stretch; }
+  .wl-note { margin: -4px 0 0; font: 400 12.5px/1.45 var(--font); color: var(--soft); }
+  .wl-swap { margin: 0; font: 400 14px/1.45 var(--font); color: var(--soft); }
+  .wl-skip { padding-top: 16px; border-top: 1px solid var(--line); }   /* the way past the form, under a hairline, on the card's one left edge */
   .wl-skip .quiet { color: var(--soft); }
-  @media (max-width: 759px) { .si { margin-top: 0; } }
 </style>
 </head>
 <body data-page="welcome">
 <header id="bar"></header>
 <main class="page me" id="main" tabindex="-1">
-  <div class="si">
-    <section class="card" id="card" aria-labelledby="si-h">
+  <div class="si" data-m="stagger">
+    <section class="card hero" id="card" data-m-now aria-labelledby="si-h">
       <div class="si-head"><span id="mark"></span><h1 class="h1" id="si-h">Welcome to SAT Freshman</h1></div>
       <div id="body"></div>
     </section>

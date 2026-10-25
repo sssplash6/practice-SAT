@@ -4,38 +4,22 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Sign in · SAT Freshman</title>
-<meta name="description" content="Sign in with a passkey, your phone, an email code or a transfer code. No password.">
+<meta name="description" content="Sign in to SAT Freshman with your email.">
+<link rel="icon" href="/favicon.ico" sizes="32x32">
 <link rel="icon" href="/assets/mark.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
 <link rel="manifest" href="/manifest.webmanifest">
 <meta name="theme-color" content="#FFFFFF">
 <script src="/assets/head.js"></script>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800;900&family=DM+Mono:wght@400;500&display=swap">
+<link rel="preload" href="/assets/fonts/Geist.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/assets/ui.css">
 <link rel="stylesheet" href="/me/me.css">
-<style>
-  /* Sign in (Shell 5; shell-me U19, U19b, U20, U21): one centred card */
-  .si { max-width: 440px; margin: 8px auto 96px; }
-  .si .card { display: grid; gap: 16px; }
-  .si-head { display: flex; align-items: center; gap: 12px; }
-  .si-head svg { width: 32px; height: 32px; }
-  .si-panel { display: grid; gap: 12px; min-height: 120px; align-content: start; }
-  .si-panel .field { width: 100%; }
-  .si .qr { display: grid; justify-items: center; gap: 10px; padding: 16px; border-radius: var(--radius); background: var(--paper); }
-  .si .qr svg { width: 180px; height: 180px; }
-  .si .code-big { text-align: center; }
-  .si .check { font-size: 14px; }
-  .si-google:empty { display: none; }
-  @media (max-width: 759px) { .si { margin-top: 0; } }
-</style>
 </head>
 <body data-page="signin">
 <header id="bar"></header>
 <main class="page me" id="main" tabindex="-1">
-  <div class="si">
-    <section class="card" id="card" aria-labelledby="si-h">
+  <div class="si" data-m="stagger">
+    <section class="card hero" id="card" data-m-now aria-labelledby="si-h">
       <div class="si-head"><span id="mark"></span><h1 class="h1" id="si-h">Sign in</h1></div>
       <div id="body"></div>
     </section>

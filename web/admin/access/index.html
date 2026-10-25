@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>Access · SAT Freshman admin</title>
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="icon" href="/assets/mark.svg" type="image/svg+xml">
+<link rel="manifest" href="/manifest.webmanifest">
+<meta name="theme-color" content="#FFFFFF">
+<script src="/assets/head.js"></script>
+<link rel="preload" href="/assets/fonts/Geist.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/assets/ui.css">
+<link rel="stylesheet" href="/admin/admin.css">
+</head>
+<body data-page="admin">
+<main class="page" data-nofold>
+  <div class="adm" id="root"></div>
+</main>
+<script src="/assets/ui.js"></script>
+<script src="/assets/kit.js"></script>
+<script src="/admin/admin.js"></script>
+<script>
+/* Access: the approved list for email sign-in. Paste addresses (a document or spreadsheet table works: the
+   address is the part with an @, the name and group the first parts with letters), Give access adds the
+   new ones and leaves listed ones as they were. */
+(() => {
+  const { h, api, boot, num, day } = AD;
+  const root = document.getElementById('root');
+  boot(root, 'Access', async () => {
+    let d = await api('/access'), q = '';
+    const body = h('tbody');
+    const draw = () => {
+      const rows = d.rows.filter(r => !q || `${r.email} ${r.name} ${r.group}`.toLowerCase().includes(q));
+      body.replaceChildren(...rows.map(r => h('tr', {},
+        h('td', {}, h('span', { class: 'adm-name', text: r.name || r.email }), r.name ? h('span', { class: 'adm-sm', text: r.email }) : null),
+        h('td', { text: r.group || '-' }), h('td', { class: 'nw', text: day(r.added) }), h('td', { class: 'nw', text: r.joined ? 'Signed in' : 'Not yet' }))));
+      if (!rows.length) body.replaceChildren(h('tr', {}, h('td', { colspan: 4, class: 'adm-empty', text: 'No addresses match.' })));
+    };
+    const box = h('textarea', { class: 'field', rows: 6, 'aria-label': 'Addresses to add',
+      placeholder: 'One student a line:\nstudent@gmail.com\nstudent@gmail.com, Full Name, 10 Economics' });
+    const said = h('p', { class: 'help', role: 'status' });
+    const give = h('button', { type: 'button', class: 'pill', text: 'Give access' });
+    give.addEventListener('click', async () => {
+      if (!box.value.trim()) { box.focus(); return; }
+      give.disabled = true;
+      try {
+        const r = await api('/access', { text: box.value });
+        const parts = [`${num(r.added.length)} added`];
+        if (r.already.length) parts.push(`${num(r.already.length)} already had access`);
+        if (r.invalid.length) parts.push(`${num(r.invalid.length)} not an email: ${r.invalid.slice(0, 3).join(' · ')}${r.invalid.length > 3 ? ' …' : ''}`);
+        said.textContent = parts.join(' · ') + '.';
+        box.value = r.invalid.join('\n');            // what could not be read stays, to fix and send again
+        d = await api('/access');
+        paint();
+      } catch (e) {
+        said.textContent = `Not saved: ${e.message}`;
+      } finally { give.disabled = false; }
+    });
+    const search = h('input', { class: 'field', type: 'search', placeholder: 'Search email, name or group', 'aria-label': 'Search addresses' });
+    search.addEventListener('input', () => { q = search.value.trim().toLowerCase(); draw(); });
+    const tile = (v, l) => h('div', { class: 'adm-tile' }, h('b', { text: v }), h('span', { text: l }));
+    const tiles = h('div', { class: 'adm-tiles' });
+    const paint = () => { tiles.replaceChildren(tile(num(d.total), 'approved addresses'), tile(num(d.joined), 'have signed in')); draw(); };
+    paint();
+    root.replaceChildren(
+      h('a', { class: 'quiet adm-back', href: '/admin/students/', text: '← Students' }),
+      h('h1', { class: 'h1', text: 'Access' }), tiles,
+      h('div', { class: 'adm-card' }, h('h2', { text: 'Give access' }),
+        h('p', { class: 'sub', text: 'Only these addresses can sign in. Paste one student a line, or copy rows straight from a document or spreadsheet table. Addresses already on the list stay as they are.' }),
+        box, h('div', { class: 'adm-row' }, give), said),
+      h('div', { class: 'adm-search' }, search),
+      h('div', { class: 'adm-card' }, h('div', { class: 'adm-wrap' }, h('table', { class: 'adm-t' },
+        h('thead', {}, h('tr', {}, ['Student', 'Group', 'Added', 'Status'].map(t => h('th', { text: t })))), body))));
+  });
+})();
+</script>
+</body>
+</html>
