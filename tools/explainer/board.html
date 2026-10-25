@@ -1,0 +1,330 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SAT Freshman board</title>
+<style>
+@font-face { font-family: "Geist"; src: url("Geist.woff2") format("woff2"); font-weight: 100 900; font-display: block; }
+@font-face { font-family: "Kalam"; src: url("Kalam-400.woff2") format("woff2"); font-weight: 400; font-display: block; }
+@font-face { font-family: "Kalam"; src: url("Kalam-700.woff2") format("woff2"); font-weight: 700; font-display: block; }
+:root { --ink: #2b2b2b; --soft: #8a857c; --blue: #1d3f9e; --red: #cc3a2b; --green: #1e8a4c; --hl: #ffd23f; }
+html, body { margin: 0; height: 100%; background: #1c1c1c; overflow: hidden; }
+#stage { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; transform-origin: 0 0; overflow: hidden;
+  background: radial-gradient(ellipse at 40% 35%, #ffffff 0%, #f7f7f3 60%, #eeeee8 100%); font-family: "Geist", sans-serif; color: var(--ink); }
+#top { position: absolute; left: 110px; top: 44px; right: 110px; display: flex; justify-content: space-between; align-items: center;
+  font-size: 22px; color: var(--soft); letter-spacing: .01em; }
+#top b { color: var(--ink); font-weight: 600; }
+#top .brand { display: flex; align-items: center; gap: 10px; }
+#top img { width: 26px; height: 26px; }
+#q { position: absolute; left: 110px; top: 120px; width: 1000px; font-size: 28px; line-height: 1.55; }
+#q .passage { margin: 0 0 26px; white-space: pre-line; }
+#q .stem { margin: 0 0 22px; font-weight: 600; white-space: pre-line; }
+#q ol { list-style: none; margin: 0; padding: 0; }
+#q li { display: flex; gap: 18px; align-items: baseline; margin: 0 0 14px; }
+#q .l { flex: none; width: 38px; height: 38px; border: 2px solid #b9b4aa; border-radius: 50%; display: inline-flex; align-items: center;
+  justify-content: center; font-size: 20px; font-weight: 600; transform: translateY(-2px); }
+#q .t { white-space: pre-line; }
+#q.math { font-size: 34px; }
+#q.math li { margin-bottom: 18px; }
+#ink { position: absolute; inset: 0; width: 1920px; height: 1080px; pointer-events: none; }
+#hl { position: absolute; inset: 0; width: 1920px; height: 1080px; pointer-events: none; mix-blend-mode: multiply; }
+.w { position: absolute; font-family: "Kalam", cursive; color: var(--blue); white-space: pre; line-height: 1; }
+#hand { position: absolute; left: 0; top: 0; width: 602px; pointer-events: none; filter: drop-shadow(-14px 22px 18px rgba(0,0,0,.18)); }
+#play { position: fixed; inset: 0; display: none; align-items: center; justify-content: center; background: rgba(0,0,0,.35);
+  color: #fff; font: 600 28px "Geist", sans-serif; cursor: pointer; }
+</style>
+</head>
+<body>
+<div id="stage">
+  <div id="top"><span id="topic"></span><span class="brand"><img src="mark.svg" alt=""><b>SAT Freshman</b></span></div>
+  <svg id="hl"></svg>
+  <div id="q"></div>
+  <svg id="ink"></svg>
+  <div id="notes"></div>
+  <img id="hand" src="hand.png" alt="">
+</div>
+<div id="play">Play</div>
+<script>
+'use strict';
+// Draws an explainer for one question as a pure function of time: seek(t) paints the board as it is at t seconds,
+// so a live player (audio clock) and a frame-by-frame recorder show the same thing.
+const W = 1920, H = 1080, RX = 1200, RW = 620, LX = 110;
+const HAND = { scale: 602 / 634, tipX: 0, tipY: 1 };            // hand.png is 634 wide, marker tip at (0, 1) (hand.py)
+const OUT = { x: 1750, y: 1180 };                               // where the hand waits off the board
+const GLIDE = 0.35;
+const params = new URLSearchParams(location.search);
+const dir = params.get('d') || './';
+const CAPTURE = params.has('capture');
+const s = document.createElement('script');
+s.src = dir + 'data.js';
+// load the fonts by name: nothing on the page uses Kalam yet, so fonts.ready alone would measure with a fallback
+s.onload = () => Promise.all(['400 40px Kalam', '700 40px Kalam', '400 28px Geist', '600 28px Geist'].map(f => document.fonts.load(f)))
+  .then(() => document.querySelector('#hand').decode()).then(build);
+document.head.append(s);
+
+const NS = 'http://www.w3.org/2000/svg';
+const el = (tag, attrs = {}, text) => { const e = document.createElement(tag); Object.assign(e, attrs); if (text != null) e.textContent = text; return e; };
+const svg = (tag, attrs) => { const e = document.createElementNS(NS, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); return e; };
+const clamp = (v, a = 0, b = 1) => Math.max(a, Math.min(b, v));
+const ease = u => u < .5 ? 2 * u * u : 1 - Math.pow(-2 * u + 2, 2) / 2;
+function rng(seed) { let x = seed * 9301 + 49297; return () => ((x = (x * 9301 + 49297) % 233280) / 233280); }
+const norm = t => t.replace(/[‘’]/g, "'").replace(/[“”]/g, '"').replace(/−/g, '-');
+
+let ops = [], total = 0, measure;
+
+function build() {
+  const B = window.BOARD, q = B.q;
+  document.querySelector('#topic').textContent = q.topic_name + ' · explained';
+  const box = document.querySelector('#q');
+  box.className = q.subject === 'math' ? 'math' : '';
+  if (q.text) box.append(el('p', { className: 'passage' }, q.text));
+  box.append(el('p', { className: 'stem' }, q.stem));
+  const ol = el('ol');
+  q.choices.forEach((c, i) => {
+    const li = el('li');
+    li.dataset.o = 'ABCD'[i];
+    li.append(el('span', { className: 'l' }, 'ABCD'[i]), el('span', { className: 't' }, c));
+    ol.append(li);
+  });
+  box.append(ol);
+  // shrink the print until the question fits the board
+  let fs = parseFloat(getComputedStyle(box).fontSize);
+  while (box.offsetTop + box.offsetHeight > H - 50 && fs > 18) box.style.fontSize = (fs -= 1) + 'px';
+
+  const cv = document.createElement('canvas').getContext('2d');
+  measure = (text, size) => { cv.font = `400 ${size}px Kalam`; return cv.measureText(text).width; };
+  layout(B);
+  if (CAPTURE) { seek(0); window.READY = true; return; }
+  live();
+}
+
+// ------------------------------------------------------------------ finding text on the board
+function blocks() { return [...document.querySelectorAll('#q .passage, #q .stem, #q .t')]; }
+function rangeOf(quote) {
+  const want = norm(quote);
+  for (const strict of [true, false]) {
+    for (const b of blocks()) {
+      const node = b.firstChild, hay = norm(node.textContent);
+      const i = strict ? hay.indexOf(want) : hay.toLowerCase().indexOf(want.toLowerCase());
+      if (i < 0) continue;
+      const r = document.createRange();
+      r.setStart(node, i); r.setEnd(node, i + want.length);
+      return r;
+    }
+  }
+  return null;
+}
+function lineRects(range) {
+  // one rect per printed line (getClientRects gives several per line on some spans)
+  const out = [];
+  for (const r of range.getClientRects()) {
+    if (r.width < 2) continue;
+    const last = out[out.length - 1];
+    if (last && Math.abs(last.y - r.y) < r.height / 2) { const x2 = Math.max(last.x + last.w, r.right); last.x = Math.min(last.x, r.left); last.w = x2 - last.x; last.h = Math.max(last.h, r.height); }
+    else out.push({ x: r.left, y: r.top, w: r.width, h: r.height });
+  }
+  return out;
+}
+function optionLines(letter) {
+  const t = document.querySelector(`#q li[data-o="${letter}"] .t`);
+  const r = document.createRange(); r.selectNodeContents(t);
+  return { lines: lineRects(r), li: t.parentElement };
+}
+
+// ------------------------------------------------------------------ paths
+function wobbly(x1, y1, x2, y2, amp, rand) {
+  const n = Math.max(2, Math.round(Math.hypot(x2 - x1, y2 - y1) / 40)), pts = [];
+  for (let i = 0; i <= n; i++) { const u = i / n; pts.push([x1 + (x2 - x1) * u, y1 + (y2 - y1) * u + (i && i < n ? (rand() - .5) * amp : 0)]); }
+  return pts;
+}
+function ellipse(cx, cy, rx, ry, rand) {
+  const pts = [], a0 = -2.6, n = 48;
+  for (let i = 0; i <= n; i++) {
+    const a = a0 + (i / n) * (Math.PI * 2 + 0.5), k = 1 + (rand() - .5) * 0.06 + (i / n) * 0.06;
+    pts.push([cx + Math.cos(a) * rx * k, cy + Math.sin(a) * ry * k]);
+  }
+  return pts;
+}
+function rectPath(x, y, w, h, rand) {
+  const j = () => (rand() - .5) * 6;
+  return [[x + j(), y + j()], [x + w + j(), y + j()], [x + w + j(), y + h + j()], [x + j(), y + h + j()], [x + 6 + j(), y - 4]];
+}
+function scribble(x, y, w) {                                        // the hand's path while it writes a line
+  const pts = [], n = Math.max(2, Math.round(w / 7));
+  for (let i = 0; i <= n; i++) pts.push([x + (w * i) / n, y - 14 + Math.sin(i * 2.3) * 9]);
+  return pts;
+}
+const lenOf = pts => pts.reduce((a, p, i) => i ? a + Math.hypot(p[0] - pts[i - 1][0], p[1] - pts[i - 1][1]) : 0, 0);
+function pointAt(pts, d) {
+  for (let i = 1; i < pts.length; i++) {
+    const seg = Math.hypot(pts[i][0] - pts[i - 1][0], pts[i][1] - pts[i - 1][1]);
+    if (d <= seg || i === pts.length - 1) { const u = seg ? clamp(d / seg) : 1; return [pts[i - 1][0] + (pts[i][0] - pts[i - 1][0]) * u, pts[i - 1][1] + (pts[i][1] - pts[i - 1][1]) * u]; }
+    d -= seg;
+  }
+  return pts[pts.length - 1];
+}
+const dAttr = pts => 'M' + pts.map(p => p[0].toFixed(1) + ' ' + p[1].toFixed(1)).join(' L');
+
+// A "piece" is one thing the marker draws: a polyline (stroke), a highlight bar or a line of handwriting.
+// An op is a list of pieces drawn in order; its hand follows each piece's path.
+function stroke(layer, pts, color, width) {
+  const p = svg('path', { d: dAttr(pts), fill: 'none', stroke: color, 'stroke-width': width, 'stroke-linecap': 'round', 'stroke-linejoin': 'round', opacity: .92 });
+  layer.append(p);
+  const L = p.getTotalLength();
+  p.style.strokeDasharray = L;
+  return { len: L, path: pts, paint: u => { p.style.strokeDashoffset = L * (1 - u); p.style.visibility = u > 0 ? 'visible' : 'hidden'; } };
+}
+function bar(x, y, w, h) {
+  const r = svg('rect', { x, y, height: h, rx: 6, fill: 'var(--hl)', opacity: .75 });
+  document.querySelector('#hl').append(r);
+  return { len: w, path: [[x, y + h * .75], [x + w, y + h * .7]], paint: u => r.setAttribute('width', Math.max(0, w * u)) };
+}
+function hand(x, y, text, size, color, weight = 400) {
+  const d = el('div', { className: 'w' }, text);
+  Object.assign(d.style, { left: x + 'px', top: (y - size) + 'px', fontSize: size + 'px', color, fontWeight: weight });
+  document.querySelector('#notes').append(d);
+  const w = measure(text, size) + 8;
+  return { len: w * 1.6, path: scribble(x, y, w), w, paint: u => { d.style.clipPath = `inset(-30% ${(1 - u) * 100}% -30% -5%)`; d.style.visibility = u > 0 ? 'visible' : 'hidden'; } };
+}
+function wrap(text, size, width) {
+  const words = text.split(' '), lines = [];
+  let cur = '';
+  for (const w of words) { const t = cur ? cur + ' ' + w : w; if (cur && measure(t, size) > width) { lines.push(cur); cur = w; } else cur = t; }
+  if (cur) lines.push(cur);
+  return lines;
+}
+
+// ------------------------------------------------------------------ laying out every op once
+function layout(B) {
+  const ink = document.querySelector('#ink');
+  const isMath = B.q.subject === 'math';
+  const all = B.steps.flatMap((st, si) => st.ops.map(o => ({ ...o, step: si })));
+
+  // notes beside crossed options go inline when they fit, else in the right column at the option's height
+  const sideNotes = [];
+  for (const o of all) if ((o.op === 'cross' || o.op === 'tick') && o.note) {
+    const { lines } = optionLines(o.option), last = lines[lines.length - 1];
+    const size = 34, w = measure(o.note, size);
+    if (last.x + last.w + 40 + w < LX + 1000 + 40) o.at = { x: last.x + last.w + 36, y: last.y + last.h * .78, size };
+    else { o.at = { x: RX, y: lines[0].y + lines[0].h * .8, size }; sideNotes.push(o.at.y - size); }
+  }
+  const workBottom = sideNotes.length ? Math.min(...sideNotes) - 24 : H - 60;
+  const writes = all.filter(o => o.op === 'write');
+  let size = isMath ? 46 : 38;
+  const linesFor = sz => writes.reduce((a, o) => a + wrap(o.text, sz, RW).length, 0);
+  let lh = size * 1.45;
+  while (130 + linesFor(size) * lh > workBottom && size > 26) { size -= 2; lh = size * 1.45; }
+  let y = 130 + size;
+
+  all.forEach((o, i) => {
+    const rand = rng(i + 7), pieces = [];
+    if (o.op === 'highlight' || o.op === 'underline' || o.op === 'circle') {
+      const r = rangeOf(o.quote);
+      if (!r) { console.warn('quote not found', o.quote); o.pieces = []; return; }
+      const lines = lineRects(r);
+      if (o.op === 'highlight') lines.forEach(l => pieces.push(bar(l.x - 4, l.y + l.h * .12, l.w + 8, l.h * .8)));
+      if (o.op === 'underline') lines.forEach(l => pieces.push(stroke(ink, wobbly(l.x - 2, l.y + l.h * .92, l.x + l.w + 2, l.y + l.h * .94, 4, rand), 'var(--blue)', 4.5)));
+      if (o.op === 'circle') {
+        const x1 = Math.min(...lines.map(l => l.x)), x2 = Math.max(...lines.map(l => l.x + l.w));
+        const y1 = lines[0].y, y2 = lines[lines.length - 1].y + lines[lines.length - 1].h;
+        pieces.push(stroke(ink, ellipse((x1 + x2) / 2, (y1 + y2) / 2, (x2 - x1) / 2 + 12, (y2 - y1) / 2 + 6, rand), 'var(--blue)', 4.5));
+      }
+    } else if (o.op === 'write') {
+      for (const line of wrap(o.text, size, RW)) { pieces.push(hand(RX, y, line, size, 'var(--blue)')); y += lh; }
+      if (o.box) {
+        const ws = pieces.map(p => p.w), top = y - lh * pieces.length - size * .95;
+        pieces.push(stroke(ink, rectPath(RX - 16, top, Math.max(...ws) + 24, lh * pieces.length - (lh - size) + size * .25, rand), 'var(--red)', 4));
+      }
+    } else if (o.op === 'cross') {
+      const { lines } = optionLines(o.option);
+      lines.forEach(l => pieces.push(stroke(ink, wobbly(l.x - 6, l.y + l.h * .55, l.x + l.w + 6, l.y + l.h * .5, 3, rand), 'var(--red)', 4)));
+      if (o.note) pieces.push(hand(o.at.x, o.at.y, o.note, o.at.size, 'var(--red)'));
+    } else if (o.op === 'tick') {
+      const { lines, li } = optionLines(o.option);
+      const b = li.querySelector('.l').getBoundingClientRect();
+      pieces.push(stroke(ink, ellipse(b.left + b.width / 2, b.top + b.height / 2, b.width / 2 + 10, b.height / 2 + 10, rand), 'var(--green)', 5));
+      const cx = LX - 78, cy = lines[0].y + lines[0].h * .2;
+      pieces.push(stroke(ink, [[cx, cy + 14], [cx + 16, cy + 32], [cx + 50, cy - 10]], 'var(--green)', 6));
+      if (o.note) pieces.push(hand(o.at.x, o.at.y, o.note, o.at.size, 'var(--green)'));
+    }
+    o.pieces = pieces;
+  });
+  ops = all.filter(o => o.pieces.length);
+  time(B);
+}
+
+// ------------------------------------------------------------------ timing: ops share their step's spoken time
+function natural(o) {
+  const L = o.pieces.reduce((a, p) => a + p.len, 0);
+  if (o.op === 'write') return clamp(0.3 + o.text.length * 0.07, 0.8, 3.4) + (o.box ? 0.6 : 0);
+  if (o.op === 'circle') return 0.9;
+  if (o.op === 'tick') return 1.0 + (o.note ? o.note.length * 0.05 : 0);
+  if (o.op === 'cross') return clamp(0.3 + L / 1500, 0.5, 1.4) + (o.note ? o.note.length * 0.05 : 0);
+  return clamp(0.3 + L / 900, 0.5, 2.6);
+}
+function time(B) {
+  let cursor = 0;
+  B.steps.forEach((st, si) => {
+    const mine = ops.filter(o => o.step === si);
+    if (!mine.length) return;
+    const start = Math.max(st.start + 0.15, cursor), room = st.start + st.dur - start;
+    const need = mine.reduce((a, o) => a + GLIDE + natural(o), 0);
+    const f = clamp(room / need, 0.6, 1), spare = Math.max(0, room - need * f), gap = Math.min(spare / mine.length, 1.0);
+    let t = start;
+    mine.forEach((o, k) => {
+      if (k) t += gap;
+      o.t0 = t + GLIDE; o.t1 = o.t0 + natural(o) * f; t = o.t1;
+      // split the op's time across its pieces by length
+      const L = o.pieces.reduce((a, p) => a + p.len, 0) || 1;
+      let a = o.t0;
+      for (const p of o.pieces) { p.t0 = a; p.t1 = a + (o.t1 - o.t0) * (p.len / L); a = p.t1; }
+    });
+    cursor = t;
+  });
+  total = B.total;
+}
+
+// ------------------------------------------------------------------ painting one moment
+function handAt(t) {
+  const pieces = ops.flatMap(o => o.pieces);
+  for (const p of pieces) if (t >= p.t0 && t <= p.t1) return pointAt(p.path, p.len === 0 ? 0 : lenOf(p.path) * ((t - p.t0) / (p.t1 - p.t0)));
+  // between pieces: glide from where the last one ended to where the next starts, or step off the board for long pauses
+  const prev = [...pieces].reverse().find(p => p.t1 < t), next = pieces.find(p => p.t0 > t);
+  const from = prev ? prev.path[prev.path.length - 1] : [OUT.x, OUT.y], to = next ? next.path[0] : [OUT.x, OUT.y];
+  const tPrev = prev ? prev.t1 : -1, tNext = next ? next.t0 : total + 1;
+  const lerp = (a, b, u) => [a[0] + (b[0] - a[0]) * ease(u), a[1] + (b[1] - a[1]) * ease(u)];
+  if (tNext - tPrev > 2.4 || !prev || !next) {
+    if (prev && t - tPrev < 0.6) return lerp(from, [OUT.x, OUT.y], (t - tPrev) / 0.6);
+    if (next && tNext - t < 0.6) return lerp([OUT.x, OUT.y], to, 1 - (tNext - t) / 0.6);
+    return [OUT.x, OUT.y];
+  }
+  // a short wait: lift a little, then move on to the next start
+  const gapU = (t - tPrev) / (tNext - tPrev);
+  if (tNext - t <= GLIDE) return lerp([from[0] + 30, from[1] + 26], to, 1 - (tNext - t) / GLIDE);
+  return lerp(from, [from[0] + 30, from[1] + 26], clamp(gapU * 3));
+}
+function seek(t) {
+  for (const o of ops) for (const p of o.pieces) p.paint(clamp((t - p.t0) / (p.t1 - p.t0)));
+  const [x, y] = handAt(t);
+  document.querySelector('#hand').style.transform = `translate(${(x - HAND.tipX * HAND.scale).toFixed(1)}px, ${(y - HAND.tipY * HAND.scale).toFixed(1)}px)`;
+}
+window.seek = seek;
+window.duration = () => total;
+
+// ------------------------------------------------------------------ live player: the audio is the clock
+function live() {
+  const stage = document.querySelector('#stage');
+  const fit = () => { const k = Math.min(innerWidth / W, innerHeight / H); stage.style.transform = `translate(${(innerWidth - W * k) / 2}px, ${(innerHeight - H * k) / 2}px) scale(${k})`; };
+  fit(); addEventListener('resize', fit);
+  const audio = new Audio(dir + window.BOARD.audio);
+  const play = document.querySelector('#play');
+  play.style.display = 'flex';
+  const loop = () => { seek(audio.currentTime); if (!audio.paused) requestAnimationFrame(loop); };
+  play.onclick = () => { play.style.display = 'none'; audio.play(); requestAnimationFrame(loop); };
+  audio.onended = () => { seek(total); play.textContent = 'Replay'; play.style.display = 'flex'; audio.currentTime = 0; };
+  seek(0);
+}
+</script>
+</body>
+</html>
