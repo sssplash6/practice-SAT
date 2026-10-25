@@ -1,0 +1,1338 @@
+{
+  "skill": "Words in Context",
+  "slug": "words_in_context",
+  "part": "w2b6",
+  "domain": "Craft and Structure",
+  "plan": {
+    "templates": [
+      {
+        "code": "B6",
+        "name": "Blank completion, phrase options (word + preposition, a/an + word)"
+      },
+      {
+        "code": "B1",
+        "name": "Blank completion, restatement clue"
+      },
+      {
+        "code": "B3",
+        "name": "Blank completion, contrast clue (including received view then finding)"
+      },
+      {
+        "code": "B5",
+        "name": "Blank completion, negated frame"
+      },
+      {
+        "code": "B2",
+        "name": "Blank completion, cause or consequence clue"
+      },
+      {
+        "code": "M2",
+        "name": "Most nearly mean, underlined phrase or phrase options"
+      },
+      {
+        "code": "M1",
+        "name": "Most nearly mean, underlined word"
+      },
+      {
+        "code": "B4",
+        "name": "Blank completion, example-pinned clue"
+      }
+    ]
+  },
+  "items": [
+    {
+      "id": "words_in_context.B6.hard.w2b6_01",
+      "template": "B6",
+      "subtype": "Blank completion: phrase options",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Carmen Sanchez and David Dunning found that a little learning can make people’s confidence ______ their competence. Participants learning to diagnose fictional diseases from symptoms were not overconfident at first, but after only a few practice cases their confidence surged; it then leveled off while their performance improved only gradually.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "commensurate with",
+        "conducive to",
+        "disproportionate to",
+        "subordinate to"
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "“Disproportionate to” means out of proportion with, here too large for. The participants were not overconfident at first, but after a few practice cases their confidence surged, while their performance improved only gradually. Confidence had therefore outrun ability: it became greater than their competence justified.",
+      "distractors": {
+        "A": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "Confidence “commensurate with” competence would match it. The text says the participants’ confidence surged after a few cases while their performance improved only gradually, so the two did not match."
+        },
+        "B": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "“Conducive to” means helping to bring about. The text never says that the participants’ confidence improved their performance; it describes confidence rising much faster than performance."
+        },
+        "D": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "Confidence “subordinate to” competence would be lesser than or ruled by it. The text says the participants became more confident than their performance warranted, the opposite relation."
+        }
+      },
+      "models": [
+        "3.2",
+        "3.12",
+        "3.17",
+        "3.23"
+      ],
+      "word_count": 49,
+      "sources": [
+        {
+          "what": "Sanchez and Dunning 2018, Overconfidence among beginners: Is a little learning a dangerous thing? (JPSP): in studies where participants learned to diagnose zombie diseases from symptoms, beginners did not start out overconfident but rapidly surged to a beginner’s bubble of overconfidence; confidence then leveled off while performance incrementally improved",
+          "url": "https://experts.illinois.edu/en/publications/overconfidence-among-beginners-is-a-little-learning-a-dangerous-t/"
+        }
+      ],
+      "notes": "Subject: social science (psychology). Key letter C. Steps: 2 (not overconfident at first but confidence surged after a few cases, then performance improved only gradually, so confidence outran competence). Two reversals (match, lesser) and one unsupported causal relation. Simplified: the zombie diseases are called fictional diseases; the paper’s financial-literacy studies are left out. Raw freq.txt ranks (the measure used for this item, since the corrected rank of disproportionate is 4,140): commensurate with 34,042; conducive to 24,104; disproportionate to 26,183; subordinate to 13,590.",
+      "band7": {
+        "verdict": "band 6",
+        "why": "Meets its band-6 target. Raw ranks commensurate with 34,042; conducive to 24,104; disproportionate to 26,183; subordinate to 13,590: 4 of 4 past 10,000, one band, mean log10 4.37 (the key falls to 4,140 corrected, so on modern text it is the commonest option). Two steps (not overconfident at first, then confidence surges ahead of gradually improving performance), B6 phrase key with an academic head, clue in the next sentence, no concessive frame or transferred sense. No distractor fits loosely: commensurate with describes the beginners before the surge, not what a little learning does."
+      },
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass"
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "C",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "words_in_context.B1.hard.w2b6_02",
+      "template": "B1",
+      "subtype": "Blank completion: restatement",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Among deep-sea hydrothermal vents, those of the Lost City field in the Atlantic Ocean are strikingly ______. Deborah Kelley and colleagues found that the field’s pale chimneys consist almost entirely of carbonate rather than the sulfide minerals characteristic of black smoker vents, and that its venting is powered not by magma but by heat from chemical alterations of the surrounding rock.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "anomalous",
+        "extinct",
+        "volatile",
+        "intermittent"
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "“Anomalous” means departing from what is usual. The text contrasts Lost City’s vents with black smokers: Lost City’s pale chimneys are made almost entirely of carbonate rather than the sulfide minerals typical of black smokers, and its venting is powered by chemical alterations of the rock rather than by magma. On both counts the field departs from what is usual for such vents.",
+      "distractors": {
+        "B": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "Vents that are “extinct” no longer vent at all. The text says that venting at Lost City is powered by heat from chemical alterations of the rock, so the vents are active, not at rest."
+        },
+        "C": {
+          "recipe": "topic echo (ASSOC)",
+          "why_wrong": "“Volatile” suits explosive or unstable geological activity, but the text says nothing about Lost City being unstable; it describes how the field differs in composition and heat source from black smokers."
+        },
+        "D": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "“Intermittent” means stopping and starting. Nothing in the text says the venting at Lost City starts and stops; the text describes what the chimneys are made of and what heats them."
+        }
+      },
+      "models": [
+        "3.4",
+        "3.8",
+        "3.16",
+        "3.22"
+      ],
+      "word_count": 61,
+      "sources": [
+        {
+          "what": "University of Washington news on the Lost City field (Deborah Kelley): found in December 2000; the most massive structure is about 18 stories; the vents are nearly 100 percent carbonate, unlike black smokers, a darkly mottled mix of sulfide minerals; venting comes from heat generated by chemical changes in the rocks, with no sign of contact with magma chambers",
+          "url": "https://www.washington.edu/news/?p=12741"
+        }
+      ],
+      "notes": "Subject: natural science (geology, oceanography). Key letter A. Steps: 2 (the text describes two ways the field differs from black smokers; the reader must generalize to anomalous). Clue carries technical terms (carbonate, sulfide, magma). Distractors: one reversal (extinct), one geological topic echo (volatile), one unsupported (intermittent). Kelley credited with colleagues: the 2001 Nature paper is Kelley et al. Raw freq.txt ranks: anomalous 24,259; extinct 12,452 (corrected 2,036); volatile 18,078 (corrected 3,530); intermittent 16,066. Quiescent avoided: it is a key in w2b5.",
+      "band7": {
+        "verdict": "band 6",
+        "why": "Meets its band-6 target by reasoning: two stated contrasts with black smokers (carbonate not sulfide, chemical heat not magma) must be generalized to anomalous, and the clue carries technical words. Raw ranks anomalous 24,259; extinct 12,452; volatile 18,078; intermittent 16,066: 4 of 4 past 10,000, one band, mean log10 4.24. On corrected ranks extinct (2,036) and volatile (3,530) are common modern words, so the key is the rarest option there: not a band-7 set. No distractor fits loosely: the venting is described as active and powered, with nothing on instability or stopping."
+      },
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [],
+        "status": "pass"
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "A",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "words_in_context.B3.hard.w2b6_03",
+      "template": "B3",
+      "subtype": "Blank completion: contrast",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Although the Ugandan government did not monitor how young adults used the cash grants it provided for learning a trade, recipients’ expenditures proved ______: Christopher Blattman and colleagues found that they invested in vocational training and tools, and four years later their incomes exceeded nonrecipients’ by about 41 percent.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "profligate",
+        "erratic",
+        "tentative",
+        "judicious"
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "“Judicious” means showing good judgment. The text says that, although no one checked how the grants were used, the recipients put the money into vocational training and tools, and four years later they earned about 41 percent more than people who did not receive grants. Their spending was sensible, as the word “Although” signals in contrast to the lack of monitoring.",
+      "distractors": {
+        "A": {
+          "recipe": "reversal: the expectation the text overturns (ANT)",
+          "why_wrong": "“Profligate” means wasteful. Wasteful spending is what the lack of monitoring might lead one to expect, but the text says the recipients invested in training and tools and later earned much more."
+        },
+        "B": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "“Erratic” means irregular or unpredictable. The text describes a consistent pattern, recipients investing in training and tools, not spending that changed unpredictably."
+        },
+        "C": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "“Tentative” means hesitant. Nothing in the text suggests that the recipients were hesitant to spend the grants; they invested them in training and tools."
+        }
+      },
+      "models": [
+        "3.1",
+        "3.7",
+        "3.10",
+        "3.20"
+      ],
+      "word_count": 49,
+      "sources": [
+        {
+          "what": "J-PAL summary of Blattman, Fiala and Martinez, Generating Skilled Self-Employment in Uganda: the Youth Opportunities Program gave cash to groups of young adults for vocational training and tools; once the transfer was awarded the government did not monitor the use of the money; recipients invested the cash; four years later beneficiaries had 41 percent higher income",
+          "url": "https://www.povertyactionlab.org/print/pdf/node/2021?lang=en"
+        }
+      ],
+      "notes": "Subject: social science (development economics). Key letter D. Steps: 2 (concession: no monitoring; finding: invested in training and tools and earned more; so the spending was sensible). The blank describes the finding side; the reversal names what the concession leads one to expect. Not the bed-net frame of B3.hard in satbank/rw/words_in_context.json (there the blank is the experts’ prediction). Simplified: the nine-year follow-up, in which nonrecipients caught up, is left out; the text claims only the four-year result. Raw freq.txt ranks: profligate 19,545; erratic 16,787; tentative 15,437; judicious 12,231.",
+      "band7": {
+        "verdict": "band 6",
+        "why": "Meets its band-6 target. Raw ranks profligate 19,545; erratic 16,787; tentative 15,437; judicious 12,231: 4 of 4 past 10,000, one band, mean log10 4.20, key the commonest (band-5 guard clear). Concessive frame (Although no monitoring) with the blank on the finding and the expectation it raises (profligate) as the reversal, two steps; the colon then spells out the ground (invested, earned more), and no option is past 20,000, so a strong band 6 rather than 7. No distractor fits loosely: the spending was consistent and decisive."
+      },
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [],
+        "status": "pass"
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "D",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "words_in_context.B5.hard.w2b6_04",
+      "template": "B5",
+      "subtype": "Blank completion: negated frame",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "When composer Julius Eastman was evicted from his apartment in the 1980s, the scores he kept there were discarded. That loss nonetheless failed to render his compositions ______: because the pieces had been performed, musicians have subsequently been able to reconstruct some of the scores from archival recordings.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "ostentatious",
+        "irretrievable",
+        "saccharine",
+        "derivative"
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "“Irretrievable” means impossible to recover. Losing his scores might seem to mean losing the music itself, but the text explains why it did not: the pieces had been performed, so musicians have been able to rebuild some of the scores from archival recordings. The loss did not make the compositions impossible to recover.",
+      "distractors": {
+        "A": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "“Ostentatious” means showy. The text is about whether Eastman’s music survived the loss of his scores, and the reason it gives, that recordings let musicians reconstruct the scores, has nothing to do with showiness."
+        },
+        "C": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "“Saccharine” means overly sweet or sentimental. Losing the scores would not make music sentimental, and the recordings the text mentions explain only how the music was recovered."
+        },
+        "D": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "“Derivative” means imitating the work of others. Losing his scores could not make Eastman’s music unoriginal, and the text says nothing about whether it borrows from other composers; it is about whether the music could be recovered."
+        }
+      },
+      "models": [
+        "3.13",
+        "3.21",
+        "6017ae31",
+        "d5ad34f0",
+        "d7807ec8"
+      ],
+      "word_count": 48,
+      "sources": [
+        {
+          "what": "Vermont Public, Timeline: Julius Eastman part 2: in the mid-1980s Eastman was evicted from his apartment for nonpayment of rent; the landlord took all of his scores and threw them out on the curb; there weren’t any scores left; because people had played the music, they started reconstructing some of the scores from archival tapes",
+          "url": "https://www.vermontpublic.org/podcast/timeline/2022-10-07/timeline-julius-eastman-part-2-fierce-black-queen-iconoclast"
+        }
+      ],
+      "notes": "Subject: humanities (music). Key letter B. Band-7 moves: negation hidden in a verb (failed to render, as d5ad34f0 fail to), concessive nonetheless, the key is the consequence the loss would be expected to have, denied by a reason clause (6017ae31 preclude). Distractors chosen so that none describes being lost, unplayable, little known, unpublished or of doubtful authenticity (those would fit loosely under the negation). Steps: 2. Raw freq.txt ranks: ostentatious 20,698; irretrievable 27,218; saccharine 55,902; derivative 31,569 (corrected 1,284, from its finance and calculus senses); all four past 20,000 raw, mean log10 4.50; key not the rarest. Reviewer: discordant (14,484, a music topic echo and the most guessable option) replaced with derivative; the eviction is told without an agent (sources differ: landlord, sheriff) and dated only to the 1980s.",
+      "band7": {
+        "verdict": "band 7",
+        "why": "After the fixes all four options sit past raw rank 20,000 (ostentatious 20,698; irretrievable 27,218; saccharine 55,902; derivative 31,569), mean log10 4.50, rarest distractor past 50,000, key not the rarest: checks 1 to 4 pass. Two steps with the negation hidden in a verb (failed to render) under a concessive nonetheless, the band-7 B5 recipe of d5ad34f0 and 6017ae31. Weakest point: irretrievable is morphologically transparent (retrieve) and the only option about whether the music survives, which it has to be, since any other loss word would fit under the negation. No distractor fits loosely: none is a consequence of losing scores."
+      },
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [
+          "passage said his landlord discarded every one of his scores in the mid-1980s; the source says only that “they” took all of his scores and threw them out (other accounts credit the sheriff and the early 1980s): now “in the 1980s, the scores he kept there were discarded”",
+          "hardened: “has nonetheless not rendered” changed to “nonetheless failed to render” (negation in a verb, as d5ad34f0)",
+          "hardened: D discordant (14,484, the music topic echo and the most guessable option) replaced with derivative (31,569 raw), unsupported; why_wrong and explanation updated"
+        ],
+        "status": "fixed"
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "B",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 7
+    },
+    {
+      "id": "words_in_context.B2.hard.w2b6_05",
+      "template": "B2",
+      "subtype": "Blank completion: cause or consequence",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "The skin of African spiny mice tears under such low tension that a predator’s grip on these rodents is ______: a captured mouse can escape by shedding a patch of skin. Ashley Seifert and colleagues found that the resulting wounds contract rapidly, after which hair follicles regenerate.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "precarious",
+        "inexorable",
+        "rapacious",
+        "prehensile"
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "“Precarious” means insecure or likely to give way. Because the mice’s skin tears so easily, a predator holding one may be left with only a patch of skin while the mouse escapes. The predator’s hold, in other words, cannot be relied on.",
+      "distractors": {
+        "B": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "“Inexorable” means impossible to stop or resist. The text says the opposite: the skin tears so easily that a captured mouse can escape by shedding a patch of it."
+        },
+        "C": {
+          "recipe": "topic echo: collocation trap (ASSOC)",
+          "why_wrong": "“Rapacious” means greedy and is often said of predators, but the text is not about the predator’s appetite; it is about whether its grip can hold a mouse whose skin tears easily."
+        },
+        "D": {
+          "recipe": "topic echo (ASSOC)",
+          "why_wrong": "“Prehensile” means adapted for grasping, as a monkey’s tail is. The text is not about whether a predator’s body is built to grasp prey; it says the mouse’s skin tears so easily that the predator’s hold gives way."
+        }
+      },
+      "models": [
+        "3.6",
+        "3.25",
+        "a756aa95",
+        "571cf537",
+        "0e033f9b"
+      ],
+      "word_count": 47,
+      "sources": [
+        {
+          "what": "Seifert et al. 2012, Skin shedding and tissue regeneration in African spiny mice (Acomys), Nature (author manuscript): a propensity for skin to tear under very low tension; skin autotomy as a way to elude capture; following skin loss, rapid wound contraction was followed by hair follicle regeneration",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3480082"
+        }
+      ],
+      "notes": "Subject: natural science (zoology). Key letter A. Band-7 moves: the cause sits in a so ... that clause, the key is an evaluative word (a precarious grip), and the distractors are rare words on the grip and predator axis: a reversal (inexorable, which also collocates with grip), a collocation trap (rapacious, a stock word for predators, as in a756aa95) and a grasping word from biology (prehensile). Steps: 1 (the colon restates the ground), carried by vocabulary. Raw freq.txt ranks: precarious 13,764; inexorable 10,314; rapacious 28,542; prehensile 50,284; all four past 10,000, two past 20,000, mean log10 4.33; key not the rarest, so not the band-5 pattern. Reviewer: tenacious (the mirror antonym of the key in the grip collocation) and vestigial (read loosely as functionless) replaced.",
+      "band7": {
+        "verdict": "band 7",
+        "why": "After the fixes all four options past raw rank 10,000 and two past 20,000 (precarious 13,764; inexorable 10,314; rapacious 28,542; prehensile 50,284), mean log10 4.33, rarest distractor past 50,000, key not the rarest: checks 1 to 4 pass. One-step cause clause carried by vocabulary, as a756aa95 (peripheral) and 571cf537 (tenuous): the three distractors are words a strong student may not own, all on the grip and predator axis (an inexorable grip, a rapacious predator, a prehensile limb), so none can be dropped by topic. Weakest point: precarious is a familiar key (the median one-step band-7 key is about 21,000). No distractor fits loosely: inexorable reverses the escape, rapacious is appetite, prehensile is anatomy."
+      },
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [
+          "hardened: B tenacious (15,769) replaced with inexorable (10,314, opaque to many students and a stock collocate of grip): tenacious was the mirror antonym of the key, killed by “tears”, leaving a two-option choice",
+          "hardened: D vestigial replaced with prehensile (50,284): vestigial, read loosely as “functionless”, came near the key and sat off the grip axis; why_wrongs rewritten"
+        ],
+        "status": "fixed"
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "A",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 7
+    },
+    {
+      "id": "words_in_context.B5.medium.w2b6_06",
+      "template": "B5",
+      "subtype": "Blank completion: negated frame",
+      "tier": "medium",
+      "passage": "Consumers seldom regard scraps of paper as ______. In experiments by Remi Trudel and Jennifer Argo, intact sheets were typically recycled while fragments were discarded as trash; according to Trudel, consumers perceive any product that has been sufficiently distorted or altered in size or form as less useful.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "disposable",
+        "serviceable",
+        "combustible",
+        "biodegradable"
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "“Serviceable” means usable or fit for use. The text says that in the experiments intact sheets were recycled while fragments were thrown away, and that consumers perceive a product that has been distorted or changed in size or form as less useful. Consumers rarely regard scraps as still usable.",
+      "distractors": {
+        "A": {
+          "recipe": "reversal: negation flip (ANT)",
+          "why_wrong": "Saying consumers seldom regard scraps as “disposable,” or fit to be thrown away, contradicts the text, which says the fragments were discarded as trash."
+        },
+        "C": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "“Combustible” means able to burn. The text says nothing about whether consumers think of paper scraps as something that burns."
+        },
+        "D": {
+          "recipe": "topic echo (ASSOC)",
+          "why_wrong": "“Biodegradable” belongs to the subject of waste, but the text says nothing about whether consumers think paper scraps break down naturally; it is about whether they think the scraps are still useful."
+        }
+      },
+      "models": [
+        "2.10",
+        "2.11",
+        "2.14",
+        "2.21"
+      ],
+      "word_count": 48,
+      "sources": [
+        {
+          "what": "KCUR (NPR) 2013, How recycling bias affects what you toss where: in Remi Trudel and Jennifer Argo’s experiments whole sheets of paper typically went in the recycling, but paper fragments went in the trash; dented or crushed cans went in the trash; Trudel: when a product is sufficiently distorted or changed in size or form, consumers perceive it as less useful",
+          "url": "https://www.kcur.org/2013-09-27/how-recycling-bias-affects-what-you-toss-where"
+        }
+      ],
+      "notes": "Subject: social science (consumer psychology). Key letter B. Negated frame (seldom); one negation flip (disposable). The key does not share a stem with useful or recycling. Raw freq.txt ranks: disposable unseen; serviceable 14,526; combustible 43,623; biodegradable unseen.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "words_in_context.B6.medium.w2b6_07",
+      "template": "B6",
+      "subtype": "Blank completion: phrase options",
+      "tier": "medium",
+      "passage": "Elizabeth Jennings’s lawsuit against the New York transportation company whose conductor, assisted by a police officer, had removed her from a streetcar in 1854 proved ______ change: following a jury’s verdict in her favor, the company consented to immediately desegregate its streetcar service.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "an obstacle to",
+        "a substitute for",
+        "a consequence of",
+        "an impetus for"
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "“An impetus for” means something that drives a change forward. The text says that after the jury ruled for Jennings, the company agreed to desegregate its streetcars at once. Her lawsuit pushed the company to change.",
+      "distractors": {
+        "A": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "The lawsuit did not block change; the text says it led the company to desegregate its service."
+        },
+        "B": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "The lawsuit did not take the place of change; according to the text, change followed from it."
+        },
+        "C": {
+          "recipe": "reversal: direction (ANT)",
+          "why_wrong": "This reverses the order of events. The lawsuit came first, and the desegregation of the company’s streetcars followed the verdict."
+        }
+      },
+      "models": [
+        "2.4",
+        "2.15",
+        "2.18",
+        "2.28"
+      ],
+      "word_count": 42,
+      "sources": [
+        {
+          "what": "Historical Society of the New York Courts, Elizabeth Jennings and streetcar desegregation: in July 1854 the conductor and a police officer removed Jennings from a Third Avenue Railroad Company streetcar; the jury found for her and awarded damages of $225; the company agreed to the immediate desegregation of its streetcar service; other companies retained segregated services",
+          "url": "https://history.nycourts.gov/?p=13634"
+        }
+      ],
+      "notes": "Subject: history. Key letter D. Distractor mix for medium: one plain reversal, one direction reversal (consequence), one unsupported. Simplified: the company (the Third Avenue Railroad Company in the source) is described rather than named, and the later spread of desegregation to other lines is left out. Ranks of the head words: obstacle 8,054 raw (5,026 corrected); substitute 9,221 raw; consequence 2,767; impetus 15,727 raw (9,360 corrected).",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "words_in_context.B1.medium.w2b6_08",
+      "template": "B1",
+      "subtype": "Blank completion: restatement",
+      "tier": "medium",
+      "passage": "Ming Smith’s photographs are often deliberately ______. Through manipulated shutter speeds and multiple-exposure printing, Smith blurs her subjects and faintly overlays images: a 1979 photograph of James Baldwin superimposes the writer’s portrait on a sky of dark clouds, and in one self-portrait the photographer herself appears barely materialized.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "conspicuous",
+        "symmetrical",
+        "hazy",
+        "exaggerated"
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "“Hazy” means blurred or indistinct. The text says Smith blurs her subjects, layers images faintly over one another, and leaves figures looking barely materialized. Her images are purposely unclear.",
+      "distractors": {
+        "A": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "Something “conspicuous” is easy to see. The text describes blurred subjects and faint, barely materialized figures, the opposite."
+        },
+        "B": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "The text says nothing about balanced or mirror-image compositions; it describes blurring and layering."
+        },
+        "D": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "“Exaggerated” means enlarged or overstated. Smith’s techniques, as the text describes them, make her figures fainter, not larger or more emphatic."
+        }
+      },
+      "models": [
+        "2.5",
+        "2.9",
+        "2.16",
+        "2.27"
+      ],
+      "word_count": 48,
+      "sources": [
+        {
+          "what": "Ming Smith’s Poetic Blur (New York Times review reprinted by Houldsworth): images blurred as if shot at very high or low velocity; manipulated shutter speeds and multiple exposure printing; a 1979 portrait of James Baldwin faintly layered over a sky of clouds; in a self-portrait she seems to emerge, barely materialized",
+          "url": "https://www.houldsworth.co.uk/press/297-ming-smiths-poetic-blur/"
+        }
+      ],
+      "notes": "Subject: humanities (photography). Key letter C. Restatement clue in the next sentence (blurs, faintly, barely materialized). Raw freq.txt ranks: conspicuous 6,466; symmetrical 23,688; hazy 13,463; exaggerated 6,194.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "words_in_context.B2.medium.w2b6_09",
+      "template": "B2",
+      "subtype": "Blank completion: cause or consequence",
+      "tier": "medium",
+      "passage": "Sally Gabori’s artistic achievements were necessarily ______. Gabori, a member of Australia’s Kaiadilt people, did not take up painting until 2005, when she was approximately eighty years old; once she had begun, however, she painted prolifically, and her vibrantly colored canvases rapidly attained both national and international recognition.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "belated",
+        "precocious",
+        "posthumous",
+        "contested"
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "“Belated” means coming late. Gabori did not take up painting until she was about eighty, so whatever she achieved as a painter had to come late in her life. The text adds that, once she began, recognition came quickly.",
+      "distractors": {
+        "B": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "“Precocious” means developing unusually early. Gabori began painting at around eighty, the opposite of an early start."
+        },
+        "C": {
+          "recipe": "wrong nuance (CONNOT)",
+          "why_wrong": "“Posthumous” means coming after death. Starting late did not mean that her achievements came only after she died; the text says her canvases rapidly attained recognition once she began painting."
+        },
+        "D": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Nothing in the text suggests that anyone disputed Gabori’s achievements, and starting to paint late would not make them disputed."
+        }
+      },
+      "models": [
+        "2.24",
+        "2.25"
+      ],
+      "word_count": 48,
+      "sources": [
+        {
+          "what": "Fondation Cartier, Sally Gabori: she began to paint in 2005, when she was around eighty years old, and quickly gained both national and international recognition",
+          "url": "https://www.fondationcartier.com/en/collection/artists/sally-gabori"
+        }
+      ],
+      "notes": "Subject: humanities (art). Key letter A. Consequence clue (did not begin until she was around eighty, so success came late); the near miss posthumous is ruled out by the second sentence. Raw freq.txt ranks: belated 11,697; precocious 22,095; posthumous 28,804; contested 7,104.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 5,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "words_in_context.M2.medium.w2b6_10",
+      "template": "M2",
+      "subtype": "Most nearly mean: underlined phrase",
+      "tier": "medium",
+      "passage": "The following text is from W. E. B. Du Bois’s 1911 novel The Quest of the Silver Fleece. Jim Sykes, a farmer, has shown Miss Smith receipts for his payments to a landowner.\n\nMiss Smith looked them over and sighed. It was the same old tale of blind receipts for money “on account”—no items, no balancing. By his help she <u>made out</u> that last year his total bill at Cresswell’s store was perhaps forty dollars.",
+      "stem": "As used in the text, what does the phrase “made out” most nearly mean?",
+      "options": [
+        "Wrote out",
+        "Figured out",
+        "Claimed falsely",
+        "Managed"
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "In the text, “made out” means figured out. The receipts list no items and no totals, so Miss Smith has to work out, with Sykes’s help, what his bill at the store came to; she arrives at an estimate, “perhaps forty dollars.”",
+      "distractors": {
+        "A": {
+          "recipe": "another sense of the target (SENSE)",
+          "why_wrong": "“Made out” can mean wrote out, as in making out a bill, but Miss Smith is not writing a bill; she is working out the amount from receipts that lack items and totals."
+        },
+        "C": {
+          "recipe": "another sense of the target (SENSE)",
+          "why_wrong": "“Made out that” can mean pretended, but nothing suggests Miss Smith is pretending; with Sykes’s help she arrives at an honest estimate."
+        },
+        "D": {
+          "recipe": "another sense of the target (SENSE)",
+          "why_wrong": "“Made out” can mean managed or got along, as in “How did you make out?”, but that sense cannot take a that-clause about the bill and does not fit what Miss Smith is doing."
+        }
+      },
+      "models": [
+        "2.1",
+        "2.8",
+        "2.26"
+      ],
+      "word_count": 75,
+      "sources": [
+        {
+          "what": "Project Gutenberg text of The Quest of the Silver Fleece (W. E. B. Du Bois, 1911), chapter in which Jim Sykes, who is buying land from Colonel Cresswell, shows Miss Smith his papers; excerpt copied exactly",
+          "url": "https://www.gutenberg.org/cache/epub/15265/pg15265.txt"
+        }
+      ],
+      "notes": "Subject: literature (novel, 1911, public domain). Key letter B. Copied exactly; the closed em dash renders the original double hyphen. Context line: Sykes has been paying the Cresswells for his land for ten years and shows Miss Smith his papers. All three distractors are real senses of “make out” (write out, pretend, fare). Not a work used in any official item or in our bank (Du Bois appears in official items only as the author of The Souls of Black Folk and as an editor).",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 2,
+        "fixes": [],
+        "status": "pass",
+        "excerpt": "checked against Project Gutenberg 15265, exact; author, year, title and context line correct"
+      }
+    },
+    {
+      "id": "words_in_context.B1.easy.w2b6_11",
+      "template": "B1",
+      "subtype": "Blank completion: restatement",
+      "tier": "easy",
+      "passage": "Beneath the surface of desert sand, the sandfish lizard’s legs are ______. Filming the lizard with a high-speed camera under X-ray illumination, researchers at the Georgia Institute of Technology found that it keeps its legs tucked against its body and propels itself with an undulating motion.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "outstretched",
+        "injured",
+        "webbed",
+        "unused"
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "“Unused” means not put to use. The text says that under the sand the lizard keeps its legs tucked against its body and moves by undulating, so it does not use its legs to move.",
+      "distractors": {
+        "A": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "The text says the lizard keeps its legs tucked against its body, not stretched out."
+        },
+        "B": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Nothing in the text suggests the lizard’s legs are hurt; it simply does not use them under the sand."
+        },
+        "C": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "The text says nothing about the shape of the lizard’s feet."
+        }
+      },
+      "models": [
+        "1.10",
+        "1.13",
+        "1.26",
+        "1.42"
+      ],
+      "word_count": 46,
+      "sources": [
+        {
+          "what": "Physics World 2009, Physicists spy on skink swimming through sand: Daniel Goldman and colleagues at Georgia Tech tracked the sandfish by illuminating sand with X-rays and filming with a high-speed camera; markers showed it keeps its legs tucked against its body while swimming; it moves with an undulating motion",
+          "url": "https://physicsworld.com/a/physicists-spy-on-skink-swimming-through-sand/"
+        }
+      ],
+      "notes": "Subject: natural science (biomechanics). Key letter D. Credited to researchers at Georgia Tech rather than to a person: the source credits Daniel Goldman’s team, but Ryan Maladen is the first author of the 2009 Science paper (lesson: never credit a study to a co-author the press quotes). Raw freq.txt ranks: outstretched 4,840; injured 3,873; webbed 15,267; unused 11,055.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "words_in_context.B1.easy.w2b6_12",
+      "template": "B1",
+      "subtype": "Blank completion: restatement",
+      "tier": "easy",
+      "passage": "Biologist Kenneth Catania found that star-nosed moles can ______ odors underwater, contrary to the conventional wisdom that mammals cannot smell when submerged: a mole rapidly exhales air bubbles and then inhales them, enabling it to follow a scent trail.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "mask",
+        "track",
+        "produce",
+        "dissolve"
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "“Track” means follow the trail of. The text says that by exhaling bubbles and breathing them back in, a mole can follow a scent trail underwater.",
+      "distractors": {
+        "A": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "To “mask” odors would be to hide them. The text says the moles smell odors and follow them."
+        },
+        "C": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "The text says nothing about moles giving off odors; it is about how they smell them."
+        },
+        "D": {
+          "recipe": "topic echo (ASSOC)",
+          "why_wrong": "“Dissolve” fits the underwater setting, but the moles are not breaking down odors in water; they are sniffing them out."
+        }
+      },
+      "models": [
+        "1.11",
+        "1.15",
+        "1.21",
+        "1.51"
+      ],
+      "word_count": 38,
+      "sources": [
+        {
+          "what": "Vanderbilt News 2006, Scientist discovers some mammals can smell objects under water: Kenneth Catania, assistant professor of biology; the common wisdom is that mammals can’t smell underwater; star-nosed moles exhale and inhale bubbles rapidly; they followed underwater scent trails by sniffing",
+          "url": "https://news.vanderbilt.edu/2006/12/20/scientist-discovers-some-mammals-can-smell-objects-under-water-58788/"
+        }
+      ],
+      "notes": "Subject: natural science (zoology). Key letter B. Restatement clue (follow a scent trail). Raw freq.txt ranks: mask 4,245; track 2,581; produce 3,462; dissolve 18,351.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "words_in_context.B1.easy.w2b6_13",
+      "template": "B1",
+      "subtype": "Blank completion: restatement",
+      "tier": "easy",
+      "passage": "Amaza Lee Meredith was a ______ architect. Although she never received formal architectural training, she honed her design skills through the study of art, and in 1939 she completed Azurest South, an International Style residence near Virginia State University.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "licensed",
+        "reluctant",
+        "self-taught",
+        "careless"
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "“Self-taught” means having learned something without formal instruction. The text says Meredith had no formal training in architecture and developed her skills by studying art.",
+      "distractors": {
+        "A": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "A licensed architect would have the formal qualifications the text says Meredith lacked."
+        },
+        "B": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Nothing in the text suggests Meredith was unwilling to design buildings; she honed her skills and completed a house."
+        },
+        "D": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "The text gives no sign that Meredith worked carelessly; it describes her developing her skills and completing a house."
+        }
+      },
+      "models": [
+        "1.11",
+        "1.21",
+        "1.23",
+        "1.39"
+      ],
+      "word_count": 38,
+      "sources": [
+        {
+          "what": "Interior Design, A glimpse into the life of pioneering architect Amaza Lee Meredith: though Meredith did not have formal training as an architect, she honed her skills first by studying art; Azurest South, the International Style house where she lived, finished in 1939, near Virginia State University",
+          "url": "https://interiordesign.net/designwire/architect-amaza-lee-meredith-queer-history/"
+        }
+      ],
+      "notes": "Subject: humanities (architecture). Key letter C. Restatement clue (no formal training, honed her skills). Raw freq.txt ranks: licensed 8,816; reluctant 6,398; self-taught 1,701; careless 2,563.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "words_in_context.B1.easy.w2b6_14",
+      "template": "B1",
+      "subtype": "Blank completion: restatement",
+      "tier": "easy",
+      "passage": "Dayanita Singh’s Museum Bhavan, a collection of nine “museums” of her photographs, is remarkably ______: the museums are mobile wooden structures, six to eight feet tall, designed so that Singh can rapidly change the images they display.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "adaptable",
+        "permanent",
+        "ornate",
+        "melancholy"
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "“Adaptable” means able to be changed or moved to suit new conditions. The text says the museums are mobile and were designed so that Singh can quickly change the images they show.",
+      "distractors": {
+        "B": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "The museums are mobile and their images can be changed quickly, so they are not fixed in one place or form."
+        },
+        "C": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "The text says nothing about elaborate decoration on the structures."
+        },
+        "D": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Nothing in the text describes the mood of the museums or their photographs."
+        }
+      },
+      "models": [
+        "1.10",
+        "1.27",
+        "1.51",
+        "1.53"
+      ],
+      "word_count": 37,
+      "sources": [
+        {
+          "what": "Dayanita Singh, Museum Bhavan: a travelling family of nine museums built by Singh, mobile wooden structures from 6 to 8 feet in height, designed to allow quick changes in their images",
+          "url": "https://dayanitasingh.net/books/322/"
+        }
+      ],
+      "notes": "Subject: humanities (photography, exhibition design). Key letter A. Restatement clue in the next sentence. Raw freq.txt ranks: adaptable 34,892 (corrected 9,360); permanent 6,682; ornate 21,070; melancholy 2,037.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "words_in_context.M1.easy.w2b6_15",
+      "template": "M1",
+      "subtype": "Most nearly mean: underlined word",
+      "tier": "easy",
+      "passage": "The following text is from Rebecca West’s 1918 novel The Return of the Soldier. Kitty and the narrator are being visited by a woman who has brought news about Kitty’s husband.\n\nKitty brutally permitted a silence to fall. Our caller could not bear it, and <u>broke</u> it in a voice that nervousness had turned to a funny, diffident croak.",
+      "stem": "As used in the text, what does the word “broke” most nearly mean?",
+      "options": [
+        "Damaged",
+        "Revealed",
+        "Ended",
+        "Tamed"
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "In the text, “broke” means ended. Kitty lets a silence fall, and the visitor, unable to stand it, ends the silence by speaking.",
+      "distractors": {
+        "A": {
+          "recipe": "another sense of the target (SENSE)",
+          "why_wrong": "“Broke” can mean damaged, as in breaking a cup, but a silence is not damaged; the visitor ends it by speaking."
+        },
+        "B": {
+          "recipe": "another sense of the target (SENSE)",
+          "why_wrong": "“Broke” can mean revealed, as in breaking news, but here the object is the silence, which the visitor ends rather than reveals."
+        },
+        "D": {
+          "recipe": "another sense of the target (SENSE)",
+          "why_wrong": "“Broke” can mean tamed, as in breaking a horse, which does not fit a silence."
+        }
+      },
+      "models": [
+        "1.4",
+        "1.38",
+        "1.56",
+        "1.54"
+      ],
+      "word_count": 59,
+      "sources": [
+        {
+          "what": "Project Gutenberg text of The Return of the Soldier (Rebecca West, 1918), chapter 1, Mrs. Grey’s visit; excerpt copied exactly",
+          "url": "https://www.gutenberg.org/cache/epub/37189/pg37189.txt"
+        }
+      ],
+      "notes": "Subject: literature (novel, 1918, public domain). Key letter C. All three distractors are other senses of break. The caller is Margaret Grey, who has come to tell Kitty that her husband Chris is in hospital.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 2,
+        "fixes": [],
+        "status": "pass",
+        "excerpt": "checked against Project Gutenberg 37189, exact; author, year, title and context line correct"
+      }
+    },
+    {
+      "id": "words_in_context.M1.easy.w2b6_16",
+      "template": "M1",
+      "subtype": "Most nearly mean: underlined word",
+      "tier": "easy",
+      "passage": "The following text is from Edith Somerville and Martin Ross’s 1894 novel The Real Charlotte. Charlotte Mullen has gone upstairs in a cottage to find Julia Duffy, an old woman who is ill.\n\nIf she had been in any doubt as to Miss Duffy’s whereabouts, a voice from the room at the end of the little passage now <u>settled</u> the matter. “Is that Peggy?” it called.",
+      "stem": "As used in the text, what does the word “settled” most nearly mean?",
+      "options": [
+        "Calmed",
+        "Occupied",
+        "Paid",
+        "Decided"
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "In the text, “settled” means decided. Charlotte is unsure which room Miss Duffy is in, and a voice calling from the room at the end of the passage decides the question for her.",
+      "distractors": {
+        "A": {
+          "recipe": "another sense of the target (SENSE)",
+          "why_wrong": "“Settled” can mean calmed, as in settling someone’s nerves, but the voice does not calm the matter; it answers the question of where Miss Duffy is."
+        },
+        "B": {
+          "recipe": "another sense of the target (SENSE)",
+          "why_wrong": "“Settled” can mean occupied, as in settling land, which does not fit a question about someone’s whereabouts."
+        },
+        "C": {
+          "recipe": "another sense of the target (SENSE)",
+          "why_wrong": "“Settled” can mean paid, as in settling a bill, but no money is involved here."
+        }
+      },
+      "models": [
+        "1.1",
+        "1.45",
+        "1.54",
+        "1.56"
+      ],
+      "word_count": 66,
+      "sources": [
+        {
+          "what": "Project Gutenberg text of The Real Charlotte (E. Oe. Somerville and Martin Ross, 1894), Charlotte’s visit to Julia Duffy’s cottage; excerpt copied exactly",
+          "url": "https://www.gutenberg.org/cache/epub/59138/pg59138.txt"
+        }
+      ],
+      "notes": "Subject: literature (novel, 1894, public domain). Key letter D. All three distractors are other senses of settle. Martin Ross is the pen name of Violet Martin.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 2,
+        "fixes": [],
+        "status": "pass",
+        "excerpt": "checked against Project Gutenberg 59138, exact; author, year, title and context line correct"
+      }
+    },
+    {
+      "id": "words_in_context.M1.easy.w2b6_17",
+      "template": "M1",
+      "subtype": "Most nearly mean: underlined word",
+      "tier": "easy",
+      "passage": "The following text is from Mary Austin’s 1903 book The Land of Little Rain. Austin is describing snowfall in the mountains.\n\nThere is seldom any wind with first snows, more often rain, but later, when there is already a smooth foot or two over all the slopes, the drifts begin. The late snows are <u>fine</u> and dry, mere ice granules at the wind’s will.",
+      "stem": "As used in the text, what does the word “fine” most nearly mean?",
+      "options": [
+        "Powdery",
+        "Excellent",
+        "Sunny",
+        "Elegant"
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "In the text, “fine” means powdery, made of very small particles. Austin describes the late snows as “mere ice granules” blown about by the wind.",
+      "distractors": {
+        "B": {
+          "recipe": "another sense of the target (SENSE)",
+          "why_wrong": "“Fine” can mean excellent, as in a fine meal, but Austin is describing what the snow is made of, “mere ice granules,” not praising it."
+        },
+        "C": {
+          "recipe": "another sense of the target (SENSE)",
+          "why_wrong": "“Fine” can describe clear, sunny weather, but here it describes the snow itself."
+        },
+        "D": {
+          "recipe": "another sense of the target (SENSE)",
+          "why_wrong": "“Fine” can mean elegant, as in fine clothes, which does not fit snow made of tiny ice granules."
+        }
+      },
+      "models": [
+        "1.4",
+        "1.45",
+        "1.54",
+        "1.56"
+      ],
+      "word_count": 64,
+      "sources": [
+        {
+          "what": "Project Gutenberg text of The Land of Little Rain (Mary Austin, 1903), chapter Nurslings of the Sky; excerpt copied exactly",
+          "url": "https://www.gutenberg.org/cache/epub/365/pg365.txt"
+        }
+      ],
+      "notes": "Subject: literature (book of nature essays, 1903, public domain). Key letter A. Trimmed before the next sentence, whose “canons” is Austin’s cañons with the tilde lost in the Gutenberg text. Raw freq.txt ranks: Powdery 42,302; Excellent 1,690; Sunny 3,629; Elegant 4,630. The key is rarer than its distractors (official easy meaning items usually have the commoner key); no plainer one-word synonym for this sense exists, and the rarer senses of fine (thin, delicate, sharp) would fit snow loosely, so the set was kept.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 2,
+        "fixes": [],
+        "status": "pass",
+        "excerpt": "checked against Project Gutenberg 365, exact; author, year, title and context line correct",
+        "note": "Key Powdery kept: “mere ice granules” pins the particle sense, the three distractors are other real senses of fine that plainly fail (mere rules out praise), and no offered option fits loosely. Its raw rank (42,302) reflects the 1850 to 1928 corpus; students know it from powdery snow, so the set is not the band-5 rare-key pattern in practice, and rarity is not a gate for an easy M1."
+      }
+    },
+    {
+      "id": "words_in_context.B6.easy.w2b6_18",
+      "template": "B6",
+      "subtype": "Blank completion: phrase options",
+      "tier": "easy",
+      "passage": "Njideka Akunyili Crosby’s paintings of everyday domestic life are ______ borrowed images. Into scenes such as her grandmother’s dining table, she layers cutouts from Nigerian lifestyle magazines and family photographs, which she usually transfers onto the painting photographically.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "free of",
+        "framed by",
+        "dense with",
+        "named after"
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "“Dense with” means filled closely with. The text says Akunyili Crosby layers many cutouts from magazines and family photographs into her painted scenes, so the paintings are packed with images taken from other sources.",
+      "distractors": {
+        "A": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "The text says the paintings contain many borrowed images, the opposite of being free of them."
+        },
+        "B": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "The text says the images are layered into the scenes, not placed around their edges as a frame."
+        },
+        "D": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Nothing in the text says how the paintings are titled."
+        }
+      },
+      "models": [
+        "1.2",
+        "1.20",
+        "1.43",
+        "1.52"
+      ],
+      "word_count": 38,
+      "sources": [
+        {
+          "what": "East of Borneo, Njideka Akunyili Crosby: The painter in her MacArthur moment: intimate scenes of domestic life in Nigeria and the US such as her grandmother’s dining table; dense collages of cutouts from Nigerian lifestyle magazines and family photographs, most transferred photographically onto the painting",
+          "url": "https://eastofborneo.org/archives/njideka-akunyili-crosby-the-painter-in-her-macarthur-moment/"
+        }
+      ],
+      "notes": "Subject: humanities (painting). Key letter C. Restatement clue in the next sentence. Raw freq.txt ranks (rarest content word): free of 569; framed by 2,047; dense with 4,276; named after 246.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [
+          "“most of which she transfers” changed to “which she usually transfers” (source: “more often, she photo-transfers them”; occasionally she glues them on)"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "words_in_context.B6.easy.w2b6_19",
+      "template": "B6",
+      "subtype": "Blank completion: phrase options",
+      "tier": "easy",
+      "passage": "Shahzia Sikander’s art is ______ the centuries-old tradition of South Asian miniature painting. Sikander trained as a miniaturist at the National College of Arts in Lahore, Pakistan, and although her works range from small watercolors to mural-scale wall paintings and digital animations, she continues to recast that tradition’s conventions.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "unfamiliar with",
+        "rooted in",
+        "praised by",
+        "copied by"
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "“Rooted in” means growing out of. The text says Sikander trained as a miniaturist and that, across many formats, her work keeps reworking the conventions of miniature painting. Her art grows out of that tradition.",
+      "distractors": {
+        "A": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "Sikander trained as a miniaturist and works with the tradition’s conventions, so her art is not unfamiliar with it."
+        },
+        "C": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "A tradition cannot praise anything, and the text says nothing about how her work has been received."
+        },
+        "D": {
+          "recipe": "reversal: direction (ANT)",
+          "why_wrong": "The tradition is centuries old and Sikander draws on it; the text does not say the tradition copies her art."
+        }
+      },
+      "models": [
+        "1.3",
+        "1.20",
+        "1.43",
+        "1.49"
+      ],
+      "word_count": 48,
+      "sources": [
+        {
+          "what": "MacArthur Foundation, Shahzia Sikander (2006 Fellow): trained as a miniaturist at the National College of Arts in Lahore, Pakistan; recasts the conventions of this centuries-old tradition; works range from intimate watercolors to mural-scale wall paintings; juxtaposes painting with digital animation",
+          "url": "https://www.macfound.org/fellows/class-of-2006/shahzia-sikander"
+        }
+      ],
+      "notes": "Subject: humanities (painting). Key letter B. Restatement clue (trained as a miniaturist, recasts the tradition’s conventions). Raw freq.txt ranks: unfamiliar with 8,144; rooted in 5,207; praised by 2,597; copied by 10,080.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "words_in_context.B2.easy.w2b6_20",
+      "template": "B2",
+      "subtype": "Blank completion: cause or consequence",
+      "tier": "easy",
+      "passage": "Fork-tailed drongos sometimes give false alarm calls even though no predator is around. Studying a wild group of 64 drongos in the Kalahari Desert, Tom Flower found that these deceptive calls often frighten foraging meerkats away from their food, which allows the drongos to swoop in and ______ it.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "share",
+        "guard",
+        "return",
+        "steal"
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "“Steal” means take something that belongs to another. The drongos give false alarms that frighten meerkats away from their food, and then the birds swoop in and take it.",
+      "distractors": {
+        "A": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "The meerkats have fled, so the drongos are not sharing the food with them; they are taking it."
+        },
+        "B": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Nothing suggests the drongos protect the food; the point of the false alarm is to get the food for themselves."
+        },
+        "C": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "The drongos scare the meerkats away from their food, which is the opposite of giving it back."
+        }
+      },
+      "models": [
+        "1.5",
+        "1.16",
+        "1.35",
+        "1.44"
+      ],
+      "word_count": 48,
+      "sources": [
+        {
+          "what": "National Geographic (Ed Yong) 2014, The bird that cries wolf changes its lies: Tom Flower studied wild fork-tailed drongos in the Kalahari; drongos mimic other species’ alarm calls even though no predators are around and scare meerkats away from food; the meerkats flee and the drongos swoop in to snatch the morsels",
+          "url": "https://www.nationalgeographic.com/science/article/the-bird-that-cries-wolf-changes-its-lies"
+        }
+      ],
+      "notes": "Subject: natural science (animal behavior). Key letter D. Consequence clue (frighten meerkats away from their food, which allows the drongos to swoop in). Not framed as imitation of other species’ calls, to keep clear of w2b1_19 (thornbills). Raw freq.txt ranks: share 1,377; guard 1,257; return 470; steal 3,847.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "words_in_context.B4.easy.w2b6_21",
+      "template": "B4",
+      "subtype": "Blank completion: example",
+      "tier": "easy",
+      "passage": "The Rasulid Hexaglot, a dictionary compiled in the fourteenth century by Yemen’s sultan al-Afdal al-Abbas, is notably ______: for each of approximately 1,200 Arabic words, it supplies equivalents in Persian, Turkish, Greek, Armenian, and Mongolian, arranged in parallel columns.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "multilingual",
+        "humorous",
+        "anonymous",
+        "poetic"
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "“Multilingual” means in several languages. The text lists the five languages besides Arabic in which the dictionary gives equivalents for each word.",
+      "distractors": {
+        "B": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Nothing in the text suggests the dictionary is meant to be funny."
+        },
+        "C": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "The text names the dictionary’s compiler, the sultan al-Afdal al-Abbas."
+        },
+        "D": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "The text describes word lists in several languages, not verse or poetic language."
+        }
+      },
+      "models": [
+        "1.7",
+        "1.22",
+        "1.25",
+        "1.34"
+      ],
+      "word_count": 39,
+      "sources": [
+        {
+          "what": "AramcoWorld 1982, The King’s Dictionary: the Rasulid sultan al-Afdal al-Abbas, who ruled Yemen from 1363 to 1377, compiled a dictionary of about 1,200 Arabic words with their equivalents in parallel columns in Persian, Turkish, Greek, Armenian and Mongolian",
+          "url": "https://archive.aramcoworld.com/issue/198202/the.king.s.dictionary.htm"
+        }
+      ],
+      "notes": "Subject: history. Key letter A. Example-pinned clue (the list of languages after the colon). The key does not echo hexaglot. Ranks: multilingual 6,538 corrected (unseen in freq.txt); humorous 5,911; anonymous 11,694; poetic 6,242.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "words_in_context.B5.easy.w2b6_22",
+      "template": "B5",
+      "subtype": "Blank completion: negated frame",
+      "tier": "easy",
+      "passage": "In an experiment by Hajo Adam and Adam Galinsky, participants told that their white coat belonged to a painter were less ______ than those wearing the same kind of coat described as a lab coat: at spotting differences between pairs of similar images, they performed worse.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "artistic",
+        "observant",
+        "comfortable",
+        "talkative"
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "“Observant” means quick to notice things. The participants told that their coat belonged to a painter did worse at spotting differences between two similar images, so they noticed less than those wearing the same kind of coat described as a lab coat.",
+      "distractors": {
+        "A": {
+          "recipe": "topic echo (ASSOC)",
+          "why_wrong": "A painter’s coat calls art to mind, but the text says nothing about how artistic the participants were; it reports how well they spotted differences."
+        },
+        "C": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "The text does not say how comfortable the participants felt in either coat."
+        },
+        "D": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Nothing in the text concerns how much the participants talked."
+        }
+      },
+      "models": [
+        "1.12",
+        "1.24",
+        "1.28",
+        "1.48"
+      ],
+      "word_count": 45,
+      "sources": [
+        {
+          "what": "British Psychological Society Research Digest 2012, Introducing enclothed cognition: in a sustained attention test of spotting differences between two similar images, participants who wore a lab coat outperformed those who wrote an essay about a lab coat, who in turn outperformed participants who wore what they were told was a painter’s coat of the same style",
+          "url": "https://bps.org.uk/2012/03/01/introducing-enclothed-cognition-how-what-we-wear-affects-how-we-think"
+        }
+      ],
+      "notes": "Subject: social science (psychology). Key letter B. Negated frame (less ______ than); topic echo artistic. As in the source, both groups wore the same style of white coat, described differently. Raw freq.txt ranks: artistic 3,634; observant 9,412; comfortable 1,349; talkative 13,443.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "words_in_context.B5.easy.w2b6_23",
+      "template": "B5",
+      "subtype": "Blank completion: negated frame",
+      "tier": "easy",
+      "passage": "For a turtle ant soldier, an oddly shaped head is by no means ______. Scott Powell and colleagues report that soldiers deploy their armored heads as living barricades at nest entrances: individual soldiers block small entrances on their own, while square-headed soldiers collectively obstruct larger ones.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "defensive",
+        "luminescent",
+        "decorative",
+        "noisy"
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "“Decorative” means serving only for ornament. The text says the soldiers use their unusual heads to block the entrances of their nests, so the heads have a practical job rather than being mere ornament.",
+      "distractors": {
+        "A": {
+          "recipe": "reversal: negation flip (ANT)",
+          "why_wrong": "Saying the heads are by no means “defensive” contradicts the text, which says soldiers use them as barricades to guard the nest."
+        },
+        "B": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "The text says nothing about the ants’ heads giving off light."
+        },
+        "D": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Nothing in the text concerns sound."
+        }
+      },
+      "models": [
+        "1.12",
+        "1.24",
+        "1.37",
+        "1.48"
+      ],
+      "word_count": 46,
+      "sources": [
+        {
+          "what": "Powell, Price and Kronauer 2020, Trait evolution is reversible, repeatable, and decoupled in the soldier caste of turtle ants (PNAS): soldiers defend nest entrances by using their elaborately armored heads as living barricades; dish-headed soldiers typically solo-block entrances that fit a single soldier, square-headed soldiers group-block large entrances",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7104247"
+        }
+      ],
+      "notes": "Subject: natural science (entomology). Key letter C. Negated frame (by no means); one negation flip (defensive). Raw freq.txt ranks: defensive 13,611; luminescent unseen; decorative 16,047; noisy 5,241.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [
+          "“found that” changed to “report that”: the cited 2020 PNAS paper states the barricade behavior as established background, not as its own new finding"
+        ],
+        "status": "fixed"
+      }
+    }
+  ]
+}

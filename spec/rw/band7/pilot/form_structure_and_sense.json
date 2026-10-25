@@ -1,0 +1,394 @@
+{
+  "skill": "Form, Structure, and Sense",
+  "slug": "form_structure_and_sense",
+  "part": null,
+  "domain": "Standard English Conventions",
+  "tier": "hard",
+  "band_target": 7,
+  "plan": {
+    "templates": [
+      {
+        "code": "R2_interrupter",
+        "name": "Nonfinite verb opening a long restrictive phrase between the subject and its delayed main verb (new template, band 7 only)",
+        "band7_count": 9,
+        "band7_models": [
+          "1a61e2ae",
+          "3a1239d2",
+          "505054e3",
+          "9127635a",
+          "a2816c7f",
+          "aa443c4b",
+          "c9a677e9",
+          "d222f7d9",
+          "f768090a"
+        ]
+      },
+      {
+        "code": "R1_lex",
+        "name": "Subject-verb agreement, lexical-verb options",
+        "band7_count": 5,
+        "band7_models": [
+          "16740ab4",
+          "1c65db8f",
+          "ae439895",
+          "b0fb36ad",
+          "b32eab9f"
+        ]
+      },
+      {
+        "code": "R1_quant_compound",
+        "name": "Subject-verb agreement, quantifier (each one of) or compound subject",
+        "band7_count": 3,
+        "band7_models": [
+          "0fe5ce68",
+          "5fd86f4b",
+          "c7cb5186"
+        ]
+      },
+      {
+        "code": "R3_past_participle",
+        "name": "Modifier placement after a past-participle opener (Compared with that of ...)",
+        "band7_count": 3,
+        "band7_models": [
+          "2dd1b8bf",
+          "8b017d4e",
+          "fced396a"
+        ]
+      }
+    ],
+    "not_chosen": "R1_be, R1_rel_poss, R2_ing and R5_possessive_det have 2 band-7 items each; R3_prep_gerund, R3_ing_participle, R6_grid and R6_individual 1 each."
+  },
+  "items": [
+    {
+      "id": "form_structure_and_sense.R1_quant_compound.b7",
+      "notes": "Subject: literature. 65 words (models' median 57). Section 6: rule R1; 18 run words after the blank; cue outside the 6-word window (the head each one sits 20 words before the blank); plural attractors variations, imitations, telegrams, letters (the last two right before the blank), an intervener verb of the other number (range) and a plural cue after the blank (together they demonstrate). Options vary on number and finiteness: two plural forms and the nonfinite recounting. Blind solve: only recounts; recount and have recounted are plural, recounting leaves each one without a verb.",
+      "template": "R1_quant_compound",
+      "subtype": "Subject-verb agreement: each one of + plural noun, with a plural-verb relative clause between",
+      "passage": "French writer Raymond Queneau’s 1947 book Exercises in Style retells a trivial anecdote, a quarrel between passengers on a crowded Paris bus, in 99 versions. Each one of the book’s variations, which range from the ode and the sonnet to imitations of telegrams and official letters, ______ the incident in a distinctive register, and together they demonstrate how thoroughly style can transform identical narrative material.",
+      "stem": "Which choice completes the text so that it conforms to the conventions of Standard English?",
+      "options": [
+        "recounts",
+        "recount",
+        "have recounted",
+        "recounting"
+      ],
+      "answer_letter": "A",
+      "explanation": "The subject of the first clause is “each one,” which is singular; “of the book’s variations” and the clause “which range ... letters” only describe it, and “they” in the second clause refers to all the variations together. The blank must supply the finite verb for “each one,” and “recounts” is the only option that is both finite and singular.",
+      "distractors": {
+        "B": {
+          "recipe": "wrong number verb",
+          "why_wrong": "The plural “recount” fits “official letters” right before the blank and matches the plural “range” and “they demonstrate” around it, but the subject is the singular “each one.”"
+        },
+        "C": {
+          "recipe": "wrong number verb",
+          "why_wrong": "The plural “have recounted” does not agree with the singular subject “each one.”"
+        },
+        "D": {
+          "recipe": "nonfinite where a finite verb is needed",
+          "why_wrong": "The participle “recounting” is not plural, but it leaves “each one of the book’s variations” without a finite verb, so everything before “and together” is a fragment."
+        }
+      },
+      "models": [
+        "0fe5ce68",
+        "5fd86f4b"
+      ],
+      "band7_moves": [
+        "quantifier head each one of + plural noun",
+        "intervener with its own finite verb of the other number (which range), and a plural cue after the blank (together they demonstrate), so the plural sounds right on both sides",
+        "plural attractors between head and blank: variations, imitations, telegrams, letters (singular head behind plurals)",
+        "options vary on number and finiteness: recounting is not plural but leaves the clause without a verb",
+        "18 words of the run follow the blank"
+      ],
+      "sources": [
+        {
+          "what": "Exercices de style, Gallimard 1947; 99 retellings of the same story; the anecdote: a man with a long neck and a funny hat argues with another passenger on the S bus, later seen at Gare Saint-Lazare; styles include Sonnet, Ode, Official Letter, Telegraphic",
+          "url": "https://en.wikipedia.org/wiki/Exercises_in_Style"
+        },
+        {
+          "what": "99 versions of one short anecdote, English translation by Barbara Wright (1958)",
+          "url": "https://www.mheu.org/en/timeline/exercises-style.htm"
+        }
+      ],
+      "word_count": 65,
+      "tier": "hard",
+      "band_target": 7,
+      "table": null,
+      "figure": null,
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 5,
+        "fixes": [
+          "mathematical notation was not supported by the sources and sonnets and telegrams overstated single versions (one Sonnet, one Telegraphic); the relative clause now names verse forms such as the ode and the sonnet and imitations of telegrams and official letters (Wikipedia list of styles), keeping plural attractors next to the blank and moving away from the which include X and Y wording of 0fe5ce68",
+          "the 1947 date is the French edition, so the opening now reads French writer Raymond Queneau’s 1947 book Exercises in Style (CB form), trimmed to keep the passage near the band-7 maximum of 64 words",
+          "hardened after gate2 (Haiku p(key) 0.93, every wrong option 2 to 3%): plural cue and they demonstrate added after the blank, are recounting replaced by recounting (number + finiteness), verse forms such as cut"
+        ],
+        "status": "fixed"
+      },
+      "band7": {
+        "verdict": "band 7",
+        "why": "The section-5 R1_quant_compound setting of 0fe5ce68: singular head each one of + plural noun, a relative clause with its own plural verb (range) and five plural attractors, the last two touching the blank, so the plural sounds right twice; head 24 words before the blank, 15 run words after it. Three plural forms against one singular, as in both models."
+      },
+      "hardened": {
+        "what": "Plural cue added after the blank (and together they demonstrate), so a plural verb fits both neighbours; are recounting replaced by the nonfinite recounting (as determining in c7cb5186 and animating in b0fb36ad), so checking number alone leaves two live options and the student must also see that each one still needs its finite verb. verse forms such as cut to hold the length.",
+        "tempting": [
+          "B: recount fits official letters right before the blank, echoes the relative-clause verb range and matches they demonstrate after it; only each one, 20 words back, rules it out",
+          "C: have recounted is plural like range and they, and the perfect suits a finished book; fails on the singular head",
+          "D: recounting reads as one more phrase describing the variations and carries no plural ending, so a student who has found the singular head but not checked for a main verb picks it; with it each one never gets a verb"
+        ]
+      }
+    },
+    {
+      "id": "form_structure_and_sense.R2_interrupter.b7",
+      "notes": "Subject: ornithology. 62 words (models' median 38). Section 6: R2_interrupter with the comma-only key (1a61e2ae, d222f7d9); the participle implanted is in the passage; 11 words from the blank to the main verb flew; garden-path check: cut before flew, E7 was, E7, was and E7 had been each give a complete, sensible passive clause; 44 run words after the blank. With the key the sentence has one finite main verb (flew); with each distractor two, joined only by a comma, and C also puts a lone comma between subject and verb. No and follows flew, so no finite option can start a series of predicates (an earlier draft with left ..., and landed let E7 was read as was implanted, left, and landed). Distance given as more than 11,000 kilometers because sources range from 11,500 to 11,680 (7,200 miles). Blind solve: only E7,.",
+      "template": "R2_interrupter",
+      "subtype": "Comma-only key: past-participle supplement (implanted ...) between the subject and its delayed main verb, 11 words",
+      "passage": "Some bar-tailed godwits breed in Alaska and overwinter in New Zealand and Australia. A female godwit designated ______ implanted with a satellite transmitter in New Zealand in February 2007, flew nonstop from Alaska’s Yukon-Kuskokwim Delta to New Zealand between August 29 and September 7, 2007, covering more than 11,000 kilometers in the longest uninterrupted migratory flight then documented for any bird.",
+      "stem": "Which choice completes the text so that it conforms to the conventions of Standard English?",
+      "options": [
+        "E7 was",
+        "E7,",
+        "E7, was",
+        "E7 had been"
+      ],
+      "answer_letter": "B",
+      "explanation": "The subject of the second sentence is “a female godwit designated E7,” and its finite main verb is “flew.” The words “implanted with ... February 2007” form a supplementary participial phrase describing E7; the comma after “E7” pairs with the comma after “2007” to set it off. A finite verb in the blank (“was,” “had been”) would give the sentence a second main verb with no conjunction.",
+      "distractors": {
+        "A": {
+          "recipe": "finite where a nonfinite is needed",
+          "why_wrong": "“A female godwit designated E7 was implanted ... in February 2007” reads as a complete clause, but then “flew” has no subject of its own: two main verbs are joined only by a comma, with no conjunction."
+        },
+        "C": {
+          "recipe": "finite where a nonfinite is needed; punctuation also wrong",
+          "why_wrong": "The comma pairs with the one after “2007,” so the phrase looks set off, but “was implanted” is a finite verb, a single comma cannot separate a subject from its verb, and the sentence again has two main verbs."
+        },
+        "D": {
+          "recipe": "finite where a nonfinite is needed",
+          "why_wrong": "“Had been implanted” suits an event earlier than the August flight, but it is a finite verb, so it competes with the main verb “flew,” and the two predicates are joined only by a comma."
+        }
+      },
+      "models": [
+        "1a61e2ae",
+        "d222f7d9",
+        "a2816c7f"
+      ],
+      "band7_moves": [
+        "R2_interrupter, comma-only key: the participle implanted is in the passage and the comma sits in the options, as in 1a61e2ae and d222f7d9",
+        "11 words from the blank to the main verb (flew), 32 more after it",
+        "garden path: each finite option makes A female godwit designated E7 ... in February 2007 a complete, natural passive clause",
+        "punctuation folded into the options (E7, / E7, was against E7 was, E7 had been)"
+      ],
+      "sources": [
+        {
+          "what": "Biologists in New Zealand captured E7 in February 2007 and implanted a transmitter in its abdomen; called E7 for a tag on its upper leg; took off from the Yukon River Delta on Aug. 29 and landed in New Zealand on Sept. 7 (nine days); 7,200-mile nonstop flight; USGS biologist Bob Gill",
+          "url": "https://www.gi.alaska.edu/alaska-science-forum/bar-tailed-godwit-goes-distance"
+        },
+        {
+          "what": "Alaska bird makes longest nonstop flight ever measured: about 11,500 kilometers",
+          "url": "https://www.nationalgeographic.com/animals/article/alaska-bird-longest-mirgation"
+        },
+        {
+          "what": "subspecies baueri breeds in Alaska and winters in New Zealand and Australia; E7's 11,680 km flight",
+          "url": "https://simple.wikipedia.com/wiki/Bar-tailed_Godwit"
+        },
+        {
+          "what": "E7 caught with 15 other godwits in New Zealand in early February 2007, each given a satellite transmitter; USGS Alaska Science Center tracking; Alaska to New Zealand nonstop, August 29 to September 7, 2007",
+          "url": "https://sciencedaily.com/releases/2007/09/070915131205.htm"
+        }
+      ],
+      "word_count": 62,
+      "tier": "hard",
+      "band_target": 7,
+      "table": null,
+      "figure": null,
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 7,
+        "fixes": [
+          "Bar-tailed godwits breed in Alaska overgeneralised the species (only the baueri population does); now Some bar-tailed godwits",
+          "several birds replaced by the sourced 16 birds (ScienceDaily/USGS and National Geographic: 16 godwits tagged in New Zealand)",
+          "hardened after gate2 (Haiku p(key) 0.90): rebuilt on the comma-only key (1a61e2ae, d222f7d9), options E7 was / E7, / E7, was / E7 had been, participle implanted in the passage, main verb left 11 words after the blank; 16 birds and the ornithologists dropped; models now 1a61e2ae, d222f7d9, a2816c7f",
+          "safety solve: the first hardened draft (left ..., and landed ...) let E7 was and E7 had been form a valid series of three predicates; the main predicate is now the single verb flew (between August 29 and September 7, covering ...), so every finite option leaves two comma-joined predicates",
+          "Yukon River Delta -> Yukon-Kuskokwim Delta (the delta E7 was tagged in and left from; flagged by two blind solvers)"
+        ],
+        "status": "fixed"
+      },
+      "band7": {
+        "verdict": "band 7",
+        "why": "R2_interrupter, the band-7-only template: a restrictive participial phrase with no commas (as in 4 of 9 models) and the main verb confirmed 9 words after the blank; every finite option makes Ornithologists ... in New Zealand a complete, sensible clause, so the error only shows at confirmed. One -ing against three finite forms of the same verb, as in 505054e3 and c9a677e9."
+      },
+      "hardened": {
+        "what": "Rebuilt on the comma-only key of 1a61e2ae and d222f7d9: the participle implanted sits in the passage and the comma is folded into the options (E7 was, E7, / E7, was, E7 had been), so finiteness and punctuation are decided together. Each finite option turns the subject and the next 11 words into a complete, natural passive clause; the error shows only at flew, 11 words after the blank. The main predicate is one verb with no and after it, so a finite option cannot be read as the first of a series (was implanted ..., flew ...).",
+        "tempting": [
+          "A: A female godwit designated E7 was implanted with a satellite transmitter in New Zealand in February 2007 is a complete, natural clause, while the bare E7, looks unfinished; it fails only at flew, 11 words on",
+          "C: its comma pairs with the comma after 2007, so the phrase looks properly set off; the verb is still finite and the comma splits subject from verb",
+          "D: the past perfect suits an event earlier than the August flight, so a tense check approves it; it is still a second main verb"
+        ]
+      }
+    },
+    {
+      "id": "form_structure_and_sense.R3_past_participle.b7",
+      "notes": "Subject: zoology (biomaterials). 36 words (models' median 32.5). Section 6: R3 key subject is a property (the dragline silk of ...), not the obvious noun (the spider) that ends the first sentence; options 17 to 19 words, all grammatical and keeping every fact; key not the longest. Distractors after hardening: W possessive naming the wrong part (Darwin’s bark spider’s webs), W (the spider, passive with the study as an interrupter), W noun + of + spider (a 2010 study of Darwin’s bark spider). Blind solve: only C, because that of any other spider means the silk of any other spider. Toughness figure from Agnarsson et al. 2010 (more than twice any previously described silk); radial threads are where the paper took its dragline samples.",
+      "template": "R3_past_participle",
+      "subtype": "Compared with that of ...: the right subject is a property (the silk), not the animal",
+      "passage": "Darwin’s bark spider, endemic to Madagascar, suspends enormous orb webs above rivers and lakes, anchoring them to either bank with threads extending up to 25 meters. Compared with that of any other spider previously examined, ______",
+      "stem": "Which choice completes the text so that it conforms to the conventions of Standard English?",
+      "options": [
+        "Darwin’s bark spider’s webs have radial threads of dragline silk more than twice as tough, a 2010 study found.",
+        "Darwin’s bark spider was found, in a 2010 study, to produce dragline silk more than twice as tough.",
+        "the dragline silk of Darwin’s bark spider is more than twice as tough, a 2010 study found.",
+        "a 2010 study of Darwin’s bark spider found its dragline silk to be more than twice as tough."
+      ],
+      "answer_letter": "C",
+      "explanation": "The opening phrase compares something with “that of any other spider,” and what is more than twice as tough is silk, so “that” stands for the dragline silk of other spiders and the noun right after the phrase must be Darwin’s bark spider’s silk. Choice C places “the dragline silk of Darwin’s bark spider” immediately after the modifier. The webs (A), the spider (B) and a study (D) are not what is compared with other spiders’ silk.",
+      "distractors": {
+        "A": {
+          "recipe": "W: wrong noun as subject (a possessive naming the wrong part, the webs)",
+          "why_wrong": "Placing “Darwin’s bark spider’s webs” right after the phrase illogically compares the webs with other spiders’ silk; the singular “that” cannot stand for the plural “webs” either."
+        },
+        "B": {
+          "recipe": "W: wrong noun as subject (the spider, with the study as an interrupter)",
+          "why_wrong": "Placing “Darwin’s bark spider” right after the phrase illogically compares the spider itself with other spiders’ silk; the interrupting “was found, in a 2010 study,” does not change the subject."
+        },
+        "D": {
+          "recipe": "W: wrong noun as subject (the study, built as noun + of + spider)",
+          "why_wrong": "Placing “a 2010 study of Darwin’s bark spider” right after the phrase illogically compares a study with other spiders’ silk, even though it has the same “of” + spider shape as “that of any other spider.”"
+        }
+      },
+      "models": [
+        "2dd1b8bf",
+        "fced396a"
+      ],
+      "band7_moves": [
+        "Compared with that of ... opener, so the right subject is a property (the silk), not the obvious noun (the spider)",
+        "two distractors look like property subjects: a possessive naming the wrong part (the webs) and a noun + of + spider phrase (a 2010 study of Darwin’s bark spider)",
+        "the obvious noun ends the first sentence and opens the third distractor (B), as silica glass does in 2dd1b8bf",
+        "options of 17 to 19 words, all grammatical sentences, keeping every fact; key not the longest option"
+      ],
+      "sources": [
+        {
+          "what": "Agnarsson, Kuntner and Blackledge 2010, PLoS ONE: Darwin's bark spider silk toughness averages 350 MJ/m3, more than twice tougher than any previously described silk; webs suspended above streams, rivers and lakes with anchor threads up to 25 m; dragline silk samples were taken from the radial threads of the orb web",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC2939878"
+        },
+        {
+          "what": "Madagascar spider silk ten times tougher than Kevlar; species from Madagascar",
+          "url": "https://cosmosmagazine.com/biology/madagascar-spider-silk-10-times-stronger-than-kevlar"
+        }
+      ],
+      "word_count": 36,
+      "tier": "hard",
+      "band_target": 7,
+      "table": null,
+      "figure": null,
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 5,
+        "fixes": [
+          "hardened: B (a 2010 study found that ...) and D (there is ... , no study) died on sight; B now opens with the spider in a passive frame with the study as an interrupter (8b017d4e style), D keeps the expletive but carries every fact, so two distractors start with the obvious noun as in 2dd1b8bf and fced396a",
+          "hardened after gate2 (Haiku p(key) 0.92): A now a possessive naming the wrong part (Darwin’s bark spider’s webs, radial threads sourced to the PMC methods), D now a 2010 study of Darwin’s bark spider in place of the expletive"
+        ],
+        "status": "fixed"
+      },
+      "band7": {
+        "verdict": "band 7",
+        "why": "After hardening: the Compared with that of opener forces a property subject (the silk of the spider), the 3-of-5 band-7 R3 setting; two distractors open with the spider, the noun the opener seems to describe, one of them a natural passive with the study inside it. Before the fix two of the three distractors (the study, there) were killed at a glance, which read as band 6."
+      },
+      "hardened": {
+        "what": "The spider-first active option (A) became a possessive naming the wrong part (Darwin’s bark spider’s webs), the shape of the key in 2dd1b8bf, and the expletive (D) became a 2010 study of Darwin’s bark spider, a noun + of + spider phrase that mirrors that of any other spider. Two distractors now look like property subjects; only the silk is what that stands for.",
+        "tempting": [
+          "A: a possessive subject like the key of 2dd1b8bf, so a student who knows that of calls for a property picks it; but the webs are not what is compared, and plural webs cannot match singular that",
+          "B: the spider, the noun that ends the first sentence and seems to be what the opener describes, inside a natural passive with the study tucked in",
+          "D: a 2010 study of Darwin’s bark spider copies the shape of that of any other spider and its clause keeps every fact; the study is not what is compared"
+        ]
+      }
+    },
+    {
+      "id": "form_structure_and_sense.R1_lex.b7",
+      "notes": "Subject: linguistics and music. 57 words (models' median 53). Section 6: plural head (pitches) behind four singular nouns (drummer, membrane, gángan, drum) and an intervener verb of the other number (generates); head 22 words before the blank, so the cue is outside the window; 12 run words after the blank. Options vary on number and finiteness: two singular forms and the nonfinite mirroring. Blind solve: only mirror; mirrors matches the nearest nouns, mirroring leaves pitches without a verb. The claim stays within Akinbo's abstract (drummers tighten and loosen the membrane to produce the three tones and can represent syllables and tones).",
+      "template": "R1_lex",
+      "subtype": "Subject-verb agreement: plural head behind a relative clause with a singular verb and singular nouns",
+      "passage": "Yorùbá is a tonal language: a syllable’s relative pitch (high, mid, or low) can distinguish otherwise identical words. According to linguist Samuel Akinbo, the fluctuating pitches that a drummer generates by alternately tightening and loosening the membrane of a gángan, an hourglass-shaped talking drum, ______ these three tones precisely enough to represent individual Yorùbá syllables and words.",
+      "stem": "Which choice completes the text so that it conforms to the conventions of Standard English?",
+      "options": [
+        "mirrors",
+        "has mirrored",
+        "mirroring",
+        "mirror"
+      ],
+      "answer_letter": "D",
+      "explanation": "The subject of the main clause is the plural noun “pitches”; everything from “that a drummer generates” to “talking drum” describes those pitches. The blank must supply that subject’s finite verb, and “mirror” is the only option that is both finite and plural.",
+      "distractors": {
+        "A": {
+          "recipe": "wrong number verb",
+          "why_wrong": "The singular “mirrors” agrees with the nearby singular nouns (“drum,” “gángan,” “drummer”), not with the plural subject “pitches.”"
+        },
+        "B": {
+          "recipe": "wrong number verb",
+          "why_wrong": "The singular “has mirrored” does not agree with the plural subject “pitches.”"
+        },
+        "C": {
+          "recipe": "nonfinite where a finite verb is needed",
+          "why_wrong": "“Mirroring” reads well after “talking drum,” as if it described the drum or the drumming, and it carries no singular ending, but it leaves “the fluctuating pitches” with no finite verb, so the sentence has no main clause."
+        }
+      },
+      "models": [
+        "ae439895",
+        "b32eab9f",
+        "16740ab4"
+      ],
+      "band7_moves": [
+        "plural head (pitches) behind singular nouns: drummer, membrane, gángan, drum",
+        "intervener with its own finite verb of the other number (that a drummer generates)",
+        "singular attractor count 4, head-to-blank distance 22 words",
+        "two singular forms and the nonfinite mirroring as distractors, so the options vary on number and finiteness"
+      ],
+      "sources": [
+        {
+          "what": "Akinbo 2019, Representation of Yorùbá tones by a talking drum: gángan (a talking drum); five native drummers in Nigeria; drummers tightened and loosened the drum membrane to articulate the three tones of Yorùbá; drummers can represent syllables, lexical tones and tonal processes",
+          "url": "https://websites.umass.edu/phonolist/2019/12/03/akinbo-2019-representation-of-yoruba-tones-by-a-talking-drum-an-acoustic-analysis"
+        },
+        {
+          "what": "Akinbo 2021, Frontiers in Communication: significant positive relationship between speech tones and their drum representations; dùndún family hourglass talking drums",
+          "url": "https://www.frontiersin.org/articles/10.3389/fcomm.2021.652690/pdf"
+        },
+        {
+          "what": "gángan listed as a Yoruba name of the talking drum, an hourglass-shaped drum whose drumhead tightens when squeezed",
+          "url": "https://en.wikipedia.org/wiki/Talking_drum"
+        },
+        {
+          "what": "Yoruba dùndún/gángan: hourglass-shaped, double-headed drum held under the arm, tension cords squeezed",
+          "url": "https://wmic.net/yoruba-dundun-gangan-ah/"
+        }
+      ],
+      "word_count": 57,
+      "tier": "hard",
+      "band_target": 7,
+      "table": null,
+      "figure": null,
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 6,
+        "fixes": [
+          "added sources for hourglass-shaped (the Akinbo abstract does not describe the drum)",
+          "hardened after gate2 (Haiku p(key) 0.90): is mirroring replaced by the nonfinite mirroring, so number alone leaves two options"
+        ],
+        "status": "fixed"
+      },
+      "band7": {
+        "verdict": "band 7",
+        "why": "Plural head behind four singular nouns and an intervener verb of the other number (that a drummer generates), the band-7 R1 pattern of ae439895 and b32eab9f; head 22 words before the blank, so the window shows only drum and singular forms; 12 run words after the blank."
+      },
+      "hardened": {
+        "what": "is mirroring replaced by the nonfinite mirroring (as animating in b0fb36ad and determining in c7cb5186): a student who rejects the singular forms still has two options, mirror and mirroring, and only the finiteness check, made against pitches 22 words back, separates them.",
+        "tempting": [
+          "A: mirrors agrees with drum, gángan and drummer right before the blank and echoes the singular generates; only pitches, 22 words back, rules it out",
+          "B: has mirrored is singular like every noun near the blank; fails on number",
+          "C: mirroring reads as a phrase about the drum or the drumming and has no singular ending, so it survives a number check; with it pitches never gets a verb"
+        ]
+      }
+    }
+  ]
+}

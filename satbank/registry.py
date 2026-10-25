@@ -89,7 +89,7 @@ def generate(name: str, seed: int, attempts: int = 60, verify: bool = True, **kw
                 continue
             if verify:
                 audit(item)
-            return _typeset_item(item)
+            return item if item.text else _typeset_item(item)   # prose keeps its hyphens and ranges
     limit = FALLBACK_ATTEMPTS if fallback else attempts
     raise ItemError(f"{name}: no valid item after {limit} attempts (seed {seed})")
 

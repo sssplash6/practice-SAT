@@ -80,12 +80,13 @@ def load_topics() -> dict[str, Topic]:
         except Exception as exc:                                    # noqa: BLE001
             BROKEN[mod.name] = exc
             continue
-        topic = getattr(m, "TOPIC", None)
-        if topic is None:
-            continue
-        if topic.slug in TOPICS:
-            raise RuntimeError(f"two topics claim the slug {topic.slug!r}")
-        TOPICS[topic.slug] = topic
+        # one TOPIC per module, or a TOPICS list (the Reading and Writing bank, satbank/topics/rw.py)
+        for topic in getattr(m, "TOPICS", None) or [getattr(m, "TOPIC", None)]:
+            if topic is None:
+                continue
+            if topic.slug in TOPICS:
+                raise RuntimeError(f"two topics claim the slug {topic.slug!r}")
+            TOPICS[topic.slug] = topic
     return TOPICS
 
 

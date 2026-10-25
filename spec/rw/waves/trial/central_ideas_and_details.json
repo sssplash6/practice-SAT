@@ -1,0 +1,966 @@
+{
+  "skill": "Central Ideas and Details",
+  "slug": "central_ideas_and_details",
+  "part": "trial",
+  "domain": "Information and Ideas",
+  "tier": "hard",
+  "band_target": 7,
+  "plan": {
+    "templates": [
+      {
+        "code": "T1",
+        "name": "Main idea, study report or scholar argument"
+      },
+      {
+        "code": "T2",
+        "name": "Main idea, view then correction"
+      },
+      {
+        "code": "T6",
+        "name": "Supported detail (informational, would most likely agree)"
+      }
+    ]
+  },
+  "items": [
+    {
+      "id": "central_ideas_and_details.trial.hard.t_01",
+      "template": "T2",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "Most poison frogs are drably colored, and such species—unlike their conspicuous relatives, which have evolved biochemical means of transporting, storing, and modifying alkaloids from the ants and mites they eat—were presumed unable to retain these toxins. Screening supposedly undefended lineages with sensitive chromatographic and mass-spectrometric methods, Rebecca D. Tarvin et al. detected alkaloids in nearly all, albeit at far lower concentrations. Every species examined ate ants and mites, and the team argues that diet alone cannot explain sequestration: dull frogs, lacking specialized machinery, seemingly accumulate alkaloids passively, perhaps an early step toward chemical defense.",
+      "source_text": "Many poison frog species use bright or contrasting colors to advertise their defenses to predators; this strategy is known as ‘aposematism’. Aposematic frogs have evolved biochemical mechanisms to transport, store and even modify the alkaloid toxins. Although aposematism has evolved independently in three poison frog clades, most of the frogs in this family are dull-colored. These dull-colored frogs are generally assumed to not be able to accumulate alkaloid toxins from their diet. However, very little is known about how animals evolve to be able to use chemicals they eat as toxins to defend themselves.\n\nTo learn more about this phenomenon, Tarvin et al. screened different ‘undefended’ frog lineages for alkaloids to determine whether the frogs lacked them, as previously assumed. The researchers used highly sensitive chromatography and mass spectrometry, techniques that can detect and identify specific compounds in chemical mixtures, even at very low concentrations.\n\nThe results showed that nearly every ‘undefended’ poison frog had alkaloids, but at substantially lower levels than aposematic species. Tarvin et al. propose that these frogs do not have the transport or storage systems that aposematic frogs employ to use the toxic alkaloids they consume. Rather, the dull-colored frogs accumulate alkaloids passively. This ‘passive accumulation’ appears to be a stepping stone on the path to evolving the ability to accumulate toxins from the diet. Tarvin et al. also found that all of the studied poison frogs ate ants and mites, the main arthropod sources of alkaloids in poison frogs.\n\nThe findings of Tarvin et al. suggest that specialized diets are not enough to explain how poison frogs evolved the ability to accumulate toxins. Changes in toxin absorption, distribution, metabolism and excretion are also required for frogs to be able to use alkaloids from their diet as poison. This provides new insights into the evolution of chemical defense in poison frogs and could help researchers to better understand how this type of defense evolved in other animals.",
+      "sources": [
+        {
+          "what": "eLife digest of Tarvin, Coleman, Donoso et al., Passive accumulation of alkaloids in inconspicuously colored frogs refines the evolutionary paradigm of acquired chemical defenses, published 2024-12-27",
+          "url": "https://elifesciences.org/articles/100011"
+        }
+      ],
+      "models": [
+        "251e5281",
+        "f7bd14de"
+      ],
+      "notes": "Stage 1 only. Source kind: journal plain-language summary (eLife digest); source_text holds the paragraphs used, verbatim. Kept the assumption about dull-colored frogs, the screening method, the finding (nearly every lineage, far lower levels), the diet observation and the authors' hedged proposal (seemingly passive, a possible step). Cut the 1990s background and the closing remarks on other animals. Modelled on band-7 T2 items 251e5281, f7bd14de. 94 words, 6.05 chars/word, 22.0% long words, 23.5 words/sentence (check_rw measure). No 6-word run shared with source_text (names and technical terms excepted), any official passage or our items.",
+      "stem": "Which choice best states the main idea of the text?",
+      "options": [
+        "Although drab poison frogs eat the same alkaloid-bearing ants and mites as their conspicuous relatives, Tarvin et al. argue that diet alone cannot explain why the drab species, lacking specialized biochemical machinery, fail to retain those toxins.",
+        "Although drab poison frogs were presumed unable to retain alkaloids, Tarvin et al. found the toxins in nearly all the drab lineages they screened, which shows that the specialized machinery of conspicuous species arose from the passive accumulation still seen in drab ones.",
+        "Although drab poison frogs lack the biochemical machinery their conspicuous relatives use to handle alkaloids, most of those examined appear to retain small amounts of these toxins anyway, contrary to what had been presumed.",
+        "Although conspicuous poison frogs were long thought to be the only ones whose prey supplies alkaloids, Tarvin et al. found that drab species eat the same ants and mites and so are likely to carry some of the same toxins."
+      ],
+      "answer_letter": "C",
+      "explanation": "The text opens with the assumption that drab poison frogs, unlike their conspicuous relatives with their specialized biochemical means, could not retain alkaloids. Tarvin et al. then detected alkaloids in nearly all the supposedly undefended lineages they screened, though at far lower concentrations, and argue that these frogs “seemingly” accumulate the toxins passively. So the main idea is that drab frogs, despite lacking that machinery, appear to retain small amounts of alkaloids after all, which overturns the assumption; that is choice C.",
+      "distractors": {
+        "A": {
+          "recipe": "the team’s own argument with the overturned assumption kept in the tail (CON-half)",
+          "why_wrong": "The text does say every species ate ants and mites and that diet alone cannot explain sequestration, but Tarvin et al. detected alkaloids in nearly all the drab lineages, so the drab species do not fail to retain the toxins; they retain them at far lower concentrations."
+        },
+        "B": {
+          "recipe": "key content plus a tail that hardens the authors’ hedge (TWI)",
+          "why_wrong": "The first half matches the finding, but the text offers passive accumulation only as “perhaps an early step toward chemical defense”; it never says the conspicuous species’ machinery arose from it, and the finding could not show that."
+        },
+        "D": {
+          "recipe": "the overturned assumption misplaced and the result reached by the wrong route (ATT), hedged",
+          "why_wrong": "The earlier assumption was that drab frogs could not retain alkaloids, not that their prey lacked them. Tarvin et al. detected the toxins directly, and the text uses the shared diet to argue that diet alone cannot explain sequestration, not as a reason to expect toxins."
+        }
+      },
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 6,
+        "fixes": [
+          "key C: dropped \"long-standing\"; the passage says only that drab frogs \"were presumed\" unable to retain alkaloids"
+        ],
+        "status": "fixed"
+      },
+      "band7": {
+        "verdict": "band 7",
+        "why": "All four options share the Although frame at 34 to 43 words and all three wrong ones are partly right; B, the strongest, is rejected only through the hedges \"seemingly\" and \"perhaps\", and A borrows the last sentence almost whole before reversing the finding."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "C",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "central_ideas_and_details.trial.hard.t_02",
+      "template": "T6",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "Earlier experiments indicated that Eurasian jays protect their caches flexibly: observed by a potential thief, they preferred concealing food behind an opaque rather than a transparent screen, and preferred caching food the onlooker had already eaten its fill of. Piero Amodio et al. tested whether jays integrate these two cues, but contrary to expectation the birds did not; indeed, they responded to neither. Even when the original procedures were repeated, the jays showed no preference for hidden sites or for food the observer no longer desired.",
+      "source_text": "Eurasian jays, Garrulus glandarius, are members of the crow family. These large-brained birds hide food when it is abundant, and eat it later, when it is scarce. Previous studies have found that jays avoid theft by other jays by carefully deciding what food to hide, and where. In one study, they preferred to hide their food behind an opaque barrier, rather than a transparent one, when another jay was watching. In a second study, they preferred to hide food that the watching jay had already eaten enough of, and thus did not want.\n\nThese studies suggest that jays have flexible cognitive skills when it comes to protecting their food. They respond to whether a potential thief can see their hiding place and to how much a thief might want the food they are stashing. The next question is, can Eurasian jays combine these two pieces of information? For example, if a jay has two types of food they could hide when another jay is present, but only has one place to hide them (either in view or out-of-view of the other jay), does the first jay prefer to stash the food that the second jay has already eaten, and therefore does not want anymore, only when the hiding place is visible to second jay?\n\nContrary to expectations, the jays did not seem to be able to combine the information about what the other jay could see and what it had been eating. In fact, they seemed unable to respond to either piece of information. When Amodio et al. repeated the original experiments, the jays did not seem to prefer to hide food out of sight, or to hide food that the watcher had already eaten.\n\nThese results raise questions about the repeatability of experiments on food hiding strategies in birds of the crow family. It suggests that previous findings should be further investigated, potentially to identify important factors that might affect the repeatability of food-hiding tactics. Repeating the experiments may show how best to investigate behavioural patterns in jays in the future.",
+      "sources": [
+        {
+          "what": "eLife digest of Amodio, Farrar, Krupenye, Ostojic and Clayton, Little evidence that Eurasian jays protect their caches by responding to cues about a conspecific's desire and visual perspective, published 2021-09-10",
+          "url": "https://elifesciences.org/articles/69647"
+        }
+      ],
+      "models": [
+        "8f3a200e",
+        "db2da2bf",
+        "458b4a11"
+      ],
+      "notes": "Stage 1 only. Source kind: journal plain-language summary (eLife digest); source_text holds the paragraphs used, verbatim. Kept the two earlier findings, the combination test, 'contrary to expectations', the failure on both cues and the failed repetition. Cut the description of the two experimental setups and the digest's closing paragraph. Modelled on band-7 T6 items 8f3a200e, db2da2bf, 458b4a11. 86 words, 5.25 chars/word, 14.8% long words, 28.7 words/sentence (check_rw measure). No 6-word run shared with source_text (names and technical terms excepted), any official passage or our items.",
+      "stem": "What does the text most strongly suggest about the earlier experiments?",
+      "options": [
+        "Their findings may not be robust, since jays put through the same procedures again showed neither of the preferences those experiments had reported.",
+        "Their findings about each cue still hold, but Amodio et al.’s results suggest that jays cannot make use of both cues at the same time.",
+        "They had already shown that jays fail to combine the two cues, a result Amodio et al. then tried to explain by testing each cue on its own.",
+        "They led Amodio et al. to expect that jays would fail to integrate the two cues, an expectation that the later study’s results bore out."
+      ],
+      "answer_letter": "A",
+      "explanation": "The earlier experiments reported two preferences in jays watched by a potential thief: hiding food behind an opaque screen and caching food the onlooker had already eaten its fill of. Amodio et al.’s jays showed neither preference, and the text stresses that this held “even when the original procedures were repeated.” When the same procedures fail to reproduce a result, the original findings may not be robust, which is choice A.",
+      "distractors": {
+        "B": {
+          "recipe": "a true result beside the earlier findings the text undercuts (CON-half), hedged",
+          "why_wrong": "The jays did fail to integrate the two cues, but the text adds that they “responded to neither,” even under the original procedures, so the results cast doubt on the earlier findings about each cue instead of leaving them intact."
+        },
+        "C": {
+          "recipe": "the later study’s question credited to the earlier experiments (ATT)",
+          "why_wrong": "The earlier experiments tested each cue separately; it was Amodio et al. who tested whether jays combine them, and they expected the birds to do so. The earlier work reported no failure to combine for anyone to explain."
+        },
+        "D": {
+          "recipe": "the direction of the expectation reversed (TWI)",
+          "why_wrong": "The birds failed to integrate the cues “contrary to expectation,” so Amodio et al. had expected the jays to integrate them; the results went against that expectation instead of bearing it out."
+        }
+      },
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 5,
+        "fixes": [
+          "D replaced: the old D (invented cue weighting) died on the same \"responded to neither\" fact as B; the new D reverses the direction of \"contrary to expectation\" (TWI)"
+        ],
+        "status": "fixed"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "The passage states the failed replication outright (\"even when the original procedures were repeated\"), so the key is one step from the last sentence. Distractors now each die on a different statement (B the replication, C who tested the combination, D \"contrary to expectation\"), but the item cannot reach band 7 without changing the passage."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "A",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "central_ideas_and_details.trial.hard.t_03",
+      "template": "T1",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "Human foraging technologies have endangered many prey species, and coastal overharvesting has sometimes driven evolutionary change, such as shellfish shrinking. Long-tailed macaques that crack oysters and snails with stones on islands off Thailand and Myanmar let Lydia V. Luncz et al. investigate whether nonhuman stone technology exerts comparable pressure. In Khao Sam Roi Yot National Park, tool-assisted foraging reduced the abundance and size of prey, especially on islands with larger monkey populations. The macaques responded by wielding progressively smaller stones—a feedback loop that, the researchers caution, could eventually make the tools so much less useful that the monkeys abandon them.",
+      "source_text": "Tools have helped us to become one of the most successful species on Earth. However, our use of tools for hunting and foraging has also caused many prey species to become endangered, or even extinct. In some cases, it has also led to evolutionary changes in prey species. For example, over-harvesting of shellfish in coastal areas has driven the shellfish to become smaller in size.\n\nRecently, long-tailed macaques living on islands off the coast of Thailand and Myanmar were also found to use stone tools to forage on shellfish. The macaques use these tools to break open oysters, snails and other prey on the seashore. Studying these monkeys offers the opportunity to test how a non-human primate using stone-based technology affects the sustainability of their prey species.\n\nLuncz et al. investigated how foraging with stone tools by long-tailed macaques living in Khao Sam Roi Yot National Park in Thailand affects local shellfish populations. This revealed that macaques using stone tools alter prey populations in a similar way to human technologies. Specifically, tool use by the macaques significantly reduced the numbers and size of the prey, especially on islands that were home to larger populations of monkeys. In return, the macaques responded by using smaller and smaller stone tools. This “feedback loop” could lead to the stone tools becoming less useful to the macaques to the point where they stop using them.",
+      "sources": [
+        {
+          "what": "eLife digest of Luncz, Tan, Haslam, Kulik, Proffitt and Malaivijitnond, Resource depletion through primate stone technology, published 2017-09-08",
+          "url": "https://elifesciences.org/articles/23647"
+        }
+      ],
+      "models": [
+        "024eb2ec",
+        "7aa510fb",
+        "e80ba20d"
+      ],
+      "notes": "Stage 1 only. Source kind: journal plain-language summary (eLife digest); source_text holds the paragraphs used, verbatim. Kept the human overharvesting precedent, the research question, the two effects on prey with the island-population gradient, the shrinking stones and the authors' hedged feedback-loop warning. Cut the speculation about tool size since the first stone tools and the call for archaeology. Modelled on band-7 T1 items 024eb2ec, 7aa510fb, e80ba20d. 100 words, 5.98 chars/word, 19.3% long words, 20.0 words/sentence (check_rw measure). No 6-word run shared with source_text (names and technical terms excepted), any official passage or our items.",
+      "stem": "Which choice best states the main idea of the text?",
+      "options": [
+        "A study shows that, as with coastal overharvesting by humans, macaques’ stone tool use has made their prey smaller, so that the monkeys on islands with the largest populations have abandoned their tools.",
+        "Research suggests that macaques have come to use progressively smaller stones because their foraging has used up the larger stones on the islands, a trend that the researchers caution could eventually lead the monkeys to abandon their tools altogether.",
+        "A study indicates that stone technology used by nonhuman primates puts less pressure on prey than human foraging technologies do, since the macaques adjust the size of their tools as their prey becomes scarcer and smaller.",
+        "Research suggests that macaques’ stone tools, like human foraging technologies, can reduce both the number and the size of the prey they target, and that the monkeys’ adjustment to this change may eventually undermine their tool use."
+      ],
+      "answer_letter": "D",
+      "explanation": "The text asks whether nonhuman stone technology exerts pressure on prey comparable to that of human foraging technologies. The answer is yes: the macaques’ tool-assisted foraging reduced the abundance and size of their prey, especially where monkey populations were larger. The macaques then turned to smaller stones, a feedback loop the researchers warn “could eventually” make the tools so much less useful that the monkeys abandon them. Choice D states both points at the text’s own degree of certainty.",
+      "distractors": {
+        "A": {
+          "recipe": "true finding with the researchers’ caution turned into a result (CON-half)",
+          "why_wrong": "The macaques’ foraging did make their prey smaller, but abandoning the tools is only a possibility the researchers “caution” about; the response the text reports is that the monkeys wield progressively smaller stones."
+        },
+        "B": {
+          "recipe": "the right trend given an invented cause (TWI), hedged",
+          "why_wrong": "The text says the macaques “responded by” using smaller stones, that is, in response to their smaller and scarcer prey; it never says the supply of larger stones ran out."
+        },
+        "C": {
+          "recipe": "invented comparison with the text’s own benchmark (CMP)",
+          "why_wrong": "The text asks whether the pressure is comparable and reports reduced prey abundance and size; it never measures the macaques’ pressure against that of humans, let alone finds it smaller."
+        }
+      },
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 6,
+        "fixes": [],
+        "status": "pass"
+      },
+      "band7": {
+        "verdict": "band 7",
+        "why": "The key answers the research question (pressure comparable to human technology) that the passage never answers in words; B needs \"responded by\" to reject the used-up stones, A turns the caution into a result; three partly right distractors, CON-half, TWI and CMP."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "D",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "central_ideas_and_details.trial.hard.t_04",
+      "template": "T6",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "Entomologist Alexander Nicholson long ago posited that Australian wildlife harbored extensive assemblages of mimics, and more such mimetic complexes have recently been documented in insects, though never before in ants. Surveying the continent’s ants and ant mimics, Stano Pekár et al. identified more than 140 species—mostly ants, but also wasps, spiders, true bugs, and treehoppers—sharing a gold-and-black warning coloration despite varying in palatability and in defenses such as spines and noxious chemicals. Few turned up in the guts of twelve predator species; offered them, a lizard and two spiders mostly refused, whether palatable or not, preferring a spider without gold markings.",
+      "source_text": "Textbooks on evolution are typically full of different examples of mimicry. However, the specifics of these examples are often poorly understood. Ninety years ago a famous Australian entomologist, Alexander Nicholson, suggested the existence of large groups of mimics in the Australian wildlife. More of these so-called “mimetic complexes” have recently been recognized among several species of insect, but not previously in ants.\n\nNow, Pekár et al. have looked at all known ants and ant-like mimics in Australia and discovered over 140 species that use gold and black colours as a warning signal. Most of the species were ants, but the collection of mimics also includes wasps, spiders, true bugs and insects called treehoppers. Some of the mimics were less palatable than others, and they possessed a range of defences, including spines and foul-tasting chemicals.\n\nPekár et al. then looked in the guts of 12 species of predators in the wild, and found that very few of them ate the mimics. When mimics were offered to three different predators (specifically a lizard and two species of spider), most avoided the mimics regardless of whether they were palatable or unpalatable. Instead, the predators preferred to eat a spider that was not a member of the group of mimics because it lacked the gold colouration.",
+      "sources": [
+        {
+          "what": "eLife digest of Pekar, Petrakova, Bulbert, Whiting and Herberstein, The golden mimicry complex uses a wide spectrum of defence to deter a community of predators, published 2017-02-07",
+          "url": "https://elifesciences.org/articles/22089"
+        }
+      ],
+      "models": [
+        "aa0968dd",
+        "d1b8a9ad",
+        "7812801f"
+      ],
+      "notes": "Stage 1 only. Source kind: journal plain-language summary (eLife digest); source_text holds the paragraphs used, verbatim. Kept Nicholson's proposal (the digest dates it ninety years before 2017; the passage says only 'long ago'), the novelty for ants, the 140-plus species and their groups, the varied palatability and defences, the gut survey and the feeding trials with the preferred non-gold spider. Cut the textbook remark and the closing call for further study. Modelled on band-7 T6 items aa0968dd, d1b8a9ad, 7812801f. 101 words, 5.24 chars/word, 12.4% long words, 33.7 words/sentence (check_rw measure). No 6-word run shared with source_text (names and technical terms excepted), any official passage or our items.",
+      "stem": "Which statement about the gold-and-black species that Pekár et al. identified is most strongly supported by the text?",
+      "options": [
+        "They form the first mimetic complex documented among Australian insects, lending support to a claim Nicholson made long ago about the continent’s wildlife.",
+        "Those among them that are palatable appear to benefit from resembling those that are not, since predators largely avoided the coloration itself.",
+        "They likely share their coloration because they share the same defenses, such as spines and noxious chemicals, which predators have learned to avoid.",
+        "They are seldom eaten by predators in the wild, but predators offered them in feeding trials ate the palatable ones more readily than the others."
+      ],
+      "answer_letter": "B",
+      "explanation": "The more than 140 species share gold-and-black coloration even though they vary in palatability and defenses. Few were found in predators’ guts, and in trials the predators mostly refused them “whether palatable or not,” preferring a spider without gold markings. Since refusal did not depend on palatability, it was the shared coloration that deterred predators, so the palatable species seem to gain protection from looking like the defended ones, as choice B says.",
+      "distractors": {
+        "A": {
+          "recipe": "right claim at the wrong level of generality (BRD-ATT)",
+          "why_wrong": "The study does bear on Nicholson’s claim, but the text says mimetic complexes “have recently been documented in insects”; what is new is a complex involving ants, not the first complex among Australian insects."
+        },
+        "C": {
+          "recipe": "plausible cause the text rules out (CON), hedged",
+          "why_wrong": "The species share their coloration “despite varying in palatability and in defenses such as spines and noxious chemicals,” so they do not share the same defenses."
+        },
+        "D": {
+          "recipe": "true first clause plus an invented comparison (CMP)",
+          "why_wrong": "Few did turn up in predators’ guts, but in the trials predators mostly refused them “whether palatable or not,” so the palatable species were not eaten more readily."
+        }
+      },
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 6,
+        "fixes": [
+          "C hedged (\"likely\") so a distractor carries a hedge like the key"
+        ],
+        "status": "fixed"
+      },
+      "band7": {
+        "verdict": "band 7",
+        "why": "The key (palatable species benefit from the shared coloration) is never stated and needs three statements: varied palatability, refusal \"whether palatable or not\", and the preference for the spider without gold. A needs the insects versus ants distinction. C and D are quicker kills, so it sits at the low end of band 7."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "B",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "central_ideas_and_details.trial.hard.t_05",
+      "template": "T2",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "Britain’s brass bands are usually said to have arisen among coal miners and other industrial workers of northern England and Wales in the 1830s to 1850s—a new musical species, in this telling, distinct from military ensembles. Historian Eamonn O’Keeffe, drawing on neglected newspaper reports, memoirs, and regimental records, grants the bands’ later ties to industrialization but locates their origin in the Napoleonic Wars. Numerous regiments had all-brass bands by 1830, and from the 1820s demobilized veterans founded civilian ones, often far from the industrial north, offering amateur players and audiences a familiar template.",
+      "source_text": "It is widely believed that brass bands originated with coal miners and other industrial communities in northern England and Wales between the 1830s and the 1850s. New evidence rewrites this history.\n\nWhile wartime bands included woodwind instruments such as clarinets and bassoons, O’Keeffe points out that the 15th Regiment of Foot had already organized a bugles-only band by 1818 and that numerous regiments had established all-brass bands by 1830, taking advantage of new instrument designs developed at home and in Continental Europe. The Life Guards, for example, performed on valved trumpets gifted by the Russian Czar. Local defence units also mustered brass bands, including a volunteer rifle corps in Paisley (1819) and yeomanry troops in Devon (1827) and Somerset (1829).\n\nO’Keeffe also shows that veterans of the Napoleonic wars founded many of Britain’s earliest non-military brass bands from the 1820s onwards. These ensembles often emerged far beyond the northern English and Welsh industrial communities with which they later became associated.\n\n“We already knew about their relationship with industrialization. Now we know that brass bands emerged from Britain’s wars against Napoleon.”\n\nBy studying previously overlooked press reports, memoirs and regimental records, O’Keeffe reveals that once demobilized, men and boys who honed their instrumental skills in uniform embarked on a variety of civilian musical careers, becoming instructors, wind performers, composers, and even opera singers.\n\nO’Keeffe said: “It is widely assumed that brass bands were a new musical species, distinct from their military counterparts. They are primarily seen as a product of industrialization pioneered by a combination of working-class performers and middle-class sponsors.\n\n“But all-brass bands first appeared in Britain and Ireland in a regimental guise. As well as producing a large cohort of band trainers, the military provided a familiar and attractive template for amateur musicians and audiences. This coincided with expanding commercial opportunities and a growing belief in the moralising power of music.”",
+      "sources": [
+        {
+          "what": "University of Cambridge research story on Eamonn O'Keeffe's Historical Journal study, Military musicians returning from Napoleonic wars invented Britain's brass bands, published 2024-10-30",
+          "url": "https://www.cam.ac.uk/stories/napoleonic-wars-veterans-invented-britains-first-brass-bands"
+        }
+      ],
+      "models": [
+        "251e5281",
+        "f7bd14de"
+      ],
+      "notes": "Stage 1 only. Source kind: university press release; source_text holds the paragraphs used, verbatim. Kept the received origin story with its 'new musical species' framing, O'Keeffe's sources, his concession that the link to industrialization was already known, the regimental all-brass bands by 1830, veteran-founded civilian bands from the 1820s beyond the industrial north, and the military as a familiar template. Cut the named bands, Sanderson's story and the instrument trade. Modelled on band-7 T2 items 251e5281, f7bd14de. 93 words, 5.24 chars/word, 11.8% long words, 31.0 words/sentence (check_rw measure). No 6-word run shared with source_text (names and technical terms excepted), any official passage or our items.",
+      "stem": "Which choice best states the main idea of the text?",
+      "options": [
+        "Although O’Keeffe does not dispute that brass bands came to be tied to industrialization, he argues that the usual account mistakes that later development for their origin, which he traces to a military tradition dating to the Napoleonic Wars.",
+        "Although O’Keeffe accepts that Britain’s first civilian brass bands appeared in the 1830s to 1850s, he argues that they were founded by military veterans rather than by industrial workers in the north.",
+        "Although brass bands have usually been linked with industrial workers, O’Keeffe’s neglected sources suggest that this link was largely a misconception of later historians rather than a real feature of the bands’ history.",
+        "Although brass bands drew on the example of military ensembles, they became a new musical species once industrial workers took them up in the 1830s to 1850s, as the newspaper reports, memoirs, and regimental records that O’Keeffe examined confirm."
+      ],
+      "answer_letter": "A",
+      "explanation": "The text first gives the usual account: brass bands arose among industrial workers in the 1830s to 1850s as something new, distinct from military ensembles. O’Keeffe “grants the bands’ later ties to industrialization” but locates their origin in the Napoleonic Wars, pointing to all-brass regimental bands by 1830 and civilian bands founded by veterans from the 1820s. So the industrial link is real but later, and the usual account has taken it for the bands’ origin, which is choice A.",
+      "distractors": {
+        "B": {
+          "recipe": "the usual dating put in O’Keeffe’s concession, beside a true claim about veterans (TWI)",
+          "why_wrong": "Veterans did found civilian bands, but the text says they did so “from the 1820s,” before the 1830s to 1850s of the usual account, and O’Keeffe locates the bands’ origin in the Napoleonic Wars, so he does not accept the usual dating."
+        },
+        "C": {
+          "recipe": "the concession denied (CON), hedged",
+          "why_wrong": "O’Keeffe “grants the bands’ later ties to industrialization,” so he does not treat the industrial link as a misconception; he disputes only where the bands began."
+        },
+        "D": {
+          "recipe": "the received view, marked “in this telling,” credited to O’Keeffe (ATT)",
+          "why_wrong": "The “new musical species” is the usual account, which the text distances with “in this telling”; O’Keeffe’s sources show the military template continuing into civilian bands, not a new species born among industrial workers."
+        }
+      },
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 6,
+        "fixes": [
+          "key A reworded so it no longer echoes \"grants the bands' later ties\": the usual account takes the later industrial link for the origin",
+          "B replaced: now concedes the usual 1830s to 1850s dating, which the veterans' bands \"from the 1820s\" rule out (TWI); the old B died on the plain origin claim",
+          "explanation updated to match"
+        ],
+        "status": "fixed"
+      },
+      "band7": {
+        "verdict": "band 7",
+        "why": "After the fix the key needs an unstated link: the industrial tie is real but later, so the usual account took it for the origin. B hinges on \"from the 1820s\" against the 1830s to 1850s, D on the distancing \"in this telling\"; all three distractors partly right in one Although frame."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "A",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "central_ideas_and_details.trial.hard.t_06",
+      "template": "T6",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "Historians have long recognized that the eighteenth-century title “Mrs” signaled social standing, but they have generally assumed that it also denoted marriage, explaining its use for unmarried women such as Elizabeth Carter as a distinction conferring wifely status. Amy Erickson contends that “Mrs” was precisely equivalent to “Mr,” designating a person with authority over servants or apprentices. In a 1793 listing of households in Bocking, Essex, 25 female household heads bore the title. Such heads were necessarily single or widowed (roughly half each, if the town was typical), and two-thirds of these women were farmers or business proprietors.",
+      "source_text": "“Historians have long known that Mrs indicated social status, but they normally assume it also shows that the woman was married. So they have wrongly concluded that women like Johnson's friend Elizabeth Carter were addressed as Mrs as an acknowledgement of distinction, to grant them the same status as a married woman.”\n\nErickson suggests that this interpretation is mistaken: “Mrs was the exact equivalent of Mr. Either term described a person who governed servants or apprentices, in Johnson's terms – we might say a person with capital. Once we adopt Johnson's understanding of the term (which was how it was used in the 18th century), it becomes clear that ‘Mrs’ was more likely to indicate a businesswoman than a married woman. So the women who took membership of the London Companies in the 18th century, all of whom were single and many of whom were involved in luxury trades, were invariably known as ‘Mrs’, as the men were ‘Mr’. Literally, they were masters and mistresses of their trades.”\n\nErickson’s research into the 1793 parish listing for the Essex market town of Bocking shows that 25 heads of household were described as Mrs. She says: “Female household heads were by definition either single or widowed and, if Bocking was typical of other communities, around half of them would have been widows, and the other half single. But two thirds of these women in Bocking were specified as farmers or business proprietors. So Mrs is more reliably being used to identify women with capital, than to identify marital status. Only one woman was Miss: the schoolmistress.”",
+      "sources": [
+        {
+          "what": "University of Cambridge research news on Amy Erickson's History Workshop Journal paper, Mistress, Miss, Mrs or Ms: untangling the shifting history of titles, published 2014-10-06",
+          "url": "https://www.cam.ac.uk/research/news/mistress-miss-mrs-or-ms-untangling-the-shifting-history-of-titles"
+        }
+      ],
+      "models": [
+        "aa0968dd",
+        "d1b8a9ad",
+        "db2da2bf"
+      ],
+      "notes": "Stage 1 only. Source kind: university press release; source_text holds the paragraphs used, verbatim. Kept the historians' assumption and their explanation for Elizabeth Carter, Erickson's equivalence of Mrs and Mr (governing servants or apprentices), and the Bocking 1793 figures with Erickson's own conditional ('if Bocking was typical'). Cut Johnson's dictionary, the Shrewsbury list, Miss and Ms. 'Eighteenth-century' comes from the page's framing of Erickson's argument. Modelled on band-7 T6 items aa0968dd, d1b8a9ad, db2da2bf. 98 words, 5.43 chars/word, 18.6% long words, 24.5 words/sentence (check_rw measure). No 6-word run shared with source_text (names and technical terms excepted), any official passage or our items.",
+      "stem": "Based on the text, Erickson would most likely agree with which statement about the title “Mrs” in the 1793 Bocking listing?",
+      "options": [
+        "Its use for the unmarried women who headed households is best explained, as historians have argued in Elizabeth Carter’s case, as a courtesy that conferred the status of a wife.",
+        "It was limited to women who ran farms or businesses, since only such women had authority over servants or apprentices.",
+        "Its use for women who, as household heads, could not have been married at the time fits the view that it marked authority rather than marriage.",
+        "It likely reflected social standing rather than authority over servants or apprentices, since a third of the women who bore it were neither farmers nor business proprietors."
+      ],
+      "answer_letter": "C",
+      "explanation": "Erickson contends that “Mrs” was the equivalent of “Mr,” marking authority over servants or apprentices, not marriage. In Bocking the title was borne by 25 female household heads, and such heads “were necessarily single or widowed,” so none of them had a husband at the time. A title used for women who could not then have been married fits Erickson’s view that it marked authority rather than marriage, which is choice C.",
+      "distractors": {
+        "A": {
+          "recipe": "the historians’ explanation that Erickson rejects, credited to her (ATT)",
+          "why_wrong": "The “wifely status” explanation is the one historians gave for Elizabeth Carter; Erickson argues instead that the title designated authority over servants or apprentices, as “Mr” did."
+        },
+        "B": {
+          "recipe": "the authority idea pushed past the figures (CON-half)",
+          "why_wrong": "Only two-thirds of the 25 women who bore the title were farmers or business proprietors, so the title was not limited to them."
+        },
+        "D": {
+          "recipe": "the passage’s own figure used to keep the view Erickson replaces (CON), hedged",
+          "why_wrong": "Erickson holds that the title designated authority over servants or apprentices; a woman need not run a farm or business to head a household with servants, so the remaining third gives her no reason to drop that view."
+        }
+      },
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 6,
+        "fixes": [
+          "D hedged (\"likely\"); no distractor carried a hedge"
+        ],
+        "status": "fixed"
+      },
+      "band7": {
+        "verdict": "band 7",
+        "why": "The key maps \"necessarily single or widowed\" to women who could not then be married and ties that to Erickson's claim; D turns the passage's own figure (a third were not farmers or proprietors) against her, A credits her with the historians' view; three partly right distractors."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "C",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "central_ideas_and_details.trial.hard.t_07",
+      "template": "T6",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "Census figures indicate that Black residents fell from roughly a third of Buenos Aires’s native population in the early nineteenth century to about 2 percent by its close. Yet no fewer than 21 Black-owned newspapers were founded there in the 1870s, the largest reaching an estimated 3,000 readers when the Black population numbered some 8,000. Many historians acknowledge that porteños classified race through fluid terms such as trigueño and pardo but treat that ambiguity as Blackness concealed or rejected. Eleanor Gaylard counters that a Black–White binary misrepresents the era: numerous residents may have identified with intermediate categories, and the census may have overlooked them.",
+      "source_text": "Many view Argentina as a nation with a distinctly White, European identity, shaped through late 19th-century European immigration. The idea of Argentina as a ‘racial outlier’ within Latin America remains deeply rooted in both popular culture and academic discourse. Statistical data appear to support this view: as of 2022, Black Argentines accounted for only 0.7% of the country’s population.“Racial diversity is not something you're confronted by in Argentina,” says Eleanor Gaylard, who graduated from Cambridge this year with a joint degree in History and Modern Languages. “Argentines are inclined to say that race isn't significant in Argentine society. But that doesn’t tell the whole story.”Historical records reveal a very different past. Census data from the beginning of the 19th century show that Black Argentines made up about a third of Buenos Aires’ native porteño population. By the end of the century, they represented only around 2%.“That is a complex statistic,” says Eleanor. “In the 1870s, we also know that at least 21 Black-owned newspapers opened in Buenos Aires. This explosion of Black newspapers indicates a very active Black community. It's far more complicated than what the census shows.”\n\nAlthough circulation figures are difficult to determine, historians estimate that the largest Black paper reached around 3,000 readers at its peak, selling around 400 copies per issue. Group reading practices likely expanded its audience further – a significant readership when the Black porteño population numbered just 8,000, and mainstream non-Black papers like La Nación sold around 1,000 copies per issue.How can we account for such a strong Black community in Buenos Aires at this time when, statistically, it appeared so marginal? Historians have tried to answer this, Eleanor explains.She describes how terms like ‘White’ weren’t common until the end of the 19th century, and were often subordinated to Anglo-Saxonist terms, distinguishing the ‘Latin’ and ‘Anglo-Saxon’ races. Through the second half of the century, there were many different, often flexible, categories such as trigueño (roughly ‘wheat-coloured’), pardo (roughly, ‘brown’) and moreno (‘dark-complexioned, or dark-skinned’), among others.\n\n“Many historians are willing to acknowledge that people understood race through these complex categories,” she says. “But they also assume this ambiguity was evidence that Blackness was being ‘hidden’ or ‘rejected’. They have almost tried to rediscover secret Black populations, assuming we can identify the ‘real’ Black or White people concealed within such categories.”\n\nEleanor counters this argument: the binary categories of Black and White did not fit late 19th-century Argentine ideas of Blackness. While the number of people who identified specifically as Black in censuses was low, she determines that many more may have identified with the nuanced racial identities that fell in-between. The official data may have failed to capture these people.“We're imposing our own understandings of race on the period. Historians must foreground the complexity and openness of conceptions of race,” she says.",
+      "sources": [
+        {
+          "what": "University of Cambridge Faculty of History news, To be Black and Argentine, on Eleanor Gaylard's research on the Black press of Buenos Aires, published 2025-12-01",
+          "url": "https://www.hist.cam.ac.uk/news/be-black-and-argentine"
+        }
+      ],
+      "models": [
+        "d1b8a9ad",
+        "7812801f",
+        "db2da2bf"
+      ],
+      "notes": "Stage 1 only. Source kind: university department news story (researcher interview); source_text holds the paragraphs used, verbatim. Kept the census decline (a third to about 2 percent), the 21 Black-owned papers of the 1870s, the estimated 3,000 readers against a Black population of 8,000, the historians' concession and assumption, and Gaylard's counter with its hedges ('may have', census may have failed). Cut circulation comparisons with La Nacion, the elite racial vocabulary and Los Negros. Gaylard is described in the source as a recent graduate, so the passage gives her name without a title. Modelled on band-7 T6 items d1b8a9ad, 7812801f, db2da2bf. 100 words, 5.45 chars/word, 19.5% long words, 25.0 words/sentence (check_rw measure). No 6-word run shared with source_text (names and technical terms excepted), any official passage or our items. Reviewer: moved the hedge onto the census's overlooking to match the source (\"may have failed to capture\"); passage now 104 words.",
+      "stem": "What does the text most strongly suggest about the census figures?",
+      "options": [
+        "They record a decline that Black residents themselves hastened by hiding their ancestry behind fluid terms such as trigueño and pardo.",
+        "They overstate the early nineteenth-century figure, since, as Gaylard argues, many residents counted as Black then may have identified with intermediate categories.",
+        "They are contradicted by the 1870s newspapers, whose readership shows that Black residents still made up about a third of the city’s native population.",
+        "They may have missed many residents of African descent, which would help explain how the city’s Black-owned newspapers could find so large a readership in the 1870s."
+      ],
+      "answer_letter": "D",
+      "explanation": "The census shows Black residents falling to about 2 percent of the native population, “Yet” the 1870s saw 21 Black-owned newspapers, the largest with an estimated 3,000 readers when the Black population numbered some 8,000. Gaylard then argues that numerous residents “may have identified with intermediate categories, and the census may have overlooked them.” If the census missed many such residents, the newspapers’ large readership makes sense, which is choice D.",
+      "distractors": {
+        "A": {
+          "recipe": "keeps the historians’ reading that Gaylard counters (CON), with a true detail",
+          "why_wrong": "Porteños did use fluid terms such as trigueño and pardo, but treating that ambiguity as Blackness concealed is the view of “many historians” that Gaylard counters; the text points instead to residents the census may have overlooked."
+        },
+        "B": {
+          "recipe": "Gaylard’s argument turned in the wrong direction (TWI), hedged",
+          "why_wrong": "Gaylard says the census “may have overlooked” residents who identified with intermediate categories, which points to an undercount; nothing in the text says the early figure of a third was too high."
+        },
+        "C": {
+          "recipe": "the right tension, overextended with an invented figure (CON)",
+          "why_wrong": "The newspapers’ readership does sit uneasily with the census, but an estimated 3,000 readers cannot show that Black residents still made up a third of the native population; the text gives no such figure for the 1870s."
+        }
+      },
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 6,
+        "fixes": [
+          "passage: the source hedges both steps (\"may have identified\", \"the official data may have failed to capture these people\"); the passage presupposed the overlooking (\"residents the census overlooked\"), now \"numerous residents may have identified with intermediate categories, and the census may have overlooked them\"; the key's \"may have missed\" now copies that degree",
+          "explanation and A, B why_wrong updated to the new wording"
+        ],
+        "status": "fixed"
+      },
+      "band7": {
+        "verdict": "band 7",
+        "why": "Ruling: the key is supported. It chains three statements (the census decline, the \"Yet\" readership of 3,000 against 8,000, and Gaylard's claim that the census may have overlooked residents in intermediate categories), and \"Yet\" is the stance word that marks the readership as at odds with the census. \"Of African descent\" is licensed because the intermediate categories sit between Black and White and historians read them as concealed Blackness. A, B and C each fail on a clear point (A is the view Gaylard counters, B gets the direction of the error wrong, C invents a figure)."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "D",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "central_ideas_and_details.trial.hard.t_08",
+      "template": "T2",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "Since at least the 1950s, the prevailing view has held that speakers combine words into nested constituents, building the treelike hierarchies thought to set human language apart from animal communication. Morten H. Christiansen and Yngwie A. Nielsen found, however, that frequent nonconstituent sequences of word classes (“can I have a,” for instance) are primed, processed faster on recurrence, which for Nielsen shows that conventional grammatical rules cannot capture every representation of linguistic structure. Christiansen ventures further: flatter structure might account for language use generally, which could make that gulf narrower than supposed.",
+      "source_text": "For decades, scientists have believed we rely on a complex mental grammar to build sentences that have hierarchically organized structure – like a branching tree. But Christiansen and Nielsen suggest that our mental representations might be more like snapping together pre-assembled LEGO pieces (such as a door frame or a wheel set) into a complete model. Instead of intricate hierarchies, they propose, we use small, linear chunks of word classes like nouns and verbs – including short sequences that can’t be formed by way of grammar, such as “in the middle of the” or “wondered if you.”\n\nThe prevailing theory since at least the 1950s is based on hierarchical, tree-like mental representations, setting humans apart from other animals, Christiansen said. In this view, words and phrases combine according to the principles of grammar into larger units called constituents. For example, in the sentence “She ate the cake,” “the” and “cake” combine into a noun phrase “the cake”, which then combines with “ate” into the verb phrase “ate the cake,” and finally with “she” to make the sentence.\n\n“But not all sequences of words form constituents,” Christiansen and Nielsen wrote in a summary of their paper. “In fact, the most common three- or four-word sequences in language are often nonconstituents, such as ‘can I have a’ or ‘it was in the.’”\n\nBecause they don’t conform to grammar, nonconstituent sequences have been overlooked. But they do play a role in a speaker’s knowledge of their language, the researchers found.\n\nIn experiments, an eye-tracking study and an analysis of phone conversations, they discovered that linear sequences of word classes can be “primed,” meaning when we hear or read them once, we process them faster the next time. That’s compelling evidence they’re part of our mental representation of language, Christiansen said. In other words, they’re a key part of our mental representation of language that goes beyond the rules of grammar.\n\n“I think the main contribution is showing that traditional rules of grammar cannot capture all of the mental representations of language structure,” Nielsen said.\n\n“It might even be possible to account for how we use language in general with flatter structure,” Christiansen said. “Importantly, if you don’t need the more complex machinery of hierarchical syntax, then this could mean that the gulf between human language and other animal communication systems is much smaller than previously thought.”",
+      "sources": [
+        {
+          "what": "Cornell Chronicle, Discovery challenges assumptions about the structure of language, on Christiansen and Nielsen's Nature Human Behaviour paper, published 2026-01-21",
+          "url": "https://news.cornell.edu/stories/2026/01/discovery-challenges-assumptions-about-structure-language"
+        }
+      ],
+      "models": [
+        "251e5281",
+        "f7bd14de",
+        "881ba6f1"
+      ],
+      "notes": "Stage 1 only. Source kind: university press release; source_text holds the paragraphs used, verbatim. Kept the hierarchical view since the 1950s and its role in separating humans from animals, the nonconstituent example, the priming finding with its definition, Nielsen's claim (rules cannot capture all representations) and Christiansen's stronger, hedged claim (might account for language generally; gulf smaller). Cut the LEGO analogy, the 'She ate the cake' walkthrough and the eye-tracking and phone-call detail. Modelled on band-7 T2 items 251e5281, f7bd14de, 881ba6f1. 92 words, 5.95 chars/word, 18.3% long words, 18.4 words/sentence (check_rw measure). No 6-word run shared with source_text (names and technical terms excepted), any official passage or our items.",
+      "stem": "Which choice best states the main idea of the text?",
+      "options": [
+        "Although human language has long been thought to differ from animal communication in its hierarchical structure, Christiansen and Nielsen have shown that the two differ far less than was supposed.",
+        "Although the view that speakers build language from nested constituents has long prevailed, evidence that speakers also represent sequences falling outside such constituents suggests that hierarchy may not account for all linguistic structure.",
+        "Although speakers process frequent nonconstituent sequences faster when they recur, Christiansen and Nielsen suggest that this priming reflects familiarity with common phrases and leaves the treelike hierarchies of human language intact.",
+        "Although nested constituents have been central to accounts of human language since the 1950s, Christiansen and Nielsen found that speakers process frequent sequences such as “can I have a” faster than they process sequences that form constituents."
+      ],
+      "answer_letter": "B",
+      "explanation": "The text sets out the prevailing view that speakers build language from nested constituents. “However,” Christiansen and Nielsen found that frequent sequences that are not constituents are primed, which for Nielsen shows that conventional rules cannot capture every representation of linguistic structure. Christiansen’s further claims are hedged (“might,” “could”). The main idea is the challenge at Nielsen’s level: hierarchy may not account for all linguistic structure, which is choice B.",
+      "distractors": {
+        "A": {
+          "recipe": "the speculative extension stated as shown and credited to both (ATT)",
+          "why_wrong": "Only Christiansen “ventures further,” and only with “might” and “could”: flatter structure might account for language use, which could narrow the gulf. Nothing has been shown about how far human language differs from animal communication."
+        },
+        "C": {
+          "recipe": "the finding kept but its challenge reversed (CON), hedged",
+          "why_wrong": "The finding is presented as a challenge to the prevailing view (“however”), and Nielsen takes it to show that conventional rules cannot capture every representation; neither researcher says the hierarchies are left intact."
+        },
+        "D": {
+          "recipe": "the definition’s comparison misread (CMP)",
+          "why_wrong": "“Processed faster on recurrence” means faster the second time than the first; the text never compares the speed of nonconstituent sequences with that of constituents."
+        }
+      },
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 5,
+        "fixes": [],
+        "status": "pass"
+      },
+      "band7": {
+        "verdict": "band 7",
+        "why": "The key holds Nielsen's level of claim; A is rejected only through \"ventures further\", \"might\" and \"could\", D through reading \"processed faster on recurrence\" correctly; all three distractors partly right."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "B",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "central_ideas_and_details.trial.hard.t_09",
+      "template": "T6",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "In Accra, Ghana, residents of compound houses—semicommunal dwellings with private bedrooms but shared kitchens, bathrooms, and living spaces—vote and attend rallies more than occupants of private housing. Such disparities might stem from other factors, but Noah Nathan and Paige Bollen found that residents of the most exposed locations in these buildings report more social ties and political information. Such effects, they argue, likely hinge on the regime: under an authoritarian police state, constant visibility to neighbors would probably have the opposite effect, whereas in Ghana’s generally healthy democracy, participating carries modest costs.",
+      "source_text": "A new study by MIT scholars finds this to be exactly the case — at least in Accra, Ghana, where many people live in semi-communal structures known as “compound houses,” often sharing kitchens, bathrooms, and common living-room spaces, while having private bedrooms.\n\nThe detailed study of homes in Ghana’s capital finds that residents of compound houses are more likely to vote, attend rallies, and take part in political campaigns, compared to people with more private forms of housing.\n\nWhile those differences could stem from factors other than housing, the highly granular study suggests the architecture itself really matters. The researchers examined the specific floor plans of compound houses and found variations in people’s political information and social connections — key factors that existing studies show predict political activity — that map to differences in where people live within compound houses.\n\nThe researchers then conducted an original research survey of 1,272 residents in 391 compound houses in 30 neighborhoods of Accra, combined with mapping that showed the layout of those compound houses and where the survey participants lived within each one. In this way, they showed the effects of compound houses more precisely: Living in parts of them with especially high exposure to other people actually increases the amount of social network ties people report, as well as the amount of political information they obtain.\n\nAs the scholars discuss in the paper, the effects of architecture on civic involvement are hardly immutable, but likely depend very much on the type of political state in question.\n\n“We think under different conditions, this kind of architecture could have different effects,” Nathan says. “If you live in an authoritarian regime with an active police state, inhabiting an architecture in which you’re constantly on display to your neighbors is probably going to have the exact opposite implications from what we find in the study.”\n\nHowever, he adds, since Ghana has a generally healthy democracy and is not a repressive state, “In this context, where there are not such high costs to participating in politics, we think these effects are going to break in the direction of more political participation.”",
+      "sources": [
+        {
+          "what": "MIT News, How architecture influences political activity, on Nathan and Bollen's American Political Science Review paper, published 2026-06-25",
+          "url": "https://news.mit.edu/2026/how-architecture-influences-political-activity-0625"
+        }
+      ],
+      "models": [
+        "8f3a200e",
+        "ed314256",
+        "4d3e3c52"
+      ],
+      "notes": "Stage 1 only. Source kind: university press release; source_text holds the paragraphs used, verbatim. Kept the compound-house definition, the participation gap, the admitted alternative explanation, the within-house exposure finding, and the authors' regime-dependence argument with its hedges (likely, probably) and the Ghana condition. Cut the survey sizes, the turnout data and the 'anonymizing city' remarks. Modelled on band-7 T6 items 8f3a200e, ed314256, 4d3e3c52. 92 words, 5.95 chars/word, 20.2% long words, 30.7 words/sentence (check_rw measure). No 6-word run shared with source_text (names and technical terms excepted), any official passage or our items.",
+      "stem": "Based on the text, Nathan and Bollen would most likely agree with which statement about compound houses?",
+      "options": [
+        "The constant visibility to neighbors that they bring likely draws residents into politics in Ghana but would probably keep them out of it under an authoritarian police state.",
+        "The shared spaces they provide would likely give residents more social ties and political information under any regime, though only in a democracy would residents act on them.",
+        "The gap in participation between their residents and occupants of private housing probably owes more to other factors than to the buildings’ design.",
+        "Their residents likely participate more than occupants of private housing because constant visibility to neighbors makes staying away from politics costly."
+      ],
+      "answer_letter": "A",
+      "explanation": "Residents of compound houses vote and attend rallies more, and Nathan and Bollen found that residents of the most exposed locations report more social ties and political information. They argue that such effects “likely hinge on the regime”: under an authoritarian police state, constant visibility to neighbors “would probably have the opposite effect,” whereas in Ghana participating carries modest costs. So the same visibility likely encourages participation in Ghana and would probably discourage it under authoritarian rule, which is choice A.",
+      "distractors": {
+        "B": {
+          "recipe": "the finding extended to every regime (CON-half), hedged",
+          "why_wrong": "The researchers say “such effects,” the extra ties and information included, “likely hinge on the regime,” so they would not expect them under any regime."
+        },
+        "C": {
+          "recipe": "the text’s own concession kept as the conclusion (CON), hedged",
+          "why_wrong": "The text grants that the disparities “might stem from other factors,” but the “but” introduces the finding that exposure within the buildings goes with more ties and information, which points to the buildings’ design."
+        },
+        "D": {
+          "recipe": "the passage’s wording turned into a different mechanism (TWI), hedged",
+          "why_wrong": "The text gives social ties and political information as the link, and it calls the costs of participating modest in Ghana; it never says that staying away from politics is costly."
+        }
+      },
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 5,
+        "fixes": [],
+        "status": "pass"
+      },
+      "band7": {
+        "verdict": "band 7",
+        "why": "The key needs \"such effects\" plus \"the opposite effect\"; D, the strongest distractor, is a one-word twist (the text gives the cost of participating, not of staying away) and B extends the ties and information to every regime; low end of band 7 because the key stays close to one sentence."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "A",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "central_ideas_and_details.trial.hard.t_10",
+      "template": "T1",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "Wind farms operate amid turbulent, perpetually shifting weather, so field experiments can scarcely isolate the effect of any single intervention, and conventional wind tunnels poorly reproduce full-scale turbines. Many predictive models, moreover, assume turbines face the wind perpendicularly, which they seldom do. John Kurelek, Michael Howland, and colleagues therefore tested a 15-centimeter turbine in a tunnel pressurized to as much as 240 atmospheres—denser air supplies greater inertia, emulating a turbine 15 to 20 meters across. Adjusting tip speed according to a turbine’s misalignment with the wind, they found, could substantially increase output, a strategy rarely employed in operating wind farms.",
+      "source_text": "Some researchers use wind tunnels to conduct tests, but scaled-down wind turbines in traditional wind tunnels can differ widely from conditions in the field. (Wind turbines are the largest rotating machines ever made.) The problem hampers not only development of better wind turbines, but also our understanding of basic questions like how much power to expect from a turbine when winds change direction.\n\n“Wind energy is a uniquely challenging problem to study experimentally,” Howland says. “We want to test the effect of a certain change in isolation, but wind farms operate in chaotic, turbulent environments where the weather is constantly evolving. Wind turbines have to react to weather conditions that we have no control over, and that introduces complexities in identifying the impact of the imposed change we are studying. The field sits at this unique intersection between environmental flow, mechanics, aerodynamics, and meteorology.”\n\nThe difficulty of running experiments at real wind farms has left researchers and engineers unsure of how changes in the alignment between the wind and turbine or factors like the turbine’s tip speed relative to the wind change power output.\n\nIn fact, the researchers say many predictive models people use are built on the assumption that turbines are always perfectly perpendicular to the wind. That’s rarely the case in the real world, even with modern turbines that gradually adjust their angle in response to the wind’s rapid directional changes.\n\nHultmark’s research lab at Princeton has pioneered the study of scaled-down wind turbines in pressurized wind tunnels, which, as previous studies have shown, better reproduce large-scale turbines in the atmosphere because pressure makes air more dense, resulting in more inertia within the scaled laboratory environment. For the new study, the researchers used a turbine measuring 15 centimeters in diameter at varying pressures of up to 240 atmospheres.\n\n“By pressurizing the chamber, we’re testing a turbine that is, all else being equal, 15 to 20 meters in diameter, with the ability to go up to 35 meters in diameter,” lead-author Kurelek explains. “That’s because we’re increasing the density by a factor of 100 to 220 times,”\n\nThey found power output could be significantly increased by adjusting the turbine’s tip speed based on its misalignment angle with the wind — a control strategy that is rarely employed in wind farms today but could offer a way to boost performance with minimal added costs.",
+      "sources": [
+        {
+          "what": "MIT News, Pressurized experiments could help wind farms generate more power, on Kurelek, Howland, Hultmark et al. in PNAS Nexus, published 2026-09-28",
+          "url": "https://news.mit.edu/2026/pressurized-experiments-could-help-wind-farms-generate-more-power-0928"
+        }
+      ],
+      "models": [
+        "024eb2ec",
+        "7aa510fb",
+        "e80ba20d"
+      ],
+      "notes": "Stage 1 only. Source kind: university press release; source_text holds the paragraphs used, verbatim. Kept the two experimental obstacles (turbulent field conditions, unrealistic scaled tunnels), the perpendicularity assumption in models, the 15-centimeter turbine at up to 240 atmospheres with the density-inertia reason and the 15 to 20 meter equivalence, and the tip-speed finding with 'rarely employed'. Cut the revenue estimate, the unified momentum model and the earlier wake-steering field test. Modelled on band-7 T1 items 024eb2ec, 7aa510fb, e80ba20d. 100 words, 5.90 chars/word, 20.7% long words, 25.0 words/sentence (check_rw measure). No 6-word run shared with source_text (names and technical terms excepted), any official passage or our items.",
+      "stem": "Which choice best states the main idea of the text?",
+      "options": [
+        "Researchers who emulated a large turbine in a pressurized tunnel found that adjusting tip speed could let a misaligned turbine produce as much power as one facing the wind perpendicularly.",
+        "Researchers found that turbines face the wind perpendicularly less often than predictive models assume, which explains why adjusting tip speed seldom increases output at operating wind farms.",
+        "Researchers who used a pressurized tunnel to get around the limits of field experiments and conventional tunnels found that a seldom-used way of operating misaligned turbines could substantially raise output.",
+        "Researchers caution that, although a small turbine in a pressurized tunnel can emulate a much larger one, the gains from adjusting tip speed may not hold up in the turbulent weather in which wind farms operate."
+      ],
+      "answer_letter": "C",
+      "explanation": "The text first explains why the question is hard to study: field experiments can scarcely isolate one intervention, and conventional tunnels poorly reproduce full-scale turbines. The researchers “therefore” used a small turbine in a high-pressure tunnel to emulate a large one, and found that adjusting tip speed to a turbine’s misalignment could substantially increase output, a strategy “rarely employed” at operating farms. Choice C states that method and finding together.",
+      "distractors": {
+        "A": {
+          "recipe": "the finding with an invented comparison as its tail (CMP), hedged",
+          "why_wrong": "The researchers did emulate a large turbine and found that adjusting tip speed to a turbine’s misalignment could substantially increase output, but the text never compares that output with the output of a turbine facing the wind perpendicularly."
+        },
+        "B": {
+          "recipe": "background credited as the finding, and “rarely employed” misread (ATT)",
+          "why_wrong": "That turbines seldom face the wind perpendicularly is background, not the researchers’ finding, and the text says adjusting tip speed could substantially increase output; it is the strategy that is rarely used, not the gain that rarely appears."
+        },
+        "D": {
+          "recipe": "an invented caution built on the text’s own obstacle (UNS), hedged",
+          "why_wrong": "Turbulent field conditions are why the researchers worked in a tunnel, but the text reports no caution from them about whether the gains would hold at operating wind farms."
+        }
+      },
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 6,
+        "fixes": [
+          "A replaced: the old A was an easy overstatement (\"the best way\"); the new A keeps the finding and adds an invented comparison with a perpendicular turbine (CMP)"
+        ],
+        "status": "fixed"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "A straight study report with no stance word: the key is the plain summary of method and finding, and a solver can reach it directly. The fix replaced the easy \"best way\" overstatement with an invented comparison, but only B is a CON, TWI or ATT trap."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "C",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "central_ideas_and_details.trial.hard.t_11",
+      "template": "T1",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "Observed with the ALMA array in 2023, the disc of gas and dust surrounding the young star MP Mus appeared flat and featureless, without the gaps that forming planets carve—an anomaly, Álvaro Ribas reasoned, for a disc seven to ten million years old. Reobserving at a longer, more penetrating wavelength, Ribas and colleagues uncovered an inner cavity and two outer gaps; meanwhile Miguel Vioque, analyzing Gaia data, detected a stellar wobble he initially attributed to a miscalculation, since the disc was reputedly featureless. Modeling then showed that a giant planet within the cavity would also explain that wobble.",
+      "source_text": "Using ALMA, Ribas observed the protoplanetary disc around MP Mus (PDS 66) in 2023. The results showed a young star seemingly all alone in the universe. Its surrounding disc showed none of the gaps where planets might be forming, and was completely flat and featureless.\n\n“Our earlier observations showed a boring, flat disc,” said Ribas. “But this seemed odd to us, since the disc is between seven and ten million years old. In a disc of that age, we would expect to see some evidence of planet formation.”\n\nNow, Ribas and his colleagues from Germany, Chile, and France have given MP Mus another chance. Once again using ALMA, they observed the star at the 3mm range, a longer wavelength than the earlier observations, allowing them to probe deeper into the disc.\n\nThe new observations turned up a cavity close to the star and two gaps further out, which were obscured in the earlier observations, suggesting that MP Mus may not be alone after all.\n\nAt the same time, Miguel Vioque, a researcher at the European Southern Observatory, was uncovering another piece of the puzzle. Using data from Gaia, he found MP Mus was ‘wobbling’.\n\n“My first reaction was that I must have made a mistake in my calculations, because MP Mus was known to have a featureless disc,” said Vioque. “I was revising my calculations when I saw Álvaro give a talk presenting preliminary results of a newly-discovered inner cavity in the disc, which meant the wobbling I was detecting was real and had a good chance of being caused by a forming planet.”\n\n“Our modelling work showed that if you put a giant planet inside the new-found cavity, you can also explain the Gaia signal,” said Ribas. “And using the longer ALMA wavelengths allowed us to see structures we couldn’t see before.”",
+      "sources": [
+        {
+          "what": "University of Cambridge research news, Astronomers find a giant hiding in the 'fog' around a young star, on Ribas et al. in Nature Astronomy, published 2025-07-14",
+          "url": "https://www.cam.ac.uk/research/news/astronomers-find-a-giant-hiding-in-the-fog-around-a-young-star"
+        }
+      ],
+      "models": [
+        "024eb2ec",
+        "7aa510fb",
+        "e80ba20d"
+      ],
+      "notes": "Stage 1 only. Source kind: university press release; source_text holds the paragraphs used, verbatim. Kept the 2023 featureless disc, Ribas's reason for finding it odd (age 7 to 10 million years), the deeper longer-wavelength reobservation and its cavity and gaps, Vioque's Gaia wobble and his first suspicion of a miscalculation, and the modelling that ties a giant planet in the cavity to the wobble. Cut the planet's mass and orbit, the 'first time' claim and future telescopes. Modelled on band-7 T1 items 024eb2ec, 7aa510fb, e80ba20d. 98 words, 5.08 chars/word, 14.9% long words, 32.7 words/sentence (check_rw measure). No 6-word run shared with source_text (names and technical terms excepted), any official passage or our items.",
+      "stem": "Which choice best states the main idea of the text?",
+      "options": [
+        "Ribas’s reobservation of the disc around MP Mus confirmed his reasoning that a disc of its age should show gaps carved by planets, revealing that Vioque’s analysis of Gaia data had been mistaken.",
+        "A giant planet within MP Mus’s disc could account both for the inner cavity that longer-wavelength observations revealed and for a stellar wobble that was at first thought to be a miscalculation.",
+        "Vioque’s detection of a stellar wobble led Ribas and colleagues to reobserve the disc around MP Mus, revealing an inner cavity and two outer gaps that a giant planet would explain.",
+        "Observations at a longer wavelength revealed structures in MP Mus’s disc that earlier observations had missed, but only the Gaia data offered evidence that the star may host a giant planet."
+      ],
+      "answer_letter": "B",
+      "explanation": "The disc around MP Mus looked featureless, which Ribas found anomalous for its age. Reobserving at a longer wavelength revealed a cavity and two gaps, while Vioque found a stellar wobble that he first put down to a miscalculation because the disc was thought featureless. Modeling showed that a giant planet in the cavity “would also explain that wobble,” so one planet can account for both lines of evidence, which is choice B.",
+      "distractors": {
+        "A": {
+          "recipe": "true first clause, then the wobble’s status reversed (TWI)",
+          "why_wrong": "The reobservation did bear out Ribas’s suspicion, but Vioque’s analysis was not mistaken: the wobble was real, and it was only Vioque’s first suspicion of a miscalculation that proved wrong."
+        },
+        "C": {
+          "recipe": "an invented sequence linking the two lines of work (ATT)",
+          "why_wrong": "Ribas reobserved the disc because a featureless disc of its age seemed anomalous; Vioque’s work went on “meanwhile,” and he doubted his own wobble because the disc was thought featureless, so the wobble did not prompt the reobservation."
+        },
+        "D": {
+          "recipe": "true first clause, then the evidence for the planet confined to one source (CON-half), hedged",
+          "why_wrong": "The longer-wavelength observations did reveal a cavity and two gaps, but the text treats gaps as what forming planets carve, and a giant planet in the cavity “would also explain” the wobble; the disc’s structures were evidence of the planet too."
+        }
+      },
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 6,
+        "fixes": [
+          "D replaced: the old D was a too-broad generalization (BRD); the new D has a true first clause and says only the Gaia data pointed to a planet, which the aside on gaps \"that forming planets carve\" and \"would also explain\" rule out"
+        ],
+        "status": "fixed"
+      },
+      "band7": {
+        "verdict": "band 7",
+        "why": "The key needs \"also\" and the opening aside on gaps \"that forming planets carve\" to see that one planet accounts for both the cavity and the wobble; C reverses the order of events (\"meanwhile\"), new D rests on the same aside, A reverses the wobble's status."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "B",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "central_ideas_and_details.trial.hard.t_12",
+      "template": "T6",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "Saint Giles and the Deer, a panel from a polyptych probably painted in Paris around 1500 by an unidentified artist now known as the Master of Saint Giles, exhibits abundant underdrawing (preparatory delineation of the composition) perceptible to the unaided eye. Infrared reflectography discloses still more. Parts of it are cursory, and revisions occur in both drawing and paint: the archer, never drawn at all, was painted over the head of a horse, and a red circle on the saint’s shoulder may represent an initial conception of his wound.",
+      "source_text": "We don't know who the artist was, but we do know he had an unusual technique. A great deal of underdrawing (the preliminary outlining of a composition) is visible to the naked eye, with technical analysis showing more. He made changes throughout, in the underdrawing and while painting. The archer was not drawn in at all but painted over a horse’s head; a red circle in Giles’s shoulder may have been the first idea for his wound. Clearly this artist was accustomed to working out his ideas on panel and making alterations at every stage of producing the work.\n\nThis panel once formed part of a large polyptych (multi-panelled altarpiece) probably painted in Paris in around 1500. In it, a frightened deer cowers in the arms of an elderly man who wears a black cowl. An arrow – intended for the animal – sticks out of his hand, which rests on the deer’s back. A richly dressed man and a clergyman kneel before him, while a group of hunters crowd behind them.\n\nTechnical analysis tells us much about the artist’s unusual technique. A great deal of underdrawing is visible to the naked eye, and yet more is seen by infrared reflectography. Some of the underdrawing is very sketchy and there are many alterations visible both in the underdrawing and the paint layer. The archer was not drawn in at all but painted over a horse’s head, and the red circle in Giles’s shoulder may have been the first idea for the wound he suffered when he tried to protect his deer. Clearly this artist was accustomed to working out his ideas on panel and making radical alterations at every stage of the work, rather than using preparatory drawings.",
+      "sources": [
+        {
+          "what": "National Gallery, London, collection page for Master of Saint Giles, Saint Giles and the Deer (NG1419); page text undated, drawing on Lorne Campbell's 2014 National Gallery catalogue",
+          "url": "https://www.nationalgallery.org.uk/paintings/master-of-saint-giles-saint-giles-and-the-deer"
+        }
+      ],
+      "models": [
+        "8f3a200e",
+        "ed314256",
+        "aa0968dd"
+      ],
+      "notes": "Stage 1 only. Source kind: museum collection text; source_text holds the paragraphs used, verbatim. Kept the probable Paris origin around 1500, the anonymous painter, visible underdrawing with its gloss, the infrared evidence, the sketchiness, the changes in drawing and paint, the undrawn archer over a horse's head and the hedged red circle. Cut the legend of Saint Giles, the composition description and the page's closing summary sentence. Modelled on band-7 T6 items 8f3a200e, ed314256, aa0968dd. 89 words, 4.92 chars/word, 15.2% long words, 29.7 words/sentence (check_rw measure). No 6-word run shared with source_text (names and technical terms excepted), any official passage or our items.",
+      "stem": "What does the text most strongly suggest about the Master of Saint Giles’s working method?",
+      "options": [
+        "The painter likely drew the composition in great detail, since so much of the underdrawing can be seen with the unaided eye.",
+        "The painter seems to have followed the underdrawing closely, since infrared reflectography reveals even more of it than the unaided eye can see.",
+        "The painter probably worked out the composition in separate preparatory drawings, which would explain why parts of the underdrawing are cursory.",
+        "The painter did not treat the underdrawing as a fixed plan, since parts of the composition were still being changed after painting had begun."
+      ],
+      "answer_letter": "D",
+      "explanation": "Much of the underdrawing is visible, and infrared shows more, but the text adds that revisions occur “in both drawing and paint.” Its example is the archer, which was “never drawn at all” and was painted over the head of a horse, so a figure was added and another covered at the painting stage. A painter who changes the composition after painting has begun is not following the underdrawing as a fixed plan, which is choice D.",
+      "distractors": {
+        "A": {
+          "recipe": "true visibility joined to a conclusion the next sentences rule out (CON-half), hedged",
+          "why_wrong": "Much of the underdrawing is “perceptible to the unaided eye,” but the text calls it abundant, not detailed: parts of it are “cursory,” and the archer was never drawn at all."
+        },
+        "B": {
+          "recipe": "true infrared detail beside a conclusion the revisions contradict (CON-half), hedged",
+          "why_wrong": "Infrared reflectography does disclose more underdrawing, but the text says revisions occur in both drawing and paint, and the archer was never drawn at all, so the painter did not simply follow the underdrawing."
+        },
+        "C": {
+          "recipe": "plausible cause for the cursory passages that the revisions on the panel undercut (UNS), hedged",
+          "why_wrong": "The text mentions no separate drawings, and its evidence points the other way: the painter kept changing the composition on the panel itself, painting the archer over a horse’s head without drawing him first."
+        }
+      },
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 6,
+        "fixes": [
+          "A, B, C rewritten to 21 to 23 words with hedges (they were 16 to 19 words, unhedged, and the key was the only \"since\" option); C is now the separate-preparatory-drawings explanation, which the revisions on the panel undercut (the old C died on \"both drawing and paint\")"
+        ],
+        "status": "fixed"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "The key follows from one sentence (revisions \"in both drawing and paint\", the undrawn archer). Distractors are now hedged, of equal length and partly right, but the clue spread stays at one sentence and no stance word is needed."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "D",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "central_ideas_and_details.trial.hard.t_13",
+      "template": "T2",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "William Hayley, an acclaimed poet and scholar who declined the poet laureateship in 1790, fell from fashion late in life and is now remembered, if at all, as the meddlesome patron who exasperated William Blake. Their relationship was more complicated: although Blake undoubtedly found Hayley overbearing, Hayley taught him Greek, broadened his knowledge of Milton, and was largely responsible for his acquittal on a sedition charge. Yet as the Fitzwilliam Museum’s Hayley manuscripts reveal, his importance extends beyond Blake, his writings and correspondence illuminating late eighteenth-century literary and artistic culture.",
+      "source_text": "The Fitzwilliam Museum holds the world’s largest collection of manuscript material relating to William Hayley (1745-1820). But who was he? A largely unknown figure today, Hayley was an acclaimed poet, a multi-lingual scholar and the author of the bestselling and highly influential The Triumphs of Temper (which advised young women on how to attract and keep a husband and was written in rhyming couplets). He achieved both commercial and critical success before, towards the end of his life, his work fell out of fashion. Posthumously, he became a laughing-stock, remembered only for irritating William Blake and writing bad poetry. But who was he really?\n\nHayley was the first person to publish an extensive translation of Dante’s Divine Comedy in English, a great friend of the artist George Romney, who for many years spent several weeks each summer with Hayley, relaxing and painting, and successfully lobbied the government to award the poet William Cowper a pension. Hayley also tried – with somewhat less success – to cure Cowper of “his calamitous depression”. And he negotiated book contracts for the poet and novelist Charlotte Smith. In 1790, Hayley was offered the poet laureateship, which he turned down, citing a combination of poor health and political objections to the duties attached to the post.\n\nBut today, where he’s known at all, it’s as the interfering patron of William Blake. The pair – one a successful author, the other a struggling engraver – met through their mutual friend, the sculptor John Flaxman. Late in the summer of 1800, Blake and his wife Catherine moved down to Felpham in West Sussex to collaborate with Hayley on engravings for his biography of Cowper. At first, Blake was delighted both with Felpham, and with Hayley. But, over time, the relationship deteriorated. Hayley was accustomed to advising his friends – including Cowper, Romney and the sculptor John Flaxman, through whom he met Blake – on subjects for their poetry and art. As this snarky verse in his notebook makes clear, Blake appreciated Hayley’s interventions rather less:\n\nTheir relationship was, however, complex. And although Blake undoubtedly found his employer frustratingly overbearing and earthbound, he also learned a great deal from him. As well as paying Blake for his work, Hayley taught him Greek and expanded his knowledge of Milton. Blake was also hugely grateful for Hayley’s interventions when he was accused of sedition. Hayley helped post bail, organised and funded a lawyer, and spoke for Blake in court. It was, in fact, a large part, down to Hayley’s involvement that Blake was acquitted, escaping prison and a hefty fine.\n\nBut it’s not only for his Blake connection that Hayley matters. As the manuscripts in the Fitzwilliam Museum’s collection reveal, he was a significant mover and shaker in late eighteenth-century cultural life, someone whose published writings and correspondence reveal much about literary and artistic production and relationships in the late eighteenth century.",
+      "sources": [
+        {
+          "what": "Cambridge University Museums blog, Who was William Hayley?, by Lisa Gee, who catalogues the Fitzwilliam Museum's Hayley Papers, published 2019-01-23",
+          "url": "https://www.museums.cam.ac.uk/blog/2019/01/23/who-was-william-hayley/"
+        }
+      ],
+      "models": [
+        "251e5281",
+        "f7bd14de",
+        "881ba6f1"
+      ],
+      "notes": "Stage 1 only. Source kind: museum blog by the researcher; source_text holds the paragraphs used, verbatim. Kept Hayley's standing, the declined laureateship (1790), his fall from fashion and present reputation as Blake's interfering patron, the concession 'undoubtedly' with what Blake gained (Greek, Milton, help at the sedition trial), and the closing claim that he matters beyond Blake. Cut Cowper, Romney, Charlotte Smith, the Dante translation and Blake's verse. Modelled on band-7 T2 items 251e5281, f7bd14de, 881ba6f1. 90 words, 5.73 chars/word, 24.0% long words, 30.0 words/sentence (check_rw measure). No 6-word run shared with source_text (names and technical terms excepted), any official passage or our items.",
+      "stem": "Which choice best states the main idea of the text?",
+      "options": [
+        "Although Hayley is now remembered mainly for his dealings with Blake, which benefited Blake more than that memory suggests, his manuscripts show that his importance is not confined to his role in Blake’s life.",
+        "Although Hayley is remembered as a patron who exasperated Blake, the help he gave Blake with Greek, with Milton, and against a sedition charge shows that Blake was wrong to find him overbearing.",
+        "Although Hayley was acclaimed enough to be offered the poet laureateship, he fell from fashion late in life largely because of his reputation as Blake’s meddlesome patron, a reputation his manuscripts now help correct.",
+        "Although Hayley’s writings shed light on the literary and artistic culture of the late eighteenth century, they are likely most valuable for what they reveal about his complicated relationship with Blake."
+      ],
+      "answer_letter": "A",
+      "explanation": "The text says Hayley is now remembered, “if at all,” as the patron who exasperated Blake, then shows the relationship was more complicated: Hayley taught Blake Greek, broadened his knowledge of Milton and largely secured his acquittal. “Yet” the text goes further: the Fitzwilliam manuscripts show that “his importance extends beyond Blake.” Choice A keeps both steps and ends on the last one.",
+      "distractors": {
+        "B": {
+          "recipe": "stops at the middle sentence and overturns its concession (CON-half)",
+          "why_wrong": "The help Hayley gave is in the text, but so is the concession that Blake “undoubtedly found Hayley overbearing”; the text calls the relationship more complicated, not Blake’s view wrong, and it ends by moving beyond Blake."
+        },
+        "C": {
+          "recipe": "an invented cause joined to true facts (UNS)",
+          "why_wrong": "Hayley did decline the laureateship and fall from fashion, but the text never says why he fell from fashion; his reputation as a meddlesome patron is how he is remembered now, not a cause given for his decline."
+        },
+        "D": {
+          "recipe": "keeps the Blake-centered view the text moves past (CON-half), hedged",
+          "why_wrong": "The first half is right, but the text’s point is that Hayley’s importance “extends beyond Blake”; it never ranks his writings’ value and certainly does not say they matter most for what they show about Blake."
+        }
+      },
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 6,
+        "fixes": [
+          "D hedged (\"likely\"); the key was the only hedged option"
+        ],
+        "status": "fixed"
+      },
+      "band7": {
+        "verdict": "band 7",
+        "why": "The key joins all three moves (remembered for Blake, the relationship helped Blake more than that memory suggests, importance beyond Blake); B is rejected through \"undoubtedly\", C through reading no cause into the first sentence."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "A",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "central_ideas_and_details.trial.hard.t_14",
+      "template": "T6",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "Although architectural pastes from ancient Egypt have been analyzed, the plaster-like layers applied to objects remain largely unexplored. Examining the coffins of Pakepu, a Theban priest of about 680–664 BCE, together with contemporaneous fragments, Caterina Zaggia et al. found that the intermediate coffin, like much painted funerary material, has a simple paste ground beneath its decoration, whereas the inner coffin and the fragments exhibit a complex structure resembling cartonnage (a composite of linen, glue, and paste). Variations in microstructure and elemental composition further suggested that several workshops were involved.",
+      "source_text": "Ancient Egyptian artefacts showcase a fascinating variety of plaster-like materials, ranging from true plasters, derived from heated lime and gypsum, to mud, calcium carbonate (limestone), and calcium sulphate mixtures—often bound with organic compounds and enriched with clay minerals or plant fibres. While architectural pastes have been studied, the composition of pastes used on objects remains largely unexplored.\n\nCaterina Zaggia, Marcos Martinón-Torres, Matthew Collins, Helen Strudwick and Julie Dawson collaborated to conduct a detailed materials' analysis of the wooden coffins of Pakepu (ca. 680–664 BCE), a priest and water pourer at the temple of Amun in Thebes. His funerary ensemble consists of an inner and an intermediate coffin, examined alongside contemporary coffin fragments from the same region.\n\nUsing optical microscopy, SEM-EDS, and FTIR spectroscopy, a significant contrast between layers was discovered. Similar to much painted ancient Egyptian funerary material, the surface of the intermediate coffin has a simple paste preparation layer under the decoration. However, the inner coffin and fragments have a complex surface structure, similar to cartonnage (a free-standing composite material crafted from layers of linen, glue and paste). Furthermore, it was found that unheated calcite was present in all samples, and that variations in micromorphology and elemental composition suggested that different workshops were used, in addition to a variety of sources of the raw materials and techniques used in production.",
+      "sources": [
+        {
+          "what": "University of Cambridge Department of Archaeology news, How were Ancient Egyptian coffins made? Plaster-like materials hold the answers, on Zaggia, Martinon-Torres, Collins, Strudwick and Dawson in Journal of Archaeological Science: Reports, published 2025-02-20",
+          "url": "https://www.arch.cam.ac.uk/news/how-were-ancient-egyptian-coffins-made-plaster-like-materials-hold-the-answers"
+        }
+      ],
+      "models": [
+        "4d3e3c52",
+        "aa0968dd",
+        "db2da2bf"
+      ],
+      "notes": "Stage 1 only. Source kind: university department news story; source_text holds the paragraphs used, verbatim. Kept the gap in research on object pastes, Pakepu and his date, the contrast between the simple paste of the intermediate coffin and the cartonnage-like layering of the inner coffin and fragments (with the source's gloss of cartonnage), and the hedged workshop inference. Cut the analytical methods, Pakepu's titles, the unheated calcite and Zaggia's wider research aims. Modelled on band-7 T6 items 4d3e3c52, aa0968dd, db2da2bf. 89 words, 5.86 chars/word, 20.0% long words, 29.7 words/sentence (check_rw measure). No 6-word run shared with source_text (names and technical terms excepted), any official passage or our items.",
+      "stem": "Based on the text, which choice best describes the inner coffin of Pakepu?",
+      "options": [
+        "Unlike the ground of the intermediate coffin, its ground is made of linen and glue rather than of paste, which is why it resembles cartonnage.",
+        "It was likely made in the same workshop as the contemporaneous fragments, since both have a complex structure resembling cartonnage.",
+        "It is the first ancient Egyptian object whose plaster-like layers have been analyzed, since earlier studies examined only architectural pastes.",
+        "Its decoration lies over a complex ground resembling cartonnage, which sets it apart from much painted funerary material as well as from the intermediate coffin."
+      ],
+      "answer_letter": "D",
+      "explanation": "The intermediate coffin, “like much painted funerary material,” has a simple paste ground beneath its decoration, “whereas” the inner coffin has a complex structure resembling cartonnage. So the inner coffin differs both from the intermediate coffin and from the simple ground that much painted funerary material has, which is choice D.",
+      "distractors": {
+        "A": {
+          "recipe": "the gloss misread (TWI)",
+          "why_wrong": "The text defines cartonnage as “a composite of linen, glue, and paste,” so a ground resembling cartonnage contains paste; it is not linen and glue instead of paste."
+        },
+        "B": {
+          "recipe": "a shared feature turned into a shared origin that the last sentence undercuts (CON-half), hedged",
+          "why_wrong": "The inner coffin and the fragments do share the cartonnage-like structure, but the text says variations in microstructure and composition suggested several workshops were involved, and it never says which pieces came from which."
+        },
+        "C": {
+          "recipe": "the hedge “largely” hardened into “only,” beside a true detail (TWI)",
+          "why_wrong": "The text says plaster-like layers on objects “remain largely unexplored,” which allows that some have been studied; it does not say this coffin is the first such object analyzed."
+        }
+      },
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 5,
+        "fixes": [
+          "A lengthened (the key was the only long option) and kept as the gloss misread: \"linen and glue rather than paste, which is why it resembles cartonnage\""
+        ],
+        "status": "fixed"
+      },
+      "band7": {
+        "verdict": "band 7",
+        "why": "The key needs \"like much painted funerary material\" and \"whereas\" to set the inner coffin apart from both groups; A turns on the gloss of cartonnage (paste is part of it), B on the several workshops, C on \"largely\"."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "D",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "central_ideas_and_details.trial.hard.t_15",
+      "template": "T6",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "Topology optimization identifies the strongest structure attainable with minimal material, but its intricate, weblike designs disregard the constraints of large concrete printers: thick nozzles, restricted turning, and the need for one continuous path. Incorporating those constraints, Hajin Kim-Tackowiak, Zane Schemmer, and Josephine Carstensen printed a 2.3-meter bridge that bore more than 2,000 pounds with negligible bending, a design Kim-Tackowiak called drastically over-engineered. Carstensen had expected the continuous path to be the costliest constraint, but quantifying each one showed that bead width mattered most: a 1-centimeter bead instead of the 4-centimeter one used could reduce material by up to 76 percent.",
+      "source_text": "But many of the most efficient designs created by computers are impossible for today’s printers to build. Engineers use a technique called topology optimization to find the strongest structure that uses the least amount of material. But those mathematically ideal designs, with their intricate, spider-web shapes, don’t account for the physical limitations of large-scale concrete printers with their thick nozzles, limited turning, and need to print in one continuous motion.\n\nNow a team of MIT researchers has developed a way to close that gap. Their framework, described in a new article in Additive Manufacturing, bakes a printer’s real fabrication limits directly into the optimization, so the design that comes out is one a machine can build and print with little or no manual redesign. They demonstrated it by designing, printing, and load-testing a 2.3-meter concrete bridge and found that today’s printing hardware, not the concrete itself, limits how light a structure can be.\n\nIn testing, the roughly 900-pound structure held more than 2,000 pounds spread across it with virtually no measurable bending, closely matching the team’s simulations.\n\nBut the test also revealed the study’s biggest surprise. “What we found was our result was super over-engineered,” Kim-Tackowiak says. “From zero to 200,000 pounds, your design is entirely driven by these 'can I build it or not' constraints. And then, after 200,000 pounds, you can start to think about the physics.” In other words, the limits of current printing technology, not the strength of concrete, were dictating how efficient the structure could be.\n\nThe single biggest lever was the width of the printed bead. The bridge used a 4 centimeter bead. The analysis showed a machine that was able to lay a 1cm bead could cut material use by as much as 76 percent while staying “well within safety margins,” Carstensen says. The result surprised her. “I thought the continuous path would be the problem, the one that had the highest effect,” she says. “But it wasn’t. It was the bead width.”",
+      "sources": [
+        {
+          "what": "MIT News, 3D-printed bridge points the way to greener construction, on Kim-Tackowiak, Schemmer, Carstensen et al. in Additive Manufacturing, published 2026-07-15",
+          "url": "https://news.mit.edu/2026/3d-printed-bridge-points-to-greener-construction-0715"
+        }
+      ],
+      "models": [
+        "4d3e3c52",
+        "7812801f",
+        "db2da2bf"
+      ],
+      "notes": "Stage 1 only. Source kind: university press release; source_text holds the paragraphs used, verbatim. Kept the aim of topology optimization and why its designs cannot be printed (the three printer limits), the constrained bridge and its load test, the researchers' 'super over-engineered' judgment, Carstensen's expectation about the continuous path and the bead-width result (4 cm used, 1 cm could save up to 76 percent). Cut the release's summary sentences, the solver history and the disaster-relief remarks. Modelled on band-7 T6 items 4d3e3c52, 7812801f, db2da2bf. 100 words, 5.70 chars/word, 22.5% long words, 33.3 words/sentence (check_rw measure). No 6-word run shared with source_text (names and technical terms excepted), any official passage or our items.",
+      "stem": "What does the text most strongly suggest about the bridge that the researchers printed?",
+      "options": [
+        "It used more material than it needed chiefly because the printer had to lay it down along a single continuous path.",
+        "It could likely have borne the same load with much less material if the printer had laid down a narrower bead of concrete.",
+        "It needed less material than an unconstrained topology-optimized design would have, since the printer’s limits ruled out intricate, weblike shapes.",
+        "Its material use was likely set more by the strength of concrete than by the printer’s limits, given how little it bent under its load."
+      ],
+      "answer_letter": "B",
+      "explanation": "The bridge bore more than 2,000 pounds with negligible bending, and Kim-Tackowiak called it “drastically over-engineered,” meaning it used more material than its job required. Quantifying the constraints showed that bead width mattered most: a 1-centimeter bead instead of the 4-centimeter one used could cut material by up to 76 percent. So a narrower bead would likely have let the bridge do its job with much less material, which is choice B.",
+      "distractors": {
+        "A": {
+          "recipe": "keeps the expectation the text overturns (CON-half)",
+          "why_wrong": "Carstensen expected the continuous path to be the costliest constraint, “but” quantifying each one showed that bead width mattered most."
+        },
+        "C": {
+          "recipe": "true detail about the printer’s limits joined to a reversed comparison (CON-half)",
+          "why_wrong": "The printer’s limits did rule out weblike designs, but topology optimization is what finds the strongest structure “with minimal material,” and the constrained bridge was “drastically over-engineered”; the limits added material rather than saving it."
+        },
+        "D": {
+          "recipe": "true observation joined to a reversed account of what governed the design (CON), hedged",
+          "why_wrong": "The bridge did bend negligibly, but that is why it was “drastically over-engineered”: it carried more material than its load required, and quantifying the constraints showed that a printer limit, bead width, mattered most."
+        }
+      },
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 6,
+        "fixes": [
+          "D replaced: the old D died on \"quantifying each one\"; the new D says the strength of concrete, not the printer, set the material, which \"drastically over-engineered\" and the bead-width result rule out (CON)"
+        ],
+        "status": "fixed"
+      },
+      "band7": {
+        "verdict": "band 7",
+        "why": "The key turns \"drastically over-engineered\" and the 1-centimeter versus 4-centimeter result into plain terms (same load, much less material); A keeps Carstensen's overturned expectation, D reverses what set the material; three partly right distractors."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "B",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    }
+  ]
+}

@@ -1,0 +1,1330 @@
+{
+  "skill": "Words in Context",
+  "slug": "words_in_context",
+  "part": "w3b6",
+  "domain": "Craft and Structure",
+  "plan": {
+    "templates": [
+      {
+        "code": "B6",
+        "name": "Blank completion, phrase options (word + preposition, a/an + word)"
+      },
+      {
+        "code": "B1",
+        "name": "Blank completion, restatement clue"
+      },
+      {
+        "code": "B3",
+        "name": "Blank completion, contrast clue (including received view then finding)"
+      },
+      {
+        "code": "B5",
+        "name": "Blank completion, negated frame"
+      },
+      {
+        "code": "M1",
+        "name": "Most nearly mean, underlined word"
+      },
+      {
+        "code": "B2",
+        "name": "Blank completion, cause or consequence clue"
+      },
+      {
+        "code": "M2",
+        "name": "Most nearly mean, underlined phrase or phrase options"
+      },
+      {
+        "code": "B4",
+        "name": "Blank completion, example-pinned clue"
+      }
+    ]
+  },
+  "items": [
+    {
+      "id": "words_in_context.B6.hard.w3b6_01",
+      "template": "B6",
+      "subtype": "Blank completion: phrase options",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Because a dollar of tax saved is equally valuable whether it reduces a payment or increases a refund, standard economic models predict that taxpayers minimizing their liability should be ______ which outcome they anticipate. Economist Alex Rees-Jones, however, found that filers expecting to owe money reduced their liability more than comparable filers expecting refunds.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "attentive to",
+        "unaware of",
+        "indifferent to",
+        "wary of"
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "To be indifferent to something is to have no reason to prefer one outcome over the other. The text explains that a saved dollar is equally valuable whether it reduces a payment or increases a refund, so the standard models expect taxpayers’ efforts not to depend on which outcome they anticipate. The word “however” then introduces Rees-Jones’s finding as a departure from that prediction.",
+      "distractors": {
+        "A": {
+          "recipe": "reversal: describes the finding, not the prediction (ANT)",
+          "why_wrong": "Filers did respond to whether they owed money, which is what Rees-Jones found; the blank, though, describes what the standard models predict, and “however” marks the finding as the opposite of that prediction."
+        },
+        "B": {
+          "recipe": "near miss: not knowing instead of not caring (CONNOT)",
+          "why_wrong": "The models do not assume that taxpayers fail to know whether they owe money or expect a refund; they assume that knowing it should make no difference, since a saved dollar is worth the same either way."
+        },
+        "D": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Being wary of something means being cautious or suspicious about it. The models’ prediction rests on the equal value of a saved dollar in either case and says nothing about taxpayers’ caution; it implies the outcome should not matter to their decisions at all."
+        }
+      },
+      "models": [
+        "4fa7e50e",
+        "5dce6cab",
+        "0462dac3",
+        "994be036"
+      ],
+      "word_count": 54,
+      "sources": [
+        {
+          "what": "Rees-Jones, Quantifying Loss-Averse Tax Manipulation, Review of Economic Studies 85(2), 2018: taxpayers facing a payment on tax day reduce their tax liability by about $34 more than taxpayers owed a refund",
+          "url": "https://ideas.repec.org/a/oup/restud/v85y2018i2p1251-1278..html"
+        }
+      ],
+      "notes": "Subject: social science (behavioral economics). Key letter C. Steps: 2 (the first clause gives the premise that makes owing and a refund equivalent, so effort should not depend on them; “however” confirms that the finding is the opposite). Key in a transferred, technical sense (indifferent to, as economists use it). Two distractors partly right: attentive to is what filers actually were; unaware of sounds like indifference but names not knowing. Raw ranks, tools/data/freq.txt (rarest content word, printed form): attentive to 7,136; unaware of 8,556; indifferent to 2,479; wary of 10,734; 1 of 4 past 10,000, 0 past 20,000.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 2,
+        "fixes": [],
+        "status": "pass"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "Raw ranks (freq.txt): attentive to 7,136; unaware of 8,556; indifferent to 2,479; wary of 10,734: 1 of 4 past 10,000, mean log 3.80, no distractor past 50,000. Plain common key with two-step reasoning (premise, then however), the band-6 B6 pattern (an exhaustive, a modest). Fair band 6."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "C",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "words_in_context.B1.hard.w3b6_02",
+      "template": "B1",
+      "subtype": "Blank completion: restatement clue",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "The Mundurucu, an Indigenous people of the Brazilian Amazon, have limited access to formal schooling, and their language contains few geometric terms. Nevertheless, in Véronique Izard’s experiments, Mundurucu adults estimated that a triangle’s angles on a perfectly flat surface total roughly 180 degrees, matching mathematically educated adults—evidence that an understanding of Euclidean geometry can be ______.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "rudimentary",
+        "provisional",
+        "idiosyncratic",
+        "intuitive"
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "Intuitive means known without being taught or reasoned out step by step. The Mundurucu have limited schooling and few geometric terms, yet their estimates matched those of mathematically educated adults. Their understanding of the geometry therefore did not come from instruction, which is what an intuitive grasp is.",
+      "distractors": {
+        "A": {
+          "recipe": "near miss: right field, wrong degree (CONNOT)",
+          "why_wrong": "Rudimentary means basic or undeveloped. The Mundurucu lack schooling and vocabulary, but their estimates matched those of mathematically educated adults, so the text gives no sign that their grasp is crude."
+        },
+        "B": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Provisional means temporary or subject to later change. Nothing in the text suggests that the Mundurucu adults’ understanding is held only for the time being."
+        },
+        "C": {
+          "recipe": "reversal: contradicted by the match with other adults (ANT)",
+          "why_wrong": "Idiosyncratic means peculiar to an individual or group. The Mundurucu answered just as educated adults elsewhere did, so their grasp is shared, not peculiar to them."
+        }
+      },
+      "models": [
+        "76e4c51d",
+        "3d658a5a",
+        "a60b0004",
+        "10c236ce"
+      ],
+      "word_count": 56,
+      "sources": [
+        {
+          "what": "Izard, Pica, Spelke, Dehaene, Flexible intuitions of Euclidean geometry in an Amazonian indigene group, PNAS 2011: Mundurucu adults’ estimates of a triangle’s angles on a planar surface summed to about 180 degrees and converged with those of mathematically educated adults, revealing an intuitive understanding without formal education",
+          "url": "https://europepmc.org/article/MED/21606377"
+        }
+      ],
+      "notes": "Subject: social science (cognitive science). Key letter D. Steps: 2 (combine the lack of schooling and vocabulary with the match to educated adults; together they rule out crude or peculiar knowledge and leave knowledge without instruction). Clue is a paraphrase in a different register (limited access to formal schooling) a sentence away from the blank. Distractors: one near miss (rudimentary, tempting because of the missing vocabulary), one reversal, one unsupported. Raw ranks, tools/data/freq.txt (rarest content word, printed form): rudimentary 22,834; provisional 26,070; idiosyncratic unranked; intuitive 20,681; 4 of 4 past 10,000, 4 past 20,000.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [
+          "band_target raised from 6 to 7: the option set passes the band-7 rarity checks (see band7)"
+        ],
+        "status": "fixed"
+      },
+      "band7": {
+        "verdict": "band 7",
+        "why": "Raw ranks: rudimentary 22,834; provisional 26,070; idiosyncratic unranked; intuitive 20,681: 4 of 4 past 20,000, mean log 4.77, rarest distractor unseen (check 2), key past 20,000 and 3+ options past 10,000 (check 3), key not the rarest (band-5 guard clear). Two steps, clue in another register a sentence away (limited access to formal schooling), one near-synonym distractor failing on degree (rudimentary): the section-5 B1 recipe. Weakest point: intuitive is the most familiar option."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "D",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 7
+    },
+    {
+      "id": "words_in_context.B3.hard.w3b6_03",
+      "template": "B3",
+      "subtype": "Blank completion: contrast clue",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "Because precise facial mimicry—replicating the subtle details of another individual’s expression—had been documented only in humans and great apes, researchers widely assumed that such sophisticated communication emerges exclusively in ______ species. In 2019, however, Derry Taylor and Marina Davila-Ross reported precise mimicry among playing sun bears, even though adult sun bears spend most of their lives alone.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "reclusive",
+        "gregarious",
+        "sedentary",
+        "garrulous"
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "Gregarious means living in groups or seeking the company of others. The sun bear finding is presented as a challenge (“however”) to the earlier assumption, and what makes it a challenge is that sun bears mostly live alone. So the assumption must have tied complex mimicry to species that live together, that is, gregarious ones.",
+      "distractors": {
+        "A": {
+          "recipe": "reversal: trait of the other side of the contrast (ANT)",
+          "why_wrong": "Reclusive describes the sun bears themselves, which spend most of their lives alone. The blank describes the species the old assumption was about, which the sun bears are contrasted with."
+        },
+        "C": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Sedentary means staying in one place or inactive. The text never links mimicry to how much animals move, and the fact that sun bears live alone would not challenge such a view."
+        },
+        "D": {
+          "recipe": "near miss: talkative, not social (CONNOT)",
+          "why_wrong": "Garrulous means excessively talkative, a trait of speakers rather than of how a species lives. The text contrasts the earlier view with bears that live alone, so the assumption concerned social living, not chattiness; facial mimicry is not speech in any case."
+        }
+      },
+      "models": [
+        "6c9f1727",
+        "22a41819",
+        "e8fb0744",
+        "a5e747f0"
+      ],
+      "band7_moves": [
+        "blank on the received view being challenged, with the finding’s side described only by a paraphrase (spend most of their lives alone)",
+        "direction left implicit: no antonym of the key appears; the reader infers it from the concessive “even though”",
+        "described side’s trait offered as a reversal (reclusive)",
+        "near-synonym-field distractor that fails on one feature (garrulous: talk, not group living)",
+        "all four options past rank 10,000"
+      ],
+      "word_count": 57,
+      "sources": [
+        {
+          "what": "University of Portsmouth news release on Taylor, Hartmann, Dezecache, Te Wong, Davila-Ross, Scientific Reports 2019: sun bears showed precise facial mimicry in play; only great apes and humans were previously known to show such complexity; it is widely believed that complex communication occurs only in species with complex social systems, yet the sun bear is not a social animal",
+          "url": "https://www.port.ac.uk/news-events-and-blogs/news/worlds-smallest-bears-facial-expressions-throw-doubt-on-human-superiority"
+        }
+      ],
+      "notes": "Subject: natural science (animal behavior). Key letter B. Steps: 2 (the received view is stated without its key trait; the concessive clause about bears living alone shows which trait the view assumed). Concessive frame: yes (even though). Band-7 check 1: 4 of 4 options past 10,000. Band-5 guard: clear (key not the rarest; reclusive is unranked). Raw ranks, tools/data/freq.txt (rarest content word, printed form): reclusive unranked; gregarious 29,890; sedentary 35,765; garrulous 17,695; 4 of 4 past 10,000, 3 past 20,000.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass"
+      },
+      "band7": {
+        "verdict": "band 7",
+        "why": "Raw ranks: reclusive unranked; gregarious 29,890; sedentary 35,765; garrulous 17,695: 4 of 4 past 10,000, 3 past 20,000, rarest distractor unseen, key past 20,000; guard clear (reclusive is the rarest). B3 received view with the blank on the challenged view and its trait left implicit, concessive even though, wrong-party reversal (reclusive) and a sound-alike near miss (garrulous), as in e8fb0744 and 22a41819."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "B",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 7
+    },
+    {
+      "id": "words_in_context.B5.hard.w3b6_04",
+      "template": "B5",
+      "subtype": "Blank completion: negated frame",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Biologist Steven Portugal and colleagues determined that a secretary bird’s kick strikes a snake with roughly five times the bird’s body weight, maintaining contact for only about 15 milliseconds. Such a brief strike cannot be ______ once initiated, so the bird must visually establish its target beforehand—an exacting requirement when the prey is venomous.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "redirected",
+        "strengthened",
+        "detected",
+        "rehearsed"
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "To redirect something is to change its course or aim. Because the kick is over in about 15 milliseconds, the bird has no time to change its aim during the strike; that is why, as the text says, it “must visually establish its target beforehand.”",
+      "distractors": {
+        "B": {
+          "recipe": "near miss: changes force, not aim (CONNOT)",
+          "why_wrong": "The text does mention the kick’s force, but the consequence it draws is about aiming in advance. Being unable to add force mid-kick would not explain why the bird must establish its target beforehand."
+        },
+        "C": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Nothing in the text concerns whether the kick can be noticed by the snake or by observers, and that would not explain why the bird must aim beforehand."
+        },
+        "D": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "To rehearse is to practice beforehand, which cannot happen “once initiated” in any case; the text says nothing about practice."
+        }
+      },
+      "models": [
+        "bbb77c84",
+        "e7d37666",
+        "f83f0aab",
+        "6c086e70"
+      ],
+      "word_count": 54,
+      "sources": [
+        {
+          "what": "Phys.org report on Portugal, Murn, Sparkes, Daley, Current Biology 2016: secretary bird kicks reach about five times body weight; contact lasts about 15 milliseconds; once a kick has started the bird cannot adapt it; the bird relies on visual targeting and feed-forward control; a missed strike on a venomous snake could be deadly",
+          "url": "https://phys.org/news/2016-01-snake-hunting-secretary-birds-body-weight.html"
+        }
+      ],
+      "notes": "Subject: natural science (biomechanics). Key letter A. Negated frame stated plainly (cannot be), as in bbb77c84 (unlikely to be superseded). Steps: 2 (the brevity of the kick plus the consequence clause, aim fixed beforehand, pin a change of aim during the kick). Near miss strengthened is tempting because force is the first fact given. Raw ranks, tools/data/freq.txt (rarest content word, printed form): redirected 73,456; strengthened 7,002; detected 5,405; rehearsed 17,273; 2 of 4 past 10,000, 1 past 20,000.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "Raw ranks: redirected 73,456; strengthened 7,002; detected 5,405; rehearsed 17,273: 2 of 4 past 10,000. The key rank is a corpus artifact (redirect is a modern word the 1850 to 1928 corpus undercounts), and key-rarest with two distractors under 10,000 is the band-5 guard shape, so no band-7 credit for vocabulary. Negation stated plainly (cannot be), as in band-6 bbb77c84; two steps. Band 6 on reasoning."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "A",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "words_in_context.M1.hard.w3b6_05",
+      "template": "M1",
+      "subtype": "Most nearly mean: underlined word",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "The following text is from a 1916 translation of Aleksandr Kuprin’s 1905 novel The Duel. Romashov, a young officer, has come to visit Nikoläiev, a fellow officer, and his wife.\n\nNikoläiev sat with his back to them at the table that was almost hidden by piles of books, drawings, and maps. Before the year was out he had to make another attempt to get admitted to the Staff College, and for many months he had been preparing with unremitting <u>industry</u> for this stiff examination in which he had already twice failed.",
+      "stem": "As used in the text, what does the word “industry” most nearly mean?",
+      "options": [
+        "Manufacturing",
+        "Erudition",
+        "Productivity",
+        "Diligence"
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "As used in the text, “industry” means diligence, or steady hard work. Nikoläiev’s table is buried in books, drawings, and maps, and he has been preparing “for many months” without a break for an examination he has already failed twice; “unremitting industry” describes that persistent effort.",
+      "distractors": {
+        "A": {
+          "recipe": "another sense of the target (SENSE)",
+          "why_wrong": "Industry can mean the making of goods, as in a nation’s industry, but Nikoläiev is studying for an examination, not producing anything."
+        },
+        "B": {
+          "recipe": "topic echo from the scene (ASSOC)",
+          "why_wrong": "Erudition means deep learning, which the piles of books might suggest, but the text describes how hard Nikoläiev is working, not how much he knows; having failed the examination twice, he is still trying to master it."
+        },
+        "C": {
+          "recipe": "near miss: economic sense of the target, output instead of effort (CONNOT)",
+          "why_wrong": "Productivity is the amount a worker produces, a meaning tied to industry in its economic sense. The text says nothing about what Nikoläiev’s study has yielded; “unremitting” describes the constancy of his effort."
+        }
+      },
+      "models": [
+        "6557f7fc",
+        "7f935017",
+        "9b22bf7b"
+      ],
+      "band7_moves": [
+        "common word in a sense that is not its first one today (industry = diligence)",
+        "one distractor is the target’s everyday sense (Manufacturing), one an economic sense close to it (Productivity), one a topic word from the scene (Erudition)",
+        "key itself mid-frequency (Diligence), not a plain everyday synonym",
+        "all four options past rank 10,000"
+      ],
+      "word_count": 91,
+      "sources": [
+        {
+          "what": "Text of The Duel by A. I. Kuprin (London: George Allen & Unwin, first published in 1916), Project Gutenberg 44117; excerpt copied exactly from the scene of Romashov’s visit to the Nikoläievs",
+          "url": "https://www.gutenberg.org/ebooks/44117"
+        }
+      ],
+      "notes": "Subject: literature. Key letter D. Two consecutive sentences copied exactly. The original Russian novel (Poedinok) appeared in 1905. Band-7 check 1: 4 of 4 options past 10,000. Raw ranks, tools/data/freq.txt (rarest content word, printed form): Manufacturing 12,300; Erudition 25,341; Productivity 42,307; Diligence 14,216; 4 of 4 past 10,000, 2 past 20,000.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 2,
+        "fixes": [],
+        "status": "pass",
+        "note": "excerpt matches Gutenberg 44117 exactly"
+      },
+      "band7": {
+        "verdict": "band 7",
+        "why": "Raw ranks: Manufacturing 12,300 (10,971 by stem); Erudition 25,341; Productivity 42,307; Diligence 14,216: 4 of 4 past 10,000, 2 past 20,000, mean log 4.31; check 2 not met (no distractor past 50,000); guard clear. Common target in a secondary sense, rare clue word (unremitting 24,828), mid-frequency key, distractors a real sense, an economic-sense near miss and a topic word, the M1 shape of 6557f7fc and 7f935017. Borderline: a student who owns industrious solves it at once."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "D",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 7
+    },
+    {
+      "id": "words_in_context.B5.medium.w3b6_06",
+      "template": "B5",
+      "subtype": "Blank completion: negated frame",
+      "tier": "medium",
+      "passage": "In experiments by psychologists Igor Grossmann and Ethan Kross, people reasoned more wisely about a friend’s relationship problems than about their own, more readily admitting what they did not know. But when people viewed their own problems from a distanced, third-person perspective, the researchers found no ______ between the two kinds of reasoning.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "affinity",
+        "disparity",
+        "rivalry",
+        "friction"
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "A disparity is a difference or inequality. The text first describes a gap: people reasoned more wisely about a friend’s problems than about their own. “But” signals that taking a distanced perspective changed this, so the researchers no longer saw a difference between the two kinds of reasoning.",
+      "distractors": {
+        "A": {
+          "recipe": "reversal under the negated frame (ANT)",
+          "why_wrong": "An affinity is a likeness or natural connection. Saying the researchers saw no affinity would mean the two kinds of reasoning were unlike each other, but distancing is presented as removing the gap, not widening it."
+        },
+        "C": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "A rivalry is a competition. Nothing in the text suggests that the two kinds of reasoning competed with each other; the point is whether one was wiser than the other."
+        },
+        "D": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Friction is conflict or tension. The text compares how wisely people reasoned in two situations; it never suggests the two kinds of reasoning clashed, so the absence of friction is not what distancing produced."
+        }
+      },
+      "models": [
+        "2.10",
+        "2.11",
+        "2.21",
+        "2.13"
+      ],
+      "word_count": 53,
+      "sources": [
+        {
+          "what": "Grossmann and Kross, Exploring Solomon’s paradox, Psychological Science 2014: participants reasoned more wisely (recognizing the limits of their knowledge and the importance of compromise) about another person’s problems than their own; self-distancing eliminated this asymmetry",
+          "url": "https://europepmc.org/article/MED/24916084"
+        }
+      ],
+      "notes": "Subject: social science (psychology). Key letter B. Negator in the blank’s sentence (no), the medium pattern. Steps: 2 (identify the gap described in the first sentence, then undo it under “But” and “no”). Clue in the previous sentence. Raw ranks, tools/data/freq.txt (rarest content word, printed form): affinity 17,131; disparity 28,960; rivalry 15,093; friction 17,693; 4 of 4 past 10,000, 1 past 20,000.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 2,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "words_in_context.B6.medium.w3b6_07",
+      "template": "B6",
+      "subtype": "Blank completion: phrase options",
+      "tier": "medium",
+      "passage": "Sociologist Lauren Rivera interviewed 120 people who hire for elite US banks, law firms, and consulting firms and found that evaluators were often ______ cultural fit. More than half ranked a candidate’s similarity to existing employees—in leisure pursuits, background, and self-presentation—as the most important interview criterion.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "swayed by",
+        "dismissive of",
+        "unfamiliar with",
+        "embarrassed by"
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "To be swayed by something is to be influenced by it. The text says that more than half of the evaluators ranked a candidate’s similarity to current employees, that is, cultural fit, as the most important criterion in interviews, so their judgments were strongly influenced by it.",
+      "distractors": {
+        "B": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "Being dismissive of cultural fit would mean treating it as unimportant, but most evaluators ranked it as the single most important criterion."
+        },
+        "C": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Nothing suggests that evaluators did not know what cultural fit was; they used it deliberately when judging candidates."
+        },
+        "D": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "The text reports how evaluators ranked their criteria, not how they felt about them, and gives no sign of embarrassment."
+        }
+      },
+      "models": [
+        "2.28",
+        "2.18",
+        "2.20"
+      ],
+      "word_count": 46,
+      "sources": [
+        {
+          "what": "ScienceDaily (American Sociological Association release) on Rivera, Hiring as Cultural Matching, American Sociological Review 2012: 120 interviews at elite investment banks, law firms, and consulting firms; cultural fit, defined as similarity to existing employees in leisure pursuits, background, and self-presentation, was ranked by more than half of evaluators as the most important criterion at the interview stage",
+          "url": "https://www.sciencedaily.com/releases/2012/11/121129093008.htm"
+        }
+      ],
+      "notes": "Subject: social science (sociology). Key letter A. Restatement in the next sentence. Steps: 1. Verb + preposition options with academic-register distractors. Raw ranks, tools/data/freq.txt (rarest content word, printed form): swayed by 5,327; dismissive of unranked; unfamiliar with 8,144; embarrassed by 4,505; 1 of 4 past 10,000, 1 past 20,000.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "words_in_context.B1.medium.w3b6_08",
+      "template": "B1",
+      "subtype": "Blank completion: restatement clue",
+      "tier": "medium",
+      "passage": "Roughly 36 years after Italian wall lizards were introduced from one Croatian islet to another, biologist Anthony Herrel and colleagues found that the transplanted population had undergone ______ change. Its head shape, bite strength, and digestive anatomy had diverged from those of the source population about as much as such traits typically differ among separate species.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "cosmetic",
+        "seasonal",
+        "wholesale",
+        "fleeting"
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "Wholesale means extensive and affecting many things at once. The next sentence lists changes in head shape, bite strength, and digestive anatomy and says they were about as large as differences between species, so the lizards changed broadly and deeply.",
+      "distractors": {
+        "A": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "Cosmetic means affecting only the surface. The changes reached bite strength and digestive anatomy and were as large as differences between species, so they were far from superficial."
+        },
+        "B": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Seasonal means tied to the time of year. The text compares the population with its source after 36 years and says nothing about changes that come and go with the seasons."
+        },
+        "D": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "Fleeting means brief. The differences built up over 36 years and are compared to those between separate species, so they are lasting, not passing."
+        }
+      },
+      "models": [
+        "2.5",
+        "2.9",
+        "2.23"
+      ],
+      "word_count": 56,
+      "sources": [
+        {
+          "what": "Herrel et al., Rapid large-scale evolutionary divergence in morphology and performance associated with exploitation of a different dietary resource, PNAS 2008: about 36 years after experimental introduction, lizards differed in head morphology, bite strength, and digestive tract structure, changes that parallel those documented among species and even families of lizards",
+          "url": "https://europepmc.org/article/MED/18344323"
+        }
+      ],
+      "notes": "Subject: natural science (evolutionary biology). Key letter C. Restatement in the next sentence. Steps: 1 (three traits and a species-level scale restate breadth and depth). Key in a less common sense (wholesale = sweeping, not the trade sense). Raw ranks, tools/data/freq.txt (rarest content word, printed form): cosmetic 46,826; seasonal 45,224; wholesale 12,092; fleeting 9,174; 3 of 4 past 10,000, 2 past 20,000.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 2,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "words_in_context.B2.medium.w3b6_09",
+      "template": "B2",
+      "subtype": "Blank completion: cause or consequence clue",
+      "tier": "medium",
+      "passage": "Martu hunters in Australia’s Western Desert set small fires while pursuing sand monitor lizards, and the resulting patchwork of burned and unburned ground benefits the lizards, which are densest where the two meet. Because this benefit outweighs the toll of the hunting itself, Rebecca Bliege Bird and colleagues found, intense Martu hunting actually ______ local lizard populations.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "depletes",
+        "stabilizes",
+        "conceals",
+        "bolsters"
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "To bolster is to strengthen or increase. The text says the patchwork created by hunting fires benefits the lizards and that this benefit outweighs the toll of the hunting, so on balance intense hunting leaves more lizards, not fewer; “actually” marks this as the surprising result.",
+      "distractors": {
+        "A": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "Depleting the population would mean the toll of hunting wins out, but the text says the benefit of the burning outweighs that toll."
+        },
+        "B": {
+          "recipe": "near miss: wrong kind of effect (CONNOT)",
+          "why_wrong": "Stabilizing means keeping a population steady. The text describes a benefit that outweighs losses, which implies an increase, and says nothing about steadiness over time."
+        },
+        "C": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Nothing in the text concerns hiding the lizards; the burned patches affect how many lizards there are, not how visible they are."
+        }
+      },
+      "models": [
+        "2.17",
+        "2.22",
+        "2.25",
+        "2.24"
+      ],
+      "word_count": 57,
+      "sources": [
+        {
+          "what": "Bliege Bird, Tayor, Codding, Bird, Niche construction and Dreaming logic: aboriginal patch mosaic burning and varanid lizards (Varanus gouldii) in Australia, Proceedings of the Royal Society B 2013 (full text): Martu hunters in the Western Desert burn while hunting sand monitors; sand monitor populations are higher where Aboriginal hunting is most intense, driven by higher densities near successional edges created by burning; the positive effects of burning while hunting overwhelm the negative effects of predation",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3813344/"
+        }
+      ],
+      "notes": "Subject: social science (anthropology and ecology). Key letter D. Cause and consequence: a because clause sets the balance of benefit against toll, and the blank names the result. Steps: 2 (weigh benefit against toll; “actually” confirms the counterintuitive direction). Raw ranks, tools/data/freq.txt (rarest content word, printed form): depletes unranked; stabilizes unranked; conceals 30,131; bolsters 59,091; 4 of 4 past 10,000, 4 past 20,000.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [
+          "writer flag closed: the paper body names the Martu throughout (Martu hunters in the Little Sandy Desert, \"Because Martu burn when they hunt small prey\"); the abstract only says Aboriginal; source now points to the PMC full text, which states both"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "words_in_context.M2.medium.w3b6_10",
+      "template": "M2",
+      "subtype": "Most nearly mean: underlined phrase or phrase options",
+      "tier": "medium",
+      "passage": "The following text is adapted from Anne Thackeray Ritchie’s 1873 novel Old Kensington. Frank Raban has been searching for George, the missing brother of Dolly Vanborough, and is now walking with Dolly’s mother.\n\nAll that long day [Frank] had followed up every trace, been everywhere, questioned every one, including Rhoda, without result. When Dolly came to meet them, he thought she looked anxious enough already, and he <u>made light of</u> his long efforts, and shrugged his shoulders.",
+      "stem": "As used in the text, what does the phrase “made light of” most nearly mean?",
+      "options": [
+        "Shed light on",
+        "Played down",
+        "Took pride in",
+        "Lost track of"
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "To make light of something is to treat it as unimportant. Frank has searched all day without success, but seeing that Dolly already looks anxious, he shrugs and minimizes how hard he has tried, so that she will not worry more. He plays down his efforts.",
+      "distractors": {
+        "A": {
+          "recipe": "another sense of light (SENSE)",
+          "why_wrong": "This reads light as illumination, as if Frank explained his efforts. Instead he shrugs them off, which hides rather than explains how hard he has searched."
+        },
+        "C": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "Taking pride in his efforts would draw attention to them, the opposite of shrugging them off to spare an already anxious Dolly."
+        },
+        "D": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Frank clearly remembers his long efforts; the text describes how he presents them to Dolly, not any confusion about them."
+        }
+      },
+      "models": [
+        "2.8",
+        "2.26",
+        "2.1"
+      ],
+      "word_count": 77,
+      "sources": [
+        {
+          "what": "Text of Old Kensington by Anne Thackeray Ritchie (1873), Project Gutenberg 36235; adapted by beginning at the second sentence of the paragraph, naming Frank in brackets, and omitting the sentence “He had come now in the faint hope of finding him at home after all.” between the two sentences shown",
+          "url": "https://www.gutenberg.org/ebooks/36235"
+        }
+      ],
+      "notes": "Subject: literature. Key letter B. Phrasal target whose parts suggest other senses (light as brightness). Steps: 1 (anxious Dolly plus the shrug fix the sense). Excerpt copied exactly apart from the bracketed name. Raw ranks, tools/data/freq.txt (rarest content word, printed form): Shed light on 2,722; Played down 1,115; Took pride in 991; Lost track of 2,581; 0 of 4 past 10,000, 0 past 20,000.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 2,
+        "fixes": [
+          "source note completed: the excerpt also omits \"He had come now in the faint hope of finding him at home after all.\" between its two sentences"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "words_in_context.B1.easy.w3b6_11",
+      "template": "B1",
+      "subtype": "Blank completion: restatement clue",
+      "tier": "easy",
+      "passage": "For more than a decade, photographer LaToya Ruby Frazier documented her grandmother, her mother, and herself in their hometown of Braddock, Pennsylvania, a former steelmaking community. The resulting photographs, published in The Notion of Family (2014), are deeply ______: many capture private moments in the everyday lives of the three women.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "personal",
+        "commercial",
+        "humorous",
+        "abstract"
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "Personal means concerning one’s own private life. Frazier photographed her own grandmother, mother, and herself, and the text says the images capture private moments in their daily lives, so the photographs are deeply personal.",
+      "distractors": {
+        "B": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "Commercial work is made to sell a product or service. These photographs show the private lives of Frazier’s own family, the opposite of advertising."
+        },
+        "C": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Nothing in the text says the photographs are funny."
+        },
+        "D": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Abstract images do not show recognizable people or things, but these photographs show Frazier’s family members."
+        }
+      },
+      "models": [
+        "1.11",
+        "1.6",
+        "1.15"
+      ],
+      "word_count": 51,
+      "sources": [
+        {
+          "what": "LaToya Ruby Frazier: photographs of her Grandma Ruby, her mother, and herself in Braddock, Pennsylvania; The Notion of Family (Aperture, 2014); images of personal spaces and intensely private moments",
+          "url": "https://en.wikipedia.org/wiki/LaToya_Ruby_Frazier"
+        }
+      ],
+      "notes": "Subject: humanities (photography). Key letter A. Restatement after the colon (private moments of her own family). Steps: 1. Raw ranks, tools/data/freq.txt (rarest content word, printed form): personal 1,149; commercial 4,708; humorous 5,911; abstract 9,239; 0 of 4 past 10,000, 0 past 20,000.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 2,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "words_in_context.B1.easy.w3b6_12",
+      "template": "B1",
+      "subtype": "Blank completion: restatement clue",
+      "tier": "easy",
+      "passage": "Indian American composer Reena Esmail ______ two musical worlds. After studying Hindustani classical music in North India as a Fulbright scholar, she began composing works that bring together Indian and Western classical traditions, and she cofounded Shastra, an organization connecting Indian musical traditions with the West.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "divides",
+        "predates",
+        "bridges",
+        "mocks"
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "To bridge two things is to connect them. The next sentence says Esmail writes works that bring together Indian and Western classical traditions and helped found an organization that connects Indian music with the West, so she links the two musical worlds.",
+      "distractors": {
+        "A": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "Dividing the two worlds would mean keeping them apart, but Esmail’s works bring them together."
+        },
+        "B": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "To predate is to come earlier in time. Both classical traditions are centuries older than Esmail, and the text is about how she joins them."
+        },
+        "D": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Nothing suggests that Esmail makes fun of either tradition; she studied one closely and writes music drawing on both."
+        }
+      },
+      "models": [
+        "1.21",
+        "1.53",
+        "1.23"
+      ],
+      "word_count": 46,
+      "sources": [
+        {
+          "what": "Reena Esmail: Indian-American composer who bridges Indian and Western classical music; Fulbright-Nehru scholarship to North India to study Hindustani music; cofounder of Shastra, which connects Indian musical tradition with the West",
+          "url": "https://en.wikipedia.org/wiki/Reena_Esmail"
+        }
+      ],
+      "notes": "Subject: humanities (music). Key letter C. Blank in the first sentence, restated in the next (bring together, connects). Steps: 1. Raw ranks, tools/data/freq.txt (rarest content word, printed form): divides 20,416; predates unranked; bridges 9,445; mocks 32,459; 3 of 4 past 10,000, 3 past 20,000.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "words_in_context.B1.easy.w3b6_13",
+      "template": "B1",
+      "subtype": "Blank completion: restatement clue",
+      "tier": "easy",
+      "passage": "Each spring, bogong moths migrate hundreds of kilometers to cool caves and rock crevices in the Australian Alps. There they remain ______ throughout the summer: densely clustered on the cave walls, the moths stop feeding and stay inactive until autumn, when they return to their breeding grounds.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "restless",
+        "aggressive",
+        "solitary",
+        "dormant"
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "Dormant means inactive, as if asleep. After the colon, the text says the moths stop feeding and stay inactive until autumn, which describes a dormant state.",
+      "distractors": {
+        "A": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "Restless creatures move about constantly, but these moths stay inactive all summer."
+        },
+        "B": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Nothing in the text describes the moths attacking anything; they simply rest on the cave walls."
+        },
+        "C": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "Solitary means alone, but the moths are densely clustered together."
+        }
+      },
+      "models": [
+        "1.42",
+        "1.10",
+        "1.51"
+      ],
+      "word_count": 47,
+      "sources": [
+        {
+          "what": "Bogong moth: spring migration of up to about 965 km to the Australian Alps, aestivation (remaining dormant) over summer in cool caves and crevices without feeding, return to breeding grounds in autumn",
+          "url": "https://en.wikipedia.org/wiki/Bogong_moth"
+        }
+      ],
+      "notes": "Subject: natural science (entomology). Key letter D. Restatement after the colon (stop feeding, stay inactive). Steps: 1. Raw ranks, tools/data/freq.txt (rarest content word, printed form): restless 2,476; aggressive 11,138; solitary 2,633; dormant 16,629; 2 of 4 past 10,000, 0 past 20,000.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 2,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "words_in_context.B1.easy.w3b6_14",
+      "template": "B1",
+      "subtype": "Blank completion: restatement clue",
+      "tier": "easy",
+      "passage": "Both written and spoken language are ______ to the films of Ho-Chunk artist Sky Hopinka. His experimental work regularly incorporates English and chinuk wawa, an Indigenous language of the Pacific Northwest that Hopinka has also taught, into its subtitles, voice-overs, and poems.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "incidental",
+        "central",
+        "harmful",
+        "unfamiliar"
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "Central means of the greatest importance. The second sentence says Hopinka’s films regularly use two languages in their subtitles, voice-overs, and poems, so language is at the heart of his work.",
+      "distractors": {
+        "A": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "Incidental means minor or occurring only by chance. Language appears regularly and in many forms in Hopinka’s films, so it is not a minor element."
+        },
+        "C": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Nothing suggests that language damages Hopinka’s films; it is something he uses throughout them."
+        },
+        "D": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Hopinka has even taught chinuk wawa, and the text gives no sign that language is strange or new to his work."
+        }
+      },
+      "models": [
+        "1.23",
+        "1.39",
+        "1.26"
+      ],
+      "word_count": 42,
+      "sources": [
+        {
+          "what": "MacArthur Foundation, Sky Hopinka (2022 Fellow): both written and spoken language is integral to much of his film and video work; his films use English and chinuk wawa in subtitles, voice-overs, and poems",
+          "url": "https://www.macfound.org/fellows/class-of-2022/sky-hopinka"
+        }
+      ],
+      "notes": "Subject: humanities (film). Key letter B. Blank in the first sentence, restated by the next. Steps: 1. Raw ranks, tools/data/freq.txt (rarest content word, printed form): incidental 19,860; central 3,784; harmful 22,343; unfamiliar 8,144; 2 of 4 past 10,000, 1 past 20,000.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "words_in_context.M1.easy.w3b6_15",
+      "template": "M1",
+      "subtype": "Most nearly mean: underlined word",
+      "tier": "easy",
+      "passage": "The following text is from E. W. Howe’s 1883 novel The Story of a Country Town. The narrator has just learned that Mateel, the former wife of his uncle Jo, is to marry another man.\n\nThe pity and friendliness I had formerly <u>entertained</u> for Mateel vanished with the messenger who brought me the letter announcing her contemplated marriage to Clinton Bragg, though my first feeling was of horror and indignation at a step which seemed so indelicate and cruel.",
+      "stem": "As used in the text, what does the word “entertained” most nearly mean?",
+      "options": [
+        "Amused",
+        "Hosted",
+        "Felt",
+        "Considered"
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "As used in the text, “entertained” means felt. The narrator says the pity and friendliness he once had toward Mateel disappeared when he heard of her marriage plans; entertained names those feelings he used to have.",
+      "distractors": {
+        "A": {
+          "recipe": "another sense of the target (SENSE)",
+          "why_wrong": "To entertain can mean to amuse, but the narrator is not amusing pity and friendliness; he is describing feelings he once had."
+        },
+        "B": {
+          "recipe": "another sense of the target (SENSE)",
+          "why_wrong": "To entertain can mean to host guests, but pity and friendliness are feelings, not visitors."
+        },
+        "D": {
+          "recipe": "another sense of the target (SENSE)",
+          "why_wrong": "To entertain an idea is to consider it, but the narrator did not merely think about pity and friendliness; he says he felt them toward Mateel."
+        }
+      },
+      "models": [
+        "1.14",
+        "1.41",
+        "1.38"
+      ],
+      "word_count": 79,
+      "sources": [
+        {
+          "what": "Text of The Story of a Country Town by E. W. Howe (1883), Project Gutenberg 47575; sentence copied exactly",
+          "url": "https://www.gutenberg.org/ebooks/47575"
+        }
+      ],
+      "notes": "Subject: literature. Key letter C. Common verb in a less usual sense (entertained a feeling = felt); all three distractors are other senses of entertain. Steps: 1 (the object, pity and friendliness, fixes the sense). Raw ranks, tools/data/freq.txt (rarest content word, printed form): Amused 2,177; Hosted unranked; Felt 219; Considered 1,230; 1 of 4 past 10,000, 1 past 20,000.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 2,
+        "fixes": [],
+        "status": "pass",
+        "note": "excerpt matches Gutenberg 47575 exactly"
+      }
+    },
+    {
+      "id": "words_in_context.M1.easy.w3b6_16",
+      "template": "M1",
+      "subtype": "Most nearly mean: underlined word",
+      "tier": "easy",
+      "passage": "The following text is adapted from Mór Jókai’s 1853 novel A Hungarian Nabob (translated by R. Nisbet Bain in 1898). A countess is describing a nobleman to Fanny.\n\n“[Count Sárosdy] is a worthy, good-natured man, but a frightful aristocrat. You will find he will be a little <u>stiff</u> towards you at first, but fortunately he has a good heart, and there are always keys wherewith to open a good heart.”",
+      "stem": "As used in the text, what does the word “stiff” most nearly mean?",
+      "options": [
+        "Reserved",
+        "Sore",
+        "Strong",
+        "Thick"
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "As used in the text, “stiff” means reserved, or cool and formal in manner. The countess warns that the count is a proud aristocrat who will be a little stiff toward Fanny at first, “but” has a good heart that can be won over, so stiff describes an unwelcoming manner.",
+      "distractors": {
+        "B": {
+          "recipe": "another sense of the target (SENSE)",
+          "why_wrong": "Stiff muscles can be sore, but the countess is describing how the count will treat Fanny, not his body."
+        },
+        "C": {
+          "recipe": "another sense of the target (SENSE)",
+          "why_wrong": "A stiff drink or breeze is a strong one, but that sense does not describe a person’s manner toward someone."
+        },
+        "D": {
+          "recipe": "another sense of the target (SENSE)",
+          "why_wrong": "A stiff paste or dough is thick, but the word here describes how the count behaves, not a substance."
+        }
+      },
+      "models": [
+        "1.1",
+        "1.40",
+        "1.45"
+      ],
+      "word_count": 70,
+      "sources": [
+        {
+          "what": "Text of A Hungarian Nabob by Mór Jókai, translated by R. Nisbet Bain (1898), Project Gutenberg 20978; adapted by naming the count in brackets for “He” and omitting the two sentences between the first and second sentences shown",
+          "url": "https://www.gutenberg.org/ebooks/20978"
+        }
+      ],
+      "notes": "Subject: literature. Key letter A. Common adjective used of manner (stiff = reserved); all three distractors are physical senses of stiff. Steps: 1 (towards you, plus the contrast with a good heart). The novel (Egy magyar nábob) appeared in 1853. Raw ranks, tools/data/freq.txt (rarest content word, printed form): Reserved 4,101; Sore 3,101; Strong 373; Thick 1,139; 0 of 4 past 10,000, 0 past 20,000.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 2,
+        "fixes": [],
+        "status": "pass",
+        "note": "excerpt and trims match Gutenberg 20978; speaker is the Countess (Lady Szentirmay) talking to Fanny"
+      }
+    },
+    {
+      "id": "words_in_context.M1.easy.w3b6_17",
+      "template": "M1",
+      "subtype": "Most nearly mean: underlined word",
+      "tier": "easy",
+      "passage": "The following text is adapted from Ivan Bunin’s 1910 novel The Village (translated by Isabel Hapgood in 1923). Kuzma is talking with his brother, Tikhon Ilitch.\n\n“I have, I may say, roamed about the world a good bit. Absolutely nowhere have I seen more tiresome and lazy types. And those who are not lazy”—here Kuzma <u>shot</u> a sidelong look at his brother—“have no sense at all.”",
+      "stem": "As used in the text, what does the word “shot” most nearly mean?",
+      "options": [
+        "Hunted",
+        "Darted",
+        "Filmed",
+        "Wounded"
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "As used in the text, “shot” means darted, or directed quickly. In the middle of his remark about people who work hard but have no sense, Kuzma quickly glances sideways at his brother, hinting that the remark is aimed at him.",
+      "distractors": {
+        "A": {
+          "recipe": "another sense of the target (SENSE)",
+          "why_wrong": "To shoot can mean to hunt, as in shooting game, but Kuzma is only glancing at his brother; nothing is being hunted."
+        },
+        "C": {
+          "recipe": "another sense of the target (SENSE)",
+          "why_wrong": "To shoot can mean to film, but Kuzma is in the middle of a conversation, not recording anything."
+        },
+        "D": {
+          "recipe": "another sense of the target (SENSE)",
+          "why_wrong": "To shoot someone can mean to wound them, but a look cannot be wounded, and nothing in the scene suggests injury."
+        }
+      },
+      "models": [
+        "1.19",
+        "1.4",
+        "1.55"
+      ],
+      "word_count": 66,
+      "sources": [
+        {
+          "what": "Text of The Village by Ivan Bunin, translated by Isabel Hapgood (London: Martin Secker, 1923), Project Gutenberg 59981; adapted by omitting two short sentences (“Well, and that’s precisely the point.” and “Well, and what then?”); otherwise copied exactly, with double hyphens printed as closed em dashes",
+          "url": "https://www.gutenberg.org/ebooks/59981"
+        }
+      ],
+      "notes": "Subject: literature. Key letter B. Common verb with a look as its object (shot a look = darted); all three distractors are other senses of shoot. Steps: 1. The novel (Derevnya) appeared in 1910. Raw ranks, tools/data/freq.txt (rarest content word, printed form): Hunted 4,624; Darted 4,773; Filmed 57,170; Wounded 1,703; 1 of 4 past 10,000, 1 past 20,000.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 2,
+        "fixes": [],
+        "status": "pass",
+        "note": "excerpt and trims match Gutenberg 59981"
+      }
+    },
+    {
+      "id": "words_in_context.B6.easy.w3b6_18",
+      "template": "B6",
+      "subtype": "Blank completion: phrase options",
+      "tier": "easy",
+      "passage": "Born into slavery in Georgia in 1848, Susie King Taylor accompanied a Union regiment of Black soldiers for more than four years during the Civil War. Her 1902 memoir, Reminiscences of My Life in Camp, is ______ that experience: in it, she recounts working as a laundress, nurse, and teacher, providing care to wounded soldiers and instructing many of them in reading and writing.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "a rejection of",
+        "a prelude to",
+        "a reward for",
+        "an account of"
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "An account of something is a description or report of it. After the colon, the text says that in her memoir Taylor recounts her work as a laundress, nurse, and teacher with the soldiers, so the book reports on her years with the regiment.",
+      "distractors": {
+        "A": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "Nothing suggests Taylor turned against her time with the regiment; her memoir records the work she did there."
+        },
+        "B": {
+          "recipe": "reversal of time order (ANT)",
+          "why_wrong": "A prelude comes before something, but the memoir was published in 1902, decades after the war years it describes."
+        },
+        "C": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "The text does not present the memoir as a prize Taylor received for her service; it is something she wrote about that service."
+        }
+      },
+      "models": [
+        "1.52",
+        "1.17",
+        "1.2"
+      ],
+      "word_count": 64,
+      "sources": [
+        {
+          "what": "Susie King Taylor: born into slavery in Liberty County, Georgia, in 1848; served with the 1st South Carolina Volunteers (33rd USCT) for four years and three months, officially as a laundress, also nursing the wounded and teaching soldiers to read and write; memoir Reminiscences of My Life in Camp (1902)",
+          "url": "https://en.wikipedia.org/wiki/Susie_King_Taylor"
+        }
+      ],
+      "notes": "Subject: history (Civil War). Key letter D. Restatement after the colon (she describes nursing and teaching). Steps: 1. Noun + preposition options with articles. Raw ranks, tools/data/freq.txt (rarest content word, printed form): a rejection of 14,195; a prelude to 14,281; a reward for 2,578; an account of 742; 2 of 4 past 10,000, 0 past 20,000.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "words_in_context.B6.easy.w3b6_19",
+      "template": "B6",
+      "subtype": "Blank completion: phrase options",
+      "tier": "easy",
+      "passage": "Charles Burnett’s Killer of Sheep (1978), a film about a slaughterhouse worker and his family in the Watts neighborhood of Los Angeles, was ______ most moviegoers for nearly 30 years. Because Burnett had never secured the licensing rights to the numerous songs on its soundtrack, the film could not receive a general release until 2007.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "popular with",
+        "dedicated to",
+        "unavailable to",
+        "inspired by"
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "Something unavailable to people cannot be obtained or seen by them. The next sentence explains that the film could not receive a general release until 2007 because the music rights had not been secured, so for decades most moviegoers had no chance to see it.",
+      "distractors": {
+        "A": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "A film that could not receive a general release could not have been popular with most moviegoers during those years."
+        },
+        "B": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Nothing in the text says Burnett dedicated the film to moviegoers."
+        },
+        "D": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "The text says the film is about a worker and his family in Watts, not that moviegoers inspired it."
+        }
+      },
+      "models": [
+        "1.43",
+        "1.49",
+        "1.3"
+      ],
+      "word_count": 55,
+      "sources": [
+        {
+          "what": "Killer of Sheep (1978, Charles Burnett): set in Watts; no general release because the music rights had not been secured; rights licensed and the film released widely in 2007",
+          "url": "https://en.wikipedia.org/wiki/Killer_of_Sheep"
+        }
+      ],
+      "notes": "Subject: humanities (film). Key letter C. The cause in the next sentence fixes the blank (no wide release, so out of reach). Steps: 1. Raw ranks, tools/data/freq.txt (rarest content word, printed form): popular with 2,302; dedicated to 12,224; unavailable to 50,639; inspired by 3,563; 2 of 4 past 10,000, 1 past 20,000.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "words_in_context.B2.easy.w3b6_20",
+      "template": "B2",
+      "subtype": "Blank completion: cause or consequence clue",
+      "tier": "easy",
+      "passage": "King Clone, a ring of creosote bushes in California’s Mojave Desert, expanded outward from a single plant at its center. Because such rings widen by a small, measurable amount annually, botanist Frank Vasek was able to ______ King Clone’s age from its diameter, arriving at approximately 11,700 years—a figure supported by radiocarbon dating of wood from the ring’s center.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "estimate",
+        "conceal",
+        "reverse",
+        "dispute"
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "To estimate something is to work out its approximate value. The text explains that the ring grows by a measurable amount each year, which let Vasek use its diameter to work out roughly how old it is, about 11,700 years.",
+      "distractors": {
+        "B": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "Vasek arrived at a figure for the ring’s age, so he made the age known rather than hiding it."
+        },
+        "C": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Nothing in the text suggests that the ring’s age could be turned back; Vasek measured the ring to find its age."
+        },
+        "D": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Nothing in the text suggests Vasek challenged an earlier figure for the ring’s age; he used its growth to work the age out himself."
+        }
+      },
+      "models": [
+        "1.35",
+        "1.5",
+        "1.31"
+      ],
+      "word_count": 59,
+      "sources": [
+        {
+          "what": "King Clone: creosote bush ring in the Mojave Desert; Frank Vasek estimated its age, by measuring annual growth and by radiocarbon dating, at about 11,700 years",
+          "url": "https://en.wikipedia.org/wiki/King_Clone"
+        }
+      ],
+      "notes": "Subject: natural science (botany). Key letter A. Cause in a because clause (a measurable yearly widening lets size yield age). Steps: 1. Raw ranks, tools/data/freq.txt (rarest content word, printed form): estimate 5,499; conceal 3,228; reverse 7,086; dispute 5,979; 0 of 4 past 10,000, 0 past 20,000.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 2,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "words_in_context.B4.easy.w3b6_21",
+      "template": "B4",
+      "subtype": "Blank completion: example-pinned clue",
+      "tier": "easy",
+      "passage": "Fiber artist Sonya Clark, who was influenced by craftspeople in her own family, frequently constructs her artworks from ______ objects. Combs, seed beads, coins, thread, and strands of human hair are among the materials she has used to examine questions of race, culture, and history.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "precious",
+        "mechanical",
+        "ancient",
+        "ordinary"
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "Ordinary means common or everyday. The second sentence lists combs, seed beads, coins, thread, and hair, all familiar everyday things, as examples of what Clark uses.",
+      "distractors": {
+        "A": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "Precious objects are rare and valuable, but combs, thread, and hair are common, inexpensive things."
+        },
+        "B": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "None of the listed materials is a machine or has moving parts."
+        },
+        "C": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Nothing in the text says the combs, beads, or thread are very old."
+        }
+      },
+      "models": [
+        "1.25",
+        "1.34",
+        "1.7"
+      ],
+      "word_count": 45,
+      "sources": [
+        {
+          "what": "Sonya Clark: fiber artist influenced by craftspeople in her family; uses humble materials such as combs, seed beads, coins, threads, and strands of hair to address race, culture, and history",
+          "url": "https://en.wikipedia.org/wiki/Sonya_Clark"
+        }
+      ],
+      "notes": "Subject: humanities (fiber art). Key letter D. Example-pinned: the list in the second sentence instantiates the key. Steps: 1. Raw ranks, tools/data/freq.txt (rarest content word, printed form): precious 2,014; mechanical 6,725; ancient 1,340; ordinary 1,336; 0 of 4 past 10,000, 0 past 20,000.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "words_in_context.B5.easy.w3b6_22",
+      "template": "B5",
+      "subtype": "Blank completion: negated frame",
+      "tier": "easy",
+      "passage": "Juana Briones never learned to read or write, but her lack of formal education did not ______ her success as an entrepreneur. In the settlement that eventually became San Francisco, she operated a farm and marketed milk and vegetables to sailors whose ships anchored in the bay, and in 1844 she purchased a 4,400-acre ranch.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "share",
+        "hinder",
+        "announce",
+        "predict"
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "To hinder something is to get in its way. The text says that Briones could not read or write “but” still did well in business, selling milk and vegetables to sailors and later buying a large ranch, so her lack of schooling did not get in the way of her success.",
+      "distractors": {
+        "A": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Her lack of education could not share in her success; the sentence is about whether it stood in her way."
+        },
+        "C": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Nothing in the text suggests anything announced her success; the point is that her lack of schooling was no obstacle."
+        },
+        "D": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "The text does not treat her lack of schooling as a sign of future success; “but” marks it as something that might have held her back."
+        }
+      },
+      "models": [
+        "1.48",
+        "1.37",
+        "1.28"
+      ],
+      "word_count": 55,
+      "sources": [
+        {
+          "what": "Juana Briones de Miranda: early resident of Yerba Buena (San Francisco); established a farm and sold milk and produce to sailors from whaling and trading ships; bought the 4,400-acre Rancho La Purísima Concepción in 1844; never received a formal education and could not read or write",
+          "url": "https://en.wikipedia.org/wiki/Juana_Briones"
+        }
+      ],
+      "notes": "Subject: history (California). Key letter B. Negated frame (did not), with “but” showing that illiteracy might have been an obstacle. Steps: 2 (undo the negation and see the obstacle sense). All three distractors are unsupported, as in 1.37. Raw ranks, tools/data/freq.txt (rarest content word, printed form): share 1,377; hinder 7,465; announce 8,469; predict 15,931; 1 of 4 past 10,000, 0 past 20,000.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass",
+        "note": "core claim confirmed on Wikipedia (farm, milk and produce sold to sailors, 4,400-acre ranch in 1844); the illiteracy premise is stated there but tagged \"citation needed\"; NPS pages checked do not mention literacy"
+      }
+    },
+    {
+      "id": "words_in_context.B3.easy.w3b6_23",
+      "template": "B3",
+      "subtype": "Blank completion: contrast clue",
+      "tier": "easy",
+      "passage": "In 1866 women were prohibited from serving in the United States Army, but Cathay Williams successfully ______ that restriction. Disguised as a man named William Cathay, she enlisted in St. Louis, Missouri, that November; only two fellow soldiers in her regiment, the 38th Infantry, are known to have been aware of the deception.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "enforced",
+        "proposed",
+        "evaded",
+        "praised"
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "To evade a rule is to get around it. The text says women could not serve in the army, “but” Williams enlisted anyway, disguised as a man, so she found a way around the restriction.",
+      "distractors": {
+        "A": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "Enforcing the restriction would mean making sure women did not serve, but Williams herself enlisted."
+        },
+        "B": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "The restriction already existed in 1866; nothing suggests that Williams suggested it."
+        },
+        "D": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Nothing in the text shows Williams approving of the restriction; she acted against it."
+        }
+      },
+      "models": [
+        "1.58",
+        "1.57"
+      ],
+      "word_count": 53,
+      "sources": [
+        {
+          "what": "Cathay Williams: because women were prohibited from military service, she enlisted on November 15, 1866, in St. Louis under the name William Cathay and was assigned to the 38th US Infantry Regiment; only her cousin and a friend, fellow soldiers in the regiment, are known to have been aware of the deception",
+          "url": "https://en.wikipedia.org/wiki/Cathay_Williams"
+        }
+      ],
+      "notes": "Subject: history (US Army). Key letter C. Contrast with “but”, confirmed by the next sentence. Steps: 1. Raw ranks, tools/data/freq.txt (rarest content word, printed form): enforced 8,693; proposed 2,188; evaded 13,250; praised 6,184; 1 of 4 past 10,000, 0 past 20,000.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass"
+      }
+    }
+  ],
+  "done": true
+}

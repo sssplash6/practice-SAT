@@ -1,0 +1,1838 @@
+{
+  "skill": "Command of Evidence",
+  "slug": "command_of_evidence",
+  "part": "w3b4",
+  "domain": "Information and Ideas",
+  "plan": {
+    "templates": [
+      {
+        "code": "T1_single",
+        "name": "Hypothetical finding supports or weakens a single claim (causal, comparison, existence, generalization, prediction)"
+      },
+      {
+        "code": "T1_compete",
+        "name": "Hypothetical finding discriminates between competing explanations (support or weaken)"
+      },
+      {
+        "code": "Q2_P8_multipart",
+        "name": "Data description: multi-part, interaction, or passage-plus-data claim"
+      },
+      {
+        "code": "T2_lit_quote",
+        "name": "Quotation from a literary work illustrates a claim (single trait, two-part, contrast)"
+      },
+      {
+        "code": "Q1_P5_control",
+        "name": "Data completion: condition vs control"
+      },
+      {
+        "code": "Q2_P5_control",
+        "name": "Data description: condition vs control or group comparison supports a conclusion"
+      },
+      {
+        "code": "Q1_P3_pairwise",
+        "name": "Data completion: pairwise comparison (one or two comparisons)"
+      },
+      {
+        "code": "Q1_P2_extreme",
+        "name": "Data completion: extreme or rank (max/min, possibly after a filter)"
+      },
+      {
+        "code": "Q1_P1_lookup",
+        "name": "Data completion: lookup (one cell or bar, reverse lookup, filter)"
+      },
+      {
+        "code": "T3_person_quote",
+        "name": "Quotation from a person (participant, respondent, historian, critic, article) supports or challenges a claim"
+      },
+      {
+        "code": "Q1_P4_trend",
+        "name": "Data completion: change over time"
+      }
+    ]
+  },
+  "items": [
+    {
+      "id": "command_of_evidence.T1_single.hard.w3b4_01",
+      "template": "T1_single",
+      "subtype": "Hypothetical finding supports a claim (individual versus species-level choice; the comparison group must be other birds of the same species)",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Many birds that nest on open ground, such as nightjars and plovers, depend on camouflage rather than concealment: their eggs, and in some species the incubating adult, blend in with the surrounding soil and leaf litter. Within a single species, however, individuals can differ considerably in the color and markings of their eggs and plumage. Studying nine such species in Zambia, Martin Stevens, Jolyon Troscianko, and colleagues photographed nests with cameras calibrated to approximate the vision of predators and concluded that individual birds select nest sites suited to their own particular appearance rather than simply nesting on any ground of the shade typical for their species.",
+      "stem": "Which finding, if true, would most directly support the researchers’ conclusion?",
+      "options": [
+        "The eggs of each species matched the ground typical of that species’ nesting areas more closely than they matched the ground where the other species nested.",
+        "Nests with eggs that closely matched the surrounding ground were less likely to be discovered by predators than were nests with poorly matched eggs.",
+        "Birds whose eggs were unusually dark for their species nested on ground that was, on average, no darker than the ground chosen by birds whose eggs were unusually pale.",
+        "A bird’s eggs generally matched the ground at its own nest more closely than they matched the ground at nests chosen by other birds of the same species."
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The researchers conclude that each bird picks a spot suited to its own eggs and plumage, not just ground of the color its species usually nests on. To show that, a bird’s eggs must fit its own chosen spot better than they fit the spots chosen by other members of its species, which is what choice D describes. Comparing only species with species, as choice A does, would fit the view the researchers reject.",
+      "distractors": {
+        "A": {
+          "recipe": "TRAP: fits the rejected view (species-level match)",
+          "why_wrong": "A match between each species and its typical ground is what birds would show if they simply nested on ground of their species’ usual shade, so it does not show that individuals choose by their own appearance."
+        },
+        "B": {
+          "recipe": "OFF: benefit of camouflage, not the choice of site",
+          "why_wrong": "This shows that good camouflage protects nests, but it says nothing about whether individual birds choose sites to suit their own coloring."
+        },
+        "C": {
+          "recipe": "OPP: would weaken the conclusion",
+          "why_wrong": "If birds with dark eggs and birds with pale eggs chose equally dark ground, individuals would not be matching sites to their own appearance, which weakens the conclusion."
+        }
+      },
+      "models": [
+        "3.25",
+        "3.31",
+        "3.39",
+        "3.42"
+      ],
+      "sources": [
+        {
+          "what": "Stevens, Troscianko, Wilson-Aggarwal and Spottiswoode 2017, Nature Ecology and Evolution, 'Improvement of individual camouflage through background choice in ground-nesting birds': nine species of nightjars, plovers and coursers in Zambia; vision modelling; individuals chose backgrounds that enhanced their own egg (and nightjar plumage) camouflage",
+          "url": "https://ore.exeter.ac.uk/repository/handle/10871/28301"
+        }
+      ],
+      "notes": "Band 6: the claim is an individual-level one, so the key needs the within-species comparison (own nest against other birds' nests). A is the species-level TRAP that fits the rejected view, B the camouflage-works OFF, C the OPP. The key matches the study's real result.",
+      "word_count": 106,
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [],
+        "status": "pass"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "Target 6 met: the key needs the right comparison group (other birds of the same species), two steps; A is a species-level TRAP, C the opposite, B a true-but-different question."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "D",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "command_of_evidence.T1_single.hard.w3b4_02",
+      "template": "T1_single",
+      "subtype": "Hypothetical finding supports a causal claim about mechanism (the key supplies the missing premise: only children of working age were affected)",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "In the early twentieth century, cotton cultivation in the US South depended heavily on children’s labor, and many children were kept out of school during the planting and harvesting seasons. In the years after 1915, the boll weevil, a beetle whose larvae feed on cotton buds, spread across Georgia, devastating cotton production in county after county. Economist Richard Baker found that as cotton output declined, school enrollment rose among Black children in rural Georgia, whose families disproportionately worked as tenant farmers and sharecroppers on cotton land. Baker argues that the infestation raised enrollment by making children’s work in the cotton fields less valuable to their families.",
+      "stem": "Which finding from Baker’s research, if true, would most directly support his argument about how the boll weevil affected school enrollment?",
+      "options": [
+        "In most counties, enrollment among Black children began to rise only after the boll weevil had arrived there, not in the years before its arrival.",
+        "The rise in enrollment was concentrated among children of the ages at which they had done the most fieldwork, with little change among children too young for such work.",
+        "After the boll weevil arrived, many counties used newly available state funds to open additional schools for Black children in rural areas.",
+        "Farmers in counties reached by the boll weevil spent far more on poisons such as calcium arsenate than did farmers in counties that the beetle had not yet reached."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "Baker argues that the weevil raised enrollment because children’s work in the cotton fields became less valuable to their families. If that is the reason, the change should appear among children old enough to have been working in the fields and not among children too young to work, since their labor was never at stake. Choice B describes exactly that pattern, so it supports the specific route Baker proposes.",
+      "distractors": {
+        "A": {
+          "recipe": "TRAP: consistent with every explanation (timing only)",
+          "why_wrong": "A rise that follows the weevil’s arrival shows that the infestation mattered, but any effect of the crop’s collapse would produce the same timing, so it does not show that the cause was the lower value of children’s work."
+        },
+        "C": {
+          "recipe": "OPP: the rival channel",
+          "why_wrong": "New schools would be a different route to higher enrollment, so this finding points to an explanation other than the one Baker gives."
+        },
+        "D": {
+          "recipe": "OFF: different outcome variable",
+          "why_wrong": "Spending on poisons describes how farmers fought the beetle; it says nothing about why children enrolled in school."
+        }
+      },
+      "models": [
+        "3.28",
+        "3.36",
+        "09775cbf",
+        "5b74feb9"
+      ],
+      "sources": [
+        {
+          "what": "Richard B. Baker 2015, Journal of Economic History, 'From the Field to the Classroom: The Boll Weevil's Impact on Education in Rural Georgia': boll weevil as instrument for cotton output; falling cotton output raised Black enrollment with little effect on white enrollment; cotton described as child-labor intensive",
+          "url": "https://www.cambridge.org/core/journals/journal-of-economic-history/article/abs/from-the-field-to-the-classroom-the-boll-weevils-impact-on-education-in-rural-georgia/7C207997DC2535174FCD3E14ACB17698"
+        }
+      ],
+      "notes": "Band-7 moves: stem names the study and the claimant (21 words); the key supplies an unstated premise (children too young to work were never part of the labor channel), turning an age contrast into evidence for the mechanism. A TRAP (timing fits every channel), C OPP (school supply), D OFF. Three steps. Age detail is hypothetical, as the stem allows; the core finding and argument are Baker's. Reviewer: the argument sentence now matches the paper’s own framing (cotton as a child-labor-intensive crop) and no longer says Baker rules out every other channel.",
+      "word_count": 106,
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [
+          "passage and explanation: Baker’s argument restated as the abstract frames it (falling cotton made children’s field work less valuable); dropped “not through some other consequence of the crop’s collapse”, which the source does not state (Cambridge abstract)"
+        ],
+        "status": "fixed"
+      },
+      "band7": {
+        "verdict": "band 7",
+        "why": "Passage 106 words, stem 21 words naming Baker; the key supplies an unstated premise (only children old enough to work had labor at stake), three steps; A is a TRAP (timing fits every channel), C the rival channel, D OFF."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "B",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 7
+    },
+    {
+      "id": "command_of_evidence.T1_compete.hard.w3b4_03",
+      "template": "T1_compete",
+      "subtype": "Hypothetical finding discriminates between two explanations (fewer severe freezes versus higher average temperature)",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Mangroves, salt-tolerant trees that are typically killed by hard freezes, have been spreading north into salt marshes along Florida’s Atlantic coast. Analyzing satellite images taken each summer from 1984 to 2011, Kyle Cavanaugh and colleagues found that mangrove area roughly doubled near the northern limit of the trees’ range. Researchers have offered two explanations for the expansion: a gradual rise in the region’s average temperatures, or a decline in the frequency of severe cold snaps, when temperatures fall below about −4°C. Cavanaugh and colleagues concluded that the second explanation better accounts for the mangroves’ spread.",
+      "stem": "Which finding, if true, would most directly support Cavanaugh and colleagues’ conclusion?",
+      "options": [
+        "Mangrove area increased most at sites where severe freezes had become less frequent, including sites where average annual temperature showed no upward trend.",
+        "Mangrove area expanded more rapidly during the 2000s than during the 1980s, a period over which Florida’s climate became noticeably warmer in several respects.",
+        "In experiments, mangrove seedlings exposed to temperatures below −4°C survived about as often as seedlings that were kept above freezing.",
+        "As mangroves spread into the salt marshes, they shaded out marsh grasses and altered the habitat available to wading birds and crabs."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The researchers conclude that mangroves spread because severe cold snaps became rarer, not because average temperatures rose. Choice A ties the growth to fewer severe freezes even at sites where average temperature did not rise, so the expansion there cannot be credited to the rival explanation. That makes A the finding that most directly supports the conclusion.",
+      "distractors": {
+        "B": {
+          "recipe": "TRAP: consistent with both explanations",
+          "why_wrong": "A warming climate brings both higher averages and fewer cold snaps, so faster spread during a warmer period does not show which of the two changes drove it."
+        },
+        "C": {
+          "recipe": "OPP: undercuts the favored mechanism",
+          "why_wrong": "If seedlings survived severe cold as well as mild conditions, fewer cold snaps would matter little, which weakens rather than supports the conclusion."
+        },
+        "D": {
+          "recipe": "OFF: effect of the expansion, not its cause",
+          "why_wrong": "This describes what the mangroves did to the marshes, not why they were able to spread."
+        }
+      },
+      "models": [
+        "3.8",
+        "3.14",
+        "3.15",
+        "2.9"
+      ],
+      "sources": [
+        {
+          "what": "Cavanaugh et al., PNAS (online Dec. 2013, print 2014), 'Poleward expansion of mangroves is a threshold response to decreased frequency of extreme cold events': Landsat 1984-2011, mangrove area doubled at the northern range limit on Florida's east coast; expansion tracked fewer days below -4 C and was uncorrelated with mean annual temperature",
+          "url": "https://insider.si.edu/2014/01/poleward-expansion-of-mangroves-is-a-response-to-decrease-in-extreme-cold"
+        }
+      ],
+      "notes": "Band 6 compete item. The key separates the two explanations (growth with fewer freezes where averages did not rise); B fits both, C is an OPP from a different angle (seedling cold tolerance) so the options do not mirror, D OFF.",
+      "word_count": 95,
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [],
+        "status": "pass"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "Target 6 met: warming predicts gains tracking mean temperature, fewer freezes predicts gains where freezes fell; the key splits them, B fits both, C the opposite route, D OFF. Short generic stem keeps it at 6."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "A",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "command_of_evidence.T1_compete.hard.w3b4_04",
+      "template": "T1_compete",
+      "subtype": "Hypothetical finding discriminates between a climatic and a human cause (the key supplies a rainfall measure that removes the rival)",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "About 2,600 years ago, much of the rainforest of western Central Africa gave way to grassland and scattered trees, a shift recorded in pollen preserved in lake sediments throughout the region; the forest returned several centuries later. Researchers have generally attributed this “rainforest crisis” to a change toward a drier, more seasonal climate. Yannick Garcin and colleagues, however, argue that the forest was opened up mainly by people, noting that the crisis coincided with the spread of communities that farmed and smelted iron, activities that require clearing land and burning wood. To test their view, the team analyzed molecules from plant waxes preserved in the sediments of Lake Barombi in Cameroon.",
+      "stem": "Which finding from Garcin and colleagues’ analysis of the Lake Barombi sediments, if true, would most directly support their argument?",
+      "options": [
+        "The waxes indicate that grasses replaced much of the forest around the lake abruptly about 2,600 years ago, as pollen records from other lakes in the region suggest.",
+        "The waxes indicate that the plants growing around the lake in recent centuries are much like those that grew there before the crisis began.",
+        "Hydrogen isotopes in the waxes, which vary with the amount of rainfall, show no notable change during the centuries when grassland replaced the forest.",
+        "Sediment layers laid down during the crisis indicate that the level of the lake fell well below its earlier level as the forest retreated from its shores."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "Garcin and colleagues argue that people, not a drier climate, opened up the forest. If a measure of rainfall stayed steady while grassland replaced the forest, the change in vegetation happened without the drying that the climate explanation requires, which leaves human activity as the better explanation. Choice C reports that finding, so it most directly supports their argument.",
+      "distractors": {
+        "A": {
+          "recipe": "TRAP: consistent with both explanations",
+          "why_wrong": "Both sides agree that grassland abruptly replaced forest about 2,600 years ago; confirming that change at Lake Barombi does not show what caused it."
+        },
+        "B": {
+          "recipe": "TRAP: irrelevant property of the same record",
+          "why_wrong": "The text already says the forest returned, and its return is expected under either explanation, so similar plants before and after the crisis do not favor one cause."
+        },
+        "D": {
+          "recipe": "OPP: the rival's prediction",
+          "why_wrong": "A falling lake level points to less rainfall, which supports the climate explanation the researchers argue against."
+        }
+      },
+      "models": [
+        "3.6",
+        "3.9",
+        "0240d11c",
+        "4d38c2ea"
+      ],
+      "sources": [
+        {
+          "what": "Garcin et al. 2018, PNAS 115: 3261-3266, 'Early anthropogenic impact on Western Central African rainforests 2,600 y ago': Lake Barombi, Cameroon, plant-wax carbon and hydrogen isotopes; abrupt C4 (grass) expansion at about 2,600 cal yr BP with no simultaneous hydrological change; authors attribute the crisis to human activity (farming, iron metallurgy) rather than climate",
+          "url": "https://www.gfz.de/en/press/news/details/humans-changed-the-ecosystems-of-central-africa-more-than-2600-years-ago"
+        }
+      ],
+      "notes": "Band-7 moves: stem names the study and narrows the finding (21 words); passage 113 words; the key supplies the unstated premise that hydrogen isotopes record rainfall, so a vegetation change without a rainfall change removes the rival. Two TRAPs (A fits both views, B an irrelevant property), D OPP (lake level fell). The key matches the study's real result.",
+      "word_count": 111,
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [],
+        "status": "pass"
+      },
+      "band7": {
+        "verdict": "band 7",
+        "why": "Passage 111 words, stem names the study; the key needs the premise that a vegetation shift with no rainfall change removes the climate rival; A fits both views (TRAP), D fits the rival (OPP), B an irrelevant property of the same record."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "C",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 7
+    },
+    {
+      "id": "command_of_evidence.Q2_P8_multipart.hard.w3b4_05",
+      "template": "Q2_P8_multipart",
+      "subtype": "Data description: passage number combined with the display (remittances relative to economy size)",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "Remittances—funds that emigrants working abroad transfer to relatives in their home countries—constitute a substantial source of household income in many developing economies. Economists typically gauge a country’s dependence on remittances by comparing the amount it receives with the size of its economy, as measured by gross domestic product (GDP). In 2019, India’s GDP, approximately $2.8 trillion, was roughly 83 times as large as Nepal’s, approximately $34 billion. Examining World Bank data, an economics student concluded that although India received considerably more money in remittances than Nepal did that year, remittances were a substantially more important component of Nepal’s economy than of India’s.",
+      "stem": "Which choice best describes data from the graph that support the student’s conclusion?",
+      "options": [
+        "India received more than twice as much money in remittances as Mexico did, and more than any other country shown in the graph.",
+        "India received about $83 billion in remittances, only about ten times the roughly $8 billion that Nepal received.",
+        "Nepal received less money in remittances than Egypt, the Philippines, or Mexico did, receiving under $10 billion in total.",
+        "Nepal received roughly one-fourth as much money in remittances as India did, or a little more than $20 billion."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": {
+        "kind": "bar graph",
+        "title": "Remittances Received by Five Countries, 2019",
+        "x_axis": "Country",
+        "y_axis": "Remittances received (billions of US dollars)",
+        "description": "Five bars; y-axis 0 to 90 in steps of 10. India about 83; Mexico about 40; the Philippines about 35; Egypt about 27; Nepal about 8.",
+        "data": [
+          {
+            "series": "Remittances received",
+            "points": [
+              [
+                "India",
+                83.3
+              ],
+              [
+                "Mexico",
+                39.8
+              ],
+              [
+                "Philippines",
+                35.2
+              ],
+              [
+                "Egypt",
+                26.8
+              ],
+              [
+                "Nepal",
+                8.2
+              ]
+            ]
+          }
+        ]
+      },
+      "explanation": "The text says India’s economy was about 83 times as large as Nepal’s. The graph shows that India received only about ten times as much in remittances as Nepal did (about $83 billion against about $8 billion). If India’s economy is 83 times larger but its remittances only ten times larger, remittances make up a far bigger share of Nepal’s economy, roughly eight times India’s share, which is what the student concluded. Choice B describes those data.",
+      "distractors": {
+        "A": {
+          "recipe": "IRREL: accurate comparison of the wrong cells",
+          "why_wrong": "This is accurate, but India’s large total says nothing about how important remittances are to its economy compared with Nepal’s."
+        },
+        "C": {
+          "recipe": "IRREL: accurate, one country only",
+          "why_wrong": "This is accurate, but it gives only Nepal’s total and says nothing about India’s, so it cannot show how remittances compare in the two countries relative to the size of each economy."
+        },
+        "D": {
+          "recipe": "INACC: misread value",
+          "why_wrong": "The graph shows Nepal receiving about $8 billion, about one-tenth of India’s total, not one-fourth or more than $20 billion."
+        }
+      },
+      "models": [
+        "3.16",
+        "3.19",
+        "3.18",
+        "3.26"
+      ],
+      "sources": [
+        {
+          "what": "World Bank World Development Indicators via API, 2019: personal remittances received (BX.TRF.PWKR.CD.DT) India 83.3 bn, Mexico 39.8 bn, Philippines 35.2 bn, Egypt 26.8 bn, Nepal 8.2 bn US dollars; GDP (NY.GDP.MKTP.CD) India 2,835.6 bn, Nepal 34.2 bn (ratio 82.9); remittances share of GDP Nepal 24.1%, India 2.9%",
+          "url": "https://api.worldbank.org/v2/country/IND;NPL;MEX;PHL;EGY/indicator/BX.TRF.PWKR.CD.DT?date=2019&format=json"
+        }
+      ],
+      "notes": "Band-7 moves: the display must be read through a passage relation (share of GDP; India's economy 83 times Nepal's, given only in the text), like the holding-force/weight model 3.16. Operations: read India and Nepal, take the ratio (about 10), compare with 83, infer the share. A and C are accurate readings of the wrong cells, D a misread that would support the conclusion if true. Values checked: 83.3/8.2 = 10.1; 83.3/39.8 = 2.1.",
+      "word_count": 102,
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 7,
+        "fixes": [],
+        "status": "pass"
+      },
+      "band7": {
+        "verdict": "band 7",
+        "why": "Proxy: the graph only bears on the claim through the passage’s GDP ratio (83 times); operations read India, read Nepal, take the ratio, compare with 83; A and C are accurate wrong-cell readings in the key’s frame, D a misreading."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "B",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 7
+    },
+    {
+      "id": "command_of_evidence.T2_lit_quote.hard.w3b4_06",
+      "template": "T2_lit_quote",
+      "subtype": "Quotation from a translated verse drama illustrates an indirect claim (reputation owed to circumstance, not character)",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "Mary Stuart is an 1800 play by Friedrich Schiller, translated by Joseph Mellish. In the play, Queen Elizabeth I of England must decide whether to authorize the execution of her cousin and rival, Mary, Queen of Scots. As she deliberates, Elizabeth intimates that her reputation for fairness owes more to her circumstances than to her character: ______",
+      "stem": "Which quotation from Mary Stuart most effectively illustrates the claim?",
+      "options": [
+        "“Have I then practised justice, all my life / Shunned each despotic deed; have I done this / Only to bind my hands against this first, / This necessary act of violence? / My own example now condemns myself!”",
+        "“Oh! servitude of popularity! / Disgraceful slavery! How weary am I / Of flattering this idol, which my soul / Despises in its inmost depth! Oh! when / Shall I once more be free upon this throne?”",
+        "“I am not made to rule— / A ruler should be made of sterner stuff: / My heart is soft and tender.”",
+        "“Had I but been a tyrant, like my sister, / My predecessor, I could fearless then / Have shed this royal blood:—but am I now / Just by my own free choice? No—I was forced / By stern necessity to use this virtue; / Necessity, which binds e’en monarch’s wills.”"
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The claim is that Elizabeth’s reputation for fairness comes from her situation rather than from her own nature. In choice D she asks whether she is just “by my own free choice” and answers that “stern necessity” forced her to practice that virtue, which says her fairness was imposed by circumstance. That makes D the quotation that illustrates the claim.",
+      "distractors": {
+        "A": {
+          "recipe": "LURE/HALF: names her lifelong justice but not its source",
+          "why_wrong": "Elizabeth refers to a lifetime of justice, but she complains that it now ties her hands; she does not say that her fairness was forced on her rather than chosen."
+        },
+        "B": {
+          "recipe": "near emotion: resentment of dependence on public favor",
+          "why_wrong": "Elizabeth resents having to court the people’s approval, but the lines say nothing about where her reputation for fairness came from."
+        },
+        "C": {
+          "recipe": "OPP: credits her nature",
+          "why_wrong": "Here Elizabeth describes her own gentle heart, which would trace her mildness to her character, the opposite of the claim."
+        }
+      },
+      "models": [
+        "3.17",
+        "3.37",
+        "3.11",
+        "3.34"
+      ],
+      "sources": [
+        {
+          "what": "Schiller, Mary Stuart (1800), Joseph Mellish translation, Project Gutenberg #6791; all four quotations verified verbatim (Act IV, Scenes IX and X; typography normalized to curly quotes and closed em dashes)",
+          "url": "https://www.gutenberg.org/ebooks/6791"
+        }
+      ],
+      "notes": "Band-7 moves: verse drama in translation; claim uses an indirect verb (intimates) and abstract terms (circumstances against character) that the key states only through 'free choice' and 'stern necessity'. Distractors are the same speaker in nearby states: A a lure (practised justice) whose point is constraint, B resentment of popularity, C the opposite stance (her soft heart). Key quotation 45 words (the full sentence); others 20 to 35. B's 'free upon this throne' is a deliberate lure on 'free choice'; it concerns freedom from courting popularity, not the source of her fairness.",
+      "word_count": 57,
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [],
+        "status": "pass"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "All four quotations verbatim in Gutenberg #6791 (Act IV, Scenes IX and X). Distractors are good (A justice lure, B near emotion, C opposite stance), but the key says the claim almost outright (“Just by my own free choice? No”, then “I was forced / By stern necessity”) and is the longest option, closer to 3.17 than to 3.37; a lure any nearer the claim would be a second answer, so it stays a strong band 6."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "D",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "command_of_evidence.Q1_P5_control.hard.w3b4_07",
+      "template": "Q1_P5_control",
+      "subtype": "Data completion: condition versus control, the result that runs against the stated expectation",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "Although common bean flowers are capable of fertilizing themselves, bees and other insects that visit them can increase the number of pods and seeds the plants produce. To quantify this contribution on smallholder farms in northern Tanzania, Filemon Elisante and colleagues grew common beans under three treatments: some plants were enclosed in fine mesh that excluded insects, some had their flowers pollinated by hand, and some remained accessible to insect visitors. Because hand pollination supplies each flower with abundant pollen, it is often assumed to produce the highest yield that pollination can achieve. In Elisante and colleagues’ study, however, ______",
+      "stem": "Which choice most effectively uses data from the table to complete the statement?",
+      "options": [
+        "plants left open to insect visitors produced an average of 1,478 kilograms of beans per hectare, more than the 1,131 kilograms per hectare produced by hand-pollinated plants.",
+        "hand-pollinated plants produced an average of 1,131 kilograms of beans per hectare, 66 percent more than the plants that were enclosed in mesh to keep insects out.",
+        "plants enclosed in mesh to keep insects out produced an average of only 681 kilograms of beans per hectare, less than half as much as plants left open to insects.",
+        "plants left open to insect visitors produced 117 percent more beans per hectare than hand-pollinated plants did, an advantage of more than 1,000 kilograms per hectare."
+      ],
+      "answer_letter": "A",
+      "table": {
+        "title": "Average Bean Yield under Three Pollination Treatments",
+        "columns": [
+          "Pollination treatment",
+          "Average yield (kilograms per hectare)",
+          "Increase over plants kept from insects (%)"
+        ],
+        "rows": [
+          [
+            "Left open to insects",
+            "1,478",
+            "117"
+          ],
+          [
+            "Pollinated by hand",
+            "1,131",
+            "66"
+          ],
+          [
+            "Enclosed in mesh (insects kept out)",
+            "681",
+            "–"
+          ]
+        ],
+        "note": null
+      },
+      "explanation": "The text says hand pollination is often assumed to produce the highest yield that pollination can achieve, and “however” calls for a result that runs against that assumption. The table shows that plants left open to insects averaged 1,478 kilograms per hectare, more than the 1,131 kilograms of hand-pollinated plants. Choice A reports that result, so it completes the statement.",
+      "distractors": {
+        "B": {
+          "recipe": "IRREL: accurate but consistent with the assumption",
+          "why_wrong": "This is accurate, but hand-pollinated plants outyielding plants kept from insects is just what the assumption about hand pollination predicts, so it does not contrast with it."
+        },
+        "C": {
+          "recipe": "IRREL: accurate, not about the assumption",
+          "why_wrong": "This is accurate and shows that insects matter, as the text’s first sentence says they can, but it compares open plants with plants kept from insects, not with hand-pollinated plants, so it says nothing against the assumption."
+        },
+        "D": {
+          "recipe": "INACC: misplaced value (percentage belongs to a different comparison)",
+          "why_wrong": "The 117 percent in the table is the gain of open plants over plants kept from insects, not over hand-pollinated plants; open plants outyielded hand-pollinated plants by only about 350 kilograms per hectare."
+        }
+      },
+      "models": [
+        "3.38",
+        "3.4",
+        "3.46",
+        "9452092c"
+      ],
+      "sources": [
+        {
+          "what": "Elisante et al. 2020, PeerJ 8: e10102, 'Insect pollination is important in a smallholder bean farming system' (Arusha region, Tanzania; Kariasii common bean): Table 1 average yield per hectare open 1,478 kg (117% over self), hand 1,131 kg (66%), self (bagged with polyethylene net to exclude pollinators) 681 kg; common bean is autogamous",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7583606/"
+        }
+      ],
+      "notes": "Band-7 moves (Q1_P5 surprise, after 3.38): the passage gives only the assumption (hand pollination yields the most) and “however”, so the student must work out which result runs against it; two distractors are accurate results that fit the assumption, one misplaces the table’s percentage. The first sentence states that insects can raise yields so that C is not itself a surprise. Options 27 to 29 words. Values checked: 1,478 > 1,131; 681/1,478 = 0.46; 1,131/681 = 1.66.",
+      "word_count": 100,
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [
+          "passage: expectation no longer spelled out (“so plants accessible to insects would be expected to yield no more than hand-pollinated plants. Contrary to that expectation”); now the assumption plus “however”, so the student must find the result that contradicts it (hardening); explanation and B, C reasons updated"
+        ],
+        "status": "fixed"
+      },
+      "band7": {
+        "verdict": "band 7",
+        "why": "After the fix: passage 100 words, Q1 options 27 to 29 words, the surprise must be inferred from the hand-pollination assumption as in 3.38; B and C are accurate readings that fit the assumption, D misplaces the 117 percent."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "A",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 7
+    },
+    {
+      "id": "command_of_evidence.Q2_P5_control.hard.w3b4_08",
+      "template": "Q2_P5_control",
+      "subtype": "Data description: condition versus control with extra conditions (free glasses alone against free glasses with upgrade offers)",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Programs that distribute free eyeglasses to schoolchildren can improve the children’s vision and academic performance, but such programs may also reduce sales of glasses, an important source of revenue for many eye-care providers, since families who receive a complimentary pair have little reason to purchase one. In a trial at rural primary schools in China’s Guangdong and Yunnan provinces, Nathan Congdon and colleagues gave some children who needed glasses a prescription only, gave others free glasses, and gave two additional groups free glasses along with an offer to purchase more fashionable “upgrade” glasses for $15 or $30. The researchers concluded that offering upgrade glasses can prevent free-glasses programs from reducing sales.",
+      "stem": "Which choice best describes data from the graph that support the researchers’ conclusion?",
+      "options": [
+        "In each of the four groups, the families of fewer than 25 percent of the children bought glasses during the trial, though the percentages differed somewhat from group to group.",
+        "The families of about 13 percent of the children who received free glasses bought glasses, roughly half the percentage in the prescription-only group.",
+        "Purchases in both groups offered upgrade glasses nearly matched those in the prescription-only group, while purchases in the group given only free glasses were much lower.",
+        "Families of children who were offered $30 upgrade glasses bought glasses about twice as often as families of children who received a prescription only."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": {
+        "kind": "bar graph",
+        "title": "Children Whose Families Bought Glasses, by Trial Group",
+        "x_axis": "Trial group",
+        "y_axis": "Children whose families bought glasses (%)",
+        "description": "Four bars; y-axis 0 to 30 in steps of 5. Prescription only about 24%; free glasses about 13%; free glasses plus $15 upgrade offer about 21%; free glasses plus $30 upgrade offer about 21%.",
+        "data": [
+          {
+            "series": "Children whose families bought glasses",
+            "points": [
+              [
+                "Prescription only",
+                23.6
+              ],
+              [
+                "Free glasses",
+                12.7
+              ],
+              [
+                "Free glasses + $15 upgrade offer",
+                21.3
+              ],
+              [
+                "Free glasses + $30 upgrade offer",
+                20.9
+              ]
+            ]
+          }
+        ]
+      },
+      "explanation": "The researchers conclude that adding an upgrade offer keeps free glasses from cutting into sales. That requires two things: free glasses alone lower purchases compared with a prescription only, and purchases in the upgrade groups stay near the prescription-only level. The graph shows about 13 percent for free glasses alone against about 24 percent for prescription only, and about 21 percent in each upgrade group. Choice C describes that whole pattern.",
+      "distractors": {
+        "A": {
+          "recipe": "IRREL: true of every group",
+          "why_wrong": "This is accurate, but a low rate in every group does not show that the upgrade offers made any difference."
+        },
+        "B": {
+          "recipe": "PART: half the comparison",
+          "why_wrong": "This shows only that free glasses reduced purchases; it leaves out the upgrade groups, so it cannot show that the offers prevented the drop."
+        },
+        "D": {
+          "recipe": "INACC: misread bars",
+          "why_wrong": "The $30 upgrade group’s rate, about 21 percent, was slightly lower than the prescription-only group’s, about 24 percent, not twice as high."
+        }
+      },
+      "models": [
+        "3.1",
+        "3.5",
+        "3.43",
+        "2.25"
+      ],
+      "sources": [
+        {
+          "what": "Wang X, Congdon N, et al. 2017, PLoS ONE 12(11): e0187808, PRICE (Potentiating Rural Investment in Children's Eyecare) cluster-randomized trial, Guangdong and Yunnan: glasses purchase control 23.6%, free glasses 12.7%, free + $15 upgrade 21.3%, free + $30 upgrade 20.9%; upgrade glasses prevented the reduction in purchases",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC5697864/"
+        }
+      ],
+      "notes": "Band 6 (condition versus control with a design wrinkle, two added conditions). The key needs all three levels; B is the partial reading, A true of every group, D a false reading. The near-equal $15 and $30 bars are never compared in an option.",
+      "word_count": 111,
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [],
+        "status": "pass"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "Target 6 met: a design wrinkle (two upgrade arms), the key needs all three levels; A true of every group, B the partial reading, D false."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "C",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "command_of_evidence.Q1_P3_pairwise.hard.w3b4_09",
+      "template": "Q1_P3_pairwise",
+      "subtype": "Data completion: pairwise comparison holding one variable fixed (same wind speed, colder air)",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Wind makes cold air feel colder because it continually strips away the thin layer of warmed air that insulates exposed skin. The US National Weather Service quantifies this effect with a wind chill index, a “feels like” temperature calculated from the air temperature and the wind speed using a model of heat loss from the human face that was tested on volunteers. According to the index, a given wind lowers the perceived temperature more dramatically when the air is already extremely cold than when it is relatively mild. For example, whereas a 20-mile-per-hour wind makes air at 30°F feel like 17°F, a drop of 13 degrees, ______",
+      "stem": "Which choice most effectively uses data from the table to complete the example?",
+      "options": [
+        "a 40-mile-per-hour wind makes air at 30°F feel like 13°F, a drop of 17 degrees.",
+        "the same wind makes air at 10°F feel like −4°F, a drop of 14 degrees.",
+        "a 40-mile-per-hour wind makes air at −10°F feel like −43°F, a drop of 33 degrees.",
+        "the same wind makes air at −10°F feel like −35°F, a drop of 25 degrees."
+      ],
+      "answer_letter": "D",
+      "table": {
+        "title": "Wind Chill (°F) at Selected Air Temperatures and Wind Speeds",
+        "columns": [
+          "Wind speed (miles per hour)",
+          "Air temperature 30°F",
+          "Air temperature 10°F",
+          "Air temperature −10°F"
+        ],
+        "rows": [
+          [
+            "10",
+            "21",
+            "−4",
+            "−28"
+          ],
+          [
+            "20",
+            "17",
+            "−9",
+            "−35"
+          ],
+          [
+            "30",
+            "15",
+            "−12",
+            "−39"
+          ],
+          [
+            "40",
+            "13",
+            "−15",
+            "−43"
+          ]
+        ],
+        "note": null
+      },
+      "explanation": "The example must keep the wind the same, 20 miles per hour, and show a bigger drop at a colder air temperature. The table shows that a 20-mile-per-hour wind makes air at −10°F feel like −35°F, a drop of 25 degrees, which is larger than the 13-degree drop at 30°F. Choice D completes the example.",
+      "distractors": {
+        "A": {
+          "recipe": "TRAP: wrong variable changed (temperature fixed, wind changed)",
+          "why_wrong": "This keeps the air at 30°F and changes the wind speed, so it says nothing about how the same wind acts on colder air."
+        },
+        "B": {
+          "recipe": "INACC: value from the wrong row",
+          "why_wrong": "In the table, −4°F is the wind chill for a 10-mile-per-hour wind at 10°F; a 20-mile-per-hour wind makes 10°F feel like −9°F."
+        },
+        "C": {
+          "recipe": "TRAP: two variables changed at once",
+          "why_wrong": "Both the wind speed and the temperature differ from the 30°F example, so the larger drop cannot be credited to the colder air alone."
+        }
+      },
+      "models": [
+        "3.29",
+        "3.30",
+        "2.27",
+        "2.32"
+      ],
+      "sources": [
+        {
+          "what": "US National Weather Service wind chill chart and formula, WC = 35.74 + 0.6215T - 35.75V^0.16 + 0.4275TV^0.16 (based on a human face model, tested on 12 subjects); table values computed with the formula and rounded as on the NWS chart (page example: 0 F with 15 mph gives -19 F)",
+          "url": "https://www.weather.gov/safety/cold-wind-chill-chart"
+        }
+      ],
+      "notes": "Plan lists this cell as band 7, but spec/rw/band7/command_of_evidence.md says Q1_P3 has no band-7 official items ('do not aim them at band 7'), so it is written as a strong band 6 per WAVE.md. Like 3.29, the key fixes one variable and changes the other; A and C change the wrong variable or both, B lifts the 10-mph value. Values checked with the NWS formula: 20 mph at 30 F = 17, at 10 F = -9, at -10 F = -35; 40 mph at 30 F = 13, at -10 F = -43; 10 mph at 10 F = -4.",
+      "word_count": 107,
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 12,
+        "fixes": [],
+        "status": "pass"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "Q1_P3 has no band-7 official items, so a strong band 6 as written: the key holds the wind fixed while A and C change it and B lifts the 10-mph value. All 12 cells match the NWS formula."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "D",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "command_of_evidence.Q1_P2_extreme.hard.w3b4_10",
+      "template": "Q1_P2_extreme",
+      "subtype": "Data completion: extreme after a filter the passage sets (tallest dam of the two types that need no narrow gorge)",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "Most of the world’s tallest dams belong to one of three structural types. Arch dams curve upstream so that the water’s pressure is transferred into the walls of the canyon, which allows them to hold back deep reservoirs with considerably less concrete. Because an arch dam depends on solid rock on both sides, engineers can build one only in a narrow gorge with strong walls. Gravity dams, which resist the water’s force through their sheer weight, and embankment dams, which are massive mounds of compacted earth or rock, face no such restriction. Among the dams in the table, the tallest dam of these two types is ______",
+      "stem": "Which choice most effectively uses data from the table to complete the statement?",
+      "options": [
+        "the Grande Dixence Dam in Switzerland, which is 285 meters tall.",
+        "the Nurek Dam in Tajikistan, which is 300 meters tall.",
+        "the Jinping-I Dam in China, which is 305 meters tall.",
+        "the Xiaowan Dam in China, which is 292 meters tall."
+      ],
+      "answer_letter": "B",
+      "table": {
+        "title": "Five of the World’s Tallest Dams",
+        "columns": [
+          "Dam",
+          "Country",
+          "Type",
+          "Height (meters)"
+        ],
+        "rows": [
+          [
+            "Jinping-I",
+            "China",
+            "concrete arch",
+            "305"
+          ],
+          [
+            "Nurek",
+            "Tajikistan",
+            "embankment",
+            "300"
+          ],
+          [
+            "Xiaowan",
+            "China",
+            "concrete arch",
+            "292"
+          ],
+          [
+            "Grande Dixence",
+            "Switzerland",
+            "concrete gravity",
+            "285"
+          ],
+          [
+            "Enguri",
+            "Georgia",
+            "concrete arch",
+            "271.5"
+          ]
+        ],
+        "note": null
+      },
+      "explanation": "The text says gravity and embankment dams face no such restriction, so the blank asks for the tallest dam of those two types. The table lists two: Nurek, an embankment dam 300 meters tall, and Grande Dixence, a gravity dam 285 meters tall. Nurek is the taller, so choice B completes the statement.",
+      "distractors": {
+        "A": {
+          "recipe": "right type, wrong extreme",
+          "why_wrong": "Grande Dixence is a gravity dam, so it is one of the two types, but at 285 meters it is shorter than the 300-meter Nurek Dam, an embankment dam."
+        },
+        "C": {
+          "recipe": "WGRP: tallest overall but the wrong type",
+          "why_wrong": "Jinping-I is the tallest dam in the table, but it is an arch dam, the type the text says can be built only in a narrow gorge, not a gravity or embankment dam."
+        },
+        "D": {
+          "recipe": "WGRP: wrong type",
+          "why_wrong": "Xiaowan is an arch dam, so it is not one of the two types the statement refers to, and it is shorter than the Jinping-I Dam in any case."
+        }
+      },
+      "models": [
+        "3.44",
+        "626a1308",
+        "1.23",
+        "1.34"
+      ],
+      "sources": [
+        {
+          "what": "Wikipedia, List of tallest dams: Jinping-I 305 m concrete arch China; Nurek 300 m embankment (earth-fill) Tajikistan; Xiaowan 292 m concrete arch China; Grande Dixence 285 m concrete gravity Switzerland; Enguri 271.5 m concrete arch Georgia",
+          "url": "https://en.wikipedia.org/wiki/List_of_tallest_dams"
+        }
+      ],
+      "notes": "Band 7 (Q1_P2 with a filter, after 3.44): the filter is set by the passage (gravity or embankment, the types with no gorge restriction), then the extreme. A is the right type at the wrong extreme, C the tallest row of the wrong type (the 3.44 trap), D another wrong-type row. Value-only options as in the model. Reviewer rebuilt it on height and dropped the year column, since Enguri’s completion year is given as 1978 or 1987 by different sources. Nurek is sometimes given as 304 m; either figure leaves it taller than Grande Dixence and the key unchanged.",
+      "word_count": 107,
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 5,
+        "fixes": [
+          "rebuilt on height so nothing depends on Enguri’s completion year (1978 on the list, 1987 elsewhere): year column dropped, the blank now asks for the tallest dam of the two types the passage says need no narrow gorge (gravity, embankment); key moved from Enguri to Nurek, still B; options, explanation, distractors and notes rewritten"
+        ],
+        "status": "fixed"
+      },
+      "band7": {
+        "verdict": "band 7",
+        "why": "One filter then an extreme, as in 3.44 (the only band-7 Q1_P2 item), with the filter set by a passage relation rather than named in the blank; C is the tallest row of the wrong type, A the right type at the wrong extreme. Value-only options follow 3.44."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "B",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 7
+    },
+    {
+      "id": "command_of_evidence.T1_single.medium.w3b4_11",
+      "template": "T1_single",
+      "subtype": "Hypothetical finding supports a group-comparison hypothesis (effect largest for one subgroup)",
+      "tier": "medium",
+      "band_target": null,
+      "passage": "Although Kenya abolished tuition fees in public primary schools in 2003, most schools still require uniforms, which can cost a poor family a substantial share of its income. A child without a uniform may also feel embarrassed among classmates who have one. Economists David Evans, Michael Kremer, and Mũthoni Ngatia gave free uniforms to randomly chosen pupils in western Kenya and then monitored how frequently those pupils and their classmates were absent. The researchers hypothesized that a free uniform would reduce absenteeism, especially among children who had never owned one.",
+      "stem": "Which finding, if true, would most directly support the researchers’ hypothesis?",
+      "options": [
+        "Students who received a free uniform missed fewer days of school than students who did not, especially if they had owned no uniform before the study.",
+        "Among students who did not receive a free uniform, those who already owned a uniform missed about as many days of school as those who did not own one.",
+        "Students who received a free uniform scored higher on end-of-year examinations than did students in the same schools who were not selected to receive one.",
+        "Parents of students who received a free uniform reported spending less money on clothing that year than parents of the other students did."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The researchers predicted that a free uniform would cut absences, and cut them most for students who had never owned a uniform. Choice A reports fewer absences among students who received uniforms than among those who did not, with the largest difference for students who had owned none, which is exactly the pattern the hypothesis predicts.",
+      "distractors": {
+        "B": {
+          "recipe": "wrong comparison (within the untreated group), points away",
+          "why_wrong": "This compares students who never received a free uniform, and it suggests owning a uniform made little difference to absences, which does not support the hypothesis."
+        },
+        "C": {
+          "recipe": "OFF: different outcome variable",
+          "why_wrong": "Higher exam scores do not show that the uniforms reduced absences, let alone that they did so most for students who had owned none."
+        },
+        "D": {
+          "recipe": "OFF: family spending",
+          "why_wrong": "Lower clothing costs for families say nothing about whether students missed fewer days of school."
+        }
+      },
+      "models": [
+        "2.6",
+        "2.7",
+        "2.43",
+        "2.21"
+      ],
+      "sources": [
+        {
+          "what": "Evans, Kremer and Ngatia, randomized distribution of free school uniforms in western Kenya (Busia); providing a uniform reduced absenteeism, with the largest effect for children who had no uniform before (IPA summary; Evans and Ngatia 2018 World Bank WPS8421 reports 37% overall and 55% for those without a prior uniform)",
+          "url": "https://www.poverty-action.org/publication/impact-distributing-school-uniforms-childrens-education-kenya"
+        }
+      ],
+      "notes": "Medium: the claim is comparative and moderated, so the key needs the treated-versus-untreated comparison plus the subgroup. B compares within the control group, C and D are off-target outcomes. The key matches the study's real result.",
+      "word_count": 90,
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [
+          "passage: stigma motive no longer attributed to the named economists (the IPA summary does not give it); now a general sentence",
+          "medium density: plainer words"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "command_of_evidence.T2_lit_quote.medium.w3b4_12",
+      "template": "T2_lit_quote",
+      "subtype": "Quotation from a novel illustrates a two-part claim (provoked by students, yet keeps his self-control)",
+      "tier": "medium",
+      "band_target": null,
+      "passage": "The Hoosier Schoolmaster is an 1871 novel by Edward Eggleston. In the novel, Ralph Hartsook, a young man from a small Indiana town, takes a job as schoolmaster in the backwoods settlement of Flat Creek, where unruly older students have intimidated and driven away previous instructors. Eggleston suggests that Ralph maintains his self-control in front of his students even when they deliberately provoke him: ______",
+      "stem": "Which quotation from The Hoosier Schoolmaster most effectively illustrates the claim?",
+      "options": [
+        "“Hartsook’s first day was hurried and unsatisfactory. He was not of himself, and consequently not master of anybody else.”",
+        "“He ate with deliberation, and looked everybody in the eyes with a manner that made Bud watch him curiously.”",
+        "“Ralph Hartsook grew red in the face when he saw the puppy. But the cool, repressed, bulldog mood in which he had kept himself saved him.”",
+        "“When evening came, there were symptoms of insubordination through the whole school. Poor Ralph was sick at heart.”"
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The claim has two parts: Ralph’s students provoke him, and he still keeps his self-control in front of them. In choice C, Ralph grows “red in the face” at the puppy his students have hidden, yet the “cool, repressed, bulldog mood” he has kept up “saved him.” Only C shows both the provocation and Ralph holding on to his self-control.",
+      "distractors": {
+        "A": {
+          "recipe": "OPP: loses self-control",
+          "why_wrong": "Here Ralph is “not of himself” and not in control of anyone, which shows him losing his self-control rather than keeping it."
+        },
+        "B": {
+          "recipe": "HALF: self-control without provocation",
+          "why_wrong": "Ralph behaves deliberately at breakfast, but nothing provokes him and his students are not present, so only one part of the claim is shown."
+        },
+        "D": {
+          "recipe": "HALF: provocation and distress without self-control",
+          "why_wrong": "The students’ unruliness provokes Ralph, but the quotation shows only that he is unhappy, not that he keeps his self-control in front of them."
+        }
+      },
+      "models": [
+        "2.11",
+        "2.26",
+        "2.35",
+        "2.37"
+      ],
+      "sources": [
+        {
+          "what": "Edward Eggleston, The Hoosier School-Master (1871), Project Gutenberg #15099, Chapter I; all four quotations verified verbatim",
+          "url": "https://www.gutenberg.org/ebooks/15099"
+        }
+      ],
+      "notes": "Medium two-part claim (provoked, yet keeps his self-control). B and D are half-matches (self-control without provocation; provocation without self-control), A the opposite, as in the medium literary models. The claim says self-control rather than outward composure because the key's Ralph visibly reddens.",
+      "word_count": 65,
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [
+          "medium density: “village” to “town”, “keeps” to “maintains”"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "command_of_evidence.T2_lit_quote.medium.w3b4_13",
+      "template": "T2_lit_quote",
+      "subtype": "Quotation from a novel illustrates a contrast claim (usual expression against a livelier side seen only at times)",
+      "tier": "medium",
+      "band_target": null,
+      "passage": "Esther Waters is an 1894 novel by George Moore. The novel opens as Esther, a twenty-year-old woman from an impoverished London family, arrives by train to begin employment as a kitchen maid at a wealthy family’s countryside estate. In characterizing Esther, Moore indicates that her usual demeanor conceals a livelier disposition that emerges only occasionally: ______",
+      "stem": "Which quotation from Esther Waters most effectively illustrates the claim?",
+      "options": [
+        "“The nose was too thick, but the nostrils were well formed. The eyes were grey, luminous, and veiled with dark lashes.”",
+        "“But it was only when she laughed that her face lost its habitual expression, which was somewhat sullen; then it flowed with bright humour.”",
+        "“She smiled, and her face became as bright as the month: it was the first day of June.”",
+        "“The girl gazed on this bleak country like one who saw it for the first time. She saw without perceiving, for her mind was occupied with personal consideration.”"
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The claim contrasts Esther’s usual expression with a livelier side that appears only at times. Choice B gives both parts: her “habitual expression” is “somewhat sullen,” and “only when she laughed” does her face fill “with bright humour.” The other quotations show either her features or a single bright moment, not the contrast.",
+      "distractors": {
+        "A": {
+          "recipe": "OFF: physical features, no change of expression",
+          "why_wrong": "This lists Esther’s features, some plain and some attractive, but says nothing about her usual expression giving way to a livelier one."
+        },
+        "C": {
+          "recipe": "HALF: the bright moment without the usual expression",
+          "why_wrong": "Esther’s face brightens here, but nothing indicates that her ordinary look hides this side of her, so only half the contrast is shown."
+        },
+        "D": {
+          "recipe": "LURE: bleak scene, inward attention",
+          "why_wrong": "The bleakness belongs to the countryside, and the lines describe Esther’s preoccupation, not an expression that gives way to liveliness."
+        }
+      },
+      "models": [
+        "2.13",
+        "2.26",
+        "2.11",
+        "2.10"
+      ],
+      "sources": [
+        {
+          "what": "George Moore, Esther Waters (1894), Project Gutenberg #8157, Chapter I; all four quotations verified verbatim",
+          "url": "https://www.gutenberg.org/ebooks/8157"
+        }
+      ],
+      "notes": "Medium contrast claim; the key alone has both halves (usual sullen look, brightness when she laughs). C is the half-match, A off-target, D a lure on 'bleak'.",
+      "word_count": 56,
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [
+          "medium density: “ordinary” to “usual”, “suggests” to “indicates”"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "command_of_evidence.Q1_P3_pairwise.medium.w3b4_14",
+      "template": "Q1_P3_pairwise",
+      "subtype": "Data completion: comparison of two measures that illustrates a stated pattern",
+      "tier": "medium",
+      "band_target": null,
+      "passage": "Many households in sub-Saharan Africa got phone service from mobile networks without ever being connected to the fixed telephone lines that once carried nearly all calls, a pattern that economists call “leapfrogging.” Because running copper wire to widely dispersed rural homes is expensive, mobile networks could reach people much more quickly and cheaply. Leapfrogging is particularly evident in World Bank data from 2010: for example, ______",
+      "stem": "Which choice most effectively uses data from the table to complete the example?",
+      "options": [
+        "Ghana had about 68 mobile subscriptions per 100 people but only about 1 fixed telephone line per 100 people.",
+        "South Africa had more fixed telephone lines per 100 people than any of the other countries listed in the table.",
+        "Kenya had more mobile subscriptions per 100 people than Ghana did, though fewer than South Africa did.",
+        "Tanzania had about 47 fixed telephone lines per 100 people but fewer than 1 mobile subscription per 100 people."
+      ],
+      "answer_letter": "A",
+      "table": {
+        "title": "Mobile and Fixed Telephone Subscriptions per 100 People in Five African Countries, 2010",
+        "columns": [
+          "Country",
+          "Mobile subscriptions",
+          "Fixed telephone lines"
+        ],
+        "rows": [
+          [
+            "Ghana",
+            "68.4",
+            "1.1"
+          ],
+          [
+            "Kenya",
+            "60.0",
+            "0.9"
+          ],
+          [
+            "Nigeria",
+            "52.4",
+            "0.6"
+          ],
+          [
+            "South Africa",
+            "96.2",
+            "9.3"
+          ],
+          [
+            "Tanzania",
+            "46.9",
+            "0.4"
+          ]
+        ],
+        "note": null
+      },
+      "explanation": "Leapfrogging means that people gained phone service through mobile networks while fixed lines stayed rare. The table shows that Ghana had about 68 mobile subscriptions per 100 people but only about 1 fixed line per 100 people, so choice A illustrates the pattern.",
+      "distractors": {
+        "B": {
+          "recipe": "IRREL: accurate, one measure only",
+          "why_wrong": "This is accurate, but it compares fixed lines across countries and says nothing about mobile service replacing fixed lines."
+        },
+        "C": {
+          "recipe": "INACC: wrong direction",
+          "why_wrong": "Kenya had about 60 mobile subscriptions per 100 people, fewer than Ghana’s 68.4, and the comparison would not show leapfrogging in any case."
+        },
+        "D": {
+          "recipe": "INACC: swapped columns",
+          "why_wrong": "The table shows the reverse for Tanzania: about 47 mobile subscriptions and fewer than 1 fixed line per 100 people."
+        }
+      },
+      "models": [
+        "2.18",
+        "2.24",
+        "2.27",
+        "2.32"
+      ],
+      "sources": [
+        {
+          "what": "World Bank World Development Indicators via API, 2010: mobile cellular subscriptions per 100 people (IT.CEL.SETS.P2) Ghana 68.4, Kenya 60.0, Nigeria 52.4, South Africa 96.2, Tanzania 46.9; fixed telephone subscriptions per 100 people (IT.MLT.MAIN.P2) Ghana 1.1, Kenya 0.9, Nigeria 0.6, South Africa 9.3, Tanzania 0.4",
+          "url": "https://api.worldbank.org/v2/country/GHA;KEN;NGA;ZAF;TZA/indicator/IT.CEL.SETS.P2?date=2010&format=json"
+        }
+      ],
+      "notes": "Medium P3: full-clause options; the key compares two columns within one row; B is accurate but off the pattern, C reverses a comparison, D swaps the columns. Values from the World Bank API rounded to one decimal.",
+      "word_count": 66,
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 10,
+        "fixes": [
+          "medium density: plainer wording in the passage"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "command_of_evidence.Q1_P5_control.medium.w3b4_15",
+      "template": "Q1_P5_control",
+      "subtype": "Data completion: treated versus control group, change from baseline",
+      "tier": "medium",
+      "band_target": null,
+      "passage": "Iodine deficiency, which can harm children’s growth and mental development, remains widespread in parts of Ethiopia even though iodized salt is sold there. In the Dawro Zone of southwestern Ethiopia, public health researcher Agize Asfaw and colleagues randomly assigned groups of households either to get six months of classes for women on iodine and iodized salt or to get none. They then scored the women’s knowledge of iodine deficiency and how well they used iodized salt. The classes appear to have improved the women’s practices: for example, ______",
+      "stem": "Which choice most effectively uses data from the table to complete the example?",
+      "options": [
+        "at the beginning of the study, the average practice score of women in the education group, 4.21, was slightly lower than that of women in the comparison group, 4.32.",
+        "the average knowledge score of women in the comparison group rose from 5.08 at the beginning of the study to 14.20 six months later.",
+        "six months after the study began, the average knowledge score of women in the education group, 14.20, was nearly twice their average practice score, 7.32.",
+        "the average practice score of women in the education group rose from 4.21 to 7.32 over six months, while that of women in the comparison group barely changed."
+      ],
+      "answer_letter": "D",
+      "table": {
+        "title": "Average Scores of Women in Education and Comparison Groups",
+        "columns": [
+          "Score",
+          "Group",
+          "Beginning of study",
+          "Six months later"
+        ],
+        "rows": [
+          [
+            "Knowledge",
+            "Education",
+            "5.36",
+            "14.20"
+          ],
+          [
+            "Knowledge",
+            "Comparison",
+            "5.08",
+            "5.24"
+          ],
+          [
+            "Practice",
+            "Education",
+            "4.21",
+            "7.32"
+          ],
+          [
+            "Practice",
+            "Comparison",
+            "4.32",
+            "4.45"
+          ]
+        ],
+        "note": null
+      },
+      "explanation": "To show that the classes improved women’s practices, the example must compare the education group with the comparison group on the practice score. The table shows that the education group’s average practice score rose from 4.21 to 7.32, while the comparison group’s went only from 4.32 to 4.45. Choice D reports that difference.",
+      "distractors": {
+        "A": {
+          "recipe": "PART: baseline only",
+          "why_wrong": "This accurately compares the groups before any classes took place, so it cannot show an effect of the classes."
+        },
+        "B": {
+          "recipe": "INACC: misplaced value",
+          "why_wrong": "The comparison group’s knowledge score went from 5.08 to only 5.24; 14.20 belongs to the education group."
+        },
+        "C": {
+          "recipe": "IRREL: wrong comparison (two measures within one group)",
+          "why_wrong": "This is accurate, but comparing knowledge with practice within the education group says nothing about whether the classes changed practices relative to the comparison group."
+        }
+      },
+      "models": [
+        "2.5",
+        "2.14",
+        "2.19"
+      ],
+      "sources": [
+        {
+          "what": "Asfaw A (Agize Asfaw), Belachew T, Gari T 2020, BMC Women's Health 20: 255, cluster randomized trial in Dawro Zone, southwest Ethiopia; Table 2 mean scores baseline/endline: knowledge intervention 5.36/14.20, control 5.08/5.24; practice intervention 4.21/7.32, control 4.32/4.45; six months of education sessions",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7670725/"
+        }
+      ],
+      "notes": "Medium P5 (treated against untreated at the same time, as in 2.5): A is a baseline-only comparison, B a misplaced value, C a comparison across measures. All values from the paper's Table 2.",
+      "word_count": 88,
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [
+          "passage: the trial randomized village-level groups of households (health development armies), not villages; plainer words"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "command_of_evidence.Q2_P8_multipart.medium.w3b4_16",
+      "template": "Q2_P8_multipart",
+      "subtype": "Data description: a pattern followed only inconsistently, supported by a two-part exception",
+      "tier": "medium",
+      "band_target": null,
+      "passage": "Biologists have long noted that among closely related species of warm-blooded animals, those living in colder environments tend to be considerably larger, perhaps because a big body loses heat more gradually for its mass than a small one does. Penguins, which breed from the equator to Antarctica, offer an opportunity to test this generalization. Using body mass and distribution data that biologist Barbara Ramos and her colleagues compiled for penguin species, a student concluded that penguins follow the pattern only inconsistently.",
+      "stem": "Which choice most effectively uses data from the table to support the student’s conclusion?",
+      "options": [
+        "The emperor penguin, which breeds farther south than any other species in the table, has an average body mass more than five times that of any other species shown.",
+        "The Magellanic penguin breeds farther south than the African penguin does and has a greater average body mass than the African penguin has.",
+        "The little penguin breeds farther from the equator than the Galápagos penguin does, yet its average body mass is lower than that of the Galápagos penguin.",
+        "The African penguin breeds farther south than the little penguin does and has a lower average body mass than the little penguin has."
+      ],
+      "answer_letter": "C",
+      "table": {
+        "title": "Breeding Range and Average Body Mass of Five Penguin Species",
+        "columns": [
+          "Species",
+          "Breeding range (latitude)",
+          "Average adult body mass (kilograms)"
+        ],
+        "rows": [
+          [
+            "Galápagos penguin",
+            "0°",
+            "2.0"
+          ],
+          [
+            "African penguin",
+            "25°S–33°S",
+            "3.1"
+          ],
+          [
+            "Little penguin",
+            "30°S–47°S",
+            "1.2"
+          ],
+          [
+            "Magellanic penguin",
+            "40°S–55°S",
+            "4.0"
+          ],
+          [
+            "Emperor penguin",
+            "64°S–77°S",
+            "28.0"
+          ]
+        ],
+        "note": null
+      },
+      "explanation": "The student concludes that penguins follow only inconsistently the pattern in which species of colder places are larger. A species that breeds farther from the equator but is smaller than one breeding nearer to it is an exception to that pattern. The little penguin breeds between 30°S and 47°S, much farther from the equator than the Galápagos penguin, yet averages 1.2 kilograms against the Galápagos penguin’s 2.0. Choice C describes that exception.",
+      "distractors": {
+        "A": {
+          "recipe": "CONTRA: accurate, fits the pattern",
+          "why_wrong": "This is accurate, but the heaviest penguin breeding farthest south fits the pattern; it does not show that penguins follow it only inconsistently."
+        },
+        "B": {
+          "recipe": "CONTRA: accurate, fits the pattern",
+          "why_wrong": "This is accurate, but a more southern species being heavier is what the pattern predicts, so it does not support the student’s conclusion."
+        },
+        "D": {
+          "recipe": "INACC: both parts misread",
+          "why_wrong": "The African penguin breeds farther north than the little penguin (25°S–33°S against 30°S–47°S) and is heavier (3.1 against 1.2 kilograms)."
+        }
+      },
+      "models": [
+        "2.42",
+        "2.8"
+      ],
+      "sources": [
+        {
+          "what": "Ramos B, Gonzalez-Acuna D, et al. 2018, BMC Genomics 19: 53, 'Landscape genomics: natural selection drives the evolution of mitogenome in penguins', Table 1 (compiled from the literature): latitude range and average body mass: Galapagos 0 deg, 2 kg; African 25-33 S, 3.1 kg; little 30-47 S, 1.2 kg; Magellanic 40-55 S, 4 kg; emperor 64-77 S, 28 kg",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC5771141/"
+        }
+      ],
+      "notes": "Medium P8 after 2.42 (a hypothesis 'not fully supported'): the key is the one two-part exception; A and B are accurate statements that fit the pattern (CONTRA), D gets both parts wrong. The pattern is Bergmann's rule, left unnamed. Values from the paper's Table 1; 28.0/4.0 = 7 (A true).",
+      "word_count": 81,
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 5,
+        "fixes": [
+          "medium density: plainer wording in the passage"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "command_of_evidence.Q1_P1_lookup.easy.w3b4_17",
+      "template": "Q1_P1_lookup",
+      "subtype": "Data completion: reverse lookup (find the row with a given value)",
+      "tier": "easy",
+      "band_target": null,
+      "passage": "Most meteorites that reach Earth’s surface are small stony fragments, but the largest specimens discovered so far consist almost entirely of iron and nickel, metals that withstand the fiery plunge through the atmosphere better than stone does. The heaviest, the Hoba meteorite in Namibia, has never been moved from the location where it was discovered in 1920. The table lists several of the largest known meteorites. According to the table, the meteorite with a mass of 16,000 kilograms was found in ______",
+      "stem": "Which choice most effectively uses data from the table to complete the statement?",
+      "options": [
+        "Mexico.",
+        "Tanzania.",
+        "Somalia.",
+        "Greenland."
+      ],
+      "answer_letter": "B",
+      "table": {
+        "title": "Five of the Largest Known Meteorites",
+        "columns": [
+          "Meteorite",
+          "Country where found",
+          "Year found",
+          "Mass (kilograms)"
+        ],
+        "rows": [
+          [
+            "Hoba",
+            "Namibia",
+            "1920",
+            "60,000"
+          ],
+          [
+            "Cape York (Ahnighito)",
+            "Greenland",
+            "1894",
+            "30,880"
+          ],
+          [
+            "Bacubirito",
+            "Mexico",
+            "1863",
+            "22,000"
+          ],
+          [
+            "Mbosi",
+            "Tanzania",
+            "1930",
+            "16,000"
+          ],
+          [
+            "El Ali",
+            "Somalia",
+            "2020",
+            "15,150"
+          ]
+        ],
+        "note": null
+      },
+      "explanation": "The table lists one meteorite with a mass of 16,000 kilograms, the Mbosi meteorite, and it was found in Tanzania, so choice B completes the statement.",
+      "distractors": {
+        "A": {
+          "recipe": "WGRP: neighboring row",
+          "why_wrong": "The meteorite found in Mexico, Bacubirito, has a mass of 22,000 kilograms."
+        },
+        "C": {
+          "recipe": "WGRP: neighboring row",
+          "why_wrong": "The meteorite found in Somalia, El Ali, has a mass of 15,150 kilograms."
+        },
+        "D": {
+          "recipe": "WGRP: another row",
+          "why_wrong": "The meteorite found in Greenland, Cape York (Ahnighito), has a mass of 30,880 kilograms."
+        }
+      },
+      "models": [
+        "1.37",
+        "1.30",
+        "1.43",
+        "1.44"
+      ],
+      "sources": [
+        {
+          "what": "Wikipedia, List of largest meteorites on Earth (iron table): Hoba 1920 Namibia 60,000 kg; Cape York (Ahnighito) 1894 Greenland 30,880 kg; Bacubirito 1863 Mexico 22,000 kg; Mbosi 1930 Tanzania 16,000 kg; El Ali 2020 Somalia 15,150 kg",
+          "url": "https://en.wikipedia.org/wiki/List_of_largest_meteorites_on_Earth"
+        }
+      ],
+      "notes": "Easy reverse lookup (as in 1.37): options are the countries of other rows.",
+      "word_count": 82,
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 5,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "command_of_evidence.Q1_P1_lookup.easy.w3b4_18",
+      "template": "Q1_P1_lookup",
+      "subtype": "Data completion: reverse lookup (find the row with a given value)",
+      "tier": "easy",
+      "band_target": null,
+      "passage": "The Cascade Range, which extends from southern British Columbia to northern California, owes its chain of towering volcanoes to the Juan de Fuca Plate, which is slowly sliding beneath North America along the Pacific coast. Several of these volcanoes have erupted within the past two centuries, and geologists continuously monitor them for indications of renewed activity. According to the table, the Cascade volcano whose most recent eruption occurred in 1880 is ______",
+      "stem": "Which choice most effectively uses data from the table to complete the statement?",
+      "options": [
+        "Mount Baker.",
+        "Glacier Peak.",
+        "Mount Hood.",
+        "Lassen Peak."
+      ],
+      "answer_letter": "A",
+      "table": {
+        "title": "Selected Volcanoes of the Cascade Range",
+        "columns": [
+          "Volcano",
+          "Elevation (meters)",
+          "Most recent eruption"
+        ],
+        "rows": [
+          [
+            "Mount Baker",
+            "3,286",
+            "1880"
+          ],
+          [
+            "Glacier Peak",
+            "3,213",
+            "about 1700"
+          ],
+          [
+            "Mount Hood",
+            "3,426",
+            "1865–1866"
+          ],
+          [
+            "Lassen Peak",
+            "3,187",
+            "1914–1917"
+          ],
+          [
+            "Mount St. Helens",
+            "2,549",
+            "2004–2008"
+          ]
+        ],
+        "note": null
+      },
+      "explanation": "The table lists 1880 as the year of Mount Baker’s most recent eruption, so choice A completes the statement.",
+      "distractors": {
+        "B": {
+          "recipe": "WGRP: neighboring row",
+          "why_wrong": "Glacier Peak’s most recent eruption, according to the table, was about 1700."
+        },
+        "C": {
+          "recipe": "WGRP: another row",
+          "why_wrong": "Mount Hood’s most recent eruption, according to the table, was in 1865–1866."
+        },
+        "D": {
+          "recipe": "WGRP: another row",
+          "why_wrong": "Lassen Peak’s most recent eruption, according to the table, was in 1914–1917."
+        }
+      },
+      "models": [
+        "1.37",
+        "1.24",
+        "1.12",
+        "1.40"
+      ],
+      "sources": [
+        {
+          "what": "Wikipedia, Cascade Volcanoes (elevation table): Mount Baker 3,286 m, last eruption 1880; Glacier Peak 3,213 m, 1700 plus or minus 100 years; Mount Hood 3,426 m, 1865-1866; Lassen Peak 3,187 m, 1914-1917; Mount St. Helens 2,549 m, 2004-2008; Mount Baker 1880 confirmed in the Mount Baker article infobox (7 September to 27 November 1880, cited to the Smithsonian Global Volcanism Program)",
+          "url": "https://en.wikipedia.org/wiki/Cascade_Volcanoes"
+        }
+      ],
+      "notes": "Easy reverse lookup (as in 1.37): options are names from other rows. Eruption months in the source (1880 Sept-Nov, 1894 Nov-Dec) dropped.",
+      "word_count": 72,
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 6,
+        "fixes": [
+          "Mount Rainier row (last eruption 1894) replaced with Glacier Peak (about 1700) from the same source table: the 1894 date conflicts with the source’s own text and is unconfirmed by USGS; option B and its reason updated"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "command_of_evidence.T1_single.easy.w3b4_19",
+      "template": "T1_single",
+      "subtype": "Hypothetical finding supports a claim about an effect (one step)",
+      "tier": "easy",
+      "band_target": null,
+      "passage": "In the Aït Baamrane region of southwestern Morocco, rainfall is scarce, but fog regularly settles over the coastal mountains. Women and girls there traditionally spent hours each day walking to distant wells and carrying water home. The organization Dar Si Hmad installed large mesh nets on a mountainside to capture droplets from the fog. Pipes then carry the water to homes in nearby villages. Supporters of the project claim that it has given women and girls more time for other activities, such as attending school.",
+      "stem": "Which finding, if true, would most directly support the supporters’ claim?",
+      "options": [
+        "The nets collect much more water on days when the fog is thick than on days when it is light.",
+        "Many residents of the villages say that they like the taste of the fog water as much as the taste of the water from the wells.",
+        "Since the nets were installed, girls in the villages have attended school more regularly than they did before.",
+        "Similar nets for collecting water from fog have been set up in dry coastal areas of Chile and Peru."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The supporters claim that piping fog water to homes has freed time for women and girls to do other things, such as attending school. Choice C reports that girls have attended school more regularly since they no longer had to fetch water, which directly supports that claim.",
+      "distractors": {
+        "A": {
+          "recipe": "OFF: how the nets work",
+          "why_wrong": "How much water the nets collect in different fog conditions says nothing about how women and girls spend their time."
+        },
+        "B": {
+          "recipe": "OFF: taste of the water",
+          "why_wrong": "Residents’ opinion of the water’s taste does not show that anyone gained time for other activities."
+        },
+        "D": {
+          "recipe": "OFF: other places",
+          "why_wrong": "Nets elsewhere do not show any effect on the time of women and girls in these Moroccan villages."
+        }
+      },
+      "models": [
+        "1.1",
+        "1.5",
+        "1.8",
+        "1.29"
+      ],
+      "sources": [
+        {
+          "what": "Dar Si Hmad fog-water project in Ait Baamrane, southwest Morocco: nets on the mountain pipe water to village homes; girls who once spent mornings fetching water now attend school regularly",
+          "url": "https://www.futura-sciences.com/en/?p=36551"
+        }
+      ],
+      "notes": "Easy one-step operationalization; three off-target distractors on obviously different variables, as in the easy models.",
+      "word_count": 85,
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [],
+        "status": "pass",
+        "note": "Time saved is framed as the supporters’ claim; the source reports girls now attend school regularly, so the passage is no stronger than the source."
+      }
+    },
+    {
+      "id": "command_of_evidence.T3_person_quote.easy.w3b4_20",
+      "template": "T3_person_quote",
+      "subtype": "Quotation from a historian supports a claim about how an art form changed",
+      "tier": "easy",
+      "band_target": null,
+      "passage": "Souwère (from the French sous verre, “under glass”) is a technique in which an artist applies paint to the reverse side of a sheet of glass so that the finished image is viewed through the front. The technique reached Senegal in the late nineteenth or early twentieth century, and early souwère paintings predominantly depicted religious subjects, such as saints and episodes from Islamic history. A student claims that later souwère artists broadened the art form to include scenes of everyday Senegalese life.",
+      "stem": "Which quotation from a work by an art historian would be the most effective evidence for the student to include in support of this claim?",
+      "options": [
+        "“Because the image is seen through the glass, a souwère painter must apply the final details first and the background last.”",
+        "“The earliest souwère paintings were often based on prints of saints and religious leaders that traders carried to Senegal from North Africa and the Middle East.”",
+        "“Glass for souwère paintings was frequently cut from old windows and mirrors, since new glass was costly.”",
+        "“By the 1960s, souwère painters were depicting market scenes, wrestling matches, and families at work in their homes alongside the older religious images.”"
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The student claims that later souwère artists added scenes of everyday life to the religious subjects of the early works. Choice D says that by the 1960s painters were showing markets, wrestling matches, and families at work alongside religious images, which is exactly that kind of change.",
+      "distractors": {
+        "A": {
+          "recipe": "OFF: technique",
+          "why_wrong": "This explains how souwère paintings are made, not what later artists chose to paint."
+        },
+        "B": {
+          "recipe": "OFF: early works only",
+          "why_wrong": "This describes the religious sources of the earliest paintings, which the text already mentions, and says nothing about later scenes of daily life."
+        },
+        "C": {
+          "recipe": "OFF: materials",
+          "why_wrong": "Where painters got their glass does not show that the subjects of souwère changed."
+        }
+      },
+      "models": [
+        "1.15",
+        "1.19",
+        "1.20",
+        "1.26"
+      ],
+      "sources": [
+        {
+          "what": "Senegalese suwer (souwere): reverse-glass painting introduced at the end of the 19th century, first religious iconography, later secular scenes of everyday life (Piasa, 'Suwer Senegal' 2023)",
+          "url": "https://www.piasa.fr/en/news/suwer-senegal-2023"
+        }
+      ],
+      "notes": "Easy T3: the quotations are invented and attributed to an unnamed historian, as in the official items; their content follows the source (religious subjects first, everyday scenes later). Dating of the technique's arrival given as a range because sources differ.",
+      "word_count": 82,
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [],
+        "status": "pass",
+        "note": "The quotations are invented and credited only to “an art historian”; no real, named person is implied. Content follows the source (religious subjects first, everyday scenes later)."
+      }
+    },
+    {
+      "id": "command_of_evidence.Q1_P3_pairwise.easy.w3b4_21",
+      "template": "Q1_P3_pairwise",
+      "subtype": "Data completion: two comparisons at once (full set of combinations)",
+      "tier": "easy",
+      "band_target": null,
+      "passage": "In a suspension bridge, the roadway hangs from enormous cables strung between two towers. The distance between the towers, called the main span, is the conventional measure of how far such a bridge can extend without intermediate supports. The table compares two of the world’s longest suspension bridges. According to the table, compared with the Great Belt Bridge in Denmark, the Xihoumen Bridge in China has ______",
+      "stem": "Which choice most effectively uses data from the table to complete the comparison?",
+      "options": [
+        "a shorter main span and opened earlier.",
+        "a longer main span and opened later.",
+        "a longer main span and opened earlier.",
+        "a shorter main span and opened later."
+      ],
+      "answer_letter": "B",
+      "table": {
+        "title": "Two Long-Span Suspension Bridges",
+        "columns": [
+          "Bridge",
+          "Country",
+          "Main span (meters)",
+          "Year opened"
+        ],
+        "rows": [
+          [
+            "Great Belt Bridge",
+            "Denmark",
+            "1,624",
+            "1998"
+          ],
+          [
+            "Xihoumen Bridge",
+            "China",
+            "1,650",
+            "2009"
+          ]
+        ],
+        "note": null
+      },
+      "explanation": "The table shows that the Xihoumen Bridge’s main span, 1,650 meters, is longer than the Great Belt Bridge’s, 1,624 meters, and that the Xihoumen Bridge opened in 2009, later than the Great Belt Bridge, which opened in 1998. Choice B completes the comparison.",
+      "distractors": {
+        "A": {
+          "recipe": "WDIR: both comparisons reversed",
+          "why_wrong": "The Xihoumen Bridge’s span is longer, not shorter, and it opened later, not earlier."
+        },
+        "C": {
+          "recipe": "WDIR: date comparison reversed",
+          "why_wrong": "The Xihoumen Bridge’s span is longer, but it opened in 2009, later than the Great Belt Bridge."
+        },
+        "D": {
+          "recipe": "WDIR: span comparison reversed",
+          "why_wrong": "The Xihoumen Bridge did open later, but its main span is longer than the Great Belt Bridge’s, not shorter."
+        }
+      },
+      "models": [
+        "1.3",
+        "1.9",
+        "1.23"
+      ],
+      "sources": [
+        {
+          "what": "Wikipedia, List of longest suspension bridge spans: Great Belt Bridge, Denmark, main span 1,624 m, opened 1998; Xihoumen Bridge, China, main span 1,650 m, opened 2009",
+          "url": "https://en.wikipedia.org/wiki/List_of_longest_suspension_bridge_spans"
+        }
+      ],
+      "notes": "Easy P3 built as the full 2x2 set of combinations, as in 1.3; the key is a mixed pair (longer but later).",
+      "word_count": 67,
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "command_of_evidence.Q1_P4_trend.easy.w3b4_22",
+      "template": "Q1_P4_trend",
+      "subtype": "Data completion: change over time in one series",
+      "tier": "easy",
+      "band_target": null,
+      "passage": "A country’s fertility rate is the average number of children a woman would have over her lifetime if current birth rates held steady. In the late twentieth and early twenty-first centuries, fertility rates declined in much of South Asia as more children survived infancy, more girls attended school, and family planning services expanded into rural areas. In some countries the decline was especially steep, transforming typical family size within a single generation. For example, the fertility rate in ______",
+      "stem": "Which choice most effectively uses data from the graph to complete the example?",
+      "options": [
+        "Bangladesh fell from more than 6 births per woman in 1980 to about 2 in 2020.",
+        "Sri Lanka dropped from more than 6 births per woman in 1980 to about 2 in 2020.",
+        "Pakistan fell below 3 births per woman by 2010.",
+        "Afghanistan was lower in 2020 than in any other country shown."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": {
+        "kind": "line graph",
+        "title": "Fertility Rate in Four South Asian Countries, 1980–2020",
+        "x_axis": "Year",
+        "y_axis": "Births per woman",
+        "description": "Four lines at 1980, 1990, 2000, 2010 and 2020; y-axis 0 to 8 in steps of 1. Afghanistan: about 7.6, 7.6, 7.6, 6.2, 5.1. Pakistan: about 6.7, 6.4, 5.4, 4.4, 3.8. Bangladesh: about 6.3, 4.5, 3.3, 2.4, 2.2. Sri Lanka: about 3.7, 2.5, 2.2, 2.1, 2.0.",
+        "data": [
+          {
+            "series": "Afghanistan",
+            "points": [
+              [
+                "1980",
+                7.64
+              ],
+              [
+                "1990",
+                7.58
+              ],
+              [
+                "2000",
+                7.57
+              ],
+              [
+                "2010",
+                6.2
+              ],
+              [
+                "2020",
+                5.15
+              ]
+            ]
+          },
+          {
+            "series": "Pakistan",
+            "points": [
+              [
+                "1980",
+                6.73
+              ],
+              [
+                "1990",
+                6.36
+              ],
+              [
+                "2000",
+                5.35
+              ],
+              [
+                "2010",
+                4.4
+              ],
+              [
+                "2020",
+                3.77
+              ]
+            ]
+          },
+          {
+            "series": "Bangladesh",
+            "points": [
+              [
+                "1980",
+                6.33
+              ],
+              [
+                "1990",
+                4.51
+              ],
+              [
+                "2000",
+                3.28
+              ],
+              [
+                "2010",
+                2.38
+              ],
+              [
+                "2020",
+                2.18
+              ]
+            ]
+          },
+          {
+            "series": "Sri Lanka",
+            "points": [
+              [
+                "1980",
+                3.73
+              ],
+              [
+                "1990",
+                2.54
+              ],
+              [
+                "2000",
+                2.21
+              ],
+              [
+                "2010",
+                2.13
+              ],
+              [
+                "2020",
+                2.01
+              ]
+            ]
+          }
+        ]
+      },
+      "explanation": "The example needs a country whose fertility rate fell especially steeply. The graph shows Bangladesh’s rate falling from more than 6 births per woman in 1980 to about 2 in 2020, so choice A completes the example.",
+      "distractors": {
+        "B": {
+          "recipe": "WGRP: another series' values",
+          "why_wrong": "Sri Lanka’s rate was under 4 births per woman in 1980, not more than 6; the drop from above 6 to about 2 belongs to Bangladesh."
+        },
+        "C": {
+          "recipe": "INACC: misread value",
+          "why_wrong": "Pakistan’s rate was still above 4 births per woman in 2010."
+        },
+        "D": {
+          "recipe": "WDIR: reversed extreme",
+          "why_wrong": "Afghanistan’s rate in 2020, about 5 births per woman, was the highest of the four countries shown, not the lowest."
+        }
+      },
+      "models": [
+        "1.6",
+        "1.10"
+      ],
+      "sources": [
+        {
+          "what": "World Bank World Development Indicators via API, total fertility rate (SP.DYN.TFRT.IN), 1980/1990/2000/2010/2020: Afghanistan 7.64/7.58/7.57/6.20/5.15; Pakistan 6.73/6.36/5.35/4.40/3.77; Bangladesh 6.33/4.51/3.28/2.38/2.18; Sri Lanka 3.73/2.54/2.21/2.13/2.01",
+          "url": "https://api.worldbank.org/v2/country/BGD;PAK;AFG;LKA/indicator/SP.DYN.TFRT.IN?date=1980:2020&format=json"
+        }
+      ],
+      "notes": "Easy P4 with short options as in 1.10; B lifts Bangladesh's values for another series, C misreads a point, D reverses an extreme. The causes in the passage (child survival, girls' schooling, family planning) are the standard account and are not tested.",
+      "word_count": 79,
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 20,
+        "fixes": [],
+        "status": "pass"
+      }
+    }
+  ],
+  "done": true
+}

@@ -1,0 +1,1798 @@
+{
+  "skill": "Command of Evidence",
+  "slug": "command_of_evidence",
+  "part": "w4b1",
+  "domain": "Information and Ideas",
+  "plan": {
+    "templates": [
+      {
+        "code": "T1_single",
+        "name": "Hypothetical finding supports or weakens a single claim (causal, comparison, existence, generalization, prediction)"
+      },
+      {
+        "code": "T1_compete",
+        "name": "Hypothetical finding discriminates between competing explanations (support or weaken)"
+      },
+      {
+        "code": "T2_lit_quote",
+        "name": "Quotation from a literary work illustrates a claim (single trait, two-part, contrast)"
+      },
+      {
+        "code": "Q2_P8_multipart",
+        "name": "Data description: multi-part, interaction, or passage-plus-data claim"
+      },
+      {
+        "code": "Q2_P5_control",
+        "name": "Data description: condition vs control or group comparison supports a conclusion"
+      },
+      {
+        "code": "Q1_P5_control",
+        "name": "Data completion: condition vs control"
+      },
+      {
+        "code": "Q1_P3_pairwise",
+        "name": "Data completion: pairwise comparison (one or two comparisons)"
+      },
+      {
+        "code": "Q2_P4_trend",
+        "name": "Data description: trend or change over time supports a conclusion"
+      },
+      {
+        "code": "T3_person_quote",
+        "name": "Quotation from a person (participant, respondent, historian, critic, article) supports or challenges a claim"
+      },
+      {
+        "code": "Q1_P1_lookup",
+        "name": "Data completion: lookup (one cell or bar, reverse lookup, filter)"
+      },
+      {
+        "code": "Q1_P2_extreme",
+        "name": "Data completion: extreme or rank (max/min, possibly after a filter)"
+      }
+    ],
+    "skipped": []
+  },
+  "items": [
+    {
+      "id": "command_of_evidence.T1_single.hard.w4b1_01",
+      "template": "T1_single",
+      "subtype": "Hypothetical finding supports an explanation (the key supplies the premise that comparison needs alternatives)",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "In 2004, economists Tahir Andrabi, Jishnu Das, and Asim Ijaz Khwaja distributed report cards to parents and schools in 56 randomly selected villages in Punjab, Pakistan; each card presented a child’s individual test scores alongside the average scores of every school in the village. A year later, tuition at private schools in those villages had declined by 17 percent and achievement had improved, relative to 56 comparison villages. One might assume that the cards were effective mainly because they informed parents, often for the first time, about their own children’s performance, but the researchers attribute the improvements to the cards’ enabling parents to compare schools with one another.",
+      "stem": "Which finding from Andrabi, Das, and Khwaja’s study, if true, would most directly support the researchers’ explanation of the changes?",
+      "options": [
+        "In the years before the cards were distributed, private school tuition had been rising at about the same rate in the report-card villages as in the comparison villages.",
+        "Among children in the report-card villages, test scores rose the most for those whose cards showed them scoring well below the other children in their school.",
+        "Private schools in the report-card villages lowered their tuition and raised their scores more where families had many schools nearby than where families had few.",
+        "Test scores in the report-card villages rose by roughly similar amounts at public schools, which charge little or nothing, and at private schools."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The researchers attribute the improvements to “the cards’ enabling parents to compare schools with one another.” Comparing schools can matter only when parents have other schools to choose, so if comparison drove the changes, they should be larger where families had many schools nearby than where they had few. Choice C reports exactly that pattern, which the rival idea (the cards simply informing parents about their own children’s performance) does not predict.",
+      "distractors": {
+        "A": {
+          "recipe": "TRAP: affects both explanations equally (similar trends before the cards)",
+          "why_wrong": "Similar tuition trends before the cards show only that the two sets of villages were alike beforehand. That makes the cards a likely cause of the changes, but it does not show whether the cards worked by letting parents compare schools or by telling parents about their own children."
+        },
+        "B": {
+          "recipe": "OPP: fits the rival explanation",
+          "why_wrong": "Gains concentrated among children whose own scores were low fit the idea that parents reacted to news about their own children, not to comparisons between schools."
+        },
+        "D": {
+          "recipe": "TRAP: consistent with both explanations",
+          "why_wrong": "Similar gains in public and private schools could arise whether parents compared schools or simply learned about their own children, so this finding does not tell the explanations apart."
+        }
+      },
+      "models": [
+        "3.28",
+        "3.39",
+        "3.36",
+        "3.42"
+      ],
+      "sources": [
+        {
+          "what": "J-PAL evaluation summary of Andrabi, Das and Khwaja (AER 2017): 112 villages in Punjab, Pakistan, 56 randomly assigned to receive report cards with child and school scores (September 2004); private fees fell 17 percent, scores rose 0.11 SD; changes in private school scores and fees larger in villages with more school competition; AER abstract: information provision facilitates better comparisons across providers",
+          "url": "https://www.povertyactionlab.org/evaluation/report-cards-impact-providing-school-and-child-test-scores-educational-markets-pakistan"
+        },
+        {
+          "what": "Andrabi, Das and Khwaja 2017, American Economic Review 107(6): 1535-63 (abstract): report cards raised test scores 0.11 SD, cut private school fees 17 percent; information provision facilitates better comparisons across providers",
+          "url": "https://www.aeaweb.org/articles?id=10.1257/aer.20140774"
+        }
+      ],
+      "notes": "Band-7 moves: the key supplies the unstated premise (comparison matters only where families have alternatives); stem names the study and claimant. A TRAP (pre-card tuition trend, bears on both), B fits the rival (child-level news), D TRAP (consistent with both). Key matches the study's real result. AER abstract: https://www.aeaweb.org/articles?id=10.1257/aer.20140774 Review: A was the negation of the key (the same school-count variable, no difference), a mirror that gave the key away; replaced with a TRAP (similar tuition trends before the cards, which bears on both explanations equally).",
+      "word_count": 108,
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [
+          "option A (no difference between one-school and several-school villages) was the exact negation of the key, a mirror that left only A or C; replaced with a TRAP on pre-card tuition trends that bears on both explanations",
+          "added the AER abstract (states that information facilitates comparisons across providers) to sources"
+        ],
+        "status": "fixed",
+        "facts_note": "J-PAL summary and AER abstract: 2004 report cards in 56 of 112 Punjab villages, fees down 17 percent, scores up, comparisons across providers; larger changes where competition was greater."
+      },
+      "band7": {
+        "verdict": "band 7",
+        "why": "Passage 108 words, stem names the study and the researchers. The key supplies the unstated premise that comparison matters only where families have other schools to choose; B is OPP (fits the own-child rival), A and D are TRAPs (pre-card trends and public-private parity bear on both explanations). The mirror option was removed."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "C",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 7
+    },
+    {
+      "id": "command_of_evidence.T1_single.hard.w4b1_02",
+      "template": "T1_single",
+      "subtype": "Hypothetical finding supports an attribution against a rival (the key supplies an unfertilized comparison group)",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "Nitrogen occurs in two stable isotopes, and their ratio in a plant’s tissues, expressed as a δ15N value, reflects the sources of the nitrogen the plant absorbed. Analyzing exceptionally well-preserved crop remains excavated at sites in northern Chile’s Atacama Desert, Francisca Santana-Sagredo and colleagues found that crop δ15N values rose sharply from around 1000 CE, with maize reaching values exceeding any previously recorded for archaeological plants. Because arid conditions can also elevate δ15N values in vegetation, the increase might be credited to the desert’s extreme aridity, but the researchers attribute it to agricultural fertilization with seabird guano, a nitrogen-rich deposit gathered on the Pacific coast.",
+      "stem": "Which finding, if true, would most directly support Santana-Sagredo and colleagues’ explanation for the high δ15N values of the crops?",
+      "options": [
+        "Wild plants that grew in the same valleys during the same centuries had δ15N values far below those of the maize.",
+        "The sharpest increases in the crops’ δ15N values occurred during centuries in which the region’s already scarce rainfall declined even further.",
+        "Human bones from the sites show δ15N values rising from around 1000 CE, much as the δ15N values of the crops grown in the nearby fields did at that time.",
+        "After about 1000 CE, maize made up a larger share of the diet of people living at the sites than it had in earlier centuries."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The researchers credit the high values to “seabird guano” rather than to “the desert’s extreme aridity.” Wild plants growing in the same valleys at the same time experienced the same dry conditions but would not have been fertilized, so if their values were far lower than the maize’s, aridity cannot account for the maize’s values, while fertilizer applied only to fields can. Choice A therefore supports the researchers’ explanation.",
+      "distractors": {
+        "B": {
+          "recipe": "OPP: the rival's prediction",
+          "why_wrong": "A rise in δ15N values that tracks falling rainfall is what the aridity explanation predicts, so it supports the rival rather than the guano explanation."
+        },
+        "C": {
+          "recipe": "TRAP: consistent with both explanations",
+          "why_wrong": "People who ate the crops would show higher values whatever made the crops’ values rise, so a parallel rise in human bones cannot tell guano apart from aridity."
+        },
+        "D": {
+          "recipe": "OFF: a different variable",
+          "why_wrong": "How much maize people ate says nothing about why the maize itself had such high δ15N values."
+        }
+      },
+      "models": [
+        "3.28",
+        "3.45",
+        "3.47",
+        "3.36"
+      ],
+      "sources": [
+        {
+          "what": "Santana-Sagredo, Schulting, Méndez-Quiros et al. 2021, Nature Plants 7: 152-158 (abstract): dramatic increase in crop d15N from around AD 1000 at Atacama sites, maize up to +30 per mil, the highest in the world for archaeological plants, human bone collagen following a similar trend; shift attributed to fertilizing crops with seabird guano",
+          "url": "https://pubmed.ncbi.nlm.nih.gov/33495555/"
+        }
+      ],
+      "notes": "Band-7 moves: the key brings in a comparison group the passage never mentions (unfertilized wild plants under the same aridity), which rules out the rival; stem names the claimant. B OPP (rival's prediction), C TRAP (consistent with both; the real human-bone trend), D OFF (the real rise in maize consumption). Aridity raising plant d15N is general background (Amundson et al. 2003), stated as a possibility the passage sets aside. Review: cut \"which no one would have fertilized\" from the key, which supplied the inference (wild plants share the aridity but not the fertilizer) the student should make.",
+      "word_count": 105,
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [
+          "cut \"which no one would have fertilized\" from the key so the student must supply the control-group logic"
+        ],
+        "status": "fixed",
+        "facts_note": "PubMed abstract: crop d15N rose from about AD 1000, maize highest for archaeological plants, attributed to seabird guano."
+      },
+      "band7": {
+        "verdict": "band 7",
+        "why": "Passage 105 words, stem names the claimant. The key brings in a comparison group the passage never mentions (wild plants under the same aridity, unfertilized), and with the giveaway clause cut the student must see why it rules out aridity. B OPP (rival prediction), C TRAP (human bones rise either way), D OFF."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "A",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 7
+    },
+    {
+      "id": "command_of_evidence.T1_single.hard.w4b1_03",
+      "template": "T1_single",
+      "subtype": "Hypothetical finding supports a causal claim (adaptation to local drying; the key ties the timing to the site itself)",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Khirsara, a settlement of the Indus (Harappan) civilization in what is now Gujarat, India, was inhabited for centuries before being abandoned late in the Harappan period. Examining carbonized grains and seeds recovered there, Anil K. Pokharia and colleagues found that around 4,200 years ago, the inhabitants’ crops shifted from mostly barley and wheat to mostly millets, which tolerate drought considerably better. Climate records from lakes and caves elsewhere in the region indicate that monsoon rainfall weakened abruptly at about that time, and the researchers argue that Khirsara’s farmers deliberately changed crops in response to drier conditions at the site.",
+      "stem": "Which finding, if true, would most directly support the researchers’ argument?",
+      "options": [
+        "Pottery and buildings at Khirsara indicate that people went on living there after 4,200 years ago, though with far fewer signs of wealth than before.",
+        "Climate records from lakes and caves in several more distant parts of South Asia also show the monsoon rainfall weakening abruptly around 4,200 years ago.",
+        "Harappan settlements in areas where the monsoon weakened only slightly also began growing more millets at about the same time as Khirsara did.",
+        "Carbon isotopes in Khirsara’s soil show wild vegetation around the site shifting toward low-rainfall species just as millets replaced barley and wheat."
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The researchers argue that farmers changed crops “in response to drier conditions at the site,” but the climate records come from “lakes and caves elsewhere in the region.” Evidence from Khirsara’s own soil that the wild vegetation around the site shifted toward species suited to low rainfall just as the crops changed would show that the site itself was drying when the farmers switched, which is what choice D reports.",
+      "distractors": {
+        "A": {
+          "recipe": "OFF: true of the period, but about a different question",
+          "why_wrong": "Continued settlement with less wealth says what happened after the shift, not whether the shift was a response to drier conditions."
+        },
+        "B": {
+          "recipe": "GEN: more of the regional evidence the passage already gives",
+          "why_wrong": "More records from other places strengthen the case that the monsoon weakened across a wide area, but like the records in the passage they come from elsewhere, so they do not show that conditions at Khirsara itself became drier when its farmers changed crops."
+        },
+        "C": {
+          "recipe": "OPP: same change where the cause was weak",
+          "why_wrong": "If settlements that saw little drying made the same switch at the same time, the shift looks like a broader trend rather than a response to drier conditions at Khirsara."
+        }
+      },
+      "models": [
+        "3.25",
+        "3.31",
+        "3.7",
+        "3.12"
+      ],
+      "sources": [
+        {
+          "what": "Pokharia, Agnihotri, Sharma et al. 2017, PLoS ONE 12(10): e0185684 (abstract): at Khirsara, Gujarat, a significant change from barley-wheat agriculture to drought-resistant millets at about 4,200 yrs BP, based on macrobotanical remains and soil organic matter carbon isotopes; the crop change appears intentional, an adaptation to deteriorated monsoon conditions; habitation continued with declined prosperity, then abandonment",
+          "url": "https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0185684"
+        }
+      ],
+      "notes": "Band 6. Two steps: the regional records come from elsewhere, so the argument needs evidence of drying at Khirsara itself, timed to the crop shift (the study's soil carbon isotopes). A is the real continuation-with-decline finding (OFF), B wrong time window, C same change without the cause. Review: old B (millets replaced barley and wheat centuries before the drying) contradicted the passage, which dates both changes to about 4,200 years ago, so one stated fact killed it; replaced with true-but-insufficient regional evidence.",
+      "word_count": 99,
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [
+          "option B contradicted the passage (both changes dated to about 4,200 years ago) and fell to one stated fact; replaced with true-but-insufficient regional climate evidence (GEN)"
+        ],
+        "status": "fixed",
+        "facts_note": "PLoS ONE abstract: shift from barley-wheat to millets at about 4,200 yrs BP, intentional adaptation to weaker monsoon; soil carbon isotopes."
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "Two linked steps: the regional records come from elsewhere, so the argument needs drying at the site timed to the switch. Wrong options are now partly right (B more regional evidence, C same switch where drying was slight) except A (OFF)."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "D",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "command_of_evidence.T1_compete.hard.w4b1_04",
+      "template": "T1_compete",
+      "subtype": "Hypothetical finding weakens one of two explanations (development vs evolution; common-garden key)",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "In Puerto Rico, the lizard Anolis cristatellus inhabits both forests and cities, where it spends much of its time on walls, fences, and other artificial surfaces considerably broader than forest branches. Biologist Kristin Winchell and colleagues found that urban lizards have longer limbs relative to their body size, as well as more lamellae (adhesive scales on the undersides of the toes), than lizards from nearby forests have. These differences might reflect evolutionary adaptation, with natural selection favoring such traits in urban environments. Alternatively, they might be developmental: each lizard’s limbs and toes might simply grow differently depending on the surfaces it climbs as it matures.",
+      "stem": "Which finding, if true, would most directly weaken the developmental explanation for the differences that Winchell and colleagues observed?",
+      "options": [
+        "Forest lizards that were kept as juveniles on broad, flat surfaces in a laboratory grew longer limbs than did forest lizards of the same age kept on narrow perches.",
+        "Lizards hatched in a laboratory from urban and forest parents and then raised on identical perches differed in the same ways that wild urban and forest lizards do.",
+        "Among the urban lizards, the individuals that were most often seen perching on walls tended to have the longest limbs relative to their body size.",
+        "Forest lizards that were moved as adults to urban sites, where they climbed mostly on walls and fences, did not go on to develop longer limbs or more lamellae."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The developmental explanation says that the traits arise because each lizard’s “limbs and toes might simply grow differently depending on the surfaces it climbs as it matures.” If lizards from urban and forest parents still differed after growing up on identical perches, the surfaces they climbed could not be the cause, so the differences must have been inherited. Choice B therefore weakens the developmental explanation.",
+      "distractors": {
+        "A": {
+          "recipe": "OPP: supports the rival explanation",
+          "why_wrong": "Longer limbs on lizards raised on broad surfaces would show that climbing surfaces can shape limb growth, which supports the developmental explanation instead of weakening it."
+        },
+        "C": {
+          "recipe": "TRAP: consistent with both explanations",
+          "why_wrong": "A link between perching on walls and limb length is expected whether wall-climbing shapes growth or selection favors long-limbed wall climbers, so it cannot weaken either view."
+        },
+        "D": {
+          "recipe": "TRAP: consistent with both explanations (adults have finished growing)",
+          "why_wrong": "The developmental explanation is about how limbs and toes grow “as it matures,” so lizards moved as adults, after they had finished growing, would keep their forest traits under either explanation; this finding cannot weaken the developmental one."
+        }
+      },
+      "models": [
+        "3.9",
+        "3.14",
+        "3.48",
+        "3.15"
+      ],
+      "sources": [
+        {
+          "what": "Winchell, Reynolds, Prado-Irwin, Puente-Rolón and Revell 2016, Evolution 70: 1009-1022 (abstract): urban A. cristatellus in three Puerto Rican municipalities use broader artificial substrates, have longer limbs relative to body size and more lamellae than forest lizards; a common-garden rearing experiment suggests the differences may be genetically based",
+          "url": "https://pubmed.ncbi.nlm.nih.gov/27074746/"
+        }
+      ],
+      "notes": "Band-7 moves: two named explanations, weaken polarity, key is the common-garden result (matches the study); A OPP fits the rival, C TRAP consistent with both, D TRAP (adults moved to urban sites keep forest traits, predicted by both because development happens \"as it matures\"). Rival explanation is stated as a possibility, not attributed.",
+      "word_count": 105,
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [
+          "option D (activity timing, OFF) replaced with a TRAP: forest lizards moved as adults do not change, which both explanations predict because development happens \"as it matures\""
+        ],
+        "status": "fixed",
+        "facts_note": "PubMed abstract: urban lizards use broader artificial substrates, longer limbs and more lamellae; common garden suggests a genetic basis."
+      },
+      "band7": {
+        "verdict": "band 7",
+        "why": "Two named explanations, weaken polarity, passage 105 words. Discrimination: development predicts no difference after identical rearing, adaptation predicts it persists, so B splits them; A fits development (OPP); C and D fit both (D is rejected only by the passage's \"as it matures\")."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "B",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 7
+    },
+    {
+      "id": "command_of_evidence.T2_lit_quote.hard.w4b1_05",
+      "template": "T2_lit_quote",
+      "subtype": "Literary quotation illustrates a two-part claim (duty and pain; translated drama)",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Minna von Barnhelm is a 1767 play by Gotthold Ephraim Lessing, translated by Ernest Bell. Major von Tellheim, a discharged Prussian officer whose integrity has been questioned, suggests that he is obligated to give up Minna, his betrothed, and that doing so causes him considerable anguish: ______",
+      "stem": "Which quotation from a translation of Minna von Barnhelm most effectively illustrates the claim?",
+      "options": [
+        "“Right; the wretched must love nothing. He merits his misfortunes, if he cannot achieve this victory over himself—if he can allow the woman he loves to take part in his misfortune... Oh! how difficult is this victory!”",
+        "“You have, on my account, lost much in the eyes of the world, but not in mine. In my eyes you have gained beyond measure by this loss. It was too sudden. You feared it might make an unfavourable impression on me.”",
+        "“Oh! Minna, what justice! what clemency! This is more than I expected; more than I deserved!—My fortune, my honour, all is reestablished!—Do I dream?”",
+        "“This Tellheim I am now, as little as I am my own father. They both have been. Now I am Tellheim the discharged, the suspected, the cripple, the beggar. To the former, Madam, you promised your hand; do you wish to keep your word?”"
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The claim has two parts: Tellheim feels obligated to give Minna up, and doing so causes him anguish. In choice A he says that “the wretched must love nothing” and that a man in misfortune must not let “the woman he loves” share it, which expresses the obligation, and he then cries, “Oh! how difficult is this victory!”, which shows the anguish.",
+      "distractors": {
+        "B": {
+          "recipe": "OPP: the opposite stance",
+          "why_wrong": "Here Tellheim praises Minna for a loss she has suffered and, far from giving her up, shows that his affection has only grown."
+        },
+        "C": {
+          "recipe": "OFF: nearby emotion (joy at his restored honor)",
+          "why_wrong": "Tellheim rejoices that his fortune and honor are restored; he says nothing about having to give Minna up."
+        },
+        "D": {
+          "recipe": "HALF: describes his fallen state, not a painful duty",
+          "why_wrong": "Tellheim lists what he has become and asks whether Minna will keep her promise, but he neither says that he must give her up nor shows that doing so pains him."
+        }
+      },
+      "models": [
+        "3.17",
+        "3.37",
+        "3.34",
+        "3.11"
+      ],
+      "sources": [
+        {
+          "what": "Lessing, Minna von Barnhelm, or, The Soldier's Fortune, translated by Ernest Bell (Harvard Classics text), Project Gutenberg ebook 2663; all four quotations checked as exact substrings (double hyphens rendered as em dashes); A and D from Act II, B and C from Act V",
+          "url": "https://www.gutenberg.org/ebooks/2663"
+        }
+      ],
+      "notes": "Band 6. Two-part claim (obligation plus pain); D is the nearest half-match (his fallen state and Minna's promise), B the opposite stance, C a nearby emotion. Play premiered 1767.",
+      "word_count": 47,
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [],
+        "status": "pass",
+        "facts_note": "All four quotations verbatim in Gutenberg 2663 (Bell); all spoken by Tellheim. Accepted trim: B ends at a semicolon in the source, given a period."
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "Translated 18th-century drama, two-part claim (duty and pain); D is a close half-match (his fall and Minna's promise), C a nearby emotion, B the opposite stance. Strong band 6, not 7: the key states both parts fairly openly."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "A",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "command_of_evidence.Q2_P8_multipart.hard.w4b1_06",
+      "template": "Q2_P8_multipart",
+      "subtype": "Data description (two-part claim: a change in one measure and no change in another, for the right pair of conditions)",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Although cultivated strawberries can fertilize their own flowers, the source of the pollen that reaches a flower may still influence the resulting fruit. Working with the strawberry cultivar Redlands Joy under controlled growing conditions, Cao Dinh Dung and colleagues hand-pollinated flowers with pollen from Redlands Joy itself, from Sugarbaby (a small-fruited cultivar), or from Rubygem (a large-fruited cultivar), leaving other plants to pollinate themselves unassisted. The researchers concluded that pollen from another cultivar made the fruit noticeably less acidic than Redlands Joy pollen did but, even when it came from a large-fruited cultivar, did not make the fruit any heavier.",
+      "stem": "Which choice best describes data from the table that support the researchers’ conclusion?",
+      "options": [
+        "Fruit from flowers given Sugarbaby pollen had a lower acid concentration and a higher sugar-to-acid ratio than fruit from any of the other three groups of flowers.",
+        "Fruit from flowers given Redlands Joy pollen had a lower acid concentration than fruit from plants left to pollinate themselves (0.93% versus 0.82%).",
+        "Fruit from flowers given Rubygem pollen weighed more, on average, than fruit from flowers given Sugarbaby pollen and had a higher acid concentration.",
+        "Fruit from flowers given Rubygem pollen weighed about as much as fruit from Redlands Joy pollen but had a lower acid concentration (0.69% versus 0.93%)."
+      ],
+      "answer_letter": "D",
+      "table": {
+        "title": "Redlands Joy Strawberry Fruit, by Source of Pollen",
+        "columns": [
+          "Source of pollen",
+          "Average mass of fruit (grams)",
+          "Acid concentration (%)",
+          "Sugar-to-acid ratio"
+        ],
+        "rows": [
+          [
+            "None added (unassisted)",
+            "9.65",
+            "0.82",
+            "9.0"
+          ],
+          [
+            "Redlands Joy",
+            "10.07",
+            "0.93",
+            "7.8"
+          ],
+          [
+            "Sugarbaby",
+            "9.64",
+            "0.61",
+            "12.3"
+          ],
+          [
+            "Rubygem",
+            "10.04",
+            "0.69",
+            "11.1"
+          ]
+        ],
+        "note": null
+      },
+      "figure": null,
+      "explanation": "The conclusion has two parts: another cultivar’s pollen made the fruit less acidic than Redlands Joy pollen did, and it did not make the fruit heavier “even when it came from a large-fruited cultivar.” Choice D addresses both parts for the large-fruited cultivar: Rubygem-pollinated fruit weighed about as much as Redlands Joy-pollinated fruit (10.04 versus 10.07 grams) but had a lower acid concentration (0.69% versus 0.93%).",
+      "distractors": {
+        "A": {
+          "recipe": "HALF: accurate, but only the acidity part",
+          "why_wrong": "This is accurate, but it says nothing about fruit mass, so it does not show that pollen from a large-fruited cultivar failed to make the fruit heavier."
+        },
+        "B": {
+          "recipe": "INACC: reversed comparison",
+          "why_wrong": "Fruit from Redlands Joy pollen had a higher acid concentration (0.93%) than fruit from unassisted plants (0.82%), not a lower one."
+        },
+        "C": {
+          "recipe": "CONTRA / wrong pair: accurate, but compares two cross-pollinated groups",
+          "why_wrong": "This is accurate (10.04 versus 9.64 grams; 0.69% versus 0.61%), but it compares the two cross-pollinated groups with each other rather than with Redlands Joy pollen, and the heavier Rubygem fruit, taken alone, would seem to point away from the conclusion."
+        }
+      },
+      "models": [
+        "3.18",
+        "3.26",
+        "3.2",
+        "3.16"
+      ],
+      "sources": [
+        {
+          "what": "Dung, Wallace, Bai, Ogbourne and Trueman 2021, PLoS ONE 16(9): e0256964: Redlands Joy under controlled conditions, autogamy, self, Sugarbaby (small-fruited) or Rubygem (large-fruited) pollen; Table 1 fresh mass 9.65, 10.07, 9.64, 10.04 g (no significant difference); acid 0.82%, 0.93%, 0.61%, 0.69%; Brix:acid 9.0, 7.8, 12.3, 11.1; abstract: cross-pollination did not affect fruit mass but lowered acidity 26-34%",
+          "url": "https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0256964"
+        }
+      ],
+      "notes": "Band 6. 'Brix:acid ratio' shown as 'Sugar-to-acid ratio' (soluble solids are mostly sugars). Steps: find the Rubygem and Redlands Joy rows, compare both columns. B is false (reversed); A and C are accurate but insufficient.",
+      "word_count": 100,
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 5,
+        "fixes": [],
+        "status": "pass",
+        "facts_note": "Table 1 and results text match (mass 9.65/10.07/9.64/10.04 g; acid 0.82/0.93/0.61/0.69 percent; Brix:acid 9.0/7.8/12.3/11.1)."
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "Two-part conclusion needs the right pair of rows on two columns; A and C are accurate but insufficient, B reversed."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "D",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "command_of_evidence.Q2_P5_control.hard.w4b1_07",
+      "template": "Q2_P5_control",
+      "subtype": "Data description (pretest and a water control group; the right pair at the right time supports a conclusion)",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "Anopheles gambiae mosquitoes, the main carriers of malaria in Africa, find people largely by the odors their bodies give off. In a study in Burkina Faso, Thierry Lefèvre and colleagues released mosquitoes into a Y-shaped tube that carried a volunteer’s odor down one arm and outdoor air down the other, recording the percentage of mosquitoes that flew upwind (activation) and the percentage of those flying mosquitoes that chose the volunteer’s arm (orientation). Each volunteer was tested, drank a liter of either water or dolo, a local sorghum beer, and was tested again fifteen minutes later; the researchers concluded that drinking beer made the volunteers more attractive to the mosquitoes.",
+      "stem": "Which choice best describes data from the graph that support the researchers’ conclusion?",
+      "options": [
+        "After drinking, volunteers in both groups drew a higher percentage of the flying mosquitoes toward their odor than they had before drinking, though the increase was greater for volunteers who drank beer.",
+        "Before drinking anything, the volunteers who would go on to drink beer and the volunteers who would go on to drink water activated nearly the same percentage of the mosquitoes, about 35% and 37%, respectively.",
+        "Activation and orientation were both higher after volunteers drank beer than before they drank it, whereas after volunteers drank water, activation was nearly unchanged and orientation was slightly lower.",
+        "After the volunteers drank beer, their odor activated about 47% of the released mosquitoes, and about 65% of the mosquitoes that took flight flew toward the volunteers’ odor rather than toward the outdoor air."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": {
+        "kind": "bar graph",
+        "title": "Mosquito Responses to Volunteers’ Odor",
+        "x_axis": "Test",
+        "y_axis": "Percentage of mosquitoes",
+        "description": "Grouped bar graph, two bars per test (activation, orientation); y-axis 0 to 70 percent in steps of 10. Before beer: activation 35, orientation 50. After beer: activation 47, orientation 65. Before water: activation 37, orientation 53. After water: activation 38, orientation 47.",
+        "data": [
+          {
+            "series": "Activation",
+            "points": [
+              [
+                "Before beer",
+                35
+              ],
+              [
+                "After beer",
+                47
+              ],
+              [
+                "Before water",
+                37
+              ],
+              [
+                "After water",
+                38
+              ]
+            ]
+          },
+          {
+            "series": "Orientation",
+            "points": [
+              [
+                "Before beer",
+                50
+              ],
+              [
+                "After beer",
+                65
+              ],
+              [
+                "Before water",
+                53
+              ],
+              [
+                "After water",
+                47
+              ]
+            ]
+          }
+        ]
+      },
+      "explanation": "The researchers concluded that “drinking beer made the volunteers more attractive to the mosquitoes.” Because each volunteer was “tested again fifteen minutes later,” a rise could come from the second test or from drinking anything, so the beer group’s change must be set against the water group’s. Choice C does this: activation rose from 35% to 47% and orientation from 50% to 65% after beer, while after water activation went only from 37% to 38% and orientation fell from 53% to 47%.",
+      "distractors": {
+        "A": {
+          "recipe": "INACC: false reading of the control group",
+          "why_wrong": "Orientation in the water group fell after drinking (53% to 47%), so it is not true that volunteers in both groups drew a higher percentage of flying mosquitoes toward their odor."
+        },
+        "B": {
+          "recipe": "IRREL: accurate baseline comparison",
+          "why_wrong": "The values are accurate, but they come from tests taken before anyone drank, so they show only that the two groups started out alike, not that beer changed anything."
+        },
+        "D": {
+          "recipe": "PART: one condition with no comparison",
+          "why_wrong": "The after-beer values are accurate, but without the volunteers’ own before-drinking values or the water group’s results, they cannot show that beer increased attractiveness."
+        }
+      },
+      "models": [
+        "3.43",
+        "3.5",
+        "3.1"
+      ],
+      "sources": [
+        {
+          "what": "Lefèvre, Gouagna, Dabiré et al. 2010, PLoS ONE 5(3): e9546: Y-tube olfactometer, volunteer odor vs outdoor air, tested before and 15 min after one litre of dolo or water; activation BB 35%, AB 47%, BW 37%, AW 38%; orientation BB 50%, BW 53%, AW 47%, AB 65%; beer increased attractiveness, water had no effect",
+          "url": "https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0009546"
+        }
+      ],
+      "notes": "Band-7 moves: design wrinkle (a pretest plus a water control), so the right comparison is a difference of differences; distractors are an accurate baseline comparison (IRREL), accurate after-beer values with no comparison (PART) and a false reading of the control (INACC). Values are the paper's reported percentages. Steps: read four bars per measure, compare within each group, then across groups. Topic fame weighed: the study drew popular coverage in 2010, but it is unused in the bank and the item turns on the before/after and water-control design, not on the headline.",
+      "word_count": 109,
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [],
+        "status": "pass",
+        "facts_note": "Abstract and figure values confirmed (beer raised activation and orientation; water had no effect). Fame weighed: the 2010 beer finding got popular press, but the item is solved from the before/after and water-control bars, not the headline; kept."
+      },
+      "band7": {
+        "verdict": "band 7",
+        "why": "Design wrinkle (pretest plus a water control) makes the key a difference of differences over eight bars; B accurate baseline (IRREL), D accurate after-beer values with no comparison (PART), A false only on the water group's orientation, which needs the passage's definition of orientation. Passage 109 words."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "C",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 7
+    },
+    {
+      "id": "command_of_evidence.Q1_P5_control.hard.w4b1_08",
+      "template": "Q1_P5_control",
+      "subtype": "Data completion (four instruction conditions; the comparison the hypothesis names, across every measure)",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "The technological hypothesis holds that early humans first developed a language of gestures to pass on the skill of making stone tools and that speech emerged later, partly because it was a better way of teaching that skill. To test this idea, Dana Michelle Cataldo, Andrea Bamberg Migliano, and Lucio Vinicius had inexperienced participants attempt to knap flint (strike stones to detach sharp, usable flakes) after an instructor had demonstrated the technique by gesture alone, by speech alone, or by both, while a fourth group received no instruction. The results challenge the hypothesis: on average, participants taught by speech alone ______",
+      "stem": "Which choice most effectively uses data from the table to complete the statement?",
+      "options": [
+        "produced fewer viable flakes and less total cutting edge than participants taught by both gesture and speech did, but a higher proportion of viable flakes than those participants did.",
+        "scored lower on each of the three measures of performance than participants who had been taught by gesture alone did.",
+        "produced a higher proportion of viable flakes than participants who received no instruction did, though fewer viable flakes in total.",
+        "produced more viable flakes than participants taught by gesture alone did, though fewer viable flakes than participants taught by both gesture and speech did."
+      ],
+      "answer_letter": "B",
+      "table": {
+        "title": "Average Flintknapping Performance by Type of Instruction",
+        "columns": [
+          "Type of instruction",
+          "Number of viable flakes",
+          "Proportion of flakes that were viable",
+          "Total cutting edge of flakes (mm)"
+        ],
+        "rows": [
+          [
+            "No instruction",
+            "4.3",
+            "0.15",
+            "18.8"
+          ],
+          [
+            "Gesture only",
+            "5.8",
+            "0.27",
+            "24.7"
+          ],
+          [
+            "Speech only",
+            "3.3",
+            "0.19",
+            "18.6"
+          ],
+          [
+            "Gesture and speech",
+            "5.6",
+            "0.30",
+            "28.7"
+          ]
+        ],
+        "note": null
+      },
+      "figure": null,
+      "explanation": "The hypothesis holds that speech arose partly because it “was a better way of teaching that skill” than the gestures that came before it, so the results challenge it if speech alone taught less well than gesture alone. The table shows that participants taught by speech alone produced fewer viable flakes (3.3 versus 5.8), a smaller proportion of viable flakes (0.19 versus 0.27), and less cutting edge (18.6 versus 24.7 mm) than those taught by gesture alone, which is what choice B states.",
+      "distractors": {
+        "A": {
+          "recipe": "INACC: compound with one false clause",
+          "why_wrong": "The speech-only group did produce fewer viable flakes and less cutting edge than the gesture-and-speech group, but its proportion of viable flakes (0.19) was lower, not higher, than that group’s (0.30)."
+        },
+        "C": {
+          "recipe": "CONTRA: accurate, but points away from the claim",
+          "why_wrong": "This is accurate (0.19 versus 0.15, and 3.3 versus 4.3 flakes), but it compares speech with no instruction rather than with gesture, so it does not challenge the idea that speech was a better teaching aid than gesture."
+        },
+        "D": {
+          "recipe": "WDIR: reversed comparison",
+          "why_wrong": "Participants taught by speech alone produced fewer viable flakes (3.3) than those taught by gesture alone (5.8), not more."
+        }
+      },
+      "models": [
+        "3.38",
+        "3.46",
+        "3.4"
+      ],
+      "sources": [
+        {
+          "what": "Cataldo, Migliano and Vinicius 2018, PLoS ONE 13(1): e0191071, Table 1 means: viable flakes none 4.3, gesture 5.8, speech 3.3, full language 5.6; proportion viable 0.15, 0.27, 0.19, 0.30; total cutting edge 18.8, 24.7, 18.6, 28.7 mm; abstract: speech alone underperforms gesture alone or gesture plus speech, contrary to the technological hypothesis",
+          "url": "https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0191071"
+        }
+      ],
+      "notes": "Band 6. Steps: identify that the hypothesis credits speech with being a better teaching aid than gesture, then check the speech-only row against the gesture-only row on all three columns. 'Full language' relabelled 'Gesture and speech'. Total flake quality column left out.",
+      "word_count": 101,
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [],
+        "status": "pass",
+        "facts_note": "Table 1 means and abstract confirmed (speech alone underperforms gesture alone and gesture plus speech)."
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "Student must see that the hypothesis credits speech over gesture, then check three columns; A is a compound with one false clause, C an accurate wrong comparison."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "B",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "command_of_evidence.Q1_P3_pairwise.hard.w4b1_09",
+      "template": "Q1_P3_pairwise",
+      "subtype": "Data completion (pairwise comparison against the reference group the claim names)",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Parks, golf courses, and other urban open spaces are frequently promoted as refuges for wildlife in metropolitan areas, and they could be particularly valuable for amphibians such as frogs and toads, which seldom disperse far from the wetlands where they breed. In 2018, ecologists David Hutto Jr. and Kyle Barrett surveyed 51 wetlands in South Carolina’s Piedmont region—roughly a third located in urban open spaces, a third in areas of low urbanization, and a third in areas of high urbanization—documenting which species occupied each. Their observations suggest that urban open spaces did not make wetlands any more hospitable for these amphibians than wetlands in highly urbanized areas were: for example, the ______",
+      "stem": "Which choice most effectively uses data from the table to complete the example?",
+      "options": [
+        "eastern narrow-mouthed toad was detected at a slightly larger percentage of wetlands in urban open spaces than of wetlands in areas of low urbanization.",
+        "spring peeper was detected at a smaller percentage of wetlands in areas of high urbanization than of wetlands in urban open spaces.",
+        "American bullfrog was detected at 75% of wetlands in urban open spaces but at only 63% of wetlands in areas of high urbanization.",
+        "gray treefrog was detected at 81% of wetlands in areas of high urbanization but at only 37% of wetlands in urban open spaces."
+      ],
+      "answer_letter": "D",
+      "table": {
+        "title": "Percentage of Surveyed Wetlands Where Each Species Was Detected",
+        "columns": [
+          "Species",
+          "Low urbanization",
+          "High urbanization",
+          "Urban open space"
+        ],
+        "rows": [
+          [
+            "Northern cricket frog",
+            "69%",
+            "44%",
+            "37%"
+          ],
+          [
+            "Eastern narrow-mouthed toad",
+            "19%",
+            "38%",
+            "21%"
+          ],
+          [
+            "Gray treefrog",
+            "81%",
+            "81%",
+            "37%"
+          ],
+          [
+            "American bullfrog",
+            "75%",
+            "75%",
+            "63%"
+          ],
+          [
+            "Spring peeper",
+            "88%",
+            "63%",
+            "32%"
+          ]
+        ],
+        "note": null
+      },
+      "figure": null,
+      "explanation": "The text claims that urban open spaces “did not make wetlands any more hospitable for these amphibians than wetlands in highly urbanized areas were,” so the example must compare urban open spaces with areas of high urbanization and show no advantage for the open spaces. The table shows the gray treefrog at 81% of high-urbanization wetlands but only 37% of urban open space wetlands, which is what choice D states.",
+      "distractors": {
+        "A": {
+          "recipe": "CONTRA / wrong comparison: accurate, but against low urbanization and favoring open spaces",
+          "why_wrong": "The values are accurate (21% versus 19%), but the claim is about highly urbanized areas, and this comparison shows urban open spaces doing slightly better, not worse."
+        },
+        "B": {
+          "recipe": "WDIR: reversed comparison",
+          "why_wrong": "The spring peeper was detected at a larger percentage of high-urbanization wetlands (63%) than of urban open space wetlands (32%), not a smaller one."
+        },
+        "C": {
+          "recipe": "INACC: misplaced values",
+          "why_wrong": "The bullfrog values are swapped: it was detected at 75% of high-urbanization wetlands and 63% of urban open space wetlands."
+        }
+      },
+      "models": [
+        "3.29",
+        "3.30"
+      ],
+      "sources": [
+        {
+          "what": "Hutto and Barrett 2021, PLoS ONE 16(1): e0244932: 51 wetlands in the South Carolina Piedmont surveyed in 2018, a third each in urban open spaces, low and high urbanization; Table 2 proportions of wetlands occupied (L/H/UOS): northern cricket frog 0.69/0.44/0.37, eastern narrow-mouthed toad 0.19/0.38/0.21, gray treefrog 0.81/0.81/0.37, American bullfrog 0.75/0.75/0.63, spring peeper 0.88/0.63/0.32; abstract: urban open space wetlands did not appear to increase suitability for anurans relative to high urbanization wetlands",
+          "url": "https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0244932"
+        }
+      ],
+      "notes": "Planned band 7, written as a strong band 6 with band_target 6: the band-7 assignment table has no band-7 official Q1_P3 items (spec/rw/band7/command_of_evidence.md section 5). Five of the twelve species in Table 2; proportions shown as percentages.",
+      "word_count": 112,
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 5,
+        "fixes": [],
+        "status": "pass",
+        "facts_note": "Table 2 proportions for the five species confirmed (columns Low/High/UOS); 51 wetlands in 2018; first author David Hutto Jr."
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "Q1_P3 has no band-7 official items (band-7 report section 1), so it cannot be band 7; strong band 6: the reference group comes from the passage and A is an accurate comparison with the wrong group."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "D",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "command_of_evidence.Q2_P4_trend.hard.w4b1_10",
+      "template": "Q2_P4_trend",
+      "subtype": "Data description (absence of a trend amid year-to-year fluctuation supports a conclusion)",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "In many temperate regions, rising temperatures have prompted animals to reproduce earlier in the year. Analyzing records of common snapping turtles nesting at Crescent Lake National Wildlife Refuge in Nebraska, Ashley R. Hedrick and colleagues found that the turtles nested earlier in years with warmer Mays, presumably because spring warmth allows females to emerge from hibernation and complete egg development sooner. Although average annual temperatures at the refuge have increased over recent decades, spring temperatures there have not yet risen, and the team concluded that the turtles’ nesting has consequently not shifted earlier over the period of their records.",
+      "stem": "Which choice best describes data from the graph that support the researchers’ conclusion?",
+      "options": [
+        "Average nesting dates in the later years were not consistently earlier than in the 1990s: the 2008 average was later than both 1990s averages shown, and the 2012 average was about as early as 1994’s.",
+        "The average nesting date in 2012 was roughly ten days earlier than the average nesting date in 1999, one of the two earliest years for which nesting records are shown in the graph.",
+        "Average nesting dates became steadily earlier from 1994 to 2004 and then became steadily later from 2004 to 2017, the last year for which nesting records are shown.",
+        "In every year shown in the graph, the turtles’ average nesting date fell within the first three weeks of June, never as early as May and never as late as the beginning of July."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": {
+        "kind": "line graph",
+        "title": "Average Nesting Date of Snapping Turtles at Crescent Lake",
+        "x_axis": "Year",
+        "y_axis": "Average nesting date (days after May 31)",
+        "description": "Single line with points at 1994, 1999, 2004, 2008, 2012 and 2017; y-axis from 0 days after May 31. Values (days after May 31, so 1 = June 1): 1994 about 5.9; 1999 about 14.4; 2004 about 6.5; 2008 about 19.6; 2012 about 4.4; 2017 about 9.4. The dates rise and fall from year to year with no steady shift toward earlier nesting.",
+        "data": [
+          {
+            "series": "Average nesting date",
+            "points": [
+              [
+                1994,
+                5.9
+              ],
+              [
+                1999,
+                14.4
+              ],
+              [
+                2004,
+                6.5
+              ],
+              [
+                2008,
+                19.6
+              ],
+              [
+                2012,
+                4.4
+              ],
+              [
+                2017,
+                9.4
+              ]
+            ]
+          }
+        ]
+      },
+      "explanation": "The team concluded that the turtles’ nesting “has consequently not shifted earlier over the period of their records.” Choice A supports this: in the graph, the later years include both a late average (2008, about 20 days after May 31, later than 1994 or 1999) and an early one (2012, about 4 days after May 31, close to 1994’s 6), so nesting in the later years was not consistently earlier than in the 1990s.",
+      "distractors": {
+        "B": {
+          "recipe": "CONTRA / PART: cherry-picked pair",
+          "why_wrong": "This comparison is accurate (about 4 versus about 14 days after May 31), but by pairing one early recent year with one later 1990s year it suggests a shift toward earlier nesting, which the full set of years does not show."
+        },
+        "C": {
+          "recipe": "INACC: false trend",
+          "why_wrong": "The dates did not change steadily: 1999 was much later than 1994, and 2012 was much earlier than 2008."
+        },
+        "D": {
+          "recipe": "IRREL: level, not change over time",
+          "why_wrong": "This is accurate, but it describes the range of dates, not whether nesting has shifted earlier over the years."
+        }
+      },
+      "models": [
+        "3.40",
+        "3.13"
+      ],
+      "sources": [
+        {
+          "what": "Hedrick, Greene, Lewis, Hood and Iverson 2021, Ecology and Evolution 11: 1505-1521: Chelydra serpentina at Crescent Lake NWR, Garden County, Nebraska; nesting earlier after warmer December and May temperatures; average annual temperatures increased but spring temperatures have not, hence nesting phenology has not advanced for Chelydra; Table 2 mean nesting dates (Julian day, 152 = 1 June, 153 in leap years): 1993 170.8, 1994 156.9, 1999 165.4, 2004 158.5, 2008 171.6, 2012 156.4, 2017 160.4",
+          "url": "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7863389/"
+        }
+      ],
+      "notes": "Six of the 18 sampled years (1994, 1999, 2004, 2008, 2012, 2017; 1993 left out so that no two points sit a year apart on the axis). Julian days converted to days after May 31 (day minus 151, or minus 152 in leap years 2004, 2008, 2012). The paper ties earlier nesting to warmer December and May temperatures; the passage mentions May only.",
+      "word_count": 99,
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [
+          "key said later years were \"no earlier overall\" though their mean is 0.2 days earlier than the 1990s mean; now \"not consistently earlier\" (explanation updated)"
+        ],
+        "status": "fixed",
+        "facts_note": "Abstract (spring temperatures not risen, nesting not advanced for Chelydra) and Table 2 means for the six years confirmed; day conversion checked."
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "Absence of a trend amid fluctuation; B is an accurate cherry-picked pair pointing the other way and D an accurate level that says nothing of change."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "A",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "command_of_evidence.T2_lit_quote.medium.w4b1_11",
+      "template": "T2_lit_quote",
+      "subtype": "Literary quotation illustrates a two-part claim (effort to learn and concealment; poem)",
+      "tier": "medium",
+      "band_target": null,
+      "passage": "“Learning to Read” is an 1872 poem by Frances Ellen Watkins Harper. The poem’s speaker, an elderly woman known as Aunt Chloe, recalls her experiences before and after emancipation in the United States. In the poem, Chloe describes how some enslaved people managed to study reading while concealing their efforts from their enslavers: ______",
+      "stem": "Which quotation from “Learning to Read” most effectively illustrates the claim?",
+      "options": [
+        "“Our masters always tried to hide / Book learning from our eyes; / Knowledge didn’t agree with slavery— / ’Twould make us all too wise.”",
+        "“I remember Uncle Caldwell, / Who took pot-liquor fat / And greased the pages of his book, / And hid it in his hat.”",
+        "“Well, the Northern folks kept sending / The Yankee teachers down; / And they stood right up and helped us, / Though Rebs did sneer and frown.”",
+        "“So I got a pair of glasses, / And straight to work I went, / And never stopped till I could read / The hymns and Testament.”"
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The claim has two parts: enslaved people studied reading, and they concealed their efforts from their enslavers. In choice B, Uncle Caldwell “greased the pages of his book, / And hid it in his hat,” so he both kept a book to learn from and concealed it from those who enslaved him.",
+      "distractors": {
+        "A": {
+          "recipe": "LURE: shares the idea of hiding, wrong agent",
+          "why_wrong": "These lines show the masters hiding learning from enslaved people, not enslaved people hiding their own efforts to learn."
+        },
+        "C": {
+          "recipe": "HALF: learning, but openly and after slavery",
+          "why_wrong": "The lines describe teachers from the North helping freed people to learn in the open, so nothing is kept hidden."
+        },
+        "D": {
+          "recipe": "HALF: effort without concealment",
+          "why_wrong": "Chloe describes her own persistence in learning to read, but she does so openly, after slavery has ended, with no need to hide it."
+        }
+      },
+      "models": [
+        "2.20",
+        "2.37",
+        "2.10",
+        "2.11"
+      ],
+      "sources": [
+        {
+          "what": "Frances E. W. Harper, Sketches of Southern Life (1872), poem “Learning to Read”; all four quotations checked as exact substrings of the Gutenberg text",
+          "url": "https://www.gutenberg.org/ebooks/69249"
+        }
+      ],
+      "notes": "The stanzas about stealing 'a little from the book' and Mr. Turner's Ben (also secret learning) are left out so that only one option fits. Sketches of Southern Life first published 1872.",
+      "word_count": 54,
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [],
+        "status": "pass",
+        "facts_note": "All four quotations verbatim in Gutenberg 69249, line breaks correct."
+      }
+    },
+    {
+      "id": "command_of_evidence.T2_lit_quote.medium.w4b1_12",
+      "template": "T2_lit_quote",
+      "subtype": "Literary quotation illustrates a contrast claim (concession of youth, insistence on depth; narrative poem)",
+      "tier": "medium",
+      "band_target": null,
+      "passage": "“Malcolm’s Katie: A Love Story” is an 1884 narrative poem by Isabella Valancy Crawford. When Max worries that Katie’s feelings might change while he is away clearing a farm in the Canadian wilderness, Katie acknowledges that she is still young but insists that her affection is already too deeply established to be uprooted: ______",
+      "stem": "Which quotation from “Malcolm’s Katie: A Love Story” most effectively illustrates the claim?",
+      "options": [
+        "“Will you not seek, keen ey’d, for some small break / In those deep lines, to part the K. and M. / For you?”",
+        "“O, words! ... only words! / You build them up that I may push them down.”",
+        "“Tho’ I be a bud, / My roots strike deep, and torn from that dear soil / Would shriek like mandrakes—those witch things I read / Of in your quaint old books.”",
+        "“If I am a bud / And only feel unfoldment—feebly stir / Within my leaves: wait patiently; some June, / I’ll blush a full-blown rose.”"
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The claim has two parts: Katie acknowledges that she is young, and she insists that her affection is too deeply established to be uprooted. In choice C she grants, “Tho’ I be a bud,” and then says that her “roots strike deep” and that being “torn from that dear soil” would make her shriek, so she shows both parts.",
+      "distractors": {
+        "A": {
+          "recipe": "LURE: wrong speaker, shares 'deep'",
+          "why_wrong": "These are Max’s words, voicing his worry that Katie will look for a way to separate from him; they are not Katie’s insistence on the depth of her love."
+        },
+        "B": {
+          "recipe": "HALF: playful dismissal only",
+          "why_wrong": "Katie teases Max for his fine words, but she neither admits her youth nor says anything about how deep her love is."
+        },
+        "D": {
+          "recipe": "HALF: youth only, love not yet full",
+          "why_wrong": "Katie admits that she is only a bud and promises to bloom later, which concedes her youth but presents her love as something still to come rather than as already deeply rooted."
+        }
+      },
+      "models": [
+        "2.20",
+        "2.37",
+        "2.10",
+        "2.26"
+      ],
+      "sources": [
+        {
+          "what": "Isabella Valancy Crawford, Old Spookses' Pass, Malcolm's Katie, and Other Poems (Toronto, 1884), Malcolm's Katie Part I; all four quotations checked as exact substrings of the Gutenberg text (double hyphens rendered as em dashes; in B the narrator's 'said Katie, blushing,' is replaced by an ellipsis; D stops mid-line)",
+          "url": "https://www.gutenberg.org/ebooks/6815"
+        }
+      ],
+      "notes": "All options from the opening exchange between Max and Katie. Lines about the poem's conquest imagery are avoided.",
+      "word_count": 54,
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [],
+        "status": "pass",
+        "facts_note": "All four quotations verbatim in Gutenberg 6815 with correct line breaks; A is Max, B to D Katie. Accepted trims: B narrator tag replaced by an ellipsis and a semicolon given a period; D ends mid-line at a comma, given a period."
+      }
+    },
+    {
+      "id": "command_of_evidence.T1_single.medium.w4b1_13",
+      "template": "T1_single",
+      "subtype": "Hypothetical finding supports a claim (isolation between populations; the finding needs the right comparison)",
+      "tier": "medium",
+      "band_target": null,
+      "passage": "Animals that live only in caves, such as the spider Nesticus barri and the beetle Ptomaphagus hatchi, typically lack eyes and pigment and cannot survive for long on the surface. Biologists have therefore predicted that populations of such animals in separate caves rarely, if ever, interbreed unless the caves are connected underground. Andras Balogh and colleagues tested this prediction by sequencing DNA from spiders and beetles collected in four caves on Tennessee’s Cumberland Plateau, located 3 to 13 kilometers apart. The researchers concluded that the populations in the different caves are highly isolated from one another.",
+      "stem": "Which finding, if true, would most directly support the researchers’ conclusion?",
+      "options": [
+        "Each cave’s spider and beetle populations carried many genetic variants that were not found in the populations of any of the other caves, including caves only a few kilometers away.",
+        "The spiders and beetles collected from all four caves lacked eyes and pigment to a similar degree, regardless of which cave they came from.",
+        "The beetles from the four caves were more similar genetically to one another than they were to beetles of the same species living in caves in other states.",
+        "The caves in which the researchers found the largest numbers of spiders also tended to be the caves in which they found the largest numbers of beetles."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The researchers concluded that the populations in the different caves “are highly isolated from one another,” meaning that they rarely interbreed. If each cave’s population carried many genetic variants found in no other cave, even in caves only a few kilometers away, those variants would not be spreading between caves, as they would if animals moved and bred between them. Choice A therefore supports the conclusion.",
+      "distractors": {
+        "B": {
+          "recipe": "GEN: restates the shared cave traits",
+          "why_wrong": "Similar eyes and pigment in all four caves say nothing about whether the populations interbreed."
+        },
+        "C": {
+          "recipe": "TRAP: wrong comparison",
+          "why_wrong": "Greater similarity among the four caves than with distant caves would, if anything, suggest some connection among the four, and it does not show that each cave is isolated from the others."
+        },
+        "D": {
+          "recipe": "OFF: population sizes",
+          "why_wrong": "Whether spiders and beetles are abundant in the same caves does not show whether populations in different caves interbreed."
+        }
+      },
+      "models": [
+        "2.7",
+        "2.33",
+        "2.21",
+        "2.16"
+      ],
+      "sources": [
+        {
+          "what": "Balogh, Ngo, Zigler and Dixon 2020, Scientific Reports 10: 17554 (abstract): RAD-seq genotyping of the troglobiotic spider Nesticus barri and beetle Ptomaphagus hatchi from four caves 3 to 13 km apart on the southern Cumberland Plateau, Tennessee; troglobionts not viable on the surface, predicted extreme divergence without subterranean connections; populations from separate caves are highly genetically isolated",
+          "url": "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7568537/"
+        }
+      ],
+      "notes": "Medium: the key operationalizes isolation as variants confined to one cave; C is the wrong comparison (four caves vs distant caves).",
+      "word_count": 96,
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass",
+        "facts_note": "PMC abstract: N. barri and P. hatchi, four caves 3 to 13 km apart, RAD-seq, highly genetically isolated."
+      }
+    },
+    {
+      "id": "command_of_evidence.Q1_P3_pairwise.medium.w4b1_14",
+      "template": "Q1_P3_pairwise",
+      "subtype": "Data completion (pairwise comparison of temperature ranges between the caves the claim contrasts)",
+      "tier": "medium",
+      "band_target": null,
+      "passage": "Caves are often described as environments where temperatures scarcely change, but a cave’s openings can admit air from outside. Biologist Luis Mejía-Ortíz and colleagues recorded temperatures hourly for approximately a year at monitoring stations in three caves in Mexico’s state of Quintana Roo. One cave, Río Secreto, is less exposed to the surface than the other two, and at some of its stations the temperature varied considerably less over the year than at stations in the other caves: for example, ______",
+      "stem": "Which choice most effectively uses data from the table to complete the example?",
+      "options": [
+        "the average temperature at station 2 in Río Secreto (25.5°C) was higher than the average temperature at station 3 in Muévelo Rico (24.5°C).",
+        "temperatures at station 1 in Muévelo Sabrosito ranged from 16.7°C to 28.0°C, while those at station 4 in Muévelo Rico ranged from 15.2°C to 28.1°C.",
+        "the highest temperature recorded at station 4 in Río Secreto (27.4°C) was lower than the highest temperature recorded at station 3 in Muévelo Rico (26.1°C).",
+        "temperatures at station 4 in Río Secreto ranged only from 25.4°C to 27.4°C, while those at station 4 in Muévelo Rico ranged from 15.2°C to 28.1°C."
+      ],
+      "answer_letter": "D",
+      "table": {
+        "title": "Temperatures Recorded at Five Cave Monitoring Stations over One Year",
+        "columns": [
+          "Cave and station",
+          "Average temperature (°C)",
+          "Lowest temperature (°C)",
+          "Highest temperature (°C)"
+        ],
+        "rows": [
+          [
+            "Muévelo Rico, station 3",
+            "24.5",
+            "17.5",
+            "26.1"
+          ],
+          [
+            "Muévelo Rico, station 4",
+            "24.6",
+            "15.2",
+            "28.1"
+          ],
+          [
+            "Muévelo Sabrosito, station 1",
+            "25.0",
+            "16.7",
+            "28.0"
+          ],
+          [
+            "Río Secreto, station 2",
+            "25.5",
+            "22.8",
+            "27.3"
+          ],
+          [
+            "Río Secreto, station 4",
+            "25.6",
+            "25.4",
+            "27.4"
+          ]
+        ],
+        "note": null
+      },
+      "figure": null,
+      "explanation": "The example must show a Río Secreto station where the temperature “varied considerably less over the year” than at a station in another cave, so it needs to compare the spread between the lowest and highest temperatures at the two stations. Choice D does this: station 4 in Río Secreto ranged only from 25.4°C to 27.4°C (2 degrees), while station 4 in Muévelo Rico ranged from 15.2°C to 28.1°C (nearly 13 degrees).",
+      "distractors": {
+        "A": {
+          "recipe": "IRREL: averages, not fluctuation",
+          "why_wrong": "The averages are accurate, but a higher average temperature does not show that temperatures fluctuated less."
+        },
+        "B": {
+          "recipe": "WGRP: two of the more open caves",
+          "why_wrong": "These ranges are accurate, but neither station is in Río Secreto, so they cannot show that Río Secreto’s temperatures fluctuated less."
+        },
+        "C": {
+          "recipe": "INACC: reversed comparison",
+          "why_wrong": "27.4°C is higher, not lower, than 26.1°C."
+        }
+      },
+      "models": [
+        "2.18",
+        "2.24",
+        "2.28",
+        "2.39"
+      ],
+      "sources": [
+        {
+          "what": "Mejía-Ortíz, Christman, Pipan and Culver 2020, PLoS ONE 15(12): e0237051: hourly temperature for about a year at 17 stations in three caves in Quintana Roo; Rio Secreto (Tuch) is less open to the surface than the other two; Table 1 mean/min/max: Muevelo Rico station 3 24.5/17.5/26.1, station 4 24.6/15.2/28.1; Muevelo Sabrosito station 1 25.0/16.7/28.0; Rio Secreto station 2 25.5/22.8/27.3, station 4 25.6/25.4/27.4",
+          "url": "https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0237051"
+        }
+      ],
+      "notes": "Five of the seventeen stations. Cave names shortened from Sistema Muévelo Rico, Sistema Muévelo Sabrosito and Río Secreto (Tuch).",
+      "word_count": 81,
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [],
+        "status": "pass",
+        "facts_note": "Table 1 station values confirmed; Rio Secreto less open to the surface."
+      }
+    },
+    {
+      "id": "command_of_evidence.Q1_P5_control.medium.w4b1_15",
+      "template": "Q1_P5_control",
+      "subtype": "Data completion (condition vs comparison group on the measure the passage links to the finding)",
+      "tier": "medium",
+      "band_target": null,
+      "passage": "Some elementary schools schedule recess before lunch instead of after it, reasoning that children who have already played will be more attentive to their meals. To evaluate this practice, researcher Monica Hunsberger and colleagues measured the quantities of food left uneaten by young students at a school in Madras, Oregon, comparing students whose recess preceded lunch with students whose recess followed it. Students who had recess first consumed more of their milk, a major source of calcium, and the nutritional data reflected this difference: ______",
+      "stem": "Which choice most effectively uses data from the table to complete the statement?",
+      "options": [
+        "59% of students who had recess before lunch met the calcium guideline, compared with 68% of students who had recess after lunch.",
+        "68% of students who had recess before lunch met the calcium guideline, compared with 59% of students who had recess after lunch.",
+        "42% of students who had recess before lunch met the vitamin C guideline, compared with 38% of students who had recess after lunch.",
+        "15% of students who had recess before lunch met the iron guideline, compared with 13% of students who had recess after lunch."
+      ],
+      "answer_letter": "B",
+      "table": {
+        "title": "Percentage of Students Whose Lunch Met Each Nutrient Guideline, by Timing of Recess",
+        "columns": [
+          "Nutrient",
+          "Recess before lunch (%)",
+          "Recess after lunch (%)"
+        ],
+        "rows": [
+          [
+            "Protein",
+            "86",
+            "84"
+          ],
+          [
+            "Iron",
+            "15",
+            "13"
+          ],
+          [
+            "Calcium",
+            "68",
+            "59"
+          ],
+          [
+            "Vitamin C",
+            "42",
+            "38"
+          ]
+        ],
+        "note": null
+      },
+      "figure": null,
+      "explanation": "The text says that students with recess first “consumed more of their milk, a major source of calcium,” so the example should show a calcium difference favoring those students. The table shows that 68% of students with recess before lunch met the calcium guideline, compared with 59% of students with recess after lunch, which is what choice B states.",
+      "distractors": {
+        "A": {
+          "recipe": "WDIR: values swapped between groups",
+          "why_wrong": "The percentages are reversed: 68%, not 59%, of students with recess before lunch met the calcium guideline."
+        },
+        "C": {
+          "recipe": "IRREL: accurate, wrong nutrient",
+          "why_wrong": "These vitamin C values are accurate, but the statement concerns the difference that drinking more milk, a source of calcium, would make."
+        },
+        "D": {
+          "recipe": "IRREL: accurate, wrong nutrient",
+          "why_wrong": "These iron values are accurate, but they do not reflect the extra milk, which the text identifies as a source of calcium."
+        }
+      },
+      "models": [
+        "2.5",
+        "2.19",
+        "2.14"
+      ],
+      "sources": [
+        {
+          "what": "Hunsberger, McGinnis, Smith et al. 2014, BMC Public Health 14: 156: plate waste measured at Madras Elementary School, Oregon, grades K-2, recess before lunch (n = 104) vs controls (n = 157); milk consumption 5.7 vs 4.4 oz; Table 1 mean probability of meeting guidelines before/after lunch: protein 86/84, iron 15/13, calcium 68/59 (p = 0.015), vitamin C 42/38",
+          "url": "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3937036/"
+        }
+      ],
+      "notes": "Table values are the study's model-estimated probabilities of meeting each guideline, shown as percentages. Calories, vitamin A, fat and sodium rows left out (vitamin A and protein also occur in milk, so protein is kept only in the table, not in an option).",
+      "word_count": 85,
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [],
+        "status": "pass",
+        "facts_note": "Table values (protein 86/84, iron 15/13, calcium 68/59, vitamin C 42/38) and milk finding confirmed."
+      }
+    },
+    {
+      "id": "command_of_evidence.Q2_P5_control.medium.w4b1_16",
+      "template": "Q2_P5_control",
+      "subtype": "Data description (each treatment against the control on two measures)",
+      "tier": "medium",
+      "band_target": null,
+      "passage": "Dogs housed in animal shelters frequently display signs of stress, such as restless movement and excessive barking. To determine whether sensory enrichment could help, Veronica Amaya and colleagues exposed dogs at a shelter in Queensland, Australia, for three hours daily to the scent of lavender, to recorded music, or to a synthetic version of a calming scent produced by nursing dogs, while a comparison group received no enrichment. The researchers suggested that all three kinds of enrichment helped the dogs settle down.",
+      "stem": "Which choice best describes data from the graph that support the researchers’ suggestion?",
+      "options": [
+        "Dogs exposed to the calming scent spent about 62% of their time lying down, a larger share than dogs in any of the other three groups.",
+        "Dogs exposed to music and dogs exposed to the calming scent spent nearly the same percentage of their time lying down, about 61%.",
+        "Dogs in each of the three enrichment groups spent more of their time lying down, and less of it standing, than dogs that received no enrichment did.",
+        "Dogs exposed to lavender spent a smaller percentage of their time lying down than dogs that received no enrichment did."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": {
+        "kind": "bar graph",
+        "title": "Shelter Dogs’ Behavior by Type of Enrichment",
+        "x_axis": "Enrichment",
+        "y_axis": "Percentage of time",
+        "description": "Grouped bar graph, two bars per group (lying down, standing); y-axis 0 to 70 percent in steps of 10. Lavender: lying down 52.6, standing 33.4. Music: lying down 61.3, standing 29.5. Calming scent: lying down 61.7, standing 26.6. No enrichment: lying down 44.4, standing 39.0.",
+        "data": [
+          {
+            "series": "Lying down",
+            "points": [
+              [
+                "Lavender",
+                52.6
+              ],
+              [
+                "Music",
+                61.3
+              ],
+              [
+                "Calming scent",
+                61.7
+              ],
+              [
+                "No enrichment",
+                44.4
+              ]
+            ]
+          },
+          {
+            "series": "Standing",
+            "points": [
+              [
+                "Lavender",
+                33.4
+              ],
+              [
+                "Music",
+                29.5
+              ],
+              [
+                "Calming scent",
+                26.6
+              ],
+              [
+                "No enrichment",
+                39.0
+              ]
+            ]
+          }
+        ]
+      },
+      "explanation": "The researchers suggested that “all three kinds of enrichment helped the dogs settle down,” so the data must show each enrichment group resting more than the dogs that received no enrichment. The graph shows that dogs given lavender, music, or the calming scent spent about 53%, 61%, and 62% of their time lying down, compared with about 44% for dogs with no enrichment, and less time standing (about 33%, 30%, and 27%, compared with 39%). Choice C describes this pattern.",
+      "distractors": {
+        "A": {
+          "recipe": "PART: one treatment group",
+          "why_wrong": "This is accurate, but it describes only the calming-scent group, so it does not show that all three kinds of enrichment helped."
+        },
+        "B": {
+          "recipe": "IRREL: comparison between two treatments",
+          "why_wrong": "This is accurate, but comparing two enrichment groups with each other says nothing about whether enrichment helped compared with no enrichment."
+        },
+        "D": {
+          "recipe": "INACC: reversed comparison",
+          "why_wrong": "Dogs exposed to lavender spent more of their time lying down (about 53%) than dogs that received no enrichment (about 44%), not less."
+        }
+      },
+      "models": [
+        "2.25",
+        "2.3"
+      ],
+      "sources": [
+        {
+          "what": "Amaya, Paterson and Phillips 2020, Animals 10(4): 581: 60 shelter dogs (University of Queensland and RSPCA Queensland) allocated to lavender, dog appeasing pheromone (DAP), music or control, 3 h a day for five days; Table 2: lie down total 52.6, 61.3, 61.7, 44.4% of time; stand 33.4, 29.5, 26.6, 39.0%; abstract: all three enrichments had some positive benefits",
+          "url": "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7222336/"
+        }
+      ],
+      "notes": "DAP (a synthetic analogue of the pheromone of nursing dogs) labelled 'Calming scent'. Values are the paper's treatment-period means; only DAP differed significantly from control for total lying down, so the claim is worded as the authors' broad suggestion.",
+      "word_count": 82,
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [],
+        "status": "pass",
+        "facts_note": "Table 2 lie-down and stand percentages confirmed; three hours a day."
+      }
+    },
+    {
+      "id": "command_of_evidence.T3_person_quote.medium.w4b1_17",
+      "template": "T3_person_quote",
+      "subtype": "Quotation from an art historian supports a two-part claim (abstract appearance, observed source)",
+      "tier": "medium",
+      "band_target": null,
+      "passage": "Scottish painter Wilhelmina Barns-Graham (1912–2004) belonged to the community of modernist artists working in St Ives, Cornwall, during the mid-twentieth century. In 1949 she visited the Grindelwald Glacier in Switzerland, and glaciers became a subject she returned to for decades. In an essay, a student claims that although Barns-Graham’s glacier paintings appear almost entirely abstract, they originated in her firsthand observation of the ice.",
+      "stem": "Which quotation from an art historian would be the most effective evidence for the student to include in support of this claim?",
+      "options": [
+        "“Even the glacier canvases that read as pure arrangements of shape and color began with what Barns-Graham saw at Grindelwald: the fractured ice, its crystalline edges, and the light passing through it.”",
+        "“In 1950 the British Council bought Barns-Graham’s painting Upper Glacier, her largest sale up to that time, and the work soon appeared in a book surveying contemporary British art.”",
+        "“Barns-Graham’s mature paintings are built from simple geometric shapes and bands of color, arranged across the canvas with an almost mathematical sense of balance.”",
+        "“When she first settled in St Ives in 1940, Barns-Graham took the town’s harbor and the surrounding Cornish landscape as the main subjects of her paintings.”"
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The student claims that the glacier paintings “appear almost entirely abstract” yet “originated in her firsthand observation of the ice.” Choice A covers both parts: it describes the canvases as reading like “pure arrangements of shape and color” and traces them to what Barns-Graham “saw at Grindelwald.”",
+      "distractors": {
+        "B": {
+          "recipe": "OFF: reception of a glacier painting",
+          "why_wrong": "The sale and publication of Upper Glacier show how the work was received, not where its forms came from."
+        },
+        "C": {
+          "recipe": "HALF: abstraction without the observed source",
+          "why_wrong": "This describes the abstract look of her paintings but says nothing about their origin in what she saw at the glacier."
+        },
+        "D": {
+          "recipe": "HALF: observation, but of other subjects and not abstract",
+          "why_wrong": "This shows that Barns-Graham painted places she knew, but it concerns her earlier harbor and landscape paintings, not her abstract glacier works."
+        }
+      },
+      "models": [
+        "2.23",
+        "2.29"
+      ],
+      "sources": [
+        {
+          "what": "Wilhelmina Barns-Graham (Wikipedia): born 1912, died 2004, Penwith Society, moved to St Ives 1940 where her paintings were heavily influenced by the Cornish landscapes and St Ives harbour; May 1949 trip to the Grindelwald Glacier inspired a series of glacier paintings she revisited for decades; British Council bought Upper Glacier in 1950, her largest sale so far, included in Herbert Read's Contemporary British Art",
+          "url": "https://en.wikipedia.org/wiki/Wilhelmina_Barns-Graham"
+        }
+      ],
+      "notes": "Quotations are invented and attributed to an unnamed art historian; their factual content follows the source. The key's description of the paintings is an interpretive judgment of the kind a historian would make.",
+      "word_count": 64,
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [],
+        "status": "pass",
+        "facts_note": "Wikipedia: 1912 to 2004, St Ives, May 1949 Grindelwald trip, glacier series revisited for decades; quotations are from an unnamed historian."
+      }
+    },
+    {
+      "id": "command_of_evidence.Q1_P1_lookup.easy.w4b1_18",
+      "template": "Q1_P1_lookup",
+      "subtype": "Data completion (read one cell)",
+      "tier": "easy",
+      "band_target": null,
+      "passage": "In 2015, three caves containing Paleolithic engravings were discovered in Aitzbitarte Hill in northern Spain. Archaeologist Diego Garate and colleagues counted the engraved figures in each cave and sorted them by subject. Bison were the animals depicted most often; Cave V, for example, contained ______",
+      "stem": "Which choice most effectively uses data from the table to complete the example?",
+      "options": [
+        "11 bison figures.",
+        "1 bison figure.",
+        "10 bison figures.",
+        "7 bison figures."
+      ],
+      "answer_letter": "D",
+      "table": {
+        "title": "Engraved Figures in Three Aitzbitarte Caves, by Subject",
+        "columns": [
+          "Cave",
+          "Bison",
+          "Horses",
+          "Other animals",
+          "Signs and lines",
+          "Total"
+        ],
+        "rows": [
+          [
+            "III",
+            "11",
+            "5",
+            "5",
+            "15",
+            "36"
+          ],
+          [
+            "V",
+            "7",
+            "0",
+            "1",
+            "2",
+            "10"
+          ],
+          [
+            "IX",
+            "1",
+            "0",
+            "0",
+            "8",
+            "9"
+          ]
+        ],
+        "note": null
+      },
+      "figure": null,
+      "explanation": "The example is about the bison figures in Cave V. In the table, the row for Cave V shows 7 in the Bison column, so choice D completes the example.",
+      "distractors": {
+        "A": {
+          "recipe": "WGRP: another cave's value",
+          "why_wrong": "Cave III, not Cave V, contained 11 bison figures."
+        },
+        "B": {
+          "recipe": "WGRP: another cave's value",
+          "why_wrong": "Cave IX, not Cave V, contained 1 bison figure."
+        },
+        "C": {
+          "recipe": "WGRP: wrong column (total)",
+          "why_wrong": "Cave V contained 10 engraved figures in total, of which only 7 were bison."
+        }
+      },
+      "models": [
+        "1.33",
+        "1.37",
+        "1.30",
+        "1.12"
+      ],
+      "sources": [
+        {
+          "what": "Garate, Rivero, Rios-Garaizar et al. 2020, PLoS ONE 15(10): e0240481: three new decorated caves found in 2015 in Aitzbitarte Hill, engraved animals mainly bison; Table 2 graphic units by cave (III: bison 11, horse 5, aurochs 2, ibex 1, bird 1, animal 1, signs 0, lines 15, total 36; V: 7, 0, 0, 0, 0, 1, 1, 1, total 10; IX: 1, 0, 0, 0, 0, 0, 1, 7, total 9)",
+          "url": "https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0240481"
+        }
+      ],
+      "notes": "Aurochs, ibex, bird and unidentified animal merged as 'Other animals'; signs and lines merged.",
+      "word_count": 45,
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [],
+        "status": "pass",
+        "facts_note": "Table 2 counts per cave confirmed; caves found in 2015; mainly bison."
+      }
+    },
+    {
+      "id": "command_of_evidence.T1_single.easy.w4b1_19",
+      "template": "T1_single",
+      "subtype": "Hypothetical finding supports a claim (existence of a practice; one step)",
+      "tier": "easy",
+      "band_target": null,
+      "passage": "Islamic tradition calls for the dead to be buried lying on the right side, with the face turned toward Mecca, the holy city in present-day Saudi Arabia. Archaeologist Yves Gleize and colleagues have studied three graves in Nîmes, in southern France, that date to between the 600s and 800s CE, when historical sources describe a Muslim presence in the region. The researchers claim that the three people were buried according to Islamic customs.",
+      "stem": "Which finding, if true, would most directly support the researchers’ claim?",
+      "options": [
+        "The three graves were dug in a part of Nîmes that had already been used as a burial ground by the town’s residents for several centuries.",
+        "In each of the three graves, the body had been placed on its right side and faced southeast, the direction of Mecca.",
+        "Genetic analysis of the skeletons indicates that the three people had ancestors who lived in North Africa.",
+        "The skeletons show signs that all three people had performed heavy physical labor during their lives."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "According to the text, “Islamic tradition calls for the dead to be buried lying on the right side, with the face turned toward Mecca.” If each body in the Nîmes graves was placed on its right side facing southeast, toward Mecca, the burials followed that custom, so choice B supports the claim.",
+      "distractors": {
+        "A": {
+          "recipe": "OFF: location of the graves, not the burial practice",
+          "why_wrong": "A long-used burial ground says nothing about whether these particular burials followed Islamic customs."
+        },
+        "C": {
+          "recipe": "OFF: ancestry, not burial practice",
+          "why_wrong": "Where the people’s ancestors came from does not show how they were buried."
+        },
+        "D": {
+          "recipe": "OFF: the people's lives, not their burial",
+          "why_wrong": "Signs of heavy labor describe how the people lived, not the way they were buried."
+        }
+      },
+      "models": [
+        "1.8",
+        "1.29",
+        "1.17",
+        "1.5"
+      ],
+      "sources": [
+        {
+          "what": "Gleize, Mendisco, Pemonge et al. 2016, PLoS ONE 11(2): e0148583: three graves at Nimes dated between the 7th and 9th centuries AD; in each, the body was placed on its right-hand side facing southeast (toward Mecca), matching Muslim burial customs; historical sources document a Muslim presence in southern Gaul in the first half of the 8th century",
+          "url": "https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0148583"
+        }
+      ],
+      "notes": "The key matches the study's real observation. C is the study's real genetic finding, used as an off-target option (ancestry does not show rites). Topic fame weighed: the Nîmes graves drew press coverage in 2016, but the subject is unused in the bank and the item needs only the burial custom stated in the passage.",
+      "word_count": 73,
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass",
+        "facts_note": "Abstract: three graves at Nimes, 7th to 9th centuries, Islamic rites, Muslim presence in southern Gaul. Fame weighed: 2016 press coverage, but the item rests only on the custom stated in the passage; kept."
+      }
+    },
+    {
+      "id": "command_of_evidence.Q1_P2_extreme.easy.w4b1_20",
+      "template": "Q1_P2_extreme",
+      "subtype": "Data completion (maximum in one column)",
+      "tier": "easy",
+      "band_target": null,
+      "passage": "African manatees feed mostly on plants that grow along the shores of rivers and lakes. To learn which plants are available to manatees in Cameroon’s Sanaga River watershed, Aristide Takoukam Kamla and colleagues surveyed the shoreline vegetation at four locations. The location where they recorded the greatest number of plant species was ______",
+      "stem": "Which choice most effectively uses data from the table to complete the statement?",
+      "options": [
+        "Lake Ossa.",
+        "Upper Sanaga.",
+        "Sanaga Estuary.",
+        "Lake Tissongo."
+      ],
+      "answer_letter": "A",
+      "table": {
+        "title": "Shoreline Vegetation Surveys in the Sanaga River Watershed",
+        "columns": [
+          "Location",
+          "Number of plots surveyed",
+          "Number of plant species recorded"
+        ],
+        "rows": [
+          [
+            "Sanaga Estuary",
+            "80",
+            "68"
+          ],
+          [
+            "Upper Sanaga",
+            "146",
+            "96"
+          ],
+          [
+            "Lake Tissongo",
+            "64",
+            "16"
+          ],
+          [
+            "Lake Ossa",
+            "668",
+            "111"
+          ]
+        ],
+        "note": null
+      },
+      "figure": null,
+      "explanation": "The statement asks for the location with “the greatest number of plant species.” In the table, Lake Ossa has 111 plant species recorded, more than Upper Sanaga (96), Sanaga Estuary (68), or Lake Tissongo (16), so choice A completes the statement.",
+      "distractors": {
+        "B": {
+          "recipe": "WGRP: second-highest value",
+          "why_wrong": "Upper Sanaga had 96 plant species recorded, fewer than Lake Ossa’s 111."
+        },
+        "C": {
+          "recipe": "WGRP: neighboring row",
+          "why_wrong": "Sanaga Estuary had 68 plant species recorded, fewer than Upper Sanaga or Lake Ossa."
+        },
+        "D": {
+          "recipe": "WDIR: the minimum, not the maximum",
+          "why_wrong": "Lake Tissongo had the fewest plant species recorded (16), not the most."
+        }
+      },
+      "models": [
+        "1.9",
+        "1.21",
+        "1.23",
+        "1.31"
+      ],
+      "sources": [
+        {
+          "what": "Takoukam Kamla, Gomes, Beck et al. 2021, Ecology and Evolution 11: 17357, Table 2: shoreline vegetation plots surveyed and number of species: Sanaga Estuary 80/68, Upper Sanaga 146/96, Lake Tissongo 64/16, Lake Ossa 668/111; abstract: shoreline surveys in the Sanaga River Watershed, manatee diet mostly reflects available vegetation",
+          "url": "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC8601922/"
+        }
+      ],
+      "notes": "Easy P2: one column maximum, value-only options. Shannon diversity column left out.",
+      "word_count": 53,
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass",
+        "facts_note": "Table 2 plots and species counts confirmed."
+      }
+    },
+    {
+      "id": "command_of_evidence.T3_person_quote.easy.w4b1_21",
+      "template": "T3_person_quote",
+      "subtype": "Quotation from an art historian supports a single claim (a turning point)",
+      "tier": "easy",
+      "band_target": null,
+      "passage": "Iranian painter Behjat Sadr (1924–2009) studied at the University of Tehran before receiving a scholarship to continue her training in Italy in the 1950s. She later became known for abstract paintings made by applying paint to canvas and metal surfaces with a palette knife. A student writing about Sadr’s career claims that her years in Italy fundamentally transformed her approach to painting.",
+      "stem": "Which quotation from an art historian would be the most effective evidence for the student to include in support of this claim?",
+      "options": [
+        "“In 1957 Sadr returned to the University of Tehran as a professor, and she went on teaching there for nearly twenty years.”",
+        "“Sadr won a major prize at the 1962 Tehran Biennale, and her work was also shown at the Venice and São Paulo Biennales.”",
+        "“Soon after she arrived in Rome, Sadr gave up the academic style she had been trained in and began to paint abstractly.”",
+        "“In 1980 Sadr moved with her daughter to Paris, where she kept painting even after she became seriously ill.”"
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The student claims that Sadr’s years in Italy “fundamentally transformed her approach to painting.” Choice C states that soon after arriving in Rome, Sadr abandoned the academic style she had been trained in and began painting abstractly, which is exactly such a transformation.",
+      "distractors": {
+        "A": {
+          "recipe": "OFF: her teaching career",
+          "why_wrong": "Sadr’s return to teach in Tehran says nothing about a change in how she painted."
+        },
+        "B": {
+          "recipe": "OFF: recognition of her work",
+          "why_wrong": "Prizes and exhibitions show that her work was admired, not that Italy changed her approach to painting."
+        },
+        "D": {
+          "recipe": "OFF: a later move",
+          "why_wrong": "Her move to Paris in 1980 came long after her years in Italy and does not describe a change in how she painted."
+        }
+      },
+      "models": [
+        "1.15",
+        "1.19",
+        "1.20"
+      ],
+      "sources": [
+        {
+          "what": "Behjat Sadr (Wikipedia): born Arak 1924, died 2009; studied at the University of Tehran, then a scholarship to Italy (Rome and Naples academies); soon after arriving in Rome abandoned academic painting for an abstract approach; returned to the University of Tehran as professor in 1957 and taught almost 20 years; Royal Grand Prize at the 1962 Tehran Biennale, Venice and Sao Paulo Biennales; moved to Paris with her daughter in 1980; known for applying paint with a palette knife to canvas and metallic surfaces",
+          "url": "https://en.wikipedia.org/wiki/Behjat_Sadr"
+        }
+      ],
+      "notes": "Quotations are invented and attributed to an unnamed art historian; their factual content follows the source.",
+      "word_count": 62,
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 5,
+        "fixes": [
+          "option B said Sadr \"later\" showed at Venice, but she showed there in 1956, before the 1962 prize; \"later\" removed"
+        ],
+        "status": "fixed",
+        "facts_note": "Wikipedia: Tehran then Italy scholarship, abstraction soon after arriving in Rome, 1957 return, 1962 prize, Paris 1980."
+      }
+    },
+    {
+      "id": "command_of_evidence.Q1_P3_pairwise.easy.w4b1_22",
+      "template": "Q1_P3_pairwise",
+      "subtype": "Data completion (two comparisons at once; full factorial options)",
+      "tier": "easy",
+      "band_target": null,
+      "passage": "Mountain bluebirds in western North America often nest in wooden nest boxes, and both parents bring insects and other small prey to their nestlings. Using video recordings made at nest boxes near Williams Lake in British Columbia, Canada, Aija White and Russell Dawson identified the prey delivered to nestlings at 5 days old and again at 9 days old. Between those ages, the makeup of the nestlings’ diet shifted: ______",
+      "stem": "Which choice most effectively uses data from the table to complete the statement?",
+      "options": [
+        "the share of the diet made up of grasshoppers decreased, and the share made up of spiders increased.",
+        "the share of the diet made up of grasshoppers increased, and the share made up of spiders decreased.",
+        "the shares of the diet made up of grasshoppers and of spiders both increased.",
+        "the shares of the diet made up of grasshoppers and of spiders both decreased."
+      ],
+      "answer_letter": "B",
+      "table": {
+        "title": "Average Share of Mountain Bluebird Nestlings’ Diet by Prey Type",
+        "columns": [
+          "Nestling age",
+          "Beetles (%)",
+          "Cicadas (%)",
+          "Grasshoppers (%)",
+          "Insect larvae (%)",
+          "Spiders (%)"
+        ],
+        "rows": [
+          [
+            "Day 5",
+            "7.9",
+            "21.6",
+            "26.1",
+            "31.5",
+            "12.9"
+          ],
+          [
+            "Day 9",
+            "5.1",
+            "22.6",
+            "35.3",
+            "32.8",
+            "4.0"
+          ]
+        ],
+        "note": null
+      },
+      "figure": null,
+      "explanation": "The table shows that grasshoppers made up 26.1% of the diet on day 5 and 35.3% on day 9, an increase, while spiders made up 12.9% on day 5 and only 4.0% on day 9, a decrease. Choice B states both changes correctly.",
+      "distractors": {
+        "A": {
+          "recipe": "WDIR: both comparisons reversed",
+          "why_wrong": "Grasshoppers’ share rose (26.1% to 35.3%) and spiders’ share fell (12.9% to 4.0%), the opposite of what this choice says."
+        },
+        "C": {
+          "recipe": "WDIR: one comparison reversed",
+          "why_wrong": "Spiders’ share fell from 12.9% to 4.0%, so the two shares did not both increase."
+        },
+        "D": {
+          "recipe": "WDIR: one comparison reversed",
+          "why_wrong": "Grasshoppers’ share rose from 26.1% to 35.3%, so the two shares did not both decrease."
+        }
+      },
+      "models": [
+        "1.3",
+        "1.4",
+        "1.7",
+        "1.27"
+      ],
+      "sources": [
+        {
+          "what": "White and Dawson 2021, Ecology and Evolution 11: 17214, Table 2: mean proportions of prey from video observations of provisioning, day 5 vs day 9: beetles 7.9/5.1, cicadas 21.6/22.6, grasshoppers 26.1/35.3, larvae 31.5/32.8, spiders 12.9/4.0; nest boxes near Williams Lake, BC, 2016",
+          "url": "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC8571610/"
+        }
+      ],
+      "notes": "Easy P3, full 2x2 factorial options as in 1.3. Values are means of individual nestlings' proportions.",
+      "word_count": 70,
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass",
+        "facts_note": "Table 2 observation means for days 5 and 9 confirmed; authors White and Dawson."
+      }
+    }
+  ],
+  "done": true
+}

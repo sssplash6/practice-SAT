@@ -31,7 +31,7 @@ ALLOWED_HOSTS = {
     "satsuiteeducatorquestionbank.collegeboard.org", "qbank-api.collegeboard.org",
 }
 USER_AGENT = "satbank-cb-data/1.0 (public metadata collection; no account access)"
-PERMISSION = "College Board, by phone to the user, 2026-09-27; written confirmation pending"
+PERMISSION = "College Board, by phone to the user, 2026-09-27; confirmed in writing by email (held by the user)"
 QB = "https://qbank-api.collegeboard.org/msreportingquestionbank-prod/questionbank"
 LOOKUP = QB + "/lookup"
 QUESTIONS = QB + "/digital/get-questions"
@@ -328,9 +328,9 @@ def legal_notes(refresh: bool) -> None:
 - The [trademark guidelines]({TRADEMARKS}) say College Board “does not grant permission for its copyrighted content, including practice test questions, to be used in conjunction with generative AI.” They also prohibit training an AI system on College Board content.
 - The [copyright instructions]({COPYRIGHT}) allow ordinary links to College Board pages. They do not grant rights to copy the linked content.
 
-## Open question for the partner agreement
+## Partner agreement
 
-The public terms address official material and its reproduction. They do not expressly settle whether independently written questions with original wording, values, and explanations may mirror an official item's abstract structure. Obtain a written answer from the College Board partner contact for this exact scenario, including acceptable similarity, examples, and any required review. Until then, keep using original authored content and do not import official stems, answer choices, explanations, screenshots, or variants into the product or AI workflows.
+The public terms address official material and its reproduction. They do not expressly settle whether independently written questions with original wording, values, and explanations may mirror an official item's abstract structure. The phone permission has since been confirmed in writing by email; the user holds it and it was not reviewed here. Keep the product on original authored content: official stems, answer choices, explanations and screenshots do not ship.
 """
     OUT.mkdir(parents=True, exist_ok=True)
     (OUT / "brand.md").write_text(brand)

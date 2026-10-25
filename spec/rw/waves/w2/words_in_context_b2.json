@@ -1,0 +1,1450 @@
+{
+  "skill": "Words in Context",
+  "slug": "words_in_context",
+  "part": "w2b2",
+  "domain": "Craft and Structure",
+  "plan": {
+    "templates": [
+      {
+        "code": "B6",
+        "name": "Blank completion, phrase options (word + preposition, a/an + word)"
+      },
+      {
+        "code": "B1",
+        "name": "Blank completion, restatement clue"
+      },
+      {
+        "code": "B5",
+        "name": "Blank completion, negated frame"
+      },
+      {
+        "code": "M1",
+        "name": "Most nearly mean, underlined word"
+      },
+      {
+        "code": "B4",
+        "name": "Blank completion, example-pinned clue"
+      },
+      {
+        "code": "M2",
+        "name": "Most nearly mean, underlined phrase or phrase options"
+      },
+      {
+        "code": "B3",
+        "name": "Blank completion, contrast clue (including received view then finding)"
+      },
+      {
+        "code": "B2",
+        "name": "Blank completion, cause or consequence clue"
+      }
+    ]
+  },
+  "items": [
+    {
+      "id": "words_in_context.B6.hard.w2b2_01",
+      "template": "B6",
+      "subtype": "Blank completion: phrase options",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Conlon Nancarrow wrote his Studies for Player Piano by punching each note into paper rolls that the instrument then played mechanically, so the compositions could be ______ the physical limitations of human performers: some race along at extraordinary speeds, and others superimpose independent melodies, each proceeding at its own tempo.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "unconstrained by",
+        "attuned to",
+        "hampered by",
+        "indebted to"
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "Because a player piano plays the rolls by itself, no pianist has to perform Nancarrow’s studies, so the music need not fit what human hands can do. The colon gives examples of what that freedom allows: extraordinary speeds and several melodies at different tempos at once. So the compositions could be “unconstrained by,” or free from, the physical limitations of human performers.",
+      "distractors": {
+        "B": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "Music “attuned to” performers’ limitations would be adjusted to fit them, staying within what people can play. But the instrument played the rolls mechanically, so the music did not have to fit a performer, and the examples (extraordinary speeds, melodies at different tempos at once) show it did not."
+        },
+        "C": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "If the compositions were “hampered by” performers’ limitations, those limitations would hold them back. But the instrument played the rolls mechanically, so no performer’s limits applied, and the examples show the music going where it pleased."
+        },
+        "D": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Being “indebted to” something means owing it a debt or depending on it. Nothing suggests the compositions owe anything to the limitations of human performers; they were written for a machine precisely so those limitations would not apply."
+        }
+      },
+      "models": [
+        "3.17",
+        "3.12",
+        "994be036",
+        "af4300b0",
+        "7b4dde72",
+        "0462dac3"
+      ],
+      "word_count": 50,
+      "sources": [
+        {
+          "what": "Conlon Nancarrow: Studies for Player Piano; player piano could play far beyond human performance ability; he punched the rolls himself with a manual punching machine; Study No. 37 has twelve melodic lines, each at a different tempo",
+          "url": "https://en.wikipedia.org/wiki/Conlon_Nancarrow"
+        }
+      ],
+      "notes": "Subject: humanities (music). Key letter A. Steps: 2 (a player piano plays itself, so the music need not fit a pianist; the colon examples confirm it goes past human limits). Distractors: two reversals of different kinds (fitting the limits, being held back by them) and one unsupported relation. Option ranks (freq.txt): unconstrained by 38,086; attuned to 23,893; hampered by 12,040; indebted to 11,122. Key is the longest option. Simplified: 'extraordinary speeds' and 'independent melodies, each proceeding at its own tempo' follow the source without naming a study.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [
+          "source URL (an MTO article that did not mention punching rolls or note speeds) replaced with one that states the premise (Wikipedia, Conlon Nancarrow)",
+          "'some demand dozens of notes per second' (not in any source) softened to 'some race along at extraordinary speeds' (source: speed beyond human ability)",
+          "distractor 'tailored to' (rank 8,269, the one option below the set's band) replaced with 'attuned to' (23,893), same reversal"
+        ],
+        "status": "fixed"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "B6, two steps (a self-playing roll frees the music from a pianist; the colon examples confirm it). After the swap all four options are past raw rank 10,000 (unconstrained by 38,086; attuned to 23,893; hampered by 12,040; indebted to 11,122), mean log10 4.25, but the key is a transparent compound (un + constrained) and the clue is close, so a strong band 6 as targeted."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "A",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "words_in_context.B6.hard.w2b2_02",
+      "template": "B6",
+      "subtype": "Blank completion: phrase options",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Thijs Bol and colleagues compared early-career Dutch scientists whose grant applications scored just above a funding threshold with those scoring just below it. The narrow winners later received more than twice as much additional funding, a disparity that, since the groups’ evaluations were nearly identical, was ______ the initial grant itself.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "extraneous to",
+        "a prerequisite for",
+        "proportional to",
+        "attributable to"
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The two groups’ applications were evaluated almost identically, so the winners were not clearly better scientists; the main difference between them was that one group got the first grant. That makes the later funding disparity “attributable to,” or caused by, the initial grant itself.",
+      "distractors": {
+        "A": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "If the disparity were “extraneous to,” or unrelated to, the first grant, winning it would not explain the difference. But the groups were nearly equal in merit and differed mainly in whether they won, which points to the grant as the cause."
+        },
+        "B": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "A “prerequisite for” something must come before it. The funding disparity opened after the first grant was awarded, so it could not have been a requirement for receiving that grant."
+        },
+        "C": {
+          "recipe": "right field, wrong nuance or agent (CONNOT)",
+          "why_wrong": "“Proportional to” would mean the disparity grew or shrank with the size of the first grant. The text compares winning with narrowly losing; it says nothing about grants of different sizes producing disparities of different sizes."
+        }
+      },
+      "models": [
+        "3.17",
+        "3.12",
+        "994be036",
+        "af4300b0",
+        "7b4dde72",
+        "0462dac3"
+      ],
+      "word_count": 51,
+      "sources": [
+        {
+          "what": "Bol, de Vaan, and van de Rijt, \"The Matthew Effect in Science Funding\" (PNAS, 2018): early-career Dutch applicants just above vs just below the funding threshold, applications treated as equal in quality; winners later received more than twice as much research money",
+          "url": "https://newsroom.haas.berkeley.edu/research/matthew-effect-how-early-career-wins-yield-large-and-lasting-advantages-2/"
+        }
+      ],
+      "notes": "Subject: social science (sociology of science). Key letter D. Steps: 2 (near-identical scores rule out merit as the explanation, so the difference must come from the award). Near miss: proportional to (a causal-sounding relation the text does not support). Option ranks: extraneous to 27,907; a prerequisite for absent; proportional to 68,085; attributable to 30,771. Simplified: 'more than twice as much additional funding' over the following eight years.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [
+          "source URL was dead (UvA press release, 404); replaced with the Berkeley Haas release, which states every detail",
+          "distractor 'independent of' (rank 3,829, far below the other three) replaced with 'extraneous to' (27,907), same reversal"
+        ],
+        "status": "fixed"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "B6, two steps (near-identical scores rule out merit, so the award explains the gap). Options now extraneous to 27,907; a prerequisite for (absent, modern); proportional to 68,085; attributable to 30,771: one band, no option dismissable by register. Near miss proportional to (causal-sounding, wrong relation). A strong band 6 as targeted."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "D",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "words_in_context.B1.hard.w2b2_03",
+      "template": "B1",
+      "subtype": "Blank completion: restatement clue",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Investors’ attention to their own savings appears to be strikingly ______. Analyzing daily logins to investment accounts, Nachum Sicherman and colleagues found that individuals checked their balances more often after the stock market rose and considerably less often after it fell, as if avoiding information they expected to be unwelcome.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "unwavering",
+        "selective",
+        "contagious",
+        "erratic"
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The second sentence explains the blank: investors checked their balances when the market had risen and stayed away when it had fallen, as if avoiding unwelcome information. Attention that people give to some news and withhold from other news is “selective.”",
+      "distractors": {
+        "A": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "“Unwavering” attention would stay the same whatever the market did. The study found that logins rose after gains and fell after losses."
+        },
+        "C": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "“Contagious” attention would spread from one investor to another. The text describes how each individual’s checking followed the market’s direction, not how investors influenced one another."
+        },
+        "D": {
+          "recipe": "right field, wrong nuance or agent (CONNOT)",
+          "why_wrong": "“Erratic” means irregular and unpredictable. The investors’ attention did change, but in a consistent pattern, rising after gains and falling after losses, so it was not random."
+        }
+      },
+      "models": [
+        "3.8",
+        "3.16",
+        "79fe7550",
+        "e35d481c",
+        "98364791"
+      ],
+      "word_count": 50,
+      "sources": [
+        {
+          "what": "Sicherman, Loewenstein, Seppi, and Utkus, 'Financial Attention' (Review of Financial Studies, 2016): logins to retirement accounts fall after market declines (ostrich effect)",
+          "url": "https://www.cmu.edu/news/stories/archives/2015/december/ostrich-effect.html"
+        }
+      ],
+      "notes": "Subject: social science (behavioral finance). Key letter B. Steps: 1 (the clue restates the key as a pattern of looking and not looking). Near miss: erratic (right field, change in attention, but wrong nuance: random rather than patterned). Option ranks: unwavering 24,630; selective 44,232; contagious 17,076; erratic 16,787.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [
+          "option set was the band-5 pattern (key selective 44,232 the rarest, constant 2,346 and costly 1,508 far below): constant replaced with 'unwavering' (24,630, same reversal), costly with 'contagious' (17,076, unsupported)",
+          "'retirement accounts' not in the source; now 'investment accounts'"
+        ],
+        "status": "fixed"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "B1, one step (the logins pattern restates the key), like the official band-6 B1 items. Options now unwavering 24,630; selective 44,232; contagious 17,076; erratic 16,787: one band, key no longer the lone rare word; erratic is the near miss (change, but patterned, not random). Strong band 6."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "B",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "words_in_context.B5.hard.w2b2_04",
+      "template": "B5",
+      "subtype": "Blank completion: negated frame",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "Conservation programs in Europe have historically concentrated on rare birds, perhaps because species as ______ as the house sparrow and the starling seem to need no protection. Yet Richard Inger and colleagues determined that such common species accounted for most of the approximately 420 million birds Europe lost over a 30-year period.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "gregarious",
+        "beleaguered",
+        "ubiquitous",
+        "sedentary"
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "Programs focused on rare birds, and the blank gives the reason other birds were left out: they seemed to need no protection. The next sentence calls these birds “such common species,” so the blank must describe birds found in great numbers almost everywhere, which is what “ubiquitous” means.",
+      "distractors": {
+        "A": {
+          "recipe": "right field, wrong nuance or agent (CONNOT)",
+          "why_wrong": "“Gregarious” birds live in flocks. That describes how a species behaves, not how common it is, and the text contrasts these birds with rare ones and then calls them “such common species.”"
+        },
+        "B": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "A “beleaguered” species is one under pressure or threat. Birds that seemed threatened would appear to need protection, the opposite of the reason the text gives for overlooking them."
+        },
+        "D": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "“Sedentary” birds stay in one area rather than migrating. Nothing in the text concerns whether these birds move, and staying in one place would not explain why they seem to need no protection."
+        }
+      },
+      "models": [
+        "6017ae31",
+        "d3ca5d59",
+        "d5ad34f0",
+        "d7807ec8"
+      ],
+      "band7_moves": [
+        "negation hidden in the consequence ('seem to need no protection'), with the key the counterintuitive reason a species is overlooked",
+        "all four options past rank 20,000",
+        "near-synonym distractor failing on one feature: gregarious (lives in flocks, not found everywhere)",
+        "reversal of the implied logic rather than a negation flip: beleaguered"
+      ],
+      "word_count": 52,
+      "sources": [
+        {
+          "what": "Inger et al. (Ecology Letters): 421 million fewer birds in Europe over 30 years, around 90 percent of the loss among the most common, widespread species (house sparrow, starling); conservation efforts tend to focus on rarer species",
+          "url": "https://news-archive.exeter.ac.uk/2014/november/title_419684_en.html"
+        }
+      ],
+      "notes": "Subject: natural science (ecology). Key letter C. Steps: 2 (the negated consequence 'need no protection' implies an abundant bird; 'such common species' confirms which trait the blank names). Concessive frame: no. Transferred-sense key: no. Section 6 checks (raw freq.txt ranks): gregarious 29,890; beleaguered 20,631; ubiquitous 25,257; sedentary 35,765; 4 of 4 past 10,000 and past 20,000; mean log10 rank 4.44; rarest distractor past 50,000: no. Combined gate: pass (3 of 4 past 10,000). Band-5 guard: clear (key is not the rarest). The framing sentence about conservation programs is the passage's, not attributed to Inger; the core claim (most of the loss among common species) is the study's. 'Approximately 420 million' rounds 421 million; 'over a 30-year period' as the source states it.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 5,
+        "fixes": [
+          "source replaced with the University of Exeter release, which states each detail (421 million, about 90 percent among common species, conservation focused on rarer species); the Audubon page could not be reached from here",
+          "'between 1980 and 2009' not in the source; now 'over a 30-year period'"
+        ],
+        "status": "fixed"
+      },
+      "band7": {
+        "verdict": "band 7",
+        "why": "Section 6 checks pass: all four options past raw rank 20,000 (gregarious 29,890; beleaguered 20,631; ubiquitous 25,257; sedentary 35,765), mean log10 4.44, combined gate and band-5 guard clear. Two steps (rare-birds contrast plus \"seem to need no protection\"), near-synonym trap gregarious (flocking, not widespread), like official bce4d106 (ubiquity) and d7807ec8. Caveat: the confirming clue \"such common species\" is plain, so the vocabulary carries the item; left as is because a vaguer clue would make gregarious loosely defensible."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "C",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 7
+    },
+    {
+      "id": "words_in_context.M1.hard.w2b2_05",
+      "template": "M1",
+      "subtype": "Most nearly mean: underlined word",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "The following text is adapted from Robert Hugh Benson’s 1904 novel By What Authority? Lady Maxwell watches her son, Hubert, and his companion Anthony depart for an afternoon of falconry.\n\nLady Maxwell cried to them from the north terrace to be careful, and pointed out to Mr. Norris who had dined with them what a graceful seat Hubert had; and then added politely, but as an obvious afterthought, that Anthony seemed to manage his pony with great <u>address</u>.",
+      "stem": "As used in the text, what does the word “address” most nearly mean?",
+      "options": [
+        "Civility",
+        "Oration",
+        "Domicile",
+        "Dexterity"
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "Lady Maxwell first praises Hubert’s riding posture and then, as an afterthought, says something about how Anthony handles his pony. To “manage” a pony “with great address” is to handle it with skill, so “address” most nearly means dexterity.",
+      "distractors": {
+        "A": {
+          "recipe": "another sense of the target (SENSE)",
+          "why_wrong": "“Address” can refer to a person’s polished, courteous manner, and the text does say that Lady Maxwell spoke “politely.” But the politeness is hers; the underlined word describes how Anthony manages his pony, and civility is not a way of handling a horse."
+        },
+        "B": {
+          "recipe": "another sense of the target (SENSE)",
+          "why_wrong": "An address can be a formal speech, but Anthony is not speaking; the phrase describes how he rides."
+        },
+        "C": {
+          "recipe": "another sense of the target (SENSE)",
+          "why_wrong": "An address can name the place where someone lives, a meaning that makes no sense in “manage his pony with great address.”"
+        }
+      },
+      "models": [
+        "3.11",
+        "3.3",
+        "3.15"
+      ],
+      "word_count": 78,
+      "sources": [
+        {
+          "what": "Robert Hugh Benson, By What Authority? (1904), Book I, chapter on the boys' hawking; Project Gutenberg text, copied exactly from 'Lady Maxwell cried' (adapted: begins after a semicolon)",
+          "url": "https://www.gutenberg.org/ebooks/19697"
+        }
+      ],
+      "notes": "Subject: literature. Key letter D. Excerpt copied exactly; it begins after a semicolon, hence 'adapted'. Hubert is Lady Maxwell's son and Anthony Norris his younger friend and companion (checked in the novel's opening chapters). Steps: 2 (set aside the common senses of 'address', then read the frame 'manage his pony with great ___' against the praise of Hubert's seat). Traps: Civility echoes 'politely' (Lady Maxwell's manner, not Anthony's); Oration and Domicile are other senses. Option ranks: Civility 9,648; Oration 22,225; Domicile 23,761; Dexterity 16,626 (key mid-frequency, as in the band-6 model 3.11 Dictate).",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [
+          "option set lifted toward one band: Courtesy (2,779) replaced with Civility (9,648), Destination (6,146) with Domicile (23,761), same traps (the politeness echo and the place sense)"
+        ],
+        "status": "fixed",
+        "excerpt": "checked against Project Gutenberg text: exact"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "M1, two steps (set aside the common senses, then read \"manage his pony with great ___\" against the praise of Hubert’s seat), politeness echo as the trap, like official 9b22bf7b (Dictate, band 6). Options Civility 9,648; Oration 22,225; Domicile 23,761; Dexterity 16,626. Excerpt checked against Project Gutenberg 19697, exact."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "D",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "words_in_context.B4.hard.w2b2_06",
+      "template": "B4",
+      "subtype": "Blank completion: example-pinned clue",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "The vine Boquila trifoliolata is a remarkably ______ mimic. In the temperate rainforests of Chile, Ernesto Gianoli and Fernando Carrasco-Urra found that as the vine climbs different trees, its leaves change in size, shape, and color to resemble those of whichever tree it is growing on, imitating several different species.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "obtrusive",
+        "versatile",
+        "sporadic",
+        "rudimentary"
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The second sentence shows the vine imitating whatever host it happens to climb: its leaves change size, shape, and color to match the tree it grows on, so one vine can copy several species. A mimic that can adapt to many different models is “versatile.”",
+      "distractors": {
+        "A": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "An “obtrusive” mimic would stand out and draw attention. The vine’s leaves change to resemble those of the tree it grows on, which helps it blend in rather than be noticed."
+        },
+        "C": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "A “sporadic” mimic would imitate other plants only now and then. The text describes the vine matching each tree it climbs, and nothing suggests the mimicry is occasional."
+        },
+        "D": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "“Rudimentary” mimicry would be crude or basic. The leaves change in size, shape, and color to match several species, which is detailed imitation, not crude imitation."
+        }
+      },
+      "models": [
+        "3.18",
+        "a06c434d",
+        "dd19befa"
+      ],
+      "word_count": 50,
+      "sources": [
+        {
+          "what": "Gianoli and Carrasco-Urra (2014, Current Biology): Boquila trifoliolata leaves mimic size, shape, and color of multiple host species, matching the nearest host",
+          "url": "https://www.sciencenews.org/blog/wild-things/south-american-vine-masterful-mimic"
+        }
+      ],
+      "notes": "Subject: natural science (botany). Key letter B. Steps: 2 (generalize from the examples, changing to match whichever host is nearest, to the abstract category). Distractors: two reversals (obtrusive, rudimentary) and one unsupported word (sporadic); 'fastidious' was dropped because its sense 'meticulous' would fit. No band-6 B4 official exists; modeled on 3.18 and the band-7 B4 items' shape. Option ranks: obtrusive 21,437; versatile 26,569; sporadic 39,991; rudimentary 22,834. Simplified: the study counted up to a dozen host species and nine leaf traits; the passage says 'several'.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [
+          "'southern Chile', 'trees and shrubs' and 'whichever host is nearest' not in the source; now 'Chile', 'different trees', 'whichever tree it is growing on'",
+          "distractor 'conspicuous' (6,466, the one option below rank 20,000) replaced with 'obtrusive' (21,437), same reversal"
+        ],
+        "status": "fixed"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "B4, two steps (generalize from matching each host to the abstract category). Options obtrusive 21,437; versatile 26,569; sporadic 39,991; rudimentary 22,834: all past 20,000. The examples pin the key directly and no distractor is a near synonym, so band 6 as targeted, not 7."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "B",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "words_in_context.B5.medium.w2b2_07",
+      "template": "B5",
+      "subtype": "Blank completion: negated frame",
+      "tier": "medium",
+      "passage": "A butterfly’s wings may appear to be little more than membranes covered with microscopic scales, but they are not ______. Cheng-Chia Tsai and colleagues discovered that the wings contain living cells and that certain species possess a pulsating “wing heart” circulating fluid through specialized structures.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "translucent",
+        "symmetrical",
+        "inert",
+        "porous"
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The text contrasts how the wings look, mere membranes covered with scales, with what Tsai’s team found: living cells and even a pulsating “wing heart.” Wings with living, active tissue are not “inert,” or lifeless and inactive.",
+      "distractors": {
+        "A": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Whether the wings let light through is never discussed; living cells and a wing heart say nothing about how translucent the wings are."
+        },
+        "B": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "The findings concern living cells and moving fluid, not the shape of the wings, so they give no reason to say the wings are not symmetrical."
+        },
+        "D": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Whether the wings let air or water pass through is never discussed; living cells and a wing heart give no reason to say the wings are not porous."
+        }
+      },
+      "models": [
+        "2.6",
+        "2.10",
+        "2.11",
+        "2.13",
+        "2.14",
+        "2.21"
+      ],
+      "word_count": 45,
+      "sources": [
+        {
+          "what": "Tsai et al. (2020, Nature Communications): butterfly wings contain living cells; a pulsing 'wing heart' moves hemolymph through a scent pad",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6987309"
+        }
+      ],
+      "notes": "Subject: natural science (biology). Key letter C. Negated frame: 'not ___' after a contrast with appearance. Steps: 2 (the 'but' sets appearance against reality; the second sentence names the reality, living and active tissue). Distractors: three unsupported words of the same band (as in 2.10). Option ranks: translucent 20,257; symmetrical 23,688; inert 12,899; porous 38,571. Simplified: the wing heart serves a scent pad on the wing.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [
+          "distractor 'ornamental' replaced with 'porous' (38,571): 'not ornamental' could be read loosely as 'not merely decorative', which the finding supports"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "words_in_context.B6.medium.w2b2_08",
+      "template": "B6",
+      "subtype": "Blank completion: phrase options",
+      "tier": "medium",
+      "passage": "Merchant sailing vessels once loaded soil and stones as ballast in distant ports and discarded the material in European harbors. In Seeds of Change, artist Maria Thereza Alves cultivates plants germinating from seeds preserved in historical ballast deposits, presenting them as living ______ that commerce.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "witnesses to",
+        "causes of",
+        "remedies for",
+        "substitutes for"
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The seeds came to Europe in ballast that merchant vessels loaded in distant ports, so the plants that grow from them are evidence of where those ships traveled. Alves presents the plants as “living witnesses to” that commerce: they record and testify to it.",
+      "distractors": {
+        "B": {
+          "recipe": "right field, wrong nuance or agent (CONNOT)",
+          "why_wrong": "The plants are a result of the commerce, not its cause; the seeds arrived only because ships discarded ballast after their voyages."
+        },
+        "C": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Nothing in the text suggests the plants cure or correct any problem with that commerce."
+        },
+        "D": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "The plants cannot take the place of the commerce in any way described in the text; they grew from seeds that the commerce carried."
+        }
+      },
+      "models": [
+        "2.4",
+        "2.7",
+        "2.15",
+        "2.18",
+        "2.20",
+        "2.28"
+      ],
+      "word_count": 45,
+      "sources": [
+        {
+          "what": "Maria Thereza Alves, Seeds of Change: earth and stones used as ballast by merchant sailing ships, unloaded in European port cities with seeds from where it was loaded; the project unearths historical ballast sites and grows ballast flora",
+          "url": "https://archive.artefact-festival.be/2019/en/expo/seeds-of-change.html"
+        }
+      ],
+      "notes": "Subject: humanities (art). Key letter A. Steps: 2 (the seeds traveled in ballast, so the plants are traces of the voyages). Near miss: causes of (right relation field, reversed direction). Option ranks: witnesses to 2,311; causes of 715; remedies for 7,073; substitutes for 9,221.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [
+          "artist's site does not load (verification page); source replaced with the Artefact festival page, which states every detail",
+          "'For centuries' not in that source; now 'Merchant sailing vessels once'"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "words_in_context.B1.medium.w2b2_09",
+      "template": "B1",
+      "subtype": "Blank completion: restatement clue",
+      "tier": "medium",
+      "passage": "Malcolm Burrows and Gregory Sutton discovered that in juvenile Issus planthoppers, the hind legs are ______ by a strip of interlocking gear teeth: whenever the insect jumps, the teeth engage precisely, so both legs begin extending within 30 millionths of a second of each other.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "immobilized",
+        "weakened",
+        "separated",
+        "synchronized"
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The clause after the colon explains what the gear teeth do: they engage so that both hind legs begin extending within 30 millionths of a second of each other. Legs made to move at the same moment are “synchronized.”",
+      "distractors": {
+        "A": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "Legs that were immobilized could not move, but the text says that when the insect jumps both legs begin extending; the gears time that movement rather than stopping it."
+        },
+        "B": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Nothing suggests the gear teeth make the legs weaker; they only control the timing of the legs’ movement."
+        },
+        "C": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "The teeth interlock and engage, joining the motion of the two legs rather than keeping the legs apart."
+        }
+      },
+      "models": [
+        "2.5",
+        "2.9",
+        "2.16",
+        "2.23",
+        "2.27"
+      ],
+      "word_count": 45,
+      "sources": [
+        {
+          "what": "Burrows and Sutton (2013, Science): Issus nymphs have interlocking gears on the hind-leg trochanters; the legs start moving within 30 microseconds of each other",
+          "url": "https://www.cam.ac.uk/research/news/functioning-mechanical-gears-seen-in-nature-for-the-first-time"
+        }
+      ],
+      "notes": "Subject: natural science (entomology). Key letter D. Steps: 1 (the clause after the colon restates the key in technical terms). One sentence, as in several medium models. Distractors: two reversals (immobilized, separated) and one unsupported word; 'propelled' was dropped because the text never says what powers the legs. Option ranks: immobilized absent from freq.txt; weakened 10,052; separated 3,282; synchronized absent from freq.txt (modern form).",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 5,
+        "fixes": [
+          "species name 'coleoptratus' not in the source; now 'Issus planthoppers'"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "words_in_context.M2.medium.w2b2_10",
+      "template": "M2",
+      "subtype": "Most nearly mean: underlined phrase",
+      "tier": "medium",
+      "passage": "The following text is from Constance Fenimore Woolson’s 1886 novel East Angels.\n\nManuel, meanwhile, was bringing forward his finest powers for the entertainment of Mrs. Harold, by whose side he had been placed; and if he talked in a somewhat more decorated strain than was prevalent in the colder circles from which she had come, it was <u>carried off</u> easily by his youth, his handsome face, his animated manner.",
+      "stem": "As used in the text, what does the phrase “carried off” most nearly mean?",
+      "options": [
+        "Taken away by force",
+        "Made acceptable",
+        "Won as a prize",
+        "Brought to an end"
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "Manuel speaks in a more flowery style than Mrs. Harold is used to, and the sentence says his youth, looks, and lively manner make up for it. Here “carried off” means that his charm made his ornate way of talking acceptable rather than awkward.",
+      "distractors": {
+        "A": {
+          "recipe": "another sense of the target (SENSE)",
+          "why_wrong": "“Carried off” can mean taken away by force, but nothing is removed here; the phrase describes how Manuel’s charm makes his flowery speech go over well."
+        },
+        "C": {
+          "recipe": "another sense of the target (SENSE)",
+          "why_wrong": "One can “carry off” a prize by winning it, but Manuel’s way of talking is not a prize, and nothing is won."
+        },
+        "D": {
+          "recipe": "another sense of the target (SENSE)",
+          "why_wrong": "“Carried off” can describe something ended, as when an illness carries someone off. Manuel’s talk is not stopped; it continues and is well received."
+        }
+      },
+      "models": [
+        "2.26",
+        "2.1",
+        "2.8"
+      ],
+      "word_count": 69,
+      "sources": [
+        {
+          "what": "Constance Fenimore Woolson, East Angels (1886), Project Gutenberg text, copied exactly",
+          "url": "https://www.gutenberg.org/ebooks/33143"
+        }
+      ],
+      "notes": "Subject: literature. Key letter B. Excerpt copied exactly (one sentence). Shape: underlined phrase with four definition-style paraphrase options (2.26, 2.8), unlike the easy M2 in this batch (single word, short phrase options). Steps: 2 (read 'if he talked ... it was carried off ... by his youth' as a concession answered by his charm). Option ranks: Taken away by force 728; Made acceptable 11,952; Won as a prize 3,700; Brought to an end 271.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 2,
+        "fixes": [],
+        "status": "pass",
+        "excerpt": "checked against Project Gutenberg text: exact"
+      }
+    },
+    {
+      "id": "words_in_context.B3.medium.w2b2_11",
+      "template": "B3",
+      "subtype": "Blank completion: contrast clue",
+      "tier": "medium",
+      "passage": "Because Uber assigns rides with a gender-blind algorithm, the platform might be expected to ______ the gender pay gap. Yet Cody Cook and colleagues determined that among over a million US drivers, men earned approximately 7 percent more per hour, owing to differences in accumulated experience, preferred driving times and locations, and driving speed.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "exacerbate",
+        "measure",
+        "eliminate",
+        "justify"
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "A gender-blind algorithm might be expected to remove any pay difference between men and women. “Yet” introduces the surprising finding that a gap remained, so the expectation must have been that the platform would “eliminate” the gap.",
+      "distractors": {
+        "A": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "To “exacerbate” the gap would be to make it worse. A gender-blind algorithm gives no reason to expect a wider gap, and the “Yet” sentence reports a gap that persisted, not one the algorithm was expected to cause."
+        },
+        "B": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Nothing about a gender-blind algorithm would lead anyone to expect the platform to measure the gap; the researchers, not the algorithm, measured it."
+        },
+        "D": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "A gender-blind algorithm gives no reason to expect it to justify a gender gap, and the text never discusses whether the gap is justified."
+        }
+      },
+      "models": [
+        "2.12"
+      ],
+      "word_count": 54,
+      "sources": [
+        {
+          "what": "Cook, Diamond, Hall, List, and Oyer: men earned about 7 percent more per hour than women among about 1.8 million US Uber drivers despite a gender-blind algorithm; three factors: experience, where and when they work, driving speed",
+          "url": "https://news.uchicago.edu/story/study-uncovers-gender-gap-earnings-uber-drivers"
+        }
+      ],
+      "notes": "Subject: social science (economics). Key letter C. Steps: 2 (infer the expectation from the gender-blind formula, then confirm it against 'Yet ... men earned approximately 7 percent more'). 'Narrow' is deliberately not offered, since a 7 percent gap could be read as a narrowed one. Option ranks: exacerbate absent (modern); measure 2,003; eliminate 27,169; justify 6,555. All three factors the source gives are named.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 5,
+        "fixes": [
+          "'compensation formula disregards gender' was stronger than the source ('gender-blind algorithm for work assignments'); now 'assigns rides with a gender-blind algorithm'",
+          "'primarily because they drove faster and had accumulated more experience' dropped the source's third factor and its weighting; now all three factors, unweighted"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "words_in_context.B1.easy.w2b2_12",
+      "template": "B1",
+      "subtype": "Blank completion: restatement clue",
+      "tier": "easy",
+      "passage": "For decades, the contributions of fashion designer Ann Lowe were largely ______. Although she created the gown Jacqueline Bouvier wore at her 1953 wedding to John F. Kennedy, as well as the dresses for the entire bridal party, the press at the time did not name her.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "uncredited",
+        "celebrated",
+        "unfinished",
+        "imitated"
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The second sentence shows that Lowe’s contributions went without public acknowledgment: although she created the gown for a famous wedding, the press at the time did not name her. Work whose maker is not named or acknowledged is “uncredited.”",
+      "distractors": {
+        "B": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "Lowe made the gown for a famous wedding, but she herself was not praised; the press did not even mention her name."
+        },
+        "C": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "The text says Lowe created the gown that was worn at the wedding, so nothing suggests her contributions were left incomplete."
+        },
+        "D": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "The text never says anyone copied Lowe’s designs; it says the press left out her name."
+        }
+      },
+      "models": [
+        "1.6",
+        "1.39",
+        "1.15",
+        "1.11"
+      ],
+      "word_count": 47,
+      "sources": [
+        {
+          "what": "Ann Lowe designed Jacqueline Bouvier's 1953 wedding gown; the press did not credit her at the time",
+          "url": "https://fashionhistory.fitnyc.edu/1898-1981-ann-lowe"
+        }
+      ],
+      "notes": "Subject: humanities (fashion design). Key letter A. Steps: 1. Option ranks: uncredited absent (modern); celebrated 5,437; unfinished 9,123; imitated 10,889. Details as the source gives them: the gown and the bridal party's dresses; the press did not credit her.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [
+          "'one of the most widely photographed wedding dresses of its era' (not in the source, and it let 'celebrated' read loosely as true of her work) cut; 'newspaper descriptions of the ceremony' now 'the press at the time' (source: the press did not credit Lowe); added the bridal-party dresses, which the source states, to keep the length near the models' median"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "words_in_context.B1.easy.w2b2_13",
+      "template": "B1",
+      "subtype": "Blank completion: restatement clue",
+      "tier": "easy",
+      "passage": "The claws of the coconut crab are remarkably ______. Measuring the grip of 29 wild crabs, Shin-ichiro Oka and colleagues recorded pinching forces of up to about 1,765 newtons and calculated that the largest individuals could exert nearly twice that force, more than any other crustacean reported.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "delicate",
+        "colorful",
+        "sensitive",
+        "powerful"
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The researchers measured how hard the crabs could pinch and found forces of up to about 1,765 newtons, with the largest crabs estimated to pinch even harder than any other crustacean reported. Claws that grip with such force are “powerful.”",
+      "distractors": {
+        "A": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "“Delicate” claws would be weak or fragile, the opposite of claws that pinch harder than those of any other crustacean reported."
+        },
+        "B": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "The study measured pinching force; the text says nothing about the claws’ color."
+        },
+        "C": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "The text describes how hard the claws can squeeze, not how well they sense touch."
+        }
+      },
+      "models": [
+        "1.11",
+        "1.42",
+        "1.6",
+        "1.23"
+      ],
+      "word_count": 47,
+      "sources": [
+        {
+          "what": "Oka, Tomita, and Miyamoto (PLOS ONE, 2016): pinching force of 29 wild coconut crabs, maximum 29.4 to 1,765.2 N; a 4 kg crab estimated at 3,300 N, greatly exceeding all other crustaceans reported",
+          "url": "https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0166108"
+        }
+      ],
+      "notes": "Subject: natural science (zoology). Key letter D. Steps: 1. Option ranks: delicate 1,159; colorful 70,399 (modern spelling undercounted); sensitive 3,071; powerful 1,932. 'Nearly twice that' rounds 3,300 N against 1,765 N.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 5,
+        "fixes": [
+          "the news source did not state 29 crabs or 1,765 newtons; source replaced with the PLOS ONE paper, which states every detail"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "words_in_context.B1.easy.w2b2_14",
+      "template": "B1",
+      "subtype": "Blank completion: restatement clue",
+      "tier": "easy",
+      "passage": "In 1931, when the school board in Lemon Grove, California, ordered Mexican American children to attend a separate two-room schoolhouse, their parents ______ the decision. They kept their children at home and took the board to court, winning what historians consider the first successful school desegregation lawsuit in the United States.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "praised",
+        "designed",
+        "resisted",
+        "funded"
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The second sentence tells what the parents did about the decision: they kept their children home and sued the school board, and they won. Refusing to go along with a decision and fighting it in court is to have “resisted” it.",
+      "distractors": {
+        "A": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "Parents who praised the decision would not have kept their children home and taken the board to court."
+        },
+        "B": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "The text says the school board ordered the separate schoolhouse; nothing suggests the parents designed the arrangement they opposed."
+        },
+        "D": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Nothing indicates that the parents paid for the separate schoolhouse; they fought the decision in court."
+        }
+      },
+      "models": [
+        "1.33",
+        "1.13",
+        "1.15"
+      ],
+      "word_count": 51,
+      "sources": [
+        {
+          "what": "Lemon Grove Incident (1931): Mexican American families refused the separate school, sued (Alvarez v. Lemon Grove School District), and won; widely described as the first successful school desegregation case in the US",
+          "url": "https://en.wikipedia.org/wiki/Lemon_Grove_Incident"
+        }
+      ],
+      "notes": "Subject: history. Key letter C. Steps: 1 (the next sentence restates the key through actions). Option ranks: praised 2,597; designed 3,864; resisted 3,187; funded 7,219.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 5,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "words_in_context.M1.easy.w2b2_15",
+      "template": "M1",
+      "subtype": "Most nearly mean: underlined word",
+      "tier": "easy",
+      "passage": "The following text is from Olive Schreiner’s 1883 novel The Story of an African Farm. Tant Sannie, a widow, manages an isolated sheep farm in the South African countryside.\n\nIn the farmhouse, on her great wooden bedstead, Tant Sannie, the Boer-woman, rolled heavily in her sleep.\n\nShe had gone to bed, as she always did, in her clothes, and the night was warm and the room <u>close</u>, and she dreamed bad dreams.",
+      "stem": "As used in the text, what does the word “close” most nearly mean?",
+      "options": [
+        "Stuffy",
+        "Nearby",
+        "Careful",
+        "Secretive"
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The word describes the room on a warm night when Tant Sannie has gone to bed fully dressed and sleeps badly. In this context a “close” room is one where the air is warm and still, so “close” most nearly means stuffy.",
+      "distractors": {
+        "B": {
+          "recipe": "another sense of the target (SENSE)",
+          "why_wrong": "“Close” often means near, but the sentence is describing the condition of the room on a warm night, not its distance from anything."
+        },
+        "C": {
+          "recipe": "another sense of the target (SENSE)",
+          "why_wrong": "Close attention is careful attention, but a room cannot be careful; the word describes the room’s air."
+        },
+        "D": {
+          "recipe": "another sense of the target (SENSE)",
+          "why_wrong": "A close person keeps secrets, but the word here describes a room, alongside the warm night, not a person’s character."
+        }
+      },
+      "models": [
+        "1.54",
+        "1.45",
+        "1.1"
+      ],
+      "word_count": 72,
+      "sources": [
+        {
+          "what": "Olive Schreiner, The Story of an African Farm (1883), Part I, chapter 1, Project Gutenberg text, copied exactly",
+          "url": "https://www.gutenberg.org/ebooks/1441"
+        }
+      ],
+      "notes": "Subject: literature. Key letter A. Excerpt copied exactly (two consecutive paragraphs). Steps: 1 (the frame 'the night was warm and the room ___' fixes the sense). Distractors: three other senses of 'close'. Option ranks: Stuffy 15,543; Nearby 29,071; Careful 1,633; Secretive 24,019. 'Shut' was deliberately not offered, since an older sense of 'close' is 'closed'.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass",
+        "excerpt": "checked against Project Gutenberg text: exact"
+      }
+    },
+    {
+      "id": "words_in_context.M1.easy.w2b2_16",
+      "template": "M1",
+      "subtype": "Most nearly mean: underlined word",
+      "tier": "easy",
+      "passage": "The following text is from Mary Cholmondeley’s 1899 novel Red Pottage. Hester is gazing across the English countryside on a sweltering summer day.\n\nThe miller’s old white horse, with a dip in his long back and a corresponding curve in his under outline, was standing motionless in the sun, <u>fast</u> asleep, his front legs bent like a sailor’s.",
+      "stem": "As used in the text, what does the word “fast” most nearly mean?",
+      "options": [
+        "Quickly",
+        "Soundly",
+        "Loyally",
+        "Restlessly"
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The horse is “standing motionless in the sun,” so it is not moving quickly; it is deep in sleep. In the phrase “fast asleep,” “fast” most nearly means soundly.",
+      "distractors": {
+        "A": {
+          "recipe": "another sense of the target (SENSE)",
+          "why_wrong": "“Fast” often means quickly, but the horse is standing motionless, so speed has nothing to do with how it is asleep."
+        },
+        "C": {
+          "recipe": "another sense of the target (SENSE)",
+          "why_wrong": "“Fast friends” are loyal ones, but loyalty does not describe a horse’s sleep."
+        },
+        "D": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "The horse is “standing motionless,” so it is not sleeping restlessly; “fast asleep” describes deep, still sleep."
+        }
+      },
+      "models": [
+        "1.40",
+        "1.8",
+        "1.54",
+        "1.56"
+      ],
+      "word_count": 58,
+      "sources": [
+        {
+          "what": "Mary Cholmondeley, Red Pottage (1899), Project Gutenberg text, copied exactly",
+          "url": "https://www.gutenberg.org/ebooks/14885"
+        }
+      ],
+      "notes": "Subject: literature. Key letter B. Excerpt copied exactly (one paragraph); straight apostrophes converted to curly. Steps: 1. Distractors: two other senses of 'fast' (quick, loyal) and one reversal contradicted by 'motionless' (restlessly). 'Firmly' and 'Securely' were not offered, since 'fast asleep' historically means firmly asleep. Option ranks: Quickly 546; Soundly 441; Loyally 3,950; Restlessly 2,476.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass",
+        "excerpt": "checked against Project Gutenberg text: exact"
+      }
+    },
+    {
+      "id": "words_in_context.M1.easy.w2b2_17",
+      "template": "M1",
+      "subtype": "Most nearly mean: underlined word",
+      "tier": "easy",
+      "passage": "The following text is from Henry Handel Richardson’s 1910 novel The Getting of Wisdom. Laura, a young girl, is traveling alone by stagecoach, leaving her family behind for boarding school.\n\nBut as she was not used to crying, she missed the moment at which she might have <u>checked</u> herself, and went on shedding tears after they had become a luxury.",
+      "stem": "As used in the text, what does the word “checked” most nearly mean?",
+      "options": [
+        "Examined",
+        "Marked",
+        "Restrained",
+        "Deposited"
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "Laura keeps crying past the point when she could have stopped, because she is not used to crying. To have “checked” herself would have been to hold herself back from crying, so “checked” most nearly means restrained.",
+      "distractors": {
+        "A": {
+          "recipe": "another sense of the target (SENSE)",
+          "why_wrong": "To check something can mean to examine it, but the sentence is about the moment Laura could have stopped crying, not about inspecting herself."
+        },
+        "B": {
+          "recipe": "another sense of the target (SENSE)",
+          "why_wrong": "To check can mean to mark with a check, a meaning that does not fit someone who goes on shedding tears."
+        },
+        "D": {
+          "recipe": "another sense of the target (SENSE)",
+          "why_wrong": "Travelers check luggage by leaving it to be stored, but Laura is not leaving anything; the sentence is about stopping her tears."
+        }
+      },
+      "models": [
+        "1.41",
+        "1.38",
+        "1.55",
+        "1.56",
+        "1.19"
+      ],
+      "word_count": 60,
+      "sources": [
+        {
+          "what": "Henry Handel Richardson, The Getting of Wisdom (1910), chapter 3, Project Gutenberg text, copied exactly",
+          "url": "https://www.gutenberg.org/ebooks/3728"
+        }
+      ],
+      "notes": "Subject: literature. Key letter C. Excerpt copied exactly (the last sentence of a paragraph). Steps: 1 (the frame 'missed the moment ... and went on shedding tears' fixes the sense). Option ranks: Examined 3,085; Marked 1,342; Restrained 5,774; Deposited 7,776.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [
+          "source line said chapter 2; the excerpt is in chapter III of Project Gutenberg 3728"
+        ],
+        "status": "fixed",
+        "excerpt": "checked against Project Gutenberg text: exact"
+      }
+    },
+    {
+      "id": "words_in_context.B6.easy.w2b2_18",
+      "template": "B6",
+      "subtype": "Blank completion: phrase options",
+      "tier": "easy",
+      "passage": "Egyptologists regard an attendance register from Deir el-Medina, the village that housed the craftsmen who constructed royal tombs, as ______ the workers’ everyday lives. Written around 1250 BCE, it records why individual workers missed particular days, listing explanations such as illness, a relative’s death, and building a house.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "a threat to",
+        "a substitute for",
+        "a reward for",
+        "a window into"
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The register records ordinary details about specific workers, such as why each one missed work. A document that lets historians see such details is “a window into” the workers’ everyday lives.",
+      "distractors": {
+        "A": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "The register is a record kept about the workers; nothing in the text suggests it endangered their lives."
+        },
+        "B": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "A written record cannot replace the workers’ lives; it only describes parts of them."
+        },
+        "C": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "The text presents the register as a record of absences, not as something given to the workers for good work."
+        }
+      },
+      "models": [
+        "1.17",
+        "1.52",
+        "1.20",
+        "1.29",
+        "1.2"
+      ],
+      "word_count": 48,
+      "sources": [
+        {
+          "what": "British Museum EA5634 (on Google Arts & Culture): workmen's register from Deir el-Medina, the craftsmen's village for the New Kingdom tombs, year 40 of Ramesses II (about 1250 BC); reasons for absence include illness, deaths of relatives and building his house",
+          "url": "https://artsandculture.google.com/asset/limestone-ostrakon-with-a-register-of-workmen-s-absences/NQH9qIBqeBg6Pg?hl=en"
+        }
+      ],
+      "notes": "Subject: social science (archaeology). Key letter D. Steps: 1. Option ranks: a threat to 5,264; a substitute for 9,221; a reward for 2,578; a window into 392. Reasons now taken from the British Museum's own description (illness, a relative's death, building a house); 'brewing beer' and 'scorpion sting' were cut, neither is in it.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [
+          "'a scorpion sting' and 'brewing beer' are not in the British Museum description (britishmuseum.org blocks fetching; its Google Arts & Culture entry was used); replaced with 'a relative’s death' and 'building a house', which it lists"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "words_in_context.B6.easy.w2b2_19",
+      "template": "B6",
+      "subtype": "Blank completion: phrase options",
+      "tier": "easy",
+      "passage": "The artists who created hand-painted movie posters for Ghana’s traveling cinemas were evidently ______ exaggeration. Painting on used flour sacks sewn together into oversized canvases that traveled from town to town, they decorated their posters with brilliant colors and dramatic scenes, many of which never appeared in the films being promoted.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "afraid of",
+        "fond of",
+        "unaware of",
+        "puzzled by"
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The painters added dramatic scenes that were not even in the films they advertised, which shows how much they liked to exaggerate. Artists who make such a habit of exaggeration are “fond of” it.",
+      "distractors": {
+        "A": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "Artists afraid of exaggeration would avoid it, but these painters decorated their posters with scenes that never appeared in the films."
+        },
+        "C": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Adding invented scenes on purpose suggests the artists knew exactly what they were doing, not that they were unaware of exaggeration."
+        },
+        "D": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Nothing suggests exaggeration confused the artists; they used it freely in their work."
+        }
+      },
+      "models": [
+        "1.3",
+        "1.43",
+        "1.2"
+      ],
+      "word_count": 51,
+      "sources": [
+        {
+          "what": "Ghanaian hand-painted movie posters on flour sacks for traveling video screenings, known for imagined scenes not in the films",
+          "url": "https://faroutmagazine.co.uk/world-of-ghanaian-movie-posters/"
+        }
+      ],
+      "notes": "Subject: humanities (art). Key letter B. Steps: 1. Option ranks: afraid of 468; fond of 1,331; unaware of 8,556; puzzled by 2,113.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [
+          "'in the 1980s and 1990s' and 'video screenings' not in the source; now 'for Ghana’s traveling cinemas' (source: Ghana’s former mobile cinema), and the flour-sack canvases as the source describes them (sewn together, oversized, in constant transit)"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "words_in_context.B2.easy.w2b2_20",
+      "template": "B2",
+      "subtype": "Blank completion: cause or consequence clue",
+      "tier": "easy",
+      "passage": "When an empty shell becomes available, hermit crabs gather beside it and line up in descending order of size. Randi Rotjan and Sara Lewis observed that once the largest crab occupies it, each remaining crab transfers into the shell just vacated by its neighbor, so a single unoccupied shell can ______ numerous crabs.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "benefit",
+        "endanger",
+        "confuse",
+        "outlast"
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "When the largest crab occupies the new shell, its old shell goes to the next crab, and so on down the line, so every crab in the line ends up with a larger shell. One unoccupied shell therefore helps, or can “benefit,” numerous crabs.",
+      "distractors": {
+        "B": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "Nothing in the chain of shell swaps harms the crabs; each one gets a shell vacated by a larger neighbor."
+        },
+        "C": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "The crabs assemble in order of size and swap in an orderly sequence, so nothing suggests they are confused."
+        },
+        "D": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "The text is about how one shell passes along a line of crabs, not about how long the shell lasts compared with the crabs."
+        }
+      },
+      "models": [
+        "1.5",
+        "1.16",
+        "1.44",
+        "1.47",
+        "1.35"
+      ],
+      "word_count": 53,
+      "sources": [
+        {
+          "what": "Rotjan, Chabot, and Lewis (Behavioral Ecology, 2010): Coenobita clypeatus hermit crabs queue from largest to smallest by a vacant shell; once the largest moves in, each switches into the shell just vacated, so one shell leads to many crabs upgrading",
+          "url": "https://www.sciencedaily.com/releases/2010/04/100426141458.htm"
+        }
+      ],
+      "notes": "Subject: natural science (animal behavior). Key letter A. Steps: 1 (consequence of the chain of swaps). Option ranks: benefit 3,156; endanger 22,925; confuse 18,979; outlast 39,183.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [
+          "'In Belize', 'terrestrial' and 'frequently' not in the source; first sentence now follows it (crabs gather by a newly available shell and queue from largest to smallest). Source line corrected (it describes the 2010 Behavioral Ecology paper, not a 2009 Ethology one); author order as the source gives it"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "words_in_context.B2.easy.w2b2_21",
+      "template": "B2",
+      "subtype": "Blank completion: cause or consequence clue",
+      "tier": "easy",
+      "passage": "Before 1896, many US farm families had to travel to a town, sometimes on an all-day trip, to collect their mail. Rural Free Delivery, first tested in West Virginia that year, sent carriers to bring mail directly to farm homes and consequently ______ rural families’ access to the postal service.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "limited",
+        "replaced",
+        "expanded",
+        "concealed"
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "Farm families once had to travel to town, sometimes for a whole day, to get their mail, but Rural Free Delivery brought it to their homes. That change made the postal service far easier to use, so it “expanded” their access.",
+      "distractors": {
+        "A": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "Bringing mail to people’s homes made it easier to receive, not harder, so the service did not limit their access."
+        },
+        "B": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Families still used the postal service; the new service changed how the mail reached them rather than replacing their access to it."
+        },
+        "D": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Nothing was hidden from rural families; the service made their mail easier to obtain."
+        }
+      },
+      "models": [
+        "1.5",
+        "1.16",
+        "1.31",
+        "1.44",
+        "1.47"
+      ],
+      "word_count": 50,
+      "sources": [
+        {
+          "what": "Rural Free Delivery began on October 1, 1896, as an experiment in Jefferson County, West Virginia; before it, farm families had to travel to a town for their mail, in some cases an all-day trip",
+          "url": "https://wvpublic.org/october-1-1896-rural-free-mail-delivery-begins/"
+        }
+      ],
+      "notes": "Subject: history. Key letter C. Steps: 1 (consequence of home delivery). Option ranks: limited 4,407; replaced 5,119; expanded 10,334; concealed 2,760.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [
+          "'sometimes for miles', 'nearest post office', 'send' and 'letters, newspapers, and mail-order catalogs' not in the source; now 'travel to a town, sometimes on an all-day trip, to collect their mail', 'first tested in West Virginia' and 'access to the postal service'"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "words_in_context.B4.easy.w2b2_22",
+      "template": "B4",
+      "subtype": "Blank completion: example-pinned clue",
+      "tier": "easy",
+      "passage": "Chinese-born composer Tan Dun has often written compositions for ______ instruments. In his Water Concerto (1998), percussionists play basins of water using bowls, bottles, and their hands, and in his Paper Concerto (2003), musicians shake and strike sheets of paper and play other instruments constructed from paper.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "traditional",
+        "electronic",
+        "miniature",
+        "unusual"
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The examples show Tan Dun making music with basins of water and with sheets of paper, things that are not normally played as instruments. These examples show that he writes for “unusual” instruments.",
+      "distractors": {
+        "A": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "Basins of water and sheets of paper are not traditional instruments; the examples show the opposite."
+        },
+        "B": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Nothing in the examples is electronic; the performers make sounds by hand with water and paper."
+        },
+        "C": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Nothing in the examples concerns size; basins of water and sheets of paper are unusual materials, not small versions of ordinary instruments."
+        }
+      },
+      "models": [
+        "1.7",
+        "1.18",
+        "1.25",
+        "1.34",
+        "1.46",
+        "1.22"
+      ],
+      "word_count": 47,
+      "sources": [
+        {
+          "what": "Tan Dun, Chinese-born composer whose works often use organic instruments: Water Concerto (1998), basins of water played with bowls, bottles and hands; Paper Concerto (2003), instruments constructed from paper, and sheets of paper shaken or struck",
+          "url": "https://en.wikipedia.org/wiki/Tan_Dun"
+        }
+      ],
+      "notes": "Subject: humanities (music). Key letter D. Steps: 1 (generalize from two examples). Option ranks: traditional 12,818; electronic 46,933; miniature 6,090; unusual 2,134. Techniques as the source describes them: basins played with bowls, bottles and hands; paper shaken, struck and made into instruments.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [
+          "source replaced with Wikipedia, Tan Dun, which states each detail; the CSO page could not be reached from here",
+          "'strike, splash, and pour water in large transparent bowls' and 'wave enormous sheets' not in the source; now 'play basins of water using bowls, bottles, and their hands' and 'shake and strike sheets of paper'; why_wrong for miniature rewritten (no size now stated)"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "words_in_context.B5.easy.w2b2_23",
+      "template": "B5",
+      "subtype": "Blank completion: negated frame",
+      "tier": "easy",
+      "passage": "Doodling while listening might seem likely to distract people, but in an experiment by psychologist Jackie Andrade, it did not ______ their concentration. Participants who shaded shapes while hearing a monotonous recorded telephone message later remembered about 29 percent more of its details than participants who simply listened.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "improve",
+        "weaken",
+        "measure",
+        "attract"
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The sentence sets up a contrast: doodling might be expected to distract, “but” it did not do so. The second sentence confirms it, since doodlers remembered more of the message, so doodling did not “weaken” their concentration.",
+      "distractors": {
+        "A": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "Doodlers remembered more of the message than listeners who did not doodle, so the study suggests doodling helped their concentration; saying it “did not improve” their concentration contradicts that result."
+        },
+        "C": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Doodling is not presented as a way of measuring concentration; the experiment measured what participants remembered."
+        },
+        "D": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "The text is about whether doodling interferes with listening, not about whether it draws people toward something."
+        }
+      },
+      "models": [
+        "1.12",
+        "1.24",
+        "1.28",
+        "1.37",
+        "1.48"
+      ],
+      "word_count": 48,
+      "sources": [
+        {
+          "what": "Andrade (2009, Applied Cognitive Psychology, 'What does doodling do?'): participants shading shapes during a dull phone message recalled 29 percent more information",
+          "url": "https://www.sciencedaily.com/releases/2009/02/090226210039.htm"
+        }
+      ],
+      "notes": "Subject: social science (psychology). Key letter B. Negated frame: 'did not ___' set against 'might seem likely to distract'. Steps: 1. Option ranks: improve 5,682; weaken 15,327; measure 2,003; attract 5,414.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "words_in_context.M2.easy.w2b2_24",
+      "template": "M2",
+      "subtype": "Most nearly mean: underlined word, phrase options",
+      "tier": "easy",
+      "passage": "The following text is from Miles Franklin’s 1901 novel My Brilliant Career. Sybylla, the narrator, is staying with her grandmother and her aunt Helen at their homestead in rural Australia.\n\nI could hear grannie’s pen <u>fly</u> over the paper as she made out a list of Christmas supplies on a table near me.\n\n“Helen, I suppose a hundredweight of currants will be sufficient?”\n\n“Yes; I should think so.”\n\n“Seven dozen yards of unbleached calico be enough?”\n\n“Yes; plenty.”",
+      "stem": "As used in the text, what does the word “fly” most nearly mean?",
+      "options": [
+        "Move swiftly",
+        "Rise upward",
+        "Run away",
+        "Flap loosely"
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "Grannie is busy writing a long list of supplies, and Sybylla can hear her pen moving across the paper. A pen that “flies” over paper is moving quickly as someone writes, so “fly” most nearly means move swiftly.",
+      "distractors": {
+        "B": {
+          "recipe": "another sense of the target (SENSE)",
+          "why_wrong": "Birds fly by rising into the air, but the pen is moving across the paper, not lifting up from it."
+        },
+        "C": {
+          "recipe": "another sense of the target (SENSE)",
+          "why_wrong": "“Fly” can mean to flee, but grannie’s pen is not escaping from anything; it is being used to write a list."
+        },
+        "D": {
+          "recipe": "another sense of the target (SENSE)",
+          "why_wrong": "A flag can fly by flapping in the wind, but a pen writing a list does not flap."
+        }
+      },
+      "models": [
+        "1.30"
+      ],
+      "word_count": 78,
+      "sources": [
+        {
+          "what": "Miles Franklin, My Brilliant Career (1901), chapter 22, Project Gutenberg text, copied exactly",
+          "url": "https://www.gutenberg.org/ebooks/11620"
+        }
+      ],
+      "notes": "Subject: literature. Key letter A. Excerpt copied exactly (one paragraph and four short lines of dialogue). Shape: single underlined word with phrase options, as in 1.30 (reaching: Arriving at); the medium M2 in this batch uses an underlined phrase with definition options instead. Steps: 1. Option ranks: Move swiftly 1,832; Rise upward 2,499; Run away 536; Flap loosely 11,351.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass",
+        "excerpt": "checked against Project Gutenberg text: exact"
+      }
+    }
+  ]
+}

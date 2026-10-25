@@ -1,0 +1,1737 @@
+{
+  "skill": "Command of Evidence",
+  "slug": "command_of_evidence",
+  "part": "w2b4",
+  "domain": "Information and Ideas",
+  "plan": {
+    "templates": [
+      {
+        "code": "T1_single",
+        "name": "Hypothetical finding supports or weakens a single claim (causal, comparison, existence, generalization, prediction)"
+      },
+      {
+        "code": "T1_compete",
+        "name": "Hypothetical finding discriminates between competing explanations (support or weaken)"
+      },
+      {
+        "code": "T2_lit_quote",
+        "name": "Quotation from a literary work illustrates a claim (single trait, two-part, contrast)"
+      },
+      {
+        "code": "T3_person_quote",
+        "name": "Quotation from a person (participant, respondent, historian, critic, article) supports or challenges a claim"
+      },
+      {
+        "code": "Q1_P1_lookup",
+        "name": "Data completion: lookup (one cell or bar, reverse lookup, filter)"
+      },
+      {
+        "code": "Q1_P2_extreme",
+        "name": "Data completion: extreme or rank (max/min, possibly after a filter)"
+      },
+      {
+        "code": "Q1_P3_pairwise",
+        "name": "Data completion: pairwise comparison (one or two comparisons)"
+      },
+      {
+        "code": "Q1_P5_control",
+        "name": "Data completion: condition vs control"
+      },
+      {
+        "code": "Q2_P4_trend",
+        "name": "Data description: trend or change over time supports a conclusion"
+      },
+      {
+        "code": "Q2_P5_control",
+        "name": "Data description: condition vs control or group comparison supports a conclusion"
+      },
+      {
+        "code": "Q2_P8_multipart",
+        "name": "Data description: multi-part, interaction, or passage-plus-data claim"
+      }
+    ]
+  },
+  "items": [
+    {
+      "id": "command_of_evidence.T1_single.hard.w2b4_01",
+      "template": "T1_single",
+      "subtype": "Hypothetical finding supports a generalization (literacy spread through a military hierarchy); the key implies low rank without naming it",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Around 600 BCE, soldiers stationed at Arad, a small fortress on the southern frontier of the kingdom of Judah, exchanged military orders and requests for provisions such as wine, oil, and flour, inscribing them in ink on fragments of pottery. Comparing the shapes of individual letters with computer algorithms and drawing on contextual clues in the inscriptions, mathematician Shira Faigenbaum-Golovin and colleagues determined that 16 of these texts were composed by at least six different writers. The team concluded that at this remote outpost, literacy had extended throughout the military hierarchy.",
+      "stem": "Which finding, if true, would most directly support the team’s conclusion?",
+      "options": [
+        "Several of the texts that were assigned to different writers share distinctive spelling habits, suggesting that one trained scribe wrote all of them.",
+        "Some of the texts were written by soldiers who were themselves receiving, rather than giving, orders from the fort’s commanders.",
+        "The texts mention the same kinds of supplies, such as wine and flour, that are recorded on pottery found at other fortresses of the period.",
+        "Each of the officers who commanded the fort over the years wrote his messages in a hand that differs from the others’."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The team concluded that reading and writing had spread through the fort’s chain of command, so the support needed is evidence that people below the top of that chain could write. Soldiers who received orders from the commanders were their subordinates, so if some texts were written by such soldiers, literacy reached lower ranks, as Choice B indicates.",
+      "distractors": {
+        "A": {
+          "recipe": "OPP: points back to one professional scribe",
+          "why_wrong": "If texts thought to come from different writers were all copied out by one trained scribe, the number of writers would shrink, which would weaken the idea that literacy was widespread."
+        },
+        "C": {
+          "recipe": "OFF: content of the texts, not who wrote them",
+          "why_wrong": "Matching the supplies listed at other fortresses says something about what the army used, not about how many people at Arad, or of what rank, could write."
+        },
+        "D": {
+          "recipe": "TRAP: several writers, but all at the top of the hierarchy",
+          "why_wrong": "Commanders writing in different hands shows only that the highest-ranking officers could write; it says nothing about soldiers lower in the chain of command."
+        }
+      },
+      "models": [
+        "3.12",
+        "3.25",
+        "3.31"
+      ],
+      "word_count": 91,
+      "sources": [
+        {
+          "what": "Faigenbaum-Golovin et al., PNAS 2016: 16 inscriptions from the Judahite desert fortress of Arad, ca. 600 BCE; algorithmic analysis complemented by textual information reveals a minimum of six authors; literacy had spread throughout the military hierarchy, down to the quartermaster and probably below",
+          "url": "https://cris.haifa.ac.il/en/publications/algorithmic-handwriting-analysis-of-judahs-military-correspondenc/"
+        }
+      ],
+      "notes": "Band 6: the key never says low rank; the student must infer that soldiers who receive orders are subordinates. A is the rival (one trained scribe), D is a true-looking finding that shows several writers but only at the top, C is off-target content. Supplies (wine, oil, flour) are the well-known content of the Eliashib letters; the passage gives the six-writer minimum as the paper does (algorithm plus textual clues). A 2020 follow-up raised the count, but the passage keeps to the 2016 study.",
+      "band7": {
+        "verdict": "band 6",
+        "why": "target 6: key implies low rank without naming it (soldiers receiving orders); TRAP D writers only at the top, OPP A"
+      },
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass",
+        "note": "core claim confirmed: PNAS 2016, 16 Arad inscriptions ca. 600 BCE, at least six authors, literacy through the military hierarchy"
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "B",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "command_of_evidence.T1_single.hard.w2b4_02",
+      "template": "T1_single",
+      "subtype": "Hypothetical finding supports a causal claim through a premise stated earlier (trees die slowly, so a tree-loss effect should grow with time since infestation)",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "The emerald ash borer, a beetle accidentally introduced to North America from Asia, kills ash trees only gradually: its larvae tunnel beneath the bark, and an infested tree typically dies only after several years. Examining 15 US states where the beetle had destroyed some 100 million ash trees, Geoffrey Donovan and colleagues compared county mortality records from 1990 to 2007 and found that deaths from cardiovascular and lower respiratory illness increased in counties after the beetle was first detected there. The team concluded that the loss of trees contributed to this increase, strengthening evidence that the natural environment benefits public health.",
+      "stem": "Which finding from Donovan and colleagues’ analysis, if true, would most directly support the team’s conclusion?",
+      "options": [
+        "In counties where the beetle was detected, deaths rose by just as much in the first year after the beetle’s detection as they did in each of the following years.",
+        "Deaths from cardiovascular illness also rose during the study period in many counties that the beetle had not yet reached.",
+        "Many counties where the beetle was detected spent millions of dollars removing dead ash trees from streets and parks.",
+        "In counties where the beetle was detected, the increase in deaths was larger three or four years after detection than in the first year."
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "Because the beetle kills trees gradually, a county loses most of its ash trees only some years after the beetle arrives. If the loss of trees raised deaths, the effect should grow as more trees die, rather than appear all at once when the beetle is first detected. Choice D reports that pattern: a larger increase three or four years after detection than in the first year, which ties the deaths to the loss of trees.",
+      "distractors": {
+        "A": {
+          "recipe": "OPP: no growth with tree loss",
+          "why_wrong": "An increase just as large in the first year, before most trees had died, would point to something that arrived with the beetle rather than to the loss of the trees, so it would weaken the conclusion."
+        },
+        "B": {
+          "recipe": "TRAP: a change that also affects the comparison group",
+          "why_wrong": "A rise in counties the beetle had not reached reflects a broader trend; it does not show that losing trees mattered and, if anything, suggests another cause."
+        },
+        "C": {
+          "recipe": "TRAP: true consequence of the infestation that cannot test the claim",
+          "why_wrong": "The cost of removing dead trees is another effect of the beetle, and it could even suggest a rival cause such as financial strain; it says nothing about whether the loss of trees affected health."
+        }
+      },
+      "models": [
+        "3.28",
+        "3.36",
+        "3.45"
+      ],
+      "word_count": 101,
+      "sources": [
+        {
+          "what": "Donovan et al. 2013, American Journal of Preventive Medicine: emerald ash borer killed about 100 million ash trees in 15 states; county mortality 1990-2007; increased cardiovascular and lower-respiratory mortality in infested counties; effect greatest as infestation progressed",
+          "url": "https://research.fs.usda.gov/treesearch/45049"
+        },
+        {
+          "what": "Penn State Extension, emerald ash borer: larvae feed under the bark; trees die after 3 to 4 years of heavy infestation (Wisconsin DNR gives 4 to 6 years)",
+          "url": "https://extension.psu.edu/emerald-ash-borer"
+        }
+      ],
+      "notes": "Band 7 moves: the fact the key depends on (trees die over several years) is in the first sentence, not the claim; the key never mentions trees, so the student must supply the link between time since detection and tree loss; B is a TRAP that affects the comparison group, C a true consequence that cannot test the claim, A the opposite (no dose response). The source reports that the effect grew as the infestation progressed, so the key is consistent with the study. The slow kill is confirmed by the second source (3 to 4 years of heavy infestation).",
+      "band7": {
+        "verdict": "band 7",
+        "why": "passage 101 words, stem names the study and the team; the key needs a premise from the first sentence (trees die over years) and never mentions trees, so the student builds the dose-response link; TRAP B (change also in the comparison counties), TRAP C (true consequence that cannot test the claim), OPP A"
+      },
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [
+          "slow kill (trees die over several years) confirmed: Penn State Extension, 3 to 4 years of heavy infestation (Wisconsin DNR 4 to 6); source added. Abstract confirms 100 million trees, 1990-2007, effect greater as infestation progressed"
+        ],
+        "status": "fixed"
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "D",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 7
+    },
+    {
+      "id": "command_of_evidence.T1_compete.hard.w2b4_03",
+      "template": "T1_compete",
+      "subtype": "Finding discriminates between two explanations for Mima mounds (gophers vs wind-blown soil trapped by shrubs) through the size of stones in the mounds",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Mima mounds, low domes of loose soil up to about two meters high, are distributed across prairies in western Washington and elsewhere in North America, and their origin has been disputed for more than a century. Some researchers have proposed that patches of shrubs gradually accumulated the mounds over centuries by trapping windblown sediment. Others, including geomorphologists Emmanuel Gabet, Taylor Perron, and Donald Johnson, contend that the mounds were constructed by pocket gophers, burrowing rodents that push soil toward their nests to remain above ground that is seasonally waterlogged.",
+      "stem": "Which finding, if true, would most directly support Gabet, Perron, and Johnson’s explanation rather than the alternative?",
+      "options": [
+        "The mounds contain small stones too heavy for wind to carry but no larger than stones that gophers can push.",
+        "The soil of the mounds is finer and looser than the soil in the low areas between them.",
+        "In each field, the mounds are elongated in the direction of the strongest winds that blow across the region.",
+        "The plants that grow on the mounds differ noticeably from the plants that grow in the low areas between them."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The two explanations differ in what moved the soil: wind or digging animals. Stones too heavy for the wind to carry could not have been piled up by wind-blown soil, but stones small enough for gophers to push could have been moved by gophers. Finding only stones in that size range in the mounds, as Choice A describes, therefore favors the gophers over the wind.",
+      "distractors": {
+        "B": {
+          "recipe": "TRAP: consistent with both explanations",
+          "why_wrong": "Fine, loose soil is what both wind-blown dust and soil sifted by burrowing animals would produce, so this finding cannot tell the explanations apart."
+        },
+        "C": {
+          "recipe": "OPP: the rival's prediction",
+          "why_wrong": "Mounds elongated along the strongest winds would point to wind as the builder, which supports the alternative explanation rather than the gophers."
+        },
+        "D": {
+          "recipe": "OFF: a difference either explanation could produce",
+          "why_wrong": "Mounds and low areas would differ in drainage and soil depth however the mounds formed, so different plants on them do not reveal what built them."
+        }
+      },
+      "models": [
+        "3.8",
+        "3.10",
+        "3.15"
+      ],
+      "word_count": 89,
+      "sources": [
+        {
+          "what": "Gabet, Perron and Johnson 2014, Geomorphology 206: biotic origin for Mima mounds supported by numerical modelling; mounds built by burrowing mammals as refuge from seasonally saturated soils; alternatives include seismic shaking and vegetation-controlled erosion and deposition",
+          "url": "https://works.bepress.com/emmanuel_gabet/38/"
+        }
+      ],
+      "notes": "Band 6, competing explanations: the key discriminates through a bridge the passage does not state (stone size limits what wind can carry); B is consistent with both, C is the rival's prediction, D a property of the mounds either view explains. The wind-and-shrub view is the vegetation-controlled deposition hypothesis Gabet and colleagues list; it is left unattributed. Mima mounds were first described in the 1840s.",
+      "band7": {
+        "verdict": "band 6",
+        "why": "target 6: key discriminates through an unstated bridge (wind cannot carry stones); B fits both, C the rival's prediction"
+      },
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [
+          "'geologists' changed to 'geomorphologists': Donald Johnson is a geographer (University of Illinois) and all three study landforms; core claim confirmed (Geomorphology 206, 2014)"
+        ],
+        "status": "fixed"
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "A",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "command_of_evidence.T1_compete.hard.w2b4_04",
+      "template": "T1_compete",
+      "subtype": "Finding discriminates between dust alone and dust-triggered thermal ice migration as the cause of Iapetus's dark hemisphere, through the sunlight received by crater walls",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "Saturn’s moon Iapetus is strikingly two-toned: the hemisphere that faces forward as the moon orbits is nearly as dark as charcoal, whereas the trailing hemisphere is bright with ice. Dark dust, thought to originate from small moons that circle Saturn in the opposite direction, accumulates on Iapetus’s leading side, and one long-standing view holds that this dust alone darkened that side. Planetary scientists Tilmann Denk and John Spencer propose instead that the dust triggered a runaway process: darkened terrain absorbs more sunlight and warms, so its ice gradually evaporates and refreezes on colder terrain, making dark regions progressively darker and bright regions brighter.",
+      "stem": "Which finding, if true, would most directly support Denk and Spencer’s explanation rather than the view that the dust alone darkened Iapetus?",
+      "options": [
+        "Spacecraft images of Iapetus taken several years apart show the boundary between its dark and bright regions in almost exactly the same place.",
+        "The dark material on Iapetus contains organic compounds similar to those found in comets and in primitive meteorites.",
+        "Within the dark region, crater walls that face the poles, and so receive little sunlight, are bright, while walls that face the equator are dark.",
+        "Within the dark region, the darkest ground is wherever incoming dust strikes most directly, regardless of how much sunlight that particular ground receives over a year."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "Dust arriving from in front of Iapetus would coat crater walls whatever their orientation, but in Denk and Spencer’s process, ice survives and collects where the ground stays cold. Walls facing the poles get little sunlight and stay cold, so the runaway process predicts that they would remain bright while sunnier walls facing the equator turn dark. Choice C reports exactly that, a pattern that follows sunlight rather than the direction of the dust.",
+      "distractors": {
+        "A": {
+          "recipe": "TRAP: consistent with both (the process is far too slow to see)",
+          "why_wrong": "Both explanations describe changes that would take far longer than a few years, so a boundary that stays put between images taken years apart cannot favor either one."
+        },
+        "B": {
+          "recipe": "TRAP: true property of the dust that both views share",
+          "why_wrong": "Both explanations agree that the darkening began with dust from outside Iapetus, so the dust’s composition cannot show whether evaporating ice made the contrast stronger."
+        },
+        "D": {
+          "recipe": "OPP: the pattern dust alone predicts",
+          "why_wrong": "Darkness that follows where the dust strikes, without regard to sunlight, is what the dust-alone view predicts, so this finding would support the alternative rather than Denk and Spencer."
+        }
+      },
+      "models": [
+        "3.6",
+        "3.9",
+        "3.14",
+        "3.48"
+      ],
+      "word_count": 103,
+      "sources": [
+        {
+          "what": "Spencer and Denk (Science, December 2009): infalling dust darkens the leading side, which absorbs more sunlight and warms so that ice evaporates and recondenses on colder, brighter areas, a runaway process (SwRI release)",
+          "url": "https://www.swri.org/node/248021"
+        }
+      ],
+      "notes": "Band 7 moves: the key supplies an observation the passage never mentions (crater walls by orientation) whose bearing depends on a premise stated earlier (darker, sunnier ground loses ice); two TRAPs consistent with both views (a stable boundary, the dust's composition) and an OPP. Bright pole-facing crater slopes in the dark region are a real Cassini observation (Wikipedia, Iapetus: light material on the weakly illuminated pole-facing slopes of craters). The dust-alone view is left unattributed.",
+      "band7": {
+        "verdict": "band 7",
+        "why": "passage 103 words, 22-word stem naming both views; the key brings an unmentioned observation (crater walls by orientation) whose bearing needs the stated premise (sunlit ground loses ice); discrimination check passes (dust alone predicts no pole/equator wall difference, the thermal process predicts bright pole-facing walls); TRAPs A and B fit both views, OPP D"
+      },
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass",
+        "note": "core claim confirmed (SwRI release, Science, Dec 2009): runaway thermal migration triggered by infalling dust"
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "C",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 7
+    },
+    {
+      "id": "command_of_evidence.Q2_P8_multipart.hard.w2b4_05",
+      "template": "Q2_P8_multipart",
+      "subtype": "Data description: passage number plus table (more than 1.7 million could speak Irish, fewer than 200,000 spoke it daily or weekly outside education)",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Irish is the first official language of Ireland. In the country’s 2016 census, 1,761,420 residents aged three and over reported that they could speak Irish, and virtually every respondent also indicated how frequently they spoke it, distinguishing use within the education system from use elsewhere. Drawing on these responses, a student concludes that the number of people who can speak Irish substantially overstates the number who use the language regularly outside school.",
+      "stem": "Which choice best describes data from the table that support the student’s conclusion?",
+      "options": [
+        "More people reported speaking Irish weekly outside the education system than reported speaking it daily outside the education system.",
+        "More people reported never speaking Irish than reported speaking it only within the education system.",
+        "More people reported speaking Irish daily or weekly outside the education system than reported never speaking it.",
+        "Fewer than 200,000 people reported speaking Irish either daily or weekly outside the education system."
+      ],
+      "answer_letter": "D",
+      "table": {
+        "title": "How Often People Who Could Speak Irish Spoke It, Ireland, 2016",
+        "columns": [
+          "How often the person spoke Irish",
+          "Number of people"
+        ],
+        "rows": [
+          [
+            "Daily, outside the education system",
+            "73,803"
+          ],
+          [
+            "Weekly, outside the education system",
+            "111,473"
+          ],
+          [
+            "Less often than weekly",
+            "586,535"
+          ],
+          [
+            "Never",
+            "418,420"
+          ],
+          [
+            "Only within the education system",
+            "558,608"
+          ]
+        ],
+        "note": "People who did not say how often they spoke Irish are not included."
+      },
+      "figure": null,
+      "explanation": "The passage says that 1,761,420 people reported being able to speak Irish. According to the table, 73,803 of them spoke it daily and 111,473 weekly outside the education system, about 185,000 regular speakers in all. Since fewer than 200,000 of more than 1.7 million speakers used Irish regularly outside school, the ability figure greatly overstates regular use, as Choice D shows.",
+      "distractors": {
+        "A": {
+          "recipe": "IRREL: accurate, compares two groups of regular speakers",
+          "why_wrong": "It is true that more people spoke Irish weekly (111,473) than daily (73,803), but this compares two groups of regular speakers and says nothing about how they compare with the 1.7 million who can speak Irish."
+        },
+        "B": {
+          "recipe": "INACC: misreads two rows",
+          "why_wrong": "Fewer people reported never speaking Irish (418,420) than reported speaking it only within the education system (558,608)."
+        },
+        "C": {
+          "recipe": "INACC: the daily-plus-weekly total is smaller, not larger",
+          "why_wrong": "Daily and weekly speakers outside education total about 185,000, far fewer than the 418,420 who reported never speaking Irish."
+        }
+      },
+      "models": [
+        "3.19",
+        "3.18",
+        "3.16"
+      ],
+      "word_count": 72,
+      "sources": [
+        {
+          "what": "CSO, Census of Population 2016 Profile 10 (Irish language): 1,761,420 aged 3 and over could speak Irish; 73,803 spoke it daily and 111,473 weekly outside the education system; 586,535 less often than weekly; 418,420 never; 558,608 only within the education system",
+          "url": "https://www.cso.ie/en/releasesandpublications/ep/p-cp10esil/p10esil/ilg/"
+        }
+      ],
+      "notes": "Band 6, like official 3.19: the key needs the passage number (1,761,420) combined with two table rows (73,803 + 111,473 = 185,276). A is accurate but compares two regular-use groups; B and C are false readings. The table excludes people who did not state a frequency, as the note says (the rows sum to 1,748,839).",
+      "band7": {
+        "verdict": "band 6",
+        "why": "target 6: passage number plus two table rows summed; A accurate but irrelevant"
+      },
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [],
+        "status": "pass",
+        "note": "CSO 2016: 1,761,420 could speak Irish; 73,803 and 111,473 are CSO's daily and weekly outside-education totals (each sums two table rows); other rows confirmed",
+        "safety_fix": "safety solve: the rows sum to 1,748,839 of 1,761,420 while the passage implied every speaker gave a frequency; now 'virtually every respondent' (99.3% gave one), matching the table note"
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "D",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "command_of_evidence.T2_lit_quote.hard.w2b4_06",
+      "template": "T2_lit_quote",
+      "subtype": "Literary quotation (drama in verse translation): indirect claim, doubt about reality turned into a resolve about conduct, against near states (doubt, sadness) and the opposite (rage)",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Life Is a Dream is a 1635 play by Pedro Calderón de la Barca, translated in 1873 by Denis Florence MacCarthy. Returned to imprisonment after a day as a prince and told that it was all a dream, Sigismund intimates that his uncertainty about what is real should alter his conduct: ______",
+      "stem": "Which quotation from Life Is a Dream most effectively illustrates the claim?",
+      "options": [
+        "“That is true: then let’s restrain / This wild rage, this fierce condition / Of the mind, this proud ambition, / Should we ever dream again”",
+        "“Nor even now am I awake / Since such thoughts my memory fill, / That it seems I’m dreaming still: / Nor is this a great mistake”",
+        "“Perfect Prince is he whose heat / Smites the tyrant where he stands, / Yes, Clotaldo dies by my hands, / Yes, my sire shall kiss my feet.”",
+        "“’Tis a dream that I in sadness / Here am bound, the scorn of fate; / ’Twas a dream that once a state / I enjoyed of light and gladness.”"
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The claim has two parts: Sigismund doubts what is real, and he draws from that doubt a lesson about his own conduct. In Choice A he resolves to restrain his “wild rage” and “proud ambition” “should we ever dream again,” that is, in case his life as a prince returns, even if only as a dream. The doubt leads directly to a decision about how to behave.",
+      "distractors": {
+        "B": {
+          "recipe": "HALF: doubt about reality without any change in conduct",
+          "why_wrong": "Sigismund says he may still be dreaming, which shows his doubt about what is real, but he draws no conclusion about how he should behave."
+        },
+        "C": {
+          "recipe": "OPP: unrestrained rage",
+          "why_wrong": "Here Sigismund, talking in his sleep, imagines killing Clotaldo and humbling his father; this is the violent ambition the claim says he decides to restrain, not a resolve to change."
+        },
+        "D": {
+          "recipe": "HALF: doubt and sadness, no resolve",
+          "why_wrong": "Sigismund calls both his imprisonment and his day of happiness dreams, which conveys doubt and sorrow, but he says nothing about changing how he acts."
+        }
+      },
+      "models": [
+        "3.37",
+        "3.17",
+        "3.11"
+      ],
+      "word_count": 52,
+      "sources": [
+        {
+          "what": "Calderón, Life Is a Dream (first published 1635), translated by Denis Florence MacCarthy (London: Henry S. King, 1873), Project Gutenberg eBook #6363; all four quotations from Act II, Scenes XVII and XVIII, copied from it",
+          "url": "https://www.gutenberg.org/ebooks/6363"
+        }
+      ],
+      "notes": "Indirect verb (intimates) and a two-part claim in older verse; distractors are the same speaker in near states (doubt, melancholy) and the opposite stance (rage spoken in his sleep). Quotations string-matched against the Gutenberg EPUB text; straight apostrophes there are set as curly ones. A ends where the sentence continues with a colon, as official items trim at line ends. No official item in any skill uses Calderón.",
+      "band7": {
+        "verdict": "band 6",
+        "why": "target 6, though it meets the band-7 T2 recipe (older verse drama, indirect verb, same speaker in near states plus the opposite stance) and may read 7"
+      },
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [],
+        "status": "pass",
+        "note": "all four quotations match the Gutenberg MacCarthy text (eBook 6363, Act II Scenes XVII and XVIII) word for word with the same line breaks"
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "A",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "command_of_evidence.T3_person_quote.hard.w2b4_07",
+      "template": "T3_person_quote",
+      "subtype": "Quotation from a dance historian supports historians' assertion (European theatrical dance shaped Shankar's work) through an indirect fact (no classical training when he began, in a ballet production)",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "In the 1920s and 1930s, Indian dancer and choreographer Uday Shankar (1900–1977) introduced audiences throughout Europe and the United States to performances inspired by Indian mythology, music, and temple sculpture, touring for years with a company he had founded in Paris in 1931. Shankar had originally studied painting in Mumbai and London, and he turned to dance after the Russian ballerina Anna Pavlova invited him to create works on Indian themes for her company. Some historians assert that Shankar’s choreography, though inspired by Indian art, was shaped just as profoundly by European theatrical dance.",
+      "stem": "Which quotation from a work by a dance historian best supports the assertion of the historians mentioned in the text?",
+      "options": [
+        "“Shankar built his dances from gestures and rhythms that he had watched temple dancers and village performers use since childhood, and he presented them to European audiences largely unaltered.”",
+        "“After its New York debut in January 1933, Shankar’s company toured dozens of American cities, and among its performers was his younger brother Ravi, later a celebrated sitar player.”",
+        "“When Shankar created his first dances, for Pavlova’s production Oriental Impressions at London’s Covent Garden, he had no formal training in any of India’s classical dance forms and had learned his stagecraft inside Pavlova’s ballet company.”",
+        "“In the late 1930s Shankar opened a cultural center near Almora, in the Himalayan foothills, where students from across India studied dance and music until a lack of funds forced it to close a few years later.”"
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The historians assert that European theatrical dance shaped Shankar’s work as much as Indian art did. Choice C supports this indirectly: when Shankar made his first dances he had no training in any Indian classical dance form, and he made them for a production by a European ballet company in London. His sense of how to build a dance must therefore have come largely from the European stage on which he started.",
+      "distractors": {
+        "A": {
+          "recipe": "OPP: credits Indian performance traditions alone",
+          "why_wrong": "This quotation says Shankar’s dances came from Indian gestures and rhythms presented largely unaltered, which disputes the historians’ assertion rather than supporting it."
+        },
+        "B": {
+          "recipe": "TRAP: true account of his career that cannot bear on the assertion",
+          "why_wrong": "Touring American cities and his brother’s membership in the company describe the company’s success, not where the form of Shankar’s dances came from."
+        },
+        "D": {
+          "recipe": "TRAP: true later chapter of his career",
+          "why_wrong": "The Almora center shows what Shankar did after his touring years, but it says nothing about whether European theatrical dance shaped his choreography."
+        }
+      },
+      "models": [
+        "3.3",
+        "3.33",
+        "3.32"
+      ],
+      "word_count": 94,
+      "sources": [
+        {
+          "what": "Uday Shankar (1900-1977): trained at J. J. School of Art and the Royal College of Art in London; no formal training in any Indian classical dance form; created Radha-Krishna and Hindu Wedding for Anna Pavlova's Oriental Impressions at Covent Garden; founded Europe's first Indian dance company in Paris in 1931; US debut January 1933, toured 84 cities; Ravi Shankar in the 1937 troupe recordings; Almora centre 1938 to 1942",
+          "url": "https://en.wikipedia.org/wiki/Uday_Shankar"
+        }
+      ],
+      "notes": "Band 6, lesson from the b3 review applied: the key is an indirect fact (no classical training, first works made for a ballet production) from which the student must infer the European shaping; it never names the cause and the effect together. A is the opposing argument; B and D are true facts about Shankar that cannot prove the assertion. Quotations are attributed to an unnamed dance historian, as official 3.3 does with a scholarly article; no real person is quoted.",
+      "band7": {
+        "verdict": "band 6",
+        "why": "target 6: key is an indirect fact (no classical training, first works made for a ballet production) from which the shaping must be inferred; OPP A, two true but irrelevant facts"
+      },
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 5,
+        "fixes": [
+          "B: Ravi joined the troupe as a dancer, so 'musicians' became 'performers' (Wikipedia credits him only in the 1937 recordings); Pavlova, Oriental Impressions, no classical training, Paris 1931, Almora 1938 to 1942 confirmed"
+        ],
+        "status": "fixed",
+        "safety_fix": "safety solve: the key supported the historians only by inference (no European link stated); it now names the stagecraft he learned in Pavlova's ballet company",
+        "safety_note": "safety solve: D's 1938 and 1942 dates disagree with sources (founded 1938 to 1940, closed 1943 or 1944); D now gives no exact years"
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "C",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "command_of_evidence.Q2_P5_control.hard.w2b4_08",
+      "template": "Q2_P5_control",
+      "subtype": "Data description: three conditions (unfed, fat, fat with vitamin E) and three measures, of which only clutch size and hatching success bear on the claim",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "Many people feed birds during winter, but the consequences for the birds’ breeding the following spring are poorly understood. In nine woodlands in Cornwall, England, Kate Plummer and colleagues supplied blue tits at some sites with fat throughout the winter and supplied birds at other sites with fat supplemented with vitamin E, while birds at a third set of sites received no food. The following spring, birds from both fed groups raised fewer fledglings, on average, than unfed birds did. A student examining the team’s data concludes that the fed birds’ shortfall emerged only after their eggs had been laid and hatched.",
+      "stem": "Which choice best describes data from the table that support the student’s conclusion?",
+      "options": [
+        "Birds fed fat alone began laying about half a day earlier, on average, than unfed birds did, while birds fed fat with vitamin E began laying slightly later.",
+        "In all three groups, females laid about eight eggs per clutch on average, and roughly 90 percent or more of those eggs hatched.",
+        "Birds fed fat with vitamin E laid the smallest clutches of the three groups, 7.9 eggs on average, but hatched the highest percentage of their eggs, nearly 93 percent.",
+        "Birds in both fed groups laid larger clutches, on average, than unfed birds did, and they also hatched a higher percentage of their eggs."
+      ],
+      "answer_letter": "B",
+      "table": {
+        "title": "Blue Tit Breeding after Winter Feeding",
+        "columns": [
+          "Winter treatment",
+          "Average laying date (days after March 31)",
+          "Average clutch size (eggs)",
+          "Eggs that hatched (%)"
+        ],
+        "rows": [
+          [
+            "No food",
+            "27.3",
+            "8.3",
+            "89.9"
+          ],
+          [
+            "Fat",
+            "26.8",
+            "8.2",
+            "90.6"
+          ],
+          [
+            "Fat with vitamin E",
+            "28.0",
+            "7.9",
+            "92.9"
+          ]
+        ],
+        "note": null
+      },
+      "figure": null,
+      "explanation": "If the fed birds’ shortfall arose only after the eggs were laid and hatched, the fed and unfed groups should have produced and hatched eggs equally well. The table shows average clutches of 8.3, 8.2, and 7.9 eggs, about eight in every group, and hatching success of 89.9, 90.6, and 92.9 percent. Choice B states both parts of this comparison.",
+      "distractors": {
+        "A": {
+          "recipe": "IRREL: accurate, timing of laying is not success",
+          "why_wrong": "The laying dates (27.3, 26.8, and 28.0 days after March 31) are read correctly, but when birds began laying does not show whether they produced or hatched fewer eggs."
+        },
+        "C": {
+          "recipe": "PART: accurate, one group, and it stresses differences",
+          "why_wrong": "Both readings are accurate, but they describe only the vitamin E group and stress how it differed from the others; they do not show that every group laid and hatched about the same number of eggs, which is what the conclusion requires."
+        },
+        "D": {
+          "recipe": "INACC: compound with one false clause that would support the conclusion if true",
+          "why_wrong": "Fed birds did hatch a slightly higher percentage of their eggs, but they did not lay larger clutches: birds fed fat averaged 8.2 eggs and birds fed fat with vitamin E 7.9, against 8.3 for unfed birds."
+        }
+      },
+      "models": [
+        "3.5",
+        "3.43",
+        "3.1"
+      ],
+      "word_count": 102,
+      "sources": [
+        {
+          "what": "Plummer et al. 2013, Scientific Reports 3: 2002: nine woodlands in Cornwall, 2008-2010; fat, fat plus vitamin E, or no food in winter; Table 1 lay date 27.3 / 26.8 / 28.0 (1 = 1 April), clutch size 8.3 / 8.2 / 7.9, hatching success 89.9 / 90.6 / 92.9 percent (unfed / fat / fat plus vitamin E); fed birds fledged about 8 percent fewer young",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6504817/"
+        }
+      ],
+      "notes": "Band 7 moves: a third condition (vitamin E) and three measures of which one (laying date) is beside the point; the student must translate 'after the eggs had been laid and hatched' into clutch size and hatching success and check all six cells. All four options are compound readings: A is an accurate reading of the wrong measure, C accurate but one group (and it stresses differences), D a compound whose false clause (fed birds laid larger clutches) would support the conclusion if it were true, so it must be checked against the table. A table rather than a graph because the three measures have different units. The conclusion is a student's reading; the authors report that laying date and clutch size did not vary and that fledging fell in both fed groups.",
+      "band7": {
+        "verdict": "band 7",
+        "why": "hardened: before review B was the only option about all groups and both relevant measures, so its shape gave it away and D died at a glance. Now all four are compound readings; the student must translate 'after the eggs had been laid and hatched' into equal clutch size and hatching success and check six cells; A accurate wrong measure, C accurate but one group, D a false clause that would support if true (8.2 and 7.9 against 8.3). Third condition and an irrelevant measure as in 3.43 and 3.5; a table because the measures have different units"
+      },
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 5,
+        "fixes": [
+          "hardened to band 7: C rewritten as an accurate two-measure reading of one group that stresses differences; D rewritten as a compound whose false clause (fed birds laid larger clutches) would support the conclusion if true; Table 1 values confirmed (Sci Rep 3:2002, PMC6504817), fed groups fledged about 8 percent fewer young"
+        ],
+        "status": "fixed"
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "B",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 7
+    },
+    {
+      "id": "command_of_evidence.Q1_P3_pairwise.hard.w2b4_09",
+      "template": "Q1_P3_pairwise",
+      "subtype": "Data completion: example of a stated relation (industrial beef uses more blue water than grazing beef) read from one column of a three-measure table",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "A food’s water footprint is the total volume of water consumed or polluted in producing it. It comprises green water, the rainwater absorbed by crops and pasture; blue water, which is withdrawn from rivers, lakes, and aquifers; and grey water, the volume required to dilute pollutants released during production. Comparing beef from grazing, mixed, and industrial production systems worldwide, Mesfin Mekonnen and Arjen Hoekstra found that although industrial systems consume less water overall per kilogram of beef, they withdraw more water from rivers, lakes, and aquifers than grazing systems do. For example, whereas a kilogram of beef from grazing systems requires 465 liters of blue water, a kilogram from ______",
+      "stem": "Which choice most effectively uses data from the table to complete the example?",
+      "options": [
+        "industrial systems requires 683 liters.",
+        "mixed systems requires 508 liters.",
+        "industrial systems requires 712 liters.",
+        "industrial systems requires 8,849 liters."
+      ],
+      "answer_letter": "A",
+      "table": {
+        "title": "Global Average Water Footprint of Beef by Production System, 1996–2005",
+        "columns": [
+          "Production system",
+          "Green water (liters per kilogram)",
+          "Blue water (liters per kilogram)",
+          "Grey water (liters per kilogram)"
+        ],
+        "rows": [
+          [
+            "Grazing",
+            "21,121",
+            "465",
+            "243"
+          ],
+          [
+            "Mixed",
+            "14,803",
+            "508",
+            "401"
+          ],
+          [
+            "Industrial",
+            "8,849",
+            "683",
+            "712"
+          ]
+        ],
+        "note": null
+      },
+      "figure": null,
+      "explanation": "The example contrasts the blue water, the water drawn from rivers, lakes, and aquifers, used for beef from grazing systems (465 liters per kilogram) with the blue water used for beef from industrial systems. The table gives 683 liters for industrial systems, more than for grazing systems, so Choice A completes the example.",
+      "distractors": {
+        "B": {
+          "recipe": "WGRP: right column, wrong production system",
+          "why_wrong": "Mixed systems do use 508 liters of blue water, but the finding being illustrated compares industrial systems with grazing systems."
+        },
+        "C": {
+          "recipe": "INACC: grey water read as blue",
+          "why_wrong": "712 liters is the grey water footprint of industrial beef, water needed to dilute pollution, not water drawn from rivers, lakes, and aquifers."
+        },
+        "D": {
+          "recipe": "INACC: green water read as blue",
+          "why_wrong": "8,849 liters is the green water footprint of industrial beef, rainwater used by crops and pasture, not blue water."
+        }
+      },
+      "models": [
+        "3.29"
+      ],
+      "word_count": 110,
+      "sources": [
+        {
+          "what": "Mekonnen and Hoekstra, Value of Water Research Report 48 (UNESCO-IHE, 2010; Ecosystems 2012), Table 4, global averages 1996-2005, beef in m3/ton (= liters per kilogram): grazing green 21,121, blue 465, grey 243; mixed 14,803, 508, 401; industrial 8,849, 683, 712; total footprint declines from grazing to industrial, while industrial systems use and pollute more ground and surface water",
+          "url": "https://www.waterfootprint.org/resources/Report-48-WaterFootprint-AnimalProducts-Vol1.pdf"
+        }
+      ],
+      "notes": "Band 6, like 3.29: the passage states the relation and begins the example; options differ by system and by column. C and D are real cells of the industrial row in the wrong column (grey, green), B the right column for the wrong system. Values copied from the report's Table 4 global averages; m3 per ton equals liters per kilogram.",
+      "band7": {
+        "verdict": "band 6",
+        "why": "Q1_P3 pairwise has no band-7 official items; strong band 6 with right-column/wrong-system and wrong-column traps"
+      },
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [],
+        "status": "pass",
+        "note": "Report 48 Table 4 global averages confirmed (21,121/465/243; 14,803/508/401; 8,849/683/712); report states industrial systems have larger blue and grey footprints"
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "A",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "command_of_evidence.Q1_P2_extreme.hard.w2b4_10",
+      "template": "Q1_P2_extreme",
+      "subtype": "Data completion: filter by period (completed in the twentieth century), then the longest; traps are the overall longest and the close runner-up within the filter",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "A base tunnel carries a railway through a mountain range near the elevation of the surrounding valleys, sparing trains the steep ascent toward a mountain pass. Because it lies far beneath the summits, a base tunnel is typically considerably longer than a tunnel constructed nearer the crest. Of the tunnels in the table that were completed during the twentieth century, the longest is ______",
+      "stem": "Which choice most effectively uses data from the table to complete the text?",
+      "options": [
+        "the Apennine Base Tunnel, at 18.5 kilometers.",
+        "the Gotthard Base Tunnel, at 57.1 kilometers.",
+        "the Furka Base Tunnel, at 15.4 kilometers.",
+        "the Simplon Tunnel, at 19.8 kilometers."
+      ],
+      "answer_letter": "D",
+      "table": {
+        "title": "Six Railway Base Tunnels in Europe",
+        "columns": [
+          "Tunnel",
+          "Country",
+          "Year completed",
+          "Length (kilometers)"
+        ],
+        "rows": [
+          [
+            "Lötschberg Base Tunnel",
+            "Switzerland",
+            "2007",
+            "34.6"
+          ],
+          [
+            "Simplon Tunnel",
+            "Switzerland and Italy",
+            "1906",
+            "19.8"
+          ],
+          [
+            "Gotthard Base Tunnel",
+            "Switzerland",
+            "2016",
+            "57.1"
+          ],
+          [
+            "Apennine Base Tunnel",
+            "Italy",
+            "1934",
+            "18.5"
+          ],
+          [
+            "Ceneri Base Tunnel",
+            "Switzerland",
+            "2020",
+            "15.4"
+          ],
+          [
+            "Furka Base Tunnel",
+            "Switzerland",
+            "1982",
+            "15.4"
+          ]
+        ],
+        "note": null
+      },
+      "figure": null,
+      "explanation": "Three tunnels in the table were completed in the twentieth century: the Simplon Tunnel (1906), the Apennine Base Tunnel (1934), and the Furka Base Tunnel (1982). Of these, the Simplon Tunnel, at 19.8 kilometers, is the longest, so Choice D completes the text.",
+      "distractors": {
+        "A": {
+          "recipe": "WGRP: the second-longest within the filter",
+          "why_wrong": "The Apennine Base Tunnel was completed in the twentieth century, but at 18.5 kilometers it is shorter than the Simplon Tunnel’s 19.8 kilometers."
+        },
+        "B": {
+          "recipe": "WGRP: the longest overall, outside the filter",
+          "why_wrong": "The Gotthard Base Tunnel is the longest in the table, but it was completed in 2016, in the twenty-first century."
+        },
+        "C": {
+          "recipe": "WGRP: the most recent within the filter, not the longest",
+          "why_wrong": "The Furka Base Tunnel was completed in 1982, but at 15.4 kilometers it is the shortest of the three twentieth-century tunnels."
+        }
+      },
+      "models": [
+        "3.44"
+      ],
+      "word_count": 64,
+      "sources": [
+        {
+          "what": "Base tunnel (Wikipedia list of operational base tunnels): Gotthard 57.1 km 2016; Lotschberg 34.6 km 2007; Simplon 19.8 km 1906/1921; Apennine 18.5 km 1934; Ceneri 15.4 km 2020; Furka 15.4 km 1982",
+          "url": "https://en.wikipedia.org/wiki/Base_tunnel"
+        }
+      ],
+      "notes": "Band 7 moves for this template (as 3.44): a filter stated in the passage (twentieth century), then an extreme; the overall longest (Gotthard) and the close runner-up inside the filter (Apennine, 18.5 against 19.8) are the traps, and rows are not in date order. Simplon opened in 1906 (its second tube in 1921) and crosses the Swiss-Italian border. Options are short, as in the band-7 model. Review: the second sentence no longer says that the longest tunnels are recent (it cued the Gotthard trap); Simplon's Swiss-Italian border crossing confirmed (Wikipedia, Simplon Tunnel).",
+      "band7": {
+        "verdict": "band 7",
+        "why": "same build as its only band-7 model 3.44 (filter, then extreme; overall extreme outside the filter, runner-up inside it, value-type options, which the band-7 report exempts from the long-option rule); the original second sentence said the longest tunnels were recent, cueing the Gotthard trap, and was replaced by a neutral one. The template's band-7 ceiling is low: one official item"
+      },
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 7,
+        "fixes": [
+          "second sentence replaced: it said the longest tunnels were recent, flagging the Gotthard trap before the table; Simplon crosses the Swiss-Italian border (Wikipedia, Simplon Tunnel, Brig to Domodossola); all lengths and years confirmed (Wikipedia, Base tunnel)"
+        ],
+        "status": "fixed"
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "D",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 7
+    },
+    {
+      "id": "command_of_evidence.T2_lit_quote.medium.w2b4_11",
+      "template": "T2_lit_quote",
+      "subtype": "Literary quotation (novel): proud heroine subdued by her guardian's kindness, against envy at his praise of another, hurt at his coldness, and low spirits over a suitor",
+      "tier": "medium",
+      "passage": "A Simple Story is a 1791 novel by Elizabeth Inchbald. Its heroine, the wealthy and fashionable Miss Milner, is the ward of Dorriforth, a clergyman who subsequently inherits the title Lord Elmwood. Inchbald suggests that affectionate words from Dorriforth can subdue even the headstrong Miss Milner: ______",
+      "stem": "Which quotation from A Simple Story most effectively illustrates the claim?",
+      "options": [
+        "“Conscious of her own inferiority in these subjects of her guardian’s praise, Miss Milner, instead of being inspired to emulation, was provoked to envy.”",
+        "“Miss Milner, the gay, the vain, the dissipated, the haughty Miss Milner, sunk underneath this kindness, and wept with a gentleness and patience, which did not give more surprise than it gave joy to Dorriforth.”",
+        "“Miss Milner is wounded at the heart by the cold and unkind manners of her guardian, but dares not take one step to retrieve his opinion.”",
+        "“Notwithstanding the seeming readiness with which Miss Milner had resigned all farther acquaintance with Lord Frederick, during the short ride home she appeared to have lost great part of her wonted spirits; she was thoughtful, and once sighed heavily.”"
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The claim is that kindness from her guardian can subdue Miss Milner despite her strong will. In Choice B the “haughty” Miss Milner “sunk underneath this kindness,” weeping “with a gentleness and patience” that surprised and pleased Dorriforth, so his kindness humbles her.",
+      "distractors": {
+        "A": {
+          "recipe": "HALF: the guardian's words provoke envy, not humility",
+          "why_wrong": "Dorriforth’s praise of others makes Miss Milner envious; his words stir her pride rather than subduing it."
+        },
+        "C": {
+          "recipe": "HALF: subdued, but by coldness rather than kindness",
+          "why_wrong": "Miss Milner is hurt and hesitant here, but because of her guardian’s cold and unkind manners, the opposite of the kindness the claim describes."
+        },
+        "D": {
+          "recipe": "OFF: low spirits over a suitor",
+          "why_wrong": "This describes Miss Milner’s sadness after giving up Lord Frederick, not any effect that Dorriforth’s kindness has on her."
+        }
+      },
+      "models": [
+        "2.26",
+        "2.11",
+        "2.20"
+      ],
+      "word_count": 47,
+      "sources": [
+        {
+          "what": "Elizabeth Inchbald, A Simple Story (1791), ed. Lytton Strachey, Project Gutenberg eBook #22002; all four quotations copied from the novel's text (Volume I, Chapters VII, IX, XIII and XVII), none from the editor's introduction",
+          "url": "https://www.gutenberg.org/ebooks/22002"
+        }
+      ],
+      "notes": "Medium, two-part claim (willful heroine; subdued by the guardian's kindness), so the distractors are half-matches (guardian's words that provoke, guardian's coldness that subdues) and one off-target mood. The claim avoids the key's own words (kindness, gentleness, haughty). Quotations string-matched against the Gutenberg EPUB text, chosen without dashes. Dorriforth becomes Lord Elmwood in the novel.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [],
+        "status": "pass",
+        "note": "all four quotations match the Gutenberg text of A Simple Story (eBook 22002) word for word"
+      }
+    },
+    {
+      "id": "command_of_evidence.T1_single.medium.w2b4_12",
+      "template": "T1_single",
+      "subtype": "Hypothetical finding supports a classification claim (HSL is unrelated to ASL)",
+      "tier": "medium",
+      "passage": "Hawaii Sign Language (HSL) has been used by deaf people in Hawaii since at least the 1820s, but after American Sign Language (ASL) was introduced in the islands’ schools in 1941, ASL gradually supplanted it; today only a few dozen people, most of them elderly, still communicate in HSL. HSL was once widely believed to be related to ASL. In 2013, however, after documenting HSL with some of its remaining signers, linguists Barbara Earth, Linda Lambrecht, and James Woodward concluded that the two languages are unrelated.",
+      "stem": "Which finding, if true, would most directly support the linguists’ conclusion?",
+      "options": [
+        "Many HSL signs closely resemble the ASL signs for the same words, differing from them only slightly in the shape or position of the hand.",
+        "Most of the people who still use HSL learned it as children from deaf relatives or neighbors.",
+        "Most HSL signs that the linguists recorded for everyday objects and actions bear no resemblance to the corresponding ASL signs.",
+        "Some HSL signs resemble gestures that hearing people in Hawaii use in ordinary conversation."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "If HSL and ASL are unrelated, their vocabularies should have little in common. Choice C reports that most HSL signs for everyday objects and actions look nothing like the ASL signs with the same meanings, which is what two unrelated languages would show.",
+      "distractors": {
+        "A": {
+          "recipe": "OPP: shared vocabulary",
+          "why_wrong": "Signs that closely resemble ASL signs, with only small differences, would suggest that the languages are related, weakening the conclusion."
+        },
+        "B": {
+          "recipe": "OFF: how signers learned HSL",
+          "why_wrong": "How today’s signers acquired HSL says nothing about whether the language shares its origins or vocabulary with ASL."
+        },
+        "D": {
+          "recipe": "OFF: resemblance to local gestures",
+          "why_wrong": "A link between some HSL signs and gestures used by hearing people in Hawaii does not show whether HSL is related to ASL."
+        }
+      },
+      "models": [
+        "2.1",
+        "2.33",
+        "2.7"
+      ],
+      "word_count": 86,
+      "sources": [
+        {
+          "what": "Hawaii Sign Language: used since at least the 1820s; ASL introduced in 1941; around 40 users in 2013, mostly over 80; previously believed related to ASL; recognized as a distinct language on 1 March 2013 by a University of Hawaii at Manoa group (Lambrecht, Earth and Woodward 2013 report); unrelated to ASL, about 80 percent of vocabulary different",
+          "url": "https://en.wikipedia.org/wiki/Hawaii_Sign_Language"
+        }
+      ],
+      "notes": "Medium: one bridge from 'unrelated' to an observable (vocabulary with no resemblance); A is the opposite, B and D off-target properties of HSL. Linguistics is under-represented in the bank.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [],
+        "status": "pass",
+        "note": "HSL facts confirmed (1820s, ASL 1941, about 40 users mostly over 80 in 2013, Lambrecht, Earth and Woodward 2013, about 80 percent of vocabulary differs)"
+      }
+    },
+    {
+      "id": "command_of_evidence.T1_single.medium.w2b4_13",
+      "template": "T1_single",
+      "subtype": "Hypothetical finding supports a causal claim with a comparison group (museums that charged vs museums that were always free)",
+      "tier": "medium",
+      "passage": "In December 2001, the United Kingdom abolished admission charges at the national museums that still required entry fees, such as London’s Natural History Museum and Victoria and Albert Museum; other national museums, including the British Museum and the National Gallery, had always been free. Over the following decade, annual visits to national museums more than doubled. The National Museum Directors’ Conference, which represents these institutions, credited the elimination of admission charges with much of this growth.",
+      "stem": "Which finding, if true, would most directly support the conference’s claim?",
+      "options": [
+        "Visits rose far more at the museums that had charged admission than at those that had always been free.",
+        "Many people who visited the national museums in 2011 said in surveys that they had come mainly to see a special exhibition.",
+        "Visits to the national museums that had always been free also increased over the decade.",
+        "More than two million more children visited the national museums in 2011 than had visited in 2000."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "If ending admission charges caused much of the growth, visits should have risen most where charges were removed. The museums that had always been free provide a comparison: they were not affected by the policy. Choice A reports that visits rose far more at the formerly charging museums than at the always-free ones, which supports the claim.",
+      "distractors": {
+        "B": {
+          "recipe": "OFF: why visitors came",
+          "why_wrong": "Visitors coming mainly for special exhibitions would suggest a reason for the growth other than free admission, not support for the conference’s claim."
+        },
+        "C": {
+          "recipe": "TRAP: growth where nothing changed",
+          "why_wrong": "A rise at museums that had always been free points to a general increase in museum-going, which would weaken rather than support the claim."
+        },
+        "D": {
+          "recipe": "TRAP: true but cannot isolate the cause",
+          "why_wrong": "More children visiting shows that visits grew, but without a comparison between museums that had charged and museums that had not, it cannot show that ending charges was the reason."
+        }
+      },
+      "models": [
+        "2.38",
+        "2.16",
+        "2.4"
+      ],
+      "word_count": 76,
+      "sources": [
+        {
+          "what": "National Museum Directors' Conference, 10 years of free entry (1 December 2011): visits to formerly charging museums up about 150 percent, to always-free museums (British Museum, National Gallery, Tate) up 22 percent; over 50 million visits, more than double the pre-December 2001 figure; over 2 million more children than in 2000",
+          "url": "https://www.nationalmuseums.org.uk/news/free-entry/"
+        }
+      ],
+      "notes": "Medium, causal claim with a built-in comparison group. A states the source's own comparison (about 150 percent against 22 percent); C is the rival (general growth), D a true figure from the same source that cannot isolate the cause, B off-target. The passage says only that the conference credited free entry with much of the growth, as the source does.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [],
+        "status": "pass",
+        "note": "NMDC 1 Dec 2011: formerly charging up 150 percent, always free up 22 percent, visits more than doubled, over 2 million more children"
+      }
+    },
+    {
+      "id": "command_of_evidence.Q1_P3_pairwise.medium.w2b4_14",
+      "template": "Q1_P3_pairwise",
+      "subtype": "Data completion: example of a mismatch between cortex mass and neuron count (two species, two measures)",
+      "tier": "medium",
+      "passage": "Larger brains are often assumed to contain more neurons. To investigate this assumption, neuroscientists Débora Jardim-Messeder, Suzana Herculano-Houzel, and colleagues counted the neurons in the cerebral cortex, the brain region associated with complex cognition, in eight species of carnivorans, the group of mammals that includes cats, dogs, and bears. They found that the mass of a species’ cortex did not consistently predict the number of neurons it contained. For example, ______",
+      "stem": "Which choice most effectively uses data from the table to complete the example?",
+      "options": [
+        "the dog’s cortex has more than twice the mass of the cat’s and contains about twice as many neurons.",
+        "the raccoon’s cortex has about the same mass as the cat’s and contains about the same number of neurons.",
+        "the dog’s cortex has less mass than the brown bear’s and also contains fewer neurons.",
+        "the brown bear’s cortex has about nine times the mass of the cat’s but contains about the same number of neurons."
+      ],
+      "answer_letter": "D",
+      "table": {
+        "title": "Cerebral Cortex Mass and Neurons in Five Carnivoran Species",
+        "columns": [
+          "Species",
+          "Mass of cerebral cortex (grams)",
+          "Neurons in cerebral cortex (millions)"
+        ],
+        "rows": [
+          [
+            "Cat",
+            "24.2",
+            "250"
+          ],
+          [
+            "Raccoon",
+            "24.5",
+            "438"
+          ],
+          [
+            "Dog",
+            "65.5",
+            "528"
+          ],
+          [
+            "Lion",
+            "139.9",
+            "545"
+          ],
+          [
+            "Brown bear",
+            "222.0",
+            "251"
+          ]
+        ],
+        "note": "The dog values are the average of two individual dogs."
+      },
+      "figure": null,
+      "explanation": "To show that cortex mass is not a reliable guide to neuron number, the example needs two species whose masses and neuron counts do not line up. The brown bear’s cortex (222.0 grams) is about nine times as massive as the cat’s (24.2 grams), yet both contain about 250 million neurons, so Choice D completes the example.",
+      "distractors": {
+        "A": {
+          "recipe": "CONTRA: accurate, but mass and neurons line up",
+          "why_wrong": "The dog’s cortex (65.5 grams) is more than twice as massive as the cat’s (24.2 grams) and does hold about twice as many neurons (528 million against 250 million), so this pair fits the assumption the researchers questioned."
+        },
+        "B": {
+          "recipe": "INACC: the raccoon has far more neurons",
+          "why_wrong": "The raccoon’s and cat’s cortexes have about the same mass, but the raccoon’s contains about 438 million neurons and the cat’s about 250 million."
+        },
+        "C": {
+          "recipe": "INACC: the dog has more neurons, not fewer",
+          "why_wrong": "The dog’s cortex is lighter than the brown bear’s, but it contains about 528 million neurons, more than the bear’s 251 million."
+        }
+      },
+      "models": [
+        "2.18",
+        "2.24"
+      ],
+      "word_count": 71,
+      "sources": [
+        {
+          "what": "Jardim-Messeder et al. 2017, Frontiers in Neuroanatomy 11: 118, Table 1: cerebral cortex mass (g) and cortical neurons (millions): cat 24.176 / 249.83; raccoon 24.491 / 437.94; dog (average of two) 65.491 / 527.91; lion 139.902 / 545.24; brown bear 222.000 / 250.97; eight carnivoran species",
+          "url": "https://www.frontiersin.org/articles/10.3389/fnana.2017.00118/full"
+        }
+      ],
+      "notes": "Medium, full-clause options as in 2.18 and 2.24. A is accurate but supports the assumption being questioned (review: changed from lion and dog, which the paper itself cites as a mismatch); B and C are false readings, and B describes a real mismatch (raccoon and cat) wrongly. Values rounded from the paper's Table 1; the dog row is the average of the two dogs, as the note says.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 5,
+        "fixes": [
+          "A: the lion-dog pair (2.1 times the mass, 3 percent more neurons) is the paper's own example of a mismatch, so A was arguably defensible; replaced with dog against cat (2.7 times the mass, about twice the neurons); Table 1 values confirmed"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "command_of_evidence.Q1_P5_control.medium.w2b4_15",
+      "template": "Q1_P5_control",
+      "subtype": "Data completion: treatment site vs control site across noise-on and noise-off periods",
+      "tier": "medium",
+      "passage": "Birds are often scarce near busy roads, but roads introduce traffic, pavement, and artificial lighting simultaneously, so it is difficult to determine which of these deters birds. To isolate the effect of noise, Christopher McClure, Jesse Barber, and colleagues created a “phantom road” on a ridge in Idaho in 2012: a half-kilometer line of speakers that played recorded traffic noise for four days at a time, alternating with four days of silence. The team also counted birds at a nearby control site. The results suggest that the noise itself drove birds away: ______",
+      "stem": "Which choice most effectively uses data from the table to complete the statement?",
+      "options": [
+        "noise levels along the phantom road were about 11 decibels higher during noise-on periods than during noise-off periods.",
+        "the number of birds along the phantom road was 28% lower during noise-on periods than during noise-off periods, whereas at the control site it was 3% higher.",
+        "at the control site, the number of birds was 3% higher during noise-on periods than during noise-off periods.",
+        "the number of birds at the control site was 28% lower during noise-on periods than during noise-off periods."
+      ],
+      "answer_letter": "B",
+      "table": {
+        "title": "Noise Levels and Bird Numbers at Two Sites in the Phantom Road Study",
+        "columns": [
+          "Site",
+          "Average noise level, noise-off periods (decibels)",
+          "Average noise level, noise-on periods (decibels)",
+          "Change in number of birds, noise-on periods compared with noise-off periods"
+        ],
+        "rows": [
+          [
+            "Phantom road",
+            "44",
+            "55",
+            "28% decrease"
+          ],
+          [
+            "Control site",
+            "40",
+            "41",
+            "3% increase"
+          ]
+        ],
+        "note": null
+      },
+      "figure": null,
+      "explanation": "To show that the noise drove birds away, the completion must compare bird numbers when the noise was on and off along the phantom road, with the control site showing that the drop was not a general change. The table shows 28% fewer birds along the phantom road during noise-on periods and 3% more at the control site, as Choice B states.",
+      "distractors": {
+        "A": {
+          "recipe": "IRREL: accurate, but about noise, not birds",
+          "why_wrong": "The noise level did rise by about 11 decibels (from 44 to 55), but this shows only that the speakers worked, not that birds responded."
+        },
+        "C": {
+          "recipe": "PART: control site only",
+          "why_wrong": "The 3% rise at the control site is accurate, but without the phantom road’s 28% drop it cannot show that the noise drove birds away."
+        },
+        "D": {
+          "recipe": "INACC: the 28% drop placed at the wrong site",
+          "why_wrong": "The 28% drop occurred along the phantom road; at the control site, bird numbers rose 3% during noise-on periods."
+        }
+      },
+      "models": [
+        "2.14",
+        "2.5"
+      ],
+      "word_count": 93,
+      "sources": [
+        {
+          "what": "McClure et al. 2013, Proc. R. Soc. B 280: 20132290: Boise Foothills, Idaho, autumn 2012; 0.5 km line of 15 speaker pairs; 4-day noise-on and noise-off blocks; noise-on LEQ 55 dB(A) near the road, 11 dB(A) above noise-off; control 41 dB(A), 1 above noise-off; birds 28 percent fewer during noise-on along the phantom road, 3 percent more at the control site",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3826227/"
+        }
+      ],
+      "notes": "Medium, condition vs control with a design control site. Noise-off levels are derived from the paper's noise-on averages and stated differences (55 - 11 = 44; 41 - 1 = 40). A is accurate but about the treatment, not the outcome; C the control alone; D the drop misplaced.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 6,
+        "fixes": [],
+        "status": "pass",
+        "note": "noise-off levels derived from the paper's stated values (55 minus 11 = 44; 41 minus 1 = 40) confirmed consistent; the paper notes noise-off was louder at the road than at the control (wind); 28 percent drop and 3 percent rise confirmed"
+      }
+    },
+    {
+      "id": "command_of_evidence.Q2_P8_multipart.medium.w2b4_16",
+      "template": "Q2_P8_multipart",
+      "subtype": "Data description: two-part claim (the top station leads on both measures; among the others capacity does not predict output)",
+      "tier": "medium",
+      "passage": "A hydroelectric power station’s installed capacity is the greatest amount of power its generators can produce at any moment. How much electricity a station actually generates over a year, however, depends on how much water flows through its turbines, which varies with rainfall and with how the station’s reservoir is managed. A student comparing five of the world’s largest stations concludes that although the station with the greatest capacity also generated the most electricity, capacity was not a reliable guide to annual generation among the other four stations.",
+      "stem": "Which choice best describes data from the table that support the student’s conclusion?",
+      "options": [
+        "Three Gorges has the greatest installed capacity of the five stations and also generated the most electricity in a year, about 112 terawatt-hours.",
+        "Baihetan has the second-greatest installed capacity of the five stations and also generated the second-most electricity of the five in a year, about 60 terawatt-hours.",
+        "Three Gorges leads the five stations in both capacity and annual generation, but Itaipu, with less capacity than Baihetan, generated far more electricity than Baihetan did.",
+        "Belo Monte has more installed capacity than Guri does but generated less electricity in a year, about 40 terawatt-hours compared with Guri’s roughly 53 terawatt-hours."
+      ],
+      "answer_letter": "C",
+      "table": {
+        "title": "Five of the World’s Largest Hydroelectric Power Stations",
+        "columns": [
+          "Station",
+          "Country",
+          "Installed capacity (megawatts)",
+          "Electricity generated in one year (terawatt-hours)"
+        ],
+        "rows": [
+          [
+            "Three Gorges",
+            "China",
+            "22,500",
+            "111.8"
+          ],
+          [
+            "Baihetan",
+            "China",
+            "16,000",
+            "60.2"
+          ],
+          [
+            "Itaipu",
+            "Brazil and Paraguay",
+            "14,000",
+            "103.0"
+          ],
+          [
+            "Belo Monte",
+            "Brazil",
+            "11,233",
+            "39.5"
+          ],
+          [
+            "Guri",
+            "Venezuela",
+            "10,235",
+            "53.4"
+          ]
+        ],
+        "note": "Generation figures are for a recent year at each station."
+      },
+      "figure": null,
+      "explanation": "The conclusion has two parts: the station with the most capacity also generated the most electricity, and among the remaining stations capacity did not predict output. Choice C covers both. Three Gorges leads in capacity (22,500 megawatts) and generation (111.8 terawatt-hours), and Itaipu, with 14,000 megawatts, generated 103.0 terawatt-hours, far more than Baihetan’s 60.2 despite Baihetan’s 16,000 megawatts.",
+      "distractors": {
+        "A": {
+          "recipe": "HALF: only the first part",
+          "why_wrong": "This is accurate, but it shows only that the largest station also generated the most; it says nothing about the other four stations."
+        },
+        "B": {
+          "recipe": "INACC: Baihetan ranks third in generation",
+          "why_wrong": "Baihetan’s 60.2 terawatt-hours is less than Itaipu’s 103.0, so it generated the third-most electricity, not the second-most."
+        },
+        "D": {
+          "recipe": "HALF: only the second part",
+          "why_wrong": "This accurate comparison shows a mismatch between capacity and output among the smaller stations, but it says nothing about whether the station with the greatest capacity generated the most."
+        }
+      },
+      "models": [
+        "2.42",
+        "2.8"
+      ],
+      "word_count": 88,
+      "sources": [
+        {
+          "what": "List of largest hydroelectric power stations (Wikipedia): Three Gorges 22,500 MW, 111.8 TWh (2020); Baihetan 16,000 MW, 60.24 TWh; Itaipu 14,000 MW, 103 TWh (2016); Belo Monte 11,233 MW, 39.5 TWh; Guri 10,235 MW, 53.41 TWh",
+          "url": "https://en.wikipedia.org/wiki/List_of_largest_hydroelectric_power_stations"
+        }
+      ],
+      "notes": "Medium multipart (two-part claim), so the wrong options are a half-match for each part (A, D, both accurate) and one false reading (B). Generation figures are for single recent years that differ by station, as the table note says.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 5,
+        "fixes": [],
+        "status": "pass",
+        "note": "capacities and generation confirmed (Wikipedia list); Xiluodu ranks above Guri, which the title 'Five of the World's Largest' allows"
+      }
+    },
+    {
+      "id": "command_of_evidence.Q1_P1_lookup.easy.w2b4_17",
+      "template": "Q1_P1_lookup",
+      "subtype": "Data completion: single cell lookup (one country's production)",
+      "tier": "easy",
+      "passage": "Tea plants thrive in warm, humid climates, and for centuries nearly all of the world’s tea was cultivated in China and elsewhere in Asia. Since tea was first planted in Kenya in the early 1900s, however, that country has become one of the world’s leading producers. According to the table, Kenya produced ______",
+      "stem": "Which choice most effectively uses data from the table to complete the statement?",
+      "options": [
+        "2.33 million metric tons of tea leaves in 2022.",
+        "1.40 million metric tons of tea leaves in 2022.",
+        "5.97 million metric tons of tea leaves in 2022.",
+        "14.53 million metric tons of tea leaves in 2022."
+      ],
+      "answer_letter": "A",
+      "table": {
+        "title": "Tea Production in Six Countries, 2022",
+        "columns": [
+          "Country",
+          "Tea leaves produced (millions of metric tons)"
+        ],
+        "rows": [
+          [
+            "China",
+            "14.53"
+          ],
+          [
+            "India",
+            "5.97"
+          ],
+          [
+            "Kenya",
+            "2.33"
+          ],
+          [
+            "Sri Lanka",
+            "1.40"
+          ],
+          [
+            "Turkey",
+            "1.30"
+          ],
+          [
+            "Vietnam",
+            "1.12"
+          ]
+        ],
+        "note": null
+      },
+      "figure": null,
+      "explanation": "The table lists Kenya’s 2022 production as 2.33 million metric tons of tea leaves, so Choice A completes the statement.",
+      "distractors": {
+        "B": {
+          "recipe": "WGRP: Sri Lanka's value",
+          "why_wrong": "1.40 million metric tons is Sri Lanka’s production, not Kenya’s."
+        },
+        "C": {
+          "recipe": "WGRP: India's value",
+          "why_wrong": "5.97 million metric tons is India’s production, not Kenya’s."
+        },
+        "D": {
+          "recipe": "WGRP: China's value",
+          "why_wrong": "14.53 million metric tons is China’s production, not Kenya’s."
+        }
+      },
+      "models": [
+        "1.37",
+        "1.44"
+      ],
+      "word_count": 53,
+      "sources": [
+        {
+          "what": "List of countries by tea production (Wikipedia, FAOSTAT 2022, million tonnes): China 14.53, India 5.97, Kenya 2.33, Sri Lanka 1.40, Turkey 1.30, Vietnam 1.12",
+          "url": "https://en.wikipedia.org/wiki/List_of_countries_by_tea_production"
+        }
+      ],
+      "notes": "Single-cell lookup with value-only options from neighbouring rows (as 1.44 and 1.33). FAO counts fresh tea leaves, hence the column label. Tea was first planted in Kenya in 1903.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 2,
+        "fixes": [],
+        "status": "pass",
+        "note": "FAOSTAT 2022 values confirmed"
+      }
+    },
+    {
+      "id": "command_of_evidence.Q1_P1_lookup.easy.w2b4_18",
+      "template": "Q1_P1_lookup",
+      "subtype": "Data completion: single cell lookup (one crater's age)",
+      "tier": "easy",
+      "passage": "When a large meteorite strikes the ground, it excavates a bowl-shaped crater. Over time, erosion wears down the crater’s rim and sediment accumulates on its floor, so many of the best-preserved craters are geologically young. A student researching small impact craters notes that the Xiuyan crater, located in northeastern China, formed approximately ______",
+      "stem": "Which choice most effectively uses data from the table to complete the statement?",
+      "options": [
+        "49,000 years ago.",
+        "50,000 years ago.",
+        "220,000 years ago.",
+        "576,000 years ago."
+      ],
+      "answer_letter": "B",
+      "table": {
+        "title": "Five Small Impact Craters",
+        "columns": [
+          "Crater",
+          "Country",
+          "Diameter (kilometers)",
+          "Approximate age (years)"
+        ],
+        "rows": [
+          [
+            "Barringer",
+            "United States",
+            "1.2",
+            "49,000"
+          ],
+          [
+            "Lonar",
+            "India",
+            "1.8",
+            "576,000"
+          ],
+          [
+            "Monturaqui",
+            "Chile",
+            "0.46",
+            "640,000"
+          ],
+          [
+            "Tswaing",
+            "South Africa",
+            "1.1",
+            "220,000"
+          ],
+          [
+            "Xiuyan",
+            "China",
+            "1.8",
+            "50,000"
+          ]
+        ],
+        "note": null
+      },
+      "figure": null,
+      "explanation": "According to the table, the Xiuyan crater in China is about 50,000 years old, so Choice B completes the statement.",
+      "distractors": {
+        "A": {
+          "recipe": "WGRP: neighbouring value, Barringer's age",
+          "why_wrong": "About 49,000 years is the age of the Barringer crater in the United States, not of the Xiuyan crater."
+        },
+        "C": {
+          "recipe": "WGRP: Tswaing's age",
+          "why_wrong": "About 220,000 years is the age of the Tswaing crater in South Africa."
+        },
+        "D": {
+          "recipe": "WGRP: Lonar's age, the row with the same diameter",
+          "why_wrong": "About 576,000 years is the age of the Lonar crater in India, which has the same diameter as the Xiuyan crater (1.8 kilometers)."
+        }
+      },
+      "models": [
+        "1.43",
+        "1.30"
+      ],
+      "word_count": 53,
+      "sources": [
+        {
+          "what": "List of impact craters on Earth (Wikipedia): Barringer, Arizona, 1.2 km, 49 ka; Tswaing (Pretoria Saltpan), 1.1 km, 220 ka; Lonar, India, 1.8 km, 576 +/- 47 ka; Monturaqui, Chile, 0.455 km, 640 +/- 140 ka; Xiuyan, China, 1.8 km, 50 ka",
+          "url": "https://en.wikipedia.org/wiki/List_of_impact_craters_on_Earth"
+        }
+      ],
+      "notes": "Single-cell lookup; options are the ages of other rows. Ages given without the error ranges, rounded as the list gives them.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 5,
+        "fixes": [],
+        "status": "pass",
+        "note": "ages and diameters confirmed (Barringer 49 ka, Xiuyan 50 ka)"
+      }
+    },
+    {
+      "id": "command_of_evidence.T1_single.easy.w2b4_19",
+      "template": "T1_single",
+      "subtype": "Hypothetical finding supports a claim about officials' view of coffeehouses (one step)",
+      "tier": "easy",
+      "passage": "The first coffeehouse in Istanbul, the capital of the Ottoman Empire, was opened in 1555 by two merchants from Damascus, and coffeehouses soon became common throughout the city. Customers gathered in them to drink coffee, play games, and listen to storytellers. Historians claim that Ottoman officials came to regard coffeehouses as places where people exchanged news and discussed, and sometimes criticized, the government.",
+      "stem": "Which finding, if true, would most directly support the historians’ claim?",
+      "options": [
+        "Coffee cost more in Istanbul than it did in the regions where it was grown.",
+        "Many coffeehouses hired storytellers and puppeteers to entertain customers in the evening.",
+        "Coffeehouses were often located near markets, where merchants could meet their customers.",
+        "Ottoman officials sent spies into coffeehouses to listen to what customers said."
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "If officials saw coffeehouses as places where people discussed and criticized the government, they would want to know what was said there. Sending spies to listen to customers’ conversations, as Choice D describes, shows that officials regarded coffeehouses in this way.",
+      "distractors": {
+        "A": {
+          "recipe": "OFF: price of coffee",
+          "why_wrong": "The cost of coffee says nothing about how officials viewed the conversations in coffeehouses."
+        },
+        "B": {
+          "recipe": "OFF: entertainment",
+          "why_wrong": "Storytellers and puppeteers show how coffeehouses entertained customers, not that officials saw them as places of political talk."
+        },
+        "C": {
+          "recipe": "OFF: location",
+          "why_wrong": "Being near markets explains who visited coffeehouses, not how officials regarded them."
+        }
+      },
+      "models": [
+        "1.29",
+        "1.35",
+        "1.8"
+      ],
+      "word_count": 63,
+      "sources": [
+        {
+          "what": "Ottoman coffeehouse (Wikipedia): first Istanbul coffeehouse 1555, founded by two merchants from Damascus; storytelling and shadow puppetry; attended by government spies to gather public opinion; news circulated and resistance planned; Murad IV abolished coffeehouses in 1633",
+          "url": "https://en.wikipedia.org/wiki/Ottoman_coffeehouse"
+        }
+      ],
+      "notes": "Easy, one-step operationalization: the key names the observable act (spies listening) that the claim predicts; the wrong options are off-target features of coffeehouses, as in 1.29 and 1.45.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass",
+        "note": "two merchants from Damascus, 1555, and government spies confirmed"
+      }
+    },
+    {
+      "id": "command_of_evidence.T3_person_quote.easy.w2b4_20",
+      "template": "T3_person_quote",
+      "subtype": "Quotation from a participant illustrates a researcher's claim (regulars return for social reasons)",
+      "tier": "easy",
+      "passage": "Parkrun began in 2004 as a weekly five-kilometer run in Bushy Park, London. The events, which are free and timed and are organized entirely by volunteers, now take place every Saturday morning in more than 20 countries. After surveying parkrun participants, a researcher claims that although many people first attend to improve their fitness, regular participants keep coming back largely for social reasons, such as spending time with friends they have made at the events.",
+      "stem": "Which quotation from a participant would best illustrate the researcher’s claim?",
+      "options": [
+        "“The course follows the river through the park, so the views are lovely in every season.”",
+        "“Each week I check my time online afterward to see whether I ran faster than the week before.”",
+        "“I started coming to get in shape, but now I come mostly for the people. A group of us always has breakfast together after the run.”",
+        "“It took me a few weeks to finish the course without stopping to walk, but now I can run the whole five kilometers without a break.”"
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The researcher claims that regular participants keep returning mainly for social reasons, even if fitness first brought them. In Choice C the participant began coming to get in shape but now comes “mostly for the people” and shares breakfast with a group after each run, which illustrates both parts of the claim.",
+      "distractors": {
+        "A": {
+          "recipe": "OFF: the setting",
+          "why_wrong": "Enjoying the views is a reason to come back, but not a social one."
+        },
+        "B": {
+          "recipe": "OFF: personal times",
+          "why_wrong": "Checking whether one ran faster is about personal performance, not about the people at the event."
+        },
+        "D": {
+          "recipe": "HALF: fitness only",
+          "why_wrong": "This shows improved fitness, the reason many people first attend, but nothing about returning for social reasons."
+        }
+      },
+      "models": [
+        "1.13",
+        "1.26"
+      ],
+      "word_count": 75,
+      "sources": [
+        {
+          "what": "Parkrun (Wikipedia): founded 2 October 2004 by Paul Sinton-Hewitt at Bushy Park, London; free, timed 5 km events every Saturday morning run entirely by volunteers; events in more than 20 countries; a 2015 Loughborough study found first-timers motivated by fitness and returners by personal bests, being outdoors, friends and family",
+          "url": "https://en.wikipedia.org/wiki/Parkrun"
+        }
+      ],
+      "notes": "Easy; the researcher is unnamed and the participant quotations are invented, as in official 1.13 and 1.26. The claim follows the 2015 study the source summarizes. A and B name non-social reasons that the study also found among returners, so the claim's word 'social' decides.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass",
+        "note": "founding, format and the 2015 Loughborough motivations study confirmed"
+      }
+    },
+    {
+      "id": "command_of_evidence.Q1_P3_pairwise.easy.w2b4_21",
+      "template": "Q1_P3_pairwise",
+      "subtype": "Data completion: two comparisons of two telescopes, full 2x2 option set",
+      "tier": "easy",
+      "passage": "A telescope’s primary mirror gathers light, and the wider the mirror, the fainter the objects the telescope can detect. Because it is extremely difficult to manufacture and support a single enormous piece of glass, the primary mirrors of several of the world’s largest telescopes are assembled from numerous hexagonal segments. The table presents data on four such telescopes. Compared with the Gran Telescopio Canarias, the Hobby–Eberly Telescope has ______",
+      "stem": "Which choice most effectively uses data from the table to complete the statement?",
+      "options": [
+        "a smaller mirror and more segments.",
+        "a smaller mirror and fewer segments.",
+        "a larger mirror and more segments.",
+        "a larger mirror and fewer segments."
+      ],
+      "answer_letter": "A",
+      "table": {
+        "title": "Four Telescopes with Segmented Mirrors",
+        "columns": [
+          "Telescope",
+          "Location",
+          "Mirror diameter (meters)",
+          "Number of mirror segments"
+        ],
+        "rows": [
+          [
+            "Gran Telescopio Canarias",
+            "Spain",
+            "10.4",
+            "36"
+          ],
+          [
+            "Hobby–Eberly Telescope",
+            "United States",
+            "10.0",
+            "91"
+          ],
+          [
+            "Keck I",
+            "United States",
+            "10.0",
+            "36"
+          ],
+          [
+            "Southern African Large Telescope",
+            "South Africa",
+            "9.2",
+            "91"
+          ]
+        ],
+        "note": "For the Hobby–Eberly Telescope and the Southern African Large Telescope, the effective diameter of the mirror is given."
+      },
+      "figure": null,
+      "explanation": "The table gives the Gran Telescopio Canarias a 10.4-meter mirror made of 36 segments and the Hobby–Eberly Telescope a 10.0-meter mirror made of 91 segments. The Hobby–Eberly Telescope therefore has a smaller mirror but more segments, as Choice A states.",
+      "distractors": {
+        "B": {
+          "recipe": "WDIR: segments reversed",
+          "why_wrong": "The Hobby–Eberly Telescope’s mirror is smaller, but it has 91 segments, more than the Gran Telescopio Canarias’s 36."
+        },
+        "C": {
+          "recipe": "WDIR: diameter reversed",
+          "why_wrong": "The Hobby–Eberly Telescope has more segments, but its mirror (10.0 meters) is smaller than the Gran Telescopio Canarias’s (10.4 meters)."
+        },
+        "D": {
+          "recipe": "WDIR: both comparisons reversed",
+          "why_wrong": "The Hobby–Eberly Telescope has a smaller mirror and more segments, the reverse of both parts of this choice."
+        }
+      },
+      "models": [
+        "1.3"
+      ],
+      "word_count": 69,
+      "sources": [
+        {
+          "what": "List of largest optical reflecting telescopes (Wikipedia): Gran Telescopio Canarias 10.4 m, 36 hexagonal segments; Hobby-Eberly Telescope 10 m effective, 91 segments; Keck 1 10 m, 36 segments; Southern African Large Telescope 9.2 m effective, 91 segments",
+          "url": "https://en.wikipedia.org/wiki/List_of_largest_optical_reflecting_telescopes"
+        }
+      ],
+      "notes": "Full 2x2 option set as in official 1.3 (one combination matches the table). The Hobby–Eberly and Southern African Large Telescope diameters are effective apertures, as the table note says.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [],
+        "status": "pass",
+        "note": "diameters and segment counts confirmed; HET's 10 m is its effective aperture, as the table note says"
+      }
+    },
+    {
+      "id": "command_of_evidence.Q2_P4_trend.easy.w2b4_22",
+      "template": "Q2_P4_trend",
+      "subtype": "Data description: variation from one winter to the next in a single-series line graph (underlined claim)",
+      "tier": "easy",
+      "passage": "Since the 1850s, observers in Madison, Wisconsin, have documented when Lake Mendota freezes completely each winter and when its ice disappears each spring. The graph shows the number of days the lake remained covered by ice in each of ten recent winters. <u>The duration of the lake’s ice cover can fluctuate by several weeks from one winter to the next.</u>",
+      "stem": "Which choice most effectively uses data from the graph to justify the underlined claim?",
+      "options": [
+        "The lake was covered by ice for about 87 days in the winter of 2012–2013 and for about 91 days in the winter of 2014–2015, two years later.",
+        "The longest period of ice cover shown, about 117 days, occurred in the winter of 2010–2011.",
+        "The lake was covered by ice for about 109 days in the winter of 2010–2011 but for only about 57 days the following winter.",
+        "The shortest period of ice cover shown, about 57 days, occurred in the winter of 2019–2020."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": {
+        "kind": "line graph",
+        "title": "Days of Ice Cover on Lake Mendota, Winters 2010–2011 to 2019–2020",
+        "x_axis": "Winter",
+        "y_axis": "Days of ice cover",
+        "description": "One line for ten winters; y-axis 0 to 140 in steps of 20. 2010–2011 about 109; 2011–2012 about 57 (the lowest); 2012–2013 about 87; 2013–2014 about 117 (the highest); 2014–2015 about 91; 2015–2016 about 62; 2016–2017 about 65; 2017–2018 about 94; 2018–2019 about 86; 2019–2020 about 70. The line rises and falls sharply from one winter to the next.",
+        "data": [
+          {
+            "series": "Days of ice cover",
+            "points": [
+              [
+                "2010–2011",
+                109
+              ],
+              [
+                "2011–2012",
+                57
+              ],
+              [
+                "2012–2013",
+                87
+              ],
+              [
+                "2013–2014",
+                117
+              ],
+              [
+                "2014–2015",
+                91
+              ],
+              [
+                "2015–2016",
+                62
+              ],
+              [
+                "2016–2017",
+                65
+              ],
+              [
+                "2017–2018",
+                94
+              ],
+              [
+                "2018–2019",
+                86
+              ],
+              [
+                "2019–2020",
+                70
+              ]
+            ]
+          }
+        ]
+      },
+      "explanation": "The underlined claim is about how much the length of ice cover can change between consecutive winters. The graph shows about 109 days of ice cover in 2010–2011 and about 57 days in 2011–2012, a difference of more than seven weeks, so Choice C justifies the claim.",
+      "distractors": {
+        "A": {
+          "recipe": "IRREL: accurate, but nearly equal and not consecutive",
+          "why_wrong": "These two values are read correctly, but they differ by only about four days and come from winters two years apart, so they do not show a change of several weeks from one winter to the next."
+        },
+        "B": {
+          "recipe": "INACC: wrong winter for the peak",
+          "why_wrong": "The longest ice cover, about 117 days, occurred in 2013–2014; in 2010–2011 the lake was frozen for about 109 days."
+        },
+        "D": {
+          "recipe": "INACC: wrong winter for the low",
+          "why_wrong": "The shortest ice cover, about 57 days, occurred in 2011–2012; in 2019–2020 the lake was frozen for about 70 days."
+        }
+      },
+      "models": [
+        "1.14"
+      ],
+      "word_count": 60,
+      "sources": [
+        {
+          "what": "Wisconsin State Climatology Office, Lake Mendota ice history: days of ice cover 2010-11 109, 2011-12 57, 2012-13 87, 2013-14 117, 2014-15 91, 2015-16 62, 2016-17 65, 2017-18 94, 2018-19 86, 2019-20 70; record begins in the 1850s",
+          "url": "https://climatology.nelson.wisc.edu/first-order-station-climate-data/madison-climate/lake-ice/history-of-ice-freezing-and-thawing-on-lake-mendota/"
+        }
+      ],
+      "notes": "Easy line graph with one series, as 1.14; the claim is about variation, so the key pairs two consecutive winters, A is an accurate but small and non-consecutive difference, B and D misplace the extremes. The record is the State Climatology Office's.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass",
+        "note": "all ten values confirmed against the State Climatology Office table"
+      }
+    }
+  ]
+}

@@ -1,0 +1,1762 @@
+{
+  "skill": "Command of Evidence",
+  "slug": "command_of_evidence",
+  "part": "w2b6",
+  "domain": "Information and Ideas",
+  "plan": {
+    "templates": [
+      {
+        "code": "T1_single",
+        "name": "Hypothetical finding supports or weakens a single claim (causal, comparison, existence, generalization, prediction)"
+      },
+      {
+        "code": "T1_compete",
+        "name": "Hypothetical finding discriminates between competing explanations (support or weaken)"
+      },
+      {
+        "code": "T2_lit_quote",
+        "name": "Quotation from a literary work illustrates a claim (single trait, two-part, contrast)"
+      },
+      {
+        "code": "T3_person_quote",
+        "name": "Quotation from a person (participant, respondent, historian, critic, article) supports or challenges a claim"
+      },
+      {
+        "code": "Q1_P1_lookup",
+        "name": "Data completion: lookup (one cell or bar, reverse lookup, filter)"
+      },
+      {
+        "code": "Q1_P2_extreme",
+        "name": "Data completion: extreme or rank (max/min, possibly after a filter)"
+      },
+      {
+        "code": "Q1_P3_pairwise",
+        "name": "Data completion: pairwise comparison (one or two comparisons)"
+      },
+      {
+        "code": "Q1_P4_trend",
+        "name": "Data completion: change over time"
+      },
+      {
+        "code": "Q1_P5_control",
+        "name": "Data completion: condition vs control"
+      },
+      {
+        "code": "Q2_P4_trend",
+        "name": "Data description: trend or change over time supports a conclusion"
+      },
+      {
+        "code": "Q2_P8_quantifier",
+        "name": "Data description: quantified claim (for each, all except one)"
+      },
+      {
+        "code": "Q2_P8_multipart",
+        "name": "Data description: multi-part, interaction, or passage-plus-data claim"
+      }
+    ]
+  },
+  "items": [
+    {
+      "id": "command_of_evidence.T1_single.hard.w2b6_01",
+      "template": "T1_single",
+      "subtype": "Hypothetical finding supports a claim (social learning needs a comparison with individual learning)",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Fringe-lipped bats (Trachops cirrhosus) locate frog prey by eavesdropping on the frogs’ mating calls, but in preliminary tests, none of the bats that biologists Rachel Page and Michael Ryan captured on Panama’s Barro Colorado Island approached recorded calls of cane toads, which are too large and too toxic for the bats to consume. The researchers then conditioned several bats, rewarding them with fish whenever they flew toward a speaker broadcasting toad calls, until those individuals approached the sound consistently. Each conditioned bat subsequently shared a flight enclosure with an inexperienced bat. Page and Ryan claim that the bats can acquire new associations between sounds and food by observing other bats.",
+      "stem": "Which finding, if true, would most directly support Page and Ryan’s claim?",
+      "options": [
+        "Conditioned bats flew toward the speaker broadcasting toad calls more rapidly when an inexperienced bat shared their enclosure than when they were housed alone.",
+        "Inexperienced bats housed with a conditioned bat eventually began flying toward the speaker broadcasting toad calls, and they, too, were rewarded with fish whenever they did so.",
+        "Inexperienced bats housed with a conditioned bat approached the toad calls after fewer trials than did inexperienced bats that were rewarded for approaching but housed alone.",
+        "Inexperienced bats housed with a conditioned bat approached the toad calls no sooner than inexperienced bats housed with another inexperienced bat did."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The claim is that a bat can learn a new food signal by watching another bat, not only through its own rewarded trial and error. To show that, inexperienced bats housed with a conditioned bat have to be compared with inexperienced bats that received the same reward but had no one to watch. Choice C gives that comparison: bats housed with a conditioned bat learned faster than rewarded bats housed alone, so the difference comes from the companion.",
+      "distractors": {
+        "A": {
+          "recipe": "SUBJ: the conditioned bats' behavior, not the learners'",
+          "why_wrong": "This finding concerns how the already conditioned bats behaved with company. It says nothing about whether the inexperienced bats learned anything by observing them."
+        },
+        "B": {
+          "recipe": "TRAP: consistent with learning alone",
+          "why_wrong": "Because the inexperienced bats were also rewarded with fish, they could have learned the toad calls on their own through trial and error. Without a comparison group, eventually approaching the calls cannot show that observing the conditioned bat helped."
+        },
+        "D": {
+          "recipe": "OPP: no benefit from a conditioned companion",
+          "why_wrong": "If a conditioned companion made no difference compared with an inexperienced one, observing other bats would not appear to help, which weakens the claim."
+        }
+      },
+      "models": [
+        "3.31",
+        "3.41",
+        "3.25"
+      ],
+      "word_count": 110,
+      "sources": [
+        {
+          "what": "Page and Ryan, Current Biology 2006: fringe-lipped bats at the Smithsonian Tropical Research Institute, Barro Colorado Island, Panama, rewarded with fish for approaching cane toad calls became tutors; naive bats learned the new call-food association by observing tutors",
+          "url": "https://www.sciencedaily.com/releases/2006/06/060619235450.htm"
+        }
+      ],
+      "notes": "Band 6: the key needs the right comparison group (rewarded bats without a tutor). TRAP B (no comparison, learners also rewarded), OPP D (tutor no better than an untrained companion), SUBJ A (tutors' speed). Baseline: no bat approached toad calls at first (paper's baseline tests).",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [],
+        "status": "pass",
+        "band7": {
+          "verdict": "band 6",
+          "why": "Two steps: the key supplies the right comparison group (rewarded bats with no one to watch); TRAP B (learners also rewarded) and OPP D. No missing premise, so a solid band 6 as targeted."
+        }
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "C",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "command_of_evidence.T1_single.hard.w2b6_02",
+      "template": "T1_single",
+      "subtype": "Hypothetical finding supports a claim (key supplies the missing premise: pitch tracks body size)",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "When confronted by predators or people, Bornean orangutans frequently produce a “kiss squeak,” a sharp sound made by drawing air in through pursed lips. Over more than two years in the forests of Borneo, primatologist Madeleine Hardus and colleagues recorded over 1,000 kiss squeaks from 23 wild orangutans. In certain populations, the apes sometimes pressed a bundle of leaves against their mouths first, and these leaf squeaks had a considerably lower maximum frequency, or pitch, than squeaks made with the lips alone. Although the researchers did not test how predators actually respond to the calls, Hardus and colleagues propose that leaf use is a deceptive strategy that allows an orangutan to sound larger than it really is.",
+      "stem": "Which finding, if true, would most directly support the proposal made by Hardus and colleagues about the orangutans’ use of leaves?",
+      "options": [
+        "Without leaves, adult males, the largest orangutans, produce kiss squeaks with lower maximum frequencies than adult females and juveniles do.",
+        "Kiss squeaks produced with a hand cupped over the lips have a lower maximum frequency than squeaks made with the lips alone, though not as low as leaf squeaks.",
+        "Animals that prey on orangutans respond in the same way to recordings of low-pitched kiss squeaks as they do to recordings of high-pitched kiss squeaks.",
+        "Orangutans in every population studied produce kiss squeaks, but only orangutans in some of those populations ever hold leaves to their mouths while doing so."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The text establishes that leaves lower the pitch of a kiss squeak, but the proposal also depends on something the text never states: that a lower pitch makes the caller seem bigger. If, without leaves, the largest orangutans naturally make the lowest squeaks, then pitch is a signal of body size, and an orangutan that lowers its pitch with leaves would sound like a larger animal. Choice A supplies that missing link.",
+      "distractors": {
+        "B": {
+          "recipe": "TRAP: true, but another way to lower pitch",
+          "why_wrong": "Showing that a cupped hand also lowers pitch adds nothing about whether a lower pitch signals a larger body, so it cannot tell us whether lowering pitch would deceive a listener about size."
+        },
+        "C": {
+          "recipe": "OPP: listeners ignore pitch",
+          "why_wrong": "If predators respond identically to low and high squeaks, a lower squeak would not change how large the caller seems to them, which weakens the proposal."
+        },
+        "D": {
+          "recipe": "TRAP: true but irrelevant (cultural variation)",
+          "why_wrong": "That leaf use is found only in some populations explains where the behavior occurs, not what it does, so it neither supports nor weakens the idea that it makes callers sound larger."
+        }
+      },
+      "models": [
+        "3.47",
+        "3.45",
+        "3.36"
+      ],
+      "word_count": 117,
+      "sources": [
+        {
+          "what": "Hardus and colleagues (Proc. R. Soc. B 2009): over 1,000 kiss-squeaks from 23 wild orangutans over two years in Borneo; leaf-assisted squeaks lower in pitch; pitch reflects body size; leaves proposed as a deceptive way to sound larger; predator responses not yet tested",
+          "url": "https://scienceblogs.com/notrocketscience/2009/08/04/orang-utans-use-leaves-to-lie-about-their-size"
+        }
+      ],
+      "notes": "Band 7 moves: key supplies a premise the text withholds (pitch tracks body size; in the study, unaided squeaks of large males were lowest); TRAP B (hand-cupping also lowers pitch: true, cannot decide), TRAP D (cultural variation: true, irrelevant), OPP C (predators ignore pitch). Stem 21 words, names the claimant.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [],
+        "status": "pass",
+        "band7": {
+          "verdict": "band 7",
+          "why": "Three steps: the key supplies the premise the text withholds (lower pitch marks a larger body); TRAP B and D are true but cannot decide, OPP C; 117-word passage, 21-word stem naming the claimants."
+        }
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "A",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 7
+    },
+    {
+      "id": "command_of_evidence.T1_compete.hard.w2b6_03",
+      "template": "T1_compete",
+      "subtype": "Hypothetical finding discriminates rival explanations (visibility vs cognition; invisible pollutant)",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Using pitch-tracking camera data, economists James Archsmith, Anthony Heyes, and Soodeh Saberian compared a large set of ball-and-strike calls by Major League Baseball umpires with air-quality records from the areas around stadiums. Umpires made more incorrect calls when concentrations of two pollutants were high: fine particulate matter, which at high concentrations makes the air visibly hazy, and carbon monoxide, a colorless gas. One possible explanation is that polluted air simply reduces visibility, making pitches harder to see. The researchers, however, suggest that the pollution may be impairing umpires’ cognition—their ability to process what they see and make quick judgments.",
+      "stem": "Which finding, if true, would most directly support the researchers’ suggestion?",
+      "options": [
+        "Umpires made more incorrect calls on days with high levels of fine particulate matter than on days with low levels of fine particulate matter.",
+        "Umpires’ accuracy tended to improve over the course of each season, regardless of the air quality on the days when they worked.",
+        "The increase in incorrect calls linked to fine particulate matter was largest in late-afternoon games, when haze and glare most reduce how clearly the ball can be seen.",
+        "Umpires made more incorrect calls when carbon monoxide levels were high, even on days when levels of fine particulate matter were low."
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The two explanations differ on whether pollution acts through what umpires can see. Carbon monoxide is colorless, so it cannot make the ball harder to see. If umpires erred more when carbon monoxide was high even though the visible pollutant, fine particulate matter, was low, the errors cannot come from reduced visibility, which leaves an effect on the umpires’ thinking. Choice D gives that finding.",
+      "distractors": {
+        "A": {
+          "recipe": "TRAP: consistent with both explanations",
+          "why_wrong": "Fine particulate matter both makes air hazy and could affect cognition, so more errors on high-particulate days fit either explanation equally well."
+        },
+        "B": {
+          "recipe": "OFF: a different variable",
+          "why_wrong": "Improvement over a season is about experience or practice; it says nothing about how pollution causes errors."
+        },
+        "C": {
+          "recipe": "OPP: the rival's prediction",
+          "why_wrong": "An effect that is largest when haze and glare make the ball hardest to see points toward the visibility explanation, not toward an effect on cognition."
+        }
+      },
+      "models": [
+        "3.8",
+        "3.9",
+        "3.14"
+      ],
+      "word_count": 99,
+      "sources": [
+        {
+          "what": "Archsmith (University of Maryland), Heyes and Saberian: PITCHf/x pitch-tracking data and EPA air-quality data around stadiums; carbon monoxide and fine particulates linked to more incorrect umpire calls; possibly a pathway interfering with cognition",
+          "url": "https://today.umd.edu/unfair-strike-zone-ea3cba85-5872-49ec-b9f4-d5a1162ec0d6"
+        }
+      ],
+      "notes": "Band 6 compete: key needs the inference that a colorless gas cannot reduce visibility, plus holding the visible pollutant low. TRAP A (both rivals predict it), OPP C (visibility prediction), OFF B. The rival 'harder to see' is framed as a possibility, not attributed to anyone; the researchers' view is kept as hedged as the source ('may be').",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [],
+        "status": "pass",
+        "band7": {
+          "verdict": "band 6",
+          "why": "Compete item with one bridge (a colorless gas cannot cause haze) plus holding the visible pollutant low; TRAP A fits both rivals, OPP C fits visibility. Fair band 6 as targeted."
+        }
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "D",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "command_of_evidence.Q2_P8_multipart.hard.w2b6_04",
+      "template": "Q2_P8_multipart",
+      "subtype": "Data description: cross-cell comparison isolates disperser loss from tree loss",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "Hornbills consume the large fruits of many tropical forest trees and subsequently deposit the seeds far from the parent tree. In 2011–2012, ecologist Rohit Naniwadekar and colleagues compared two forests in Arunachal Pradesh, India: Namdapha Tiger Reserve, which has experienced no logging and relatively little hunting, and Miao Reserved Forest, where logging has eliminated many fruiting trees and intensive hunting has made hornbills scarce. For five tree species whose fruits hornbills consume, the researchers measured the density of adult trees and the number of seeds dispersed onto the forest floor away from parent trees. They concluded that the scarcity of dispersed seeds in Miao reflects, at least partially, the scarcity of hornbills, not merely the loss of fruiting trees.",
+      "stem": "Which choice best describes data from the table that support Naniwadekar and colleagues’ conclusion?",
+      "options": [
+        "Adult Phoebe, Beilschmiedia assamica, and Dysoxylum trees were all considerably more abundant in Namdapha than in Miao, and no dispersed seeds of those three species were found in Miao.",
+        "Adult Canarium strictum trees were more abundant in Miao than in Namdapha, yet fewer dispersed Canarium strictum seeds were found in Miao than in Namdapha.",
+        "Adult Alseodaphne petiolaris trees were about as abundant in Miao as in Namdapha, and so were dispersed Alseodaphne petiolaris seeds.",
+        "More dispersed seeds of every species were found in Namdapha than in Miao, and adult Beilschmiedia assamica trees were roughly ten times as abundant in Namdapha as in Miao."
+      ],
+      "answer_letter": "B",
+      "table": {
+        "title": "Adult Trees and Dispersed Seeds per Hectare for Five Hornbill Food Trees",
+        "columns": [
+          "Tree species",
+          "Adult trees, Namdapha",
+          "Adult trees, Miao",
+          "Seeds, Namdapha",
+          "Seeds, Miao"
+        ],
+        "rows": [
+          [
+            "Phoebe sp.",
+            "0.38",
+            "0.17",
+            "863",
+            "0"
+          ],
+          [
+            "Beilschmiedia assamica",
+            "2.46",
+            "0.25",
+            "256",
+            "0"
+          ],
+          [
+            "Dysoxylum sp.",
+            "1.50",
+            "0.00",
+            "50",
+            "0"
+          ],
+          [
+            "Canarium strictum",
+            "0.04",
+            "0.25",
+            "38",
+            "13"
+          ],
+          [
+            "Alseodaphne petiolaris",
+            "0.13",
+            "0.08",
+            "306",
+            "150"
+          ]
+        ],
+        "note": null
+      },
+      "figure": null,
+      "explanation": "Fewer seeds in Miao could come from either cause: fewer trees producing fruit or fewer hornbills carrying the seeds away. To show that hornbills matter, a species is needed whose trees are not scarcer in Miao. Canarium strictum is that species: its trees were more abundant in Miao (about 0.25 per hectare against 0.04), yet fewer of its seeds were found there (13 against 38 per hectare). Since the shortage cannot come from a lack of trees, it points to a lack of dispersers, as choice B states.",
+      "distractors": {
+        "A": {
+          "recipe": "IRREL: accurate, but explained by tree loss alone",
+          "why_wrong": "All three species had fewer adult trees in Miao (Dysoxylum had none at all), so the shortage of their seeds there could reflect the loss of fruiting trees. As stated, these data cannot separate that cause from a lack of hornbills; only a species with at least as many trees in Miao can."
+        },
+        "C": {
+          "recipe": "INACC: false reading",
+          "why_wrong": "Alseodaphne petiolaris seeds were about half as common in Miao (150 per hectare) as in Namdapha (306), so the seed counts were not about the same."
+        },
+        "D": {
+          "recipe": "IRREL: accurate, but explained by tree loss alone",
+          "why_wrong": "The overall seed shortage and the tenfold difference in Beilschmiedia trees are consistent with the loss of trees alone, so they do not show that the scarcity of hornbills contributed."
+        }
+      },
+      "models": [
+        "3.26",
+        "3.16",
+        "3.18"
+      ],
+      "word_count": 119,
+      "sources": [
+        {
+          "what": "Naniwadekar, Shukla, Isvaran and Datta, PLoS ONE 2015, Table 2: adult tree density and scatter-dispersed seed arrival per hectare for five hornbill food trees, less disturbed Namdapha vs logged and hunted Miao; seed shortage attributed to both dispersal and source limitation",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4363152/"
+        }
+      ],
+      "notes": "Band 7 moves: the key is the one cell that separates the two causes the passage names (more trees but fewer seeds); two accurate distractors that cannot separate them (A, D) and one false reading (C). Tree densities rounded to two decimals from the paper's means; seed counts as published. Conclusion kept to 'at least in part', since the paper credits both dispersal and source limitation.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [
+          "rewrote A's why_wrong: Phoebe and Beilschmiedia keep some trees in Miao yet have zero seeds, so 'could be due entirely to tree loss' was overstated; it now says the stated cells cannot separate the causes"
+        ],
+        "status": "fixed",
+        "band7": {
+          "verdict": "band 7",
+          "why": "Cross-cell isolation: student must find the one species with more trees but fewer seeds in Miao and see that it rules out tree loss; two accurate wrong-cell distractors (A, D) in the same frame, one false reading; four or more operations."
+        }
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "B",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 7
+    },
+    {
+      "id": "command_of_evidence.T2_lit_quote.hard.w2b6_05",
+      "template": "T2_lit_quote",
+      "subtype": "Literary quotation (stance claim: battered heroism in isolation; near emotions as distractors)",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "“Mr. Flood’s Party” is a 1921 poem by Edwin Arlington Robinson. In the poem, Eben Flood, who has outlived his companions, stops on a deserted road at night to carry on an imaginary conversation with himself. Robinson suggests that Eben, though diminished by age and loss, still has a kind of heroic dignity: ______",
+      "stem": "Which quotation from “Mr. Flood’s Party” most effectively illustrates the claim?",
+      "options": [
+        "“Below him, in the town among the trees, / Where friends of other days had honored him, / A phantom salutation of the dead / Rang thinly till old Eben’s eyes were dim.”",
+        "“‘Well, Mr. Flood, we have not met like this / In a long time; and many a change has come / To both of us, I fear, since last it was / We had a drop together. Welcome home!’”",
+        "“Alone, as if enduring to the end / A valiant armor of scarred hopes outworn, / He stood there in the middle of the road / Like Roland’s ghost winding a silent horn.”",
+        "“There was not much that was ahead of him, / And there was nothing in the town below— / Where strangers would have shut the many doors / That many friends had opened long ago.”"
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The claim has two parts: Eben has been worn down by age and loss, yet something heroic remains in him. In choice C he stands “Alone,” his hopes “scarred” and “outworn,” which shows what he has lost, but he wears “A valiant armor” and is compared to Roland, a legendary warrior. The quotation therefore shows both his diminished state and his heroic dignity.",
+      "distractors": {
+        "A": {
+          "recipe": "NEAR EMOTION: grief",
+          "why_wrong": "These lines show Eben remembering friends who once honored him until his eyes fill with tears; they convey grief over the past, not a heroic dignity he still has."
+        },
+        "B": {
+          "recipe": "NEAR EMOTION: nostalgic cheer",
+          "why_wrong": "Here Eben playfully greets himself as an old friend come home, a moment of convivial nostalgia rather than heroic dignity."
+        },
+        "D": {
+          "recipe": "HALF: loss without heroism",
+          "why_wrong": "These lines stress that Eben has no future and no friends left in the town, so they show how much he has lost but nothing heroic about him."
+        }
+      },
+      "models": [
+        "3.37",
+        "3.17",
+        "3.35"
+      ],
+      "word_count": 54,
+      "sources": [
+        {
+          "what": "Robinson, Mr. Flood's Party, Wikisource text of Collected Poems (1921): quotations A to C match exactly; D's dash after 'below' follows the printed text (second source), where Wikisource has a hyphen",
+          "url": "https://en.wikisource.org/wiki/Collected_Poems_(Robinson)/Mr._Flood%27s_Party"
+        },
+        {
+          "what": "Robinson, Collected Poems (Macmillan, 1921; 1922 printing), scan pp. 573-574: prints a dash after 'below' and after 'rang', so Wikisource's hyphens there are transcription slips",
+          "url": "https://archive.org/details/collectedpoems0000robi"
+        }
+      ],
+      "notes": "Band 7 moves: verse in figurative language (Roland's ghost, armor of hopes); claim paraphrased away from the key's words; distractors are the same speaker in nearby states (grief over past honor, nostalgic cheer, bleak loss). The printed Collected Poems shows a dash after 'below' (Wikisource's hyphen is a slip). Year: collected 1921.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [
+          "reworded the claim from 'endures his isolation with a kind of battered heroism' (echoed by the key's 'Alone, as if enduring') to 'though diminished by age and loss, still has a kind of heroic dignity'; updated explanation and why_wrong",
+          "kept the em dash after 'below' in D: the printed Collected Poems (archive.org scan) shows a dash there and after 'rang', so Wikisource's hyphen is a slip; added the scan to sources"
+        ],
+        "status": "fixed",
+        "band7": {
+          "verdict": "band 7",
+          "why": "Figurative verse (valiant armor, Roland winding a silent horn) must be read as heroic dignity; claim no longer shares words with the key; A (past honor, grief) and D (loss) are near states of the same speaker."
+        },
+        "checks": [
+          "all four quotations match Wikisource and the scan otherwise word for word; 1921 date as given"
+        ]
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "C",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 7
+    },
+    {
+      "id": "command_of_evidence.T3_person_quote.hard.w2b6_06",
+      "template": "T3_person_quote",
+      "subtype": "Quotation from a critic supports the text's rebuttal (transformation vs preservation)",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "Uli is a drawing tradition of the Igbo people of southeastern Nigeria in which artists, traditionally women, paint curvilinear motifs derived from nature on human bodies and on the walls of sacred buildings. Uche Okeke, whose mother created uli designs, was a founding member of the Zaria Art Society in 1958 and, beginning in 1971, taught at the University of Nigeria, Nsukka, where uli became central to his drawings and paintings. Okeke’s uli-based works are sometimes characterized as an attempt to document a disappearing art, but that characterization overlooks how thoroughly he reinvented the tradition, transforming a practice bound to particular bodies and occasions into a vocabulary for modern art.",
+      "stem": "Which quotation from an art historian would most directly support the claim made in the text?",
+      "options": [
+        "“In Okeke’s drawings, uli motifs are enlarged to fill a whole page, or broken into fragments and set among figures from Igbo folktales, in arrangements no body painter would have made. The motifs no longer adorn a person for a festival; they are the building blocks of his own compositions.”",
+        "“Okeke recognized that uli was disappearing as fewer young women learned it, and his drawings serve above all as an archive: sheet after sheet preserves motifs that might otherwise have been lost, recorded with a fidelity that makes them an indispensable resource for anyone studying the visual culture of the Igbo people.”",
+        "“Arguments over whether Okeke preserved uli or transformed it miss an important point: the women who painted uli were always inventing new motifs and discarding old ones, so the tradition was never fixed, and any artist who worked with it was continuing and changing it at the same time.”",
+        "“For Okeke and the other young artists at Zaria, turning to traditions such as uli was a political act as much as an artistic one: in the years around Nigerian independence, they rejected the idea that modern art in Nigeria had to follow the European models taught in their classes.”"
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The text claims that Okeke did not merely preserve uli but reinvented it, turning a practice tied to particular bodies and occasions into a language for modern art. Choice A supports this: Okeke enlarged, fragmented and recombined the motifs in ways body painters never did, so that they stopped decorating a person for a ceremony and became parts of his own compositions.",
+      "distractors": {
+        "B": {
+          "recipe": "OPP: sides with the view the text rejects",
+          "why_wrong": "This quotation describes Okeke’s drawings as an archive that preserves a disappearing art, which is the view the text says overlooks his transformation of uli."
+        },
+        "C": {
+          "recipe": "TRAP: a reconciliation that sidesteps the claim",
+          "why_wrong": "By arguing that preserving and transforming uli were always the same thing, this quotation dissolves the distinction the text draws instead of showing that Okeke remade the tradition."
+        },
+        "D": {
+          "recipe": "OFF: motive, not what he did with uli",
+          "why_wrong": "This quotation explains why the Zaria artists turned to Nigerian traditions, not how Okeke changed uli, so it does not bear on the text’s claim about his transformation of it."
+        }
+      },
+      "models": [
+        "3.21",
+        "3.3",
+        "3.32"
+      ],
+      "word_count": 110,
+      "sources": [
+        {
+          "what": "Uche Okeke: founding member of the Zaria Art Society in 1958; joined the University of Nigeria, Nsukka, in 1971; uli traditionally painted by Igbo women on the body and walls of sacred places, motifs from nature; his mother made uli designs; he carried uli into a modern idiom at Nsukka; drew on Igbo folktales",
+          "url": "https://en.wikipedia.org/wiki/Uche_Okeke"
+        }
+      ],
+      "notes": "Band 7 moves: the claim sits inside the text's rebuttal of an alternative view (as in the Stevens sandpainting model); options are 46 to 53-word arguments; OPP (the rejected archive view), TRAP (reconciliation that dissolves the claim), OFF (political motive). Quotations are from an unnamed historian, as official T3 items do.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [
+          "rewrote key A, which echoed the claim noun for noun ('bound to a particular wearer and ceremony', 'grammar of modern drawings' against 'bound to particular bodies and occasions', 'vocabulary for modern art'); now concrete (enlarged, fragmented, set among folktale figures) at 49 words"
+        ],
+        "status": "fixed",
+        "band7": {
+          "verdict": "band 7",
+          "why": "Claim sits inside the rebuttal of the archive view; 40 to 55-word arguing quotations; OPP B (archive), TRAP C (reconciliation), OFF D; key now paraphrases rather than mirrors the claim."
+        },
+        "checks": [
+          "Okeke facts confirmed: mother made uli, Zaria Art Society 1958, Nsukka from 1971, uli on bodies and sacred walls, folktales"
+        ]
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "A",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 7
+    },
+    {
+      "id": "command_of_evidence.Q1_P5_control.hard.w2b6_07",
+      "template": "Q1_P5_control",
+      "subtype": "Data completion: each treatment against the control in every period",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "In rural Gambia, thatched roofs are increasingly being replaced by metal roofs, which can make houses so uncomfortably hot at night that residents are less likely to sleep under insecticide-treated bed nets. To evaluate an inexpensive remedy, Majo Carrasco-Tenezaca, Steve Lindsay, and colleagues constructed two identical experimental houses with metal roofs and monitored indoor temperatures during the malaria season while the roofs were left bare, coated with a red primer, or painted white. Comparing each coated roof with the bare-metal roof, the researchers concluded that only one of the two coatings kept the house cooler throughout the day and night: ______",
+      "stem": "Which choice most effectively uses data from the table to complete the statement?",
+      "options": [
+        "both of the coated houses were cooler than the bare-metal house during the evening, the hours when residents typically decide whether to sleep under a bed net that night.",
+        "the white-roofed house was cooler than the red-roofed house in each of the three periods shown in the table.",
+        "the red-roofed house was cooler than the bare-metal house during the day but warmer than the bare-metal house at night.",
+        "the white-roofed house was cooler than the bare-metal house in all three periods, but the red-roofed house was not cooler than the bare-metal house during the day."
+      ],
+      "answer_letter": "D",
+      "table": {
+        "title": "Indoor Temperature (°C) of Experimental Houses in Gambia, by Roof Type",
+        "columns": [
+          "Roof",
+          "Evening (9:00 p.m.–midnight)",
+          "Night (12:30–7:00 a.m.)",
+          "Day (7:30 a.m.–8:30 p.m.)"
+        ],
+        "rows": [
+          [
+            "Bare metal",
+            "31.5",
+            "29.4",
+            "34.0"
+          ],
+          [
+            "Red primer",
+            "30.3",
+            "28.4",
+            "34.4"
+          ],
+          [
+            "White paint",
+            "29.8",
+            "27.8",
+            "33.1"
+          ]
+        ],
+        "note": "Evening and night values are averages; day values are the average daily maximum."
+      },
+      "figure": null,
+      "explanation": "The conclusion compares each coating with the bare-metal roof and says only one kept the house cooler at all times. The white-roofed house was cooler than the bare-metal house in the evening (29.8 °C against 31.5 °C), at night (27.8 °C against 29.4 °C), and during the day (a maximum of 33.1 °C against 34.0 °C), while the red-roofed house was not cooler during the day (34.4 °C against 34.0 °C). Choice D states both halves.",
+      "distractors": {
+        "A": {
+          "recipe": "PART: one period only",
+          "why_wrong": "It is true that both painted houses were cooler in the evening, but this covers only one period and does not show that just one paint kept the house cooler at all times."
+        },
+        "B": {
+          "recipe": "IRREL: wrong comparison",
+          "why_wrong": "The conclusion compares each coating with the bare-metal roof; comparing the two coatings with each other does not show whether either was cooler than bare metal at every time of day."
+        },
+        "C": {
+          "recipe": "WDIR: reversed",
+          "why_wrong": "The table shows the opposite: the red-roofed house was cooler than the bare-metal house at night (28.4 °C against 29.4 °C) but not during the day."
+        }
+      },
+      "models": [
+        "3.46",
+        "3.38",
+        "3.4"
+      ],
+      "word_count": 101,
+      "sources": [
+        {
+          "what": "Carrasco-Tenezaca, Jatta, Jawara, Bradley, Pinder, D'Alessandro, Knudsen and Lindsay, Malaria Journal 2021, Table 1: mean indoor temperatures for bare-metal, red oxide primer and white gloss roofs, 21.00-00.00, 00.30-07.00 and 07.30-20.30 h; white roofs cooler at all times, red roofs cooler at night but not during the day",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC8555212/"
+        }
+      ],
+      "notes": "Values rounded to one decimal from Table 1 (31.49, 29.43, 33.98; 30.26, 28.42, 34.42; 29.75, 27.84, 33.05). Table 1's footnote: night and evening are means, day is the maximum, hence the table note. The red roof's daytime excess (+0.44 °C) was not significant (p = 0.081), so the key says 'not cooler', not 'warmer'. Year left out: the paper gives 2018 in the abstract and September to October 2017 in the methods.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [
+          "Table 1 day values are daily maximums, not means: retitled the table (dropped \"Mean\") and added a note",
+          "dropped \"2018\" from the passage: the paper gives the 2018 season in the abstract but 11 September to 21 October 2017 in the methods"
+        ],
+        "status": "fixed",
+        "band7": {
+          "verdict": "band 6",
+          "why": "Condition against control in every period: the key needs both coated houses checked against bare metal in three columns; A and B are accurate but insufficient, C reversed. Band 6 as targeted."
+        },
+        "checks": [
+          "'not cooler' for the red roof by day is fair: 34.4 against 34.0 is literally not cooler and the source says the red roof was not cooler during the day (difference not significant)"
+        ]
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "D",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "command_of_evidence.Q2_P8_quantifier.hard.w2b6_08",
+      "template": "Q2_P8_quantifier",
+      "subtype": "Data description: the effect must hold in both strata, not just in the aggregate",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "Since 2004, fishing villages in the Velondriake region of southwestern Madagascar have periodically closed part of their octopus fishing grounds for two to seven months before reopening them. Using eight years of fishery records, Thomas Oliver and colleagues compared the change in each village’s octopus income from the 30 days before a closure to the 30 days after it with the change in nearby control villages that had closed nothing. Some closures overlapped with a six-week shutdown of octopus fishing across the entire region, which can temporarily raise catches everywhere once fishing resumes. The researchers concluded that the closures increased village income whether or not they overlapped with the regional shutdown.",
+      "stem": "Which choice best describes data from the table that support Oliver and colleagues’ conclusion?",
+      "options": [
+        "Averaged across all closures, villages with a closure gained approximately $817 in octopus income, nearly four times the $214 gained by control villages over the same periods.",
+        "The smallest gain shown for villages with a closure, $775, was more than three times the largest gain shown for control villages, $240.",
+        "Control villages gained more octopus income after closures that overlapped the regional shutdown than they did after closures that did not overlap with it.",
+        "Villages with a closure gained more octopus income after closures that overlapped the regional shutdown than they did after closures that did not overlap with it."
+      ],
+      "answer_letter": "B",
+      "table": {
+        "title": "Average Change in Village Octopus Income from 30 Days Before a Closure to 30 Days After It (in dollars, adjusted for purchasing power)",
+        "columns": [
+          "Closures",
+          "Villages with a closure",
+          "Control villages"
+        ],
+        "rows": [
+          [
+            "Overlapped regional shutdown",
+            "775",
+            "240"
+          ],
+          [
+            "Did not overlap regional shutdown",
+            "865",
+            "189"
+          ],
+          [
+            "All closures",
+            "817",
+            "214"
+          ]
+        ],
+        "note": null
+      },
+      "figure": null,
+      "explanation": "The conclusion has to hold for both kinds of closures: those that overlapped the regional shutdown and those that did not. Choice B covers both at once. If even the smallest gain for villages with a closure ($775) was more than three times the largest gain for control villages ($240), then villages with a closure outgained control villages after every kind of closure in the table, including closures that did not overlap the shutdown ($865 against $189).",
+      "distractors": {
+        "A": {
+          "recipe": "TRAP: aggregate hides the strata",
+          "why_wrong": "The overall averages are accurate, but an overall advantage could come entirely from closures that overlapped the shutdown, so they cannot show that closures helped whether or not they overlapped it."
+        },
+        "C": {
+          "recipe": "IRREL: accurate, wrong group",
+          "why_wrong": "It is true that control villages gained more after overlapping closures ($240 against $189), but this concerns villages without closures and suggests an effect of the shutdown, not of the closures."
+        },
+        "D": {
+          "recipe": "INACC: false reading",
+          "why_wrong": "Villages with a closure gained less after closures that overlapped the shutdown ($775) than after closures that did not ($865)."
+        }
+      },
+      "models": [
+        "3.24",
+        "3.23",
+        "3.20"
+      ],
+      "word_count": 111,
+      "sources": [
+        {
+          "what": "Oliver, Oleson, Ratsimbazafy, Raberinary, Benbow and Harris, PLoS ONE 2015, Table 1: mean village octopus income change (opening boost, after minus before, $PPP) for closure vs control villages, all closures, closures independent of the regional shutdown (no ban) and closures extending it (ban); Velondriake LMMA, closures since 2004",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4471298/"
+        }
+      ],
+      "notes": "Band 7 move: quantified key stated indirectly (smallest closure gain above the largest control gain, as in the official 'none lower than 33%' item), beside the 'overall' trap A in the same ratio frame. Values are the paper's 'Opening Boost $PPP After-Before' column. The regional shutdown is the six-week seasonal octopus fishery closure the paper describes.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 2,
+        "fixes": [
+          "rewrote key B, which restated the conclusion ('both after closures that overlapped ... and after closures that did not'), as a quantified statement: the smallest closure-village gain ($775) is more than three times the largest control gain ($240)"
+        ],
+        "status": "fixed",
+        "band7": {
+          "verdict": "band 7",
+          "why": "After the rewrite the student must see that a minimum-above-maximum comparison covers both strata, beside an accurate overall-row trap in the same ratio frame (A) and an accurate wrong-group reading (C); as written before, it read band 6."
+        },
+        "checks": [
+          "values confirmed against Table 1 ($817/$214, $865/$189, $775/$240) and the robustness finding"
+        ]
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "B",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 7
+    },
+    {
+      "id": "command_of_evidence.Q2_P4_trend.hard.w2b6_09",
+      "template": "Q2_P4_trend",
+      "subtype": "Data description: trend read through the charging schedule given in the passage",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "Stockholm, Sweden, began charging motorists a fee for entering or leaving its city center on a trial basis from January 3 to July 31, 2006. The charges were then suspended, and following a referendum they were reinstated permanently in August 2007. Comparing weekday traffic across the charging boundary each month with traffic during the same month of 2005, before any charges existed, transport economists Maria Börjesson, Jonas Eliasson, and colleagues found that traffic increased immediately after the trial ended. Nevertheless, they concluded that some drivers retained travel habits they had adopted during the trial even after the charges were suspended.",
+      "stem": "Which choice best describes data from the table that support Börjesson, Eliasson, and colleagues’ conclusion?",
+      "options": [
+        "In both March and November of 2008, traffic was at least 17 percent below its 2005 level.",
+        "Traffic in March 2006 was 22 percent lower than in March 2005, the largest drop for any month shown in the table.",
+        "In November 2006 and March 2007, traffic was still 8 to 9 percent lower than it had been in the same months of 2005.",
+        "In every month shown in the table, traffic stayed at least 15 percent below its level in the same month of 2005."
+      ],
+      "answer_letter": "C",
+      "table": {
+        "title": "Change in Weekday Traffic Across Stockholm’s Charging Boundary Compared with the Same Month of 2005",
+        "columns": [
+          "Year",
+          "March",
+          "November"
+        ],
+        "rows": [
+          [
+            "2006",
+            "−22%",
+            "−9%"
+          ],
+          [
+            "2007",
+            "−8%",
+            "−18%"
+          ],
+          [
+            "2008",
+            "−17%",
+            "−19%"
+          ]
+        ],
+        "note": null
+      },
+      "figure": null,
+      "explanation": "According to the text, no charges were in force from August 2006 to July 2007, so November 2006 and March 2007 are the months in the table without charges. If traffic in those months was still 8 to 9 percent below its 2005 level, some drivers kept driving less even when there was no fee, which is what the researchers concluded. Choice C reports those months.",
+      "distractors": {
+        "A": {
+          "recipe": "IRREL: accurate, but charged months",
+          "why_wrong": "The charges were back in force in 2008, so lower traffic then reflects the charges themselves and says nothing about habits that outlasted them."
+        },
+        "B": {
+          "recipe": "IRREL: accurate, but a charged month",
+          "why_wrong": "March 2006 fell during the trial, when drivers were paying the charge, so its large drop cannot show what drivers did once the charges were gone."
+        },
+        "D": {
+          "recipe": "INACC: constancy that the data contradict",
+          "why_wrong": "Traffic was only 9 percent below its 2005 level in November 2006 and 8 percent below in March 2007, so it did not stay at least 15 percent below in every month shown."
+        }
+      },
+      "models": [
+        "3.40",
+        "3.13"
+      ],
+      "word_count": 100,
+      "sources": [
+        {
+          "what": "Börjesson, Eliasson, Hugosson and Brundell-Freij, The Stockholm congestion charges: five years on (CTS Working Paper 2012:3; Transport Policy 2012), Table 1 monthly change in traffic across the cordon vs 2005 (2006 Mar -22%, Nov -9%; 2007 Mar -8%, Nov -18%; 2008 Mar -17%, Nov -19%); trial Jan 3-Jul 31 2006, permanent from Aug 2007; residual effect: some car users developed new habits persisting after the charges were abolished",
+          "url": "https://www.transportportal.se/SWoPEc/CTS2012-3.pdf"
+        }
+      ],
+      "notes": "Band 7 moves: the student must map months to charging status from the dates in the passage (Nov 2006 and Mar 2007 uncharged; the table does not say); two accurate readings of charged months (A, B) and a false constancy claim (D). Months chosen to avoid June-July 2007 (roadworks) and the July gaps.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass",
+        "band7": {
+          "verdict": "band 7",
+          "why": "Proxy from the passage: months must be mapped to charging status from the dates given (Nov 2006 and Mar 2007 uncharged); A and B are accurate readings of charged months, D false constancy. All six table values match the paper."
+        },
+        "safety_note": "safety solve: 'suspended' then 'abolished' for the same charges; both now 'suspended'"
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "C",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 7
+    },
+    {
+      "id": "command_of_evidence.T2_lit_quote.medium.w2b6_10",
+      "template": "T2_lit_quote",
+      "subtype": "Literary quotation (two-part claim: makes beautiful things / mocked by fellow workers)",
+      "tier": "medium",
+      "passage": "Life in the Iron-Mills is an 1861 novella by Rebecca Harding Davis. Its protagonist, Hugh Wolfe, works exhausting shifts tending a furnace in an ironworks. Davis portrays Wolfe as persistently making beautiful objects even though the laborers he works alongside ridicule him for it: ______",
+      "stem": "Which quotation from Life in the Iron-Mills most effectively illustrates the claim?",
+      "options": [
+        "“Out of the blocks of this korl, Wolfe, in his off-hours from the furnace, had a habit of chipping and moulding figures,—hideous, fantastic enough, but sometimes strangely beautiful: even the mill-men saw that, while they jeered at him.”",
+        "“As he knocked the ashes from his cigar, Wolfe caught with a quick pleasure the contour of the white hand, the blood-glow of a red ring he wore.”",
+        "“He was never seen in the cockpit, did not own a terrier, drank but seldom; when he did, desperately. He fought sometimes, but was always thrashed, pommelled to a jelly.”",
+        "“The Doctor had held out his hand in a frank, generous way, telling him to ‘take care of himself, and to remember it was his right to rise.’”"
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The claim has two parts: Wolfe makes beautiful things, and his fellow workers mock him for it. In choice A, Wolfe carves figures that are “sometimes strangely beautiful,” and “the mill-men” see this “while they jeered at him.” The quotation shows both parts.",
+      "distractors": {
+        "B": {
+          "recipe": "HALF: notices beauty, no making and no mockery",
+          "why_wrong": "Wolfe takes pleasure in the beauty of a visitor’s hand and ring, but he is not making anything, and no one mocks him."
+        },
+        "C": {
+          "recipe": "HALF: his place among the workers, no beauty",
+          "why_wrong": "These sentences describe how Wolfe differs from the other mill workers and is beaten in fights, but they say nothing about his making beautiful things."
+        },
+        "D": {
+          "recipe": "OFF: encouragement rather than mockery",
+          "why_wrong": "A visitor encourages Wolfe here, which is the opposite of being mocked, and the quotation does not show Wolfe making anything."
+        }
+      },
+      "models": [
+        "2.26",
+        "2.11",
+        "2.36"
+      ],
+      "word_count": 45,
+      "sources": [
+        {
+          "what": "Rebecca Harding Davis, Life in the Iron-Mills (Atlantic Monthly, April 1861), Project Gutenberg text; quotations copied exactly, '--' rendered as em dashes",
+          "url": "https://www.gutenberg.org/ebooks/876"
+        }
+      ],
+      "notes": "Two-part claim; half-match distractors (B beauty only, C mockery-adjacent mill life only) and one off-target with the opposite attitude (D).",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [
+          "claim said 'compelled to create', stronger than the quotation's 'had a habit of'; now 'persistently making'"
+        ],
+        "status": "fixed",
+        "checks": [
+          "quotations match Gutenberg 876 (D nests the inner quotation in single quotes)"
+        ]
+      }
+    },
+    {
+      "id": "command_of_evidence.T2_lit_quote.medium.w2b6_11",
+      "template": "T2_lit_quote",
+      "subtype": "Literary quotation (two-part claim: shared unease / growing closeness)",
+      "tier": "medium",
+      "passage": "“The Bride Comes to Yellow Sky” is an 1898 short story by Stephen Crane. In the story, Jack Potter, a Texas town marshal, is bringing home a bride he married without informing the town. Crane suggests that the couple’s shared uneasiness about arriving in Yellow Sky draws them closer together: ______",
+      "stem": "Which quotation from “The Bride Comes to Yellow Sky” most effectively illustrates the claim?",
+      "options": [
+        "“To the minds of the pair, their surroundings reflected the glory of their marriage that morning in San Antonio.”",
+        "“Frequently he had reflected upon the advisability of telling them by telegraph, but a new cowardice had been upon him. He feared to do it.”",
+        "“A passenger, noting this play, grew excessively sardonic, and winked at himself in one of the numerous mirrors.”",
+        "“A sense of mutual guilt invaded their minds, and developed a finer tenderness. They looked at each other with eyes softly aglow.”"
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The claim joins two ideas: the couple share an uneasy feeling about arriving in Yellow Sky, and that feeling brings them closer. In choice D, “mutual guilt” is the shared unease, and it “developed a finer tenderness,” so that they look at each other “with eyes softly aglow.” Only this quotation links the unease to their closeness.",
+      "distractors": {
+        "A": {
+          "recipe": "HALF: happiness without unease",
+          "why_wrong": "This sentence shows the couple delighting in their marriage, but it shows no uneasiness about arriving in Yellow Sky."
+        },
+        "B": {
+          "recipe": "HALF: unease without closeness",
+          "why_wrong": "Potter’s fear of telling the town shows his own unease, but nothing here shows the couple growing closer to each other."
+        },
+        "C": {
+          "recipe": "OFF: another passenger’s mockery",
+          "why_wrong": "This sentence shows a passenger mocking the couple, not the couple’s own feelings toward each other."
+        }
+      },
+      "models": [
+        "2.11",
+        "2.13",
+        "2.37"
+      ],
+      "word_count": 51,
+      "sources": [
+        {
+          "what": "Stephen Crane, The Bride Comes to Yellow Sky (McClure's Magazine, February 1898), text from The Open Boat and Other Stories (1898), Project Gutenberg; quotations copied exactly",
+          "url": "https://www.gutenberg.org/ebooks/45524"
+        }
+      ],
+      "notes": "Two-part claim; half-match distractors A and B, off-target C. The marriage took place in San Antonio that morning; the town has not been told.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [],
+        "status": "pass",
+        "checks": [
+          "quotations match Gutenberg 45524 word for word"
+        ]
+      }
+    },
+    {
+      "id": "command_of_evidence.T1_single.medium.w2b6_12",
+      "template": "T1_single",
+      "subtype": "Hypothetical finding supports a causal claim (needs a comparison group)",
+      "tier": "medium",
+      "passage": "In 1998, Los Angeles County introduced grade cards for restaurants: an A, B, or C based on the restaurant’s most recent health inspection, to be displayed in its window. Economists Ginger Zhe Jin and Phillip Leslie studied the county’s inspection records from the years before and after the change and found that diners became more responsive to differences in restaurants’ hygiene. But Jin and Leslie also claim that the grade cards caused restaurants themselves to improve their hygiene.",
+      "stem": "Which finding, if true, would most directly support Jin and Leslie’s claim?",
+      "options": [
+        "After the grade cards were introduced, restaurants with A grades drew more customers than restaurants with B or C grades did.",
+        "Inspection scores rose after 1998 at restaurants in areas where posting the cards was required but changed little in areas where posting was voluntary.",
+        "Restaurants that received a C grade in their first inspection after 1998 were considerably more likely than restaurants with A or B grades to go out of business within a few years.",
+        "Restaurants’ average inspection scores were no higher in the years after 1998 than they had been in the years before 1998."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The claim is that the cards made restaurants clean up, so the evidence must show hygiene improving because of the cards. If inspection scores rose where the cards had to be posted but not where posting was optional, the difference points to the cards themselves as the cause of the improvement. Choice B describes that pattern.",
+      "distractors": {
+        "A": {
+          "recipe": "OFF: diners' response, not restaurants' hygiene",
+          "why_wrong": "Customers favoring A-grade restaurants is the effect on diners the text already mentions; it does not show that any restaurant improved its hygiene."
+        },
+        "C": {
+          "recipe": "TRAP: selection instead of improvement",
+          "why_wrong": "Poorly graded restaurants closing could raise the average hygiene of those left without any restaurant improving, so it does not support the claim about restaurants improving themselves."
+        },
+        "D": {
+          "recipe": "OPP: no improvement",
+          "why_wrong": "If scores did not rise after the cards were introduced, restaurants did not improve their hygiene, which weakens the claim."
+        }
+      },
+      "models": [
+        "2.16",
+        "2.38",
+        "2.21"
+      ],
+      "word_count": 78,
+      "sources": [
+        {
+          "what": "Jin and Leslie, The Effect of Information on Product Quality: Evidence from Restaurant Hygiene Grade Cards (QJE 2003): in 1998 Los Angeles County introduced hygiene grade cards displayed in restaurant windows; the cards caused inspection scores to rise and consumer demand to become sensitive to hygiene",
+          "url": "https://www.econ.umd.edu/publication/effects-information-product-quality-evidence-restaurant-hygiene-grade-cards"
+        }
+      ],
+      "notes": "Medium: one bridge (a comparison with areas where posting was voluntary, which the paper itself used). TRAP C (exit of bad restaurants), OFF A (demand side), OPP D.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "command_of_evidence.Q1_P3_pairwise.medium.w2b6_13",
+      "template": "Q1_P3_pairwise",
+      "subtype": "Data completion: one comparison of yearly rates across two glacier areas",
+      "tier": "medium",
+      "passage": "Temperate glaciers, which in China are found mainly in the warm, humid mountains along the southeastern edge of the Tibetan Plateau, have relatively warm ice and are especially sensitive to rising temperatures. Glaciologist Shijin Wang and colleagues compiled measurements of area change for several groups of Chinese glaciers. Because the measurements cover periods of different lengths, the table gives the average yearly change for each area. Temperate glaciers, such as those on Meili and Yulong Snow Mountains, have lost area especially fast. For example, ______",
+      "stem": "Which choice most effectively uses data from the table to complete the example?",
+      "options": [
+        "the Himalayan glaciers lost about 0.42 percent of their area per year, faster than the Tianshan glaciers did.",
+        "the glaciers on Meili Snow Mountain lost about 0.97 percent of their area per year, more slowly than the Himalayan glaciers did.",
+        "the glaciers on Yulong Snow Mountain lost about 1.05 percent of their area per year, about five times as fast as the Karakorum glaciers did.",
+        "the Tianshan glaciers lost about 0.35 percent of their area per year, three times as fast as the glaciers on Meili Snow Mountain."
+      ],
+      "answer_letter": "C",
+      "table": {
+        "title": "Average Yearly Change in Area for Five Chinese Glacier Areas",
+        "columns": [
+          "Glacier area",
+          "Period measured",
+          "Change in area per year (%)"
+        ],
+        "rows": [
+          [
+            "Tianshan",
+            "1959–2010",
+            "−0.35"
+          ],
+          [
+            "Karakorum",
+            "1978–2015",
+            "−0.20"
+          ],
+          [
+            "Himalayas",
+            "1990–2015",
+            "−0.42"
+          ],
+          [
+            "Meili Snow Mountain",
+            "1974–2013",
+            "−0.97"
+          ],
+          [
+            "Yulong Snow Mountain",
+            "1957–2017",
+            "−1.05"
+          ]
+        ],
+        "note": null
+      },
+      "figure": null,
+      "explanation": "The example must show a temperate glacier area shrinking especially fast. Yulong Snow Mountain, one of the temperate areas named in the text, lost about 1.05 percent of its area per year, compared with about 0.20 percent for the Karakorum, roughly five times as fast. Choice C reports this comparison accurately.",
+      "distractors": {
+        "A": {
+          "recipe": "WGRP: accurate, but not a temperate area",
+          "why_wrong": "The Himalayan and Tianshan rates are read correctly, but neither is one of the temperate glacier areas the text names, so the comparison does not illustrate the claim."
+        },
+        "B": {
+          "recipe": "WDIR: reversed comparison",
+          "why_wrong": "Meili Snow Mountain’s rate of about 0.97 percent per year is faster, not slower, than the Himalayan rate of about 0.42 percent."
+        },
+        "D": {
+          "recipe": "INACC: wrong comparison",
+          "why_wrong": "The Tianshan glaciers lost about 0.35 percent per year, far less than Meili Snow Mountain’s 0.97 percent, so they did not shrink faster."
+        }
+      },
+      "models": [
+        "2.18",
+        "2.28",
+        "2.39"
+      ],
+      "word_count": 85,
+      "sources": [
+        {
+          "what": "Wang, Che and Wei, Scientific Reports 2021, Table 1: area change of typical glacier areas in China with period and annual change (%/a): Tianshan 1959-2010 -0.35, Karakorum 1978-2015 -0.20, Himalayas 1990-2015 -0.42, Meili 1974-2013 -0.97, Yulong 1957-2017 -1.05; temperate glaciers more strongly affected by climate change",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7804466/"
+        }
+      ],
+      "notes": "Rates compared, not totals, because the periods differ (the paper's own annual column). 1.05 / 0.20 = 5.25, read as 'about five times'. Karakorum spelled as in the source table.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 5,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "command_of_evidence.Q1_P4_trend.medium.w2b6_14",
+      "template": "Q1_P4_trend",
+      "subtype": "Data completion: change over time in one series of four",
+      "tier": "medium",
+      "passage": "Mongolia’s herders have long raised five main kinds of livestock: sheep, goats, cattle, horses, and camels. In a 2020 study of desertification in Mongolia, researcher Erdeni Sanzheev and colleagues reported that growing demand for goat hair and cashmere had substantially changed the makeup of the country’s herds, with goats becoming far more numerous than they had been before. Goats, for example, increased in number from ______",
+      "stem": "Which choice most effectively uses data from the graph to complete the example?",
+      "options": [
+        "about 5 million in 1990 to about 27 million in 2018.",
+        "about 15 million in 1990 to about 31 million in 2018.",
+        "about 3 million in 1990 to about 4 million in 2018.",
+        "about 5 million in 1990 to about 31 million in 2018."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": {
+        "kind": "line graph",
+        "title": "Number of Livestock in Mongolia, 1990–2018",
+        "x_axis": "Year",
+        "y_axis": "Number of animals (millions)",
+        "description": "Four lines at 1990, 1995, 2000, 2005, 2010, 2015 and 2018. Sheep: about 15.1, 13.7, 13.9, 12.9, 14.5, 24.9, 30.6 million. Goats: about 5.1, 8.5, 10.3, 13.3, 13.9, 23.6, 27.1 million. Cattle: about 2.9, 3.3, 3.1, 2.0, 2.2, 3.8, 4.4 million. Horses: about 2.3, 2.7, 2.7, 2.0, 1.9, 3.3, 3.9 million. Goats rise in every period and briefly outnumber sheep in 2005.",
+        "data": [
+          {
+            "series": "Sheep",
+            "points": [
+              [
+                "1990",
+                15.1
+              ],
+              [
+                "1995",
+                13.7
+              ],
+              [
+                "2000",
+                13.9
+              ],
+              [
+                "2005",
+                12.9
+              ],
+              [
+                "2010",
+                14.5
+              ],
+              [
+                "2015",
+                24.9
+              ],
+              [
+                "2018",
+                30.6
+              ]
+            ]
+          },
+          {
+            "series": "Goats",
+            "points": [
+              [
+                "1990",
+                5.1
+              ],
+              [
+                "1995",
+                8.5
+              ],
+              [
+                "2000",
+                10.3
+              ],
+              [
+                "2005",
+                13.3
+              ],
+              [
+                "2010",
+                13.9
+              ],
+              [
+                "2015",
+                23.6
+              ],
+              [
+                "2018",
+                27.1
+              ]
+            ]
+          },
+          {
+            "series": "Cattle",
+            "points": [
+              [
+                "1990",
+                2.9
+              ],
+              [
+                "1995",
+                3.3
+              ],
+              [
+                "2000",
+                3.1
+              ],
+              [
+                "2005",
+                2.0
+              ],
+              [
+                "2010",
+                2.2
+              ],
+              [
+                "2015",
+                3.8
+              ],
+              [
+                "2018",
+                4.4
+              ]
+            ]
+          },
+          {
+            "series": "Horses",
+            "points": [
+              [
+                "1990",
+                2.3
+              ],
+              [
+                "1995",
+                2.7
+              ],
+              [
+                "2000",
+                2.7
+              ],
+              [
+                "2005",
+                2.0
+              ],
+              [
+                "2010",
+                1.9
+              ],
+              [
+                "2015",
+                3.3
+              ],
+              [
+                "2018",
+                3.9
+              ]
+            ]
+          }
+        ]
+      },
+      "explanation": "The goat line starts at about 5.1 million in 1990 and ends at about 27.1 million in 2018, a more than fivefold rise that illustrates goats becoming far more numerous. Choice A gives these values.",
+      "distractors": {
+        "B": {
+          "recipe": "WGRP: sheep line",
+          "why_wrong": "About 15 million in 1990 and about 31 million in 2018 are the values for sheep, not goats."
+        },
+        "C": {
+          "recipe": "WGRP: cattle line",
+          "why_wrong": "About 3 million in 1990 and about 4 million in 2018 are the values for cattle, not goats."
+        },
+        "D": {
+          "recipe": "INACC: wrong end point",
+          "why_wrong": "Goats began at about 5 million, but about 31 million is the 2018 value for sheep; goats numbered about 27 million in 2018."
+        }
+      },
+      "models": [
+        "2.15",
+        "2.34",
+        "2.40"
+      ],
+      "word_count": 66,
+      "sources": [
+        {
+          "what": "Sanzheev, Mikheeva, Osodoev, Batomunkuev and Tulokhonov, IJERPH 2020, Table 1: livestock in Mongolia, million head, 1990-2018 (sheep 15.1 to 30.6; goats 5.1 to 27.1; cattle 2.9 to 4.4; horses 2.3 to 3.9); change in livestock structure due to demand for goat hair and cashmere",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7312674/"
+        }
+      ],
+      "notes": "Camels (0.3 to 0.5 million) left out of the graph, which the passage does not need. Any other true goat rise (for example 1990 to 2010) is kept out of the options.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "command_of_evidence.Q2_P4_trend.medium.w2b6_15",
+      "template": "Q2_P4_trend",
+      "subtype": "Data description: change before vs after an event named in the passage",
+      "tier": "medium",
+      "passage": "Populations of several vulture species in South Asia crashed beginning in the mid-1990s after the birds fed on the carcasses of livestock treated with diclofenac, a painkiller that is toxic to vultures. India banned veterinary use of the drug in 2006. Using road surveys repeated several times between 2000 and 2011, Vibhu Prakash and colleagues concluded that the vultures’ decline had slowed since the ban.",
+      "stem": "Which choice best describes data from the table that support Prakash and colleagues’ conclusion?",
+      "options": [
+        "The oriental white-backed vulture population fell from 100 percent of its 2000 level to 51 percent in 2002, a larger drop than for the other species.",
+        "In every survey year after 2000, the long-billed and slender-billed vultures were at a higher percentage of their 2000 level than the oriental white-backed vulture was.",
+        "Both populations fell steadily throughout the period, losing about as large a share of their 2000 level from 2007 to 2011 as from 2002 to 2003.",
+        "Both populations dropped sharply from 2002 to 2003 but changed by no more than about three percentage points from 2007 to 2011."
+      ],
+      "answer_letter": "D",
+      "table": {
+        "title": "Vulture Populations in India as a Percentage of Their 2000 Level",
+        "columns": [
+          "Year",
+          "Oriental white-backed vulture",
+          "Long-billed and slender-billed vultures"
+        ],
+        "rows": [
+          [
+            "2000",
+            "100",
+            "100"
+          ],
+          [
+            "2002",
+            "51",
+            "84"
+          ],
+          [
+            "2003",
+            "9",
+            "35"
+          ],
+          [
+            "2007",
+            "3",
+            "34"
+          ],
+          [
+            "2011",
+            "4",
+            "31"
+          ]
+        ],
+        "note": null
+      },
+      "figure": null,
+      "explanation": "The ban came in 2006, so the conclusion needs a steep decline before the ban and little decline after it. Both populations fell sharply from 2002 to 2003 (from 51 to 9 percent and from 84 to 35 percent of their 2000 levels) but barely changed from 2007 to 2011 (3 to 4 percent and 34 to 31 percent). Choice D describes that change in the rate of decline, comparing a pre-ban drop with the post-ban change for both groups.",
+      "distractors": {
+        "A": {
+          "recipe": "PART: a pre-ban drop only",
+          "why_wrong": "The 2000–2002 drop is read correctly, but it happened before the ban and says nothing about whether the decline slowed afterward."
+        },
+        "B": {
+          "recipe": "IRREL: levels, not changes",
+          "why_wrong": "This compares how far each population had fallen, not how fast each was falling before and after the ban."
+        },
+        "C": {
+          "recipe": "INACC: false reading",
+          "why_wrong": "The populations did not fall steadily: they lost far more from 2002 to 2003 than from 2007 to 2011, when one population even rose slightly."
+        }
+      },
+      "models": [
+        "2.2",
+        "2.22",
+        "2.12"
+      ],
+      "word_count": 65,
+      "sources": [
+        {
+          "what": "Prakash and colleagues, PLoS ONE 2012, Table 1 (2000-2011 series): population indices relative to 2000 for Gyps bengalensis (0.5147, 0.0872, 0.0300, 0.0396) and G. indicus plus G. tenuirostris (0.8371, 0.3492, 0.3369, 0.3129) in 2002, 2003, 2007, 2011; decline slowed since the 2006 ban on veterinary diclofenac",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3492300/"
+        }
+      ],
+      "notes": "Indices from the 2000-2011 transect series converted to percentages and rounded. A table rather than a line graph: values of 3 and 4 percent would not read beside 100 on a linear axis.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 8,
+        "fixes": [],
+        "status": "pass",
+        "checks": [
+          "key holds: the long-billed and slender-billed group's flat stretch (35 to 34) runs 2003 to 2007, across the 2006 ban, and the key only contrasts the sharp 2002 to 2003 drop with the 1 to 3-point change after 2007"
+        ]
+      }
+    },
+    {
+      "id": "command_of_evidence.T1_compete.medium.w2b6_16",
+      "template": "T1_compete",
+      "subtype": "Hypothetical finding discriminates two navigation explanations",
+      "tier": "medium",
+      "passage": "Cory’s shearwaters forage across vast stretches of open ocean and then return to the small islands where they nest, but how they find their way over water with no landmarks has long been debated. Some researchers propose that seabirds sense Earth’s magnetic field; others, that they follow odors carried by the wind. To test these hypotheses, Anna Gagliardo and colleagues temporarily disrupted either the sense of smell or the magnetic sense of some shearwaters nesting in the Azores and released all the birds from a ship about 800 kilometers from their colony. The researchers concluded that smell plays a crucial role in the birds’ oceanic navigation.",
+      "stem": "Which finding, if true, would most directly support the researchers’ conclusion?",
+      "options": [
+        "Birds carrying magnets that disrupted their magnetic sense strayed far off course, while untreated birds headed straight home.",
+        "Birds that temporarily could not smell wandered and were slow to return home, while birds carrying magnets returned as directly as untreated birds did.",
+        "All of the released birds, whether treated or untreated, eventually made their way back to their nests in the Azores.",
+        "Cory’s shearwaters can detect the odor of a compound released by plankton, which helps them find areas of the ocean that are rich in prey."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "If smell is crucial for navigation, birds that cannot smell should have trouble getting home, while birds whose magnetic sense is disrupted should do fine. Choice B describes exactly this: the birds without smell wandered and were slow, but the birds carrying magnets returned as directly as untreated birds.",
+      "distractors": {
+        "A": {
+          "recipe": "OPP: the rival's prediction",
+          "why_wrong": "Birds going astray when their magnetic sense is disrupted would point to the magnetic explanation, not to smell."
+        },
+        "C": {
+          "recipe": "TRAP: no difference between groups",
+          "why_wrong": "If every group eventually got home, the results would not show that any one sense mattered, so they cannot support the conclusion about smell."
+        },
+        "D": {
+          "recipe": "OFF: smell for food, not for navigation",
+          "why_wrong": "Using smell to find prey does not show that the birds use smell to find their way home across the ocean."
+        }
+      },
+      "models": [
+        "2.9",
+        "2.30"
+      ],
+      "word_count": 106,
+      "sources": [
+        {
+          "what": "Gagliardo and colleagues, Journal of Experimental Biology 2013, Oceanic navigation in Cory's shearwaters: birds nesting in the Azores displaced about 800 km and released at sea after anosmia (zinc sulphate) or magnets; magnetically disturbed birds homed like controls, anosmic birds were impaired; olfaction crucial for oceanic navigation",
+          "url": "https://doi.org/10.1242/jeb.085738"
+        }
+      ],
+      "notes": "Medium compete: OPP A is the magnetic prediction (not a word-for-word mirror of the key), TRAP C (no difference), OFF D (smell for foraging). The key names both groups, as medium keys do.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [
+          "replaced the Movebank data-page URL, which shows no text, with the paper DOI (abstract: Azores, about 800 km, anosmic birds impaired, magnet birds like controls)"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "command_of_evidence.Q1_P1_lookup.easy.w2b6_17",
+      "template": "Q1_P1_lookup",
+      "subtype": "Data completion: lookup of one cell",
+      "tier": "easy",
+      "passage": "The Zayanderud, the river flowing through the city of Isfahan in central Iran, is crossed by several historic stone footbridges. One dates to the eleventh century, but the most celebrated were constructed under the Safavid dynasty, which established Isfahan as its capital at the end of the sixteenth century. A student researching these bridges notes that Si-o-se-pol, which has 33 arches, was completed in ______",
+      "stem": "Which choice most effectively uses data from the table to complete the statement?",
+      "options": [
+        "the 11th century.",
+        "1599.",
+        "1602.",
+        "1650."
+      ],
+      "answer_letter": "C",
+      "table": {
+        "title": "Four Historic Bridges over the Zayanderud in Isfahan",
+        "columns": [
+          "Bridge",
+          "Completed",
+          "Number of arches"
+        ],
+        "rows": [
+          [
+            "Shahrestan Bridge",
+            "11th century",
+            "13"
+          ],
+          [
+            "Marnan Bridge",
+            "1599",
+            "17"
+          ],
+          [
+            "Si-o-se-pol",
+            "1602",
+            "33"
+          ],
+          [
+            "Khaju Bridge",
+            "1650",
+            "21"
+          ]
+        ],
+        "note": null
+      },
+      "figure": null,
+      "explanation": "In the table, the bridge with 33 arches is Si-o-se-pol, which was completed in 1602. Choice C gives this year.",
+      "distractors": {
+        "A": {
+          "recipe": "WGRP: Shahrestan Bridge",
+          "why_wrong": "The 11th century is when Shahrestan Bridge, which has 13 arches, was built."
+        },
+        "B": {
+          "recipe": "WGRP: Marnan Bridge",
+          "why_wrong": "1599 is the year Marnan Bridge, which has 17 arches, was completed."
+        },
+        "D": {
+          "recipe": "WGRP: Khaju Bridge",
+          "why_wrong": "1650 is the year Khaju Bridge, which has 21 arches, was completed."
+        }
+      },
+      "models": [
+        "1.37",
+        "1.43",
+        "1.30"
+      ],
+      "word_count": 65,
+      "sources": [
+        {
+          "what": "List of bridges in Iran, historical bridges table: Shahrestan Bridge (Seljuq, 11th century, 13 arches), Marnan Bridge (Safavid, 1599, 17 arches), Si-o-se-pol (Safavid, 1602, 33 arches), Khaju Bridge (Safavid, 1650, 21 arches), all footbridges over the Zayanderud in Isfahan",
+          "url": "https://en.wikipedia.org/wiki/List_of_bridges_in_Iran"
+        }
+      ],
+      "notes": "Value-only options, as in the easy lookup models. Safavid capital moved to Isfahan in 1598.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "command_of_evidence.T1_single.easy.w2b6_18",
+      "template": "T1_single",
+      "subtype": "Hypothetical finding supports a no-difference conclusion",
+      "tier": "easy",
+      "passage": "According to a calendar followed by some practitioners of biodynamic agriculture, wine tastes better on “fruit days,” which are determined by the position of the Moon, than on “root days.” To test this idea, researcher Wendy Parr and colleagues asked nineteen New Zealand wine professionals to taste twelve Pinot noir wines, without knowing their identities, twice on a fruit day and twice on a root day. The researchers concluded that the type of day did not affect how the wines tasted.",
+      "stem": "Which finding, if true, would most directly support the researchers’ conclusion?",
+      "options": [
+        "The tasters gave each wine about the same ratings on the fruit days as they did on the root days.",
+        "Most of the tasters said that they had never tasted wine according to the biodynamic calendar.",
+        "The tasters rated some of the twelve wines much more highly than they rated others.",
+        "Wines produced with biodynamic methods received higher average ratings from the tasters than wines produced with conventional methods did."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The conclusion is that the type of day made no difference to how the wines tasted. If each wine received about the same ratings on fruit days as on root days, the calendar had no effect, which is exactly what choice A describes.",
+      "distractors": {
+        "B": {
+          "recipe": "OFF: tasters' background",
+          "why_wrong": "Whether tasters had followed the calendar before does not show whether the wines tasted different on different kinds of days."
+        },
+        "C": {
+          "recipe": "OFF: differences among wines",
+          "why_wrong": "Differences between wines show that tasters could tell wines apart, not whether the day affected how any one wine tasted."
+        },
+        "D": {
+          "recipe": "OFF: production method, not the day",
+          "why_wrong": "This compares how the wines were made, not the days on which they were tasted."
+        }
+      },
+      "models": [
+        "1.1",
+        "1.29",
+        "1.41"
+      ],
+      "word_count": 81,
+      "sources": [
+        {
+          "what": "Parr, Valentin, Reedman, Grose and Green, PLoS ONE 2017: nineteen New Zealand wine professionals tasted 12 Pinot noir wines blind, twice on a Fruit day and twice on a Root day of the biodynamic calendar for wine drinkers; type of day did not systematically influence any characteristic rated",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC5207694/"
+        }
+      ],
+      "notes": "Easy one-step operationalization; three off-target distractors on other variables, as in the easy models.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "command_of_evidence.Q1_P2_extreme.easy.w2b6_19",
+      "template": "Q1_P2_extreme",
+      "subtype": "Data completion: the row that is extreme on two columns",
+      "tier": "easy",
+      "passage": "Astronomers frequently build observatories on high mountains, where telescopes sit above much of Earth’s atmosphere. Several of the world’s highest observatories were constructed in recent decades, but one of the oldest high-altitude sites is also among the highest. Of the five observatories in the table, the one established earliest is also the one at the highest elevation: the observatory in ______",
+      "stem": "Which choice most effectively uses data from the table to complete the statement?",
+      "options": [
+        "India.",
+        "Mexico.",
+        "China.",
+        "Bolivia."
+      ],
+      "answer_letter": "D",
+      "table": {
+        "title": "Elevation and Founding Year of Five High-Altitude Observatories",
+        "columns": [
+          "Observatory",
+          "Country",
+          "Elevation (meters)",
+          "Year established"
+        ],
+        "rows": [
+          [
+            "Indian Astronomical Observatory",
+            "India",
+            "4,500",
+            "2001"
+          ],
+          [
+            "Mauna Kea Observatory",
+            "United States",
+            "4,190",
+            "1967"
+          ],
+          [
+            "Large Millimeter Telescope",
+            "Mexico",
+            "4,580",
+            "2006"
+          ],
+          [
+            "Yangbajing Cosmic Ray Observatory",
+            "China",
+            "4,300",
+            "1990"
+          ],
+          [
+            "Chacaltaya Astrophysical Observatory",
+            "Bolivia",
+            "5,230",
+            "1946"
+          ]
+        ],
+        "note": null
+      },
+      "figure": null,
+      "explanation": "Chacaltaya Astrophysical Observatory, in Bolivia, was established in 1946, earlier than any other observatory in the table, and at 5,230 meters it is also the highest. Choice D names its country.",
+      "distractors": {
+        "A": {
+          "recipe": "WGRP: neither earliest nor highest",
+          "why_wrong": "The observatory in India was established in 2001 and sits at 4,500 meters, so it is neither the earliest nor the highest."
+        },
+        "B": {
+          "recipe": "WGRP: second highest, most recent",
+          "why_wrong": "The observatory in Mexico is the second highest, at 4,580 meters, but it was established in 2006, the latest of the five."
+        },
+        "C": {
+          "recipe": "WGRP: neither earliest nor highest",
+          "why_wrong": "The observatory in China was established in 1990 and sits at 4,300 meters, so it is neither the earliest nor the highest."
+        }
+      },
+      "models": [
+        "1.23",
+        "1.9",
+        "1.34"
+      ],
+      "word_count": 61,
+      "sources": [
+        {
+          "what": "List of highest astronomical observatories: Chacaltaya Astrophysical Observatory 5,230 m, Bolivia, 1946; Large Millimeter Telescope Alfonso Serrano 4,580 m, Mexico, 2006; Indian Astronomical Observatory 4,500 m, Hanle, India, 2001; Mauna Kea Observatory 4,190 m, Hawaii, 1967; Yangbajing International Cosmic Ray Observatory 4,300 m, Tibet, China, 1990",
+          "url": "https://en.wikipedia.org/wiki/List_of_highest_astronomical_observatories"
+        }
+      ],
+      "notes": "Sphinx (Jungfraujoch) and Gornergrat kept out: batch w2b5 uses those summits for railways.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 10,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "command_of_evidence.T3_person_quote.easy.w2b6_20",
+      "template": "T3_person_quote",
+      "subtype": "Quotation from a participant illustrates a researcher's claim",
+      "tier": "easy",
+      "passage": "At Humanitas, a home for older adults in Deventer, the Netherlands, a few university students live rent-free. In exchange, each student agrees to spend at least 30 hours a month being a “good neighbor” to the roughly 160 residents—watching sports with them, joining in birthday celebrations, or keeping them company when they are ill. A researcher studying the arrangement claims that the students give the residents a connection to life outside the home.",
+      "stem": "Which quotation from a resident would best illustrate the researcher’s claim?",
+      "options": [
+        "“The students are always polite. They say hello to everyone in the hallway, even when they are rushing off to class in the morning.”",
+        "“When the students tell me about their classes and their evenings out in town, I feel as though I am part of the world beyond these walls again.”",
+        "“The nurses here take very good care of all of us, and the meals are better than I expected when I first moved in.”",
+        "“I really enjoy the hours I spend with the students now, though I have to admit I was worried at first that they would be far too noisy for a place like this.”"
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The researcher claims that the students connect the residents to life outside the home. In choice B, a resident says that hearing about the students’ classes and evenings in town makes her feel part of “the world beyond these walls” again, which illustrates that connection directly.",
+      "distractors": {
+        "A": {
+          "recipe": "OFF: the students' manners",
+          "why_wrong": "Politeness in the hallway says nothing about a connection to life outside the home."
+        },
+        "C": {
+          "recipe": "OFF: the staff and the food",
+          "why_wrong": "This praises the care and meals at the home and does not mention the students at all."
+        },
+        "D": {
+          "recipe": "HALF: enjoyment without the outside world",
+          "why_wrong": "The resident enjoys the students’ company, but nothing here links that company to life outside the home."
+        }
+      },
+      "models": [
+        "1.13",
+        "1.19",
+        "1.26"
+      ],
+      "word_count": 73,
+      "sources": [
+        {
+          "what": "Humanitas retirement home, Deventer, Netherlands: students live rent-free in exchange for at least 30 hours a month as good neighbors (Gea Sijpkes); six students and about 160 residents; watching sports, birthday celebrations, company when sick",
+          "url": "https://ami.group.uq.edu.au/node/1073"
+        }
+      ],
+      "notes": "Researcher and quotations are unnamed and invented, as in official T3 participant items; the program's facts are real.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [
+          "replaced the dead Next Avenue URL (redirects to a landing page) with a copy of the same article confirming six students, about 160 residents, 30 hours a month"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "command_of_evidence.T2_lit_quote.easy.w2b6_21",
+      "template": "T2_lit_quote",
+      "subtype": "Literary quotation (single-trait claim)",
+      "tier": "easy",
+      "passage": "Wild Animals I Have Known is an 1898 collection of stories by Ernest Thompson Seton. In the story “Lobo, the King of Currumpaw,” the narrator emphasizes that the wolf Lobo cannot be fooled by poisoned bait: ______",
+      "stem": "Which quotation from “Lobo, the King of Currumpaw” most effectively illustrates the claim?",
+      "options": [
+        "“Old Lobo, or the king, as the Mexicans called him, was the gigantic leader of a remarkable pack of gray wolves, that had ravaged the Currumpaw Valley for a number of years.”",
+        "“His voice at night was well-known and easily distinguished from that of any of his fellows.”",
+        "“A great price was set on Lobo’s head, and in consequence poison in a score of subtle forms was put out for him, but he never failed to detect and avoid it.”",
+        "“Lobo, generally, came into this part of the range in the early part of each week, and passed the latter part, it was supposed, around the base of Sierra Grande.”"
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The claim is that Lobo could not be tricked by poisoned bait. In choice C, poison “in a score of subtle forms” is set out for Lobo, but he “never failed to detect and avoid it,” which illustrates the claim directly.",
+      "distractors": {
+        "A": {
+          "recipe": "OFF: size and leadership",
+          "why_wrong": "This describes Lobo as the huge leader of a destructive pack but says nothing about poison."
+        },
+        "B": {
+          "recipe": "OFF: his voice",
+          "why_wrong": "This notes that Lobo’s howl was easy to recognize, not that he avoided poison."
+        },
+        "D": {
+          "recipe": "OFF: his habits of movement",
+          "why_wrong": "This describes where Lobo spent different parts of the week, not how he dealt with poisoned bait."
+        }
+      },
+      "models": [
+        "1.11",
+        "1.42",
+        "1.16"
+      ],
+      "word_count": 37,
+      "sources": [
+        {
+          "what": "Ernest Thompson Seton, Wild Animals I Have Known (1898), Lobo, the King of Currumpaw, Project Gutenberg text; quotations copied exactly",
+          "url": "https://www.gutenberg.org/ebooks/3031"
+        }
+      ],
+      "notes": "Easy single-trait claim; three off-target quotations from the opening of the same story.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [],
+        "status": "pass",
+        "checks": [
+          "quotations match Gutenberg 3031 word for word"
+        ]
+      }
+    },
+    {
+      "id": "command_of_evidence.T1_compete.easy.w2b6_22",
+      "template": "T1_compete",
+      "subtype": "Hypothetical finding supports one of two routes of transmission",
+      "tier": "easy",
+      "passage": "In Shark Bay, Western Australia, some bottlenose dolphins hunt with marine sponges held on their beaks. Young dolphins learn this technique from their mothers. Another technique, known as “shelling,” involves carrying a large empty snail shell to the surface and shaking out the fish hiding inside. After analyzing observations of more than 1,000 dolphins recorded from 2007 to 2018, Sonja Wild and colleagues concluded that, unlike sponging, shelling can spread between dolphins that spend time together, not only from mother to calf.",
+      "stem": "Which finding, if true, would most directly support Wild and colleagues’ conclusion?",
+      "options": [
+        "Several dolphins that use shelling have mothers that never use it but spend much of their time with other dolphins that do.",
+        "Nearly all of the dolphins that use shelling are the offspring of mothers that also use shelling.",
+        "Dolphins that use shelling also use sponges when they hunt for fish on the seafloor.",
+        "Dolphins in Shark Bay catch more fish in the summer months than in the winter months."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "If shelling can pass between companions rather than only from mother to calf, some dolphins should have learned it without a mother who shells, from dolphins they associate with. Choice A describes such dolphins, so it supports the conclusion.",
+      "distractors": {
+        "B": {
+          "recipe": "OPP: mother-to-calf pattern",
+          "why_wrong": "If nearly every shelling dolphin had a shelling mother, shelling would look like sponging, passed from mother to calf, which does not support the conclusion."
+        },
+        "C": {
+          "recipe": "OFF: another technique",
+          "why_wrong": "Using both techniques says nothing about whom a dolphin learned shelling from."
+        },
+        "D": {
+          "recipe": "OFF: seasons",
+          "why_wrong": "Seasonal differences in catch are unrelated to how shelling spreads among dolphins."
+        }
+      },
+      "models": [
+        "1.25"
+      ],
+      "word_count": 82,
+      "sources": [
+        {
+          "what": "Wild, Hoppitt, Allen and Krützen, Current Biology 2020: Shark Bay surveys 2007-2018, over 1,000 dolphins; sponging learned from mothers; shelling learned from companions, first quantitative evidence of horizontal transmission of a foraging tactic in toothed whales",
+          "url": "https://www.sciencedaily.com/releases/2020/06/200625115929.htm"
+        }
+      ],
+      "notes": "Easy compete: one step from the claim to the observable (shelling dolphins whose mothers do not shell). OPP B, two off-target distractors.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [],
+        "status": "pass"
+      }
+    }
+  ]
+}

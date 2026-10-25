@@ -523,7 +523,8 @@ def integer_roots_constant(rng: random.Random, seed: int, *, k=None, named=None,
     factor = min((d for d in range(1, n + 1) if n % d == 0 and d * d <= n),
                  key=lambda d: d + n // d)
     return Item("nleq.integer_roots_constant", "a constant with integer roots",
-                difficulty, seed, sent(stem), "spr", E(key), gridin(Q(key)),
+                difficulty, seed, sent(stem), "spr", E(key),
+                ", ".join(gridin(Q(v)) for v in sums),
                 rationale, params=P,
                 spr_mistakes=gridin_pool(E(key), [
                     Mis("reported the product of the two integer roots instead of their sum", k),

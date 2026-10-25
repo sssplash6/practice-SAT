@@ -1,0 +1,1799 @@
+{
+  "skill": "Command of Evidence",
+  "slug": "command_of_evidence",
+  "part": "w2b5",
+  "domain": "Information and Ideas",
+  "plan": {
+    "templates": [
+      {
+        "code": "T1_single",
+        "name": "Hypothetical finding supports or weakens a single claim (causal, comparison, existence, generalization, prediction)"
+      },
+      {
+        "code": "T1_compete",
+        "name": "Hypothetical finding discriminates between competing explanations (support or weaken)"
+      },
+      {
+        "code": "Q2_P8_multipart",
+        "name": "Data description: multi-part, interaction, or passage-plus-data claim"
+      },
+      {
+        "code": "T2_lit_quote",
+        "name": "Quotation from a literary work illustrates a claim (single trait, two-part, contrast)"
+      },
+      {
+        "code": "Q1_P5_control",
+        "name": "Data completion: condition vs control"
+      },
+      {
+        "code": "Q2_P5_control",
+        "name": "Data description: condition vs control or group comparison supports a conclusion"
+      },
+      {
+        "code": "Q1_P3_pairwise",
+        "name": "Data completion: pairwise comparison (one or two comparisons)"
+      },
+      {
+        "code": "Q1_P4_trend",
+        "name": "Data completion: change over time"
+      },
+      {
+        "code": "Q2_P4_trend",
+        "name": "Data description: trend or change over time supports a conclusion"
+      },
+      {
+        "code": "Q1_P1_lookup",
+        "name": "Data completion: lookup (one cell or bar, reverse lookup, filter)"
+      },
+      {
+        "code": "Q1_P2_extreme",
+        "name": "Data completion: extreme or rank (max/min, possibly after a filter)"
+      },
+      {
+        "code": "T3_person_quote",
+        "name": "Quotation from a person (participant, respondent, historian, critic, article) supports or challenges a claim"
+      }
+    ]
+  },
+  "items": [
+    {
+      "id": "command_of_evidence.T1_single.hard.w2b5_01",
+      "template": "T1_single",
+      "subtype": "Hypothetical finding supports a claim about whose influence mattered more (the key supplies which cue only handlers and which only dogs could use)",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "Detection dogs work with human handlers: when a dog signals, or “alerts,” that it has detected a target substance, the handler reports the location. In a 2011 study, Lisa Lit, Julie Schweitzer, and Anita Oberbauer had 18 drug- or explosives-detection teams search rooms in a church after telling the handlers that some rooms might contain target scents and that red construction paper marked a scent’s location. In reality, no room contained any target scent, although in some rooms the researchers had concealed sausages and tennis balls out of view. The teams made more than 200 alerts, and Lit and her colleagues concluded that the handlers’ beliefs had influenced where those alerts occurred more than the dogs’ interests had.",
+      "stem": "Which finding from Lit, Schweitzer, and Oberbauer’s study, if true, would most directly support their conclusion?",
+      "options": [
+        "Teams alerted more often in the room containing both red paper and hidden sausages and tennis balls than in the room in which nothing had been placed or hidden.",
+        "Teams alerted more often at the spots where the sausages and tennis balls had been hidden than at other spots in the same rooms.",
+        "Teams alerted more often at the spots marked with red paper than at the spots where the sausages and tennis balls had been hidden.",
+        "Teams alerted more often at the spots marked with red paper than at unmarked spots in the room in which nothing had been placed or hidden."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "Only the handlers had been told that red paper marked a scent, and the sausages and tennis balls were hidden out of view, so they could attract only the dogs. If teams alerted more often at the paper than at the hidden food, the cue that only handlers could act on outweighed the cue that only dogs could act on, which is what the researchers concluded. Choice C reports that pattern.",
+      "distractors": {
+        "A": {
+          "recipe": "TRAP: confounded comparison (both cues present at once)",
+          "why_wrong": "That room held both the red paper and the hidden food, so more alerts there could come from the handlers’ beliefs, the dogs’ interests, or both; the comparison cannot show which mattered more."
+        },
+        "B": {
+          "recipe": "OPP: shows the dogs’ interests at work",
+          "why_wrong": "Alerts gathering at the hidden food would show that the dogs’ interests shaped the alerts, and the finding says nothing about whether the handlers’ beliefs mattered more."
+        },
+        "D": {
+          "recipe": "TRAP: half of a comparative claim (beliefs only, no comparison with the dogs’ interests)",
+          "why_wrong": "This would show that the handlers’ beliefs affected where the teams alerted, but it does not compare that influence with the pull of the hidden food, so it cannot show that the beliefs mattered more than the dogs’ interests."
+        }
+      },
+      "models": [
+        "3.42",
+        "3.39",
+        "3.28"
+      ],
+      "word_count": 118,
+      "sources": [
+        {
+          "what": "UC Davis Health news release (Feb. 23, 2011) on Lit, Schweitzer and Oberbauer, Animal Cognition 14(3):387–394: 18 law-enforcement handler–dog teams, a church, handlers told red construction paper marked scent, no target scent anywhere, two sausages and two tennis balls hidden out of view, more than 200 erroneous alerts, more alerts at the paper; abstract: human influence affected alert locations more than dog influence",
+          "url": "https://health.ucdavis.edu/common/includes/shared/features/2010-2011/02/20110223_drug_dogs.html"
+        }
+      ],
+      "notes": "Band 7 moves: the facts the key depends on (only handlers were told about the paper; the food was hidden out of view) sit in earlier sentences, not the claim; the key never names beliefs or interests, so the student must map each cue to the party that could use it; TRAP A (confound), OPP B, TRAP D (beliefs only, no comparison with the food). The key is the study’s own reported pattern. Clever Hans is deliberately not named (textbook hook).",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [
+          "confirmed 18 teams, church, red paper told only to handlers, sausages and tennis balls hidden out of view, 200+ alerts, more alerts at the paper, human over dog influence (UC Davis release, 2011)",
+          "D (OFF, handler experience, killed by one fact) replaced by a TRAP: more alerts at the paper than at unmarked spots in the empty room, which shows the beliefs at work but not that they outweighed the dogs’ interests"
+        ],
+        "status": "fixed"
+      },
+      "band7": {
+        "verdict": "band 7",
+        "why": "after the fix every wrong option is an alert-location finding that looks like a test (A confounded room, D beliefs only, B the dogs’ pull); the key needs the unstated mapping of red paper to handlers and hidden food to dogs plus the ‘more than’ comparison; passage 119 words, stem names the study"
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "C",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 7
+    },
+    {
+      "id": "command_of_evidence.T1_single.hard.w2b5_02",
+      "template": "T1_single",
+      "subtype": "Hypothetical finding supports a causal claim (the effect should appear where and when light matters)",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Cities often install brighter outdoor lighting in the hope of reducing crime, but because well-lit places tend to differ from darker ones in many other respects, the effect of lighting itself has been difficult to isolate. In 2016, New York City placed temporary light towers at public housing developments selected at random, leaving a comparable group of developments without them, and economists Aaron Chalfin, Benjamin Hansen, Jason Lerner, and Lucie Parker found that serious crimes subsequently declined at the developments that received the towers. Although the towers’ arrival might have brought other changes as well, such as frequent visits by the city crews who maintained them, the researchers attribute the decline to the additional illumination.",
+      "stem": "Which finding from the study, if true, would most directly support Chalfin and colleagues’ conclusion?",
+      "options": [
+        "At the developments that received towers, crime declined mostly outdoors and at night, with little change indoors or during the day.",
+        "At the developments that received towers, crime declined by about as much during daylight hours as it did after dark.",
+        "Residents of the developments that received towers were more likely than other residents to say that they felt safe outdoors.",
+        "City crews visited the developments that received towers several times a week, mostly in the evening, to refuel, inspect, and repair them."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "Light from the towers could make a difference only outdoors and only after dark. If crime fell mainly in those places and hours and changed little indoors or in daylight, the decline matches the reach of the light rather than other changes that came with the towers. Choice A describes that pattern.",
+      "distractors": {
+        "B": {
+          "recipe": "OPP: the rival’s prediction",
+          "why_wrong": "Light makes no difference in daylight, so a daytime decline as large as the nighttime one would point to something other than the light, such as the other changes the towers brought."
+        },
+        "C": {
+          "recipe": "OFF: residents’ feelings, not the cause of the decline",
+          "why_wrong": "Feeling safer could follow from any cause of lower crime, or from none, so this survey result does not show that the light rather than another change reduced crime."
+        },
+        "D": {
+          "recipe": "OPP: a rival cause present at the same time",
+          "why_wrong": "Frequent evening visits by city crews are exactly the kind of other change the text mentions, so this finding would make that rival explanation more plausible, not less."
+        }
+      },
+      "models": [
+        "3.25",
+        "3.31",
+        "3.41"
+      ],
+      "word_count": 115,
+      "sources": [
+        {
+          "what": "NBER Working Paper 25798 (2019; J. Quant. Criminology 2022), Chalfin, Hansen, Lerner and Parker: temporary streetlights randomly allocated to New York City public housing developments, March–August 2016; sizable crime reductions, at least 36 percent in nighttime outdoor index crimes",
+          "url": "https://www.nber.org/papers/w25798"
+        }
+      ],
+      "notes": "Band 6: one bridge from the claim (light itself) to an observable (the effect confined to outdoor, nighttime crime). The key is the paper’s own result (the decline concentrated in nighttime outdoor index crimes); the passage says only that serious crimes declined, which the source supports, and never states the mechanism more strongly than the abstract does. Crews visiting is offered as a possibility, not as a reported fact.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 2,
+        "fixes": [
+          "confirmed random allocation of temporary lights to NYC public housing in 2016 and the crime decline (NBER w25798 abstract)"
+        ],
+        "status": "pass"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "one bridge from the claim (light acts only outdoors after dark) to an observable; TRAP-like D and OPP B; a strong band 6 as targeted"
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "A",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "command_of_evidence.T1_compete.hard.w2b5_03",
+      "template": "T1_compete",
+      "subtype": "Finding discriminates genetic change (selection) from phenotypic plasticity through the gene frequency, a route the claim does not name",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "Threespine sticklebacks living in the ocean are usually covered in bony armor plates, whereas freshwater populations typically evolve to have far fewer, a difference governed largely by a single gene, Eda, which has one version associated with full plating and another with few plates. In Lake Washington, which borders Seattle, fully plated fish went from about 6 percent of the sticklebacks in the late 1960s to 49 percent by the mid-2000s, following a cleanup that made the murky water much clearer. One possibility is that the fish developed more plates in response to changed surroundings; Jun Kitano and colleagues propose instead that cutthroat trout, which could spot prey more easily in clearer water, increasingly consumed less armored fish.",
+      "stem": "Which finding, if true, would most directly support Kitano and colleagues’ explanation?",
+      "options": [
+        "In another lake whose water grew clearer over the same decades, fully plated sticklebacks also became more common.",
+        "Young sticklebacks from Lake Washington that carried the same version of Eda developed more plates when raised in clear water than in murky water.",
+        "Sticklebacks in the ocean carry the version of Eda associated with full plating far more often than do sticklebacks in most freshwater lakes.",
+        "The share of Lake Washington sticklebacks carrying the version of Eda associated with full plating rose between the late 1960s and the mid-2000s."
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "If fish merely grew more plates in response to their surroundings, the mix of Eda versions in the population would stay the same. If trout were killing less armored fish, the fish that survived and bred would more often carry the full-plating version, so that version would become more common. A rise in that version’s share, as in choice D, therefore fits predation but not the other possibility.",
+      "distractors": {
+        "A": {
+          "recipe": "TRAP: consistent with both explanations",
+          "why_wrong": "Both explanations tie the change to clearer water, through trout that hunt better or through fish that grow more plates in clearer surroundings, so a similar change in another clearing lake fits either one and does not favor Kitano and colleagues’ explanation."
+        },
+        "B": {
+          "recipe": "OPP: the rival’s prediction",
+          "why_wrong": "Fish with the same gene version growing more plates in clear water would show that the environment itself changes plating, which is the other possibility."
+        },
+        "C": {
+          "recipe": "OFF: true background about other populations",
+          "why_wrong": "This contrasts ocean and lake fish in general and says nothing about how Lake Washington’s fish changed, so it cannot separate the two explanations of that change."
+        }
+      },
+      "models": [
+        "3.15",
+        "3.48",
+        "3.9",
+        "3.14"
+      ],
+      "word_count": 118,
+      "sources": [
+        {
+          "what": "USGS publication page for Kitano et al. 2008, Current Biology, Reverse evolution of armor plates in the threespine stickleback: completely plated fish increased in Lake Washington over 40 years; proposed cause higher trout predation after water transparency rose in the early 1970s; standing variation at Eda (the Fred Hutchinson release, May 15, 2008, gives 6 percent completely plated in the late 1960s and 49 percent today and says the findings challenge a primary role for phenotypic plasticity)",
+          "url": "https://www.usgs.gov/publications/reverse-evolution-armor-plates-threespine-stickleback"
+        }
+      ],
+      "notes": "Band 7 moves: the fact the key depends on (plating is set largely by one gene with two versions) sits in the first sentence, far from the claim; the stem is CB’s plain form, so the student must see unprompted that only a finding that separates the two explanations supports Kitano’s; the key supplies an observation the passage never mentions (gene-version frequency), and the student must see that plasticity cannot change it; TRAP A fits both, OPP B is the plasticity result, C is a true property of other fish. Weaken polarity was not used here (b1–b3 used it twice). The alternative is offered unattributed.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [
+          "confirmed Kitano et al. 2008, Lake Washington plating increase, trout predation after clearer water, Eda (USGS page)",
+          "stem changed to CB’s plain form (no CB stem says ‘support X over the other possibility’)",
+          "A (more trout) would read as direct support for Kitano under the plain stem; replaced by a TRAP that fits both explanations (another clearing lake grew more plated fish)"
+        ],
+        "status": "fixed"
+      },
+      "band7": {
+        "verdict": "band 7",
+        "why": "plain CB stem, so the student must see unprompted that only a separating finding supports Kitano; the key needs the unstated premise that a developmental response leaves Eda frequencies unchanged; TRAP A fits both, OPP B is the rival’s result, C an irrelevant property of the same fish"
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "D",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 7
+    },
+    {
+      "id": "command_of_evidence.T1_compete.hard.w2b5_04",
+      "template": "T1_compete",
+      "subtype": "Finding discriminates two accounts of filled pauses (deliberate signals vs interchangeable symptoms)",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "English speakers frequently fill pauses with “uh” or “um.” According to one view, these sounds are merely symptoms of difficulty, noises that slip out involuntarily while a speaker struggles to plan the next part of an utterance, with no difference in meaning between the two. Having examined several large collections of recorded conversations, however, psychologists Herbert Clark and Jean Fox Tree rejected this view, concluding instead that “uh” and “um” are words that speakers use to inform listeners about an upcoming delay: “uh” announces a brief delay, they argue, whereas “um” announces a longer one.",
+      "stem": "Which finding, if true, would most directly support Clark and Fox Tree’s conclusion?",
+      "options": [
+        "Speakers said “uh” and “um” more often when describing unfamiliar subjects than when describing familiar ones.",
+        "Silences that followed “um” in the conversations were, on average, considerably longer than silences that followed “uh.”",
+        "Speakers paused for longer just after saying “uh” or “um” than at moments when they used neither sound.",
+        "Listeners judged recorded speakers to be less fluent when the speakers said “uh” and “um” often than when they rarely did."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "If “uh” announces a brief delay and “um” a longer one, the silence after “um” should tend to be longer than the silence after “uh.” If the two were interchangeable noises, there would be no reason for such a difference. Choice B reports the difference.",
+      "distractors": {
+        "A": {
+          "recipe": "TRAP: consistent with both views",
+          "why_wrong": "Unfamiliar subjects cause more planning trouble and more delays, so both views expect more of these sounds there; the finding does not separate them."
+        },
+        "C": {
+          "recipe": "TRAP: consistent with both views",
+          "why_wrong": "Longer pauses after either sound fit the idea that the sounds announce delays, but they fit just as well the rejected view that the sounds slip out while a speaker struggles; only a difference between “uh” and “um” would show that each announces a different delay."
+        },
+        "D": {
+          "recipe": "OFF: listeners’ impressions",
+          "why_wrong": "How fluent listeners think a speaker is concerns the effect of the sounds, not whether speakers use the two sounds differently to announce delays."
+        }
+      },
+      "models": [
+        "3.10",
+        "3.8",
+        "2.9"
+      ],
+      "word_count": 95,
+      "sources": [
+        {
+          "what": "Clark and Fox Tree, Using uh and um in spontaneous speaking, Cognition 84 (2002) 73–111: analysis of several large corpora; uh and um are conventional English words that speakers plan and produce; uh announces a minor delay and um a major one",
+          "url": "https://doi.org/10.1016/S0010-0277(02)00017-3"
+        }
+      ],
+      "notes": "Band 6: the key needs one bridge (announcement of a longer delay → longer silence) and the comparison between the two sounds; the stem is CB’s plain form; because the passage rejects the symptom view, only evidence that separates the two views supports the conclusion directly; both TRAPs engage the claim’s own variable (delay) but cannot separate the views. A finding that speakers use fewer fillers with no listener present was rejected as a distractor because it would also support the signal view. The symptom view is given unattributed (“One view holds”), as Clark and Fox Tree describe it.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 2,
+        "fixes": [
+          "confirmed Clark and Fox Tree 2002: several large corpora, uh and um as words announcing minor and major delays",
+          "stem changed to CB’s plain form (no CB stem says ‘support X over the view that’); C now a TRAP whose why_wrong names the rejected view"
+        ],
+        "status": "fixed"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "one bridge (a longer announced delay means a longer silence) plus the uh/um contrast; A and C fit both views; strong band 6 as targeted"
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "B",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "command_of_evidence.Q2_P8_multipart.hard.w2b5_05",
+      "template": "Q2_P8_multipart",
+      "subtype": "Data description: interaction (effect of the payment differs by prior gym use), cross-cell comparison with the control group",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "Financial incentives might help people establish a lasting exercise habit, or their influence might disappear once the payments end. In a study at the University of Chicago, economists Gary Charness and Uri Gneezy paid student participants $25 to visit the campus gym once during a single week; half of those participants were then offered an additional $100 to make eight more visits over the following month, while a control group received no payments for gym attendance. Using electronic records of gym entries, the researchers compared participants’ weekly attendance before the study with their attendance after all payments had ended, concluding that the larger incentive produced a lasting change only among participants who had not previously been regular gym users.",
+      "stem": "Which choice best describes data from the table that support Charness and Gneezy’s conclusion?",
+      "options": [
+        "Nonregular users rose from about 0.1 to 1.1 weekly visits in the eight-visit group but not in the control group, while regular users in both of those groups declined slightly.",
+        "Regular users in the eight-visit group visited the gym less often each week than regular users in the control group did, both before the study began and after it ended.",
+        "Nonregular users in the one-visit group more than doubled their weekly visits, going from about 0.08 to 0.18, while nonregular users in the control group did not increase their visits.",
+        "Nonregular users rose from about 0.1 to 1.1 weekly visits in the eight-visit group but only from about 0.08 to 0.18 in the one-visit group."
+      ],
+      "answer_letter": "A",
+      "table": {
+        "title": "Average Weekly Gym Visits before and after the Study (University of Chicago)",
+        "columns": [
+          "Group",
+          "Regular users: before",
+          "Regular users: after",
+          "Nonregular users: before",
+          "Nonregular users: after"
+        ],
+        "rows": [
+          [
+            "Control (no gym payment)",
+            "1.84",
+            "1.77",
+            "0.06",
+            "0.05"
+          ],
+          [
+            "One-visit payment",
+            "1.87",
+            "1.83",
+            "0.08",
+            "0.18"
+          ],
+          [
+            "Eight-visit payment",
+            "1.64",
+            "1.57",
+            "0.10",
+            "1.09"
+          ]
+        ],
+        "note": "Regular users had visited the gym at least once a week before the study."
+      },
+      "figure": null,
+      "explanation": "The conclusion has two parts: the eight-visit payment raised later gym use among students who had not been regular users, and it did not do so among regular users. The table shows nonregular users in the eight-visit group rising from 0.10 to 1.09 weekly visits while those in the control group stayed near 0.05, and regular users in both groups dropping slightly (1.64 to 1.57 and 1.84 to 1.77). Choice A states both parts.",
+      "distractors": {
+        "B": {
+          "recipe": "IRREL: accurate comparison of the wrong cells",
+          "why_wrong": "It is true (1.64 and 1.57 against 1.84 and 1.77), but it compares the two groups’ levels rather than how each changed, so it says nothing about a lasting effect of the payment."
+        },
+        "C": {
+          "recipe": "WGRP/IRREL: accurate, but about the one-visit group",
+          "why_wrong": "The numbers are right, but the conclusion concerns the larger payment for eight visits; the one-visit group’s small rise does not address it."
+        },
+        "D": {
+          "recipe": "PART: accurate comparison in the key’s frame, silent on regular users",
+          "why_wrong": "Both changes are right, and they show the larger payment doing more for nonregular users than the smaller one did, but the choice says nothing about regular users, so it cannot show that the lasting change occurred only among nonregular users."
+        }
+      },
+      "models": [
+        "3.26",
+        "3.43",
+        "3.18",
+        "3.16"
+      ],
+      "word_count": 119,
+      "sources": [
+        {
+          "what": "Charness and Gneezy, Incentives to Exercise, Econometrica 77(3) 2009, 909–931 (author PDF): Study 1 at the University of Chicago, $25 for one visit, $100 more for at least eight visits in the next four weeks, control group unpaid for gym visits, swipe-card records; Table I mean weekly attendance before/after: regular attendees control 1.844/1.774, one visit 1.866/1.827, eight visits 1.644/1.571; nonregular control 0.058/0.046, one visit 0.077/0.181, eight visits 0.102/1.085; the entire effect came from people who had not been regular attendees",
+          "url": "https://faculty.econ.ucsb.edu/~charness/papers/exercise.pdf"
+        }
+      ],
+      "notes": "Band 7 moves: an interaction (the payment’s effect depends on prior gym use) read through a cross-cell comparison with the control group; distractors are accurate comparisons of the wrong cells in the key’s own frame (B levels, C one-visit group) plus an in-frame half (D: eight-visit against one-visit nonregular users, silent on regular users). Values rounded to two decimals from Table I (1.085 shown as 1.09). Regular users are those who went at least once a week before the study (the paper’s definition), given in the table note.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [
+          "checked all 12 table values against Table I of the author PDF (Study 1) and the design ($25 one visit, $100 for eight more, control unpaid)",
+          "D (direction misread, killed by one fact) replaced by an accurate in-frame half: eight-visit against one-visit nonregular users, silent on regular users"
+        ],
+        "status": "fixed"
+      },
+      "band7": {
+        "verdict": "band 7",
+        "why": "an interaction read through a cross-cell comparison with the control; after the fix all three distractors are accurate comparisons of wrong cells in the key’s frame (B levels, C one-visit group, D eight-visit against one-visit, silent on regular users); about six reads and three comparisons"
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "A",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 7
+    },
+    {
+      "id": "command_of_evidence.T2_lit_quote.hard.w2b5_06",
+      "template": "T2_lit_quote",
+      "subtype": "Literary quotation: ambivalence (concession plus delay) in verse drama",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "Edward the Second is a circa 1592 play by Christopher Marlowe. Pressed by rebellious nobles to relinquish his throne, King Edward reveals his ambivalence about abdicating, conceding that his reign must end even as he attempts to prolong it: ______",
+      "stem": "Which quotation from Edward the Second most effectively illustrates the claim?",
+      "options": [
+        "“But what are kings, when regiment is gone, / But perfect shadows in a sunshine day? / My nobles rule; I bear the name of king, / I wear the crown; but am controll’d by them, / By Mortimer, and my unconstant queen”",
+        "“Here, take my crown; the life of Edward too: / Two kings in England cannot reign at once. / But stay a while: let me be king till night, / That I may gaze upon this glittering crown”",
+        "“Inhuman creatures, nurs’d with tiger’s milk, / Why gape you for your sovereign’s overthrow? / My diadem, I mean, and guiltless life. / See, monsters, see! I’ll wear my crown again.”",
+        "“The griefs of private men are soon allay’d; / But not of kings. The forest deer, being struck, / Runs to an herb that closeth up the wounds”"
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The claim has two parts: Edward accepts that his reign must end, and he tries to hold on to it a little longer. In choice B he offers the crown and grants that “two kings in England cannot reign at once,” then asks to remain king “till night” so he can keep gazing at the crown.",
+      "distractors": {
+        "A": {
+          "recipe": "HALF: concession of lost power without any attempt to prolong his reign",
+          "why_wrong": "Edward admits that his nobles hold the real power, but he does not try to delay giving up the throne here."
+        },
+        "C": {
+          "recipe": "HALF/OPP: clings to the crown in defiance, conceding nothing",
+          "why_wrong": "Edward puts the crown back on and denounces the nobles; he tries to keep his reign but does not concede that it must end."
+        },
+        "D": {
+          "recipe": "OFF: nearby emotion (grief)",
+          "why_wrong": "Edward reflects that a king’s griefs, unlike a commoner’s, do not heal; the lines say nothing about yielding or delaying."
+        }
+      },
+      "models": [
+        "3.37",
+        "3.17",
+        "3.11"
+      ],
+      "word_count": 40,
+      "sources": [
+        {
+          "what": "Christopher Marlowe, Edward the Second (written c. 1592, printed 1594), Project Gutenberg eBook #20288; all four quotations copied from the abdication scene (straight apostrophes made curly; the stage directions “Taking off the crown” and “Putting on the crown” are not inside the quoted lines)",
+          "url": "https://www.gutenberg.org/ebooks/20288"
+        }
+      ],
+      "notes": "Band 7 moves: indirect claim (ambivalence); all four options are the same speaker in one scene in nearby states (powerlessness, defiance, grief); two half-matches split the claim’s two parts (A concession only, C prolonging only), so only B has both. Lines with editorial brackets (“[And]”, “[be king]”) were avoided. The lines “Continue ever, thou celestial sun ...” were left out because they could be read as both conceding and delaying.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 5,
+        "fixes": [
+          "all four quotations match Project Gutenberg #20288 (Act V abdication scene) word for word"
+        ],
+        "status": "pass"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "the claim’s gloss spells out both halves, so the key maps line by line; T2 has only three band-7 officials, and the scene’s other candidate lines (‘let me wear it yet a while’, ‘Receive it? no’) are themselves ambivalent, so a closer distractor would risk a second key; left a strong band 6"
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "B",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "command_of_evidence.Q1_P5_control.hard.w2b5_07",
+      "template": "Q1_P5_control",
+      "subtype": "Data completion: condition vs control with an expectation the data contradict (posted calories did not shift drink choices)",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "In 2008, New York City began requiring chain restaurants to post the calorie content of menu items. Comparing Starbucks locations in the city with locations in Boston and Philadelphia, which had no such requirement, economists Bryan Bollinger, Phillip Leslie, and Alan Sorensen found that average calories per transaction in New York City declined by about 6 percent after posting began, almost entirely because customers purchased fewer calories in food. Because customers’ usual drinks change with the seasons whether or not calories are posted, the researchers also compared how cardholders in the three cities switched drinks, concluding that the posted calories had little influence on what customers drank, since in New York City ______",
+      "stem": "Which choice most effectively uses data from the graph to complete the statement?",
+      "options": [
+        "about 12 percent of cardholders switched to a drink with fewer calories per ounce than their usual one, and about 8 percent switched to a drink of a smaller size than their usual one.",
+        "cardholders cut the calories in their usual drinks by about 6 percent, matching the decline in calories per purchase that the researchers found overall.",
+        "the share of cardholders who switched to a larger drink was more than twice the share who switched to a smaller drink, unlike in Boston and Philadelphia.",
+        "a smaller share of cardholders than in Boston and Philadelphia switched to a drink with fewer calories per ounce, and only a slightly larger share switched to a smaller size."
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": {
+        "kind": "bar graph",
+        "title": "Starbucks Cardholders Who Switched Their Usual Drink after Calorie Posting Began",
+        "x_axis": "Type of switch",
+        "y_axis": "Percentage of cardholders",
+        "description": "Grouped bar graph, two bars per type of switch (New York City; Boston and Philadelphia); y-axis from 0 to 14 percent with gridlines every 2. To a smaller size: about 8.4 and 7.8. To a larger size: about 10.4 and 9.1. To fewer calories per ounce: about 11.6 and 13.1. To more calories per ounce: about 12.2 and 11.9.",
+        "data": [
+          {
+            "series": "New York City",
+            "points": [
+              [
+                "To a smaller size",
+                8.36
+              ],
+              [
+                "To a larger size",
+                10.45
+              ],
+              [
+                "To fewer calories per ounce",
+                11.61
+              ],
+              [
+                "To more calories per ounce",
+                12.19
+              ]
+            ]
+          },
+          {
+            "series": "Boston and Philadelphia",
+            "points": [
+              [
+                "To a smaller size",
+                7.79
+              ],
+              [
+                "To a larger size",
+                9.11
+              ],
+              [
+                "To fewer calories per ounce",
+                13.06
+              ],
+              [
+                "To more calories per ounce",
+                11.86
+              ]
+            ]
+          }
+        ]
+      },
+      "explanation": "To show that the posted calories had little effect, New York City cardholders must be compared with cardholders in the cities without posting. The graph shows that fewer New York cardholders switched to drinks with fewer calories per ounce (about 11.6 percent against 13.1 percent) and that only slightly more switched to a smaller size (about 8.4 percent against 7.8 percent). Choice D describes this comparison.",
+      "distractors": {
+        "A": {
+          "recipe": "PART: accurate, but no comparison with the control cities",
+          "why_wrong": "The New York figures are right, but without the Boston and Philadelphia figures they cannot show whether the posted calories changed anything."
+        },
+        "B": {
+          "recipe": "OUTS/CONTRA: not in the graph and contrary to the text",
+          "why_wrong": "The graph shows shares of cardholders who switched drinks, not calories in drinks, and the text says the 6 percent drop came almost entirely from food."
+        },
+        "C": {
+          "recipe": "INACC: misreads the bars",
+          "why_wrong": "About 10.4 percent of New York cardholders switched to a larger drink and about 8.4 percent to a smaller one, nowhere near twice as many."
+        }
+      },
+      "models": [
+        "3.38",
+        "3.4",
+        "3.46"
+      ],
+      "word_count": 113,
+      "sources": [
+        {
+          "what": "Bollinger, Leslie and Sorensen, Calorie Posting in Chain Restaurants, NBER Working Paper 15648 (2010): Starbucks transaction and cardholder data, Boston and Philadelphia as controls, calories per transaction down about 6 percent, effect almost entirely in food; Table 2 (cardholders’ most common beverage before vs after posting, NYC / Boston and Philadelphia): smaller size 8.36 / 7.79, larger size 10.45 / 9.11, lower calories per ounce 11.61 / 13.06, higher calories per ounce 12.19 / 11.86 percent",
+          "url": "https://www.nber.org/papers/w15648"
+        }
+      ],
+      "notes": "Band 7 moves: the passage sets up an expectation (posted calories should push drinkers toward lighter drinks) and the key reports the control comparison that defeats it; the measure must be read through the control cities named in an earlier sentence; options are compound clauses; distractors: an accurate single-city reading (A), a claim the display cannot settle (B), and a misread (C). Graph values from Table 2 (row and column totals); 2008 is the year Starbucks posted calories in NYC (April 1). The seasonality sentence follows the paper (similar switching patterns in the control cities, ‘more likely due to seasonality’), so a reading of New York figures alone is explicitly insufficient.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [
+          "checked the eight bar values against Table 2 of NBER w15648, the 6 percent fall, the food effect and the paper’s seasonality reading",
+          "removed the read-aloud description’s interpretive last sentence (‘only for fewer calories per ounce is the control bar clearly taller’), which handed over the key"
+        ],
+        "status": "fixed"
+      },
+      "band7": {
+        "verdict": "band 7",
+        "why": "a surprise relative to the stated expectation; the seasonality sentence is the passage relation that forces the control comparison; options are compound clauses of about 25 words; four reads and two comparisons; A is an accurate single-city reading that cannot decide the claim"
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "D",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 7
+    },
+    {
+      "id": "command_of_evidence.Q2_P5_control.hard.w2b5_08",
+      "template": "Q2_P5_control",
+      "subtype": "Data description: condition vs control with two outcome measures, only one of which bears on the conclusion",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Teachers often cover classroom walls with posters, maps, and student artwork. To determine whether such displays affect young children’s learning, Anna Fisher, Karrie Godwin, and Howard Seltman taught 24 kindergarten children six introductory science lessons in a laboratory classroom, three while its walls were heavily decorated and three while they were mostly bare, recording how much of each lesson the children spent off task and then testing them on the lesson content. The researchers concluded that the decorations reduced how much the children learned, not merely how attentive the children appeared to be.",
+      "stem": "Which choice best describes data from the graph that support the researchers’ conclusion?",
+      "options": [
+        "Children spent a greater percentage of lesson time off task in the decorated classroom than in the sparse classroom, by about 10 percentage points.",
+        "After lessons in the sparse classroom, children answered more than half of the test questions about the lessons correctly.",
+        "Children answered a greater percentage of test questions correctly after lessons in the sparse classroom than after lessons in the decorated classroom.",
+        "In each of the two classrooms, the percentage of test questions children answered correctly was greater than the percentage of lesson time they spent off task."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": {
+        "kind": "bar graph",
+        "title": "Kindergarten Children’s Attention and Learning in Two Classrooms",
+        "x_axis": "Measure",
+        "y_axis": "Percent",
+        "description": "Grouped bar graph, two bars per measure (decorated classroom, sparse classroom); y-axis from 0 to 60 percent with gridlines every 10. Time spent off task: decorated about 38.6, sparse about 28.4. Test questions answered correctly: decorated about 42, sparse about 55.",
+        "data": [
+          {
+            "series": "Decorated classroom",
+            "points": [
+              [
+                "Time spent off task",
+                38.6
+              ],
+              [
+                "Test questions answered correctly",
+                42
+              ]
+            ]
+          },
+          {
+            "series": "Sparse classroom",
+            "points": [
+              [
+                "Time spent off task",
+                28.4
+              ],
+              [
+                "Test questions answered correctly",
+                55
+              ]
+            ]
+          }
+        ]
+      },
+      "explanation": "The conclusion is about learning, which the study measured with test questions, and it claims more than a difference in how attentive the children looked. The graph shows that children answered about 55 percent of questions correctly after lessons in the sparse classroom and about 42 percent after lessons in the decorated one. Choice C describes that difference.",
+      "distractors": {
+        "A": {
+          "recipe": "IRREL: accurate, wrong measure",
+          "why_wrong": "The off-task figures (about 38.6 against 28.4 percent) are right, but they show how attentive the children were, and the conclusion claims more than that: an effect on learning."
+        },
+        "B": {
+          "recipe": "PART: one condition only",
+          "why_wrong": "The sparse-classroom score is right (about 55 percent), but without the decorated-classroom score it cannot show that the decorations reduced learning."
+        },
+        "D": {
+          "recipe": "IRREL: accurate comparison across unrelated measures",
+          "why_wrong": "It is true in both rooms (42 against 38.6, 55 against 28.4), but comparing test scores with off-task time says nothing about the effect of the decorations."
+        }
+      },
+      "models": [
+        "3.43",
+        "3.5",
+        "3.1"
+      ],
+      "word_count": 93,
+      "sources": [
+        {
+          "what": "Carnegie Mellon University news release (May 27, 2014) on Fisher, Godwin and Seltman, Psychological Science: 24 kindergarten students, six science lessons in laboratory classrooms, three decorated and three sparse; accuracy 55 percent correct in the sparse room vs 42 percent in the decorated room; off task 38.6 vs 28.4 percent; decorated classrooms made children more distracted and less likely to learn",
+          "url": "https://www.cmu.edu/news/stories/archives/2014/may/may27_decoratedclassrooms.html"
+        }
+      ],
+      "notes": "Band 6 design wrinkle: two outcome measures, only one of which bears on the conclusion (test accuracy, not off-task time); the conclusion’s final clause rules out the attention measure. Only the measures the CMU release states are used (press sources disagree on a gain score, so none is shown).",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [
+          "confirmed 24 kindergartners, six lessons (three decorated, three sparse), off task 38.6 vs 28.4 percent, 55 vs 42 percent correct (CMU release)"
+        ],
+        "status": "pass"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "design wrinkle of two measures with only one bearing on the claim, but a single two-bar comparison; strong band 6 as targeted"
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "C",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "command_of_evidence.Q1_P3_pairwise.hard.w2b5_09",
+      "template": "Q1_P3_pairwise",
+      "subtype": "Data completion: pairwise comparison of two measures for one source, guided by a relation stated in the passage",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "A country’s generating capacity is the amount of electricity its power plants could produce if every plant operated continuously at full output. Because some kinds of plants run close to full output far more consistently than others, a source’s share of a country’s capacity often differs from its share of the electricity the country actually generates: plants used mainly as backup, for instance, contribute much less to production than to capacity. Other sources contribute proportionally more to production than to capacity, as in Iceland, which generates nearly all of its electricity from hydroelectric and geothermal plants. In 2020, for example, Iceland’s geothermal plants accounted for ______",
+      "stem": "Which choice most effectively uses data from the table to complete the example?",
+      "options": [
+        "about 26 percent of the country’s capacity but about 31 percent of the electricity it produced.",
+        "about 72 percent of the country’s capacity but only about 69 percent of the electricity it produced.",
+        "about 2 percent of the country’s capacity but almost none of the electricity it produced.",
+        "about 31 percent of the electricity produced, a larger share than any other source except hydroelectric plants."
+      ],
+      "answer_letter": "A",
+      "table": {
+        "title": "Electricity in Iceland by Source, 2020",
+        "columns": [
+          "Source",
+          "Share of installed capacity (%)",
+          "Share of electricity produced (%)"
+        ],
+        "rows": [
+          [
+            "Hydroelectric",
+            "71.77",
+            "68.79"
+          ],
+          [
+            "Geothermal",
+            "25.72",
+            "31.16"
+          ],
+          [
+            "Fuel",
+            "2.45",
+            "0.02"
+          ],
+          [
+            "Wind",
+            "0.06",
+            "0.03"
+          ]
+        ],
+        "note": null
+      },
+      "figure": null,
+      "explanation": "The example must show a source whose share of production is larger than its share of capacity, and the sentence names geothermal plants. According to the table, geothermal plants made up about 25.7 percent of Iceland’s capacity but produced about 31.2 percent of its electricity, as choice A states.",
+      "distractors": {
+        "B": {
+          "recipe": "WGRP: hydroelectric values attributed to geothermal",
+          "why_wrong": "These are the hydroelectric figures, and they show a smaller share of production than of capacity, the opposite of the example’s point."
+        },
+        "C": {
+          "recipe": "WGRP: fuel values attributed to geothermal",
+          "why_wrong": "These are the figures for fuel-burning plants, and they too show a smaller share of production than of capacity."
+        },
+        "D": {
+          "recipe": "IRREL: accurate, but no comparison with capacity",
+          "why_wrong": "Geothermal plants did produce about 31 percent, second only to hydroelectric plants, but the example is about production compared with capacity, which this choice leaves out."
+        }
+      },
+      "models": [
+        "3.29",
+        "3.30"
+      ],
+      "word_count": 106,
+      "sources": [
+        {
+          "what": "Wikipedia, Electricity sector in Iceland, table Installed Electrical Capacity and Production in Iceland (2020): hydroelectric 71.77 percent of capacity and 68.79 percent of production, geothermal 25.72 and 31.16, wind 0.06 and 0.03, fuel 2.45 and 0.02",
+          "url": "https://en.wikipedia.org/wiki/Electricity_sector_in_Iceland"
+        }
+      ],
+      "notes": "Band 6 (no band-7 official Q1_P3 items). Passage relation (capacity share vs production share) applied to the named source; wrong-row distractors use the other sources’ real values. The general statement that some plants run near full output more of the time is a definition-level fact, not a claim about Iceland.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 2,
+        "fixes": [
+          "all eight table values match Wikipedia’s 2020 capacity and production table"
+        ],
+        "status": "pass"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "Q1_P3 has no band-7 official items; strong band 6 with a passage relation applied to the named row and wrong-row distractors"
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "A",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "command_of_evidence.T2_lit_quote.medium.w2b5_10",
+      "template": "T2_lit_quote",
+      "subtype": "Literary quotation: two-part claim (starving, yet too proud to ask for food)",
+      "tier": "medium",
+      "passage": "Hunger is an 1890 novel by Knut Hamsun, translated in 1899 by George Egerton. Its narrator, an impoverished young writer wandering the streets of Christiania (now Oslo), is frequently starving, yet his pride prevents him from asking anyone for food: ______",
+      "stem": "Which quotation from Hunger most effectively illustrates the claim?",
+      "options": [
+        "“It was the very deuce that one must let oneself turn into a living deformity for sheer hunger’s sake.”",
+        "“Was it not I who, no later than yesterday, had decided to pass her proudly by if I met her, to treat her with the greatest indifference? Instead of that, I had only aroused her compassion, and coaxed an alms from her.”",
+        "“I was not in the least proud; I dared make the assertion roundly, that I was one of the least arrogant beings up to date.”",
+        "“But supposing I were to go in and beg for a bit of bread? Surely that was a fleeting thought, a flash; it could never really have occurred to me seriously.”"
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The claim has two parts: the narrator is starving, and pride stops him from asking for food. In choice D he considers begging for “a bit of bread” but dismisses the idea as something that “could never really have occurred to me seriously,” so his hunger meets a refusal to ask.",
+      "distractors": {
+        "A": {
+          "recipe": "HALF: hunger without the refusal to ask",
+          "why_wrong": "The narrator complains that hunger is wasting his body, but nothing in the line shows pride keeping him from asking for food."
+        },
+        "B": {
+          "recipe": "HALF/OFF: pride toward a woman, and help accepted",
+          "why_wrong": "He recalls meaning to pass a woman proudly and then accepting her charity; the line involves pride but not food, and it shows him taking help rather than refusing to ask."
+        },
+        "C": {
+          "recipe": "LURE: shares the word “proud”",
+          "why_wrong": "Here the narrator insists that he is not proud at all, as he prepares to return to a lodging house; the line neither shows pride nor concerns food."
+        }
+      },
+      "models": [
+        "2.26",
+        "2.36",
+        "2.13"
+      ],
+      "word_count": 41,
+      "sources": [
+        {
+          "what": "Knut Hamsun, Hunger, translated by George Egerton (1899; PG text from the 1921 Knopf printing), Project Gutenberg eBook #8387; all four quotations string-matched (straight apostrophes made curly)",
+          "url": "https://www.gutenberg.org/ebooks/8387"
+        }
+      ],
+      "notes": "Medium two-part claim: half-match distractors split the parts (A hunger, B pride without food), C is a keyword lure on “proud.” The line “If I could only knock all shame on the head and apply to him” was left out because it would also fit the claim. Hamsun and Hunger appear nowhere in the official or our banks.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 5,
+        "fixes": [
+          "all four quotations match Project Gutenberg #8387 (Egerton translation) word for word"
+        ],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "command_of_evidence.T2_lit_quote.medium.w2b5_11",
+      "template": "T2_lit_quote",
+      "subtype": "Literary quotation (poem): two-part claim (contempt for the hometown, yet unable to escape it)",
+      "tier": "medium",
+      "passage": "Spoon River Anthology is a 1915 poetry collection by Edgar Lee Masters. In the poem “Archibald Higbie,” an artist expresses contempt for his hometown of Spoon River while acknowledging that he could never entirely free himself from its influence: ______",
+      "stem": "Which quotation from “Archibald Higbie” most effectively illustrates the claim?",
+      "options": [
+        "“I loathed you, Spoon River. / I tried to rise above you, / I was ashamed of you. / I despised you / As the place of my nativity.”",
+        "“And there in Rome, among the artists, / Speaking Italian, speaking French, / I seemed to myself at times to be free / Of every trace of my origin.”",
+        "“There was no culture, you know, in Spoon River / And I burned with shame and held my peace. / And what could I do, all covered over / And weighted down with western soil”",
+        "“I seemed to be reaching the heights of art / And to breathe the air that the masters breathed / And to see the world with their eyes.”"
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The claim has two parts: contempt for Spoon River and an admission that the town still held him. In choice C, Higbie sneers that there was “no culture” in Spoon River and then asks what he could do, “all covered over / And weighted down with western soil,” an image of being unable to shake off his origins.",
+      "distractors": {
+        "A": {
+          "recipe": "HALF: contempt only",
+          "why_wrong": "Higbie states his contempt for the town, but these lines do not admit that he failed to free himself of it."
+        },
+        "B": {
+          "recipe": "HALF/OPP: describes seeming free of his origins",
+          "why_wrong": "The lines describe feeling, at times, free of his origins and show no contempt for the town, so they match neither part of the claim."
+        },
+        "D": {
+          "recipe": "OFF: artistic ambition",
+          "why_wrong": "Higbie describes his sense of rising toward great art, which concerns neither his feelings about Spoon River nor its hold on him."
+        }
+      },
+      "models": [
+        "2.31",
+        "2.26",
+        "2.10"
+      ],
+      "word_count": 40,
+      "sources": [
+        {
+          "what": "Edgar Lee Masters, Spoon River Anthology (1915), Project Gutenberg eBook #1280, poem “Archibald Higbie”; all four quotations copied at line boundaries",
+          "url": "https://www.gutenberg.org/ebooks/1280"
+        }
+      ],
+      "notes": "Medium two-part claim; half-match distractors (A contempt only; B the illusion of freedom, no contempt), D off-target. The lines about critics seeing Lincoln’s face in his work were left out because they would also show that he could not escape his origins.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 5,
+        "fixes": [
+          "all four quotations match the poem in Project Gutenberg #1280 at line boundaries"
+        ],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "command_of_evidence.T1_single.medium.w2b5_12",
+      "template": "T1_single",
+      "subtype": "Hypothetical finding supports a claim about the sources of an artist’s imagery",
+      "tier": "medium",
+      "passage": "Martín Ramírez grew up in Los Altos de Jalisco, a ranching region of west-central Mexico, and in 1925 emigrated to California, where he is believed to have worked on railroad construction. He spent the last three decades of his life in psychiatric institutions, where he produced the elaborate drawings for which he is now celebrated. Admirers long characterized these works as enigmatic, the products of a mind isolated from external reality, but sociologist Víctor Espinosa, who investigated Ramírez’s life in Mexico and California, argues instead that the drawings emerged from the artist’s own experiences.",
+      "stem": "Which finding, if true, would most directly support Espinosa’s argument?",
+      "options": [
+        "Ramírez sometimes created large drawing surfaces by gluing scraps of paper together with a paste he mixed himself.",
+        "The riders who recur in Ramírez’s drawings wear the clothing and carry the gear of Los Altos ranchers of the early 1900s.",
+        "Several other patients at the hospitals where Ramírez lived also produced drawings filled with repeated, closely spaced lines.",
+        "Ramírez’s drawings were first shown to the public in the 1950s by a psychologist who worked at one of the hospitals where Ramírez lived."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "Espinosa argues that Ramírez’s drawings drew on his own experiences. If the riders in the drawings are dressed and equipped like the ranchers of the region where Ramírez grew up, his imagery came from his life in Jalisco, as choice B states.",
+      "distractors": {
+        "A": {
+          "recipe": "OFF: materials, not subject matter",
+          "why_wrong": "How Ramírez made his drawing surfaces says nothing about whether what he drew came from his experiences."
+        },
+        "C": {
+          "recipe": "SUBJ/OPP: points to the hospital setting instead",
+          "why_wrong": "If other patients drew similar patterns, the style might reflect hospital life shared by many people, not Ramírez’s own past."
+        },
+        "D": {
+          "recipe": "OFF: how the work became known",
+          "why_wrong": "Who first exhibited the drawings concerns their reception, not the sources of their images."
+        }
+      },
+      "models": [
+        "2.4",
+        "2.21",
+        "2.6"
+      ],
+      "word_count": 94,
+      "sources": [
+        {
+          "what": "Hyperallergic review of Víctor M. Espinosa’s book on Martín Ramírez: born 1895 in Los Altos de Jalisco, left for the United States in 1925, believed to have worked as a railroad builder, in psychiatric hospitals from about 1931 (DeWitt State Hospital 1948–1963); Espinosa, a sociologist, rejects the ‘enigmatic’ outsider-art reading and links the horsemen, trains and tunnels to the artist’s experiences",
+          "url": "https://hyperallergic.com/humanizing-an-enigma-a-new-book-illuminates-martin-ramirezs-life-and-art"
+        }
+      ],
+      "notes": "Medium: one bridge from the claim (own experiences) to an observable (riders dressed like Los Altos ranchers). Distractor A uses a real practice (paper glued with homemade paste) as an if-true finding. ‘Most of his life in psychiatric hospitals’: about 1931 to his death in 1963.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [
+          "confirmed Los Altos de Jalisco, 1925 emigration, believed railroad work, hospitals until death in 1963, sociologist Espinosa’s reading against the enigma framing (Hyperallergic)"
+        ],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "command_of_evidence.Q1_P3_pairwise.medium.w2b5_13",
+      "template": "Q1_P3_pairwise",
+      "subtype": "Data completion: two comparisons between a pair of statues (height without and with base)",
+      "tier": "medium",
+      "passage": "The height of a monumental statue can be measured in two ways: as the height of the sculpted figure alone or as the height including the pedestal or platform on which it stands. When the Ushiku Daibutsu, a bronze statue of the Buddha in Japan, was completed in 1993, it was the world’s tallest statue, but several statues constructed since then have surpassed it considerably. A student comparing it with these more recent monuments observes that the Ushiku Daibutsu is ______",
+      "stem": "Which choice most effectively uses data from the table to complete the statement?",
+      "options": [
+        "taller than the Laykyun Sekkya when the bases are included, though shorter when they are not.",
+        "shorter than the Spring Temple Buddha when the bases are excluded but taller when they are included.",
+        "taller than every other statue in the table that was completed before 2010, whether or not the bases are included.",
+        "shorter than the Laykyun Sekkya, which was completed 15 years later, whether or not the bases are included."
+      ],
+      "answer_letter": "D",
+      "table": {
+        "title": "Heights of Four Monumental Statues",
+        "columns": [
+          "Statue",
+          "Country",
+          "Year completed",
+          "Height of statue (meters)",
+          "Height including base (meters)"
+        ],
+        "rows": [
+          [
+            "Statue of Unity",
+            "India",
+            "2018",
+            "182",
+            "240"
+          ],
+          [
+            "Spring Temple Buddha",
+            "China",
+            "2008",
+            "128",
+            "208"
+          ],
+          [
+            "Laykyun Sekkya",
+            "Myanmar",
+            "2008",
+            "116",
+            "129"
+          ],
+          [
+            "Ushiku Daibutsu",
+            "Japan",
+            "1993",
+            "100",
+            "120"
+          ]
+        ],
+        "note": null
+      },
+      "figure": null,
+      "explanation": "According to the table, the Ushiku Daibutsu is 100 meters tall without its base and 120 meters with it, while the Laykyun Sekkya, completed in 2008, is about 116 meters without its base and about 129 meters with it. The Ushiku Daibutsu is therefore shorter by both measures, as choice D states.",
+      "distractors": {
+        "A": {
+          "recipe": "INACC: wrong on the with-base comparison",
+          "why_wrong": "With bases included, the Ushiku Daibutsu (120 meters) is still shorter than the Laykyun Sekkya (about 129 meters)."
+        },
+        "B": {
+          "recipe": "INACC: wrong on the with-base comparison",
+          "why_wrong": "With its base, the Spring Temple Buddha reaches 208 meters, far above the Ushiku Daibutsu’s 120 meters."
+        },
+        "C": {
+          "recipe": "INACC: wrong extreme",
+          "why_wrong": "The Spring Temple Buddha and the Laykyun Sekkya, both completed in 2008, are taller than the Ushiku Daibutsu by either measure."
+        }
+      },
+      "models": [
+        "2.32",
+        "2.28",
+        "1.3"
+      ],
+      "word_count": 81,
+      "sources": [
+        {
+          "what": "Wikipedia, List of tallest statues: Statue of Unity (India, 2018) 182 m / 240 m with base; Spring Temple Buddha (China, 2008) 128 / 208; Laykyun Sekkya (Myanmar, 2008) 115.8 / 129.2; Ushiku Daibutsu (Japan, 1993) 100 / 120, world’s tallest statue 1993–2008",
+          "url": "https://en.wikipedia.org/wiki/List_of_tallest_statues"
+        }
+      ],
+      "notes": "Medium Q1_P3: every option is a two-part comparison in one frame, so each must be checked against both columns; Laykyun Sekkya heights rounded to 116 and 129 in the table.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [
+          "confirmed all heights and years and Ushiku Daibutsu as world’s tallest 1993–2008 (Wikipedia list and article)"
+        ],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "command_of_evidence.Q1_P4_trend.medium.w2b5_14",
+      "template": "Q1_P4_trend",
+      "subtype": "Data completion: change over the months of the year (rainfall peak late in the year)",
+      "tier": "medium",
+      "passage": "Chennai, the capital of the Indian state of Tamil Nadu, lies on the Bay of Bengal along the country’s southeastern coast. The city receives some precipitation from the southwest monsoon winds, which typically blow from about mid-June to mid-September, but it obtains most of its seasonal rainfall from the northeast monsoon, which arrives later in the year. Chennai’s average monthly rainfall, calculated from three decades of measurements, reflects this pattern, with rainfall ______",
+      "stem": "Which choice most effectively uses data from the graph to complete the statement?",
+      "options": [
+        "rising steadily from about 75 millimeters in June to about 144 millimeters in September and then leveling off for the rest of the year.",
+        "reaching its highest monthly level in August, at about 141 millimeters, before declining through the final months of the year.",
+        "climbing from about 144 millimeters in September to about 377 millimeters in November, well above the amount in any month from June through August.",
+        "staying under about 50 millimeters in every month from January through May and falling to its lowest point in March, at only about 3 millimeters."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": {
+        "kind": "line graph",
+        "title": "Average Monthly Rainfall in Chennai, India, 1991–2020",
+        "x_axis": "Month",
+        "y_axis": "Rainfall (millimeters)",
+        "description": "One line across the twelve months; y-axis from 0 to 400 millimeters with gridlines every 50. January about 20, February about 5, March about 3, April about 18, May about 50, June about 75, July about 113, August about 141, September about 144, October about 278, November about 377 (the peak), December about 184.",
+        "data": [
+          {
+            "series": "Average rainfall",
+            "points": [
+              [
+                "Jan",
+                20.0
+              ],
+              [
+                "Feb",
+                4.7
+              ],
+              [
+                "Mar",
+                3.4
+              ],
+              [
+                "Apr",
+                17.5
+              ],
+              [
+                "May",
+                49.7
+              ],
+              [
+                "Jun",
+                75.4
+              ],
+              [
+                "Jul",
+                113.1
+              ],
+              [
+                "Aug",
+                141.4
+              ],
+              [
+                "Sep",
+                143.9
+              ],
+              [
+                "Oct",
+                278.3
+              ],
+              [
+                "Nov",
+                377.3
+              ],
+              [
+                "Dec",
+                183.7
+              ]
+            ]
+          }
+        ]
+      },
+      "explanation": "Rain from the northeast monsoon falls late in the year, after the southwest monsoon ends in mid-September. The graph shows rainfall rising from about 144 millimeters in September to about 377 millimeters in November, far more than in June, July, or August, as choice C states.",
+      "distractors": {
+        "A": {
+          "recipe": "INACC: misreads the later months",
+          "why_wrong": "Rainfall does not level off after September; it nearly doubles in October and peaks in November."
+        },
+        "B": {
+          "recipe": "INACC: wrong peak",
+          "why_wrong": "August, at about 141 millimeters, is far below October (about 278) and November (about 377)."
+        },
+        "D": {
+          "recipe": "IRREL: accurate, but about the dry season",
+          "why_wrong": "The figures for January through May are correct, but they say nothing about when the city gets most of its rain."
+        }
+      },
+      "models": [
+        "2.15",
+        "2.34",
+        "2.40"
+      ],
+      "word_count": 73,
+      "sources": [
+        {
+          "what": "Wikipedia, Geography of Chennai: weather box with India Meteorological Department 1991–2020 normals (monthly rain, mm: Jan 20.0, Feb 4.7, Mar 3.4, Apr 17.5, May 49.7, Jun 75.4, Jul 113.1, Aug 141.4, Sep 143.9, Oct 278.3, Nov 377.3, Dec 183.7); text: most seasonal rainfall from the north-east monsoon, smaller amounts from the south-west monsoon from mid-June to mid-September",
+          "url": "https://en.wikipedia.org/wiki/Geography_of_Chennai"
+        }
+      ],
+      "notes": "Medium trend completion on a single line graph; distractors: two misreads of the shape (A, B) and an accurate but irrelevant reading of the dry season (D). The passage does not claim that Chennai is unlike the rest of India, which the source does not state.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 2,
+        "fixes": [
+          "all twelve monthly normals and the monsoon timing match Wikipedia, Geography of Chennai"
+        ],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "command_of_evidence.Q2_P4_trend.medium.w2b5_15",
+      "template": "Q2_P4_trend",
+      "subtype": "Data description: size of the steps in a record progression over time",
+      "tier": "medium",
+      "passage": "In a cable-stayed bridge, the roadway is suspended from cables attached directly to tall towers, and the main span is the distance between the two towers. After the first modern cable-stayed bridge was completed in Sweden in 1956, engineers repeatedly established new records for the longest main span. A student investigating these engineering records concludes that the largest individual increases in the record have occurred since the 1990s.",
+      "stem": "Which choice best describes data from the graph that support the student’s conclusion?",
+      "options": [
+        "In both 1995 and 2008, the new record exceeded the previous one by about 200 meters or more, a far larger jump than any record set before 1995.",
+        "The record main span roughly doubled between 1956 and 1974, rising from about 180 meters to about 400 meters over that period.",
+        "Every bridge that set a new record after 1990 had a main span longer than 500 meters, which is more than any bridge that set a record before 1990.",
+        "The record rose by more between 1983 and 1993 than it did over the longer period between 1995 and 2012."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": {
+        "kind": "bar graph",
+        "title": "Record Main Span of Cable-Stayed Bridges, by Year Record Was Set, 1956–2012",
+        "x_axis": "Year record was set",
+        "y_axis": "Main span (meters)",
+        "description": "One bar for each year in which a new record was set; y-axis from 0 to 1,200 meters with gridlines every 200. 1956 about 182, 1957 about 260, 1959 about 302, 1969 about 319, 1971 about 350, 1974 about 404, 1983 about 440, 1986 about 465, 1991 about 530, 1993 about 602, 1995 about 856, 1999 about 890, 2008 about 1,088, 2012 about 1,104. The bars rise in small steps until 1993, then jump sharply in 1995 and again in 2008.",
+        "data": [
+          {
+            "series": "Record main span",
+            "points": [
+              [
+                "1956",
+                182
+              ],
+              [
+                "1957",
+                260
+              ],
+              [
+                "1959",
+                302
+              ],
+              [
+                "1969",
+                319
+              ],
+              [
+                "1971",
+                350
+              ],
+              [
+                "1974",
+                404
+              ],
+              [
+                "1983",
+                440
+              ],
+              [
+                "1986",
+                465
+              ],
+              [
+                "1991",
+                530
+              ],
+              [
+                "1993",
+                602
+              ],
+              [
+                "1995",
+                856
+              ],
+              [
+                "1999",
+                890
+              ],
+              [
+                "2008",
+                1088
+              ],
+              [
+                "2012",
+                1104
+              ]
+            ]
+          }
+        ]
+      },
+      "explanation": "To show that the largest jumps came after 1990, the record’s increases must be compared. The graph shows that in 1995 the record rose from about 602 to about 856 meters and in 2008 from about 890 to about 1,088 meters, whereas no earlier new record exceeded the previous one by more than about 80 meters. Choice A describes this comparison.",
+      "distractors": {
+        "B": {
+          "recipe": "IRREL: accurate, but about early growth",
+          "why_wrong": "The record did roughly double from 1956 to 1974, but this concerns growth over the early decades, not the size of the jumps since the 1990s."
+        },
+        "C": {
+          "recipe": "IRREL: levels instead of changes",
+          "why_wrong": "Recent records being longer than earlier ones follows from the definition of a record; it says nothing about how large the jumps between records were."
+        },
+        "D": {
+          "recipe": "INACC: misreads the changes",
+          "why_wrong": "The record rose by about 162 meters from 1983 to 1993 (440 to 602) but by about 248 meters from 1995 to 2012 (856 to 1,104)."
+        }
+      },
+      "models": [
+        "2.2",
+        "2.12",
+        "2.22"
+      ],
+      "word_count": 68,
+      "sources": [
+        {
+          "what": "Wikipedia, List of longest cable-stayed bridge spans, Timeline of world record lengths: Strömsund 1956 182 m, Theodor Heuss 1957 260, Severin 1959 302, Kniebrücke 1969 319, Duisburg-Neuenkamp 1971 350, Saint-Nazaire 1974 404, Fernández Casado 1983 440, Alex Fraser 1986 465, Skarnsund 1991 530, Yangpu 1993 602, Pont de Normandie 1995 856, Tatara 1999 890, Sutong 2008 1,088, Russky 2012 1,104; Strömsund (1956) most often cited as the first modern cable-stayed bridge",
+          "url": "https://en.wikipedia.org/wiki/List_of_longest_cable-stayed_bridge_spans"
+        }
+      ],
+      "notes": "Medium Q2_P4: changes rather than levels; distractors are an accurate early-growth reading (B), levels offered for changes (C) and a misread of two increases (D). The graph stops at 2012; the 2025 record (Changtai, 1,176 m) is left out, so the student’s claim is checked only on 1956–2012.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 2,
+        "fixes": [
+          "all fourteen record spans and years match the Wikipedia timeline"
+        ],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "command_of_evidence.T1_compete.medium.w2b5_16",
+      "template": "T1_compete",
+      "subtype": "Finding discriminates two accounts of a behavior (learning about danger vs mourning)",
+      "tier": "medium",
+      "passage": "American crows often congregate noisily around a dead crow, a behavior that some observers have interpreted as a kind of funeral. To investigate these gatherings, Kaeli Swift and John Marzluff of the University of Washington first fed crows at several locations around Seattle and then had volunteers wearing distinctive latex masks stand near those locations, sometimes while holding a stuffed dead crow. The crows scolded the masked volunteers loudly and occasionally dove at them aggressively. Rather than mourning, Swift and Marzluff concluded, crows gather around their dead in order to learn about danger.",
+      "stem": "Which finding, if true, would most directly support Swift and Marzluff’s conclusion?",
+      "options": [
+        "Crows that lived in neighborhoods with many trees tended to gather in larger groups than did crows that lived in less wooded neighborhoods.",
+        "Crows that gathered near a dead crow often stayed at the site for some time after the masked volunteer had left.",
+        "Weeks later, crows scolded a masked volunteer who had once held a dead crow even when that volunteer came back empty-handed.",
+        "Crows reacted more strongly to a masked volunteer holding a dead crow than to a masked volunteer holding a dead pigeon."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "If crows gather around a dead crow to learn what is dangerous, they should afterward treat the person linked to the death as a threat. Choice C reports that crows later scolded the masked volunteer even without a dead crow, which shows they had learned to link that person with danger rather than simply grieving.",
+      "distractors": {
+        "A": {
+          "recipe": "OFF: group size by habitat",
+          "why_wrong": "Where crows live and how large their groups are does not bear on whether gatherings around the dead are about danger or grief."
+        },
+        "B": {
+          "recipe": "OPP: fits the mourning account",
+          "why_wrong": "Lingering near the dead crow after the threat has gone fits a mourning account at least as well as a danger account, so it does not support the conclusion."
+        },
+        "D": {
+          "recipe": "TRAP: consistent with both accounts",
+          "why_wrong": "Crows would be expected to respond more to one of their own kind whether they were grieving or assessing danger, so this difference does not separate the two accounts."
+        }
+      },
+      "models": [
+        "2.9",
+        "2.30",
+        "1.25"
+      ],
+      "word_count": 93,
+      "sources": [
+        {
+          "what": "Swift and Marzluff, Wild American crows gather around their dead to learn about danger, Animal Behaviour 109 (2015) 187–197: masked volunteers with a taxidermied crow at feeding sites near Seattle; crows scolded and mobbed; later, crows scolded the mask without a dead bird and were cautious about feeding there; the gatherings are about threat assessment",
+          "url": "https://doi.org/10.1016/j.anbehav.2015.08.021"
+        }
+      ],
+      "notes": "Medium compete: the passage names both accounts; the key is the observation only the danger account predicts (later scolding of the person and caution at the site, the study’s own result). D is also a real result but fits both accounts.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 2,
+        "fixes": [
+          "confirmed masks, stuffed dead crow, feeding sites, later scolding of the mask without the bird (coverage of Swift and Marzluff 2015)",
+          "explanation said choice C reports wariness of feeding at the site; C does not say that, so the clause was cut"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "command_of_evidence.Q1_P1_lookup.easy.w2b5_17",
+      "template": "Q1_P1_lookup",
+      "subtype": "Data completion: lookup of one cell",
+      "tier": "easy",
+      "passage": "Ancient Egyptian pharaohs commissioned obelisks, tall four-sided stone pillars with pyramid-shaped tops, and erected them at their temples. Centuries later, several of these monuments were transported to cities outside Egypt. One of them, originally erected by the pharaoh Thutmose III at the temple of Karnak, now stands in Istanbul, Turkey. According to the table, this obelisk’s height, not including its base, is ______",
+      "stem": "Which choice most effectively uses data from the table to complete the statement?",
+      "options": [
+        "21.00 meters.",
+        "18.54 meters.",
+        "32.18 meters.",
+        "22.83 meters."
+      ],
+      "answer_letter": "B",
+      "table": {
+        "title": "Four Ancient Egyptian Obelisks Now Standing outside Egypt",
+        "columns": [
+          "Obelisk",
+          "Present location",
+          "Pharaoh who raised it",
+          "Height without base (meters)"
+        ],
+        "rows": [
+          [
+            "Lateran Obelisk",
+            "Rome, Italy",
+            "Thutmose III and Thutmose IV",
+            "32.18"
+          ],
+          [
+            "Luxor Obelisk",
+            "Paris, France",
+            "Ramesses II",
+            "22.83"
+          ],
+          [
+            "Cleopatra’s Needle",
+            "London, United Kingdom",
+            "Thutmose III",
+            "21.00"
+          ],
+          [
+            "Obelisk of Theodosius",
+            "Istanbul, Turkey",
+            "Thutmose III",
+            "18.54"
+          ]
+        ],
+        "note": null
+      },
+      "figure": null,
+      "explanation": "The obelisk in Istanbul is the Obelisk of Theodosius, and the table gives its height without its base as 18.54 meters.",
+      "distractors": {
+        "A": {
+          "recipe": "WGRP: neighboring row with the same pharaoh",
+          "why_wrong": "21.00 meters is the height of Cleopatra’s Needle in London, another obelisk of Thutmose III."
+        },
+        "C": {
+          "recipe": "WGRP: neighboring row",
+          "why_wrong": "32.18 meters is the height of the Lateran Obelisk in Rome."
+        },
+        "D": {
+          "recipe": "WGRP: neighboring row",
+          "why_wrong": "22.83 meters is the height of the Luxor Obelisk in Paris."
+        }
+      },
+      "models": [
+        "1.30",
+        "1.37",
+        "1.44"
+      ],
+      "word_count": 63,
+      "sources": [
+        {
+          "what": "Wikipedia, Egyptian obelisks, table: Lateran Obelisk (Thutmose III/Thutmose IV, Karnak, now Rome) 32.18 m; Luxor obelisk in Paris (Ramesses II) 22.83 m; Cleopatra’s Needle in London (Thutmose III, Heliopolis) 21.00 m; Obelisk of Theodosius (Thutmose III, Karnak, now Istanbul) 18.54 m, heights without base",
+          "url": "https://en.wikipedia.org/wiki/Egyptian_obelisks"
+        }
+      ],
+      "notes": "Easy lookup with value-only options, as in the easy models; the London obelisk shares the pharaoh, so a student who matches on Thutmose III rather than the city is caught.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 2,
+        "fixes": [
+          "all four heights and pharaohs match Wikipedia, Egyptian obelisks"
+        ],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "command_of_evidence.T1_single.easy.w2b5_18",
+      "template": "T1_single",
+      "subtype": "Hypothetical finding supports a librarian’s belief (one step)",
+      "tier": "easy",
+      "passage": "In the early 1900s, Mary Lemist Titcomb was the head librarian of the Washington County Free Library in Hagerstown, Maryland. She began sending a horse-drawn wagon loaded with books to farms and homes throughout the surrounding countryside, an early version of what is now called a bookmobile. In Titcomb’s view, many rural residents found it difficult to travel to a library and had little motivation to make the effort. She believed that these residents would become regular readers if books were delivered directly to them.",
+      "stem": "Which finding, if true, would most directly support Titcomb’s belief?",
+      "options": [
+        "The wagon could carry several hundred books at a time on shelves built into its sides.",
+        "Residents of Hagerstown itself borrowed more books from the library’s main building in the years after the wagon began making its trips into the countryside.",
+        "The wagon’s driver also delivered mail and newspapers to some of the farms along its route.",
+        "Many families visited by the wagon became regular borrowers, although no one in those families had borrowed from the library before."
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "Titcomb believed that rural residents who did not come to the library would read if books came to them. Families who had never borrowed from the library but borrowed regularly from the wagon, as in choice D, would show exactly that.",
+      "distractors": {
+        "A": {
+          "recipe": "OFF: the wagon’s capacity",
+          "why_wrong": "How many books the wagon held says nothing about whether rural residents became readers."
+        },
+        "B": {
+          "recipe": "SUBJ: town residents instead of rural ones",
+          "why_wrong": "Titcomb’s belief concerned people in the countryside, not residents of Hagerstown who could already reach the library."
+        },
+        "C": {
+          "recipe": "OFF: other deliveries",
+          "why_wrong": "Delivering mail and newspapers does not show that the people along the route began reading library books."
+        }
+      },
+      "models": [
+        "1.5",
+        "1.8",
+        "1.1"
+      ],
+      "word_count": 85,
+      "sources": [
+        {
+          "what": "Maryland State Archives, Maryland Women’s Hall of Fame: Mary Lemist Titcomb; the Washington County Free Library became the first library to carry books directly to remote homes by book wagon; Titcomb held that isolated residents found it hard to reach a library and many would not make the effort, so the library should go to them",
+          "url": "https://msa.maryland.gov/msa/educ/exhibits/womenshall/html/titcomb.html"
+        }
+      ],
+      "notes": "Easy one-step operationalization. The wagon’s first year is given as 1904 by the Maryland State Archives and 1905 by most other accounts, so the passage says only ‘the early 1900s.’ Titcomb’s title (head of the library) is given generally.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 2,
+        "fixes": [
+          "confirmed Titcomb, Washington County Free Library, book wagon (1904 per the Maryland State Archives), her reasoning about rural readers"
+        ],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "command_of_evidence.Q1_P2_extreme.easy.w2b5_19",
+      "template": "Q1_P2_extreme",
+      "subtype": "Data completion: the row that is the minimum on two columns",
+      "tier": "easy",
+      "passage": "The heaviest bells known were cast for temples, monasteries, and public monuments in countries including Russia, Myanmar, China, and Japan, and a few weigh more than 100 metric tons. The Tsar Bell in Moscow, though broken, is the heaviest bell still in existence. Among the five bells in the table, the earliest to be cast is also the lightest: ______",
+      "stem": "Which choice most effectively uses data from the table to complete the statement?",
+      "options": [
+        "the Tōdai-ji Temple Bell.",
+        "the Chion-in Temple Bell.",
+        "the Mingun Bell.",
+        "the Bell of Good Luck."
+      ],
+      "answer_letter": "A",
+      "table": {
+        "title": "Five of the World’s Heaviest Bells",
+        "columns": [
+          "Bell",
+          "Location",
+          "Year cast",
+          "Weight (metric tons)"
+        ],
+        "rows": [
+          [
+            "Tsar Bell",
+            "Moscow, Russia",
+            "1735",
+            "202"
+          ],
+          [
+            "Mingun Bell",
+            "Mingun, Myanmar",
+            "1808",
+            "91"
+          ],
+          [
+            "Chion-in Temple Bell",
+            "Kyoto, Japan",
+            "1633",
+            "67"
+          ],
+          [
+            "Bell of Good Luck",
+            "Pingdingshan, China",
+            "2000",
+            "116"
+          ],
+          [
+            "Tōdai-ji Temple Bell",
+            "Nara, Japan",
+            "732",
+            "44"
+          ]
+        ],
+        "note": null
+      },
+      "figure": null,
+      "explanation": "The Tōdai-ji Temple Bell was cast in 732, earlier than any other bell in the table, and at about 44 metric tons it is also the lightest.",
+      "distractors": {
+        "B": {
+          "recipe": "WGRP: next-oldest and next-lightest",
+          "why_wrong": "The Chion-in Temple Bell, cast in 1633 and weighing about 67 metric tons, is neither the earliest nor the lightest."
+        },
+        "C": {
+          "recipe": "WGRP: wrong row",
+          "why_wrong": "The Mingun Bell was cast in 1808 and weighs about 91 metric tons."
+        },
+        "D": {
+          "recipe": "WDIR: the most recent, not the earliest",
+          "why_wrong": "The Bell of Good Luck was cast in 2000, the latest of the five, and weighs about 116 metric tons."
+        }
+      },
+      "models": [
+        "1.23",
+        "1.9",
+        "1.21"
+      ],
+      "word_count": 59,
+      "sources": [
+        {
+          "what": "Wikipedia, List of heaviest bells: Tsar Bell, Moscow, 1735, 201,924 kg, broken; Bell of Good Luck, Pingdingshan, China, 2000, 116,000 kg; Mingun Bell, Myanmar, 1808, 199,998 lb; Chion-in Temple Bell, Kyoto, 1633, 148,000 lb; Tōdai-ji Temple Bell, Nara, 732, 96,000 lb",
+          "url": "https://en.wikipedia.org/wiki/List_of_heaviest_bells"
+        }
+      ],
+      "notes": "Easy extreme on two columns (as in 1.23); weights converted to metric tons and rounded (202, 116, 91, 67, 44).",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [
+          "weights and years match Wikipedia’s existing-bells table (lb converted)",
+          "the Tsar Bell is the heaviest bell in existence, not the heaviest ever cast (the Great Bell of Dhammazedi, about 300 t, was heavier): passage changed to ‘the heaviest bell still in existence’"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "command_of_evidence.T3_person_quote.easy.w2b5_20",
+      "template": "T3_person_quote",
+      "subtype": "Quotation from a survey respondent illustrates the researchers’ claim",
+      "tier": "easy",
+      "passage": "On farms in Namibia, predators such as cheetahs sometimes kill goats and sheep. Beginning in 1994, the Cheetah Conservation Fund placed livestock guarding dogs, large dogs raised among herds so that they stay with and protect the animals, with Namibian farmers. After surveying farmers who had received the dogs, a research team led by Laurie Marker, the organization’s founder, concluded that most of these farmers credited the dogs with greatly reducing the number of animals they lost to predators.",
+      "stem": "Which quotation from a surveyed farmer would best illustrate the researchers’ conclusion?",
+      "options": [
+        "“The dog has become a good companion for my children, and it follows them whenever they walk down to the river.”",
+        "“Before we had the dog, cheetahs and jackals took several goats every year. Since it joined the herd, we have hardly lost any.”",
+        "“Feeding a dog this large is expensive, and at first I was not sure that it would be worth what it costs.”",
+        "“The dog barks loudly whenever a stranger comes near the house at night, so we always know when someone is approaching the farm.”"
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The researchers concluded that most surveyed farmers credited the dogs with greatly reducing the number of animals they lost to predators. The farmer in choice B reports losing several goats a year to predators before getting the dog and hardly any since, which illustrates that conclusion.",
+      "distractors": {
+        "A": {
+          "recipe": "OFF: companionship",
+          "why_wrong": "The dog’s friendship with the children has nothing to do with livestock lost to predators."
+        },
+        "C": {
+          "recipe": "OFF: cost",
+          "why_wrong": "The cost of feeding the dog says nothing about whether it reduced losses to predators."
+        },
+        "D": {
+          "recipe": "OFF: guarding the house, not the herd",
+          "why_wrong": "Barking at strangers near the house concerns people, not predators attacking livestock."
+        }
+      },
+      "models": [
+        "1.13",
+        "1.26",
+        "1.32"
+      ],
+      "word_count": 75,
+      "sources": [
+        {
+          "what": "Cheetah Conservation Fund resource library: Marker, Dickman and Macdonald (2005), Perceived effectiveness of livestock-guarding dogs placed on Namibian farms: 117 dogs placed 1994–2001; 73 percent of responding farmers reported a large decline in livestock losses after acquiring a dog",
+          "url": "https://cheetah.org/resource-library/perceived-effectiveness-of-livestock-guarding-dogs-placed-on-namibian-farms/"
+        }
+      ],
+      "notes": "Easy T3: the quotations are invented and attributed only to an unnamed surveyed farmer, as in the official items; the researchers’ claim is the paper’s headline finding. The source lists the authors by initials (L. L. Marker et al.), so only Laurie Marker, the CCF’s founder, is named.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 2,
+        "fixes": [
+          "confirmed Marker, Dickman and Macdonald 2005 (Marker first author, CCF founder), dogs placed from 1994, 73 percent of farmers reporting a large decline in losses",
+          "the study measured farmers’ perceptions, so the claim no longer states that the dogs reduced losses: researchers concluded that most farmers credited the dogs with greatly reducing losses; stem says ‘conclusion’ to match"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "command_of_evidence.T2_lit_quote.easy.w2b5_21",
+      "template": "T2_lit_quote",
+      "subtype": "Literary quotation: single trait (eager to leave home for good)",
+      "tier": "easy",
+      "passage": "Rootabaga Stories is a 1922 collection of children’s stories by Carl Sandburg. In the first story, a character named Gimme the Ax is determined to abandon his home permanently and travel as far away as possible: ______",
+      "stem": "Which quotation from Rootabaga Stories most effectively illustrates the claim?",
+      "options": [
+        "“The chimney sits on top of the house and lets the smoke out.... The doorknobs open the doors. The windows are always either open or shut.”",
+        "“Not even the Kings of Egypt with all their climbing camels, and all their speedy, spotted, lucky lizards, ever had a ride like this.”",
+        "“We wish a ticket to ride where the railroad tracks run off into the sky and never come back—send us far as the railroad rails go and then forty ways farther yet.”",
+        "“The first words they speak as soon as they learn to make words shall be their names.”"
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The claim is that Gimme the Ax wants to leave for good and go as far as he can. In choice C he asks for a ticket to ride where the tracks “run off into the sky” and to “never come back.”",
+      "distractors": {
+        "A": {
+          "recipe": "LURE: describes the home he leaves",
+          "why_wrong": "Gimme the Ax describes his unchanging house, but he says nothing about leaving it or traveling far away."
+        },
+        "B": {
+          "recipe": "OFF: delight in the ride",
+          "why_wrong": "He boasts about how grand the train ride is, which shows enjoyment of the trip rather than a wish to leave for good."
+        },
+        "D": {
+          "recipe": "OFF: naming his children",
+          "why_wrong": "This is his plan for how his children will be named, which has nothing to do with leaving home."
+        }
+      },
+      "models": [
+        "1.11",
+        "1.16",
+        "1.36"
+      ],
+      "word_count": 37,
+      "sources": [
+        {
+          "what": "Carl Sandburg, Rootabaga Stories (1922), Project Gutenberg eBook #27085, first story (“How They Broke Away to Go to the Rootabaga Country”); quotations copied exactly, with the comma before the speech tag ended as a period and, in A, the tag “said Gimme the Ax” replaced by an ellipsis",
+          "url": "https://www.gutenberg.org/ebooks/27085"
+        }
+      ],
+      "notes": "Easy single trait in plain language. The key quotes the full sentence (the source’s double hyphen printed as a closed em dash). The line ‘It is too much to be too long anywhere’ was left out because it would also fit. Chicago Poems is not on Project Gutenberg, so the claim line’s placeholder became Rootabaga Stories.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 5,
+        "fixes": [
+          "all four quotations match Project Gutenberg #27085 (first story), with a CB-style ellipsis for the speech tag in A"
+        ],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "command_of_evidence.Q2_P5_control.easy.w2b5_22",
+      "template": "Q2_P5_control",
+      "subtype": "Data description: group comparison (Andes vs Alps railways)",
+      "tier": "easy",
+      "passage": "Constructing a railway at high elevation requires engineers to overcome steep gradients and severe weather. Several of the world’s highest railways climb into the Andes of South America, while others ascend into the Alps of Europe. The Jungfrau Railway in Switzerland, the highest railway in Europe, travels underground for much of its upper route. A student researching mountain railways compares the highest points reached by railways in these two ranges. The student concludes that the railways in the Andes climb to considerably greater elevations than those in the Alps.",
+      "stem": "Which choice best describes data from the table that support the student’s conclusion?",
+      "options": [
+        "Both Andean railways in the table reach elevations above 4,000 meters, while neither Alpine railway in the table reaches 3,500 meters.",
+        "The Lima–Huancayo railway opened in 1893, almost two decades before the Jungfrau Railway opened in 1912.",
+        "The Jungfrau Railway reaches a higher elevation than the Gornergrat Railway does, although the Jungfrau Railway opened 14 years later.",
+        "The Salta–Antofagasta railway reaches a higher elevation than the Lima–Huancayo railway does."
+      ],
+      "answer_letter": "A",
+      "table": {
+        "title": "Highest Points Reached by Four Mountain Railways",
+        "columns": [
+          "Railway",
+          "Mountain range",
+          "Highest point",
+          "Elevation (meters)",
+          "Year opened"
+        ],
+        "rows": [
+          [
+            "Lima–Huancayo",
+            "Andes",
+            "Galera Summit Tunnel",
+            "4,783",
+            "1893"
+          ],
+          [
+            "Salta–Antofagasta",
+            "Andes",
+            "Abra Chorrillos",
+            "4,475",
+            "1948"
+          ],
+          [
+            "Jungfrau Railway",
+            "Alps",
+            "Jungfraujoch",
+            "3,454",
+            "1912"
+          ],
+          [
+            "Gornergrat Railway",
+            "Alps",
+            "Gornergrat",
+            "3,090",
+            "1898"
+          ]
+        ],
+        "note": null
+      },
+      "figure": null,
+      "explanation": "The conclusion compares the two mountain ranges, so the data must show the Andean railways climbing higher than the Alpine ones. According to the table, both Andean railways reach more than 4,000 meters (4,783 and 4,475), while neither Alpine railway reaches 3,500 meters (3,454 and 3,090), as choice A states.",
+      "distractors": {
+        "B": {
+          "recipe": "IRREL: accurate, wrong measure (opening year)",
+          "why_wrong": "The dates are right, but when the railways opened says nothing about how high they climb."
+        },
+        "C": {
+          "recipe": "IRREL: comparison within one range",
+          "why_wrong": "This compares two Alpine railways with each other, so it does not show anything about the Andes compared with the Alps."
+        },
+        "D": {
+          "recipe": "INACC: reversed comparison",
+          "why_wrong": "The Salta–Antofagasta railway reaches 4,475 meters, lower than the Lima–Huancayo railway’s 4,783 meters."
+        }
+      },
+      "models": [
+        "1.22",
+        "1.28"
+      ],
+      "word_count": 89,
+      "sources": [
+        {
+          "what": "Wikipedia, List of highest railways: Lima–Huancayo (Peru), Galera Summit Tunnel, 4,783 m, opened 1893; Salta–Antofagasta (Argentina/Chile), Abra Chorrillos, 4,475 m (closed-railways table; the tourist train stops at La Polvorilla, 4,220 m), 1948; Jungfrau Railway (Switzerland), Jungfraujoch, 3,454 m, 1912; Gornergrat Railway (Switzerland), 3,090 m, 1898",
+          "url": "https://en.wikipedia.org/wiki/List_of_highest_railways"
+        }
+      ],
+      "notes": "Easy group comparison with a type column (mountain range), as in 1.22; distractors: accurate but wrong measure (B), within-group comparison (C), reversed reading (D).",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [
+          "elevations and years match Wikipedia, List of highest railways",
+          "Salta–Antofagasta’s highest point is Abra Chorrillos, 4,475 m (La Polvorilla, 4,220 m, is where the tourist train stops); row, explanation and D’s why_wrong updated, key unchanged"
+        ],
+        "status": "fixed"
+      }
+    }
+  ]
+}

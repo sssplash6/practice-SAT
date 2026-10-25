@@ -1,0 +1,366 @@
+{
+  "skill": "Central Ideas and Details",
+  "slug": "central_ideas_and_details",
+  "part": "b7",
+  "domain": "Information and Ideas",
+  "plan": {
+    "templates": [
+      {
+        "code": "T6",
+        "name": "Supported detail (informational, literary irony, would most likely agree)"
+      },
+      {
+        "code": "T2",
+        "name": "Main idea, view then correction"
+      },
+      {
+        "code": "T1",
+        "name": "Main idea, study report or scholar argument"
+      },
+      {
+        "code": "T4_poem",
+        "name": "Main idea, poem or verse drama"
+      }
+    ]
+  },
+  "source": "spec/rw/band7/pilot (written to spec/rw/band7/WRITE.md, reviewed to spec/rw/VERIFY.md, gated per PROXY.md, blind safety solve)",
+  "items": [
+    {
+      "id": "central_ideas_and_details.T1.b7",
+      "template": "T1",
+      "subtype": "Main idea (study report: research question answered)",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "In the United States, low-income households buy groceries that are markedly less healthful, on average, than those bought by high-income households, a disparity frequently attributed to “food deserts,” neighborhoods that lack a nearby supermarket. To determine how much of the disparity such limited access actually explains, economist Hunt Allcott and colleagues examined the purchases of households whose neighborhoods gained a new supermarket and of households that relocated to areas where residents ate more healthfully. Neither change substantially altered what households bought, and the team estimated that offering low-income households the same products and prices available to high-income households would reduce the nutritional disparity by only about 10%.",
+      "stem": "Which choice best states the main idea of the text?",
+      "options": [
+        "Research by Allcott and colleagues suggests that limited access to supermarkets explains little of the nutritional disparity between income groups, which instead stems mainly from low-income households’ more limited knowledge of nutrition.",
+        "A study suggests that the nutritional disparity between income groups owes far less to the stores, products, and prices available to low-income households than the widely held food-desert explanation assumes.",
+        "A study suggests that moving low-income households to neighborhoods where residents eat more healthfully would reduce the nutritional disparity between income groups by only about 10%, so limited access explains little of that disparity.",
+        "A study finds that low-income households buy less healthful groceries than high-income households mainly because their neighborhoods lack supermarkets, but that a supermarket opening nearby does little to change what households buy."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "Sentence 1 gives the common explanation of the disparity (food deserts), and sentence 2 turns it into a question: how much of the disparity limited access “actually explains.” Sentence 3 answers it in two steps: neither a new supermarket nor a move to a healthier area substantially changed purchases, and giving low-income households the same products and prices as high-income households would cut the disparity by only about 10%. Stores, products and prices are what access covers, so the disparity owes far less to them than the food-desert explanation assumes, which is choice B. The text never says what accounts for the rest of the disparity.",
+      "distractors": {
+        "A": {
+          "recipe": "key content plus an unsupported tail (TWI), hedged",
+          "why_wrong": "The first clause matches the study’s result, but the text never says what accounts for the rest of the disparity; nutrition knowledge is not mentioned anywhere, so the tail is unsupported."
+        },
+        "C": {
+          "recipe": "the right figure attached to the wrong finding (MIX), hedged",
+          "why_wrong": "The 10% figure belongs to a different finding: the text gives it for offering low-income households the same products and prices as high-income households, not for relocation. For relocation it says only that households that moved (the study observed them; it moved no one) did not substantially change what they bought, and it gives no figure."
+        },
+        "D": {
+          "recipe": "the received view credited to the study (ATT) beside a true finding",
+          "why_wrong": "The second clause is supported, but the first credits the study with the food-desert explanation that sentence 1 presents as a common attribution and sentence 2 makes the thing the study tested; the study’s estimates show that access explains little of the disparity, so it did not find that a lack of supermarkets causes it."
+        }
+      },
+      "models": [
+        "024eb2ec",
+        "e80ba20d",
+        "7aa510fb"
+      ],
+      "band7_moves": [
+        "T1: the second sentence states a research question (“how much of the disparity such limited access actually explains”) and the key answers that question one level up (“owes far less to the stores, products, and prices ... than the widely held food-desert explanation assumes”) instead of restating a finding or echoing “only about 10%”",
+        "key needs three statements: the common explanation (sentence 1), the two null natural experiments and the 10% estimate (sentence 3), with “same products and prices” mapped to “access”",
+        "long two-part options (30 to 34 words); every distractor is partly right: TWI (the key’s own claim plus an unsupported cause for the remainder, hedged), MIX (the key’s conclusion reached through the 10% figure attached to the wrong finding, hedged), ATT (the common food-desert explanation credited to the study beside a true finding)",
+        "sentences of 30+ words"
+      ],
+      "sources": [
+        {
+          "what": "Allcott, Diamond and Dubé (NBER w24094; QJE 2019 with Handbury, Rahkovsky and Schnell): supermarket entry had economically small effects on healthy eating; households that moved to healthier areas did not change their eating; giving low-income households the same products and prices would reduce nutritional inequality by only 9%, the other 91% driven by demand",
+          "url": "https://www.nber.org/digest/feb18/eliminating-food-deserts-wont-cure-nutritional-inequality"
+        },
+        {
+          "what": "Paper page: The Geography of Poverty and Nutrition: Food Deserts and Food Choices Across the United States",
+          "url": "https://www.gsb.stanford.edu/faculty-research/working-papers/geography-poverty-nutrition-food-deserts-food-choices-across-united"
+        },
+        {
+          "what": "QJE 2019 abstract (134(4): 1793-1844): exposing low-income households to the same products and prices available to high-income households reduces nutritional inequality by only about 10%; neighborhood environments do not contribute meaningfully",
+          "url": "https://ideas.repec.org/a/oup/qjecon/v134y2019i4p1793-1844..html"
+        }
+      ],
+      "notes": "Section 6 checks. (1) main-idea option mean 31.5 words (gate 28). (2) 2 distractors hedged (A suggests, C suggests). (3) contrast or negation in all 4 options. (4) 35.7 words per sentence (gate 30). (6) steps 3: the question in sentence 2, two null natural experiments and the 10% estimate in sentence 3, with same products and prices read as access. (7) partly right 3 of 3 (A second half, C last clause, D first clause). (8) stance: only, in only about 10%, decides A and D. (9) recipes ATT, CMP, CON-half: no UNS/NAR/OVR/BRD. Blind solve: B only; A fails on confirms, C on the comparison, D on largely disappear. 107 words vs model median 98. Originality: no official or bank item on food deserts, Allcott or supermarket entry (grep). The study is the published QJE 2019 version of NBER w24094; the passage says about 10%, the published QJE figure (the 2017 NBER working paper said 9%). Hardening pass (2026-10-16; the figures above describe the pre-hardening draft): option mean 32.0 words; hedged distractors A and C (suggests); contrast words in A and D; recipes TWI, MIX, ATT; partly right 3 of 3; each wrong option dies on a different part of the text (A on its silence about the remainder, C on which finding the 10% belongs to, D on sentence 2’s question). Haiku blind solve p(key) 0.92 before, 0.85 and 0.70 after two rounds (C 15%, A 10% in the last).",
+      "word_count": 107,
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 6,
+        "fixes": [
+          "changed “about 9%” to “about 10%”: the item cites the QJE 2019 paper, whose abstract says about 10% (9% was the 2017 NBER working-paper figure); synced explanation, why_wrong A and D, band7_moves and notes; added the QJE abstract as a source",
+          "hardening pass (2026-10-16), after a Haiku blind solve read the item as band 6 (no wrong option drew more than about 6%): replaced A (ATT, “confirms” the view the study tested), C (invented comparison) and D (“largely disappear”) with a TWI tail on the key’s own claim, a MIX that attaches the 10% estimate to the relocation finding and an ATT that credits the food-desert explanation to the study; reworded the key to answer the research question one level up; explanation, distractors and band7_moves synced"
+        ],
+        "status": "fixed",
+        "band7": {
+          "verdict": "band 7",
+          "why": "Carries its moves: sentence 2 states the research question and B answers it at the text’s exact degree (“only a small part”), which needs “same products and prices” read as access and two null natural experiments joined to the estimate. All three distractors are partly right (A second half, C last clause, D first clause) and the mix is ATT, CMP, CON-half, the band-7 recipe. Same shape and demand as 024eb2ec. Weakest point: the one figure “only about 10%” kills both A and D, so it sits at the easy edge of band 7. Fresh Haiku blind solve after review: right, p(key) 0.94."
+        }
+      },
+      "hardened": {
+        "what": "Replaced the three distractors that the one figure “only about 10%” killed at a glance. A states the key’s own point and adds an unsupported cause for the rest of the gap; C reaches the key’s conclusion but attaches the 10% estimate to the relocation finding; D credits the study with the food-desert explanation beside a true finding. The key answers the research question one level up instead of echoing the figure, so each option dies on a different part of the text.",
+        "tempting": [
+          "A: its first half is the key’s point, and nutrition knowledge looks like the natural remainder; dies because the text never says what explains the rest of the disparity",
+          "C: every clause echoes the text and its conclusion is the key’s; dies because the 10% belongs to the products-and-prices estimate, not to relocation",
+          "D: its second half is true and its first half echoes sentence 1, giving a plausible paradox (food deserts cause the gap, supermarkets do not fix it); dies on sentence 2, which makes that explanation the thing the study tested, and on the 10% answer"
+        ]
+      },
+      "band": 6,
+      "band_basis": "pilot gate: reads band 6 against official anchors after hardening; served as hard"
+    },
+    {
+      "id": "central_ideas_and_details.T2.b7",
+      "template": "T2",
+      "subtype": "Main idea (view then correction)",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "Film theorists have long cited the Kuleshov effect, in which viewers read hunger, grief, or desire into the same expressionless face depending on whether it is intercut with a bowl of soup, a child in a coffin, or a woman on a divan. Whatever Lev Kuleshov actually screened is beyond recovery: no footage survives, and the best-known description of the experiment was written years later by his collaborator Vsevolod Pudovkin. A 1992 re-creation by Stephen Prince and Wayne Hensley detected no effect, but it showed each viewer the sequence only once. When Daniel Barratt and colleagues had 36 participants rate 24 such sequences in 2016, judgments of the neutral face shifted with the emotional context.",
+      "stem": "Which choice best states the main idea of the text?",
+      "options": [
+        "Although no footage of Kuleshov’s experiment survives, Barratt and colleagues’ 2016 study has now confirmed that Kuleshov’s original audiences read emotions into the same expressionless face just as Pudovkin later described.",
+        "Although the Kuleshov effect is still widely cited, the loss of the original footage and the failure of a later re-creation suggest that it may owe more to Pudovkin’s retelling than to how viewers actually respond.",
+        "Although what Kuleshov’s original experiment showed can no longer be determined, the phenomenon it is credited with demonstrating has found support in a study whose design addressed a limitation of an earlier attempt to reproduce it.",
+        "Although Prince and Hensley’s 1992 re-creation detected no effect, Barratt and colleagues’ 2016 study shows that the effect appears only when viewers rate many sequences rather than seeing a single one."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The text separates two things. Kuleshov’s experiment cannot be checked: “Whatever Lev Kuleshov actually screened is beyond recovery,” and the best-known account was written years later by Pudovkin. The effect named after it can be tested: the 1992 re-creation found nothing, but the “but” clause marks its single viewing as a limitation, and Barratt and colleagues, whose participants rated 24 sequences, found that judgments of the neutral face shifted with context. So the original remains unknowable while the effect has gained support from a design that addressed the earlier study’s limitation, as choice C says.",
+      "distractors": {
+        "A": {
+          "recipe": "the key’s support credited to the wrong object (ATT)",
+          "why_wrong": "The 2016 study supports the effect, but it used new sequences and new viewers; since whatever Kuleshov screened is “beyond recovery,” no later study can confirm how his original audiences responded."
+        },
+        "B": {
+          "recipe": "keeps the earlier doubt and stops before the last sentence (CON), hedged",
+          "why_wrong": "The lost footage and the failed re-creation are in the text, but the text qualifies the 1992 result (each viewer saw the sequence only once) and ends with a study in which viewers’ judgments did shift with context, so the effect does reflect how viewers respond."
+        },
+        "D": {
+          "recipe": "key content with an overreaching link (TWI)",
+          "why_wrong": "The 2016 study supports the effect, but it never compared single and repeated viewings, so it cannot show that the effect appears only with many sequences; the text says only that the 1992 study’s single viewing was a limitation. The option also drops the text’s point that Kuleshov’s own experiment cannot be checked."
+        }
+      },
+      "models": [
+        "881ba6f1",
+        "f7bd14de",
+        "251e5281",
+        "70aacc03"
+      ],
+      "band7_moves": [
+        "T2: the correction is carried by a stance clause (“Whatever Lev Kuleshov actually screened is beyond recovery”) that splits the unverifiable experiment from the testable effect; the key depends on keeping the two apart",
+        "the earlier doubt (a failed re-creation) is conceded and then qualified inside one sentence (“but it showed each viewer the sequence only once”)",
+        "all four options share the “Although X, Y” frame (30 to 36 words) and differ only in what is conceded and what is revised; the key says “a limitation of an earlier attempt” rather than naming the single viewing, so the but-clause must be read as a flaw",
+        "distractors: one keeps the earlier doubt and stops before the last sentence (CON, hedged), one credits the 2016 support to Kuleshov’s lost original (ATT), one turns the text’s hint about the single viewing into a finding the 2016 study never made (TWI)",
+        "main-idea sentences of 30+ words"
+      ],
+      "sources": [
+        {
+          "what": "Kuleshov effect: shots of soup, a girl in a coffin and a woman on a divan; no film or photo documentation survives; Pudovkin described the audience reaction in 1929; Prince and Hensley (1992) did not find the effect with a single-trial between-subject design; Barratt et al. (2016) 36 participants, 24 sequences, neutral faces rated in line with context",
+          "url": "https://en.wikipedia.org/wiki/Kuleshov_effect"
+        },
+        {
+          "what": "Barratt, Rédei, Innes-Ker and van de Weijer 2016, Perception 45(8): 847-874: original footage lost, earlier replications conflicting or unreliable; 36 participants viewed 24 sequences; “some sort of Kuleshov effect does in fact exist”",
+          "url": "https://www.lunduniversity.lu.se/lup/publication/ca3d37a0-82b5-487e-a523-188ff1564d0a"
+        },
+        {
+          "what": "Prince and Hensley 1992, Cinema Journal 31(2): 59-75, re-creation of the classic experiment",
+          "url": "https://en.wikipedia.org/wiki/Kuleshov_effect"
+        }
+      ],
+      "notes": "Section 6 checks. (1) option mean 31.8 words. (2) 1 distractor hedged (A suggests, likely). (3) all 4 options in the Although frame. (4) 28.8 words per sentence: the last long sentence was split to keep the file’s hard-tier sentence length within check_rw's 15% band (32.9 before the split, above the 31.9 limit); main-idea band-7 median is 33, so this is the one soft signal the item gives up. (6) steps 3: separate the experiment (beyond recovery) from the effect, read the but-clause as a flaw in the 1992 design, read the 2016 result as support. (7) partly right 3 of 3. (8) stance: Whatever Lev Kuleshov actually screened is beyond recovery, plus but it showed each viewer the sequence only once. (9) recipes TWI, ATT, CON. Blind solve: C only; designed to detect effects a single viewing might miss paraphrases the contrast between one viewing and 24 rated sequences. 115 words vs model median 85.5. Originality: Kuleshov, Pudovkin, Barratt appear in no official or bank item. Hardening pass (2026-10-16; the figures above describe the pre-hardening draft): option mean 33.5 words; hedged distractor B (suggest, may); all four in the Although frame; recipes ATT, CON, TWI; partly right 3 of 3; key is still the file’s one key-longest option. Haiku p(key) 0.85 before, 0.88 and 0.84 after (D 9%).",
+      "word_count": 115,
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 7,
+        "fixes": [
+          "hardening pass (2026-10-16), after a Haiku blind solve read the item as band 6 (no wrong option drew more than about 6%): replaced A (Pudovkin exaggerated), B (sequence differed) and D (treated as a legend) with an ATT that credits the 2016 support to Kuleshov’s lost original, a hedged CON that stops before the last sentence and a TWI that turns the hint about the single viewing into a 2016 finding; key now says “addressed a limitation of an earlier attempt”; explanation, distractors and band7_moves synced"
+        ],
+        "status": "fixed",
+        "band7": {
+          "verdict": "band 7",
+          "why": "The stance clause “Whatever Lev Kuleshov actually screened is beyond recovery” splits the unrecoverable experiment from the testable effect, and the 1992 null result is conceded and qualified inside one sentence (“but it showed each viewer the sequence only once”). C states this a level up: “designed to detect effects that a single viewing might miss” must be inferred from once versus 24 rated sequences (Barratt et al. call it an improved design). All four options share the Although frame; B (ATT) and D (keeps the earlier doubt) start from true details, A adds an unsupported tail. As hard as f7bd14de and 70aacc03, and only C survives a close reading. Fresh Haiku blind solve after review: right, p(key) 0.92."
+        }
+      },
+      "hardened": {
+        "what": "Replaced A, B and D, which each failed on a detail a quick reader catches, with options that are right up to one move: A credits the 2016 support to Kuleshov’s own lost experiment, B stops at the lost footage and the failed re-creation, D turns the text’s hint about the single viewing into a finding the 2016 study never made. The key now says “a limitation of an earlier attempt” instead of echoing “a single viewing.”",
+        "tempting": [
+          "A: agrees with the key that the effect has support, and Pudovkin’s account seems vindicated; dies on “Whatever Lev Kuleshov actually screened is beyond recovery”",
+          "B: built from sentences 2 and 3 and hedged like the text; a reader who weighs the lost footage and the null result but not the last sentence takes it",
+          "D: every piece is in the text (the 1992 null result, the many rated sequences, the single viewing) and it reads like the key made concrete; dies on “only”, since no study compared one viewing with many"
+        ]
+      },
+      "band": 6,
+      "band_basis": "pilot gate: reads band 6 against official anchors after hardening; served as hard"
+    },
+    {
+      "id": "central_ideas_and_details.T6.b7",
+      "template": "T6",
+      "subtype": "Supported detail (would most likely agree)",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "Because satellites record nighttime lights across the entire planet, some economists have proposed using luminosity as a stand-in for gross domestic product (GDP), particularly where official statistics are unreliable. Xi Chen and William Nordhaus evaluated this proposal by comparing luminosity with economic output from 1992 to 2008 in 170 countries whose statistical systems had been graded from A (most reliable) to E (least reliable). For countries graded A or B, luminosity added almost nothing to existing estimates, whereas for countries graded D or E it added substantial information. The researchers had expected luminosity to be especially valuable in sparsely populated areas, but there the faint lights of economic activity often failed to register at all.",
+      "stem": "Based on the text, Chen and Nordhaus would most likely agree with which statement about luminosity data?",
+      "options": [
+        "They can be especially informative in countries graded D or E, since satellites detect the lights of economic activity wherever that activity takes place.",
+        "They proved less useful in sparsely populated areas than the researchers had expected, largely because official statistics for such areas were already reliable.",
+        "They can usefully supplement official figures in countries graded D or E, though they proved less valuable there than the researchers had expected.",
+        "They add the most where official statistics are least reliable, though they can miss economic activity that is too sparse to give off detectable light."
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "Two findings have to be held together. Luminosity added substantial information for countries graded D or E, which the parenthetical scale marks as the least reliable statistical systems, and almost nothing for A or B, so lights are most valuable where official figures are weakest. The last sentence adds a limit: in sparsely populated areas the faint lights of economic activity “often failed to register at all,” so lights can miss activity that is too thin to detect. Choice D states both.",
+      "distractors": {
+        "A": {
+          "recipe": "true first half, then the proposal’s premise that the last sentence overturns (CON-half), hedged",
+          "why_wrong": "Luminosity was valuable for D and E countries, but the last sentence says the faint lights of activity in sparsely populated areas often failed to register at all, so satellites do not detect activity wherever it takes place."
+        },
+        "B": {
+          "recipe": "true first half, wrong cause (TWI)",
+          "why_wrong": "Luminosity did disappoint in sparsely populated areas, but the text gives the reason: the faint lights of economic activity there often failed to register. It says nothing about official statistics for such areas being reliable."
+        },
+        "C": {
+          "recipe": "the disappointed expectation moved to the wrong case (MIX), hedged",
+          "why_wrong": "Luminosity did supplement weak official figures, but the text places the researchers’ disappointed expectation in sparsely populated areas; for countries graded D or E it reports only that luminosity added substantial information."
+        }
+      },
+      "models": [
+        "8f3a200e",
+        "db2da2bf",
+        "4d3e3c52"
+      ],
+      "band7_moves": [
+        "T6 would-most-likely-agree: a proposal plus a finding that splits it by case (weak vs strong statistical systems) and then a second, unexpected limit (sparse areas); the key holds in one case and not the other",
+        "the grading scale is defined in parentheses (A most reliable, E least) and must be mapped back to “unreliable” statistics in sentence 1",
+        "distractors: a permutation set on the two findings: the D-and-E result resting on the proposal’s premise that satellites see all activity (CON-half, hedged), the sparse-area disappointment given the wrong cause (TWI), the D-and-E result paired with the disappointment that belongs to sparse areas (MIX, hedged)",
+        "key hedged at the text’s degree (“can miss”) and not the only hedged option; it states both findings one level up"
+      ],
+      "sources": [
+        {
+          "what": "Chen and Nordhaus 2011, PNAS 108(21): 8589-8594: luminosity as a proxy for GDP, countries and 1x1 degree grid cells, 1992-2008; 170 countries graded A to E; little value for high-quality systems; considerable value for D (time series) and E (cross section); expected value in low-density areas generally not confirmed, 36% of low-density cells with positive output had zero lights; grades A to D are the Penn World Table’s, the authors added E for countries with essentially no statistical system; very limited value added for A, B and C countries",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3102367"
+        },
+        {
+          "what": "NSF summary: luminosity likely to add value for countries graded D and E, very limited value for A and B",
+          "url": "https://www.nsf.gov/news/nighttime-lights-clarify-economic-activity"
+        }
+      ],
+      "notes": "Section 6 checks. (1) supported-detail option mean 26.2 words (gate 18). (2) 2 distractors hedged (A may, B likely). (6) steps 2 plus a definition: map unreliable statistics to grades D and E through the parenthetical scale, and turn faint lights failed to register into little about places with faint light. (7) partly right 2 of 3 (A is the proxy the economists proposed, B is the researchers’ own expectation). (8) stance: had expected ... but, which kills B. (9) recipes CONV, CON, CMP (CONV is a band-7-only recipe). Blind solve: D only. 115 words vs model median 91. Originality: no official or bank item on luminosity or GDP proxies; an official FSS item mentions moths and nighttime lights, a different topic. Architecture differs from 8f3a200e (proposal, graded test, second unexpected limit) though the stem is the same. Hardening pass (2026-10-16; the figures above describe the pre-hardening draft): option mean 23.8 words; hedged distractors A and C (can); contrast words in C and D; recipes CON-half, TWI, MIX; partly right 3 of 3 (A and C first halves, B first half). Haiku p(key) 0.90 before, 0.88 and 0.88 after.",
+      "word_count": 115,
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 9,
+        "fixes": [
+          "sentence 2 said Chen and Nordhaus graded the 170 statistical systems themselves; grades A to D come from the Penn World Table and the authors added E, so the sentence now says the systems “had been graded” (PMC3102367); scale parenthetical kept",
+          "hardening pass (2026-10-16), after a Haiku blind solve read the item as band 6 (no wrong option drew more than about 6%): replaced A (CONV), B (the expectation the text flags with “had expected ... but”) and C (invented comparison) with a hedged CON-half resting on the proposal’s premise, a TWI that gives the sparse-area result the wrong cause and a MIX that pairs the D-and-E result with the disappointment that belongs to sparse areas; key reworded one level up; explanation, distractors and band7_moves synced"
+        ],
+        "status": "fixed",
+        "band7": {
+          "verdict": "band 7",
+          "why": "The would-most-likely-agree variant of 8f3a200e: a proposal split by case (weak versus strong statistical systems) plus a second, unexpected limit (sparse areas), so the key holds in one case and fails in another; the student must map the parenthetical A-to-E scale back to “unreliable” statistics. Distractors: CONV (absence of light read as absence of activity, the band-7-only recipe), the researchers’ own overturned expectation (B, hedged), an invented comparison across grades (C). B is a clean kill for a close reader (“had expected ... but”), so this is band 7 at the level of the model, not above it. Fresh Haiku blind solve after review: right, p(key) 0.93."
+        }
+      },
+      "hardened": {
+        "what": "Rebuilt the three distractors around the two findings: A keeps the D-and-E result but rests it on the proposal’s premise that satellites see all activity, B keeps the sparse-area disappointment but gives it the wrong cause, C pairs the D-and-E result with the disappointment that belongs to sparse areas. Every option now joins true pieces of the passage, so the student must check which case each piece belongs to.",
+        "tempting": [
+          "A: its first half is the key’s first half and its reason echoes sentence 1 (satellites record lights across the entire planet); dies on “failed to register at all”",
+          "B: its first half is exactly the last sentence’s turn; dies because that sentence names faint lights, not reliable statistics, as the cause",
+          "C: has the key’s exact shape (useful where statistics are weak, though limited) and both of its pieces are in the text; dies because the disappointed expectation belongs to sparsely populated areas, not to D and E countries"
+        ]
+      },
+      "band": 6,
+      "band_basis": "pilot gate: reads band 6 against official anchors after hardening; served as hard"
+    },
+    {
+      "id": "central_ideas_and_details.T4_poem.b7",
+      "template": "T4_poem",
+      "subtype": "Main idea (poem)",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "The following text is Alice Meynell’s 1893 poem “Renouncement.” The speaker addresses a person whom the speaker loves.\n\nI must not think of thee; and, tired yet strong,\nI shun the thought that lurks in all delight—\nThe thought of thee—and in the blue Heaven’s height,\nAnd in the sweetest passage of a song.\nOh, just beyond the fairest thoughts that throng\nThis breast, the thought of thee waits, hidden yet bright;\nBut it must never, never come in sight;\nI must stop short of thee the whole day long.\nBut when sleep comes to close each difficult day,\nWhen night gives pause to the long watch I keep,\nAnd all my bonds I needs must loose apart,\nMust doff my will as raiment laid away,—\nWith the first dream that comes with the first sleep\nI run, I run, I am gathered to thy heart.",
+      "stem": "Which choice best states the main idea of the text?",
+      "options": [
+        "The speaker can keep thoughts of the person addressed at bay only through a constant effort of will, so when sleep takes that will away each night, the first dream brings the speaker to that person.",
+        "The speaker’s long struggle to renounce the person addressed finally collapses, and the speaker, no longer able to resist, abandons the renunciation altogether and is at last reunited with that person.",
+        "The speaker resists thoughts of the person addressed throughout the day but each night deliberately lays that resistance aside, choosing to let dreams carry the speaker to that person.",
+        "The speaker takes refuge in the day’s delights, such as the sky and music, which keep thoughts of the person addressed at a distance until sleep lets those thoughts return."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The first eight lines describe a daylong effort of will: the speaker “must not think of thee,” is “tired yet strong,” and must “stop short of thee the whole day long.” Lines 9 to 12 say that when sleep closes “each difficult day” the speaker “needs must” loose those bonds and “Must doff my will,” so the surrender is forced and comes every night. The last two lines place the result in “the first dream”: “I run, I run, I am gathered to thy heart.” Choice A joins the daytime restraint, its dependence on the will, and its nightly collapse in a dream.",
+      "distractors": {
+        "B": {
+          "recipe": "surface reading of the turn (LIT): a nightly dream read as a final, waking reunion",
+          "why_wrong": "The surrender happens “when sleep comes to close each difficult day” and the meeting happens in “the first dream,” so the struggle resumes every day and nothing ends it for good; the speaker is not literally reunited with anyone."
+        },
+        "C": {
+          "recipe": "right action, wrong agency (TWI): the surrender read as a choice",
+          "why_wrong": "The daytime resistance and the night’s surrender are both in the poem, but the surrender is not chosen: at night the speaker “needs must” loosen the bonds and “Must doff my will,” so the will itself is laid aside, and the speaker is “gathered” to the beloved rather than deciding to go."
+        },
+        "D": {
+          "recipe": "the delights’ role reversed (CON-half), true second half",
+          "why_wrong": "The poem says the thought of the beloved “lurks in all delight,” naming “the blue Heaven’s height” and “the sweetest passage of a song,” so the sky and music carry that thought rather than keep it away; the speaker has to shun it inside them."
+        }
+      },
+      "models": [
+        "b69d821d",
+        "8d88740e"
+      ],
+      "band7_moves": [
+        "T4_poem: one extended figure (a day-long watch, bonds, will doffed “as raiment”) has to be carried into the general claim; the speaker says one thing (“I must not think of thee”) and admits the opposite at the end",
+        "options are long single-frame sentences (29 to 36 words), each partly right, so the item is decided on one link; the key states the pattern one level up (restraint that lasts only while the will is awake)",
+        "distractors: the turn read as a final, waking reunion (LIT), a volition misreading that keeps the turn but makes the surrender a choice, refuted only by “needs must” and “Must doff my will” (TWI), the day’s delights read as a refuge from the thought that lurks inside them (CON-half)"
+      ],
+      "sources": [
+        {
+          "what": "Text of “Renouncement” (Alice Meynell, Poems, 1903 John Lane edition; Project Gutenberg #1186). Spaced double hyphens set as closed em dashes, straight apostrophe as curly; stanza breaks removed as in CB verse items",
+          "url": "https://www.gutenberg.org/ebooks/1186"
+        },
+        {
+          "what": "“Renouncement” first appeared in book form in Meynell’s Poems (1893)",
+          "url": "https://www.litcharts.com/poetry/alice-meynell/renouncement"
+        },
+        {
+          "what": "Spectator review of Poems, 11 March 1893, discussing the sonnet",
+          "url": "https://archive.spectator.co.uk/article/11th-march-1893/18/books"
+        },
+        {
+          "what": "“Renouncement” was omitted from Preludes (1875), so Poems (1893) is its first book publication",
+          "url": "https://www.literaturecambridge.co.uk/news/meynell"
+        }
+      ],
+      "notes": "Section 6 checks. (1) option mean 30.5 words (main idea gate 28). (2) no hedged distractor, as in both band-7 verse models. (6) steps 3: read the first eight lines as daytime restraint, read the bonds, watch and raiment as the will that sleep removes, read gathered to thy heart as arrival. (7) partly right 3 of 3 (each wrong option starts with the true daytime restraint). (8) stance: needs must and doff my will reject C; I am gathered rejects B. (9) recipes LIT, TWI, LIT (reviewer replaced the original C, a flat CON, with the TWI volition misreading). Blind solve: A only. 146 words with source and context lines vs model median 129.5. Originality: Meynell appears in no official item of any skill and nowhere in satbank/rw (grep). The poem is a well-known Victorian sonnet but far less anthologized than Shakespeare, whom the band-7 models use. Text checked against Project Gutenberg #1186 line by line; only punctuation typography changed. Hardening pass (2026-10-16; the figures above describe the pre-hardening draft): option mean 31.5 words; no hedged distractor, as in both verse models; recipes LIT, TWI, CON-half; partly right 3 of 3. Haiku p(key) 0.85 before, 0.82 and 0.85 after (C 8 to 9%).",
+      "word_count": 146,
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [
+          "replaced C (“trained the mind ... no longer arise even in dreams”), a flat contradiction of the last line, with a volition misreading (the speaker deliberately lays the resistance aside each night) that only “needs must loose apart” and “Must doff my will” refute; updated distractors, band7_moves and notes",
+          "year 1893 confirmed: Literature Cambridge says Meynell omitted the sonnet from Preludes (1875) and LitCharts gives Poems (1893) as first publication; Wikipedia’s line that Ruskin praised it in connection with the 1875 volume conflicts, but two sources support 1893, so the source line stands; source added",
+          "text checked line by line against Project Gutenberg #1186: identical apart from -- set as closed em dashes and curly apostrophe",
+          "hardening pass (2026-10-16), after a Haiku blind solve read the item as band 6 (no wrong option drew more than about 6%): replaced B (dream that never reaches the beloved) and D (thoughts spoil the day’s pleasures) with a LIT reading of the turn as a final, waking reunion and a CON-half that makes the day’s delights a refuge from the thought that lurks in them; key reworded one level up (restraint that lasts only while the will is awake); C kept; explanation, distractors and band7_moves synced"
+        ],
+        "status": "fixed",
+        "band7": {
+          "verdict": "band 7",
+          "why": "Before the fix it read as band 6: B, C and D all died on the final line, so the item was two steps with one real trap. Now C keeps the true day-and-night shape and even the surrender and fails only on agency, which the student must weigh against “needs must” and “Must doff my will” (the section 6 stance test); B misreads the dream’s outcome and D misreads “lurks in all delight”. The extended figure (watch, bonds, will doffed “as raiment”) has to be carried into the general claim, as in b69d821d. Fresh Haiku blind solve after review: right, p(key) 0.95; asked to argue for C, it named “needs must” and “gathered” as the words that defeat it."
+        }
+      },
+      "hardened": {
+        "what": "Replaced B (a dream that never arrives) and D (thoughts that spoil pleasure), which the last line killed at a glance, with two options that are right up to one link: B reads the ending as a final, waking collapse of the renunciation, D makes the day’s delights a refuge from the thought that, in the poem, lurks inside them. C’s volition trap kept. The key now states the pattern one level up instead of retelling the poem.",
+        "tempting": [
+          "B: the sonnet does end in the speaker’s surrender, and a reader who takes the turn as the poem’s resolution reads it as final; dies on “each difficult day” and “the first dream”",
+          "C: keeps the true day-and-night shape and even the surrender; dies on “needs must” and “Must doff my will”",
+          "D: names the poem’s own delights (sky and song), keeps the day-and-night order, and “just beyond the fairest thoughts” suggests a screen; dies on “lurks in all delight”, which puts the thought inside the sky and the song"
+        ]
+      },
+      "band": 6,
+      "band_basis": "pilot gate: reads band 6 against official anchors after hardening; served as hard"
+    }
+  ]
+}

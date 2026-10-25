@@ -1,0 +1,1045 @@
+{
+  "skill": "Cross-Text Connections",
+  "slug": "cross_text_connections",
+  "part": "w2b1",
+  "domain": "Craft and Structure",
+  "plan": {
+    "templates": [
+      {
+        "code": "S1_concede_rebut",
+        "name": "Respond: concede part of the target, rebut the rest (two-part options)"
+      },
+      {
+        "code": "S1_solution",
+        "name": "Respond: one text supplies a solution to the other's problem"
+      },
+      {
+        "code": "S1_framework_critique",
+        "name": "Respond: critique of the target's framework or standard"
+      },
+      {
+        "code": "S1_alt_explanation",
+        "name": "Respond: the behavior might be explained without the target's interpretation"
+      },
+      {
+        "code": "S2_joint_inference",
+        "name": "Agree: joint inference from two compatible studies"
+      },
+      {
+        "code": "S4_relate",
+        "name": "Relationship: function of each text"
+      },
+      {
+        "code": "S1_counterexample",
+        "name": "Respond: counterexample to a 'first', 'only' or 'requires' claim"
+      },
+      {
+        "code": "S1_limit_degree",
+        "name": "Respond: limit the degree or scope of the target claim"
+      },
+      {
+        "code": "S1_case_fits_frame",
+        "name": "Respond (Text 1 speaking): Text 2's case fits Text 1's general frame"
+      },
+      {
+        "code": "S2_shared_premise",
+        "name": "Agree: shared premise beneath a visible disagreement"
+      },
+      {
+        "code": "S1_rival_hypothesis",
+        "name": "Respond: rival hypothesis with evidence the target does not account for"
+      },
+      {
+        "code": "S3_difference",
+        "name": "Difference: how the two authors view an object, compared on one axis"
+      }
+    ]
+  },
+  "items": [
+    {
+      "id": "cross_text_connections.S1_concede_rebut.hard.w2b1_01",
+      "template": "S1_concede_rebut",
+      "subtype": "Response prediction",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Text 1\n\nFrances E. W. Harper’s 1892 novel Iola Leroy follows a woman, raised as a rich planter’s daughter, who is enslaved after his death when her mother’s ancestry comes to light. Because Iola could easily pass as white, some critics have read the novel as addressed mainly to white audiences: Harper, they argue, gave her heroine that appearance because nineteenth-century readers sympathized more readily with characters resembling themselves, and wrote the book chiefly to win that sympathy.\n\nText 2\n\nHarper may well have anticipated that Iola’s appearance would move white readers. Yet much of the novel is taken up by long conversations in which Black characters debate education, temperance, and the obligations of educated people to their communities—scenes that contribute little to the plot. These discussions seem meant less to elicit outsiders’ sympathy than to model, for Black readers, the work of rebuilding communities after emancipation.",
+      "stem": "Based on the texts, how would the author of Text 2 most likely respond to the critics’ interpretation of Iola Leroy presented in Text 1?",
+      "options": [
+        "By agreeing that Harper wrote mainly for white readers but objecting that Iola’s appearance would have weakened rather than strengthened their sympathy",
+        "By conceding that the novel’s long conversations slow its plot but insisting that Harper included them to hold the interest of white readers",
+        "By granting that Harper likely hoped Iola’s appearance would appeal to white readers but questioning whether those readers were the novel’s main audience",
+        "By accepting that Harper sought white readers’ sympathy but arguing that the novel’s debates were meant to persuade those readers to support Black schools"
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The critics in Text 1 make two claims: Harper gave Iola a white appearance to gain white readers’ sympathy, and she wrote the novel chiefly for those readers. The author of Text 2 grants the first point (“Harper may well have anticipated that Iola’s appearance would move white readers”) but argues that the novel’s long debates were meant to model community rebuilding “for Black readers.” So the author would grant the point about Iola’s appearance while questioning whether white readers were the main audience.",
+      "distractors": {
+        "A": {
+          "recipe": "D7 half right (wrong concession)",
+          "why_wrong": "Text 2 does not agree that Harper wrote mainly for white readers; that is the claim it disputes. It also never says Iola’s appearance weakened readers’ sympathy."
+        },
+        "B": {
+          "recipe": "D7 half right (right concession, wrong rebuttal)",
+          "why_wrong": "Text 2 does say the conversations do little to advance the plot, but it says they were aimed at Black readers, not meant to hold white readers’ interest."
+        },
+        "D": {
+          "recipe": "D7 half right (right concession, invented rebuttal)",
+          "why_wrong": "Text 2 says the debates model community work for Black readers; it does not say they were meant to persuade white readers to fund schools."
+        }
+      },
+      "models": [
+        "3.9",
+        "3.2"
+      ],
+      "word_count": 147,
+      "sources": [
+        {
+          "what": "Iola Leroy (1892) by Frances E. W. Harper: heroine raised as white, enslaved after her father’s death, rejects passing and devotes herself to uplift; themes include education and temperance",
+          "url": "https://courses.bowdoin.edu/africana-studies-1109-fall-2019-gender-equity/iola-leroy/"
+        }
+      ],
+      "notes": "Area: literature (criticism). Both texts are unattributed views (critics; the author’s own), so no scholar’s position is put in anyone’s mouth. Concession and rebuttal are on different axes (why Iola looks white vs. who the book addresses), not 3.9’s minor-vs-central frame.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [
+          "explanation quoted a sentence the passage no longer contains (“counted on”); now quotes the passage"
+        ],
+        "status": "fixed"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "Concede-then-rebut with two-part options, which the band-7 report calls a band-6 device; two half-right distractors (B, D) and a wrong concession (A) make it a strong band 6, but the key stays inside the two texts’ own claims (2 steps, no synthesis)."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "C",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "cross_text_connections.S1_concede_rebut.hard.w2b1_02",
+      "template": "S1_concede_rebut",
+      "subtype": "Response prediction",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Text 1\n\nIn the early 2000s, the chytrid fungus Batrachochytrium dendrobatidis swept through the mountain forests of central Panama, killing frogs by disrupting the functioning of their skin. Within months, many species had disappeared from streams where they had previously been common. <u>Because the fungus persists in the environment and in tolerant amphibian species long after an outbreak, the worst-hit frog populations seemed unlikely to recover as long as it remained.</u>\n\nText 2\n\nReturning to sites in Panama five to thirteen years after the outbreak, Jamie Voyles and colleagues documented growing numbers of several frog species. The fungus was still present, and laboratory comparisons showed no sign that it had become less virulent. The difference apparently lay with the frogs: skin secretions from wild survivors inhibited the fungus’s growth far more effectively than secretions from frogs taken into captivity before the outbreak.",
+      "stem": "Based on the texts, how would Voyles and colleagues (Text 2) most likely respond to the underlined claim in Text 1?",
+      "options": [
+        "By acknowledging that the fungus can persist long after an outbreak but pointing out that frog populations may rebound even while it remains",
+        "By agreeing that the hardest-hit populations are unlikely to recover but attributing their failure to recover to habitat loss rather than to the fungus",
+        "By accepting that recovery depends on the fungus disappearing but noting that the fungus has become less deadly than it was during the outbreak",
+        "By conceding that the fungus remains as virulent as it was before but suggesting that frogs raised in captivity are better able to resist it"
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The underlined claim says that because the fungus persists, badly hit frog populations were unlikely to recover while it remained. Voyles and colleagues agree that the fungus persists (“The fungus was still present”), but they still “documented growing numbers of several frog species.” They would therefore grant the fungus’s persistence while pointing out that populations can rebound in its presence.",
+      "distractors": {
+        "B": {
+          "recipe": "D7 half right (wrong concession plus add-on)",
+          "why_wrong": "Text 2 reports that several species are recovering, so the researchers would not agree that recovery is unlikely; habitat loss is never mentioned."
+        },
+        "C": {
+          "recipe": "D2 wrong side",
+          "why_wrong": "Text 2 found frogs recovering while the fungus remained, and it found no sign that the fungus had become less virulent."
+        },
+        "D": {
+          "recipe": "D7 half right (right concession, reversed detail)",
+          "why_wrong": "Text 2 does say the fungus is no less virulent, but it found that wild survivors, not frogs taken into captivity, resist the fungus better."
+        }
+      },
+      "models": [
+        "3.2",
+        "3.13"
+      ],
+      "word_count": 142,
+      "sources": [
+        {
+          "what": "Voyles et al. 2018, Science: Panama frog species partly recovering 5 to 13 years after the chytrid epidemic; no evidence the pathogen weakened; skin secretions of wild survivors inhibit Bd more than those of frogs taken into captivity before the outbreak",
+          "url": "https://m.phys.org/news/2018-03-mass-extinctions-lessons-amphibian-die-off.html"
+        }
+      ],
+      "notes": "Area: natural science (disease ecology). Text 1’s pessimistic view is unattributed. 3.2 shape (agree the danger is real, deny it is inevitable), built on a persistence-versus-recovery split rather than 3.2’s possibility-versus-inevitability wording.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [
+          "plainer words to bring the passage toward CB register (writer note: medium and hard ran denser than CB): physiological dropped, abundant to common, evidence to sign",
+          "explanation quoted “becoming more common again”, which is not in the passage; now quotes it exactly"
+        ],
+        "status": "fixed"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "Same concede-rebut shell: D keeps the right concession and reverses the captivity detail, B and C grant what Text 2 denies; 2 steps, no synthesis, so a strong band 6."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "A",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "cross_text_connections.S1_solution.hard.w2b1_03",
+      "template": "S1_solution",
+      "subtype": "Response prediction",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Text 1\n\nFrom 2011 to 2016, a team led by Michael Phelps of the Early Manuscripts Electronic Library imaged dozens of palimpsests—manuscripts whose original writing was scraped away so that the parchment could be reused—at St. Catherine’s Monastery in Egypt. Each page was photographed under a series of wavelengths of light, from ultraviolet to infrared. Because traces of the erased ink reflect these wavelengths differently than the parchment does, software comparing the images could make the hidden writing legible.\n\nText 2\n\nPalimpsests can preserve texts that survive nowhere else, but reading their erased layers has always been difficult. In the nineteenth century, scholars brushed pages with chemical reagents that temporarily darkened the faded ink. The method worked, but the chemicals eventually stained the parchment, leaving some pages harder to read than before. Today, libraries are understandably wary of any treatment that might harm such fragile manuscripts.",
+      "stem": "Based on the texts, how would the author of Text 1 most likely respond to the discussion in Text 2?",
+      "options": [
+        "By contending that libraries’ caution is unwarranted, since the reagents described in Text 2 can be applied safely if the pages are imaged first",
+        "By suggesting that pages darkened by nineteenth-century reagents should be reexamined, since imaging under several wavelengths can remove the stains",
+        "By pointing out that most of the palimpsests at St. Catherine’s Monastery had already been treated with reagents before they were photographed",
+        "By observing that the erased writing in such manuscripts can now be read using a method in which no substance is applied to the pages"
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "Text 2 describes a problem: erased texts in palimpsests are hard to read, the old chemical method damaged the parchment, and libraries now resist any treatment that might harm the manuscripts. Text 1 describes a method that solves this problem: pages are only photographed under different wavelengths of light, and software reveals the hidden writing. The author of Text 1 would therefore observe that such writing can now be read without applying anything to the pages.",
+      "distractors": {
+        "A": {
+          "recipe": "D2 wrong side",
+          "why_wrong": "Text 1 never endorses chemical reagents; its method replaces them, so the author would not call the libraries’ caution unwarranted."
+        },
+        "B": {
+          "recipe": "D3 twisted detail",
+          "why_wrong": "Text 1 says imaging makes erased writing legible; it never says imaging removes stains from parchment."
+        },
+        "C": {
+          "recipe": "D1 unaddressed add-on",
+          "why_wrong": "Neither text says whether the St. Catherine’s palimpsests had been treated with reagents."
+        }
+      },
+      "models": [
+        "3.7",
+        "3.6"
+      ],
+      "word_count": 146,
+      "sources": [
+        {
+          "what": "Sinai Palimpsests Project (EMEL, St. Catherine’s Monastery, UCLA Library), 2011 to 2016: spectral imaging under 12 wavelengths from ultraviolet to near infrared recovered erased texts from 74 palimpsests",
+          "url": "https://sinaied.library.ucla.edu/about-project/"
+        }
+      ],
+      "notes": "Area: humanities (manuscript studies, imaging). Text 1 speaks about Text 2 (3.7 direction); the key is a practice that removes the problem, inferred from the method’s noncontact nature, which Text 1 never states outright. Text 2 is the author’s general account (nineteenth-century reagent use on palimpsests is standard history).",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "Solution mapping with Text 1 speaking, as in band-7 f7c02e89, and B is a band-7 style twisted detail (imaging removes stains); but the link from Text 2’s worry about harm to a method that applies nothing is one short step and C is an add-on, so it reads as a strong band 6."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "D",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "cross_text_connections.S1_framework_critique.hard.w2b1_04",
+      "template": "S1_framework_critique",
+      "subtype": "Response prediction",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Text 1\n\nCreole languages such as Haitian Creole arose where speakers of many languages were brought together under colonial rule, often on plantations worked by enslaved Africans. Some linguists have proposed that creoles can be identified by their structure alone: because they developed so recently, these languages are said to share a set of simple grammatical features, such as little inflection on words, that distinguish them as a separate structural type.\n\nText 2\n\nEvery language, linguist Michel DeGraff notes, developed from earlier languages through contact and gradual change: French itself evolved from the Latin spoken in Roman Gaul. Creoles, he argues, arose through these same ordinary processes. What distinguishes them is the history of the communities that formed them—colonial conquest and enslavement—so the label “creole” describes how a language came into being, not what its grammar is like.",
+      "stem": "Based on the texts, how would Michel DeGraff (Text 2) most likely respond to the argument presented in Text 1?",
+      "options": [
+        "By agreeing that creoles formed more recently than most languages but arguing that their grammars are in fact more complex than those of older languages",
+        "By disputing the assumption that grammatical features can reveal whether a language belongs to a distinct category of creole languages",
+        "By conceding that creoles share certain grammatical features but insisting that those features were inherited from the languages of enslaved Africans",
+        "By arguing that creoles should be studied mainly through the history of colonial plantations rather than through analysis of their grammars"
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "Text 1 presents the view that creoles can be identified by their grammar, since they supposedly share simple features that make them a distinct type. DeGraff argues that creoles developed through the same processes as other languages and that what sets them apart is their history, “not what its grammar is like.” He would therefore dispute the assumption that grammatical features can show whether a language is a creole.",
+      "distractors": {
+        "A": {
+          "recipe": "D7 half right (unsupported concession, invented claim)",
+          "why_wrong": "Text 2 never compares the ages of creoles and other languages, and it says nothing about creole grammars being more complex; DeGraff’s point is that grammar does not define creoles at all."
+        },
+        "C": {
+          "recipe": "D7 half right (wrong concession)",
+          "why_wrong": "DeGraff denies that creoles form a grammatical type, so he would not concede shared features; Text 2 also never discusses inherited African features."
+        },
+        "D": {
+          "recipe": "D3 twisted detail",
+          "why_wrong": "Text 2 says the label “creole” reflects a language’s history; it does not recommend studying history instead of grammar."
+        }
+      },
+      "models": [
+        "3.14"
+      ],
+      "word_count": 138,
+      "sources": [
+        {
+          "what": "DeGraff 2003, Against Creole Exceptionalism (Language 79): challenges the view that creoles form a special structural class and proposes a sociohistorical definition",
+          "url": "https://muse.jhu.edu/article/44746/summary"
+        }
+      ],
+      "notes": "Area: social science (linguistics). Text 1’s view is unattributed (the creole prototype view held by some linguists). Framework critique like 3.14: Text 2 rejects the category, not a single fact.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 2,
+        "fixes": [
+          "plainer words to bring the passage toward CB register (writer note: medium and hard ran denser than CB): emerged to arose (twice), typological class to structural type, observes to notes, created to formed"
+        ],
+        "status": "fixed"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "Framework critique in the respond stem (the one band-7 official uses an agreement stem about the description); A and C are half right and D is a close twisted detail, 2 steps, no synthesis."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "B",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "cross_text_connections.S1_alt_explanation.hard.w2b1_05",
+      "template": "S1_alt_explanation",
+      "subtype": "Response prediction",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Text 1\n\nStone flakes with sharp edges and the smooth, curved fracture surfaces left by a hard blow are among the most common artifacts at early archaeological sites. Because detaching such a flake requires hitting one stone against another at an appropriate angle, archaeologists have generally interpreted these flakes as evidence that hominins were intentionally producing cutting tools, and the oldest ones have been used to establish when toolmaking began.\n\nText 2\n\nIn Brazil’s Serra da Capivara National Park, wild bearded capuchins strike quartz cobbles set in conglomerate rock with handheld stones and then lick the resulting powder, perhaps as a mineral supplement. Tomos Proffitt and colleagues found that this pounding frequently breaks off flakes with the sharp edges and fracture surfaces characteristic of early hominin implements. Yet the flakes seem to be an incidental by-product: the monkeys ignore them and haven’t been seen using them.",
+      "stem": "Based on the texts, how would Proffitt and colleagues (Text 2) most likely respond to the reasoning of the archaeologists discussed in Text 1?",
+      "options": [
+        "It is likely mistaken, because most of the oldest flakes found at early sites were probably made by monkeys rather than by hominins.",
+        "It is sound, because only an animal with considerable skill could strike stones at the angle needed to produce such flakes.",
+        "It may not be reliable, since flakes with these features can be produced by animals that aren’t attempting to make tools at all.",
+        "It is partly correct, because such flakes were made on purpose, but they were probably used to obtain minerals rather than to cut."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The archaeologists in Text 1 reason that sharp flakes with curved fracture surfaces show that hominins were deliberately making tools. Proffitt and colleagues found that capuchins produce flakes with the same features while pounding rocks for dust, and that the monkeys ignore the flakes. They would suggest that the reasoning may not be reliable, since such flakes can be made by animals that are not trying to make tools.",
+      "distractors": {
+        "A": {
+          "recipe": "D5 overstatement",
+          "why_wrong": "Text 2 shows only that monkeys can produce such flakes; it never claims that the flakes at early sites were made by monkeys."
+        },
+        "B": {
+          "recipe": "D2 wrong side",
+          "why_wrong": "Text 2 shows the opposite: monkeys produce these flakes without aiming to, so the flakes do not require deliberate skill."
+        },
+        "D": {
+          "recipe": "D3 twisted detail",
+          "why_wrong": "The minerals come from the dust the monkeys lick, not from the flakes, and Text 2 says the flakes are a by-product, not made on purpose."
+        }
+      },
+      "models": [
+        "3.12"
+      ],
+      "word_count": 146,
+      "sources": [
+        {
+          "what": "Proffitt et al. 2016, Nature (Oxford news release): wild bearded capuchins in Serra da Capivara unintentionally produce sharp-edged flakes with conchoidal fractures resembling hominin tools while pounding quartz to lick the dust; they do not use the flakes",
+          "url": "https://www.ox.ac.uk/node/513260"
+        }
+      ],
+      "notes": "Area: natural science (primatology and archaeology). Text 1 states the general assumption without naming any site (Lomekwi 3 is claimed elsewhere). It-statement shell as in 3.12 and 3.5.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [
+          "plainer words to bring the passage toward CB register (writer note: medium and hard ran denser than CB): manufacturing to producing, embedded to set, observed to seen"
+        ],
+        "status": "fixed",
+        "note": "topic fame borderline: capuchin flakes had wide press in 2016, but not textbook; kept"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "S1_alt_explanation has no band-7 official items, so it cannot be band 7; A (overstatement) and D (twisted detail) are close, B falls quickly."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "C",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "cross_text_connections.S2_joint_inference.hard.w2b1_06",
+      "template": "S2_joint_inference",
+      "subtype": "Agreement",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Text 1\n\nBumblebees spend a great deal of energy keeping their flight muscles warm, so heat itself may be valuable to them. In a 2006 experiment, Adrian Dyer and colleagues offered bumblebees artificial flowers of two colors containing equally concentrated sugar solutions, with the flowers of one color kept several degrees warmer than the others. The bees learned which color indicated warmth and visited those flowers preferentially.\n\nText 2\n\nThe stinking hellebore (Helleborus foetidus) blooms in midwinter in the mountains of southern Spain, when low temperatures limit insect activity. Carlos Herrera and María Pozo found that the plant’s nectar is often colonized by yeasts, which are carried on the bodies of visiting bumblebees. As the yeasts metabolize the nectar’s sugars, they release heat: flowers whose nectar contained dense yeast populations were measurably warmer inside than flowers whose nectar contained few yeasts or none.",
+      "stem": "Based on the texts, if Dyer and colleagues (Text 1) and Herrera and Pozo (Text 2) were aware of the findings of both studies, they would most likely agree with which statement?",
+      "options": [
+        "A hellebore flower whose nectar has been warmed by yeasts may offer visiting bumblebees a reward in addition to the nectar’s sugar.",
+        "Hellebore flowers with dense yeast populations are likely more attractive to bumblebees than other hellebore flowers because their nectar is sweeter.",
+        "Bumblebees can most likely detect the temperature of a flower’s nectar from a distance, before they land on the flower.",
+        "Yeasts in hellebore nectar most likely evolved to warm flowers because warmer flowers attract more of the bees that carry those yeasts."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "Text 1 shows that bumblebees treat warmth as worth seeking: given equally sweet nectar, they chose the warmer flowers. Text 2 shows that yeasts in hellebore nectar make some flowers warmer. Together, the findings suggest that a yeast-warmed hellebore flower may give visiting bumblebees a reward, warmth, beyond the sugar in its nectar. Neither text states this on its own.",
+      "distractors": {
+        "B": {
+          "recipe": "D3 twisted detail",
+          "why_wrong": "Text 2 says the yeasts break down the nectar’s sugar, so yeast-rich nectar would not be sweeter; any added appeal would come from warmth."
+        },
+        "C": {
+          "recipe": "D3 twisted detail",
+          "why_wrong": "Text 1 says the bees learned which color signaled warmth, which suggests they relied on color, not on sensing temperature from a distance."
+        },
+        "D": {
+          "recipe": "D5 overstatement",
+          "why_wrong": "Neither text discusses how the yeasts evolved or claims that warming flowers benefits the yeasts."
+        }
+      },
+      "models": [
+        "3.4"
+      ],
+      "word_count": 143,
+      "sources": [
+        {
+          "what": "Dyer, Whitney, Arnold, Glover and Chittka 2006, Nature 442: bumblebees prefer warmer flowers and learn to use color to predict floral temperature",
+          "url": "https://qmro.qmul.ac.uk/xmlui/bitstream/123456789/278/2/Dyer_et_al_06_Nature.pdf"
+        },
+        {
+          "what": "Herrera and Pozo 2010, Proc. R. Soc. B: nectar yeasts warm the flowers of the winter-blooming Helleborus foetidus; warming depends on yeast density",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC2871880/"
+        }
+      ],
+      "notes": "Area: natural science (pollination ecology). 3.4 logic: two compatible studies; the key needs both. Text 2 deliberately omits any pollinator consequence so the item is not solvable from one text. Two sources because the item rests on two studies.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [
+          "Dyer et al. kept the warm flowers 8 °C warmer (28.8 against 20.8 °C), so “a few degrees” became “several degrees”",
+          "plainer words to bring the passage toward CB register (writer note: medium and hard ran denser than CB): restrict to limit"
+        ],
+        "status": "fixed"
+      },
+      "band7": {
+        "verdict": "band 7",
+        "why": "Joint inference as in a87c3925: the key states a conclusion neither text states (warmth as a second reward in yeast-warmed hellebores), 3 steps, and two twisted-detail distractors (B sweeter nectar, C sensing heat from a distance). Key is shorter than the band-7 norm (22 words). Planned band 6; not hardened."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "A",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "cross_text_connections.S4_relate.hard.w2b1_07",
+      "template": "S4_relate",
+      "subtype": "Relationship",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Text 1\n\nBeginning in 2013, a wasting disease killed millions of sea stars along North America’s Pacific coast, causing their arms to twist and their bodies to disintegrate. In 2014, Ian Hewson and colleagues reported that a densovirus was far more abundant in symptomatic sea stars than in healthy ones and that healthy individuals injected with virus-sized particles from diseased tissue became sick. The virus, the researchers suggested, was the likely cause.\n\nText 2\n\nWhen Hewson’s team later analyzed samples from additional species and years, the virus’s association with wasting held for only one species, the sunflower sea star. Closely related densoviruses were also found in apparently healthy sea stars, an indication that such viruses are common even in unaffected populations. In 2018, Hewson suggested that the densovirus alone could not explain the die-off and that environmental conditions, possibly including unusually warm water, probably played a part.",
+      "stem": "Which choice best describes how Text 1 and Text 2 relate to each other?",
+      "options": [
+        "Text 1 describes a possible cause of a disease, whereas Text 2 argues that environmental conditions, rather than that cause, were mainly responsible for the disease.",
+        "Text 1 presents a hypothesis about a disease’s cause, whereas Text 2 describes later tests confirming that hypothesis for most species examined.",
+        "Text 1 reports that a virus caused a disease, whereas Text 2 explains how unusually warm water allowed that virus to spread among sea stars.",
+        "Text 1 presents findings that led researchers to propose a cause for a disease, whereas Text 2 reports further findings that cast doubt on that proposal."
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "Text 1 reports Hewson’s team’s 2014 findings (more virus in sick sea stars, disease after injection) and their proposal that the virus was the likely cause. Text 2 reports later findings that weaken that proposal: the link held for only one species, related viruses appeared in healthy animals, and Hewson came to doubt that the virus alone could explain the die-off. So Text 2 casts doubt on the cause proposed in Text 1.",
+      "distractors": {
+        "A": {
+          "recipe": "D5 overstatement",
+          "why_wrong": "Text 2 says the densovirus alone could not explain the die-off and that environmental conditions probably played a part; it does not say those conditions, rather than the virus, were mainly responsible."
+        },
+        "B": {
+          "recipe": "D2 wrong side",
+          "why_wrong": "Text 2 says the virus’s link to wasting held for only one species, not for most species examined."
+        },
+        "C": {
+          "recipe": "D3 twisted detail",
+          "why_wrong": "Text 2 mentions warm water as a possible contributing condition; it does not say warm water helped the virus spread, and Text 1 calls the virus only the likely cause."
+        }
+      },
+      "models": [
+        "3.11"
+      ],
+      "word_count": 147,
+      "sources": [
+        {
+          "what": "Hewson et al. 2018, Frontiers in Marine Science: densovirus association with wasting found in only one species (Pycnopodia helianthoides); related viruses in asymptomatic sea stars; earlier 2014 study (PNAS) linked SSaDV to wasting through abundance and inoculation trials; wasting likely has multiple causes",
+          "url": "https://frontiersin.org/journals/marine-science/articles/10.3389/fmars.2018.00077/full"
+        }
+      ],
+      "notes": "Area: natural science (marine disease). 3.11 relation (findings plus explanation, then detail casting doubt) but the doubt comes from the same team’s later work. Text 2 stops at 2018 and names no single cause, so it does not conflict with later work (2025) identifying a bacterium as a cause of wasting in sunflower sea stars.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [
+          "A (“two competing explanations”) died on one fact and the item read easier than band 6 (its model 3.11 is band 5); A now overstates Text 2 (environment rather than the virus mainly responsible), so the reader must weigh “alone” and “played a part”",
+          "plainer words to bring the passage toward CB register (writer note: medium and hard ran denser than CB): detected to found"
+        ],
+        "status": "fixed",
+        "note": "topic fame borderline: sea star wasting is a known die-off, but the densovirus doubt story is not; kept"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "S4_relate has no band-7 official items (its only model, 3.11, is band 5), so it cannot be band 7; with A rewritten as an overstatement of Text 2 it is a fair band 6."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "D",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "cross_text_connections.S1_counterexample.medium.w2b1_08",
+      "template": "S1_counterexample",
+      "subtype": "Response prediction",
+      "tier": "medium",
+      "passage": "Text 1\n\nPhotosynthesis turns light energy into chemical energy, and on Earth that light comes almost entirely from the Sun. Sunlight diminishes rapidly with depth in the ocean, and below about 1,000 meters none is left. <u>For this reason, scientists long assumed that no organism inhabiting the deep sea could survive by photosynthesis.</u> The communities clustered around deep-sea hydrothermal vents instead depend on bacteria that get energy from chemical compounds such as hydrogen sulfide.\n\nText 2\n\nIn 2005, J. Thomas Beatty and colleagues reported isolating a green sulfur bacterium from a hydrothermal vent approximately 2,400 meters below the surface of the Pacific Ocean. The bacterium, called GSB1, can’t grow without light. At that depth, however, the only illumination is the faint glow given off by the vent’s extremely hot water, so the researchers concluded that GSB1 most likely uses this geothermal light for photosynthesis.",
+      "stem": "Based on the texts, what would the researchers in Text 2 most likely say about the assumption in the underlined sentence in Text 1?",
+      "options": [
+        "It is largely accurate, because GSB1 depends on chemicals released at the vent rather than on light.",
+        "It overlooks a source of light in the deep sea that at least one organism appears able to use.",
+        "It underestimates how far sunlight can travel in parts of the ocean where the water is especially clear.",
+        "It was reasonable at the time, but GSB1 shows that some sunlight reaches depths of more than 2,000 meters."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The underlined sentence says scientists assumed no deep-sea organism could live by photosynthesis, since sunlight does not reach the deep sea. Beatty and colleagues found a bacterium at a deep vent that cannot grow without light and concluded that it most likely photosynthesizes using the faint geothermal glow of the vent’s water. They would say the assumption overlooks a source of light, other than sunlight, that at least one deep-sea organism appears to use.",
+      "distractors": {
+        "A": {
+          "recipe": "D2 wrong side",
+          "why_wrong": "Text 2 says GSB1 cannot grow without light and most likely uses the vent’s geothermal light; the chemical-based bacteria are the ones Text 1 describes."
+        },
+        "C": {
+          "recipe": "D1 unaddressed add-on",
+          "why_wrong": "Neither text discusses water clarity or how far sunlight travels in clear water."
+        },
+        "D": {
+          "recipe": "D3 twisted detail",
+          "why_wrong": "The light GSB1 uses comes from the vent’s hot water, not from the Sun; Text 2 never says sunlight reaches the vent."
+        }
+      },
+      "models": [
+        "2.10",
+        "2.4"
+      ],
+      "word_count": 144,
+      "sources": [
+        {
+          "what": "Beatty et al. 2005, PNAS: obligately photosynthetic green sulfur bacterium (GSB1) isolated from a deep-sea hydrothermal vent where the only light is geothermal radiation",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC1166624"
+        }
+      ],
+      "notes": "Area: natural science (microbiology). Counterexample to a ‘no organism could’ claim, as in 2.10 (It-statement shell from the ‘say about’ stem).",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [
+          "plainer words to bring the passage toward CB register (writer note: medium and hard ran denser than CB): converts to turns, roughly/remains to about/is left, extract to get, designated to called, emitted by the scalding water to given off by the extremely hot water"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "cross_text_connections.S1_limit_degree.medium.w2b1_09",
+      "template": "S1_limit_degree",
+      "subtype": "Response prediction",
+      "tier": "medium",
+      "passage": "Text 1\n\nEcologists have documented many cases in which species introduced by people crowd out native species. Islands have been especially vulnerable: their native plants and animals often evolved without mainland competitors or predators, and introductions there have been linked to many extinctions. <u>Thus, the arrival of nonnative species is widely expected to leave island ecosystems with fewer species than they originally supported.</u>\n\nText 2\n\nDov Sax, Steven Gaines, and James Brown compared records of the plant species found on oceanic islands before and after European colonization. Native plants had gone extinct, but relatively few of them, while large numbers of introduced plants had established wild populations. In New Zealand, about 2,000 nonnative species have become naturalized. Overall, plant species counts on the islands have roughly doubled—though the researchers warn that this doesn’t mean the ecosystems are better off.",
+      "stem": "Based on the texts, how would Sax, Gaines, and Brown (Text 2) most likely respond to the expectation presented in the underlined sentence in Text 1?",
+      "options": [
+        "By arguing that introduced plants have generally made the island ecosystems they’ve entered healthier than before",
+        "By pointing out that many native island plants had already gone extinct before Europeans arrived",
+        "By suggesting that most island extinctions have been caused by predators rather than by competitors",
+        "By noting that, at least among plants, introductions have tended to raise rather than lower island species counts"
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "Text 1 says introduced species are widely expected to leave islands with fewer species. Sax, Gaines, and Brown found that for plants, extinctions were relatively few while many introduced species became established, so plant species counts on islands have roughly doubled. They would point out that, for plants at least, introductions have raised rather than lowered the number of species, which limits how far the expectation holds.",
+      "distractors": {
+        "A": {
+          "recipe": "D2 wrong side",
+          "why_wrong": "The researchers explicitly caution that more species does not mean the ecosystems are better off."
+        },
+        "B": {
+          "recipe": "D1 unaddressed add-on",
+          "why_wrong": "Text 2 compares records from before and after colonization but says nothing about extinctions that happened before Europeans arrived."
+        },
+        "C": {
+          "recipe": "D1 unaddressed add-on",
+          "why_wrong": "Neither text compares the roles of predators and competitors in causing island extinctions."
+        }
+      },
+      "models": [
+        "2.9",
+        "2.8"
+      ],
+      "word_count": 139,
+      "sources": [
+        {
+          "what": "Sax, Gaines and Brown 2002, American Naturalist (UCSB release): plant species richness on oceanic islands roughly doubled as naturalizations far exceeded extinctions; New Zealand about 2,000 natives, fewer than 10 extinct, about 2,000 introduced species naturalized; Gaines cautions this is not beneficial",
+          "url": "https://news.ucsb.edu/2002/011661/increasing-biodiversity-not-always-best"
+        }
+      ],
+      "notes": "Area: natural science (ecology). Limits the scope of the underlined expectation (2.9 pattern); the researchers’ caveat sets up the wrong-side trap in A.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [
+          "plainer words to bring the passage toward CB register (writer note: medium and hard ran denser than CB): numerous to many, caution to warn; the semicolon sentence split in two (35 words a sentence)",
+          "key verb “pointing out” changed to “noting” (it otherwise appeared only in distractors across the batch); B takes “pointing out” instead"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "cross_text_connections.S1_limit_degree.medium.w2b1_10",
+      "template": "S1_limit_degree",
+      "subtype": "Response prediction",
+      "tier": "medium",
+      "passage": "Text 1\n\nIn the United States, restaurant customers determine how much to tip after their meal, and the custom is frequently defended on precisely that basis. Because servers’ earnings depend heavily on gratuities, the argument goes, tipping gives servers a powerful incentive to be attentive, and it allows customers to reward excellent service and penalize poor service directly—something a fixed service charge could not accomplish.\n\nText 2\n\nMichael Lynn, who studies consumer behavior at Cornell University, statistically pooled the findings of over a dozen studies examining the relationship between tip size and diners’ evaluations of the service they received. Better service did produce larger tips, but only slightly: service ratings accounted for just a few percent of the variation in what diners left. The size of the bill, by contrast, explained most of it.",
+      "stem": "Based on the texts, how would Lynn (Text 2) most likely respond to the argument presented in Text 1?",
+      "options": [
+        "By suggesting that tips may track service quality too loosely to give servers a powerful incentive",
+        "By claiming that diners who receive poor service usually tip more generously than those who receive good service",
+        "By recommending that restaurants replace tipping with a fixed service charge added to every bill",
+        "By agreeing that tipping strongly motivates servers but noting that diners tend to tip less on large bills"
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "Text 1 argues that tipping lets customers reward good service and so gives servers a powerful incentive. Lynn found that better service brings only slightly larger tips, since service ratings explain just a few percent of the differences in tips. He would therefore suggest that tips track service too loosely to provide the strong incentive Text 1 describes.",
+      "distractors": {
+        "B": {
+          "recipe": "D2 wrong side",
+          "why_wrong": "Lynn found that better service did bring larger tips, only slightly; he never says poor service brings bigger tips."
+        },
+        "C": {
+          "recipe": "D1 unaddressed add-on",
+          "why_wrong": "Text 2 reports findings about tips; it makes no recommendation about service charges."
+        },
+        "D": {
+          "recipe": "D7 half right (wrong concession, twisted detail)",
+          "why_wrong": "Lynn’s findings undercut the claim that tipping strongly motivates servers, and Text 2 says bill size explains most of the variation in tips, not that diners tip less on large bills."
+        }
+      },
+      "models": [
+        "2.8"
+      ],
+      "word_count": 134,
+      "sources": [
+        {
+          "what": "Lynn, Restaurant Tipping and Service Quality: A Tenuous Relationship (meta-analysis of 24 correlations from 14 studies); Lynn: service ratings explain under 4 percent of tip differences, bill size about 70 percent",
+          "url": "https://www.pbs.org/wnet/chasing-the-dream/stories/why-do-we-tip/"
+        },
+        {
+          "what": "Lynn 2001, Restaurant Tipping and Service Quality: A Tenuous Relationship (Cornell H.R.A. Quarterly): 24 correlations from 14 studies; the service-tip link is weak enough to raise doubts about tips as a way to motivate servers",
+          "url": "https://ecommons.cornell.edu/items/042e8740-5c44-486e-ab28-00f05781d153"
+        }
+      ],
+      "notes": "Area: social science (economics, consumer behavior). Limit degree in the 2.8 sense: the effect exists but is weak, so the key hedges (‘may’, ‘too loosely’).",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [
+          "added the Cornell record of Lynn’s 2001 meta-analysis (14 studies) as a second source"
+        ],
+        "status": "fixed",
+        "note": "topic fame borderline: tipping and service is pop-economics fare, but Lynn’s meta-analysis is not widely known; kept"
+      }
+    },
+    {
+      "id": "cross_text_connections.S1_case_fits_frame.medium.w2b1_11",
+      "template": "S1_case_fits_frame",
+      "subtype": "Response prediction",
+      "tier": "medium",
+      "passage": "Text 1\n\nWhen a species expands its range, the individuals that reach new territory first are often the strongest dispersers, and when they breed with one another, their offspring tend to inherit that ability. Some biologists have therefore predicted that dispersal ability should increase at the edge of an expanding range. But traits that aid dispersal, such as large wings, are costly to develop, so the advantage should fade once a population is established.\n\nText 2\n\nTwo species of bush crickets have spread northward across southern Britain in recent decades as the climate has warmed. Most individuals of these species have short wings and rarely fly, but Adam Simmons and Chris Thomas found that long-winged individuals were far more common at recently colonized sites than in long-established populations. Within roughly a decade of colonization, however, the proportion of long-winged crickets had declined to the level typical of older populations.",
+      "stem": "Based on the texts, what would the author of Text 1 most likely say about the findings described in Text 2?",
+      "options": [
+        "They suggest that long wings cost the crickets less to develop than biologists have generally assumed.",
+        "They indicate that the crickets’ spread was driven mainly by changes in wing length rather than by a warming climate.",
+        "They fit the expectation that dispersal ability is favored at the edge of an expanding range, but only for a limited time.",
+        "They show that short-winged crickets are better than long-winged crickets at reaching and colonizing new sites."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "Text 1 predicts that dispersal ability should rise at the edge of an expanding range and then fade once a population is established, because traits like large wings are costly. Text 2 reports that long-winged crickets were far more common at newly colonized sites but declined to the usual level within about ten years. The author of Text 1 would say these findings fit that expectation: dispersal ability was favored at the range edge, but only for a time.",
+      "distractors": {
+        "A": {
+          "recipe": "D2 wrong side",
+          "why_wrong": "The decline in long-winged crickets after colonization is what Text 1 expects if long wings are costly; nothing suggests they cost less than assumed."
+        },
+        "B": {
+          "recipe": "D3 twisted detail",
+          "why_wrong": "Text 2 links the spread to the warming climate; it never says wing length drove the spread."
+        },
+        "D": {
+          "recipe": "D2 wrong side",
+          "why_wrong": "Text 2 found long-winged crickets far more common at newly colonized sites, which suggests they are the better colonizers."
+        }
+      },
+      "models": [
+        "2.2",
+        "2.6"
+      ],
+      "word_count": 149,
+      "sources": [
+        {
+          "what": "Simmons and Thomas 2004, American Naturalist 164: in expanding bush cricket species in Britain, long-winged (dispersive) individuals more frequent in newly colonized populations, falling to core levels 5 to 10 years after colonization",
+          "url": "https://eprints.whiterose.ac.uk/id/eprint/7558/"
+        }
+      ],
+      "notes": "Area: natural science (evolutionary ecology). Text 1 speaks about Text 2 (general frame, then a case that fits it, as in 2.2); They-statement shell from the ‘say about’ stem. Text 1’s frame is unattributed.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 2,
+        "fixes": [
+          "source URL pointed to Thomas et al. 2001 (Nature); replaced with the Simmons and Thomas 2004 record that states the 5 to 10 year decline"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "cross_text_connections.S2_shared_premise.medium.w2b1_12",
+      "template": "S2_shared_premise",
+      "subtype": "Agreement",
+      "tier": "medium",
+      "passage": "Text 1\n\nDesert kites—long, low stone walls converging on an enclosure—were named by aviators who first noticed them from the air in the 1920s and thought they resembled children’s kites. Thousands have since been documented from Arabia to Kazakhstan. Because many enclosures terminate in pits or at the edge of a precipice, archaeologist Rémy Crassard and his colleagues contend that kites functioned as traps for the mass killing of gazelles and other wild ungulates.\n\nText 2\n\nSome researchers have proposed that certain kites were constructed by herders rather than hunters. Walls that funnel animals toward an enclosure would be equally useful for gathering domesticated sheep and goats and for capturing wild gazelles, and the enclosures could have served as corrals where livestock were counted, separated, or protected overnight. Little direct evidence survives, however, to indicate what happened to the animals once they were inside.",
+      "stem": "Based on the texts, Crassard and his colleagues (Text 1) and the researchers in Text 2 would most likely agree with which statement about desert kites?",
+      "options": [
+        "They were most likely built by the communities that were the first to domesticate sheep and goats.",
+        "They were designed so that their converging walls would guide animals into an enclosed area.",
+        "Gazelles were the animals most often driven into the enclosures at the ends of kites.",
+        "The kites in Kazakhstan were built later than those in Arabia and were modeled on them."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The two texts disagree about why kites were built: Crassard and his colleagues see them as hunting traps, while the researchers in Text 2 suggest some were pens for herders. Both, however, describe walls that converge on an enclosure and funnel animals toward it. So both would agree that kites were built to guide animals into an enclosed area.",
+      "distractors": {
+        "A": {
+          "recipe": "D1 unaddressed add-on",
+          "why_wrong": "Text 2 suggests some kites served herders, but neither text says who first domesticated sheep and goats or ties kites to them."
+        },
+        "C": {
+          "recipe": "D4 one text only",
+          "why_wrong": "Crassard’s team sees kites as traps for gazelles and other game, but the researchers in Text 2 think some held sheep and goats, so they would not agree."
+        },
+        "D": {
+          "recipe": "D1 unaddressed add-on",
+          "why_wrong": "Neither text compares when kites in different regions were built."
+        }
+      },
+      "models": [
+        "2.1",
+        "2.3"
+      ],
+      "word_count": 144,
+      "sources": [
+        {
+          "what": "Globalkites project (Rémy Crassard, Olivier Barge): desert kites from Arabia to Kazakhstan, converging walls and enclosures ending in pits or precipices, interpreted as mass hunting traps; the project also tested whether kites served animal domestication",
+          "url": "https://www.archeorient.mom.fr/recherche/projets-finances/projets-archives/globalkites"
+        }
+      ],
+      "notes": "Area: social science (archaeology). Text 2 is unattributed (‘some researchers’); the herding view is a real alternative the Globalkites project tested. Shared premise under a disagreement about purpose, as in 2.1.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "cross_text_connections.S2_shared_premise.medium.w2b1_13",
+      "template": "S2_shared_premise",
+      "subtype": "Agreement",
+      "tier": "medium",
+      "passage": "Text 1\n\nThe banjo is frequently regarded as a distinctively American instrument, but its origins lie in West Africa. In the late 1990s, Jola musician and scholar Daniel Laemouahuma Jatta drew attention to the akonting, a traditional lute of the Jola people of Senegal and the Gambia. Like early banjos, the akonting has a gourd resonator covered with animal hide and a short drone string plucked with the thumb, prompting some researchers to characterize it as the banjo’s living ancestor.\n\nText 2\n\nGourd-bodied lutes were widespread throughout West Africa, and the enslaved people transported to the Caribbean and North America came from numerous regions. It is therefore unlikely that the banjo descends from any single African instrument. More probably, it was invented in the Americas by musicians who combined characteristics of the various lutes they remembered, which may explain the considerable diversity of early banjo designs.",
+      "stem": "Based on the texts, both authors would most likely agree with which statement?",
+      "options": [
+        "The banjo was played in North America before it was played anywhere in the Caribbean.",
+        "The akonting is the single instrument from which the banjo is most directly descended.",
+        "Early banjos usually had more strings than the akonting and were not played with the thumb.",
+        "The banjo’s development drew on instrument traditions that existed in West Africa."
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The authors disagree about the banjo’s ancestry: the author of Text 1 presents the akonting as its living ancestor, while the author of Text 2 argues that the banjo combined features of many West African lutes. Both, though, trace the banjo to West African instruments, so both would agree that its development drew on West African traditions.",
+      "distractors": {
+        "A": {
+          "recipe": "D1 unaddressed add-on",
+          "why_wrong": "Neither text says where the banjo was first played in the Americas."
+        },
+        "B": {
+          "recipe": "D4 one text only",
+          "why_wrong": "Text 1 favors the akonting as the banjo’s ancestor, but Text 2 says the banjo is unlikely to descend from any single instrument."
+        },
+        "C": {
+          "recipe": "D3 twisted detail",
+          "why_wrong": "Text 1 says early banjos, like the akonting, had a short string plucked with the thumb; neither text compares numbers of strings."
+        }
+      },
+      "models": [
+        "2.3",
+        "2.1"
+      ],
+      "word_count": 146,
+      "sources": [
+        {
+          "what": "UCLA Ethnomusicology Review, Historical Narratives of the Akonting and Banjo: Daniel Laemouahuma Jatta’s work on the Jola akonting (presented with Ulf Jägfors from 1999 to 2000) and the view that the banjo likely descends from many West African gourd lutes",
+          "url": "https://ethnomusicologyreview.ucla.edu/node/763"
+        }
+      ],
+      "notes": "Area: arts (music history). Text 2 is the author’s own argument (the composite-origin view also voiced by Jatta, Jägfors and Pestcoe in 2005), so no scholar is misquoted.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "cross_text_connections.S1_rival_hypothesis.medium.w2b1_14",
+      "template": "S1_rival_hypothesis",
+      "subtype": "Response prediction",
+      "tier": "medium",
+      "passage": "Text 1\n\nIn many cities, songbirds that normally sing only during the day can be heard singing well after dark. Because urban areas are brightly lit at night, a common explanation has been that streetlights and other artificial lighting disrupt birds’ perception of time, prompting them to sing at hours when they would ordinarily stay silent. If that explanation is correct, the most brightly lit neighborhoods should have the most nocturnal song.\n\nText 2\n\nRichard Fuller, Philip Warren, and Kevin Gaston recorded European robins at 67 sites around Sheffield, England, measuring both light and noise levels at each location. Robins sang at night primarily where daytime noise was high; the influence of nighttime illumination was considerably weaker. Nocturnal singing costs robins energy they would otherwise save by sleeping, but in noisy environments it may allow their songs to be heard without competing with traffic.",
+      "stem": "Based on the texts, how would Fuller, Warren, and Gaston (Text 2) most likely respond to the explanation presented in Text 1?",
+      "options": [
+        "By arguing that it doesn’t account for the closer link between robins’ nighttime singing and noise during the day",
+        "By suggesting that robins in rural areas sing at night more often than researchers have realized",
+        "By noting that bright light at night makes urban robins less likely to sing during the day",
+        "By questioning whether the streetlights in Sheffield were bright enough to affect the robins’ behavior"
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "Text 1 explains urban birds’ nighttime singing as a response to artificial light. Fuller, Warren, and Gaston found that robins sang at night mainly where daytime noise was high, while nighttime light had a much weaker effect, and they propose that singing at night lets robins avoid competing with traffic. They would argue that the light explanation doesn’t account for the closer link between nighttime song and daytime noise.",
+      "distractors": {
+        "B": {
+          "recipe": "D1 unaddressed add-on",
+          "why_wrong": "Text 2 studied robins around Sheffield and says nothing about how often rural robins sing at night."
+        },
+        "C": {
+          "recipe": "D3 twisted detail",
+          "why_wrong": "Text 2 links nighttime singing to daytime noise; it never says light at night reduces daytime singing."
+        },
+        "D": {
+          "recipe": "D3 twisted detail",
+          "why_wrong": "Text 2 found that light had a weaker effect than noise, not that Sheffield’s lights were too dim to matter."
+        }
+      },
+      "models": [
+        "2.5"
+      ],
+      "word_count": 144,
+      "sources": [
+        {
+          "what": "Fuller, Warren and Gaston 2007, Biology Letters: urban European robins in Sheffield sing at night where daytime noise is high; effect of night light much weaker; 67 sites",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC2390663"
+        }
+      ],
+      "notes": "Area: natural science (behavioral ecology). Rival hypothesis with evidence the target cannot account for, as in 2.5; the key uses ‘arguing’, a verb the official keys rarely use, to avoid the verb tell.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 2,
+        "fixes": [
+          "plainer words to bring the passage toward CB register (writer note: medium and hard ran denser than CB): daylight to the day, illuminated to lit, remain to stay, intense to high, conserve to save"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "cross_text_connections.S1_solution.medium.w2b1_15",
+      "template": "S1_solution",
+      "subtype": "Response prediction",
+      "tier": "medium",
+      "passage": "Text 1\n\nAfter the Civil War, many formerly enslaved people attempted to find spouses, children, parents, and siblings from whom they had been separated by sale. Historians investigating these efforts face a difficulty: enslavers’ records typically identified enslaved people by first name only, if at all, and seldom indicated where family members had been sent. Consequently, the searches themselves left few traces in official documentation.\n\nText 2\n\nMany of those seeking relatives placed notices headed “Information Wanted” in African American newspapers, describing a missing family member and the place where that person had last been seen. Last Seen, a project at Villanova University directed by historian Judith Giesberg, has been collecting thousands of these advertisements and transcribing them into a freely accessible online database, allowing each search to be read in the searcher’s own words.",
+      "stem": "Based on the texts, how would the author of Text 2 most likely respond to the problem presented in Text 1?",
+      "options": [
+        "By arguing that enslavers’ records are more complete than historians have generally assumed",
+        "By suggesting that historians instead study families that were never separated by sale",
+        "By pointing to a kind of source that records these searches in the words of the searchers themselves",
+        "By noting that most of the searches described in these newspaper notices ended in successful family reunions"
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "Text 1’s problem is that the searches formerly enslaved people made for separated family members left few traces in official records. Text 2 describes “Information Wanted” notices, placed by the searchers themselves, that the Last Seen project is collecting and transcribing. The author of Text 2 would respond by pointing to this kind of source, which documents the searches in the searchers’ own words.",
+      "distractors": {
+        "A": {
+          "recipe": "D2 wrong side",
+          "why_wrong": "Text 2 does not dispute Text 1’s account of enslavers’ records; it points to a different source."
+        },
+        "B": {
+          "recipe": "D9 generic academic move",
+          "why_wrong": "Text 2 offers a way to study the searches, not a recommendation to study other families."
+        },
+        "D": {
+          "recipe": "D1 unaddressed add-on",
+          "why_wrong": "Neither text says how many of the searches ended in reunions."
+        }
+      },
+      "models": [
+        "2.11"
+      ],
+      "word_count": 135,
+      "sources": [
+        {
+          "what": "Last Seen: Finding Family After Slavery (Villanova University with Mother Bethel AME Church), directed by Judith Giesberg, digitizes Information Wanted ads placed by freed people in African American newspapers seeking family separated by slavery",
+          "url": "https://www.villanova.edu/villanova/media/pressreleases/2022/history-professor-judith-giesberg.html"
+        }
+      ],
+      "notes": "Area: history. Solution to a stated problem, as in 2.11; the key names the kind of source one level more abstract than the passage.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 2,
+        "fixes": [
+          "plainer words to bring the passage toward CB register (writer note: medium and hard ran denser than CB): locate to find, confront to face, location to place"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "cross_text_connections.S2_shared_premise.easy.w2b1_16",
+      "template": "S2_shared_premise",
+      "subtype": "Agreement",
+      "tier": "easy",
+      "passage": "Text 1\n\nMary Lou Williams is remembered as a gifted pianist, but her greatest influence on jazz came through her writing for other musicians. As the arranger for Andy Kirk’s band, the Clouds of Joy, in the 1930s, she largely shaped the group’s signature sound. Famous bandleaders, including Benny Goodman and Duke Ellington, later sought out her compositions and arrangements for their own bands.\n\nText 2\n\nAfter settling in New York in 1943, Williams mentored younger musicians such as Thelonious Monk and Dizzy Gillespie. These players were creating bebop, a fast, complex new style. Williams, by then a respected veteran, offered advice on their music and encouraged them while bebop was still controversial. This support may have been her most important contribution to jazz.",
+      "stem": "Based on the texts, both authors would most likely agree with which statement?",
+      "options": [
+        "Williams was the first woman to lead a nationally touring jazz band.",
+        "Williams had a significant influence on the music made by other jazz musicians.",
+        "Williams preferred bebop to the big band music of the 1930s.",
+        "Williams was better known as a pianist than as a composer in her lifetime."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The authors disagree about Williams’s most important contribution: the author of Text 1 points to her arrangements and compositions for bands such as Andy Kirk’s, while the author of Text 2 points to her mentoring of young bebop musicians. Both, however, describe Williams shaping other musicians’ work, so both would agree that she had a significant influence on other jazz musicians.",
+      "distractors": {
+        "A": {
+          "recipe": "D1 unaddressed add-on",
+          "why_wrong": "Neither text says Williams led a band of her own, let alone that she was the first woman to do so."
+        },
+        "C": {
+          "recipe": "D1 unaddressed add-on",
+          "why_wrong": "Neither text says which style of music Williams preferred."
+        },
+        "D": {
+          "recipe": "D3 twisted detail",
+          "why_wrong": "Text 1 says she is remembered today as a pianist; neither text compares her fame as a pianist and as a composer during her lifetime."
+        }
+      },
+      "models": [
+        "1.2",
+        "1.13"
+      ],
+      "word_count": 124,
+      "sources": [
+        {
+          "what": "NPR 2019, How Mary Lou Williams Shaped the Sound of the Big Band Era: arranger and composer for Andy Kirk’s Clouds of Joy, wrote for Benny Goodman and Duke Ellington; mentor to bebop musicians including Monk and Gillespie",
+          "url": "https://www.npr.org/2019/09/10/749743012/how-mary-lou-williams-shaped-the-sound-of-the-big-band-era"
+        }
+      ],
+      "notes": "Area: arts (music). Shared premise under a disagreement about emphasis, as in 1.2 and 1.13.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "cross_text_connections.S3_difference.easy.w2b1_17",
+      "template": "S3_difference",
+      "subtype": "Difference",
+      "tier": "easy",
+      "passage": "Text 1\n\nSarah Winnemucca’s 1883 book Life Among the Piutes is commonly described as the first autobiography published by a Native American woman. Historians value it as a firsthand account of Northern Paiute society and of the violent conflicts that followed white settlement in Nevada. Because Winnemucca personally witnessed many events she describes, her book preserves details omitted from official government reports written during that period.\n\nText 2\n\nLife Among the Piutes should be read not as a neutral record but as a deliberate argument. Winnemucca developed large portions of the book from lectures delivered to audiences in eastern cities. She composed it to secure their support for Paiute land claims. Her choices about which events to include, and how to portray them, reflect that purpose, so readers should approach the book as advocacy as much as history.",
+      "stem": "Which choice best describes a difference in how the author of Text 1 and the author of Text 2 view Life Among the Piutes?",
+      "options": [
+        "The author of Text 1 believes that Winnemucca wrote the book alone, whereas the author of Text 2 believes that an editor helped her write it.",
+        "The author of Text 1 focuses on the book’s account of Paiute culture, whereas the author of Text 2 focuses on Winnemucca’s childhood.",
+        "The author of Text 1 doubts that Winnemucca witnessed the events she describes, whereas the author of Text 2 accepts her account as accurate.",
+        "The author of Text 1 values the book mainly as a historical record, whereas the author of Text 2 stresses that it was written to persuade its readers."
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The author of Text 1 presents the book as a valuable “firsthand account” that preserves details missing from government reports. The author of Text 2 argues that the book should be read “not as a neutral record but as a deliberate argument,” written to win support for Paiute land claims. So the author of Text 1 values it mainly as a historical record, whereas the author of Text 2 stresses its persuasive purpose.",
+      "distractors": {
+        "A": {
+          "recipe": "D1 unaddressed add-on",
+          "why_wrong": "Neither text mentions an editor or discusses whether Winnemucca had help writing the book."
+        },
+        "B": {
+          "recipe": "D8 wrong dimension",
+          "why_wrong": "Text 2 is about the book’s persuasive purpose, not Winnemucca’s childhood, and neither text contrasts these topics."
+        },
+        "C": {
+          "recipe": "D2 wrong side",
+          "why_wrong": "Text 1 stresses that Winnemucca witnessed many of the events; Text 2 is the one that treats her account with some caution."
+        }
+      },
+      "models": [
+        "1.9",
+        "1.14"
+      ],
+      "word_count": 138,
+      "sources": [
+        {
+          "what": "Sarah Winnemucca, Life Among the Piutes: Their Wrongs and Claims (1883), often called the first autobiography by a Native American woman; developed from her lectures in the Northeast with help from Mary Peabody Mann; argued for Paiute rights",
+          "url": "https://americacomesalive.com/sarah-winnemucca-ca-1844-1891-educator-and-advocate-for-native-americans/"
+        }
+      ],
+      "notes": "Area: literature and history (autobiography). Both views are unattributed author positions. Whereas-shell on one axis (record vs. advocacy), as in 1.9 and 1.14.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [
+          "explanation quoted “firsthand record” and “not a neutral record but an argument”; now quotes the passage exactly"
+        ],
+        "status": "fixed"
+      }
+    }
+  ]
+}

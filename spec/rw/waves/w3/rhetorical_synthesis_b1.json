@@ -1,0 +1,1303 @@
+{
+  "skill": "Rhetorical Synthesis",
+  "slug": "rhetorical_synthesis",
+  "part": "w3b1",
+  "domain": "Expression of Ideas",
+  "plan": {
+    "templates": [
+      {
+        "code": "SIM",
+        "name": "Similarity"
+      },
+      {
+        "code": "DIFF",
+        "name": "Difference"
+      },
+      {
+        "code": "RANK",
+        "name": "Order or relative degree"
+      },
+      {
+        "code": "SPEC",
+        "name": "Specify or identify a single fact"
+      },
+      {
+        "code": "EMPH",
+        "name": "Emphasize one attribute"
+      },
+      {
+        "code": "DESC",
+        "name": "Describe"
+      },
+      {
+        "code": "EXPL",
+        "name": "Explain (cause, origin, advantage, mechanism, definition, significance)"
+      },
+      {
+        "code": "EXAMPLE",
+        "name": "Example, or explanation plus example"
+      },
+      {
+        "code": "STUDY",
+        "name": "Research study (aim, method, results)"
+      },
+      {
+        "code": "GEN",
+        "name": "Generalization, with or without support"
+      },
+      {
+        "code": "OVERVIEW",
+        "name": "Overview or summary"
+      },
+      {
+        "code": "AUD_NEW",
+        "name": "Introduce or describe to an unfamiliar or new audience"
+      },
+      {
+        "code": "AUD_FAM",
+        "name": "Present or describe to an already familiar audience"
+      },
+      {
+        "code": "QUOTE",
+        "name": "Quotation"
+      }
+    ]
+  },
+  "items": [
+    {
+      "id": "rhetorical_synthesis.EXPL.hard.w3b1_01",
+      "template": "EXPL",
+      "subtype": "Explain significance (chain of three bullets)",
+      "tier": "hard",
+      "passage": "While researching a topic, a student has taken the following notes:\n• The Amazon rainforest’s soils are naturally deficient in phosphorus, a nutrient essential for plant growth.\n• Heavy rainfall and seasonal flooding wash some of this phosphorus out of the soils each year.\n• Chad’s Bodélé Depression, the dried bed of an ancient lake, produces dust rich in phosphorus from fossilized microorganisms.\n• Prevailing winds carry millions of tons of this dust across the Atlantic to the Amazon annually.\n• Researchers estimate that the dust deposits roughly as much phosphorus as the rainforest’s soils lose.",
+      "stem": "The student wants to explain why dust from the Bodélé Depression is important to the Amazon rainforest. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "Dust from the Bodélé Depression adds more phosphorus to the Amazon’s soils each year than rainfall and flooding wash away, gradually correcting the soils’ natural deficiency.",
+        "The phosphorus that Bodélé dust deposits in the Amazon each year roughly equals what the rainforest’s plants absorb from the soil, which helps keep the soils supplied with the nutrient.",
+        "Dust from the Bodélé Depression replaces about as much phosphorus as rain and floods wash out of the Amazon’s soils each year, sustaining a naturally scarce nutrient.",
+        "Rich in phosphorus from fossilized microorganisms, dust from the Bodélé Depression, the dried bed of an ancient lake in Chad, is carried by prevailing winds across the Atlantic."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The goal is to explain why the dust matters to the rainforest. The notes link three facts: the Amazon’s soils are poor in phosphorus, rain and floods wash some of it away each year, and the dust brings about as much phosphorus as is lost. Choice C joins them: the dust replaces, in roughly equal measure, the phosphorus that the naturally poor soils keep losing.",
+      "distractors": {
+        "A": {
+          "recipe": "FALSE (goal-shaped: overstated amount)",
+          "why_wrong": "The notes say the dust’s phosphorus roughly equals what the soils lose, not more than they lose; the sentence overstates the amount."
+        },
+        "B": {
+          "recipe": "FALSE (goal-shaped: wrong loss)",
+          "why_wrong": "The notes compare the dust’s phosphorus with what rainfall and flooding wash out of the soils, not with what the plants absorb."
+        },
+        "D": {
+          "recipe": "OG (origin and route of the dust)",
+          "why_wrong": "It says where the dust comes from and that winds carry it over the Atlantic, but it never connects the dust to the Amazon’s soils, so it does not explain why the dust is important there."
+        }
+      },
+      "models": [
+        "3.17",
+        "3.23",
+        "ee51ad04"
+      ],
+      "word_count": 96,
+      "sources": [],
+      "notes": "Subject: natural science (Saharan dust and Amazon nutrients). Real phenomenon known without a search; the estimate is attributed to unnamed researchers (WAVE.md, no fact-checking for this skill). Option fact check: A FALSE goal-shaped (more than vs roughly equal), B FALSE goal-shaped (plants absorb vs rain and floods remove), D true but off-goal. Goal-only solve (without the notes): A, B and C all explain the dust’s importance.",
+      "band_target": 7,
+      "band7_moves": [
+        "why-goal over a three-bullet chain (poor soils, yearly loss, dust supplies about the same amount)",
+        "key states the derived relation (the dust replenishes what rain and floods remove) in words the notes do not use",
+        "two goal-shaped FALSE options that run the whole explanation with one wrong fact: more phosphorus than is lost, and a loss to the plants instead of to rain and floods",
+        "one accurate off-goal option (where the dust comes from and how it travels)"
+      ],
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [
+          "key C paraphrased away from the notes’ wording (was “intense rainfall and seasonal flooding ... a nutrient that the Amazon’s soils naturally lack”, which also overstated “deficient”)",
+          "notes: “Intense rainfall” to “Heavy rainfall”",
+          "explanation updated"
+        ],
+        "status": "fixed"
+      },
+      "band7": {
+        "verdict": "band 7",
+        "why": "EXPL over a three-bullet chain; derived key (the dust replaces what rain and floods remove) now paraphrased; two goal-shaped FALSE options (more than the loss, loss to plants) plus one OG, as 3fa48bf3; notes 27% rare words."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "C",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "rhetorical_synthesis.STUDY.hard.w3b1_02",
+      "template": "STUDY",
+      "subtype": "Emphasize the aim of a study",
+      "tier": "hard",
+      "passage": "While researching a topic, a student has taken the following notes:\n• In northern Ethiopia, agriculture and livestock grazing have eliminated most of the original forest.\n• Small patches of native forest survive around many Ethiopian Orthodox churches, where trees are protected for religious reasons.\n• A team of ecologists investigated whether these church forests could supply seeds for restoring vegetation on surrounding farmland.\n• The researchers identified tree species and counted seedlings in 28 church forests.\n• Most forests contained seedlings of native species, but few seedlings survived where livestock grazed.",
+      "stem": "The student wants to emphasize the aim of the research study. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "The ecologists set out to determine whether church forests in northern Ethiopia could provide seeds for restoring vegetation on the farmland surrounding them.",
+        "To identify which tree species grow around Ethiopian Orthodox churches, the researchers surveyed trees and counted seedlings in 28 church forests.",
+        "The researchers found that most church forests contained seedlings of native species but that few seedlings survived in areas where livestock grazed.",
+        "The ecologists studied church forests to determine why patches of native forest have survived around Ethiopian Orthodox churches when agriculture has eliminated most of the region’s forest."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The aim is what the ecologists wanted to find out: whether the church forests could supply seeds for restoring vegetation on the surrounding farmland. Choice A states that aim.",
+      "distractors": {
+        "B": {
+          "recipe": "FALSE (method recast as the aim)",
+          "why_wrong": "It describes the team’s method and presents identifying the species as the purpose; the notes say the team investigated whether the forests could supply seeds for restoration."
+        },
+        "C": {
+          "recipe": "OG (findings offered for aim)",
+          "why_wrong": "It reports what the ecologists found, not what they set out to learn."
+        },
+        "D": {
+          "recipe": "FALSE (goal-shaped: wrong aim)",
+          "why_wrong": "The notes give the reason the forests survive (the trees are protected for religious reasons) as background; explaining their survival was not the study’s aim."
+        }
+      },
+      "models": [
+        "3.1",
+        "973632d2",
+        "56b000d0",
+        "c40a1964"
+      ],
+      "word_count": 92,
+      "sources": [],
+      "notes": "Subject: natural science (forest restoration). Real setting (church forests of northern Ethiopia); the study is written for unnamed ecologists with plausible, unverified details (WAVE.md). Band 6 by plan: study-slot distractors (method dressed as an aim, findings) plus one goal-shaped false aim.",
+      "band_target": 6,
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [
+          "“twenty-eight” to “28” in notes and option B"
+        ],
+        "status": "fixed"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "“Emphasize the aim” is the band-6 study-slot pattern (spec section 5); strong band 6 with two goal-shaped false aims and one findings option."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "A",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "rhetorical_synthesis.OVERVIEW.hard.w3b1_03",
+      "template": "OVERVIEW",
+      "subtype": "Historical overview",
+      "tier": "hard",
+      "passage": "While researching a topic, a student has taken the following notes:\n• The Qhapaq Ñan was a road network connecting Cusco, the Inca capital, with the empire’s distant provinces.\n• During the 1400s, the Inca extended it to more than 30,000 kilometers, incorporating many roads constructed by earlier Andean civilizations.\n• After the Spanish conquest of the 1530s, much of the network fell into disrepair; its steep staircases were unsuitable for horses and wagons.\n• Local communities still use some sections.\n• In 2014, six South American countries jointly secured its designation as a UNESCO World Heritage Site.",
+      "stem": "The student wants to provide an overview of the Qhapaq Ñan’s history. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "After the Inca extended it in the 1400s, the Qhapaq Ñan connected Cusco with distant provinces until the Spanish conquest, when the entire network was abandoned; in 2014, it received UNESCO World Heritage status.",
+        "Extended by the Inca to more than 30,000 kilometers in the 1400s, the Qhapaq Ñan largely fell into disrepair after the Spanish conquest, though in 2014 the local communities still using it secured its UNESCO World Heritage listing.",
+        "Some sections of the Qhapaq Ñan, a road network named a UNESCO World Heritage Site in 2014, are still used by local communities.",
+        "Expanded by the Inca in the 1400s from roads that earlier Andean civilizations had built, the Qhapaq Ñan largely fell into disrepair after the Spanish conquest before becoming a UNESCO World Heritage Site in 2014."
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "An overview of the network’s history has to cover its whole arc: the Inca extended it in the 1400s from older roads, much of it fell into disrepair after the Spanish conquest, and it was listed as a World Heritage Site in 2014. Choice D covers all three stages and stays true to the notes.",
+      "distractors": {
+        "A": {
+          "recipe": "FALSE (goal-shaped: overstated decline)",
+          "why_wrong": "The notes say much of the network deteriorated and that local communities still use some sections, so the entire network was not abandoned."
+        },
+        "B": {
+          "recipe": "FALSE (goal-shaped: wrong agent)",
+          "why_wrong": "It follows the right arc, but the notes say six South American countries jointly secured the UNESCO listing, not the local communities that still use some sections."
+        },
+        "C": {
+          "recipe": "PART (present-day status only)",
+          "why_wrong": "It gives only the network’s current status and use; it leaves out its Inca expansion and its decline after the conquest, so it is not an overview of its history."
+        }
+      },
+      "models": [
+        "3.22",
+        "3.8",
+        "3.9"
+      ],
+      "word_count": 98,
+      "sources": [],
+      "notes": "Subject: history (Inca road network). Facts are general knowledge (Inca expansion in the 1400s, decline after the conquest, joint 2014 UNESCO listing by six countries); no fact-check per WAVE.md. Option fact check: A FALSE goal-shaped (entire network vs much of, and some sections still used), B FALSE goal-shaped (the 2014 listing credited to the local communities instead of six countries; reviewer replaced a reversed-chronology version), C true but partial. Goal-only solve: A, B and D all read as overviews.",
+      "band_target": 7,
+      "band7_moves": [
+        "overview goal over a dated arc (Inca expansion, decline after the conquest, 2014 listing) with a present-day bullet as fodder",
+        "key compresses three bullets into one dated arc",
+        "two goal-shaped FALSE options that span the same arc with one wrong fact each: abandoned entirely, and expanded after the conquest",
+        "one PART option (present-day status only)"
+      ],
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [
+          "option B replaced: the reversed-chronology version was killed by one obvious date; now a goal-shaped FALSE that runs the right arc and credits the 2014 listing to the local communities instead of six countries",
+          "key D reworded (“from roads that earlier Andean civilizations had built”, “fell into disrepair”)",
+          "notes: “deteriorated” to “fell into disrepair”, “stone” cut",
+          "A “designation” to “status”, C “designated” to “named”",
+          "explanation, B why_wrong and notes updated"
+        ],
+        "status": "fixed"
+      },
+      "band7": {
+        "verdict": "band 7",
+        "why": "OVERVIEW in the 964c6055 shape plus two goal-shaped FALSE options; after the fix B misattaches the 2014 listing to the wrong agent and needs a cross-check against the last bullet, A overstates the decline; one PART."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "D",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "rhetorical_synthesis.AUD_FAM.hard.w3b1_04",
+      "template": "AUD_FAM",
+      "subtype": "Present findings to a familiar audience",
+      "tier": "hard",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Allelopathy occurs when a plant releases chemicals that inhibit the growth of neighboring plants.\n• The tree of heaven, native to China, is invasive throughout North America and Europe.\n• Researchers grew native tree seedlings in soil from beneath tree of heaven stands and in soil from comparable areas without the tree.\n• Seedlings in soil from beneath the tree of heaven grew approximately one-third less than the others.\n• The researchers suggest that a compound from the tree’s decomposing leaves accumulates in the soil.",
+      "stem": "The student wants to present the study’s findings to an audience already familiar with allelopathy. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "Native tree seedlings grew less in soil from beneath the tree of heaven, researchers found, a sign of allelopathy, which occurs when a plant releases chemicals that inhibit the growth of its neighbors.",
+        "Researchers found that native tree seedlings grew approximately one-third less in soil from beneath tree of heaven stands than in other soil, possibly because of a compound from the tree’s decomposing leaves.",
+        "To study allelopathy, in which plants release chemicals that inhibit the growth of neighboring plants, researchers grew native tree seedlings in soil from beneath the tree of heaven.",
+        "A compound from the decomposing leaves of the tree of heaven, which is native to China but invasive in North America and Europe, may accumulate in the soil."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "Choice B gives the study’s finding (seedlings grew approximately one-third less in soil from beneath the tree of heaven) and the researchers’ suggested cause, and it does not define allelopathy, which this audience already knows.",
+      "distractors": {
+        "A": {
+          "recipe": "AUD (re-defines the familiar term)",
+          "why_wrong": "It reports the finding but then explains what allelopathy is, which an audience already familiar with the term does not need."
+        },
+        "C": {
+          "recipe": "AUD + PART (method with a definition)",
+          "why_wrong": "It defines allelopathy for an audience that already knows it and describes how the study was done without giving its findings."
+        },
+        "D": {
+          "recipe": "PART (suggested cause without the finding)",
+          "why_wrong": "It gives the researchers’ suggested explanation and background on the tree, but not what they found about the seedlings."
+        }
+      },
+      "models": [
+        "3.16",
+        "3.7",
+        "2.1"
+      ],
+      "word_count": 97,
+      "sources": [],
+      "notes": "Subject: natural science (plant ecology). Band 6: AUD_FAM has no band-7 official items (spec/rw/band7/rhetorical_synthesis.md), so the plan’s 7 is written as a strong band 6 (WAVE.md). Real tree and real phenomenon; the study is written for an unnamed team with plausible, unverified details. Hardest option A is complete except that it re-defines the term (the 2.1 D pattern).",
+      "band_target": 6,
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "AUD_FAM has no band-7 official items, so it cannot be band 7; strong band 6 in the 39ccb463 shape (AUD, AUD, PART), the hardest option complete except for re-defining the term."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "B",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "rhetorical_synthesis.DESC.hard.w3b1_05",
+      "template": "DESC",
+      "subtype": "Describe a process",
+      "tier": "hard",
+      "passage": "While researching a topic, a student has taken the following notes:\n• The cochineal is a tiny insect that feeds on prickly pear cacti; females produce carminic acid, a red pigment.\n• To manufacture the dye, workers scrape the females from cactus pads and dry them.\n• The dried insects are ground into a powder, which is boiled in water to extract the pigment.\n• Before dyeing, wool is soaked in alum, a mineral salt that acts as a mordant.\n• The mordant binds the pigment to the fibers, preventing the color from washing out.",
+      "stem": "The student wants to describe how wool is dyed with cochineal. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "Female cochineal insects are dried and ground, and the powder is boiled in alum, which extracts the red pigment and binds it directly to the wool.",
+        "Prickly pear pads are dried and ground, and the powder is boiled in water to extract carminic acid, which binds to wool that has been soaked in alum.",
+        "Female cochineal insects are dried, ground, and boiled to extract their red pigment, which binds to wool that has first been soaked in alum, a mordant.",
+        "Dried and ground cochineal insects are boiled to extract their red pigment, and the dyed wool is afterward soaked in alum so that the color does not wash out."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The notes give the process in order: the female insects are dried, ground, and boiled to extract their pigment, and the wool, soaked in alum beforehand, holds the color because the mordant binds it. Choice C keeps every step and its order.",
+      "distractors": {
+        "A": {
+          "recipe": "FALSE (goal-shaped: wrong agent)",
+          "why_wrong": "The notes say the powder is boiled in water to extract the pigment; the alum is a mordant in which the wool is soaked before dyeing, not the liquid that extracts the pigment."
+        },
+        "B": {
+          "recipe": "FALSE (goal-shaped: wrong source)",
+          "why_wrong": "The pigment comes from the insects, not from the cactus; the notes say the insects, not the prickly pear pads, are dried and ground."
+        },
+        "D": {
+          "recipe": "FALSE (goal-shaped: wrong order)",
+          "why_wrong": "The notes say the wool is soaked in alum before dyeing, not afterward."
+        }
+      },
+      "models": [
+        "3.24",
+        "cfade68d"
+      ],
+      "word_count": 95,
+      "sources": [],
+      "notes": "Subject: science and craft (natural dye). Process facts are general knowledge; no named people. Unlabelled bullets (no Step labels; GENERATE.md tells list). Option fact check: A, B and D each FALSE in one step; only C matches every bullet. Goal-only solve: all four describe a dyeing process.",
+      "band_target": 7,
+      "band7_moves": [
+        "describe a four-stage process (dry, grind, boil, mordant) with an order word that matters (before dyeing)",
+        "three goal-shaped FALSE options, each running the whole process with one swapped agent, source or step (powder boiled in alum, the cactus is ground, the mordant comes last)",
+        "key compresses four bullets into one sentence in the right order"
+      ],
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [
+          "notes bullet 1 grammar (“Cochineal are tiny insects” to “The cochineal is a tiny insect”)",
+          "“pulverized” to “ground” in notes and all four options; “functions as” to “acts as”; fodder “in sunlight or ovens” cut",
+          "explanation and B why_wrong updated"
+        ],
+        "status": "fixed"
+      },
+      "band7": {
+        "verdict": "band 7",
+        "why": "DESC process with three goal-shaped FALSE options, each one swapped agent, source or step (as b07a7634); key needs all four stages in order; notes 35% rare words."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "C",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "rhetorical_synthesis.DIFF.medium.w3b1_06",
+      "template": "DIFF",
+      "subtype": "Difference",
+      "tier": "medium",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Reef-building corals reproduce sexually through two main strategies.\n• Broadcast-spawning corals release eggs and sperm into the surrounding water, where fertilization occurs.\n• On many reefs, dozens of species spawn at once on a few nights each year, soon after a full moon.\n• Brooding corals retain their eggs internally, where sperm drawn in from the water fertilizes them.\n• Their larvae develop inside the parent before being released.",
+      "stem": "The student wants to contrast where fertilization takes place in the two kinds of corals. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "Both broadcast-spawning corals and brooding corals depend on sperm carried through the water to fertilize their eggs.",
+        "Whereas the eggs of broadcast-spawning corals are fertilized in the open water, those of brooding corals are fertilized inside the parent.",
+        "On many reefs, dozens of broadcast-spawning species release their eggs and sperm on the same few nights each year, soon after a full moon.",
+        "Broadcast-spawning corals and brooding corals both reproduce sexually, but they do so through different strategies."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The goal asks where fertilization happens in each kind of coral. Choice B sets the two side by side: broadcast spawners’ eggs are fertilized in the open water, brooders’ eggs inside the parent.",
+      "distractors": {
+        "A": {
+          "recipe": "REL (similarity instead of contrast)",
+          "why_wrong": "It states something the two kinds share (sperm travels through the water) rather than contrasting where fertilization occurs."
+        },
+        "C": {
+          "recipe": "PART (one kind only)",
+          "why_wrong": "It describes only broadcast-spawning corals and their timing; brooding corals are not mentioned."
+        },
+        "D": {
+          "recipe": "VAGUE",
+          "why_wrong": "It says the two strategies differ without saying where fertilization happens in either."
+        }
+      },
+      "models": [
+        "2.11",
+        "2.17",
+        "2.32"
+      ],
+      "word_count": 81,
+      "sources": [],
+      "notes": "Subject: natural science (coral reproduction). General knowledge; no named people. No fact-check per WAVE.md (Rhetorical Synthesis).",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.DIFF.medium.w3b1_07",
+      "template": "DIFF",
+      "subtype": "Difference",
+      "tier": "medium",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Inuktitut is a language spoken by Inuit in northern Canada.\n• In Nunavut, it is usually written in syllabics, a script in which each symbol represents a syllable.\n• This script was adapted from one that missionary James Evans devised for the Cree language in the 1840s.\n• In Labrador, Inuit write their dialect with the Latin alphabet, the script used for English.\n• Moravian missionaries introduced alphabetic writing there in the 1700s.",
+      "stem": "The student wants to contrast how Inuit write their language in Nunavut and in Labrador. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "In both Nunavut and Labrador, the script that Inuit use for writing can be traced to the work of missionaries.",
+        "Adapted from a script that James Evans devised for Cree, the syllabics used in Nunavut represent each syllable with a single symbol.",
+        "Inuktitut is spoken by Inuit in northern Canada, including in Nunavut and Labrador.",
+        "Inuit in Nunavut usually write their language in syllabics, whereas those in Labrador use the Latin alphabet."
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "To contrast the two places, the sentence must name the script used in each. Choice D does: syllabics in Nunavut, the Latin alphabet in Labrador.",
+      "distractors": {
+        "A": {
+          "recipe": "REL (similarity instead of contrast)",
+          "why_wrong": "It points out what the two scripts have in common (both trace back to missionaries), not how the writing differs."
+        },
+        "B": {
+          "recipe": "PART (one place only)",
+          "why_wrong": "It describes only the syllabics used in Nunavut and says nothing about Labrador."
+        },
+        "C": {
+          "recipe": "OG (background)",
+          "why_wrong": "It says where the language is spoken but not how it is written in either place."
+        }
+      },
+      "models": [
+        "2.10",
+        "2.23",
+        "2.19"
+      ],
+      "word_count": 85,
+      "sources": [],
+      "notes": "Subject: social science (writing systems). General knowledge (Evans’s Cree syllabics, Moravian missions in Labrador). No fact-check per WAVE.md (Rhetorical Synthesis).",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.DIFF.medium.w3b1_08",
+      "template": "DIFF",
+      "subtype": "Difference",
+      "tier": "medium",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Hand-knotted carpets are made by tying short pieces of yarn around vertical threads called warps.\n• Weavers traditionally use two principal kinds of knots.\n• A symmetrical, or Turkish, knot is wrapped around two neighboring warps, with both ends emerging between them.\n• An asymmetrical, or Persian, knot is wrapped fully around one warp but merely passes behind the next.\n• Asymmetrical knots can be packed more densely, allowing finer detail.",
+      "stem": "The student wants to contrast how the yarn is wrapped in the two kinds of knots. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "While a symmetrical knot is wrapped around two neighboring warps, an asymmetrical knot is wrapped fully around only one, merely passing behind the next.",
+        "Asymmetrical knots can be packed more densely than symmetrical knots can, which allows weavers to create finer detail.",
+        "Both symmetrical and asymmetrical knots are made by tying short pieces of yarn around the vertical threads of a carpet.",
+        "Turkish and Persian knots are the two main kinds of knots in hand-knotted carpets, and they are tied in different ways."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The goal is a contrast in how the yarn is wrapped. Choice A gives both: a symmetrical knot wraps two warps, while an asymmetrical knot wraps fully around only one.",
+      "distractors": {
+        "B": {
+          "recipe": "REL (wrong dimension)",
+          "why_wrong": "It contrasts how densely the knots can be packed, not how the yarn is wrapped."
+        },
+        "C": {
+          "recipe": "REL (similarity instead of contrast)",
+          "why_wrong": "It states what the two knots have in common."
+        },
+        "D": {
+          "recipe": "VAGUE",
+          "why_wrong": "It says the knots are tied differently without saying how the yarn is wrapped in either."
+        }
+      },
+      "models": [
+        "2.32",
+        "2.41",
+        "2.17"
+      ],
+      "word_count": 83,
+      "sources": [],
+      "notes": "Subject: arts and crafts (carpet weaving). General knowledge; no named people. No fact-check per WAVE.md (Rhetorical Synthesis).",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.AUD_NEW.medium.w3b1_09",
+      "template": "AUD_NEW",
+      "subtype": "Introduce to a new audience",
+      "tier": "medium",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Harambee is a Swahili word meaning “all pull together.”\n• In Kenya, it refers to a tradition of community self-help in which residents pool money and labor for shared projects.\n• Harambee fundraisers have financed schools, clinics, and water systems throughout the country.\n• After independence in 1963, President Jomo Kenyatta adopted harambee as a national slogan.\n• The word appears on Kenya’s coat of arms.",
+      "stem": "The student wants to introduce harambee to a new audience. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "Harambee fundraisers have financed schools, clinics, and water systems throughout Kenya.",
+        "After Kenya gained independence in 1963, President Jomo Kenyatta adopted harambee as a national slogan, and the word now appears on the country’s coat of arms.",
+        "Harambee, a Swahili word meaning “all pull together,” names a Kenyan tradition in which residents pool money and labor for community projects.",
+        "The Swahili word harambee means “all pull together.”"
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "An audience new to harambee needs to learn what it is. Choice C explains the word’s meaning and the tradition itself: residents pooling money and labor for community projects.",
+      "distractors": {
+        "A": {
+          "recipe": "AUD (no orienting context)",
+          "why_wrong": "It mentions harambee fundraisers as if the audience already knew what harambee is."
+        },
+        "B": {
+          "recipe": "OG (history of the slogan)",
+          "why_wrong": "It gives the word’s later use as a slogan and emblem without explaining the tradition."
+        },
+        "D": {
+          "recipe": "PART (word meaning only)",
+          "why_wrong": "It translates the word but never says what the harambee tradition is."
+        }
+      },
+      "models": [
+        "2.26",
+        "2.43",
+        "2.8"
+      ],
+      "word_count": 78,
+      "sources": [],
+      "notes": "Subject: social science (Kenyan civic tradition). General knowledge (meaning, Kenyatta’s slogan, coat of arms). No fact-check per WAVE.md (Rhetorical Synthesis).",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [
+          "key C: harambee is the Swahili word itself, not “from a Swahili word”"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.AUD_NEW.medium.w3b1_10",
+      "template": "AUD_NEW",
+      "subtype": "Describe a work to an audience unfamiliar with the artist",
+      "tier": "medium",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Liza Macaraeg is a Filipino American artist.\n• She creates large sculptures from abacá, a durable fiber obtained from a banana plant native to the Philippines.\n• Her 2019 installation Undertow consists of hundreds of hand-knotted abacá cords suspended from the ceiling.\n• The cords are dyed in shades of blue that darken toward the floor.\n• As visitors walk among them, the cords sway and brush against one another.",
+      "stem": "The student wants to describe Undertow to an audience unfamiliar with Liza Macaraeg. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "Undertow’s hundreds of hand-knotted abacá cords, which are dyed in shades of blue that darken toward the floor, sway and brush against one another as visitors walk among them.",
+        "In Undertow (2019), Filipino American artist Liza Macaraeg suspended hundreds of hand-knotted abacá cords, dyed in deepening blues, from the ceiling.",
+        "Filipino American artist Liza Macaraeg creates large sculptures from abacá, a durable fiber obtained from a banana plant.",
+        "Macaraeg’s 2019 installation Undertow consists of hundreds of abacá cords suspended from the ceiling."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "Choice B describes Undertow (hundreds of knotted abacá cords in deepening blues hanging from the ceiling) and tells an unfamiliar audience who made it: Filipino American artist Liza Macaraeg.",
+      "distractors": {
+        "A": {
+          "recipe": "AUD (no orienting context)",
+          "why_wrong": "It describes the work but never says who made it, so a reader unfamiliar with Macaraeg learns nothing about the artist."
+        },
+        "C": {
+          "recipe": "OG (artist’s general practice)",
+          "why_wrong": "It introduces the artist and her material but does not describe Undertow."
+        },
+        "D": {
+          "recipe": "AUD (name without identification)",
+          "why_wrong": "It uses Macaraeg’s surname as if the reader already knew who she is."
+        }
+      },
+      "models": [
+        "2.34",
+        "2.36"
+      ],
+      "word_count": 82,
+      "sources": [],
+      "notes": "Subject: arts (installation). Invented artist and work (WAVE.md: invented names where unverified); web search for “Liza Macaraeg” found no real artist of that name. Abacá facts are general knowledge.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [],
+        "status": "pass",
+        "checks": "searched “Liza Macaraeg” artist: no real artist of that name (closest: Liza Macawili, Liza Mac); invented name reads as a real Filipino American name"
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.EMPH.medium.w3b1_11",
+      "template": "EMPH",
+      "subtype": "Emphasize one attribute (duration)",
+      "tier": "medium",
+      "passage": "While researching a topic, a student has taken the following notes:\n• The Persian poet Ferdowsi was born around 940 CE near the city of Tus, in present-day Iran.\n• His epic poem, the Shahnameh, or “Book of Kings,” recounts the history of Iran’s rulers from mythical times to the 600s CE.\n• Ferdowsi worked on the poem for roughly thirty years, completing it around 1010.\n• The finished work contains approximately 50,000 couplets.\n• Because Ferdowsi largely avoided Arabic vocabulary, the poem helped preserve the Persian language.",
+      "stem": "The student wants to emphasize how long Ferdowsi spent writing the Shahnameh. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "Completed around 1010, the Shahnameh recounts the history of Iran’s rulers from mythical times to the 600s CE.",
+        "Ferdowsi’s Shahnameh, an epic poem also known as the “Book of Kings,” contains approximately 50,000 couplets.",
+        "By largely avoiding Arabic vocabulary in the Shahnameh, Ferdowsi helped preserve the Persian language.",
+        "Ferdowsi devoted roughly three decades of his life to writing the Shahnameh."
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The notes say Ferdowsi worked on the poem for roughly thirty years. Choice D foregrounds that span (“roughly three decades of his life”).",
+      "distractors": {
+        "A": {
+          "recipe": "OG (completion date and subject)",
+          "why_wrong": "It gives the year the poem was finished and the period it covers, but not how long Ferdowsi spent writing it."
+        },
+        "B": {
+          "recipe": "OG (length of the poem)",
+          "why_wrong": "It emphasizes the poem’s size, not the time Ferdowsi spent on it."
+        },
+        "C": {
+          "recipe": "OG (significance)",
+          "why_wrong": "It explains the poem’s effect on the Persian language, not how long it took to write."
+        }
+      },
+      "models": [
+        "2.20",
+        "2.14",
+        "2.6"
+      ],
+      "word_count": 88,
+      "sources": [],
+      "notes": "Subject: literature (Persian epic). General knowledge (about thirty years, completed around 1010, about 50,000 couplets). No fact-check per WAVE.md (Rhetorical Synthesis).",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.EXPL.medium.w3b1_12",
+      "template": "EXPL",
+      "subtype": "Explain the origin of a name",
+      "tier": "medium",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Astronaut Stuart Roosa piloted the command module of the 1971 Apollo 14 mission.\n• Before joining NASA, Roosa had been a smokejumper, a firefighter who parachutes into remote wilderness.\n• During the mission, he carried roughly 500 tree seeds in his personal kit while the module orbited the Moon.\n• After the seeds returned to Earth, the seedlings grown from them were planted across the United States.\n• These trees became known as “Moon trees.”",
+      "stem": "The student wants to explain why the trees are known as Moon trees. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "The trees are called Moon trees because they grew from seeds that Stuart Roosa carried in orbit around the Moon during the 1971 Apollo 14 mission.",
+        "A former smokejumper, astronaut Stuart Roosa piloted the command module of the 1971 Apollo 14 mission.",
+        "Seedlings grown from seeds that returned to Earth after the Apollo 14 mission were planted across the United States.",
+        "The name “Moon trees” reflects a connection between the trees and a space mission."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "Choice A links the name to its cause: the trees grew from seeds that Roosa carried in orbit around the Moon.",
+      "distractors": {
+        "B": {
+          "recipe": "OG (background on Roosa)",
+          "why_wrong": "It describes Roosa’s career and role on the mission but does not mention the trees or their name."
+        },
+        "C": {
+          "recipe": "PART (link to the Moon missing)",
+          "why_wrong": "It says where the seedlings were planted but never says the seeds traveled around the Moon, which is what the name refers to."
+        },
+        "D": {
+          "recipe": "VAGUE",
+          "why_wrong": "It says the name reflects a connection without saying what the connection is."
+        }
+      },
+      "models": [
+        "2.13",
+        "2.7",
+        "2.15"
+      ],
+      "word_count": 87,
+      "sources": [],
+      "notes": "Subject: history of science (Apollo 14). General knowledge (Roosa, smokejumper, about 500 seeds). No fact-check per WAVE.md (Rhetorical Synthesis).",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.EXPL.medium.w3b1_13",
+      "template": "EXPL",
+      "subtype": "Explain a process",
+      "tier": "medium",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Permafrost is ground that remains frozen for at least two consecutive years.\n• In winter, extreme cold causes frozen ground to contract, opening narrow vertical cracks.\n• In spring, meltwater trickles into the cracks and refreezes, forming thin vertical veins of ice.\n• Repeated over centuries, this cycle gradually widens each vein into a wedge several meters deep.\n• Seen from above, the cracks often connect to form a pattern of polygons.",
+      "stem": "The student wants to explain how ice wedges form. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "Seen from above, the cracks in which ice wedges form frequently connect to create an extensive pattern of polygons across the permafrost.",
+        "In winter, extreme cold causes frozen ground to contract, opening narrow vertical cracks.",
+        "Ice wedges form as meltwater repeatedly fills and freezes in cracks that open when frozen ground contracts during winter.",
+        "Found in permafrost, ground that remains frozen for at least two consecutive years, ice wedges can reach several meters deep."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "Choice C explains the process: cracks open as frozen ground contracts in winter, and meltwater repeatedly fills them and freezes, which over time builds the ice into wedges.",
+      "distractors": {
+        "A": {
+          "recipe": "OG (pattern seen from above)",
+          "why_wrong": "It describes how the cracks look from above, not how the wedges form."
+        },
+        "B": {
+          "recipe": "PART (first step only)",
+          "why_wrong": "It explains how the cracks open but not how the ice fills and widens them."
+        },
+        "D": {
+          "recipe": "OG (where and how deep)",
+          "why_wrong": "It says where ice wedges occur and how deep they reach, not how they form."
+        }
+      },
+      "models": [
+        "2.31",
+        "2.3",
+        "2.13"
+      ],
+      "word_count": 84,
+      "sources": [],
+      "notes": "Subject: earth science (permafrost). General knowledge; no named people. No fact-check per WAVE.md (Rhetorical Synthesis).",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.SIM.medium.w3b1_14",
+      "template": "SIM",
+      "subtype": "Similarity",
+      "tier": "medium",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Indigenous communities in Latin America have long traditions of shared work.\n• In southern Mexico, Zapotec and Mixe towns practice tequio, which requires residents to give unpaid labor to community projects.\n• In the Andes, the Quechua tradition of minga brings neighbors together to harvest crops or repair irrigation canals.\n• Minga participants are typically rewarded with food and drink rather than wages.\n• Tequio is often a formal condition of community membership.",
+      "stem": "The student wants to emphasize a similarity between tequio and minga. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "Tequio is often a formal condition of community membership, whereas minga participants are typically rewarded with food and drink.",
+        "In the Andes, the Quechua tradition of minga brings neighbors together to harvest crops or repair irrigation canals.",
+        "Tequio and minga have certain features in common, though one is practiced in Mexico and the other in the Andes.",
+        "In both tequio and minga, community members contribute their labor without wages to shared projects."
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The notes say tequio involves unpaid labor for community projects and that minga participants work on shared tasks for food and drink rather than wages. Choice D states that shared trait for both traditions.",
+      "distractors": {
+        "A": {
+          "recipe": "REL (contrast instead of similarity)",
+          "why_wrong": "It sets the two traditions against each other rather than saying what they share."
+        },
+        "B": {
+          "recipe": "PART (one tradition only)",
+          "why_wrong": "It describes only minga."
+        },
+        "C": {
+          "recipe": "VAGUE",
+          "why_wrong": "It says the traditions have features in common without naming any."
+        }
+      },
+      "models": [
+        "2.30",
+        "2.24",
+        "2.46"
+      ],
+      "word_count": 85,
+      "sources": [],
+      "notes": "Subject: social science (communal labor traditions). General knowledge; no named people. No fact-check per WAVE.md (Rhetorical Synthesis).",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.RANK.medium.w3b1_15",
+      "template": "RANK",
+      "subtype": "Relative degree",
+      "tier": "medium",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Several of the world’s highest volcanoes rise along the border between Chile and Argentina, in the Andes mountains.\n• Ojos del Salado reaches 6,893 meters above sea level.\n• It is generally considered the highest volcano on Earth and holds a crater lake near its summit.\n• Llullaillaco, located farther north along the same border, reaches 6,739 meters.\n• In 1999, archaeologists discovered well-preserved Inca offerings near Llullaillaco’s summit.",
+      "stem": "The student wants to emphasize how Llullaillaco’s height compares with that of Ojos del Salado. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "Although Llullaillaco rises more than 6,700 meters above sea level, it is about 150 meters lower than Ojos del Salado.",
+        "At 6,739 meters, Llullaillaco rises roughly 150 meters higher than Ojos del Salado.",
+        "Ojos del Salado reaches 6,893 meters above sea level, and Llullaillaco reaches 6,739 meters.",
+        "In 1999, archaeologists discovered Inca offerings near the summit of Llullaillaco, one of several high volcanoes along the border between Chile and Argentina."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "Llullaillaco (6,739 meters) is about 150 meters lower than Ojos del Salado (6,893 meters). Choice A states that comparison directly while noting how high Llullaillaco still is.",
+      "distractors": {
+        "B": {
+          "recipe": "FALSE (reversed comparison)",
+          "why_wrong": "It reverses the comparison: Llullaillaco is lower than Ojos del Salado, not higher."
+        },
+        "C": {
+          "recipe": "LIST (both values, no relation)",
+          "why_wrong": "It gives both heights side by side but never states how they compare."
+        },
+        "D": {
+          "recipe": "OG (archaeological find)",
+          "why_wrong": "It mentions a discovery on Llullaillaco and its general setting, not its height relative to Ojos del Salado."
+        }
+      },
+      "models": [
+        "2.37",
+        "2.44",
+        "2.27"
+      ],
+      "word_count": 81,
+      "sources": [],
+      "notes": "Subject: earth science (Andean volcanoes). Heights are standard published figures. No fact-check per WAVE.md (Rhetorical Synthesis).",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.EXAMPLE.medium.w3b1_16",
+      "template": "EXAMPLE",
+      "subtype": "Explanation and example",
+      "tier": "medium",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Plants that get much of their water from groundwater are known as phreatophytes.\n• Their roots extend deep enough to reach the water table, below which the ground is saturated.\n• Mesquite is a shrub or small tree native to deserts of the southwestern United States and northern Mexico.\n• Its taproot can reach groundwater more than 50 meters underground.\n• Indigenous peoples of the region have long ground mesquite pods into flour.",
+      "stem": "The student wants to provide an explanation and an example of phreatophytes. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "Phreatophytes are plants whose roots extend deep enough to reach the water table, below which the ground is saturated.",
+        "Phreatophytes, plants that draw much of their water from groundwater, include mesquite, whose taproot can reach water more than 50 meters underground.",
+        "Mesquite, a desert shrub native to the southwestern United States and northern Mexico, has a taproot that can reach groundwater more than 50 meters underground.",
+        "Indigenous peoples of the southwestern United States and northern Mexico have long ground the pods of mesquite, a desert shrub, into flour."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "Choice B does both jobs: it explains what phreatophytes are (plants that draw much of their water from groundwater) and names an example, mesquite, with the detail that shows why it qualifies.",
+      "distractors": {
+        "A": {
+          "recipe": "PART (explanation only)",
+          "why_wrong": "It explains phreatophytes but gives no example."
+        },
+        "C": {
+          "recipe": "PART (example only)",
+          "why_wrong": "It describes mesquite but never explains what a phreatophyte is or says that mesquite is one."
+        },
+        "D": {
+          "recipe": "OG (use of mesquite pods)",
+          "why_wrong": "It describes a use of mesquite and says nothing about phreatophytes."
+        }
+      },
+      "models": [
+        "2.16",
+        "2.25",
+        "2.42"
+      ],
+      "word_count": 85,
+      "sources": [],
+      "notes": "Subject: natural science (desert plants). General knowledge; mesquite root depth rounded. No fact-check per WAVE.md (Rhetorical Synthesis).",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [
+          "notes: “obtain” to “get”"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.STUDY.medium.w3b1_17",
+      "template": "STUDY",
+      "subtype": "Present the results",
+      "tier": "medium",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Northern quolls are small predatory marsupials native to northern Australia.\n• Many quolls die after eating cane toads, a poisonous invasive species spreading across the region.\n• Researchers wanted to know whether quolls could be taught to avoid toads.\n• The team fed captive quolls sausages made from toad meat and a chemical causing temporary nausea, then released them into territories that toads were spreading into.\n• The trained quolls attacked toads less often and survived longer than untrained quolls.",
+      "stem": "The student wants to present the study’s results. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "Researchers wanted to find out whether northern quolls could be taught to avoid poisonous cane toads.",
+        "Researchers fed captive quolls toad-meat sausages containing a chemical causing temporary nausea before releasing them into territories that toads were spreading into.",
+        "Quolls that had eaten the nausea-inducing toad sausages attacked toads less often and survived longer than quolls that had not.",
+        "Northern quolls, small predatory marsupials native to northern Australia, often die after eating invasive cane toads."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The results are what the researchers found: the trained quolls attacked toads less often and survived longer than untrained ones. Choice C reports exactly that.",
+      "distractors": {
+        "A": {
+          "recipe": "OG (aim offered for results)",
+          "why_wrong": "It states what the researchers wanted to know, not what they found."
+        },
+        "B": {
+          "recipe": "OG (method offered for results)",
+          "why_wrong": "It describes how the study was carried out, not its results."
+        },
+        "D": {
+          "recipe": "OG (background)",
+          "why_wrong": "It gives the problem that prompted the study, not the study’s results."
+        }
+      },
+      "models": [
+        "2.5",
+        "2.2",
+        "2.21"
+      ],
+      "word_count": 92,
+      "sources": [],
+      "notes": "Subject: natural science (conservation behavior). Real problem and real kind of trial; the study is attributed to unnamed researchers with simplified details. No fact-check per WAVE.md (Rhetorical Synthesis).",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [
+          "“colonizing” to “spreading into” in notes and option B"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.AUD_FAM.medium.w3b1_18",
+      "template": "AUD_FAM",
+      "subtype": "Describe to a familiar audience",
+      "tier": "medium",
+      "passage": "While researching a topic, a student has taken the following notes:\n• A mashrabiya is a projecting window enclosed by carved wooden latticework, common in traditional Arab architecture.\n• It admits breezes while shading the interior and providing privacy.\n• Designed by French architect Jean Nouvel, Paris’s Institut du Monde Arabe opened in 1987.\n• Its glass south facade is covered with metal panels patterned like mashrabiyas.\n• Each panel contains light-sensitive openings that widen or narrow, like a camera lens, to regulate incoming sunlight.",
+      "stem": "The student wants to describe the Institut du Monde Arabe’s south facade to an audience already familiar with mashrabiyas. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "The Institut du Monde Arabe’s south facade is covered with panels patterned like mashrabiyas, projecting windows enclosed by carved wooden latticework.",
+        "Like a mashrabiya, which admits breezes while shading the interior and providing privacy, the Institut du Monde Arabe’s glass facade regulates how much sunlight enters the building.",
+        "Designed by French architect Jean Nouvel, the Institut du Monde Arabe opened in Paris in 1987.",
+        "Patterned like mashrabiyas, the metal panels on the Institut du Monde Arabe’s south facade contain openings that widen or narrow to regulate incoming sunlight."
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "Choice D describes the facade (metal panels patterned like mashrabiyas, with openings that widen or narrow to control sunlight) and uses the term mashrabiya without explaining it, which suits an audience that already knows it.",
+      "distractors": {
+        "A": {
+          "recipe": "AUD (re-defines the familiar term)",
+          "why_wrong": "It explains what a mashrabiya is, which this audience already knows, and leaves out how the panels work."
+        },
+        "B": {
+          "recipe": "AUD (re-explains the familiar term)",
+          "why_wrong": "It spends its words on what a mashrabiya does and says little about the facade itself."
+        },
+        "C": {
+          "recipe": "OG (architect and date)",
+          "why_wrong": "It identifies the building’s architect and opening year but does not describe the facade."
+        }
+      },
+      "models": [
+        "2.18",
+        "2.1",
+        "2.28"
+      ],
+      "word_count": 85,
+      "sources": [],
+      "notes": "Subject: arts (architecture). General knowledge (Nouvel, 1987, mechanical apertures); panel count kept as “hundreds”. No fact-check per WAVE.md (Rhetorical Synthesis).",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [
+          "“apertures” to “openings” in notes, key D and explanation"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.GEN.medium.w3b1_19",
+      "template": "GEN",
+      "subtype": "Make and support a generalization",
+      "tier": "medium",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Before Old English spread across England in the 400s and 500s CE, many inhabitants spoke Brittonic, a Celtic language.\n• Several English rivers are named Avon, from the Brittonic word for “river.”\n• Old English speakers apparently mistook this word for a name.\n• Pendle Hill in Lancashire combines a Brittonic word and an Old English word that both mean “hill.”\n• Welsh, a descendant of Brittonic, still uses afon for “river.”",
+      "stem": "The student wants to make and support a generalization about place names in England. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "The name of Pendle Hill in Lancashire combines a Brittonic word and an Old English word that both mean “hill.”",
+        "English place names can preserve words from Brittonic, a language once widely spoken in England, as the several rivers named Avon, after the Brittonic word for “river,” illustrate.",
+        "Brittonic, the Celtic language spoken in England before Old English, survives today through its descendant, Welsh, which still uses afon for “river.”",
+        "Because Old English speakers apparently mistook the Brittonic word for “river” for a name, several English rivers are called Avon."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "Choice B makes a general claim about English place names (they can preserve Brittonic words) and supports it with a case from the notes (the rivers named Avon).",
+      "distractors": {
+        "A": {
+          "recipe": "PART (support without the claim)",
+          "why_wrong": "It gives one example but makes no general claim about place names."
+        },
+        "C": {
+          "recipe": "OG (generalization about the wrong subject)",
+          "why_wrong": "It is about the survival of the Brittonic language through Welsh, not about place names in England."
+        },
+        "D": {
+          "recipe": "PART (single case explained)",
+          "why_wrong": "It explains how one river name arose but does not generalize about place names."
+        }
+      },
+      "models": [
+        "2.22",
+        "2.12"
+      ],
+      "word_count": 84,
+      "sources": [],
+      "notes": "Subject: social science (linguistics, toponymy). General knowledge (Avon from Brittonic, Pendle Hill). No fact-check per WAVE.md (Rhetorical Synthesis).",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [
+          "key B: “spoken there” to “spoken in England” (clear antecedent)"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.QUOTE.medium.w3b1_20",
+      "template": "QUOTE",
+      "subtype": "Quotation that explains",
+      "tier": "medium",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Okakura Kakuzō (1863–1913) was a Japanese scholar and art critic.\n• In 1906, he published The Book of Tea, which he wrote in English for Western readers.\n• The book explains the Japanese tea ceremony and the philosophy behind it, which Okakura called “Teaism.”\n• Its first chapter opens with the sentence “Tea began as a medicine and grew into a beverage.”\n• Okakura describes Teaism as “founded on the adoration of the beautiful among the sordid facts of everyday existence.”",
+      "stem": "The student wants to use a quotation from Okakura to explain what he saw as the essence of Teaism. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "In The Book of Tea, Okakura describes Teaism as founded on “the adoration of the beautiful among the sordid facts of everyday existence.”",
+        "The Book of Tea opens with Okakura’s observation that “Tea began as a medicine and grew into a beverage.”",
+        "Okakura believed that Teaism, the philosophy behind the Japanese tea ceremony, is devoted to appreciating beauty even within the ordinary, often unpleasant routines of daily life.",
+        "Written in English for Western readers, Okakura’s 1906 book The Book of Tea explains the Japanese tea ceremony."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "Choice A quotes the words in which Okakura defines Teaism, “the adoration of the beautiful among the sordid facts of everyday existence,” so it uses a quotation to explain what he saw as its essence.",
+      "distractors": {
+        "B": {
+          "recipe": "NOQ (quotation that does another job)",
+          "why_wrong": "It quotes Okakura on the history of tea as a drink, not on what Teaism is."
+        },
+        "C": {
+          "recipe": "NOQ (paraphrase, no quotation)",
+          "why_wrong": "It paraphrases Okakura’s idea but does not use a quotation, as the goal requires."
+        },
+        "D": {
+          "recipe": "OG (about the book)",
+          "why_wrong": "It describes the book and its audience but neither quotes Okakura nor explains Teaism."
+        }
+      },
+      "models": [
+        "2.9",
+        "2.29"
+      ],
+      "word_count": 93,
+      "sources": [],
+      "notes": "Subject: literature and arts (Japanese tea philosophy). Both quotations copied exactly from the Project Gutenberg text of The Book of Tea (ebook 769, Chapter I): https://www.gutenberg.org/files/769/769-h/769-h.htm",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [
+          "Okakura’s birth year 1862 to 1863 (14 February 1863, Gregorian; 1862 is the lunar-calendar year)"
+        ],
+        "status": "fixed",
+        "checks": "both quotations verified verbatim against Project Gutenberg ebook 769 (Chapter I)"
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.SPEC.easy.w3b1_21",
+      "template": "SPEC",
+      "subtype": "Specify a location",
+      "tier": "easy",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Igorot communities in the northern Philippines have long positioned coffins on cliff faces.\n• The coffins rest on wooden beams anchored in limestone or inside natural crevices.\n• Some families believed elevated burial brought the deceased closer to ancestral spirits.\n• The best-known hanging coffins are in Echo Valley, near the town of Sagada.\n• Sagada lies in Mountain Province, in northern Luzon.",
+      "stem": "The student wants to specify where the best-known hanging coffins are located. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "Igorot coffins rest on wooden beams anchored in cliff faces or inside natural crevices.",
+        "Some Igorot families believed that elevated burial brought the deceased closer to ancestral spirits.",
+        "Igorot communities in the northern Philippines have long positioned coffins on cliff faces.",
+        "The best-known hanging coffins are located in Echo Valley, near the town of Sagada in northern Luzon."
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The goal asks where the best-known hanging coffins are. Choice D gives the place: Echo Valley, near the town of Sagada in northern Luzon.",
+      "distractors": {
+        "A": {
+          "recipe": "OG (how the coffins are placed)",
+          "why_wrong": "It explains how the coffins are set on the cliffs, not where the best-known ones are."
+        },
+        "B": {
+          "recipe": "OG (reason for the practice)",
+          "why_wrong": "It gives a belief behind the practice, not a location."
+        },
+        "C": {
+          "recipe": "PART (region of the practice only)",
+          "why_wrong": "It names the broad region where the practice is found, not where the best-known hanging coffins are."
+        }
+      },
+      "models": [
+        "1.9",
+        "1.4"
+      ],
+      "word_count": 75,
+      "sources": [],
+      "notes": "Subject: history and culture (burial customs in the Philippines). General knowledge (Sagada, Echo Valley, Mountain Province, Luzon). No fact-check per WAVE.md (Rhetorical Synthesis).",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [
+          "option D “situated” to “located”"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.EMPH.easy.w3b1_22",
+      "template": "EMPH",
+      "subtype": "Emphasize one attribute (distance)",
+      "tier": "easy",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Entada gigas is a climbing vine of tropical rainforests.\n• Its seed pods can reach two meters in length.\n• Its heart-shaped seeds, called sea hearts, often fall into rivers and are eventually carried to the ocean.\n• Sea hearts can float for more than a year.\n• Ocean currents transport some across the Atlantic to beaches in Ireland and Norway.",
+      "stem": "The student wants to emphasize how far sea hearts can travel. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "Carried by ocean currents, sea hearts can drift all the way across the Atlantic, washing up on beaches as far away as Ireland and Norway.",
+        "The seed pods of Entada gigas, a climbing vine, can reach two meters in length.",
+        "Entada gigas is a climbing vine that grows in tropical rainforests.",
+        "Sea hearts, the heart-shaped seeds of Entada gigas, can float for more than a year."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "Choice A stresses distance: the seeds can cross the whole Atlantic and reach beaches as far away as Ireland and Norway.",
+      "distractors": {
+        "B": {
+          "recipe": "OG (size of the pods)",
+          "why_wrong": "It gives the length of the seed pods, not how far the seeds travel."
+        },
+        "C": {
+          "recipe": "OG (where the vine grows)",
+          "why_wrong": "It says where the vine grows, not how far its seeds can go."
+        },
+        "D": {
+          "recipe": "OG (how long the seeds float)",
+          "why_wrong": "It says how long sea hearts stay afloat, not how far they travel."
+        }
+      },
+      "models": [
+        "1.15",
+        "1.7"
+      ],
+      "word_count": 73,
+      "sources": [],
+      "notes": "Subject: natural science (seed dispersal by ocean currents). General knowledge; no named people. No fact-check per WAVE.md (Rhetorical Synthesis).",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [
+          "“frequently” to “often”; “remain buoyant” to “can float” in notes and option D"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.DESC.easy.w3b1_23",
+      "template": "DESC",
+      "subtype": "Describe a shape",
+      "tier": "easy",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Victoria amazonica is a giant water lily inhabiting shallow waters of the Amazon River basin.\n• It was named in honor of Britain’s Queen Victoria.\n• Its circular leaves can be more than three meters across.\n• Each leaf’s edge turns sharply upward, forming a rim.\n• Its flowers open white and become pink on their second night.",
+      "stem": "The student wants to describe the shape of the water lily’s leaves. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "Victoria amazonica, a giant water lily named in honor of Queen Victoria, grows in the Amazon River basin.",
+        "The flowers of Victoria amazonica open white and become pink on their second night.",
+        "The leaves of Victoria amazonica are circular, with edges that turn sharply upward to form a rim.",
+        "Victoria amazonica is a giant water lily whose leaves can be more than three meters across."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "Choice C merges the two bullets about the leaves’ form: they are circular, and their edges turn up to form a rim.",
+      "distractors": {
+        "A": {
+          "recipe": "OG (name and habitat)",
+          "why_wrong": "It gives the plant’s name and where it grows, not the shape of its leaves."
+        },
+        "B": {
+          "recipe": "OG (flowers)",
+          "why_wrong": "It describes the flowers, not the leaves."
+        },
+        "D": {
+          "recipe": "OG (size of the leaves)",
+          "why_wrong": "It gives how large the leaves can grow, not their shape."
+        }
+      },
+      "models": [
+        "1.8",
+        "1.18"
+      ],
+      "word_count": 70,
+      "sources": [],
+      "notes": "Subject: natural science (botany). General knowledge; no named people. No fact-check per WAVE.md (Rhetorical Synthesis).",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [
+          "“can exceed three meters in diameter” to “can be more than three meters across” in notes and option D"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.RANK.easy.w3b1_24",
+      "template": "RANK",
+      "subtype": "Order",
+      "tier": "easy",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Few women in nineteenth-century Japan could train as physicians.\n• Ogino Ginko passed Japan’s national medical licensing examination in 1885.\n• She became the first woman licensed to practice Western medicine in Japan.\n• Kei Okami graduated from the Woman’s Medical College of Pennsylvania in 1889.\n• She was the first Japanese woman to earn a degree in Western medicine.",
+      "stem": "The student wants to identify which of the two women qualified as a physician first. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "Few women in nineteenth-century Japan could train as physicians.",
+        "Ogino Ginko qualified as a physician in 1885, four years before Kei Okami earned her medical degree.",
+        "Kei Okami was the first Japanese woman to earn a degree in Western medicine.",
+        "Kei Okami earned her medical degree before Ogino Ginko passed Japan’s medical licensing examination."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "Ogino qualified in 1885 and Okami in 1889. Choice B makes the order clear: Ogino qualified four years before Okami earned her degree.",
+      "distractors": {
+        "A": {
+          "recipe": "OG (background)",
+          "why_wrong": "It gives the general situation for women in Japan and names neither doctor."
+        },
+        "C": {
+          "recipe": "PART (one woman only)",
+          "why_wrong": "It gives Okami’s achievement but says nothing about Ogino, so it cannot show who qualified first."
+        },
+        "D": {
+          "recipe": "FALSE (reversed order)",
+          "why_wrong": "It reverses the order: Ogino passed the exam in 1885, before Okami’s 1889 degree."
+        }
+      },
+      "models": [
+        "1.17",
+        "1.20"
+      ],
+      "word_count": 72,
+      "sources": [],
+      "notes": "Subject: history (women in medicine). General knowledge (Ogino Ginko 1885, Kei Okami 1889). No fact-check per WAVE.md (Rhetorical Synthesis).",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      }
+    }
+  ],
+  "done": true
+}

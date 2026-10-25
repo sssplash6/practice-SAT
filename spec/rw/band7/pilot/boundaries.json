@@ -1,0 +1,365 @@
+{
+  "skill": "Boundaries",
+  "slug": "boundaries",
+  "part": null,
+  "domain": "Standard English Conventions",
+  "tier": "hard",
+  "band_target": 7,
+  "plan": {
+    "templates": [
+      {
+        "code": "S1_adverb",
+        "name": "Conjunctive adverb closing clause 1 (L, though; R), contrast with the previous sentence",
+        "band7_count": 11,
+        "band7_models": [
+          "21e58a83",
+          "5aa171de",
+          "790fc366",
+          "84658166",
+          "a05cc490",
+          "b771d175",
+          "be37d4ae",
+          "c06af4d8",
+          "c15069eb",
+          "e41018de",
+          "f78997cf"
+        ]
+      },
+      {
+        "code": "S1_period",
+        "name": "Period between sentences, the second opening with a long modifier",
+        "band7_count": 10,
+        "band7_models": [
+          "0fa289a7",
+          "4b424102",
+          "5bed774c",
+          "615f001e",
+          "707461d8",
+          "940ff6f7",
+          "952fd392",
+          "a872c60a",
+          "ba8ebf49",
+          "f45ae404"
+        ]
+      },
+      {
+        "code": "S4_restrictive",
+        "name": "No punctuation: restrictive title or appositive before a name",
+        "band7_count": 8,
+        "band7_models": [
+          "0a114526",
+          "13fcf575",
+          "59a246dc",
+          "5aae2475",
+          "6d4b2e1e",
+          "78e978b5",
+          "960dec02",
+          "fa36d803"
+        ]
+      },
+      {
+        "code": "S1_colon_clauses",
+        "name": "Colon between independent clauses, the second explaining the first",
+        "band7_count": 5,
+        "band7_models": [
+          "2c4cd76d",
+          "6fac7f45",
+          "8772475b",
+          "9579581e",
+          "bb4557cf"
+        ]
+      }
+    ],
+    "tie": "S1_colon_clauses and S5_series both have 5 band-7 items for fourth place; S1_colon_clauses was taken because it carries the logic-wrong distractor (a relation word wrong by meaning), the strongest band-7 signal in the skill file.",
+    "not_chosen": "S3_adverb_pair (new template, 2 band-7 items) does not reach the top four; S2_trailing 4, S2_colon 3, S3_dash_pair 3."
+  },
+  "items": [
+    {
+      "id": "boundaries.S4_restrictive.b7",
+      "notes": "Subject: mineralogy. 63 words (models' median 49). Section 6: rule is S4_restrictive (non-person appositive, band 7 only); logic-wrong distractor: none (the template rejects commas on restrictiveness); cue: local, the S4 exemption applies; run 39 words with the key; reasoning steps 3 (left side, right side, two slots vary). Local-window solve would likely find the key, as at every band for this rule. Blind solve: only A. The first sentence is generic (any mineral), so nothing earlier identifies the mineral and the commas in B cannot be defended as nonrestrictive. Earth's 38 percent share was left out to keep the sentence free of a unique description before the name.",
+      "template": "S4_restrictive",
+      "subtype": "Restrictive appositive (not a person) followed by the verb",
+      "passage": "For a mineral to receive an official name, researchers must find a natural sample of it and determine both its chemical composition and its crystal structure. Long studied only in laboratory experiments, the high-pressure silicate ______ its name in 2014, after mineral physicist Oliver Tschauner and mineralogist Chi Ma identified natural grains of it in a meteorite that fell in Australia in 1879.",
+      "stem": "Which choice completes the text so that it conforms to the conventions of Standard English?",
+      "options": [
+        "mineral bridgmanite received",
+        "mineral, bridgmanite, received",
+        "mineral, bridgmanite received",
+        "mineral bridgmanite, received"
+      ],
+      "answer_letter": "A",
+      "explanation": "“Bridgmanite” is essential information: there are many high-pressure silicate minerals, and the name identifies which one the sentence is about. Because the name is restrictive, no commas set it off, and no punctuation belongs between the subject (“the high-pressure silicate mineral bridgmanite”) and its verb, “received.”",
+      "distractors": {
+        "B": {
+          "recipe": "commas around a restrictive element",
+          "why_wrong": "Setting “bridgmanite” off with commas treats the name as removable, but without it the sentence would not say which high-pressure silicate mineral received its name."
+        },
+        "C": {
+          "recipe": "comma intrudes into a unit",
+          "why_wrong": "A single comma separates the noun phrase from the name that identifies it; the name is restrictive and takes no punctuation."
+        },
+        "D": {
+          "recipe": "comma intrudes into a unit (subject and verb)",
+          "why_wrong": "A comma cannot separate the subject “the high-pressure silicate mineral bridgmanite” from its verb “received.”"
+        }
+      },
+      "models": [
+        "0a114526",
+        "59a246dc"
+      ],
+      "band7_moves": [
+        "restrictive appositive that is not a person (the high-pressure silicate mineral bridgmanite), a band-7-only setting",
+        "second slot after the name (the verb follows), so options vary at two positions",
+        "a fronted participial phrase before the subject makes the appositive commas look like supplement punctuation",
+        "run of 39 words with the key in place"
+      ],
+      "sources": [
+        {
+          "what": "naming requires a natural sample with known chemical composition and crystal structure; scientists had known it only from synthetic samples (silicate perovskite); Oliver Tschauner (UNLV mineral physicist) and Chi Ma (Caltech mineralogist); grains from a meteorite that fell near Tenham station, Australia, in 1879; named in 2014 after Percy Bridgman",
+          "url": "https://www.unlv.edu/news/article/earths-most-abundant-mineral-finally-has-name"
+        },
+        {
+          "what": "Tschauner, Ma et al. 2014, Science: discovery of bridgmanite in the shocked Tenham meteorite",
+          "url": "https://meteorites.asu.edu/uncategorized/bridgmanite"
+        }
+      ],
+      "word_count": 63,
+      "tier": "hard",
+      "band_target": 7,
+      "table": null,
+      "figure": null,
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 6,
+        "fixes": [],
+        "status": "pass"
+      },
+      "band7": {
+        "verdict": "band 7",
+        "why": "Non-person restrictive appositive (the high-pressure silicate mineral bridgmanite), the band-7-only S4 setting of 59a246dc, with a second slot before the verb as in 0a114526. The trap is B, commas that look polite after a fronted participial phrase; C and D are as easy as in the models. Local-window exemption applies, so it is judged on the rule setting."
+      }
+    },
+    {
+      "id": "boundaries.S1_adverb.b7",
+      "notes": "Subject: earth science (paleoclimate). 60 words (models' median 56). Section 6: logic-wrong distractors present (A and C fail on meaning against the previous sentence); cue outside the 6-word window: yes, the contrast that places though in clause 1 is the previous sentence; run 34 words; reasoning steps 3. Local-window solve: the window shows record and the ice, which allows both , though; and ; though, so the previous sentence is needed. Blind solve: only B. Age kept general (more than two million years) because the 2.7-million figure was a 2017 conference report and the 2019 paper says over two million.",
+      "template": "S1_adverb",
+      "subtype": "Supplementary adverb closing clause 1 (L, though; R)",
+      "passage": "Ice recovered from Antarctica’s Allan Hills Blue Ice Area exceeds two million years in age, more than double the age of the oldest ice in any continuous core available in 2019. These samples do not constitute an unbroken climate ______ the ice, as geoscientist Yuzhen Yan and colleagues reported that year, is stratigraphically discontinuous, so it preserves only isolated snapshots of Earth’s ancient atmosphere.",
+      "stem": "Which choice completes the text so that it conforms to the conventions of Standard English?",
+      "options": [
+        "record; though",
+        "record, though;",
+        "record, though",
+        "record, though,"
+      ],
+      "answer_letter": "B",
+      "explanation": "The sentence contains two main clauses: “These samples do not constitute an unbroken climate record, though” and “the ice ... atmosphere.” A semicolon joins them, and a comma sets off “though,” which belongs to the first clause: it signals that this limitation contrasts with the impressive age reported in the previous sentence. The second clause then explains the limitation.",
+      "distractors": {
+        "A": {
+          "recipe": "semicolon with a non-clause; logic-wrong",
+          "why_wrong": "With “though” opening the second clause, that clause becomes dependent and cannot follow a semicolon; it would also illogically present the discontinuous ice as a contrast, when it is the reason the samples do not form an unbroken record."
+        },
+        "C": {
+          "recipe": "logic-wrong (legal shape, wrong meaning)",
+          "why_wrong": "Here “though” introduces the second clause, illogically presenting the discontinuous ice as a contrast to the samples’ not forming an unbroken record, when it is the reason for it; “though” has to close the first clause, which qualifies the impressive age reported in the previous sentence."
+        },
+        "D": {
+          "recipe": "comma splice",
+          "why_wrong": "Setting off “though” with commas leaves the two main clauses joined by only a comma."
+        }
+      },
+      "models": [
+        "5aa171de",
+        "f78997cf",
+        "c06af4d8"
+      ],
+      "band7_moves": [
+        "adverb closes clause 1 and answers the previous sentence (old ice, but no unbroken record)",
+        "logic-wrong distractors (; though and , though) that fail on meaning against the previous sentence",
+        "clause 2 carries an interrupter (as ... reported in 2019) so its verb sits far from the blank",
+        "key and the comma-splice option are the same length"
+      ],
+      "sources": [
+        {
+          "what": "Yan et al. 2019, Nature 574:663-666: recovery of stratigraphically discontinuous ice more than two million years old from the Allan Hills Blue Ice Area, East Antarctica; title: Two-million-year-old snapshots of atmospheric gases from Antarctic ice",
+          "url": "https://collaborate.princeton.edu/en/publications/two-million-year-old-snapshots-of-atmospheric-gases-from-antarcti/"
+        },
+        {
+          "what": "oldest continuous ice core extends back about 800,000 years; Allan Hills discontinuous cores preserve snapshots back to at least 2.7 million years",
+          "url": "https://www.usap-dc.org/view/project/p0000760"
+        },
+        {
+          "what": "previous oldest air record of about 800,000 years from continuous cores",
+          "url": "https://www.atlasobscura.com/places/allan-hills"
+        },
+        {
+          "what": "Beyond EPICA (January 2025): continuous core from Little Dome C reaching at least 1.2 million years, so the old wording (more than double any continuous core, present tense) is no longer true; the claim is now anchored to 2019, when continuous cores reached about 800,000 years",
+          "url": "https://www.lsce.ipsl.fr/en/antarctica-a-drilling-campaign-extract-ice-core-older-than-1-million-years/"
+        },
+        {
+          "what": "Princeton release 2019: Yuzhen Yan first author, Ph.D. in geosciences; continuous cores extend back about 800,000 years",
+          "url": "https://princeton.edu/news/2019/11/21/two-million-year-old-ice-cores-provide-first-direct-observations-ancient-climate"
+        }
+      ],
+      "word_count": 64,
+      "tier": "hard",
+      "band_target": 7,
+      "table": null,
+      "figure": null,
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 6,
+        "fixes": [
+          "sentence 1 was false since January 2025 (Beyond EPICA continuous core of at least 1.2 million years, so two million is no longer more than double); anchored to continuous cores available in 2019",
+          "geochemist changed to geoscientist (Princeton: Ph.D. in geosciences); reported in 2019 changed to reported that year",
+          "why_wrong for C claimed the clause boundary is unmarked; with C the sentence is well formed and fails on meaning only (as CB treats the parallel option in 5aa171de), so it now says that"
+        ],
+        "status": "fixed"
+      },
+      "band7": {
+        "verdict": "band 7",
+        "why": "The band-7 S1_adverb cluster (5aa171de, f78997cf): the adverb closes clause 1 and is decided by the previous sentence (old ice, but no unbroken record), so the textbook ; though and the subordinating , though fail only on meaning; clause 2 carries a 9-word interrupter. Option shapes match the models."
+      }
+    },
+    {
+      "id": "boundaries.S1_colon_clauses.b7",
+      "notes": "Subject: archaeology and botany. 50 words (models' median 47). Section 6: logic-wrong distractor present (, while); cue outside the window: yes, the second clause's subject (the seed) comes 15 words after the blank; run 51 words with the key; reasoning steps 4 (long opener, logic distractor). No semicolon, period or dash is offered, so no second legal mark is on the menu. Blind solve: only C. Chosen over S5_series at a 5 to 5 tie (see plan.tie).",
+      "template": "S1_colon_clauses",
+      "subtype": "Colon between main clauses; the second, opening with a participial phrase, explains the first",
+      "passage": "Methuselah, a Judean date palm cultivated at Kibbutz Ketura in southern Israel, has an extraordinary ______ recovered during archaeological excavations of Herod the Great’s palace at Masada in the 1960s, the seed from which it sprouted remained in storage for four decades before botanist Elaine Solowey germinated it in 2005.",
+      "stem": "Which choice completes the text so that it conforms to the conventions of Standard English?",
+      "options": [
+        "origin,",
+        "origin",
+        "origin:",
+        "origin, while"
+      ],
+      "answer_letter": "C",
+      "explanation": "The sentence has two main clauses: “Methuselah ... has an extraordinary origin” and “recovered ... the seed from which it sprouted remained in storage ... in 2005.” The second clause explains what is extraordinary about the palm’s origin, so a colon correctly joins them and introduces the explanation.",
+      "distractors": {
+        "A": {
+          "recipe": "comma splice",
+          "why_wrong": "The phrase after the comma first seems to describe “origin,” but “the seed ... remained in storage” is a main clause, so the comma joins two main clauses."
+        },
+        "B": {
+          "recipe": "fused sentence",
+          "why_wrong": "The two main clauses run together with no punctuation between them."
+        },
+        "D": {
+          "recipe": "logic-wrong (relation word)",
+          "why_wrong": "“While” signals a contrast or something happening at the same time, but the second clause explains the palm’s unusual origin."
+        }
+      },
+      "models": [
+        "8772475b",
+        "6fac7f45",
+        "2c4cd76d"
+      ],
+      "band7_moves": [
+        "clause 1 announces (has an extraordinary origin) and clause 2 explains",
+        "clause 2 opens with a 14-word participial phrase that could attach to origin, so the splice shows only at the seed",
+        "logic-wrong distractor (, while) beside the splice and fused options",
+        "run of 51 words with the key in place"
+      ],
+      "sources": [
+        {
+          "what": "Masada excavations 1963-1965 at Herod the Great's palace found date seeds; kept four decades at Bar-Ilan University; radiocarbon dated 155 BC to 64 CE; Elaine Solowey of the Arava Institute sprouted seeds in 2005; planted at Ketura in southern Israel; first plant nicknamed Methuselah",
+          "url": "https://en.wikipedia.org/wiki/Judean_date_palm"
+        },
+        {
+          "what": "Sarah Sallon obtained seeds from Ehud Netzer and took them to Solowey; planted January 2005; Methuselah the only one to survive",
+          "url": "https://www.israelnationalnews.com/news/126484"
+        }
+      ],
+      "word_count": 50,
+      "tier": "hard",
+      "band_target": 7,
+      "table": null,
+      "figure": null,
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 6,
+        "fixes": [],
+        "status": "pass"
+      },
+      "band7": {
+        "verdict": "band 7",
+        "why": "Clause 1 announces (an extraordinary origin), clause 2 opens with a 14-word participial phrase that reads as a modifier of origin, so the splice in A and B only shows at the seed, 15 words after the blank; D is the , while relation-word distractor of 6fac7f45, wrong by meaning. No semicolon or period is offered, so no twin mark."
+      }
+    },
+    {
+      "id": "boundaries.S1_period.b7",
+      "notes": "Subject: architecture. 64 words (models' median 39). Section 6: opener 17 words and attachable to the last noun before the boundary (Quinta Monroy); cue outside the window: yes (each residence, 18 words after the blank); run 46 words across the two resulting sentences; reasoning steps 4 (long opener, a dash partner earlier in the sentence). The dash option closes the pair opened after unconventional, as in f45ae404, so no lone dash is offered as a joiner. Blind solve: only D. Project dates differ by source (2003 to 2006, design 2004), so the passage says the early 2000s.",
+      "template": "S1_period",
+      "subtype": "Period between sentences; the second opens with a long participial phrase",
+      "passage": "In the early 2000s, the Chilean firm Elemental was commissioned to rehouse 93 families from an informal settlement in Iquique. The architects’ solution was unconventional—a development called Quinta ______ by architect Alejandro Aravena as “half of a good house” rather than a complete but inadequate one, each residence came with a kitchen, a bathroom, and structural walls, leaving occupants to construct the remainder themselves.",
+      "stem": "Which choice completes the text so that it conforms to the conventions of Standard English?",
+      "options": [
+        "Monroy, conceived",
+        "Monroy conceived",
+        "Monroy—conceived",
+        "Monroy. Conceived"
+      ],
+      "answer_letter": "D",
+      "explanation": "The words from “The architects’ solution” through “Quinta Monroy” form a complete sentence, and “each residence came with a kitchen ...” is another. The long phrase beginning “Conceived by architect Alejandro Aravena” describes the subject of the second sentence, “each residence,” so a period must come before it.",
+      "distractors": {
+        "A": {
+          "recipe": "comma splice",
+          "why_wrong": "The phrase after the comma first seems to describe Quinta Monroy, but “each residence came with ...” is a main clause, so the comma joins two sentences."
+        },
+        "B": {
+          "recipe": "fused sentence (misplaced boundary)",
+          "why_wrong": "With no punctuation the phrase attaches to Quinta Monroy, and the second main clause, “each residence came with ...,” is then joined to the first by only a comma."
+        },
+        "C": {
+          "recipe": "comma splice (dash closes the pair)",
+          "why_wrong": "The dash closes the pair opened after “unconventional,” turning the phrase into a modifier of the first sentence; the main clause “each residence came with ...” is then joined to it by only a comma."
+        }
+      },
+      "models": [
+        "0fa289a7",
+        "a872c60a",
+        "f45ae404"
+      ],
+      "band7_moves": [
+        "17-word participial opener that could modify the last noun before the boundary (Quinta Monroy)",
+        "the splice appears only at each residence, 17 words after the blank",
+        "an open dash earlier in the sentence makes the dash option close a pair (f45ae404 setting)",
+        "key and the comma option are the same length"
+      ],
+      "sources": [
+        {
+          "what": "Chilean government tasked ELEMENTAL with rehousing 93 families living in an inner-city informal settlement in Iquique; half of a good house rather than a complete but inadequate one; initial units with kitchen, bathroom, structural walls and staircase, residents completing the rest; project dated 2003-2006; Aravena Pritzker Prize 2016",
+          "url": "https://udcsa.gsd.harvard.edu/projects/105"
+        },
+        {
+          "what": "Quinta Monroy housing, Iquique, Elemental (Alejandro Aravena)",
+          "url": "https://arquitecturaviva.com/works/viviendas-quinta-monroy-1"
+        },
+        {
+          "what": "Aravena's half of a good house model, design dated 2004",
+          "url": "https://newrepublic.com/article/134223/can-half-good-house-become-home"
+        }
+      ],
+      "word_count": 64,
+      "tier": "hard",
+      "band_target": 7,
+      "table": null,
+      "figure": null,
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 6,
+        "fixes": [],
+        "status": "pass"
+      },
+      "band7": {
+        "verdict": "band 7",
+        "why": "17-word past-participle opener that can hang on the last noun before the boundary (Quinta Monroy), the band-7 S1_period setting of 0fa289a7 and a872c60a; the splice shows only at each residence; the dash option closes the pair opened after unconventional, the f45ae404 setting. Run 46 words."
+      }
+    }
+  ]
+}

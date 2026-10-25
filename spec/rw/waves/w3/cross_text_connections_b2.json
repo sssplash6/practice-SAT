@@ -1,0 +1,1002 @@
+{
+  "skill": "Cross-Text Connections",
+  "slug": "cross_text_connections",
+  "part": "w3b2",
+  "domain": "Craft and Structure",
+  "plan": {
+    "templates": [
+      {
+        "code": "S1_concede_rebut",
+        "name": "Respond: concede part of the target, rebut the rest (two-part options)"
+      },
+      {
+        "code": "S1_solution",
+        "name": "Respond: one text supplies a solution to the other's problem"
+      },
+      {
+        "code": "S1_second_factor",
+        "name": "Respond: target is incomplete, a second cause or source"
+      },
+      {
+        "code": "S2_hidden_assumption",
+        "name": "Agree: shared methodological assumption under a dispute"
+      },
+      {
+        "code": "S3_difference",
+        "name": "Difference: how the two authors view an object, compared on one axis"
+      },
+      {
+        "code": "S1_counterexample",
+        "name": "Respond: counterexample to a 'first', 'only' or 'requires' claim"
+      },
+      {
+        "code": "S1_limit_degree",
+        "name": "Respond: limit the degree or scope of the target claim"
+      },
+      {
+        "code": "S1_case_fits_frame",
+        "name": "Respond (Text 1 speaking): Text 2's case fits Text 1's general frame"
+      },
+      {
+        "code": "S2_shared_premise",
+        "name": "Agree: shared premise beneath a visible disagreement"
+      },
+      {
+        "code": "S1_rival_hypothesis",
+        "name": "Respond: rival hypothesis with evidence the target does not account for"
+      }
+    ]
+  },
+  "items": [
+    {
+      "id": "cross_text_connections.S1_concede_rebut.hard.w3b2_01",
+      "template": "S1_concede_rebut",
+      "subtype": "Response prediction",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Text 1\n\nBirds inhabiting cities frequently sing at higher pitches than members of the same species inhabiting nearby forests. Because traffic noise is concentrated at low frequencies, many researchers have interpreted this difference as an adaptation: <u>by raising the pitch of their songs, urban birds shift them above the dominant frequencies of traffic noise, ensuring that rivals and prospective mates can detect them</u>.\n\nText 2\n\nRecording common blackbirds in Vienna, Austria, Erwin Nemeth, Henrik Brumm, and colleagues confirmed that urban males favored higher notes than forest males did. But blackbirds’ higher notes are also louder, and the team calculated that the pitch increase by itself only modestly extends the distance over which a song remains audible amid traffic; most of the improvement derives from the additional volume. The elevated pitch, they suggest, may simply be a by-product of singing loudly.",
+      "stem": "Based on the texts, how would the researchers in Text 2 most likely respond to the underlined claim in Text 1?",
+      "options": [
+        "By acknowledging that city birds sing at higher pitches than forest birds do but objecting that the shift does nothing to help their songs carry through traffic noise",
+        "By agreeing that city birds’ songs are higher pitched but suggesting that the pitch rise may be a side effect of a change that matters more for being heard",
+        "By questioning whether city and forest birds really differ in pitch but conceding that low-frequency traffic noise can prevent birds from hearing one another’s songs",
+        "By endorsing the view that higher pitch is an adaptation to traffic noise but adding that city blackbirds also tend to favor louder notes than forest blackbirds do"
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The researchers in Text 2 accept the observation behind the claim: city blackbirds did favor higher notes. What they doubt is the explanation. They found that the higher pitch alone “only modestly extends” the distance over which a song stays audible amid traffic, that most of the improvement comes from the additional volume, and that the higher pitch “may simply be a by-product of singing loudly.” So they would grant the pitch difference while suggesting it is a side effect of the louder singing that does more to make songs audible.",
+      "distractors": {
+        "A": {
+          "recipe": "D7 half right (right concession, overstated rebuttal)",
+          "why_wrong": "Text 2 says the pitch increase extends a song’s range “only modestly,” not that it does nothing at all."
+        },
+        "C": {
+          "recipe": "D7 half right (denial where the speaker concedes)",
+          "why_wrong": "The researchers confirmed that city males favored higher notes, so they would not question whether the pitch difference is real."
+        },
+        "D": {
+          "recipe": "D2 wrong side",
+          "why_wrong": "The added detail about louder notes is true to Text 2, but the researchers do not endorse the adaptation view; they suggest the higher pitch may be a by-product of singing loudly."
+        }
+      },
+      "models": [
+        "3.2",
+        "3.13"
+      ],
+      "word_count": 136,
+      "sources": [
+        {
+          "what": "Nemeth et al. 2013, Proc. R. Soc. B 280: 20122798: urban blackbirds in Vienna use higher-frequency elements, which are also louder; the frequency shift alone adds little to communication distance in noise compared with the amplitude gain, and the higher pitch could be an epiphenomenon of singing louder",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3574330/"
+        }
+      ],
+      "notes": "Area: natural science (behavioral ecology). Text 1 is the masking-avoidance view, unattributed. Concession is the observation, rebuttal is its interpretation; the key names neither loudness nor by-product in the passage’s words. The withdrawn 2010 great tit claim (Nemeth, Brumm) is a different study and was never written.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [],
+        "status": "pass"
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "B",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "cross_text_connections.S1_concede_rebut.hard.w3b2_02",
+      "template": "S1_concede_rebut",
+      "subtype": "Response prediction",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Text 1\n\nDuring the 1960s, writer Elena Poniatowska visited Josefina Bórquez, an impoverished elderly woman who had lived through the Mexican Revolution, every Wednesday afternoon to hear her recollections. The resulting book, Hasta no verte Jesús mío (1969), is narrated entirely by Jesusa Palancares, the name Poniatowska gave to Bórquez. <u>Because it preserves a real woman’s account of her experiences in her own language, the book is more accurately classified as oral history than as a novel</u>.\n\nText 2\n\nPoniatowska certainly constructed Hasta no verte Jesús mío from her conversations with Bórquez, and Jesusa’s blunt, idiomatic speech owes much to Bórquez’s own. But the book is no transcript. Poniatowska eliminated characters from Bórquez’s stories, elaborated the episodes she considered most significant, and assembled the fragments into a single continuous narrative. Jesusa Palancares is a character derived from a life, not that life transcribed word for word.",
+      "stem": "Based on the texts, how would the author of Text 2 most likely respond to the underlined claim in Text 1?",
+      "options": [
+        "By agreeing that the book reproduces Bórquez’s account faithfully but questioning whether her memories of events from decades earlier can be trusted",
+        "By acknowledging that Poniatowska reshaped Bórquez’s stories but maintaining that those changes make the book less reliable than an oral history would be",
+        "By accepting that Jesusa Palancares is a character drawn from life but arguing that Poniatowska invented Jesusa’s way of speaking rather than taking it from Bórquez",
+        "By granting that the book is grounded in Bórquez’s recollections and manner of speech but disputing that it presents her account as she actually gave it"
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The author of Text 2 grants part of Text 1’s premise: the book was built from the conversations with Bórquez, and Jesusa’s speech “owes much to Bórquez’s own.” But the author denies that the book simply preserves her account, since Poniatowska eliminated characters, elaborated episodes, and assembled the fragments into one narrative, so Jesusa is “not that life transcribed word for word.” The author would therefore accept the book’s grounding in Bórquez’s words while disputing that it presents her account unaltered.",
+      "distractors": {
+        "A": {
+          "recipe": "D7 half right (wrong concession, add-on rebuttal)",
+          "why_wrong": "Text 2 rejects the idea that the book reproduces Bórquez’s account faithfully, and it never questions her memory."
+        },
+        "B": {
+          "recipe": "D1 unaddressed add-on in the rebuttal",
+          "why_wrong": "Text 2 does say Poniatowska reshaped the stories, but it makes no judgment that this makes the book less reliable or less valuable; its point is only that the book is not a word-for-word record."
+        },
+        "C": {
+          "recipe": "D7 half right (right concession, contradicted rebuttal)",
+          "why_wrong": "Text 2 says Jesusa’s speech “owes much to Bórquez’s own,” so the author would not claim that Poniatowska invented it."
+        }
+      },
+      "models": [
+        "3.9",
+        "3.2"
+      ],
+      "word_count": 143,
+      "sources": [
+        {
+          "what": "Hasta no verte Jesús mío (1969): based on Wednesday-afternoon interviews with Josefina Bórquez; Poniatowska used her anecdotes and way of speaking but the book is not an authentic transcription of her life; she eliminated characters and developed key moments; interview combined with fiction",
+          "url": "https://es.wikipedia.org/wiki/Hasta_no_verte_Jes%C3%BAs_m%C3%ADo"
+        }
+      ],
+      "notes": "Area: literature (Mexican testimonial novel). Text 1’s oral-history reading is unattributed. The rebuttal says the book is shaped, not that it is untrue, so B (less reliable) is an evaluation the author never makes.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 5,
+        "fixes": [
+          "generalised \"Between 1963 and 1964\" to \"During the 1960s\" (no source gives the years; es.wikipedia gives Wednesday afternoons, Texas Observer the 1960s)",
+          "changed \"to record her recollections\" to \"to hear her recollections\" (source: \"para escuchar sus experiencias vitales\")",
+          "core claim confirmed: not an authentic transcription, characters eliminated, key moments developed, speech drawn from Bórquez"
+        ],
+        "status": "fixed"
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "D",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "cross_text_connections.S1_solution.hard.w3b2_03",
+      "template": "S1_solution",
+      "subtype": "Response prediction",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Text 1\n\nThroughout the western United States, snowmelt replenishes the reservoirs that supply cities and agriculture during summer, so water managers forecast runoff from snowpack measurements. Most measurements come from a limited number of fixed locations: automated stations that weigh the overlying snow and courses that crews sample manually. <u>Because snow depth varies considerably with elevation, slope, and exposure to wind and sunlight, a few locations can seriously misrepresent an entire watershed</u>.\n\nText 2\n\nBeginning in 2013, a team led by Thomas Painter of NASA’s Jet Propulsion Laboratory flew the Airborne Snow Observatory over California’s Tuolumne River basin, a source of San Francisco’s water. A laser scanner aboard the aircraft measures the elevation of the snow surface, which is compared with a map of the same terrain surveyed when snow-free. Combined with estimates of snow density, the resulting depths yield the water content of the snowpack throughout the basin.",
+      "stem": "Based on the texts, how would the researchers in Text 2 most likely respond to the underlined portion in Text 1?",
+      "options": [
+        "They would argue that their approach avoids the difficulty because it does not require extrapolating from a small number of sampling sites.",
+        "They would claim that their measurements are more accurate than those of the fixed sites because the laser scanner records the weight of the snow directly.",
+        "They would contend that adding more fixed stations at high elevations would allow forecasters to estimate the water content of an entire watershed.",
+        "They would point out that their surveys, unlike readings at the fixed sites, yield the snowpack’s water content without requiring any estimate of snow density."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "Text 1’s underlined sentence says that snow varies so much from place to place that measurements at a few points can misrepresent a whole watershed. The Airborne Snow Observatory measures the height of the snow surface across the entire Tuolumne River basin and turns those depths into the water content of the whole snowpack. The researchers would therefore say that their method avoids the problem because it does not depend on estimating a watershed from a handful of sites.",
+      "distractors": {
+        "B": {
+          "recipe": "D3 twisted detail",
+          "why_wrong": "The laser measures the height of the snow surface, and water content comes from combining depth with density estimates; nothing is weighed directly. It is Text 1’s stations that weigh the snow."
+        },
+        "C": {
+          "recipe": "D2 wrong side (keeps the old method)",
+          "why_wrong": "The researchers replace point measurements with basin-wide surveys; Text 2 never recommends adding fixed stations."
+        },
+        "D": {
+          "recipe": "D3 twisted detail",
+          "why_wrong": "Text 2 says the depths are combined with estimates of the snow’s density to yield water content, so the method does rely on such estimates."
+        }
+      },
+      "models": [
+        "3.6",
+        "3.7"
+      ],
+      "word_count": 145,
+      "sources": [
+        {
+          "what": "NASA Airborne Snow Observatory (Thomas Painter, JPL): lidar on the plane measures snow depth against a snow-free baseline, density estimates convert depth to water content; water managers otherwise rely on snow pillow stations; April 2013 map of the Upper Tuolumne watershed that supplies San Francisco",
+          "url": "https://science.nasa.gov/earth/earth-observatory/finding-water-in-snow-83427/"
+        }
+      ],
+      "notes": "Area: earth science (hydrology). Modelled on 3.6 (a method that sidesteps a stated dating difficulty) with the 3.6 D trap moved to the laser (depth, not weight). Snow courses and pillows simplified to “fixed sites.”",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 5,
+        "fixes": [],
+        "status": "pass"
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "A",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "cross_text_connections.S1_second_factor.hard.w3b2_04",
+      "template": "S1_second_factor",
+      "subtype": "Response prediction",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Text 1\n\nIn cities, many trees open their leaf buds several days earlier in spring than trees of the same species in the surrounding countryside. Ecologists have generally attributed this pattern to the urban heat island: pavement and masonry store solar energy by day and radiate it after dark, keeping cities warmer than rural areas. <u>Since rising spring temperatures are a principal signal for buds to open, earlier budburst in cities is a straightforward consequence of their warmth</u>.\n\nText 2\n\nRichard ffrench-Constant and colleagues compared thirteen years of volunteers’ budburst records for four tree species across the United Kingdom with satellite imagery of nighttime illumination. Buds opened up to 7.5 days earlier where nights were brighter, and the relationship was even stronger when large urban areas were excluded from the analysis. Artificial light at night, the researchers suggest, may be advancing spring for trees beyond what warmer temperatures alone could explain.",
+      "stem": "Based on the texts, how would ffrench-Constant and colleagues (Text 2) most likely characterize the underlined claim in Text 1?",
+      "options": [
+        "As correct about the role of temperature but mistaken about how many days earlier city trees open their buds than rural trees do",
+        "As underestimating how much more heat pavement and buildings release at night in cities than in the surrounding rural areas",
+        "As overlooking a feature of developed areas other than their warmth that may also contribute to the earlier opening of trees’ leaf buds",
+        "As mistaking the cause of early budburst in cities, which depends on nighttime lighting rather than on the warmth of urban areas"
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "Text 1 treats earlier budburst in cities as simply a result of urban warmth. The researchers in Text 2 found that buds opened earlier where nights were brighter, even outside large cities, and suggest that night lighting may advance spring “beyond what warmer temperatures alone could explain.” They would therefore see the underlined claim as incomplete: it leaves out a second factor, artificial light, that may also hasten budburst.",
+      "distractors": {
+        "A": {
+          "recipe": "D7 half right (accepts temperature, invents a dispute over size)",
+          "why_wrong": "Text 2 does not dispute how much earlier city trees open their buds; its objection concerns what causes the difference."
+        },
+        "B": {
+          "recipe": "D3 twisted detail",
+          "why_wrong": "The heat released by pavement comes from Text 1; Text 2 says nothing about how strong the heat island is."
+        },
+        "D": {
+          "recipe": "D5 overstatement (second cause turned into the only cause)",
+          "why_wrong": "Text 2 says light may advance spring beyond what warmth alone could explain, which keeps warmth as a factor; it does not replace temperature with lighting."
+        }
+      },
+      "models": [
+        "3.8",
+        "2.7"
+      ],
+      "word_count": 147,
+      "sources": [
+        {
+          "what": "ffrench-Constant et al. 2016, Proc. R. Soc. B: 13-year UK budburst records for four species against satellite night lighting; budburst up to 7.5 days earlier in brighter areas; stronger when large urban areas excluded; too large for temperature alone; correlational",
+          "url": "https://ore.exeter.ac.uk/repository/handle/10871/22257"
+        }
+      ],
+      "notes": "Area: natural science (plant ecology). The study is correlational, so Text 2 and the key hedge (“suggest,” “may”). D is the tempting overstatement; C keeps warmth in play as the source does.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 5,
+        "fixes": [],
+        "status": "pass"
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "C",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "cross_text_connections.S2_hidden_assumption.hard.w3b2_05",
+      "template": "S2_hidden_assumption",
+      "subtype": "Agreement",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Text 1\n\nWhether dinosaurs were warm-blooded like mammals or cold-blooded like most reptiles cannot be observed directly, so in 2014 ecologist John Grady and colleagues approached the question through growth. Using growth rings preserved in fossil bones, they estimated how fast 21 dinosaur species gained mass and compared those rates with rates for a wide range of living animals. Dinosaurs grew faster than reptiles but slower than mammals, so the team classed them as mesotherms, animals with intermediate metabolisms.\n\nText 2\n\nPaleontologist Michael D’Emic reanalyzed the 2014 data. Grady’s team had converted yearly growth into daily growth by dividing by 365, but many animals, dinosaurs probably among them, grow only during favorable seasons. Correcting for such pauses roughly doubled the dinosaurs’ rates, placing them alongside those of mammals—evidence, D’Emic argued, that dinosaurs were warm-blooded.",
+      "stem": "Based on the texts, Grady’s team (Text 1) and D’Emic (Text 2) would most likely agree with which statement?",
+      "options": [
+        "Dinosaurs’ metabolisms were intermediate between those of reptiles and those of mammals.",
+        "Growth rings in fossil bones record how many days each year an animal spent growing.",
+        "Living reptiles grow only in favorable seasons, whereas mammals grow all year.",
+        "The speed at which an animal grew can serve as evidence about the nature of its metabolism."
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The two texts disagree about what kind of metabolism dinosaurs had, but both reach their conclusions the same way. Grady’s team classed dinosaurs as mesotherms because their growth rates fell between those of reptiles and mammals, and D’Emic called dinosaurs warm-blooded because corrected growth rates matched those of mammals. Both therefore assume that how fast an animal grew reveals something about its metabolism.",
+      "distractors": {
+        "A": {
+          "recipe": "D4 one text only (the conflict point)",
+          "why_wrong": "This is Grady’s team’s conclusion, which D’Emic rejects in favor of warm-bloodedness."
+        },
+        "B": {
+          "recipe": "D3 twisted detail",
+          "why_wrong": "Neither text says growth rings record days of growth; D’Emic’s point is that yearly growth cannot simply be divided by 365 because animals may pause."
+        },
+        "C": {
+          "recipe": "D3 twisted detail",
+          "why_wrong": "Text 2 says only that many animals grow in favorable seasons; neither text contrasts reptiles with mammals on this point, and Grady’s team does not discuss seasonal growth."
+        }
+      },
+      "models": [
+        "3.1"
+      ],
+      "word_count": 130,
+      "sources": [
+        {
+          "what": "Grady et al. 2014 Science used growth rates from bone growth rings for 21 dinosaur species to infer mesothermy; D’Emic 2015 Science comment argued annual-to-daily conversion underestimated growth for seasonally pausing animals, and doubled rates placed dinosaurs near mammals, supporting endothermy",
+          "url": "https://www.nationalgeographic.com/science/article/dinosaur-physiology-debate-continues-to-simmer"
+        },
+        {
+          "what": "D’Emic 2015 Science comment: yearly growth scaled to daily ignored seasonal pauses, underestimating dinosaur growth; reanalysis \"lends more support that dinosaurs were warm-blooded\"",
+          "url": "https://www.sci.news/paleontology/science-dinosaurs-warm-blooded-02857.html"
+        }
+      ],
+      "notes": "Area: natural science (paleontology). Built like 3.1: a dispute over a conclusion that rests on a method both sides use; each text states its reliance on growth rates. Comparison set simplified to “a wide range of living animals.”",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [
+          "added sci.news source for D’Emic’s warm-blooded conclusion (the National Geographic source hedges it); core claim confirmed, text unchanged"
+        ],
+        "status": "fixed"
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "D",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "cross_text_connections.S3_difference.hard.w3b2_06",
+      "template": "S3_difference",
+      "subtype": "Difference",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Text 1\n\nGilberto Freyre’s 1933 Casa-Grande & Senzala, translated as The Masters and the Slaves, transformed how Brazilians understood their colonial past. Its evidence is remarkably diverse: travelers’ accounts, family memoirs, ecclesiastical inquiries, newspaper advertisements. Yet Freyre never systematically considers how far a particular source deserves trust. A colorful anecdote from a foreign visitor or a family legend carries as much weight as an official record, and readers cannot determine which claims rest on solid evidence.\n\nText 2\n\nFew books have shaped a nation’s self-image as profoundly as The Masters and the Slaves shaped Brazil’s. But Freyre’s Brazil is fundamentally the sugar-producing Northeast, where his family had lived for generations, and its center is the plantation house and slave quarters of the book’s Portuguese title. Freyre presents what he observed there as the history of the entire country, though other regions developed along considerably different lines.",
+      "stem": "Which choice best describes a difference in how the authors of Text 1 and Text 2 view Gilberto Freyre’s The Masters and the Slaves?",
+      "options": [
+        "The author of Text 1 objects to the way Freyre weighed his evidence, while the author of Text 2 objects to the regional narrowness of the society on which Freyre based claims about the entire nation.",
+        "The author of Text 1 objects to the way Freyre weighed his evidence, while the author of Text 2 argues that Freyre’s family background led him to portray plantation owners more favorably than his sources warranted.",
+        "The author of Text 1 contends that Freyre drew on too narrow a range of sources, while the author of Text 2 contends that Freyre’s account of the Northeast does not apply to the rest of Brazil.",
+        "The author of Text 1 credits the book with changing how Brazilians saw their history, while the author of Text 2 doubts that the book had much influence outside the Northeast."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "Both authors criticize the book, but on different grounds. The author of Text 1 faults Freyre’s handling of evidence: he “never systematically considers how far a particular source deserves trust,” so anecdotes carry as much weight as official records. The author of Text 2 faults the book’s scope: Freyre’s Brazil is “the sugar-producing Northeast,” yet he presents it as “the history of the entire country.”",
+      "distractors": {
+        "B": {
+          "recipe": "D7 half right (Text 2 half invented)",
+          "why_wrong": "The Text 1 half is accurate, but Text 2 mentions Freyre’s family only to explain why the Northeast is at the center of his book; it never says he portrayed plantation owners too favorably."
+        },
+        "C": {
+          "recipe": "D7 half right (Text 1 half reversed)",
+          "why_wrong": "The Text 2 half is accurate, but Text 1 calls Freyre’s evidence “remarkably diverse”; its complaint is that he did not weigh them, not that they were too few in kind."
+        },
+        "D": {
+          "recipe": "D8 wrong dimension (a point the texts share, then an invented doubt)",
+          "why_wrong": "Both authors credit the book with great influence on Brazilians’ view of their past, so this is not a difference, and Text 2 never doubts its reach beyond the Northeast."
+        }
+      },
+      "models": [
+        "3.10"
+      ],
+      "word_count": 141,
+      "sources": [
+        {
+          "what": "Celarent (A. Abbott), review of The Masters and the Slaves, American Journal of Sociology 116(1), 2010: Freyre from Recife in the northeast sugar country, his northeastern provincialism, argument rooted in the sugar plantation; sources range from travelers’ accounts to memoirs, newspaper advertisements and church inquiries, with no systematic attempt to assess their quality, which opened him to great criticism",
+          "url": "https://home.uchicago.edu/~aabbott/barbpapers/barbfreyre.pdf"
+        }
+      ],
+      "notes": "Area: history and social science. Both texts are the authors’ own evaluations, as in 3.10. B is a real later criticism of Freyre (a softened picture of slavery) that neither text makes, the trap for students who know the book.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [
+          "Text 1 \"seldom considers how far a particular source deserves trust\" changed to \"never systematically considers how far a particular source deserves trust\" (Abbott review: \"no systematic attempt to assess the quality of these sources ... Not that Freyre did not judge his sources\"); explanation quote updated"
+        ],
+        "status": "fixed"
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "A",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "cross_text_connections.S1_counterexample.medium.w3b2_07",
+      "template": "S1_counterexample",
+      "subtype": "Response prediction",
+      "tier": "medium",
+      "band_target": null,
+      "passage": "Text 1\n\n<u>Many political scientists of the mid-twentieth century held that democratic elections require a literate public</u>. Voters, they reasoned, must be able to read newspapers and party platforms to make informed choices, and they must be able to read a printed ballot to mark it correctly. By this standard, countries in which most adults were illiterate appeared poorly prepared for national elections with universal adult suffrage.\n\nText 2\n\nIndia held its first general election between October 1951 and February 1952. Roughly 173 million people were registered to vote, and about 85 percent of eligible adults were unable to read or write. To accommodate them, the Election Commission, headed by Sukumar Sen, assigned each party a distinctive pictorial symbol—a pair of bullocks, a hut—and placed a separate ballot box for each candidate, marked with that candidate’s symbol, in every polling station. More than 100 million votes were cast.",
+      "stem": "Based on the texts, how would the author of Text 2 most likely respond to the underlined claim in Text 1?",
+      "options": [
+        "Voters who cannot read tend to support large parties, whose symbols are more widely recognized than those of small parties.",
+        "Pictorial symbols were adopted mainly to help literate voters tell apart parties with similar names.",
+        "Holding a national election open to all adults does not depend on most voters being able to read.",
+        "Elections in countries where most adults cannot read are unlikely to reflect what voters actually want."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "Text 1 reports the view that democratic elections “require a literate public.” Text 2 describes India’s 1951–52 election, in which about 85 percent of eligible adults could not read, yet the Election Commission made voting possible with party symbols and symbol-marked ballot boxes, and more than 100 million votes were cast. The author of Text 2 would therefore respond that an election open to all adults can be held even when most voters cannot read.",
+      "distractors": {
+        "A": {
+          "recipe": "D1 unaddressed add-on",
+          "why_wrong": "Text 2 says nothing about which parties nonliterate voters supported or how well known particular symbols were."
+        },
+        "B": {
+          "recipe": "D3 twisted detail",
+          "why_wrong": "Text 2 says the symbols were introduced to accommodate the many voters who could not read, not to help literate voters."
+        },
+        "D": {
+          "recipe": "D2 wrong side",
+          "why_wrong": "This restates the worry behind Text 1’s claim; Text 2 presents India’s election as a case in which a largely nonliterate electorate voted, not as evidence that the results were unreliable."
+        }
+      },
+      "models": [
+        "2.10",
+        "2.4"
+      ],
+      "word_count": 144,
+      "sources": [
+        {
+          "what": "India’s first general election 1951–52: about 176 million adults, about 85 percent of whom could not read or write; party symbols, ballot papers and ballot boxes designed for a mostly unlettered electorate under Sukumar Sen",
+          "url": "https://en.wikipedia.org/wiki/Sukumar_Sen_(civil_servant)"
+        },
+        {
+          "what": "1951–52 Indian general election: about 173 million registered voters, party symbols, a separate symbol-marked ballot box per candidate, about 106 million votes cast",
+          "url": "https://en.wikipedia.org/wiki/1951%E2%80%9352_Indian_general_election"
+        }
+      ],
+      "notes": "Area: social science (political science, history). Text 1’s view is unattributed (a common mid-century assumption). Registered voters (about 173 million), symbols (Congress bullocks, KMPP hut), a symbol-marked box per candidate, and about 106 million votes from https://en.wikipedia.org/wiki/1951%E2%80%9352_Indian_general_election.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [
+          "added the 1951–52 election page (named only in notes) to sources: 173 million voters, symbol-marked box per candidate, votes cast; text unchanged"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "cross_text_connections.S1_counterexample.medium.w3b2_08",
+      "template": "S1_counterexample",
+      "subtype": "Response prediction",
+      "tier": "medium",
+      "band_target": null,
+      "passage": "Text 1\n\nÉlisabeth Jacquet de La Guerre was celebrated as a harpsichordist at the court of Louis XIV, where she had performed since childhood. In 1694 the Paris Opéra presented her Céphale et Procris, a five-act tragedy set to music. Although the production was unsuccessful, it secured her a permanent place in music history: <u>with Céphale et Procris, Jacquet de La Guerre became the first woman to compose an opera</u>.\n\nText 2\n\nIn February 1625, the Medici court in Florence entertained the visiting Polish prince Władysław with an opera, La liberazione di Ruggiero dall’isola d’Alcina, in which a knight is liberated from a sorceress’s enchanted island. Its composer, Francesca Caccini, was a singer and instrumentalist employed by the Medici family. The prince was evidently impressed: he arranged for the opera to be performed again in Warsaw in 1628.",
+      "stem": "Based on the texts, how would the author of Text 2 most likely respond to the underlined claim in Text 1?",
+      "options": [
+        "Jacquet de La Guerre probably modeled Céphale et Procris on the opera that Caccini wrote for the Medici court.",
+        "Another woman had composed an opera roughly seventy years before Céphale et Procris was staged.",
+        "Women composers found greater acceptance at the Medici court than they did at the court of Louis XIV.",
+        "Céphale et Procris was the first opera by a woman to be performed outside its composer’s home country."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "Text 1 claims that Jacquet de La Guerre became the first woman to compose an opera when Céphale et Procris was staged in 1694. Text 2 describes an opera by Francesca Caccini that was performed for the Medici court in 1625, about seventy years earlier. The author of Text 2 would therefore point out that a woman had composed an opera long before Jacquet de La Guerre did.",
+      "distractors": {
+        "A": {
+          "recipe": "D1 unaddressed add-on (influence)",
+          "why_wrong": "Neither text suggests that Jacquet de La Guerre knew Caccini’s opera or modeled her work on it."
+        },
+        "C": {
+          "recipe": "D1 unaddressed add-on (comparison)",
+          "why_wrong": "Neither text compares how the two courts treated women composers; both women were employed or celebrated at court."
+        },
+        "D": {
+          "recipe": "D3 twisted detail",
+          "why_wrong": "It was Caccini’s opera that was performed again abroad, in Warsaw; Céphale et Procris was staged in Paris, in its composer’s own country."
+        }
+      },
+      "models": [
+        "2.4",
+        "1.4"
+      ],
+      "word_count": 134,
+      "sources": [
+        {
+          "what": "Francesca Caccini, La liberazione di Ruggiero dall’isola d’Alcina, performed for the visiting Polish prince Władysław in 1625 and staged in Warsaw in 1628; widely regarded as the first opera written by a woman",
+          "url": "https://en.wikipedia.org/wiki/Francesca_Caccini"
+        }
+      ],
+      "notes": "Area: arts (music history). Text 1 states a mistaken “first” claim in the author’s voice, as 1.4 does. Jacquet de La Guerre’s Céphale et Procris (Paris Opéra, 1694, five acts, poorly received) is standard; the medium step is recognizing Caccini’s work as an opera and doing the date arithmetic, since the key names neither woman.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "cross_text_connections.S1_limit_degree.medium.w3b2_09",
+      "template": "S1_limit_degree",
+      "subtype": "Response prediction",
+      "tier": "medium",
+      "band_target": null,
+      "passage": "Text 1\n\nCities are commonly regarded as places where wildlife declines. Pavement, construction, and the spread of lawns and ornamental plantings replace the habitats on which native species depend, and urban expansion has been linked to local extinctions worldwide. <u>For this reason, conservation planners have often treated cities as having little value for protecting threatened species, concentrating their efforts on extensive natural areas far from urban centers</u>.\n\nText 2\n\nChristopher Ives, Pia Lentini, and colleagues mapped the distributions of 1,643 threatened plant and animal species in Australia and compared 99 cities with nonurban areas. Per unit of area, cities contained substantially more threatened species than nonurban areas did, and about 30 percent of the species occurred in at least one city. Urbanization certainly endangers many species, the researchers acknowledge, but national conservation planning should not overlook cities.",
+      "stem": "Based on the texts, how would the researchers in Text 2 most likely respond to the underlined claim in Text 1?",
+      "options": [
+        "By agreeing that cities offer little protection to threatened species but recommending that new natural areas be established closer to urban centers",
+        "By arguing that the harm urban expansion causes to native species has been greatly exaggerated",
+        "By pointing out that threatened animals are found in cities more often than threatened plants are",
+        "By suggesting that cities may matter more for the survival of threatened species than that approach assumes"
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "Text 1 describes planners treating cities as having little value for protecting threatened species. The researchers in Text 2 found that, per unit of area, Australian cities contained more threatened species than nonurban areas and that about 30 percent of threatened species occurred in at least one city. While granting that urbanization endangers many species, they would respond that cities are more important for threatened species than that approach allows.",
+      "distractors": {
+        "A": {
+          "recipe": "D2 wrong side",
+          "why_wrong": "The researchers do not agree that cities offer little protection; their data show cities hold many threatened species, and Text 2 recommends including cities, not creating new natural areas."
+        },
+        "B": {
+          "recipe": "D5 overstatement",
+          "why_wrong": "Text 2 says that urbanization “certainly endangers many species,” so the researchers do not dismiss the harm."
+        },
+        "C": {
+          "recipe": "D1 unaddressed add-on",
+          "why_wrong": "Text 2 groups plants and animals together and never compares how often each occurs in cities."
+        }
+      },
+      "models": [
+        "2.9",
+        "2.8"
+      ],
+      "word_count": 133,
+      "sources": [
+        {
+          "what": "Ives, Lentini et al. 2016, Global Ecology and Biogeography 25: 117–126: 1,643 legally protected (threatened) species in Australia, 99 cities vs nonurban areas; cities held more threatened species per unit area; about 30 percent of threatened species occurred in cities; conservation policy should include cities",
+          "url": "https://researchportalplus.anu.edu.au/en/publications/cities-are-hotspots-for-threatened-species/"
+        }
+      ],
+      "notes": "Area: natural science (conservation ecology). Text 1’s planning view is unattributed. Text 2 concedes the harm and narrows the claim, as in 2.8; the key hedges (“may”).",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "cross_text_connections.S1_case_fits_frame.medium.w3b2_10",
+      "template": "S1_case_fits_frame",
+      "subtype": "Response prediction",
+      "tier": "medium",
+      "band_target": null,
+      "passage": "Text 1\n\nWhy would females of a species come to prefer males with a particular coloration or call? According to the sensory bias hypothesis, such preferences may originate in an entirely different context. If a species’ perceptual system is tuned to detect something valuable, such as a particular food, males that happen to resemble it will attract disproportionate attention from females, and over generations a mating preference can develop from a bias that never evolved for mating.\n\nText 2\n\nFemale guppies, small freshwater fish, prefer males with conspicuous orange spots. Biologist Helen Rodd and colleagues presented guppies with small disks of various colors and found that females and males alike approached orange disks more readily than disks of other colors. In the wild, guppies consume orange fruits that drop into streams, and across populations, the strength of attraction to orange objects closely tracked the strength of females’ preference for orange males.",
+      "stem": "Based on the texts, what would the author of Text 1 most likely say about the findings described in Text 2?",
+      "options": [
+        "They suggest that the guppies’ preference for orange males may have grown out of a response that first served another purpose.",
+        "They show that male guppies developed orange spots so that predators would mistake them for fruit.",
+        "They indicate that young guppies must learn their attraction to the color orange by watching older members of their own population.",
+        "They undermine the hypothesis, because male guppies were drawn to the orange disks just as strongly as female guppies were."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "Text 1 explains the sensory bias hypothesis: a preference for a trait in mates can grow out of a sensitivity that evolved for something else, such as finding food. Text 2 reports that guppies of both sexes are drawn to orange objects, that guppies eat orange fruits, and that populations more attracted to orange objects show a stronger female preference for orange males. The author of Text 1 would see these findings as fitting the hypothesis: the mating preference may have developed from a response that originally helped guppies find food.",
+      "distractors": {
+        "B": {
+          "recipe": "D3 twisted detail",
+          "why_wrong": "Neither text mentions predators; the link to fruit concerns what attracts guppies, not what fools their enemies."
+        },
+        "C": {
+          "recipe": "D1 unaddressed add-on",
+          "why_wrong": "Neither text discusses whether the attraction to orange is learned from other guppies."
+        },
+        "D": {
+          "recipe": "D2 wrong side",
+          "why_wrong": "That males also approach orange disks supports the hypothesis, since it shows an attraction to orange that exists outside mate choice."
+        }
+      },
+      "models": [
+        "2.2",
+        "2.6"
+      ],
+      "word_count": 147,
+      "sources": [
+        {
+          "what": "Rodd, Hughes, Grether and Baril 2002, Proc. R. Soc. B 269: 475–481: both sexes more responsive to orange objects outside a mating context; female preference for orange males may be a pleiotropic effect of a sensory bias for orange arising in food detection; attraction to orange objects explained 94 percent of between-population variation in female preference",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC1690917/"
+        }
+      ],
+      "notes": "Area: natural science (evolutionary biology). Text 1 speaks (frame), Text 2 is the case, as in 2.2. Fruit as guppy food simplified from the paper’s fruit-mimicry framing.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "cross_text_connections.S1_case_fits_frame.medium.w3b2_11",
+      "template": "S1_case_fits_frame",
+      "subtype": "Response prediction",
+      "tier": "medium",
+      "band_target": null,
+      "passage": "Text 1\n\nA central finding of behavioral economics is that people evaluate outcomes relative to a reference point—an expectation, a goal, the status quo—rather than in absolute terms. Falling short of that point registers as a loss, and losses loom larger psychologically than equivalent gains: forfeiting an anticipated $100 typically feels worse than receiving an unexpected $100 feels good. Consequently, people tend to exert more effort to avoid a loss than to secure an equivalent gain.\n\nText 2\n\nIn golf, each hole has a “par,” the number of strokes an expert player is expected to require, and completing a hole one stroke under par earns a “birdie.” In professional tournaments, a stroke saved contributes identically either way. Yet when economists Devin Pope and Maurice Schweitzer analyzed more than 2.5 million putts by professional golfers on the PGA Tour, <u>they found that putts for par were more likely to succeed than putts of equal length for birdie</u>.",
+      "stem": "Based on the texts, how would the author of Text 1 most likely regard the finding presented in the underlined portion of Text 2?",
+      "options": [
+        "As surprising, because professionals’ long experience should keep the label attached to a score from affecting their performance",
+        "As puzzling, because a stroke saved on a birdie putt counts for more in a tournament than a stroke saved on a par putt",
+        "As predictable, because missing a par putt would register as a loss relative to the expected score, whereas missing a birdie putt would not",
+        "As unremarkable, because golfers usually attempt birdie putts from longer distances than they attempt par putts"
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "Text 1 says people judge outcomes against a reference point, feel losses more than equal gains, and so work harder to avoid losses. In golf, par is the expected score: missing a par putt means falling short of it, while missing a birdie putt only forgoes a gain. The author of Text 1 would therefore expect golfers to sink par putts more often, so the finding would seem predictable.",
+      "distractors": {
+        "A": {
+          "recipe": "D6 right attitude for a different speaker, wrong reason",
+          "why_wrong": "Text 1 makes no exception for experienced people; its account predicts the pattern rather than finding it surprising."
+        },
+        "B": {
+          "recipe": "D3 twisted detail",
+          "why_wrong": "Text 2 says a stroke saved counts identically either way, so the premise of this choice contradicts the text."
+        },
+        "D": {
+          "recipe": "D6 plausible verdict, reason contradicted",
+          "why_wrong": "The study compared putts of equal length, so distance cannot explain the difference."
+        }
+      },
+      "models": [
+        "1.11",
+        "2.6"
+      ],
+      "word_count": 152,
+      "sources": [
+        {
+          "what": "Pope and Schweitzer 2011, American Economic Review 101(1): 129–157: over 2.5 million PGA Tour putts measured by laser; par as a reference point; even top players show loss aversion (par putts made more often than equal-length birdie putts)",
+          "url": "https://www.aeaweb.org/articles?id=10.1257/aer.101.1.129"
+        }
+      ],
+      "notes": "Area: social science (behavioral economics). As-adjective shell as in 1.11, built on the D6 recipe (plausible attitudes, wrong reasons). Text 1 is a textbook statement of loss aversion, unattributed.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "cross_text_connections.S2_shared_premise.medium.w3b2_12",
+      "template": "S2_shared_premise",
+      "subtype": "Agreement",
+      "tier": "medium",
+      "band_target": null,
+      "passage": "Text 1\n\nThe QWERTY keyboard, named for the first six letters of its top row, took shape in the 1870s as inventor Christopher Latham Sholes revised his typewriter. Its peculiar arrangement had a mechanical rationale. In early machines, the bars carrying the letters could collide and jam when adjacent keys were struck in rapid succession, so Sholes separated letters that frequently appear together in English, keeping the mechanism working smoothly. The arrangement has outlived the machines it was designed for.\n\nText 2\n\nResearchers Koichi Yasuoka and Motoko Yasuoka, tracing the layout through Sholes’s successive prototypes, propose a different explanation. Among the typewriter’s earliest customers were telegraph businesses, whose operators transcribed incoming messages as they received them in Morse code. According to the Yasuokas, these customers’ requirements, communicated to Sholes and his collaborators, gradually determined where many of the letters were placed.",
+      "stem": "Based on the texts, the author of Text 1 and the Yasuokas (Text 2) would most likely agree with which statement?",
+      "options": [
+        "Sholes arranged the keys so that letters often typed in sequence would sit far apart on the keyboard.",
+        "The order of letters on the QWERTY keyboard was shaped by practical demands of the period in which the typewriter was developed.",
+        "The QWERTY arrangement allows people to type faster than an alphabetical arrangement of the keys would.",
+        "Telegraph operators preferred typewriters whose keys would not jam when struck in rapid succession."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The texts disagree about why the letters ended up where they are. The author of Text 1 credits a mechanical problem of early typewriters, jamming typebars, and the Yasuokas credit the requirements of the telegraph businesses that were among the machine’s first customers. Both, however, trace the layout to practical demands of the 1870s, when Sholes was developing the typewriter.",
+      "distractors": {
+        "A": {
+          "recipe": "D4 one text only (the conflict point)",
+          "why_wrong": "This is the jamming account given in Text 1; the Yasuokas propose a different explanation for where the letters were placed."
+        },
+        "C": {
+          "recipe": "D1 unaddressed add-on",
+          "why_wrong": "Neither text compares QWERTY’s typing speed with that of an alphabetical layout."
+        },
+        "D": {
+          "recipe": "D3 twisted detail (joins the two texts)",
+          "why_wrong": "Jamming comes from Text 1 and the telegraph operators from Text 2; neither text says the operators cared about jamming."
+        }
+      },
+      "models": [
+        "1.5",
+        "2.1"
+      ],
+      "word_count": 137,
+      "sources": [
+        {
+          "what": "Yasuoka and Yasuoka, On the Prehistory of QWERTY, ZINBUN 42 (2011): 161-174: traces the keyboard through Sholes’s 1868, 1870, 1872 and 1873 machines; first customer Porter’s Telegraph College; keyboard developed for Morse receivers; about half the letters moved by the requirements of Harrington and Craig of the American Telegraph Works; rejects the claim that Sholes arranged typebars to separate frequent digrams",
+          "url": "https://repository.kulib.kyoto-u.ac.jp/dspace/bitstream/2433/139379/1/42_161.pdf"
+        },
+        {
+          "what": "QWERTY devised by Sholes in the early 1870s; the typebar-jamming explanation is popular but possibly invented; letter groupings attributed instead to feedback from American Morse telegraph operators (Yasuoka and Yasuoka, On the Prehistory of QWERTY, 2011)",
+          "url": "https://en.wikipedia.org/wiki/QWERTY"
+        }
+      ],
+      "notes": "Area: history of technology. Text 1 states the familiar jamming account in the author’s voice; Text 2 the Yasuokas’ telegraph account. Shared premise phrased one level up (practical demands of the period), as in 2.3.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [
+          "added the Yasuoka paper as source (Wikipedia did not attribute the telegraph account to them); paper confirms prototypes traced and letters moved by telegraph customers’ requirements",
+          "Text 2 \"earliest regular users were telegraph operators ... the operators’ requirements\" changed to \"earliest customers were telegraph businesses, whose operators ... these customers’ requirements\" (the paper names Porter’s Telegraph College and Harrington and Craig of the American Telegraph Works); explanation updated"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "cross_text_connections.S1_second_factor.medium.w3b2_13",
+      "template": "S1_second_factor",
+      "subtype": "Response prediction",
+      "tier": "medium",
+      "band_target": null,
+      "passage": "Text 1\n\nDuring the 1930s and 1940s, recordings of Cuban son issued by the British label His Master’s Voice in its “GV” series circulated widely in central Africa and were broadcast by the region’s earliest radio stations. Congolese guitarists absorbed the style from these records, and because the discs were frequently labeled “rumba,” the dance music that emerged in Léopoldville and Brazzaville became known as Congolese rumba. <u>The genre is thus essentially a local adaptation of Cuban son</u>.\n\nText 2\n\nThe Cuban records were undeniably popular, but Congolese musicians were hardly starting from nothing. Maringa, a Bakongo dance music performed with guitars, accordions, and improvised percussion such as struck bottles, had already become widespread in the region’s towns during the 1920s. Guitarist Franco Luambo later characterized his music as fundamentally African in its rhythm and guitar parts, with melodies that follow the tonal patterns of Lingala.",
+      "stem": "Based on the texts, how would the author of Text 2 most likely characterize the underlined claim in Text 1?",
+      "options": [
+        "By praising it for recognizing that Congolese guitarists learned new playing techniques from imported records",
+        "By disputing that recordings of Cuban son were as widely heard in central Africa during the 1930s and 1940s as Text 1 suggests",
+        "By arguing that the genre’s name shows that its musicians deliberately set out to imitate Cuban performers",
+        "By objecting that it gives too little weight to a local dance music that was established before the Cuban records arrived"
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "Text 1 concludes that Congolese rumba is “essentially a local adaptation of Cuban son.” The author of Text 2 grants that the Cuban records were popular but points out that maringa, a Bakongo dance music, was already widespread in the 1920s, before the records of the 1930s and 1940s, and cites Franco’s description of his music as African in rhythm, guitar parts and melody. The author would therefore object that the claim overlooks a local tradition that also shaped the genre.",
+      "distractors": {
+        "A": {
+          "recipe": "D2 wrong side (praise)",
+          "why_wrong": "The author of Text 2 does not praise the claim; the point of Text 2 is that the claim leaves out the music’s local roots."
+        },
+        "B": {
+          "recipe": "D2 wrong side (denies what the speaker grants)",
+          "why_wrong": "Text 2 says the Cuban records were “undeniably popular,” so the author would not dispute that they were widely heard."
+        },
+        "C": {
+          "recipe": "D3 twisted detail",
+          "why_wrong": "Text 1 explains the name as a result of mislabeled discs; Text 2 never treats the name as evidence of deliberate imitation."
+        }
+      },
+      "models": [
+        "2.7",
+        "1.15"
+      ],
+      "word_count": 142,
+      "sources": [
+        {
+          "what": "Congolese rumba: Cuban son spread through EMI’s GV series (from 1933) and early radio; discs mislabeled rumba gave the name; maringa, a Bakongo dance music prominent in the 1920s to 1940s and played with guitars, accordions and a bottle used as percussion, remained the music’s foundation; Franco Luambo on Lingala melody and African guitar and rhythm",
+          "url": "https://en.wikipedia.org/wiki/Congolese_rumba"
+        }
+      ],
+      "notes": "Area: arts (music). Key verb “objecting” (an advocacy verb) and distractor verb “praising” keep the By-verb tell from marking the key. Léopoldville is now Kinshasa.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "cross_text_connections.S1_solution.medium.w3b2_14",
+      "template": "S1_solution",
+      "subtype": "Response prediction",
+      "tier": "medium",
+      "band_target": null,
+      "passage": "Text 1\n\nHistorians of eighteenth-century London confront a lopsided archive. Most surviving letters, diaries, and memoirs were written by the educated and the prosperous, so the city’s servants, laborers, street vendors, and lodgers appear primarily as others described them. Recovering how such people spoke and what concerned them is therefore difficult, and accounts of everyday life tend to be narrated from the perspective of those who employed or governed them.\n\nText 2\n\nBetween 1674 and 1913, the published Proceedings of the Old Bailey, London’s central criminal court, reported nearly 197,000 trials, frequently reproducing the testimony of victims, witnesses, and defendants. Since 2003, the Old Bailey Online project has made the complete text, approximately 127 million words, searchable on the internet. Its creators describe the Proceedings as the largest single source of information about non-elite lives ever published.",
+      "stem": "Based on the texts, how would the author of Text 2 most likely respond to the problem presented in Text 1?",
+      "options": [
+        "By arguing that criminal trials offer a distorted view of everyday life, since most Londoners never appeared in court",
+        "By suggesting that historians concentrate on the nineteenth century, for which more records of ordinary people survive",
+        "By identifying a body of records in which people outside the elite are frequently heard in their own words",
+        "By pointing out that letters and diaries from the period have also been made searchable on the internet"
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "Text 1’s problem is that the surviving written record of eighteenth-century London comes mostly from the educated and prosperous, so ordinary people’s speech and concerns are hard to recover. Text 2 describes the Proceedings of the Old Bailey, which reproduce the testimony of victims, witnesses and defendants and are described as the largest single source of information about non-elite lives ever published. The author of Text 2 would answer the problem by pointing to these records.",
+      "distractors": {
+        "A": {
+          "recipe": "D2 wrong side",
+          "why_wrong": "Text 2 presents the trial records as a rich source on non-elite lives, not as a distorted one."
+        },
+        "B": {
+          "recipe": "D9 generic academic move",
+          "why_wrong": "Text 2 does not recommend changing periods; its records begin in 1674 and cover the eighteenth century."
+        },
+        "D": {
+          "recipe": "D3 twisted detail",
+          "why_wrong": "What Text 2 says has been made searchable online is the trial Proceedings, not letters and diaries, which Text 1 says come mostly from the elite."
+        }
+      },
+      "models": [
+        "2.11"
+      ],
+      "word_count": 133,
+      "sources": [
+        {
+          "what": "Old Bailey Online: searchable edition of the published trial accounts of London’s central criminal court, 1674–1913, about 197,000 trials and 127 million words, launched March 2003; described as the largest single source of information about non-elite lives and behaviour ever published",
+          "url": "https://www.dhi.ac.uk/projects/old-bailey/"
+        }
+      ],
+      "notes": "Area: history. Solution relation as in 2.11; Text 1’s archival problem is unattributed and general.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [
+          "\"largest single body of information\" changed to \"source\", the creators’ own word (dhi.ac.uk)"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "cross_text_connections.S1_rival_hypothesis.medium.w3b2_15",
+      "template": "S1_rival_hypothesis",
+      "subtype": "Response prediction",
+      "tier": "medium",
+      "band_target": null,
+      "passage": "Text 1\n\nHorses had inhabited the grasslands of Alaska and the Yukon for several hundred thousand years before disappearing near the end of the last ice age, at roughly the time people first arrived from Asia. To some researchers, this coincidence suggests a cause: <u>newly arrived hunters, encountering animals unaccustomed to human predators, killed horses faster than the population could replenish itself</u>.\n\nText 2\n\nPaleontologist R. Dale Guthrie radiocarbon dated a series of horse leg bones from Alaska and measured each specimen, producing a record of body size spanning thousands of years. The bones became markedly smaller during the final millennia before the horses vanished, suggesting that conditions for the animals were already deteriorating. That period also brought a climatic shift that transformed the dry grassland on which the horses grazed, and Guthrie concludes that the evidence does not support overkill by humans.",
+      "stem": "Based on the texts, how would Guthrie (Text 2) most likely respond to the hypothesis presented in the underlined portion of Text 1?",
+      "options": [
+        "By arguing that it fails to explain why the horses were already shrinking during the millennia before they vanished",
+        "By agreeing that the horses’ decreasing size would have made them easier for newly arrived hunters to pursue and kill in large numbers",
+        "By suggesting that people reached Alaska thousands of years earlier than the hypothesis assumes",
+        "By pointing out that horses survived the same climatic shift in other parts of North America"
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "Text 1 attributes the horses’ disappearance to hunting by newly arrived people. Guthrie found that the horses’ leg bones became markedly smaller during the final millennia before they vanished, which he links to a climatic shift that transformed their grassland, and he concludes that the evidence does not support overkill. He would therefore argue that the hunting hypothesis does not account for the earlier decline in body size.",
+      "distractors": {
+        "B": {
+          "recipe": "D2 wrong side",
+          "why_wrong": "Guthrie rejects overkill by humans; he treats the shrinking size as a sign of worsening conditions, not as something that helped hunters."
+        },
+        "C": {
+          "recipe": "D1 unaddressed add-on",
+          "why_wrong": "Text 2 says nothing about when people reached Alaska."
+        },
+        "D": {
+          "recipe": "D1 unaddressed add-on",
+          "why_wrong": "Text 2 discusses only horses in Alaska and does not mention other parts of North America."
+        }
+      },
+      "models": [
+        "2.5"
+      ],
+      "word_count": 139,
+      "sources": [
+        {
+          "what": "Guthrie 2003, Nature 426: 169–171: radiocarbon-dated metacarpals show Alaskan horses underwent a rapid decline in body size before extinction; extinction best attributed to a coincident climatic and vegetational shift; the data do not support human overkill",
+          "url": "https://www.nature.com/articles/nature02098"
+        }
+      ],
+      "notes": "Area: natural science (paleontology). Text 1’s overkill hypothesis is unattributed. The dates are left out (Guthrie’s 12,500 are radiocarbon years) to avoid a calendar-year confusion.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "cross_text_connections.S2_shared_premise.easy.w3b2_16",
+      "template": "S2_shared_premise",
+      "subtype": "Agreement",
+      "tier": "easy",
+      "band_target": null,
+      "passage": "Text 1\n\nTango emerged during the late 1800s in the poor waterfront neighborhoods of Buenos Aires and Montevideo, cities facing each other across the Río de la Plata. Its deepest roots lie in the region’s communities of African descent. Candombe, the drumming and dance of Afro-Argentines and Afro-Uruguayans, shaped tango’s distinctive rhythm, and the word “tango” itself was long used locally for gatherings of enslaved Africans and their descendants.\n\nText 2\n\nTango took shape in the crowded tenements of Buenos Aires and Montevideo, where hundreds of thousands of European immigrants, chiefly from Italy and Spain, settled after 1870. These newcomers contributed their own songs and instruments, and the habanera, a Spanish-Cuban dance popular in the port cities, supplied much of early tango’s rhythm. Tango is best understood as the product of these mixed immigrant districts.",
+      "stem": "Based on the texts, both authors would most likely agree with which statement?",
+      "options": [
+        "Tango’s rhythm came mainly from the habanera, a dance that was popular in port cities.",
+        "Tango was first performed in theaters for wealthy audiences in Buenos Aires.",
+        "Tango was brought to the Río de la Plata region by immigrants from Spain.",
+        "Tango developed in working-class neighborhoods of Buenos Aires and Montevideo in the late nineteenth century."
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The authors disagree about tango’s main roots: Text 1 stresses African-descended communities and candombe, while Text 2 stresses European immigrants and the habanera. But both place tango’s beginnings in the poor, crowded neighborhoods of Buenos Aires and Montevideo in the late 1800s (Text 1’s “poor waterfront neighborhoods,” Text 2’s “crowded tenements” after 1870).",
+      "distractors": {
+        "A": {
+          "recipe": "D4 one text only",
+          "why_wrong": "Only Text 2 credits the habanera; Text 1 says candombe shaped tango’s beat."
+        },
+        "B": {
+          "recipe": "D1 unaddressed add-on",
+          "why_wrong": "Neither text mentions theaters or wealthy audiences; both place tango in poor neighborhoods."
+        },
+        "C": {
+          "recipe": "D3 twisted detail",
+          "why_wrong": "Both texts say tango took shape in Buenos Aires and Montevideo; Text 2 says immigrants contributed to it there, not that they brought it from Spain."
+        }
+      },
+      "models": [
+        "1.2",
+        "1.5",
+        "1.6"
+      ],
+      "word_count": 131,
+      "sources": [
+        {
+          "what": "Tango emerged in the 1880s in the poor port areas of Buenos Aires and Montevideo on the Río de la Plata; candombe of formerly enslaved Africans shaped it and “tango” named gatherings of enslaved people; European immigrants and the habanera also shaped it",
+          "url": "https://en.wikipedia.org/wiki/Tango"
+        }
+      ],
+      "notes": "Area: arts (music and dance). Both texts are the authors’ own emphases, as in 1.2; no researchers named.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "cross_text_connections.S1_counterexample.easy.w3b2_17",
+      "template": "S1_counterexample",
+      "subtype": "Response prediction",
+      "tier": "easy",
+      "band_target": null,
+      "passage": "Text 1\n\nFingerprints were proposed as a method of identifying criminals during the 1880s, but police were initially reluctant to adopt them. In Britain, the turning point came in 1905, when brothers Alfred and Albert Stratton were convicted of a double murder in Deptford, near London, after a thumbprint on a cash box was traced to Alfred. <u>The Stratton case was the first murder investigation to be solved with fingerprint evidence</u>.\n\nText 2\n\nIn June 1892, two young children were discovered murdered in their home in Necochea, Argentina. Their mother, Francisca Rojas, accused a neighbor. Several days afterward, police inspector Eduardo Álvarez, trained in the fingerprint classification methods of Juan Vucetich, noticed a bloody print on a bedroom door. He removed that section of the door and compared the print with Rojas’s own fingerprints. The prints matched, and Rojas confessed.",
+      "stem": "Based on the texts, how would the author of Text 2 most likely respond to the underlined claim in Text 1?",
+      "options": [
+        "Álvarez probably learned how to compare fingerprints from British police officers.",
+        "A murder case in Argentina was solved with fingerprint evidence more than ten years before the Stratton case.",
+        "Bloody fingerprints are easier to match than prints left on objects such as cash boxes.",
+        "The Stratton brothers were convicted mainly because of evidence other than the thumbprint."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "Text 1 claims that the 1905 Stratton case was the first murder case solved with fingerprint evidence. Text 2 describes an 1892 murder in Necochea, Argentina, that was solved when a bloody print on a door was matched to Francisca Rojas, who then confessed. The author of Text 2 would point out that fingerprints solved a murder in Argentina more than ten years before the Stratton case.",
+      "distractors": {
+        "A": {
+          "recipe": "D1 unaddressed add-on",
+          "why_wrong": "Text 2 says Álvarez was trained in the methods of Juan Vucetich, not by British police."
+        },
+        "C": {
+          "recipe": "D1 unaddressed add-on",
+          "why_wrong": "Neither text compares how easily different kinds of prints can be matched."
+        },
+        "D": {
+          "recipe": "D1 unaddressed add-on",
+          "why_wrong": "Text 2 does not discuss the Stratton case at all, and Text 1 says the thumbprint led to the conviction."
+        }
+      },
+      "models": [
+        "1.4"
+      ],
+      "word_count": 136,
+      "sources": [
+        {
+          "what": "Francisca Rojas, Necochea, Argentina, June 1892: her two children killed; she blamed a neighbor; Inspector Álvarez, trained by Juan Vucetich, found a bloody print on a bedroom door, removed that part of the door, matched it to Rojas, and she confessed; believed to be the first criminal found guilty through fingerprint evidence",
+          "url": "https://en.wikipedia.org/wiki/Francisca_Rojas"
+        }
+      ],
+      "notes": "Area: history (forensic science). The Stratton case (Deptford, 1905, thumbprint on a cash box) is the well-known British first; Text 1 overstates it as the first anywhere, as 1.4’s Text 1 does with Carracci.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [],
+        "status": "pass"
+      }
+    }
+  ],
+  "done": true
+}

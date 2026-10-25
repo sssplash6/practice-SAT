@@ -1,0 +1,1798 @@
+{
+  "skill": "Command of Evidence",
+  "slug": "command_of_evidence",
+  "part": "w3b3",
+  "domain": "Information and Ideas",
+  "plan": {
+    "templates": [
+      {
+        "code": "T1_single",
+        "name": "Hypothetical finding supports or weakens a single claim (causal, comparison, existence, generalization, prediction)"
+      },
+      {
+        "code": "T1_compete",
+        "name": "Hypothetical finding discriminates between competing explanations (support or weaken)"
+      },
+      {
+        "code": "Q2_P8_multipart",
+        "name": "Data description: multi-part, interaction, or passage-plus-data claim"
+      },
+      {
+        "code": "T2_lit_quote",
+        "name": "Quotation from a literary work illustrates a claim (single trait, two-part, contrast)"
+      },
+      {
+        "code": "T3_person_quote",
+        "name": "Quotation from a person (participant, respondent, historian, critic, article) supports or challenges a claim"
+      },
+      {
+        "code": "Q2_P5_control",
+        "name": "Data description: condition vs control or group comparison supports a conclusion"
+      },
+      {
+        "code": "Q1_P3_pairwise",
+        "name": "Data completion: pairwise comparison (one or two comparisons)"
+      },
+      {
+        "code": "Q2_P4_trend",
+        "name": "Data description: trend or change over time supports a conclusion"
+      },
+      {
+        "code": "Q1_P5_control",
+        "name": "Data completion: condition vs control"
+      },
+      {
+        "code": "Q1_P1_lookup",
+        "name": "Data completion: lookup (one cell or bar, reverse lookup, filter)"
+      }
+    ]
+  },
+  "items": [
+    {
+      "id": "command_of_evidence.T1_single.hard.w3b3_01",
+      "template": "T1_single",
+      "subtype": "Hypothetical finding supports a causal claim (program vs general trend); key supplies the comparison across cohorts and regions",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "Between 1973 and 1978, the Indonesian government built more than 61,000 primary schools, one of the largest school construction programs ever undertaken. Because more schools went to districts where many children were not enrolled, the number of new schools per child varied widely from region to region. Over the same years, however, schooling in Indonesia may also have been rising for other reasons, such as growing household incomes. Using survey data on adults born before and after the program began, economist Esther Duflo argued that the construction program itself, and not merely these broader trends, increased the amount of education that Indonesians received.",
+      "stem": "Which finding from Duflo’s study, if true, would most directly support her argument about the school construction program?",
+      "options": [
+        "People from regions that received many new schools were no more likely to have finished primary school than their older siblings who had been too old to attend the new schools.",
+        "The gap in years of education between people young enough to attend the new schools and people already too old to attend them was larger in regions that received many new schools than in regions that received few.",
+        "Among people who were already too old to attend the new schools, those from regions that later received many new schools had about as many years of education as those from regions that received few.",
+        "People who entered primary school after 1978 in regions that received many new schools completed more years of education than people who entered primary school before 1973 in those same regions."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "Duflo must show that the new schools, not a nationwide rise in schooling, raised education. A general rise would lift younger people's schooling about equally everywhere. If the gain from older to younger people was larger where many schools were built than where few were built, the extra gain tracks the program itself, which supports her argument.",
+      "distractors": {
+        "A": {
+          "recipe": "OPP: no gain where the schools were built",
+          "why_wrong": "If younger people in high-construction regions did no better than their older siblings, the program left no trace on education, which would weaken the argument."
+        },
+        "C": {
+          "recipe": "PART: the comparison group alone",
+          "why_wrong": "Older people's education being similar across regions shows only that the regions started out alike; without data on the younger people, it shows no increase from the program."
+        },
+        "D": {
+          "recipe": "TRAP: before-and-after in one kind of region, consistent with the general trend",
+          "why_wrong": "A rise from older to younger people within high-construction regions could come from the nationwide increase in schooling the passage mentions, since there is no comparison with regions that received few schools."
+        }
+      },
+      "models": [
+        "3.39",
+        "3.42",
+        "3.28",
+        "3.36"
+      ],
+      "sources": [
+        {
+          "what": "Duflo, NBER Working Paper 7860 (2000), AER 91(4) 2001: over 61,000 primary schools built 1973-1978; effect estimated by combining regional differences in schools built with cohort differences from the program's timing; children aged 2 to 6 in 1974 received 0.12 to 0.19 more years of education per school built per 1,000 children",
+          "url": "https://www.nber.org/papers/w7860"
+        }
+      ],
+      "notes": "Band-7 moves: the key supplies a difference of differences (cohort gap compared across high- and low-construction regions), which the passage never describes beyond 'adults born before and after'; the rival (a nationwide rise) is in the passage; D is the TRAP (before-after in treated regions only, fits both), C is the control half alone (partial), A the rival's prediction. Stem names the study and claimant (19 words). Allocation by the number of unenrolled children follows the paper's design; 'may also have been rising ... household incomes' is a hedged setup for the rival, not a sourced finding.",
+      "word_count": 103,
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [],
+        "status": "pass",
+        "band7": {
+          "verdict": "band 7",
+          "why": "difference of differences the passage never states (cohort gap compared across high- and low-construction regions) rules out the nationwide rise; D is a TRAP that fits both, C a partial control; 103-word passage, 19-word stem naming study and claimant"
+        }
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "B",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 7
+    },
+    {
+      "id": "command_of_evidence.T1_single.hard.w3b3_02",
+      "template": "T1_single",
+      "subtype": "Hypothetical finding supports an interpretive claim about fossil evidence (needs the bridge from group makeup to foraging)",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "At Engare Sero, just south of Lake Natron in northern Tanzania, more than 400 human footprints have been preserved in volcanic sediment since the Late Pleistocene, making the site the largest assemblage of fossil human footprints yet known in Africa. Analyzing the sizes and spacing of the prints, anthropologist Kevin Hatala and colleagues identified 17 trackways heading in the same direction at similar speeds, most likely made by 14 adult women accompanied by only two adult men and one juvenile. The researchers suggest that these tracks may record women foraging together, a cooperative and sexually divided form of foraging seen in some present-day societies.",
+      "stem": "Which finding, if true, would most directly support the researchers’ suggestion?",
+      "options": [
+        "The volcanic sediment in which the footprints were made hardened soon after the prints formed, preserving even the faint impressions left by individual toes.",
+        "The trackways attributed to the 14 women were made over a span of several weeks rather than during a single crossing of the area.",
+        "Footprint sites of similar age elsewhere in Africa preserve trackways made by groups that included both adults and children.",
+        "In present-day foraging societies such as the Hadza of Tanzania, women often forage in groups that men join only occasionally, while most children remain in camp."
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The researchers suggest that the group of mostly women recorded at Engare Sero was foraging together, as women do in some present-day societies. If women in present-day foraging societies forage in groups that men join only occasionally and that leave most children behind, the makeup of the Engare Sero group (14 women, two men, one juvenile) matches that pattern, which supports the suggestion.",
+      "distractors": {
+        "A": {
+          "recipe": "OFF: preservation of the prints",
+          "why_wrong": "How well the prints were preserved says nothing about what the people who made them were doing."
+        },
+        "B": {
+          "recipe": "OPP: undermines the premise that the women traveled together",
+          "why_wrong": "If the women's trackways were made weeks apart, they would not record a group foraging together, which would weaken the suggestion."
+        },
+        "C": {
+          "recipe": "TRAP / SUBJ: other sites, mixed groups",
+          "why_wrong": "Mixed groups of adults and children at other sites say nothing about whether women foraged together, and they do not match the mostly female group at Engare Sero."
+        }
+      },
+      "models": [
+        "3.12",
+        "3.25",
+        "3.31",
+        "3.7"
+      ],
+      "sources": [
+        {
+          "what": "Hatala et al. 2020, Scientific Reports 10: 7740: more than 400 Late Pleistocene human footprints at Engare Sero, south of Lake Natron, largest assemblage in Africa; 17 similarly oriented trackways attributed to at least 14 adult females with two adult males and one juvenile, at similar speeds; in the context of ethnographic data (Hadza, Ache: women forage cooperatively with occasional male company, children typically left in camp), may record cooperative, sexually divided foraging",
+          "url": "https://www.nature.com/articles/s41598-020-64095-0"
+        }
+      ],
+      "notes": "Band 6: the key supplies the bridge (an observed present-day pattern that matches the group's makeup), as in the paper's own argument; B attacks the 'together' premise (OPP), C is off-target on other sites, A is irrelevant to behavior. The passage says 'suggest ... may', as the paper does.",
+      "word_count": 104,
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 2,
+        "fixes": [
+          "passage said \"at least 14 adult women\"; source says 14, most likely female: now \"most likely made by 14 adult women\" (PMC7224389)"
+        ],
+        "status": "fixed",
+        "band7": {
+          "verdict": "band 6",
+          "why": "key supplies the ethnographic bridge the authors use; A and C are off-target, B weakens; target 6"
+        }
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "D",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "command_of_evidence.T1_compete.hard.w3b3_03",
+      "template": "T1_compete",
+      "subtype": "Hypothetical finding discriminates between competing explanations (weather alone vs weather plus falling prices); support",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "Coffee leaf rust, a fungal disease that strips coffee plants of their leaves, spread across Central America in 2012 and 2013, reducing the region’s coffee production by about 16 percent. During that period, coffee-growing areas experienced unusually warm nights and cool days, a pattern thought to shorten the interval between the fungus’s infection of a leaf and its production of new spores. Plant pathologist Jacques Avelino and colleagues accept that the weather contributed, but they argue that the epidemic was also driven by a decline in coffee prices: farmers earning less from their crop tend to economize on fungicides and fertilizer, leaving their plants more vulnerable to disease.",
+      "stem": "Which finding, if true, would most directly support the argument made by Avelino and colleagues?",
+      "options": [
+        "In earlier decades, years in which the weather in the region was as favorable to the fungus as it was in 2012 brought only mild outbreaks of rust whenever coffee prices were high.",
+        "Rust damage in 2012 was most severe on farms that had reduced their use of fungicides, nearly all of which were in the areas where nights had been warmest that year.",
+        "Among farms that experienced similar temperatures in 2012, those that kept up their usual fungicide and fertilizer applications suffered about as much rust damage as those that cut back.",
+        "Coffee plants that were severely damaged by rust in 2012 produced fewer berries the following year, which reduced the incomes of many farmers in the region even further."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "Avelino and colleagues argue that the weather alone does not explain the epidemic and that falling prices also drove it. If earlier years with weather just as favorable to the fungus produced only mild outbreaks when prices were high, then favorable weather was not enough by itself: the severe outbreak came when that weather was combined with low prices, as the argument holds.",
+      "distractors": {
+        "B": {
+          "recipe": "TRAP: confounded comparison (looks like a test, cannot decide)",
+          "why_wrong": "The farms that cut back on fungicides were nearly all in the warmest areas, so their worse damage could be due to the weather alone; the finding cannot separate the two causes."
+        },
+        "C": {
+          "recipe": "OPP: the rival's prediction",
+          "why_wrong": "If farms that kept spraying and fertilizing suffered as much damage as farms that cut back under the same temperatures, reduced spending made no difference, which weakens the argument."
+        },
+        "D": {
+          "recipe": "TRAP: wrong time window (a consequence, not a cause)",
+          "why_wrong": "Lower yields after the epidemic are a result of the 2012 damage; they say nothing about whether falling prices helped cause it."
+        }
+      },
+      "models": [
+        "3.9",
+        "3.15",
+        "3.14",
+        "3.6"
+      ],
+      "sources": [
+        {
+          "what": "Avelino et al. 2015, Food Security 7(2): 303-321: Central American production fell 16% in 2013; main drivers economic and meteorological; all intense epidemics in 37 years coincided with low profitability (price declines in 2012-13); low profitability led to suboptimal management and more vulnerable plants; reduced diurnal thermal amplitude likely shortened the latency period",
+          "url": "https://repositorio.catie.ac.cr/handle/11554/7223"
+        }
+      ],
+      "notes": "Band-7 moves: two views in the passage (weather alone, implied, vs weather plus prices); the key reaches the argument by an unexpected route (other years, weather held constant, prices varied), which the passage never mentions; B is a TRAP whose comparison is confounded with the rival cause; C is the rival's prediction under controlled temperatures; D is a wrong-time-window TRAP. Stem names the claimants (15 words). Reviewer check: weather-only view predicts severe outbreaks in A's years regardless of price, the price view predicts mild ones, so A splits them; B fits both.",
+      "word_count": 108,
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 2,
+        "fixes": [],
+        "status": "pass",
+        "band7": {
+          "verdict": "band 7",
+          "why": "key reaches the price view by an unexpected route (other years, weather held, prices varied); weather-only predicts severe outbreaks there, price view mild ones, so A splits them; B is confounded with warm nights and fits both; C the rival’s prediction"
+        }
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "A",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 7
+    },
+    {
+      "id": "command_of_evidence.T1_compete.hard.w3b3_04",
+      "template": "T1_compete",
+      "subtype": "Hypothetical finding discriminates between competing explanations (less foraging time vs changed vegetation); support",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Over three decades beginning in 1979, yearling Alpine chamois—goatlike mammals of European mountains—in three hunting districts of the Italian Alps became roughly a quarter lighter. Analyzing records of more than 10,000 animals, ecologist Tom Mason and colleagues linked the decline to warmer springs and summers. Warming might have altered the alpine meadows on which chamois graze, but satellite measurements revealed no change in the timing or productivity of the vegetation over the study period. The researchers therefore suggest that high temperatures may reduce chamois body mass by limiting how much time the animals spend foraging.",
+      "stem": "Which finding, if true, would most directly support the researchers’ suggestion?",
+      "options": [
+        "The plants that chamois in the study area prefer to eat contain less protein in midsummer than they did in the early 1980s, though the plants are just as abundant.",
+        "Yearling chamois in the warmest of the three hunting districts were, on average, lighter than yearling chamois in the coolest of the three districts.",
+        "On days when temperatures were high, chamois in the study area spent more time resting in shaded areas and less time grazing than they did on cooler days.",
+        "Male and female yearling chamois in the study area lost roughly the same proportion of their body mass over the three decades that the researchers examined."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The researchers suggest that heat makes chamois lighter by cutting into the time they spend foraging, not by changing their food. A finding that chamois rest in the shade and graze less on hot days than on cool days shows exactly that link between high temperatures and reduced foraging, which supports the suggestion.",
+      "distractors": {
+        "A": {
+          "recipe": "OPP: supports the rival (the food changed)",
+          "why_wrong": "Less nutritious plants would give warming another way to lower body mass through the food itself, the explanation the researchers set aside, so this does not support their suggestion."
+        },
+        "B": {
+          "recipe": "TRAP: consistent with both explanations",
+          "why_wrong": "Lighter animals in a warmer district fit either a loss of foraging time or a change in the vegetation, so the finding does not favor the researchers' explanation."
+        },
+        "D": {
+          "recipe": "OFF: different variable",
+          "why_wrong": "Whether males and females declined equally says nothing about how high temperatures reduce body mass."
+        }
+      },
+      "models": [
+        "3.10",
+        "3.8",
+        "3.15"
+      ],
+      "sources": [
+        {
+          "what": "Mason, Apollonio, Chirichella, Willis, Stephens 2014, Frontiers in Zoology 11: 69: long-term body mass declines in juvenile Alpine chamois in three neighbouring Italian Alps populations, linked to warmer spring and summer temperatures (and density); no evidence that timing or productivity of resources changed; suggests less time foraging during hot periods",
+          "url": "https://www.stir.ac.uk/research/hub/publication/533958"
+        }
+      ],
+      "notes": "Band 6: two explanations for the same warming link; the key operationalizes the researchers' mechanism (temperature to foraging time), A gives the rival a route (food quality), B is consistent with both, D is off-target. Passage says 'suggest ... may', matching the paper's 'possibly'. Rough figures (a quarter lighter, more than 10,000 animals, from 1979) come from the paper and press coverage.",
+      "word_count": 95,
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 2,
+        "fixes": [],
+        "status": "pass",
+        "band7": {
+          "verdict": "band 6",
+          "why": "mechanism key against a food-quality rival (A) and a fits-both TRAP (B); target 6"
+        }
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "C",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "command_of_evidence.Q2_P8_multipart.hard.w3b3_05",
+      "template": "Q2_P8_multipart",
+      "subtype": "Data description: quantified two-time claim ('most, though not all'), cross-cell comparison",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Seafood reaches consumers in two ways: through capture fisheries, which harvest wild populations, and through aquaculture, the farming of fish, shellfish, and other aquatic organisms in ponds, pens, and tanks. Because wild catches in many regions cannot expand much further without depleting fish stocks, much of the growth in global seafood production since the 1990s has come from aquaculture. Examining United Nations statistics for four countries, a student concludes that between 2000 and 2020, aquaculture overtook capture fisheries as the larger source of seafood in most, though not all, of those countries.",
+      "stem": "Which choice best describes data from the table that support the student’s conclusion?",
+      "options": [
+        "In each of the four countries, aquaculture production was greater in 2020 than in 2000, and capture production was also greater in 2020 than in 2000 in three of the countries.",
+        "In 2020, Vietnam had the greatest aquaculture production of the four countries, while Norway had the greatest capture production of the four countries.",
+        "In 2000, aquaculture production in Egypt was nearly as great as capture production, whereas in Norway capture production was roughly six times as great as aquaculture production.",
+        "In 2000, aquaculture production was less than capture production in all four countries, but in 2020 it was greater than capture production in every country except Norway."
+      ],
+      "answer_letter": "D",
+      "table": {
+        "title": "Aquaculture and Capture Fisheries Production in Four Countries, 2000 and 2020 (thousands of metric tons)",
+        "columns": [
+          "Country",
+          "Aquaculture, 2000",
+          "Capture fisheries, 2000",
+          "Aquaculture, 2020",
+          "Capture fisheries, 2020"
+        ],
+        "rows": [
+          [
+            "Bangladesh",
+            "657",
+            "1,004",
+            "2,584",
+            "1,920"
+          ],
+          [
+            "Egypt",
+            "340",
+            "384",
+            "1,592",
+            "418"
+          ],
+          [
+            "Norway",
+            "491",
+            "2,913",
+            "1,490",
+            "2,637"
+          ],
+          [
+            "Vietnam",
+            "514",
+            "1,630",
+            "4,681",
+            "3,541"
+          ]
+        ],
+        "note": null
+      },
+      "figure": null,
+      "explanation": "The conclusion has two parts: aquaculture overtook capture fisheries between 2000 and 2020, and it did so in most but not all of the countries. Choice D covers both: in 2000 aquaculture was smaller than capture in every country, and in 2020 it was larger in Bangladesh, Egypt, and Vietnam but still smaller in Norway (1,490 against 2,637).",
+      "distractors": {
+        "A": {
+          "recipe": "IRREL: accurate changes, but no comparison between the two sources",
+          "why_wrong": "This is true, but it compares each source with itself over time; growth in both does not show that aquaculture came to exceed capture."
+        },
+        "B": {
+          "recipe": "INACC: misread cell in the 2020 column",
+          "why_wrong": "Vietnam did have the greatest aquaculture production in 2020, but its capture production (3,541) was greater than Norway's (2,637), so the second half is false; it also would not show aquaculture overtaking capture."
+        },
+        "C": {
+          "recipe": "PART: accurate, one year only",
+          "why_wrong": "These 2000 figures are accurate, but a single year cannot show aquaculture overtaking capture between 2000 and 2020."
+        }
+      },
+      "models": [
+        "3.24",
+        "3.20",
+        "3.18",
+        "2.42"
+      ],
+      "sources": [
+        {
+          "what": "FAO capture fisheries and aquaculture production by country (OWID grapher); values rounded to thousands of metric tons: Bangladesh 657/1,004 (2000) and 2,584/1,920 (2020); Egypt 340/384 and 1,592/418; Norway 491/2,913 and 1,490/2,637; Vietnam 514/1,630 and 4,681/3,541",
+          "url": "https://ourworldindata.org/grapher/capture-and-aquaculture-production"
+        }
+      ],
+      "notes": "Band 6: quantified multipart claim (before and after, all-but-one) needing eight cells; A and C are accurate but insufficient (within-source change; one year), B is a near-miss misread of the 2020 capture column. All statements checked in Python against the table.",
+      "word_count": 92,
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 2,
+        "fixes": [],
+        "status": "pass",
+        "notes": "All eight cells match the FAO/OWID CSV.",
+        "band7": {
+          "verdict": "band 6",
+          "why": "eight cells and an all-but-one quantifier; A and C accurate but insufficient; target 6"
+        }
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "D",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "command_of_evidence.T2_lit_quote.hard.w3b3_06",
+      "template": "T2_lit_quote",
+      "subtype": "Literary quotation illustrates a two-part (ambivalent) claim; translated verse drama",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Iphigenia in Tauris is a 1787 play by Johann Wolfgang von Goethe, translated by Anna Swanwick. In the play, the priestess Iphigenia regards Thoas, the king who shelters her, with ambivalence, esteeming him even as she experiences his protection as a kind of captivity: ______",
+      "stem": "Which quotation from Iphigenia in Tauris most effectively illustrates the claim?",
+      "options": [
+        "“Thus I, by noble Thoas, am detain’d, / Bound with a heavy, though a sacred chain.”",
+        "“Too great thine offer, king, to one unknown; / Abash’d the fugitive before thee stands, / Who on this shore sought only what thou gav’st, / Safety and peace.”",
+        "“Freely to breathe alone is not to live. / Say, is it life, within this holy fane, / Like a poor ghost around its sepulchre / To linger out my days?”",
+        "“Then will I call the gods, and chiefly thee, / Diana, goddess resolute, to aid me; / Thyself a virgin, thou’lt a virgin shield, / And succour to thy priestess gladly yield.”"
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The claim has two parts: Iphigenia esteems Thoas, and she feels his protection as captivity. In choice A she calls him “noble Thoas,” which shows her regard, yet says she is “detain’d” by him and “Bound with a heavy, though a sacred chain,” which presents his care as a form of captivity. Only this quotation shows both attitudes at once.",
+      "distractors": {
+        "B": {
+          "recipe": "HALF: esteem and gratitude only",
+          "why_wrong": "Iphigenia humbly thanks the king for the “Safety and peace” he gave her, but nothing here presents his protection as captivity."
+        },
+        "C": {
+          "recipe": "HALF: confinement only, nearby emotion (despair)",
+          "why_wrong": "Iphigenia describes her life in the temple as a ghostly lingering, but she says nothing about Thoas, let alone that she esteems him."
+        },
+        "D": {
+          "recipe": "OPP / nearby emotion: defiance",
+          "why_wrong": "Iphigenia calls on Diana to protect her, a defiant stance that shows neither esteem for Thoas nor a sense that his protection confines her."
+        }
+      },
+      "models": [
+        "3.17",
+        "3.37",
+        "3.11",
+        "3.34"
+      ],
+      "sources": [
+        {
+          "what": "Goethe, Iphigenia in Tauris, trans. Anna Swanwick (Project Gutenberg #15850); all four quotations copied from Act I, scenes 1 to 3; verse play of 1787, Swanwick's translation first published 1843",
+          "url": "https://www.gutenberg.org/ebooks/15850"
+        }
+      ],
+      "notes": "Two-part claim with an indirect frame (ambivalence); key matches both parts through older diction (“detain’d”, “sacred chain”), distractors are the same speaker in nearby states (gratitude, despair, defiance). A line that says “the mighty will, to which I bow” was avoided because, out of context, it could read as deference to Thoas. Quotations verified verbatim against the Gutenberg text (apostrophes curled, line breaks as slashes).",
+      "word_count": 45,
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 5,
+        "fixes": [],
+        "status": "pass",
+        "notes": "Writer flag (no translation year) answered: no year added. The Gutenberg (Hinds) text matches none of the dated editions exactly: the 1843 Selections reads \"thy offer\" and \"gavest\" in B, the 1850 Bohn reads \"detained\" in A. A year would misdate the wording; CB has undated translator lines too. All four quotations verbatim against Gutenberg #15850.",
+        "band7": {
+          "verdict": "band 6",
+          "why": "two-part ambivalence claim, distractors the same speaker in nearby states; target 6"
+        }
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "A",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "command_of_evidence.T3_person_quote.hard.w3b3_07",
+      "template": "T3_person_quote",
+      "subtype": "Quotation from a historian supports a student's interpretive claim about an artist",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Composer and pianist Margaret Bonds (1913–1972), among the first Black American composers to achieve national recognition, is best remembered for her arrangements of African American spirituals and her musical settings of poems by her friend Langston Hughes. Her 1967 composition Troubled Water, for instance, combines a traditional spiritual melody with distinctive features of jazz and European classical music. A student writing about her career argues that Bonds regarded spirituals not as fixed relics of an earlier era but as living material to be reshaped for contemporary audiences.",
+      "stem": "Which quotation from a music historian best supports the student’s argument?",
+      "options": [
+        "“Bonds’s friendship with Langston Hughes lasted for decades, and his poetry supplied the texts for many of the art songs she composed for voice and piano, including several that remain in the concert repertoire.”",
+        "“Spirituals were among the first African American musical forms to reach concert audiences in the United States and Europe, carried there in the late nineteenth century largely by touring university choirs.”",
+        "“For Bonds, a spiritual was never a museum piece; she treated each familiar melody as a point of departure, setting it against the harmonies of jazz or the forms of the concert hall so that it could speak to listeners of her own day.”",
+        "“Troubled Water makes considerable technical demands on the pianist, a reflection of the rigorous training Bonds herself had received as a performer at Northwestern University and later at the Juilliard School.”"
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The student argues that Bonds saw spirituals as living material to be reshaped rather than as fixed relics. Choice C says that for Bonds a spiritual “was never a museum piece” and that she used familiar melodies as “a point of departure,” reworking them with jazz harmonies and concert forms for listeners of “her own day,” which states that view directly.",
+      "distractors": {
+        "A": {
+          "recipe": "OFF: true detail about the same composer, different topic",
+          "why_wrong": "This describes Bonds's collaboration with Hughes, but it says nothing about how she regarded spirituals."
+        },
+        "B": {
+          "recipe": "SUBJ / GEN: right idea, wrong agent and time",
+          "why_wrong": "This shows spirituals reaching new audiences through earlier choirs, not Bonds's own attitude toward the material."
+        },
+        "D": {
+          "recipe": "OFF: same work, different property",
+          "why_wrong": "The difficulty of Troubled Water and Bonds's training explain the piece's demands on the pianist, not her view of spirituals as material to be reshaped."
+        }
+      },
+      "models": [
+        "3.33",
+        "3.32",
+        "1.15"
+      ],
+      "sources": [
+        {
+          "what": "Margaret Bonds (1913-1972): one of the first Black composers to gain recognition in the US; best remembered for arrangements of spirituals and collaborations with Langston Hughes; Troubled Water (1967) melds spiritual melody with jazz and classical features; studied at Northwestern and Juilliard",
+          "url": "https://en.wikipedia.org/wiki/Margaret_Bonds"
+        }
+      ],
+      "notes": "Band 6: the key restates the student's claim in new terms (museum piece, point of departure); A and D are accurate, on-topic statements about Bonds that miss the claim; B gives the idea of spirituals reaching new audiences but for other performers in an earlier period. Quotations are invented and unattributed (a music historian); facts inside them (decades-long friendship with Hughes, Fisk-style touring choirs, Northwestern and Juilliard) are accurate.",
+      "word_count": 87,
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [],
+        "status": "pass",
+        "band7": {
+          "verdict": "band 6",
+          "why": "target 6; key paraphrases the claim fairly closely, distractors are true but off the claim, so it sits at the easy end of band 6"
+        }
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "C",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "command_of_evidence.Q2_P5_control.hard.w3b3_08",
+      "template": "Q2_P5_control",
+      "subtype": "Data description: two treatments and a control; only the treatment-vs-treatment comparison bears on the conclusion",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "Wind turbines kill large numbers of migratory bats, particularly on nights with low wind speeds, when rotating turbines generate comparatively little electricity. In 2008 and 2009, at a wind facility in Pennsylvania, wildlife biologist Edward Arnett and colleagues investigated whether raising turbines’ cut-in speed—the minimum wind speed at which turbines produce power—would reduce bat mortality, randomly assigning turbines each night to the standard cut-in speed of 3.5 meters per second (m/s) or to an elevated speed of 5.0 or 6.5 m/s. Noting that the 6.5 m/s setting sacrificed approximately three times as much electricity as the 5.0 m/s setting, the researchers concluded that curtailment at 5.0 m/s was considerably more cost-effective.",
+      "stem": "Which choice best describes data from the graph that support Arnett and colleagues’ conclusion?",
+      "options": [
+        "In both 2008 and 2009, turbines operating at the standard cut-in speed averaged more than twice as many bat fatalities per turbine as turbines at either elevated speed did.",
+        "Turbines with a cut-in speed of 6.5 m/s averaged more bat fatalities per turbine than turbines with a cut-in speed of 5.0 m/s did in 2008 and only slightly fewer in 2009.",
+        "In 2009, turbines with a cut-in speed of 6.5 m/s averaged fewer bat fatalities per turbine than turbines with a cut-in speed of 5.0 m/s did, and far fewer than turbines at the standard speed.",
+        "Turbines with a cut-in speed of 5.0 m/s averaged fewer bat fatalities per turbine than turbines with a cut-in speed of 6.5 m/s did in both 2008 and 2009."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": {
+        "kind": "bar graph",
+        "title": "Average Number of Bat Fatalities per Turbine over 25 Nights, by Cut-In Speed",
+        "x_axis": "Year",
+        "y_axis": "Bat fatalities per turbine",
+        "description": "Grouped bar graph with three bars for each year (standard cut-in speed of 3.5 m/s, cut-in speed of 5.0 m/s, cut-in speed of 6.5 m/s); y-axis 0 to 2.5 in steps of 0.25. 2008: 3.5 m/s about 2.04, 5.0 m/s about 0.27, 6.5 m/s about 0.53. 2009: 3.5 m/s about 2.29, 5.0 m/s about 0.73, 6.5 m/s about 0.55.",
+        "data": [
+          {
+            "series": "3.5 m/s (standard)",
+            "points": [
+              [
+                "2008",
+                2.04
+              ],
+              [
+                "2009",
+                2.29
+              ]
+            ]
+          },
+          {
+            "series": "5.0 m/s",
+            "points": [
+              [
+                "2008",
+                0.27
+              ],
+              [
+                "2009",
+                0.73
+              ]
+            ]
+          },
+          {
+            "series": "6.5 m/s",
+            "points": [
+              [
+                "2008",
+                0.53
+              ],
+              [
+                "2009",
+                0.55
+              ]
+            ]
+          }
+        ]
+      },
+      "explanation": "The conclusion compares the two elevated speeds: 6.5 m/s cost about three times as much electricity, so 5.0 m/s is more cost-effective only if the higher setting did not save clearly more bats. The graph shows that in 2008 the 6.5 m/s turbines averaged more fatalities (about 0.53) than the 5.0 m/s turbines (about 0.27), and in 2009 only slightly fewer (about 0.55 against 0.73). The costlier setting brought no consistent gain, which supports the conclusion.",
+      "distractors": {
+        "A": {
+          "recipe": "IRREL: accurate comparison of the wrong pair (control vs treatments)",
+          "why_wrong": "This is true, but it shows only that raising the cut-in speed helps; it does not compare the two elevated speeds, which is what a judgment about their cost-effectiveness requires."
+        },
+        "C": {
+          "recipe": "CONTRA / PART: one year, pointing the other way",
+          "why_wrong": "This is true, but taken alone it suggests the costlier 6.5 m/s setting saved more bats, which would weaken the claim that 5.0 m/s was more cost-effective; it also ignores 2008."
+        },
+        "D": {
+          "recipe": "INACC: misread cell in a compound frame like the key's",
+          "why_wrong": "In 2009 the 5.0 m/s turbines averaged more fatalities than the 6.5 m/s turbines (about 0.73 against 0.55), so this statement is false."
+        }
+      },
+      "models": [
+        "3.43",
+        "3.5",
+        "3.1",
+        "3.16"
+      ],
+      "sources": [
+        {
+          "what": "Arnett, Huso, Schirmacher, Hayes 2011, Frontiers in Ecology and the Environment 9(4): 209-214, Casselman Wind Project, Pennsylvania: turbines randomly assigned each night to fully operational (3.5 m/s), 5.0 m/s or 6.5 m/s cut-in; mean fatalities per turbine over 25 nights 2.04 / 0.27 / 0.53 (2008) and 2.29 / 0.73 / 0.55 (2009); power loss three times higher at 6.5 than at 5.0; no difference between 5.0 and 6.5 in either year and curtailment at 5.0 far more cost-effective",
+          "url": "https://tethys.pnnl.gov/sites/default/files/publications/Arnett-et-al.-2011.pdf"
+        }
+      ],
+      "notes": "Band-7 moves: design wrinkle (a third condition, the standard-speed control, whose accurate comparison A is irrelevant to a treatment-vs-treatment conclusion); passage relation needed (the 3x power cost is only in the passage, the fatalities only in the graph); key is the right pair at both times; C is an accurate one-year reading that points the other way; D is a misread compound in the key's frame. Values are the paper's reported means. Operations: identify the relevant pair, read four bars, compare within each year, combine with the cost relation.",
+      "word_count": 111,
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [],
+        "status": "pass",
+        "notes": "All six means, the 3x power loss and \"no difference between 5.0 and 6.5 ... far more cost-effective\" confirmed in the paper text. \"Only slightly fewer\" (0.55 vs 0.73) left: the paper finds no difference.",
+        "band7": {
+          "verdict": "band 7",
+          "why": "third condition (standard speed) makes A an accurate wrong-pair comparison; C accurate for one year and points the other way; the 3x power cost lives only in the passage; four bars read and combined"
+        }
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "B",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 7
+    },
+    {
+      "id": "command_of_evidence.Q1_P3_pairwise.hard.w3b3_09",
+      "template": "Q1_P3_pairwise",
+      "subtype": "Data completion: pairwise comparison restricted by two passage conditions (same size class, reusable)",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Aerospace engineers have long expected reusable rockets to make spaceflight cheaper, since manufacturing a new launch vehicle for every mission is enormously expensive. The results have been inconsistent. The Space Shuttle, whose orbiter and solid-fuel boosters were recovered and refurbished between flights, proved to be one of the costliest vehicles ever used to deliver cargo to low Earth orbit, whereas several later reusable designs have been considerably more economical. Indeed, reusable vehicles belonging to the same size class have differed dramatically in cost: for example, whereas the Space Shuttle cost about $65,400 to launch each kilogram of payload, ______",
+      "stem": "Which choice most effectively uses data from the table to complete the example?",
+      "options": [
+        "the Falcon Heavy cost about $1,500.",
+        "the Falcon 9 cost about $2,600.",
+        "the Saturn V cost about $5,400.",
+        "the Delta IV Heavy cost about $11,600."
+      ],
+      "answer_letter": "A",
+      "table": {
+        "title": "Cost to Launch Payload to Low Earth Orbit for Five Launch Vehicles",
+        "columns": [
+          "Launch vehicle",
+          "Year of first successful launch",
+          "Size class",
+          "Reusable components",
+          "Cost per kilogram of payload (2021 US dollars)"
+        ],
+        "rows": [
+          [
+            "Saturn V",
+            "1967",
+            "heavy",
+            "no",
+            "5,400"
+          ],
+          [
+            "Space Shuttle",
+            "1981",
+            "heavy",
+            "yes",
+            "65,400"
+          ],
+          [
+            "Delta IV Heavy",
+            "2004",
+            "heavy",
+            "no",
+            "11,600"
+          ],
+          [
+            "Falcon 9",
+            "2010",
+            "medium",
+            "yes",
+            "2,600"
+          ],
+          [
+            "Falcon Heavy",
+            "2018",
+            "heavy",
+            "yes",
+            "1,500"
+          ]
+        ],
+        "note": "Falcon 9 first stages have been recovered and reused since 2017."
+      },
+      "figure": null,
+      "explanation": "The example must compare the Space Shuttle with another reusable vehicle of the same size class. The table lists the Shuttle as a heavy vehicle with reusable components; the only other heavy vehicle with reusable components is the Falcon Heavy, which cost about $1,500 per kilogram, a dramatic difference from the Shuttle's $65,400.",
+      "distractors": {
+        "B": {
+          "recipe": "WGRP: reusable, but the wrong size class",
+          "why_wrong": "The Falcon 9 has reusable components, but it is a medium vehicle, so it is not in the same size class as the Space Shuttle."
+        },
+        "C": {
+          "recipe": "WGRP: same class, but not reusable",
+          "why_wrong": "The Saturn V is a heavy vehicle, but it has no reusable components, so it cannot illustrate a difference among reusable vehicles."
+        },
+        "D": {
+          "recipe": "WGRP: same class, not reusable, smaller contrast",
+          "why_wrong": "The Delta IV Heavy is heavy but not reusable, so it does not fit the example."
+        }
+      },
+      "models": [
+        "3.29",
+        "3.30",
+        "2.27"
+      ],
+      "sources": [
+        {
+          "what": "CSIS Aerospace Security Project (2022) launch cost per kilogram to low Earth orbit, constant 2021 US$, by first successful launch and size class (heavy > 20,000 kg): Saturn V 1967 5,400; Space Shuttle 1981 65,400; Delta IV Heavy 2004 11,600; Falcon 9 2010 2,600 (medium); Falcon Heavy 2018 1,500. Reusable-components column from the vehicles' designs (Shuttle orbiter and boosters; Falcon first stage and boosters)",
+          "url": "https://ourworldindata.org/grapher/cost-space-launches-low-earth-orbit"
+        }
+      ],
+      "notes": "Band 6: two conditions from the passage (reusable, same size class) must be applied to two table columns before the value is read; each distractor meets one condition or none; all cost far less than the Shuttle, so cost alone does not pick the key. Values are CSIS figures as published by OWID. The 'Reusable components' column describes each vehicle family's design (Falcon 9 first stages became reusable after its first flights). Reviewer: table note added because Falcon 9 first stages were first reused in 2017, not on its 2010 first flight.",
+      "word_count": 99,
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [
+          "added table note: Falcon 9 first stages recovered and reused since 2017 (its 2010 first flights were not reused)"
+        ],
+        "status": "fixed",
+        "notes": "Topic fame judged: kept. Shuttle cost and Falcon reusability are familiar, but CB uses NASA topics (Gemini menus, STS-79), no official item covers launch costs, and the key needs the reusable and size-class filters plus the CSIS figure, which general knowledge does not supply (both Falcons are famous). Values match OWID/CSIS CSV.",
+        "band7": {
+          "verdict": "band 6",
+          "why": "no band-7 official items for Q1_P3: strong band 6 (two filters, reusable and size class, before the value)"
+        }
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "A",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "command_of_evidence.Q2_P4_trend.hard.w3b3_10",
+      "template": "Q2_P4_trend",
+      "subtype": "Data description: change over time read through a passage relation (output equals land times yield)",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "A country can expand its harvest of a crop either by cultivating more land or by raising the crop’s yield, the quantity harvested from each hectare already planted. Cocoa yields can be improved by replacing aging, less productive trees and by controlling the fungal and viral diseases that attack them, but such investments typically take several years to pay off. Côte d’Ivoire, the world’s leading producer of cocoa beans, increased its output substantially between 2010 and 2020, and after examining United Nations agricultural statistics, a student concludes that this increase came from planting cocoa on additional land rather than from higher yields.",
+      "stem": "Which choice best describes data from the table that support the student’s conclusion?",
+      "options": [
+        "In 2020, Côte d’Ivoire harvested cocoa from more than 4 million hectares and produced 2.20 million metric tons of cocoa beans, more than in any other year shown in the table.",
+        "Both the amount of cocoa beans produced and the area harvested were greater in each year from 2012 to 2020 than they had been in 2010, the first year shown.",
+        "From 2016 to 2018, the amount of cocoa beans produced rose from 1.63 to 2.11 million metric tons, a slightly greater proportional increase than the area harvested showed over the same years.",
+        "From 2010 to 2020, the area harvested nearly doubled, from 2.28 to 4.27 million hectares, while the amount of cocoa beans produced grew by a smaller proportion."
+      ],
+      "answer_letter": "D",
+      "table": {
+        "title": "Cocoa Bean Production and Area Harvested in Côte d’Ivoire, 2010–2020",
+        "columns": [
+          "Year",
+          "Cocoa beans produced (millions of metric tons)",
+          "Area harvested (millions of hectares)"
+        ],
+        "rows": [
+          [
+            "2010",
+            "1.30",
+            "2.28"
+          ],
+          [
+            "2012",
+            "1.49",
+            "2.75"
+          ],
+          [
+            "2014",
+            "1.64",
+            "3.08"
+          ],
+          [
+            "2016",
+            "1.63",
+            "3.17"
+          ],
+          [
+            "2018",
+            "2.11",
+            "4.07"
+          ],
+          [
+            "2020",
+            "2.20",
+            "4.27"
+          ]
+        ],
+        "note": null
+      },
+      "figure": null,
+      "explanation": "Yield is the amount harvested per hectare, so it rises only when output grows faster than the land harvested. The table shows the reverse: from 2010 to 2020 the area harvested grew from 2.28 to 4.27 million hectares (about 87 percent), while production grew from 1.30 to 2.20 million metric tons (about 69 percent). Output per hectare therefore fell slightly, so the extra cocoa came from additional land, as the student concludes.",
+      "distractors": {
+        "A": {
+          "recipe": "IRREL: levels in one year instead of changes",
+          "why_wrong": "These figures for 2020 are accurate, but values from a single year cannot show whether the growth since 2010 came from more land or from higher yields."
+        },
+        "B": {
+          "recipe": "PART: accurate but insufficient (both measures rose)",
+          "why_wrong": "It is true that both measures rose, but that is consistent with yields rising too; it does not show that output grew no faster than the land harvested."
+        },
+        "C": {
+          "recipe": "CONTRA / wrong window: accurate reading of one interval that points the other way",
+          "why_wrong": "This is accurate (about 29 percent against about 28 percent), but it covers only 2016 to 2018, and output growing faster than land in that interval means yield rose slightly then, which points away from the student’s conclusion rather than supporting it."
+        }
+      },
+      "models": [
+        "3.40",
+        "3.13",
+        "3.16"
+      ],
+      "sources": [
+        {
+          "what": "FAO cocoa bean production for Côte d’Ivoire by year (1.30 million t in 2010, 2.20 million t in 2020)",
+          "url": "https://ourworldindata.org/grapher/cocoa-bean-production"
+        },
+        {
+          "what": "FAO cocoa bean yields for Côte d’Ivoire (0.571 t/ha in 2010, 0.516 t/ha in 2020); area harvested in the table = production divided by yield",
+          "url": "https://ourworldindata.org/grapher/cocoa-bean-yields"
+        }
+      ],
+      "notes": "Band-7 moves: proxy (yield = output per hectare, stated only in the passage, must be applied to two columns that do not show yield); key is a contrast in rates; B is an accurate but insufficient reading (both rose), A is levels instead of changes, C is an accurate 2016 to 2018 reading that points the other way (reviewer replaced a reversed-proportion mirror of the key). Operations: read 2010 and 2020 in both columns, compute two proportional changes, compare, apply the relation. All option statements checked in Python.",
+      "word_count": 102,
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [
+          "replaced C (reversed-proportion mirror of key D, killed by the same 2010 to 2020 computation) with an accurate 2016 to 2018 reading that points the other way (production +29%, area +28%, checked on unrounded FAO values)"
+        ],
+        "status": "fixed",
+        "notes": "Area = production / yield matches the FAO/OWID CSVs for every year.",
+        "band7": {
+          "verdict": "band 7",
+          "why": "after the C fix: yield proxy stated only in the passage, key is a contrast in rates, A levels, B both-rose, C an accurate wrong-window reading pointing against the conclusion; four reads, two ratios, a comparison"
+        }
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "D",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 7
+    },
+    {
+      "id": "command_of_evidence.T1_single.medium.w3b3_11",
+      "template": "T1_single",
+      "subtype": "Hypothetical finding supports a causal conclusion (treated vs comparison schools, right outcome)",
+      "tier": "medium",
+      "band_target": null,
+      "passage": "In the early 2000s, government schools throughout rural India replaced a monthly distribution of free grain, which pupils carried home to their families, with a free cooked lunch served at school every day. Because a meal served on school premises benefits only the children who are present to eat it, the change could influence daily attendance as well as overall enrollment. Comparing schools in one rural area that had already introduced cooked meals with schools still distributing grain, economist Farzana Afridi concluded that the meals improved daily attendance in the lowest grades.",
+      "stem": "Which finding, if true, would most directly support Afridi’s conclusion?",
+      "options": [
+        "Many families in the area reported that the monthly grain ration their children brought home had usually been shared among all members of the household.",
+        "The number of children enrolled in the area’s schools was about the same after the switch to cooked meals as it had been before the switch.",
+        "After the switch, the share of enrolled first graders present on a typical school day rose more in schools serving cooked meals than in schools still distributing grain.",
+        "Both before and after the switch, attendance rates among children in the upper grades were higher than attendance rates among children in the lower grades."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "Afridi concluded that cooked meals improved daily attendance in the lowest grades. A finding that the share of first graders present on a typical day rose more in schools that served meals than in schools that still gave out grain measures exactly that outcome, in the right grades, against the right comparison, so it supports her conclusion.",
+      "distractors": {
+        "A": {
+          "recipe": "OFF: how the grain ration was used",
+          "why_wrong": "How families shared the grain ration says nothing about whether cooked meals changed attendance."
+        },
+        "B": {
+          "recipe": "OFF: enrollment, not attendance",
+          "why_wrong": "Unchanged enrollment concerns how many children were signed up, not how many came to school each day, which is what the conclusion is about."
+        },
+        "D": {
+          "recipe": "TRAP: comparison across grades, not across kinds of schools",
+          "why_wrong": "A gap between upper and lower grades that existed before and after the switch does not show that the meals changed attendance in the lower grades."
+        }
+      },
+      "models": [
+        "2.7",
+        "2.21",
+        "2.6",
+        "2.38"
+      ],
+      "sources": [
+        {
+          "what": "Afridi, The Impact of School Meals on School Participation: Evidence from Rural India (ISI Delhi DP 10-02, 2010; J. Development Studies 2011): transition from monthly free grain to daily cooked meals; difference-in-differences with school panel data; significant improvement in daily participation in lower grades (grade 1 girls' attendance more than 12 points higher); no significant effect on enrollment",
+          "url": "https://econpapers.repec.org/paper/aloisipdp/10-02.htm"
+        }
+      ],
+      "notes": "Medium: one-step operationalization with the right comparison group; B is the outcome the study found unchanged (enrollment), so it neither supports nor contradicts the attendance conclusion; D compares the wrong groups.",
+      "word_count": 92,
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 2,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "command_of_evidence.T2_lit_quote.medium.w3b3_12",
+      "template": "T2_lit_quote",
+      "subtype": "Literary quotation illustrates a two-part claim (observance from duty, without feeling); translated novel",
+      "tier": "medium",
+      "band_target": null,
+      "passage": "Niels Lyhne is an 1880 novel by J.P. Jacobsen, translated from the Danish by Hanna Astrup Larsen in 1919. In the novel, Jacobsen characterizes the family of the title character’s mother as observing religious customs from a sense of obligation rather than from any genuine religious feeling: ______",
+      "stem": "Which quotation from Niels Lyhne most effectively illustrates the claim?",
+      "options": [
+        "“The Blid family were practical folk who accepted things as they were; they did their work, slept their sleep, and never thought of demanding any diversions beyond the harvest home and three or four Christmas parties.”",
+        "“They never passed through any religious experiences, but they would no more have dreamed of not rendering unto God what was God’s than they would have neglected to pay their taxes.”",
+        "“[T]heir natures had nothing of the poetic; beauty never stirred any raptures in them, and they were never visited by vague longings or day-dreams.”",
+        "“[T]hey said their evening prayers, went to church at Easter and Whitsun, sang their hymns on Christmas Eve, and partook of the Lord’s Supper twice a year.”"
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The claim has two parts: the family keeps up religious customs, and they do so from duty rather than deep feeling. Choice B says they “never passed through any religious experiences” (no deep feeling) yet would no more fail to render “unto God what was God’s” than fail to “pay their taxes,” comparing their religion to a routine obligation. Only this quotation shows both parts.",
+      "distractors": {
+        "A": {
+          "recipe": "LURE / OFF: practical character, keyword (Christmas)",
+          "why_wrong": "This shows the family's plain, practical habits and mentions Christmas parties, but it says nothing about why or how they observe religious customs."
+        },
+        "C": {
+          "recipe": "HALF: absence of feeling, but about beauty",
+          "why_wrong": "This shows that the family lacked strong feelings, but about beauty and poetry, not about religion, and it says nothing about duty."
+        },
+        "D": {
+          "recipe": "HALF: observance only",
+          "why_wrong": "This lists the religious customs the family kept, but on its own it does not show that they kept them from duty rather than deep feeling."
+        }
+      },
+      "models": [
+        "2.26",
+        "2.11",
+        "2.13",
+        "2.37"
+      ],
+      "sources": [
+        {
+          "what": "J. P. Jacobsen, Niels Lyhne (1880), trans. Hanna Astrup Larsen (American-Scandinavian Foundation, 1919), Project Gutenberg #55389, chapter I; quotations copied verbatim (C begins mid-sentence and D drops an opening 'Therefore', both marked with a bracketed capital)",
+          "url": "https://www.gutenberg.org/ebooks/55389"
+        }
+      ],
+      "notes": "Medium two-part claim; key is the only option that joins observance to its motive; D is the observance half (its opening 'Therefore' is bracketed out so it does not point to an unseen reason), C is the feeling half on the wrong object, A a keyword lure. Work not used in any official item or in the bank (grep Jacobsen, Lyhne).",
+      "word_count": 46,
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [
+          "added translation year \"in 1919\" (copyright page of the Gutenberg text), as CB gives one"
+        ],
+        "status": "fixed",
+        "notes": "All four quotations verbatim against Gutenberg #55389, chapter I; bracketed capitals mark mid-sentence starts."
+      }
+    },
+    {
+      "id": "command_of_evidence.T2_lit_quote.medium.w3b3_13",
+      "template": "T2_lit_quote",
+      "subtype": "Literary quotation illustrates a two-part claim (seeks approval, meets disapproval); translated comic novel",
+      "tier": "medium",
+      "band_target": null,
+      "passage": "St. Peter’s Umbrella is an 1895 novel by Kálmán Mikszáth, translated from the Hungarian by B.W. Worswick in 1900. In the novel, Mikszáth characterizes Pál Gregorics as perpetually seeking the approval of his fellow townspeople yet receiving nothing but their disapproval: ______",
+      "stem": "Which quotation from St. Peter’s Umbrella most effectively illustrates the claim?",
+      "options": [
+        "“Nature had blessed Pál Gregorics with a freckly face and red hair, which made people quote the old saying, ‘Red-haired people are never good.’”",
+        "“So Pál Gregorics made up his mind to prove that it was untrue. All these old sayings are like pots in which generations have been cooking for ages, and Pál Gregorics intended to break one of them.”",
+        "“He had beautiful bouquets sent from Vienna for Mrs. Vozáry, and one fine evening he let five hundred nightingales loose in Mrs. Muskulyi’s garden.”",
+        "“Pál Gregorics was always chasing Popularity, and instead of finding it came face to face with Criticism, a much less pleasing figure.”"
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The claim pairs Gregorics's constant pursuit of approval with the disapproval he receives instead. Choice D says he “was always chasing Popularity” (seeking approval) and “instead of finding it came face to face with Criticism” (receiving disapproval), so it is the only quotation that shows both parts.",
+      "distractors": {
+        "A": {
+          "recipe": "HALF: disapproval only",
+          "why_wrong": "People quote an unkind saying about red-haired men, which shows a prejudice against Gregorics, but nothing here shows him seeking anyone's approval."
+        },
+        "B": {
+          "recipe": "HALF: effort only",
+          "why_wrong": "Gregorics resolves to disprove an old saying, which shows his effort to be thought well of, but the quotation does not show the town disapproving of him."
+        },
+        "C": {
+          "recipe": "HALF / LURE: lavish efforts to please, no response shown",
+          "why_wrong": "His gifts of bouquets and nightingales show him trying to please particular women, not the town as a whole, and the quotation does not say how anyone responded."
+        }
+      },
+      "models": [
+        "2.26",
+        "2.11",
+        "2.20",
+        "2.37"
+      ],
+      "sources": [
+        {
+          "what": "Kálmán Mikszáth, St. Peter's Umbrella (1895), trans. B. W. Worswick (Jarrold & Sons, 1900; Harper 1901), Project Gutenberg #31945, Part II, chapter I; quotations copied verbatim (inner quotation marks in A set as single quotes)",
+          "url": "https://www.gutenberg.org/ebooks/31945"
+        }
+      ],
+      "notes": "Medium two-part claim; three half-matches (disapproval only, effort only, effort toward a different audience with no response). The sentence 'And he was as good a man as you could wish to see ... induce people to misunderstand his intentions' was left out because it also carries both parts. Work not used in any official item or in the bank (grep Mikszáth, Umbrella).",
+      "word_count": 42,
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [],
+        "status": "pass",
+        "notes": "All four quotations verbatim against Gutenberg #31945; A sets inner quotes as single quotes."
+      }
+    },
+    {
+      "id": "command_of_evidence.Q1_P3_pairwise.medium.w3b3_14",
+      "template": "Q1_P3_pairwise",
+      "subtype": "Data completion: pairwise comparison of two groups on the measure the claim names",
+      "tier": "medium",
+      "band_target": null,
+      "passage": "Since 2019, the polling company YouGov has periodically asked about 2,000 adults in Great Britain to classify their diets, offering categories such as meat eater, flexitarian (someone who eats mostly vegetarian food but occasionally consumes meat or fish), vegetarian, and vegan. In the January 2022 survey, the youngest respondents were the most likely to avoid meat entirely: for example, ______",
+      "stem": "Which choice most effectively uses data from the table to complete the example?",
+      "options": [
+        "10% of respondents aged 18–24 described themselves as vegetarian, compared with only 3% of respondents aged 65 and older.",
+        "20% of respondents aged 18–24 described themselves as flexitarian, compared with only 13% of respondents aged 65 and older.",
+        "5% of respondents aged 25–49 described themselves as vegetarian, the same percentage as among respondents aged 50–64.",
+        "3% of respondents aged 50–64 described themselves as vegan, compared with only 2% of respondents aged 25–49."
+      ],
+      "answer_letter": "A",
+      "table": {
+        "title": "Self-Reported Diets of Adults in Great Britain by Age Group, January 2022 (percentage of respondents)",
+        "columns": [
+          "Age group",
+          "Meat eater",
+          "Flexitarian",
+          "Vegetarian",
+          "Vegan"
+        ],
+        "rows": [
+          [
+            "18–24",
+            "52",
+            "20",
+            "10",
+            "5"
+          ],
+          [
+            "25–49",
+            "68",
+            "16",
+            "5",
+            "2"
+          ],
+          [
+            "50–64",
+            "73",
+            "14",
+            "5",
+            "3"
+          ],
+          [
+            "65 and older",
+            "78",
+            "13",
+            "3",
+            "0"
+          ]
+        ],
+        "note": "Rows do not add up to 100 because some respondents chose other categories."
+      },
+      "figure": null,
+      "explanation": "The example must show the youngest respondents more often avoiding meat entirely, which vegetarians and vegans do. Choice A does this: 10% of respondents aged 18–24 were vegetarian, compared with 3% of those aged 65 and older.",
+      "distractors": {
+        "B": {
+          "recipe": "IRREL: true, wrong measure (flexitarians still eat some meat)",
+          "why_wrong": "These figures are accurate, but flexitarians occasionally eat meat or fish, so they do not avoid meat entirely."
+        },
+        "C": {
+          "recipe": "IRREL: sameness, and not the youngest group",
+          "why_wrong": "This is accurate, but it compares two middle age groups that did not differ, so it does not show the youngest respondents avoiding meat more often."
+        },
+        "D": {
+          "recipe": "CONTRA: true data pointing the other way",
+          "why_wrong": "This is accurate, but it shows an older group slightly more likely to be vegan than a younger one, the opposite of the pattern the example illustrates."
+        }
+      },
+      "models": [
+        "2.24",
+        "2.27",
+        "2.28"
+      ],
+      "sources": [
+        {
+          "what": "YouGov 'Dietary choices of Brits' tracker via OWID, survey of 4 January 2022, about 2,000 adults: meat eater / flexitarian / vegetarian / vegan (%) 18-24: 52/20/10/5; 25-49: 68/16/5/2; 50-64: 73/14/5/3; 65+: 78/13/3/0; pescetarian and 'none of these' omitted",
+          "url": "https://ourworldindata.org/grapher/dietary-choices-of-british-adults"
+        }
+      ],
+      "notes": "Medium pairwise completion: the passage's definition of flexitarian is what rules out B; C and D are accurate but either show no difference or the reverse direction. Pescetarian and 'none of these' columns omitted (hence the table note).",
+      "word_count": 60,
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [],
+        "status": "pass",
+        "notes": "All cells match the OWID YouGov CSV (4 January 2022)."
+      }
+    },
+    {
+      "id": "command_of_evidence.Q1_P5_control.medium.w3b3_15",
+      "template": "Q1_P5_control",
+      "subtype": "Data completion: treated vs control at the same site",
+      "tier": "medium",
+      "band_target": null,
+      "passage": "Like other legumes, chickpeas can obtain nitrogen with the help of rhizobia, soil bacteria that live in nodules on the plants’ roots. Because the soils at their study sites contained few rhizobia compatible with chickpeas, researchers led by Endalkachew Wolde-meskel tested whether coating seeds with the bacteria, a practice called inoculation, could raise yields on smallholder farms in Ethiopia. Inoculated plots generally outproduced uninoculated control plots on the same farms: for example, ______",
+      "stem": "Which choice most effectively uses data from the graph to complete the example?",
+      "options": [
+        "in 2014 at Damote, control plots yielded about 2,000 kilograms of chickpeas per hectare, more than control plots at any other location shown.",
+        "in 2015 at Ginir, inoculated plots yielded less than 1,200 kilograms of chickpeas per hectare, the lowest yield of any inoculated plots shown.",
+        "in 2015 at Gimbichu, inoculated plots yielded about 2,400 kilograms of chickpeas per hectare, whereas control plots yielded only about 1,500.",
+        "in 2014 at Adaa, control plots yielded about 2,300 kilograms of chickpeas per hectare, whereas inoculated plots yielded about 1,900."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": {
+        "kind": "bar graph",
+        "title": "Average Chickpea Yields on Inoculated and Control Plots at Four Year/Location Combinations in Ethiopia",
+        "x_axis": "Year and location",
+        "y_axis": "Grain yield (kilograms per hectare)",
+        "description": "Grouped bar graph with two bars for each year and location (control plots, inoculated plots); y-axis 0 to 3,000 in steps of 500. 2014, Adaa: control about 1,940, inoculated about 2,270. 2014, Damote: control about 2,010, inoculated about 2,560. 2015, Gimbichu: control about 1,510, inoculated about 2,410. 2015, Ginir: control about 960, inoculated about 1,170. Inoculated plots are higher than control plots at every location.",
+        "data": [
+          {
+            "series": "Control plots",
+            "points": [
+              [
+                "2014, Adaa",
+                1937
+              ],
+              [
+                "2014, Damote",
+                2006
+              ],
+              [
+                "2015, Gimbichu",
+                1510
+              ],
+              [
+                "2015, Ginir",
+                958
+              ]
+            ]
+          },
+          {
+            "series": "Inoculated plots",
+            "points": [
+              [
+                "2014, Adaa",
+                2272
+              ],
+              [
+                "2014, Damote",
+                2560
+              ],
+              [
+                "2015, Gimbichu",
+                2413
+              ],
+              [
+                "2015, Ginir",
+                1170
+              ]
+            ]
+          }
+        ]
+      },
+      "explanation": "The example must show inoculated plots outproducing control plots. In 2015 at Gimbichu, inoculated plots yielded about 2,400 kilograms per hectare and control plots only about 1,500, so choice C completes the example.",
+      "distractors": {
+        "A": {
+          "recipe": "IRREL: control plots only, compared across sites",
+          "why_wrong": "This is true, but it compares control plots at different locations and says nothing about how inoculated plots did."
+        },
+        "B": {
+          "recipe": "PART: inoculated plots only, no control",
+          "why_wrong": "This is true, but it gives only the inoculated yield at Ginir; without the control yield it cannot show inoculated plots outproducing control plots."
+        },
+        "D": {
+          "recipe": "INACC: values swapped between the two bars",
+          "why_wrong": "At Adaa in 2014, inoculated plots yielded about 2,300 kilograms per hectare and control plots about 1,900, not the reverse."
+        }
+      },
+      "models": [
+        "2.5",
+        "2.19",
+        "2.14"
+      ],
+      "sources": [
+        {
+          "what": "Wolde-meskel et al. 2018, Agriculture, Ecosystems and Environment 261: 144-152 (open access, PMC5946702): on-farm trials in Ethiopia 2012-2015 with control and inoculated plots on the same farms; few or no compatible rhizobia in soils; Table 4 yields (kg/ha) control vs inoculated: 2014 Adaa 1937 vs 2272; 2014 Damote 2006 vs 2560; 2015 Gimbichu 1510 vs 2413; 2015 Ginir 958 vs 1170",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC5946702/"
+        }
+      ],
+      "notes": "Medium P5 completion: key pairs the treated and control bars at one site; A compares controls across sites, B gives one bar only, D swaps the two bars. Values are the paper's Table 4 means; the P and P+I treatments are left out.",
+      "word_count": 73,
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [],
+        "status": "pass",
+        "notes": "Values match Table 4 of the paper."
+      }
+    },
+    {
+      "id": "command_of_evidence.Q2_P8_multipart.medium.w3b3_16",
+      "template": "Q2_P8_multipart",
+      "subtype": "Data description: two-part claim across two dates (behind, then far ahead)",
+      "tier": "medium",
+      "band_target": null,
+      "passage": "The printing press, introduced in Europe in the mid-fifteenth century, made books dramatically cheaper, but readers in different countries did not adopt them at the same pace. Economic historians Eltjo Buringh and Jan Luiten van Zanden estimated the number of books consumed annually per person in European countries between 1475 and 1775. Examining their estimates, a student concludes that the Netherlands and Great Britain, which lagged behind Italy in book consumption during the sixteenth century, had moved far ahead of it by the late seventeenth century.",
+      "stem": "Which choice best describes data from the table that support the student’s conclusion?",
+      "options": [
+        "Book consumption per 1,000 people in the Netherlands increased from 1575 to 1625 and again from 1625 to 1675, and consumption in Spain also increased over both of those periods.",
+        "In 1575, Italy consumed more books per 1,000 people than either the Netherlands or Great Britain did, but in 1675 each of those countries consumed more than three times as many as Italy did.",
+        "In 1675, Great Britain consumed fewer books per 1,000 people than the Netherlands did but more books per 1,000 people than either Italy or Spain did in that year.",
+        "In 1575, Italy consumed more books per 1,000 people than Spain did, and in 1675 Italy’s consumption was about four times that of Spain."
+      ],
+      "answer_letter": "B",
+      "table": {
+        "title": "Estimated Annual Book Consumption in Four European Countries, 1575–1675 (books per 1,000 people)",
+        "columns": [
+          "Country",
+          "1575",
+          "1625",
+          "1675"
+        ],
+        "rows": [
+          [
+            "Italy",
+            "51",
+            "42",
+            "56"
+          ],
+          [
+            "Netherlands",
+            "34",
+            "139",
+            "259"
+          ],
+          [
+            "Great Britain",
+            "27",
+            "80",
+            "192"
+          ],
+          [
+            "Spain",
+            "4",
+            "9",
+            "14"
+          ]
+        ],
+        "note": null
+      },
+      "figure": null,
+      "explanation": "The conclusion has two parts: the Netherlands and Great Britain trailed Italy in the sixteenth century, and they were far ahead of it by the late seventeenth century. Choice B shows both: in 1575 Italy (51) was ahead of the Netherlands (34) and Great Britain (27), and in 1675 the Netherlands (259) and Great Britain (192) each consumed more than three times as many books per 1,000 people as Italy (56).",
+      "distractors": {
+        "A": {
+          "recipe": "IRREL: accurate changes without the comparison to Italy",
+          "why_wrong": "This is true, but it never compares the Netherlands with Italy and says nothing about Great Britain, so it cannot show those countries moving ahead of Italy."
+        },
+        "C": {
+          "recipe": "PART: accurate, one year only",
+          "why_wrong": "This is true of 1675, but it says nothing about the sixteenth century, when the conclusion says Great Britain lagged behind Italy."
+        },
+        "D": {
+          "recipe": "IRREL: accurate comparison of the wrong pair (Italy and Spain)",
+          "why_wrong": "This is true, but the conclusion concerns the Netherlands and Great Britain, not Spain."
+        }
+      },
+      "models": [
+        "2.42",
+        "2.8",
+        "3.24"
+      ],
+      "sources": [
+        {
+          "what": "Buringh and van Zanden (2009), Journal of Economic History, annual per capita book consumption by country 1475-1775 (OWID grapher): Italy 0.0510/0.0421/0.0563, Netherlands 0.0335/0.1390/0.2594, Great Britain 0.0273/0.0800/0.1918, Spain 0.0043/0.0088/0.0143 books per person in 1575/1625/1675 (shown per 1,000 people, rounded); in 1525 Italy 0.0213, Netherlands 0.0142, Great Britain 0.0146",
+          "url": "https://ourworldindata.org/grapher/annual-per-capita-consumption-books"
+        }
+      ],
+      "notes": "Medium two-part claim (behind, then far ahead); A, C and D are accurate statements that miss one part or the right pair. Per-person values converted to books per 1,000 people and rounded. 'Lagged during the sixteenth century' holds for 1525 and 1575 in the source.",
+      "word_count": 86,
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [],
+        "status": "pass",
+        "notes": "All cells match the OWID Buringh and van Zanden CSV after conversion."
+      }
+    },
+    {
+      "id": "command_of_evidence.Q1_P1_lookup.easy.w3b3_17",
+      "template": "Q1_P1_lookup",
+      "subtype": "Data completion: lookup of one named cell",
+      "tier": "easy",
+      "band_target": null,
+      "passage": "The Rwenzori Mountains, which straddle the international border between Uganda and the Democratic Republic of Congo, consist of six massifs separated by deep gorges. In 1906, an Italian expedition led by the Duke of the Abruzzi reached the highest summits in the range and named several of them after European explorers and royalty. A student researching the expedition notes that the highest point of Mount Speke is ______",
+      "stem": "Which choice most effectively uses data from the table to complete the statement?",
+      "options": [
+        "5,109 meters.",
+        "4,843 meters.",
+        "4,798 meters.",
+        "4,890 meters."
+      ],
+      "answer_letter": "D",
+      "table": {
+        "title": "Highest Points of Five Massifs in the Rwenzori Mountains",
+        "columns": [
+          "Massif",
+          "Elevation of highest point (meters)"
+        ],
+        "rows": [
+          [
+            "Mount Stanley",
+            "5,109"
+          ],
+          [
+            "Mount Speke",
+            "4,890"
+          ],
+          [
+            "Mount Baker",
+            "4,843"
+          ],
+          [
+            "Mount Emin",
+            "4,798"
+          ],
+          [
+            "Mount Gessi",
+            "4,715"
+          ]
+        ],
+        "note": null
+      },
+      "figure": null,
+      "explanation": "The statement asks for the highest point of Mount Speke. According to the table, Mount Speke's highest point is 4,890 meters.",
+      "distractors": {
+        "A": {
+          "recipe": "WGRP: neighboring row (Mount Stanley)",
+          "why_wrong": "5,109 meters is the highest point of Mount Stanley, not Mount Speke."
+        },
+        "B": {
+          "recipe": "WGRP: neighboring row (Mount Baker)",
+          "why_wrong": "4,843 meters is the highest point of Mount Baker, not Mount Speke."
+        },
+        "C": {
+          "recipe": "WGRP: other row (Mount Emin)",
+          "why_wrong": "4,798 meters is the highest point of Mount Emin, not Mount Speke."
+        }
+      },
+      "models": [
+        "1.44",
+        "1.43",
+        "1.30"
+      ],
+      "sources": [
+        {
+          "what": "Rwenzori: six massifs separated by deep gorges; Stanley 5,109 m, Speke 4,890 m, Baker 4,843 m, Emin 4,798 m, Gessi 4,715 m; Duke of the Abruzzi's 1906 expedition scaled the highest peaks and named several",
+          "url": "https://en.wikipedia.org/wiki/Rwenzori_Mountains"
+        }
+      ],
+      "notes": "Easy one-cell lookup with value-only options; distractors are the values of other rows.",
+      "word_count": 68,
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 2,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "command_of_evidence.Q1_P1_lookup.easy.w3b3_18",
+      "template": "Q1_P1_lookup",
+      "subtype": "Data completion: filter rows by a categorical column",
+      "tier": "easy",
+      "band_target": null,
+      "passage": "The Seychelles, an island nation in the western Indian Ocean, consists of 115 islands. Most are low coral islands, but several dozen are granitic: they are composed of granite, fragments of an ancient continental landmass, and many of them rise dramatically from the surrounding ocean. A student preparing a geography report finds that two examples of granitic islands are ______",
+      "stem": "Which choice most effectively uses data from the table to complete the statement?",
+      "options": [
+        "Mahé and Silhouette.",
+        "Praslin and Coëtivy.",
+        "Silhouette and Assumption.",
+        "Assumption and Coëtivy."
+      ],
+      "answer_letter": "A",
+      "table": {
+        "title": "Five Islands of the Seychelles",
+        "columns": [
+          "Island",
+          "Type",
+          "Area (square kilometers)",
+          "Highest point (meters)"
+        ],
+        "rows": [
+          [
+            "Mahé",
+            "granitic",
+            "155.0",
+            "905"
+          ],
+          [
+            "Praslin",
+            "granitic",
+            "38.0",
+            "367"
+          ],
+          [
+            "Silhouette",
+            "granitic",
+            "20.1",
+            "751"
+          ],
+          [
+            "Assumption",
+            "coral",
+            "11.6",
+            "32"
+          ],
+          [
+            "Coëtivy",
+            "coral",
+            "9.3",
+            "21"
+          ]
+        ],
+        "note": null
+      },
+      "figure": null,
+      "explanation": "The statement needs two islands that are granitic. The table lists Mahé and Silhouette as granitic, so choice A completes the statement.",
+      "distractors": {
+        "B": {
+          "recipe": "WGRP: one row of the wrong type",
+          "why_wrong": "Praslin is granitic, but Coëtivy is a coral island."
+        },
+        "C": {
+          "recipe": "WGRP: one row of the wrong type",
+          "why_wrong": "Silhouette is granitic, but Assumption is a coral island."
+        },
+        "D": {
+          "recipe": "WGRP: both rows of the wrong type",
+          "why_wrong": "Assumption and Coëtivy are both coral islands."
+        }
+      },
+      "models": [
+        "1.12",
+        "1.40",
+        "1.38"
+      ],
+      "sources": [
+        {
+          "what": "List of islands of Seychelles: Mahé 155.01 km2, 905 m, Granitic; Praslin 38.00 km2, 367 m, Granitic; Silhouette 20.10 km2, 751 m, Granitic; Assumption 11.60 km2, 32 m, Outer Islands (Aldabra Group, coral); Coëtivy 9.33 km2, 21 m, Southern Coral Group; 115 islands",
+          "url": "https://en.wikipedia.org/wiki/List_of_islands_of_Seychelles"
+        }
+      ],
+      "notes": "Easy filter (CB 1.12 shape): exactly one option names two granitic islands. Areas rounded to one decimal.",
+      "word_count": 60,
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "command_of_evidence.T1_single.easy.w3b3_19",
+      "template": "T1_single",
+      "subtype": "Hypothetical finding supports a claim about influence (one-step operationalization)",
+      "tier": "easy",
+      "band_target": null,
+      "passage": "Warli painting, an artistic tradition of the Warli people of western India, was traditionally practiced by women, who decorated the mud walls of their homes with white figures to celebrate weddings, festivals, and harvests. In the 1970s, Warli artist Jivya Soma Mashe began painting every day rather than only for rituals, working on paper and canvas instead of walls. A student claims that Mashe’s work introduced Warli painting to audiences far beyond the villages where it originated.",
+      "stem": "Which finding, if true, would most directly support the student’s claim?",
+      "options": [
+        "Warli painters traditionally made their white paint by mixing rice flour with water and adding gum to help it stick.",
+        "Within a few years of Mashe’s first paintings on paper, his work was exhibited in France, and it later appeared in a major exhibition in Paris.",
+        "Mashe’s two sons both learned to paint in the Warli style and became well-known Warli artists themselves.",
+        "Many Warli paintings show scenes from daily life, such as farming, fishing, and people dancing in a circle."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The student claims that Mashe's work brought Warli painting to audiences far from the Warli villages. If his paintings were exhibited in France within a few years and later in a major Paris exhibition, people far from western India saw them, which directly supports the claim.",
+      "distractors": {
+        "A": {
+          "recipe": "OFF: how the paint was made",
+          "why_wrong": "How the traditional white paint was made says nothing about who saw Mashe's work."
+        },
+        "C": {
+          "recipe": "OFF / SUBJ: the art passed on within the family",
+          "why_wrong": "That his sons became Warli artists shows the art continuing in his family, not reaching audiences far beyond the villages."
+        },
+        "D": {
+          "recipe": "OFF: subjects of the paintings",
+          "why_wrong": "What Warli paintings depict says nothing about how far Mashe's work traveled."
+        }
+      },
+      "models": [
+        "1.5",
+        "1.41",
+        "1.8",
+        "1.29"
+      ],
+      "sources": [
+        {
+          "what": "Jivya Soma Mashe (1934-2018): in the 1970s began painting Warli works on an everyday basis rather than for rituals, on paper and canvas; first exhibition outside India at the Palais de Menton, France, in 1976; later shown internationally (Magiciens de la terre, Centre Pompidou, Paris); two sons are well-known Warli artists. Warli painting: done on mud walls with white pigment of rice flour and water with gum, traditionally by women, for weddings, festivals and harvests",
+          "url": "https://en.wikipedia.org/wiki/Jivya_Soma_Mashe"
+        }
+      ],
+      "notes": "Easy: the key states the claim's outcome (audiences far from the villages) directly; the three distractors are accurate facts about Warli painting and Mashe that miss it.",
+      "word_count": 77,
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 2,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "command_of_evidence.T3_person_quote.easy.w3b3_20",
+      "template": "T3_person_quote",
+      "subtype": "Quotation from a historian supports a student's claim about an artist",
+      "tier": "easy",
+      "band_target": null,
+      "passage": "Agnes Pelton (1881–1961) painted portraits and landscapes early in her career, but she is best known today for her abstract paintings, which reflected her spiritual beliefs. In late 1931, she settled in Cathedral City, a small town in the California desert, intending only a short stay; she remained there for nearly thirty years. In a paper, an art history student claims that the desert setting where Pelton spent her later years shaped the imagery of her abstract paintings.",
+      "stem": "Which quotation from a work by an art historian would be the most effective evidence for the student to include in support of this claim?",
+      "options": [
+        "“Pelton was born in Stuttgart, Germany, to American parents, and because of poor health she was taught at home for much of her childhood.”",
+        "“Two of Pelton’s early paintings were shown at the 1913 Armory Show in New York, an exhibition that introduced many Americans to modern art.”",
+        "“In 1938, Pelton became one of the founding members of the Transcendental Painting Group, a circle of artists in New Mexico who promoted abstract painting.”",
+        "“Once Pelton moved to the desert, its brilliant light and wide skies began to appear in her abstract paintings as glowing horizons and bands of color.”"
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The student claims that Pelton's desert surroundings shaped the imagery of her abstract paintings. Choice D says that after her move to Cathedral City, the desert's light and skies appeared in those paintings as glowing horizons and bands of color, which directly supports the claim.",
+      "distractors": {
+        "A": {
+          "recipe": "OFF: biographical detail from her childhood",
+          "why_wrong": "Her birthplace and schooling say nothing about how the desert affected her abstract paintings."
+        },
+        "B": {
+          "recipe": "OFF: early career, wrong time",
+          "why_wrong": "The 1913 exhibition of her early paintings came long before she moved to the desert, so it does not show the desert's influence."
+        },
+        "C": {
+          "recipe": "OFF / LURE: abstract art, but no link to the desert",
+          "why_wrong": "Joining a group of abstract painters concerns her abstract work, but the quotation does not connect that work to the desert setting."
+        }
+      },
+      "models": [
+        "1.15",
+        "1.19",
+        "1.20"
+      ],
+      "sources": [
+        {
+          "what": "Agnes Pelton (1881-1961): born in Stuttgart to American parents, educated at home due to poor health; two paintings in the 1913 Armory Show; settled in Cathedral City, California, in late 1931, intending a visit, and lived there nearly 30 years, writing of the desert's light and skies; member of the Transcendental Painting Group; abstract art reflecting spiritual beliefs",
+          "url": "https://en.wikipedia.org/wiki/Agnes_Lawrence_Pelton"
+        }
+      ],
+      "notes": "Easy: the key names the claim's two elements (desert setting, imagery of the abstractions); the three distractors are accurate facts about Pelton that miss the claim. Quotations are invented and unattributed; every fact inside them matches the source (the key's reading of her imagery follows her own words about the desert's light and skies and the 2019 to 2020 exhibition title Desert Transcendentalist).",
+      "word_count": 78,
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "command_of_evidence.Q1_P3_pairwise.easy.w3b3_21",
+      "template": "Q1_P3_pairwise",
+      "subtype": "Data completion: two comparisons of the same pair (2x2 factorial options)",
+      "tier": "easy",
+      "band_target": null,
+      "passage": "Martinique and Dominica are neighboring islands in the Lesser Antilles, an arc of islands in the eastern Caribbean Sea. Both were formed by volcanic activity, and both have rugged, mountainous interiors covered in tropical rainforest. Consulting the table, a geography student notes that in comparison with Dominica, Martinique has ______",
+      "stem": "Which choice most effectively uses data from the table to complete the statement?",
+      "options": [
+        "a larger area and a higher highest point.",
+        "a smaller area and a higher highest point.",
+        "a larger area and a lower highest point.",
+        "a smaller area and a lower highest point."
+      ],
+      "answer_letter": "C",
+      "table": {
+        "title": "Area and Highest Point of Two Islands in the Lesser Antilles",
+        "columns": [
+          "Island",
+          "Area (square kilometers)",
+          "Highest point",
+          "Elevation of highest point (meters)"
+        ],
+        "rows": [
+          [
+            "Martinique",
+            "1,128",
+            "Mont Pelée",
+            "1,397"
+          ],
+          [
+            "Dominica",
+            "750",
+            "Morne Diablotins",
+            "1,447"
+          ]
+        ],
+        "note": null
+      },
+      "figure": null,
+      "explanation": "According to the table, Martinique's area (1,128 square kilometers) is larger than Dominica's (750 square kilometers), but its highest point (1,397 meters) is lower than Dominica's (1,447 meters). Choice C states both comparisons correctly.",
+      "distractors": {
+        "A": {
+          "recipe": "WDIR: second comparison reversed",
+          "why_wrong": "Martinique's area is larger, but its highest point is lower than Dominica's, not higher."
+        },
+        "B": {
+          "recipe": "WDIR: both comparisons reversed",
+          "why_wrong": "Martinique has a larger area and a lower highest point, the reverse of both comparisons here."
+        },
+        "D": {
+          "recipe": "WDIR: first comparison reversed",
+          "why_wrong": "Martinique's highest point is lower, but its area is larger than Dominica's, not smaller."
+        }
+      },
+      "models": [
+        "1.3",
+        "1.4"
+      ],
+      "sources": [
+        {
+          "what": "Martinique: area 1,128 km2, highest point Mont Pelée 1,397 m; Dominica: area 750 km2, highest point Morne Diablotins 1,447 m",
+          "url": "https://en.wikipedia.org/wiki/Martinique"
+        },
+        {
+          "what": "Dominica area 750 km2; Morne Diablotins 1,447 m",
+          "url": "https://en.wikipedia.org/wiki/Dominica"
+        }
+      ],
+      "notes": "Easy 2x2 factorial (CB 1.3 shape); the key is the mixed combination, so neither 'both larger' nor 'both smaller' works.",
+      "word_count": 50,
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 2,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "command_of_evidence.Q2_P5_control.easy.w3b3_22",
+      "template": "Q2_P5_control",
+      "subtype": "Data description: group comparison (one category against the other) supports a conclusion",
+      "tier": "easy",
+      "band_target": null,
+      "passage": "Astronomers classify the moons of Jupiter into two broad categories. Regular moons, such as Io and Ganymede, probably formed from a disk of gas and dust encircling the young planet; they travel in nearly circular orbits that lie close to the plane of Jupiter’s equator. Irregular moons, such as Himalia and Pasiphae, are generally considered to be asteroids that Jupiter’s gravity captured much later, and they are small and follow stretched, tilted orbits. Comparing data on five of these moons, an astronomy student concludes that irregular moons typically orbit at much greater distances from Jupiter than regular moons do.",
+      "stem": "Which choice best describes data from the table that support the student’s conclusion?",
+      "options": [
+        "Both regular moons orbit less than 1.1 million kilometers from Jupiter, while each of the three irregular moons orbits more than 11 million kilometers away.",
+        "Ganymede, which has the largest diameter of any moon in the table, orbits more than twice as far from Jupiter as Io does.",
+        "Io and Ganymede each have a diameter of more than 3,000 kilometers, which is larger than the diameter of any of the irregular moons in the table.",
+        "Pasiphae, an irregular moon, has a diameter of about 58 kilometers and orbits farther from Jupiter than any other moon in the table does."
+      ],
+      "answer_letter": "A",
+      "table": {
+        "title": "Diameter and Average Orbital Distance of Five Moons of Jupiter",
+        "columns": [
+          "Moon",
+          "Category",
+          "Diameter (kilometers)",
+          "Average distance from Jupiter (kilometers)"
+        ],
+        "rows": [
+          [
+            "Io",
+            "regular",
+            "3,643",
+            "421,700"
+          ],
+          [
+            "Ganymede",
+            "regular",
+            "5,268",
+            "1,070,400"
+          ],
+          [
+            "Himalia",
+            "irregular",
+            "140",
+            "11,439,000"
+          ],
+          [
+            "Ananke",
+            "irregular",
+            "29",
+            "21,029,500"
+          ],
+          [
+            "Pasiphae",
+            "irregular",
+            "58",
+            "23,463,200"
+          ]
+        ],
+        "note": null
+      },
+      "figure": null,
+      "explanation": "The conclusion compares the two categories on distance from Jupiter. Choice A does exactly that: both regular moons orbit within about 1.1 million kilometers, while all three irregular moons orbit more than 11 million kilometers away.",
+      "distractors": {
+        "B": {
+          "recipe": "IRREL: comparison within one category",
+          "why_wrong": "This compares two regular moons with each other, so it says nothing about how irregular moons differ from regular ones."
+        },
+        "C": {
+          "recipe": "IRREL: true, wrong measure (size)",
+          "why_wrong": "This compares the categories by diameter, not by distance from Jupiter, which is what the conclusion is about."
+        },
+        "D": {
+          "recipe": "PART: a single moon, no comparison with the regular moons",
+          "why_wrong": "This describes only one irregular moon; it does not compare irregular moons as a group with regular moons."
+        }
+      },
+      "models": [
+        "1.22",
+        "1.28"
+      ],
+      "sources": [
+        {
+          "what": "Moons of Jupiter (table from JPL data): Io 3,642.6 km, 421,700 km; Ganymede 5,268.2 km, 1,070,400 km; Himalia 139.6 km, 11,439,000 km; Ananke 29.1 km, 21,029,500 km; Pasiphae 57.8 km, 23,463,200 km; regular moons (prograde, nearly circular, low-inclination orbits) formed in the circumplanetary disk; irregular moons small, on eccentric, inclined orbits, irregular moons thought to be captured asteroids",
+          "url": "https://en.wikipedia.org/wiki/Moons_of_Jupiter"
+        }
+      ],
+      "notes": "Easy group comparison (CB 1.22 shape): only A compares the two categories on the measure the conclusion names; B is within-category, C the wrong measure, D one moon only. Diameters rounded to whole kilometers.",
+      "word_count": 99,
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 2,
+        "fixes": [],
+        "status": "pass",
+        "notes": "Pasiphae distance 23,463,200 km is the Moons of Jupiter list value (its own page gives about 24.1 million); either way it is the farthest, so no option changes."
+      }
+    }
+  ],
+  "done": true,
+  "removed": []
+}

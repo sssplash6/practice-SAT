@@ -1,0 +1,1305 @@
+{
+  "skill": "Transitions",
+  "slug": "transitions",
+  "part": "w1b1",
+  "domain": "Expression of Ideas",
+  "plan": {
+    "templates": [
+      {
+        "code": "A1_addition",
+        "name": "Addition/similarity: a further item of the same kind"
+      },
+      {
+        "code": "C1_two_subject",
+        "name": "Contrast: two subjects, opposite values"
+      },
+      {
+        "code": "C2_belief_finding",
+        "name": "Contrast: established view or appearance, then a finding that breaks it"
+      },
+      {
+        "code": "C3_limiting_fact",
+        "name": "Contrast: positive claim, then a limiting fact about the same subject"
+      },
+      {
+        "code": "E1_consequence",
+        "name": "Cause/effect: condition, principle or evidence, then its consequence"
+      },
+      {
+        "code": "E2_motive_action",
+        "name": "Cause/effect: need or judgment, then the action it motivates"
+      },
+      {
+        "code": "K1_grant_turn",
+        "name": "Concession: grant, then the main claim resumes (but / Still)"
+      },
+      {
+        "code": "K2_qualification",
+        "name": "Concession: supported claim, then a fact that qualifies it"
+      },
+      {
+        "code": "M1_emphasis",
+        "name": "Emphasis: stronger same-direction fact (content-contrast trap at hard)"
+      },
+      {
+        "code": "P1_purpose_aptness",
+        "name": "Purpose and aptness: goal then deliberate act, or a fitting echo"
+      },
+      {
+        "code": "S1_spec_restate",
+        "name": "Specification/restatement: exact content or plain rewording"
+      },
+      {
+        "code": "T1_sequence_time",
+        "name": "Sequence/time: next step, earlier or later event, end of a long effort"
+      },
+      {
+        "code": "U1_culmination_alt",
+        "name": "Culmination, alternative and place (ultimately, alternatively, there)"
+      },
+      {
+        "code": "X1_example",
+        "name": "Example: general claim, then one named instance"
+      }
+    ]
+  },
+  "items": [
+    {
+      "id": "transitions.K1_grant_turn.hard.w1b1_01",
+      "template": "K1_grant_turn",
+      "subtype": "Concession: grant then turn",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "Chinese architect Wang Shu conceived the Ningbo History Museum as a building whose walls would preserve the remnants of villages demolished nearby. ______ some of those walls are reinforced concrete, molded against bamboo formwork. Still, across much of the facade, bricks and tiles salvaged from the razed dwellings, some a century old, are fitted together in wapan, a traditional patchwork masonry technique.",
+      "stem": "Which choice completes the text with the most logical transition?",
+      "options": [
+        "Specifically,",
+        "Similarly,",
+        "Of course,",
+        "Thus,"
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The first sentence says the walls were meant to preserve the remains of demolished villages. The blank sentence grants a point that cuts against this aim: some walls are concrete, not salvaged material. The next sentence, beginning with “Still,” returns to the main claim: much of the facade is made of salvaged bricks and tiles. “Of course” is the transition that concedes a point before such a turn.",
+      "distractors": {
+        "A": {
+          "recipe": "wrong grain (specification)",
+          "why_wrong": "Concrete walls are not a more precise account of how the walls preserve village remains; the clause names an exception to that aim."
+        },
+        "B": {
+          "recipe": "similarity for concession",
+          "why_wrong": "The concrete walls are not a second case like the museum’s aim of preserving village remains; they are an exception the writer concedes before turning back with “Still.”"
+        },
+        "D": {
+          "recipe": "unearned cause",
+          "why_wrong": "The aim of preserving village remains does not cause some walls to be made of concrete."
+        }
+      },
+      "models": [
+        "974b5a8c",
+        "f5959727"
+      ],
+      "word_count": 62,
+      "sources": [
+        {
+          "what": "Ningbo Museum opened 2008; salvaged bricks and stone, wapan, concrete and bamboo walls, hundred-year-old materials",
+          "url": "https://en.wikipedia.org/wiki/Ningbo_Museum"
+        },
+        {
+          "what": "facade of bricks and tiles from the remains of farmers' homes; concrete walls on a wood-and-bamboo frame",
+          "url": "https://www.iconeye.com/architecture/ningbo-historic-museum-by-amateur-architecture-studio"
+        },
+        {
+          "what": "bricks and roof tiles salvaged from demolition sites; continuity of the region's history",
+          "url": "https://www.pritzkerprize.com/2012/essay"
+        }
+      ],
+      "notes": "Band-7 target, but spec/rw/band7/transitions.md finds no band-7 K1 official item (K1 tops out at band 6) and says not to push it. Written as the strongest band-6 K1: dense register; the blank sentence names the same walls as A and ends with salvaged materials, so Specifically and In fact pull on a first read; no phantom-sequence or summary decoy. No contrast decoy because rw_options excludes contrast next to a concession key. Register 5.48 chars/word.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [
+          "safety solve: 'In fact,' was defensible in its corrective sense; replaced with a decoy of a plainly different relation, awaiting a fresh safety solve"
+        ],
+        "status": "pass"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "K1_grant_turn has no band-7 official items (spec/rw/band7/transitions.md section 5), so it cannot be band 7; it stands as a strong band 6 on the f5959727 frame (Of course ... Still), register 5.48. \"In fact\" next to a concession key is a CB decoy (176edca6, Granted key)."
+      },
+      "band": 6,
+      "safety": {
+        "agreed": true,
+        "answer": "C",
+        "also_defensible": [],
+        "unfair": ""
+      }
+    },
+    {
+      "id": "transitions.K2_qualification.hard.w1b1_02",
+      "template": "K2_qualification",
+      "subtype": "Concession: qualification",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Around 100 CE, Claudia Severa, a Roman commander’s wife, sent her friend Sulpicia Lepidina a wooden tablet inviting her to a birthday celebration. Excavated at Vindolanda, near Hadrian’s Wall, the tablet is frequently identified as the earliest surviving Latin written in a woman’s own hand. ______ a professional scribe wrote out most of the invitation; Severa personally added only the final lines.",
+      "stem": "Which choice completes the text with the most logical transition?",
+      "options": [
+        "Granted,",
+        "For example,",
+        "Hence,",
+        "Additionally,"
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The text says the tablet is often called the earliest surviving Latin written by a woman. The last sentence limits that claim without overturning it: a scribe wrote most of the tablet, and only the final lines are in Severa’s own hand. “Granted” signals this kind of qualification.",
+      "distractors": {
+        "B": {
+          "recipe": "example for concession",
+          "why_wrong": "A scribe writing most of the invitation is not an instance of the tablet being in Severa’s own hand; it qualifies that claim, since she wrote only the final lines."
+        },
+        "C": {
+          "recipe": "unearned cause",
+          "why_wrong": "Calling the tablet the earliest Latin by a woman does not cause a scribe to have written most of it."
+        },
+        "D": {
+          "recipe": "additive decoy",
+          "why_wrong": "The sentence is not one more point in favor of the claim; it qualifies the claim by showing that only part of the tablet is Severa’s writing."
+        }
+      },
+      "models": [
+        "176edca6",
+        "9dc4e640"
+      ],
+      "word_count": 62,
+      "sources": [
+        {
+          "what": "Tab. Vindol. 291: c. AD 97-105, Severa wife of Aelius Brocchus, main text in a scribe's hand, closing greeting in her own hand, earliest known Latin by a woman",
+          "url": "https://romaninscriptionsofbritain.org/inscriptions/TabVindol291"
+        },
+        {
+          "what": "British Museum, Vindolanda tablets",
+          "url": "https://www.britishmuseum.org/collection/galleries/roman-britain/vindolanda-tablets"
+        }
+      ],
+      "notes": "",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [
+          "safety solve: 'In fact,' was defensible in its corrective sense; replaced with a decoy of a plainly different relation, awaiting a fresh safety solve"
+        ],
+        "status": "pass"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "band_target 6; mirrors 176edca6 (Granted key, In fact decoy, qualifying last sentence)."
+      },
+      "band": 6,
+      "safety": {
+        "agreed": true,
+        "answer": "A",
+        "also_defensible": [],
+        "unfair": ""
+      }
+    },
+    {
+      "id": "transitions.S1_spec_restate.hard.w1b1_03",
+      "template": "S1_spec_restate",
+      "subtype": "Specification / restatement",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "Ornithologists long assumed that songbirds migrating from Europe to tropical Africa cross the Sahara in a single nonstop flight lasting about forty hours. Radar observations by Heiko Schmaljohann and colleagues in Mauritania undermined that assumption; ______ the team found, songbirds took off shortly after sunset from the open desert, evidently having spent the daylight hours resting on the ground rather than flying.",
+      "stem": "Which choice completes the text with the most logical transition?",
+      "options": [
+        "that said,",
+        "for this reason,",
+        "moreover,",
+        "in many cases,"
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The first clause of the second sentence says radar observations undermined the idea of a nonstop flight. The clause after the blank tells what the team found and how common it was: in many cases, songbirds took off at sunset after resting in the desert all day. “In many cases” introduces this more precise account of the finding.",
+      "distractors": {
+        "A": {
+          "recipe": "false opposition (concession)",
+          "why_wrong": "Nothing in the clause concedes a point against the radar evidence; birds resting in the desert is exactly how the evidence undermined the nonstop account."
+        },
+        "B": {
+          "recipe": "unearned cause",
+          "why_wrong": "The radar observations did not cause the birds to take off at sunset; the takeoffs are what the observations recorded."
+        },
+        "C": {
+          "recipe": "additive decoy",
+          "why_wrong": "The clause is not a further, separate point; it spells out what the team found, which is the very evidence that undermined the assumption."
+        }
+      },
+      "models": [
+        "d3b7d7a3",
+        "4b7a84b0"
+      ],
+      "word_count": 62,
+      "sources": [
+        {
+          "what": "long assumed 40 h non-stop flight; radar at three sites in Mauritania; departures right after sunset, birds spent the day in the plain desert; most songbirds cross intermittently",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC2197203"
+        },
+        {
+          "what": "Schmaljohann thesis, radar at three Mauritanian sites 2003-2004",
+          "url": "https://edoc.unibas.ch/643"
+        }
+      ],
+      "notes": "Band-7 moves (spec/rw/band7/transitions.md section 5, S1 frequency form): the clause before the blank challenges a long-held account and B gives the common case; B's content (resting, not flying nonstop) reads as a contrast with the old view, so the concession decoy pulls; key outside the core 13. 'more often' is not in rw_options' inventory, so the frequency key is 'in many cases'. Decoys differ from d3b7d7a3's (that said / moreover replace nevertheless / additionally). Section 6: key not core 13; no sequence or summary decoy; surface-contrast proxy passes (adversative decoy, 'rather than' in the blank's clause); interrupter 'the team found,' added in review as in d3b7d7a3. Gate passes (register 5.38 chars/word after review).",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [
+          "passage: dropped \"at three sites\" to hold length",
+          "passage: added the interrupter \"the team found,\" after the blank (band-7 S1 recipe, model d3b7d7a3); it ties the clause to the radar finding, so \"moreover\" cannot read as a further, separate fact",
+          "explanation reworded for the interrupter",
+          "notes updated",
+          "C why_wrong tied to \"the team found\""
+        ],
+        "status": "fixed"
+      },
+      "band7": {
+        "verdict": "band 7",
+        "why": "Matches d3b7d7a3: a long-held account undermined, then after a semicolon and the interrupter \"the team found,\" the common case, keyed with a frequency connective outside the core 13 (bank exposure 1). \"rather than flying\" makes the clause look like a contrast, so \"that said\" pulls; \"moreover\" fails only because the clause is the finding itself. Section 6: key not core 13, no sequence or summary decoy, surface-contrast proxy passes, register 5.38."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "D",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 7
+    },
+    {
+      "id": "transitions.U1_culmination_alt.hard.w1b1_04",
+      "template": "U1_culmination_alt",
+      "subtype": "Culmination / alternative",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Stemborers, moths whose larvae tunnel into maize stalks, can devastate harvests throughout East Africa. Farmers have conventionally combated these pests with chemical insecticides. ______ they can practice push-pull, a strategy pioneered in Kenya: desmodium interplanted between the maize rows releases odors that repel the moths, while a perimeter of Napier grass attracts them away from the crop.",
+      "stem": "Which choice completes the text with the most logical transition?",
+      "options": [
+        "For instance,",
+        "Alternatively,",
+        "Thus,",
+        "In other words,"
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The second sentence names one way to protect maize from stemborers: chemical insecticides. The last sentence describes a different way to solve the same problem, planting desmodium and Napier grass. “Alternatively” signals this second option.",
+      "distractors": {
+        "A": {
+          "recipe": "wrong grain (example)",
+          "why_wrong": "Push-pull is not an instance of using chemical insecticides; it is a different method."
+        },
+        "C": {
+          "recipe": "unearned cause",
+          "why_wrong": "Using insecticides does not lead to farmers practicing push-pull; the sentences describe two separate options."
+        },
+        "D": {
+          "recipe": "wrong grain (restatement)",
+          "why_wrong": "The second sentence does not reword the first; it introduces a new method with new details."
+        }
+      },
+      "models": [
+        "9502ec65"
+      ],
+      "word_count": 57,
+      "sources": [
+        {
+          "what": "push-pull developed by icipe: desmodium volatiles repel stemborer moths, Napier grass attracts them",
+          "url": "https://www.push-pull.net/push_pull_works.htm"
+        },
+        {
+          "what": "stemborers lay eggs in maize stems; farmers can lose much of a crop; pesticides are the usual response",
+          "url": "https://www.csmonitor.com/layout/set/amphtml/Perspectives/Making-a-difference/Change-Agent/2013/0628/Push-Pull-strategy-helps-end-hunger-and-poverty-for-farmers-in-sub-Saharan-Africa"
+        }
+      ],
+      "notes": "",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [
+          "explanation: \"second sentence\" twice; the second is the last sentence"
+        ],
+        "status": "fixed"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "band_target 6; mirrors 9502ec65 (Alternatively key against example, cause and restatement decoys)."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "B",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "transitions.M1_emphasis.hard.w1b1_05",
+      "template": "M1_emphasis",
+      "subtype": "Emphasis",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "Cuvier’s beaked whales routinely remain submerged far longer than their oxygen reserves would seemingly permit. Even so, the 222-minute dive documented in 2020 by researchers led by Nicola Quick was extraordinary for the species. ______ the median duration of the more than 3,600 foraging dives captured by the team’s satellite-linked transmitters was only 59 minutes.",
+      "stem": "Which choice completes the text with the most logical transition?",
+      "options": [
+        "Nevertheless,",
+        "Indeed,",
+        "Accordingly,",
+        "Moreover,"
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The second sentence claims that the 222-minute dive was extraordinary even for Cuvier’s beaked whales. The last sentence supports that claim: a typical dive lasted only about an hour, far less than 222 minutes. “Indeed” signals a fact that confirms and strengthens the previous claim.",
+      "distractors": {
+        "A": {
+          "recipe": "false opposition (concession)",
+          "why_wrong": "The 59-minute median does not hold true in spite of the record dive; it is the evidence that the record dive was extraordinary."
+        },
+        "C": {
+          "recipe": "unearned cause",
+          "why_wrong": "The record dive did not cause the typical dive to be short; the median is evidence about the whales, not a result of the record."
+        },
+        "D": {
+          "recipe": "additive decoy",
+          "why_wrong": "The median is not a separate point added to the previous one; it is the support for the claim that the 222-minute dive was extraordinary."
+        }
+      },
+      "models": [
+        "a266d876",
+        "47e238be",
+        "00e0170f"
+      ],
+      "word_count": 55,
+      "sources": [
+        {
+          "what": "222-minute dive, JEB 23 Sept 2020; 23 whales; median presumed foraging dive 59 min",
+          "url": "https://www.guinnessworldrecords.com/world-records/341455-longest-dive-by-a-mammal"
+        },
+        {
+          "what": "Nicola Quick, Duke; 3,680 dives by 23 whales; seal-based calculations implied about half an hour",
+          "url": "https://www.sciencenews.org/?p=3091749"
+        }
+      ],
+      "notes": "Band-7 moves: content contrast with logical support (B's short typical dive looks like a reversal of the record, but it proves the record extraordinary); concession sentence ('Even so') in A primes a contrast reading; key outside the core 13; blank sentence-initial after a period, not the officials' semicolon frame, and no 'outlier'/'majority' wording. Section 6: key not core 13; no sequence or summary decoy; surface-contrast proxy passes ('only' in the blank sentence, adversative decoy); register 5.56 chars/word. Gate passes.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      },
+      "band7": {
+        "verdict": "band 7",
+        "why": "Matches a266d876 and 47e238be: a record called extraordinary, then the typical case with the opposite value (\"only 59 minutes\"), keyed with indeed; \"Even so\" in sentence 2 primes a contrast reading, so \"Nevertheless\" pulls; decoys are CB's own set (false opposition, unearned cause, additive). Section 6: key not core 13, no sequence or summary decoy, surface-contrast proxy passes, register 5.52."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "B",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 7
+    },
+    {
+      "id": "transitions.C1_two_subject.medium.w1b1_06",
+      "template": "C1_two_subject",
+      "subtype": "Contrast: two subjects",
+      "tier": "medium",
+      "passage": "Humans possess a single copy of TP53, a gene that instructs cells with damaged DNA either to repair the damage or to self-destruct before becoming cancerous. African elephants, ______ carry at least twenty copies, a redundancy that may explain why these enormous, long-lived animals so rarely succumb to cancer.",
+      "stem": "Which choice completes the text with the most logical transition?",
+      "options": [
+        "by contrast,",
+        "for instance,",
+        "similarly,",
+        "in other words,"
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The first sentence says humans have one copy of TP53. The second says elephants have at least twenty copies. “By contrast” marks the difference between the two species.",
+      "distractors": {
+        "B": {
+          "recipe": "wrong grain (example)",
+          "why_wrong": "Elephants are not an example of humans having one copy; they have many more."
+        },
+        "C": {
+          "recipe": "false parallel",
+          "why_wrong": "Elephants do not have a similar number of copies; twenty differs sharply from one."
+        },
+        "D": {
+          "recipe": "wrong grain (restatement)",
+          "why_wrong": "The second sentence is about a different species with a different number of copies, not a rewording of the first."
+        }
+      },
+      "models": [
+        "2.4",
+        "2.6"
+      ],
+      "word_count": 49,
+      "sources": [
+        {
+          "what": "humans one TP53 copy, African elephants at least 20 copies; elephant cancer mortality 4.81% vs 11-25% in humans (Abegglen et al. 2015, JAMA)",
+          "url": "https://ascopost.com/issues/november-10-2015/multiple-copies-of-tp53-tumor-suppressor-gene-potentially-related-to-lower-than-expected-cancer-rate-in-elephants"
+        }
+      ],
+      "notes": "",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "transitions.A1_addition.medium.w1b1_07",
+      "template": "A1_addition",
+      "subtype": "Addition / similarity",
+      "tier": "medium",
+      "passage": "At his Bamako studio in the 1950s, Malian photographer Seydou Keïta encouraged sitters to pose with borrowed accessories, from wristwatches to a Vespa scooter, that conveyed cosmopolitan sophistication. ______ he hung boldly patterned textiles behind his subjects, replacing these backdrops every few years, a practice that now enables scholars to date individual portraits.",
+      "stem": "Which choice completes the text with the most logical transition?",
+      "options": [
+        "Instead,",
+        "In other words,",
+        "Moreover,",
+        "Thus,"
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The first sentence describes one way Keïta shaped his portraits: lending sitters props. The second describes another: hanging patterned backdrops behind them. “Moreover” adds this second practice to the first.",
+      "distractors": {
+        "A": {
+          "recipe": "false opposition (replacement)",
+          "why_wrong": "The backdrops did not replace the props; Keïta used both."
+        },
+        "B": {
+          "recipe": "wrong grain (restatement)",
+          "why_wrong": "Hanging backdrops is a new practice, not a rewording of lending props."
+        },
+        "D": {
+          "recipe": "unearned cause",
+          "why_wrong": "Lending props did not cause Keïta to hang patterned backdrops."
+        }
+      },
+      "models": [
+        "2.10",
+        "2.11",
+        "2.7"
+      ],
+      "word_count": 53,
+      "sources": [
+        {
+          "what": "studio props included watches, pens, radios, Western suits and a Vespa",
+          "url": "https://www.berggruen.com/exhibitions/seydou-keita"
+        },
+        {
+          "what": "lushly patterned backdrops and props now date periods of his career; Bamako studio in the 1950s and 1960s",
+          "url": "https://www.artbook.com/9783869303017.html"
+        }
+      ],
+      "notes": "",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "transitions.A1_addition.medium.w1b1_08",
+      "template": "A1_addition",
+      "subtype": "Addition / similarity",
+      "tier": "medium",
+      "passage": "Lesley Nneka Arimah’s 2017 story collection What It Means When a Man Falls from the Sky frequently renders ordinary emotional experiences in fantastical terms. In “Who Will Greet You at Home,” prospective mothers must fashion infants from yarn or clay. ______ in the title story, mathematicians have devised calculations capable of removing a person’s grief.",
+      "stem": "Which choice completes the text with the most logical transition?",
+      "options": [
+        "Nevertheless,",
+        "In other words,",
+        "Consequently,",
+        "Likewise,"
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The first sentence says the collection often presents everyday emotions in fantastical terms. The next two sentences each describe a story that does this: one about longing for a child, one about grief. “Likewise” signals that the title story is a parallel case.",
+      "distractors": {
+        "A": {
+          "recipe": "false opposition (concession)",
+          "why_wrong": "The title story does not hold true despite the first story; it works the same way."
+        },
+        "B": {
+          "recipe": "wrong grain (restatement)",
+          "why_wrong": "The title story is a different story, not a rewording of the description of “Who Will Greet You at Home.”"
+        },
+        "C": {
+          "recipe": "unearned cause",
+          "why_wrong": "One story’s premise does not cause the other story’s premise."
+        }
+      },
+      "models": [
+        "2.7",
+        "2.11"
+      ],
+      "word_count": 55,
+      "sources": [
+        {
+          "what": "Who Will Greet You at Home: women craft children from yarn, raffia or clay; first in The New Yorker 2015, collected 2017",
+          "url": "https://brittlepaper.com/2015/11/monsters-motherhood-read-lesley-nneka-arimahs-shocking-story-handcrafted-babies"
+        },
+        {
+          "what": "title story: mathematicians allow humans to remove emotional pain from others",
+          "url": "https://publishersweekly.com/978-0-7352-1102-5"
+        }
+      ],
+      "notes": "",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "transitions.S1_spec_restate.medium.w1b1_09",
+      "template": "S1_spec_restate",
+      "subtype": "Specification / restatement",
+      "tier": "medium",
+      "passage": "In 2016, a University of Vermont team led by computational scientist Andrew Reagan charted the emotional trajectories of fiction on an unprecedented scale. ______ the researchers used sentiment-analysis software to score the happiness of the vocabulary in successive segments of 1,327 Project Gutenberg stories, tracing how each narrative’s mood rose and fell.",
+      "stem": "Which choice completes the text with the most logical transition?",
+      "options": [
+        "On the other hand,",
+        "Specifically,",
+        "In addition,",
+        "Similarly,"
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The first sentence states in general terms what the team did: it charted the emotional trajectories of fiction. The second sentence gives the exact procedure they used. “Specifically” introduces this more precise account.",
+      "distractors": {
+        "A": {
+          "recipe": "false opposition (contrast)",
+          "why_wrong": "The procedure does not contrast with the charting described before; it is how the charting was done."
+        },
+        "C": {
+          "recipe": "additive decoy",
+          "why_wrong": "Rating the words is not a separate project added to charting trajectories; it is how the trajectories were charted."
+        },
+        "D": {
+          "recipe": "false parallel",
+          "why_wrong": "The second sentence does not describe a similar, separate case; it describes the same study in more detail."
+        }
+      },
+      "models": [
+        "2.12",
+        "2.3",
+        "2.15"
+      ],
+      "word_count": 52,
+      "sources": [
+        {
+          "what": "Reagan, Mitchell, Kiley, Danforth, Dodds 2016, EPJ Data Science: 1,327 Project Gutenberg stories, six core emotional arcs",
+          "url": "https://arxiv.org/abs/1606.07772"
+        }
+      ],
+      "notes": "",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "transitions.C2_belief_finding.medium.w1b1_10",
+      "template": "C2_belief_finding",
+      "subtype": "Contrast: belief vs finding",
+      "tier": "medium",
+      "passage": "Among amphibians, lunglessness was known only in a large family of salamanders and in one caecilian; every frog examined had possessed lungs. On a 2007 expedition to Indonesian Borneo, ______ biologist David Bickford confirmed that Barbourula kalimantanensis, a flattened stream-dwelling frog, has no lungs, absorbing oxygen entirely through its skin.",
+      "stem": "Which choice completes the text with the most logical transition?",
+      "options": [
+        "in other words,",
+        "consequently,",
+        "however,",
+        "in particular,"
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The first sentence says that every frog examined had lungs. The second reports a frog with no lungs at all, which breaks that pattern. “However” marks this contrast between the earlier record and the new finding.",
+      "distractors": {
+        "A": {
+          "recipe": "wrong grain (restatement)",
+          "why_wrong": "The second sentence does not reword the claim that every frog examined had lungs; it reports a frog that breaks that pattern."
+        },
+        "B": {
+          "recipe": "unearned cause",
+          "why_wrong": "The earlier record of frogs with lungs did not cause Bickford’s finding of a lungless frog."
+        },
+        "D": {
+          "recipe": "wrong grain (specification)",
+          "why_wrong": "The lungless frog is not a particular case of frogs having lungs; it is an exception to that pattern."
+        }
+      },
+      "models": [
+        "2.1",
+        "2.16"
+      ],
+      "word_count": 50,
+      "sources": [
+        {
+          "what": "Barbourula kalimantanensis, first known lungless frog; Bickford, Iskandar, Barlian 2008, Current Biology; 2007 expedition; lunglessness probably evolved only three times",
+          "url": "https://news.mongabay.com/2008/04/lungless-frog-discovered-in-borneo/"
+        }
+      ],
+      "notes": "",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "transitions.E1_consequence.medium.w1b1_11",
+      "template": "E1_consequence",
+      "subtype": "Cause / effect",
+      "tier": "medium",
+      "passage": "In the late 1990s, a national electrification program connected thousands of rural households in South Africa’s KwaZulu-Natal province, where women had long spent many hours gathering firewood. Economist Taryn Dinkelman found that newly connected communities shifted sharply from wood to electricity for cooking. ______ women there became markedly more likely to hold paid jobs within five years.",
+      "stem": "Which choice completes the text with the most logical transition?",
+      "options": [
+        "Hence,",
+        "Nevertheless,",
+        "Likewise,",
+        "In other words,"
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The text explains that women in the province had spent many hours gathering firewood and that electrified communities stopped cooking with wood. Freed from that work, women took paid jobs. “Hence” signals that this rise in employment is a consequence of the change described before it.",
+      "distractors": {
+        "B": {
+          "recipe": "false opposition (concession)",
+          "why_wrong": "The rise in women’s employment did not happen in spite of the switch from wood; it followed from it."
+        },
+        "C": {
+          "recipe": "false parallel",
+          "why_wrong": "Women taking paid jobs is not a similar case of switching fuels; it is a result of the switch."
+        },
+        "D": {
+          "recipe": "wrong grain (restatement)",
+          "why_wrong": "Women holding paid jobs is a new fact, not a rewording of the shift from wood to electricity."
+        }
+      },
+      "models": [
+        "2.9",
+        "2.14"
+      ],
+      "word_count": 57,
+      "sources": [
+        {
+          "what": "Dinkelman, rural electrification roll-out in KwaZulu-Natal 1996-2001; shift away from wood; female employment rises within five years; women spend much time on fuel-wood collection",
+          "url": "https://energia.org/assets/2015/09/dinkelman_electricity_0810.pdf"
+        }
+      ],
+      "notes": "",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "transitions.T1_sequence_time.medium.w1b1_12",
+      "template": "T1_sequence_time",
+      "subtype": "Sequence / time",
+      "tier": "medium",
+      "passage": "In 2004, Cuban American painter Carmen Herrera, then 89, sold a canvas for the first time. Within a few years, her crisp, hard-edged geometric abstractions were attracting international acclaim. ______ she had labored for roughly six decades in near obscurity, exhibiting infrequently and receiving scant attention from dealers or critics.",
+      "stem": "Which choice completes the text with the most logical transition?",
+      "options": [
+        "Likewise,",
+        "As a result,",
+        "For instance,",
+        "Previously,"
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The first two sentences describe Herrera’s success beginning in 2004. The last describes the long period before that, when she worked in obscurity. “Previously” signals that the last sentence describes an earlier time.",
+      "distractors": {
+        "A": {
+          "recipe": "false parallel",
+          "why_wrong": "Decades of obscurity are not similar to the acclaim described in the second sentence."
+        },
+        "B": {
+          "recipe": "unearned cause",
+          "why_wrong": "Her late success did not cause the obscurity, which came first."
+        },
+        "C": {
+          "recipe": "wrong grain (example)",
+          "why_wrong": "Working in obscurity is not an example of selling paintings and drawing acclaim."
+        }
+      },
+      "models": [
+        "2.2",
+        "2.13"
+      ],
+      "word_count": 50,
+      "sources": [
+        {
+          "what": "first sale in 2004 at age 89 after decades of painting; Whitney show Lines of Sight 2016",
+          "url": "https://www.nybooks.com/daily/2016/12/29/carmen-herrera-art-without-lies/"
+        }
+      ],
+      "notes": "",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [
+          "explanation: \"second sentence\" corrected to \"last sentence\"",
+          "A why_wrong: acclaim is in the second sentence, not the first"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "transitions.P1_purpose_aptness.medium.w1b1_13",
+      "template": "P1_purpose_aptness",
+      "subtype": "Purpose / aptness",
+      "tier": "medium",
+      "passage": "Tsuda Umeko studied biology at Bryn Mawr College in Pennsylvania from 1889 to 1892. She returned to Japan convinced that Japanese women deserved an education as rigorous as the instruction available to men at the nation’s elite universities. ______ in 1900 she established the Women’s Institute of English Studies in Tokyo, holding its students to exacting academic standards.",
+      "stem": "Which choice completes the text with the most logical transition?",
+      "options": [
+        "Regardless,",
+        "With this in mind,",
+        "Similarly,",
+        "In other words,"
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The second sentence states Tsuda’s conviction that Japanese women deserved a rigorous education. The last describes the step she took to act on that belief: founding a demanding school for women. “With this in mind” signals an action taken to serve the goal just stated.",
+      "distractors": {
+        "A": {
+          "recipe": "false opposition (dismissive)",
+          "why_wrong": "Founding the school did not happen regardless of her conviction; it followed from it."
+        },
+        "C": {
+          "recipe": "false parallel",
+          "why_wrong": "Founding the school is not a similar, separate case; it is what she did because of her conviction."
+        },
+        "D": {
+          "recipe": "wrong grain (restatement)",
+          "why_wrong": "The last sentence adds a new action and date; it does not reword her conviction."
+        }
+      },
+      "models": [
+        "2.5"
+      ],
+      "word_count": 58,
+      "sources": [
+        {
+          "what": "Tsuda studied biology at Bryn Mawr from 1889; founded Joshi Eigaku Juku (Women's Institute of English Studies) in Tokyo in 1900; meant to follow rigorous university standards",
+          "url": "https://en.wikipedia.org/wiki/Tsuda_Umeko"
+        }
+      ],
+      "notes": "",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [
+          "D why_wrong: \"second sentence\" corrected to \"last sentence\""
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "transitions.T1_sequence_time.easy.w1b1_14",
+      "template": "T1_sequence_time",
+      "subtype": "Sequence / time",
+      "tier": "easy",
+      "passage": "In Rwanda, the company Zipline uses drones to deliver blood supplies to rural hospitals. First, a health worker requests the necessary blood by text message. ______ employees at a Zipline distribution center package the order in a cardboard container and launch a drone by catapult. Finally, the drone releases the package, which descends by parachute.",
+      "stem": "Which choice completes the text with the most logical transition?",
+      "options": [
+        "Next,",
+        "For instance,",
+        "In contrast,",
+        "Likewise,"
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The text lists the steps of a delivery in order, marked by “First” and “Finally.” Packing the box and launching the drone come after the order is placed and before the box is dropped. “Next” signals this middle step.",
+      "distractors": {
+        "B": {
+          "recipe": "wrong grain (example)",
+          "why_wrong": "Packing and launching the drone is not an example of ordering blood; it is the following step."
+        },
+        "C": {
+          "recipe": "false opposition (contrast)",
+          "why_wrong": "Packing the order does not contrast with placing it; it continues the process."
+        },
+        "D": {
+          "recipe": "false parallel",
+          "why_wrong": "The staff’s actions are not similar to the health worker’s; they are the next step."
+        }
+      },
+      "models": [
+        "1.11",
+        "1.35"
+      ],
+      "word_count": 55,
+      "sources": [],
+      "notes": "Facts from general knowledge of Zipline's widely reported Rwanda service; not web-checked (brief of 2026-10-16).",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [
+          "explanation: subject-verb agreement (\"come\")"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "transitions.T1_sequence_time.easy.w1b1_15",
+      "template": "T1_sequence_time",
+      "subtype": "Sequence / time",
+      "tier": "easy",
+      "passage": "While incarcerated with other Japanese Americans in camps in California and Utah from 1942 to 1944, artist Miné Okubo produced hundreds of drawings documenting the cramped barracks and relentless dust storms of camp life. ______ in 1946, she published Citizen 13660, an illustrated memoir recounting her experiences through captioned drawings.",
+      "stem": "Which choice completes the text with the most logical transition?",
+      "options": [
+        "Nevertheless,",
+        "Likewise,",
+        "Later,",
+        "For example,"
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The first sentence describes drawings Okubo made from 1942 to 1944. The second describes a book she published in 1946, after that period. “Later” signals that the second event came after the first.",
+      "distractors": {
+        "A": {
+          "recipe": "false opposition (concession)",
+          "why_wrong": "Publishing the book did not happen in spite of the drawings; it grew out of them."
+        },
+        "B": {
+          "recipe": "false parallel",
+          "why_wrong": "Publishing a book in 1946 is not similar to making drawings in the camps; it is a later event."
+        },
+        "D": {
+          "recipe": "wrong grain (example)",
+          "why_wrong": "The book is not an example of the drawings she made in the camps."
+        }
+      },
+      "models": [
+        "1.12",
+        "1.18",
+        "1.31"
+      ],
+      "word_count": 50,
+      "sources": [],
+      "notes": "Facts (Tanforan and Topaz camps, Citizen 13660 published 1946) from general knowledge; not web-checked (brief of 2026-10-16).",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "transitions.X1_example.easy.w1b1_16",
+      "template": "X1_example",
+      "subtype": "Example",
+      "tier": "easy",
+      "passage": "Portuguese merchants and missionaries, the first Europeans to reach Japan, arrived in the 1540s and remained influential there for nearly a century. Their language left enduring traces on Japanese vocabulary. ______ the Japanese word for bread, pan, derives from the Portuguese pão, and karuta, meaning “playing cards,” derives from the Portuguese carta.",
+      "stem": "Which choice completes the text with the most logical transition?",
+      "options": [
+        "Nevertheless,",
+        "Meanwhile,",
+        "In other words,",
+        "For example,"
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The second sentence makes a general claim: Portuguese left traces on Japanese vocabulary. The last gives specific words that show this. “For example” introduces these instances.",
+      "distractors": {
+        "A": {
+          "recipe": "false opposition (concession)",
+          "why_wrong": "The borrowed words do not exist in spite of the Portuguese influence; they are evidence of it."
+        },
+        "B": {
+          "recipe": "phantom time",
+          "why_wrong": "The sentence does not describe something happening at the same time as the traders’ arrival; it gives instances of the claim."
+        },
+        "C": {
+          "recipe": "wrong grain (restatement)",
+          "why_wrong": "Naming particular words adds specific instances; it does not reword the general claim."
+        }
+      },
+      "models": [
+        "1.26",
+        "1.37"
+      ],
+      "word_count": 52,
+      "sources": [],
+      "notes": "Loanwords pan and karuta and the 1540s arrival are standard facts; not web-checked (brief of 2026-10-16).",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "transitions.X1_example.easy.w1b1_17",
+      "template": "X1_example",
+      "subtype": "Example",
+      "tier": "easy",
+      "passage": "Beginning in 1979, Mexican photographer Graciela Iturbide spent years documenting everyday life in Juchitán, an Oaxacan town where Zapotec women dominate the bustling marketplaces and command considerable respect. ______ her photograph Nuestra Señora de las Iguanas depicts a Juchitán vendor gazing into the distance with live iguanas arranged like a crown on her head.",
+      "stem": "Which choice completes the text with the most logical transition?",
+      "options": [
+        "By contrast,",
+        "For instance,",
+        "Thus,",
+        "Finally,"
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The first sentence says Iturbide spent years photographing daily life and women in Juchitán. The second describes one photograph from that work. “For instance” introduces this example.",
+      "distractors": {
+        "A": {
+          "recipe": "false opposition (contrast)",
+          "why_wrong": "The photograph does not contrast with Iturbide’s work in Juchitán; it is part of it."
+        },
+        "C": {
+          "recipe": "unearned cause",
+          "why_wrong": "The photograph is not a result of the information about Juchitán’s markets; it is an instance of Iturbide’s documentation."
+        },
+        "D": {
+          "recipe": "phantom sequence",
+          "why_wrong": "No series of steps is being listed, so nothing signals a final item."
+        }
+      },
+      "models": [
+        "1.2",
+        "1.26"
+      ],
+      "word_count": 54,
+      "sources": [],
+      "notes": "Facts from general knowledge of Iturbide's Juchitán series; not web-checked (brief of 2026-10-16).",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "transitions.E1_consequence.easy.w1b1_18",
+      "template": "E1_consequence",
+      "subtype": "Cause / effect",
+      "tier": "easy",
+      "passage": "The frigid waters of the Southern Ocean contain abundant dissolved oxygen. This may explain how Antarctic icefish survive without hemoglobin, the protein that transports oxygen in the bloodstream of other vertebrates and gives blood its characteristic red color. ______ the blood of icefish is nearly transparent, and their gills are creamy white.",
+      "stem": "Which choice completes the text with the most logical transition?",
+      "options": [
+        "However,",
+        "Likewise,",
+        "As a result,",
+        "For instance,"
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The second sentence says icefish lack hemoglobin, the protein that makes blood red. Without it, their blood is nearly clear and their gills are pale. “As a result” signals this consequence.",
+      "distractors": {
+        "A": {
+          "recipe": "false opposition (contrast)",
+          "why_wrong": "Clear blood does not contrast with lacking hemoglobin; it follows from it."
+        },
+        "B": {
+          "recipe": "false parallel",
+          "why_wrong": "Clear blood is not a similar fact about another case; it is the result of the missing hemoglobin."
+        },
+        "D": {
+          "recipe": "wrong grain (example)",
+          "why_wrong": "Clear blood is not an example of the ocean holding oxygen; it is a consequence of lacking hemoglobin."
+        }
+      },
+      "models": [
+        "1.5",
+        "1.27"
+      ],
+      "word_count": 52,
+      "sources": [],
+      "notes": "Icefish lacking hemoglobin is a standard biology fact; not web-checked (brief of 2026-10-16).",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "transitions.E1_consequence.easy.w1b1_19",
+      "template": "E1_consequence",
+      "subtype": "Cause / effect",
+      "tier": "easy",
+      "passage": "In Australia, where participation in federal elections was voluntary, fewer than 60 percent of eligible citizens voted in 1922. Two years later, parliament passed legislation requiring all eligible citizens to vote and penalizing those who failed to do so without a legitimate excuse. ______ turnout in the 1925 federal election exceeded 90 percent.",
+      "stem": "Which choice completes the text with the most logical transition?",
+      "options": [
+        "Consequently,",
+        "Earlier,",
+        "Nevertheless,",
+        "For instance,"
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The second sentence describes a 1924 law that made voting compulsory and fined nonvoters. The last sentence reports that turnout then rose above 90 percent. “Consequently” signals that this rise resulted from the law.",
+      "distractors": {
+        "B": {
+          "recipe": "phantom time",
+          "why_wrong": "The 1925 election came after the 1924 law, not before it."
+        },
+        "C": {
+          "recipe": "false opposition (concession)",
+          "why_wrong": "High turnout did not happen in spite of the law; the law produced it."
+        },
+        "D": {
+          "recipe": "wrong grain (example)",
+          "why_wrong": "The 1925 turnout is not an example of the law; it is the law’s result."
+        }
+      },
+      "models": [
+        "1.3",
+        "1.27"
+      ],
+      "word_count": 53,
+      "sources": [],
+      "notes": "Compulsory voting from 1924 and turnout about 59% (1922) and 91% (1925) are standard figures; not web-checked (brief of 2026-10-16).",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "transitions.C3_limiting_fact.easy.w1b1_20",
+      "template": "C3_limiting_fact",
+      "subtype": "Contrast: limiting fact",
+      "tier": "easy",
+      "passage": "Nigerian teacher Mohammed Bah Abba promoted a pot-in-pot cooler: one clay pot nested inside a larger one, with wet sand between them. As the water evaporates, it draws heat from the inner pot, keeping vegetables fresh for weeks without electricity. ______ the device performs well only in arid climates, since humid air slows evaporation.",
+      "stem": "Which choice completes the text with the most logical transition?",
+      "options": [
+        "As a result,",
+        "Similarly,",
+        "In other words,",
+        "However,"
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The first two sentences praise the cooler: it keeps vegetables fresh for weeks without electricity. The last sentence states a limit on that claim: it works well only in dry climates. “However” signals this contrast between the device’s benefit and its limitation.",
+      "distractors": {
+        "A": {
+          "recipe": "unearned cause",
+          "why_wrong": "Keeping produce fresh does not cause the cooler to fail in humid places."
+        },
+        "B": {
+          "recipe": "false parallel",
+          "why_wrong": "The limitation is not similar to the benefit described before; it restricts it."
+        },
+        "C": {
+          "recipe": "wrong grain (restatement)",
+          "why_wrong": "The last sentence adds a new fact about climate; it does not reword the sentences before it."
+        }
+      },
+      "models": [
+        "1.33",
+        "1.23"
+      ],
+      "word_count": 54,
+      "sources": [],
+      "notes": "Mohammed Bah Abba's pot-in-pot cooler (Rolex Award 2000) from general knowledge; not web-checked (brief of 2026-10-16).",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [
+          "C why_wrong: passage has three sentences"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "transitions.E2_motive_action.easy.w1b1_21",
+      "template": "E2_motive_action",
+      "subtype": "Cause: motive and action",
+      "tier": "easy",
+      "passage": "When armed militants occupied Timbuktu, Mali, in 2012, librarian Abdel Kader Haidara feared that the city’s hundreds of thousands of centuries-old manuscripts, covering subjects from astronomy to law, would be destroyed. ______ he organized a secret operation in which couriers smuggled the manuscripts, packed in metal footlockers, hundreds of miles south to the capital, Bamako.",
+      "stem": "Which choice completes the text with the most logical transition?",
+      "options": [
+        "In comparison,",
+        "For this reason,",
+        "Likewise,",
+        "In other words,"
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The first sentence says Haidara feared the manuscripts would be destroyed. The second describes what he did because of that fear: he had the manuscripts smuggled to safety. “For this reason” signals that his action was motivated by the fear.",
+      "distractors": {
+        "A": {
+          "recipe": "false opposition (contrast)",
+          "why_wrong": "The rescue is not being compared with the threat; it is a response to it."
+        },
+        "C": {
+          "recipe": "false parallel",
+          "why_wrong": "Smuggling the manuscripts is not similar to fearing for them; it is the action the fear prompted."
+        },
+        "D": {
+          "recipe": "wrong grain (restatement)",
+          "why_wrong": "The second sentence describes a new action, not a rewording of Haidara’s fear."
+        }
+      },
+      "models": [
+        "1.9",
+        "1.13"
+      ],
+      "word_count": 55,
+      "sources": [],
+      "notes": "Haidara's 2012-2013 evacuation of the Timbuktu manuscripts to Bamako from general knowledge; not web-checked (brief of 2026-10-16).",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "transitions.A1_addition.easy.w1b1_22",
+      "template": "A1_addition",
+      "subtype": "Addition / similarity",
+      "tier": "easy",
+      "passage": "In essays published in the Atlantic Monthly in 1900, Yankton Dakota writer Zitkála-Šá described her childhood on a reservation and the loneliness she endured at a missionary boarding school far from home. ______ she cowrote The Sun Dance Opera (1913) with composer William F. Hanson, contributing melodies drawn from Dakota ceremonial songs.",
+      "stem": "Which choice completes the text with the most logical transition?",
+      "options": [
+        "In addition,",
+        "Nevertheless,",
+        "For instance,",
+        "Previously,"
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The first sentence describes one of Zitkála-Šá’s works, her essays. The second describes another, the opera she cowrote. “In addition” signals that the second sentence adds a further accomplishment.",
+      "distractors": {
+        "B": {
+          "recipe": "false opposition (concession)",
+          "why_wrong": "Writing the opera does not go against writing the essays; both are her work."
+        },
+        "C": {
+          "recipe": "wrong grain (example)",
+          "why_wrong": "The opera is not an example of the essays; it is a separate work."
+        },
+        "D": {
+          "recipe": "phantom time",
+          "why_wrong": "The opera dates from 1913, after the 1900 essays, not before them."
+        }
+      },
+      "models": [
+        "1.7",
+        "1.30"
+      ],
+      "word_count": 52,
+      "sources": [],
+      "notes": "Zitkála-Šá's 1900 Atlantic Monthly essays and The Sun Dance Opera (1913, with William F. Hanson) from general knowledge; not web-checked (brief of 2026-10-16).",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "transitions.M1_emphasis.easy.w1b1_23",
+      "template": "M1_emphasis",
+      "subtype": "Emphasis",
+      "tier": "easy",
+      "passage": "Esther Mahlangu learned the geometric wall painting of her Ndebele community as a girl. She has since carried that tradition far beyond the homesteads where it originated. ______ in 1991 she covered an entire BMW sedan in Ndebele patterns, becoming the first woman commissioned to create one of the company’s art cars.",
+      "stem": "Which choice completes the text with the most logical transition?",
+      "options": [
+        "However,",
+        "Similarly,",
+        "In fact,",
+        "In conclusion,"
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The second sentence says Mahlangu has taken Ndebele painting far beyond its original setting. The last sentence gives a striking fact that strengthens that claim: she painted a BMW car. “In fact” signals this stronger, supporting fact.",
+      "distractors": {
+        "A": {
+          "recipe": "false opposition (contrast)",
+          "why_wrong": "Painting the car does not contrast with spreading Ndebele painting; it is a vivid case of it."
+        },
+        "B": {
+          "recipe": "false parallel",
+          "why_wrong": "The sentence does not describe a similar, separate case; it strengthens the claim about Mahlangu."
+        },
+        "D": {
+          "recipe": "premature summary",
+          "why_wrong": "The sentence adds a new, specific fact rather than summing up the text."
+        }
+      },
+      "models": [
+        "1.6"
+      ],
+      "word_count": 52,
+      "sources": [],
+      "notes": "Mahlangu's 1991 BMW Art Car (first woman to make one) from general knowledge; not web-checked (brief of 2026-10-16).",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      }
+    }
+  ]
+}

@@ -1,0 +1,360 @@
+{
+  "skill": "Inferences",
+  "slug": "inferences",
+  "part": "b7",
+  "domain": "Information and Ideas",
+  "plan": {
+    "templates": [
+      {
+        "code": "S2",
+        "name": "Principle plus case (S10 trade-off folded in)"
+      },
+      {
+        "code": "S11",
+        "name": "Received view plus counterevidence"
+      },
+      {
+        "code": "S3",
+        "name": "Rule or timeline rejects a premise"
+      },
+      {
+        "code": "S4",
+        "name": "Elimination"
+      }
+    ]
+  },
+  "source": "spec/rw/band7/pilot (written to spec/rw/band7/WRITE.md, reviewed to spec/rw/VERIFY.md, gated per PROXY.md, blind safety solve)",
+  "items": [
+    {
+      "id": "inferences.S2.b7",
+      "template": "S2",
+      "subtype": "Principle plus case (two pressures)",
+      "passage": "Bergmann’s rule holds that individuals of a species tend to be smaller in warmer climates, since a smaller body dissipates heat more efficiently. For migratory birds, however, diminished body size also elevates the metabolic cost of flight—a considerable liability on journeys spanning thousands of kilometers—whereas proportionally longer wings reduce that cost. Analyzing 70,716 specimens of 52 migratory species that died after colliding with buildings in Chicago between 1978 and 2016, Brian Weeks and colleagues determined that tarsus length, a standard proxy for body size, decreased by 2.4% as summer temperatures on the species’ breeding grounds increased. Over the same period, wing length increased by 1.3%, a change that the researchers propose ______",
+      "stem": "Which choice most logically completes the text?",
+      "options": [
+        "may have helped the birds shed heat on their warming breeding grounds, adding to the cooling advantage that their smaller bodies already provided.",
+        "may have compensated for the 2.4% decrease in tarsus length, so that the birds’ overall body size changed little over the period studied.",
+        "may have helped the birds keep up their long migrations, which their smaller bodies had made more difficult by causing them to retain more heat in flight.",
+        "may have offset a cost that the birds’ response to warmer summers would otherwise have imposed on their long migrations."
+      ],
+      "answer_letter": "D",
+      "explanation": "Sentence 1 explains the shrinking: a smaller body sheds heat more efficiently, and the birds’ bodies shrank as summers on their breeding grounds warmed. The dash aside in sentence 2 names the price of that response: a smaller body raises the metabolic cost of flight, a liability on long migrations, while proportionally longer wings reduce that cost. Wings lengthened over the same period, so the researchers most plausibly see the longer wings as offsetting the flight cost that the warming-driven shrinking would otherwise have added. In choice D, “the birds’ response to warmer summers” is the shrinking and “a cost ... imposed on their long migrations” is the higher cost of flight.",
+      "distractors": {
+        "A": {
+          "recipe": "right principle on the wrong variable (MIX)",
+          "why_wrong": "The text links heat loss only to body size; the one effect it gives longer wings is a lower cost of flight, so nothing suggests the researchers see the wings as a way to shed heat."
+        },
+        "B": {
+          "recipe": "right compensation on the wrong variable (MIX)",
+          "why_wrong": "Tarsus length is “a standard proxy for body size,” so its decrease means the birds’ bodies shrank; the text gives longer wings one effect, a lower cost of flight, and nothing suggests they kept body size constant."
+        },
+        "C": {
+          "recipe": "key content with the mechanism reversed in a subordinate clause (REV)",
+          "why_wrong": "The first half fits the text, but the reason does not: sentence 1 says a smaller body dissipates heat more efficiently, so shrinking would not make the birds retain more heat; the difficulty the text names is the higher metabolic cost of flight."
+        }
+      },
+      "models": [
+        "45f66433",
+        "26f5c4ba",
+        "6b8a7c74"
+      ],
+      "band7_moves": [
+        "S2 with two principles chained (Bergmann’s rule plus the flight-cost trade-off); the blank asks for the consequence that the second principle forces on the observed case",
+        "the decisive premise sits in a dash aside two sentences before the blank",
+        "key hedged as the evidence requires (“may have offset”) and stated one level up (“a cost that the birds’ response to warmer summers would otherwise have imposed”), so sentence 1, the dash aside and the wing change must be chained",
+        "distractors: MIX (the cooling role given to the wings), MIX (compensation aimed at body size instead of flight cost), REV hidden in a subordinate clause (the key’s claim in concrete words with Bergmann’s mechanism reversed); all three reuse true pieces of the text"
+      ],
+      "sources": [
+        {
+          "what": "Weeks et al. 2020, Ecology Letters 23: 316-325: 70,716 individuals of 52 North American migratory species; warming summer temperatures predict body size reduction; wing length increased; hypothesis that longer wings are a compensatory adaptation to maintain migration as smaller bodies increased the metabolic cost of flight",
+          "url": "https://doi.org/10.1111/ele.13434"
+        },
+        {
+          "what": "Field Museum press release: birds that died hitting Chicago buildings, collected since 1978, data 1978-2016; tarsus decreased 2.4%, wing length increased 1.3%; Bergmann’s rule",
+          "url": "https://www.fieldmuseum.org/about/press/birds-are-shrinking-climate-warms"
+        }
+      ],
+      "notes": "Section 6 checks. (1) option mean 21.5 words (gate 20). (2) 112 words, models' median 111. (3) key 127 chars, distractors 136, 138, 123: not longest. (4) soft flags: key has despite; dash aside in sentence 2. (6) steps 3: smaller body raises flight cost, longer wings lower it, both changes observed together, so the wings offset the cost; premise two sentences before the blank. (7) partly right 3 of 3 (A keeps the collision sample, B the heat principle, C the cost link). (8) REV and MIX: 2 (C, B) plus one CAUSE; no OUT. Blind solve: D only; B fails because the text says small bodies shed heat more readily. Originality: no official or bank item on Bergmann's rule, tarsus or the Chicago collision series (grep). Figures checked against the Ecology Letters abstract and the Field Museum release. Hardening pass (2026-10-16; the figures above describe the pre-hardening draft): option mean 23.3 words; key 120 chars, the shortest; recipes MIX, MIX, REV (hidden in a subordinate clause); no OUT; partly right 3 of 3. Haiku p(key) 0.88 before, 0.86 and 0.88 after (C 6 to 7%).",
+      "word_count": 112,
+      "tier": "hard",
+      "band_target": 7,
+      "table": null,
+      "figure": null,
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 10,
+        "fixes": [
+          "hardening pass (2026-10-16), after a Haiku blind solve read the item as band 6 (no wrong option drew more than about 6%): replaced A (collision sampling), B (heat retained by smaller bodies) and C (migrations more costly) with a MIX that gives the wings a cooling role, a MIX that has them compensate for body size and a REV hidden in a subordinate clause under the key’s own claim; key reworded one level up (“a cost that the birds’ response to warmer summers would otherwise have imposed”); explanation, distractors and band7_moves synced"
+        ],
+        "status": "fixed",
+        "band7": {
+          "verdict": "band 7",
+          "why": "Two principles chained (Bergmann’s rule and the flight-cost trade-off) with the decisive premise in the dash aside two sentences before the blank; the key is hedged and framed as a “despite” consequence, as in 45f66433. B (the heat principle misapplied, reversing what the text says about small bodies) and A (a collision-sampling story the specimen source invites) are close and partly right; C is a one-step reversal. Only D survives. Fresh Haiku blind solve after review: right, p(key) 0.93."
+        }
+      },
+      "hardened": {
+        "what": "Replaced A (collision sampling), B (a heat claim that reversed sentence 1 outright) and C (a plain reversal) with options built from the right pieces: A gives the cooling role to the wings, B has the wings compensate for the wrong thing (the measured body size), C keeps the key’s claim that the wings sustained migration but reverses the reason in a subordinate clause. The key is now stated one level up, so the concrete C reads more familiar than the key.",
+        "tempting": [
+          "A: consistent with Bergmann’s rule and the warming, and echoes sentence 1; dies because the text gives the wings only one effect, a lower cost of flight",
+          "B: uses the passage’s own numbers and the key’s idea of compensation; dies on “a standard proxy for body size”, since wings change the cost of flight, not body size",
+          "C: its first half is the key in concrete words; dies on “a smaller body dissipates heat more efficiently”"
+        ]
+      },
+      "band": 6,
+      "band_basis": "pilot gate: reads band 6 against official anchors after hardening; served as hard"
+    },
+    {
+      "id": "inferences.S11.b7",
+      "template": "S11",
+      "subtype": "Received view plus counterevidence (what the researchers contend)",
+      "passage": "For more than half a century, laboratory experiments have demonstrated that an individual who witnesses an emergency is less likely to intervene when other witnesses are present than when alone. This phenomenon, the bystander effect, is frequently interpreted as evidence that victims in crowded public settings will rarely receive assistance. Yet when Richard Philpot and colleagues systematically coded surveillance footage of 219 actual conflicts in Amsterdam, Cape Town, and Lancaster, United Kingdom, they found that at least one bystander intervened in approximately nine of every ten conflicts and that the probability that someone intervened increased with the number of bystanders present. The researchers contend that their findings do not overturn the laboratory results but instead demonstrate that ______",
+      "stem": "Which choice most logically completes the text?",
+      "options": [
+        "a victim’s chances of being helped can rise with the number of bystanders even if each bystander, considered individually, becomes less inclined to intervene.",
+        "the reluctance to intervene seen in laboratories is produced by artificial settings and so does not arise among witnesses to actual conflicts.",
+        "a victim surrounded by many bystanders, though less likely to be helped than one with only a few witnesses, will still usually receive some help.",
+        "witnesses to real conflicts become more willing to intervene as more bystanders join them, which participants in laboratory experiments did not."
+      ],
+      "answer_letter": "A",
+      "explanation": "The laboratory finding concerns each individual witness, who is less likely to act when others are present. The footage records something else: whether anyone at all intervened, which happened in about nine of every ten conflicts and grew likelier as bystanders increased. Both hold at once if each person is somewhat less inclined to help but there are more people who might, which is how the researchers can keep the laboratory results while rejecting the fear that crowds leave victims unhelped. Choice A states that reconciliation. Because the footage measures only whether someone intervened, it cannot show that individual reluctance is absent in real settings or that each witness grows more willing.",
+      "distractors": {
+        "B": {
+          "recipe": "level confusion presented as a limit on the laboratory results (MIX)",
+          "why_wrong": "The footage records only whether at least one bystander intervened, so it cannot show that individual reluctance disappears outside the laboratory; a rising chance that someone helps is fully compatible with each witness being less inclined. Calling the laboratory effect an artifact also undercuts the results the researchers say they keep."
+        },
+        "C": {
+          "recipe": "reversal hidden in the concession (REV), true tail",
+          "why_wrong": "The tail fits the nine-in-ten rate, but the concession contradicts the footage: the more bystanders were present, the likelier someone intervened, so a victim with many bystanders was more likely, not less likely, to be helped."
+        },
+        "D": {
+          "recipe": "swap of the level (MIX): aggregate read as individual",
+          "why_wrong": "The footage shows how often someone intervened, not how willing each witness was; and saying real witnesses behave the opposite way from laboratory participants would overturn the laboratory results, which the researchers say their findings do not do."
+        }
+      },
+      "models": [
+        "4b8eda0a",
+        "086dd8cc",
+        "a13c1c66"
+      ],
+      "band7_moves": [
+        "S11 with the target of type T2: the blank reconstructs what the researchers contend, and the lead-in rules out any answer that overturns the received result",
+        "the new interpretation must account for all the evidence: the replicated individual-level effect, the 9-in-10 rate and the rise with group size",
+        "key is conditional (“even if”), hedged (“can rise”), and the shortest-but-one option",
+        "distractors: a level confusion that seems to honor “do not overturn” by confining the laboratory effect to laboratories (MIX), the received inference hidden in a concession beside the true nine-in-ten rate (REV), the aggregate read as individual willingness (MIX); all three are partly right"
+      ],
+      "sources": [
+        {
+          "what": "Philpot, Liebst, Levine, Bernasco and Lindegaard 2020, American Psychologist 75(1): 66-75: CCTV of 219 public conflicts in the UK, the Netherlands and South Africa (Lancaster, Amsterdam, Cape Town); in 9 of 10 conflicts at least one bystander helped; more bystanders, greater likelihood that someone intervened; the study does not evaluate the individual-level bystander effect, and additional numbers may reduce individual helping propensity while providing a larger pool of helpers",
+          "url": "https://doi.org/10.1037/amp0000469"
+        },
+        {
+          "what": "Repository record of the article",
+          "url": "https://ore.exeter.ac.uk/repository/handle/10871/37604"
+        },
+        {
+          "what": "PsyPost summary: traditional research measured an individual’s likelihood to intervene, not the aggregate likelihood that at least one person helps; each additional bystander increased the odds of help; the results challenge the popular view, not the experimental findings",
+          "url": "https://www.psypost.org/cross-national-cctv-footage-reveals-that-bystanders-intervene-in-9-out-of-10-public-conflicts/"
+        }
+      ],
+      "notes": "Section 6 checks. (1) option mean 23.0 words. (2) 118 words, models' median 113. (3) key 158 chars ties the longest distractor (B, 158); this is the file's one key-longest item, needed to keep the key-longest rate near the official 21%. (4) soft flags: key conditional (even if), negation in the lead-in. (6) steps 3: separate the individual-level laboratory finding from the group-level footage finding, keep both true, combine them as the researchers do. (7) partly right 3 of 3. (8) REV and MIX: 3 (B MIX, C REV, D REV attacking the wrong premise). (9) target T2: what the researchers contend. Blind solve: A only; the lead-in excludes D and B. Wording of the key follows the paper's own reconciliation (individual helping propensity may fall while the pool of helpers grows). The bystander effect is a textbook topic, but the subject is the 2020 CCTV study, as 881ba6f1 uses Adam Smith for Kennedy's work; no official or bank item covers it (an official WIC item and a bank TSP item mention bystanders in another sense). Hardening pass (2026-10-16; the figures above describe the pre-hardening draft): option mean 23.0 words; key 158 chars, still the file’s one key-longest item (B 142, C 145, D 144); recipes MIX, REV, MIX; partly right 3 of 3. Haiku p(key) 0.88 before, 0.84 and 0.92 after.",
+      "word_count": 118,
+      "tier": "hard",
+      "band_target": 7,
+      "table": null,
+      "figure": null,
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 8,
+        "fixes": [
+          "hardening pass (2026-10-16), after a Haiku blind solve read the item as band 6 (no wrong option drew more than about 6%): replaced C (received inference) and D (lab overstated, excluded by the lead-in) with a MIX that confines the laboratory effect to laboratories and a REV hidden in a concession beside the true nine-in-ten rate; the old level swap moved from B to D; key unchanged; explanation, distractors and band7_moves synced"
+        ],
+        "status": "fixed",
+        "band7": {
+          "verdict": "band 7",
+          "why": "The strongest of the eight: the key must reconcile an individual-level laboratory finding with a group-level field finding (a level shift the text never states), conditional (“even if”) and hedged. The lead-in “do not overturn the laboratory results” is the decisive clue for rejecting B (MIX of levels) and D (attacks the laboratory data), both partly right; C is the received inference the footage contradicts. A T2 target (what the researchers contend), a strong band-7 sign; matches 4b8eda0a’s “account for all the evidence” demand. Fresh Haiku blind solve after review: right, p(key) 0.94."
+        }
+      },
+      "hardened": {
+        "what": "Replaced C (the received inference, contradicted outright) and D (an open attack on the laboratory data that the lead-in excludes). New B seems to honor “do not overturn” by confining the laboratory effect to laboratories; new C concedes the nine-in-ten rate and hides the received view in its “though” clause; the old level swap moves to D. B and D now fail only on the level distinction (someone intervened versus each witness), which is what the key turns on.",
+        "tempting": [
+          "B: seems to keep the laboratory results (they hold in laboratories) and to fit the footage; dies because a count of whether anyone intervened cannot show that individual reluctance is absent",
+          "C: its tail matches the nine-in-ten rate and its concession matches the familiar reading of the bystander effect; dies on “the probability that someone intervened increased with the number of bystanders”",
+          "D: reads the rising rate as rising individual willingness; dies on the level distinction and on “do not overturn”"
+        ]
+      },
+      "band": 6,
+      "band_basis": "pilot gate: reads band 6 against official anchors after hardening; served as hard"
+    },
+    {
+      "id": "inferences.S3.b7",
+      "template": "S3",
+      "subtype": "Timeline rejects a premise",
+      "passage": "The tea plant cannot grow at the high elevations of western Tibet, and no documentary evidence of tea consumption in Tibet predates the Tang dynasty (618–907 CE). According to one tradition, tea was first introduced to Tibet as part of the dowry of the Chinese princess Wencheng, who married the Tibetan king Songtsen Gampo in 641. Analyzing ancient botanical residues for caffeine, theanine, and phytoliths characteristic of tea, Houyuan Lu and colleagues identified tea among the funerary offerings of a Han emperor who died in 141 BCE, near present-day Xi’an, and among the remains at Gurgyam, a cemetery situated 4,290 meters above sea level in western Tibet and dated to the second or third century CE. These findings suggest that ______",
+      "stem": "Which choice most logically completes the text?",
+      "options": [
+        "Wencheng’s dowry cannot have included any tea, since tea had already been carried into western Tibet centuries before her marriage to Songtsen Gampo.",
+        "tea had already been carried into western Tibet centuries before Wencheng’s marriage, so her dowry cannot have been what first brought tea to Tibet.",
+        "tea was present in Tibet centuries before Wencheng’s marriage, though only in places low enough for the tea plant to grow there.",
+        "tea had already been grown in western Tibet by the second or third century CE, long before Wencheng’s dowry could have introduced it there."
+      ],
+      "answer_letter": "B",
+      "explanation": "The rule in sentence 1 does the first step: tea cannot grow at the high elevations of western Tibet, so the tea at Gurgyam, 4,290 meters up in western Tibet, must have been brought there. The dates do the second: Gurgyam dates to the second or third century CE, centuries before Wencheng’s marriage in 641. So tea had been carried onto the plateau long before her dowry, which cannot have been what first brought tea to Tibet, as choice B says. That conclusion concerns only how tea first arrived: whatever the dowry may have contained, the findings say nothing about whether it included tea.",
+      "distractors": {
+        "A": {
+          "recipe": "the key’s premise pushed to an invalid conclusion (EXT)",
+          "why_wrong": "Its premise is the key’s, but the conclusion does not follow: tea’s earlier presence shows only that the dowry was not how tea first reached Tibet. Whatever the dowry may have contained, nothing in the findings bears on whether it included tea."
+        },
+        "C": {
+          "recipe": "true first clause, then the growing rule misapplied to the tea itself (MIX)",
+          "why_wrong": "Tea was in Tibet centuries before 641, but not only where the plant can grow: it was found at Gurgyam, 4,290 meters up in western Tibet, where the text says the plant cannot grow."
+        },
+        "D": {
+          "recipe": "right date logic, carried swapped for grown (MIX)",
+          "why_wrong": "The dates are right, but sentence 1 says the tea plant cannot grow at the high elevations of western Tibet, where Gurgyam lies, so the tea found there was brought in, not grown."
+        }
+      },
+      "models": [
+        "b9a3941b",
+        "ac285054",
+        "5c7e0d62",
+        "e9521fd1"
+      ],
+      "band7_moves": [
+        "S3 with three dates or ranges (141 BCE, second or third century CE, Tang 618–907 overlapping the 641 marriage) and a rule stated in the first clause (tea cannot grow at western Tibet’s elevations, so its presence at Gurgyam means transport)",
+        "key is negative (“cannot have been what first brought tea to Tibet”) and needs the growing rule as well as the dates (“carried into western Tibet”)",
+        "distractors: a permutation set on the key’s own frame (grown in western Tibet; present only where the plant can grow), each keeping the true date logic, plus the key’s premise pushed to an invalid conclusion about the dowry’s contents (EXT); every option keeps a true detail",
+        "decisive rule sits in sentence 1, two sentences before the blank"
+      ],
+      "sources": [
+        {
+          "what": "Lu et al. 2016, Scientific Reports 6: 18955: tea identified by caffeine, theanine and calcium phytoliths in the Han Yangling Mausoleum of the Jing Emperor Liu Qi (188–141 BCE) and at Gurgyam Cemetery, Ngari, 4290 m asl, dated second to third century CE; tea does not grow in Tibet; no records of tea entering Tibet before the Tang Dynasty (618–907 CE); claim that tea was introduced as part of Princess Wencheng’s dowry",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4704058"
+        },
+        {
+          "what": "Princess Wencheng married Songtsen Gampo in 641",
+          "url": "https://en.wikipedia.org/wiki/Princess_Wencheng"
+        }
+      ],
+      "notes": "Section 6 checks. (1) option mean 21.2 words. (2) 121 words, models' median 109.5. (3) key 123 chars, distractors 119, 132, 124. (4) soft flags: key negative (cannot have been), parenthetical date range. (6) steps 3: the plant does not grow there, so the Gurgyam tea was carried in; the second or third century precedes 641; so the dowry cannot be the first means. Rule sits in sentence 1, three sentences before the blank. (7) partly right 3 of 3 (each keeps a true date or record). (8) REV and MIX: 3. Blind solve: B only. The Han date is a decoy that matters only for A. Originality: no official or bank item on tea in Tibet (an official RS and CoE item mention Tibet in other topics). Hardening pass (2026-10-16; the figures above describe the pre-hardening draft): option mean 23.3 words; key 148 chars, A 149: not longest; recipes EXT, MIX, MIX (C and D form a permutation set with the key); the key now needs the growing rule (sentence 1) as well as the dates. Haiku p(key) 0.85 before, 0.85 and 0.87 after.",
+      "word_count": 121,
+      "tier": "hard",
+      "band_target": 7,
+      "table": null,
+      "figure": null,
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 10,
+        "fixes": [
+          "sentence 1 said the tea plant “does not grow on the Tibetan Plateau”; tea is cultivated today in low valleys of southeastern Tibet (Nyingchi, Medog), so the rule now reads “cannot grow at the high elevations of western Tibet”, where Gurgyam (4,290 m) lies (a narrowing of Lu et al.’s “does not grow in Tibet”; no source gives the altitude limit, but tea is a lowland-to-mid-altitude crop and western Tibet sits above 4,000 m); explanation, why_wrong A and C and band7_moves synced",
+          "hardening pass (2026-10-16), after a Haiku blind solve read the item as band 6 (no wrong option drew more than about 6%): replaced A (sequence swap), C (cultivation before a climate change) and D (residues misdated) with the key’s premise pushed to an invalid conclusion about the dowry (EXT) and two members of a permutation set on the key’s frame (grown; present only where the plant grows); key reworded to “carried into western Tibet”, so it needs the growing rule as well as the dates; explanation, distractors and band7_moves synced"
+        ],
+        "status": "fixed",
+        "band7": {
+          "verdict": "band 7",
+          "why": "Three dates with an overlap (the Tang range containing 641, the Han death in 141 BCE, Gurgyam in the second or third century CE), a rule in sentence 1 and a negative key with a concession (“whatever ... may have contained ... cannot have been”), as in ac285054 and 5c7e0d62. It sits at the easy edge: each distractor dies on one fact (A on 141 BCE, C on the elevation rule, D on the stated dating), so the difficulty rests on reaching the negative conclusion rather than on distractor closeness, which is also true of the sweet-potato model. Fresh Haiku blind solve after review: right, p(key) 0.94."
+        }
+      },
+      "hardened": {
+        "what": "Replaced A (a Tibet-to-Han sequence swap), C (cultivation before a climate change) and D (the residues misdated), each killed by one plainly stated fact. B (carried), D (grown) and C (present only where the plant grows) now form a permutation set that keeps the true date logic and differs on how tea got there, and A takes the key’s own premise to a conclusion that does not follow (the dowry held no tea). The key now needs the growing rule as well as the dates.",
+        "tempting": [
+          "A: its premise is the key’s first clause almost word for word and it sounds like the same refutation; dies because earlier arrival rules out the dowry as tea’s first means, not as a carrier of tea",
+          "C: keeps the true “centuries before” and reads sentence 1 as a limit on where tea could be found; dies on Gurgyam’s 4,290 meters in western Tibet",
+          "D: has the key’s date logic; dies on sentence 1, which rules out growing tea where Gurgyam lies"
+        ]
+      },
+      "band": 6,
+      "band_basis": "pilot gate: reads band 6 against official anchors after hardening; served as hard"
+    },
+    {
+      "id": "inferences.S4.b7",
+      "template": "S4",
+      "subtype": "Elimination (three routes, permutation set)",
+      "passage": "Modern strains of the bacterium responsible for tuberculosis in the Americas closely resemble European strains, implying that the disease was introduced by Europeans after 1492; skeletal evidence of pre-contact tuberculosis, however, contradicts that assumption. An alternative hypothesis holds that the disease accompanied the first human populations to reach the Americas, more than 15,000 years ago. Kirsten Bos and colleagues reconstructed three 1,000-year-old genomes of the pathogen from human skeletons in Peru and determined that they were most closely related not to any human-adapted strain but to strains that infect seals and sea lions; the team also dated the most recent common ancestor of all these strains, human-adapted ones included, to less than 6,000 years ago. These findings suggest that ______",
+      "stem": "Which choice most logically completes the text?",
+      "options": [
+        "the disease reached Peru with the first people to arrive in the Americas and then spread from those people to the seals and sea lions along the coast.",
+        "the skeletal evidence of pre-contact tuberculosis was likely produced by some other disease, since the ancient Peruvian strains matched no human-adapted strain.",
+        "people in Peru likely acquired the disease from infected marine mammals rather than from the first people to reach the Americas or from Europeans.",
+        "the strains that caused tuberculosis in Peru 1,000 years ago are probably the ancestors of the strains that cause the disease in the Americas today."
+      ],
+      "answer_letter": "C",
+      "explanation": "The text names three possible sources. Europeans are ruled out because the Peruvian genomes are 1,000 years old, older than 1492. The first Americans are ruled out because the strains share an ancestor less than 6,000 years old, far later than people reached the Americas. The ancient strains are closest to those of seals and sea lions, so the remaining source is marine mammals, as choice C says. The ancient genomes are of the tuberculosis pathogen itself, recovered from human skeletons, so they confirm tuberculosis before 1492 rather than cast doubt on it.",
+      "distractors": {
+        "A": {
+          "recipe": "direction swap (REV)",
+          "why_wrong": "The strains’ common ancestor lived less than 6,000 years ago, long after the first people reached the Americas more than 15,000 years ago, so the disease could not have come with them."
+        },
+        "B": {
+          "recipe": "rescue of the received view by attacking the wrong premise (REV)",
+          "why_wrong": "The ancient genomes are of “the pathogen” named in sentence 1, the tuberculosis bacterium, recovered from 1,000-year-old human skeletons, so people in Peru did have tuberculosis before 1492; that the strains resembled seal strains rather than human-adapted ones says where the disease came from, not that it was some other disease."
+        },
+        "D": {
+          "recipe": "right pieces, wrong link (MIX)",
+          "why_wrong": "Modern American strains resemble European ones, whereas the ancient Peruvian strains were unlike any strain adapted to humans, so the ancient strains are not shown to be ancestors of today’s."
+        }
+      },
+      "models": [
+        "96d1c1fe",
+        "8209f485",
+        "f1bfbed3"
+      ],
+      "band7_moves": [
+        "S4 elimination: three candidate sources, each met by a different kind of evidence (a date, a molecular age, a genetic resemblance)",
+        "permutation set: every option recombines the same pieces (first Americans, Europeans, seals, Peru, modern strains) with one link moved",
+        "key is an “other than” conclusion that rules out two routes at once, hedged (“likely”)",
+        "one premise (more than 15,000 years ago) sits two sentences before the blank, the other (less than 6,000 years) at the end of a 60-word sentence"
+      ],
+      "sources": [
+        {
+          "what": "Bos et al. 2014, Nature 514: 494-497: modern American M. tuberculosis strains closely related to European ones, supporting post-contact introduction, which conflicts with archaeological evidence of pre-contact tuberculosis; three 1,000-year-old genomes from Peruvian skeletons, distinct from human-adapted forms and most closely related to strains adapted to seals and sea lions; most recent common ancestor of the complex less than 6,000 years ago",
+          "url": "https://doi.org/10.1038/nature13591"
+        },
+        {
+          "what": "Abstract (Europe PMC record)",
+          "url": "https://europepmc.org/article/MED/25141181"
+        },
+        {
+          "what": "People reached the Americas at least 15,000 years ago",
+          "url": "https://en.wikipedia.org/wiki/Settlement_of_the_Americas"
+        },
+        {
+          "what": "Full text (PMC): a Pleistocene dispersal following human movements could explain pre-contact presence (the first-humans hypothesis the text names); MRCA of the MTBC, which includes the human-adapted lineages, about 4,449 years before present; American strains most closely related to European ones",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4550673"
+        }
+      ],
+      "notes": "Section 6 checks. (1) option mean 25.0 words. (2) 120 words, models' median 100. (3) key 146 chars, A 150, D 148: not longest. (4) soft flags: key has rather than; contrast (not ... but) in sentence 3. (6) steps 3: rule out Europeans by the 1,000-year date, rule out the first Americans by the under-6,000-year ancestor against arrival over 15,000 years ago, accept seals by the genetic resemblance. (7) partly right 3 of 3. (8) REV and MIX: 3 (permutation set). Blind solve: C only. Originality: no official or bank item on ancient tuberculosis genomes; the bank's FSS item on auramine staining is a different topic. Hardening pass (2026-10-16; the figures above describe the pre-hardening draft): B replaced only; option mean 24.8 words; key 146 chars, B 160: not longest; recipes REV, REV, MIX. Haiku p(key) 0.75 before, 0.86 and 0.85 after (single-sample noise: A and D unchanged).",
+      "word_count": 120,
+      "tier": "hard",
+      "band_target": 7,
+      "table": null,
+      "figure": null,
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 8,
+        "fixes": [
+          "“the most recent common ancestor of all these strains” could be read as Peru plus seal strains only, which would let A survive (humans bring it 15,000 years ago, it jumps to seals later); added “human-adapted ones included”, which matches Bos et al. (the MTBC ancestor); added the PMC full text as the source for the first-humans hypothesis",
+          "hardening pass (2026-10-16), after a Haiku blind solve read the item as band 6 (no wrong option drew more than about 6%): replaced B (a Peru-to-Europe transfer, the one plainly unsupported option) with a REV that rescues the post-1492 view by dismissing the skeletal evidence; A, C, D unchanged; explanation and distractors synced"
+        ],
+        "status": "fixed",
+        "band7": {
+          "verdict": "band 7",
+          "why": "Elimination of three named sources, each ruled out by a different kind of evidence (a 1,000-year date against 1492, a molecular age against a 15,000-year arrival, a genetic resemblance), with one premise two sentences before the blank and an “other than” key hedged with “likely”. A and D reuse the right pieces with one link moved and are close; B (a Peru-to-Europe transfer) is the one weak, mostly unsupported member, within the section 5 limit of one plain OUT. Fresh Haiku blind solve after review: right, p(key) 0.92."
+        }
+      },
+      "hardened": {
+        "what": "Lighter touch, as asked: only B changed. The old B (a Peru-to-Europe transfer) was the one plainly unsupported option; the new B rescues the post-1492 view by dismissing the skeletal evidence, using a true fact (no match to any human-adapted strain). A and D, which already drew about 10% each, are unchanged.",
+        "tempting": [
+          "A: keeps the first-Americans hypothesis and the seal link with the direction moved; dies on the common ancestor less than 6,000 years old",
+          "B: uses a true finding to save the textbook view that Europeans brought the disease; dies because the genomes are of the tuberculosis pathogen itself, taken from pre-contact human skeletons",
+          "D: sounds like the natural continuity claim; dies because modern American strains resemble European ones while the ancient strains matched no human-adapted strain"
+        ]
+      },
+      "band": 6,
+      "band_basis": "pilot gate: reads band 6 against official anchors after hardening; served as hard"
+    }
+  ]
+}

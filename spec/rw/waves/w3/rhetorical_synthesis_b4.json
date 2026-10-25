@@ -1,0 +1,1279 @@
+{
+  "skill": "Rhetorical Synthesis",
+  "slug": "rhetorical_synthesis",
+  "part": "w3b4",
+  "domain": "Expression of Ideas",
+  "plan": {
+    "templates": [
+      {
+        "code": "EXPL",
+        "name": "Explain (cause, origin, advantage, mechanism, definition, significance)"
+      },
+      {
+        "code": "GEN",
+        "name": "Generalization, with or without support"
+      },
+      {
+        "code": "DIFF",
+        "name": "Difference"
+      },
+      {
+        "code": "RANK",
+        "name": "Order or relative degree"
+      },
+      {
+        "code": "AUD_NEW",
+        "name": "Introduce or describe to an unfamiliar or new audience"
+      },
+      {
+        "code": "EMPH",
+        "name": "Emphasize one attribute"
+      },
+      {
+        "code": "SIM",
+        "name": "Similarity"
+      },
+      {
+        "code": "EXAMPLE",
+        "name": "Example, or explanation plus example"
+      },
+      {
+        "code": "STUDY",
+        "name": "Research study (aim, method, results)"
+      },
+      {
+        "code": "AUD_FAM",
+        "name": "Present or describe to an already familiar audience"
+      },
+      {
+        "code": "SPEC",
+        "name": "Specify or identify a single fact"
+      },
+      {
+        "code": "QUOTE",
+        "name": "Quotation"
+      }
+    ]
+  },
+  "items": [
+    {
+      "id": "rhetorical_synthesis.EXPL.hard.w3b4_01",
+      "template": "EXPL",
+      "subtype": "Explain a cause (chain of three bullets)",
+      "tier": "hard",
+      "passage": "While researching a topic, a student has taken the following notes:\n• The iron pillar of Delhi, a column more than seven meters tall, was forged roughly 1,600 years ago.\n• Despite centuries of exposure to monsoon rains, the pillar shows remarkably little corrosion.\n• Metallurgists have found that its wrought iron contains an unusually high proportion of phosphorus.\n• This phosphorus promotes the formation of a thin, dense film of iron compounds on the metal’s surface.\n• Once established, the film slows further rusting by limiting contact between the iron and moisture.",
+      "stem": "The student wants to explain why the iron pillar of Delhi has rusted so little. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "Forged roughly 1,600 years ago, the iron pillar of Delhi is a wrought-iron column more than seven meters tall that contains an unusually high proportion of phosphorus.",
+        "The phosphorus in the iron pillar of Delhi has kept moisture from reaching the metal at all, so no film of iron compounds has formed on its surface.",
+        "Because its iron is unusually rich in phosphorus, the iron pillar of Delhi has developed a thin surface film that keeps moisture away from the metal and slows corrosion.",
+        "Because monsoon rains have coated it with a thin film of phosphorus, the iron pillar of Delhi has rusted remarkably little."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The goal is to explain why the pillar has rusted so little. The notes give a chain: the iron is rich in phosphorus, the phosphorus helps a thin film form on the surface, and the film limits contact between the iron and moisture. Choice C links all three steps to the pillar’s lack of rust.",
+      "distractors": {
+        "A": {
+          "recipe": "OG (cause stated with no link to the effect)",
+          "why_wrong": "It mentions the phosphorus but only as one fact about the column; it never says how the phosphorus keeps the pillar from rusting, so nothing is explained."
+        },
+        "B": {
+          "recipe": "FALSE (goal-shaped: reversed mechanism)",
+          "why_wrong": "According to the notes, the phosphorus helps a film form, and that film is what limits contact with moisture; the choice says no film formed and that moisture never reaches the metal."
+        },
+        "D": {
+          "recipe": "FALSE (goal-shaped: wrong source of the protection)",
+          "why_wrong": "It offers an explanation, but the notes say the phosphorus is in the pillar’s own wrought iron and the protective film is made of iron compounds; nothing says the rains deposited phosphorus on the surface."
+        }
+      },
+      "models": [
+        "3.17",
+        "3.2",
+        "d4b07ce6"
+      ],
+      "word_count": 93,
+      "sources": [],
+      "notes": "Subject: natural science and technology (metallurgy, the Gupta-era iron pillar in the Qutb complex). Well-known real subject written from general knowledge, no search (WAVE.md: no fact-checking for this skill); the phosphorus explanation is the standard metallurgical account, attributed to unnamed metallurgists. Band 6 by plan: one cause-without-link (A) and two goal-shaped FALSE options, a reversed link (B) and a wrong source of the phosphorus (D). Option fact check: A true, off-goal; B false; C key; D false.",
+      "band_target": 6,
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [
+          "D was the effect alone (dismissed on sight); now a goal-shaped explanation that misplaces the phosphorus (rain-deposited film instead of the iron itself)"
+        ],
+        "status": "fixed"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "Plan target 6. Two goal-shaped FALSE options (B reversed link, D wrong source) and one cause-without-link (A), but the key walks the notes’ chain in nearly their own words and derives nothing, so it stays a strong band 6."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "C",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "rhetorical_synthesis.GEN.hard.w3b4_02",
+      "template": "GEN",
+      "subtype": "Make and support a generalization",
+      "tier": "hard",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Ålesund, a port town on Norway’s western coast, was built largely of wood until the early twentieth century.\n• In January 1904, a fire destroyed most of the town’s center, leaving thousands of residents homeless.\n• Within about three years, architects had rebuilt the center using stone and brick.\n• Most of the new buildings were designed in Art Nouveau, an ornamental style then fashionable across Europe.\n• Ålesund is one of many towns whose architectural character changed dramatically when they were rebuilt after a fire.",
+      "stem": "The student wants to make and support a generalization about towns rebuilt after fires. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "Rebuilding after a fire can dramatically change a town’s architectural character, as in Ålesund, Norway, where wooden buildings gave way to stone and brick Art Nouveau structures after 1904.",
+        "Rebuilding after a fire can dramatically change a town’s architectural character, as in Ålesund, Norway, where a 1904 fire left thousands of residents homeless.",
+        "Towns rebuilt after fires, such as Ålesund, Norway, have generally adopted Art Nouveau, an ornamental style that was fashionable across Europe in the early twentieth century.",
+        "Many towns have changed dramatically in architectural character as a result of being rebuilt after a fire."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The goal has two parts: a general claim about towns rebuilt after fires and a specific case that supports it. Choice A makes the claim (rebuilding after a fire can change a town’s architectural character) and supports it with Ålesund, whose wooden center was replaced with stone and brick Art Nouveau buildings after the 1904 fire.",
+      "distractors": {
+        "B": {
+          "recipe": "PART (goal-shaped: the right claim with an example that does not support it)",
+          "why_wrong": "It makes the right general claim, but its example tells only what the fire destroyed; it says nothing about how Ålesund’s architecture changed when the town was rebuilt, so the claim goes unsupported."
+        },
+        "C": {
+          "recipe": "FALSE (overgeneralization from one case)",
+          "why_wrong": "The notes say only that Ålesund was rebuilt in Art Nouveau; nothing in them suggests that towns rebuilt after fires generally adopted that style."
+        },
+        "D": {
+          "recipe": "PART (generalization without support)",
+          "why_wrong": "It states a general claim but offers no specific case to support it."
+        }
+      },
+      "models": [
+        "3.12",
+        "0acc26b2",
+        "3.20"
+      ],
+      "word_count": 98,
+      "sources": [],
+      "notes": "Subject: history (the 1904 Ålesund fire and the town’s Art Nouveau rebuilding). Real event known without a search (WAVE.md); figures kept general (“thousands”, “about three years”). Band 6 by plan: the make-and-support shape with one claim-only (D), one claim backed by a detail that does not show the change (B) and one overgeneralizing (C) option, as 622a351d and 0acc26b2.",
+      "band_target": 6,
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [
+          "B was the Ålesund case with no claim (dismissed on sight); now the right claim backed by a detail (the fire left residents homeless) that does not show the architectural change"
+        ],
+        "status": "fixed"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "Plan target 6. Make-and-support shape (claim-only D, overgeneralization C, claim with non-supporting example B); the generalization is bullet 5 nearly word for word, so the key needs no climb of level, as band-6 622a351d and 0acc26b2."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "A",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "rhetorical_synthesis.DIFF.hard.w3b4_03",
+      "template": "DIFF",
+      "subtype": "Compare two methods on a named attribute",
+      "tier": "hard",
+      "passage": "While researching a topic, a student has taken the following notes:\n• During the early 1800s, sugar was made by boiling cane juice until its water evaporated, leaving crystals behind.\n• In the widely used “Jamaica train,” workers ladled the juice along a row of open kettles heated from below by a furnace.\n• In the 1840s, Louisiana-born engineer Norbert Rillieux patented a multiple-effect evaporator, a series of sealed vacuum pans.\n• Steam heated the first pan; vapor boiling off each pan’s juice then heated the pan that followed.\n• Rillieux’s evaporator consumed far less fuel than the Jamaica train.",
+      "stem": "The student wants to compare how the two methods heated the cane juice. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "Unlike the Jamaica train, which burned fuel in a furnace beneath its kettles, Rillieux’s evaporator used no fuel, relying entirely on vapor to boil the juice.",
+        "Both methods boiled the juice directly over a furnace, but Rillieux’s evaporator held it in sealed vacuum pans rather than open kettles.",
+        "Whereas workers in the Jamaica train heated the juice by ladling it from kettle to kettle, Rillieux’s evaporator heated it with vapor passed from each pan to the next.",
+        "The Jamaica train heated the juice directly with a furnace, whereas Rillieux’s evaporator reused each pan’s vapor to heat the juice in the next pan."
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The goal is to compare how each method heated the juice. According to the notes, the Jamaica train’s kettles sat over a furnace, while in Rillieux’s evaporator the vapor boiling off each pan’s juice heated the next pan. Choice D sets these two ways of heating side by side and misstates neither.",
+      "distractors": {
+        "A": {
+          "recipe": "FALSE (goal-shaped: overstatement, “far less fuel” becomes none)",
+          "why_wrong": "It compares the heating, but the notes say Rillieux’s evaporator consumed far less fuel than the Jamaica train, not that it used none."
+        },
+        "B": {
+          "recipe": "FALSE (goal-shaped: false shared trait)",
+          "why_wrong": "It compares the heating, but only the Jamaica train set its vessels over a furnace; in Rillieux’s evaporator steam heated the first pan and vapor from each pan heated the next."
+        },
+        "C": {
+          "recipe": "FALSE (goal-shaped: swapped agent, ladling credited with heating)",
+          "why_wrong": "It compares the heating, but in the Jamaica train the furnace under the kettles heated the juice; ladling only moved the juice along the row."
+        }
+      },
+      "models": [
+        "3.14",
+        "459df2ba",
+        "8e9e473d"
+      ],
+      "word_count": 100,
+      "sources": [],
+      "notes": "Subject: history of technology (Norbert Rillieux’s multiple-effect evaporator, patents of the 1840s, against the Jamaica train). Real, well-documented subject written from general knowledge (WAVE.md). Review rewrite: a steam bullet names the first pan’s heat source so a both-over-a-furnace option is contradicted by text; the labor clause left the notes. Option fact check: A false (no fuel against far less fuel); B false (Rillieux’s pans not over a furnace); C false (ladling moved the juice, the furnace heated it); D key. Goal-only solve (without the notes): all four compare how the methods heated the juice.",
+      "band_target": 7,
+      "band7_moves": [
+        "all three distractors compare heating and each fails on one stated detail, as b07a7634",
+        "overstatement of a quantity: far less fuel becomes no fuel (A)",
+        "false shared trait contradicted by the steam and vapor bullet (B)",
+        "swapped agent: ladling, which moved the juice, credited with heating it (C), using the kettle-to-kettle wording as a lure",
+        "key paraphrases the mechanism (reused each pan’s vapor) instead of copying bullet 4"
+      ],
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [
+          "B was the key with the two methods swapped (a mirror) and A compared labor, not heating; rewrote A, B, C as goal-shaped options that each misstate one detail (no fuel, both over a furnace, ladling as heating)",
+          "added a steam bullet so the old both-over-a-furnace error is contradicted by text, not inference; dropped the unused labor clause; key paraphrased away from bullet 4",
+          "bullet 2 now says the furnace heated the kettles, so C (ladling as heating) is contradicted by text"
+        ],
+        "status": "fixed"
+      },
+      "band7": {
+        "verdict": "band 7",
+        "why": "Three goal-shaped FALSE distractors that each compare heating and fail on one detail (overstated fuel, false shared trait, swapped agent); goal-only solve leaves all four standing; key paraphrases the mechanism with a derived “reused”. Matches 459df2ba and b07a7634."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "D",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "rhetorical_synthesis.RANK.hard.w3b4_04",
+      "template": "RANK",
+      "subtype": "Relative degree from two measures pointing opposite ways",
+      "tier": "hard",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Hokkaido and Kyushu are two of the four main islands of Japan.\n• Hokkaido, the northernmost of the four, covers approximately 78,000 square kilometers.\n• Its population is approximately 5.2 million.\n• Kyushu, the southernmost of the four, covers approximately 36,800 square kilometers.\n• Its population is approximately 12.7 million.",
+      "stem": "The student wants to compare how densely populated the two islands are. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "With approximately 12.7 million residents on approximately 78,000 square kilometers, Kyushu is far more densely populated than Hokkaido.",
+        "Kyushu has less than half the area of Hokkaido but more than twice the population, making Kyushu by far the more densely populated island.",
+        "Because Kyushu has more than twice as many residents as Hokkaido, it is about twice as densely populated.",
+        "Since Hokkaido has roughly twice the area of Kyushu and Kyushu has roughly twice the population of Hokkaido, the two islands are about equally densely populated."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "How densely populated an island is depends on its population relative to its area. Kyushu covers less than half the area of Hokkaido (about 36,800 against 78,000 square kilometers) yet has more than twice the population (about 12.7 million against 5.2 million), so Choice B correctly concludes that Kyushu is by far the more densely populated island.",
+      "distractors": {
+        "A": {
+          "recipe": "FALSE (goal-shaped: number attached to the wrong island)",
+          "why_wrong": "Its conclusion is right, but it gives Kyushu Hokkaido’s area: Kyushu covers approximately 36,800 square kilometers, not 78,000."
+        },
+        "C": {
+          "recipe": "FALSE (goal-shaped: right direction, wrong size, area ignored)",
+          "why_wrong": "It looks only at population. Kyushu also has less than half of Hokkaido’s area, so it is roughly five times as densely populated, not about twice."
+        },
+        "D": {
+          "recipe": "FALSE (goal-shaped: faulty derivation)",
+          "why_wrong": "If Hokkaido has about twice the area and Kyushu about twice the population, Kyushu holds far more people per square kilometer; the two islands are not equally densely populated."
+        }
+      },
+      "models": [
+        "3.15",
+        "1.17"
+      ],
+      "word_count": 62,
+      "sources": [],
+      "notes": "Subject: social science (geography of Japan). Real figures, rounded (about 78,000 and 36,800 square kilometers; about 5.2 and 12.7 million people), written from general knowledge (WAVE.md); the subject is the two islands’ density, not the Seikan Tunnel of the official SPEC item. Densities from the printed figures: Hokkaido about 67 per square kilometer, Kyushu about 345, so Kyushu is about five times as dense; 36,800/78,000 = 0.47 (less than half), 12.7/5.2 = 2.44 (more than twice). Option fact check: A false (Hokkaido’s area given to Kyushu); C false (about twice, actually about five times); D false (equal); B key. Goal-only solve: all four compare density.",
+      "band_target": 7,
+      "band7_moves": [
+        "two measures that point opposite ways (Hokkaido larger, Kyushu more populous), as 5fa51c86",
+        "derived relation: density is never stated in the notes and must be worked out from area and population",
+        "number attached to the wrong island under a correct conclusion (A), as 5645f119",
+        "right direction but wrong size from ignoring area (C), and a faulty derivation that calls the islands equal (D)"
+      ],
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [
+          "A listed the figures without a relation (did not do the goal); now the right conclusion with Hokkaido’s area given to Kyushu",
+          "C (Hokkaido denser) fell to one obvious fact; now the right direction with the wrong size (about twice, ignoring area)"
+        ],
+        "status": "fixed"
+      },
+      "band7": {
+        "verdict": "band 7",
+        "why": "All three distractors state a density comparison and each fails on one detail (misattached area, magnitude from population alone, faulty equal-density derivation); the key’s relation is derived, never stated in the notes, as 5fa51c86."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "B",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "rhetorical_synthesis.DIFF.medium.w3b4_05",
+      "template": "DIFF",
+      "subtype": "Emphasize a difference between two scripts",
+      "tier": "medium",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Arabic calligraphy has been practiced in many scripts, or styles of writing.\n• Kufic, one of the oldest scripts, is named after the city of Kufa in present-day Iraq.\n• Its letters are angular, constructed from straight strokes and sharp corners.\n• Naskh became widely used for copying books by the eleventh century.\n• Its letters are rounded and flowing, which makes the script easy to read.",
+      "stem": "The student wants to emphasize a difference between Kufic and Naskh. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "Kufic, one of the oldest scripts of Arabic calligraphy, is named after the city of Kufa in present-day Iraq.",
+        "Naskh, which became widely used for copying books by the eleventh century, has rounded, flowing letters that are easy to read.",
+        "Whereas Kufic letters are angular, with straight strokes and sharp corners, Naskh letters are rounded and flowing.",
+        "Kufic and Naskh are both scripts of Arabic calligraphy, but each has its own distinctive style."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "To emphasize a difference, the sentence must set the two scripts against each other on the same point. Choice C contrasts the shapes of their letters: angular in Kufic, rounded and flowing in Naskh.",
+      "distractors": {
+        "A": {
+          "recipe": "OG (origin of one script’s name)",
+          "why_wrong": "It tells where Kufic’s name comes from but never mentions Naskh, so no difference is shown."
+        },
+        "B": {
+          "recipe": "PART (one script only)",
+          "why_wrong": "It describes only Naskh and gives nothing to contrast it with."
+        },
+        "D": {
+          "recipe": "VAGUE (a difference asserted without content)",
+          "why_wrong": "It says each script has its own style but never says what distinguishes them."
+        }
+      },
+      "models": [
+        "2.10",
+        "2.11",
+        "2.19"
+      ],
+      "word_count": 79,
+      "sources": [],
+      "notes": "Subject: arts (Arabic calligraphy). General knowledge, no search needed (WAVE.md). Medium DIFF mix: OG, PART, VAGUE. Replaces a fresco item withdrawn before checking (claimed first by w2b2_07).",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [
+          "trimmed the notes (86 to 79 words)"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.DIFF.medium.w3b4_06",
+      "template": "DIFF",
+      "subtype": "Emphasize a difference between two places",
+      "tier": "medium",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Some countries legally guarantee public access to private countryside.\n• Sweden’s right, allemansrätten, covers most land other than gardens and cultivated fields.\n• It also permits overnight camping on another person’s property.\n• England’s Countryside and Rights of Way Act of 2000 established a comparable right to roam.\n• However, that right covers only certain categories of land, such as moorland, shown on official maps.",
+      "stem": "The student wants to emphasize a difference between the right to roam in Sweden and the right to roam in England. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "England’s right to roam was established by the Countryside and Rights of Way Act of 2000.",
+        "Both Sweden and England legally guarantee public access to some private countryside.",
+        "Sweden’s allemansrätten permits not only access to most land other than gardens and cultivated fields but also overnight camping on another person’s property.",
+        "Sweden’s right to roam covers most land other than gardens and cultivated fields, whereas England’s covers only certain mapped categories of land."
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "Choice D contrasts the two rights on the same point, the land they cover: in Sweden most land other than gardens and cultivated fields, in England only certain categories of land shown on official maps.",
+      "distractors": {
+        "A": {
+          "recipe": "OG (origin of one right)",
+          "why_wrong": "It tells how England’s right was created but says nothing about Sweden’s, so no difference is shown."
+        },
+        "B": {
+          "recipe": "REL (a similarity instead of a difference)",
+          "why_wrong": "It states what the two countries have in common rather than how their rights differ."
+        },
+        "C": {
+          "recipe": "PART (one country only)",
+          "why_wrong": "It describes only Sweden’s right and never brings in England’s."
+        }
+      },
+      "models": [
+        "2.23",
+        "2.19",
+        "2.10"
+      ],
+      "word_count": 77,
+      "sources": [],
+      "notes": "Subject: social science (public access law). Real laws described from general knowledge (WAVE.md); England is named alone, as the student’s notes do, though the 2000 Act also covers Wales.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [
+          "trimmed the notes (82 to 77 words)"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.DIFF.medium.w3b4_07",
+      "template": "DIFF",
+      "subtype": "Contrast two kinds on a named attribute",
+      "tier": "medium",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Sea ice forms when seawater at the ocean’s surface freezes.\n• Fast ice is sea ice attached to a coastline or to the shallow seafloor.\n• It stays stationary even as winds and ocean currents move past it.\n• Pack ice is sea ice that floats freely, unattached to land.\n• It drifts with prevailing winds and currents, sometimes traveling hundreds of kilometers in a single season.",
+      "stem": "The student wants to contrast how the two kinds of sea ice respond to winds and ocean currents. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "Unlike pack ice, which drifts with winds and currents, fast ice stays stationary because it is attached to a coastline or the seafloor.",
+        "Sea ice, which forms when seawater at the ocean’s surface freezes, can be either attached to land or unattached.",
+        "Pack ice, which floats freely, drifts with prevailing winds and currents, sometimes traveling hundreds of kilometers in a single season.",
+        "Fast ice and pack ice are both forms of sea ice, but they respond to winds and ocean currents in different ways."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The goal asks how each kind of ice responds to winds and currents. Choice A gives both responses in one sentence: pack ice drifts with them, while fast ice, attached to the coast or seafloor, stays where it is.",
+      "distractors": {
+        "B": {
+          "recipe": "OG (defines sea ice)",
+          "why_wrong": "It explains how sea ice forms and that some is anchored, but it never names the two kinds or says how either responds to winds and currents."
+        },
+        "C": {
+          "recipe": "PART (one kind only)",
+          "why_wrong": "It describes only how pack ice responds, so there is no contrast with fast ice."
+        },
+        "D": {
+          "recipe": "VAGUE (the relation without content)",
+          "why_wrong": "It says the two kinds respond differently but not how each one responds."
+        }
+      },
+      "models": [
+        "2.32",
+        "2.17",
+        "2.11"
+      ],
+      "word_count": 79,
+      "sources": [],
+      "notes": "Subject: natural science (sea ice). General knowledge (WAVE.md). The goal names the compared attribute, as 2.32 and 2.17 do.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [
+          "trimmed the notes (82 to 79 words)"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.AUD_NEW.medium.w3b4_08",
+      "template": "AUD_NEW",
+      "subtype": "Introduce an organization to an audience unfamiliar with its founder",
+      "tier": "medium",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Gladys Kalema-Zikusooka is a Ugandan wildlife veterinarian.\n• Much of her work concerns mountain gorillas in Bwindi Impenetrable National Park.\n• She found that the gorillas could catch diseases, such as scabies, from people living nearby.\n• In 2003, she founded Conservation Through Public Health, which improves health care in communities bordering the park.\n• Healthier communities, she argues, pass fewer diseases to the gorillas.",
+      "stem": "The student wants to introduce Conservation Through Public Health to an audience unfamiliar with Kalema-Zikusooka. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "Kalema-Zikusooka’s organization, Conservation Through Public Health, improves health care in communities bordering Bwindi Impenetrable National Park.",
+        "Ugandan wildlife veterinarian Gladys Kalema-Zikusooka found that mountain gorillas in Bwindi Impenetrable National Park could catch diseases, such as scabies, from people.",
+        "Founded in 2003 by Ugandan wildlife veterinarian Gladys Kalema-Zikusooka, Conservation Through Public Health aims to protect mountain gorillas by improving health care in communities bordering their park.",
+        "In Kalema-Zikusooka’s view, healthier communities near Bwindi Impenetrable National Park pass fewer diseases to the gorillas there."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "An audience that does not know Kalema-Zikusooka needs to learn who she is, and the sentence must also introduce the organization. Choice C identifies her as a Ugandan wildlife veterinarian and explains what Conservation Through Public Health does and why.",
+      "distractors": {
+        "A": {
+          "recipe": "AUD (founder named but not identified)",
+          "why_wrong": "It describes the organization but refers to Kalema-Zikusooka as if the audience already knew who she is."
+        },
+        "B": {
+          "recipe": "OG (the founder’s finding)",
+          "why_wrong": "It identifies Kalema-Zikusooka and reports one of her findings, but it never mentions the organization."
+        },
+        "D": {
+          "recipe": "AUD (founder not identified, organization not named)",
+          "why_wrong": "It gives her view without saying who she is, and it does not introduce Conservation Through Public Health at all."
+        }
+      },
+      "models": [
+        "2.8",
+        "2.36",
+        "2.34"
+      ],
+      "word_count": 77,
+      "sources": [],
+      "notes": "Subject: natural science (wildlife veterinary medicine, One Health). Real person and organization written from general knowledge (WAVE.md): Kalema-Zikusooka founded CTPH in 2003; the 1990s scabies outbreak among Bwindi gorillas was traced to people.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [
+          "trimmed the notes (82 to 77 words)"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.AUD_NEW.medium.w3b4_09",
+      "template": "AUD_NEW",
+      "subtype": "Describe a thing to an audience unfamiliar with its place",
+      "tier": "medium",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Ugarit was an ancient port city on the Mediterranean coast of present-day Syria.\n• Its ruins were discovered accidentally in 1928 by a farmer plowing his field.\n• Scribes in Ugarit developed an alphabet of 30 signs, each representing an individual sound.\n• The signs consisted of wedge-shaped impressions pressed into clay tablets.\n• Tablets listing the signs in sequence reveal an order resembling that of later alphabets.",
+      "stem": "The student wants to describe the Ugaritic alphabet to an audience unfamiliar with Ugarit. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "Used in Ugarit, an ancient port city on the coast of present-day Syria, the Ugaritic alphabet had 30 wedge-shaped signs, each representing an individual sound.",
+        "Scribes in Ugarit developed 30 signs consisting of wedge-shaped impressions in clay, each representing an individual sound.",
+        "The ruins of Ugarit, an ancient port city on the coast of present-day Syria, were discovered accidentally in 1928 by a farmer plowing his field.",
+        "Tablets found in Ugarit list the signs of its alphabet in an order resembling that of later alphabets."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The sentence must describe the alphabet and also tell an unfamiliar audience what Ugarit was. Choice A identifies Ugarit as an ancient port city in what is now Syria and describes the alphabet’s 30 wedge-shaped signs, each standing for one sound.",
+      "distractors": {
+        "B": {
+          "recipe": "AUD (place named but not identified)",
+          "why_wrong": "It describes the alphabet but never says what Ugarit was, which this audience would not know."
+        },
+        "C": {
+          "recipe": "OG (discovery of the ruins)",
+          "why_wrong": "It identifies Ugarit but says nothing about its alphabet."
+        },
+        "D": {
+          "recipe": "AUD (place not identified, one detail only)",
+          "why_wrong": "It mentions only the order of the signs and does not explain what Ugarit was."
+        }
+      },
+      "models": [
+        "2.36",
+        "2.34",
+        "2.43"
+      ],
+      "word_count": 80,
+      "sources": [],
+      "notes": "Subject: history (the Ugaritic alphabet, Ras Shamra). Real subject from general knowledge (WAVE.md). The glossed term is Ugarit, not cuneiform (RS w2b5_09 glosses cuneiform).",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.EMPH.medium.w3b4_10",
+      "template": "EMPH",
+      "subtype": "Emphasize one quality (speed)",
+      "tier": "medium",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Lasting is the shoemaking stage in which a shoe’s upper is stretched over a foot-shaped mold and fastened to the sole.\n• Experienced hand lasters could complete roughly 50 pairs of shoes daily.\n• Jan Ernst Matzeliger, an immigrant from Suriname, worked in a shoe factory in Lynn, Massachusetts.\n• In 1883, he patented a machine that automated lasting.\n• His machine could complete as many as 700 pairs daily.",
+      "stem": "The student wants to emphasize the speed of Matzeliger’s machine. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "Lasting, the stage of shoemaking that Matzeliger’s machine automated, involves stretching a shoe’s upper over a foot-shaped mold and fastening it to the sole.",
+        "Before patenting his lasting machine in 1883, Matzeliger, an immigrant from Suriname, worked in a shoe factory in Lynn, Massachusetts.",
+        "Matzeliger’s machine automated lasting, a stage of shoemaking that experienced workers had previously performed by hand.",
+        "Matzeliger’s machine could complete as many as 700 pairs of shoes daily, many times the roughly 50 pairs an experienced hand laster could manage."
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "Choice D emphasizes the machine’s speed by giving its output, as many as 700 pairs a day, and setting it beside the roughly 50 pairs an experienced hand laster could complete.",
+      "distractors": {
+        "A": {
+          "recipe": "OG (defines lasting)",
+          "why_wrong": "It explains what lasting is but says nothing about how fast the machine worked."
+        },
+        "B": {
+          "recipe": "OG (inventor’s background)",
+          "why_wrong": "It gives Matzeliger’s background and the patent date, not the machine’s speed."
+        },
+        "C": {
+          "recipe": "VAGUE (automation without the speed)",
+          "why_wrong": "It says the machine replaced hand work but gives no sense of how fast it was."
+        }
+      },
+      "models": [
+        "2.6",
+        "2.33",
+        "2.14"
+      ],
+      "word_count": 82,
+      "sources": [],
+      "notes": "Subject: history (Jan Ernst Matzeliger’s 1883 lasting machine). Real inventor from general knowledge (WAVE.md); the commonly cited outputs (about 50 pairs a day by hand, up to 700 by machine) are kept round.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [
+          "trimmed the notes (88 to 82 words)"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.EMPH.medium.w3b4_11",
+      "template": "EMPH",
+      "subtype": "Emphasize one quality (size)",
+      "tier": "medium",
+      "passage": "While researching a topic, a student has taken the following notes:\n• The paradoxical frog (Pseudis paradoxa) lives in ponds, lakes, and marshes in parts of South America.\n• It spends nearly its entire life in water, feeding on insects and other small animals.\n• Its tadpoles can reach about 22 centimeters in length.\n• As a tadpole transforms into a frog, its body shrinks dramatically.\n• Adults rarely grow longer than about 7.5 centimeters.",
+      "stem": "The student wants to emphasize how large the paradoxical frog’s tadpoles are. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "The paradoxical frog (Pseudis paradoxa) lives in ponds, lakes, and marshes in parts of South America, spending nearly its entire life in water.",
+        "Paradoxical frog tadpoles can grow to about 22 centimeters long, roughly three times the length of the adult frogs they become.",
+        "Adult paradoxical frogs, which feed on insects and other small animals, rarely grow longer than about 7.5 centimeters.",
+        "The paradoxical frog’s body shrinks dramatically as it transforms from a tadpole into a frog."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "Choice B emphasizes the tadpoles’ size by giving their length, about 22 centimeters, and comparing it with the much smaller adults they become.",
+      "distractors": {
+        "A": {
+          "recipe": "OG (habitat)",
+          "why_wrong": "It describes where the frog lives, not how large its tadpoles are."
+        },
+        "C": {
+          "recipe": "OPP (stresses the small adult)",
+          "why_wrong": "It emphasizes how small the adult frogs are and says nothing about the tadpoles."
+        },
+        "D": {
+          "recipe": "VAGUE (the change without the size)",
+          "why_wrong": "It says the body shrinks during the change into a frog but never conveys how large the tadpoles are."
+        }
+      },
+      "models": [
+        "2.40",
+        "2.33",
+        "1.16"
+      ],
+      "word_count": 75,
+      "sources": [],
+      "notes": "Subject: natural science (Pseudis paradoxa). Real animal from general knowledge (WAVE.md); lengths rounded from commonly cited figures (tadpoles to about 22 cm, adults rarely over about 7.5 cm); 22/7.5 = 2.9, so “roughly three times” holds.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [
+          "trimmed the notes (85 to 75 words)"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.EXPL.medium.w3b4_12",
+      "template": "EXPL",
+      "subtype": "Explain a mechanism",
+      "tier": "medium",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Intense ultraviolet light reflecting off snow and ice can cause snow blindness, a painful, temporary loss of vision.\n• For centuries, Inuit peoples of the Arctic have carved goggles to guard against it.\n• They are made from bone, antler, ivory, or driftwood.\n• Instead of open lenses, each eyepiece has a narrow horizontal slit.\n• The slits admit far less of the reflected light than would reach unprotected eyes.",
+      "stem": "The student wants to explain how Inuit snow goggles protect against snow blindness. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "Inuit snow goggles have narrow horizontal slits in place of open lenses.",
+        "Intense ultraviolet light reflecting off snow and ice can cause snow blindness, a painful, temporary loss of vision.",
+        "Because their narrow slits admit far less reflected light than would reach unprotected eyes, Inuit snow goggles guard against snow blindness.",
+        "For centuries, Inuit peoples of the Arctic have carved goggles from bone, antler, ivory, or driftwood to guard against snow blindness."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "Snow blindness is caused by intense light reflecting off snow and ice. Choice C explains how the goggles prevent it: their narrow slits let in far less of that reflected light than would reach unprotected eyes.",
+      "distractors": {
+        "A": {
+          "recipe": "PART (the feature without its effect)",
+          "why_wrong": "It describes the slits but never says what they do or how they relate to snow blindness."
+        },
+        "B": {
+          "recipe": "OG (defines the condition)",
+          "why_wrong": "It explains what snow blindness is and what causes it, not how the goggles protect against it."
+        },
+        "D": {
+          "recipe": "OG (purpose and materials, no mechanism)",
+          "why_wrong": "It says the goggles are meant to guard against snow blindness but not how they do so."
+        }
+      },
+      "models": [
+        "2.31",
+        "2.3",
+        "2.15"
+      ],
+      "word_count": 82,
+      "sources": [],
+      "notes": "Subject: natural science and technology (Inuit snow goggles, photokeratitis). General knowledge (WAVE.md). The key is the only option that names both the slits and their effect on reflected light.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [
+          "trimmed the notes (87 to 82 words)"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.SIM.medium.w3b4_13",
+      "template": "SIM",
+      "subtype": "Emphasize a similarity between two works",
+      "tier": "medium",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Surya is the sun god in Hinduism.\n• The Modhera Sun Temple in western India was constructed in the early eleventh century.\n• Dedicated to Surya, it stands beside a large stepped water tank.\n• The Konark Sun Temple in eastern India was constructed in the thirteenth century.\n• Also dedicated to Surya, it was designed to resemble an enormous chariot with 24 carved stone wheels.",
+      "stem": "The student wants to emphasize a similarity between the Modhera Sun Temple and the Konark Sun Temple. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "The Modhera Sun Temple and the Konark Sun Temple were both dedicated to Surya, the Hindu sun god.",
+        "While the Modhera Sun Temple stands beside a large stepped water tank, the Konark Sun Temple was designed to resemble an enormous chariot.",
+        "Constructed in the thirteenth century, the Konark Sun Temple in eastern India was designed to resemble an enormous chariot with 24 carved stone wheels.",
+        "The Modhera Sun Temple in western India was constructed roughly two centuries before the Konark Sun Temple in eastern India."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "Choice A names both temples and the trait they share: each was dedicated to Surya, the sun god in Hinduism.",
+      "distractors": {
+        "B": {
+          "recipe": "REL (a difference instead of a similarity)",
+          "why_wrong": "It contrasts the temples’ features rather than pointing out something they have in common."
+        },
+        "C": {
+          "recipe": "PART (one temple only)",
+          "why_wrong": "It describes only the Konark Sun Temple."
+        },
+        "D": {
+          "recipe": "REL (order instead of similarity)",
+          "why_wrong": "It says which temple was built first, which sets them apart rather than showing what they share."
+        }
+      },
+      "models": [
+        "2.46",
+        "2.30",
+        "2.24"
+      ],
+      "word_count": 78,
+      "sources": [],
+      "notes": "Subject: arts and history (Hindu temple architecture). General knowledge (WAVE.md): Modhera built 1026 to 1027 under the Chaulukyas, Konark about 1250 under the Eastern Gangas, so “roughly two centuries” holds. The notes carry one shared trait only (Surya).",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.RANK.medium.w3b4_14",
+      "template": "RANK",
+      "subtype": "Relative size of two entities",
+      "tier": "medium",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Armillaria fungi grow mostly underground, spreading through soil and tree roots as networks of threadlike filaments.\n• Genetic testing can reveal whether filaments scattered across a forest belong to a single individual.\n• In 1992, researchers identified one individual Armillaria fungus in Michigan covering about 15 hectares.\n• In 2003, researchers described another in Oregon’s Malheur National Forest.\n• It covers about 965 hectares.",
+      "stem": "The student wants to compare the size of the Oregon fungus with that of the Michigan fungus. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "Armillaria fungi spread through soil and tree roots as networks of threadlike filaments that grow mostly underground.",
+        "The Michigan fungus was identified in 1992, more than a decade before researchers described the Oregon fungus.",
+        "In 2003, researchers described an individual Armillaria fungus in Oregon’s Malheur National Forest that covers about 965 hectares.",
+        "Covering about 965 hectares, the Oregon fungus is more than 60 times the size of the Michigan fungus."
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The Oregon fungus covers about 965 hectares and the Michigan fungus about 15 hectares. Choice D states how the two compare: the Oregon fungus is more than 60 times as large (965 divided by 15 is about 64).",
+      "distractors": {
+        "A": {
+          "recipe": "OG (how the fungi grow)",
+          "why_wrong": "It describes how Armillaria fungi grow, not how large either fungus is."
+        },
+        "B": {
+          "recipe": "REL (wrong dimension: dates)",
+          "why_wrong": "It compares when the two fungi were identified, not their sizes."
+        },
+        "C": {
+          "recipe": "PART (one fungus only)",
+          "why_wrong": "It gives the size of the Oregon fungus but says nothing about the Michigan fungus."
+        }
+      },
+      "models": [
+        "2.37",
+        "2.44",
+        "2.27"
+      ],
+      "word_count": 76,
+      "sources": [],
+      "notes": "Subject: natural science (the Armillaria individuals reported in Michigan, 1992, and Oregon’s Malheur National Forest, published 2003). Areas are the published round figures (about 15 and 965 hectares), written from general knowledge (WAVE.md). 965/15 = 64.3.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.EXAMPLE.medium.w3b4_15",
+      "template": "EXAMPLE",
+      "subtype": "Explanation and example",
+      "tier": "medium",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Myrmecochory is the dispersal of plant seeds by ants.\n• Seeds dispersed this way carry an elaiosome, a fatty attachment that ants eat.\n• Ants haul the seeds to their nests, consume the elaiosomes, and discard the seeds, which can then germinate.\n• Bloodroot is a wildflower native to the woodlands of eastern North America.\n• Each of its seeds carries an elaiosome and is dispersed by ants.",
+      "stem": "The student wants to provide an explanation and an example of myrmecochory. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "In myrmecochory, ants haul seeds to their nests, consume the fatty attachments called elaiosomes, and discard the seeds, which can then germinate.",
+        "In myrmecochory, ants carry seeds to their nests to eat the fatty attachments on them; bloodroot is one plant whose seeds are dispersed this way.",
+        "Bloodroot, a wildflower native to the woodlands of eastern North America, produces seeds that each carry an elaiosome.",
+        "An elaiosome is a fatty attachment on some plant seeds that ants eat."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The goal has two parts. Choice B explains myrmecochory (ants carry seeds to their nests to eat the fatty attachments) and gives an example of a plant dispersed this way, bloodroot.",
+      "distractors": {
+        "A": {
+          "recipe": "PART (explanation without an example)",
+          "why_wrong": "It explains how myrmecochory works but names no plant that is dispersed this way."
+        },
+        "C": {
+          "recipe": "PART (example without an explanation)",
+          "why_wrong": "It names bloodroot and its elaiosomes but never explains myrmecochory or even mentions ants."
+        },
+        "D": {
+          "recipe": "OG (defines a related term)",
+          "why_wrong": "It defines an elaiosome rather than myrmecochory, and it gives no example."
+        }
+      },
+      "models": [
+        "2.16",
+        "2.25",
+        "3.4"
+      ],
+      "word_count": 80,
+      "sources": [],
+      "notes": "Subject: natural science (seed dispersal by ants). General knowledge (WAVE.md); bloodroot (Sanguinaria canadensis) is a standard example.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [
+          "trimmed the notes (82 to 80 words)"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.STUDY.medium.w3b4_16",
+      "template": "STUDY",
+      "subtype": "Present the study’s results",
+      "tier": "medium",
+      "passage": "While researching a topic, a student has taken the following notes:\n• In southwestern Morocco, goats often climb argan trees to eat their fruit.\n• Scientists had assumed that goats spread argan seeds mainly by excreting them in their dung.\n• Ecologists set out to learn whether the goats might disperse the seeds in another way.\n• They observed goats chewing their cud, partially digested food brought back up from the stomach.\n• The goats spat out many argan seeds while chewing, and many of these could still sprout.",
+      "stem": "The student wants to present the study’s results. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "The ecologists set out to learn whether goats might disperse argan seeds in a way other than excreting them in their dung.",
+        "The researchers observed goats in southwestern Morocco as they chewed their cud, partially digested food brought back up from the stomach.",
+        "The ecologists found that goats spat out argan seeds while chewing their cud and that many of these seeds could still sprout.",
+        "The ecologists found that goats spread argan seeds mainly by excreting them in their dung."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The study’s results are what the ecologists observed: goats spat out argan seeds while chewing their cud, and many of those seeds could still sprout. Choice C presents both results.",
+      "distractors": {
+        "A": {
+          "recipe": "OG (aim offered for results)",
+          "why_wrong": "It states what the ecologists set out to learn, not what they found."
+        },
+        "B": {
+          "recipe": "OG (method offered for results)",
+          "why_wrong": "It describes what the researchers did, not what they found."
+        },
+        "D": {
+          "recipe": "FALSE (background assumption presented as a finding)",
+          "why_wrong": "The notes give dung as what scientists had assumed before the study; the study found that goats also spit out seeds while chewing their cud."
+        }
+      },
+      "models": [
+        "2.5",
+        "2.2",
+        "3.10"
+      ],
+      "word_count": 89,
+      "sources": [],
+      "notes": "Subject: natural science (seed dispersal by goats in argan trees). The real 2017 finding is written for unnamed ecologists with no figures (WAVE.md: never put made-up numbers on a real study). Study-slot distractors (aim, method) plus the background assumption dressed as a finding.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [
+          "trimmed the notes (98 to 87 words)"
+        ],
+        "status": "fixed",
+        "note": "real 2017 argan goat study: unnamed ecologists, no figures"
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.AUD_FAM.medium.w3b4_17",
+      "template": "AUD_FAM",
+      "subtype": "Describe to an audience already familiar with a term",
+      "tier": "medium",
+      "passage": "While researching a topic, a student has taken the following notes:\n• The Tripitaka Koreana is a set of more than 81,000 wooden printing blocks carved with Buddhist scriptures in the 1200s.\n• The blocks are housed at Haeinsa, a temple in the mountains of South Korea.\n• They are stored in two halls constructed in the 1400s.\n• Windows of different sizes on opposite walls keep air circulating.\n• Their earthen floors contain charcoal, lime, and salt, which absorb moisture.",
+      "stem": "The student wants to describe the halls that house the Tripitaka Koreana to an audience already familiar with the Tripitaka Koreana. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "The Tripitaka Koreana, a set of more than 81,000 wooden printing blocks carved with Buddhist scriptures in the 1200s, is stored in two halls at Haeinsa.",
+        "Carved with Buddhist scriptures in the 1200s, the more than 81,000 wooden blocks of the Tripitaka Koreana are stored in halls whose windows keep air circulating and whose floors absorb moisture.",
+        "Haeinsa, a temple in the mountains of South Korea, houses the Tripitaka Koreana.",
+        "At Haeinsa, the Tripitaka Koreana is stored in two fifteenth-century halls whose mismatched windows keep air circulating and whose floors, mixed with charcoal, lime, and salt, absorb moisture."
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "This audience already knows what the Tripitaka Koreana is, so the sentence should spend its words on the halls. Choice D does: it gives their age, the windows that keep air moving and the floors that absorb moisture, without explaining the blocks again.",
+      "distractors": {
+        "A": {
+          "recipe": "AUD and PART (re-explains the blocks, says little about the halls)",
+          "why_wrong": "It explains what the Tripitaka Koreana is, which this audience knows, and says only that the halls exist."
+        },
+        "B": {
+          "recipe": "AUD (re-explains the familiar term)",
+          "why_wrong": "It describes the halls but spends half the sentence explaining what the Tripitaka Koreana is, which this audience already knows."
+        },
+        "C": {
+          "recipe": "OG (where the blocks are kept)",
+          "why_wrong": "It names the temple but does not describe the halls."
+        }
+      },
+      "models": [
+        "2.1",
+        "2.18",
+        "2.28"
+      ],
+      "word_count": 81,
+      "sources": [],
+      "notes": "Subject: history (the Tripitaka Koreana and the Janggyeong Panjeon halls at Haeinsa). Real subject from general knowledge (WAVE.md). B is complete on the halls and fails only by re-explaining the familiar term, as 2.1 D does.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [
+          "trimmed the notes (87 to 81 words); key D said the floors were made of charcoal, lime and salt, now that they are mixed with them, as the notes say earthen floors contain them"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.SPEC.medium.w3b4_18",
+      "template": "SPEC",
+      "subtype": "Specify a single fact (material)",
+      "tier": "medium",
+      "passage": "While researching a topic, a student has taken the following notes:\n• The valiha is a stringed instrument from Madagascar.\n• Its body is a long tube of bamboo, with strings stretched along its length.\n• On early valihas, the strings were thin strips cut from the bamboo’s own outer skin.\n• Many modern valihas use metal strings instead.\n• These strings are frequently made from bicycle brake cables, which are durable and widely available.",
+      "stem": "The student wants to specify what the strings of many modern valihas are made from. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "Many modern valihas have strings made from bicycle brake cables.",
+        "On early valihas, the strings were thin strips cut from the outer skin of the bamboo tube that formed the instrument’s body.",
+        "The valiha, a stringed instrument from Madagascar, has a body made from a long tube of bamboo.",
+        "The strings of a valiha are stretched along the length of its bamboo body."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The notes say that many modern valihas use metal strings made from bicycle brake cables. Choice A specifies that material.",
+      "distractors": {
+        "B": {
+          "recipe": "OG (the material of early strings)",
+          "why_wrong": "It specifies what the strings of early valihas were made from, not those of modern ones."
+        },
+        "C": {
+          "recipe": "OG (the material of the body)",
+          "why_wrong": "It specifies what the instrument’s body is made from, not its strings."
+        },
+        "D": {
+          "recipe": "OG (how the strings are arranged)",
+          "why_wrong": "It describes where the strings run, not what they are made from."
+        }
+      },
+      "models": [
+        "2.45",
+        "2.39"
+      ],
+      "word_count": 75,
+      "sources": [],
+      "notes": "Subject: arts (Malagasy tube zither). General knowledge (WAVE.md). Each distractor answers a neighboring what-is-it-made-of or where question.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.QUOTE.medium.w3b4_19",
+      "template": "QUOTE",
+      "subtype": "Quotation that explains a purpose",
+      "tier": "medium",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Sekar Wulandari is an Indonesian artist who builds large outdoor sculptures from bamboo.\n• Openings cut into the bamboo stalks produce low, shifting tones when wind blows across them.\n• She tunes each stalk by adjusting the size of its openings, a process she calls “slow, patient listening.”\n• Of her sculptures, she has said, “I want listeners to hear weather they cannot see.”\n• Her 2018 work Angin Sore (“afternoon wind”) stood on a hillside in Central Java for six months.",
+      "stem": "The student wants to provide a quotation from Wulandari that explains her purpose in creating sculptures played by the wind. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "Wulandari creates sculptures played by the wind so that listeners can hear changes in the weather.",
+        "Wulandari has described tuning her bamboo stalks as “slow, patient listening.”",
+        "Wulandari has said that she builds bamboo sculptures for the wind to play because she wants “listeners to hear weather they cannot see.”",
+        "Wulandari’s 2018 work Angin Sore (“afternoon wind”) stood on a hillside in Central Java for six months."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The goal calls for a quotation that explains Wulandari’s purpose. Choice C quotes her own words, that she wants “listeners to hear weather they cannot see,” as the reason she builds sculptures for the wind to play.",
+      "distractors": {
+        "A": {
+          "recipe": "NOQ (paraphrase, no quotation)",
+          "why_wrong": "It states her purpose in its own words but includes no quotation from Wulandari."
+        },
+        "B": {
+          "recipe": "NOQ (a quotation doing another job)",
+          "why_wrong": "It quotes Wulandari, but the quotation describes the tuning process rather than her purpose."
+        },
+        "D": {
+          "recipe": "OG (a quoted title gloss, not her words)",
+          "why_wrong": "The quoted words translate the work’s title; they are not Wulandari’s and say nothing about her purpose."
+        }
+      },
+      "models": [
+        "2.29",
+        "2.9"
+      ],
+      "word_count": 94,
+      "sources": [],
+      "notes": "Subject: arts (sound sculpture). Invented artist, work and quotations (WAVE.md: quotes from real named people must be real); the name Sekar Wulandari was searched once and matched no artist. Angin Sore is Indonesian for “afternoon wind”. Review: the tuning quotation was reworded to read naturally (the old one made the wind surprise the work).",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [
+          "trimmed the notes (101 to 94 words); replaced the tuning quotation, which read oddly (the wind surprising the work), in the notes and in B"
+        ],
+        "status": "fixed",
+        "note": "searched “Sekar Wulandari”: no artist by that name; reads as an ordinary Javanese name"
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.SPEC.easy.w3b4_20",
+      "template": "SPEC",
+      "subtype": "Identify a single fact (classification)",
+      "tier": "easy",
+      "passage": "While researching a topic, a student has taken the following notes:\n• The kinkajou is a small mammal inhabiting the rainforests of Central and South America.\n• It spends most of its life in trees, gripping branches with its prehensile tail.\n• Because of this grasping tail, it is frequently mistaken for a monkey.\n• However, the kinkajou belongs to the raccoon family.\n• Other members of this family include raccoons and coatis.",
+      "stem": "The student wants to specify the animal family to which the kinkajou belongs. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "The kinkajou is a small mammal inhabiting the rainforests of Central and South America.",
+        "The kinkajou belongs to the raccoon family, which also includes raccoons and coatis.",
+        "Because of its grasping tail, the kinkajou, a rainforest mammal, is frequently mistaken for a monkey.",
+        "The kinkajou spends most of its life in trees, gripping branches with its prehensile tail."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The notes say that the kinkajou belongs to the raccoon family. Choice B specifies that family and names two of its other members.",
+      "distractors": {
+        "A": {
+          "recipe": "OG (where it lives)",
+          "why_wrong": "It specifies where the kinkajou lives, not the family it belongs to."
+        },
+        "C": {
+          "recipe": "OG (a common mistake)",
+          "why_wrong": "It says what the kinkajou is often mistaken for, which is not the family it actually belongs to."
+        },
+        "D": {
+          "recipe": "OG (behavior)",
+          "why_wrong": "It describes how the kinkajou lives in trees, not its family."
+        }
+      },
+      "models": [
+        "1.5",
+        "1.9",
+        "1.4"
+      ],
+      "word_count": 73,
+      "sources": [],
+      "notes": "Subject: natural science (Potos flavus, family Procyonidae). General knowledge (WAVE.md).",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.EMPH.easy.w3b4_21",
+      "template": "EMPH",
+      "subtype": "Emphasize one quality (length)",
+      "tier": "easy",
+      "passage": "While researching a topic, a student has taken the following notes:\n• The Sahel is a semiarid region bordering the southern edge of the Sahara.\n• The region has been losing vegetation and fertile soil.\n• In 2007, the African Union launched the Great Green Wall initiative to restore the region’s land.\n• The project aims to plant a band of trees and other vegetation.\n• When complete, the band would stretch approximately 8,000 kilometers, from Senegal to Djibouti.",
+      "stem": "The student wants to emphasize how long the Great Green Wall is planned to be. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "When complete, the Great Green Wall would stretch approximately 8,000 kilometers across Africa, all the way from Senegal to Djibouti.",
+        "The African Union launched the Great Green Wall initiative in 2007.",
+        "The Great Green Wall initiative aims to restore land in the Sahel, which has been losing vegetation and fertile soil.",
+        "The Sahel, where the Great Green Wall is being planted, is a semiarid region bordering the southern edge of the Sahara."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "Choice A emphasizes the planned length of the Great Green Wall by giving its distance, about 8,000 kilometers, and stressing that it would run all the way from Senegal to Djibouti.",
+      "distractors": {
+        "B": {
+          "recipe": "OG (launch date)",
+          "why_wrong": "It says when the initiative began, not how long the wall would be."
+        },
+        "C": {
+          "recipe": "OG (purpose)",
+          "why_wrong": "It gives the initiative’s goal, not the wall’s length."
+        },
+        "D": {
+          "recipe": "OG (location)",
+          "why_wrong": "It describes the region where the wall is planted, not how far the wall would stretch."
+        }
+      },
+      "models": [
+        "1.15",
+        "1.7",
+        "1.14"
+      ],
+      "word_count": 79,
+      "sources": [],
+      "notes": "Subject: social science and environment (the African Union’s Great Green Wall, launched 2007). General knowledge (WAVE.md); the commonly cited planned length is about 8,000 km.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.SIM.easy.w3b4_22",
+      "template": "SIM",
+      "subtype": "Emphasize a similarity between two species",
+      "tier": "easy",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Carnivorous plants trap and digest small animals to obtain nutrients.\n• The Venus flytrap is native to boggy wetlands in the Carolinas.\n• It catches insects and spiders with hinged leaves that snap shut when touched.\n• The waterwheel plant floats freely in ponds across parts of Europe, Asia, Africa, and Australia.\n• It catches tiny aquatic invertebrates with hinged leaves that also snap shut when touched.",
+      "stem": "The student wants to emphasize a similarity between the Venus flytrap and the waterwheel plant. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "The Venus flytrap is native to boggy wetlands in the Carolinas, whereas the waterwheel plant floats in ponds on several continents.",
+        "The waterwheel plant, which floats freely in ponds, catches tiny aquatic invertebrates with hinged leaves.",
+        "Carnivorous plants, such as the Venus flytrap, trap and digest small animals to obtain nutrients.",
+        "Both the Venus flytrap and the waterwheel plant catch prey with hinged leaves that snap shut when touched."
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "Choice D names both plants and the trait they share: each catches its prey with hinged leaves that snap shut when touched.",
+      "distractors": {
+        "A": {
+          "recipe": "REL (a difference instead of a similarity)",
+          "why_wrong": "It contrasts where the two plants grow rather than pointing out something they share."
+        },
+        "B": {
+          "recipe": "PART (one plant only)",
+          "why_wrong": "It describes only the waterwheel plant."
+        },
+        "C": {
+          "recipe": "OG (defines the category)",
+          "why_wrong": "It explains what carnivorous plants do and mentions only the Venus flytrap."
+        }
+      },
+      "models": [
+        "1.11",
+        "1.22",
+        "2.46"
+      ],
+      "word_count": 79,
+      "sources": [],
+      "notes": "Subject: natural science (Dionaea and Aldrovanda, the two snap-trap plants). General knowledge (WAVE.md). Parallel bullets per plant, as 1.11.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.DIFF.easy.w3b4_23",
+      "template": "DIFF",
+      "subtype": "Emphasize a difference between two instruments",
+      "tier": "easy",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Bagpipes force air stored in a bag through pipes to produce sound.\n• Scotland’s Great Highland bagpipe is inflated through a mouthpiece by the player’s breath.\n• Traditionally played outdoors, it can be heard across considerable distances.\n• Ireland’s uilleann pipes are inflated by a bellows that the player pumps with one arm.\n• Their name comes from the Irish word for “elbow.”",
+      "stem": "The student wants to emphasize a difference between the two kinds of bagpipes. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "Bagpipes force air stored in a bag through pipes to produce sound.",
+        "The Great Highland bagpipe is inflated by the player’s breath, while the uilleann pipes are inflated by a bellows pumped with one arm.",
+        "Ireland’s uilleann pipes are inflated by a bellows that the player pumps with one arm, and their name comes from the Irish word for “elbow.”",
+        "Both the Great Highland bagpipe and the uilleann pipes force air stored in a bag through pipes to produce sound."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "Choice B contrasts the two kinds of bagpipes on the same point, how each is filled with air: the Great Highland bagpipe by the player’s breath, the uilleann pipes by a bellows pumped with one arm.",
+      "distractors": {
+        "A": {
+          "recipe": "OG (defines the category)",
+          "why_wrong": "It explains what bagpipes are but does not name or contrast the two kinds."
+        },
+        "C": {
+          "recipe": "PART (one instrument only)",
+          "why_wrong": "It describes only the uilleann pipes, so nothing is contrasted."
+        },
+        "D": {
+          "recipe": "REL (a similarity instead of a difference)",
+          "why_wrong": "It states what the two instruments have in common rather than how they differ."
+        }
+      },
+      "models": [
+        "1.2",
+        "1.13"
+      ],
+      "word_count": 75,
+      "sources": [],
+      "notes": "Subject: arts (Scottish and Irish bagpipes). General knowledge (WAVE.md); “uilleann” is Irish for elbow.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.AUD_NEW.easy.w3b4_24",
+      "template": "AUD_NEW",
+      "subtype": "Introduce a person to an unfamiliar audience",
+      "tier": "easy",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Joaquín Torres-García (1874–1949) was a Uruguayan painter.\n• He lived abroad for four decades before returning home in 1934.\n• He is best known for paintings arranging simple symbols, such as fish and stars, within a grid.\n• His 1943 drawing América invertida shows South America upside down, with its southern tip at the top.\n• It reflected his view that Latin American art should not simply imitate Europe.",
+      "stem": "The student wants to introduce Torres-García to an audience unfamiliar with the artist. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "In his 1943 drawing América invertida, Torres-García placed South America upside down, so that its southern tip appears at the top.",
+        "Uruguayan painter Joaquín Torres-García is best known for works arranging simple symbols, such as fish and stars, within a grid.",
+        "Torres-García lived abroad for four decades before returning home to Uruguay in 1934.",
+        "América invertida reflected Torres-García’s view that Latin American art should not simply imitate Europe."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "To introduce Torres-García to an audience that does not know him, the sentence should say who he was and what he is known for. Choice B identifies him as a Uruguayan painter and names the work he is best known for.",
+      "distractors": {
+        "A": {
+          "recipe": "OG (one work, artist not identified)",
+          "why_wrong": "It describes a single drawing and never says who Torres-García was."
+        },
+        "C": {
+          "recipe": "OG (biography without identity)",
+          "why_wrong": "It tells where he lived but not that he was a painter or what he is known for."
+        },
+        "D": {
+          "recipe": "OG (one work’s meaning, artist not identified)",
+          "why_wrong": "It explains a view expressed in one drawing without introducing the artist."
+        }
+      },
+      "models": [
+        "1.12"
+      ],
+      "word_count": 81,
+      "sources": [],
+      "notes": "Subject: arts (Joaquín Torres-García, Constructive Universalism, América invertida 1943). General knowledge (WAVE.md).",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      }
+    }
+  ],
+  "done": true
+}

@@ -1,0 +1,1086 @@
+{
+  "skill": "Cross-Text Connections",
+  "slug": "cross_text_connections",
+  "part": "w3b1",
+  "domain": "Craft and Structure",
+  "plan": {
+    "templates": [
+      {
+        "code": "S1_concede_rebut",
+        "name": "Respond: concede part of the target, rebut the rest (two-part options)"
+      },
+      {
+        "code": "S1_solution",
+        "name": "Respond: one text supplies a solution to the other's problem"
+      },
+      {
+        "code": "S1_refute_data",
+        "name": "Respond: target refuted by new data"
+      },
+      {
+        "code": "S1_alt_explanation",
+        "name": "Respond: the behavior might be explained without the target's interpretation"
+      },
+      {
+        "code": "S2_joint_inference",
+        "name": "Agree: joint inference from two compatible studies"
+      },
+      {
+        "code": "S4_relate",
+        "name": "Relationship: function of each text"
+      },
+      {
+        "code": "S1_counterexample",
+        "name": "Respond: counterexample to a 'first', 'only' or 'requires' claim"
+      },
+      {
+        "code": "S1_limit_degree",
+        "name": "Respond: limit the degree or scope of the target claim"
+      },
+      {
+        "code": "S1_case_fits_frame",
+        "name": "Respond (Text 1 speaking): Text 2's case fits Text 1's general frame"
+      },
+      {
+        "code": "S2_shared_premise",
+        "name": "Agree: shared premise beneath a visible disagreement"
+      },
+      {
+        "code": "S1_second_factor",
+        "name": "Respond: target is incomplete, a second cause or source"
+      },
+      {
+        "code": "S3_difference",
+        "name": "Difference: how the two authors view an object, compared on one axis"
+      }
+    ]
+  },
+  "items": [
+    {
+      "id": "cross_text_connections.S1_concede_rebut.hard.w3b1_01",
+      "template": "S1_concede_rebut",
+      "subtype": "Response prediction",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Text 1\n\nHow did sauropods, the enormous long-necked dinosaurs, position their heads? One influential approach articulates fossil neck vertebrae so that the joints between adjacent bones overlap maximally, producing what is termed the neutral pose of the skeleton. For Diplodocus and Apatosaurus, this reconstruction yields a neck extending almost straight forward from the shoulders. <u>Thus, these sauropods most likely held their necks roughly horizontal, feeding on low-growing plants.</u>\n\nText 2\n\nArticulating sauropod vertebrae for maximal overlap may well produce a nearly straight neck. But when paleontologists Michael Taylor, Mathew Wedel, and Darren Naish reviewed X-rays of living animals—mammals, turtles, lizards, crocodiles, and birds—they found that animals habitually hold their necks raised well above the neutral pose of their skeletons. Unless sauropods differed from every living group, they too probably carried their heads high.",
+      "stem": "Based on the texts, how would the author of Text 2 most likely respond to the underlined claim in Text 1?",
+      "options": [
+        "By accepting that the neck bones fit together in a nearly straight line but arguing that the approach should be applied to more sauropod species before its results are trusted",
+        "By conceding that sauropods may have lowered their heads to feed but disputing that the approach in Text 1 shows how their neck bones fit together",
+        "By allowing that the approach in Text 1 may show how the neck bones fit together best but denying that it reveals the posture in which sauropods usually carried their necks",
+        "By granting that living animals seldom hold their necks in the neutral pose of their bones but suggesting that sauropods’ enormous size may have made them an exception"
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "Text 1 moves from how the vertebrae fit together (a nearly straight neck) to a claim about how sauropods actually held their necks. The author of Text 2 grants the first step (articulating the vertebrae “may well produce a nearly straight neck”) but rejects the second, because living animals “habitually hold their necks raised well above the neutral pose of their skeletons.” So the author would accept the fit of the bones while denying that it shows the animals’ usual posture.",
+      "distractors": {
+        "A": {
+          "recipe": "D7 half right (right concession, wrong rebuttal)",
+          "why_wrong": "Text 2 does grant the straight fit of the bones, but its objection is that living animals do not hold their necks in that pose, not that the approach needs testing on more species."
+        },
+        "B": {
+          "recipe": "D7 half right (denial where the speaker concedes)",
+          "why_wrong": "Text 2 never discusses lowering the head to feed, and it explicitly allows that the approach may correctly show how the bones fit together; it disputes only what that fit says about posture."
+        },
+        "D": {
+          "recipe": "D2 wrong side",
+          "why_wrong": "Text 2 raises the possibility of sauropods being different only to set it aside (“Unless sauropods differed from every living group”); its conclusion is that they, like living animals, held their heads high."
+        }
+      },
+      "models": [
+        "3.2",
+        "3.9"
+      ],
+      "word_count": 133,
+      "sources": [
+        {
+          "what": "Taylor, Wedel and Naish 2009, Acta Palaeontologica Polonica 54(2): osteological neutral pose implies horizontal necks, but living amniotes habitually hold necks extended above it, so sauropods probably did too",
+          "url": "https://www.app.pan.pl/article/item/app54-213.html"
+        }
+      ],
+      "notes": "Area: natural science (paleontology). Text 1 is unattributed (the neutral-pose reconstructions of Diplodocus and Apatosaurus). The concession is about a measurement and the rebuttal about the inference from it, a different axis from 3.2 (risk) and 3.9 (reputation).",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [],
+        "status": "pass",
+        "band7": {
+          "verdict": "band 6",
+          "why": "Concede-rebut with two-part options; all three distractors are half right or reverse the concession, and the key paraphrases “habitually” as “usually carried”. Stays inside the two texts’ own claims, so not band 7 (template’s band-7 model is the same-conclusion-better-evidence form)."
+        }
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "C",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "cross_text_connections.S1_concede_rebut.hard.w3b1_02",
+      "template": "S1_concede_rebut",
+      "subtype": "Response prediction",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Text 1\n\nClorinda Matto de Turner’s 1889 novel Aves sin nido (Birds Without a Nest) was among the first Latin American novels to denounce the mistreatment of Indigenous peoples, exposing how a priest, a governor, and other officials in an Andean town exploit Indigenous households. Some critics, however, consider its conclusion a lapse: the revelation that two lovers are half siblings is, they argue, a contrivance borrowed from sentimental romance that distracts from the novel’s social criticism.\n\nText 2\n\nThe novel’s conclusion is admittedly improbable and indebted to the popular romances of its era. Yet the secret it uncovers is that both lovers were fathered by the same parish priest. Far from abandoning the novel’s protest, the revelation intensifies it, demonstrating that clerical abuses penetrate the most intimate relationships within the town’s families.",
+      "stem": "Based on the texts, how would the author of Text 2 most likely respond to the critics’ view of the novel’s ending presented in Text 1?",
+      "options": [
+        "By granting that the ending depends on an unlikely device drawn from popular fiction but contending that it deepens rather than departs from the novel’s critique of those who hold power in the town",
+        "By agreeing that the ending distracts from the novel’s social criticism but arguing that its appeal to readers of romances helped that criticism reach a wider audience",
+        "By acknowledging that the lovers’ shared parentage is improbable but insisting that Matto de Turner included it to mock the sentimental romances of her time",
+        "By conceding that the novel’s portrayal of the clergy is exaggerated but defending the ending as the most realistic and carefully planned part of the book"
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The critics in Text 1 call the ending a borrowed romance device that distracts from the novel’s protest. The author of Text 2 grants that the ending is “admittedly improbable and indebted to the popular romances of its era,” but argues that because the lovers’ father is a priest, the revelation “intensifies” the novel’s protest. So the author would accept the charge of implausibility while denying that the ending turns away from the novel’s criticism of the town’s powerful figures.",
+      "distractors": {
+        "B": {
+          "recipe": "D7 half right (wrong concession)",
+          "why_wrong": "Text 2 rejects the idea that the ending distracts from the protest, and it says nothing about the novel reaching a wider audience."
+        },
+        "C": {
+          "recipe": "D7 half right (right concession, twisted rebuttal)",
+          "why_wrong": "Text 2 does call the ending improbable, but it says the ending is indebted to popular romances, not that it mocks them; the author’s point is about the priest, not about parody."
+        },
+        "D": {
+          "recipe": "D7 half right (wrong concession and wrong rebuttal)",
+          "why_wrong": "Text 2 never calls the portrayal of the clergy exaggerated, and it calls the ending improbable rather than realistic."
+        }
+      },
+      "models": [
+        "3.9",
+        "3.2"
+      ],
+      "word_count": 133,
+      "sources": [
+        {
+          "what": "Aves sin nido (1889): exposes priest and governor exploiting Indigenous villagers; a dreadful secret prevents the lovers’ marriage because they share the same father, a parish priest, bringing the novel’s exposure to a climax (Oxford, Torn from the Nest, description)",
+          "url": "https://northwindbook.com/book/9780195110067"
+        }
+      ],
+      "notes": "Area: literature (criticism). Both texts are unattributed views; the critics’ reading and the author’s reply are general positions on the novel, not quotations. The key is the longest option (planned; the batch keeps key-longest near the official rate).",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [],
+        "status": "pass",
+        "band7": {
+          "verdict": "band 6",
+          "why": "Two-part concede-rebut shell as in band-6 officials 105ea6de and 6a1dc7c5; C keeps the true concession and swaps the purpose. The key maps closely onto Text 2’s “admittedly” and “Far from abandoning”, which keeps it at 6."
+        }
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "A",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "cross_text_connections.S1_solution.hard.w3b1_03",
+      "template": "S1_solution",
+      "subtype": "Response prediction",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Text 1\n\nSince the early 2000s, an international network of nearly 4,000 autonomous Argo floats has transformed oceanography. Each float drifts at depth, ascends every ten days while measuring temperature and salinity, and transmits its observations by satellite. Around Antarctica, however, the network has a conspicuous gap. <u>In winter, sea ice blankets immense expanses of ocean, and a float ascending beneath it cannot reach the surface to transmit its data.</u>\n\nText 2\n\nBeginning in the mid-2000s, researchers attached miniature sensor tags to southern elephant seals, which forage throughout the Southern Ocean and routinely dive hundreds of meters, including beneath the winter ice. The tags record temperature and salinity profiles during each dive and relay the measurements by satellite whenever a seal surfaces to breathe through cracks or openings in the ice.",
+      "stem": "Based on the texts, how would the researchers in Text 2 most likely respond to the underlined portion of Text 1?",
+      "options": [
+        "They would contend that the gap in coverage is smaller than it appears, since floats can sample the ice-covered waters during the summer months.",
+        "They would claim that the seals send their measurements while swimming beneath the ice, something the floats in Text 1 are unable to do.",
+        "They would argue that measurements gathered by seals are more accurate than those gathered by floats in every part of the ocean.",
+        "They would observe that animals that regularly find their way to the surface through the ice can transmit data collected in waters that floats cannot report from."
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The underlined portion explains the floats’ blind spot: under winter ice, a float cannot reach the air to transmit. Text 2 describes seals that dive “beneath the winter ice” and relay their data “whenever a seal surfaces to breathe through cracks or openings in the ice.” The researchers would therefore note that the seals overcome exactly the obstacle that stops the floats.",
+      "distractors": {
+        "A": {
+          "recipe": "D1 unaddressed add-on",
+          "why_wrong": "Neither text discusses summer sampling by floats; Text 2 offers a way to gather winter data under the ice, not a reason the gap is small."
+        },
+        "B": {
+          "recipe": "D3 twisted detail",
+          "why_wrong": "Text 2 says the tags send data when a seal surfaces to breathe, not while it swims beneath the ice."
+        },
+        "C": {
+          "recipe": "D5 overstatement",
+          "why_wrong": "Text 2 makes no comparison of accuracy between seal and float measurements, let alone across the whole ocean."
+        }
+      },
+      "models": [
+        "3.6",
+        "3.7"
+      ],
+      "word_count": 131,
+      "sources": [
+        {
+          "what": "Charrassin et al. 2008, PNAS 105(33): sea ice prevents conventional Argo floats from surfacing to transmit data; CTD tags on southern elephant seals (2004 to 2005) gave a 30-fold increase in profiles from the sea-ice zone, transmitted by satellite when the animals surfaced",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC2575336/"
+        }
+      ],
+      "notes": "Area: natural science (oceanography). No individual researcher named, since the seal programme is a consortium (MEOP). Replaces the earlier run’s dinosaur body-mass subject to keep the batch from three Mesozoic reptile items.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [],
+        "status": "pass",
+        "band7": {
+          "verdict": "band 6",
+          "why": "Solution mapping with the hardest distractor (B) moving one detail (sending beneath the ice rather than at the surface), as in f3c45b4f; but the link from seals to the floats’ gap is direct, not an unstated step, so 6 rather than 7."
+        }
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "D",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "cross_text_connections.S1_refute_data.hard.w3b1_04",
+      "template": "S1_refute_data",
+      "subtype": "Response prediction",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Text 1\n\nGeologists conventionally date the carving of the Grand Canyon to the past 5 to 6 million years. Measuring helium in apatite crystals, which records when rocks cooled as overlying layers eroded, geologist Rebecca Flowers and colleagues concluded in 2012 that the western Grand Canyon had been incised to nearly its present depth by 70 million years ago. Accordingly, the canyon would be over ten times older than the longstanding consensus holds.\n\nText 2\n\nApplying comparable thermochronological techniques to rocks along the canyon’s length, Karl Karlstrom and colleagues determined that its segments differ substantially in age: two middle segments were incised tens of millions of years ago, but the segments at the eastern and western extremities formed within the past 5 to 6 million years. Only then did the Colorado River integrate the older valleys into one continuous canyon.",
+      "stem": "Based on the texts, how would Karlstrom and colleagues (Text 2) most likely respond to the conclusion of Flowers and colleagues discussed in Text 1?",
+      "options": [
+        "By agreeing that the western canyon was deeply cut by 70 million years ago but arguing that erosion since that time has been too slow to measure",
+        "By acknowledging that parts of the canyon may be very old but denying that the canyon as a single, connected feature is nearly that ancient",
+        "By maintaining that no part of the canyon could have been carved before the Colorado River began flowing through the region 5 to 6 million years ago",
+        "By proposing that the 70-million-year date describes the canyon’s eastern end rather than its western end, where the youngest rock layers are found"
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "Flowers and colleagues conclude that the canyon is about 70 million years old. Karlstrom and colleagues found that some middle segments are indeed tens of millions of years old, but the ends, including the western end, formed only in the past 5 to 6 million years, when the river linked the older valleys “into one continuous canyon.” They would therefore allow that parts of the canyon are ancient while rejecting the idea that the canyon as a whole is.",
+      "distractors": {
+        "A": {
+          "recipe": "D7 half right (wrong concession)",
+          "why_wrong": "Karlstrom’s team found that the western end formed within the past 5 to 6 million years, so they would not agree it was deeply cut 70 million years ago; neither text discusses the speed of later erosion."
+        },
+        "C": {
+          "recipe": "D5 overstatement",
+          "why_wrong": "Text 2 says two middle segments were carved tens of millions of years ago, before the river linked them, so it does not claim that no part predates the river."
+        },
+        "D": {
+          "recipe": "D3 twisted detail",
+          "why_wrong": "Text 2 says both the eastern and the western ends are young, and neither text says where the youngest rock layers are."
+        }
+      },
+      "models": [
+        "3.3",
+        "3.5"
+      ],
+      "word_count": 140,
+      "sources": [
+        {
+          "what": "Karlstrom et al. 2014, Nature Geoscience: middle segments 70-50 and 25-15 Ma, end segments (Marble Canyon, Westernmost Grand Canyon) 5-6 Ma; integration of older palaeocanyons 5-6 Ma; responds to Flowers 2012 70 Ma western canyon",
+          "url": "https://planetarygeoscience.uchicago.edu/doc/Karlstrom_et_al_2014.pdf"
+        }
+      ],
+      "notes": "Area: natural science (earth science). Flowers and Farley 2012 (Science) concluded the western Grand Canyon was carved to within a few hundred meters of modern depth by about 70 Ma; the passage says “nearly its present depth”.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [
+          "“along the canyon’s entire length” to “along the canyon’s length” (Karlstrom et al. dated four of the five segments; do not state it more strongly than the source)"
+        ],
+        "status": "fixed",
+        "band7": {
+          "verdict": "band 6",
+          "why": "Refute-by-data where the student must see that old middle segments plus young ends deny an old connected canyon; A and D reuse passage details. Text 2 refutes directly rather than changing a parameter the student must apply, so 6."
+        }
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "B",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "cross_text_connections.S1_alt_explanation.hard.w3b1_05",
+      "template": "S1_alt_explanation",
+      "subtype": "Response prediction",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Text 1\n\nJoshua Plotnik and Frans de Waal observed 26 captive Asian elephants at a camp in northern Thailand. When an elephant displayed signs of distress, such as spreading its ears or raising its tail, nearby elephants often approached it, emitted soft chirping sounds, and touched its face or mouth with their trunks—behaviors observed considerably less frequently during uneventful periods. The researchers interpret this as consolation, a response indicating empathy.\n\nText 2\n\nElephants rarely confront a threat in isolation. Whatever startles one animal, whether a barking dog or a passing vehicle, is usually perceived by others nearby as well. A bystander that hurries toward an agitated companion and reaches out with its trunk may therefore be calming itself as much as the other elephant, seeking contact because it too has been unsettled by the same disturbance.",
+      "stem": "Based on the texts, how would the author of Text 2 most likely respond to the researchers’ interpretation in Text 1 of the bystanders’ behavior?",
+      "options": [
+        "That behavior may have been prompted by the bystanders’ own unease rather than by concern for the elephant in distress.",
+        "That behavior shows that elephants are startled by sudden disturbances more easily than other animals that console one another are.",
+        "That behavior was more likely a response to the signs of distress the other elephant displayed than to any disturbance the bystanders perceived themselves.",
+        "That behavior suggests that the bystanders were imitating the distressed elephant rather than recognizing its emotional state."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "Plotnik and de Waal take the bystanders’ approaches, chirps, and trunk contact as consolation, a sign of empathy. The author of Text 2 points out that whatever upsets one elephant usually reaches the others too, so a bystander reaching out “may therefore be calming itself,” having been “unsettled by the same disturbance.” The author would therefore say the behavior might reflect the bystanders’ own unease rather than concern for another elephant.",
+      "distractors": {
+        "B": {
+          "recipe": "D1 unaddressed add-on (comparison)",
+          "why_wrong": "Text 2 says disturbances affect many elephants at once, but it never compares how easily elephants and other animals are startled."
+        },
+        "C": {
+          "recipe": "D2 wrong side (reverses the speaker’s point)",
+          "why_wrong": "This is closer to Text 1’s reading. Text 2 argues the opposite: whatever startles one elephant is “usually perceived by others nearby as well,” so the bystanders may be reacting to the disturbance themselves."
+        },
+        "D": {
+          "recipe": "D3 twisted detail",
+          "why_wrong": "Text 2 says the bystanders may have been alarmed by the same disturbance, not that they were copying the distressed elephant."
+        }
+      },
+      "models": [
+        "3.12"
+      ],
+      "word_count": 136,
+      "sources": [
+        {
+          "what": "Plotnik and de Waal 2014, PeerJ 2:e278, “Asian elephants (Elephas maximus) reassure others in distress”: 26 captive elephants in northern Thailand; bystanders made more contact and vocalizations toward distressed animals than in control periods; framed as consolation",
+          "url": "https://doaj.org/article/56e88c6e56b14f65a6adfb309f687022"
+        }
+      ],
+      "notes": "Area: natural science (animal behavior). Text 2 is the author’s unattributed view; the paper itself notes that distress was usually triggered by ambiguous stimuli that bystanders may also have perceived. Replaces the earlier run’s Star Carr subject, which central_ideas_and_details w3b1_21 claimed first.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [
+          "C (predators, an add-on neither text raises) replaced by a reversal of Text 2’s point that bystanders perceive the same disturbance, so a wrong option now needs Text 2 read closely (hardening toward band 6)"
+        ],
+        "status": "fixed",
+        "band7": {
+          "verdict": "band 6",
+          "why": "After the C rewrite one distractor reverses Text 2’s point and D twists it; B remains an add-on. Model 3.12 is band 6 and alt_explanation has no band-7 officials, so a strong band 6 is the ceiling."
+        }
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "A",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "cross_text_connections.S2_joint_inference.hard.w3b1_06",
+      "template": "S2_joint_inference",
+      "subtype": "Agreement",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Text 1\n\nOne method for determining whether comets delivered Earth’s water compares the ratio of deuterium, a heavy isotope of hydrogen, to ordinary hydrogen in cometary water with the corresponding ratio in Earth’s oceans. In 2011, Paul Hartogh and colleagues used the Herschel Space Observatory to measure this ratio in comet Hartley 2, a member of the Jupiter family of comets, which are thought to originate in the Kuiper belt beyond Neptune. The ratio closely matched that of terrestrial seawater, unlike the ratios previously measured in comets from the more distant Oort cloud, which were approximately twice as high.\n\nText 2\n\nIn 2014, the Rosetta spacecraft began orbiting comet 67P/Churyumov–Gerasimenko, which belongs to the Jupiter family of comets. Using a mass spectrometer aboard Rosetta, Kathrin Altwegg and colleagues analyzed the comet’s water vapor directly, detecting a deuterium-to-hydrogen ratio roughly three times that of terrestrial oceans—among the highest values yet measured in the solar system.",
+      "stem": "Based on the texts, if Hartogh and colleagues (Text 1) and Altwegg and colleagues (Text 2) were aware of the findings of both studies, they would most likely agree with which statement?",
+      "options": [
+        "Comets from the Oort cloud are more likely than comets from the Kuiper belt to have supplied most of the water in Earth’s oceans.",
+        "The ratio of deuterium to hydrogen in a comet’s water rises steadily the longer the comet spends in the inner solar system.",
+        "The ratio measured in Hartley 2 cannot be assumed to be typical of comets that came from the same region of the solar system as Hartley 2 did.",
+        "Measurements taken by a spacecraft orbiting a comet are more reliable than measurements taken by a telescope at a great distance."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "Text 1 identifies Hartley 2 as a Jupiter-family comet from the Kuiper belt with an Earth-like ratio. Text 2 reports that 67P, also a Jupiter-family comet, has a ratio about three times Earth’s. Taken together, the findings show that comets from the same family can differ widely, so neither team could treat Hartley 2’s value as representative of its group.",
+      "distractors": {
+        "A": {
+          "recipe": "D3 twisted detail",
+          "why_wrong": "Text 1 says Oort cloud comets have ratios about twice Earth’s, which points away from them as the source; neither text supports this comparison."
+        },
+        "B": {
+          "recipe": "D1 unaddressed add-on",
+          "why_wrong": "Neither text says anything about how the ratio changes over time or with a comet’s distance from the Sun."
+        },
+        "D": {
+          "recipe": "D1 unaddressed add-on (method comparison)",
+          "why_wrong": "Text 2 notes that Rosetta analyzed the water directly, but neither text claims that one method is more reliable than the other, and both results are presented as valid."
+        }
+      },
+      "models": [
+        "3.4"
+      ],
+      "word_count": 154,
+      "sources": [
+        {
+          "what": "Altwegg et al. 2015, Science: 67P D/H (5.3 ± 0.7) × 10^-4, about three times terrestrial; Hartley 2 (Hartogh 2011) Earth-like; wide range of D/H within Jupiter-family comets",
+          "url": "https://sci.esa.int/web/rosetta/-/55119-altwegg-et-al-2015"
+        }
+      ],
+      "notes": "Area: natural science (astronomy). Hartogh 2011 (Nature) used Herschel; Oort cloud comets measured earlier average about twice Earth’s ratio. The key is a joint inference neither text states, as in 3.4, and is the longest option (planned).",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [
+          "Text 1 now says Jupiter-family comets as a group are thought to come from the Kuiper belt (was “presumably originating” attached to Hartley 2 alone), so the key’s “same region” step rests on a stated premise for 67P too"
+        ],
+        "status": "fixed",
+        "band7": {
+          "verdict": "band 6",
+          "why": "Joint inference neither text states (Hartley 2 not typical of its group), two steps across both texts; A and D reuse passage details. Close to band 7 (template model 3.4 is band 7) but the inference is a single contrast of two values rather than a mechanism applied to a case."
+        }
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "C",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "cross_text_connections.S4_relate.hard.w3b1_07",
+      "template": "S4_relate",
+      "subtype": "Relationship",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Text 1\n\nPterosaurs, the flying reptiles of the Mesozoic era, were covered in fine filaments called pycnofibers, long regarded as simple hairlike strands. In 2018, however, a team led by paleontologist Zixiao Yang reported that two pterosaur fossils from China preserve pycnofibers with tufts and branches resembling the down feathers of certain dinosaurs. The team proposed that feathers may have originated in a common ancestor of pterosaurs and dinosaurs, considerably earlier than generally thought.\n\nText 2\n\nPaleontologists David Unwin and David Martill are unpersuaded. Pterosaur wings were reinforced by tough internal fibers, and as a carcass decomposes, such fibers can fray, overlap, and tangle. Branching structures like those in the Chinese fossils, they argue, could result from this degradation rather than from genuine feather anatomy—and such structures appear in only a few of the many pterosaur fossils that preserve pycnofibers.",
+      "stem": "Which choice best describes how Text 1 and Text 2 relate to each other?",
+      "options": [
+        "Text 1 describes how a long-standing view of pycnofibers was overturned by new fossils, whereas Text 2 argues that the long-standing view was mistaken from the start.",
+        "Text 1 reports a discovery made in fossils from China, whereas Text 2 attributes the branching structures in those fossils to the fibers that reinforced pterosaur wings rather than to decay.",
+        "Text 1 presents a discovery and a proposal about the origin of feathers, whereas Text 2 describes additional fossils that strengthen the case for that proposal.",
+        "Text 1 reports a finding and the evolutionary conclusion drawn from it, whereas Text 2 offers a different account of the evidence on which that conclusion rests."
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "Text 1 reports Yang’s team’s finding of branched pycnofibers and their proposal that feathers arose in a shared ancestor of pterosaurs and dinosaurs. Text 2 argues that the branching could come from decaying wing fibers rather than feather structure, which undercuts the evidence for that proposal. So Text 2 offers another explanation of the evidence behind Text 1’s conclusion.",
+      "distractors": {
+        "A": {
+          "recipe": "D7 half right (wrong second half)",
+          "why_wrong": "Text 1 does describe new fossils challenging the older view, but Text 2 does not attack the older view that pycnofibers were simple strands; its doubts about branching fit that view rather than reject it."
+        },
+        "B": {
+          "recipe": "D3 twisted detail (half right)",
+          "why_wrong": "Text 2 does point to the wing fibers, but it says the branching “could result from this degradation,” that is, from the fibers fraying as the carcass decayed, not from the fibers rather than decay."
+        },
+        "C": {
+          "recipe": "D7 half right (reversed stance)",
+          "why_wrong": "The description of Text 1 is accurate, but Text 2 challenges the proposal rather than adding fossils that support it."
+        }
+      },
+      "models": [
+        "3.11"
+      ],
+      "word_count": 140,
+      "sources": [
+        {
+          "what": "Unwin and Martill 2020, Nature Ecology & Evolution: branched filaments in Yang et al. (2018/2019) pterosaurs are degraded internal wing-membrane fibres, not protofeathers; branching in only three of about 30 specimens",
+          "url": "https://le.ac.uk/news/2020/september/pterosaurs"
+        }
+      ],
+      "notes": "Area: natural science (paleontology). Yang et al. published online December 2018 (Nature Ecology & Evolution 3, 2019) and offered a deep common origin as one of two possibilities, so Text 1 hedges with “may have”.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [
+          "B (fossil dating, which neither text raises) replaced by a half-right twist of Text 2’s own account (wing fibers “rather than decay”), so the wrong options are no longer each killed by one fact"
+        ],
+        "status": "fixed",
+        "band7": {
+          "verdict": "band 6",
+          "why": "S4_relate has no band-7 officials. After the B rewrite two distractors are half right (A, B) and C reverses Text 2; a strong band 6."
+        }
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "D",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "cross_text_connections.S1_counterexample.medium.w3b1_08",
+      "template": "S1_counterexample",
+      "subtype": "Response prediction",
+      "tier": "medium",
+      "passage": "Text 1\n\nThomas Edison’s phonograph, unveiled in 1877, recorded sound by embossing grooves into tinfoil wrapped around a rotating cylinder; a stylus retracing those grooves could then reproduce the sound. <u>Edison’s recitation of “Mary Had a Little Lamb” on the device is frequently described as the earliest recording of a human voice.</u> Within several decades, the technology he pioneered had made recorded music a fixture of domestic life.\n\nText 2\n\nIn 1857, French typesetter Édouard-Léon Scott de Martinville patented the phonautograph, an instrument that inscribed sound waves as undulating lines on paper coated with soot. Scott intended these tracings to be examined visually; he never imagined they could be heard. In 2008, however, a team of audio historians digitally scanned his tracings and converted them into sound, revealing a recording, made in 1860, of a voice singing the French folk song “Au clair de la lune.”",
+      "stem": "Based on the texts, what would the author of Text 2 most likely say about the claim in the underlined sentence in Text 1?",
+      "options": [
+        "It is accurate, because Scott’s phonautograph could not reproduce sound and therefore did not truly record a voice.",
+        "It overlooks evidence that a human voice was captured years before Edison’s invention, even though that recording could not be heard when it was made.",
+        "It confuses two inventions, because Scott’s device was the first to record music, whereas Edison’s was the first to record speech.",
+        "It understates Scott’s influence, because Edison designed his phonograph after studying the tracings made by Scott’s device."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The underlined sentence calls Edison’s 1877 recitation the earliest recording of a human voice. Text 2 describes a voice that Scott’s phonautograph traced in 1860, which researchers turned into sound in 2008, even though Scott never meant the tracings to be heard. The author of Text 2 would therefore say the claim overlooks an earlier recorded voice.",
+      "distractors": {
+        "A": {
+          "recipe": "D2 wrong side",
+          "why_wrong": "Text 2 treats the 1860 tracing as a recording of a voice, one that could later be converted into sound, so the author would not call the claim accurate."
+        },
+        "C": {
+          "recipe": "D3 twisted detail",
+          "why_wrong": "Text 2 mentions that the 1860 voice was singing, but neither text distinguishes the first recording of music from the first recording of speech."
+        },
+        "D": {
+          "recipe": "D1 unaddressed add-on",
+          "why_wrong": "Neither text says that Edison studied Scott’s tracings or was influenced by Scott’s device."
+        }
+      },
+      "models": [
+        "2.4",
+        "2.10"
+      ],
+      "word_count": 146,
+      "sources": [
+        {
+          "what": "Scott de Martinville’s phonautograph (patented 1857) traced sound as soot lines; First Sounds converted the 1860 “Au clair de la lune” phonautogram to sound in 2008, earlier than Edison’s 1877 “Mary Had a Little Lamb”",
+          "url": "https://en.wikipedia.org/wiki/%C3%89douard-L%C3%A9on_Scott_de_Martinville"
+        }
+      ],
+      "notes": "Area: arts and history (history of sound recording). The key is the longest option (planned). The playback-speed correction (the 1860 recording is a man singing slowly) is left out; the passage says only “a voice singing”.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "cross_text_connections.S1_limit_degree.medium.w3b1_09",
+      "template": "S1_limit_degree",
+      "subtype": "Response prediction",
+      "tier": "medium",
+      "passage": "Text 1\n\nWhen higher-income households begin moving into a lower-income urban neighborhood, rents and property values in the area typically rise. Many critics of this process, known as gentrification, contend that <u>it forces substantial numbers of longtime residents, particularly those with the fewest financial resources, out of their neighborhoods</u>. In this view, affluent newcomers do not simply join the existing community but gradually replace it.\n\nText 2\n\nUsing individual credit records, Lei Ding, Jackelyn Hwang, and Eileen Divringi followed Philadelphia residents through the housing boom and bust of the 2000s. Vulnerable residents—those with low credit scores and no mortgage—were generally no more likely to leave gentrifying neighborhoods than comparable residents of nongentrifying neighborhoods were. When vulnerable residents did move, however, they were more likely to relocate to lower-income neighborhoods.",
+      "stem": "Based on the texts, how would Ding, Hwang, and Divringi (Text 2) most likely respond to the underlined claim in Text 1?",
+      "options": [
+        "By agreeing that gentrification displaces many vulnerable residents but noting that most of those residents eventually find housing in more prosperous neighborhoods",
+        "By arguing that gentrification primarily drives out residents with high credit scores, who can more easily afford to relocate",
+        "By suggesting that the effects of gentrification cannot be assessed until a neighborhood has finished changing",
+        "By cautioning that gentrification may not push financially vulnerable residents out as often as the claim assumes"
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The underlined claim says gentrification forces large numbers of the poorest longtime residents out. Ding, Hwang, and Divringi found that vulnerable residents were “generally no more likely to leave gentrifying neighborhoods” than similar residents elsewhere, though those who moved tended to go to lower-income areas. They would therefore suggest that such displacement happens less often than the claim assumes.",
+      "distractors": {
+        "A": {
+          "recipe": "D2 wrong side",
+          "why_wrong": "Text 2 does not agree that many vulnerable residents are displaced, and it says those who move tend to go to lower-income neighborhoods, not more prosperous ones."
+        },
+        "B": {
+          "recipe": "D1 unaddressed add-on",
+          "why_wrong": "Text 2 reports only on vulnerable residents; it says nothing about residents with high credit scores being driven out."
+        },
+        "C": {
+          "recipe": "D9 generic academic move",
+          "why_wrong": "Text 2 reports findings from a period of rapid change; it never suggests that effects can be judged only after a neighborhood stops changing."
+        }
+      },
+      "models": [
+        "2.8",
+        "2.9"
+      ],
+      "word_count": 129,
+      "sources": [
+        {
+          "what": "Ding, Hwang and Divringi 2016 (Philadelphia Fed WP 15-36/R): vulnerable residents (low credit scores, no mortgage) generally no more likely to move from gentrifying neighborhoods; when they move, more likely to move to lower-income neighborhoods",
+          "url": "https://philadelphiafed.org/-/media/FRBP/Assets/working-papers/2015/wp15-36R.pdf"
+        }
+      ],
+      "notes": "Area: social science (urban economics). Text 1 is an unattributed critics’ view. The study covers 2002 to 2014; the passage says “the housing boom and bust of the 2000s”, the paper’s own framing.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "cross_text_connections.S1_limit_degree.medium.w3b1_10",
+      "template": "S1_limit_degree",
+      "subtype": "Response prediction",
+      "tier": "medium",
+      "passage": "Text 1\n\nIn 1998, fisheries scientist Daniel Pauly and colleagues reported that the average trophic level of global fish catches—a measure of how high in the food web the harvested species feed—had been declining since the 1950s. They attributed this trend to “fishing down marine food webs”: after depleting large, long-lived predatory fish, fleets turned progressively to smaller species and invertebrates lower in the food web.\n\nText 2\n\nTrevor Essington and colleagues examined catch records from 48 large marine ecosystems and found that the average trophic level of catches had declined in 30 of them. In half of those 30, however, catches of predatory fish had not decreased; fleets had simply added new fisheries for smaller species. Only in nine did the records show predators being depleted and then replaced.",
+      "stem": "Based on the texts, how would Essington and colleagues (Text 2) most likely respond to the explanation offered by Pauly and colleagues in Text 1?",
+      "options": [
+        "By suggesting that it accounts for the declining trophic level of catches in only some of the ecosystems where that decline has occurred",
+        "By rejecting the finding that the average trophic level of catches has declined, since predatory fish continued to be harvested in most of the ecosystems examined",
+        "By agreeing that fleets have shifted toward smaller species but arguing that this shift has allowed populations of predatory fish to recover",
+        "By noting that the decline in trophic level occurred mainly in ecosystems where commercial fishing began only recently"
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "Pauly’s team explains the falling trophic level of catches by fleets depleting predators and then turning to smaller species. Essington’s team confirms the decline in 30 ecosystems but finds that predators were depleted and replaced in only nine; in half of the 30, fleets kept catching predators and added smaller species. They would therefore say that Pauly’s explanation fits only some of the cases.",
+      "distractors": {
+        "B": {
+          "recipe": "D2 wrong side",
+          "why_wrong": "Essington’s team confirms that the trophic level of catches declined in 30 of 48 ecosystems; they question why, not whether, it declined."
+        },
+        "C": {
+          "recipe": "D3 twisted detail",
+          "why_wrong": "Text 2 says predator catches did not decrease in many ecosystems, but it never says predator populations recovered."
+        },
+        "D": {
+          "recipe": "D1 unaddressed add-on",
+          "why_wrong": "Neither text discusses when commercial fishing began in different ecosystems."
+        }
+      },
+      "models": [
+        "2.9",
+        "2.8"
+      ],
+      "word_count": 130,
+      "sources": [
+        {
+          "what": "Essington, Beaudreau and Wiedenmann 2006, PNAS 103(9): 3171-3175, “Fishing through marine food webs”: mean trophic level of catches declined in 30 of 48 large marine ecosystems; sequential addition (predator catches held steady) the most common pattern, sequential collapse in 9",
+          "url": "https://doi.org/10.1073/pnas.0510964103"
+        }
+      ],
+      "notes": "Area: natural science (marine ecology). Pauly et al. 1998 (Science) coined “fishing down marine food webs”. Replaces the earlier run’s insect-decline subject (famous topic; the meta-analysis was later corrected).",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [
+          "source swapped from the UW press release (which counts 21 additions against the passage’s “half”) to the paper itself (DOI); the paper’s split of the 30 declines is 15 addition, 6 unclear, 9 collapse (summary of the paper on rs.resalliance.org), which matches the passage"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "cross_text_connections.S1_case_fits_frame.medium.w3b1_11",
+      "template": "S1_case_fits_frame",
+      "subtype": "Response prediction",
+      "tier": "medium",
+      "passage": "Text 1\n\nAnthropologist Joseph Henrich has argued that a population’s size constrains the complexity of the technology it can sustain. Complex skills are learned by copying experts, and imitation is usually imperfect: in a large population, some learners will match or surpass the most skilled model, but in a small, isolated one, intricate skills tend to decline with each generation. Henrich cites Tasmania, whose inhabitants, separated from mainland Australia by rising seas, gradually abandoned technologies such as bone tools.\n\nText 2\n\nIn a 2013 experiment, Maxime Derex and colleagues formed groups of 2 to 16 participants who played a computer game in which each person could build either a simple virtual fishing net or a far more elaborate arrowhead, observing other members’ designs between attempts. Over successive rounds, larger groups maintained and even improved the arrowhead, whereas smaller groups preserved it less well.",
+      "stem": "Based on the texts, how would Henrich (Text 1) most likely regard the results of the experiment described in Text 2?",
+      "options": [
+        "As puzzling, because a complex skill should be easier to preserve in a small group whose members can all observe one another",
+        "As unconvincing, because a computer game cannot reproduce the conditions under which real tools were made and used",
+        "As consistent with his argument, because the harder skill fared better where more people could learn it",
+        "As significant, because they show that small groups invent simple tools more readily than large groups do"
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "Henrich argues that complex skills survive in large populations but erode in small ones, because imperfect copying is offset only when there are many learners. In Derex’s experiment, the elaborate arrowhead was kept and improved in larger groups but preserved less well in smaller ones. Henrich would therefore see the results as supporting his argument.",
+      "distractors": {
+        "A": {
+          "recipe": "D6 wrong attitude and reason",
+          "why_wrong": "Henrich expects small groups to lose complex skills, so the results would not puzzle him; Text 1 never suggests that close observation in a small group preserves skills."
+        },
+        "B": {
+          "recipe": "D6 attitude without support",
+          "why_wrong": "Nothing in Text 1 suggests that Henrich would dismiss laboratory evidence; the results match what his argument predicts."
+        },
+        "D": {
+          "recipe": "D3 twisted detail",
+          "why_wrong": "Text 2 says small groups preserved the complex arrowhead less well, not that they invented simple tools more readily than large groups."
+        }
+      },
+      "models": [
+        "2.2",
+        "2.6"
+      ],
+      "word_count": 143,
+      "sources": [
+        {
+          "what": "Derex, Beugin, Godelle and Raymond 2013, Nature 503: groups of different sizes in a dual-task computer game; larger groups maintained higher cultural complexity and improved traits more often; builds on Henrich’s Tasmanian argument",
+          "url": "https://ideas.repec.org/a/nat/nature/v503y2013i7476d10.1038_nature12774.html"
+        }
+      ],
+      "notes": "Area: social science (anthropology). Text 1 speaks about Text 2 (case fits the frame), the 1.11 and 2.6 direction. Henrich 2004 (American Antiquity) on Tasmanian technological loss. Group sizes in Derex were 2, 4, 8 and 16. The key is the longest option (planned).",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [
+          "plainer words toward CB register (medium ran denser than CB): Complex skills are acquired by imitating expert practitioners to Complex skills are learned by copying experts; intricate skills tend to deteriorate with each generation to intricate skills tend to decline with each generation"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "cross_text_connections.S2_shared_premise.medium.w3b1_12",
+      "template": "S2_shared_premise",
+      "subtype": "Agreement",
+      "tier": "medium",
+      "passage": "Text 1\n\nIn 1545, an epidemic that the Nahuatl-speaking peoples of Mexico called cocoliztli swept through the region, killing a large part of an Indigenous population already devastated by smallpox. Epidemiologist Rodolfo Acuña-Soto and colleagues contend that cocoliztli was a hemorrhagic fever caused by a native virus transmitted by rodents, whose populations, they suggest, multiplied when abundant rains followed a prolonged drought—conditions recorded in tree rings.\n\nText 2\n\nAnalyzing ancient DNA extracted from the teeth of people buried in an epidemic cemetery at Teposcolula-Yucundaa in southern Mexico, a team led by Åshild Vågene identified Salmonella enterica Paratyphi C, a bacterium that causes enteric fever. The researchers propose this pathogen as a strong candidate for the cause of the 1545 epidemic, which killed a large share of the town’s Indigenous inhabitants.",
+      "stem": "Based on the texts, Acuña-Soto and colleagues (Text 1) and Vågene’s team (Text 2) would most likely agree with which statement about the 1545 epidemic?",
+      "options": [
+        "It was spread mainly by rodents whose numbers increased after an unusually wet period.",
+        "It was responsible for a great many deaths among Indigenous people.",
+        "Its cause can be identified most reliably through DNA preserved in victims’ teeth.",
+        "It was more lethal in southern Mexico than in the central part of the country."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The two texts disagree about the cause of the 1545 epidemic: Acuña-Soto’s team proposes a native rodent-borne virus, while Vågene’s team proposes a bacterium. Both, however, describe it as deadly: Text 1 says it killed “a large part” of the Indigenous population, and Text 2 says it killed “a large share” of a town’s inhabitants. Both would agree that it caused many deaths.",
+      "distractors": {
+        "A": {
+          "recipe": "D4 one text only",
+          "why_wrong": "Only Acuña-Soto’s team links the epidemic to rodents and rainfall; Vågene’s team attributes it to a bacterium."
+        },
+        "C": {
+          "recipe": "D4 one text only (overstated)",
+          "why_wrong": "Text 2 uses DNA from teeth, but neither team claims it is the most reliable method, and Text 1 relies on other evidence."
+        },
+        "D": {
+          "recipe": "D1 unaddressed add-on",
+          "why_wrong": "Neither text compares the death rate in different parts of Mexico."
+        }
+      },
+      "models": [
+        "2.1",
+        "2.3"
+      ],
+      "word_count": 130,
+      "sources": [
+        {
+          "what": "Vågene et al. 2018, Nature Ecology & Evolution 2: Salmonella enterica Paratyphi C genomes from Teposcolula-Yucundaa epidemic cemetery, a strong candidate for the 1545 cocoliztli",
+          "url": "https://www.mpg.de/11884269/possible-cause-of-early-colonial-era-mexican-epidemic-identified"
+        },
+        {
+          "what": "Acuña-Soto et al. 2002, Emerging Infectious Diseases 8(4): 1545 and 1576 cocoliztli likely indigenous viral hemorrhagic fevers, rodent host, aggravated by drought and wet periods in tree-ring records",
+          "url": "https://doaj.org/article/9737431fab304cf18786da1cc2b18e4a"
+        }
+      ],
+      "notes": "Area: history (epidemiology of colonial Mexico). DNA came from teeth (dental pulp); Vågene’s team called the bacterium a strong candidate, which the passage keeps.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [
+          "plainer words toward CB register (medium ran denser than CB): killing a substantial proportion of an Indigenous population to killing a large part of an Indigenous population; from the teeth of individuals buried to from the teeth of people buried",
+          "explanation quote updated to match"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "cross_text_connections.S2_shared_premise.medium.w3b1_13",
+      "template": "S2_shared_premise",
+      "subtype": "Agreement",
+      "tier": "medium",
+      "passage": "Text 1\n\nAntoine Galland’s French translation of the Thousand and One Nights, published in the early 1700s, introduced European readers to the collection—and to several stories, among them “Aladdin” and “Ali Baba,” that appear in no earlier manuscript of the Nights. Galland heard these tales in 1709 from a Syrian traveler, Hanna Diyab, yet his diary records only summaries. Some scholars therefore regard Galland as the stories’ true author, since their memorable scenes and dialogue were his own elaborations.\n\nText 2\n\nHanna Diyab, the Aleppo-born storyteller who supplied Galland with tales such as “Aladdin,” is often remembered merely as an informant. Yet Diyab’s Arabic memoir of his travels, written decades later, reveals a gifted narrator who transformed his experiences into vivid scenes. Scholars Paulo Lemos Horta and Ruth Bottigheimer have argued that Diyab should be considered the original author of such tales.",
+      "stem": "Based on the texts, the author of Text 1 and the author of Text 2 would most likely agree with which statement?",
+      "options": [
+        "Galland’s diary preserves a complete record of the tales that Diyab told him in 1709.",
+        "Diyab wrote his memoir chiefly in order to claim credit for tales that Galland had published.",
+        "The vivid scenes in “Aladdin” were drawn mainly from Diyab’s own experiences as a traveler.",
+        "Galland did not take “Aladdin” from an older written version of the Thousand and One Nights that he was translating."
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The texts disagree about who deserves credit for tales like “Aladdin”: Text 1 points to Galland, who wrote them up, and Text 2 to Diyab, who told them. Both, though, place the tale’s origin outside any written text of the Nights: Text 1 says it appears “in no earlier manuscript,” and Text 2 says Diyab supplied it to Galland and may be its original author. Both would agree that Galland did not translate it from an older written version.",
+      "distractors": {
+        "A": {
+          "recipe": "D2 contradicts Text 1",
+          "why_wrong": "Text 1 says the diary records “only brief summaries” of the tales, not a complete record; Text 2 does not mention the diary."
+        },
+        "B": {
+          "recipe": "D1 unaddressed add-on",
+          "why_wrong": "Text 2 says the memoir shows Diyab’s skill as a narrator, but neither text says why he wrote it."
+        },
+        "C": {
+          "recipe": "D4 one text only",
+          "why_wrong": "Text 2 links Diyab’s storytelling to his travels, but Text 1 credits the vivid scenes to Galland’s own elaborations, so its author would reject this."
+        }
+      },
+      "models": [
+        "2.1",
+        "2.3"
+      ],
+      "word_count": 142,
+      "sources": [
+        {
+          "what": "Hanna Diyab, Maronite from Aleppo, told Galland 16 tales in 1709 including Aladdin and Ali Baba; no written Arabic originals (except The Ebony Horse); memoir 1763; Bottigheimer and Horta argue Diyab is the original author",
+          "url": "https://en.wikipedia.org/wiki/Hanna_Diyab"
+        }
+      ],
+      "notes": "Area: literature (literary history and authorship), the 3.1 authorship-dispute pattern at medium. Text 1’s view of Galland as author is unattributed. The key is the longest option (planned).",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [
+          "“only brief summaries” to “only summaries”: Galland’s diary holds extended summaries of Diyab’s tales (Wikipedia, Hanna Diyab); the key does not depend on it"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "cross_text_connections.S1_second_factor.medium.w3b1_14",
+      "template": "S1_second_factor",
+      "subtype": "Response prediction",
+      "tier": "medium",
+      "passage": "Text 1\n\nBird eggs range from white to deep brown, blue, and green, often with dark speckling. Ornithologists have long explained this variety mainly in terms of predation: eggs laid in open nests, in this view, evolved colors and markings that camouflage them against their surroundings, concealing them from egg-eating animals, whereas eggs laid in dark cavities, where they are hard to see, tend to remain plain white.\n\nText 2\n\nAnalyzing museum specimens from 634 bird species worldwide, Phillip Wisocki and colleagues found that eggshell coloration corresponds to climate: species living in colder regions, particularly those whose nests are exposed to sunlight, tend to lay darker eggs. In experiments, darker eggs warmed more rapidly in sunlight than paler eggs did, an advantage that may help keep developing embryos warm in cold environments.",
+      "stem": "Based on the texts, how would Wisocki and colleagues (Text 2) most likely characterize the explanation of egg coloration presented in Text 1?",
+      "options": [
+        "By arguing that it reverses cause and effect, since predators are more abundant in the cold regions where birds lay darker eggs",
+        "By agreeing that darker eggs are better concealed from predators in cold regions, where nests are more often exposed to sunlight",
+        "By proposing that it may be incomplete, since climate as well as the threat of predators appears to influence egg color",
+        "By rejecting it entirely, since birds in cold regions typically lay their eggs in cavities where color cannot be seen"
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "Text 1 explains egg color mainly as protection from predators. Wisocki and colleagues found that egg darkness tracks climate and that darker eggs warm faster in sunlight, which may help embryos in cold places. They would therefore treat the predation explanation as incomplete, since climate appears to be another factor.",
+      "distractors": {
+        "A": {
+          "recipe": "D1 unaddressed add-on",
+          "why_wrong": "Neither text compares how abundant predators are in cold and warm regions."
+        },
+        "B": {
+          "recipe": "D3 twisted detail",
+          "why_wrong": "Text 2 links sun-exposed nests in cold regions to warming the eggs, not to hiding them from predators."
+        },
+        "D": {
+          "recipe": "D5 overstatement (plus twisted detail)",
+          "why_wrong": "Text 2 adds climate as a factor without rejecting the predation explanation, and it says cold-region nests are often exposed to sunlight, not hidden in cavities."
+        }
+      },
+      "models": [
+        "2.7",
+        "3.8"
+      ],
+      "word_count": 132,
+      "sources": [
+        {
+          "what": "Wisocki et al. 2020, Nature Ecology & Evolution 4: eggs of 634 species; birds in cold habitats, especially with nests exposed to sun, lay darker eggs; darker eggs heat faster in sunlight; thermoregulatory benefit",
+          "url": "https://www.sciencenews.org/article/bird-eggs-laid-cold-climates-are-darker-may-keep-eggs-warm"
+        }
+      ],
+      "notes": "Area: natural science (ornithology). Text 1 is the traditional camouflage view (cavity nesters lay white eggs), stated without attribution.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [
+          "plainer words toward CB register (medium ran denser than CB): Ornithologists have traditionally explained this diversity primarily in terms of predation to Ornithologists have long explained this variety mainly in terms of predation; whereas eggs deposited in dark cavities, where visibility is minimal, tend to remain plain white to whereas eggs laid in dark cavities, where they are hard to see, tend to remain plain white; species inhabiting colder regions to species living in colder regions"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "cross_text_connections.S1_solution.medium.w3b1_15",
+      "template": "S1_solution",
+      "subtype": "Response prediction",
+      "tier": "medium",
+      "passage": "Text 1\n\nThousands of low-income high school students in the United States earn grades and test scores high enough for admission to the nation’s most selective colleges. Yet most of these students never apply to such institutions, even though generous financial aid would often make attending them less expensive than attending a nearby college. Researchers attribute this pattern largely to a lack of information: these students frequently know no one who has attended a selective college.\n\nText 2\n\nIn a large randomized experiment, economists Caroline Hoxby and Sarah Turner mailed some high-achieving, low-income students a packet describing college costs, financial aid, and graduation rates, along with waivers for application fees. Each packet cost about $6. Compared with similar students who received nothing, recipients applied to more selective colleges and were more likely to enroll at institutions with higher graduation rates.",
+      "stem": "Based on the texts, how would Hoxby and Turner (Text 2) most likely respond to the pattern described in Text 1?",
+      "options": [
+        "By arguing that selective colleges should lower their admission standards for applicants from low-income families",
+        "By noting that an inexpensive way of supplying the missing information can change where such students apply",
+        "By suggesting that the students described in Text 1 are often better served by attending colleges close to home",
+        "By pointing out that application fees, rather than a lack of information, are the main reason such students do not apply"
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "Text 1 says that many high-achieving, low-income students do not apply to selective colleges, largely because they lack information. Hoxby and Turner’s $6 packets supplied information about costs, aid, and graduation rates, and students who received them applied to more selective colleges. They would therefore note that a cheap way of providing the missing information can change students’ choices.",
+      "distractors": {
+        "A": {
+          "recipe": "D1 unaddressed add-on",
+          "why_wrong": "Neither text discusses admission standards; Text 1 says these students already qualify for admission."
+        },
+        "C": {
+          "recipe": "D2 wrong side",
+          "why_wrong": "Text 2 presents applying to more selective colleges as the desired outcome, and Text 1 notes that such colleges are often cheaper for these students."
+        },
+        "D": {
+          "recipe": "D3 twisted detail (overstated)",
+          "why_wrong": "The packets did include fee waivers, but Text 2 never says fees, rather than information, are the main obstacle; the packets mainly provided information."
+        }
+      },
+      "models": [
+        "2.11"
+      ],
+      "word_count": 140,
+      "sources": [
+        {
+          "what": "Hoxby and Turner, Expanding College Opportunities for High-Achieving, Low Income Students: randomized trial mailing information on college costs, aid and application guidance plus application fee waivers to high-achieving low-income students; recipients applied to and enrolled at more selective colleges (What Works Clearinghouse single study review)",
+          "url": "https://ies.ed.gov/ncee/WWC/Docs/SingleStudyReviews/wwc_hoxby_031114.pdf"
+        }
+      ],
+      "notes": "Area: social science (economics of education). Text 1’s information-gap premise is Hoxby and Avery’s undermatch finding, stated without attribution.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [
+          "source URL returned 404; replaced with the What Works Clearinghouse review of the study"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "cross_text_connections.S2_shared_premise.easy.w3b1_16",
+      "template": "S2_shared_premise",
+      "subtype": "Agreement",
+      "tier": "easy",
+      "passage": "Text 1\n\nIn 1949, archaeologist Sergei Rudenko excavated a burial mound in the Pazyryk Valley of Siberia’s Altai Mountains. Water had infiltrated the tomb and frozen, preserving a woolen carpet woven in the fourth or third century BCE—probably the oldest surviving pile carpet in the world. Many scholars believe the carpet was manufactured in Persia and carried to the Altai, since its depictions of horsemen and deer closely resemble artwork produced in the Persian Empire during that period.\n\nText 2\n\nOther scholars argue that the Pazyryk carpet was woven in Armenia, then a province of the Persian Empire. They point out that the horses on the carpet closely match the horses on a stone relief at Persepolis, the Persian royal capital, that depicts a delegation from Armenia. In their view, the carpet shows Persian influence but was the work of Armenian weavers.",
+      "stem": "Based on the texts, the scholars in Text 1 and the scholars in Text 2 would most likely agree with which statement?",
+      "options": [
+        "The Pazyryk carpet was made by weavers who lived in Armenia.",
+        "The Pazyryk carpet was badly damaged when water entered the tomb and froze.",
+        "Carpets made in Armenia were more finely knotted than carpets made in Persia.",
+        "The images on the Pazyryk carpet look very much like art from the Persian Empire of that era."
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The two groups disagree about where the carpet was made: Persia or Armenia. But the scholars in Text 1 say its horsemen and deer “closely resemble artwork produced in the Persian Empire,” and the scholars in Text 2 say its horses “closely match” those on a relief at Persepolis and that the carpet “shows Persian influence.” Both groups agree that the carpet’s images look like Persian art.",
+      "distractors": {
+        "A": {
+          "recipe": "D4 one text only",
+          "why_wrong": "This is the view of the scholars in Text 2; the scholars in Text 1 believe the carpet was made in Persia."
+        },
+        "B": {
+          "recipe": "D3 twisted detail",
+          "why_wrong": "Text 1 says the frozen water preserved the carpet, not that it damaged it."
+        },
+        "C": {
+          "recipe": "D1 unaddressed add-on",
+          "why_wrong": "Neither text compares how finely carpets from Armenia and Persia were knotted."
+        }
+      },
+      "models": [
+        "1.5",
+        "1.12"
+      ],
+      "word_count": 142,
+      "sources": [
+        {
+          "what": "Pazyryk carpet: from barrow 5 excavated by Rudenko in 1949; dated to the 4th to 3rd centuries BCE; probably the oldest surviving pile carpet; borders with deer and horsemen; origin debated, Persian (imported Persian work) or Armenian (Schurmann), horses matching the Persepolis relief of the Armenian delegation",
+          "url": "https://en.wikipedia.org/wiki/Pazyryk_carpet"
+        }
+      ],
+      "notes": "Area: arts and history (archaeology of textiles). Both attributions are given as unnamed groups of scholars, so no view is pinned on Rudenko. The key is the longest option (planned).",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [
+          "“the oldest surviving pile carpet” hedged to “probably the oldest”, as the source has it"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "cross_text_connections.S1_refute_data.easy.w3b1_17",
+      "template": "S1_refute_data",
+      "subtype": "Response prediction",
+      "tier": "easy",
+      "passage": "Text 1\n\nLawn signs are among the most familiar sights of an election season in the United States, and campaigns spend considerable money printing them. Many political consultants, however, consider the signs wasteful. <u>A sign on a supporter’s lawn, they argue, does nothing to change how anyone votes.</u> In their view, campaign money would be better spent on advertising or on volunteers who contact voters directly.\n\nText 2\n\nTo find out whether lawn signs influence elections, political scientists Donald Green, Jonathan Krasno, and colleagues conducted four experiments during actual campaigns. In each, they placed signs supporting a candidate in randomly selected voting precincts while leaving other precincts without signs. When the votes were counted, the candidate’s share of the vote was slightly higher—about one percentage point on average—in the precincts with signs.",
+      "stem": "Based on the texts, how would the political scientists in Text 2 most likely respond to the underlined claim in Text 1?",
+      "options": [
+        "Lawn signs may have a small but measurable effect on how many votes a candidate receives.",
+        "Lawn signs are more effective in national elections than they are in local elections.",
+        "Campaigns should spend more money on lawn signs than they spend on advertising.",
+        "Voters who see lawn signs are more likely to volunteer for a political campaign."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The consultants in Text 1 claim that lawn signs do not change how anyone votes. In Green and Krasno’s experiments, candidates did slightly better, by about one percentage point on average, in precincts where signs were placed. The researchers would respond that signs may have a small but real effect on votes.",
+      "distractors": {
+        "B": {
+          "recipe": "D1 unaddressed add-on",
+          "why_wrong": "Neither text compares national and local elections."
+        },
+        "C": {
+          "recipe": "D5 overstatement",
+          "why_wrong": "Text 2 finds only a small effect and says nothing about how campaigns should divide their spending."
+        },
+        "D": {
+          "recipe": "D1 unaddressed add-on",
+          "why_wrong": "Neither text discusses whether seeing signs makes people volunteer."
+        }
+      },
+      "models": [
+        "1.1",
+        "1.3"
+      ],
+      "word_count": 132,
+      "sources": [
+        {
+          "what": "Green, Krasno, Coppock, Farrer, Lenoir and Zingher 2016, Electoral Studies 41: four randomized field experiments placing lawn signs in random precincts; pooled effect slightly more than one percentage point of vote share",
+          "url": "https://isps.yale.edu/research/publications/isps16-23"
+        }
+      ],
+      "notes": "Area: social science (political science). The pooled estimate is a little over one point; the passage says “about one percentage point on average”. The key is the longest option (planned).",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "cross_text_connections.S3_difference.easy.w3b1_18",
+      "template": "S3_difference",
+      "subtype": "Difference",
+      "tier": "easy",
+      "passage": "Text 1\n\nChoreographers long had few ways to preserve their dances other than the memories of the dancers who performed them. Labanotation, a system published by Rudolf Laban in 1928, changed that. Using symbols placed along a vertical staff, a trained notator can record the direction, level, and timing of every movement. Because a written score captures the choreography itself rather than one particular performance, Labanotation remains the best way to preserve dances for the future.\n\nText 2\n\nLabanotation is an impressive achievement, but few people use it. Reading and writing it requires years of training, and notating even a short dance can take many hours. Video, by contrast, can be made and watched by anyone. Although a video shows only one performance, it preserves the dancers’ expressions and style. For most dance companies, video is the more practical choice.",
+      "stem": "Which choice best describes a difference in how the author of Text 1 and the author of Text 2 view Labanotation?",
+      "options": [
+        "The author of Text 1 believes that Labanotation is easy to learn, whereas the author of Text 2 believes that it takes years of study.",
+        "The author of Text 1 regards Labanotation as the best way to preserve dances, whereas the author of Text 2 considers it less practical than video.",
+        "The author of Text 1 values Labanotation for capturing dancers’ expressions, whereas the author of Text 2 values it for recording the timing of movements.",
+        "The author of Text 1 argues that Labanotation was developed earlier than the author of Text 2 suggests that it was."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The author of Text 1 says Labanotation “remains the best way to preserve dances.” The author of Text 2 admires the system but says few people can use it and that video “is the more practical choice” for most companies. The difference is that Text 1 sees notation as the best method, while Text 2 sees it as less practical than video.",
+      "distractors": {
+        "A": {
+          "recipe": "D3 twisted detail",
+          "why_wrong": "Text 1 mentions a “trained notator” and never says the system is easy to learn."
+        },
+        "C": {
+          "recipe": "D2 values swapped",
+          "why_wrong": "Text 1 values notation for recording movements such as timing, and Text 2 says video, not notation, preserves dancers’ expressions."
+        },
+        "D": {
+          "recipe": "D8 wrong dimension",
+          "why_wrong": "Only Text 1 gives a date for Labanotation; the texts do not disagree about when it was developed."
+        }
+      },
+      "models": [
+        "1.8",
+        "1.14"
+      ],
+      "word_count": 140,
+      "sources": [
+        {
+          "what": "Labanotation: Rudolf Laban’s movement notation published in 1928 (Schrifttanz); symbols on a vertical staff record direction, level, body part and duration; intended to preserve dances beyond individual performances",
+          "url": "https://www.britannica.com/art/Labanotation"
+        }
+      ],
+      "notes": "Area: arts (dance). Both views are the authors’ own; no real critic is quoted.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [],
+        "status": "pass"
+      }
+    }
+  ],
+  "done": true
+}

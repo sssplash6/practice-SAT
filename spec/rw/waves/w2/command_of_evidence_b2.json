@@ -1,0 +1,1754 @@
+{
+  "skill": "Command of Evidence",
+  "slug": "command_of_evidence",
+  "part": "w2b2",
+  "domain": "Information and Ideas",
+  "plan": {
+    "templates": [
+      {
+        "code": "T1_single",
+        "name": "Hypothetical finding supports or weakens a single claim (causal, comparison, existence, generalization, prediction)"
+      },
+      {
+        "code": "T1_compete",
+        "name": "Hypothetical finding discriminates between competing explanations (support or weaken)"
+      },
+      {
+        "code": "T2_lit_quote",
+        "name": "Quotation from a literary work illustrates a claim (single trait, two-part, contrast)"
+      },
+      {
+        "code": "T3_person_quote",
+        "name": "Quotation from a person (participant, respondent, historian, critic, article) supports or challenges a claim"
+      },
+      {
+        "code": "Q1_P1_lookup",
+        "name": "Data completion: lookup (one cell or bar, reverse lookup, filter)"
+      },
+      {
+        "code": "Q1_P2_extreme",
+        "name": "Data completion: extreme or rank (max/min, possibly after a filter)"
+      },
+      {
+        "code": "Q1_P3_pairwise",
+        "name": "Data completion: pairwise comparison (one or two comparisons)"
+      },
+      {
+        "code": "Q1_P4_trend",
+        "name": "Data completion: change over time"
+      },
+      {
+        "code": "Q1_P5_control",
+        "name": "Data completion: condition vs control"
+      },
+      {
+        "code": "Q1_P67_criterion",
+        "name": "Data completion: passage criterion or presence/absence combined with the display"
+      },
+      {
+        "code": "Q2_P5_control",
+        "name": "Data description: condition vs control or group comparison supports a conclusion"
+      },
+      {
+        "code": "Q2_P8_quantifier",
+        "name": "Data description: quantified claim (for each, all except one)"
+      },
+      {
+        "code": "Q2_P8_multipart",
+        "name": "Data description: multi-part, interaction, or passage-plus-data claim"
+      }
+    ]
+  },
+  "items": [
+    {
+      "id": "command_of_evidence.T1_single.hard.w2b2_01",
+      "template": "T1_single",
+      "subtype": "Hypothetical finding supports a causal conclusion over a rival cause (location of the effect)",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "During the dry season, the Mara River in Kenya slows nearly to a standstill, and the pools where thousands of hippopotamuses rest during the day accumulate dung, whose decomposition by bacteria strips the water of dissolved oxygen. Fish kills in the river have frequently followed heavy rainstorms, which also wash agricultural runoff from surrounding farmland into the channel. After monitoring the river for several years, ecologist Christopher Dutton and colleagues concluded that the kills occur when storm flows flush oxygen-depleted water out of the hippo pools and into the river channel downstream.",
+      "stem": "Which finding, if true, would most directly support Dutton and colleagues’ conclusion?",
+      "options": [
+        "Hippos in the Mara River spend more of each day in the pools during the dry season than during the rainy season, when grazing along the riverbanks is easier.",
+        "Fish kills in the river were most frequent after storms that dropped heavy rain on farmland along the river, regardless of how many hippo pools lay upstream of the affected stretches.",
+        "Throughout the dry season, the water in hippo pools contained far less oxygen than the water flowing through the main channel of the river did.",
+        "After storms, oxygen fell sharply at sites downstream of stretches with many hippo pools but changed little at sites upstream of them, though both received farm runoff."
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The conclusion is that storm flows carry oxygen-poor water from the hippo pools into the river below them. Choice D shows oxygen dropping after storms only below the stretches with many pools, while sites above them, which also received farm runoff, changed little. That pattern points to the pools rather than to runoff from farms as the source of the oxygen loss that kills fish.",
+      "distractors": {
+        "A": {
+          "recipe": "OFF: how hippos use the pools",
+          "why_wrong": "How long hippos stay in the pools in each season says nothing about what happens to the river when storms flush the pools."
+        },
+        "B": {
+          "recipe": "OPP: points to the other storm-borne cause",
+          "why_wrong": "Kills tracking rain on farmland regardless of the hippo pools would point to farm runoff, which storms also carry into the river, rather than to water flushed from the pools."
+        },
+        "C": {
+          "recipe": "GEN/TRAP: restates the context",
+          "why_wrong": "The passage already says the pools lose oxygen; low oxygen in the pools would be expected under either explanation and does not show that pool water causes the kills downstream."
+        }
+      },
+      "models": [
+        "3.25",
+        "3.12",
+        "3.31"
+      ],
+      "word_count": 92,
+      "sources": [
+        {
+          "what": "Dutton et al. 2018, Nature Communications 9: 1951, organic matter loading by hippos causes downstream hypoxia and fish kills in the Mara River when high flows flush hippo pools",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC5956076"
+        }
+      ],
+      "notes": "Band 6: comparison by location (downstream of pools against upstream, both receiving farm runoff). The passage names runoff only as something storms also carry, not as a view anyone held; the paper itself tests pool flushing against river flow.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "Target 6. Key needs the right comparison (below against above the pools, both with runoff), one bridge. OPP B (farm runoff), GEN/TRAP C (pools already low in oxygen), OFF A. Passage 92 words."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "D",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "command_of_evidence.T1_single.hard.w2b2_02",
+      "template": "T1_single",
+      "subtype": "Hypothetical finding supports a two-part explanation (what writers attend to against what recipients attend to)",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "People who want to thank someone in writing often fret over their phrasing, worried that their words will seem clumsy or insincere. In a series of experiments, Amit Kumar and Nicholas Epley asked participants to write letters of gratitude to people who had affected their lives and to predict how the recipients would feel, then surveyed the recipients and found that writers had consistently underestimated how positive the recipients would feel. Kumar and Epley propose that this error arises because writers judge their letters mainly by how articulately they are expressed, whereas recipients respond mainly to the warmth the letters convey.",
+      "stem": "Which finding, if true, would most directly support Kumar and Epley’s proposal?",
+      "options": [
+        "Recipients’ feelings tracked how warm they found the letters far more than how well written they found them, while writers’ predictions tracked how well written the writers believed their letters to be.",
+        "Recipients who judged a letter to be clumsily worded felt considerably less positive about receiving it than recipients who judged a letter to be well worded did, even when both found the letter equally warm.",
+        "Writers underestimated how surprised recipients would be to learn what the writers were grateful for, and the size of this error did not depend on how long the letters were.",
+        "Writers rated their own letters as noticeably less articulate than the recipients of those letters rated them, especially when the letters were addressed to former teachers."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The proposal has two parts: writers base their expectations on how articulate a letter is, and recipients react mainly to its warmth. Choice A supports both at once: recipients’ feelings followed warmth rather than writing quality, and writers’ predictions followed their own sense of writing quality. That mismatch is exactly what would make writers misjudge how recipients feel.",
+      "distractors": {
+        "B": {
+          "recipe": "OPP: recipients judging by wording",
+          "why_wrong": "If recipients felt worse about clumsy letters even when the warmth was the same, wording would matter to recipients, which is the opposite of what Kumar and Epley propose."
+        },
+        "C": {
+          "recipe": "OFF: a different misjudgment",
+          "why_wrong": "This reports another way writers misjudged recipients, about surprise, and says nothing about what writers and recipients each pay attention to."
+        },
+        "D": {
+          "recipe": "HALF: the writers’ side only",
+          "why_wrong": "Writers rating their letters as less articulate than recipients did shows a gap in judgments of style, but it does not show that writers’ predictions depend on style or that recipients respond mainly to warmth."
+        }
+      },
+      "models": [
+        "3.31",
+        "3.39",
+        "3.42"
+      ],
+      "word_count": 101,
+      "sources": [
+        {
+          "what": "Kumar and Epley 2018, Psychological Science, 'Undervaluing gratitude': letter writers underestimated how positive recipients would feel (and overestimated awkwardness); expressers focus on how competently they express thanks, recipients on the warmth of the gesture",
+          "url": "https://www.psychologicalscience.org/publications/observer/obsonline/people-underestimate-the-power-of-saying-thanks.html"
+        }
+      ],
+      "notes": "Band 6: two-part mechanism claim; key needs both parts (A); OPP on the recipients' side, OFF (surprise, a real secondary result) and HALF (writers' self-ratings only). The passage keeps to the paper's framing (competence or articulateness for expressers, warmth for recipients).",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "Target 6. Two-part mechanism; key must match both sides. OPP B (recipients judge wording), HALF D (writers’ self-ratings, close to a real result), OFF C. Two steps."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "A",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "command_of_evidence.T1_single.hard.w2b2_03",
+      "template": "T1_single",
+      "subtype": "Hypothetical finding supports a causal claim by supplying an unstated premise (adoption unrelated to prior prospects)",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "Between 1450 and 1500, the printing press spread from Mainz, Germany, where Johannes Gutenberg had introduced movable-type printing, to more than 200 European cities. Economic historian Jeremiah Dittmar found that cities that had established a press by 1500 subsequently grew roughly 60 percent faster over the following century than otherwise comparable cities. Some scholars caution that this association may not reflect any consequence of printing, since printers, who depended on customers for their books, may simply have established workshops in cities that were already prospering. Dittmar maintains, however, that the press itself contributed to the faster growth.",
+      "stem": "Which finding from Dittmar’s research, if true, would most directly support his argument that the press itself contributed to the faster growth?",
+      "options": [
+        "Cities that had established a press by 1500 had already been growing faster than other European cities for several decades before printing reached them.",
+        "Over the following century, the price of books fell sharply both in cities that had established a press by 1500 and in cities that had not, as printed books were shipped to buyers across Europe.",
+        "A city’s distance from Mainz strongly predicted how early the city acquired a press but was unrelated to how quickly the city had grown before printing appeared.",
+        "Cities that established a press in the 1470s grew no faster after 1500 than cities that did not establish one until the 1490s."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The scholars’ worry is that printers chose cities that were already thriving, so a press may only mark a promising city. Choice C shows that when a city got a press depended on its distance from Mainz, a matter of geography, and that this distance had nothing to do with how the city was growing beforehand. Presses therefore did not go preferentially to cities with bright prospects, which leaves the press itself as a likely cause of the later growth.",
+      "distractors": {
+        "A": {
+          "recipe": "OPP: the rival’s prediction",
+          "why_wrong": "If cities with presses were already growing faster before printing arrived, printers would seem to have picked thriving cities, which supports the scholars’ alternative."
+        },
+        "B": {
+          "recipe": "TRAP: a change that affects both groups equally",
+          "why_wrong": "A fall in book prices shared by cities with and without presses cannot explain why the cities with presses grew faster, and it says nothing about whether printers chose cities that were already thriving."
+        },
+        "D": {
+          "recipe": "TRAP: comparison that cannot decide the claim",
+          "why_wrong": "Comparing early and late adopters says nothing about whether presses went to cities that were already flourishing; if anything, finding no advantage for a longer period with a press would cast doubt on an effect of printing."
+        }
+      },
+      "models": [
+        "3.28",
+        "3.45",
+        "3.36"
+      ],
+      "word_count": 97,
+      "sources": [
+        {
+          "what": "Dittmar 2011, QJE 126(3): cities where presses were established in the 1400s grew 60 percent faster than similar cities; adopters had no prior growth advantage; printers did not simply choose auspicious locations; distance from Mainz used as an instrument for adoption (abstract)",
+          "url": "https://researchonline.lse.ac.uk/id/eprint/53580"
+        }
+      ],
+      "notes": "Band 7 moves: key supplies an unstated premise (adoption driven by distance from Mainz, which is unrelated to prior growth); stem names the study and the claimant; OPP (prior growth), TRAP affecting both groups (book prices), TRAP comparison within adopters. 'More than 200 cities' per Dittmar (205).",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [
+          "B (“far more books ... sold to buyers in distant markets”) could be read as a growth channel of the press, a second line of support; replaced by a TRAP that affects both groups equally (book prices fell in cities with and without presses)",
+          "source URL changed from VoxEU (403) to the LSE eprint record, whose abstract states the 60 percent figure, no prior advantage, and the Mainz instrument"
+        ],
+        "status": "fixed"
+      },
+      "band7": {
+        "verdict": "band 7",
+        "why": "Key supplies an unstated premise (adoption set by geography, unrelated to prior growth), three steps. OPP A (prior growth), TRAP B (shared change), TRAP D (comparison within adopters). Stem names the study and the claimant (23 words). Passage 97 words, slightly under the recipe."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "C",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 7
+    },
+    {
+      "id": "command_of_evidence.T1_compete.hard.w2b2_04",
+      "template": "T1_compete",
+      "subtype": "Hypothetical finding weakens a rival explanation (inheritance) through a within-family comparison",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "Ejectives are consonants produced by closing the vocal cords, compressing the air trapped above them, and releasing it in a sharp burst; they occur in only a minority of the world’s languages. Analyzing the locations of nearly 600 languages, linguist Caleb Everett found that languages with ejectives tend to be spoken in or near high-elevation regions. Everett has proposed that the thinner air at high elevations makes ejectives easier to produce, favoring their use. Other linguists suggest that the pattern instead reflects history: a few language families that happen to be concentrated in highland areas may simply have inherited ejectives from their common ancestors.",
+      "stem": "Which finding, if true, would most directly weaken the explanation offered by the other linguists?",
+      "options": [
+        "Most of the highland languages that have ejectives belong to just a handful of language families, and nearly every member of those families has ejectives, whether it is spoken in the highlands or in the lowlands.",
+        "Within language families whose members are spoken at a range of elevations, the members spoken in highland areas have ejectives far more often than closely related members spoken in lowland areas do.",
+        "Some lowland languages that have ejectives are spoken by communities whose ancestors migrated down from highland regions several centuries ago.",
+        "Languages that have ejectives tend to have larger inventories of consonants overall than languages that lack ejectives do."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The other linguists say ejectives cluster at high elevations only because a few highland language families inherited them. If that were so, whether a language has ejectives should follow its family, not its elevation. Choice B shows the opposite: within single families, the highland members have ejectives far more often than their close lowland relatives, even though they share the same ancestry. Inheritance cannot explain that difference, but Everett’s air-pressure account can.",
+      "distractors": {
+        "A": {
+          "recipe": "OPP: the rival’s prediction",
+          "why_wrong": "Ejectives concentrated in a few families whose members have them wherever they are spoken is just what inheritance would produce, so this supports the other linguists."
+        },
+        "C": {
+          "recipe": "TRAP: consistent with both explanations",
+          "why_wrong": "Lowland communities with highland ancestors might keep ejectives because they inherited them or because the sounds arose in their ancestors’ highland home; the finding fits either account."
+        },
+        "D": {
+          "recipe": "OFF: another property of the same languages",
+          "why_wrong": "The size of a language’s consonant inventory says nothing about whether elevation or ancestry explains where ejectives occur."
+        }
+      },
+      "models": [
+        "3.48",
+        "3.9",
+        "3.14"
+      ],
+      "word_count": 104,
+      "sources": [
+        {
+          "what": "Everett 2013, PLoS ONE 8(6): e65275, 567 languages; languages with ejectives are closer to high-elevation regions; proposed that reduced air pressure eases ejective production; the pattern is not the result of particular families",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3680446"
+        }
+      ],
+      "notes": "Band 7 moves: two views (air pressure against inheritance), weaken polarity aimed at the rival; key is a within-family elevation split (holds ancestry constant); OPP fits the rival, TRAP fits both, OFF an irrelevant property. 'Other linguists' is a plausible rival stated generically, not attributed to a named person.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [],
+        "status": "pass"
+      },
+      "band7": {
+        "verdict": "band 7",
+        "why": "Weaken polarity aimed at the rival; key holds ancestry constant through a within-family elevation split. Discrimination: inheritance predicts ejectives follow family (A), air pressure predicts B; C (lowland descendants of highlanders) fits both. Passage 104 words, stem 15 naming whose view."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "B",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 7
+    },
+    {
+      "id": "command_of_evidence.Q2_P8_multipart.hard.w2b2_05",
+      "template": "Q2_P8_multipart",
+      "subtype": "Data description (two-part claim across conditions and time: similar before, different during)",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "In rural India, teachers are frequently absent from school, and supervisors have little way of knowing when. In 2003 the nonprofit organization Seva Mandir gave the teachers at 60 of its single-teacher schools in Rajasthan cameras with tamper-proof date stamps, asked them to photograph themselves with their students at the start and end of each school day, and based their pay on the days documented. After making unannounced visits to these and comparison schools, economists Esther Duflo, Rema Hanna, and Stephen Ryan concluded that the program substantially increased how often schools were open and that this gap did not reflect earlier differences between the groups.",
+      "stem": "Which choice best describes data from the table that support the economists’ conclusion?",
+      "options": [
+        "Camera schools were open on only about 3 percentage points more of the visits than comparison schools before the program, but on about 20 percentage points more during it.",
+        "During the program, camera schools were open on about 78% of the visits, whereas comparison schools were open on only about 58% of them, a gap of about 20 percentage points.",
+        "Both before and during the program, comparison schools were open on fewer than two-thirds of the unannounced visits that the researchers made to them.",
+        "Before the program, camera schools were already open on about 78% of the visits, a rate that changed little once the cameras and the new pay system were introduced."
+      ],
+      "answer_letter": "A",
+      "table": {
+        "title": "Percentage of Unannounced Visits on Which Schools Were Open",
+        "columns": [
+          "School group",
+          "Before the program (August 2003)",
+          "During the program (September 2003–March 2005)"
+        ],
+        "rows": [
+          [
+            "Camera schools",
+            "66",
+            "78"
+          ],
+          [
+            "Comparison schools",
+            "63",
+            "58"
+          ]
+        ],
+        "note": null
+      },
+      "figure": null,
+      "explanation": "The conclusion has two parts: the program raised how often schools were open, and the difference was not there beforehand. Choice A addresses both: before the program the camera schools were open on only about 3 percentage points more visits (66% against 63%), but during the program the gap was about 20 points (78% against 58%).",
+      "distractors": {
+        "B": {
+          "recipe": "HALF: the program period only",
+          "why_wrong": "The figures are accurate, but without the before-program rates they cannot show that the gap did not already exist."
+        },
+        "C": {
+          "recipe": "IRREL: accurate, one group only",
+          "why_wrong": "It is true that comparison schools were open on fewer than two-thirds of visits both times, but this says nothing about how camera schools differed from them."
+        },
+        "D": {
+          "recipe": "INACC: wrong period",
+          "why_wrong": "Camera schools were open on about 66% of visits before the program; 78% is their rate during it."
+        }
+      },
+      "models": [
+        "3.18",
+        "3.16",
+        "3.26"
+      ],
+      "word_count": 105,
+      "sources": [
+        {
+          "what": "Duflo, Hanna and Ryan, NBER WP 11880 (AER 2012, 'Incentives Work'): baseline random visits August 2003, schools open 66% (treatment) and 63% (comparison); Table 3, September 2003-March 2005, open 0.78 (treatment) and 0.58 (control); cameras with tamper-proof date and time stamps, photographs at start and end of day, salary a function of attendance; Seva Mandir non-formal education centres in Udaipur, Rajasthan",
+          "url": "https://www.nber.org/papers/w11880"
+        }
+      ],
+      "notes": "Schools are single-teacher non-formal education centres, so 'open' means the teacher was present. 120 schools, 60 with cameras. Baseline (August 2003) random visits reached 44 camera and 41 comparison schools (paper, Table 1); during the program, 1,103 and 1,086 visits (Table 3).",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 5,
+        "fixes": [],
+        "status": "pass"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "Target 6. Two-part claim across time and groups: 4 reads, 2 differences. HALF B (during only), IRREL C (comparison schools only), INACC D. No proxy."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "A",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "command_of_evidence.T2_lit_quote.hard.w2b2_06",
+      "template": "T2_lit_quote",
+      "subtype": "Literary quotation illustrates a two-part claim (preference for hardship over an empty sheltered life)",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Rutherford and Son is a 1912 play by Githa Sowerby. In the play, Janet, the unmarried daughter of a domineering glassworks owner, tells her father that she would rather have shared the hardships of the village’s poor women than lead her own sheltered, empty life: ______",
+      "stem": "Which quotation from Rutherford and Son most effectively illustrates the claim?",
+      "options": [
+        "“Me a lady? What do ladies think about, sitting the day long with their hands before them? What have they in their idle hearts?”",
+        "“Ask the men that work for you—ask their wives that curtsey to us in the road. Do you think they don’t know the difference? We’re just the same as they are—common, every one of us.”",
+        "“I’ve envied them—envied them their pain, their poorness—the very times they hadn’t bread. Theirs isn’t the dead empty house, the blank o’ the moors; they got something to fight, something to be feared of.”",
+        "“You think I’m sorry you’ve found out—you think you’ve done for me when you use shameful words on me and turn me out o’ your house. You’ve let me out o’ gaol!”"
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The claim has two parts: Janet wishes she had shared the village women’s hardships, and she sees her own life as sheltered and empty. In choice C she says she has envied the women “their pain, their poorness,” and she contrasts their struggles with “the dead empty house” she lives in, so the quotation shows both parts.",
+      "distractors": {
+        "A": {
+          "recipe": "HALF: the empty life only",
+          "why_wrong": "Janet mocks the idle life of a lady, but she says nothing about the poor women of the village or about wishing to share their hardships."
+        },
+        "B": {
+          "recipe": "LURE: the villagers, but sameness rather than envy",
+          "why_wrong": "Janet mentions the workers’ wives, but her point is that her family is no different from them, not that she would prefer their hard lives to her own."
+        },
+        "D": {
+          "recipe": "OFF: defiance at being sent away",
+          "why_wrong": "Janet tells her father that being turned out of his house frees her, which concerns her defiance of him rather than her envy of the village women."
+        }
+      },
+      "models": [
+        "3.17",
+        "3.34",
+        "3.35"
+      ],
+      "word_count": 46,
+      "sources": [
+        {
+          "what": "Sowerby, Rutherford and Son: A Play in Three Acts (London: Sidgwick and Jackson, 1912), Act II, Janet's speeches to her father; text checked against two scans of the 1912 edition (cu31924013224666 and rutherfordsonpla00soweuoft)",
+          "url": "https://archive.org/details/rutherfordsonpla00soweuoft"
+        }
+      ],
+      "notes": "Quotations copied from the 1912 edition; spaced dashes closed and the printer's space before ? and ! removed, as CB prints them. All four lines are Janet's, from the same scene.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 5,
+        "fixes": [],
+        "status": "pass",
+        "literary_text": "checked verbatim against two scans of the 1912 Sidgwick and Jackson edition (archive.org rutherfordsonpla00soweuoft and cu31924013224666), Act II; all four quotations exact; spaced dashes closed and the printer’s space before ? and ! removed"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "Target 6. Two-part claim; HALF A (empty life only), LURE B (villagers, but sameness), OFF D (defiance), all Janet in the same scene. Claim verb is direct, not the band-7 indirect kind."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "C",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "command_of_evidence.T3_person_quote.hard.w2b2_07",
+      "template": "T3_person_quote",
+      "subtype": "Quotation from a scholarly review supports a claim about an artist’s method",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Sudanese artist Ibrahim El-Salahi learned Arabic calligraphy as a boy at the Quranic school his father directed. After studying painting at the Slade School of Fine Art in London, he returned to Khartoum in the late 1950s and began incorporating small Arabic inscriptions into his paintings, experiments that became central to the Khartoum School of modern Sudanese art. A student argues that El-Salahi’s originality lies less in any particular image than in his procedure: he allowed the shapes of handwritten letters to generate his pictures rather than merely decorate them.",
+      "stem": "Which quotation from a scholarly review of El-Salahi’s work best supports the student’s claim?",
+      "options": [
+        "“The steady hand El-Salahi developed copying verses at his father’s school shows throughout his paintings, where even the longest, most intricate lines are drawn with a calligrapher’s control.”",
+        "“Although El-Salahi’s first Khartoum paintings drew little interest, his work later reached collectors on several continents, and in 2013 Tate Modern presented a major retrospective of it.”",
+        "“The Arabic phrases in El-Salahi’s paintings often run along the edges of the canvas, where they serve as captions that tell viewers how the figures at the center should be understood.”",
+        "“In El-Salahi’s notebooks, a single Arabic letter is repeated and stretched until it becomes the curve of a horn or the outline of a face, so that each image grows out of the act of writing.”"
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The student claims that El-Salahi’s pictures came out of the shapes of writing rather than simply carrying writing as ornament. Choice D describes exactly that process: a letter is repeated and stretched until it turns into a horn or a face, so the image “grows out of the act of writing.”",
+      "distractors": {
+        "A": {
+          "recipe": "HALF: calligraphy as a skill of the hand, not a source of images",
+          "why_wrong": "This credits El-Salahi’s calligraphy training with the precision of his lines, a skill carried into painting, not a procedure in which the shapes of letters produce the pictures."
+        },
+        "B": {
+          "recipe": "OFF: reception rather than method",
+          "why_wrong": "This describes how El-Salahi’s reputation grew, not how his pictures were made."
+        },
+        "C": {
+          "recipe": "OPP: writing as label",
+          "why_wrong": "Phrases that act as captions explaining the figures would make the writing an addition to the pictures, the opposite of the student’s claim that writing produced them."
+        }
+      },
+      "models": [
+        "3.33",
+        "3.32",
+        "3.3"
+      ],
+      "word_count": 90,
+      "sources": [
+        {
+          "what": "El-Salahi learned calligraphy at his father's Quranic school; Slade School of Fine Art 1954-1957; founder of the Khartoum School; began writing small Arabic inscriptions in the corners of his paintings, then broke down the letters and animal, human and plant forms emerged; 2013 Tate Modern retrospective, Tate Modern’s first retrospective of a contemporary artist from Africa",
+          "url": "https://en.wikipedia.org/wiki/Ibrahim_El-Salahi"
+        }
+      ],
+      "notes": "The quotations are attributed to an unnamed scholarly review, as in 3.33, and are written for the item; no real critic is quoted.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 6,
+        "fixes": [
+          "A (European modernism, off topic) replaced by a HALF on calligraphy (training shows in the precision of his lines, not letters generating images), so no wrong option is plain off-topic",
+          "B: “first African-born artist given a retrospective at Tate Modern” changed to “Tate Modern presented a major retrospective”; the source says first retrospective of a contemporary artist from Africa"
+        ],
+        "status": "fixed"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "Target 6. Procedure claim; HALF A (calligraphy as skill), OPP C (writing as captions), OFF B (reception). Key paraphrases the claim (letter stretched into a horn or face). Quotations invented and credited to an unnamed review, no real critic quoted."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "D",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "command_of_evidence.Q2_P5_control.hard.w2b2_08",
+      "template": "Q2_P5_control",
+      "subtype": "Data description (treatment against two control conditions, one of them an active control)",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "To test whether music lessons enhance children’s intellectual development, psychologist E. Glenn Schellenberg randomly assigned 144 six-year-olds in Toronto to one of four groups: a year of weekly keyboard lessons, a year of voice lessons, a year of drama lessons, or no lessons, and he measured each child’s IQ before and after that year. Drama was included because, like music instruction, it is an arts activity that requires practice, memorization, and close attention to sound. Since beginning formal schooling typically raises children’s IQ scores, and every participant started first grade that year, some increase was to be expected in every group. Schellenberg concluded that music lessons produced small increases in IQ that comparable nonmusical activities did not.",
+      "stem": "Which choice best describes data from the graph that support Schellenberg’s conclusion?",
+      "options": [
+        "The voice group had a larger average increase in IQ than the keyboard group did, although the two increases differed by less than one point.",
+        "The keyboard group, whose average increase in IQ was the smaller of the two music groups’ increases, still gained about two points more than the drama group did.",
+        "Each of the two music groups had an average increase in IQ about three points larger than that of the group that received no lessons.",
+        "The drama group had a larger average increase in IQ than the keyboard group did, though a smaller one than the voice group did."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": {
+        "kind": "bar graph",
+        "title": "Average Increase in IQ among Children Who Completed the Year, by Group",
+        "x_axis": "Group",
+        "y_axis": "Average increase in full-scale IQ (points)",
+        "description": "One bar per group; y-axis 0 to 8 in steps of 2. Keyboard lessons: about 6.8. Voice lessons: about 7.2 (the tallest). Drama lessons: about 4.6. No lessons: about 3.9 (the shortest). Both music bars are well above the drama and no-lessons bars, and the drama bar is a little above the no-lessons bar.",
+        "data": [
+          {
+            "series": "Average increase in full-scale IQ (points)",
+            "points": [
+              [
+                "Keyboard lessons",
+                6.8
+              ],
+              [
+                "Voice lessons",
+                7.2
+              ],
+              [
+                "Drama lessons",
+                4.6
+              ],
+              [
+                "No lessons",
+                3.9
+              ]
+            ]
+          }
+        ]
+      },
+      "explanation": "The conclusion has two parts: music lessons raised IQ, and a comparable nonmusical activity did not do the same. Every group was expected to gain some points from starting school, and the drama group also had a year of practice and memorization, so the music groups must be compared with the drama group, not only with the children who had no lessons. Choice B makes the decisive comparison: even the keyboard group, the music group with the smaller gain (about 6.8 points), gained about 2 points more than the drama group (about 4.6). Since the voice group gained more than the keyboard group and the drama group gained more than the no-lessons group, both music groups outgained both groups without music lessons.",
+      "distractors": {
+        "A": {
+          "recipe": "IRREL: accurate comparison within the treatment",
+          "why_wrong": "The voice group did gain slightly more than the keyboard group (about 7.2 against 6.8 points), but comparing two kinds of music lessons says nothing about music against nonmusical activities."
+        },
+        "C": {
+          "recipe": "PART: only the passive control",
+          "why_wrong": "Both music groups did gain about 3 points more than the no-lessons group, but without the drama group this could reflect taking any kind of lessons rather than music in particular."
+        },
+        "D": {
+          "recipe": "INACC: misread bars",
+          "why_wrong": "The drama group gained about 4.6 points, less than both the keyboard group (about 6.8) and the voice group (about 7.2)."
+        }
+      },
+      "models": [
+        "3.43",
+        "3.5",
+        "3.1"
+      ],
+      "word_count": 117,
+      "sources": [
+        {
+          "what": "Schellenberg 2004, Psychological Science 15(8): 511-514: 144 six-year-olds randomly assigned to keyboard, voice, drama or no lessons; Figure 1, mean increase in full-scale IQ for children who completed the study, read from the bars: keyboard 6.8, voice 7.2, drama 4.6, no lessons 3.9 (the text reports 7.0 for the music groups and 4.3 for the controls); all groups gained, attributed to entering grade school; music lessons cause small increases in IQ, comparable nonmusical activities do not",
+          "url": "https://sites.utm.utoronto.ca/sites/sites.utm.utoronto.ca.glenn_website/files/download/SchellenbergPS2004.pdf"
+        }
+      ],
+      "notes": "Band 7 moves: an active control condition (drama) the key must include, with a passage sentence (every group expected to gain) that rules out raw gains; the key is the pinch comparison (smaller music gain against the larger nonmusic gain); IRREL within music, PART music against the passive control only, one false reading. Values are the paper’s Figure 1 (completers, n = 30, 32, 34, 36), read from the bars; they match its summary of 7.0 (music) and 4.3 (controls) within rounding. Table 1 before/after differences are not used: the before means include the 12 children who dropped out.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 8,
+        "fixes": [
+          "figure values replaced: the writer used Table 1 before/after differences (6.1, 7.6, 5.1, 3.9), but the before means include 12 children who dropped out; the paper’s Figure 1 (completers) gives about 6.8, 7.2, 4.6, 3.9, which match its 7.0 and 4.3 summary within rounding; title says children who completed the year",
+          "old A (“voice exceeded keyboard by about one and a half points”) was an artifact of those numbers (the paper: the two music groups were similar, p > .8); rewritten as accurate (less than one point)",
+          "hardened: the key no longer restates the conclusion (each music group beat both controls); it is the pinch comparison (the smaller music gain still beats the drama gain by about 2 points), and C is an accurate music-against-no-lessons PART",
+          "passage adds the paper’s point that entering school raises IQ, so every group was expected to gain (passage 91 to 117 words)"
+        ],
+        "status": "fixed"
+      },
+      "band7": {
+        "verdict": "band 7",
+        "why": "After the fixes: an active control the key must use and a passage relation (all groups expected to gain) that rules out raw gains; the key needs four reads and the inference that beating the larger nonmusic gain with the smaller music gain covers every pair. IRREL A and PART C are accurate; D a false reading. Passage 117 words."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "B",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 7
+    },
+    {
+      "id": "command_of_evidence.Q2_P8_quantifier.hard.w2b2_09",
+      "template": "Q2_P8_quantifier",
+      "subtype": "Data description (claim holds for each of three groups, two comparisons per group)",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Many students from low- and moderate-income families who would qualify for federal college grants never complete the Free Application for Federal Student Aid (FAFSA). In an experiment at H&R Block tax-preparation offices in Ohio and North Carolina, economist Eric Bettinger and colleagues offered some participants help completing the FAFSA along with an estimate of the aid they could receive; others received only the aid estimate, and a control group received neither. The researchers concluded that for each group of participants studied, help with the application, but not information about aid alone, substantially raised the share who filed.",
+      "stem": "Which choice best describes data from the table that support the researchers’ conclusion?",
+      "options": [
+        "Among independent adults with no prior college experience, 39.5% of those who received help filed the FAFSA, compared with only 13.8% of those in the control group.",
+        "In each group, participants who received only an aid estimate filed the FAFSA at a lower rate than participants in the control group did.",
+        "In each group, help raised the filing rate at least 15 percentage points above the control rate, while an aid estimate alone left the rate within 2 points of it.",
+        "In each of the three conditions, high school seniors filed the FAFSA at a higher rate than independent adults with no prior college experience did."
+      ],
+      "answer_letter": "C",
+      "table": {
+        "title": "Percentage of Participants Who Filed the FAFSA, by Group and Condition",
+        "columns": [
+          "Participant group",
+          "Control",
+          "Help completing the FAFSA",
+          "Aid estimate only"
+        ],
+        "rows": [
+          [
+            "High school seniors (dependents)",
+            "40.2",
+            "55.9",
+            "39.0"
+          ],
+          [
+            "Independent adults, no prior college",
+            "13.8",
+            "39.5",
+            "12.7"
+          ],
+          [
+            "Independent adults, some prior college",
+            "35.3",
+            "55.7",
+            "37.2"
+          ]
+        ],
+        "note": null
+      },
+      "figure": null,
+      "explanation": "The conclusion must hold for every group and has two parts: help raised filing substantially, and an aid estimate alone did not. Choice C checks both parts in all three rows: help raised filing by about 16, 26, and 20 points, while the aid-estimate-only rates differ from the control rates by only about 1 to 2 points.",
+      "distractors": {
+        "A": {
+          "recipe": "PART: one group only",
+          "why_wrong": "The figures are accurate, but they cover only one of the three groups and say nothing about the aid-estimate-only condition."
+        },
+        "B": {
+          "recipe": "INACC: false for one row",
+          "why_wrong": "Among independent adults with some prior college, the aid-estimate-only group filed at 37.2%, above the control rate of 35.3%."
+        },
+        "D": {
+          "recipe": "IRREL: accurate comparison across groups",
+          "why_wrong": "This compares two kinds of participants rather than the conditions, so it does not show what help or information did."
+        }
+      },
+      "models": [
+        "3.20",
+        "3.24",
+        "3.23"
+      ],
+      "word_count": 97,
+      "sources": [
+        {
+          "what": "Bettinger, Long, Oreopoulos and Sanbonmatsu, NBER WP 15361 (QJE 2012), Table 3 FAFSA filing: control means .402/.138/.353 for dependent, independent without and with prior college; FAFSA treatment effects .157/.257/.204; information-only -.012/-.011/.019; abstract: information alone had no significant effect on FAFSA submission",
+          "url": "https://www.nber.org/papers/w15361"
+        }
+      ],
+      "notes": "Rates are the control means plus the unadjusted treatment coefficients in Table 3, columns 1, 3 and 5 (for example 40.2 + 15.7 = 55.9). The paper's dependent participants are high school seniors (17-year-olds) whose parents were H&R Block clients. Reviewer: the paper itself states the help-group rates in prose (39.5 and 55.7 percent); the aid-estimate-only rates are control means plus the unadjusted coefficients (-.012, -.011, .019).",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 7,
+        "fixes": [],
+        "status": "pass"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "Target 6. Quantifier over three rows, two conditions each (six differences). PART A, INACC B (one row false), IRREL D (across groups). No trap built in beyond the near-threshold 1.9, so not band 7."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "C",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "command_of_evidence.Q1_P67_criterion.hard.w2b2_10",
+      "template": "Q1_P67_criterion",
+      "subtype": "Data completion (passage relation turns counts into a change in share)",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "Every ten years, India’s census asks residents to identify their mother tongue, the language they first learned to speak. Between the 2001 and 2011 censuses, India’s total population increased by nearly 18 percent, so a language could gain millions of first-language speakers during the decade and nevertheless come to represent a smaller proportion of the population: that occurred whenever its number of speakers rose by a smaller percentage than the national population did. Comparing the two censuses, a student finds that several major languages lost ground in this sense even as they gained millions of first-language speakers: ______",
+      "stem": "Which choice most effectively uses data from the table to complete the statement?",
+      "options": [
+        "Telugu, for example, gained about 7 million first-language speakers between 2001 and 2011, an increase of only about 10 percent, so its share of India’s population declined.",
+        "Hindi, for example, gained more than 100 million first-language speakers between 2001 and 2011, an increase of about 25 percent, so its share of India’s population declined.",
+        "Urdu, for example, lost about 0.7 million first-language speakers between 2001 and 2011, a drop of about 1 percent, so its share of India’s population declined.",
+        "Bengali, for example, gained about 14 million first-language speakers between 2001 and 2011, mostly because speakers of other languages adopted it, so its share of India’s population declined."
+      ],
+      "answer_letter": "A",
+      "table": {
+        "title": "First-Language Speakers of Six Languages in India’s 2001 and 2011 Censuses",
+        "columns": [
+          "Language",
+          "2001 (millions)",
+          "2011 (millions)"
+        ],
+        "rows": [
+          [
+            "Hindi",
+            "422.0",
+            "528.3"
+          ],
+          [
+            "Bengali",
+            "83.2",
+            "97.2"
+          ],
+          [
+            "Marathi",
+            "71.9",
+            "83.0"
+          ],
+          [
+            "Telugu",
+            "74.0",
+            "81.1"
+          ],
+          [
+            "Tamil",
+            "60.8",
+            "69.0"
+          ],
+          [
+            "Urdu",
+            "51.5",
+            "50.8"
+          ]
+        ],
+        "note": null
+      },
+      "figure": null,
+      "explanation": "By the passage’s reasoning, a language’s share of the population fell if its speakers increased by less than the population’s nearly 18 percent. The table shows Telugu rising from 74.0 million to 81.1 million speakers, a gain of about 7 million, or about 10 percent of 74 million. Telugu therefore gained speakers yet fell as a share of the population, so choice A completes the statement.",
+      "distractors": {
+        "B": {
+          "recipe": "WDIR: the relation applied backward",
+          "why_wrong": "Hindi’s speakers did rise by about 25 percent, but that is faster than the population’s growth of nearly 18 percent, so Hindi’s share rose rather than declined."
+        },
+        "C": {
+          "recipe": "IRREL: accurate, but fails the passage’s criterion",
+          "why_wrong": "Urdu’s figures are read correctly, and its share did fall, but Urdu lost speakers rather than gaining millions of them, so it does not illustrate a language that lost ground even as it gained speakers."
+        },
+        "D": {
+          "recipe": "OUTS: a cause the table cannot show",
+          "why_wrong": "The table gives only counts, so it cannot show why Bengali gained speakers; a mother tongue, as the passage defines it, is also the language a person first learned, not one adopted later."
+        }
+      },
+      "models": [
+        "43f4013a",
+        "3233c162",
+        "3.27",
+        "3.22"
+      ],
+      "word_count": 98,
+      "sources": [
+        {
+          "what": "Census of India 2001 and 2011 first-language speakers: Hindi 422,048,642 / 528,347,193; Bengali 83,193,311 / 97,237,669; Marathi 71,936,894 / 83,026,680; Telugu 74,002,856 / 81,127,740; Tamil 60,793,814 / 69,026,881; Urdu 51,536,111 / 50,772,631 (shares 2011: Telugu 6.70% from 7.19%); the page’s ranking-table headers give total population 1,028,610,328 (2001) and 1,210,854,977 (2011), an increase of 17.7 percent",
+          "url": "https://en.wikipedia.org/wiki/List_of_languages_by_number_of_native_speakers_in_India"
+        }
+      ],
+      "notes": "Band 7 moves: the passage states the relation that turns two counts into a change in share (growth below the population's 17.7 percent means a falling share); the blank concludes about shares, which the table does not show; WDIR (Hindi grew faster than the population), IRREL (Urdu read correctly, share fell, but it lost speakers: fails the passage criterion), OUTS (cause of Bengali's growth). Population 1,028.6 million (2001) to 1,210.9 million (2011), both on the cited page.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 8,
+        "fixes": [
+          "C (Urdu “gained about 2 million”, killed by one cell) replaced by an accurate Urdu reading whose share did fall but which lost speakers, so it fails only the passage criterion (gained millions)",
+          "confirmed “nearly 18 percent”: the cited page gives both census totals (1,028,610,328 and 1,210,854,977, 17.7 percent); recorded in sources"
+        ],
+        "status": "fixed"
+      },
+      "band7": {
+        "verdict": "band 7",
+        "why": "Proxy stated in the passage (growth below the population’s 18 percent means a falling share); the blank concludes about shares, which the table does not show; four operations. WDIR B (Hindi above the threshold), IRREL C (accurate, fails the criterion), OUTS D (a cause the table cannot show). Compound options of 26 to 30 words."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "A",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 7
+    },
+    {
+      "id": "command_of_evidence.T2_lit_quote.medium.w2b2_11",
+      "template": "T2_lit_quote",
+      "subtype": "Literary quotation illustrates a two-part claim (success and its emptiness)",
+      "tier": "medium",
+      "passage": "The Rise of David Levinsky is a 1917 novel by Abraham Cahan. Its narrator, an immigrant who arrived in New York in poverty and became a leading clothing manufacturer, acknowledges that the wealth and influence he has accumulated hold little meaning for him: ______",
+      "stem": "Which quotation from The Rise of David Levinsky most effectively illustrates the claim?",
+      "options": [
+        "“Sometimes, when I think of my past in a superficial, casual way, the metamorphosis I have gone through strikes me as nothing short of a miracle.”",
+        "“My present station, power, the amount of worldly happiness at my command, and the rest of it, seem to be devoid of significance.”",
+        "“Life is much shorter than I imagined it to be. The last years that I spent in my native land and my first years in America come back to me with the distinctness of yesterday.”",
+        "“I love to brood over my youth. The dearest days in one’s life are those that seem very far and very near at once. My wretched boyhood appeals to me as a sick child does to its mother.”"
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The claim pairs Levinsky’s wealth and influence with his sense that they mean little. In choice B he lists his “present station, power,” and “worldly happiness” and says they “seem to be devoid of significance,” which matches both parts.",
+      "distractors": {
+        "A": {
+          "recipe": "HALF/OPP: success seen as wonderful",
+          "why_wrong": "Levinsky refers to his rise, but here he calls it “nothing short of a miracle,” which presents his success as remarkable rather than meaningless."
+        },
+        "C": {
+          "recipe": "OFF: memory and time",
+          "why_wrong": "This is about how vividly he remembers his early years, not about what his wealth and status mean to him."
+        },
+        "D": {
+          "recipe": "OFF: fondness for his youth",
+          "why_wrong": "This shows his tenderness toward his boyhood but says nothing about his wealth or status."
+        }
+      },
+      "models": [
+        "2.11",
+        "2.26",
+        "2.31"
+      ],
+      "word_count": 44,
+      "sources": [
+        {
+          "what": "Cahan, The Rise of David Levinsky (1917), Book I, chapter I, opening paragraphs",
+          "url": "https://www.gutenberg.org/ebooks/2803"
+        }
+      ],
+      "notes": "All four quotations come from the opening pages of chapter I, copied from the Project Gutenberg text (its doubled spaces removed).",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [],
+        "status": "pass",
+        "literary_text": "checked verbatim against Project Gutenberg #2803, Book I, chapter I; all four quotations exact"
+      }
+    },
+    {
+      "id": "command_of_evidence.T1_single.medium.w2b2_12",
+      "template": "T1_single",
+      "subtype": "Hypothetical finding supports a causal claim (comparison group within the same counties)",
+      "tier": "medium",
+      "passage": "Between 1914 and 1931, a program funded by philanthropist Julius Rosenwald helped Black communities throughout the segregated rural South construct nearly 5,000 schoolhouses, with local residents contributing cash, land, and labor. Using historical census records, economists Daniel Aaronson and Bhashkar Mazumder examined school attendance among children who grew up in counties where these schools were built. They concluded that the schools substantially increased attendance among rural Black children, rather than simply appearing in places where attendance was already rising for other reasons.",
+      "stem": "Which finding, if true, would most directly support Aaronson and Mazumder’s conclusion?",
+      "options": [
+        "Many Rosenwald schools were built from a small number of standard plans, which called for tall windows placed to let in as much daylight as possible.",
+        "In counties that later received Rosenwald schools, attendance among rural Black children had already been rising faster than in other counties for several years before any of the schools had opened.",
+        "Black children who attended Rosenwald schools were more likely than their parents had been to move to cities in the North as adults.",
+        "After Rosenwald schools opened in a county, attendance rose sharply among rural Black children living nearby but changed little among rural white children in that county, who could not attend them."
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The conclusion is that the schools themselves raised Black children’s attendance, not that they happened to open where attendance was rising anyway. Choice D shows attendance rising for the children who could use the schools but not for white children in the same counties, who faced the same local conditions but could not attend them. That comparison points to the schools as the cause.",
+      "distractors": {
+        "A": {
+          "recipe": "OFF: building design",
+          "why_wrong": "How the schoolhouses were designed says nothing about whether they changed attendance."
+        },
+        "B": {
+          "recipe": "OPP: the alternative the researchers rejected",
+          "why_wrong": "Attendance already rising faster before the schools opened would suggest the schools went to places where attendance was rising anyway."
+        },
+        "C": {
+          "recipe": "SUBJ: a different outcome",
+          "why_wrong": "Moving north as adults is a later effect, not school attendance, so it does not bear on the conclusion."
+        }
+      },
+      "models": [
+        "2.7",
+        "2.21",
+        "2.33"
+      ],
+      "word_count": 82,
+      "sources": [
+        {
+          "what": "Aaronson and Mazumder, 'The Impact of Rosenwald Schools on Black Achievement' (JPE 2011; Chicago Fed WP 2009-26): nearly 5,000 schools for rural Southern Black children 1914-1931; significant effects on attendance, literacy, years of schooling and Northern migration",
+          "url": "https://www.chicagofed.org/-/media/publications/working-papers/2009/wp2009-26-pdf.pdf"
+        }
+      ],
+      "notes": "The white-children comparison mirrors the paper's design (rural white children in the same counties serve as a comparison group).",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "command_of_evidence.T1_single.medium.w2b2_13",
+      "template": "T1_single",
+      "subtype": "Hypothetical finding supports a causal claim over other effects of the same change (timing of the effect)",
+      "tier": "medium",
+      "passage": "When daylight saving time begins each spring, clocks across most of the United States move forward one hour, so roughly an hour of daylight shifts from early morning to early evening, when many pedestrians and drivers are commuting home from work or school. Economists Jennifer Doleac and Nicholas Sanders compared robbery rates in the days immediately before and immediately after this transition. They concluded that robberies declined after the shift because of the additional evening daylight rather than because of other changes that accompany the time switch.",
+      "stem": "Which finding, if true, would most directly support Doleac and Sanders’s conclusion?",
+      "options": [
+        "After the shift, robberies fell most in the hour around sunset, which had changed from darkness to daylight, and changed little in hours whose lighting was unaffected.",
+        "After the shift, robberies fell by about the same amount in every hour of the day, including late-night hours that were dark both before and after the change.",
+        "Robbery rates in the areas the researchers studied had been declining gradually for several years before the period that the researchers examined.",
+        "In the weeks after the shift, more robberies occurred on weekends than on weekdays, just as more had occurred on weekends than on weekdays during the weeks before the shift."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The conclusion credits the drop in robberies to the extra evening daylight, not to other effects of changing the clocks. If light is the cause, robberies should fall in the hour that turned from dark to light and stay about the same in hours whose lighting did not change. Choice A describes exactly that pattern.",
+      "distractors": {
+        "B": {
+          "recipe": "OPP: an effect unrelated to light",
+          "why_wrong": "A drop of the same size in every hour, including hours that stayed dark, would point to something about the time change other than daylight."
+        },
+        "C": {
+          "recipe": "OFF: a long-term trend",
+          "why_wrong": "A gradual decline over earlier years says nothing about why robberies fell right after the clock change."
+        },
+        "D": {
+          "recipe": "TRAP: a pattern unchanged by the shift",
+          "why_wrong": "A weekend pattern that was the same before and after the shift does not show what caused robberies to fall."
+        }
+      },
+      "models": [
+        "2.21",
+        "2.7",
+        "2.33"
+      ],
+      "word_count": 87,
+      "sources": [
+        {
+          "what": "Doleac and Sanders, 'Under the Cover of Darkness' (SIEPR working paper; Review of Economics and Statistics 2015): regression discontinuity around the spring shift to DST; robbery falls, with the largest effects in the hour around sunset that gains light, suggesting the changes are due to ambient light rather than other factors",
+          "url": "https://siepr.stanford.edu/publications/working-paper/under-cover-darkness-using-daylight-saving-time-measure-how-ambient"
+        }
+      ],
+      "notes": "The claim stays at the paper's level (a drop concentrated in the hour that gains light, attributed to ambient light); no figures are given. Displacement to other hours is not claimed, since the cited pages do not state it.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "command_of_evidence.Q1_P3_pairwise.medium.w2b2_14",
+      "template": "Q1_P3_pairwise",
+      "subtype": "Data completion (two comparisons between two rows)",
+      "tier": "medium",
+      "passage": "A river’s length is not always a reliable guide to the volume of water it discharges, since that volume depends largely on how much precipitation falls across the land the river drains. Rivers draining the rainy Pacific Northwest, for example, can discharge considerably more water than longer rivers draining drier regions. A comparison of two of the rivers in the table illustrates this point: ______",
+      "stem": "Which choice most effectively uses data from the table to complete the statement?",
+      "options": [
+        "the Arkansas River is longer than the Yukon River and also carries more water on average.",
+        "the Red River is longer than the Arkansas River and carries more water on average.",
+        "the Columbia River is shorter than the Yukon River but carries more water on average.",
+        "the Yukon River is shorter than the Columbia River but carries more water on average."
+      ],
+      "answer_letter": "C",
+      "table": {
+        "title": "Length and Average Discharge of Four North American Rivers",
+        "columns": [
+          "River",
+          "Length (miles)",
+          "Average discharge at mouth (cubic feet per second)"
+        ],
+        "rows": [
+          [
+            "Yukon",
+            "1,980",
+            "225,000"
+          ],
+          [
+            "Columbia",
+            "1,249",
+            "265,000"
+          ],
+          [
+            "Arkansas",
+            "1,469",
+            "41,000"
+          ],
+          [
+            "Red",
+            "1,290",
+            "56,000"
+          ]
+        ],
+        "note": null
+      },
+      "figure": null,
+      "explanation": "To show that length is a poor guide to volume, the comparison needs a shorter river that carries more water. The Columbia is 1,249 miles long, shorter than the 1,980-mile Yukon, yet its average discharge of 265,000 cubic feet per second exceeds the Yukon’s 225,000, so choice C completes the statement.",
+      "distractors": {
+        "A": {
+          "recipe": "INACC: both comparisons wrong",
+          "why_wrong": "The Arkansas (1,469 miles; 41,000 cubic feet per second) is shorter than the Yukon and carries far less water."
+        },
+        "B": {
+          "recipe": "INACC: one comparison wrong",
+          "why_wrong": "The Red River does carry more water than the Arkansas, but at 1,290 miles it is shorter, not longer."
+        },
+        "D": {
+          "recipe": "WDIR: rows reversed",
+          "why_wrong": "The Yukon is longer than the Columbia and carries less water, the reverse of what this choice says."
+        }
+      },
+      "models": [
+        "2.18",
+        "2.27",
+        "2.24"
+      ],
+      "word_count": 65,
+      "sources": [
+        {
+          "what": "USGS, Largest Rivers in the United States (Kammerer 1990): length and average discharge at mouth: Yukon 1,980 mi, 225,000 ft3/s; Columbia 1,249 mi, 265,000; Arkansas 1,469 mi, 41,000; Red 1,290 mi, 56,000",
+          "url": "https://pubs.usgs.gov/of/1987/ofr87-242/"
+        }
+      ],
+      "notes": "The table also contains a second valid contrast (Red against Arkansas), but no option states it truly: choice B gets the length comparison wrong.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 8,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "command_of_evidence.Q1_P5_control.medium.w2b2_15",
+      "template": "Q1_P5_control",
+      "subtype": "Data completion (treatment relative to control on several measures)",
+      "tier": "medium",
+      "passage": "Cereal leaf beetles deposit their eggs on wheat leaves, and the larvae that subsequently hatch scrape away the leaf surface as they feed. Swiss farmers can receive government payments for sowing strips of native wildflowers along their fields, which shelter predatory insects that attack crop pests. Matthias Tschumi and colleagues compared ten wheat fields bordered by such strips with ten control fields lacking them and found that the strips were associated with considerably better pest control: ______",
+      "stem": "Which choice most effectively uses data from the table to complete the statement?",
+      "options": [
+        "fields beside wildflower strips had 66% fewer cereal leaf beetle larvae and 40% less damage from the beetles than control fields did.",
+        "fields beside wildflower strips had 44% fewer cereal leaf beetle larvae than control fields did, and their grain yield was 66% higher.",
+        "control fields had 40% less damage from cereal leaf beetles than fields beside wildflower strips did.",
+        "fields beside wildflower strips produced 10% more grain than control fields did, though they had about the same number of cereal leaf beetle eggs."
+      ],
+      "answer_letter": "A",
+      "table": {
+        "title": "Wheat Fields beside Wildflower Strips Compared with Control Fields",
+        "columns": [
+          "Measure",
+          "Difference from control fields (%)"
+        ],
+        "rows": [
+          [
+            "Cereal leaf beetle eggs",
+            "−44"
+          ],
+          [
+            "Cereal leaf beetle larvae",
+            "−66"
+          ],
+          [
+            "Leaf damage caused by cereal leaf beetles",
+            "−40"
+          ],
+          [
+            "Grain yield",
+            "+10"
+          ]
+        ],
+        "note": null
+      },
+      "figure": null,
+      "explanation": "Better pest control means fewer pests and less damage in the fields beside the strips. The table shows larvae 66% lower and beetle damage 40% lower in those fields than in control fields, which is what choice A reports.",
+      "distractors": {
+        "B": {
+          "recipe": "INACC: misplaced values",
+          "why_wrong": "The 44% reduction refers to eggs, not larvae, and grain yield was 10% higher, not 66%."
+        },
+        "C": {
+          "recipe": "WDIR: groups reversed",
+          "why_wrong": "Fields beside the strips, not control fields, had 40% less beetle damage."
+        },
+        "D": {
+          "recipe": "INACC: one false clause",
+          "why_wrong": "The yield figure is right, but fields beside the strips had 44% fewer beetle eggs, not about the same number."
+        }
+      },
+      "models": [
+        "2.14",
+        "2.5",
+        "2.19"
+      ],
+      "word_count": 77,
+      "sources": [
+        {
+          "what": "Tschumi, Albrecht, Bärtschi, Collatz, Entling and Jacot 2016, Agriculture, Ecosystems and Environment 220: 97-103: wheat beside perennial wildflower strips (N=10) against control fields (N=10): cereal leaf beetle eggs -44%, larvae -66%, crop damage -40%, yield +10%",
+          "url": "https://doi.org/10.1016/j.agee.2016.01.001"
+        }
+      ],
+      "notes": "Values are the percentage differences reported in the abstract.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 5,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "command_of_evidence.Q2_P5_control.medium.w2b2_16",
+      "template": "Q2_P5_control",
+      "subtype": "Data description (change from baseline in treatment against control)",
+      "tier": "medium",
+      "passage": "Presbyopia, the gradual loss of the ability to focus on nearby objects that typically begins in a person’s forties, frequently goes uncorrected in rural India. In a 2017 trial in Assam, researchers randomly assigned tea pickers with presbyopia to receive free reading glasses either immediately or after the trial concluded, and they measured how much tea each worker harvested per day before and after the first group received glasses. The researchers concluded that the glasses increased the workers’ productivity.",
+      "stem": "Which choice best describes data from the graph that support the researchers’ conclusion?",
+      "options": [
+        "During the evaluation period, workers who had received glasses immediately picked about 35 kilograms of tea per day on average.",
+        "Both groups of workers picked more tea per day on average during the evaluation period than they had during the baseline period, before any glasses were distributed.",
+        "During the evaluation period, workers who had not yet received glasses picked more tea per day on average than workers who had received glasses immediately did.",
+        "Workers who received glasses immediately increased their daily harvest by about 10 kilograms on average, roughly twice the increase for the other workers."
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": {
+        "kind": "bar graph",
+        "title": "Average Weight of Tea Picked per Worker per Day",
+        "x_axis": "Period",
+        "y_axis": "Tea picked per day (kilograms)",
+        "description": "Grouped bars for two periods, baseline (June 2017) and evaluation (July–October 2017), each with two bars: workers who received glasses immediately and workers who received glasses after the trial. Y-axis 0 to 40 in steps of 10. Baseline: glasses immediately about 25.0, glasses after the trial about 26.0. Evaluation: glasses immediately about 34.8, glasses after the trial about 30.6.",
+        "data": [
+          {
+            "series": "Received glasses immediately",
+            "points": [
+              [
+                "Baseline (June 2017)",
+                25.0
+              ],
+              [
+                "Evaluation (July–October 2017)",
+                34.8
+              ]
+            ]
+          },
+          {
+            "series": "Received glasses after the trial",
+            "points": [
+              [
+                "Baseline (June 2017)",
+                26.0
+              ],
+              [
+                "Evaluation (July–October 2017)",
+                30.6
+              ]
+            ]
+          }
+        ]
+      },
+      "explanation": "Both groups picked more tea in the evaluation period, so the question is whether the workers with glasses improved more than the workers without them. Choice D shows they did: the group with glasses rose from about 25 to about 35 kilograms a day, an increase of nearly 10, while the other group rose from about 26 to about 31, an increase of under 5.",
+      "distractors": {
+        "A": {
+          "recipe": "PART: one group, no comparison",
+          "why_wrong": "The figure is accurate, but without the other group or the baseline it cannot show that the glasses made a difference."
+        },
+        "B": {
+          "recipe": "IRREL: true of both groups",
+          "why_wrong": "Both groups did improve, but a gain shared by workers without glasses cannot show that the glasses raised productivity."
+        },
+        "C": {
+          "recipe": "WDIR: groups reversed",
+          "why_wrong": "During the evaluation period the workers with glasses picked about 35 kilograms a day, more than the other group’s roughly 31."
+        }
+      },
+      "models": [
+        "2.25",
+        "2.3"
+      ],
+      "word_count": 79,
+      "sources": [
+        {
+          "what": "PROSPER trial, Lancet Global Health 2018; 6: e1019-27: 751 tea pickers aged 40+ in Assam randomized to near glasses immediately or at closeout; mean productivity rose from 25.0 to 34.8 kg/day (intervention) and from 26.0 to 30.6 kg/day (control), a between-group difference of 5.25 kg/day",
+          "url": "https://doi.org/10.1016/S2214-109X(18)30329-2"
+        }
+      ],
+      "notes": "Values from the abstract's Findings.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 5,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "command_of_evidence.Q1_P1_lookup.medium.w2b2_17",
+      "template": "Q1_P1_lookup",
+      "subtype": "Data completion (one cell, chosen by row and column)",
+      "tier": "medium",
+      "passage": "Ushuaia, Argentina, on the island of Tierra del Fuego, is frequently described as the southernmost city in the world. Because the seasons in the Southern Hemisphere are the reverse of those in the Northern Hemisphere, July falls during Ushuaia’s winter. According to the table, July in Ushuaia has an average daily ______",
+      "stem": "Which choice most effectively uses data from the table to complete the text?",
+      "options": [
+        "maximum temperature of 0.2°C.",
+        "minimum temperature of 0.2°C.",
+        "minimum temperature of 3.0°C.",
+        "maximum temperature of 10.6°C."
+      ],
+      "answer_letter": "B",
+      "table": {
+        "title": "Average Weather in Ushuaia, Argentina, for Four Months (1991–2020)",
+        "columns": [
+          "Month",
+          "Daily maximum temperature (°C)",
+          "Daily minimum temperature (°C)",
+          "Days with snow"
+        ],
+        "rows": [
+          [
+            "January",
+            "13.6",
+            "5.4",
+            "0.2"
+          ],
+          [
+            "April",
+            "9.4",
+            "3.0",
+            "4.3"
+          ],
+          [
+            "July",
+            "4.6",
+            "0.2",
+            "10.6"
+          ],
+          [
+            "October",
+            "10.1",
+            "2.3",
+            "5.5"
+          ]
+        ],
+        "note": null
+      },
+      "figure": null,
+      "explanation": "In the July row, the daily minimum temperature column reads 0.2°C, so choice B completes the text.",
+      "distractors": {
+        "A": {
+          "recipe": "INACC: wrong column",
+          "why_wrong": "July’s average daily maximum is 4.6°C; 0.2 is its minimum (and January’s number of snowy days)."
+        },
+        "C": {
+          "recipe": "WGRP: wrong row",
+          "why_wrong": "3.0°C is April’s average daily minimum, not July’s."
+        },
+        "D": {
+          "recipe": "INACC: wrong column",
+          "why_wrong": "10.6 is the number of days with snow in July, not a temperature."
+        }
+      },
+      "models": [
+        "2.41"
+      ],
+      "word_count": 52,
+      "sources": [
+        {
+          "what": "Climate data for Ushuaia Airport, 1991-2020 normals (Servicio Meteorológico Nacional): January 13.6/5.4 °C, 0.2 snowy days; April 9.4/3.0, 4.3; July 4.6/0.2, 10.6; October 10.1/2.3, 5.5",
+          "url": "https://en.wikipedia.org/wiki/Ushuaia"
+        }
+      ],
+      "notes": "",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 6,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "command_of_evidence.Q1_P1_lookup.easy.w2b2_18",
+      "template": "Q1_P1_lookup",
+      "subtype": "Data completion (reverse lookup: find the row by year, report its area)",
+      "tier": "easy",
+      "passage": "Of the 63 national parks in the United States, eight are in Alaska, and together they account for more than half of the territory in all the country’s national parks. Most of Alaska’s parks, including Gates of the Arctic and Katmai, were established by a single law passed in 1980. A student researching these parks notes that the oldest of them, Denali, which was established in 1917, covers approximately ______",
+      "stem": "Which choice most effectively uses data from the table to complete the statement?",
+      "options": [
+        "7.5 million acres.",
+        "3.7 million acres.",
+        "4.7 million acres.",
+        "3.2 million acres."
+      ],
+      "answer_letter": "C",
+      "table": {
+        "title": "Four National Parks in Alaska",
+        "columns": [
+          "National park",
+          "Year established",
+          "Area (acres)"
+        ],
+        "rows": [
+          [
+            "Gates of the Arctic",
+            "1980",
+            "7,523,897"
+          ],
+          [
+            "Katmai",
+            "1980",
+            "3,674,529"
+          ],
+          [
+            "Denali",
+            "1917",
+            "4,740,911"
+          ],
+          [
+            "Glacier Bay",
+            "1980",
+            "3,223,383"
+          ]
+        ],
+        "note": null
+      },
+      "figure": null,
+      "explanation": "The table lists Denali, established in 1917, with an area of 4,740,911 acres, or about 4.7 million acres.",
+      "distractors": {
+        "A": {
+          "recipe": "WGRP: neighboring row",
+          "why_wrong": "About 7.5 million acres is the area of Gates of the Arctic."
+        },
+        "B": {
+          "recipe": "WGRP: neighboring row",
+          "why_wrong": "About 3.7 million acres is the area of Katmai."
+        },
+        "D": {
+          "recipe": "WGRP: neighboring row",
+          "why_wrong": "About 3.2 million acres is the area of Glacier Bay."
+        }
+      },
+      "models": [
+        "1.24",
+        "1.30",
+        "1.44"
+      ],
+      "word_count": 70,
+      "sources": [
+        {
+          "what": "List of national parks of the United States: Denali est. February 26, 1917, 4,740,911.16 acres; Gates of the Arctic est. December 2, 1980, 7,523,897.45 acres; Katmai 1980, 3,674,529.33 acres; Glacier Bay 1980, 3,223,383.43 acres; eight Alaska parks of 63",
+          "url": "https://en.wikipedia.org/wiki/List_of_national_parks_of_the_United_States"
+        }
+      ],
+      "notes": "The 1980 law is the Alaska National Interest Lands Conservation Act; the eight Alaska parks total about 32.5 million acres, roughly 60 percent of all national park land.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 7,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "command_of_evidence.T1_single.easy.w2b2_19",
+      "template": "T1_single",
+      "subtype": "Hypothetical finding supports a claim about where an animal gets a substance",
+      "tier": "easy",
+      "passage": "The African crested rat is a rabbit-sized rodent of East Africa. Predators seldom attack it, and domestic dogs have reportedly become seriously ill or died after encounters with one. Along each side of its body runs a strip of specialized hairs that absorb liquids like a wick. Zoologist Jonathan Kingdon and colleagues claim that the rat coats these hairs with poison obtained from the bark of the Acokanthera tree rather than poison manufactured by its own body.",
+      "stem": "Which finding, if true, would most directly support Kingdon and colleagues’ claim?",
+      "options": [
+        "Crested rats that had chewed Acokanthera bark carried the tree’s poison on their side hairs, but those that had never had access to the tree did not.",
+        "Crested rats spend most of the day hidden in burrows, hollow trees, or rock crevices and come out to search for food mainly at night, when fewer predators are active.",
+        "Several other rodents that live in East Africa also have long, coarse hairs that grow along their backs and sides.",
+        "Jackals that live in the same areas as crested rats often hunt other rodents that are about the same size as crested rats."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The claim is that the rat’s poison comes from Acokanthera bark rather than from its own body. Choice A shows that rats had the poison on their hairs only if they had chewed the bark, which is what would be expected if the bark were its source.",
+      "distractors": {
+        "B": {
+          "recipe": "OFF: daily activity",
+          "why_wrong": "When the rats are active says nothing about where their poison comes from."
+        },
+        "C": {
+          "recipe": "OFF: other species’ fur",
+          "why_wrong": "Other rodents having coarse hairs does not show where the crested rat’s poison comes from."
+        },
+        "D": {
+          "recipe": "OFF: predators’ diet",
+          "why_wrong": "What jackals hunt says nothing about the source of the crested rat’s poison."
+        }
+      },
+      "models": [
+        "1.29",
+        "1.8",
+        "1.45"
+      ],
+      "word_count": 77,
+      "sources": [
+        {
+          "what": "Kingdon et al. 2012, Proc. R. Soc. B 279: 675-680: the African crested rat chews Acokanthera schimperi bark and roots and applies the toxic mixture to specialized wick-like flank hairs; first report of a placental mammal acquiring a plant toxin this way",
+          "url": "https://www.sciencedaily.com/releases/2011/08/110802201836.htm"
+        }
+      ],
+      "notes": "Reports of dogs falling ill or dying after encounters with crested rats come from the study’s background (ScienceDaily: “accounts of dogs becoming ill or dying after encounters with rats”); kept hedged (“reportedly”).",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [
+          "“domestic dogs that have bitten one have reportedly become seriously ill” changed to “have reportedly become seriously ill or died after encounters with one” (the source reports encounters, not bites)"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "command_of_evidence.Q1_P2_extreme.easy.w2b2_20",
+      "template": "Q1_P2_extreme",
+      "subtype": "Data completion (second-largest bar)",
+      "tier": "easy",
+      "passage": "Once reduced to fewer than 100 individuals in southern Spain, the Iberian lynx has since been reintroduced to several regions of Spain and Portugal. A 2023 census counted more than 2,000 lynx. Andalusia, where the last wild populations survived, still had the most lynx, but the region with the second-largest number was ______",
+      "stem": "Which choice most effectively uses data from the graph to complete the statement?",
+      "options": [
+        "Portugal.",
+        "Extremadura.",
+        "Murcia.",
+        "Castilla-La Mancha."
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": {
+        "kind": "bar graph",
+        "title": "Iberian Lynx Counted in the 2023 Census, by Region",
+        "x_axis": "Region",
+        "y_axis": "Number of lynx",
+        "description": "One bar per region; y-axis 0 to 800 in steps of 100. Andalusia: about 755. Castilla-La Mancha: about 715. Extremadura: about 253. Murcia: about 7. Portugal: about 291. Castilla-La Mancha is the second-tallest bar, just below Andalusia and far above the rest.",
+        "data": [
+          {
+            "series": "Number of lynx",
+            "points": [
+              [
+                "Andalusia",
+                755
+              ],
+              [
+                "Castilla-La Mancha",
+                715
+              ],
+              [
+                "Extremadura",
+                253
+              ],
+              [
+                "Murcia",
+                7
+              ],
+              [
+                "Portugal",
+                291
+              ]
+            ]
+          }
+        ]
+      },
+      "explanation": "After Andalusia’s bar (about 755 lynx), the tallest bar belongs to Castilla-La Mancha, with about 715 lynx, far more than Portugal, Extremadura, or Murcia.",
+      "distractors": {
+        "A": {
+          "recipe": "WGRP: third-largest bar",
+          "why_wrong": "Portugal had about 291 lynx, far fewer than Castilla-La Mancha’s 715."
+        },
+        "B": {
+          "recipe": "WGRP: fourth-largest bar",
+          "why_wrong": "Extremadura had about 253 lynx, fewer than both Castilla-La Mancha and Portugal."
+        },
+        "C": {
+          "recipe": "WDIR: the smallest bar",
+          "why_wrong": "Murcia had the fewest lynx of any region shown, only about 7."
+        }
+      },
+      "models": [
+        "1.21",
+        "1.9",
+        "1.31"
+      ],
+      "word_count": 53,
+      "sources": [
+        {
+          "what": "MITECO 2023 Iberian lynx census: 2,021 lynx; Andalusia 755, Castilla-La Mancha 715, Extremadura 253, Murcia 7, Portugal 291",
+          "url": "https://www.miteco.gob.es/es/prensa/ultimas-noticias/2024/mayo/la-poblacion-de-lince-iberico-supero-los-2-000-ejemplares-en-202.html"
+        }
+      ],
+      "notes": "The 2002 low (94 lynx in Doñana and Sierra Morena) is the well-documented starting point; not on the cited page.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 6,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "command_of_evidence.Q1_P3_pairwise.easy.w2b2_21",
+      "template": "Q1_P3_pairwise",
+      "subtype": "Data completion (two comparisons between two rows, full factorial options)",
+      "tier": "easy",
+      "passage": "The first asteroids were discovered in the early 1800s, when astronomers searching the region between the orbits of Mars and Jupiter spotted several faint objects moving against the background stars. The largest, Ceres, now classified as a dwarf planet, was found in 1801, and others soon followed. Comparing two of the largest asteroids in the table, a student notes that compared with Vesta, Pallas was discovered ______",
+      "stem": "Which choice most effectively uses data from the table to complete the comparison?",
+      "options": [
+        "earlier and is larger.",
+        "earlier but is smaller.",
+        "later but is larger.",
+        "later and is smaller."
+      ],
+      "answer_letter": "B",
+      "table": {
+        "title": "Four of the Largest Bodies in the Asteroid Belt",
+        "columns": [
+          "Name",
+          "Year discovered",
+          "Average diameter (kilometers)"
+        ],
+        "rows": [
+          [
+            "Ceres",
+            "1801",
+            "939"
+          ],
+          [
+            "Pallas",
+            "1802",
+            "511"
+          ],
+          [
+            "Vesta",
+            "1807",
+            "525"
+          ],
+          [
+            "Hygiea",
+            "1849",
+            "433"
+          ]
+        ],
+        "note": null
+      },
+      "figure": null,
+      "explanation": "Pallas was discovered in 1802, five years before Vesta (1807), and its average diameter of 511 kilometers is smaller than Vesta’s 525 kilometers. Choice B states both comparisons correctly.",
+      "distractors": {
+        "A": {
+          "recipe": "WDIR: size reversed",
+          "why_wrong": "Pallas was discovered earlier, but it is smaller than Vesta, not larger."
+        },
+        "C": {
+          "recipe": "WDIR: both reversed",
+          "why_wrong": "Pallas was discovered earlier than Vesta and is smaller."
+        },
+        "D": {
+          "recipe": "WDIR: date reversed",
+          "why_wrong": "Pallas is smaller, but it was discovered in 1802, earlier than Vesta."
+        }
+      },
+      "models": [
+        "1.3",
+        "1.4",
+        "1.7"
+      ],
+      "word_count": 67,
+      "sources": [
+        {
+          "what": "List of exceptional asteroids, largest by diameter: Ceres 939.4 km (1801), Vesta 525.4 km (1807), Pallas 511 km (1802), Hygiea 433 km (1849)",
+          "url": "https://en.wikipedia.org/wiki/List_of_exceptional_asteroids"
+        }
+      ],
+      "notes": "Diameters rounded to the nearest kilometer.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 8,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "command_of_evidence.Q1_P4_trend.easy.w2b2_22",
+      "template": "Q1_P4_trend",
+      "subtype": "Data completion (one series that shows rapid growth)",
+      "tier": "easy",
+      "passage": "During the 1840s and 1850s, steamboats on the Ohio and Mississippi Rivers and, later, railroads linking the Great Lakes to the interior turned several western towns into major commercial centers. Merchants in these cities shipped grain, pork, and lumber to eastern markets and received manufactured goods in return, and newcomers arrived by the thousands to work in warehouses, mills, and meatpacking plants. Census records show that some of these cities grew remarkably quickly. For example, the population of ______",
+      "stem": "Which choice most effectively uses data from the graph to complete the example?",
+      "options": [
+        "Cincinnati fell by more than half between 1850 and 1860.",
+        "Louisville grew faster than that of any other city shown from 1840 to 1860.",
+        "Chicago rose from below 10,000 in 1840 to above 100,000 in 1860.",
+        "St. Louis stayed at about 20,000 from 1840 to 1850."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": {
+        "kind": "line graph",
+        "title": "Population of Four Cities, 1840–1860",
+        "x_axis": "Census year",
+        "y_axis": "Population (thousands)",
+        "description": "Four lines at 1840, 1850 and 1860; y-axis 0 to 180 in steps of 20. Cincinnati: about 46, 115, 161. St. Louis: about 16, 78, 161. Chicago: about 4, 30, 112. Louisville: about 21, 43, 68. Every city grows; Chicago starts lowest in 1840 and passes 100 by 1860, while Louisville is the lowest line in 1860.",
+        "data": [
+          {
+            "series": "Cincinnati",
+            "points": [
+              [
+                "1840",
+                46.3
+              ],
+              [
+                "1850",
+                115.4
+              ],
+              [
+                "1860",
+                161.0
+              ]
+            ]
+          },
+          {
+            "series": "St. Louis",
+            "points": [
+              [
+                "1840",
+                16.5
+              ],
+              [
+                "1850",
+                77.9
+              ],
+              [
+                "1860",
+                160.8
+              ]
+            ]
+          },
+          {
+            "series": "Chicago",
+            "points": [
+              [
+                "1840",
+                4.5
+              ],
+              [
+                "1850",
+                30.0
+              ],
+              [
+                "1860",
+                112.2
+              ]
+            ]
+          },
+          {
+            "series": "Louisville",
+            "points": [
+              [
+                "1840",
+                21.2
+              ],
+              [
+                "1850",
+                43.2
+              ],
+              [
+                "1860",
+                68.0
+              ]
+            ]
+          }
+        ]
+      },
+      "explanation": "The example has to show a city growing remarkably quickly. The graph shows Chicago at about 4,000 people in 1840 and about 112,000 in 1860, so choice C, a rise from below 10,000 to above 100,000, is accurate and shows rapid growth.",
+      "distractors": {
+        "A": {
+          "recipe": "WDIR: rise read as a fall",
+          "why_wrong": "Cincinnati grew from about 115,000 in 1850 to about 161,000 in 1860; it did not fall."
+        },
+        "B": {
+          "recipe": "INACC: wrong extreme",
+          "why_wrong": "Louisville grew the least of the four cities, ending about 68,000 in 1860, far below the others."
+        },
+        "D": {
+          "recipe": "INACC: misread values",
+          "why_wrong": "St. Louis grew from about 16,000 in 1840 to about 78,000 in 1850, so it did not stay near 20,000."
+        }
+      },
+      "models": [
+        "1.10",
+        "1.6"
+      ],
+      "word_count": 79,
+      "sources": [
+        {
+          "what": "US census populations 1840, 1850, 1860: Cincinnati 46,338 / 115,435 / 161,044; St. Louis 16,469 / 77,860 / 160,773; Chicago 4,470 / 29,963 / 112,172; Louisville 21,210 / 43,194 / 68,033",
+          "url": "https://en.wikipedia.org/wiki/List_of_largest_cities_of_U.S._states_and_territories_by_historical_population"
+        }
+      ],
+      "notes": "Values are census counts in thousands, rounded to one decimal.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 12,
+        "fixes": [],
+        "status": "pass"
+      }
+    }
+  ]
+}

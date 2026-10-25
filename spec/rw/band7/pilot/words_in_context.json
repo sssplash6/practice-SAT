@@ -1,0 +1,340 @@
+{
+  "skill": "Words in Context",
+  "slug": "words_in_context",
+  "part": null,
+  "domain": "Craft and Structure",
+  "band_target": 7,
+  "plan": {
+    "templates": [
+      {
+        "code": "B6",
+        "name": "Blank completion, phrase options (word + preposition, a/an + word)",
+        "band7_official": 8,
+        "band6_official": 6
+      },
+      {
+        "code": "B1",
+        "name": "Blank completion, restatement clue",
+        "band7_official": 5,
+        "band6_official": 10
+      },
+      {
+        "code": "B2",
+        "name": "Blank completion, cause or consequence clue",
+        "band7_official": 5,
+        "band6_official": 3
+      },
+      {
+        "code": "B3",
+        "name": "Blank completion, contrast clue (including received view then finding)",
+        "band7_official": 5,
+        "band6_official": 1
+      }
+    ],
+    "skipped": [
+      [
+        "B5",
+        "band 7: 4"
+      ],
+      [
+        "B4",
+        "band 7: 3"
+      ],
+      [
+        "M1",
+        "band 7: 2"
+      ],
+      [
+        "M2",
+        "band 7: 1"
+      ]
+    ]
+  },
+  "items": [
+    {
+      "id": "words_in_context.B1.b7",
+      "template": "B1",
+      "subtype": "Blank completion: restatement clue",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "Few surviving artifacts document the stylistic evolution of early medieval Roman painting as comprehensively as one sanctuary wall in Santa Maria Antiqua, a church in the Roman Forum. The wall is a ______: between late antiquity and the early eighth century, at least six successive decorative schemes were applied over their predecessors, and portions of several earlier layers remain discernible alongside the images partially concealing them.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "pentimento",
+        "palimpsest",
+        "facsimile",
+        "triptych"
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "As used here, a “palimpsest” is something reused or altered while still showing traces of its earlier forms (the word first named a manuscript scraped and written over). The colon introduces the restatement: over several centuries at least six decorative schemes were applied over their predecessors, and parts of several earlier layers can still be seen beside the later images. That layered reuse, with the old still visible under the new, is what makes the wall a palimpsest.",
+      "distractors": {
+        "A": {
+          "recipe": "near synonym that fails on one feature (CONNOT)",
+          "why_wrong": "A pentimento is a trace of an earlier version that the same painter altered and painted over within one work. The text describes separate decorative schemes made by different painters across centuries, so the word names the wrong thing, and it names a visible trace rather than the whole wall."
+        },
+        "C": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "A facsimile is an exact copy of something. Nothing in the text suggests the wall reproduces another work; it records successive original layers."
+        },
+        "D": {
+          "recipe": "topic echo (ASSOC)",
+          "why_wrong": "A triptych is a work of art in three panels, often an altarpiece. The word fits the church setting but not the text, which describes one wall built up in at least six superimposed layers, not three panels side by side."
+        }
+      },
+      "models": [
+        "bce4d106",
+        "93665100"
+      ],
+      "band7_moves": [
+        "rare noun key whose restatement sits after a colon in a different register (successive schemes applied over predecessors) rather than echoing the key",
+        "familiar figurative use: a manuscript term transferred to a wall",
+        "every option past corrected rank 10,000",
+        "near-synonym distractor that fails on one feature (pentimento: the same artist's revision, not successive works)"
+      ],
+      "word_count": 66,
+      "sources": [
+        {
+          "what": "Santa Maria Antiqua, oldest Christian monument in the Roman Forum; the palimpsest wall in the sanctuary has at least six layers of decoration; the last layer under Pope John VII (705 to 707); the earliest layers date from the fourth to sixth century",
+          "url": "https://en.wikipedia.org/wiki/Santa_Maria_Antiqua"
+        },
+        {
+          "what": "palimpsest wall with six layers of painting; newer paintings applied on top of older ones",
+          "url": "https://www.turismoroma.it/en/places/santa-maria-antiqua-and-oratory-forty-martyrs"
+        },
+        {
+          "what": "six layers identifiable on the large fragment near the apse, from the fourth to fifth centuries to the eighth century",
+          "url": "https://turismoroma.it/en/node/881"
+        }
+      ],
+      "notes": "Subject: humanities (art history, early medieval Rome). Key letter B. Steps: 2 (read the colon as a restatement, then match layered reuse with visible traces to the transferred sense of the key). Concessive frame: no. Transferred-sense key: yes. Models' median length 54; this passage 66 words. Section 6 checks: corrected option ranks (pentimento unseen, palimpsest 63907, facsimile 25758, triptych 64780); 4 of 4 past rank 10,000, 4 past 20,000, mean log10 rank 5.01; rarest distractor past 50,000: yes; band-5 guard (rare key, two or more common distractors): clear.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [],
+        "status": "pass"
+      },
+      "band7": {
+        "verdict": "band 7",
+        "why": "Carried by vocabulary, as section 5 allows for one-step B1 (bce4d106): all four options past corrected rank 20,000, two near 65,000 and one unseen. Pentimento is the near synonym and fails on two counts a strong student can state: it names a trace showing through within one painting (an artist's painted-over change), not a whole surface, and the text describes separate schemes laid over one another across centuries, with earlier layers visible alongside later ones rather than through them. Palimpsest in its transferred sense (something with layers apparent beneath the surface) matches the colon clause exactly, so no second option is defensible."
+      }
+    },
+    {
+      "id": "words_in_context.B2.b7",
+      "template": "B2",
+      "subtype": "Blank completion: cause or consequence clue",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "Sumit Agarwal and colleagues found that the larger a Canadian lottery prize, the likelier the winner’s close neighbors were to declare bankruptcy in subsequent years. Because larger prizes were also linked to costlier conspicuous assets, such as houses and cars, among the neighbors who went bankrupt, the researchers suggest that one household’s windfall can ______ the finances of surrounding households by prompting them to emulate its spending.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "underwrite",
+        "garnish",
+        "squander",
+        "imperil"
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "As used here, “imperil” means to put in danger. The text reports that bigger lottery prizes were followed by more bankruptcies among the winners’ close neighbors and that bigger prizes were also linked to costlier visible assets among the neighbors who went bankrupt, which suggests they spent to keep up with the winners. The “by” clause names that cause, so the consequence for the neighbors’ finances is danger: the windfall can imperil them.",
+      "distractors": {
+        "A": {
+          "recipe": "reversal that is also a finance collocate (ANT)",
+          "why_wrong": "To “underwrite” finances is to back them with money or guarantee them. The text links larger prizes to more bankruptcies among neighbors, so the windfall weakens their finances rather than supporting them."
+        },
+        "B": {
+          "recipe": "topic echo from the debt setting with the wrong agent (ASSOC)",
+          "why_wrong": "In its legal sense, to “garnish” is for a creditor to seize part of a debtor’s wages or property. The word suits the setting of debt and bankruptcy, but a windfall is not a creditor and takes nothing from the neighbors; it prompts them to spend."
+        },
+        "C": {
+          "recipe": "near synonym with the wrong agent (CONNOT)",
+          "why_wrong": "To “squander” is to waste money or resources by spending them carelessly, so the one who squanders must be the spender. The windfall does not spend the neighbors’ money; it prompts the neighbors to spend their own, so the verb takes the wrong subject."
+        }
+      },
+      "models": [
+        "e26d23c4",
+        "7bc05fa2"
+      ],
+      "band7_moves": [
+        "cause in a by clause in the blank's sentence, so the key is the consequence (B2 setting)",
+        "evaluative verb key in a figurative use (a windfall endangering others' finances)",
+        "all four options past corrected rank 20,000, one unseen",
+        "three negative-sounding options in the debt setting, two failing on agent: garnish (a creditor's legal seizure) and squander (the neighbors, not the windfall, would be the ones wasting money)",
+        "reversal distractor that is itself a finance collocate (underwrite)"
+      ],
+      "word_count": 67,
+      "sources": [
+        {
+          "what": "Agarwal, Mikhed and Scholnick, Peers' Income and Financial Distress: Evidence from Lottery Winners and Neighboring Bankruptcies, Review of Financial Studies 33(1), 2020: the dollar magnitude of a neighbor's lottery win increases subsequent borrowing and bankruptcies among other neighbors",
+          "url": "https://ideas.repec.org/a/oup/rfinst/v33y2020i1p433-472..html"
+        },
+        {
+          "what": "Working paper: Canadian lottery and bankruptcy data; the size of the neighbor's win is related to the dollar value of more visible (house, car) but not less visible assets of neighboring bankruptcy filers, consistent with conspicuous consumption and keeping up with the Joneses",
+          "url": "https://www.philadelphiafed.org/-/media/frbp/assets/working-papers/2018/wp18-16.pdf"
+        }
+      ],
+      "notes": "Subject: social science (economics). Key letter D. Steps: 2 (infer from the asset pattern that neighbors spent to keep pace, then take the consequence of that spending as harm). Concessive frame: no. Transferred-sense key: partly (a windfall as the agent that endangers). Models' median length 54; this passage 62 words. Section 6 checks: corrected option ranks (buoy 18247, audit 43478, squander 27047, imperil 25572); 4 of 4 past rank 10,000, 3 past 20,000, mean log10 rank 4.43; rarest distractor past 50,000: no; band-5 guard (rare key, two or more common distractors): clear. Reviewer: buoy and audit replaced by underwrite and garnish (a 1400 scorer knows buoy, audit and squander, and bankruptcy kills buoy at a glance); corrected ranks now underwrite unseen, garnish 42845, squander 27047, imperil 25572; mean log10 rank 4.87. \"immediate neighbors\" changed to the paper's \"close neighbors\" (same six-digit postal code); the asset finding restated as the paper gives it (win size linked to the value of visible assets of bankrupt neighbors).",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 5,
+        "fixes": [
+          "immediate neighbors -> close neighbors (paper: neighbors in the same six-digit postal code, median 13 households)",
+          "asset sentence restated to match the finding: larger wins linked to costlier visible assets (house, car) among bankrupt neighbors, not a plain description of those neighbors",
+          "options buoy and audit replaced by underwrite (reversal) and garnish (debt-setting echo, wrong agent) to raise the option set to band-7 rarity; distractors and explanation rewritten"
+        ],
+        "status": "fixed"
+      },
+      "band7": {
+        "verdict": "band 7",
+        "why": "Before the fix it read band 6: one-step direction (bankruptcy is stated) and all four words known to a strong student. Now three options sound negative in the debt setting, and two of them (garnish, squander) fail only on agent or sense, the band-7 collocation and agent pattern of 4b54bbf0; all four options past corrected rank 20,000. The logic stays one step, so the item leans on vocabulary, which section 2 shows is how one-step band-7 items work."
+      }
+    },
+    {
+      "id": "words_in_context.B3.b7",
+      "template": "B3",
+      "subtype": "Blank completion: contrast clue, received view then finding",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "Because listeners in Western societies so reliably prefer consonant chords to dissonant ones, some researchers had long hypothesized that the preference was ______. Josh McDermott and colleagues complicated that assumption in 2016: Tsimane villagers in the Bolivian Amazon, most of whom have had very little exposure to Western music, rated consonant and dissonant chords as equally pleasant, though, like American listeners, they disliked acoustically rough sounds.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "vestigial",
+        "ephemeral",
+        "innate",
+        "inculcated"
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "As used here, “innate” means present from birth rather than learned. The blank states the hypothesis that the 2016 study “complicated”: Tsimane listeners with little exposure to Western music did not prefer consonant chords, even though, like Americans, they disliked acoustic roughness. A finding that the preference is absent without exposure challenges the view that it is built in, so the hypothesis must have been that the preference was innate.",
+      "distractors": {
+        "A": {
+          "recipe": "near synonym from the key's field that fails on one feature (CONNOT)",
+          "why_wrong": "“Vestigial” describes a remnant of something that once served a purpose and no longer does. The text gives no sign that anyone regarded the preference as a leftover that had lost its function; the view under challenge concerns whether the preference is inborn."
+        },
+        "B": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "“Ephemeral” means short-lived. The text presents the preference as reliable among Western listeners, and the Tsimane results bear on where it comes from, not on how long it lasts."
+        },
+        "D": {
+          "recipe": "reversal: trait of the finding's side (ANT-party)",
+          "why_wrong": "“Inculcated” means instilled through repetition or teaching. That is what the Tsimane results point toward, since the preference appears to depend on exposure, so it cannot be the assumption the study complicated."
+        }
+      },
+      "models": [
+        "e8fb0744",
+        "22a41819"
+      ],
+      "band7_moves": [
+        "received view then finding with the blank on the view being challenged",
+        "direction left implicit: the text never says learned or cultural; the student infers it from the Tsimane' result",
+        "the finding side's trait offered as a reversal distractor (inculcated)",
+        "every option past corrected rank 10,000, one distractor unseen in both corpora",
+        "near-synonym distractor from the biology field (vestigial)"
+      ],
+      "word_count": 66,
+      "sources": [
+        {
+          "what": "McDermott, Schultz, Undurraga and Godoy, Nature 2016: Tsimane' rated dissonant chords as pleasant as consonant ones; most Tsimane have very limited exposure to Western music; they showed the same dislike of acoustic roughness; some scientists had hypothesized that the brain is wired to respond favorably to consonant chords",
+          "url": "https://news.mit.edu/2016/music-tastes-cultural-not-hardwired-brain-0713"
+        },
+        {
+          "what": "Paper record: Indifference to dissonance in native Amazonians reveals cultural variation in music perception, Nature 535, 547 to 550 (2016)",
+          "url": "https://www.nature.com/articles/nature18635"
+        }
+      ],
+      "notes": "Subject: social science (music cognition, anthropology). Key letter C. Steps: 2 (from the Tsimane' result infer that the preference depends on exposure, then take the opposite as the challenged view). Concessive frame: no (received view then finding). Transferred-sense key: no. Models' median length 58; this passage 69 words. Tsimane written without the closing apostrophe the Nature paper uses, as in the MIT release and the rest of our bank, so it cannot be read as a possessive. Section 6 checks: corrected option ranks (vestigial unseen, ephemeral 21660, innate 11550, inculcated 33243); 4 of 4 past rank 10,000, 3 past 20,000, mean log10 rank 4.73; rarest distractor past 50,000: yes; band-5 guard (rare key, two or more common distractors): clear.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 5,
+        "fixes": [
+          "roughness clause generalised to \"like American listeners, they disliked acoustically rough sounds\" (the paper reports Western-like responses to roughness, not a matched degree)"
+        ],
+        "status": "fixed"
+      },
+      "band7": {
+        "verdict": "band 7",
+        "why": "B3 is the template band 7 favours most and this follows e8fb0744: the blank sits on the challenged view and the direction (learned) is never stated. The trap is the finding side's trait (inculcated), and every option is past corrected rank 10,000 (vestigial unseen). Vestigial cannot be defended: the because clause grounds the hypothesis in the reliability of the preference, which suggests inborn, not a functionless leftover."
+      }
+    },
+    {
+      "id": "words_in_context.B6.b7",
+      "template": "B6",
+      "subtype": "Blank completion: phrase options (a/an + noun + preposition)",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "Because members of a naked mole-rat colony, predominantly offspring of a single breeding queen, share a distinctive dialect of soft chirps, it is tempting to regard that dialect as ______ genetic relatedness. Investigating its transmission, however, Alison Barker and colleagues determined that pups relocated to unfamiliar colonies early in life acquired the dialect of their adoptive colony rather than that of their birth colony.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "a corollary of",
+        "a precondition for",
+        "an impediment to",
+        "an antidote to"
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "As used here, “a corollary of” means a natural consequence of. The text says it is tempting to see the shared chirp dialect as following from the colony members’ relatedness, since most are the queen’s offspring, and then says “however”: pups moved to another colony took on that colony’s dialect. The tempting view, which the finding undercuts, is that the dialect is a corollary of genetic relatedness.",
+      "distractors": {
+        "B": {
+          "recipe": "near synonym with the causal direction reversed (CONNOT)",
+          "why_wrong": "“A precondition for” would make the dialect something that must exist before relatedness can. The tempting view runs the other way: relatedness would produce the shared dialect, not depend on it."
+        },
+        "C": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "“An impediment to” means an obstacle to. Nothing in the text suggests that a dialect could hinder genetic relatedness; the question is whether relatedness explains the dialect."
+        },
+        "D": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "“An antidote to” means a remedy that counteracts something. The text presents relatedness as a possible source of the shared dialect, not as a problem the dialect counteracts."
+        }
+      },
+      "models": [
+        "3021d9ef",
+        "1455b754"
+      ],
+      "band7_moves": [
+        "concessive frame that hides the direction: it is tempting to regard A as ______ B, then a however clause with the finding that undercuts it",
+        "word + preposition key with an academic head (a corollary of)",
+        "three-step chain: tempting reason, finding, then which relation the finding undercuts",
+        "every option past corrected rank 10,000, one unseen",
+        "near-synonym distractor that reverses the causal direction (a precondition for)"
+      ],
+      "word_count": 64,
+      "sources": [
+        {
+          "what": "Barker et al., Cultural transmission of vocal dialect in the naked mole-rat, Science 371:503 to 507 (2021): soft chirps carry colony-specific dialects; pups cross-fostered early in life adopt their adoptive colony's dialect",
+          "url": "https://repository.up.ac.za/bitstream/2263/88000/1/Barker_Cultural_2021.pdf"
+        },
+        {
+          "what": "colony dialects; pups raised in a foreign colony adopt the new colony's dialect, not their birth colony's",
+          "url": "https://www.sci.news/biology/naked-mole-rats-colony-specific-dialects-09302.html"
+        },
+        {
+          "what": "naked mole-rat colonies: a single breeding female (queen) and one to three breeding males; other members are nonbreeding",
+          "url": "https://en.wikipedia.org/wiki/Naked_mole-rat"
+        },
+        {
+          "what": "Science abstract: single breeding queen; soft chirp carries colony dialects; pups fostered in foreign colonies early in life learn the adoptive colony's dialect",
+          "url": "https://doi.org/10.1126/science.abc6588"
+        }
+      ],
+      "notes": "Subject: natural science (animal behavior). Key letter A. Steps: 3. Concessive frame: yes. Transferred-sense key: no. Models' median length 56; this passage 64 words. Section 6 checks: corrected option ranks (a corollary of 34058, a precondition for unseen, an impediment to 23789, an antidote to 20272); 4 of 4 past rank 10,000, 4 past 20,000, mean log10 rank 4.80; rarest distractor past 50,000: yes; band-5 guard (rare key, two or more common distractors): clear.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [],
+        "status": "pass"
+      },
+      "band7": {
+        "verdict": "band 7",
+        "why": "Matches 3021d9ef: a \"tempting to regard A as ______ B\" frame that hides the direction, a three-step chain (tempting reason, finding, which relation the finding undercuts), an academic word + preposition key and all options past corrected rank 20,000. No distractor fits: a precondition for reverses the causal direction, and impediment and antidote have no support."
+      }
+    }
+  ]
+}

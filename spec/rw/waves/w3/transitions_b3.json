@@ -1,0 +1,1190 @@
+{
+  "skill": "Transitions",
+  "slug": "transitions",
+  "part": "w3b3",
+  "domain": "Expression of Ideas",
+  "plan": {
+    "templates": [
+      {
+        "code": "A1_addition",
+        "name": "Addition/similarity: a further item of the same kind"
+      },
+      {
+        "code": "C1_two_subject",
+        "name": "Contrast: two subjects, opposite values"
+      },
+      {
+        "code": "C2_belief_finding",
+        "name": "Contrast: established view or appearance, then a finding that breaks it"
+      },
+      {
+        "code": "C3_limiting_fact",
+        "name": "Contrast: positive claim, then a limiting fact about the same subject"
+      },
+      {
+        "code": "E1_consequence",
+        "name": "Cause/effect: condition, principle or evidence, then its consequence"
+      },
+      {
+        "code": "E2_motive_action",
+        "name": "Cause/effect: need or judgment, then the action it motivates"
+      },
+      {
+        "code": "K1_grant_turn",
+        "name": "Concession: grant, then the main claim resumes (but / Still)"
+      },
+      {
+        "code": "M1_emphasis",
+        "name": "Emphasis: stronger same-direction fact (content-contrast trap at hard)"
+      },
+      {
+        "code": "P1_purpose_aptness",
+        "name": "Purpose and aptness: goal then deliberate act, or a fitting echo"
+      },
+      {
+        "code": "S1_spec_restate",
+        "name": "Specification/restatement: exact content or plain rewording"
+      },
+      {
+        "code": "T1_sequence_time",
+        "name": "Sequence/time: next step, earlier or later event, end of a long effort"
+      },
+      {
+        "code": "U1_culmination_alt",
+        "name": "Culmination, alternative and place (ultimately, alternatively, there)"
+      },
+      {
+        "code": "X1_example",
+        "name": "Example: general claim, then one named instance"
+      }
+    ]
+  },
+  "items": [
+    {
+      "id": "transitions.K1_grant_turn.hard.w3b3_01",
+      "template": "K1_grant_turn",
+      "subtype": "Concession: grant then turn",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Linguists classify Hawai‘i Creole English, known locally as Pidgin, as an independent language, and since 2015 the US Census Bureau has listed it among the languages spoken in American homes. ______ most of Pidgin’s vocabulary is derived from English. But its grammar is distinctive: ongoing actions are signaled with the marker “stay,” a construction absent from standard English.",
+      "stem": "Which choice completes the text with the most logical transition?",
+      "options": [
+        "Moreover,",
+        "Granted,",
+        "For instance,",
+        "Hence,"
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The first sentence claims that Pidgin is a language in its own right. The blank sentence admits a fact that seems to weaken that claim: most of its vocabulary comes from English. The next sentence turns back with “But,” showing that Pidgin’s grammar is distinctive. “Granted” introduces a point the writer concedes before returning to the main claim.",
+      "distractors": {
+        "A": {
+          "recipe": "additive",
+          "why_wrong": "“Moreover” would add a further reason to treat Pidgin as a separate language, but borrowing most of its words from English is a reason to doubt that, which is why the next sentence has to answer it with “But.”"
+        },
+        "C": {
+          "recipe": "wrong grain (example)",
+          "why_wrong": "An English-based vocabulary is not an example of Pidgin being a language in its own right; it is a point against that view."
+        },
+        "D": {
+          "recipe": "unearned cause",
+          "why_wrong": "Being classified as a language and listed by the Census Bureau does not cause Pidgin’s vocabulary to come from English."
+        }
+      },
+      "models": [
+        "3.17",
+        "3.19"
+      ],
+      "word_count": 57,
+      "sources": [],
+      "notes": "Grant then turn, the turn opened by But in the next sentence (3.17 and 3.19 shape), keyed Granted. K1 has no band-7 official items (spec/rw/band7/transitions.md section 5), so this is written as a strong band 6 and band_target is 6, not the 7 the plan asked for. Trap: Moreover, for a reader who takes the blank sentence as more description of Pidgin. No In fact or Indeed and no contrast word beside the concession key. Facts from general knowledge, not web-checked (Transitions, brief of 2026-10-16); no made-up finding attributed to a real person or organisation.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass",
+        "band7": {
+          "verdict": "band 6",
+          "why": "K1 has no band-7 official items, so it stays a strong band 6: grant then But as in f5959727 (Of course ... Still), with additive, example and cause decoys and no contrast decoy."
+        }
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "B",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "transitions.S1_spec_restate.hard.w3b3_02",
+      "template": "S1_spec_restate",
+      "subtype": "Restatement of a technical term",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "Indian sandalwood, prized for its fragrant heartwood, grows readily in the mixed dry forests of southern India, yet seedlings planted in stands of sandalwood alone have often withered. The tree is a root hemiparasite; ______ it produces its own sugars through photosynthesis but draws much of its water and mineral nutrients from the roots of neighboring plants.",
+      "stem": "Which choice completes the text with the most logical transition?",
+      "options": [
+        "nevertheless,",
+        "in addition,",
+        "for instance,",
+        "that is,"
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The clause before the blank names a technical category: sandalwood is a root hemiparasite. The clause after it says the same thing in plain terms: the tree makes its own sugars but takes water and minerals from other plants’ roots, which is what being a partial parasite of roots means. “That is” signals this rewording.",
+      "distractors": {
+        "A": {
+          "recipe": "false opposition (concession)",
+          "why_wrong": "Making its own sugars can look like a contrast with being a parasite, but a hemiparasite is only partly parasitic. The clause after the blank explains what the term means; it does not hold true in spite of it."
+        },
+        "B": {
+          "recipe": "additive",
+          "why_wrong": "The clause after the blank is not a second, separate fact about the tree; it spells out the meaning of “root hemiparasite.”"
+        },
+        "C": {
+          "recipe": "wrong grain (example)",
+          "why_wrong": "The clause after the blank is not one instance of hemiparasitism among others; it describes what the term means for sandalwood as a whole."
+        }
+      },
+      "models": [
+        "d3b7d7a3",
+        "3.5",
+        "3.1"
+      ],
+      "word_count": 56,
+      "sources": [],
+      "notes": "Restatement keyed that is after a semicolon. Band-7 setting: surface contrast inside B (although its leaves make sugars ... it draws ... from neighbors) next to a parasite label, with nevertheless as the false-opposition decoy, plus a yet in the prior sentence; the term is glossed only by B, so in addition pulls a reader who does not see B as the gloss. No cause decoy (B is the definition, so a cause word could be read as defensible). Not the popular-picture / study-found frame of the three existing more-often items. Section 6 checks (spec/rw/band7/transitions.md): key outside the core 13, no obvious decoys, surface-contrast proxy passes (yet in the sentence before the blank), chars per word 5.36. Facts from general knowledge, not web-checked (Transitions, brief of 2026-10-16); no made-up finding attributed to a real person or organisation. Review 2026-10-20: B reordered so the main clause right after the blank (produces its own sugars) reads as a contrast with parasite; the old although made nevertheless read awkwardly, an easy kill.",
+      "band7_moves": [
+        "surface contrast with a non-adversative key (although inside B, parasite label in A)",
+        "adversative yet in the sentence before the blank",
+        "key after a semicolon",
+        "false-opposition decoy nevertheless",
+        "key outside the core 13",
+        "no phantom-sequence or summary decoy"
+      ],
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [
+          "reordered the clause after the blank (produces its own sugars ... but draws ...) so nevertheless is a live lure instead of an awkward fit after although; why_wrong for A updated"
+        ],
+        "status": "fixed",
+        "band7": {
+          "verdict": "band 6",
+          "why": "Hardened (the nevertheless lure now meets a self-sufficient-sounding clause right after the blank), but a technical term followed by its gloss is the band-6 That is pattern of e3edc138; S1 reaches band 7 only in the more-often frame of d3b7d7a3, already used by three bank items."
+        }
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "D",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "transitions.U1_culmination_alt.hard.w3b3_03",
+      "template": "U1_culmination_alt",
+      "subtype": "Culmination",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "German instrument maker Heinrich Band began selling the bandoneon, a type of concertina, in the 1840s, and early on it was promoted partly as an inexpensive substitute for the organ in modest rural churches. ______ the instrument’s fame emerged from a very different setting: carried to Buenos Aires by European immigrants, it became the defining sound of Argentine tango.",
+      "stem": "Which choice completes the text with the most logical transition?",
+      "options": [
+        "Ultimately,",
+        "Hence,",
+        "Moreover,",
+        "For example,"
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The first sentence gives the bandoneon’s beginnings as a cheap stand-in for a church organ. The blank sentence gives where the instrument ended up and what it is now known for: the sound of tango in Buenos Aires. “Ultimately” signals this final outcome, reached after the instrument’s early use.",
+      "distractors": {
+        "B": {
+          "recipe": "unearned cause",
+          "why_wrong": "Being sold as a substitute for a church organ did not cause the bandoneon to become famous in tango; the sentence after the blank stresses that its fame came from a very different setting."
+        },
+        "C": {
+          "recipe": "additive",
+          "why_wrong": "The blank sentence does not add a further point about the bandoneon’s use in churches; it tells where the instrument ended up."
+        },
+        "D": {
+          "recipe": "wrong grain (example)",
+          "why_wrong": "Tango is not an example of the bandoneon being used in place of an organ in small churches."
+        }
+      },
+      "models": [
+        "3.4",
+        "3.2"
+      ],
+      "word_count": 58,
+      "sources": [],
+      "notes": "Culmination keyed Ultimately: an original purpose in A, the lasting outcome in B (3.4 shape, an initial impression then what finally counts). A stays on the original purpose, so the cause decoy fails because A does not produce B. No contrast word offered, since B itself turns against A. Band 6 by plan. Facts from general knowledge, not web-checked (Transitions, brief of 2026-10-16); no made-up finding attributed to a real person or organisation.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass",
+        "band7": {
+          "verdict": "band 6",
+          "why": "Band 6 by plan: an early purpose, then where the fame finally came from, as in 6e0c60da; hence, moreover and for example are the U1 recipe decoys, and very different setting kills the cause decoy."
+        }
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "A",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "transitions.M1_emphasis.hard.w3b3_04",
+      "template": "M1_emphasis",
+      "subtype": "Emphasis (content-contrast trap)",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "Dawn redwoods, conifers indigenous to central China, turn a coppery orange each autumn and then shed all their needles, leaving their branches bare until spring. Among cone-bearing trees, such seasonal needle loss is exceptional; ______ the vast majority of conifers, including pines, spruces, and firs, retain their needles throughout the winter and replace them only gradually.",
+      "stem": "Which choice completes the text with the most logical transition?",
+      "options": [
+        "nevertheless,",
+        "that said,",
+        "indeed,",
+        "in addition,"
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The clause before the blank says that shedding needles each autumn, as dawn redwoods do, is unusual among cone-bearing trees. The clause after it backs up and sharpens that claim: the vast majority of conifers keep their needles all winter. “Indeed” signals this stronger statement in the same direction.",
+      "distractors": {
+        "A": {
+          "recipe": "false opposition (concession)",
+          "why_wrong": "Conifers that keep their needles behave the opposite way from dawn redwoods, but that is the evidence that needle loss is unusual, not something true in spite of it."
+        },
+        "B": {
+          "recipe": "false opposition (concession)",
+          "why_wrong": "“That said” would introduce a point that qualifies the claim that seasonal needle loss is unusual, but most conifers keeping their needles all winter makes that claim stronger, not weaker."
+        },
+        "D": {
+          "recipe": "additive",
+          "why_wrong": "The habit of most conifers is not a separate, further point; it is the reason that needle loss counts as unusual among cone-bearing trees."
+        }
+      },
+      "models": [
+        "47e238be",
+        "a266d876",
+        "00e0170f"
+      ],
+      "word_count": 55,
+      "sources": [],
+      "notes": "Band-7 M1 frame of 47e238be and a266d876 (an unusual case, then the majority with the opposite value), built without their outlier wording. Surface contrast: conifers that keep their needles read against dawn redwoods that shed theirs, so nevertheless and that said (synonym pair, allowed at band 7) pull a hurried reader; in addition pulls a reader who takes B as one more fact. Review 2026-10-20: rewritten from a draft whose B (the small wild population) only supported the clause before it, so the adversative decoys had nothing to grab. Facts from general knowledge, not web-checked (Transitions, brief of 2026-10-16); no made-up finding attributed to a real person or organisation.",
+      "band7_moves": [
+        "surface contrast with a non-adversative key (shed vs keep needles)",
+        "key after a semicolon",
+        "two false-opposition decoys (synonym pair) plus an additive decoy",
+        "key outside the core 13",
+        "no phantom-sequence or summary decoy"
+      ],
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [
+          "rebuilt passage and options on the band-7 M1 frame (dawn redwoods shed their needles, most conifers keep theirs); old B only supported the clause before it, so the draft read band 6; explanation, distractors and notes rewritten",
+          "unusual changed to exceptional so the hard tier meets the long-word floor in check_rw"
+        ],
+        "status": "fixed",
+        "band7": {
+          "verdict": "band 7",
+          "why": "Rebuilt on the 47e238be and a266d876 mechanism: B describes the majority with the opposite habit, so its surface points to contrast while it proves the claim; key indeed outside the core 13, adversative synonym pair plus an additive decoy, blank after a semicolon, 5.51 chars per word."
+        }
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "C",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "transitions.C1_two_subject.medium.w3b3_05",
+      "template": "C1_two_subject",
+      "subtype": "Contrast: two subjects",
+      "tier": "medium",
+      "passage": "Tuvan throat singers produce two pitches simultaneously: a sustained low drone and, floating above it, a melody of overtones. In the style called sygyt, those overtones resonate as a piercing, flutelike whistle; in kargyraa, ______ the drone itself descends dramatically, and the singer generates a deep, rumbling growl.",
+      "stem": "Which choice completes the text with the most logical transition?",
+      "options": [
+        "for instance,",
+        "similarly,",
+        "by contrast,",
+        "therefore,"
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The text describes two styles of throat singing. In sygyt the overtones make a piercing whistle, while in kargyraa the drone descends and the singer growls. “By contrast” signals that the second style has the opposite quality from the first.",
+      "distractors": {
+        "A": {
+          "recipe": "wrong grain (example)",
+          "why_wrong": "Kargyraa is not an example of the high, whistling sygyt style; it is a different style with the opposite sound."
+        },
+        "B": {
+          "recipe": "false parallel",
+          "why_wrong": "“Similarly” would mean kargyraa sounds like sygyt, but a deep growl is the opposite of a piercing whistle."
+        },
+        "D": {
+          "recipe": "unearned cause",
+          "why_wrong": "The high whistle of sygyt does not cause the drone in kargyraa to drop low; the two are separate styles."
+        }
+      },
+      "models": [
+        "2.4",
+        "2.6"
+      ],
+      "word_count": 47,
+      "sources": [],
+      "notes": "Two subjects, opposite values, blank after an introductory phrase in the second clause of a semicolon sentence (2.4 position). Facts from general knowledge, not web-checked (Transitions, brief of 2026-10-16); no made-up finding attributed to a real person or organisation.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "transitions.C1_two_subject.medium.w3b3_06",
+      "template": "C1_two_subject",
+      "subtype": "Contrast: two subjects (numbers)",
+      "tier": "medium",
+      "passage": "In 1872, physicist William Thomson (later Lord Kelvin) designed a machine that predicted tides by adding together ten constituents, the regular rhythms, set by the Moon and Sun, that combine to produce a tide. A machine built for the US Coast and Geodetic Survey in the 1910s, ______ combined thirty-seven constituents.",
+      "stem": "Which choice completes the text with the most logical transition?",
+      "options": [
+        "by comparison,",
+        "in other words,",
+        "for instance,",
+        "as a result,"
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The first sentence says Thomson’s machine added together ten constituents. The second says a later machine combined thirty-seven. “By comparison” signals that the second machine is being measured against the first on the same feature, the number of constituents.",
+      "distractors": {
+        "B": {
+          "recipe": "wrong grain (restatement)",
+          "why_wrong": "The second sentence does not reword the description of Thomson’s machine; it describes a different machine with a different number of constituents."
+        },
+        "C": {
+          "recipe": "wrong grain (example)",
+          "why_wrong": "The 1910s machine is not an instance of Thomson’s machine or of any general claim in the first sentence; it is a second machine set beside the first."
+        },
+        "D": {
+          "recipe": "unearned cause",
+          "why_wrong": "Thomson’s machine summing ten constituents did not cause the later machine to sum thirty-seven; the text gives no such link."
+        }
+      },
+      "models": [
+        "2.18",
+        "2.4"
+      ],
+      "word_count": 50,
+      "sources": [],
+      "notes": "Two subjects compared on a number (by comparison, as in 1.14), placed as an interrupter after a long subject noun phrase. No similarity word offered, since both machines add constituents. Later machine is the US Coast and Geodetic Survey Tide Predicting Machine No. 2 (37 constituents, in use from about 1912). Facts from general knowledge, not web-checked (Transitions, brief of 2026-10-16); no made-up finding attributed to a real person or organisation.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "transitions.A1_addition.medium.w3b3_07",
+      "template": "A1_addition",
+      "subtype": "Addition",
+      "tier": "medium",
+      "passage": "Indian chemist Asima Chatterjee devoted much of her career to investigating the medicinal compounds found in plants. From the aquatic fern Marsilea minuta, she developed Ayush-56, an anticonvulsant drug used to treat epilepsy. ______ her research on alkaloids extracted from the Madagascar periwinkle advanced the study of compounds now used in cancer chemotherapy.",
+      "stem": "Which choice completes the text with the most logical transition?",
+      "options": [
+        "Nevertheless,",
+        "Consequently,",
+        "Instead,",
+        "Additionally,"
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The text says Chatterjee studied medicinal compounds in plants and gives one result: a drug for epilepsy made from a fern. The blank sentence gives a second, separate contribution: her research on periwinkle alkaloids used against cancer. “Additionally” signals this further item of the same kind.",
+      "distractors": {
+        "A": {
+          "recipe": "false opposition (concession)",
+          "why_wrong": "Her periwinkle research does not hold true in spite of her work on the epilepsy drug; the two contributions point the same way."
+        },
+        "B": {
+          "recipe": "unearned cause",
+          "why_wrong": "Developing a drug from a fern did not cause her research on periwinkle alkaloids; they are two separate lines of work."
+        },
+        "C": {
+          "recipe": "false opposition (contrast)",
+          "why_wrong": "“Instead” would mean the periwinkle research replaced the work on Ayush-56, but the text presents both as parts of her career."
+        }
+      },
+      "models": [
+        "2.11",
+        "2.10"
+      ],
+      "word_count": 52,
+      "sources": [],
+      "notes": "Two contributions by one person (2.11 shape). No example decoy, because the blank sentence could be read as an instance of the first sentence; no similarity decoy beside an addition key. Facts from general knowledge, not web-checked (Transitions, brief of 2026-10-16); no made-up finding attributed to a real person or organisation.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "transitions.S1_spec_restate.medium.w3b3_08",
+      "template": "S1_spec_restate",
+      "subtype": "Specification",
+      "tier": "medium",
+      "passage": "Among the Mbuti people of Congo’s Ituri Forest, men produce barkcloth from the inner bark of trees, and women decorate it with intricate designs painted in a plant-based dye. ______ the women combine juice extracted from the fruit of a gardenia shrub with powdered charcoal, applying the mixture with twigs or their fingertips.",
+      "stem": "Which choice completes the text with the most logical transition?",
+      "options": [
+        "However,",
+        "Specifically,",
+        "Likewise,",
+        "For this reason,"
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The first sentence says only that the women paint designs with a plant-based dye. The blank sentence gives the exact details of that dye and how it is applied: gardenia juice combined with powdered charcoal, applied with twigs or fingertips. “Specifically” signals this more precise account of the same point.",
+      "distractors": {
+        "A": {
+          "recipe": "false opposition (contrast)",
+          "why_wrong": "The details about gardenia juice and charcoal do not contrast with the statement that the women paint with a plant dye; they spell it out."
+        },
+        "C": {
+          "recipe": "false parallel",
+          "why_wrong": "The blank sentence does not describe a similar, separate activity; it describes the same painting in more detail."
+        },
+        "D": {
+          "recipe": "unearned cause",
+          "why_wrong": "Painting with a plant dye is not a reason the women mix gardenia juice with charcoal; the mixing is simply what that painting consists of."
+        }
+      },
+      "models": [
+        "2.12",
+        "3.3"
+      ],
+      "word_count": 52,
+      "sources": [],
+      "notes": "General statement, then its exact content (2.12 shape). No example decoy beside a specification key. Facts from general knowledge, not web-checked (Transitions, brief of 2026-10-16); no made-up finding attributed to a real person or organisation.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "transitions.S1_spec_restate.medium.w3b3_09",
+      "template": "S1_spec_restate",
+      "subtype": "Restatement (definition after a dash)",
+      "tier": "medium",
+      "passage": "In the early 2010s, management researchers studying how entrepreneurs in India solve problems on limited budgets drew attention to jugaad—______ improvising an inexpensive, makeshift solution from whatever materials happen to be available. These researchers argued that large Western corporations could benefit from adopting this resourceful, flexible approach rather than dismissing it as mere tinkering.",
+      "stem": "Which choice completes the text with the most logical transition?",
+      "options": [
+        "for example,",
+        "in addition,",
+        "that is,",
+        "however,"
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The text names a practice, jugaad, and the words after the blank explain what the term means: improvising a cheap, makeshift solution from whatever is available. “That is” signals this definition, which restates the term in plain language.",
+      "distractors": {
+        "A": {
+          "recipe": "wrong grain (example)",
+          "why_wrong": "The words after the blank are not one example of jugaad; they define the term itself."
+        },
+        "B": {
+          "recipe": "additive",
+          "why_wrong": "The words after the blank do not add something beyond jugaad; they explain what jugaad is."
+        },
+        "D": {
+          "recipe": "false opposition (contrast)",
+          "why_wrong": "Nothing after the blank contrasts with jugaad; the phrase describes the very practice the researchers drew attention to."
+        }
+      },
+      "models": [
+        "2.15"
+      ],
+      "word_count": 54,
+      "sources": [],
+      "notes": "Definition of a term after a dash, keyed that is (2.15 shape, lowercase options). The term is from the business-management literature on frugal innovation (popularized in the book Jugaad Innovation, 2012); researchers left unnamed. Facts from general knowledge, not web-checked (Transitions, brief of 2026-10-16); no made-up finding attributed to a real person or organisation.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "transitions.E1_consequence.medium.w3b3_10",
+      "template": "E1_consequence",
+      "subtype": "Consequence",
+      "tier": "medium",
+      "passage": "Cecropia trees of tropical America shelter colonies of Azteca ants in their hollow stems and supply them with nutritious food bodies produced at the bases of the leaf stalks. In return, the ants attack herbivorous insects and sever climbing vines. ______ Cecropia trees occupied by ants generally sustain far less damage to their foliage than unoccupied trees.",
+      "stem": "Which choice completes the text with the most logical transition?",
+      "options": [
+        "Consequently,",
+        "Instead,",
+        "Likewise,",
+        "Earlier,"
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The text explains that the ants living in Cecropia trees attack plant-eating insects and cut away climbing vines. The blank sentence gives the result of that protection: trees with ants suffer much less leaf damage than trees without them. “Consequently” signals this result.",
+      "distractors": {
+        "B": {
+          "recipe": "false opposition (contrast)",
+          "why_wrong": "“Instead” would mean the reduced leaf damage replaces the ants’ defense, but it follows from that defense."
+        },
+        "C": {
+          "recipe": "false parallel",
+          "why_wrong": "The blank sentence does not describe a similar, separate case; it states the outcome of the ants’ behavior described just before it."
+        },
+        "D": {
+          "recipe": "phantom time",
+          "why_wrong": "Nothing places the reduced leaf damage before the ants’ defense; the damage is lower because of what the ants do."
+        }
+      },
+      "models": [
+        "2.9",
+        "2.14"
+      ],
+      "word_count": 56,
+      "sources": [],
+      "notes": "Mutualism, then its effect on the host (2.9 shape: mechanism, then the result). Facts from general knowledge, not web-checked (Transitions, brief of 2026-10-16); no made-up finding attributed to a real person or organisation.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "transitions.T1_sequence_time.medium.w3b3_11",
+      "template": "T1_sequence_time",
+      "subtype": "Time (earlier event)",
+      "tier": "medium",
+      "passage": "In 2011, the World Organisation for Animal Health declared that rinderpest, a viral disease that had devastated herds of cattle, buffalo, and other hoofed animals across Africa, Asia, and Europe, had been eradicated after a decades-long international campaign. ______ only one disease, smallpox, had ever been eliminated through deliberate human effort.",
+      "stem": "Which choice completes the text with the most logical transition?",
+      "options": [
+        "Therefore,",
+        "Previously,",
+        "For example,",
+        "Similarly,"
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The first sentence reports that rinderpest was declared eradicated in 2011. The blank sentence describes the situation before that declaration: up to then, smallpox was the only disease ever eliminated by human effort. “Previously” signals that the blank sentence refers to an earlier time.",
+      "distractors": {
+        "A": {
+          "recipe": "unearned cause",
+          "why_wrong": "The eradication of rinderpest did not cause smallpox to be the only disease eliminated; that was the situation before 2011."
+        },
+        "C": {
+          "recipe": "wrong grain (example)",
+          "why_wrong": "Smallpox is not an example of rinderpest’s eradication; it is a different disease, and the sentence is about the record before 2011."
+        },
+        "D": {
+          "recipe": "false parallel",
+          "why_wrong": "The sentence does not describe a similar event; it states that before 2011 only one disease had ever been eliminated, which no longer held once rinderpest was eradicated."
+        }
+      },
+      "models": [
+        "2.2"
+      ],
+      "word_count": 50,
+      "sources": [],
+      "notes": "Reverse-order time keyed Previously (2.2 shape): the had-been perfect and the word only mark the earlier state. Facts from general knowledge, not web-checked (Transitions, brief of 2026-10-16); no made-up finding attributed to a real person or organisation.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "transitions.C2_belief_finding.medium.w3b3_12",
+      "template": "C2_belief_finding",
+      "subtype": "Contrast: belief then finding",
+      "tier": "medium",
+      "passage": "After black rats reached Lord Howe Island, east of mainland Australia, in 1918, the island’s large, flightless stick insect disappeared and was presumed extinct. In 2001, ______ researchers climbing Ball’s Pyramid, a steep volcanic sea stack more than 20 kilometers from the island, discovered a small population of the insects sheltering beneath a single shrub.",
+      "stem": "Which choice completes the text with the most logical transition?",
+      "options": [
+        "consequently,",
+        "for instance,",
+        "in addition,",
+        "however,"
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The first sentence says the stick insect was presumed extinct after rats arrived on its island. The second sentence reports a finding that contradicts that belief: in 2001, researchers found a small population on a nearby sea stack. “However” signals this contrast.",
+      "distractors": {
+        "A": {
+          "recipe": "unearned cause",
+          "why_wrong": "The insect being presumed extinct did not cause the discovery of a surviving population; the discovery overturned that belief."
+        },
+        "B": {
+          "recipe": "wrong grain (example)",
+          "why_wrong": "The discovery on Ball’s Pyramid is not an example of the insect disappearing; it shows that the insect had survived."
+        },
+        "C": {
+          "recipe": "additive",
+          "why_wrong": "The discovery does not add a further point in support of the insect’s extinction; it contradicts it."
+        }
+      },
+      "models": [
+        "2.1",
+        "2.16"
+      ],
+      "word_count": 54,
+      "sources": [],
+      "notes": "Belief then finding, the blank after the introductory phrase In 2001 (2.1 position, lowercase options). Researchers left unnamed. Facts from general knowledge, not web-checked (Transitions, brief of 2026-10-16); no made-up finding attributed to a real person or organisation.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "transitions.P1_purpose_aptness.medium.w3b3_13",
+      "template": "P1_purpose_aptness",
+      "subtype": "Purpose",
+      "tier": "medium",
+      "passage": "When Korean scholar-official Kim Man-jung was banished to a remote province in 1687, he hoped to spare his widowed mother the loneliness of his absence. ______ according to a long-standing account, he composed The Cloud Dream of the Nine, a novel of romance and adventure, expressly for her to read while he was in exile.",
+      "stem": "Which choice completes the text with the most logical transition?",
+      "options": [
+        "However,",
+        "That is,",
+        "To that end,",
+        "Similarly,"
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The first sentence states Kim Man-jung’s goal: to keep his mother from being lonely while he was in exile. The blank sentence describes what he did to serve that goal: he wrote a novel for her to read. “To that end” signals an action taken to achieve a stated aim.",
+      "distractors": {
+        "A": {
+          "recipe": "false opposition (contrast)",
+          "why_wrong": "Writing a novel for his mother does not contrast with his wish to spare her loneliness; it carries that wish out."
+        },
+        "B": {
+          "recipe": "wrong grain (restatement)",
+          "why_wrong": "The blank sentence does not reword his hope; it describes a separate action he took because of it."
+        },
+        "D": {
+          "recipe": "false parallel",
+          "why_wrong": "The blank sentence does not describe a similar, separate case; it tells what Kim Man-jung himself did to achieve his goal."
+        }
+      },
+      "models": [
+        "2.5",
+        "3.15"
+      ],
+      "word_count": 54,
+      "sources": [],
+      "notes": "Goal then deliberate act, keyed To that end (3.15 shape at medium). No cause decoy beside a purpose key. The account that he wrote the novel for his mother is traditional, hence according to a long-standing account. Facts from general knowledge, not web-checked (Transitions, brief of 2026-10-16); no made-up finding attributed to a real person or organisation.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "transitions.X1_example.easy.w3b3_14",
+      "template": "X1_example",
+      "subtype": "Example",
+      "tier": "easy",
+      "passage": "Indian writer Premchand published some three hundred short stories. Many portray the hardships of impoverished villagers. ______ in “The Shroud” (1936), a poor man and his son collect money from neighbors to buy a shroud for the son’s wife, who has died, but squander it on food and drink.",
+      "stem": "Which choice completes the text with the most logical transition?",
+      "options": [
+        "For instance,",
+        "However,",
+        "In conclusion,",
+        "Likewise,"
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The sentence before the blank makes a general claim: many of Premchand’s stories show the hardships of poor villagers. The blank sentence describes one particular story, “The Shroud,” that shows such hardship. “For instance” signals this example.",
+      "distractors": {
+        "B": {
+          "recipe": "false opposition (contrast)",
+          "why_wrong": "“The Shroud” does not contrast with the claim about Premchand’s stories; it illustrates it."
+        },
+        "C": {
+          "recipe": "premature summary",
+          "why_wrong": "The blank sentence does not sum up the text; it gives a specific story as an example."
+        },
+        "D": {
+          "recipe": "false parallel",
+          "why_wrong": "The blank sentence does not describe a separate, similar case; “The Shroud” is one of the stories the first sentence describes."
+        }
+      },
+      "models": [
+        "1.25",
+        "1.26"
+      ],
+      "word_count": 48,
+      "sources": [],
+      "notes": "General claim, then one named work. Facts from general knowledge, not web-checked (Transitions, brief of 2026-10-16); no made-up finding attributed to a real person or organisation.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "transitions.X1_example.easy.w3b3_15",
+      "template": "X1_example",
+      "subtype": "Example",
+      "tier": "easy",
+      "passage": "Bioluminescence, the production of light through a chemical reaction, is most familiar in fireflies and deep-sea creatures. But it also occurs in numerous fungi. ______ the small mushroom Mycena chlorophos, which grows on decaying branches in humid Asian and Pacific forests, emits a pale green glow visible on dark nights.",
+      "stem": "Which choice completes the text with the most logical transition?",
+      "options": [
+        "On the other hand,",
+        "For example,",
+        "Afterward,",
+        "In other words,"
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The sentence before the blank says that bioluminescence occurs in a number of fungi. The blank sentence names one such fungus, Mycena chlorophos, which glows pale green. “For example” signals this example.",
+      "distractors": {
+        "A": {
+          "recipe": "false opposition (contrast)",
+          "why_wrong": "The glowing mushroom does not contrast with the claim that bioluminescence occurs in fungi; it is one of those fungi."
+        },
+        "C": {
+          "recipe": "phantom time",
+          "why_wrong": "The blank sentence does not describe something that happens after the first sentence; it gives an example."
+        },
+        "D": {
+          "recipe": "wrong grain (restatement)",
+          "why_wrong": "The blank sentence does not reword the sentence before it; it names a particular mushroom."
+        }
+      },
+      "models": [
+        "1.20",
+        "1.37"
+      ],
+      "word_count": 49,
+      "sources": [],
+      "notes": "General claim with a quantifier (a number of fungi), then one named species; the opening sentence sets fireflies and deep-sea fish aside, so But carries the turn before the blank. Facts from general knowledge, not web-checked (Transitions, brief of 2026-10-16); no made-up finding attributed to a real person or organisation.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "transitions.T1_sequence_time.easy.w3b3_16",
+      "template": "T1_sequence_time",
+      "subtype": "Sequence (process step)",
+      "tier": "easy",
+      "passage": "Mexican artisans often produce papel picado, colorful cut-paper banners used to decorate celebrations, in large batches. First, they stack dozens of sheets of tissue paper and position a paper template on top. ______ they use hammers and small chisels to punch the design through the entire stack. Finally, they separate the sheets and string them along a cord.",
+      "stem": "Which choice completes the text with the most logical transition?",
+      "options": [
+        "Regardless,",
+        "For instance,",
+        "In other words,",
+        "Next,"
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The text describes the steps of making papel picado, with “First” before the blank and “Finally” after it. Punching the design through the stack comes after stacking the paper and before separating the sheets. “Next” signals this following step.",
+      "distractors": {
+        "A": {
+          "recipe": "false opposition (dismissive concession)",
+          "why_wrong": "“Regardless” would mean the punching happens without regard to the stacking, but it depends on the stack and template being in place."
+        },
+        "B": {
+          "recipe": "wrong grain (example)",
+          "why_wrong": "Punching the design is not an example of stacking paper; it is the next step in the process."
+        },
+        "C": {
+          "recipe": "wrong grain (restatement)",
+          "why_wrong": "Punching the design does not reword the first step; it is a different step."
+        }
+      },
+      "models": [
+        "1.8",
+        "1.22"
+      ],
+      "word_count": 57,
+      "sources": [],
+      "notes": "Procedure framed by First and Finally around the blank. Facts from general knowledge, not web-checked (Transitions, brief of 2026-10-16); no made-up finding attributed to a real person or organisation.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "transitions.T1_sequence_time.easy.w3b3_17",
+      "template": "T1_sequence_time",
+      "subtype": "Time (earlier event)",
+      "tier": "easy",
+      "passage": "In 1859, Irish physicist John Tyndall began experiments showing that certain gases, including carbon dioxide, absorb heat. His work is often credited as the foundation of climate science. ______ in 1856, American scientist Eunice Foote had found that a glass cylinder filled with carbon dioxide grew warmer in sunlight than one filled with ordinary air.",
+      "stem": "Which choice completes the text with the most logical transition?",
+      "options": [
+        "As a result,",
+        "For example,",
+        "Earlier,",
+        "In conclusion,"
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The first sentence describes Tyndall’s experiments, which began in 1859. The blank sentence describes Foote’s finding from 1856, three years before. “Earlier” signals that the second event came first.",
+      "distractors": {
+        "A": {
+          "recipe": "unearned cause",
+          "why_wrong": "Tyndall’s 1859 experiments could not have caused Foote’s 1856 finding, which came before them."
+        },
+        "B": {
+          "recipe": "wrong grain (example)",
+          "why_wrong": "Foote’s finding is not an example of Tyndall’s work; it is a separate, earlier experiment."
+        },
+        "D": {
+          "recipe": "premature summary",
+          "why_wrong": "The blank sentence does not sum up the text; it adds a new fact about an earlier experiment."
+        }
+      },
+      "models": [
+        "1.12",
+        "2.2"
+      ],
+      "word_count": 54,
+      "sources": [],
+      "notes": "Reverse chronology carried by the dates (1.12 shape). No similarity decoy, since Foote’s experiment really is similar to Tyndall’s. Facts from general knowledge, not web-checked (Transitions, brief of 2026-10-16); no made-up finding attributed to a real person or organisation.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "transitions.E1_consequence.easy.w3b3_18",
+      "template": "E1_consequence",
+      "subtype": "Consequence",
+      "tier": "easy",
+      "passage": "For centuries, Koreans have stored and fermented foods such as kimchi and soy sauce in onggi, earthenware jars made of coarse clay. The jars are fired in a way that leaves microscopic pores in their walls. ______ air can gradually circulate through the jars, while the liquids inside cannot escape.",
+      "stem": "Which choice completes the text with the most logical transition?",
+      "options": [
+        "Nevertheless,",
+        "As a result,",
+        "Similarly,",
+        "Meanwhile,"
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The sentence before the blank says that firing leaves tiny pores in the walls of onggi jars. The blank sentence gives the effect of those pores: air can pass through the jars. “As a result” signals this consequence.",
+      "distractors": {
+        "A": {
+          "recipe": "false opposition (concession)",
+          "why_wrong": "Air passing through the jars does not happen in spite of the pores; it happens because of them."
+        },
+        "C": {
+          "recipe": "false parallel",
+          "why_wrong": "The blank sentence does not describe a similar, separate case; it describes what the pores make possible."
+        },
+        "D": {
+          "recipe": "phantom time",
+          "why_wrong": "“Meanwhile” would present a separate event happening at the same time, but air passing through the jars is the effect of the pores just described."
+        }
+      },
+      "models": [
+        "1.5",
+        "1.3"
+      ],
+      "word_count": 49,
+      "sources": [],
+      "notes": "Property, then its effect. Facts from general knowledge, not web-checked (Transitions, brief of 2026-10-16); no made-up finding attributed to a real person or organisation.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "transitions.E1_consequence.easy.w3b3_19",
+      "template": "E1_consequence",
+      "subtype": "Consequence",
+      "tier": "easy",
+      "passage": "Gagaku, the court music of Japan, has been handed down since the eighth century. For most of that time, it was taught within hereditary families of musicians, who carefully preserved its instruments, melodies, and dances. ______ gagaku is often described as the oldest orchestral music still performed anywhere in the world.",
+      "stem": "Which choice completes the text with the most logical transition?",
+      "options": [
+        "Consequently,",
+        "For example,",
+        "On the other hand,",
+        "Secondly,"
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The text explains that gagaku has been handed down since the eighth century and carefully preserved by families of musicians. The blank sentence gives a result of that long, careful preservation: gagaku is described as the oldest orchestral music still performed. “Consequently” signals this result.",
+      "distractors": {
+        "B": {
+          "recipe": "wrong grain (example)",
+          "why_wrong": "Being called the oldest orchestral music is not an example of how the music was preserved; it is a result of that preservation."
+        },
+        "C": {
+          "recipe": "false opposition (contrast)",
+          "why_wrong": "The blank sentence does not contrast with the careful preservation of gagaku; it follows from it."
+        },
+        "D": {
+          "recipe": "phantom sequence",
+          "why_wrong": "The text is not listing points in order, so “Secondly” has nothing to follow."
+        }
+      },
+      "models": [
+        "1.27",
+        "1.15"
+      ],
+      "word_count": 50,
+      "sources": [],
+      "notes": "Long preservation, then the standing it gives the music. Facts from general knowledge, not web-checked (Transitions, brief of 2026-10-16); no made-up finding attributed to a real person or organisation.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "transitions.C3_limiting_fact.easy.w3b3_20",
+      "template": "C3_limiting_fact",
+      "subtype": "Contrast: claim then limiting fact",
+      "tier": "easy",
+      "passage": "In Kecak, a large circle of performers chants “cak” in rapid, interlocking rhythms. The performance is one of Bali’s most celebrated traditions. ______ it is not an ancient ritual: it was created in the 1930s, when Balinese dancer Wayan Limbak and German painter Walter Spies adapted the chanting of a trance ceremony for visitors.",
+      "stem": "Which choice completes the text with the most logical transition?",
+      "options": [
+        "For this reason,",
+        "In other words,",
+        "However,",
+        "Lastly,"
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The sentence before the blank presents Kecak as one of Bali’s most celebrated traditions. The blank sentence adds a fact that limits that picture: Kecak is not ancient but was created in the 1930s for visitors. “However” signals this contrast.",
+      "distractors": {
+        "A": {
+          "recipe": "unearned cause",
+          "why_wrong": "Kecak being celebrated is not the reason it is a recent creation; the two facts pull in different directions."
+        },
+        "B": {
+          "recipe": "wrong grain (restatement)",
+          "why_wrong": "Saying that Kecak was created in the 1930s does not reword the claim that it is celebrated; it adds a contrasting fact."
+        },
+        "D": {
+          "recipe": "phantom sequence",
+          "why_wrong": "The text is not listing points, so “Lastly” has nothing to close."
+        }
+      },
+      "models": [
+        "1.10",
+        "1.33"
+      ],
+      "word_count": 53,
+      "sources": [],
+      "notes": "Positive claim, then a limiting fact about the same subject (1.10 shape). Facts from general knowledge, not web-checked (Transitions, brief of 2026-10-16); no made-up finding attributed to a real person or organisation.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "transitions.E2_motive_action.easy.w3b3_21",
+      "template": "E2_motive_action",
+      "subtype": "Motive then action",
+      "tier": "easy",
+      "passage": "In 2000, Singapore’s government grew concerned that Singlish, an informal variety of English that mixes in words from Malay, Hokkien, Tamil, and other languages, would make it harder for Singaporeans to be understood by English speakers elsewhere. ______ it launched the Speak Good English Movement, a campaign encouraging citizens to use standard English.",
+      "stem": "Which choice completes the text with the most logical transition?",
+      "options": [
+        "However,",
+        "Similarly,",
+        "In other words,",
+        "For this reason,"
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The first sentence gives the government’s concern: Singlish might make Singaporeans harder to understand abroad. The blank sentence describes the action that concern led to, a campaign promoting standard English. “For this reason” signals that the concern motivated the action.",
+      "distractors": {
+        "A": {
+          "recipe": "false opposition (contrast)",
+          "why_wrong": "Launching the campaign does not contrast with the government’s concern; it responds to it."
+        },
+        "B": {
+          "recipe": "false parallel",
+          "why_wrong": "The blank sentence does not describe a similar, separate case; it describes what the government did about its concern."
+        },
+        "C": {
+          "recipe": "wrong grain (restatement)",
+          "why_wrong": "The campaign is not a rewording of the concern; it is an action taken because of it."
+        }
+      },
+      "models": [
+        "1.9",
+        "1.13"
+      ],
+      "word_count": 52,
+      "sources": [],
+      "notes": "Concern, then the action it motivates, keyed For this reason. Facts from general knowledge, not web-checked (Transitions, brief of 2026-10-16); no made-up finding attributed to a real person or organisation.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "transitions.A1_addition.easy.w3b3_22",
+      "template": "A1_addition",
+      "subtype": "Addition",
+      "tier": "easy",
+      "passage": "Puerto Rican writer Julia de Burgos earned lasting acclaim for her poetry, including “Río Grande de Loíza,” a tribute to the river that flowed past her childhood home. ______ she worked as a journalist during the 1940s, contributing articles to Pueblos Hispanos, a Spanish-language weekly newspaper published in New York City.",
+      "stem": "Which choice completes the text with the most logical transition?",
+      "options": [
+        "In addition,",
+        "On the contrary,",
+        "In other words,",
+        "Today,"
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The first sentence describes the work that earned de Burgos lasting acclaim, her poetry. The blank sentence adds a second kind of work she did: journalism for a New York newspaper. “In addition” signals this further, separate point.",
+      "distractors": {
+        "B": {
+          "recipe": "false opposition (contrast)",
+          "why_wrong": "Her journalism does not contradict the claim that her poetry earned her acclaim; it is another activity."
+        },
+        "C": {
+          "recipe": "wrong grain (restatement)",
+          "why_wrong": "Writing for a newspaper is not a rewording of writing poetry; it is a different kind of work."
+        },
+        "D": {
+          "recipe": "phantom time",
+          "why_wrong": "The blank sentence describes work she did in the 1940s, not something happening today."
+        }
+      },
+      "models": [
+        "1.7",
+        "1.30"
+      ],
+      "word_count": 50,
+      "sources": [],
+      "notes": "Two kinds of work by one writer. Facts from general knowledge, not web-checked (Transitions, brief of 2026-10-16); no made-up finding attributed to a real person or organisation.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "transitions.M1_emphasis.easy.w3b3_23",
+      "template": "M1_emphasis",
+      "subtype": "Emphasis",
+      "tier": "easy",
+      "passage": "Darwin’s frogs, amphibians of Chilean and Argentine forests, are named for Charles Darwin, who collected specimens during the Beagle’s voyage. Males of the species are unusually devoted parents. ______ a male carries his developing offspring inside his vocal sac for weeks, until they emerge from his mouth as froglets.",
+      "stem": "Which choice completes the text with the most logical transition?",
+      "options": [
+        "Nevertheless,",
+        "In fact,",
+        "Previously,",
+        "In comparison,"
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The sentence before the blank says male Darwin’s frogs are unusually devoted parents. The blank sentence gives a striking fact that strengthens that claim: a male carries his young inside his vocal sac for weeks. “In fact” signals this stronger support.",
+      "distractors": {
+        "A": {
+          "recipe": "false opposition (concession)",
+          "why_wrong": "Carrying the young for weeks does not happen in spite of the males being devoted parents; it shows how devoted they are."
+        },
+        "C": {
+          "recipe": "phantom time",
+          "why_wrong": "The blank sentence does not describe something that happened before the males’ parenting; it describes that parenting."
+        },
+        "D": {
+          "recipe": "false opposition (contrast)",
+          "why_wrong": "The blank sentence does not compare the males with anything else; it adds a fact about the same frogs."
+        }
+      },
+      "models": [
+        "1.6"
+      ],
+      "word_count": 48,
+      "sources": [],
+      "notes": "Claim, then a stronger same-direction fact (1.6 shape). No example decoy, since the blank sentence could be read as an instance of devotion. Facts from general knowledge, not web-checked (Transitions, brief of 2026-10-16); no made-up finding attributed to a real person or organisation.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      }
+    }
+  ],
+  "done": true
+}

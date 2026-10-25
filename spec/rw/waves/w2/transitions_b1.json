@@ -1,0 +1,1228 @@
+{
+  "skill": "Transitions",
+  "slug": "transitions",
+  "part": "w2b1",
+  "domain": "Expression of Ideas",
+  "plan": {
+    "templates": [
+      {
+        "code": "A1_addition",
+        "name": "Addition/similarity: a further item of the same kind"
+      },
+      {
+        "code": "C1_two_subject",
+        "name": "Contrast: two subjects, opposite values"
+      },
+      {
+        "code": "C2_belief_finding",
+        "name": "Contrast: established view or appearance, then a finding that breaks it"
+      },
+      {
+        "code": "C3_limiting_fact",
+        "name": "Contrast: positive claim, then a limiting fact about the same subject"
+      },
+      {
+        "code": "E1_consequence",
+        "name": "Cause/effect: condition, principle or evidence, then its consequence"
+      },
+      {
+        "code": "E2_motive_action",
+        "name": "Cause/effect: need or judgment, then the action it motivates"
+      },
+      {
+        "code": "K1_grant_turn",
+        "name": "Concession: grant, then the main claim resumes (but / Still)"
+      },
+      {
+        "code": "K2_qualification",
+        "name": "Concession: supported claim, then a fact that qualifies it"
+      },
+      {
+        "code": "M1_emphasis",
+        "name": "Emphasis: stronger same-direction fact (content-contrast trap at hard)"
+      },
+      {
+        "code": "P1_purpose_aptness",
+        "name": "Purpose and aptness: goal then deliberate act, or a fitting echo"
+      },
+      {
+        "code": "S1_spec_restate",
+        "name": "Specification/restatement: exact content or plain rewording"
+      },
+      {
+        "code": "T1_sequence_time",
+        "name": "Sequence/time: next step, earlier or later event, end of a long effort"
+      },
+      {
+        "code": "U1_culmination_alt",
+        "name": "Culmination, alternative and place (ultimately, alternatively, there)"
+      },
+      {
+        "code": "X1_example",
+        "name": "Example: general claim, then one named instance"
+      }
+    ]
+  },
+  "items": [
+    {
+      "id": "transitions.K1_grant_turn.hard.w2b1_01",
+      "template": "K1_grant_turn",
+      "subtype": "Concession: grant then turn",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "In his 1499 treatise The Judgment of Two Languages, Central Asian poet Alisher Navoi maintained that Chagatai Turkic, his native language, was a richer medium for poetry than Persian, then the region’s dominant literary language. ______ Navoi himself composed considerable verse in Persian, under the pen name Fani. But the overwhelming majority of his writing is in Turkic.",
+      "stem": "Which choice completes the text with the most logical transition?",
+      "options": [
+        "As a result,",
+        "Granted,",
+        "Additionally,",
+        "Similarly,"
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The first sentence says Navoi championed Turkic as a language for poetry. The blank sentence admits a fact that seems to cut against that: he also wrote poems in Persian. The next sentence turns back with “But”: most of his work is in Turkic. “Granted” introduces a point the writer concedes before returning to the main claim.",
+      "distractors": {
+        "A": {
+          "recipe": "unearned cause",
+          "why_wrong": "Arguing that Turkic suited poetry would not cause Navoi to write verse in Persian; the Persian poems are a point against the argument, not a result of it."
+        },
+        "C": {
+          "recipe": "additive",
+          "why_wrong": "“Additionally” would present the Persian verse as one more point supporting Navoi’s case for Turkic, but writing in Persian seems to work against that case, which is why the next sentence begins with “But.”"
+        },
+        "D": {
+          "recipe": "false parallel",
+          "why_wrong": "Writing verse in Persian is not similar to arguing for Turkic; it is a concession that the following sentence answers."
+        }
+      },
+      "models": [
+        "3.17",
+        "3.19"
+      ],
+      "word_count": 58,
+      "sources": [],
+      "notes": "Grant then turn, the turn in the next sentence opened by But (3.19 shape, with But for Still). K1 has no band-7 official items (spec/rw/band7/transitions.md section 5), so this is a strong band 6: rare key, the turn a sentence after the blank, no contrast or emphasis decoy (no In fact beside the concession key). Facts from general knowledge; not web-checked (Transitions, brief of 2026-10-16); no made-up finding attributed to a real person or organisation.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [
+          "passage: Navoi's thesis sharpened from 'every bit as expressive a medium for poetry as Persian' to 'a richer medium for poetry than Persian' (the treatise argues Turkic's superiority), which also makes the grant cleaner; 'the dominant literary language of Central Asia' to 'then the region’s dominant literary language' (Central Asian ... Central Asia repeated); 62 to 58 words"
+        ],
+        "notes": "No fact check (Transitions, brief of 2026-10-16); no made-up finding attributed to a real person or organisation: named people and institutions are real and carry their commonly reported facts, researchers behind findings are unnamed. Second-sense check: no In fact or Indeed beside the concession key; Additionally and Similarly are CB's own decoys beside a grant (f5959727: Furthermore, Similarly); Similarly: no matching case named.",
+        "status": "fixed"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "plan.json asked for band 7, but K1_grant_turn has no band-7 official items (spec/rw/band7/transitions.md section 5), so it cannot be band 7; the writer rightly set band_target 6. Strong band 6 on the f5959727 frame (grant, then the turn opened by But in the next sentence), with that item's additive, parallel and cause decoy recipes and no contrast or emphasis decoy beside the concession key; Granted is outside the core 13."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "B",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "transitions.K2_qualification.hard.w2b1_02",
+      "template": "K2_qualification",
+      "subtype": "Concession: qualification",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Gyotaku, a printmaking technique that originated in nineteenth-century Japan, gave anglers an exact record of their catches. Because each print is pulled directly from an inked fish, it preserves the animal’s true size and the precise arrangement of its scales and fins. ______ the eye, which rarely prints clearly, is typically painted in by hand afterward.",
+      "stem": "Which choice completes the text with the most logical transition?",
+      "options": [
+        "In other words,",
+        "Furthermore,",
+        "Specifically,",
+        "Admittedly,"
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The first two sentences claim that a gyotaku print is an exact record because it comes straight from the fish. The blank sentence admits a limit to that claim: one part, the eye, is not printed at all but painted in by hand. “Admittedly” introduces a fact that qualifies the claim without overturning it.",
+      "distractors": {
+        "A": {
+          "recipe": "wrong grain (restatement)",
+          "why_wrong": "The blank sentence does not reword the claim that the print is an exact record; it points out a part of the print that is added by hand."
+        },
+        "B": {
+          "recipe": "additive",
+          "why_wrong": "“Furthermore” would add another point in support of the print’s accuracy, but an eye painted in by hand is a limit on that accuracy."
+        },
+        "C": {
+          "recipe": "wrong grain (specification)",
+          "why_wrong": "The eye is not one of the details the print preserves exactly; it is the one detail the print fails to capture, so the sentence does not specify the earlier claim."
+        }
+      },
+      "models": [
+        "3.8",
+        "3.12",
+        "3.14"
+      ],
+      "word_count": 56,
+      "sources": [],
+      "notes": "Supported claim, then the one detail that qualifies it (3.14 shape: a property that holds except under one condition). Key Admittedly, new for K2 in our bank (That said x4 and Granted x1 so far). No In fact or Indeed on offer (second-sense rule). Facts from general knowledge; not web-checked (Transitions, brief of 2026-10-16); no made-up finding attributed to a real person or organisation.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "notes": "No fact check (Transitions, brief of 2026-10-16); no made-up finding attributed to a real person or organisation: named people and institutions are real and carry their commonly reported facts, researchers behind findings are unnamed. Second-sense check: no In fact or Indeed beside the qualification key; Specifically fails because the eye is the one detail the print does not capture.",
+        "status": "pass"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "band_target 6 (plan). K2 on the 3.14 shape: a supported claim (an exact record), then the one detail that qualifies it (the eye painted in), keyed Admittedly with restatement, additive and specification decoys and no In fact or Indeed on offer."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "D",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "transitions.S1_spec_restate.hard.w2b1_03",
+      "template": "S1_spec_restate",
+      "subtype": "Specification after a semicolon (surface contrast)",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "Early modern Europeans are often imagined to have married in their early teens. Demographers analyzing parish registers, which recorded local baptisms, marriages, and burials, have found little evidence supporting that image; ______ in England and much of northwestern Europe between the 1500s and the 1700s, women typically first married not as teenagers but in their mid-twenties.",
+      "stem": "Which choice completes the text with the most logical transition?",
+      "options": [
+        "specifically,",
+        "nonetheless,",
+        "thus,",
+        "in addition,"
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The first clause of the second sentence says that demographers found little evidence for the image of very early marriage. The clause after the blank gives the exact finding: women usually first married not as teenagers but in their mid-twenties. “Specifically” signals that this clause spells out what the demographers found.",
+      "distractors": {
+        "B": {
+          "recipe": "false opposition",
+          "why_wrong": "The clause after the blank agrees with the clause before it: marriage in the mid-twenties is the evidence that fails to support the image of teenage marriage. It contrasts only with the popular image in the first sentence, not with the demographers’ finding."
+        },
+        "C": {
+          "recipe": "unearned cause",
+          "why_wrong": "The typical marriage ages are not a result of the demographers finding little support for the image; they are the evidence behind that finding."
+        },
+        "D": {
+          "recipe": "additive",
+          "why_wrong": "The clause after the blank is not a separate point added to the demographers’ conclusion; it is the content of that conclusion."
+        }
+      },
+      "models": [
+        "d3b7d7a3",
+        "3.3"
+      ],
+      "word_count": 56,
+      "sources": [],
+      "notes": "Band-7 S1 (d3b7d7a3 move): a popular account, then researchers who undercut it, then after a semicolon the exact finding, which contradicts the first sentence so that nonetheless pulls. Varied from w1b1_03 (in many cases, with an interrupter) and w1b3_02 (More often, explicit share): no interrupter, no quantity, and a specification key rather than a frequency key. Decoy trio differs from the model’s (for this reason, additionally, nevertheless). No in fact or indeed on offer (in fact would fit as a correction). Hajnal’s European marriage pattern (women about 25 to 26, men about 27 to 28 in early modern England). Facts from general knowledge; not web-checked (Transitions, brief of 2026-10-16); no made-up finding attributed to a real person or organisation.",
+      "band7_moves": [
+        "surface contrast: the clause after the blank contradicts the popular image in sentence 1, so nonetheless reads right on a first pass",
+        "key outside the core 13 (specifically); the clause it introduces repeats none of the wording before the blank",
+        "each decoy is a common connective with a plausible misreading (separate point, consequence, despite); no sequence or summary decoy",
+        "blank after a semicolon, lowercase options"
+      ],
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "notes": "No fact check (Transitions, brief of 2026-10-16); no made-up finding attributed to a real person or organisation: named people and institutions are real and carry their commonly reported facts, researchers behind findings are unnamed. Second-sense check: no in fact or indeed on offer (in fact would fit as a correction); nonetheless dies on the clause before the blank, thus on direction, in addition because 'not as teenagers but' ties the clause to the finding.",
+        "status": "pass"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "Specification form: specifically spells out a general finding, the frame of the band-6 S1 item 8e9677e6, not the frequency key of the band-7 model d3b7d7a3. The surface contrast ('not as teenagers but' against sentence 1) is already resolved by the clause right before the blank ('little evidence supporting that image'), and the one band-6 S1 item with surface contrast (4b7a84b0) shows that trap alone does not lift this frame. Register 5.20 fails gate 4; the combined gate passes via proxy 3. Not hardened: the frequency frame is already used by w1b1_03 and w1b3_02, and dropping 'not as teenagers but' would let in addition read as a second finding. band_target left at 7 as in w1b3_02."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "A",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "transitions.M1_emphasis.hard.w2b1_04",
+      "template": "M1_emphasis",
+      "subtype": "Emphasis",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Chinese artist Xu Bing’s installation Book from the Sky (1987–1991) fills a gallery with hand-printed volumes and suspended scrolls covered in what appear to be Chinese characters. Viewers who read Chinese, however, find the text entirely illegible. ______ all of the roughly 4,000 characters are Xu’s own inventions: none appears in any Chinese dictionary.",
+      "stem": "Which choice completes the text with the most logical transition?",
+      "options": [
+        "Nevertheless,",
+        "Consequently,",
+        "Indeed,",
+        "Likewise,"
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The second sentence says that even fluent readers of Chinese cannot read the work. The blank sentence backs that up with a stronger fact: every one of the characters is invented, so none of them could be read. “Indeed” signals that the sentence confirms and strengthens the previous point.",
+      "distractors": {
+        "A": {
+          "recipe": "false opposition",
+          "why_wrong": "The invented characters do not hold true in spite of the work being unreadable; they are the reason it is unreadable, so the two sentences point the same way."
+        },
+        "B": {
+          "recipe": "unearned cause",
+          "why_wrong": "Xu did not invent the characters because viewers could not read the work; the reverse is true, since the invented characters are what make it unreadable."
+        },
+        "D": {
+          "recipe": "false parallel",
+          "why_wrong": "The sentence does not describe a second, similar case; it adds force to the same point about the work’s unreadability."
+        }
+      },
+      "models": [
+        "3.6",
+        "3.10"
+      ],
+      "word_count": 54,
+      "sources": [],
+      "notes": "Plain band-6 emphasis: a claim (unreadable), then the stronger fact behind it. The however in sentence 2 primes a contrast so that Nevertheless pulls; not the outlier-then-majority frame of the band-7 models or of w1b1_05. No To that end or For example on offer (Xu’s intent and an example reading would both be arguable). Facts from general knowledge; not web-checked (Transitions, brief of 2026-10-16); no made-up finding attributed to a real person or organisation.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "notes": "No fact check (Transitions, brief of 2026-10-16); no made-up finding attributed to a real person or organisation: named people and institutions are real and carry their commonly reported facts, researchers behind findings are unnamed. Second-sense check: Likewise: no matching case named; Consequently fails on direction (the invented characters cause the illegibility).",
+        "status": "pass"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "band_target 6 (plan). Plain emphasis: illegible, then the stronger fact behind it (Indeed), with sentence 2's however priming Nevertheless; not the outlier-then-majority frame of the band-7 M1 models (47e238be, a266d876)."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "C",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "transitions.C3_limiting_fact.hard.w2b1_05",
+      "template": "C3_limiting_fact",
+      "subtype": "Exception to a habit (nonetheless)",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "Japanese architect Tadao Ando is renowned for buildings of exposed concrete, their smooth gray surfaces left unadorned inside and out in churches, museums, and residences alike. ______ for Japan’s pavilion at the 1992 world’s fair in Spain, he designed an enormous hall framed in timber, its tiers of interlocking wooden brackets recalling the joinery of traditional Japanese temples.",
+      "stem": "Which choice completes the text with the most logical transition?",
+      "options": [
+        "Accordingly,",
+        "In particular,",
+        "Likewise,",
+        "Nonetheless,"
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The first sentence describes Ando’s usual material, bare concrete. The blank sentence describes a building that departs from that habit: a hall framed in timber, chosen to echo traditional Japanese temples. “Nonetheless” signals that this project is an exception to what the first sentence would lead the reader to expect.",
+      "distractors": {
+        "A": {
+          "recipe": "unearned cause",
+          "why_wrong": "Ando’s reputation for concrete does not lead to a timber building; the pavilion goes against that reputation rather than following from it."
+        },
+        "B": {
+          "recipe": "wrong grain (specification)",
+          "why_wrong": "The pavilion is not a particular case of Ando’s concrete buildings; it is built of wood, so it is an exception to the habit, not a detail of it."
+        },
+        "C": {
+          "recipe": "false parallel",
+          "why_wrong": "A timber hall is not like the concrete buildings described in the first sentence; it differs from them."
+        }
+      },
+      "models": [
+        "fc95a352",
+        "3.7"
+      ],
+      "word_count": 58,
+      "sources": [],
+      "notes": "Band-7 C3 (fc95a352 move): a habit, then a one-off exception with a purpose (timber to recall temple joinery), keyed with a concession word in its exception role and no other adversative option. Varied from w1b3_04 (Nevertheless, rail gauge): key Nonetheless, a named building rather than a named line, and a new decoy trio (Accordingly, In particular, Likewise). Seville is not named (already a Transitions subject). Japan Pavilion, Expo ’92, one of the largest timber buildings of its day with bracket tiers after temple construction. Facts from general knowledge; not web-checked (Transitions, brief of 2026-10-16); no made-up finding attributed to a real person or organisation.",
+      "band7_moves": [
+        "habit then one-off exception, the exception given a purpose (echoing temple joinery)",
+        "key a concession word used for an exception, with no contrast or other adversative option on offer",
+        "the material cue (timber) comes a dozen words after the blank, so a reader who stops at the named pavilion picks In particular",
+        "no sequence or summary decoy"
+      ],
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "notes": "No fact check (Transitions, brief of 2026-10-16); no made-up finding attributed to a real person or organisation: named people and institutions are real and carry their commonly reported facts, researchers behind findings are unnamed. Second-sense check: Nonetheless is the only adversative; Likewise: no matching case named; In particular has no 'notably' reading that survives 'framed in timber'.",
+        "status": "pass"
+      },
+      "band7": {
+        "verdict": "band 7",
+        "why": "Mirrors fc95a352 move for move: a habit (bare concrete in churches, museums and residences), a one-off exception given a purpose (timber brackets recalling temple joinery), Nonetheless in its exception role with no other adversative option, and cause and parallel decoys as in the model plus In particular. The material cue (timber) is the 18th word after the blank, so a reader who stops at the named pavilion picks In particular. Register 5.46 passes gate 4; proxy 3 fails, as it does for fc95a352 itself (adversative key)."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "D",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "transitions.C1_two_subject.medium.w2b1_06",
+      "template": "C1_two_subject",
+      "subtype": "Contrast: two subjects (numbers, interrupter)",
+      "tier": "medium",
+      "passage": "A standard violin has four strings, each bowed or plucked by the performer. The Hardanger fiddle of western Norway, ______ typically has eight or nine: four conventional playing strings and four or five additional strings positioned beneath the fingerboard, which resonate sympathetically when the others are bowed.",
+      "stem": "Which choice completes the text with the most logical transition?",
+      "options": [
+        "by comparison,",
+        "for instance,",
+        "likewise,",
+        "therefore,"
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The first sentence gives the number of strings on a standard violin (four). The second gives the number on the Hardanger fiddle (eight or nine). “By comparison” signals that the second instrument is being measured against the first on the same feature.",
+      "distractors": {
+        "B": {
+          "recipe": "wrong grain (example)",
+          "why_wrong": "The Hardanger fiddle is not an example of a standard four-string violin; it has twice as many strings."
+        },
+        "C": {
+          "recipe": "false parallel",
+          "why_wrong": "“Likewise” would say the Hardanger fiddle is like the standard violin, but it differs from it in the very feature described."
+        },
+        "D": {
+          "recipe": "unearned cause",
+          "why_wrong": "The number of strings on a standard violin does not cause the Hardanger fiddle to have eight or nine."
+        }
+      },
+      "models": [
+        "2.6",
+        "2.18",
+        "1.14"
+      ],
+      "word_count": 47,
+      "sources": [],
+      "notes": "Two subjects, one attribute, numbers (By comparison is CB’s choice for a numeric contrast, 1.14), placed as an interrupter after the subject (2.6). Facts from general knowledge; not web-checked (Transitions, brief of 2026-10-16); no made-up finding attributed to a real person or organisation.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "notes": "No fact check (Transitions, brief of 2026-10-16); no made-up finding attributed to a real person or organisation: named people and institutions are real and carry their commonly reported facts, researchers behind findings are unnamed. Second-sense check: likewise: no matching case (four strings against eight or nine); for instance fails, the fiddle is not a standard violin.",
+        "status": "pass"
+      }
+    },
+    {
+      "id": "transitions.A1_addition.medium.w2b1_07",
+      "template": "A1_addition",
+      "subtype": "Addition",
+      "tier": "medium",
+      "passage": "Founded in Damascus in 1154, the Bimaristan al-Nuri admitted patients regardless of wealth, providing food, medicine, and treatment free of charge. ______ the hospital served as a medical school, where students attended lectures and learned at patients’ bedsides; among them was Ibn al-Nafis, who later described the pulmonary circulation of blood.",
+      "stem": "Which choice completes the text with the most logical transition?",
+      "options": [
+        "Instead,",
+        "In other words,",
+        "What’s more,",
+        "For example,"
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The first sentence describes one role of the hospital: free care for patients. The blank sentence adds a second, separate role: training physicians. “What’s more” signals that a further point is being added to the first.",
+      "distractors": {
+        "A": {
+          "recipe": "false opposition",
+          "why_wrong": "“Instead” would mean the hospital trained physicians rather than caring for patients, but it did both."
+        },
+        "B": {
+          "recipe": "wrong grain (restatement)",
+          "why_wrong": "Training physicians is not a rewording of giving patients free care; it is a different activity."
+        },
+        "D": {
+          "recipe": "wrong grain (example)",
+          "why_wrong": "Training physicians is not an example of caring for patients free of charge."
+        }
+      },
+      "models": [
+        "2.10",
+        "2.11"
+      ],
+      "word_count": 51,
+      "sources": [],
+      "notes": "Two roles of one institution (2.11 shape: two separate acts by the same agent). Key What’s more, which CB keys (3.20, 7ce14583) and our bank has not used. Ibn al-Nafis studied medicine at the Nuri hospital. Facts from general knowledge; not web-checked (Transitions, brief of 2026-10-16); no made-up finding attributed to a real person or organisation.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "notes": "No fact check (Transitions, brief of 2026-10-16); no made-up finding attributed to a real person or organisation: named people and institutions are real and carry their commonly reported facts, researchers behind findings are unnamed. Second-sense check: Instead has no hook (the hospital did both); For example fails, teaching is not free care.",
+        "status": "pass"
+      }
+    },
+    {
+      "id": "transitions.A1_addition.medium.w2b1_08",
+      "template": "A1_addition",
+      "subtype": "Similarity: a parallel case",
+      "tier": "medium",
+      "passage": "Using data from the Gaia space telescope, astronomers have identified thousands of stars following unusually elongated orbits through the Milky Way: remnants of Gaia-Enceladus, a smaller galaxy that merged with ours approximately ten billion years ago. ______ the Sagittarius dwarf galaxy is currently being absorbed by the Milky Way, its stars stretched into long streams.",
+      "stem": "Which choice completes the text with the most logical transition?",
+      "options": [
+        "Nevertheless,",
+        "Likewise,",
+        "In other words,",
+        "Hence,"
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The first sentence describes a small galaxy, Gaia-Enceladus, that merged with the Milky Way long ago. The blank sentence describes a second small galaxy, Sagittarius, that is being absorbed by the Milky Way now. “Likewise” signals that the second case is similar to the first.",
+      "distractors": {
+        "A": {
+          "recipe": "false opposition",
+          "why_wrong": "Nothing about Sagittarius goes against the Gaia-Enceladus finding; both are cases of a smaller galaxy being taken in by the Milky Way."
+        },
+        "C": {
+          "recipe": "wrong grain (restatement)",
+          "why_wrong": "The sentence about Sagittarius describes a different galaxy, so it does not reword the sentence about Gaia-Enceladus."
+        },
+        "D": {
+          "recipe": "unearned cause",
+          "why_wrong": "The ancient merger with Gaia-Enceladus is not the reason that the Sagittarius galaxy is being absorbed today."
+        }
+      },
+      "models": [
+        "2.7"
+      ],
+      "word_count": 55,
+      "sources": [],
+      "notes": "A second member of the same kind (2.7: a second story in the collection; here a second galaxy taken in by the Milky Way). Similarity key, so no addition decoy. No For example on offer. Facts from general knowledge; not web-checked (Transitions, brief of 2026-10-16); no made-up finding attributed to a real person or organisation.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "notes": "No fact check (Transitions, brief of 2026-10-16); no made-up finding attributed to a real person or organisation: named people and institutions are real and carry their commonly reported facts, researchers behind findings are unnamed. Second-sense check: Likewise is the key and has its matching case (a second galaxy taken in); Nevertheless has no concession hook.",
+        "status": "pass"
+      }
+    },
+    {
+      "id": "transitions.S1_spec_restate.medium.w2b1_09",
+      "template": "S1_spec_restate",
+      "subtype": "Restatement",
+      "tier": "medium",
+      "passage": "Communication accommodation theory, developed by social psychologist Howard Giles beginning in the 1970s, holds that conversational partners frequently converge linguistically. ______ speakers tend to adjust their accents, speaking rates, and word choices to sound more like the person they are talking to. Giles argued that such adjustments often signal a desire for approval.",
+      "stem": "Which choice completes the text with the most logical transition?",
+      "options": [
+        "Nevertheless,",
+        "Similarly,",
+        "Furthermore,",
+        "In other words,"
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The first sentence states the theory in technical terms: conversational partners converge linguistically. The blank sentence says the same thing in plainer terms: people adjust how they talk to sound like the person they are talking to. “In other words” signals a rewording of the previous idea.",
+      "distractors": {
+        "A": {
+          "recipe": "false opposition",
+          "why_wrong": "The blank sentence does not hold true in spite of the theory; it says what the theory says."
+        },
+        "B": {
+          "recipe": "false parallel",
+          "why_wrong": "The blank sentence does not describe a second, similar case; it describes the same tendency the theory names."
+        },
+        "C": {
+          "recipe": "additive",
+          "why_wrong": "The blank sentence adds no new claim to the theory; adjusting one’s speech to sound like a partner is what converging means."
+        }
+      },
+      "models": [
+        "2.15",
+        "2.12"
+      ],
+      "word_count": 53,
+      "sources": [],
+      "notes": "A technical claim, then a plain rewording with no new facts (2.15, 3.5 kind). No example or specification decoy, since the adjusted features could pass as instances. Facts from general knowledge; not web-checked (Transitions, brief of 2026-10-16); no made-up finding attributed to a real person or organisation.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "notes": "No fact check (Transitions, brief of 2026-10-16); no made-up finding attributed to a real person or organisation: named people and institutions are real and carry their commonly reported facts, researchers behind findings are unnamed. Second-sense check: Similarly: no second case named; Furthermore fails since the sentence adds no claim.",
+        "status": "pass"
+      }
+    },
+    {
+      "id": "transitions.C2_belief_finding.medium.w2b1_10",
+      "template": "C2_belief_finding",
+      "subtype": "Contrast: belief then finding (after an opening phrase)",
+      "tier": "medium",
+      "passage": "Sailors have long described huge waves rising without warning from moderate seas, but many oceanographers once dismissed such accounts, since standard models predicted that waves of that size should almost never form. On January 1, 1995, ______ instruments on a gas platform in the North Sea recorded a single wave about 26 meters high.",
+      "stem": "Which choice completes the text with the most logical transition?",
+      "options": [
+        "however,",
+        "therefore,",
+        "in other words,",
+        "to that end,"
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The first sentence says that oceanographers doubted reports of giant waves because their models said such waves should almost never form. The second sentence reports that instruments measured exactly such a wave. “However” signals that this finding goes against the oceanographers’ earlier view.",
+      "distractors": {
+        "B": {
+          "recipe": "unearned cause",
+          "why_wrong": "The models’ prediction that giant waves should almost never form could not cause instruments to record one; the measurement goes against the prediction."
+        },
+        "C": {
+          "recipe": "wrong grain (restatement)",
+          "why_wrong": "The 1995 measurement is new information, not a rewording of the oceanographers’ doubts."
+        },
+        "D": {
+          "recipe": "unearned purpose",
+          "why_wrong": "The instruments did not record the wave as a step toward the oceanographers’ goal; the passage describes no such goal, and the measurement undercut their view."
+        }
+      },
+      "models": [
+        "2.1",
+        "2.16"
+      ],
+      "word_count": 54,
+      "sources": [],
+      "notes": "Established view, then the measurement that broke it, with the blank after an opening date phrase (2.1 shape). Likewise, For example and In addition left out: each could pair the measured wave with the sailors’ accounts. Facts from general knowledge; not web-checked (Transitions, brief of 2026-10-16); no made-up finding attributed to a real person or organisation.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "notes": "No fact check (Transitions, brief of 2026-10-16); no made-up finding attributed to a real person or organisation: named people and institutions are real and carry their commonly reported facts, researchers behind findings are unnamed. Second-sense check: to that end has no stated goal to serve; no Likewise, For example or In addition on offer.",
+        "status": "pass"
+      }
+    },
+    {
+      "id": "transitions.E1_consequence.medium.w2b1_11",
+      "template": "E1_consequence",
+      "subtype": "Cause / effect",
+      "tier": "medium",
+      "passage": "Most North American songbirds nest in spring, when the insects their chicks require are abundant. Red crossbills, however, feed their nestlings conifer seeds, which they extract from cones with their distinctive crossed bills, and in many forests cones retain seeds well into winter. ______ crossbills sometimes breed in January or February, while snow still blankets the ground.",
+      "stem": "Which choice completes the text with the most logical transition?",
+      "options": [
+        "In other words,",
+        "As a result,",
+        "For instance,",
+        "Likewise,"
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The second sentence explains that crossbills feed their chicks on conifer seeds and that cones keep their seed into winter. The blank sentence gives the consequence: crossbills can breed even in midwinter. “As a result” signals that this follows from the food supply just described.",
+      "distractors": {
+        "A": {
+          "recipe": "wrong grain (restatement)",
+          "why_wrong": "Breeding in winter is not a rewording of cones holding seed into winter; it is a new fact that follows from it."
+        },
+        "C": {
+          "recipe": "wrong grain (example)",
+          "why_wrong": "Breeding in January is not an example of cones holding seed into winter; it is a result of that."
+        },
+        "D": {
+          "recipe": "false parallel",
+          "why_wrong": "Crossbills breeding in winter is not like most songbirds nesting in spring; it differs from it."
+        }
+      },
+      "models": [
+        "2.9",
+        "2.14"
+      ],
+      "word_count": 57,
+      "sources": [],
+      "notes": "Condition, then its consequence (2.9); the however in sentence 2 and the winter setting give the passage a contrastive surface. No However or Nevertheless on offer: a student who ties the blank sentence to sentence 1 (most songbirds nest in spring) could defend a contrast. Facts from general knowledge; not web-checked (Transitions, brief of 2026-10-16); no made-up finding attributed to a real person or organisation.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "notes": "No fact check (Transitions, brief of 2026-10-16); no made-up finding attributed to a real person or organisation: named people and institutions are real and carry their commonly reported facts, researchers behind findings are unnamed. Second-sense check: Likewise: no matching case (spring against winter); no adversative on offer although sentence 1 gives a contrast hook.",
+        "status": "pass"
+      }
+    },
+    {
+      "id": "transitions.T1_sequence_time.medium.w2b1_12",
+      "template": "T1_sequence_time",
+      "subtype": "Time: earlier event",
+      "tier": "medium",
+      "passage": "In 2005, Algerian novelist and filmmaker Assia Djebar became the first North African writer elected to the Académie française, the institution that has regulated the French language since 1635. ______ in 1955, she had become the first Algerian woman admitted to the École normale supérieure de jeunes filles, an extraordinarily selective school.",
+      "stem": "Which choice completes the text with the most logical transition?",
+      "options": [
+        "However,",
+        "As a result,",
+        "Earlier,",
+        "For example,"
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The first sentence describes an event of 2005. The blank sentence describes an event of 1955 and uses “had become,” so it reaches back in time. “Earlier” signals that this event came before the one just described.",
+      "distractors": {
+        "A": {
+          "recipe": "false opposition",
+          "why_wrong": "Djebar’s admission to the school does not contrast with her election to the Académie; both are achievements."
+        },
+        "B": {
+          "recipe": "unearned cause",
+          "why_wrong": "An event of 1955 cannot be a result of an event that happened fifty years later."
+        },
+        "D": {
+          "recipe": "wrong grain (example)",
+          "why_wrong": "Being admitted to a school in 1955 is not an example of being elected to the Académie française in 2005."
+        }
+      },
+      "models": [
+        "2.2",
+        "1.12"
+      ],
+      "word_count": 52,
+      "sources": [],
+      "notes": "Reverse time order carried by dates and the past perfect (2.2 kind). No Similarly or In addition on offer: two firsts could be read as parallel achievements. Facts from general knowledge; not web-checked (Transitions, brief of 2026-10-16); no made-up finding attributed to a real person or organisation.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [
+          "passage: 'an extraordinarily selective institution' to 'an extraordinarily selective school' (institution used twice)"
+        ],
+        "notes": "No fact check (Transitions, brief of 2026-10-16); no made-up finding attributed to a real person or organisation: named people and institutions are real and carry their commonly reported facts, researchers behind findings are unnamed. Second-sense check: no Next or Later beside backward dates; However has no contrast hook.",
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "transitions.E2_motive_action.medium.w2b1_13",
+      "template": "E2_motive_action",
+      "subtype": "Cause: motive and action",
+      "tier": "medium",
+      "passage": "Onesimus, an enslaved West African man in the Boston household of minister Cotton Mather, told Mather he had been protected against smallpox in childhood: material from an infected person’s sore was deliberately rubbed into a small incision. When an epidemic struck Boston in 1721, Mather became convinced the procedure could save lives. ______ he urged the city’s physicians to adopt it.",
+      "stem": "Which choice completes the text with the most logical transition?",
+      "options": [
+        "Nevertheless,",
+        "Likewise,",
+        "In other words,",
+        "Consequently,"
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The second sentence says that Mather became convinced the procedure Onesimus described could save lives. The blank sentence gives the action that conviction led to: Mather urged physicians to adopt it. “Consequently” signals that the action follows from that conviction.",
+      "distractors": {
+        "A": {
+          "recipe": "false opposition",
+          "why_wrong": "Urging physicians to adopt the procedure does not go against Mather’s belief that it could save lives; it follows from that belief."
+        },
+        "B": {
+          "recipe": "false parallel",
+          "why_wrong": "Urging physicians to adopt the procedure is not a second case similar to Mather’s belief; it is what he did because of it."
+        },
+        "C": {
+          "recipe": "wrong grain (restatement)",
+          "why_wrong": "Urging physicians to act is not a rewording of being convinced; it is a new step taken because of that conviction."
+        }
+      },
+      "models": [
+        "2.17"
+      ],
+      "word_count": 61,
+      "sources": [],
+      "notes": "A judgment, then the action it motivates (2.17 kind). Key Consequently, not the Accordingly or For this reason used four times each in our E2 items. Facts from general knowledge; not web-checked (Transitions, brief of 2026-10-16); no made-up finding attributed to a real person or organisation.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "notes": "No fact check (Transitions, brief of 2026-10-16); no made-up finding attributed to a real person or organisation: named people and institutions are real and carry their commonly reported facts, researchers behind findings are unnamed. Second-sense check: Nevertheless has no concession hook (the sentence before states a conviction); Likewise: no matching case.",
+        "status": "pass"
+      }
+    },
+    {
+      "id": "transitions.U1_culmination_alt.medium.w2b1_14",
+      "template": "U1_culmination_alt",
+      "subtype": "Alternative",
+      "tier": "medium",
+      "passage": "Purple loosestrife, a Eurasian wetland plant introduced to North America in the early 1800s, now displaces native vegetation across much of the continent. Land managers often control it by spraying herbicides or by digging up the plants. ______ they can release Galerucella beetles, leaf-eating insects from the plant’s native range that feed almost exclusively on loosestrife.",
+      "stem": "Which choice completes the text with the most logical transition?",
+      "options": [
+        "For example,",
+        "Alternatively,",
+        "Consequently,",
+        "In other words,"
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The second sentence describes the usual ways to control loosestrife: spraying herbicides or digging up the plants. The blank sentence describes a different way to do the same job: releasing beetles that feed almost only on loosestrife. “Alternatively” signals a second, different option for the same problem.",
+      "distractors": {
+        "A": {
+          "recipe": "wrong grain (example)",
+          "why_wrong": "Releasing beetles is not an example of spraying herbicides or digging up plants; it is a separate method."
+        },
+        "C": {
+          "recipe": "unearned cause",
+          "why_wrong": "Spraying or digging up loosestrife does not lead land managers to release beetles; the methods are options, not cause and effect."
+        },
+        "D": {
+          "recipe": "wrong grain (restatement)",
+          "why_wrong": "Releasing beetles is not a rewording of spraying or digging; it is a different method."
+        }
+      },
+      "models": [
+        "2.8",
+        "3.16"
+      ],
+      "word_count": 56,
+      "sources": [],
+      "notes": "One method, then a different method for the same problem (3.16 kind), at medium. Key Alternatively rather than There, which three of our four medium U1 items key. No contrast, addition or similarity decoy (each could be defended beside two methods), and no drawback of the first methods is stated, so Consequently cannot read as motive and action. Facts from general knowledge; not web-checked (Transitions, brief of 2026-10-16); no made-up finding attributed to a real person or organisation.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "notes": "No fact check (Transitions, brief of 2026-10-16); no made-up finding attributed to a real person or organisation: named people and institutions are real and carry their commonly reported facts, researchers behind findings are unnamed. Second-sense check: no contrast, addition or similarity decoy beside two methods; For example fails, beetles are neither spraying nor digging.",
+        "status": "pass"
+      }
+    },
+    {
+      "id": "transitions.T1_sequence_time.easy.w2b1_15",
+      "template": "T1_sequence_time",
+      "subtype": "Time: later event",
+      "tier": "easy",
+      "passage": "Between 1967 and 1969, Barbadian poet Kamau Brathwaite published three book-length poems, Rights of Passage, Masks, and Islands, that together explore the experiences of African peoples throughout the Caribbean. ______ in 1973, the three poems were collected into a single volume, The Arrivants: A New World Trilogy.",
+      "stem": "Which choice completes the text with the most logical transition?",
+      "options": [
+        "Later,",
+        "However,",
+        "For example,",
+        "Similarly,"
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The first sentence describes poems published between 1967 and 1969. The blank sentence describes what happened to them in 1973. “Later” signals that this event came after the ones just described.",
+      "distractors": {
+        "B": {
+          "recipe": "false opposition",
+          "why_wrong": "Collecting the poems in one volume does not contrast with publishing them; it is the next event in their history."
+        },
+        "C": {
+          "recipe": "wrong grain (example)",
+          "why_wrong": "Collecting the poems in 1973 is not an example of publishing them between 1967 and 1969."
+        },
+        "D": {
+          "recipe": "false parallel",
+          "why_wrong": "The 1973 collection is not a similar, separate event; it gathers the same three poems later."
+        }
+      },
+      "models": [
+        "1.18",
+        "1.12"
+      ],
+      "word_count": 47,
+      "sources": [],
+      "notes": "Dated events in order (1.18 kind). Facts from general knowledge; not web-checked (Transitions, brief of 2026-10-16); no made-up finding attributed to a real person or organisation.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "notes": "No fact check (Transitions, brief of 2026-10-16); no made-up finding attributed to a real person or organisation: named people and institutions are real and carry their commonly reported facts, researchers behind findings are unnamed. Second-sense check: no competing time decoy; Similarly: no matching case.",
+        "status": "pass"
+      }
+    },
+    {
+      "id": "transitions.T1_sequence_time.easy.w2b1_16",
+      "template": "T1_sequence_time",
+      "subtype": "Sequence: next step",
+      "tier": "easy",
+      "passage": "Zellij, the geometric tilework adorning walls and fountains throughout Morocco, is crafted by hand. Artisans first chip glazed clay tiles into small shapes, such as stars and triangles, using a sharp-edged hammer. ______ they arrange the fragments face down in the intended pattern and pour mortar over them, forming a single panel.",
+      "stem": "Which choice completes the text with the most logical transition?",
+      "options": [
+        "Likewise,",
+        "However,",
+        "Then,",
+        "For instance,"
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The second sentence describes the first step in making zellij: chipping tiles into small shapes. The blank sentence describes the step that follows: arranging the pieces and pouring mortar over them. “Then” signals the next step in the process.",
+      "distractors": {
+        "A": {
+          "recipe": "false parallel",
+          "why_wrong": "Arranging the pieces is not similar to chipping the tiles; it is a different, later step."
+        },
+        "B": {
+          "recipe": "false opposition",
+          "why_wrong": "Arranging the pieces does not contrast with chipping the tiles; it continues the same process."
+        },
+        "D": {
+          "recipe": "wrong grain (example)",
+          "why_wrong": "Arranging the pieces is not an example of chipping tiles into shapes; it is the next step."
+        }
+      },
+      "models": [
+        "1.11",
+        "1.35"
+      ],
+      "word_count": 52,
+      "sources": [],
+      "notes": "A procedure with first ... then the blank (1.11, 1.22 kind). Facts from general knowledge; not web-checked (Transitions, brief of 2026-10-16); no made-up finding attributed to a real person or organisation.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "notes": "No fact check (Transitions, brief of 2026-10-16); no made-up finding attributed to a real person or organisation: named people and institutions are real and carry their commonly reported facts, researchers behind findings are unnamed. Second-sense check: Likewise: no matching case; no Next or Finally on offer.",
+        "status": "pass"
+      }
+    },
+    {
+      "id": "transitions.E1_consequence.easy.w2b1_17",
+      "template": "E1_consequence",
+      "subtype": "Cause / effect",
+      "tier": "easy",
+      "passage": "The Moon’s gravity gradually slows Earth’s rotation, so days steadily lengthen. Hundreds of millions of years ago, they were considerably shorter than they are today. ______ each year, the time Earth takes to orbit the Sun, contained more days: growth lines in fossil corals about 380 million years old suggest approximately 400.",
+      "stem": "Which choice completes the text with the most logical transition?",
+      "options": [
+        "However,",
+        "Thus,",
+        "Regardless,",
+        "Firstly,"
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The first two sentences explain that the Moon slows Earth’s rotation, so days were shorter long ago. The blank sentence draws the conclusion that follows: if each day was shorter, a year must have held more of them. “Thus” signals that the sentence follows from the one before it.",
+      "distractors": {
+        "A": {
+          "recipe": "false opposition",
+          "why_wrong": "A year holding more days does not contrast with days being shorter; it follows from it."
+        },
+        "C": {
+          "recipe": "false opposition (dismissive)",
+          "why_wrong": "“Regardless” would mean the number of days in a year has nothing to do with the length of a day, but it depends directly on it."
+        },
+        "D": {
+          "recipe": "phantom sequence",
+          "why_wrong": "Nothing is being listed, so there is no first point for “Firstly” to introduce."
+        }
+      },
+      "models": [
+        "1.32",
+        "1.5"
+      ],
+      "word_count": 52,
+      "sources": [],
+      "notes": "Principle, then what follows from it (1.32 kind). No Similarly, In other words, For example or Previously on offer: more days per year is logically equivalent to shorter days, and the coral evidence could pass as an instance. Facts from general knowledge; not web-checked (Transitions, brief of 2026-10-16); no made-up finding attributed to a real person or organisation.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "notes": "No fact check (Transitions, brief of 2026-10-16); no made-up finding attributed to a real person or organisation: named people and institutions are real and carry their commonly reported facts, researchers behind findings are unnamed. Second-sense check: However pulls more than CB easy decoys usually do (shorter days, then more days), but the appositive forces the consequence, so it is not a second answer; Firstly and Regardless are plainly off.",
+        "status": "pass"
+      }
+    },
+    {
+      "id": "transitions.X1_example.easy.w2b1_18",
+      "template": "X1_example",
+      "subtype": "Example",
+      "tier": "easy",
+      "passage": "Many flowers bear markings that are invisible to humans but conspicuous to bees, which can perceive ultraviolet light. ______ the petals of the black-eyed Susan look uniformly yellow to people, but under ultraviolet light the base of each petal appears dark, forming a bull’s-eye that may guide bees toward the flower’s nectar.",
+      "stem": "Which choice completes the text with the most logical transition?",
+      "options": [
+        "However,",
+        "In conclusion,",
+        "Previously,",
+        "For example,"
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The first sentence makes a general claim: many flowers have markings that bees can see but people cannot. The blank sentence gives one specific flower with such a marking, the black-eyed Susan. “For example” signals that the sentence offers an instance of the general claim.",
+      "distractors": {
+        "A": {
+          "recipe": "false opposition",
+          "why_wrong": "The black-eyed Susan does not contrast with the general claim; it is a case of it."
+        },
+        "B": {
+          "recipe": "premature summary",
+          "why_wrong": "The sentence does not sum up the text; it introduces a specific new case."
+        },
+        "C": {
+          "recipe": "wrong time",
+          "why_wrong": "The sentence describes how the flower looks now, not something that happened before the claim in the first sentence."
+        }
+      },
+      "models": [
+        "1.2",
+        "1.37"
+      ],
+      "word_count": 52,
+      "sources": [],
+      "notes": "General claim with many, then one named instance (1.25, 1.37 kind). No Similarly or Likewise on offer (the flower belongs to the set named in sentence 1). Facts from general knowledge; not web-checked (Transitions, brief of 2026-10-16); no made-up finding attributed to a real person or organisation.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "notes": "No fact check (Transitions, brief of 2026-10-16); no made-up finding attributed to a real person or organisation: named people and institutions are real and carry their commonly reported facts, researchers behind findings are unnamed. Second-sense check: Previously fails on tense (a present-tense description); no Similarly or Likewise on offer.",
+        "status": "pass"
+      }
+    },
+    {
+      "id": "transitions.X1_example.easy.w2b1_19",
+      "template": "X1_example",
+      "subtype": "Example (interrupter)",
+      "tier": "easy",
+      "passage": "Some communities have created local currencies, money that can be spent only at businesses in a particular area, to keep spending within the local economy. The Bristol pound, ______ was launched in 2012 and was accepted by hundreds of independent businesses across Bristol, England.",
+      "stem": "Which choice completes the text with the most logical transition?",
+      "options": [
+        "for instance,",
+        "by contrast,",
+        "in other words,",
+        "lastly,"
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The first sentence makes a general claim: some communities have created local currencies. The second sentence names one such currency, the Bristol pound. “For instance” signals that the Bristol pound is an example of the general claim.",
+      "distractors": {
+        "B": {
+          "recipe": "false opposition",
+          "why_wrong": "The Bristol pound does not differ from the local currencies described in the first sentence; it is one of them."
+        },
+        "C": {
+          "recipe": "wrong grain (restatement)",
+          "why_wrong": "The second sentence adds a specific case; it does not reword the general claim."
+        },
+        "D": {
+          "recipe": "phantom sequence",
+          "why_wrong": "No list of points is being made, so the sentence is not a final item in a series."
+        }
+      },
+      "models": [
+        "1.28",
+        "1.25"
+      ],
+      "word_count": 44,
+      "sources": [],
+      "notes": "General claim, then one named instance, with the blank as an interrupter after the subject (1.28 frame, varied decoy set). Facts from general knowledge; not web-checked (Transitions, brief of 2026-10-16); no made-up finding attributed to a real person or organisation.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [
+          "passage: blank sentence rebuilt around one main verb ('The Bristol pound, ______ was launched in 2012 and was accepted by hundreds of independent businesses across Bristol, England.'); the old 'launched in Bristol, England, in 2012,' garden-pathed on 'launched' and repeated Bristol"
+        ],
+        "notes": "No fact check (Transitions, brief of 2026-10-16); no made-up finding attributed to a real person or organisation: named people and institutions are real and carry their commonly reported facts, researchers behind findings are unnamed. Second-sense check: lastly: no list; by contrast fails, the Bristol pound is one such currency.",
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "transitions.C3_limiting_fact.easy.w2b1_20",
+      "template": "C3_limiting_fact",
+      "subtype": "Contrast: limiting fact",
+      "tier": "easy",
+      "passage": "Volapük, a language invented in 1879 by German priest Johann Martin Schleyer, spread rapidly across Europe. Within a decade it had attracted thousands of enthusiasts, and its 1889 congress in Paris was conducted entirely in Volapük. ______ the movement soon collapsed, as many adherents abandoned it for simpler invented languages.",
+      "stem": "Which choice completes the text with the most logical transition?",
+      "options": [
+        "Consequently,",
+        "In other words,",
+        "However,",
+        "Likewise,"
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The first two sentences describe Volapük’s quick success. The blank sentence describes its sudden decline. “However” signals that this sentence contrasts with the success just described.",
+      "distractors": {
+        "A": {
+          "recipe": "unearned cause",
+          "why_wrong": "The language’s quick spread did not cause its collapse; the collapse came because followers left for easier languages."
+        },
+        "B": {
+          "recipe": "wrong grain (restatement)",
+          "why_wrong": "The collapse of the movement is not a rewording of its success; it is the opposite."
+        },
+        "D": {
+          "recipe": "false parallel",
+          "why_wrong": "A collapse is not similar to the rapid spread described before; it reverses it."
+        }
+      },
+      "models": [
+        "1.10",
+        "1.33"
+      ],
+      "word_count": 50,
+      "sources": [],
+      "notes": "Positive claim, then a fact that limits it (1.10 kind: once prominent, then neglected). Esperanto not named (it is an official Boundaries subject). Facts from general knowledge; not web-checked (Transitions, brief of 2026-10-16); no made-up finding attributed to a real person or organisation.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "notes": "No fact check (Transitions, brief of 2026-10-16); no made-up finding attributed to a real person or organisation: named people and institutions are real and carry their commonly reported facts, researchers behind findings are unnamed. Second-sense check: Likewise: no matching case; Consequently fails, the spread did not cause the collapse.",
+        "status": "pass"
+      }
+    },
+    {
+      "id": "transitions.C1_two_subject.easy.w2b1_21",
+      "template": "C1_two_subject",
+      "subtype": "Contrast: two subjects",
+      "tier": "easy",
+      "passage": "Male red phalaropes, shorebirds that breed in the Arctic, have drab brown and gray plumage, and they alone incubate the eggs and care for the chicks. ______ females are brilliantly colored in brick red and frequently depart after laying their eggs to seek additional mates.",
+      "stem": "Which choice completes the text with the most logical transition?",
+      "options": [
+        "For example,",
+        "In contrast,",
+        "Similarly,",
+        "In other words,"
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The first sentence describes the males: drab in color and solely responsible for the eggs and chicks. The blank sentence describes the females: brightly colored and quick to leave. “In contrast” signals that the second sentence describes a subject that differs from the first.",
+      "distractors": {
+        "A": {
+          "recipe": "wrong grain (example)",
+          "why_wrong": "The females are not an example of the males described in the first sentence; they differ from them."
+        },
+        "C": {
+          "recipe": "false parallel",
+          "why_wrong": "The females are not similar to the males; they differ in both color and behavior."
+        },
+        "D": {
+          "recipe": "wrong grain (restatement)",
+          "why_wrong": "The sentence about the females gives new information; it does not reword the sentence about the males."
+        }
+      },
+      "models": [
+        "1.17",
+        "1.14"
+      ],
+      "word_count": 45,
+      "sources": [],
+      "notes": "Two subjects, opposite values on two attributes (1.17 kind). No cause decoy: male care could be read as what frees the females to leave. Facts from general knowledge; not web-checked (Transitions, brief of 2026-10-16); no made-up finding attributed to a real person or organisation.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "notes": "No fact check (Transitions, brief of 2026-10-16); no made-up finding attributed to a real person or organisation: named people and institutions are real and carry their commonly reported facts, researchers behind findings are unnamed. Second-sense check: Similarly: no matching case; no cause decoy on offer.",
+        "status": "pass"
+      }
+    },
+    {
+      "id": "transitions.E2_motive_action.easy.w2b1_22",
+      "template": "E2_motive_action",
+      "subtype": "Cause: need then action",
+      "tier": "easy",
+      "passage": "Farming in ancient Egypt depended on the Nile’s yearly flood: a low flood left fields parched, while an unusually high one could destroy villages. Officials needed to anticipate each year’s harvest and the taxes it would bring. ______ they built nilometers, stone staircases or shafts marked with measurements, to record how high the river rose.",
+      "stem": "Which choice completes the text with the most logical transition?",
+      "options": [
+        "Therefore,",
+        "Similarly,",
+        "However,",
+        "In conclusion,"
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The second sentence says that officials needed to predict each year’s harvest, which depended on the flood. The blank sentence gives the action they took to meet that need: building nilometers to measure the river’s rise. “Therefore” signals that the action follows from the need.",
+      "distractors": {
+        "B": {
+          "recipe": "false parallel",
+          "why_wrong": "Building nilometers is not similar to needing to anticipate the harvest; it is the response to that need."
+        },
+        "C": {
+          "recipe": "false opposition",
+          "why_wrong": "Building nilometers does not go against the officials’ need; it serves it."
+        },
+        "D": {
+          "recipe": "premature summary",
+          "why_wrong": "The sentence does not sum up the text; it adds a new fact about what the officials built."
+        }
+      },
+      "models": [
+        "1.9",
+        "1.13"
+      ],
+      "word_count": 55,
+      "sources": [],
+      "notes": "Need, then the same agents’ action (1.9, 1.16 kind). No example decoy (the nilometers could pass as an instance of anticipating the harvest). Facts from general knowledge; not web-checked (Transitions, brief of 2026-10-16); no made-up finding attributed to a real person or organisation.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "notes": "No fact check (Transitions, brief of 2026-10-16); no made-up finding attributed to a real person or organisation: named people and institutions are real and carry their commonly reported facts, researchers behind findings are unnamed. Second-sense check: Similarly: no matching case; However has no hook.",
+        "status": "pass"
+      }
+    },
+    {
+      "id": "transitions.P1_purpose_aptness.easy.w2b1_23",
+      "template": "P1_purpose_aptness",
+      "subtype": "Purpose",
+      "tier": "easy",
+      "passage": "Russian painter Igor Savitsky sought to preserve the work of Soviet avant-garde artists, whose experimental styles had been officially condemned. ______ beginning in the 1960s, he acquired thousands of their paintings, often from the artists’ families, for a museum he established in Nukus, a remote city in what is now Uzbekistan.",
+      "stem": "Which choice completes the text with the most logical transition?",
+      "options": [
+        "In other words,",
+        "In conclusion,",
+        "To that end,",
+        "Likewise,"
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The first sentence states Savitsky’s goal: to save works by condemned avant-garde artists. The blank sentence describes what he did to reach that goal: he bought thousands of their works for his museum. “To that end” signals an action taken to achieve the goal just stated.",
+      "distractors": {
+        "A": {
+          "recipe": "wrong grain (restatement)",
+          "why_wrong": "“In other words” would mean the blank sentence restates Savitsky’s goal, but it adds new facts: when he acted, how many paintings he acquired, where they came from, and the museum he founded."
+        },
+        "B": {
+          "recipe": "premature summary",
+          "why_wrong": "The sentence does not sum up the text; it describes a new action."
+        },
+        "D": {
+          "recipe": "false parallel",
+          "why_wrong": "Acquiring the paintings is not a second, similar goal; it is the means of achieving the first one."
+        }
+      },
+      "models": [
+        "1.21"
+      ],
+      "word_count": 51,
+      "sources": [],
+      "notes": "Goal, then the deliberate act that serves it (1.21 kind). Key To that end, new at easy (our easy P1 items key With this in mind). No cause or example decoy. Facts from general knowledge; not web-checked (Transitions, brief of 2026-10-16); no made-up finding attributed to a real person or organisation.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [
+          "decoy A 'Nevertheless,' replaced with 'In other words,': the clause 'whose experimental styles had been officially condemned' gave Nevertheless a fitting second sense (he acquired the paintings despite the condemnation); In other words is CB's own decoy in the same 'sought to ... To that end' frame (f5149550); distractor A recipe and why_wrong rewritten"
+        ],
+        "notes": "No fact check (Transitions, brief of 2026-10-16); no made-up finding attributed to a real person or organisation: named people and institutions are real and carry their commonly reported facts, researchers behind findings are unnamed. Second-sense check: Nevertheless replaced (see fixes); Likewise: no matching case; In conclusion is a plain premature-summary decoy.",
+        "status": "fixed"
+      }
+    }
+  ]
+}

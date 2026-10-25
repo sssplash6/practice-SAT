@@ -1,0 +1,366 @@
+{
+  "skill": "Text Structure and Purpose",
+  "slug": "text_structure_and_purpose",
+  "part": null,
+  "domain": "Craft and Structure",
+  "band_target": 7,
+  "plan": {
+    "templates": [
+      {
+        "code": "F_setup",
+        "name": "Function: set-up or context for what follows",
+        "band7_official": 4,
+        "band6_official": 2
+      },
+      {
+        "code": "F_reason",
+        "name": "Function: the span is the consideration behind a conclusion or decision stated elsewhere (new code from the band-7 file)",
+        "band7_official": 2,
+        "band6_official": 2
+      },
+      {
+        "code": "F_example",
+        "name": "Function: example or supporting detail for a claim",
+        "band7_official": 2,
+        "band6_official": 2
+      },
+      {
+        "code": "F_qualify",
+        "name": "Function: qualification of an earlier description",
+        "band7_official": 2,
+        "band6_official": 0
+      }
+    ],
+    "skipped": [
+      [
+        "F_lit",
+        "band 7: 1"
+      ],
+      [
+        "F_implication",
+        "band 7: 1"
+      ],
+      [
+        "S6, S15, S17, S18",
+        "band 7: 1 each"
+      ],
+      [
+        "P_study, P_lit, P_view",
+        "band 7: 1 each"
+      ]
+    ]
+  },
+  "items": [
+    {
+      "id": "text_structure_and_purpose.F_setup.b7",
+      "template": "F_setup",
+      "subtype": "Function of an underlined part",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "<u>Because the left hemisphere of the brain has proven dominant in comprehending spoken languages, written texts, and sign languages alike</u>, researchers have generally regarded this asymmetry as independent of the physical form in which language reaches the brain. Onur Güntürkün and colleagues tested that view in Kuşköy, a mountain village in northeastern Turkey whose inhabitants also communicate in whistled Turkish, which shares the vocabulary and grammar of spoken Turkish but conveys them through acoustic properties, such as pitch and melody, that the right hemisphere is specialized to process. When different syllables were played to each ear simultaneously, spoken syllables yielded the expected left-hemisphere advantage, whereas whistled syllables elicited roughly symmetrical contributions from both hemispheres.",
+      "stem": "Which choice best describes the function of the underlined portion in the text as a whole?",
+      "options": [
+        "It presents evidence for a view about how the brain processes language, evidence that the findings described later in the text go on to call into question.",
+        "It identifies a pattern in brain function in order to explain why Güntürkün and colleagues expected whistled Turkish to be processed mainly by the brain’s right hemisphere.",
+        "It identifies the evidence behind a view that researchers have generally held, a view that the text goes on to suggest is undermined by findings about whistled Turkish.",
+        "It describes a pattern in brain function in order to explain why the inhabitants of Kuşköy came to communicate in whistled as well as spoken Turkish."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The underlined portion gives the pattern (left-hemisphere dominance for spoken, written, and signed language) that led researchers to the view stated in the rest of the sentence: the asymmetry does not depend on the form in which language arrives. The text then tests that view: whistled Turkish, which carries the same words through pitch and melody, drew on both hemispheres about equally, while spoken syllables still showed the usual left-hemisphere advantage. So the portion is the evidence behind a view that the later findings undermine; the evidence itself is left standing.",
+      "distractors": {
+        "A": {
+          "recipe": "first clause right, later clause moves the overturn from the view to its evidence (INV)",
+          "why_wrong": "The underlined pattern is not called into question: spoken syllables still produced the expected left-hemisphere advantage. What the whistled results undermine is the view drawn from the pattern, which sits in the rest of the sentence."
+        },
+        "B": {
+          "recipe": "first clause right, later clause gives the next sentence's job (INV, PART)",
+          "why_wrong": "The point that whistled Turkish relies on pitch and melody, which the right hemisphere is specialized to process, comes from the second sentence, not the underlined pattern. The text never says anyone expected mainly right-hemisphere processing, and the result was roughly symmetrical."
+        },
+        "D": {
+          "recipe": "first clause right, invented purpose (INV)",
+          "why_wrong": "The text never explains why the people of Kuşköy whistle. The village is mentioned as the place where the view could be tested, not as something the underlined portion accounts for."
+        }
+      },
+      "models": [
+        "1f2d6173",
+        "a2f64e58",
+        "df45f0eb"
+      ],
+      "band7_moves": [
+        "the underline covers only the evidence (the Because clause); the view drawn from it sits outside the underline, as the speculation does in a2f64e58",
+        "deciding evidence sits two sentences after the span, and the student must see that it overturns the view, not the pattern (spoken syllables still show the left advantage)",
+        "three distractors keep a true first clause about the span; A keeps the key's stance but moves the overturn onto the evidence, B gives the second sentence's job, D invents a purpose",
+        "key of 29 words with a that-the-text-goes-on clause"
+      ],
+      "word_count": 114,
+      "sources": [
+        {
+          "what": "Güntürkün, Güntürkün and Hahn, Whistled Turkish alters language asymmetries, Current Biology 25(16): R706 to R708, 2015",
+          "url": "https://doi.org/10.1016/j.cub.2015.06.067"
+        },
+        {
+          "what": "spoken languages, written texts and sign language involve the left hemisphere more strongly; the asymmetry considered independent of the physical properties of the input; 31 inhabitants of Kuşköy tested; whistled Turkish has the same vocabulary and grammar, used in the mountainous north-eastern part of Turkey; acoustic properties for which the right hemisphere is specialized; spoken Turkish showed a clear asymmetry, whistled Turkish did not (symmetric hemispheric contributions); dichotic presentation of different syllables to each ear",
+          "url": "https://neurosciencenews.com/language-processing-turkish-whistling-2453/"
+        },
+        {
+          "what": "Kuşköy residents speak and whistle Turkish; both sides of the brain used for the whistled form",
+          "url": "https://www.pbs.org/wgbh/nova/next/body/human-speaking-whistled-bird-language-use-both-sides-of-their-brain-to-talk-not-just-one/"
+        }
+      ],
+      "notes": "Subject: natural science (neuroscience of language). Key letter C. Span role: means (a received view set up for a test), not the main claim. Key parts: 3 (pattern, conclusion drawn, later undermined). Underline closes before the final period so the checker's sentence count stays correct. Section 6 checks: key 32 words; mean option length 29.0 words; compound clause marker in key: yes; distractors with a true first clause and a false later clause: 3 of 3 (A reverses the outcome, B twists the pitch and melody detail, D invents a purpose). Reviewer: old A (\"confirmed\") mirrored the key and died on one word; replaced by a swap of the two conditions that keeps the key's stance. Hardening pass 2026-10-16: see hardened; key now 28 words, mean option length 27.0 words, passage 114 words (earlier section 6 figures in this note predate the pass).",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 6,
+        "fixes": [
+          "option A rewritten: the old \"confirmed\" option mirrored the key; the new one keeps the key's stance and swaps spoken for whistled Turkish",
+          "underline narrowed to the Because clause (stem now says underlined portion); key, A and B rewritten so A moves the overturn from the view to its evidence and B gives the next sentence's job (hardening pass 2026-10-16)"
+        ],
+        "status": "fixed"
+      },
+      "band7": {
+        "verdict": "band 7",
+        "why": "Follows a2f64e58 and df45f0eb: the span is a view (pattern plus conclusion) that later sentences overturn, the key carries three parts, and all three distractors keep a true first clause. With the mirror option replaced, the closest distractor agrees that the view is undermined and fails only on which condition broke the asymmetry, so the student must read the last sentence closely."
+      },
+      "hardened": {
+        "what": "Underline narrowed to the Because clause (stem \"sentence\" changed to \"portion\" to match), so the span is the evidence and the view lies just outside it. A and B rewritten to describe what the neighboring clause and sentence do.",
+        "tempting": [
+          "A: it keeps the key's shape and stance (evidence for a view, then a later challenge); only a reader who checks the spoken-syllable result sees that the evidence stands and the view falls"
+        ]
+      }
+    },
+    {
+      "id": "text_structure_and_purpose.F_reason.b7",
+      "template": "F_reason",
+      "subtype": "Function of an underlined part",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "When Marine Veits, Lilach Hadany, and colleagues played recordings of flying bees to beach evening primrose flowers, the sugar concentration of the flowers’ nectar rose by about a fifth within three minutes; flowers exposed to silence or to high-frequency sounds showed no comparable change, nor did flowers enclosed in sound-blocking glass jars during playback. In field observations, the team also found that <u>pollinators were more than nine times as common near a plant if a pollinator had been near it within the previous six minutes</u>. The researchers propose that nectar that sweetens while pollinators are still in the vicinity may increase the likelihood of cross-pollination.",
+      "stem": "Which choice best describes the function of the underlined portion in the text as a whole?",
+      "options": [
+        "It reports an observation that helps show that the flowers’ response to bee sounds could occur soon enough to have the effect the researchers propose.",
+        "It reports an observation that, according to the text, shows that the flowers were responding to the sounds of bees rather than to other sounds.",
+        "It reports an observation that the text suggests weakens the researchers’ proposal, since pollinators gather near the same plants whether or not their nectar has sweetened.",
+        "It describes a pattern in pollinator behavior that, according to the text, led the researchers to enclose some flowers in sound-blocking glass jars."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The underlined portion reports that once a pollinator has been near a plant, more pollinators are likely to be near it over the following six minutes. The last sentence proposes a benefit that depends on timing: the nectar must sweeten while pollinators are still nearby. Since the flowers sweeten their nectar within three minutes, inside that six-minute window, the observation helps show that the response could come soon enough to have the proposed effect.",
+      "distractors": {
+        "B": {
+          "recipe": "first clause right, later clause gives another sentence's job (INV, PART)",
+          "why_wrong": "The evidence that the flowers responded specifically to bee sounds is in the first sentence: silence, high-frequency sounds and sound-blocking jars produced no change. The field observation concerns when pollinators are near plants, not which sounds trigger the response."
+        },
+        "C": {
+          "recipe": "first clause right, stance flip with an invented reason (STANCE)",
+          "why_wrong": "The text never presents the observation as a problem for the proposal, and it never says pollinators gather regardless of the nectar. The observation shows that pollinators are likely to stay nearby for several minutes, which is what the proposed benefit needs."
+        },
+        "D": {
+          "recipe": "invented method rationale (INV)",
+          "why_wrong": "The text mentions the glass jars only as a condition in the playback experiments. It never connects them to the field observation."
+        }
+      },
+      "models": [
+        "153aaae2",
+        "de059199"
+      ],
+      "band7_moves": [
+        "the span is the consideration behind a conclusion the student must assemble: the passage never states that the response is fast enough (F_reason, after 153aaae2)",
+        "the deciding comparison (three minutes against six) joins the first two sentences, and the last sentence supplies the condition (pollinators still nearby)",
+        "three options share the key's first clause (reports an observation) and fail later: another sentence's job, and a stance flip with an invented reason; the fourth invents a method rationale",
+        "key states the relation abstractly (soon enough to have the proposed effect) and echoes no passage wording"
+      ],
+      "word_count": 105,
+      "sources": [
+        {
+          "what": "Veits et al., Flowers respond to pollinator sound within minutes by increasing nectar sugar concentration, Ecology Letters 22(9): 1483 to 1492, 2019 (Oenothera drummondii; sweeter nectar within three minutes; could increase chances of cross pollination; no response to higher frequencies)",
+          "url": "https://doi.org/10.1111/ele.13331"
+        },
+        {
+          "what": "Oenothera drummondii, beach evening primrose",
+          "url": "https://en.wikipedia.org/wiki/Oenothera_drummondii"
+        },
+        {
+          "what": "full text: sugar concentration increased by a factor of 1.2 within 3 min for bee and bee-like sounds versus silence and high-frequency sound; flowers covered by sound-blocking glass jars showed no effect of the low playback; a pollinator was more than 9 times more common near the plant if a pollinator had been near it in the preceding 6 min, so a response within minutes could be relevant to pollinators; potentially increasing the chances of cross pollination",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6852653/"
+        }
+      ],
+      "notes": "Subject: natural science (plant ecology). Key letter A. Span role: means (a consideration behind a conclusion the student assembles). Key parts: 2. Reviewer rewrite: the old last sentence (\"the flowers respond quickly enough for the change to matter\") handed the key to the student and the key echoed it; it now states only the researchers' proposal, which the paper makes (Veits et al.: response within minutes relevant to pollinators; potentially increasing cross-pollination). Facts corrected against the paper: the sugar rise is a factor of 1.2 (the 12-17 to 20 percent figures came from press coverage), silence and the glass jars were separate controls (jars blocked sound during playback, not \"silence under jars\"), and the field count is pollinators near a plant after a pollinator had been near it (same or another individual), not \"visited\". Section 6: key 26 words; three options share a true first clause.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 6,
+        "fixes": [
+          "sugar rise restated as \"about a fifth\" (paper: factor of 1.2); press figures 12-17 to 20 percent dropped",
+          "controls corrected: silence and high-frequency sound were separate controls; jars covered flowers during playback (old text said \"kept in silence under vibration-blocking glass jars\")",
+          "field observation corrected: \"if a pollinator had been near it\" (paper), not \"another pollinator had visited\"",
+          "last sentence no longer states the timing conclusion, so the student must set three minutes against six; all options and distractor notes rewritten"
+        ],
+        "status": "fixed"
+      },
+      "band7": {
+        "verdict": "band 7",
+        "why": "Before the fix it read band 6: the last sentence said the flowers respond \"quickly enough for the change to matter\" and the key restated it, while C and D each died on one fact. Now, as in 153aaae2, the span is a consideration whose job the student must work out from three sentences (three-minute response, six-minute window, benefit needing pollinators still nearby), three options share the key's first clause, and the closest distractor gives the first sentence's job."
+      }
+    },
+    {
+      "id": "text_structure_and_purpose.F_example.b7",
+      "template": "F_example",
+      "subtype": "Function of an underlined part",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "After working as a social realist in the 1930s, depicting Black Americans confronting dispossession and discrimination, Norman Lewis concluded that such images were not changing viewers’ thinking, and by the mid-1940s he had turned to abstraction. Critics and fellow Black artists often considered him insufficiently focused on the realities of the street, and Lewis himself declared that aesthetic ideas should take precedence over political and social ones. Yet <u>his 1960 canvas American Totem constructs a towering abstract form from white triangular shapes that evoke the hoods worn by members of the Ku Klux Klan</u>.",
+      "stem": "Which choice best describes the function of the underlined portion in the text as a whole?",
+      "options": [
+        "It describes a work that runs counter to the critics’ view of Lewis, suggesting that by 1960 he had returned to the social realism he practiced in the 1930s.",
+        "It presents a case that complicates the critics’ assessment of Lewis by showing that his abstract work confronted racial injustice more directly than his social realist work had.",
+        "It describes a work that the text presents as evidence that Lewis eventually abandoned his belief that aesthetic ideas should take precedence over political ones.",
+        "It presents a case that complicates the picture of Lewis’s art formed by the critics’ assessment and by his own stated priorities."
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The text first sets up a picture of Lewis as an abstract painter whom critics and fellow Black artists thought detached from the realities of the street and who himself put aesthetic ideas ahead of political ones. The underlined portion, introduced by “Yet,” gives a single abstract painting whose white triangles evoke Ku Klux Klan hoods. That case complicates the picture: whatever his stated priorities, his abstraction could address racial violence. The painting is still abstract, so it is not a return to social realism, and the text never ranks it against his earlier work.",
+      "distractors": {
+        "A": {
+          "recipe": "first clause right, later clause twists a detail (INV)",
+          "why_wrong": "The painting does run against the critics’ view, but the text calls it “a towering abstract form” built from triangular shapes. It is abstract work with political imagery, not a return to the social realism of the 1930s."
+        },
+        "B": {
+          "recipe": "first clause right, later clause adds a comparison the text does not make (INV)",
+          "why_wrong": "The painting does complicate the critics’ view, but the text never compares how directly his abstract and social realist works addressed injustice. His 1930s work depicted dispossession and discrimination outright; American Totem only evokes Klan hoods."
+        },
+        "C": {
+          "recipe": "first clause right, later clause overreaches (INV)",
+          "why_wrong": "The painting is offered as evidence, but the text never says Lewis changed his belief about aesthetic priority. “Yet” marks a contrast between the belief and the work, not a later reversal of the belief."
+        }
+      },
+      "models": [
+        "9b01bcf4",
+        "2e744883"
+      ],
+      "band7_moves": [
+        "a single case whose job is to show a person's position, not to add content (F_example, after 9b01bcf4)",
+        "abstract key: the example complicates two earlier claims (the critics' view and his own stated priority) without repeating their wording",
+        "all three distractors open with a true first clause about the painting (runs counter to the critics, complicates their assessment, offered as evidence) and fail later: a return to realism, an unmade comparison, a change of belief",
+        "key with a concessive second part"
+      ],
+      "word_count": 94,
+      "sources": [
+        {
+          "what": "Whitney audio guide, American Totem (1960): Lewis earlier painted Black people facing dispossession and discrimination and came to feel it did not move audiences; turned to abstraction to address racial inequality; the white triangular shapes refer to hoods worn by members of the Ku Klux Klan",
+          "url": "https://whitney.org/media/46044"
+        },
+        {
+          "what": "by the mid-1940s Lewis made the transition to abstract painting; he believed his social subjects would change the way people think and concluded his social-realist works were not making a difference",
+          "url": "https://hyperallergic.com/filling-out-the-story-on-the-art-of-norman-lewis"
+        },
+        {
+          "what": "Lewis was often considered insufficiently focused on the realities of the street; Lewis: political and social aspects should not be the primary concern, aesthetic ideas should have preference",
+          "url": "https://jamespanero.com/writing/2015/12/procession-the-art-of-norman-lewis.html"
+        }
+      ],
+      "notes": "Subject: humanities (art history). Key letter D. Span role: means (an example that clarifies a position). Key parts: 2 (an example; it shows abstraction engaging politics despite his stated priority). The underline starts after Yet so the checker counts sentences correctly. Section 6 checks: key 20 words; mean option length 25.5 words; compound clause marker in key: no; distractors with a true first clause and a false later clause: 1 of 3 (C keeps a true first clause; A and B fail from the start). Reviewer: key made abstract (it had repeated the passage's aesthetic and political wording); \"During the civil rights era\" dropped, since the source places the critics' view in his lifetime without that period. First-half match recount: B and C both keep a true first clause (2 of 3). Hardening pass 2026-10-16: see hardened; key now 22 words, mean option length 26.0 words, passage 94 words (earlier section 6 figures in this note predate the pass).",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 6,
+        "fixes": [
+          "dropped \"During the civil rights era\": the source says critics and fellow Black artists often saw him so, without naming the period",
+          "key rewritten in abstract terms (it echoed \"aesthetic\" and \"political\" from the passage)",
+          "options A and B rewritten with a true first clause (the painting runs against the critics' view) and a false later clause: a return to 1930s social realism; a comparison of directness the text never makes (hardening pass 2026-10-16)"
+        ],
+        "status": "fixed"
+      },
+      "band7": {
+        "verdict": "band 7",
+        "why": "Follows 9b01bcf4: a single case whose job is to show a person's position, an abstract key, and distractors that give the earlier phase's job (A), a reputation the text does not claim (B) and a partly right overreach (C, \"abandoned his belief\"), which the student can rule out only by seeing that \"Yet\" sets work against belief rather than reporting a change of belief. Two distractors keep a true first clause."
+      },
+      "hardened": {
+        "what": "A and B replaced: A was the 1930s realist work (wrong era from the start) and B a reversal; both now open with a true clause (the painting runs against the critics' view) and fail later, so all three distractors share the key's first move.",
+        "tempting": [
+          "B: its first half is the key's own point, and the second half sounds like the reason Lewis turned to abstraction; the text makes no such comparison",
+          "C (unchanged): agrees the painting cuts against his stated belief, then overreaches to a change of belief"
+        ]
+      }
+    },
+    {
+      "id": "text_structure_and_purpose.F_qualify.b7",
+      "template": "F_qualify",
+      "subtype": "Function of an underlined part",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "The following text is from Anthony Trollope’s 1855 novel The Warden. Mr Harding, a clergyman, is the precentor (director of music) at the cathedral of Barchester, a fictional English town.\n\nMr Harding’s warmest admirers cannot say that he was ever an industrious man; the circumstances of his life have not called on him to be so; <u>and yet he can hardly be called an idler</u>. Since his appointment to his precentorship, he has published, with all possible additions of vellum, typography, and gilding, a collection of our ancient church music, with some correct dissertations on Purcell, Crotch, and Nares. He has greatly improved the choir of Barchester, which, under his dominion, now rivals that of any cathedral in England.",
+      "stem": "Which choice best describes the function of the underlined portion in the text as a whole?",
+      "options": [
+        "It qualifies an earlier judgment of Mr Harding, and the sentences that follow go further, showing that he has been an industrious man after all.",
+        "It moderates an unflattering assessment of Mr Harding, and the sentences that follow give evidence for that moderation.",
+        "It casts doubt on the praise of Mr Harding’s warmest admirers, and the sentences that follow suggest that his achievements are mostly ornamental.",
+        "It explains why the circumstances of Mr Harding’s life have never required him to be industrious, and the sentences that follow describe what he has accomplished nonetheless."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The text opens with an unflattering admission: even Mr Harding’s warmest admirers cannot call him industrious. The underlined portion limits that judgment (“and yet he can hardly be called an idler”), and the next sentences list what he has done: a published collection of church music with dissertations, and a choir that now rivals any in England. The portion moderates the earlier assessment without reversing it, and the examples that follow support it.",
+      "distractors": {
+        "A": {
+          "recipe": "first clause right, later clause overreaches (BROAD)",
+          "why_wrong": "The narrator states that even his warmest admirers cannot say he was ever industrious and never withdraws that. The sentences that follow support the narrower claim in the underlined portion, that he can hardly be called an idler; they do not turn him into an industrious man."
+        },
+        "C": {
+          "recipe": "stance flip that misreads the admirers' concession as praise (STANCE)",
+          "why_wrong": "The admirers are not praising Mr Harding here; they concede that he was never industrious. The underlined portion pushes back against that concession, and the sentences that follow present his collection and his choir as real accomplishments."
+        },
+        "D": {
+          "recipe": "first clause gives the neighboring clause's job, later clause right (PART)",
+          "why_wrong": "The explanation of his circumstances is the clause before the underlined portion (“the circumstances of his life have not called on him to be so”). The underlined portion turns away from it with “and yet” to say that he is not idle; it explains nothing about his circumstances."
+        }
+      },
+      "models": [
+        "0f2933b9",
+        "df46a2ee"
+      ],
+      "band7_moves": [
+        "pre-1910 literary prose with a self-qualifying span that limits the narrator's own earlier judgment",
+        "the qualification is borne out by the sentences after the span, so the student must read past it",
+        "all four options share one two-part shape (the span's role, then what the following sentences do), so shape cannot pick the key",
+        "A keeps the key's first clause and overreaches in the second (qualify becomes reverse); D gets the second clause right but gives the span the job of the clause before it; C misreads the admirers' concession as praise"
+      ],
+      "word_count": 119,
+      "sources": [
+        {
+          "what": "Text of The Warden, chapter 1, copied from Project Gutenberg (straight apostrophes made curly; nothing else changed)",
+          "url": "https://www.gutenberg.org/ebooks/619"
+        },
+        {
+          "what": "The Warden, first published 1855; Septimus Harding, precentor of Barchester Cathedral and warden of Hiram's Hospital; Barchester a fictional cathedral town",
+          "url": "https://en.wikipedia.org/wiki/The_Warden"
+        }
+      ],
+      "notes": "Subject: literature. Key letter B. Span role: means (a qualification). Key parts: 2. Work check: The Warden appears in no official item (the only Trollope in the official bank is Barchester Towers, a command of evidence item). Text checked word for word against Project Gutenberg #619 (straight apostrophes made curly). Mr Harding kept without a period, as in the source. Reviewer: the old key was the only two-part option and each distractor died on the clause next to the span; all four options now share the two-part shape and two keep a true first clause. Hardening pass 2026-10-16: see hardened; key now 18 words, mean option length 23.2 words, passage 119 words (earlier section 6 figures in this note predate the pass).",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [
+          "options A, C, D rewritten: the key had been the only two-part option, and each distractor died on the adjacent clause; now all four share the two-part shape and two keep a true first clause",
+          "options A and D rewritten: A now overreaches (the following sentences show him industrious after all); D gives the span the job of the circumstances clause before it, with a correct second clause; Trollope text unchanged (hardening pass 2026-10-16)"
+        ],
+        "status": "fixed"
+      },
+      "band7": {
+        "verdict": "band 7",
+        "why": "Before the fix it read band 6: the option shape gave the key away and every distractor failed on one adjacent clause. Now, as in df46a2ee, the key is short and abstract, but the decision rests on what the two following sentences do: A and D agree that the span qualifies the earlier judgment and fail only on that later clause, and C needs the student to see that the admirers' remark is a concession, not praise."
+      },
+      "hardened": {
+        "what": "A and D replaced. Both used to fail on an obviously false account of the following sentences (his circumstances; examples of idleness). A now overreaches from qualifying to reversing; D gets the following sentences right but gives the span the job of the clause next to it.",
+        "tempting": [
+          "A: a published collection and a choir that rivals any in England do sound industrious, so \"went further\" feels earned; only the narrator's unretracted \"cannot say that he was ever an industrious man\" rules it out"
+        ]
+      }
+    }
+  ]
+}

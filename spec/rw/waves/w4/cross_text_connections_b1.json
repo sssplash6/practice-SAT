@@ -1,0 +1,1066 @@
+{
+  "skill": "Cross-Text Connections",
+  "slug": "cross_text_connections",
+  "part": "w4b1",
+  "domain": "Craft and Structure",
+  "done": true,
+  "plan": {
+    "templates": [
+      {
+        "code": "S1_concede_rebut",
+        "name": "Respond: concede part of the target, rebut the rest (two-part options)"
+      },
+      {
+        "code": "S1_solution",
+        "name": "Respond: one text supplies a solution to the other's problem"
+      },
+      {
+        "code": "S2_hidden_assumption",
+        "name": "Agree: shared methodological assumption under a dispute"
+      },
+      {
+        "code": "S1_second_factor",
+        "name": "Respond: target is incomplete, a second cause or source"
+      },
+      {
+        "code": "S2_joint_inference",
+        "name": "Agree: joint inference from two compatible studies"
+      },
+      {
+        "code": "S4_relate",
+        "name": "Relationship: function of each text"
+      },
+      {
+        "code": "S1_counterexample",
+        "name": "Respond: counterexample to a 'first', 'only' or 'requires' claim"
+      },
+      {
+        "code": "S1_limit_degree",
+        "name": "Respond: limit the degree or scope of the target claim"
+      },
+      {
+        "code": "S1_case_fits_frame",
+        "name": "Respond (Text 1 speaking): Text 2's case fits Text 1's general frame"
+      },
+      {
+        "code": "S2_shared_premise",
+        "name": "Agree: shared premise beneath a visible disagreement"
+      },
+      {
+        "code": "S1_rival_hypothesis",
+        "name": "Respond: rival hypothesis with evidence the target does not account for"
+      },
+      {
+        "code": "S1_refute_data",
+        "name": "Respond: target refuted by new data"
+      },
+      {
+        "code": "S3_difference",
+        "name": "Difference: how the two authors view an object, compared on one axis"
+      }
+    ]
+  },
+  "items": [
+    {
+      "id": "cross_text_connections.S1_concede_rebut.hard.w4b1_01",
+      "template": "S1_concede_rebut",
+      "subtype": "Response prediction",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Text 1\n\nEpiphytic lichens, which absorb water and nutrients directly from the air, are highly sensitive to pollution. In 1970, two British botanists showed that sulfur dioxide levels across England and Wales could be estimated by recording which lichen species grew on local trees. The most sensitive species disappear first as the gas becomes more concentrated. <u>Where sensitive lichens are absent from urban trees, therefore, the air is likely rich in sulfur dioxide.</u>\n\nText 2\n\nSulfur dioxide levels in London declined steeply during the late twentieth century, and lichens have since recolonized many of the city’s trees. Surveying 334 ash trees, however, Louise Davies and colleagues found that lichen diversity was lowest where nitrogen oxides from traffic were most concentrated. Lichens there were actually more abundant, but they were mostly pollution-tolerant species associated with nitrogen enrichment.",
+      "stem": "Based on the texts, how would the author of Text 2 most likely respond to the underlined claim in Text 1?",
+      "options": [
+        "By accepting that lichens once offered a cheap way to map sulfur dioxide but contending that lichen surveys can no longer tell polluted parts of a city from cleaner ones",
+        "By agreeing that missing sensitive lichens can still signal polluted air but cautioning that in London the pollutant responsible is probably not the one Text 1 names",
+        "By granting that sensitive lichens vanish where sulfur dioxide is concentrated but suggesting that the tolerant lichens now common in parts of London indicate clean air",
+        "By conceding that lichens respond to air quality but objecting that measuring sulfur dioxide directly has always been more reliable than surveying lichens"
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The underlined claim treats a lack of sensitive lichens as a sign of sulfur dioxide. Text 2 reports that “Sulfur dioxide levels in London declined steeply during the late twentieth century” and that “lichen diversity was lowest where nitrogen oxides from traffic were most concentrated.” So the author of Text 2 would accept that missing sensitive lichens still point to polluted air but would warn that in London today the likely cause is nitrogen oxides, not the sulfur dioxide named in Text 1.",
+      "distractors": {
+        "A": {
+          "recipe": "D7 half right (right concession, wrong rebuttal)",
+          "why_wrong": "Text 2 shows that lichen diversity tracks nitrogen oxides across London, so lichen surveys can still separate more polluted areas from less polluted ones."
+        },
+        "C": {
+          "recipe": "D3 twisted detail",
+          "why_wrong": "The tolerant species are “actually more abundant” where nitrogen oxides are highest and are “associated with nitrogen enrichment,” so they mark polluted air, not clean air."
+        },
+        "D": {
+          "recipe": "D1 unaddressed add-on",
+          "why_wrong": "Text 2 never compares lichen surveys with direct measurements of sulfur dioxide; its point concerns which pollutant the lichens now reflect."
+        }
+      },
+      "models": [
+        "3.2",
+        "3.9"
+      ],
+      "word_count": 132,
+      "sources": [
+        {
+          "what": "Davies, Bates, Bell, James, Purvis 2007, Environmental Pollution 146: 334 ash trees in London; lichen diversity inversely related to NOx; abundance of pollution-tolerant species associated with eutrophication rises with NOx",
+          "url": "https://pubmed.ncbi.nlm.nih.gov/16777294/"
+        }
+      ],
+      "notes": "Area: natural science (ecology, air pollution). Text 1 is unattributed apart from the 1970 England and Wales sulfur dioxide scale (Hawksworth and Rose 1970, Nature 227: 145, doi 10.1038/227145a0). The concession (lichens still gauge pollution) is inferred from the NOx pattern, not stated, and the rebuttal needs the sulfur dioxide decline plus the NOx finding.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 2,
+        "fixes": [],
+        "status": "pass",
+        "band7": {
+          "verdict": "band 6",
+          "why": "Concede-rebut with two-part options; A keeps the true concession and overreaches in the rebuttal, C twists the tolerant-species detail. The key needs two links (SO2 decline plus the NOx pattern) and is paraphrased, but stays within the texts, so band 6; CTC hard cells are planned at 6."
+        }
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "B",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "cross_text_connections.S1_concede_rebut.hard.w4b1_02",
+      "template": "S1_concede_rebut",
+      "subtype": "Response prediction",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Text 1\n\nJulia Margaret Cameron was given her first camera in 1863, at age forty-eight. She soon began exhibiting portraits whose diffuse, softly blurred features distinguished them from the crisp images produced by commercial studios. Reviewers in the journal of the Photographic Society of London objected to the “slovenliness of manipulation” evident in her prints. <u>The haziness of Cameron’s portraits, they concluded, reflected a novice’s unfamiliarity with the camera.</u>\n\nText 2\n\nCameron was admittedly inexperienced when she produced her first portraits, and she had considerable technical knowledge still to acquire. But their softness was no mere beginner’s error. In Annals of My Glass House, an account of her career written in 1874, she recalled that “when focusing and coming to something which, to my eye, was very beautiful, I stopped there instead of screwing on the lens to the more definite focus which all other photographers insist upon.”",
+      "stem": "Based on the texts, how would the author of Text 2 most likely respond to the critics’ assessment presented in the underlined sentence in Text 1?",
+      "options": [
+        "By agreeing that Cameron’s portraits looked unlike those made in commercial studios but arguing that later critics came to prefer her style to the studios’ sharper images",
+        "By conceding that the blurring in Cameron’s portraits resulted from her inexperience but insisting that the critics failed to see the images’ artistic merits",
+        "By accepting that Cameron favored a softer focus than other photographers did but claiming that she adopted it only after critics faulted her earliest portraits",
+        "By acknowledging that Cameron was new to photography when she made her early portraits but rejecting the idea that inexperience explains their softness"
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The critics in Text 1 attribute the “haziness” of the portraits to “a novice’s unfamiliarity with the camera.” Text 2 grants that “Cameron was admittedly inexperienced when she produced her first portraits” but states that “their softness was no mere beginner’s error,” citing her own account that she “stopped there instead of screwing on the lens to the more definite focus.” The author thus accepts that Cameron was inexperienced while denying that inexperience caused the blur.",
+      "distractors": {
+        "A": {
+          "recipe": "D7 half right (right concession, wrong rebuttal)",
+          "why_wrong": "Text 2 says nothing about how later critics judged Cameron’s style; its objection is that the blur was a deliberate choice."
+        },
+        "B": {
+          "recipe": "D2 wrong side (concession the speaker rejects)",
+          "why_wrong": "Text 2 explicitly denies that the blur came from inexperience (“no mere beginner’s error”), so it would not concede that point."
+        },
+        "C": {
+          "recipe": "D3 twisted detail",
+          "why_wrong": "Text 2 presents the soft focus as Cameron’s own choice but gives no evidence that she adopted it in reaction to critics; nothing in either text sets that sequence."
+        }
+      },
+      "models": [
+        "3.9",
+        "3.2"
+      ],
+      "word_count": 144,
+      "sources": [
+        {
+          "what": "Mack Books essay quoting Cameron’s 1874 account (stopped at what looked beautiful instead of screwing the lens to the more definite focus) and the Photographic Society critics who dismissed her as a novice and objected to her “slovenliness of manipulation”",
+          "url": "https://mackbooks.co.uk/blogs/news/her-mistakes-were-her-successes"
+        },
+        {
+          "what": "V&A: Annals of My Glass House written in 1874 as an account of her first ten years as a photographer",
+          "url": "https://www.vam.ac.uk/articles/annals-of-my-glass-house-by-julia-margaret-cameron"
+        },
+        {
+          "what": "Metropolitan Museum record for Cameron’s Kate Keown (archive.org mirror) quoting the Annals: “when focusing and coming to something which, to my eye, was very beautiful, I stopped there instead of screwing on the lens to the more definite focus which all other photographers insist on” (photoquotations.com gives “insist upon”, as the Mack essay does)",
+          "url": "https://archive.org/details/mma_kate_keown_286404"
+        },
+        {
+          "what": "Wikipedia, Julia Margaret Cameron: given a sliding-box camera for Christmas around 1863 (born 1815)",
+          "url": "https://en.wikipedia.org/wiki/Julia_Margaret_Cameron"
+        }
+      ],
+      "notes": "Area: arts (photography history). Both quotations copied from the Mack Books essay as fetched; the Annals sentence is quoted as the essay gives it (its two parts are one continuous sentence there). Cameron began photographing in 1863 at 48 (born 1815).",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [
+          "Annals quotation corrected to the published wording: comma in “which, to my eye,” and “screwing on the lens” (Met record, photoquotations; the writer had copied the Mack essay’s shortened form)",
+          "“took up photography in 1863” changed to “was given her first camera in 1863” (Wikipedia: camera given for Christmas around 1863)",
+          "explanation quote updated; sources added"
+        ],
+        "status": "fixed",
+        "band7": {
+          "verdict": "band 6",
+          "why": "Concede-rebut; B takes the wrong side of the concession and C invents a sequence. The key maps fairly closely onto “no mere beginner’s error”, which keeps it at the low end of band 6."
+        }
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "D",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "cross_text_connections.S1_solution.hard.w4b1_03",
+      "template": "S1_solution",
+      "subtype": "Response prediction",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Text 1\n\nIn the mid-twentieth century, several American dealers and collectors cut medieval manuscripts apart and distributed the individual leaves through sales and donations. The practice made authentic medieval book art available to schools, libraries, and private buyers who could never have afforded an entire volume. <u>Once a manuscript’s leaves have been dispersed among dozens of owners, however, the book can no longer be studied as a coherent whole.</u>\n\nText 2\n\nIn 1942, a New York dealer cut apart the Beauvais Missal, a thirteenth-century French manuscript containing texts for the Mass. Its leaves were then sold or given away individually. Manuscript scholar Lisa Fagin Davis has since located roughly a hundred of them in collections across 26 states and five countries. Using digital images supplied by those institutions, she is restoring each leaf to its original position within an online reconstruction of the volume.",
+      "stem": "Based on the texts, how would Davis (Text 2) most likely respond to the underlined claim in Text 1?",
+      "options": [
+        "By suggesting that a dispersed manuscript’s original arrangement can be at least partly recovered even while its leaves remain in separate hands",
+        "By arguing that a scattered manuscript can be studied as a whole only after its surviving leaves have been gathered into a single collection",
+        "By agreeing that the Beauvais Missal can never be fully reconstructed but noting that its leaves remain valuable to the schools and libraries that own them",
+        "By pointing out that dealers who divided manuscripts kept records of each sale, which allow every leaf of a book like the Beauvais Missal to be traced"
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The underlined claim says that a dispersed manuscript “can no longer be studied as a coherent whole.” Davis’s project addresses that problem without bringing the leaves together: “Using digital images supplied by those institutions, she is restoring each leaf to its original position within an online reconstruction of the volume.” Since she has located “roughly a hundred” leaves, the book’s order can be recovered at least in part.",
+      "distractors": {
+        "B": {
+          "recipe": "D2 wrong side",
+          "why_wrong": "Davis’s reconstruction is digital; the leaves stay in their 26 states and five countries, so she would not say they must be gathered into one collection."
+        },
+        "C": {
+          "recipe": "D7 half right (unsupported concession plus Text 1 detail)",
+          "why_wrong": "Text 2 never says the missal can never be reconstructed, and the value of single leaves to schools and libraries comes from Text 1, not from Davis’s response."
+        },
+        "D": {
+          "recipe": "D3 twisted detail plus overstatement",
+          "why_wrong": "Text 2 says Davis “located” the leaves, not that dealers’ records made every leaf traceable, and the leaves in Text 2 were simply “sold or given away individually.”"
+        }
+      },
+      "models": [
+        "3.6",
+        "3.7"
+      ],
+      "word_count": 140,
+      "sources": [
+        {
+          "what": "Case Western Reserve University: Beauvais Missal sold by Hearst in 1942 and cut up by dealer Philip Duschnes within a month, leaves scattered by Otto Ege; 96 known leaves in 26 states and five countries; Lisa Fagin Davis’s digital reconstruction",
+          "url": "https://case.edu/news/kelvin-smith-library-hosts-lecture-mid-20th-century-destruction-books"
+        }
+      ],
+      "notes": "Area: arts and history (medieval manuscripts). Fragmentarium dates the missal 1270–1300 and now lists 122 of 309 leaves; the passage keeps “roughly a hundred” and the 26 states and five countries from the CWRU account. Solution model 3.6 (method answers an underlined problem); the trap in D echoes Text 1’s dealers.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 2,
+        "fixes": [],
+        "status": "pass",
+        "band7": {
+          "verdict": "band 6",
+          "why": "Solution template; B is the near miss (whole only once reunited) and needs the digital detail to reject. Band 6."
+        }
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "A",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "cross_text_connections.S2_hidden_assumption.hard.w4b1_04",
+      "template": "S2_hidden_assumption",
+      "subtype": "Agreement",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Text 1\n\nSeattle’s minimum wage, previously $9.47 an hour, rose to as much as $11 in 2015 and $13 in 2016. Economists at the University of Washington led by Ekaterina Jardim compared Seattle’s labor market with a weighted combination of regions elsewhere in Washington State, excluding surrounding King County, where employers might also have raised pay. Relative to that composite, the 2016 increase reduced the hours worked in Seattle’s low-wage jobs.\n\nText 2\n\nBerkeley economist Michael Reich and his collaborators concentrated on Seattle’s food service industry, which employs an unusually large proportion of minimum wage workers. Their comparison group consisted of counties in Washington and elsewhere in the country whose economic trends had closely matched Seattle’s for nearly six years before the ordinance took effect. Measured against that group, food service wages in Seattle increased, but employment in the industry did not decline.",
+      "stem": "Based on the texts, Jardim and colleagues (Text 1) and Reich and colleagues (Text 2) would most likely agree with which statement?",
+      "options": [
+        "Measuring the hours that employees work reveals the effects of a higher minimum wage more accurately than measuring the number of people employed does.",
+        "The food service industry is the part of the economy where any harm caused by a higher minimum wage would show up most clearly.",
+        "Places without the higher minimum wage can show what would likely have happened in Seattle if its minimum wage had not risen.",
+        "Seattle’s minimum wage increases left the city’s low-wage workers with less total pay than they would otherwise have earned."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The teams reach different results, but both rest on the same method. Jardim’s team compared Seattle’s labor market “with a weighted combination of regions elsewhere in Washington State,” and Reich’s “comparison group consisted of counties in Washington and elsewhere in the country.” Each judges the ordinance by measuring Seattle against places where the higher minimum wage did not apply (“Relative to that composite,” “Measured against that group”), so both assume those places show what Seattle would have looked like without it.",
+      "distractors": {
+        "A": {
+          "recipe": "D4 one text only",
+          "why_wrong": "Only Text 1 measures hours, and it does not claim that hours are a better measure than jobs; Text 2 measures wages and employment, so nothing suggests Reich’s team would accept this ranking."
+        },
+        "B": {
+          "recipe": "D4 one text only",
+          "why_wrong": "Text 2 chooses food service because it employs many minimum wage workers, but Text 1’s team looked at low-wage jobs across the city, so it does not share the view that one industry shows the effects most clearly."
+        },
+        "D": {
+          "recipe": "D4 one text only (contradicted by the other)",
+          "why_wrong": "Text 1 reports fewer hours, but Text 2 finds that food service wages “increased” while employment “did not decline,” so Reich’s team would not agree that workers lost pay."
+        }
+      },
+      "models": [
+        "3.1"
+      ],
+      "word_count": 139,
+      "sources": [
+        {
+          "what": "Jardim, Long, Plotnick, van Inwegen, Vigdor, Wething, NBER Working Paper 23532 (2017, revised 2018): synthetic control built from Washington PUMAs, King County PUMAs excluded for spillovers; the second increase to $13 reduced hours worked in low-wage jobs (6 to 7 percent across methods in the revised abstract; the 2017 draft said about 9 percent)",
+          "url": "https://www.nber.org/papers/w23532"
+        },
+        {
+          "what": "Reich, Allegretto, Godoey 2017, Seattle’s Minimum Wage Experience 2015-16 (CWED, Berkeley): synthetic control from county data in Washington and the rest of the US matched for nearly six years; food service wages rose, employment not affected",
+          "url": "https://doi.org/10.2139/ssrn.3043388"
+        }
+      ],
+      "notes": "Area: social science (economics). Hidden-assumption template (3.1, the shared premise under a dispute): the key is the counterfactual comparison both studies rely on, stated one level above either text. Neither text says “synthetic control”. Text 1’s team’s 3 percent wage rise is left out so no option about rising wages is shared by both.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [
+          "dropped the “roughly 9 percent” hours figure: the cited NBER page now gives 6 to 7 percent as a conclusion across several methods, not the synthetic-composite result the sentence describes"
+        ],
+        "status": "fixed",
+        "note": "Subject is well known (Seattle minimum wage, UW vs Berkeley studies); kept because no option leans on that fame and the key needs both texts’ method.",
+        "band7": {
+          "verdict": "band 6",
+          "why": "Hidden shared assumption stated one level above both texts; every wrong option is true of one study only. The strongest item in the batch, band 6."
+        }
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "C",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "cross_text_connections.S1_second_factor.hard.w4b1_05",
+      "template": "S1_second_factor",
+      "subtype": "Response prediction",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Text 1\n\nLyme disease, a bacterial infection transmitted by blacklegged ticks, was first identified in Connecticut during the 1970s and is now the most frequently reported vector-borne illness in the United States. Its emergence coincided with a dramatic resurgence of white-tailed deer, which had nearly disappeared from the northeastern states by the late 1800s. Because adult ticks feed and mate on deer, <u>the spread of Lyme disease can be attributed to the recovery of the region’s deer populations.</u>\n\nText 2\n\nBrian Allan, Felicia Keesing, and Richard Ostfeld sampled ticks in fourteen forest fragments in southeastern New York. Young ticks in the nymph stage were substantially denser in small fragments than in larger ones, and a greater proportion of them carried the Lyme bacterium. Fragmented woodlands, the researchers explain, typically support fewer mammal species but abundant white-footed mice, the hosts from which feeding ticks are most likely to acquire the infection.",
+      "stem": "Based on the texts, how would Allan, Keesing, and Ostfeld (Text 2) most likely characterize the underlined claim in Text 1?",
+      "options": [
+        "As failing to consider how breaking forests into smaller pieces may raise the risk of infection by favoring one particular host",
+        "As mistaken about which animal adult ticks feed on, since young ticks acquire the bacterium mainly from white-footed mice rather than from deer",
+        "As overstating the importance of deer, since larger forests, which shelter more kinds of mammals, contain more infected ticks than small fragments do",
+        "As consistent with the finding that forest fragments inhabited by more deer contain higher densities of infected ticks than other fragments do"
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "Text 1 credits the spread of Lyme disease to one cause, the recovery of deer. Text 2 points to another influence on risk: small fragments held substantially denser young ticks, “a greater proportion” of which carried the bacterium, and fragmented woodlands support “abundant white-footed mice, the hosts from which feeding ticks are most likely to acquire the infection.” The researchers would therefore see the claim as leaving out the effect of forest fragmentation.",
+      "distractors": {
+        "B": {
+          "recipe": "D3 twisted detail",
+          "why_wrong": "Text 2 does not dispute that adult ticks feed on deer; its point about mice concerns where young ticks pick up the bacterium, which is compatible with Text 1’s statement."
+        },
+        "C": {
+          "recipe": "D2 wrong side (reversed finding)",
+          "why_wrong": "Text 2 reports the opposite pattern: small fragments, which support fewer mammal species, held more ticks and a greater share of infected ones."
+        },
+        "D": {
+          "recipe": "D1 unaddressed add-on",
+          "why_wrong": "Text 2 never counts deer in the forest fragments; its finding concerns fragment size and white-footed mice."
+        }
+      },
+      "models": [
+        "3.8"
+      ],
+      "word_count": 146,
+      "sources": [
+        {
+          "what": "Allan, Keesing, Ostfeld 2003, Conservation Biology 17: 14 forest patches 0.7–7.6 ha in Dutchess County, New York; nymph density and infection prevalence fall with patch area; fragmentation lowers mammal diversity and raises white-footed mouse density; ticks feeding on mice most likely to be infected; no similar pattern for larval ticks, hence nymphs only",
+          "url": "https://doi.org/10.1046/j.1523-1739.2003.01260.x"
+        }
+      ],
+      "notes": "Area: natural science (disease ecology). Text 1 is the author’s own thesis (deer rebound, Lyme first described in Connecticut in the 1970s). As-characterize shell as in 3.8: the key names the overlooked factor without the passage’s words (fragments, mice); B and C reuse those words to sound right.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [
+          "“Immature ticks” narrowed to young ticks in the nymph stage: the abstract finds no density pattern for larvae",
+          "explanation wording updated"
+        ],
+        "status": "fixed",
+        "band7": {
+          "verdict": "band 6",
+          "why": "Characterize shell; the key names the overlooked factor without the passage’s words, B and C reuse them. Band 6."
+        }
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "A",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "cross_text_connections.S2_joint_inference.hard.w4b1_06",
+      "template": "S2_joint_inference",
+      "subtype": "Agreement",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Text 1\n\nIn a study by psychologists Shiri Lev-Ari and Boaz Keysar, listeners heard trivia statements, such as “A giraffe can go without water longer than a camel can,” recorded by native English speakers and by speakers with mild or heavy foreign accents, whose speech is generally harder for listeners to follow. Participants were told that the researchers had supplied every statement, so the speakers were merely reading. Nevertheless, accented statements were rated less likely to be true, and heavily accented ones least likely of all.\n\nText 2\n\nPsychologists Rolf Reber and Norbert Schwarz presented participants with statements such as “Osorno is in Chile” and asked them to evaluate whether each was true. The statements appeared in colors that made them either easily legible or moderately difficult to read against a white background. Highly visible statements were judged true significantly above chance level, whereas moderately visible ones were judged true only at chance level.",
+      "stem": "Based on the texts, if Lev-Ari and Keysar (Text 1) and Reber and Schwarz (Text 2) were aware of the findings of both studies, they would most likely agree with which statement?",
+      "options": [
+        "Listeners in Lev-Ari and Keysar’s study doubted the accented statements mainly because they assumed that non-native speakers know less about trivia topics.",
+        "Statements printed in highly visible colors would be judged true more often than the same statements spoken aloud in any accent, including a native one.",
+        "Trivia statements about geography are generally judged true more often than statements about animals, whatever the manner in which they are presented.",
+        "Part of the doubt that listeners expressed about accented statements may have arisen from the extra effort needed to understand them."
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "Text 1 notes that accented speech is “generally harder for listeners to follow” and rules out the speakers’ knowledge as the reason for the doubt, since “Participants were told that the researchers had supplied every statement”; the doubt also grew with the strength of the accent. Text 2 shows that statements that are harder to perceive are believed less: “moderately visible ones were judged true only at chance level.” Together the studies suggest that the effort of understanding accented speech may itself have made the statements seem less true.",
+      "distractors": {
+        "A": {
+          "recipe": "D2 wrong side",
+          "why_wrong": "Text 1’s design works against this explanation: participants were told that the researchers had supplied every statement and that the speakers “were merely reading,” yet the doubt remained."
+        },
+        "B": {
+          "recipe": "D5 overstatement (comparison neither study made)",
+          "why_wrong": "Neither study compares printed statements with spoken ones, so neither team could agree that print beats every spoken version."
+        },
+        "C": {
+          "recipe": "D1 unaddressed add-on",
+          "why_wrong": "The giraffe and Osorno statements are only examples; neither study compares topics, and the effects reported come from how statements were presented."
+        }
+      },
+      "models": [
+        "3.4"
+      ],
+      "word_count": 150,
+      "sources": [
+        {
+          "what": "University of Chicago news release on Lev-Ari and Keysar 2010 (J. Exp. Soc. Psychol. 46: 1093–1096): giraffe trivia statement; listeners told the statements were prepared for the speakers; ratings 7.5 native, 6.95 mild accent, 6.84 heavy accent; “Because an accent makes a person harder to understand, listeners are less likely to find what the person says as truthful”",
+          "url": "https://news.uchicago.edu/story/foreign-accents-make-speakers-seem-less-truthful-listeners-research-shows"
+        },
+        {
+          "what": "Reber and Schwarz 1999, Consciousness and Cognition 8: statements like “Osorno is in Chile” in easy or hard-to-read colors; moderately visible judged true at chance, highly visible above chance",
+          "url": "https://pubmed.ncbi.nlm.nih.gov/10487787/"
+        }
+      ],
+      "notes": "Area: social science (psychology). Joint inference as in 3.4: Text 1 never names the processing explanation (Keysar’s own reading, in the source) and Text 2 never mentions speech, so the key needs both. A is the first explanation a reader reaches for and Text 1’s design rules it out.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [
+          "Text 1 now states the premise the key needs (“whose speech is generally harder for listeners to follow”, from the UChicago release), worded away from key D",
+          "“researchers had written every statement” softened to “had supplied” (source: statements prepared for the speakers)",
+          "explanation and A’s why_wrong updated"
+        ],
+        "status": "fixed",
+        "band7": {
+          "verdict": "band 6",
+          "why": "Joint inference; even with the premise now stated, the key needs Text 2’s fluency result applied to speech, and A is ruled out only by Text 1’s design. Band 6."
+        }
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "D",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "cross_text_connections.S4_relate.hard.w4b1_07",
+      "template": "S4_relate",
+      "subtype": "Relationship",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Text 1\n\nNorway assesses the cognitive abilities of most young men when they report for military service, and the results reveal a striking pattern: average scores increased with each successive birth cohort until those born in the mid-1970s, then began to decline. Some researchers attributed the decline to demographic shifts in who was having children, proposing, for instance, that adults with lower scores had come to have larger families than adults with higher scores.\n\nText 2\n\nTo test such explanations, Bernt Bratsberg and Ole Rogeberg compared brothers raised in the same households. If the decline reflected changes in which families were producing children, there would be no reason for younger brothers to score systematically differently from their older siblings. Instead, the same rise and subsequent decline appeared within individual families, among brothers born in different years.",
+      "stem": "Which choice best describes how Text 1 and Text 2 relate to each other?",
+      "options": [
+        "Text 1 presents evidence that test scores in Norway have fallen, whereas Text 2 questions whether the fall in scores actually took place.",
+        "Text 1 explains why test scores in Norway rose for several decades, whereas Text 2 argues that the same explanation also accounts for their later decline.",
+        "Text 1 describes a trend in test scores and one proposed explanation for part of it, whereas Text 2 reports evidence that undermines that explanation.",
+        "Text 1 outlines two competing explanations for a decline in test scores, whereas Text 2 presents findings that favor one of those explanations over the other."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "Text 1 reports that scores “increased with each successive birth cohort until those born in the mid-1970s, then began to decline” and gives one explanation of the decline, “demographic shifts in who was having children.” Text 2 shows why that explanation fails: such shifts give “no reason for younger brothers to score systematically differently from their older siblings,” yet the decline “appeared within individual families.” Text 2 thus undermines the explanation offered in Text 1.",
+      "distractors": {
+        "A": {
+          "recipe": "D2 wrong side",
+          "why_wrong": "Text 2 confirms the decline (“the same rise and subsequent decline appeared within individual families”); it questions only the explanation for it."
+        },
+        "B": {
+          "recipe": "D3 misassigned function",
+          "why_wrong": "Text 1 explains only the decline, not the rise, and Text 2 rejects the explanation rather than extending it."
+        },
+        "D": {
+          "recipe": "D3 misassigned function",
+          "why_wrong": "Text 1 gives a single proposed explanation (“demographic shifts in who was having children”), and Text 2 argues against it rather than choosing between two accounts."
+        }
+      },
+      "models": [
+        "3.11"
+      ],
+      "word_count": 132,
+      "sources": [
+        {
+          "what": "Bratsberg and Rogeberg 2018, PNAS 115: Norwegian conscription scores for 1962–1991 cohorts; scores peaked with the 1975 cohort; Flynn effect, turning point and decline recovered within families (brothers), no support for explanations that vary between families",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6042097/"
+        }
+      ],
+      "notes": "Area: social science (psychology, economics). The passage never uses the label “Flynn effect.” Test coverage is 83–93 percent of each cohort, hence “most young men.” Function key as in 3.11, built on a different structure (one proposed explanation, then a within-family comparison).",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [],
+        "status": "pass",
+        "band7": {
+          "verdict": "band 6",
+          "why": "Relate-the-texts function item; D (two competing explanations) is a close misreading of “for instance”. Band 6."
+        }
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "C",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "cross_text_connections.S1_counterexample.medium.w4b1_08",
+      "template": "S1_counterexample",
+      "subtype": "Response prediction",
+      "tier": "medium",
+      "passage": "Text 1\n\nThe ancient Olympic Games, held at Olympia in honor of Zeus, were overwhelmingly a masculine institution. Victors received olive wreaths, and their names were preserved in lists of champions for centuries. Women, however, were prohibited from competing in the athletic contests, and married women were reportedly barred even from attending as spectators. <u>Consequently, no woman could ever have been recognized as an Olympic victor.</u>\n\nText 2\n\nIn 396 BCE, the four-horse chariot race at Olympia was won by a team belonging to Cynisca, a daughter of the Spartan king Archidamus II, who had trained the horses herself. In chariot races, victory was normally credited to the owner of the horses rather than to the charioteer, who in Cynisca’s case was a hired driver. She triumphed again in 392 BCE and commemorated her victories with bronze statues at Olympia.",
+      "stem": "Based on the texts, how would the author of Text 2 most likely respond to the underlined claim in Text 1?",
+      "options": [
+        "By arguing that married women were in fact permitted to watch the equestrian events at Olympia",
+        "By pointing out that in certain contests a woman could be honored as a victor without competing herself",
+        "By noting that Cynisca drove her own chariot to victory despite the ban on women competing",
+        "By suggesting that Spartan women, unlike other Greek women, were allowed to compete in the athletic contests"
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "Text 1 concludes that because women could not compete, “no woman could ever have been recognized as an Olympic victor.” Text 2 describes a woman who was: in chariot races “victory was normally credited to the owner of the horses rather than to the charioteer,” so Cynisca, who owned and trained the winning team, was the victor even though “a hired driver” raced it. The author would point out that in such contests a woman could be honored as a victor without competing herself.",
+      "distractors": {
+        "A": {
+          "recipe": "D3 twisted detail",
+          "why_wrong": "Text 2 says nothing about who could watch the races; its point is that the owner, not the driver, was credited with the win."
+        },
+        "C": {
+          "recipe": "D3 twisted detail",
+          "why_wrong": "Text 2 states that Cynisca’s charioteer “was a hired driver,” so she did not drive the chariot herself."
+        },
+        "D": {
+          "recipe": "D1 unaddressed add-on",
+          "why_wrong": "Neither text says Spartan women could compete in athletic contests; Cynisca won by owning and training horses, not by competing."
+        }
+      },
+      "models": [
+        "2.4",
+        "2.10"
+      ],
+      "word_count": 136,
+      "sources": [
+        {
+          "what": "Wikipedia, Cynisca: daughter of Archidamus II; won the four-horse chariot race in 396 and 392 BC with horses she trained and hired charioteers; women entered equestrian events by owning and training horses; bronze statues and inscription at Olympia",
+          "url": "https://en.wikipedia.org/wiki/Cynisca"
+        },
+        {
+          "what": "Wikipedia, Chariot racing: records almost invariably credit victorious owners and their horses, drivers often not named; Cynisca twice entered and won the Olympic chariot race as owner and trainer",
+          "url": "https://en.wikipedia.org/wiki/Chariot_racing"
+        }
+      ],
+      "notes": "Area: history (ancient Greece). Counterexample to an “ever/no woman” claim built on a rule (owner credited) rather than on an earlier date, unlike 1.4. Text 1 is the author’s own overgeneralization, as in 2.10.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [
+          "owner-credit rule stated as the fetched source has it: “In chariot races, victory was normally credited to the owner” (Wikipedia, Chariot racing: records almost invariably credit owners)",
+          "option B reworded without “rules” (in certain contests a woman could be honored as a victor without competing herself)",
+          "explanation updated; source added"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "cross_text_connections.S1_counterexample.medium.w4b1_09",
+      "template": "S1_counterexample",
+      "subtype": "Response prediction",
+      "tier": "medium",
+      "passage": "Text 1\n\nMicrofinance institutions in Bangladesh, Bolivia, and elsewhere have reported remarkably high repayment rates on small loans to impoverished borrowers who have no collateral. Many observers credited this success to group liability. Borrowers were organized into groups whose members were jointly responsible for one another’s loans, giving each member an incentive to screen and monitor the others. <u>Without such shared responsibility, it was widely assumed, these borrowers could not be expected to repay.</u>\n\nText 2\n\nEconomists Xavier Giné and Dean Karlan collaborated with a Philippine bank that lent to groups of borrowers who met weekly. The bank randomly selected half of its existing lending centers and converted them to individual liability: members were no longer responsible for one another’s debts. The weekly meetings and repayment schedules were retained. Repayment rates in the converted centers proved no lower than in centers that kept group liability.",
+      "stem": "Based on the texts, how would Giné and Karlan (Text 2) most likely respond to the underlined assumption in Text 1?",
+      "options": [
+        "By suggesting that borrowers in the Philippines tend to be more reliable than borrowers in Bangladesh or Bolivia",
+        "By arguing that the weekly meetings, rather than the repayment schedule, were what kept repayment rates high",
+        "By agreeing that lenders must hold borrowers responsible for one another’s loans when the borrowers lack collateral",
+        "By noting that borrowers repaid just as reliably after being released from responsibility for other members’ debts"
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "Text 1 reports the assumption that without group liability “these borrowers could not be expected to repay.” In Giné and Karlan’s experiment, centers were converted so that “members were no longer responsible for one another’s debts,” yet “Repayment rates in the converted centers proved no lower than in centers that kept group liability.” The researchers would therefore note that repayment stayed high without shared responsibility.",
+      "distractors": {
+        "A": {
+          "recipe": "D1 unaddressed add-on",
+          "why_wrong": "Text 2 compares centers within one Philippine bank, not borrowers in different countries."
+        },
+        "B": {
+          "recipe": "D3 twisted detail",
+          "why_wrong": "In the converted centers “The weekly meetings and repayment schedules were retained,” so the experiment cannot single out the meetings as the cause of high repayment."
+        },
+        "C": {
+          "recipe": "D2 wrong side",
+          "why_wrong": "The experiment shows repayment held up after borrowers were no longer responsible for one another’s debts, so the researchers would reject this."
+        }
+      },
+      "models": [
+        "2.4",
+        "2.10"
+      ],
+      "word_count": 141,
+      "sources": [
+        {
+          "what": "Giné and Karlan, Group versus Individual Liability: A Field Experiment in the Philippines (CGD Working Paper 111, 2007; J. Dev. Econ. 2014): half of existing group-liability centers randomly converted to individual liability, weekly meetings and repayments kept; repayment rate unaffected",
+          "url": "https://doi.org/10.2139/ssrn.981390"
+        }
+      ],
+      "notes": "Area: social science (economics). Counterexample to a “requires” claim (repayment requires group liability). Text 1’s mechanism (screen and monitor) matches the source’s description of the group-liability argument. The new-client finding in the source is left out so no option is true but unstated.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "cross_text_connections.S1_limit_degree.medium.w4b1_10",
+      "template": "S1_limit_degree",
+      "subtype": "Response prediction",
+      "tier": "medium",
+      "passage": "Text 1\n\nA reminder letter, a simplified application form, a different default option: according to published studies, such modest adjustments to the way choices are presented can substantially alter behavior. Across dozens of studies, the adjustments raised the share of people taking a desired action, such as getting vaccinated, by an average of 8.7 percentage points. <u>Inexpensive interventions of this kind, it appears, can transform how people behave.</u>\n\nText 2\n\nStefano DellaVigna and Elizabeth Linos analyzed all 126 randomized trials conducted by two of the largest US government units devoted to such interventions. Together, the trials involved about 23 million people. The average effect was statistically significant but much smaller: 1.4 percentage points. Most of the discrepancy, the researchers concluded, arose because academic studies with weak results are less likely to be published, inflating the averages reported in journals.",
+      "stem": "Based on the texts, how would DellaVigna and Linos (Text 2) most likely respond to the conclusion in the underlined portion of Text 1?",
+      "options": [
+        "By suggesting that such interventions do change behavior but that their typical effect is likely far smaller than the published studies indicate",
+        "By arguing that such interventions have no measurable effect once they are applied by governments rather than by academic researchers",
+        "By pointing out that the government trials involved far more people than the published studies did, which made their effects appear smaller",
+        "By recommending that governments rely on published studies rather than on their own trials when designing new programs"
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "Text 1 concludes that these inexpensive interventions “can transform how people behave,” citing an average effect of 8.7 percentage points. DellaVigna and Linos found an effect that “was statistically significant but much smaller: 1.4 percentage points,” and they traced most of the gap to the fact that “academic studies with weak results are less likely to be published.” They would grant that the interventions work while arguing that the typical effect is far more modest than journals suggest.",
+      "distractors": {
+        "B": {
+          "recipe": "D5 overstatement",
+          "why_wrong": "Text 2 calls the government trials’ average effect “statistically significant,” so the researchers would not say the interventions have no measurable effect."
+        },
+        "C": {
+          "recipe": "D3 twisted detail",
+          "why_wrong": "Text 2 mentions the 23 million participants, but it attributes the smaller average to selective publication of academic studies, not to the size of the government trials."
+        },
+        "D": {
+          "recipe": "D2 wrong side",
+          "why_wrong": "Text 2 argues that published studies overstate effects, so the researchers would not tell governments to rely on them over their own trials."
+        }
+      },
+      "models": [
+        "2.8",
+        "2.9"
+      ],
+      "word_count": 135,
+      "sources": [
+        {
+          "what": "DellaVigna and Linos, RCTs to Scale: Comprehensive Evidence from Two Nudge Units (NBER w27594; Econometrica 2022): 126 RCTs, 23 million people, all trials of two of the largest US nudge units; academic-journal average 8.7 percentage points vs 1.4 in nudge units; selective publication explains about 70 percent of the gap",
+          "url": "https://www.nber.org/papers/w27594"
+        }
+      ],
+      "notes": "Area: social science (behavioral economics). The passage never uses the label “nudge.” Limit-degree key as in 2.8 (effect real but smaller); C is the tempting wrong mechanism because the 23 million figure is in the text.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "cross_text_connections.S1_case_fits_frame.medium.w4b1_11",
+      "template": "S1_case_fits_frame",
+      "subtype": "Response prediction",
+      "tier": "medium",
+      "passage": "Text 1\n\nIn 1688, the Irish scientist William Molyneux posed a question to the philosopher John Locke: if a person born blind, who had learned to distinguish a cube from a sphere by touch, suddenly gained sight, could that person identify the objects by sight alone? Molyneux and Locke both answered no. Knowledge acquired through one sense, they reasoned, does not automatically transfer to another; the correspondence between the senses must be learned through experience.\n\nText 2\n\nWorking in India with five young people who had been blind from birth until surgery restored their sight, Richard Held, Pawan Sinha, and colleagues tested whether the newly sighted could visually identify an object they had previously explored only by touch. Shortly after surgery, the participants were barely more successful than if they had been guessing. Within days, however, their ability to match felt objects with seen ones had improved dramatically.",
+      "stem": "Based on the texts, what would the author of Text 1 most likely say about the findings described in Text 2?",
+      "options": [
+        "They show that Molyneux and Locke were mistaken, since the participants eventually learned to recognize by sight objects they had only felt.",
+        "They suggest that the correspondence between touch and sight is present at birth but is weakened by years of blindness.",
+        "They are consistent with the answer Molyneux and Locke gave, and they suggest that the link between the senses can be learned quickly.",
+        "They are difficult to interpret, because the participants could perceive objects only dimly in the period just after surgery."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "Molyneux and Locke held that a newly sighted person could not at first identify by sight what was known by touch, because “the correspondence between the senses must be learned through experience.” The participants in Text 2 matched felt and seen objects poorly “Shortly after surgery” but improved “Within days.” The author of Text 1 would see the first result as confirming Molyneux and Locke’s answer and the second as showing that the needed experience can be gained quickly.",
+      "distractors": {
+        "A": {
+          "recipe": "D2 wrong side",
+          "why_wrong": "Molyneux and Locke said the link must be learned through experience; the participants’ later improvement fits that view rather than refuting it."
+        },
+        "B": {
+          "recipe": "D3 twisted detail",
+          "why_wrong": "Text 1 holds that the correspondence is learned, not present at birth, and Text 2’s rapid improvement after poor first results gives no sign of an inborn link."
+        },
+        "D": {
+          "recipe": "D1 unaddressed add-on",
+          "why_wrong": "Neither text says the participants saw only dimly; Text 2 reports only how well they matched felt and seen objects."
+        }
+      },
+      "models": [
+        "2.2",
+        "2.6"
+      ],
+      "word_count": 144,
+      "sources": [
+        {
+          "what": "MIT News 2011 on Held, Sinha et al., Nature Neuroscience 14: five patients aged 8 to 17 in India, born blind; right after surgery touch-to-vision matching little better than guessing; skill acquired within days",
+          "url": "https://news.mit.edu/2011/vision-problem-0411"
+        },
+        {
+          "what": "Held et al. 2011 abstract: Molyneux’s question; lack of immediate transfer, cross-modal mapping developed rapidly",
+          "url": "https://pubmed.ncbi.nlm.nih.gov/21478887/"
+        }
+      ],
+      "notes": "Area: philosophy and psychology. Text 1 speaks about Text 2, as in 2.2 and 2.6. Four of the five patients had cataracts and one a corneal opacity, hence “surgery restored their sight.”",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 2,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "cross_text_connections.S1_case_fits_frame.medium.w4b1_12",
+      "template": "S1_case_fits_frame",
+      "subtype": "Response prediction",
+      "tier": "medium",
+      "passage": "Text 1\n\nIn 1877, zoologist Joel Asaph Allen observed that warm-blooded animals inhabiting hot climates tend to have longer limbs, ears, and other appendages than related animals in colder regions. Because appendages have a large surface area relative to their volume, they dissipate heat efficiently, an advantage where overheating is a danger and a liability where conserving warmth matters most. The pattern, now called Allen’s rule, has been documented in numerous birds and mammals.\n\nText 2\n\nMeasuring museum specimens collected between 1871 and 2008, Daniel Campbell-Tennant and colleagues found that in four Australian parrot species, including the gang-gang cockatoo and the mulga parrot, the surface area of the bill has increased by roughly 4 to 10 percent. In three species, a bird’s bill size was also predicted by the average maximum summer temperature during the five years before the bird was collected.",
+      "stem": "Based on the texts, how would the author of Text 1 most likely regard the findings in Text 2?",
+      "options": [
+        "As puzzling, because animals in warming climates would be expected to develop smaller bodies rather than larger appendages",
+        "As consistent with Allen’s rule, because larger bills would help the birds release more body heat as summers grow hotter",
+        "As unsurprising, because parrots need sturdier bills to crack the harder seeds that grow during hotter, drier summers",
+        "As inconclusive, because changes in bill size over little more than a century are too small to reflect a change in climate"
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "Text 1 explains that appendages “dissipate heat efficiently,” which is why animals in hot climates tend to have larger ones. Text 2 reports that parrot bills have grown and that bill size tracked “the average maximum summer temperature during the five years before the bird was collected.” The author of Text 1 would regard this as an example of Allen’s rule: bigger bills would help the birds shed heat as summers warm.",
+      "distractors": {
+        "A": {
+          "recipe": "D6 right topic, wrong reason",
+          "why_wrong": "Text 1 says nothing about body size; by its reasoning, warming should favor larger appendages, so the findings would not be puzzling."
+        },
+        "C": {
+          "recipe": "D6 right verdict, wrong reason",
+          "why_wrong": "The author of Text 1 might find the findings unsurprising, but because of heat loss, not seed hardness, which neither text mentions."
+        },
+        "D": {
+          "recipe": "D6 wrong verdict and unsupported reason",
+          "why_wrong": "Text 1 gives no time limit for such changes, and Text 2’s link between bill size and recent summer temperatures is the kind of evidence Allen’s rule predicts."
+        }
+      },
+      "models": [
+        "2.2",
+        "2.6"
+      ],
+      "word_count": 138,
+      "sources": [
+        {
+          "what": "Campbell-Tennant, Gardner, Kearney, Symonds 2015, Journal of Biogeography 42: Allen’s rule; five Australian parrot species, specimens 1871–2008; 4–10 percent increase in bill surface area in four species; maximum summer temperature in the five years before collection predicted bill size in three",
+          "url": "https://doi.org/10.1111/jbi.12499"
+        }
+      ],
+      "notes": "Area: natural science (ecology, evolution). Frame text (Allen 1877) plus case, Text 1 speaking, As-adjective shell as in 1.11 with D6 wrong reasons. The source notes that location and year were still better predictors in most species; the passage claims only that temperature also predicted bill size.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [],
+        "status": "pass",
+        "note": "Allen’s rule is a textbook frame, as thermodynamics is in official 2.2; the parrot-bill case is little known, so kept."
+      }
+    },
+    {
+      "id": "cross_text_connections.S2_shared_premise.medium.w4b1_13",
+      "template": "S2_shared_premise",
+      "subtype": "Agreement",
+      "tier": "medium",
+      "passage": "Text 1\n\nJohn Gilbert was among the most celebrated romantic leads of the silent era, but his 1929 sound film His Glorious Night provoked laughter from audiences. According to the explanation that became established in Hollywood, moviegoers considered his voice too high and thin for a screen lover. On this account, synchronized sound destroyed Gilbert’s career by exposing a vocal deficiency that silent films had concealed.\n\nText 2\n\nFilm historian Kevin Brownlow doubts that Gilbert’s voice itself was the problem. Gilbert’s natural voice, Brownlow observes, was quite low and compared well with that of his costar Conrad Nagel, who was regarded as having one of the best voices for sound films. The laughter, Brownlow argues, was provoked instead by Gilbert’s exaggerated diction and by an inane script, flaws that coaching and better material could have corrected.",
+      "stem": "Based on the texts, proponents of the explanation described in Text 1 and Brownlow (Text 2) would most likely agree with which statement?",
+      "options": [
+        "Gilbert’s voice was poorly suited to the romantic roles that had made him famous in silent films.",
+        "Gilbert’s problems in sound films could have been avoided if he had received coaching beforehand.",
+        "Conrad Nagel’s voice was better suited to sound films than Gilbert’s voice was.",
+        "Audiences laughed during His Glorious Night at moments that were not meant to be funny."
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The two sides disagree about the cause of the laughter but not about the laughter itself. Text 1 says the film “provoked laughter from audiences” because his voice seemed wrong “for a screen lover,” and Text 2 says “The laughter” was provoked by “exaggerated diction” and “an inane script,” which it calls “flaws.” Both treat the laughter as an unintended reaction to a romantic film.",
+      "distractors": {
+        "A": {
+          "recipe": "D4 one text only",
+          "why_wrong": "This is the Hollywood explanation in Text 1; Brownlow rejects it, noting that Gilbert’s voice “compared well” with Nagel’s."
+        },
+        "B": {
+          "recipe": "D4 one text only",
+          "why_wrong": "Only Brownlow says “coaching and better material could have corrected” the flaws; the explanation in Text 1 blames Gilbert’s voice itself."
+        },
+        "C": {
+          "recipe": "D2 wrong side",
+          "why_wrong": "Brownlow says Gilbert’s voice “compared well” with Nagel’s, and Text 1 never mentions Nagel, so neither side asserts this."
+        }
+      },
+      "models": [
+        "2.1",
+        "2.3"
+      ],
+      "word_count": 132,
+      "sources": [
+        {
+          "what": "Wikipedia, John Gilbert (actor): audiences laughed at His Glorious Night (1929); Brownlow on Gilbert’s natural voice being quite low and comparing well with Conrad Nagel’s, considered one of the best voices for sound; enunciation and an inane script as the cause; elocution coaching and a better script could have fixed it",
+          "url": "https://en.wikipedia.org/wiki/John_Gilbert_(actor)"
+        }
+      ],
+      "notes": "Area: arts (film history). Shared premise beneath a dispute over cause, as in 2.1 (both accept the observation, disagree on its explanation). Text 1 reports the Hollywood account without endorsing it, so the stem names its proponents.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 2,
+        "fixes": [],
+        "status": "pass",
+        "note": "Gilbert’s “squeaky voice” legend is fairly well known; Brownlow’s revision and the shared-premise key are not, so kept."
+      }
+    },
+    {
+      "id": "cross_text_connections.S1_rival_hypothesis.medium.w4b1_14",
+      "template": "S1_rival_hypothesis",
+      "subtype": "Response prediction",
+      "tier": "medium",
+      "passage": "Text 1\n\nMany orb-weaving spiders add conspicuous zigzags or bands of bright white silk, known as decorations, to their webs. Because orb webs themselves are nearly invisible, one long-standing hypothesis holds that decorations serve as warning signals to birds, which might otherwise fly through a web and destroy it. Rebuilding a damaged web consumes silk and energy, so decorations that prevent such collisions would protect a substantial investment.\n\nText 2\n\nDecorations also reflect ultraviolet light, which attracts many flying insects. Studying the orb-weaving spider Argiope versicolor, arachnologist Daiqin Li found that individuals that decorated their webs more frequently intercepted insects at a higher rate and gained weight faster than those that decorated less often. Li therefore argues that decorations improve a spider’s foraging success by making its web more attractive to prey.",
+      "stem": "Based on the texts, how would Li (Text 2) most likely respond to the hypothesis presented in Text 1?",
+      "options": [
+        "By arguing that it does not account for the link between how often a spider decorates its web and how much prey that web captures",
+        "By pointing out that birds are less likely to collide with webs that reflect ultraviolet light",
+        "By agreeing that decorations protect webs from birds but questioning whether rebuilding a web is costly for a spider",
+        "By insisting that decorations make spiders more visible to the insects that prey on them"
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "Text 1 explains decorations as signals that keep birds from destroying webs. Li’s evidence concerns something that hypothesis does not address: spiders “that decorated their webs more frequently intercepted insects at a higher rate and gained weight faster.” Li argues instead that decorations make a web “more attractive to prey,” so he would say the bird-warning hypothesis leaves this link between decorating and prey capture unexplained.",
+      "distractors": {
+        "B": {
+          "recipe": "D3 twisted detail",
+          "why_wrong": "Text 2 mentions ultraviolet light only as something that attracts insects; it says nothing about birds."
+        },
+        "C": {
+          "recipe": "D7 half right (unsupported concession plus add-on)",
+          "why_wrong": "Li does not accept the bird-warning explanation, and neither text questions the cost of rebuilding a web, which Text 1 says consumes “silk and energy.”"
+        },
+        "D": {
+          "recipe": "D3 twisted detail",
+          "why_wrong": "In Text 2 the insects drawn to decorations are the spider’s prey, not predators of the spider."
+        }
+      },
+      "models": [
+        "2.5"
+      ],
+      "word_count": 128,
+      "sources": [
+        {
+          "what": "Li 2005, Proceedings of the Royal Society B 272: Argiope versicolor; decorations are bright white, UV-reflecting silk; growth rate and insect interception rise with decorating frequency, supporting the prey-attraction hypothesis",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC1559872/"
+        }
+      ],
+      "notes": "Area: natural science (animal behavior). Text 1 states the bird-warning (web-advertisement) hypothesis without attribution. Rival hypothesis as in 2.5: the key names the evidence the first hypothesis does not explain.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "cross_text_connections.S1_refute_data.easy.w4b1_16",
+      "template": "S1_refute_data",
+      "subtype": "Response prediction",
+      "tier": "easy",
+      "passage": "Text 1\n\nSharks are often pictured as loners. Unlike dolphins or many schooling fish, most sharks are thought to hunt and travel alone, encountering other members of their species only in passing. A shark’s keen senses and powerful body, after all, seem to make the company of other sharks unnecessary. <u>Even reef sharks, which may gather near the same stretch of coral, have generally been described as solitary animals with no lasting ties to one another.</u>\n\nText 2\n\nYannis Papastamatiou and his team attached acoustic tags to grey reef sharks at a remote atoll in the Pacific Ocean and tracked the animals for several years. They found that the sharks gathered in groups during the day and spread out to hunt at night. Some pairs of sharks stayed together for as long as four years. The researchers think group members may share information about where to find food.",
+      "stem": "Based on the texts, how would Papastamatiou and his team (Text 2) most likely respond to the underlined claim in Text 1?",
+      "options": [
+        "Grey reef sharks find more food during the day than they do at night.",
+        "At least some reef sharks appear to form social groups that last for years rather than meeting only briefly.",
+        "Scientists should track sharks for only short periods to avoid disturbing them.",
+        "Most sharks that live in the open ocean also travel in groups."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The underlined claim describes reef sharks as “solitary animals with no lasting ties to one another.” Papastamatiou’s team found that grey reef sharks “gathered in groups during the day” and that “Some pairs of sharks stayed together for as long as four years.” The researchers would therefore say that at least some reef sharks form long-lasting groups.",
+      "distractors": {
+        "A": {
+          "recipe": "D3 twisted detail",
+          "why_wrong": "Text 2 says the sharks gathered in groups by day and “spread out to hunt at night,” which suggests they feed mainly at night, not by day."
+        },
+        "C": {
+          "recipe": "D1 unaddressed add-on",
+          "why_wrong": "Text 2 tracked the sharks for several years and says nothing about tracking causing disturbance."
+        },
+        "D": {
+          "recipe": "D1 unaddressed add-on",
+          "why_wrong": "Text 2 studied grey reef sharks at one atoll; it makes no claim about sharks of the open ocean."
+        }
+      },
+      "models": [
+        "1.1",
+        "1.3"
+      ],
+      "word_count": 144,
+      "sources": [
+        {
+          "what": "Papastamatiou et al. 2020, Proceedings of the Royal Society B 287: acoustic tracking of grey reef sharks at a Pacific atoll; stable social groups over multiyear periods, some pairs associated for up to 4 years; groups form by day and disperse at night; social information use while foraging",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7575530/"
+        }
+      ],
+      "notes": "Area: natural science (marine biology). Text 1 is the popular view in the author’s voice. The study site is Palmyra Atoll; the passage keeps “a remote atoll in the Pacific Ocean” as the abstract does.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "cross_text_connections.S1_limit_degree.easy.w4b1_17",
+      "template": "S1_limit_degree",
+      "subtype": "Response prediction",
+      "tier": "easy",
+      "passage": "Text 1\n\nPaintings and engravings made by Stone Age artists more than ten thousand years ago show horses, bison, and other animals with remarkable energy. These artists depended on the animals they depicted for food, and they probably spent many hours watching them closely. <u>Their pictures of walking animals, it seems, are nearly perfect in showing how the animals’ legs move.</u>\n\nText 2\n\nGábor Horváth and colleagues examined 1,000 artworks showing walking four-legged animals, from prehistoric cave art to modern paintings. Before the 1880s, when photographs first revealed exactly how such animals step, about 84 percent of artists’ depictions got the leg positions wrong. Prehistoric artists did much better. Even so, 46 percent of their walking animals still had their legs placed incorrectly.",
+      "stem": "Based on the texts, how would the author of Text 2 most likely respond to the underlined claim in Text 1?",
+      "options": [
+        "By noting that although cave artists showed walking animals more accurately than many later artists did, they still made mistakes nearly half the time",
+        "By arguing that cave artists mostly painted animals that were standing still rather than walking",
+        "By pointing out that artists working after the 1880s made no mistakes when showing walking animals",
+        "By suggesting that cave artists cared more about the colors of animals than about how the animals moved"
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The underlined claim says prehistoric pictures of walking animals are “nearly perfect” in showing leg movement. Text 2 agrees that “Prehistoric artists did much better” than artists before the 1880s, but it adds that “46 percent of their walking animals still had their legs placed incorrectly.” The author of Text 2 would accept that cave artists were more accurate than many later artists while noting that they were far from perfect.",
+      "distractors": {
+        "B": {
+          "recipe": "D1 unaddressed add-on",
+          "why_wrong": "Text 2 counts only depictions of walking animals and says nothing about how many cave paintings show standing animals."
+        },
+        "C": {
+          "recipe": "D3 twisted detail",
+          "why_wrong": "Text 2 gives an error rate only for artists before the 1880s; it never says later artists made no mistakes."
+        },
+        "D": {
+          "recipe": "D1 unaddressed add-on",
+          "why_wrong": "Neither text discusses the colors of the animals; Text 2 is about the positions of their legs."
+        }
+      },
+      "models": [
+        "1.10"
+      ],
+      "word_count": 119,
+      "sources": [
+        {
+          "what": "Horvath, Farkas, Boncz, Blaho, Kriska 2012, PLoS ONE 7: 1000 prehistoric and modern quadruped walking depictions; error rate 83.5 percent before Muybridge (1880s), 57.9 percent after 1887, 46.2 percent for prehistoric depictions",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3515592/"
+        }
+      ],
+      "notes": "Area: arts and science (prehistoric art, animal locomotion). Limit-degree as in 1.10: the key grants the claim’s direction and limits its degree. Rounded 83.5 to 84 percent and 46.2 to 46 percent.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [
+          "“showed the legs in impossible positions” changed to “got the leg positions wrong” (the paper says erroneous, not impossible)"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "cross_text_connections.S3_difference.easy.w4b1_18",
+      "template": "S3_difference",
+      "subtype": "Difference",
+      "tier": "easy",
+      "passage": "Text 1\n\nThe thylacine, a striped, dog-like marsupial driven to extinction in the twentieth century, was the largest meat-eating marsupial of recent times. Most accounts give adults an average weight of about 30 kilograms. Predators of that size usually hunt animals as large as or larger than themselves. The thylacine is therefore often described as a hunter of kangaroos and wallabies, and farmers in Tasmania once blamed it for killing their sheep.\n\nText 2\n\nDouglass Rovinsky and colleagues used three-dimensional models of skeletons and preserved specimens to estimate the body masses of 93 adult thylacines. The average was only 16.7 kilograms. Predators weighing less than about 21 kilograms, the researchers note, typically feed on animals much smaller than themselves. The thylacine therefore probably hunted mostly small prey, tackling larger animals only occasionally.",
+      "stem": "Which choice best describes a difference in how the author of Text 1 and the author of Text 2 view the thylacine?",
+      "options": [
+        "The author of Text 1 believes that the thylacine became extinct earlier than the author of Text 2 believes.",
+        "The author of Text 1 claims that the thylacine lived in a larger area than the author of Text 2 claims.",
+        "The author of Text 1 suggests that the thylacine usually hunted larger animals than the author of Text 2 suggests.",
+        "The author of Text 1 thinks that thylacines hunted in groups more often than the author of Text 2 thinks."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "Text 1 describes the thylacine as “a hunter of kangaroos and wallabies,” prey “as large as or larger than” itself. Text 2 concludes that “The thylacine therefore probably hunted mostly small prey, tackling larger animals only occasionally.” The two authors differ on how large the thylacine’s usual prey was.",
+      "distractors": {
+        "A": {
+          "recipe": "D8 wrong dimension",
+          "why_wrong": "Only Text 1 mentions extinction (“in the twentieth century”); the texts do not disagree about when it happened."
+        },
+        "B": {
+          "recipe": "D1 unaddressed add-on",
+          "why_wrong": "Neither text discusses the size of the thylacine’s range."
+        },
+        "D": {
+          "recipe": "D1 unaddressed add-on",
+          "why_wrong": "Neither text says whether thylacines hunted alone or in groups."
+        }
+      },
+      "models": [
+        "1.8",
+        "1.14"
+      ],
+      "word_count": 128,
+      "sources": [
+        {
+          "what": "Rovinsky, Evans, Martin, Adams 2020, Proceedings of the Royal Society B 287: 93 adult thylacines; mean 16.7 kg versus the commonly used 29.5 kg; below the 21 kg costs-of-carnivory threshold; small-prey predator occasionally taking large prey",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7482282/"
+        }
+      ],
+      "notes": "Area: natural science (paleobiology). Difference on one axis (prey size), as in 1.8 (speed of formation). Text 1 keeps the common 30 kg estimate and the costs-of-carnivory logic the source describes; the Tasmanian sheep-killing blame is the historical basis of the bounty.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [],
+        "status": "pass"
+      }
+    }
+  ],
+  "removed": [
+    {
+      "id": "cross_text_connections.S1_second_factor.medium.w4b1_15",
+      "reason": "Reuses a round-1 subject: the round-1 Cross-Text draft (S1_second_factor.easy) was built on red autumn-leaf anthocyanins as a sunscreen and flagged by the blind judges as a textbook tell; this item’s Text 1 is the same hypothesis. Blind solve agreed (C). Saved in the reviewer scratch folder as removed_item_15.json."
+    }
+  ]
+}

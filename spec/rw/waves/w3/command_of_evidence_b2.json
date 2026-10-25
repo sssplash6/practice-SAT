@@ -1,0 +1,1731 @@
+{
+  "skill": "Command of Evidence",
+  "slug": "command_of_evidence",
+  "part": "w3b2",
+  "domain": "Information and Ideas",
+  "plan": {
+    "templates": [
+      {
+        "code": "T1_single",
+        "name": "Hypothetical finding supports or weakens a single claim (causal, comparison, existence, generalization, prediction)"
+      },
+      {
+        "code": "T1_compete",
+        "name": "Hypothetical finding discriminates between competing explanations (support or weaken)"
+      },
+      {
+        "code": "T2_lit_quote",
+        "name": "Quotation from a literary work illustrates a claim (single trait, two-part, contrast)"
+      },
+      {
+        "code": "T3_person_quote",
+        "name": "Quotation from a person (participant, respondent, historian, critic, article) supports or challenges a claim"
+      },
+      {
+        "code": "Q1_P1_lookup",
+        "name": "Data completion: lookup (one cell or bar, reverse lookup, filter)"
+      },
+      {
+        "code": "Q1_P2_extreme",
+        "name": "Data completion: extreme or rank (max/min, possibly after a filter)"
+      },
+      {
+        "code": "Q1_P3_pairwise",
+        "name": "Data completion: pairwise comparison (one or two comparisons)"
+      },
+      {
+        "code": "Q1_P5_control",
+        "name": "Data completion: condition vs control"
+      },
+      {
+        "code": "Q2_P4_trend",
+        "name": "Data description: trend or change over time supports a conclusion"
+      },
+      {
+        "code": "Q2_P5_control",
+        "name": "Data description: condition vs control or group comparison supports a conclusion"
+      },
+      {
+        "code": "Q2_P8_multipart",
+        "name": "Data description: multi-part, interaction, or passage-plus-data claim"
+      }
+    ]
+  },
+  "items": [
+    {
+      "id": "command_of_evidence.T1_single.hard.w3b2_01",
+      "template": "T1_single",
+      "subtype": "Hypothetical finding supports a claim with a stated rival (defense rather than prey capture); key rules out the rival through a comparison with nonspitting relatives",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Venom spitting, a defensive behavior in which a snake sprays venom toward the eyes of a threatening animal, evolved independently in three lineages of cobras, and spitting is never used to capture prey. Comparing the venoms of these cobras with those of closely related nonspitting species, Taline Kazandjian, Nicholas Casewell, and colleagues found that all three spitting lineages produce elevated quantities of phospholipase A₂ (PLA₂), a toxin that intensifies the effect of other venom components on mammals’ pain-sensing neurons. The team concluded that the additional PLA₂ is a defensive adaptation that makes the venom more painful to attackers, not an aid to subduing prey.",
+      "stem": "Which finding, if true, would most directly support the team’s conclusion?",
+      "options": [
+        "Over their evolutionary history, all three lineages of spitting cobras shifted toward eating larger prey animals than their nonspitting relatives eat, and larger prey take longer to subdue.",
+        "Spitting cobras inject more venom when they bite an animal that threatens them than when they bite an animal they are hunting.",
+        "When injected into the rodents and lizards that cobras commonly eat, spitting cobras’ venoms immobilize those animals no faster than the venoms of nonspitting relatives do.",
+        "Venom that a spitting cobra sprays into an attacker’s eyes can cause lasting injury even if it is rinsed out within a few minutes."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The conclusion has two parts: the extra PLA₂ serves defense, and it does not help the cobras subdue prey. If the extra PLA₂ made the venom better for hunting, spitting cobras’ venoms should immobilize prey faster than their nonspitting relatives’ venoms. Choice C says they do not, which removes the hunting explanation and leaves defense, the only use the cobras make of spitting, as the likelier reason for the added PLA₂.",
+      "distractors": {
+        "A": {
+          "recipe": "OPP: the rival (prey) explanation",
+          "why_wrong": "A shift to larger prey that are harder to subdue would give the spitting cobras a hunting reason to evolve stronger venom, which points toward the explanation the team rejects."
+        },
+        "B": {
+          "recipe": "TRAP: a behavior that cannot decide the claim",
+          "why_wrong": "This is about how much venom cobras inject when biting, not about the higher PLA₂ levels in spitting cobras’ venom; any cobra could adjust its dose this way, so it does not tie the added PLA₂ to defense."
+        },
+        "D": {
+          "recipe": "OFF: right entity, different outcome",
+          "why_wrong": "Lasting eye injury shows that spat venom harms attackers, but it says nothing about pain or about PLA₂, and it does not show that the added PLA₂ fails to help with prey."
+        }
+      },
+      "models": [
+        "3.25",
+        "3.31",
+        "3.7"
+      ],
+      "sources": [
+        {
+          "what": "Kazandjian et al. 2021, Science 371: 386-390: venom spitting evolved three times in cobras; all three spitting lineages show increased PLA₂ toxins that potentiate cytotoxins’ activation of mammalian sensory neurons, causing enhanced pain; defense, not only predation, drove the change",
+          "url": "https://research.bangor.ac.uk/en/publications/convergent-evolution-of-pain-inducing-defensive-venom-components-/"
+        }
+      ],
+      "notes": "Band 6: the key addresses the 'not an aid to subduing prey' half of the claim through the nonspitting comparison group; no distractor is killed by a single stated fact. Rodents and lizards are among typical cobra prey (general knowledge).",
+      "word_count": 104,
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 2,
+        "fixes": [],
+        "status": "pass",
+        "facts_note": "core claim (three spitting lineages, raised PLA2 potentiating pain, defensive) confirmed on the Bangor abstract",
+        "band7": {
+          "verdict": "band 6",
+          "why": "Meets its band-6 target: the key needs the nonspitting comparison group and supplies the unstated premise that the extra PLA2 gives no hunting edge; OPP, TRAP and OFF distractors, none killed by one stated fact."
+        }
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "C",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "command_of_evidence.T1_single.hard.w3b2_02",
+      "template": "T1_single",
+      "subtype": "Hypothetical finding supports a researcher’s suggestion; key needs the bridge from personal stake to laborers’ wages versus materials",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "In Indonesia, villages build local roads with government grants, hiring residents as paid laborers and buying materials such as sand and rock. To measure corruption in more than 600 of these projects, economist Benjamin Olken had engineers dig core samples from the finished roads and estimate what each one actually cost, then compared those estimates with the spending that villages reported. In some villages, Olken’s team encouraged residents to attend public meetings at which project officials accounted for their spending. Olken suggests that residents are most willing to monitor spending when they stand to gain personally from preventing theft.",
+      "stem": "Which finding from Olken’s study, if true, would most directly support his suggestion?",
+      "options": [
+        "In villages where residents were encouraged to attend the meetings, less of the money reported as laborers’ pay was missing, but the money missing from spending on materials did not decline.",
+        "In villages where residents were encouraged to attend the meetings, attendance was higher than in other villages, and many of those who attended asked officials detailed questions about the project’s costs.",
+        "In villages that were told their project would be audited by the government, less money was missing from spending on both laborers’ pay and materials.",
+        "Residents who had worked on a road as paid laborers were no more likely than other residents to raise concerns about spending at the meetings."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "Residents hired as laborers lose money themselves if their pay is skimmed, but no single resident gains much from checking whether sand and rock were stolen. If the meetings reduced missing wages but not missing materials, as choice A says, then monitoring improved only where residents had a personal stake, which is what Olken suggests.",
+      "distractors": {
+        "B": {
+          "recipe": "OFF: participation instead of its effect",
+          "why_wrong": "Higher attendance and more questions show that residents took part, not that their monitoring reduced missing funds, and they say nothing about which kinds of spending were affected."
+        },
+        "C": {
+          "recipe": "TRAP: wrong treatment",
+          "why_wrong": "Government audits are not monitoring by residents, and a drop in both kinds of missing money does not show that residents monitor best when they stand to gain personally."
+        },
+        "D": {
+          "recipe": "OPP: undercuts the mechanism",
+          "why_wrong": "If residents who had been paid as laborers, and so had a personal stake in their wages, were no more vigilant than others, personal gain would not seem to drive monitoring, which weakens the suggestion."
+        }
+      },
+      "models": [
+        "3.25",
+        "3.31",
+        "3.7"
+      ],
+      "sources": [
+        {
+          "what": "J-PAL summary of Olken 2007 (JPE 115(2): 200-249), Indonesian village road projects: engineers estimated what was actually used and compared it with reported spending; invitations to accountability meetings reduced missing labor expenses, since villagers who worked on the roads had a stake in getting paid, but had no effect on missing materials; people are more willing to monitor when they stand to gain personally (free-riding)",
+          "url": "https://www.povertyactionlab.org/print/pdf/node/1442"
+        }
+      ],
+      "notes": "Band 6: two linked steps (who has a personal stake in which spending, then which spending fell). The key restates Olken’s actual result in plain words; the passage does not state it.",
+      "word_count": 99,
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass",
+        "facts_note": "J-PAL summary: 608 villages, engineers' core samples, meetings cut missing labor but not materials, personal-benefit explanation",
+        "band7": {
+          "verdict": "band 6",
+          "why": "Two linked steps (who has a personal stake in which spending, then which spending fell); the key's split result is not in the passage; D is an OPP on the same mechanism, C a wrong-treatment TRAP."
+        }
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "A",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "command_of_evidence.T1_single.hard.w3b2_03",
+      "template": "T1_single",
+      "subtype": "Hypothetical finding supports a causal claim against a confound; key supplies an unstated premise (the climate index outside the fly’s range)",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "Tsetse flies transmit a parasitic disease that is frequently fatal to cattle and horses. Economist Marcella Alsan used temperature and humidity data to calculate how suitable locations across Africa were for the flies’ survival. She found that ethnic groups inhabiting areas where this tsetse suitability index was high had been less likely, before colonial rule, to use draft animals and plows and less likely to be politically centralized. Alsan argues that the flies themselves were responsible for this pattern: by making livestock hard to keep, the flies limited farmers’ use of draft animals and so the food surpluses that could have supported centralized states.",
+      "stem": "Which finding, if true, would most directly support Alsan’s argument about the cause of the pattern she found?",
+      "options": [
+        "Today, regions of Africa where the index is high have lower average incomes than regions of Africa where the index is low.",
+        "In parts of Africa where the flies were largely eliminated during the twentieth century, farmers went on to adopt plows no faster than farmers in otherwise similar areas where the flies remained.",
+        "Ethnic groups living where the index was high mostly grew crops that thrive in hot, humid conditions rather than crops that require cooler or drier weather.",
+        "In tropical Asia and South America, where tsetse flies do not live, places whose climate gives them high index values were as likely as other places to use draft animals."
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "Because Alsan’s index is calculated from temperature and humidity, a high index value also marks a hot, humid climate, so the pattern she found could in principle reflect the climate rather than the flies. Choice D separates the two: in tropical Asia and South America, places with high index values share that climate but have no tsetse flies, and there the use of draft animals was not lower. If the climate itself had held back the use of livestock, it should have done so there too; since it did not, the African pattern is best explained by the flies, as Alsan argues.",
+      "distractors": {
+        "A": {
+          "recipe": "TRAP: consistent with both explanations (and the wrong time)",
+          "why_wrong": "Lower incomes today in high-index regions could follow from the flies or from the hot, humid climate that the index also measures, and they concern the present rather than the period before colonial rule, so they do not show that the flies caused the pattern."
+        },
+        "B": {
+          "recipe": "OPP: weakens the fly explanation",
+          "why_wrong": "If removing the flies did not speed up the use of plows, the flies would seem not to have been what held it back, which weakens Alsan’s argument."
+        },
+        "C": {
+          "recipe": "TRAP: consistent with the rival",
+          "why_wrong": "Crops suited to heat and humidity point to the climate, which the index also measures, as an influence on how these groups farmed; that fits a climate explanation at least as well as Alsan’s and does not separate the flies from the climate."
+        }
+      },
+      "models": [
+        "3.28",
+        "3.36",
+        "3.45"
+      ],
+      "sources": [
+        {
+          "what": "Alsan 2015, American Economic Review 105(1): 382-410: a TseTse suitability index built from insect physiology and climate; groups in suitable areas less likely to use domesticated animals and the plow and less politically centralized; the index has no similar explanatory power outside Africa, where the fly does not exist (placebo)",
+          "url": "https://ideas.repec.org/a/aea/aecrev/v105y2015i1p382-410.html"
+        }
+      ],
+      "notes": "Band 7 moves: the key supplies the premise the passage leaves out (the index computed where the flies are absent: Alsan’s own placebo test); stem names the claimant and the rival; distractors OPP (fly eradication without plow adoption), two TRAPs (consistent with both; consistent with the rival, present-day outcome). Index inputs given as temperature and humidity (the TSI models fly population dynamics from these). Reviewer: removed the passage's explicit climate rival and the stem's 'rather than the climate itself', so the student must infer the confound from the index's inputs (sentence 2); key is Alsan's own out-of-Africa result (repec abstract).",
+      "word_count": 104,
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 2,
+        "fixes": [
+          "hardened: dropped the explicit climate rival from the passage and 'rather than the climate itself' from the stem, so the confound must be inferred from the index's inputs; added the flies' mechanism (agricultural surplus) from the abstract; explanation and why_wrong A and C rewritten to match"
+        ],
+        "status": "fixed",
+        "facts_note": "repec abstract: TSI groups less likely to use animals and plow, less centralized; correlations absent in tropics outside Africa (the key). Temperature and humidity inputs not confirmed (paper PDF unreachable, search budget spent); left as a minor detail",
+        "band7": {
+          "verdict": "band 7",
+          "why": "After the fix the rival is only implied by the index's inputs (earlier sentence), so the key supplies the missing premise (a high index without the flies); stem 19 words naming the claimant; B is the right test with the wrong result (OPP), A and C fit both or the rival (TRAP); passage 104 words."
+        }
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "D",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 7
+    },
+    {
+      "id": "command_of_evidence.T1_compete.hard.w3b2_04",
+      "template": "T1_compete",
+      "subtype": "Hypothetical finding discriminates two explanations (sodium supplement vs toxin binding); key works through timing against food abundance",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "Along the Tambopata River in southeastern Peru, macaws and other parrots congregate at riverbank cliffs to eat clay, a behavior known as geophagy. One explanation holds that clay protects the birds from toxins: when preferred foods are scarce, parrots consume more unripe seeds, which contain bitter chemical defenses, and laboratory experiments show that clay can bind such compounds. Another holds that clay supplies sodium, a nutrient that is scarce in the vegetation of inland rainforests. Drawing on more than 20,000 hours of observations at the cliffs, ecologists Elizabeth Hobson and Donald Brightsmith argue that the sodium explanation better accounts for the birds’ behavior.",
+      "stem": "Which finding from Hobson and Brightsmith’s observations, if true, would most directly support their argument over the alternative explanation?",
+      "options": [
+        "Clay eating at the cliffs rose sharply in the seasons when unripe seeds, with their bitter chemical defenses, made up the largest part of the parrots’ diet.",
+        "Parrots ate the most clay in the months when they were feeding chicks in the nest, a period when ripe fruits near the cliffs were especially plentiful.",
+        "Rather than eating soil from anywhere on the cliffs, the parrots repeatedly returned to a few particular layers of clay.",
+        "Large species such as scarlet macaws usually arrived at the cliffs and began eating clay earlier in the morning than smaller parrot species did."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The toxin explanation predicts the most clay eating when preferred foods are scarce and parrots must eat unripe, chemically defended seeds. Choice B reports the opposite timing: clay eating peaked when ripe fruit was plentiful. It also peaked while parents were feeding growing chicks, a time when the birds’ need for a scarce nutrient such as sodium would be greatest. That pattern fits the sodium explanation and not the toxin one.",
+      "distractors": {
+        "A": {
+          "recipe": "OPP: the rival’s prediction",
+          "why_wrong": "More clay eating when the diet is full of chemically defended seeds is just what the toxin explanation predicts, so this supports the alternative, not Hobson and Brightsmith."
+        },
+        "C": {
+          "recipe": "TRAP: consistent with both explanations",
+          "why_wrong": "Parrots could favor certain layers because those layers hold more sodium or because they bind toxins better; the finding does not say which, so it cannot decide between the explanations."
+        },
+        "D": {
+          "recipe": "OFF: an irrelevant property of the same behavior",
+          "why_wrong": "The order in which species arrive in the morning says nothing about whether the clay supplies sodium or protects against toxins."
+        }
+      },
+      "models": [
+        "3.9",
+        "3.14",
+        "3.48"
+      ],
+      "sources": [
+        {
+          "what": "Texas A&M release on Hobson and Brightsmith’s Tambopata study (Ibis): two leading theories, clay protects against food toxins when ideal foods are scarce vs clay supplies minerals; over 20,000 hours of observation; geophagy highly correlated with breeding season; evidence against the toxin idea, sodium needs the likely driver",
+          "url": "https://vetmed.tamu.edu/news/press-releases/texas-am-professor-explores-why-peruvian-parrots-eat-clay/"
+        }
+      ],
+      "notes": "Band 7 moves: two named views; key works through an unexpected route (peak clay eating coincides with food abundance and chick rearing), which the toxin view does not predict; distractors OPP (the rival’s prediction), TRAP fitting both (particular layers), irrelevant property (arrival order). Coverage of the study reports parrots ate more clay when food was plentiful and that eating peaked in the breeding season.",
+      "word_count": 103,
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass",
+        "facts_note": "TAMU release: Hobson and Brightsmith, Tambopata, 20,000+ hours, two theories, clay eating tied to breeding season, sodium over toxins (Ibis 2017)",
+        "band7": {
+          "verdict": "band 7",
+          "why": "Two named views; the key works through an unexpected route (most clay eaten when ripe fruit was plentiful and chicks were fed), which the toxin view does not predict; OPP A, TRAP C fits both, D an irrelevant property; passage 103 words, stem names the study and claimants."
+        }
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "B",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 7
+    },
+    {
+      "id": "command_of_evidence.Q2_P8_multipart.hard.w3b2_05",
+      "template": "Q2_P8_multipart",
+      "subtype": "Data description: interaction across two populations and three size classes, read through the passage’s link between size class and hatching period",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "In green sea turtles, the temperature at which eggs incubate determines each hatchling’s sex: warmer nests produce more females. At a feeding ground in the northern Great Barrier Reef, Michael Jensen and colleagues used genetic markers to trace each turtle to one of two nesting populations, one breeding on cooler southern beaches and one on northern beaches, where sand temperatures have remained above the pivotal temperature (which yields equal numbers of males and females) since the early 1990s. Most adult-sized turtles in the study hatched before that warming; most juveniles and subadults hatched afterward. The team concluded that the northern population’s extreme female bias is a recent development driven by warming.",
+      "stem": "Which choice best describes data from the table that support the team’s conclusion?",
+      "options": [
+        "Northern-population juveniles and subadults were each more than 99% female, compared with less than 90% of northern adult-sized turtles, while southern turtles were 64% to 70% female in every size class.",
+        "In every size class, the northern population had a larger share of females than the southern population did, and the difference between the two populations was greatest among the subadults.",
+        "Southern-population adult-sized turtles had a larger share of females than southern juveniles did, while southern subadults had a smaller share of females than any other group of turtles shown in the table.",
+        "Northern-population subadults had a slightly larger share of females than northern juveniles did, and northern adult-sized turtles had a larger share of females than any group of southern turtles did."
+      ],
+      "answer_letter": "A",
+      "table": {
+        "title": "Percentage of Green Turtles That Were Female",
+        "columns": [
+          "Nesting population",
+          "Juveniles (%)",
+          "Subadults (%)",
+          "Adult-sized turtles (%)"
+        ],
+        "rows": [
+          [
+            "Northern beaches",
+            "99.1",
+            "99.8",
+            "86.8"
+          ],
+          [
+            "Southern beaches",
+            "67.8",
+            "64.5",
+            "69.2"
+          ]
+        ],
+        "note": null
+      },
+      "figure": null,
+      "explanation": "The passage links size class to hatching time: adult-sized turtles hatched before the northern beaches warmed, and most juveniles and subadults hatched after. Among northern turtles, those younger groups are more than 99% female, compared with about 87% of adult-sized turtles, so the bias grew after the warming began. Among southern turtles, from the cooler beaches, the share stays between about 64% and 70% in every size class, which shows that the jump among young northern turtles is not simply a difference between younger and older turtles in general. Choice A gives both parts.",
+      "distractors": {
+        "B": {
+          "recipe": "IRREL: accurate comparison of the wrong cells",
+          "why_wrong": "The northern population is more female in every size class (and the gap is largest for subadults), but a bias present in every class could be a long-standing feature of the northern beaches; this comparison does not show that the bias grew recently."
+        },
+        "C": {
+          "recipe": "IRREL: the comparison population only",
+          "why_wrong": "These comparisons are accurate (69.2% against 67.8%, and 64.5% is the lowest value), but they concern only the southern turtles and show no change in the northern population."
+        },
+        "D": {
+          "recipe": "CONTRA: accurate cells pointing the wrong way",
+          "why_wrong": "Both statements are accurate, but subadults, which are older than juveniles, being slightly more female suggests no rise among younger turtles, and adult northern turtles outranking southern ones says nothing about change over time."
+        }
+      },
+      "models": [
+        "3.26",
+        "3.16"
+      ],
+      "sources": [
+        {
+          "what": "Jensen et al. 2018, Current Biology 28: 154-159 (Results and Table 1): nGBR-origin turtles 99.1% of juveniles, 99.8% of subadults, 86.8% of adult-sized turtles female; sGBR-origin 67.8%, 64.5%, 69.2%; turtles caught at the Howick Group feeding ground; juveniles 4-16 years, subadults 13-23, adults over 20; nGBR nests above the pivotal temperature since the early 1990s",
+          "url": "https://repository.library.noaa.gov/view/noaa/62575"
+        }
+      ],
+      "notes": "Band 7 moves: proxy (size class stands for hatching before or after the warming, given in the passage); the key is a cross-cell interaction (northern change across classes against southern stability); all three distractors are accurate readings of wrong cells in the key’s frame. Howick Group is in the northern GBR.",
+      "word_count": 111,
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass",
+        "facts_note": "Jensen et al. text: 99.1/99.8/86.8 north, 67.8/64.5/69.2 south, nests above pivotal temperature since early 1990s",
+        "band7": {
+          "verdict": "band 7",
+          "why": "Proxy given in the passage (size class stands for hatching before or after the warming); key is a cross-cell interaction with the southern control; all three distractors are accurate readings in the key's frame; four or more operations; passage 111 words."
+        }
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "A",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 7
+    },
+    {
+      "id": "command_of_evidence.T2_lit_quote.hard.w3b2_06",
+      "template": "T2_lit_quote",
+      "subtype": "Literary quotation illustrates an indirect claim (sorrow standing in for an absent son); distractors are the same speaker in nearby emotions",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "King John is a circa 1596 play by William Shakespeare. Constance, whose young son, Arthur, has been imprisoned by his uncle, King John, grieves inconsolably. Shakespeare suggests that Constance’s sorrow has effectively become a substitute for her imprisoned son, as when she says, ______",
+      "stem": "Which quotation from King John most effectively illustrates the claim?",
+      "options": [
+        "“If I were mad, I should forget my son, / Or madly think a babe of clouts [a rag doll] were he. / I am not mad; too well, too well I feel / The different plague of each calamity.”",
+        "“No, I defy all counsel, all redress, / But that which ends all counsel, true redress, / Death, death, O amiable, lovely death! / Thou odoriferous stench, sound rottenness!”",
+        "“O Lord! My boy, my Arthur, my fair son! / My life, my joy, my food, my all the world! / My widow-comfort, and my sorrows’ cure!”",
+        "“Grief fills the room up of my absent child, / Lies in his bed, walks up and down with me, / Puts on his pretty looks, repeats his words, / Remembers me of all his gracious parts, / Stuffs out his vacant garments with his form; / Then have I reason to be fond of grief?”"
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "In choice D, Constance describes her grief doing what her son used to do: it fills his room, lies in his bed, walks beside her, wears his looks, repeats his words, and fills out his empty clothes. Her grief has taken Arthur’s place, which is why, she asks, she should not be fond of it. That is the claim.",
+      "distractors": {
+        "A": {
+          "recipe": "LURE: a stand-in for the son, but from imagined madness, not grief",
+          "why_wrong": "Constance pictures a rag doll taking Arthur’s place only to say that this is what madness would bring; she insists she is not mad and feels each loss fully, so these lines do not show her sorrow standing in for her son."
+        },
+        "B": {
+          "recipe": "OFF: same speaker, nearby emotion (longing for death)",
+          "why_wrong": "Here Constance rejects all comfort except death, which she calls lovely; the lines express despair, not sorrow taking her son’s place."
+        },
+        "C": {
+          "recipe": "LURE: shares the son and sorrow",
+          "why_wrong": "Constance calls Arthur her life, her joy, and the cure of her sorrows, so the lines show what her son meant to her, not that her sorrow now stands in for him."
+        }
+      },
+      "models": [
+        "3.37",
+        "3.17",
+        "3.34"
+      ],
+      "sources": [
+        {
+          "what": "Shakespeare, King John, Act 3, scene 4 (Constance), Project Gutenberg eBook 1511; all four quotations copied from this scene",
+          "url": "https://www.gutenberg.org/ebooks/1511"
+        }
+      ],
+      "notes": "Band 7 moves: indirect claim verb ('suggests ... has come to stand in for'), Elizabethan language, distractors from the same speaker in neighboring emotions (denial of madness and wish to forget, longing for death, devotion to her son with the word 'sorrows’'). Date given as circa 1596 (King John is usually dated 1595-96). Gutenberg text copied exactly, with its curly apostrophes. Reviewer: option A replaced (was the 'I am not mad ... forget myself' lines) with the 'babe of clouts' lines from the same speech, a closer lure that offers a substitute for Arthur without grief; gloss in brackets, CB style.",
+      "word_count": 44,
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [
+          "option A replaced (the 'I am not mad ... forget myself' lines) by the 'babe of clouts [a rag doll]' lines of the same speech: a stand-in for Arthur that comes from imagined madness, not grief, so the key no longer wins against three distant emotions"
+        ],
+        "status": "fixed",
+        "facts_note": "all quotations verbatim against Gutenberg 1511 (Act 3, scene 4, all Constance)",
+        "band7": {
+          "verdict": "band 7",
+          "why": "Pre-1929 drama, indirect claim verb, all four quotations are Constance in the same scene; after the fix A offers a stand-in for Arthur (from madness she denies) and C pairs her son with her sorrows, so the key must be matched on both grief and substitution, through Elizabethan personification."
+        }
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "D",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 7
+    },
+    {
+      "id": "command_of_evidence.T3_person_quote.hard.w3b2_07",
+      "template": "T3_person_quote",
+      "subtype": "Quotation from an art historian supports a two-part contention set inside a rebuttal (tradition and deliberate contemporary concerns)",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "Norval Morrisseau, an Anishinaabe artist from northwestern Ontario, learned the stories of his people from his grandfather and was largely self-taught as a painter. In 1962, an exhibition of his paintings sold out at Toronto’s Pollock Gallery. Reviewers debated whether his work should be categorized as modern or primitive and generally presented him as an illustrator of traditional legends, but art historian Carmen Robertson argues that this coverage reflected entrenched stereotypes of Indigenous people and had little to do with Morrisseau as an individual or an artist. Morrisseau, she contends, was a contemporary artist who deliberately combined Anishinaabe traditions with the concerns of his own time.",
+      "stem": "Which quotation from a work by an art historian would best support Robertson’s contention about Morrisseau?",
+      "options": [
+        "“Morrisseau took little interest in the debates of the Toronto art world. He painted what the old stories showed him, and the force of his work comes from how directly it passes those visions on, untouched by training or theory.”",
+        "“The reviewers of 1962 who called Morrisseau modern and those who called him primitive were each partly right: his canvases joined the techniques of modern painting to images drawn from Anishinaabe tradition, and the tension between those two sources is what gives his early work its power.”",
+        "“Morrisseau drew his figures from Anishinaabe stories, but the choices about how to render them, from the heavy black outlines to the vivid colors, were his own, and he used them to address the world he lived in, not a vanished past.”",
+        "“Before Morrisseau, many of the Anishinaabe stories he painted had been passed down mainly through spoken accounts and markings on birchbark scrolls; his paintings gave those stories a form that people outside his community could see.”"
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "Robertson’s contention has two parts: Morrisseau drew on Anishinaabe tradition, and he did so deliberately, as an artist addressing his own time rather than as a conduit for old legends. Choice C covers both: the figures come from Anishinaabe stories, the choices about how to paint them were Morrisseau’s own, and he used them to speak to the world he lived in.",
+      "distractors": {
+        "A": {
+          "recipe": "OPP: sides with the view the text rejects",
+          "why_wrong": "Presenting Morrisseau as passing on old visions untouched by training or theory repeats the framing of him as an illustrator of legends that Robertson argues against."
+        },
+        "B": {
+          "recipe": "TRAP: reconciles the reviewers’ labels without addressing the claim",
+          "why_wrong": "This quotation treats the reviewers’ labels as partly accurate, which is the framing Robertson rejects, and it describes a mix of painting techniques and traditional images, not deliberate choices that took up the concerns of Morrisseau’s own time."
+        },
+        "D": {
+          "recipe": "HALF: tradition only",
+          "why_wrong": "The quotation connects Morrisseau’s paintings to Anishinaabe stories but not to deliberate choices or to the concerns of his own time."
+        }
+      },
+      "models": [
+        "3.3",
+        "3.21",
+        "3.32"
+      ],
+      "sources": [
+        {
+          "what": "Carmen Robertson, 'Picasso of the North' (Art Canada Institute essay on Norval Morrisseau): after the 1962 Pollock Gallery exhibition critics judged his art modern or primitive or both and framed him as a painter of legends; the media framing drew on colonial stereotypes and had little to do with Morrisseau as an individual or an artist; Morrisseau as a contemporary Indigenous artist blending the traditional and the contemporary",
+          "url": "https://artcanada.com/the-essay/picasso-of-the-north-by-carmen-robertson"
+        }
+      ],
+      "notes": "Band 7 moves: the claim sits inside Robertson’s rebuttal of the reviewers’ framing; quotations of 40 to 50 words that argue; distractors OPP (the rejected framing), TRAP (influence instead of the claim), HALF (tradition only). The four quotations are invented and attributed to an unnamed art historian; the facts in them (heavy outlines and vivid color in his Woodland style, birchbark scrolls, later Woodland School painters) are general knowledge about his work. Reviewer: passage lengthened past 100 words (grandfather, self-taught: general knowledge; ACI essay); option B replaced (was the exhibition's influence on later painters) with a reconciliation of the 'modern or primitive' labels, the band-7 TRAP.",
+      "word_count": 106,
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [
+          "passage lengthened past 100 words (grandfather's stories, largely self-taught)",
+          "option B replaced (later painters' uptake of his style) with a reconciliation of the 'modern or primitive' labels, the band-7 TRAP; why_wrong rewritten"
+        ],
+        "status": "fixed",
+        "facts_note": "Art Canada Institute essay: Pollock Gallery 1962 sold out on day one, modern or primitive, painter of legends, stereotypes that had little to do with him as an individual or artist, contemporary artist blending traditional and contemporary",
+        "band7": {
+          "verdict": "band 6",
+          "why": "Hardened (passage 106 words, B now a reconciliation TRAP, A an OPP made more tempting by the self-taught detail), but the key restates the contention in other words rather than supplying an unstated premise (check 5), so a strong band 6."
+        }
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "C",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "command_of_evidence.Q2_P5_control.hard.w3b2_08",
+      "template": "Q2_P5_control",
+      "subtype": "Data description: treated groups against an untreated comparison, with modeled conditions that remove the treatment (two-part conclusion)",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Since the 1960s, some groups of mountain gorillas in the Virunga Mountains of central Africa have been habituated to human observers, allowing rangers to monitor them daily and veterinarians to treat sick or injured animals; other groups remain unhabituated and receive less protection. Martha Robbins and colleagues compared the two kinds of groups’ growth from 1967 to 2008 and modeled how habituated groups would have grown without various kinds of veterinary care. The team concluded that veterinary care contributed to habituated groups’ faster growth but does not by itself account for the difference between the two kinds of groups.",
+      "stem": "Which choice best describes data from the table that support the team’s conclusion?",
+      "options": [
+        "Habituated groups grew by about 4.1% per year on average, nearly 5 percentage points faster than unhabituated groups, which declined slightly over the same four decades.",
+        "Modeled without any veterinary treatment, habituated groups would still have outgrown unhabituated groups, though at only about half the habituated groups’ actual rate.",
+        "Modeled without snare-wound treatment, habituated groups would have grown at the same rate as when they were modeled without respiratory-disease treatment.",
+        "Modeled without snare-wound treatment, habituated groups would have grown more slowly than when they were modeled without any veterinary treatment."
+      ],
+      "answer_letter": "B",
+      "table": {
+        "title": "Average Annual Growth of Virunga Mountain Gorilla Groups, 1967–2008",
+        "columns": [
+          "Gorilla groups",
+          "Average annual growth rate (%)"
+        ],
+        "rows": [
+          [
+            "Unhabituated groups",
+            "−0.7"
+          ],
+          [
+            "Habituated groups",
+            "4.1"
+          ],
+          [
+            "Habituated groups, modeled without snare-wound treatment",
+            "3.4"
+          ],
+          [
+            "Habituated groups, modeled without respiratory-disease treatment",
+            "3.4"
+          ],
+          [
+            "Habituated groups, modeled without any veterinary treatment",
+            "2.2"
+          ]
+        ],
+        "note": null
+      },
+      "figure": null,
+      "explanation": "The conclusion has two parts. Veterinary care helped: without any veterinary treatment, the model puts habituated groups’ growth at 2.2% per year instead of the actual 4.1%, about half. But it does not explain the whole difference: even at 2.2%, habituated groups would still have outgrown unhabituated groups, which declined by 0.7% per year. Choice B states both parts.",
+      "distractors": {
+        "A": {
+          "recipe": "PART: the observed gap without the modeled condition",
+          "why_wrong": "The gap between habituated and unhabituated groups is accurate, but it says nothing about veterinary care, so it cannot show how much of the gap the care explains."
+        },
+        "C": {
+          "recipe": "IRREL: accurate comparison of two modeled conditions",
+          "why_wrong": "Both modeled rates are 3.4%, but comparing two kinds of treatment with each other does not show whether veterinary care accounts for all of the difference between the two kinds of groups."
+        },
+        "D": {
+          "recipe": "INACC: misread rows",
+          "why_wrong": "The model without snare-wound treatment gives 3.4% per year, which is faster, not slower, than the 2.2% without any veterinary treatment."
+        }
+      },
+      "models": [
+        "3.43",
+        "3.5",
+        "3.1"
+      ],
+      "sources": [
+        {
+          "what": "Robbins et al. 2011, PLoS ONE 6(6): e19788, 'Extreme conservation leads to recovery of the Virunga mountain gorillas': habituated groups grew 4.1% per year (time series, adjusted), unhabituated groups −0.7%; modeled habituated growth without snare-wound treatment 3.4%, without respiratory-disease treatment 3.4%, with no veterinary treatment 2.2%; veterinary care may explain up to 40% of the growth difference, protection from poachers most of the rest",
+          "url": "https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0019788"
+        }
+      ],
+      "notes": "Habituated growth is the paper’s time-series estimate adjusted for gorillas moving between groups (unadjusted 6.6%). Table rows simplify the paper’s counterfactual wording ('no snare wound treatment', 'no veterinary treatment').",
+      "word_count": 99,
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 5,
+        "fixes": [],
+        "status": "pass",
+        "facts_note": "PLoS ONE: 4.1, -0.7, 3.4, 3.4, 2.2, 1967-2008, care explains up to 40% of the gap",
+        "band7": {
+          "verdict": "band 6",
+          "why": "Meets band 6 and touches band-7 signals: design wrinkle (modeled conditions), key needs the cross-cell comparison with unhabituated groups plus the halving, two accurate-but-insufficient distractors and one misread."
+        }
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "B",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "command_of_evidence.Q1_P3_pairwise.hard.w3b2_09",
+      "template": "Q1_P3_pairwise",
+      "subtype": "Data completion: a pairwise comparison that must illustrate the passage’s claim (declines differed from metal to metal), with accurate comparisons of the wrong pairs as distractors",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Sulfur dioxide (SO₂), released mainly by burning coal, dissolves in the moisture on outdoor metal surfaces and speeds their corrosion. Since 1970, Kateřina Kreislová, Dagmar Knotková, and colleagues have measured the corrosion of exposed metal samples at Czech test sites, including Prague and Kopisty, an industrial area. After power plants installed desulfurization equipment, SO₂ levels fell sharply, and every metal tested corroded more slowly. The size of the decline at a given site differed considerably from metal to metal, however: for example, whereas the corrosion rate of carbon steel in Prague fell to about one-sixth of its earlier level, ______",
+      "stem": "Which choice most effectively uses data from the table to complete the example?",
+      "options": [
+        "the corrosion rate of copper in Prague also fell to about one-sixth of its earlier level, from 1.30 to 0.22 micrometers per year.",
+        "the corrosion rate of carbon steel at Kopisty fell to less than half of its earlier level, from 21.4 to 9.3 micrometers per year.",
+        "the corrosion rate of zinc at Kopisty fell from 2.82 to 0.33 micrometers per year, to about one-ninth of its earlier level.",
+        "the corrosion rate of zinc in Prague fell to less than one-twentieth of its earlier level, from 2.82 to 0.13 micrometers per year."
+      ],
+      "answer_letter": "D",
+      "table": {
+        "title": "Average Corrosion Rates at Two Czech Test Sites (micrometers per year)",
+        "columns": [
+          "Metal",
+          "Prague, 1970–1994",
+          "Prague, 2004–2015",
+          "Kopisty, 1970–1994",
+          "Kopisty, 2004–2015"
+        ],
+        "rows": [
+          [
+            "Carbon steel",
+            "16.1",
+            "2.6",
+            "21.4",
+            "9.3"
+          ],
+          [
+            "Zinc",
+            "2.82",
+            "0.13",
+            "3.66",
+            "0.33"
+          ],
+          [
+            "Copper",
+            "1.30",
+            "0.22",
+            "2.26",
+            "0.51"
+          ]
+        ],
+        "note": null
+      },
+      "figure": null,
+      "explanation": "The sentence needs a metal whose decline differs from carbon steel’s in Prague, where the rate fell from 16.1 to 2.6 micrometers per year, to about one-sixth. Zinc in Prague fell from 2.82 to 0.13, which is less than one-twentieth of its earlier rate (2.82 divided by 20 is about 0.14), a much steeper drop. Choice D gives that contrast between two metals at the same site.",
+      "distractors": {
+        "A": {
+          "recipe": "IRREL: accurate, but sameness offered as difference",
+          "why_wrong": "Copper in Prague did fall to about one-sixth (1.30 to 0.22), but that is the same proportion as carbon steel, so it cannot show that the decline differed from metal to metal."
+        },
+        "B": {
+          "recipe": "IRREL: accurate comparison of the wrong pair (same metal, other site)",
+          "why_wrong": "Carbon steel at Kopisty did fall from 21.4 to 9.3, but this compares the same metal at another site, so it does not illustrate how the decline differed from metal to metal at a given site."
+        },
+        "C": {
+          "recipe": "INACC: value taken from the wrong column",
+          "why_wrong": "2.82 is zinc’s earlier rate in Prague; at Kopisty zinc fell from 3.66 to 0.33 micrometers per year."
+        }
+      },
+      "models": [
+        "3.29",
+        "3.30"
+      ],
+      "sources": [
+        {
+          "what": "Kreislová and Knotková 2017, Materials 10(4): 394, 'The Results of 45 Years of Atmospheric Corrosion Study in the Czech Republic', Table 2 (measured values): Prague 1970-1994 SO₂ 87.6 µg/m³, carbon steel 16.1, zinc 2.82, copper 1.30 µm/a; Prague 2004-2015 SO₂ 7.3, 2.6, 0.13, 0.22; Kopisty 1970-1994 SO₂ 119.2, 21.4, 3.66, 2.26; Kopisty 2004-2015 SO₂ 14.2, 9.3, 0.33, 0.51; SO₂ had the greatest influence on corrosion in the 1970s-1980s and fell after desulphurization between 1994 and 2004",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC5506999/"
+        }
+      ],
+      "notes": "Band 6 (plan cell was 7; WAVE.md: Q1_P3 has no band-7 official items, so a strong band 6). Two distractors are accurate readings that fail the claim (same proportion as steel; same metal at another site), one is a misplaced value. Rates are averages over each period, the 'Real' (measured) column of the source table. Kopisty is in the North Bohemian brown-coal region.",
+      "word_count": 100,
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 12,
+        "fixes": [],
+        "status": "pass",
+        "facts_note": "Table 2 'Real' columns of PMC5506999 match all 12 cells",
+        "band7": {
+          "verdict": "band 6",
+          "why": "Q1_P3 has no band-7 official items, so a strong band 6: compound options with ratios to compute, an accurate same-ratio distractor, an accurate wrong-pair distractor and a wrong-column value."
+        }
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "D",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "command_of_evidence.Q2_P4_trend.hard.w3b2_10",
+      "template": "Q2_P4_trend",
+      "subtype": "Data description: change over time compared across areas (contrast in timing)",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "The Eurasian otter disappeared from much of Britain after the 1950s, when the pesticides dieldrin and aldrin, applied to seeds and used in sheep dips, accumulated in rivers and in the fish that otters eat. Beginning in 1977, surveyors in Wales have repeatedly searched the same riverside sites for signs of otters, such as droppings and footprints, recording the percentage of sites in each region where such signs appear. After reviewing the surveys, a student concludes that the otter’s recovery in Wales proceeded unevenly, with otters becoming widespread in some regions decades before they did in others.",
+      "stem": "Which choice best describes data from the table that support the student’s conclusion?",
+      "options": [
+        "In each of the four regions, the percentage of sites with signs of otters was considerably higher in the 2009–10 survey than it had been in the original 1977–78 survey.",
+        "By the time of the 2009–10 survey, signs of otters were found at more than 65% of the surveyed sites in each of the four regions.",
+        "Signs of otters were found at more than 80% of sites in the Wye region by 1991, but at no more than about 20% of sites in Anglesey or Mid Glamorgan until after 2002.",
+        "In the Teifi region, the percentage of sites with signs of otters increased with every survey from 1977–78 through 2009–10."
+      ],
+      "answer_letter": "C",
+      "table": {
+        "title": "Percentage of Survey Sites with Signs of Otters in Four Regions of Wales",
+        "columns": [
+          "Region",
+          "1977–78",
+          "1984–85",
+          "1991",
+          "2002",
+          "2009–10"
+        ],
+        "rows": [
+          [
+            "Wye",
+            "24",
+            "62",
+            "83",
+            "94",
+            "97"
+          ],
+          [
+            "Teifi",
+            "38",
+            "40",
+            "59",
+            "97",
+            "96"
+          ],
+          [
+            "Anglesey",
+            "18",
+            "0",
+            "0",
+            "18",
+            "69"
+          ],
+          [
+            "Mid Glamorgan",
+            "2",
+            "0",
+            "2",
+            "21",
+            "72"
+          ]
+        ],
+        "note": null
+      },
+      "figure": null,
+      "explanation": "The conclusion is about timing: otters became widespread in some regions long before others. In the Wye region, signs of otters already appeared at 83% of sites in 1991, while in Anglesey and Mid Glamorgan they appeared at only about 20% of sites or fewer in every survey through 2002 and became common only by 2009–10. Choice C reports that gap of more than a decade.",
+      "distractors": {
+        "A": {
+          "recipe": "IRREL: overall rise instead of a difference in timing",
+          "why_wrong": "Every region did gain, but an increase everywhere is consistent with an even recovery; it says nothing about some regions recovering decades earlier."
+        },
+        "B": {
+          "recipe": "IRREL: levels at a single date",
+          "why_wrong": "All four regions were above 65% in 2009–10, but that shows where the recovery ended up, not that it arrived at different times."
+        },
+        "D": {
+          "recipe": "INACC: misread trend",
+          "why_wrong": "In the Teifi region the percentage fell slightly, from 97% in 2002 to 96% in 2009–10, so it did not rise with every survey."
+        }
+      },
+      "models": [
+        "3.13",
+        "3.40"
+      ],
+      "sources": [
+        {
+          "what": "Otter Survey of Wales 2009-10 (Environment Agency Wales / Natural Resources Wales), Table 3: percentage of positive sites common to all five surveys, by hydrometric area: Wye 24, 62, 83, 94, 97; Teifi 38, 40, 59, 97, 96; Anglesey 18, 0, 0, 18, 69; Mid Glam 2, 0, 2, 21, 72 (1977-78, 1984-85, 1991, 2002, 2009-10); decline since the late 1950s caused mainly by dieldrin and aldrin used as seed dressing and sheep dip",
+          "url": "https://naturalresources.wales/media/4590/osw-5-english-24-06-2015.pdf"
+        }
+      ],
+      "notes": "Band 6: the key is a contrast in timing between regions (two operations: the early rise in the Wye, the late rise in Anglesey and Mid Glamorgan); distractors are levels and an overall rise (both accurate) plus one misread trend. The student is unnamed. 'Regions' stands for the report’s hydrometric areas.",
+      "word_count": 97,
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 5,
+        "fixes": [],
+        "status": "pass",
+        "facts_note": "Otter Survey of Wales Table 3 (sites common to all surveys) rows match; dieldrin and aldrin as seed dressing and sheep dip",
+        "band7": {
+          "verdict": "band 6",
+          "why": "Key is a contrast in timing across regions (two reads in different columns plus a check through 2002); distractors are an overall rise and end levels (accurate) and one misread trend."
+        }
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "C",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "command_of_evidence.T1_single.medium.w3b2_11",
+      "template": "T1_single",
+      "subtype": "Hypothetical finding supports a claim about behavior (positioning to exploit upwash)",
+      "tier": "medium",
+      "passage": "Many large birds, including geese and pelicans, migrate in V-shaped formations. Aerodynamic theory predicts that a bird flying slightly behind and to one side of another can conserve energy by exploiting upwash, the rising air that spills off the tip of the leading bird’s wing. To determine whether birds actually take advantage of this effect, Steven Portugal and colleagues equipped northern bald ibises with lightweight data loggers that continuously recorded each bird’s position and wingbeats during a migratory flight. The researchers claim that the ibises position themselves to benefit from upwash.",
+      "stem": "Which finding, if true, would most directly support the researchers’ claim?",
+      "options": [
+        "Ibises in the formation most often flew at the angle and distance behind a neighbor where the theory predicts upwash to be strongest.",
+        "Ibises spent a larger share of the flight in V formations while crossing open farmland than while crossing hills and forests.",
+        "Young ibises making their first migration joined V formations about as readily as older ibises did.",
+        "Ibises in the formation took turns flying at the front of the V, so that no single bird led the group for more than a short part of the flight."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The claim is that the ibises place themselves where they can use upwash. Choice A says the birds most often occupied exactly the position where theory predicts the upwash is strongest, which is what birds that deliberately exploit upwash would do.",
+      "distractors": {
+        "B": {
+          "recipe": "OFF: same birds, different variable",
+          "why_wrong": "How often the birds flew in a V over different kinds of ground says nothing about where each bird placed itself relative to the upwash."
+        },
+        "C": {
+          "recipe": "OFF: age, not position",
+          "why_wrong": "That young birds join formations as readily as older ones does not show that any bird positions itself to use upwash."
+        },
+        "D": {
+          "recipe": "TRAP: related behavior that cannot decide the claim",
+          "why_wrong": "Taking turns at the front concerns who leads, not whether the followers sit where upwash is strongest."
+        }
+      },
+      "models": [
+        "2.21",
+        "2.7",
+        "2.33"
+      ],
+      "sources": [
+        {
+          "what": "Portugal et al. 2014, Nature 505: 399-402, 'Upwash exploitation and downwash avoidance by flap phasing in ibis formation flight': northern bald ibises on a migration flight behind a microlight carried GPS and accelerometer loggers; birds in V positions occupied aerodynamically favorable positions and flapped in phase to capture upwash",
+          "url": "https://ideas.repec.org/a/nat/nature/v505y2014i7483d10.1038_nature12939.html"
+        }
+      ],
+      "notes": "",
+      "word_count": 91,
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 2,
+        "fixes": [
+          "removed 'deliberately' (the abstract says the ibises 'position themselves in aerodynamically optimum positions'; the passage should not state it more strongly)"
+        ],
+        "status": "fixed",
+        "facts_note": "Europe PMC abstract of Portugal et al. 2014"
+      }
+    },
+    {
+      "id": "command_of_evidence.T2_lit_quote.medium.w3b2_12",
+      "template": "T2_lit_quote",
+      "subtype": "Literary quotation illustrates a claim about a character’s outlook (bad luck singles him out); distractors include the same speaker’s other gloomy remarks",
+      "tier": "medium",
+      "passage": "Spreading the News is a 1904 play by Lady Gregory. Early in the play, which takes place on the outskirts of a country fair in Ireland, a farmer named Bartley Fallon reveals his gloomy conviction that he is personally singled out for bad luck: ______",
+      "stem": "Which quotation from Spreading the News most effectively illustrates the claim?",
+      "options": [
+        "“And it’s a great expense for a poor man to be buried in America.”",
+        "“If there’s ever any misfortune coming to this world, it’s on myself it pitches, like a flock of crows on seed potatoes.”",
+        "“Leave off talking of misfortunes, and listen to Jack Smith that is coming the way, and he singing.”",
+        "“I’m thinking if I’ll be living at the end of twenty years, it’s a very old man I’ll be then!”"
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The claim is that Bartley believes misfortune targets him in particular. In choice B he says that any misfortune that comes into the world lands on him, the way crows settle on seed potatoes, which shows exactly that belief.",
+      "distractors": {
+        "A": {
+          "recipe": "OFF: gloomy remark on a different subject",
+          "why_wrong": "Bartley is fretting about the cost of a burial in America, not claiming that bad luck seeks him out."
+        },
+        "C": {
+          "recipe": "LURE: shares the word 'misfortunes'",
+          "why_wrong": "The speaker is telling someone to stop talking about misfortunes; the line does not show anyone believing that bad luck singles him out."
+        },
+        "D": {
+          "recipe": "OFF: same speaker, a different gloomy thought",
+          "why_wrong": "Bartley complains that in twenty years he would be very old, which is a sour remark about aging, not a belief that misfortune targets him."
+        }
+      },
+      "models": [
+        "2.20",
+        "2.10",
+        "2.26"
+      ],
+      "sources": [
+        {
+          "what": "Lady Gregory, Seven Short Plays (1909), 'Spreading the News' (first produced at the opening of the Abbey Theatre, 27 December 1904), Project Gutenberg eBook 41653; all four quotations from the opening scene",
+          "url": "https://www.gutenberg.org/ebooks/41653"
+        }
+      ],
+      "notes": "Quotations copied from the Gutenberg text with straight apostrophes made curly; the stage direction before option D’s line (With a deep sigh) is omitted. Option C is spoken by Mrs. Fallon.",
+      "word_count": 43,
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [
+          "'at a crowded country fair' changed to 'on the outskirts of a country fair' (the scene direction; Bartley calls it 'a scattered sort of a fair')"
+        ],
+        "status": "fixed",
+        "facts_note": "all quotations verbatim against Gutenberg 41653; A, B, D are Bartley's, C is Mrs. Fallon's"
+      }
+    },
+    {
+      "id": "command_of_evidence.T2_lit_quote.medium.w3b2_13",
+      "template": "T2_lit_quote",
+      "subtype": "Literary quotation illustrates a two-part contrast claim (rejects abundance, drawn to a stark landscape)",
+      "tier": "medium",
+      "passage": "“Wild Peaches” is a 1921 poem by Elinor Wylie. After imagining an idyllic existence amid the abundant fruit and game of Maryland’s Eastern Shore, the speaker unexpectedly reveals that such extravagant plenty repels her and that she is drawn instead to a starker, more restrained landscape: ______",
+      "stem": "Which quotation from “Wild Peaches” most effectively illustrates the claim?",
+      "options": [
+        "“Peaches grow wild, and pigs can live in clover; / A barrel of salted herrings lasts a year; / The spring begins before the winter’s over.”",
+        "“The autumn frosts will lie upon the grass / Like bloom on grapes of purple-brown and gold. / The misted early mornings will be cold; / The little puddles will be roofed with glass.”",
+        "“Down to the Puritan marrow of my bones / There’s something in this richness that I hate. / I love the look, austere, immaculate, / Of landscapes drawn in pearly monotones.”",
+        "“There’s something in my very blood that owns / Bare hills, cold silver on a sky of slate, / A thread of water, churned to milky spate / Streaming through slanted pastures fenced with stones.”"
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The claim has two parts: the speaker dislikes the Eastern Shore’s plenty, and she prefers a plainer landscape. In choice C she says there is something in “this richness” that she hates and that she loves the “austere, immaculate” look of landscapes in “pearly monotones,” which covers both parts.",
+      "distractors": {
+        "A": {
+          "recipe": "HALF: the abundance only",
+          "why_wrong": "These lines describe the plenty of the Eastern Shore but show no dislike of it and no attraction to a starker landscape."
+        },
+        "B": {
+          "recipe": "LURE: cold imagery inside the lush setting",
+          "why_wrong": "The frost and cold mornings are part of the speaker’s description of the Eastern Shore’s autumn, painted in rich colors; they do not show her rejecting that place."
+        },
+        "D": {
+          "recipe": "HALF: the stark landscape only",
+          "why_wrong": "The speaker feels bound to bare hills and stony pastures, but these lines do not say she is repelled by the abundance she has imagined."
+        }
+      },
+      "models": [
+        "2.37",
+        "2.20",
+        "2.26"
+      ],
+      "sources": [
+        {
+          "what": "Elinor Wylie, Nets to Catch the Wind (1921), 'Wild Peaches', sections 2 and 4, Project Gutenberg eBook 6682",
+          "url": "https://www.gutenberg.org/ebooks/6682"
+        }
+      ],
+      "notes": "Quotations copied from the Gutenberg text with straight apostrophes made curly.",
+      "word_count": 47,
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [],
+        "status": "pass",
+        "facts_note": "all quotations verbatim against Gutenberg 6682 (sections 2 and 4)"
+      }
+    },
+    {
+      "id": "command_of_evidence.Q1_P3_pairwise.medium.w3b2_14",
+      "template": "Q1_P3_pairwise",
+      "subtype": "Data completion (a contrasting pairwise comparison that completes a 'whereas' sentence)",
+      "tier": "medium",
+      "passage": "Along an 18-kilometer stretch of the Trans-Canada Highway in Alberta, Canada, fencing steers wildlife toward wide overpasses that cross above the road and narrower underpasses beneath it. Ecologists Anthony Clevenger and Nigel Waltho monitored two overpasses and eleven underpasses for nearly three years and found that use of the two kinds of structures differed by species: for example, whereas elk visits were about twice as numerous at the underpasses as at the overpasses, ______",
+      "stem": "Which choice most effectively uses data from the table to complete the example?",
+      "options": [
+        "black bear visits were about twice as numerous at the overpasses as at the underpasses.",
+        "cougar visits were about twice as numerous at the underpasses as at the overpasses.",
+        "wolf visits were more numerous at the overpasses than at the underpasses.",
+        "deer visits were about twice as numerous at the overpasses as at the underpasses."
+      ],
+      "answer_letter": "D",
+      "table": {
+        "title": "Wildlife Visits to Highway Crossings in Alberta, 1997–2000",
+        "columns": [
+          "Species",
+          "Visits to 2 overpasses",
+          "Visits to 11 underpasses"
+        ],
+        "rows": [
+          [
+            "Elk",
+            "640",
+            "1,302"
+          ],
+          [
+            "Deer",
+            "1,086",
+            "543"
+          ],
+          [
+            "Black bear",
+            "10",
+            "103"
+          ],
+          [
+            "Cougar",
+            "12",
+            "105"
+          ],
+          [
+            "Wolf",
+            "8",
+            "43"
+          ]
+        ],
+        "note": null
+      },
+      "figure": null,
+      "explanation": "The sentence needs a species whose pattern is the reverse of the elk’s. According to the table, deer made 1,086 visits to the overpasses and 543 to the underpasses, about twice as many at the overpasses, so choice D completes the contrast.",
+      "distractors": {
+        "A": {
+          "recipe": "WDIR: comparison reversed",
+          "why_wrong": "Black bears visited the underpasses far more often (103 visits) than the overpasses (10 visits)."
+        },
+        "B": {
+          "recipe": "INACC: wrong ratio, and no contrast",
+          "why_wrong": "Cougar visits were about nine times as numerous at the underpasses (105 against 12), and a pattern in the same direction as the elk’s would not complete the contrast."
+        },
+        "C": {
+          "recipe": "WDIR: comparison reversed",
+          "why_wrong": "Wolves made 43 visits to the underpasses and only 8 to the overpasses."
+        }
+      },
+      "models": [
+        "2.18",
+        "2.27",
+        "2.24"
+      ],
+      "sources": [
+        {
+          "what": "Clevenger and Waltho 2005, Biological Conservation 121: 453-464, Conservation Evidence summary: 18-km stretch of the four-lane Trans-Canada Highway in Alberta, November 1997 to August 2000; 2 overpasses (50 m wide): elk 640, deer 1,086, black bear 10, grizzly 9, wolf 8, cougar 12 visits; 11 underpasses: elk 1,302, deer 543, cougar 105, black bear 103, wolf 43, grizzly 6",
+          "url": "https://conservationevidencejournal.com/individual-study/7480"
+        }
+      ],
+      "notes": "The highway section is in Banff National Park; the passage gives only the province, as the source does. Grizzly bears left out of the table.",
+      "word_count": 74,
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 10,
+        "fixes": [],
+        "status": "pass",
+        "facts_note": "Conservation Evidence summary: all ten visit counts, 18 km, 1997-2000"
+      }
+    },
+    {
+      "id": "command_of_evidence.Q1_P5_control.medium.w3b2_15",
+      "template": "Q1_P5_control",
+      "subtype": "Data completion (treated against control on the measure the sentence names)",
+      "tier": "medium",
+      "passage": "Corn earworms, the caterpillars of a nocturnal moth, feed on developing corn kernels and leave damaged ears vulnerable to fungal infection. To estimate how much insect-eating bats protect corn, biologists Josiah Maine and Justin Boyles constructed netted enclosures over sections of cornfields, closing the netting every night to exclude bats and reopening it every morning so that birds could continue foraging. Compared with neighboring open plots, the enclosed plots suffered more extensive pest damage: for example, ______",
+      "stem": "Which choice most effectively uses data from the table to complete the example?",
+      "options": [
+        "ears from the enclosed plots averaged 5.82 damaged kernels, while ears from the open plots averaged 3.74.",
+        "ears from the open plots averaged 0.303 corn earworm larvae, while ears from the enclosed plots averaged 0.191.",
+        "20% of ears from the enclosed plots had fungal growth, while 4.82% of ears from the open plots did.",
+        "ears from both kinds of plots contained about 4 parts per million of fumonisin, a toxin produced by fungi."
+      ],
+      "answer_letter": "A",
+      "table": {
+        "title": "Corn Ears from Plots with and without Bats, 2014",
+        "columns": [
+          "Measure",
+          "Plots enclosed at night",
+          "Open plots"
+        ],
+        "rows": [
+          [
+            "Corn earworm larvae per ear",
+            "0.303",
+            "0.191"
+          ],
+          [
+            "Damaged kernels per ear",
+            "5.82",
+            "3.74"
+          ],
+          [
+            "Ears with fungal growth (%)",
+            "20",
+            "12"
+          ],
+          [
+            "Fumonisin, a fungal toxin (parts per million)",
+            "4.82",
+            "4.15"
+          ]
+        ],
+        "note": null
+      },
+      "figure": null,
+      "explanation": "The sentence calls for an example of the enclosed plots suffering more damage. According to the table, ears from the enclosed plots averaged 5.82 damaged kernels, compared with 3.74 for ears from the open plots, so choice A completes the example.",
+      "distractors": {
+        "B": {
+          "recipe": "WDIR: values swapped between conditions",
+          "why_wrong": "The enclosed plots, not the open plots, averaged 0.303 larvae per ear; the open plots averaged 0.191."
+        },
+        "C": {
+          "recipe": "INACC: misplaced value",
+          "why_wrong": "4.82 is the fumonisin level in the enclosed plots, not a percentage of ears; 12% of ears from the open plots had fungal growth."
+        },
+        "D": {
+          "recipe": "IRREL: sameness offered as an example of difference",
+          "why_wrong": "Treating the two fumonisin levels as about the same would not show that the enclosed plots suffered more damage, and the enclosed plots’ level (4.82) is actually higher than the open plots’ (4.15)."
+        }
+      },
+      "models": [
+        "2.5",
+        "2.14",
+        "2.19"
+      ],
+      "sources": [
+        {
+          "what": "Maine and Boyles 2015, PNAS 112(40): 12438-12443, 'Bats initiate vital agroecological interactions in corn': six 20 m x 20 m x 7 m exclosures, netting drawn back by day for birds and closed at night; 2014: 0.303 vs 0.191 earworm larvae per ear, 5.82 vs 3.74 damaged kernels per ear, 20% vs 12% of ears with fungal growth, fumonisin 4.82 vs 4.15 ppm (exclosure vs control)",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4603461"
+        }
+      ],
+      "notes": "Values are the paper’s 2014 means; standard errors omitted.",
+      "word_count": 77,
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 8,
+        "fixes": [],
+        "status": "pass",
+        "facts_note": "PMC4603461: all 2014 values, nets closed at night"
+      }
+    },
+    {
+      "id": "command_of_evidence.Q2_P5_control.medium.w3b2_16",
+      "template": "Q2_P5_control",
+      "subtype": "Data description (treatment against two comparison groups, one a control for marking in general)",
+      "tier": "medium",
+      "passage": "In northern Botswana, near the Okavango Delta, lions and leopards occasionally kill cattle, and farmers sometimes retaliate by killing the predators. Because these carnivores typically ambush prey that appears unaware of them, Cameron Radford, Neil Jordan, and colleagues investigated whether eyes painted on cattle’s hindquarters would deter attacks. In 14 herds, the researchers painted artificial eyes on some cattle, painted simple crosses on others, and left the remainder unmarked. The team concluded that the painted eyes protected cattle more effectively than the crosses did.",
+      "stem": "Which choice best describes data from the table that support the researchers’ conclusion?",
+      "options": [
+        "The 15 unmarked cattle killed by lions and leopards were more than three times as many as the 4 cattle with painted crosses that were killed.",
+        "None of the 683 cattle with painted eyes were killed by lions or leopards, whereas 4 of the 543 cattle with painted crosses were killed.",
+        "More of the cattle with painted crosses were killed by lions or leopards than were unmarked cattle.",
+        "The group of cattle with painted eyes was larger than the group with painted crosses but smaller than the unmarked group."
+      ],
+      "answer_letter": "B",
+      "table": {
+        "title": "Cattle Killed by Lions and Leopards in Northern Botswana, 2015–2018",
+        "columns": [
+          "Marking",
+          "Number of cattle",
+          "Number killed"
+        ],
+        "rows": [
+          [
+            "Painted eyes",
+            "683",
+            "0"
+          ],
+          [
+            "Painted crosses",
+            "543",
+            "4"
+          ],
+          [
+            "No marking",
+            "835",
+            "15"
+          ]
+        ],
+        "note": null
+      },
+      "figure": null,
+      "explanation": "The conclusion compares painted eyes with painted crosses. According to the table, none of the 683 cattle with painted eyes were killed, while 4 of the 543 cattle with crosses were, even though the group with crosses was smaller. Choice B makes that comparison.",
+      "distractors": {
+        "A": {
+          "recipe": "IRREL: accurate comparison of the wrong groups",
+          "why_wrong": "The numbers are accurate, but comparing unmarked cattle with crossed cattle says nothing about the painted eyes."
+        },
+        "C": {
+          "recipe": "INACC: misread rows",
+          "why_wrong": "Only 4 cattle with painted crosses were killed, far fewer than the 15 unmarked cattle."
+        },
+        "D": {
+          "recipe": "IRREL: group sizes instead of outcomes",
+          "why_wrong": "The group sizes are described accurately, but they say nothing about how many cattle in each group were killed."
+        }
+      },
+      "models": [
+        "2.25",
+        "2.3",
+        "3.1"
+      ],
+      "sources": [
+        {
+          "what": "Radford et al. 2020, Communications Biology 3: 430, 'Artificial eyespots on cattle reduce predation by large carnivores': 14 herds near the Okavango Delta, 2015-2018; 683 eyespot, 543 cross-marked and 835 unmarked cattle; ambush predator (lion and leopard) kills 0, 4 and 15",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7414152"
+        }
+      ],
+      "notes": "Counts include only lion and leopard kills, as in the paper’s main analysis (one hyena kill per group excluded). Cross-marks were added in 2017.",
+      "word_count": 84,
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 6,
+        "fixes": [],
+        "status": "pass",
+        "facts_note": "PMC7414152: 14 herds, 683/543/835 cattle, 0/4/15 killed"
+      }
+    },
+    {
+      "id": "command_of_evidence.Q1_P1_lookup.medium.w3b2_17",
+      "template": "Q1_P1_lookup",
+      "subtype": "Data completion (one cell, chosen by row and column)",
+      "tier": "medium",
+      "passage": "Many of the oldest African baobab trees have recently collapsed and died. Using radiocarbon dating, chemist Adrian Patrut and colleagues estimated the ages of enormous baobabs throughout southern Africa and also measured each tree’s girth, the circumference of its trunk. According to the table, the Chapman baobab had a girth of ______",
+      "stem": "Which choice most effectively uses data from the table to complete the text?",
+      "options": [
+        "22.6 meters.",
+        "25.90 meters.",
+        "25.50 meters.",
+        "18.9 meters."
+      ],
+      "answer_letter": "B",
+      "table": {
+        "title": "Four of the Oldest African Baobabs",
+        "columns": [
+          "Tree (country)",
+          "Girth (meters)",
+          "Height (meters)",
+          "Estimated age (years)"
+        ],
+        "rows": [
+          [
+            "Panke (Zimbabwe)",
+            "25.50",
+            "15.5",
+            "more than 2,500"
+          ],
+          [
+            "Holboom (Namibia)",
+            "35.10",
+            "30.2",
+            "1,800"
+          ],
+          [
+            "Chapman baobab (Botswana)",
+            "25.90",
+            "22.6",
+            "1,400"
+          ],
+          [
+            "Platland tree (South Africa)",
+            "34.11",
+            "18.9",
+            "1,100"
+          ]
+        ],
+        "note": null
+      },
+      "figure": null,
+      "explanation": "In the row for the Chapman baobab, the girth column reads 25.90 meters, so choice B completes the text.",
+      "distractors": {
+        "A": {
+          "recipe": "INACC: wrong column",
+          "why_wrong": "22.6 meters is the Chapman baobab’s height, not its girth."
+        },
+        "C": {
+          "recipe": "WGRP: wrong row",
+          "why_wrong": "25.50 meters is the girth of Panke, not of the Chapman baobab."
+        },
+        "D": {
+          "recipe": "WGRP and wrong column",
+          "why_wrong": "18.9 meters is the height of the Platland tree."
+        }
+      },
+      "models": [
+        "2.41"
+      ],
+      "sources": [
+        {
+          "what": "Patrut et al. 2018, Nature Plants 4: 423-426, 'The demise of the largest and oldest African baobabs', Table 1 (postprint): Panke girth 25.50 m, height 15.5 m, age +2500; Holboom 35.10 m, 30.2 m, 1800; Chapman baobab 25.90 m, 22.6 m, 1400; Platland tree 34.11 m, 18.9 m, 1100; 9 of the 13 oldest and 5 of the 6 largest died or lost their oldest parts over 12 years",
+          "url": "https://repository.up.ac.za/items/8aedef7f-f71e-4a01-ab40-2990e8ab99f8/full"
+        }
+      ],
+      "notes": "Girth is circumference at 1.30 m. Ages are the paper’s calculated ages of the tree or oldest stem.",
+      "word_count": 52,
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [],
+        "status": "pass",
+        "facts_note": "Patrut et al. postprint table: girths 25.50, 35.10, 25.90, 34.11"
+      }
+    },
+    {
+      "id": "command_of_evidence.Q1_P1_lookup.easy.w3b2_18",
+      "template": "Q1_P1_lookup",
+      "subtype": "Data completion (one cell, found from the row named in the text)",
+      "tier": "easy",
+      "passage": "Particle colliders speed up beams of tiny particles around rings and then smash them together so that physicists can study what the collisions produce. While writing about the history of these machines, a student made a table of five colliders. According to the table, TRISTAN, which operated in Japan from 1987 to 1995, had a ring with a circumference of ______",
+      "stem": "Which choice most effectively uses data from the table to complete the statement?",
+      "options": [
+        "3.016 kilometers.",
+        "6.336 kilometers.",
+        "0.948 kilometers.",
+        "27 kilometers."
+      ],
+      "answer_letter": "A",
+      "table": {
+        "title": "Five Particle Colliders",
+        "columns": [
+          "Collider",
+          "Laboratory",
+          "Years of operation",
+          "Ring circumference (kilometers)"
+        ],
+        "rows": [
+          [
+            "ISR",
+            "CERN",
+            "1971–1984",
+            "0.948"
+          ],
+          [
+            "SppS",
+            "CERN",
+            "1981–1991",
+            "6.9"
+          ],
+          [
+            "TRISTAN",
+            "KEK",
+            "1987–1995",
+            "3.016"
+          ],
+          [
+            "LEP",
+            "CERN",
+            "1989–2000",
+            "27"
+          ],
+          [
+            "HERA",
+            "DESY",
+            "1992–2007",
+            "6.336"
+          ]
+        ],
+        "note": null
+      },
+      "figure": null,
+      "explanation": "In the TRISTAN row, the ring circumference column reads 3.016 kilometers, so choice A completes the statement.",
+      "distractors": {
+        "B": {
+          "recipe": "WGRP: wrong row",
+          "why_wrong": "6.336 kilometers is the circumference of HERA’s ring, not TRISTAN’s."
+        },
+        "C": {
+          "recipe": "WGRP: wrong row",
+          "why_wrong": "0.948 kilometers is the circumference of the ISR’s ring."
+        },
+        "D": {
+          "recipe": "WGRP: wrong row",
+          "why_wrong": "27 kilometers is the circumference of LEP’s ring, which operated from 1989 to 2000."
+        }
+      },
+      "models": [
+        "1.30",
+        "1.38",
+        "1.43"
+      ],
+      "sources": [
+        {
+          "what": "List of accelerators in particle physics (collider tables): ISR, CERN, 1971-1984, 948 m around; SppS, CERN, 1981-1984, 6.9 km around; TRISTAN, KEK, 1987-1995, circular 3016 m; LEP, CERN, 1989-2000, 27 km; HERA, DESY, 1992-2007, 6336 m",
+          "url": "https://en.wikipedia.org/wiki/List_of_accelerators_in_particle_physics"
+        },
+        {
+          "what": "SppS operated at CERN from 1981 to 1991 (the list's 1981-1984 is wrong)",
+          "url": "https://en.wikipedia.org/wiki/Super_Proton%E2%80%93Antiproton_Synchrotron"
+        }
+      ],
+      "notes": "KEK is in Tsukuba, Japan; DESY in Hamburg, Germany; CERN near Geneva.",
+      "word_count": 61,
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [
+          "SppS years corrected from 1981-1984 to 1981-1991 (it ran as a collider until 1991); source added"
+        ],
+        "status": "fixed",
+        "facts_note": "TRISTAN, KEK, 1987-1995, 3016 m confirmed on the Wikipedia list"
+      }
+    },
+    {
+      "id": "command_of_evidence.T1_single.easy.w3b2_19",
+      "template": "T1_single",
+      "subtype": "Hypothetical finding supports a causal claim (one-step operationalization with a comparison group)",
+      "tier": "easy",
+      "passage": "In 2000, the Mexican state of Coahuila began a program called Piso Firme, which replaced the dirt floors in poor families’ homes with cement floors. Economists Matias Cattaneo, Sebastian Galiani, Paul Gertler, and colleagues compared families in Coahuila with similar families in the neighboring state of Durango, where the program had not yet begun. The researchers claim that cement floors improved young children’s health, since dirt floors can harbor parasites that children pick up while playing.",
+      "stem": "Which finding, if true, would most directly support the researchers’ claim?",
+      "options": [
+        "Parents in Coahuila whose homes received cement floors reported being considerably more satisfied with their housing than parents in Durango reported being.",
+        "Installing a cement floor in a typical home in Coahuila took workers only a few days.",
+        "Homes in the Durango comparison group were, on average, slightly larger than homes in the Coahuila group.",
+        "Young children in homes that received cement floors had fewer parasitic infections than young children in comparable homes in Durango did."
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The researchers claim that cement floors improved young children’s health by removing a source of parasites. Choice D reports that children in homes with the new floors had fewer parasitic infections than similar children whose homes kept dirt floors, which is the result the claim predicts.",
+      "distractors": {
+        "A": {
+          "recipe": "OFF: adults’ satisfaction, not children’s health",
+          "why_wrong": "Parents’ satisfaction with their housing does not show any change in children’s health."
+        },
+        "B": {
+          "recipe": "OFF: installation time",
+          "why_wrong": "How quickly a floor was installed says nothing about its effect on children’s health."
+        },
+        "C": {
+          "recipe": "OFF: house size",
+          "why_wrong": "A difference in house size is not a difference in children’s health and does not involve the floors."
+        }
+      },
+      "models": [
+        "1.29",
+        "1.41",
+        "1.17"
+      ],
+      "sources": [
+        {
+          "what": "Cattaneo, Galiani, Gertler, Martinez, Titiunik 2009, AEJ: Economic Policy 1(1): 75-105, 'Housing, Health, and Happiness': Mexico’s Piso Firme program replaced dirt floors with cement; comparison of Torreon (Coahuila) with Gomez Palacio and Lerdo (Durango); reductions in parasitic infestations, diarrhea and anemia in young children and improved cognitive development",
+          "url": "https://newsarchive.berkeley.edu/news/media/releases/2009/03/10_floors.shtml"
+        }
+      ],
+      "notes": "Program start year 2000 in Coahuila per the paper’s background; the comparison households were in the same metropolitan area across the state line.",
+      "word_count": 76,
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 2,
+        "fixes": [],
+        "status": "pass",
+        "facts_note": "Berkeley release: Piso Firme from 2000 in Coahuila, comparison across the Durango line, Gertler, Cattaneo, Galiani and others; fewer parasites, children's health gains"
+      }
+    },
+    {
+      "id": "command_of_evidence.Q1_P2_extreme.easy.w3b2_20",
+      "template": "Q1_P2_extreme",
+      "subtype": "Data completion (largest bar)",
+      "tier": "easy",
+      "passage": "Tuvalu, a Pacific nation of low-lying atolls, is frequently described as extremely vulnerable to rising seas. Yet geographer Paul Kench and colleagues discovered that between 1971 and 2014, the land area of eight of Tuvalu’s nine atolls increased. Of the atolls shown in the graph, the one whose land area increased by the largest percentage was ______",
+      "stem": "Which choice most effectively uses data from the graph to complete the statement?",
+      "options": [
+        "Funafuti.",
+        "Vaitupu.",
+        "Nukufetau.",
+        "Niutao."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": {
+        "kind": "bar graph",
+        "title": "Change in Land Area of Six Atolls in Tuvalu, 1971–2014",
+        "x_axis": "Atoll",
+        "y_axis": "Increase in land area (%)",
+        "description": "One bar per atoll; y-axis 0 to 7 in steps of 1. Niutao: about 0.1. Nanumaga: about 1.6. Nui: about 2.2. Vaitupu: about 2.4. Funafuti: about 3.9. Nukufetau: about 6.2, the tallest bar.",
+        "data": [
+          {
+            "series": "Increase in land area (%)",
+            "points": [
+              [
+                "Niutao",
+                0.14
+              ],
+              [
+                "Nanumaga",
+                1.56
+              ],
+              [
+                "Nui",
+                2.22
+              ],
+              [
+                "Vaitupu",
+                2.35
+              ],
+              [
+                "Funafuti",
+                3.85
+              ],
+              [
+                "Nukufetau",
+                6.17
+              ]
+            ]
+          }
+        ]
+      },
+      "explanation": "The tallest bar in the graph belongs to Nukufetau, whose land area grew by about 6.2%, more than any other atoll shown.",
+      "distractors": {
+        "A": {
+          "recipe": "WGRP: second-tallest bar",
+          "why_wrong": "Funafuti’s land area grew by about 3.9%, less than Nukufetau’s 6.2%."
+        },
+        "B": {
+          "recipe": "WGRP: a middle bar",
+          "why_wrong": "Vaitupu’s land area grew by only about 2.4%."
+        },
+        "D": {
+          "recipe": "WDIR: the smallest bar",
+          "why_wrong": "Niutao’s land area grew the least of the atolls shown, by only about 0.1%."
+        }
+      },
+      "models": [
+        "1.9",
+        "1.21",
+        "1.31"
+      ],
+      "sources": [
+        {
+          "what": "Kench, Ford, Owen 2018, Nature Communications 9: 605, Table 1: land area change 1971-2014 by atoll (Niutao 0.14%, Nanumaga 1.56%, Nui 2.22%, Vaitupu 2.35%, Nukufetau 6.17%, Funafuti 3.85%, Nukulaelae 5.67%); net increase of 73.5 ha (2.9%), land area increase in eight of nine atolls",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC5807422/"
+        }
+      ],
+      "notes": "Six of the nine atolls graphed (Nukulaelae, Nanumea and Niulakita left out).",
+      "word_count": 57,
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 7,
+        "fixes": [],
+        "status": "pass",
+        "facts_note": "PMC5807422 Table 1: all six percentages, eight of nine atolls grew"
+      }
+    },
+    {
+      "id": "command_of_evidence.Q1_P3_pairwise.easy.w3b2_21",
+      "template": "Q1_P3_pairwise",
+      "subtype": "Data completion (two comparisons, full set of combinations)",
+      "tier": "easy",
+      "passage": "About 13,000 years ago, many large North American mammals, such as mammoths, died out. Paleontologists Julie Meachen and Joshua Samuels compared leg bones of coyotes from California’s Rancho La Brea tar pits, which predate those extinctions, with bones of modern southern California coyotes and found that coyotes became smaller after the extinctions. Compared with the modern coyotes, the Rancho La Brea coyotes had ______",
+      "stem": "Which choice most effectively uses data from the table to complete the statement?",
+      "options": [
+        "a longer average humerus and a longer average femur.",
+        "a longer average humerus and a shorter average femur.",
+        "a shorter average humerus and a longer average femur.",
+        "a shorter average humerus and a shorter average femur."
+      ],
+      "answer_letter": "A",
+      "table": {
+        "title": "Average Lengths of Two Leg Bones in Coyotes",
+        "columns": [
+          "Coyotes",
+          "Humerus, upper front leg (millimeters)",
+          "Femur, upper hind leg (millimeters)"
+        ],
+        "rows": [
+          [
+            "Rancho La Brea, before the extinctions",
+            "167.33",
+            "185.08"
+          ],
+          [
+            "Modern southern California",
+            "154.78",
+            "172.03"
+          ]
+        ],
+        "note": null
+      },
+      "figure": null,
+      "explanation": "According to the table, the Rancho La Brea coyotes’ average humerus (167.33 millimeters) and average femur (185.08 millimeters) were both longer than the modern coyotes’ (154.78 and 172.03 millimeters), so choice A completes the statement.",
+      "distractors": {
+        "B": {
+          "recipe": "WDIR: second comparison reversed",
+          "why_wrong": "The Rancho La Brea coyotes’ femur was longer, not shorter, than the modern coyotes’ (185.08 against 172.03 millimeters)."
+        },
+        "C": {
+          "recipe": "WDIR: first comparison reversed",
+          "why_wrong": "The Rancho La Brea coyotes’ humerus was longer, not shorter, than the modern coyotes’ (167.33 against 154.78 millimeters)."
+        },
+        "D": {
+          "recipe": "WDIR: both comparisons reversed",
+          "why_wrong": "Both bones were longer in the Rancho La Brea coyotes."
+        }
+      },
+      "models": [
+        "1.3",
+        "1.4"
+      ],
+      "sources": [
+        {
+          "what": "Meachen and Samuels 2012, PNAS 109(11): 4191-4196, 'Evolution in coyotes (Canis latrans) in response to the megafaunal extinctions', Table 1 means: humerus length (HuL) Rancho La Brea 167.33, southern California modern 154.78; femur length (FeL) 185.08, 172.03; Pleistocene coyotes were larger and more robust than Holocene populations",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3306717/"
+        }
+      ],
+      "notes": "The source table prints no unit; lengths of 150 to 190 for coyote limb bones can only be millimeters, so the header gives millimeters. Rancho La Brea fossils span roughly 50,000 to 11,000 years ago; most date from before the extinctions.",
+      "word_count": 64,
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [],
+        "status": "pass",
+        "facts_note": "Table 1 means confirmed (PMC3306717 via fetch); the paper prints no unit, millimeters kept since 155 to 185 can only be millimeters for coyote limb bones"
+      }
+    },
+    {
+      "id": "command_of_evidence.Q2_P5_control.easy.w3b2_22",
+      "template": "Q2_P5_control",
+      "subtype": "Data description (two treatments and a control; the conclusion compares the two treatments)",
+      "tier": "easy",
+      "passage": "In rural Rajasthan, India, many children did not get the full course of recommended vaccines, partly because health workers were often absent from village clinics. A team of economists set up reliable monthly vaccination camps in some villages. In some of those villages, families also got a bag of lentils at each visit and a set of plates when a child finished the full course. A third group of villages had no camps. The economists concluded that the small rewards raised immunization rates beyond what the camps alone achieved.",
+      "stem": "Which choice best describes data from the table that support the economists’ conclusion?",
+      "options": [
+        "In villages with camps only, 18% of children were fully immunized, compared with 6% of children in villages with neither camps nor rewards.",
+        "In villages with camps and rewards, 39% of children were fully immunized, compared with 18% of children in villages with camps only.",
+        "In villages with neither camps nor rewards, only 6% of children were fully immunized.",
+        "In villages with camps and rewards, the cost per fully immunized child was higher than it was in villages with camps only."
+      ],
+      "answer_letter": "B",
+      "table": {
+        "title": "Results of an Immunization Program in Rural Rajasthan",
+        "columns": [
+          "Village group",
+          "Children fully immunized (%)",
+          "Cost per fully immunized child (US dollars)"
+        ],
+        "rows": [
+          [
+            "Camps and rewards",
+            "39",
+            "27.94"
+          ],
+          [
+            "Camps only",
+            "18",
+            "55.83"
+          ],
+          [
+            "Neither camps nor rewards",
+            "6",
+            "not applicable"
+          ]
+        ],
+        "note": null
+      },
+      "figure": null,
+      "explanation": "The conclusion compares villages that had camps and rewards with villages that had camps alone. According to the table, 39% of children were fully immunized in villages with camps and rewards, compared with 18% in villages with camps only, so choice B supports the conclusion.",
+      "distractors": {
+        "A": {
+          "recipe": "IRREL: accurate comparison of the wrong groups",
+          "why_wrong": "This comparison shows the effect of the camps, not of the rewards, which the conclusion is about."
+        },
+        "C": {
+          "recipe": "PART: one group alone",
+          "why_wrong": "The control villages’ rate alone cannot show that the rewards added anything to the camps."
+        },
+        "D": {
+          "recipe": "INACC: misread column",
+          "why_wrong": "The cost per fully immunized child was lower, about $27.94, in villages with camps and rewards than in villages with camps only, about $55.83."
+        }
+      },
+      "models": [
+        "1.22",
+        "1.28"
+      ],
+      "sources": [
+        {
+          "what": "Banerjee, Duflo, Glennerster, Kothari 2010, BMJ 340: c2220, cluster-randomised evaluation in rural Rajasthan (134 villages): full immunisation 39% (camps plus incentives: lentils at each immunisation, plates on completion), 18% (reliable camps only), 6% (control); cost per fully immunised child US$27.94 vs US$55.83",
+          "url": "https://doi.org/10.1136/bmj.c2220"
+        }
+      ],
+      "notes": "Researchers left unnamed in the passage. Nurse absenteeism at government health centers in the area is the background the paper gives for the reliable camps.",
+      "word_count": 89,
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [],
+        "status": "pass",
+        "facts_note": "Europe PMC abstract of Banerjee et al. 2010: 39, 18, 6 percent; lentils and plates; $28 vs $56"
+      }
+    }
+  ],
+  "done": true
+}

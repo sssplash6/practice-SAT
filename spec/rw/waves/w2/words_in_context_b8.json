@@ -1,0 +1,1341 @@
+{
+  "skill": "Words in Context",
+  "slug": "words_in_context",
+  "part": "w2b8",
+  "domain": "Craft and Structure",
+  "plan": {
+    "templates": [
+      {
+        "code": "B6",
+        "name": "Blank completion, phrase options (word + preposition, a/an + word)"
+      },
+      {
+        "code": "B1",
+        "name": "Blank completion, restatement clue"
+      },
+      {
+        "code": "B3",
+        "name": "Blank completion, contrast clue (including received view then finding)"
+      },
+      {
+        "code": "B5",
+        "name": "Blank completion, negated frame"
+      },
+      {
+        "code": "B2",
+        "name": "Blank completion, cause or consequence clue"
+      },
+      {
+        "code": "M1",
+        "name": "Most nearly mean, underlined word"
+      },
+      {
+        "code": "B4",
+        "name": "Blank completion, example-pinned clue"
+      }
+    ]
+  },
+  "items": [
+    {
+      "id": "words_in_context.B6.hard.w2b8_01",
+      "template": "B6",
+      "subtype": "Blank completion: phrase options",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Conventional wisdom holds that waiting is ______ customer satisfaction, so faster service should always please customers more. Yet in experiments simulating online travel searches, Ryan Buell and Michael Norton found that people preferred a site that made them wait while showing the work it was doing over one returning identical results instantly.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "a spur to",
+        "a drain on",
+        "a barometer of",
+        "unrelated to"
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "“A drain on” means something that steadily uses up or reduces. The text says that, according to conventional wisdom, faster service should always please customers more, which follows only if waiting reduces satisfaction. The word “Yet” then sets Buell and Norton’s finding, that people sometimes preferred to wait, against that conventional view.",
+      "distractors": {
+        "A": {
+          "recipe": "reversal (ANT), trait of the finding rather than of the view",
+          "why_wrong": "If waiting were a spur to satisfaction, slower service would please customers more, the opposite of the conventional view that faster service is always better. A spur to satisfaction is closer to what Buell and Norton found, but the blank describes the view their finding is set against."
+        },
+        "C": {
+          "recipe": "right field, wrong relation (CONNOT)",
+          "why_wrong": "Calling waiting a barometer of satisfaction would make it only a measure or sign of satisfaction. That would not explain why faster service should always please customers more; the conventional view is that waiting actively lowers satisfaction."
+        },
+        "D": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "If waiting were unrelated to satisfaction, the speed of a service would not matter to customers, so there would be no reason to think faster service should always please them more."
+        }
+      },
+      "models": [
+        "3.5",
+        "3.9",
+        "3.12",
+        "3.17"
+      ],
+      "word_count": 52,
+      "sources": [
+        {
+          "what": "Buell and Norton 2011, The Labor Illusion: How Operational Transparency Increases Perceived Value (Management Science): conventional wisdom and operations theory hold that the longer people wait, the less satisfied they become; when websites signal that they are working, people can prefer slower sites to instant ones even when results are identical; five experiments simulated online travel and online dating services",
+          "url": "https://ideas.repec.org/a/inm/ormnsc/v57y2011i9p1564-1579.html"
+        }
+      ],
+      "notes": "Subject: social science (operations, consumer behavior). Key letter B. Steps: 2 (the “so” clause says faster service should always please more, so waiting must reduce satisfaction; “Yet” marks the finding as against this view, which keeps the finding’s trait, a spur, out of the blank). Distractors: one reversal that describes the finding rather than the conventional view (a spur to), one near miss of relation (a barometer of), one reversal (unrelated to). Raw freq.txt ranks: a spur to 6,779; a drain on 9,534; a barometer of 17,917; unrelated to 40,068. Plain key by design (band 6 is reasoning with plain keys, spec/rw/band7/words_in_context.md section 2).",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [],
+        "status": "pass"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "Two steps: the so clause makes waiting lower satisfaction, and Yet sets the finding against that view, so the finding's trait (a spur to) is the trap. Plain key as band 6 uses (3.12, 3.17); options one band (raw 6,779 to 40,068, corrected 5,823 to 17,917), key not the rarest. a barometer of is a relation near miss that cannot yield the so clause; no distractor fits read loosely."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "B",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "words_in_context.B1.hard.w2b8_02",
+      "template": "B1",
+      "subtype": "Blank completion: restatement",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Fourth-generation bamboo artist Tanabe Chikuunsai IV distinguishes his craft works, which are made to endure, from his installations, which are ______ by design. After each exhibition, his studio dismantles the installation and reuses about 95 percent of its bamboo strips in subsequent works, so that what remains of the piece is chiefly the impression it made on viewers.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "durable",
+        "utilitarian",
+        "impermanent",
+        "monumental"
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "“Impermanent” means not lasting. The text contrasts Tanabe’s craft works, which are made to endure, with his installations, and then explains that each installation is taken apart after its exhibition, its bamboo reused, so that only viewers’ impressions of it remain. The installations are therefore impermanent by design.",
+      "distractors": {
+        "A": {
+          "recipe": "reversal (ANT), trait of the other side",
+          "why_wrong": "Durability belongs to Tanabe’s craft works, which the text says are made to endure. The installations are contrasted with them and are dismantled after each exhibition, so they are not durable."
+        },
+        "B": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "The text says nothing about the installations serving a practical purpose; it describes only how long they last, being taken apart after each exhibition."
+        },
+        "D": {
+          "recipe": "right field, wrong nuance (CONNOT)",
+          "why_wrong": "“Monumental” suggests something imposing and lasting, like a monument. The text says nothing about the installations’ size and stresses instead that each one is dismantled after its exhibition, leaving only an impression."
+        }
+      },
+      "models": [
+        "3.4",
+        "3.8",
+        "3.16",
+        "3.22"
+      ],
+      "word_count": 58,
+      "sources": [
+        {
+          "what": "Seiko Presage museum interview with fourth-generation bamboo artist Tanabe Chikuunsai IV: after each exhibition the studio carefully dismantles the installation and reuses about 95% of the bamboo strips in future works; craft works are made to endure; of an installation, what remains is the impression it has made on people",
+          "url": "https://www.seikowatches.com/uk-en/products/presage/special/thepresagemuseum2026/bamboo"
+        }
+      ],
+      "notes": "Subject: humanities (sculpture, craft). Key letter C. Steps: 2 (contrast with craft works made to endure, then the dismantling and reuse after each exhibition; the reader must turn both into a statement about duration). Ephemeral avoided: it is an existing option. Distractors: the other side’s trait (durable), one unsupported (utilitarian), one wrong-connotation word that also implies permanence (monumental). Raw freq.txt ranks: durable 30,496; utilitarian 31,827; impermanent absent (modern word); monumental 23,472. Transient avoided: w2b7_06 offers transitory.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [],
+        "status": "pass"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "One-step contrast with made to endure plus the dismantling sentence, like 3.4 (variable). Options one band (raw 23,472 to 31,827; impermanent unseen in freq.txt but built on permanent); band-5 guard passes (one distractor under 10,000 corrected). Easy end of band 6; dropping made to endure would let monumental (large scale) fit the first sentence, so not hardened that way."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "C",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "words_in_context.B3.hard.w2b8_03",
+      "template": "B3",
+      "subtype": "Blank completion: contrast",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Parrots and crows rival primates on complex cognitive tasks despite their smaller brains, which seemed to imply that birds make efficient use of ______ neural resources. But Seweryn Olkowicz and colleagues discovered that parrots and songbirds pack neurons so densely that a macaw’s forebrain holds more neurons than a macaque monkey’s.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "meager",
+        "copious",
+        "specialized",
+        "auxiliary"
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "“Meager” means small in amount. The text says that birds’ smaller brains seemed to imply something about their neural resources, and the word “But” introduces a finding that contradicts it: parrots and songbirds pack in so many neurons that a macaw’s forebrain has more than a macaque’s. The implied view, then, was that birds have only meager neural resources.",
+      "distractors": {
+        "B": {
+          "recipe": "reversal (ANT), trait of the finding",
+          "why_wrong": "Copious neural resources are what Olkowicz and colleagues found. The blank, however, states what small brains seemed to imply, and “But” sets the finding against that implication, so the implication cannot already be that the resources are copious."
+        },
+        "C": {
+          "recipe": "right field, fails the contrast (CONNOT)",
+          "why_wrong": "Small brains might suggest that birds’ neurons work differently, but the finding introduced by “But” concerns how many neurons birds have. Only a claim about amount is contradicted by learning that a macaw’s forebrain holds more neurons than a macaque’s."
+        },
+        "D": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Nothing in the text suggests that small brains implied supplementary or backup neural resources; the contrast with the finding is about how many neurons birds have."
+        }
+      },
+      "models": [
+        "3.1",
+        "3.7",
+        "3.10",
+        "3.20"
+      ],
+      "word_count": 51,
+      "sources": [
+        {
+          "what": "Vanderbilt University news on Olkowicz et al. 2016 (PNAS), senior author Suzana Herculano-Houzel with Pavel Nemec: parrots and crows match primates on complex tasks, raising the question of how birds with small brains manage it; birds have far more forebrain neurons than expected, smaller and more densely packed; the macaw has more forebrain neurons than the macaque; parrot and songbird brains hold about twice as many neurons as primate brains of the same mass",
+          "url": "https://news.vanderbilt.edu/2016/06/13/study-gives-new-meaning-to-the-term-bird-brain/"
+        }
+      ],
+      "notes": "Subject: natural science (neuroscience, ornithology). Key letter A. Lead author Seweryn Olkowicz credited (the press release names the senior author). Received view, then finding: the blank sits in the implied view and the finding’s trait (copious) is offered as the reversal, as in 3.10. Steps: 2 (small brains implied something about neural resources; the finding, introduced by But, is about neuron numbers, so the implication was scarcity). Near miss: specialized (the older idea that bird brains are wired differently) fails because the finding contradicts amount, not wiring. Raw freq.txt ranks: meager 20,689; copious 16,770 (reviewer: replaced ample 4,736, which sat a band below the other three); specialized 34,794; auxiliary 28,354.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [
+          "distractor B ample (freq.txt rank 4,736, a band below the other three) replaced with copious (16,770); why_wrong B and notes updated"
+        ],
+        "status": "fixed"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "Received view then finding, as 3.10: small brains implied scant resources and But overturns the amount. After the swap all four past 10,000 raw (16,770 to 34,794), 3 of 4 corrected (specialized 6,551), mean log10 4.18; key not the rarest. specialized is the near miss the finding does not contradict. Band-6 reasoning with no distractor past 50,000, so not band 7."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "A",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "words_in_context.B5.hard.w2b8_04",
+      "template": "B5",
+      "subtype": "Blank completion: negated frame",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "Deadlines are often credited with motivating people to complete important assignments, but research by Meng Zhu, Yang Yang, and Christopher Hsee suggests that mere urgency can also make decisions less ______: participants often chose a task offering a smaller payoff over one offering a larger payoff because the former appeared about to expire.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "improvident",
+        "convivial",
+        "magnanimous",
+        "sagacious"
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "“Sagacious” means showing sound judgment. The text says that participants often picked a task with a smaller payoff over one with a larger payoff only because the smaller-payoff task seemed about to expire. Giving up the larger reward for no real reason is poor judgment, so urgency made their choices less sagacious.",
+      "distractors": {
+        "A": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "“Improvident” means failing to provide for the future. Choices that were less improvident would be wiser, but the text describes participants giving up a larger payoff because a smaller one seemed about to expire, which is less wise, not more."
+        },
+        "B": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "“Convivial” means friendly and sociable. The text is about how people choose between tasks with different payoffs, not about how sociable their choices are."
+        },
+        "C": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "“Magnanimous” means generous toward others. The participants’ choices affected only their own payoffs, and the text says nothing about generosity."
+        }
+      },
+      "models": [
+        "d7807ec8",
+        "d5ad34f0",
+        "6017ae31",
+        "d3ca5d59"
+      ],
+      "word_count": 53,
+      "sources": [
+        {
+          "what": "Zhu, Yang, and Hsee 2018, The mere urgency effect (Journal of Consumer Research 45(3)): across five experiments, participants chose tasks with objectively lower payoffs over higher-payoff tasks when the lower-payoff task merely appeared urgent (an illusion of expiration), violating dominance",
+          "url": "https://academic.oup.com/jcr/article/45/3/673/4925353"
+        }
+      ],
+      "notes": "Subject: social science (behavioral economics). Key letter D. Band-7 moves: negation hidden in a comparative (less ______), as in d7807ec8; the key is an evaluation the reader must infer from the described choice (giving up a larger payoff for a spurious deadline); rare option set with the band-7 pattern of plainly unsupported rare distractors (band7 file section 2, point 4). Rarity (raw freq.txt): improvident 29,905; convivial 26,167; magnanimous 17,613; sagacious 15,764; all four past 10,000, three past 15,000; mean log10 rank 4.34 (band-7 target 4.2 or more). Judicious, prudent and capricious avoided: existing options or official keys.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass"
+      },
+      "band7": {
+        "verdict": "band 7",
+        "why": "Negation hidden in a comparative (less ______), as in d7807ec8 (sanguine); the key is inferred from the described choice (a smaller payoff taken because it seemed about to expire). All four options past 10,000 (15,764 to 29,905), mean log10 4.33, so checks 1 and 3 pass; check 2 fails (rarest distractor 29,905, under 50,000). improvident is a reversal trap for a reader who misses less. Band-5 guard passes (key is the commonest option)."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "D",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 7
+    },
+    {
+      "id": "words_in_context.B2.hard.w2b8_05",
+      "template": "B2",
+      "subtype": "Blank completion: cause or consequence",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "Christopher Costello and colleagues found that fisheries managed with catch shares, which guarantee each holder a fixed portion of the total allowable catch, collapsed roughly half as frequently as others. By assuring fishers of their portion in advance, catch shares may ______ the scramble to harvest fish before competitors can.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "precipitate",
+        "subsidize",
+        "defuse",
+        "ratify"
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "To “defuse” a situation is to make it less tense or dangerous. The text explains that catch shares guarantee each holder a fixed portion of the allowable catch in advance. A fisher whose portion is already assured has no need to race rivals for fish, so catch shares may take the pressure out of that scramble, which fits their link to fewer collapses.",
+      "distractors": {
+        "A": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "To precipitate the scramble would be to bring it on suddenly. A guaranteed portion removes the reason to race rivals, so it would calm the scramble, not set it off, and the text links catch shares to fewer collapses."
+        },
+        "B": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "To subsidize something is to pay part of its cost. The text says nothing about catch shares paying for fishing; it says they guarantee each holder a portion of the catch."
+        },
+        "D": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "To ratify something is to give it formal approval, as when a government ratifies a treaty. The text does not suggest that catch shares approve the scramble; by assuring fishers of their portion in advance, they remove the reason to race rivals for fish."
+        }
+      },
+      "models": [
+        "0e033f9b",
+        "571cf537",
+        "7bc05fa2",
+        "a756aa95",
+        "e26d23c4",
+        "3.25"
+      ],
+      "word_count": 50,
+      "sources": [
+        {
+          "what": "ScienceDaily (UCSB release) on Costello, Gaines and Lynham 2008, Science: catch shares guarantee each holder a fixed portion of a fishery’s total allowable catch; open access leads to a free-for-all race to fish and collapse; nearly a third of open-access fisheries have collapsed, about half that rate under catch shares; shares create an incentive to protect the stock",
+          "url": "https://www.sciencedaily.com/releases/2008/09/080918170357.htm"
+        }
+      ],
+      "notes": "Subject: social science (resource economics). Key letter C. Band-7 moves: the cause sits in a “By” clause in the blank’s sentence (recipe for B2); the key is a familiar word in a transferred sense (defuse a bomb, here a race), as in buttress or stymie; rare option set. Rarity (raw freq.txt): precipitate 14,384; subsidize 74,107; defuse absent from freq.txt (modern word, undercounted); ratify 44,154 (reviewer: replaced adjudicate, which a loose reader could take as settling the contest by assigning portions); all four past 10,000, one past 50,000 (subsidize). Combined gate: 3 of 4 options past 10,000. Two-step chain: guaranteed portion, so no reason to race, so the race is calmed.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [
+          "distractor D adjudicate replaced with ratify (44,154 raw, 17,822 corrected): read loosely, catch shares that assign portions in advance could be said to settle (adjudicate) the contest; why_wrong D and notes updated"
+        ],
+        "status": "fixed"
+      },
+      "band7": {
+        "verdict": "band 7",
+        "why": "Cause in a By clause in the blank's sentence, like 0e033f9b (prudent) and a756aa95 (peripheral); key in a transferred sense (defuse a bomb, here a race). Options precipitate 14,384, ratify 44,154 raw (17,822 corrected), subsidize 74,107, defuse unseen in freq.txt (a corpus gap that inflates the mean log, 4.82); checks 1, 2 (subsidize) and 3 pass. All three distractors plainly fail on the text but are rare, the band-7 pattern in section 2, point 4."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "C",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 7
+    },
+    {
+      "id": "words_in_context.B5.medium.w2b8_06",
+      "template": "B5",
+      "subtype": "Blank completion: negated frame",
+      "tier": "medium",
+      "passage": "Comparing the scores of millions of students who completed a standardized test more than once, economist R. Jisung Park and colleagues determined that hot school days diminish students’ learning; that harm is not ______, however: in schools equipped with air conditioning, heat’s detrimental effect on learning largely disappeared.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "unavoidable",
+        "measurable",
+        "trivial",
+        "gradual"
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "“Unavoidable” means impossible to prevent. The text says that hot school days reduce learning but that in schools with air conditioning, heat’s effect largely disappeared. Because air conditioning can prevent the harm, the harm is not unavoidable.",
+      "distractors": {
+        "B": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "Park and colleagues measured the harm by comparing students’ test scores, so it is measurable; saying it is not measurable contradicts the text."
+        },
+        "C": {
+          "recipe": "negation flip (ANT)",
+          "why_wrong": "Saying the harm is not trivial would mean it is serious, which would not contrast with the finding that hot days diminish learning, as “however” requires; the evidence about air conditioning shows instead that the harm can be prevented."
+        },
+        "D": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "The text says nothing about how quickly the harm develops; the evidence about air conditioning concerns whether the harm can be prevented, not its pace."
+        }
+      },
+      "models": [
+        "2.10",
+        "2.11",
+        "2.13",
+        "2.14",
+        "2.21"
+      ],
+      "word_count": 48,
+      "sources": [
+        {
+          "what": "Park, Goodman, Hurwitz, and Smith 2020, Heat and Learning (American Economic Journal: Economic Policy 12(2)): student fixed effects models using 10 million students who retook the PSAT show that hotter school days before the test reduce scores; school air conditioning largely offsets the effect",
+          "url": "https://www.aeaweb.org/doi/10.1257/pol.20180612"
+        }
+      ],
+      "notes": "Subject: social science (economics of education). Key letter A. Lead author R. Jisung Park. The test is named only as a standardized test (the PSAT in the source). Negated frame (not ______, however) as in 2.21. Universal and lasting avoided as options: “not universal” would also fit (air-conditioned schools were spared) and “not lasting” could be misread with “disappeared”. Raw freq.txt ranks: unavoidable 16,320; measurable 32,842; trivial 6,377; gradual 9,216.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "words_in_context.B6.medium.w2b8_07",
+      "template": "B6",
+      "subtype": "Blank completion: phrase options",
+      "tier": "medium",
+      "passage": "The male gametes of the alga Gracilaria gracilis lack any means of propulsion, so researchers presumed that currents transported them to female plants. But Emma Lavaut and colleagues discovered that isopods, small crustaceans, act as ______ the alga, collecting gametes while foraging on male strands and transferring them to females.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "parasites of",
+        "rivals of",
+        "hosts of",
+        "couriers for"
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "A courier is someone who carries and delivers things. The text says the isopods collect the alga’s male gametes while foraging on male strands and transfer them to female plants, doing the carrying that researchers had assumed currents did. They therefore act as couriers for the alga.",
+      "distractors": {
+        "A": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "The text does not say the isopods live off the alga at its expense; it says they carry its gametes to female plants, which helps the alga reproduce."
+        },
+        "B": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Nothing in the text suggests that the isopods compete with the alga for anything; they carry its gametes from male to female plants."
+        },
+        "C": {
+          "recipe": "reversal of the relation (ANT)",
+          "why_wrong": "The text describes the isopods foraging on the alga’s strands, so if anything the alga is the host and the isopods its visitors; nothing suggests the alga lives on or in the isopods."
+        }
+      },
+      "models": [
+        "2.4",
+        "2.7",
+        "2.18",
+        "2.20",
+        "2.28"
+      ],
+      "word_count": 50,
+      "sources": [
+        {
+          "what": "ScienceAlert on Lavaut et al. 2022, Science (Emma Lavaut, Sorbonne University): the red alga Gracilaria gracilis has male gametes with no flagellum to propel them; it was thought to rely on ocean currents; the isopod Idotea balthica inadvertently collects spermatia while foraging on male strands and transfers them to female plants; fertilization about 20 times higher with isopods present",
+          "url": "https://www.sciencealert.com/crustaceans-found-pollinating-seaweeds-in-an-ocean-first"
+        }
+      ],
+      "notes": "Subject: natural science (marine biology). Key letter D. The paper’s title is Pollinators of the sea; the key is the figurative couriers for, since w2b7_08 offers pollinate. Steps: restatement after the blank plus the contrast with currents. Distractors: two unsupported relations (parasites, rivals), one reversed relation (hosts). Predators avoided (official option predatory). Raw freq.txt ranks: parasites of 25,843; rivals of 12,309; hosts of 9,629; couriers for 25,509.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [
+          "“tiny crustaceans” made “small crustaceans” (ScienceAlert: small marine crustaceans)"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "words_in_context.B1.medium.w2b8_08",
+      "template": "B1",
+      "subtype": "Blank completion: restatement",
+      "tier": "medium",
+      "passage": "In 1962 textile artist Lenore Tawney designed an “open reed” for her loom, an innovation permitting her to ______ the silhouette of a weaving during its construction: the contours of her subsequent “woven forms” could therefore change while the weaving proceeded rather than being predetermined.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "freeze",
+        "vary",
+        "duplicate",
+        "exhibit"
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "“Vary” means change. The text explains that with the open reed, the contours of Tawney’s woven forms were not predetermined but could change while the weaving proceeded. The device therefore let her vary the silhouette of a weaving during its construction.",
+      "distractors": {
+        "A": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "To freeze a shape is to fix it so that it cannot change. The text says the open reed let the contours of each piece change as the weaving proceeded rather than being predetermined, the opposite of freezing them."
+        },
+        "C": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "The text does not say the device let Tawney copy shapes; it says the contours of each piece could change as the weaving proceeded."
+        },
+        "D": {
+          "recipe": "topic echo (ASSOC)",
+          "why_wrong": "Exhibiting is something done with a finished work. The text describes what the device allowed during construction: contours that could change while the weaving proceeded."
+        }
+      },
+      "models": [
+        "2.5",
+        "2.9",
+        "2.16",
+        "2.23",
+        "2.27"
+      ],
+      "word_count": 45,
+      "sources": [
+        {
+          "what": "Lenore Tawney Foundation chronology: 1955 begins open-warp weavings; 1962 designs an open reed for her loom, allowing the shape of the works to change as they are woven; 1963 twenty-two new woven forms exhibited in Woven Forms at the Museum of Contemporary Crafts",
+          "url": "https://lenoretawney.org/lenore-tawney/chronology/"
+        }
+      ],
+      "notes": "Subject: humanities (textile art). Key letter B. Restatement after a colon, as in 2.5; the key needs the reader to see that contours which change during weaving are being varied. Distractors: one reversal (freeze), one unsupported (duplicate), one topic echo (exhibit). Standardize avoided (official option standardized). Raw freq.txt ranks: freeze 12,794; vary 13,917; duplicate 17,771; exhibit 8,746.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "words_in_context.B2.medium.w2b8_09",
+      "template": "B2",
+      "subtype": "Blank completion: cause or consequence",
+      "tier": "medium",
+      "passage": "From the 1930s until 1943, the Works Progress Administration employed carriers, predominantly women, to deliver library materials to isolated households throughout mountainous eastern Kentucky. Because creek beds and animal trails frequently constituted the only roads, the carriers depended chiefly on horses and mules, animals capable of ______ terrain that automobiles could not.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "barricading",
+        "charting",
+        "negotiating",
+        "excavating"
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "To “negotiate” terrain is to travel over it successfully. The text says that creek beds and animal trails were often the only roads, so the carriers depended on horses and mules, animals that could get across ground automobiles could not. The animals were therefore capable of negotiating such terrain.",
+      "distractors": {
+        "A": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "The carriers depended on horses and mules because the animals could get through the region; animals capable of barricading the terrain would block travel rather than make it possible."
+        },
+        "B": {
+          "recipe": "topic echo (ASSOC)",
+          "why_wrong": "Charting terrain means mapping it. The text explains that the carriers depended on animals that could travel where automobiles could not, not on animals that could map the routes."
+        },
+        "D": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "The text says nothing about digging; the point is that horses and mules could travel along creek beds and trails where automobiles could not."
+        }
+      },
+      "models": [
+        "2.17",
+        "2.22",
+        "2.24",
+        "2.25"
+      ],
+      "word_count": 52,
+      "sources": [
+        {
+          "what": "WVTF/NPR feature on the Pack Horse Librarians of Eastern Kentucky: the WPA provided the carriers’ salaries; carriers, mostly women, set out by horseback or mule, following animal paths and fence lines; a creek bed would be the road; the program ended in 1943",
+          "url": "https://www.wvtf.org/2018-09-13/the-pack-horse-librarians-of-eastern-kentucky"
+        }
+      ],
+      "notes": "Subject: history (1930s United States). Key letter C. Start year left as the 1930s (sources give 1935 or 1936). Medium difficulty from a familiar word in a secondary sense (negotiate as travel over, not bargain), with the cause in a Because clause. Obstructing avoided (official option obstructed). Raw freq.txt ranks: barricading 50,862; charting 62,279; negotiating 36,193; excavating 41,998.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 5,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "words_in_context.M1.medium.w2b8_10",
+      "template": "M1",
+      "subtype": "Most nearly mean: underlined word",
+      "tier": "medium",
+      "passage": "The following text is adapted from Helen Hunt Jackson’s 1884 novel Ramona. Alessandro, a young man employed on the ranch, has become devoted to Ramona.\n\nWhen [Alessandro] played or sang he sat on the upper step of the stairs leading down to the garden. He sat always, when Ramona was there, in the spot which best <u>commanded</u> a view of her face.",
+      "stem": "As used in the text, what does the word “commanded” most nearly mean?",
+      "options": [
+        "Afforded",
+        "Ordered",
+        "Deserved",
+        "Governed"
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "In the text, “commanded” means afforded, or provided. Alessandro always sat in the spot that gave him the best view of Ramona’s face.",
+      "distractors": {
+        "B": {
+          "recipe": "another sense of the target (SENSE)",
+          "why_wrong": "“Commanded” can mean ordered, as when an officer commands troops to advance, but a spot on the stairs does not order anything; it provides a view."
+        },
+        "C": {
+          "recipe": "another sense of the target (SENSE)",
+          "why_wrong": "“Commanded” can mean deserved, as in commanding respect, but the text is about where Alessandro sat to see Ramona, not about what the spot deserved."
+        },
+        "D": {
+          "recipe": "another sense of the target (SENSE)",
+          "why_wrong": "“Commanded” can mean governed or controlled, as in commanding an army, but the spot on the stairs does not control anything; it gives Alessandro a good view of Ramona’s face."
+        }
+      },
+      "models": [
+        "2.3",
+        "2.19"
+      ],
+      "word_count": 62,
+      "sources": [
+        {
+          "what": "Project Gutenberg text of Ramona (Helen Hunt Jackson, 1884), the veranda scene while Felipe recovers; two sentences copied exactly with one sentence between them omitted and “he” glossed as [Alessandro]",
+          "url": "https://www.gutenberg.org/cache/epub/2802/pg2802.txt"
+        }
+      ],
+      "notes": "Subject: literature (novel, 1884, public domain). Key letter A. Adapted: the omitted sentence is “He also had a secret, which he thought all his own, in regard to the positions he chose.” All three distractors are other senses of command. Raw freq.txt ranks: Afforded 4,804; Ordered 1,535; Deserved 4,451; Governed 10,291. Controlled and Directed avoided (both could be read loosely into “commanded a view”); Demanded avoided (official option Demanding).",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 2,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "words_in_context.B1.easy.w2b8_11",
+      "template": "B1",
+      "subtype": "Blank completion: restatement",
+      "tier": "easy",
+      "passage": "Indian sculptor Mrinalini Mukherjee took a largely ______ approach to her fiber sculptures. Rather than designing compositions in preliminary drawings or weaving them on a loom, she constructed simple armatures and knotted dyed fiber onto them.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "mechanical",
+        "cooperative",
+        "methodical",
+        "intuitive"
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "“Intuitive” means guided by instinct and feeling rather than by a plan worked out in advance. The text says Mukherjee did not design her compositions in preliminary drawings or weave them on a loom but knotted dyed fiber onto simple armatures, so her approach was largely intuitive.",
+      "distractors": {
+        "A": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "A mechanical approach would rely on machines or fixed procedures. The text says Mukherjee did not use a loom and instead knotted fiber onto simple armatures herself."
+        },
+        "B": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "The text does not mention anyone working with Mukherjee; it describes how she herself constructed armatures and knotted fiber."
+        },
+        "C": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "A methodical approach follows a careful plan, but the text says Mukherjee did not plan her compositions in preliminary drawings."
+        }
+      },
+      "models": [
+        "1.11",
+        "1.23",
+        "1.51",
+        "1.53"
+      ],
+      "word_count": 36,
+      "sources": [
+        {
+          "what": "Berkshire Fine Arts review of Phenomenal Nature: Mrinalini Mukherjee (Met Breuer, 2019): she did not make drawings or use a loom for weaving but built simple armatures, with an intuitive, labor-intensive approach knotting fiber, similar to hemp and dyed in earth-toned colors, into structures inspired by nature",
+          "url": "https://berkshirefinearts.com/06-17-2019_phenomenal-nature-at-the-metropolitan-museum-of-art.htm"
+        }
+      ],
+      "notes": "Subject: humanities (sculpture). Key letter D. Restatement after a colon. Two reversals (mechanical, methodical), one unsupported (cooperative); collaborative and commercial avoided (official options collaboration, commercialization). Raw freq.txt ranks: mechanical 6,725; cooperative 49,531; methodical 18,651; intuitive 20,681.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "words_in_context.B1.easy.w2b8_12",
+      "template": "B1",
+      "subtype": "Blank completion: restatement",
+      "tier": "easy",
+      "passage": "Ornithologist Kimberly Bostwick found that the male club-winged manakin’s courtship song is a kind of ______ performance. The bird rubs specialized wing feathers together more than 100 times per second, causing them to resonate and produce a hum resembling a violin note.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "vocal",
+        "instrumental",
+        "scripted",
+        "collective"
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "“Instrumental” describes sound made by an instrument rather than a voice. The text says the manakin’s courtship song is produced by rubbing wing feathers together, which resonate to make a hum like a violin note. Its feathers work like an instrument, so the performance is instrumental.",
+      "distractors": {
+        "A": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "A vocal performance is made with the voice. Although the text calls the sound a song, it says the sound comes from the bird rubbing its wing feathers together so that they resonate, as an instrument does."
+        },
+        "C": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "The text says nothing about the performance following a set script; it explains how the sound is produced by the wing feathers."
+        },
+        "D": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "The text describes a single male making the sound with his own wings; nothing suggests a group performs it together."
+        }
+      },
+      "models": [
+        "1.9",
+        "1.10",
+        "1.23",
+        "1.27"
+      ],
+      "word_count": 42,
+      "sources": [
+        {
+          "what": "Cornell Chronicle on Bostwick et al. (Proceedings of the Royal Society B): Kim Bostwick, Cornell Museum of Vertebrates curator and lead author; the male club-winged manakin attracts the female by rubbing specialized wing feathers more than 100 cycles per second, producing a high hum similar to a sustained violin note; the feathers resonate at a particular frequency",
+          "url": "https://news.cornell.edu/node/273561"
+        }
+      ],
+      "notes": "Subject: natural science (ornithology). Key letter B. Restatement in the following sentence (feathers that resonate to make a violin-like hum); “song” makes vocal the trap. Reviewer: “not a song” removed, since the source calls it a courtship song. Raw freq.txt ranks: vocal 18,876; instrumental 23,291; scripted 26,776; collective 21,764.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [
+          "removed “is not a song but”: the Cornell source calls the sound a courtship song; the passage now says the song is a kind of ______ performance and adds that the rubbed feathers resonate (in the source); explanation, why_wrong A and notes updated"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "words_in_context.B1.easy.w2b8_13",
+      "template": "B1",
+      "subtype": "Blank completion: restatement",
+      "tier": "easy",
+      "passage": "Julie Dash’s Daughters of the Dust (1991), which depicts three generations of a Gullah family preparing to migrate north from their Sea Island home in 1902, was a ______ work. It was the first feature directed by an African American woman to receive theatrical distribution in the United States.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "pioneering",
+        "derivative",
+        "lighthearted",
+        "regional"
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "“Pioneering” means being among the first to do something new. The text explains that Daughters of the Dust was the first feature directed by an African American woman to receive theatrical distribution in the United States, so it was a pioneering work.",
+      "distractors": {
+        "B": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "A derivative work copies earlier ones. The text presents the film as a first of its kind, the opposite of derivative."
+        },
+        "C": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "The text gives no sign that the film is meant to be funny; it describes the family it follows and the film’s place as a first."
+        },
+        "D": {
+          "recipe": "topic echo (ASSOC)",
+          "why_wrong": "The film’s family lives on one of the Sea Islands, but the sentence that follows the blank explains a national first, its theatrical distribution in the United States, not its regional setting."
+        }
+      },
+      "models": [
+        "1.6",
+        "1.13",
+        "1.15",
+        "1.39"
+      ],
+      "word_count": 49,
+      "sources": [
+        {
+          "what": "Wikipedia, Daughters of the Dust: 1991 independent drama written, directed and produced by Julie Dash; set in 1902, it centers on three generations of Gullah women of the Peazant family as they prepare to migrate from the rural South to the North (a Gullah family’s preparation to leave their Sea Island home); the first feature film directed by an African-American woman to receive a theatrical release in the United States",
+          "url": "https://en.wikipedia.org/wiki/Daughters_of_the_Dust"
+        }
+      ],
+      "notes": "Subject: humanities (film). Key letter A. Restatement in the following sentence. Raw freq.txt ranks: pioneering 60,736 (modern word, undercounted); derivative 31,569; lighthearted 51,636; regional 18,939.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [
+          "“contemplating migration from an island off the South Carolina coast” made “preparing to migrate north from their Sea Island home”: the Wikipedia source places the island in South Carolina in its lede but off Georgia in its plot, and says the family prepares to migrate north; why_wrong D and source note updated"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "words_in_context.B1.easy.w2b8_14",
+      "template": "B1",
+      "subtype": "Blank completion: restatement",
+      "tier": "easy",
+      "passage": "Since 1975, artist Amalia Mesa-Bains has made installations that ______ the home altars found in many Mexican American households: like such altars, her works bring together family photographs, dried flowers, and other found objects, though they are not intended for religious use.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "supplant",
+        "mock",
+        "echo",
+        "consecrate"
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "To “echo” something is to repeat or resemble it. The text explains that, like home altars, Mesa-Bains’s installations bring together family photographs, dried flowers, and other objects, even though they are not intended for religious use. Her works therefore echo the home altars.",
+      "distractors": {
+        "A": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "To supplant something is to take its place. The text does not say her installations replace home altars; it says they resemble them but are not intended for religious use."
+        },
+        "B": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "To mock the altars would be to ridicule them. The text describes the installations as gathering family photographs and other cherished items like the altars do, with no hint of ridicule."
+        },
+        "D": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "To consecrate something is to make it sacred. The text says her installations are not intended for religious use, so they do not consecrate the altars."
+        }
+      },
+      "models": [
+        "1.9",
+        "1.13",
+        "1.23",
+        "1.39"
+      ],
+      "word_count": 42,
+      "sources": [
+        {
+          "what": "Wikipedia, Amalia Mesa-Bains: she began creating altar installations in 1975; her installations reference home altars and ofrendas; though they take the form of an altar they are not intended for religious use; materials include found objects, dried flowers and family photographs",
+          "url": "https://en.wikipedia.org/wiki/Amalia_Mesa-Bains"
+        }
+      ],
+      "notes": "Subject: humanities (installation art). Key letter C. Restatement after a colon (like such altars). Replace and restore avoided (official options replacing, restored). Raw freq.txt ranks: supplant 28,305; mock 5,607; echo 4,393; consecrate 27,636.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [
+          "“though they are made for galleries rather than for religious use” made “though they are not intended for religious use” (source wording; galleries not in the source); explanation and why_wrong A and D updated"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "words_in_context.M1.easy.w2b8_15",
+      "template": "M1",
+      "subtype": "Most nearly mean: underlined word",
+      "tier": "easy",
+      "passage": "The following text is from Margaret Deland’s 1888 novel John Ward, Preacher. Helen has unexpectedly returned to the house of her uncle, Dr. Howe, on a stormy night.\n\nHe lifted Helen’s bonnet, still heavy with rain, and laid it on the cloak she had thrown across a chair, and then stood and looked at them as though they could explain the mystery of her return. The tall clock on the stairs <u>struck</u> eleven, and outside the storm beat and complained.",
+      "stem": "As used in the text, what does the word “struck” most nearly mean?",
+      "options": [
+        "Attacked",
+        "Sounded",
+        "Impressed",
+        "Removed"
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "In the text, “struck” means sounded. The tall clock rang out eleven times to mark the hour while Dr. Howe stood puzzling over Helen’s return.",
+      "distractors": {
+        "A": {
+          "recipe": "another sense of the target (SENSE)",
+          "why_wrong": "“Struck” can mean attacked, as when an enemy strikes, but a clock does not attack the hour; it sounds it."
+        },
+        "C": {
+          "recipe": "another sense of the target (SENSE)",
+          "why_wrong": "“Struck” can mean impressed, as in an idea striking someone, but the clock is not impressing anyone; it is ringing the hour."
+        },
+        "D": {
+          "recipe": "another sense of the target (SENSE)",
+          "why_wrong": "“Struck” can mean removed, as when a name is struck from a list, but nothing is removed in the text; the clock rings out the hour."
+        }
+      },
+      "models": [
+        "1.1",
+        "1.19",
+        "1.41",
+        "1.45"
+      ],
+      "word_count": 80,
+      "sources": [
+        {
+          "what": "Project Gutenberg text of John Ward, Preacher (Margaret Deland; copyright 1888), Dr. Howe after Helen’s return on a stormy night; excerpt copied exactly",
+          "url": "https://www.gutenberg.org/cache/epub/18478/pg18478.txt"
+        }
+      ],
+      "notes": "Subject: literature (novel, 1888, public domain). Key letter B. All three distractors are other senses of strike. Typography only: the straight apostrophe in Helen’s made curly. Hit avoided as an option: “the clock hit eleven” can mean it reached eleven. Raw freq.txt ranks: Attacked 4,864; Sounded 1,947; Impressed 2,907; Removed 2,025.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 2,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "words_in_context.M1.easy.w2b8_16",
+      "template": "M1",
+      "subtype": "Most nearly mean: underlined word",
+      "tier": "easy",
+      "passage": "The following text is adapted from Jonas Lie’s 1883 novel The Family at Gilje (translated by Samuel Coffin Eastman in 1920). Jörgen, a schoolboy, is studying while his father, the captain, reads.\n\nJörgen raised his head, covered with coarse, yellow hair, from his book.\n\n“I think there are bells on the road,” he gently remarked, “far off.”\n\n“Nonsense! attend to your lesson.”\n\n“The trader’s bells—they are so <u>dull</u> and low,” Jörgen put in again.",
+      "stem": "As used in the text, what does the word “dull” most nearly mean?",
+      "options": [
+        "Boring",
+        "Blunt",
+        "Cloudy",
+        "Muted"
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "In the text, “dull” means muted. Jörgen is describing how the trader’s distant bells sound: not clear and ringing but muted and low.",
+      "distractors": {
+        "A": {
+          "recipe": "another sense of the target (SENSE)",
+          "why_wrong": "“Dull” can mean boring, as in a dull lesson, but Jörgen is describing the sound of bells he hears far off, not whether they are interesting."
+        },
+        "B": {
+          "recipe": "another sense of the target (SENSE)",
+          "why_wrong": "“Dull” can mean blunt, as in a dull knife, but bells heard in the distance have no edge; Jörgen is describing their sound."
+        },
+        "C": {
+          "recipe": "another sense of the target (SENSE)",
+          "why_wrong": "“Dull” can mean cloudy, as in a dull sky, but Jörgen is describing what he hears, not the weather."
+        }
+      },
+      "models": [
+        "1.1",
+        "1.14",
+        "1.45",
+        "1.54",
+        "1.56"
+      ],
+      "word_count": 74,
+      "sources": [
+        {
+          "what": "Project Gutenberg text of The Family at Gilje (Jonas Lie, Familien paa Gilje 1883; translated by Samuel Coffin Eastman, American-Scandinavian Foundation 1920), chapter IV, the evening the trader arrives; sentences copied exactly, with one sentence and one paragraph between them omitted",
+          "url": "https://www.gutenberg.org/cache/epub/55646/pg55646.txt"
+        }
+      ],
+      "notes": "Subject: literature (Norwegian novel in translation, public domain). Key letter D. Adapted: omitted are the sentence beginning “It was the second time he had heard them” and the paragraph beginning “But, notwithstanding he pretended”. Typography only: straight quotes made curly and “--” made a closed em dash. Source line follows the translation format of 1.45. All three distractors are other senses of dull; Faint avoided (it would fit bells far off). Raw freq.txt ranks: Boring 15,907; Blunt 9,226; Cloudy 10,961; Muted 72,725 (common today; the old corpus undercounts it). Muffled avoided (an existing option is muffle).",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 2,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "words_in_context.M1.easy.w2b8_17",
+      "template": "M1",
+      "subtype": "Most nearly mean: underlined word",
+      "tier": "easy",
+      "passage": "The following text is from Charlotte M. Yonge’s 1853 novel The Heir of Redclyffe. Guy, a young man mourning his grandfather’s sudden death, is conversing with Mrs. Edmonstone.\n\n‘Yes,’ he said; ‘how few Sundays ago—’ and there he paused.\n\n‘Ah! you had so little preparation.’\n\n‘None. That very morning he had done business with Markham, and had never been more clear and <u>collected</u>.’",
+      "stem": "As used in the text, what does the word “collected” most nearly mean?",
+      "options": [
+        "Calm",
+        "Fetched",
+        "Saved",
+        "Accumulated"
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "In the text, “collected” means calm. Guy explains that his grandfather’s death came without warning: that very morning his grandfather had handled business and had never seemed more clear-headed and composed.",
+      "distractors": {
+        "B": {
+          "recipe": "another sense of the target (SENSE)",
+          "why_wrong": "“Collected” can mean fetched, as in collecting a child from school, but Guy is describing his grandfather’s state of mind that morning, not someone being picked up."
+        },
+        "C": {
+          "recipe": "another sense of the target (SENSE)",
+          "why_wrong": "“Collected” can mean saved, as in collected stamps, but Guy is describing how his grandfather seemed, not something that was kept."
+        },
+        "D": {
+          "recipe": "another sense of the target (SENSE)",
+          "why_wrong": "“Collected” can mean accumulated, as in dust collecting on a shelf, but Guy is describing his grandfather as clear-headed and composed, not something that piled up."
+        }
+      },
+      "models": [
+        "1.4",
+        "1.45",
+        "1.54",
+        "1.56"
+      ],
+      "word_count": 63,
+      "sources": [
+        {
+          "what": "Project Gutenberg text of The Heir of Redclyffe (Charlotte M. Yonge, 1853), Guy speaking with Mrs. Edmonstone about his grandfather’s death; excerpt copied exactly",
+          "url": "https://www.gutenberg.org/cache/epub/2505/pg2505.txt"
+        }
+      ],
+      "notes": "Subject: literature (novel, 1853, public domain). Key letter A. Typography only: “--” made a closed em dash; the novel’s single quotation marks kept. All three distractors are other senses of collect; Gathered avoided (Gathers is the official key of 1.55). Possible overlap for the reviewer: w2b7_16 (Atherton, “features singularly composed”) was not yet written when this was checked; if its key is also Calm, change one of the two. Raw freq.txt ranks: Calm 1,023; Fetched 5,803; Saved 1,285; Accumulated 9,905.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 2,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "words_in_context.B6.easy.w2b8_18",
+      "template": "B6",
+      "subtype": "Blank completion: phrase options",
+      "tier": "easy",
+      "passage": "In studies by Cassie Mogilner and colleagues, participants who spent time helping others subsequently felt less ______ time than participants who wasted time, spent it on themselves, or even received a windfall of free time. Giving time away, it seems, can make time feel more abundant.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "curious about",
+        "proud of",
+        "pressed for",
+        "sure of"
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "Someone “pressed for” time feels they do not have enough of it. The text says that giving time away can make time feel more plentiful, so the people who helped others felt less pressed for time than the people in the other groups.",
+      "distractors": {
+        "A": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "The text says nothing about how interested the participants were in time; it is about whether time felt plentiful."
+        },
+        "B": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "The text does not discuss pride; it says that helping others made time feel more plentiful."
+        },
+        "D": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Feeling less sure of time does not match the text’s conclusion that giving time away made time feel more plentiful; the text is about having enough time, not certainty."
+        }
+      },
+      "models": [
+        "1.2",
+        "1.17",
+        "1.20",
+        "1.43"
+      ],
+      "word_count": 46,
+      "sources": [
+        {
+          "what": "ScienceDaily (APS release) on Mogilner, Chance, and Norton 2012, Psychological Science: lead researcher Cassie Mogilner; spending time on others increased participants’ feelings of time affluence (subjective sense of having time) compared with wasting time, spending time on oneself, and even gaining a windfall of free time",
+          "url": "https://www.sciencedaily.com/releases/2012/07/120713095402.htm"
+        }
+      ],
+      "notes": "Subject: social science (psychology). Key letter C. Phrase options (adjective + preposition), as in 1.2 and 1.3. Restatement in the following sentence. Raw freq.txt ranks: curious about 985; proud of 906; pressed for 1,348; sure of 264.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 2,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "words_in_context.B2.easy.w2b8_19",
+      "template": "B2",
+      "subtype": "Blank completion: cause or consequence",
+      "tier": "easy",
+      "passage": "Over 30 years of collecting cliff swallows killed by vehicles on Nebraska roads, Charles Brown and Mary Bomberger Brown observed such fatalities decline dramatically as the birds’ average wingspan decreased. Shorter wings may enable a swallow to take off more quickly and pivot away from approaching automobiles, helping it ______ traffic.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "slow",
+        "trail",
+        "harm",
+        "dodge"
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "To “dodge” something is to move quickly to avoid it. The text says shorter wings may let a swallow take off more quickly and pivot away from approaching automobiles, which would help it avoid being hit by traffic.",
+      "distractors": {
+        "A": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "The text describes how shorter wings help a swallow get away from cars, not how a bird might make traffic slow down."
+        },
+        "B": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "To trail traffic would be to follow it. The text says shorter wings help a swallow pivot away from approaching automobiles."
+        },
+        "C": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Nothing in the text suggests that swallows harm cars; it is about how the birds avoid being killed by them."
+        }
+      },
+      "models": [
+        "1.5",
+        "1.31",
+        "1.35",
+        "1.44"
+      ],
+      "word_count": 51,
+      "sources": [
+        {
+          "what": "ScienceDaily on Brown and Bomberger Brown 2013 (Current Biology): for 30 years the researchers collected cliff swallows killed on the same Nebraska roads; road-kill mortality declined sharply; today’s swallows are hit less often thanks to shorter wingspans that may help them take off more quickly; shorter wings may help birds pivot away from passing cars",
+          "url": "https://sciencedaily.com/releases/2013/03/130318132627.htm"
+        }
+      ],
+      "notes": "Subject: natural science (evolutionary ecology). Key letter D. Lead author Charles R. Brown. Cause clue in the same sentence. Signal and damage avoided (existing options signaling, damaged). Raw freq.txt ranks: slow 1,163; trail 3,143; harm 1,345; dodge 7,025.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "words_in_context.B2.easy.w2b8_20",
+      "template": "B2",
+      "subtype": "Blank completion: cause or consequence",
+      "tier": "easy",
+      "passage": "During Philadelphia’s 1793 yellow fever epidemic, many Black residents volunteered as nurses for the sick. When publisher Mathew Carey later accused some of them of theft and of extorting wages, Absalom Jones and Richard Allen, leaders of the city’s Black community, published a pamphlet to ______ the volunteers against his charges.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "evacuate",
+        "champion",
+        "quarantine",
+        "condemn"
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "To “champion” people is to speak up for them and defend them. The text says Carey accused some of the volunteer nurses of theft and extortion, and that Jones and Allen responded with a pamphlet set against his charges, so the pamphlet was written to champion the volunteers.",
+      "distractors": {
+        "A": {
+          "recipe": "topic echo (ASSOC)",
+          "why_wrong": "Evacuation belongs to the epidemic setting, but the pamphlet came afterward, in answer to Carey’s charges; it was not a plan to move the volunteers out of the city."
+        },
+        "C": {
+          "recipe": "topic echo (ASSOC)",
+          "why_wrong": "Quarantine belongs to the epidemic setting, but the pamphlet answered Carey’s accusations against the volunteers; it was not a measure to isolate anyone from disease."
+        },
+        "D": {
+          "recipe": "reversal (ANT), action of the wrong party",
+          "why_wrong": "Condemning the volunteers is what Carey did when he accused them. Jones and Allen published their pamphlet against his charges, which means they took the volunteers’ side."
+        }
+      },
+      "models": [
+        "1.5",
+        "1.31",
+        "1.35",
+        "1.44"
+      ],
+      "word_count": 51,
+      "sources": [
+        {
+          "what": "Wikipedia, A Short Account of the Malignant Fever (Mathew Carey): Carey’s pamphlet accused African Americans of theft and of extorting wages; local Black leaders Absalom Jones and Richard Allen felt it did not give sufficient credit to Black residents who volunteered as nurses during the outbreak and published A Narrative of the Proceedings of the Black People, During the Late Awful Calamity in Philadelphia (1794) in response",
+          "url": "https://en.wikipedia.org/wiki/A_Short_Account_of_the_Malignant_Fever"
+        }
+      ],
+      "notes": "Subject: history (early United States). Key letter B. Cause clue (When ... accused). Recruit avoided (“recruit the volunteers against his charges” could be read as rallying them). Burying the dead and the Free African Society left out (not in the source). Raw freq.txt ranks: evacuate 66,408; champion 7,801; quarantine 38,593; condemn 8,146. Defend and imitate avoided (official options Defended, Imitated); vindicate avoided (w2b7_01 offers a vindication of). Accuse avoided: it shares a stem with “accused” in the passage.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "words_in_context.B4.easy.w2b8_21",
+      "template": "B4",
+      "subtype": "Blank completion: example",
+      "tier": "easy",
+      "passage": "The Indonesian mimic octopus, first described in 1998, is a remarkably ______ impersonator: it extends its arms to resemble the venomous spines of a lionfish, flattens its body to resemble a flatfish, and conceals itself in a hole, exposing only two arms, to resemble a sea snake.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "flexible",
+        "clumsy",
+        "hesitant",
+        "unwitting"
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "“Flexible” means able to change easily to suit different situations. The text gives three examples: the octopus extends its arms to resemble a lionfish’s spines, flattens its body to resemble a flatfish, and exposes only two arms to resemble a sea snake. Because it reshapes itself to imitate such different animals, it is a remarkably flexible impersonator.",
+      "distractors": {
+        "B": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "A clumsy impersonator would imitate others poorly, but the text describes three distinct and specific imitations, each achieved by reshaping the octopus’s arms or body."
+        },
+        "C": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Nothing in the text suggests that the octopus hesitates to imitate other animals; the examples show the range of animals it imitates."
+        },
+        "D": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "The text says nothing about whether the octopus is aware of what it is doing; the examples show how many different animals it can imitate."
+        }
+      },
+      "models": [
+        "1.7",
+        "1.18",
+        "1.34",
+        "1.46"
+      ],
+      "word_count": 47,
+      "sources": [
+        {
+          "what": "NBC News (2010) on the Indonesian mimic octopus (Thaumoctopus mimicus), first described by scientists in 1998: to mimic a lionfish it juts its arms out like the fish’s venomous spines; to mimic a sea snake it hides its body in a hole and leaves two arms exposed; it also imitates flatfish and other animals",
+          "url": "https://www.nbcnews.com/news/amp/wbna38885409"
+        }
+      ],
+      "notes": "Subject: natural science (marine biology). Key letter A. Example-pinned clue after a colon: the key is the category the three examples instantiate (range of imitations), so the species name does not give it away. Versatile, adaptable, impersonates, imitates and mimics avoided: existing options. Raw freq.txt ranks: flexible 16,852; clumsy 6,011; hesitant 48,415; unwitting 29,437.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "words_in_context.B5.easy.w2b8_22",
+      "template": "B5",
+      "subtype": "Blank completion: negated frame",
+      "tier": "easy",
+      "passage": "Before asking donors how much they will contribute to help a group of people in need, a fundraiser might first ask how much they would hypothetically give to help one of them. This additional question is far from ______: Christopher Hsee and colleagues found that it substantially increased donations to the group.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "helpful",
+        "polite",
+        "pointless",
+        "fashionable"
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "“Pointless” means serving no purpose. The text says Hsee and colleagues found that asking first about one person greatly increased donations to the group, so the extra question serves a real purpose: it is far from pointless.",
+      "distractors": {
+        "A": {
+          "recipe": "negation flip (ANT)",
+          "why_wrong": "Saying the question is far from helpful would mean it does not help, but the text says it greatly increased donations."
+        },
+        "B": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "The text says nothing about whether the question is courteous; the finding that follows the colon is about its effect on donations."
+        },
+        "D": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "The text does not say whether the question is in style among fundraisers; it reports that the question increased donations."
+        }
+      },
+      "models": [
+        "1.12",
+        "1.28",
+        "1.37",
+        "1.48"
+      ],
+      "word_count": 52,
+      "sources": [
+        {
+          "what": "Chicago Booth Rustandy Center summary of Hsee, Zhang, Lu, and Xu 2013, Unit Asking: A Method to Boost Donations and Beyond (Psychological Science): asking donors to indicate a hypothetical amount for helping one of the needy persons before asking how much they will give to the whole group greatly increases donations for the group",
+          "url": "https://www.chicagobooth.edu/research/rustandy/social-impact-research/research-papers/2013/unit-asking-a-method-to-boost-donations-and-beyond"
+        }
+      ],
+      "notes": "Subject: social science (psychology of giving). Key letter C. Negated frame (far from ______). Costly and familiar avoided as options: “far from costly” is true of the method and “far from familiar” could be read as true of a new method. Raw freq.txt ranks: helpful 10,036; polite 3,171; pointless 45,123; fashionable 2,674.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 2,
+        "fixes": [
+          "“a group of needy children” and “one child” made “a group of people in need” and “one of them”: the Chicago Booth source speaks of needy persons only; explanation updated"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "words_in_context.B3.easy.w2b8_23",
+      "template": "B3",
+      "subtype": "Blank completion: contrast",
+      "tier": "easy",
+      "passage": "Most birds build some kind of nest for their eggs, whether an elaborate woven cup or a shallow depression in the ground. Common murres, however, ______ nest construction entirely: these seabirds breed on extremely narrow cliff ledges, where each egg rests directly on bare rock and is never left unattended.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "relish",
+        "forgo",
+        "hasten",
+        "supervise"
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "To “forgo” something is to do without it. The text contrasts most birds, which build some kind of nest, with common murres, whose eggs rest directly on bare rock on narrow cliff ledges. Murres therefore forgo nest construction entirely.",
+      "distractors": {
+        "A": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "To relish nest construction would be to enjoy it, but the text says murre eggs rest directly on bare rock, which shows that murres build no nests at all."
+        },
+        "C": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Hastening nest construction would mean building nests sooner. The text says murre eggs rest directly on bare rock, so murres do not build nests at any time."
+        },
+        "D": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Supervising nest construction would mean overseeing it, but the text says murre eggs rest on bare rock, without nests, so there is no nest construction to oversee."
+        }
+      },
+      "models": [
+        "1.57",
+        "1.58"
+      ],
+      "word_count": 50,
+      "sources": [
+        {
+          "what": "Hakai Magazine on Birkhead and colleagues’ guillemot egg research: these seabirds, also known as common murres, breed on incredibly narrow cliff ledges and don’t bother with nests; they never leave their egg unattended",
+          "url": "https://hakaimagazine.com/news/nice-egg-whats-point/"
+        },
+        {
+          "what": "Wikipedia, Common murre: they make no nest; the single egg is incubated between the adult’s feet on a bare rock ledge on a cliff face",
+          "url": "https://en.wikipedia.org/wiki/Common_murre"
+        }
+      ],
+      "notes": "Subject: natural science (ornithology). Key letter B. Contrast (however) between most birds and murres, plus restatement after the colon. Raw freq.txt ranks: relish 7,866; forgo 53,109; hasten 6,033; supervise 38,054.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [
+          "added Wikipedia, Common murre as a second source for the bare-rock detail (Hakai confirms narrow cliff ledges, no nests, egg never unattended; its live page blocks fetches, checked via the archived copy)"
+        ],
+        "status": "fixed"
+      }
+    }
+  ]
+}

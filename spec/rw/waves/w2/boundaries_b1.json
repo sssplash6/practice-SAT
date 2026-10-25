@@ -1,0 +1,1441 @@
+{
+  "skill": "Boundaries",
+  "slug": "boundaries",
+  "part": "w2b1",
+  "domain": "Standard English Conventions",
+  "plan": {
+    "templates": [
+      {
+        "code": "S1_period",
+        "name": "Period between independent clauses (second often opens with an introductory phrase)"
+      },
+      {
+        "code": "S1_adverb",
+        "name": "Conjunctive adverb: semicolon or period on the correct side, comma on the other"
+      },
+      {
+        "code": "S2_colon",
+        "name": "Colon after a complete clause before an explanation or specified item"
+      },
+      {
+        "code": "S4_restrictive",
+        "name": "No punctuation with a restrictive clause or restrictive appositive"
+      },
+      {
+        "code": "S1_comma_conj",
+        "name": "Comma plus coordinating conjunction between independent clauses"
+      },
+      {
+        "code": "S3_dash_pair",
+        "name": "Dash pair around a supplementary element"
+      },
+      {
+        "code": "S1_colon_clauses",
+        "name": "Colon between independent clauses (second explains first)"
+      },
+      {
+        "code": "S4_subj_verb",
+        "name": "No punctuation between subject and verb"
+      },
+      {
+        "code": "S3_comma_pair",
+        "name": "Comma or parenthesis pair around a supplementary element"
+      },
+      {
+        "code": "S2_trailing",
+        "name": "Comma before a trailing nonrestrictive modifier"
+      },
+      {
+        "code": "S4_object",
+        "name": "No punctuation between a verb or preposition and its object"
+      },
+      {
+        "code": "S2_intro_comma",
+        "name": "Comma after an introductory element"
+      },
+      {
+        "code": "S6_question",
+        "name": "Question versus statement (word order and end mark)"
+      },
+      {
+        "code": "S5_series",
+        "name": "Items in a series (commas; semicolons when items contain commas)"
+      }
+    ]
+  },
+  "items": [
+    {
+      "id": "boundaries.S1_period.hard.w2b1_01",
+      "template": "S1_period",
+      "subtype": "Joining two independent clauses: period before a long past-participle opener",
+      "tier": "hard",
+      "passage": "In 2007, rather than excavate the Nanhai One where it lay off southern China, archaeologists lifted the whole merchant ship without first unloading its ______ in a steel caisson along with tons of surrounding sediment, the ship was transported to a purpose-built museum, where its contents were carefully excavated.",
+      "stem": "Which choice completes the text so that it conforms to the conventions of Standard English?",
+      "options": [
+        "cargo, encased",
+        "cargo, which was encased",
+        "cargo encased",
+        "cargo. Encased"
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The first sentence ends with “without first unloading its cargo.” The second sentence opens with the participial phrase “Encased in a steel caisson along with tons of surrounding sediment,” which describes its subject, “the ship,” and then gives the main verb “was transported.” A period correctly separates the two sentences.",
+      "distractors": {
+        "A": {
+          "recipe": "comma splice",
+          "why_wrong": "The comma attaches the participial phrase to the first clause, so the main clause “the ship was transported to a purpose-built museum ...” is joined to the first independent clause with only a comma, a comma splice."
+        },
+        "B": {
+          "recipe": "added word creates the error",
+          "why_wrong": "“Which was encased” makes the phrase a description of the cargo inside the first sentence, so the clause “the ship was transported ...” still follows with only a comma, a comma splice."
+        },
+        "C": {
+          "recipe": "misplaced boundary (opener glued to clause 1)",
+          "why_wrong": "With no mark, “encased in a steel caisson” reads as a description of the cargo, but the comma after “sediment” then joins two independent clauses, a comma splice."
+        }
+      },
+      "models": [
+        "3.28",
+        "3.10",
+        "4b424102",
+        "3.32"
+      ],
+      "word_count": 48,
+      "sources": [],
+      "notes": "Subject: history (archaeology). Band-7 checks (band7/boundaries.md section 6): opener of 11 words, a past participle that can describe clause 1's last noun (“cargo encased in a steel caisson” reads naturally in A, B and C); the splice shows only at “the ship was transported,” 11 words after the blank, so the cue is outside a 6-word window; the run is the whole 49-word passage (one sentence); reasoning steps 3. No logic-wrong distractor (the template's band-7 models have none). Menu differs from w1b1_01 (which used and / none / comma / period).",
+      "band_target": 7,
+      "band7_moves": [
+        "opener of 11 words, a past participle that could modify clause 1's last noun",
+        "glued and which-clause options read as natural descriptions of the cargo until the splice 11 words later",
+        "one-sentence run of 49 words"
+      ],
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [
+          "why_wrong B quoted “which was enclosed”; the option says “which was encased”"
+        ],
+        "status": "fixed"
+      },
+      "band7": {
+        "verdict": "band 7",
+        "why": "S1_period on the 3.28 and 3.10 shape: an 11-word past-participle opener that reads naturally on clause 1’s last noun (cargo), so the comma, which-was and glued options hold until the splice at “the ship was transported,” 11 words after the blank; one 49-word run."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "D",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 7
+    },
+    {
+      "id": "boundaries.S1_period.hard.w2b1_02",
+      "template": "S1_period",
+      "subtype": "Joining two independent clauses: period before a noun-phrase appositive opener",
+      "tier": "hard",
+      "passage": "To get its spores eaten by herbivores, which avoid grass surrounding their droppings, the dung-dwelling fungus Pilobolus relies on a pressurized ______ swollen, fluid-filled stalk capped by a capsule of spores, this structure ruptures when mature, propelling the capsule as far as two meters.",
+      "stem": "Which choice completes the text so that it conforms to the conventions of Standard English?",
+      "options": [
+        "launcher, a",
+        "launcher. A",
+        "launcher, which is a",
+        "launcher that is a"
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The first sentence ends with “a pressurized launcher.” The second sentence opens with the noun phrase “A swollen, fluid-filled stalk capped by a capsule of spores,” which describes its subject, “this structure,” and then gives the verb “ruptures.” A period is needed between the two sentences.",
+      "distractors": {
+        "A": {
+          "recipe": "comma splice",
+          "why_wrong": "The comma makes the noun phrase a description of “launcher,” so the clause “this structure ruptures ...” is joined to the first independent clause with only a comma, a comma splice."
+        },
+        "C": {
+          "recipe": "added word creates the error",
+          "why_wrong": "“Which is a ...” attaches the description to “launcher” within the first sentence, and the clause “this structure ruptures ...” then follows with only a comma, a comma splice."
+        },
+        "D": {
+          "recipe": "added word creates the error",
+          "why_wrong": "“That is a ...” also makes the description part of the first sentence, so the comma before “this structure” joins two independent clauses, a comma splice."
+        }
+      },
+      "models": [
+        "3.8",
+        "940ff6f7",
+        "4b424102",
+        "3.32",
+        "3.28"
+      ],
+      "word_count": 43,
+      "sources": [],
+      "notes": "Subject: science (mycology). Band-7 checks: the opener is a 10-word noun-phrase appositive that renames clause 1's last noun (the 3.8 and 940ff6f7 move), so A, C and D read as an ordinary appositive or relative clause until “this structure,” 11 words after the blank; the run is the whole 44-word passage; reasoning steps 3. Two added-word variants as in 4b424102 (“who are known” / “, who are known”).",
+      "band_target": 7,
+      "band7_moves": [
+        "opener is a 10-word noun phrase that renames clause 1's last noun and could hang on it",
+        "two added-word distractors (which is a / that is a) that read as natural until the second subject",
+        "splice cue 11 words after the blank"
+      ],
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [
+          "trimmed passage from 48 to 44 words (models’ median 44); the 10-word opener and the 11-word cue distance kept"
+        ],
+        "status": "fixed"
+      },
+      "band7": {
+        "verdict": "band 7",
+        "why": "The 3.8 move with its menu: a 10-word noun-phrase opener that renames and could hang on “launcher,” so the comma, which-is and that-is options read as normal until “this structure,” 11 words after the blank."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "B",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 7
+    },
+    {
+      "id": "boundaries.S1_period.hard.w2b1_03",
+      "template": "S1_period",
+      "subtype": "Joining two independent clauses: period before an infinitive opener",
+      "tier": "hard",
+      "passage": "The deep waters of Lake Kivu, along Rwanda’s western border, hold huge quantities of dissolved ______ exploit this resource, a Rwandan power project extracts gas-laden water from the depths and pipes the separated methane ashore, where it is burned to generate electricity.",
+      "stem": "Which choice completes the text so that it conforms to the conventions of Standard English?",
+      "options": [
+        "methane. To",
+        "methane, to",
+        "methane in order to",
+        "methane to"
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The first sentence ends with “dissolved methane.” The second sentence opens with the infinitive phrase “To exploit this resource,” which gives the purpose of the action that follows, and its main clause is “a Rwandan power project extracts gas-laden water from the depths ...” A period correctly separates the two sentences.",
+      "distractors": {
+        "B": {
+          "recipe": "comma splice",
+          "why_wrong": "The comma attaches “to exploit this resource” to the first clause, so the main clause “a Rwandan power project extracts ...” is joined to the first independent clause with only a comma, a comma splice."
+        },
+        "C": {
+          "recipe": "added word creates the error",
+          "why_wrong": "“In order to” says the waters hold methane for the purpose of exploiting it, which is illogical, and the clause “a Rwandan power project extracts ...” still follows with only a comma, a comma splice."
+        },
+        "D": {
+          "recipe": "misplaced boundary (opener glued to clause 1)",
+          "why_wrong": "With no mark, “to exploit this resource” runs into the first clause, and the comma after “resource” then joins two independent clauses, a comma splice."
+        }
+      },
+      "models": [
+        "73a6603c",
+        "5ee7fb04",
+        "3.4",
+        "886dc9f9"
+      ],
+      "word_count": 41,
+      "sources": [],
+      "notes": "Subject: science (limnology and energy). Band 6 by plan: short purpose opener (4 words) in the manner of 5ee7fb04's infinitive; no semicolon option, since “; to exploit this resource, a Rwandan power project extracts ...” would be a second correct answer.",
+      "band_target": 6,
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "A 4-word infinitive opener right after the blank keeps the cue inside a 6-word window (5ee7fb04 shape); planned band 6."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "A",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "boundaries.S1_adverb.hard.w2b1_04",
+      "template": "S1_adverb",
+      "subtype": "Conjunctive adverb closing clause 1 (contrast with the previous sentence), semicolon after it",
+      "tier": "hard",
+      "passage": "The Sogdians of Central Asia are remembered principally as merchants who dominated commerce along the Silk Road. The early fourth-century Sogdian documents known as the Ancient Letters are not exclusively ______ one is an indignant message from a woman named Miwnay, whose husband had abandoned her in a Chinese frontier town.",
+      "stem": "Which choice completes the text so that it conforms to the conventions of Standard English?",
+      "options": [
+        "commercial; however,",
+        "commercial, however,",
+        "commercial, however;",
+        "commercial however,"
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The previous sentence says the Sogdians are remembered principally as merchants, and the clause “the Ancient Letters are not exclusively commercial, however” runs against that impression, so “however” belongs at the end of this clause, set off by a comma. The semicolon after “however” then joins this clause to the next one, “one is an indignant message ...,” which gives an example of a letter that is not commercial.",
+      "distractors": {
+        "A": {
+          "recipe": "logic-wrong adverb placement",
+          "why_wrong": "The semicolon before “however” makes the adverb open the second clause, illogically presenting Miwnay’s message as contrary to the claim that the letters are not exclusively commercial; the message is an example of that claim."
+        },
+        "B": {
+          "recipe": "comma splice",
+          "why_wrong": "Commas alone can't join the two independent clauses; the comma after “however” creates a comma splice."
+        },
+        "D": {
+          "recipe": "fused sentence",
+          "why_wrong": "With no punctuation after “commercial,” the two independent clauses run together, and “however” is attached to the second clause, where it would illogically signal a contrast with the first."
+        }
+      },
+      "models": [
+        "b771d175",
+        "be37d4ae",
+        "3.25",
+        "5aa171de"
+      ],
+      "word_count": 50,
+      "sources": [],
+      "notes": "Subject: history (Silk Road documents). Band-7 checks: the adverb closes clause 1, which qualifies the previous sentence (merchants, so the letters should be commercial); clause 2 is an example of clause 1, so A's contrast fails on meaning, the cue sitting in the previous sentence; B and D fail on rule. Run 35 words.",
+      "band_target": 7,
+      "band7_moves": [
+        "adverb closes clause 1, which corrects the impression left by the previous sentence",
+        "logic-wrong distractor (; however,) is the taught pattern and fails only against the previous sentence",
+        "clause 2 is an example of clause 1, so no contrast reading survives"
+      ],
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass",
+        "attribution": "Miwnay’s letter among the Sogdian Ancient Letters reads right from recall; kept, not searched"
+      },
+      "band7": {
+        "verdict": "band 7",
+        "why": "The b771d175 and be37d4ae move: “however” closes a clause that corrects the previous sentence, the taught “; however,” fails only on meaning against sentence 1, and clause 2 is an example of clause 1, so no contrast reading survives."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "C",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 7
+    },
+    {
+      "id": "boundaries.S1_adverb.hard.w2b1_05",
+      "template": "S1_adverb",
+      "subtype": "Conjunctive adverb closing clause 1, period before the next sentence",
+      "tier": "hard",
+      "passage": "The Chinese philosopher Mozi, who taught in the fifth century BCE, denounced wars of conquest as theft and murder committed on a huge scale. He did not oppose all warfare, ______ and his disciples became specialists in defending walled cities, traveling to assist smaller states threatened by invasion.",
+      "stem": "Which choice completes the text so that it conforms to the conventions of Standard English?",
+      "options": [
+        "however he",
+        "however, he",
+        "however but he",
+        "however. He"
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The comma before the blank sets off “however,” which ends the clause “He did not oppose all warfare, however” and contrasts it with Mozi’s denunciation of conquest in the previous sentence. The words that follow, “He and his disciples became specialists ...,” form a new independent clause, so a period is needed after “however.”",
+      "distractors": {
+        "A": {
+          "recipe": "fused sentence",
+          "why_wrong": "With no punctuation after “however,” the two independent clauses run together."
+        },
+        "B": {
+          "recipe": "comma splice",
+          "why_wrong": "A comma alone can't join the independent clause ending in “however” to the independent clause “he and his disciples became specialists ...,” so this is a comma splice."
+        },
+        "C": {
+          "recipe": "conjunction without comma",
+          "why_wrong": "“But” needs a comma before it to join two independent clauses, and it would also present the disciples’ skill at defending cities as contrary to Mozi’s not opposing all warfare, which is illogical."
+        }
+      },
+      "models": [
+        "3.7",
+        "81f43b85"
+      ],
+      "word_count": 47,
+      "sources": [],
+      "notes": "Subject: philosophy (early Chinese thought). Band 6 by plan, on 2bb7416a's frame (adverb already set off by a comma in the passage, the boundary after it). No semicolon option (it would be a twin of the period key), and no “, and” or “, so” option, which would be acceptable after the parenthetical “however.”",
+      "band_target": 6,
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass",
+        "attribution": "Mozi’s condemnation of conquest and his school’s defensive expertise read right from recall; kept"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "The 2bb7416a (3.7) frame and menu: the adverb is already set off in the passage, and the splice, fused and but options fail on rule at the blank; planned band 6."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "D",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "boundaries.S2_colon.hard.w2b1_06",
+      "template": "S2_colon",
+      "subtype": "Colon after a complete clause before a single specified item (noun phrase with a relative clause)",
+      "tier": "hard",
+      "passage": "Fante Asafo companies, traditional warrior associations in the coastal towns of present-day Ghana, fly appliquéd cloth flags whose images illustrate proverbs and taunt rival companies. Before 1957, most of these flags shared one borrowed ______ British Union Jack, which filled the corner nearest the pole until Ghana’s independence, when the new national flag took its place.",
+      "stem": "Which choice completes the text so that it conforms to the conventions of Standard English?",
+      "options": [
+        "emblem: the",
+        "emblem; the",
+        "emblem, it was the",
+        "emblem. The"
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The clause “Before 1957, most of these flags shared one borrowed emblem” is complete and announces an item that the rest of the sentence names. A colon correctly introduces that item, the noun phrase “the British Union Jack, which filled the corner nearest the pole until Ghana’s independence ...”",
+      "distractors": {
+        "B": {
+          "recipe": "semicolon with a non-clause",
+          "why_wrong": "A semicolon must join two independent clauses, but “the British Union Jack, which filled ...” is a noun phrase followed by a relative clause, not an independent clause."
+        },
+        "C": {
+          "recipe": "added word creates the error",
+          "why_wrong": "“It was” turns what follows into an independent clause, so the comma joins two independent clauses, a comma splice."
+        },
+        "D": {
+          "recipe": "period leaves a fragment",
+          "why_wrong": "The period leaves “The British Union Jack, which filled the corner ... took its place” as a fragment: “filled” and “took” are the verbs of the relative clause and the when-clause, so there is no main verb."
+        }
+      },
+      "models": [
+        "3.18",
+        "3.26",
+        "3.19"
+      ],
+      "word_count": 55,
+      "sources": [],
+      "notes": "Subject: arts (textiles, Ghana). Band-7 checks: the specified item is a noun phrase whose relative clause and when-clause carry finite verbs (“filled,” “took”), so the period and semicolon options look like they introduce a sentence; menu as e9aee0d8 (colon / semicolon / comma + it was / period) but the announcing phrase is a counted noun (“one borrowed emblem”), not e9aee0d8's comparative.",
+      "band_target": 7,
+      "band7_moves": [
+        "noun phrase after the colon contains finite verbs in a relative clause and a when-clause",
+        "period and semicolon options read as introducing a full sentence",
+        "comma + added it was option (splice)"
+      ],
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      },
+      "band7": {
+        "verdict": "band 7",
+        "why": "The e9aee0d8 menu and move: a complete clause announcing “one borrowed emblem,” then a noun phrase whose relative clause and when-clause carry finite verbs, so the period and semicolon options look like they start a sentence."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "A",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 7
+    },
+    {
+      "id": "boundaries.S2_colon.hard.w2b1_07",
+      "template": "S2_colon",
+      "subtype": "Colon after a complete clause before a single specified item",
+      "tier": "hard",
+      "passage": "The Madaba Map, a sixth-century floor mosaic in a Jordanian church, depicts the territory between Lebanon and the Nile Delta, identifying settlements, rivers, and roads. Its creators devoted their most elaborate detail to one city in ______ Jerusalem, whose walls, gates, and colonnaded main street are clearly visible.",
+      "stem": "Which choice completes the text so that it conforms to the conventions of Standard English?",
+      "options": [
+        "particular;",
+        "particular",
+        "particular:",
+        "particular."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The clause “Its creators devoted their most elaborate detail to one city in particular” is complete and announces a specific city. A colon correctly introduces that city, “Jerusalem,” together with the description that follows it.",
+      "distractors": {
+        "A": {
+          "recipe": "semicolon with a non-clause",
+          "why_wrong": "“Jerusalem, whose walls ... are clearly visible” is a noun phrase with a relative clause, not an independent clause, so a semicolon can't introduce it."
+        },
+        "B": {
+          "recipe": "missing required mark",
+          "why_wrong": "Without punctuation, the name “Jerusalem” runs straight into the phrase “in particular,” and nothing marks it as the city the clause announces."
+        },
+        "D": {
+          "recipe": "period leaves a fragment",
+          "why_wrong": "The period leaves “Jerusalem, whose walls ... are clearly visible” as a fragment; “are” is the verb of the relative clause, not of a main clause."
+        }
+      },
+      "models": [
+        "3.22",
+        "3.2",
+        "92f309b2"
+      ],
+      "word_count": 47,
+      "sources": [],
+      "notes": "Subject: history (Byzantine cartography). Band 6: the 3.22 menu (period, semicolon, none, colon). No comma or lone-dash option: either mark before “Jerusalem” could be defended.",
+      "band_target": 6,
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "The 3.22 menu with a short announcing phrase and a single name after the blank; the cue is local; planned band 6."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "C",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "boundaries.S4_restrictive.hard.w2b1_08",
+      "template": "S4_restrictive",
+      "subtype": "Restrictive appositive: title and name as the subject of a clause",
+      "tier": "hard",
+      "passage": "Javanese artist Raden Saleh’s 1857 painting The Arrest of Pangeran Diponegoro shows the captured prince as defiant. Decades earlier, Dutch ______ had portrayed the same scene with the prince appearing resigned to his captivity, a depiction that Saleh’s painting pointedly rejects.",
+      "stem": "Which choice completes the text so that it conforms to the conventions of Standard English?",
+      "options": [
+        "painter, Nicolaas Pieneman,",
+        "painter Nicolaas Pieneman",
+        "painter Nicolaas Pieneman,",
+        "painter, Nicolaas Pieneman"
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "“Dutch painter” is a title that identifies Nicolaas Pieneman, and together they are the subject of the clause “Dutch painter Nicolaas Pieneman had portrayed the same scene.” Because the name is essential to identifying the painter, no punctuation should separate “painter” from “Nicolaas Pieneman,” and no comma should separate the subject from its verb, “had portrayed.”",
+      "distractors": {
+        "A": {
+          "recipe": "commas around a restrictive element",
+          "why_wrong": "Setting “Nicolaas Pieneman” off with commas treats the name as extra information, but without it “Dutch painter” does not tell the reader who completed the earlier version."
+        },
+        "C": {
+          "recipe": "comma intrudes into a unit",
+          "why_wrong": "The comma after “Pieneman” separates the subject of the clause from its verb, “had portrayed.”"
+        },
+        "D": {
+          "recipe": "comma intrudes into a unit",
+          "why_wrong": "The comma separates the title “Dutch painter” from the name it identifies, “Nicolaas Pieneman.”"
+        }
+      },
+      "models": [
+        "3.14",
+        "4dcedc31",
+        "3.30",
+        "3.11"
+      ],
+      "word_count": 40,
+      "sources": [],
+      "notes": "Subject: arts (painting, Indonesia). Band 6 on 3.14's option shape (both slots varied); the title and name open their clause after the short phrase “Decades earlier,” with no determiner before them (the 3.14 and 4dcedc31 shape), so the comma pair in A cannot be defended as a nonrestrictive appositive; the name is followed directly by its verb, so no comma after it can be defended either.",
+      "band_target": 6,
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [
+          "trimmed passage from 45 to 41 words (models’ median 41); explanation and why_wrong C updated to “had portrayed”"
+        ],
+        "status": "fixed",
+        "attribution": "Raden Saleh’s 1857 painting answering Nicolaas Pieneman’s earlier submission scene reads right from recall; kept"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "Title plus name followed directly by the verb, with no later material tempting a comma (4dcedc31 shape); planned band 6."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "B",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "boundaries.S1_comma_conj.hard.w2b1_09",
+      "template": "S1_comma_conj",
+      "subtype": "Joining two independent clauses: comma plus and, second clause opening with a because-clause",
+      "tier": "hard",
+      "passage": "At Mehrgarh, a Neolithic settlement in present-day Pakistan, archaeologists discovered eleven molars with holes drilled into their ______ because the edges of several holes were worn smooth, researchers concluded that the procedure was performed on living patients, who kept chewing with those teeth.",
+      "stem": "Which choice completes the text so that it conforms to the conventions of Standard English?",
+      "options": [
+        "crowns, and",
+        "crowns",
+        "crowns and",
+        "crowns,"
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The text joins two independent clauses: “archaeologists discovered eleven molars with holes drilled into their crowns” and “researchers concluded that the procedure was performed on living patients,” which opens with the introductory clause “because the edges of several holes were worn smooth.” A comma followed by the coordinating conjunction “and” correctly joins the two.",
+      "distractors": {
+        "B": {
+          "recipe": "misplaced boundary (opener glued to clause 1)",
+          "why_wrong": "With no punctuation, the because-clause attaches to the first clause, and the comma after “smooth” then joins two independent clauses, a comma splice."
+        },
+        "C": {
+          "recipe": "conjunction without comma",
+          "why_wrong": "When “and” joins two long independent clauses like these, a comma is needed before it."
+        },
+        "D": {
+          "recipe": "comma splice",
+          "why_wrong": "A comma alone can't join two independent clauses."
+        }
+      },
+      "models": [
+        "3.9",
+        "7ce4ee13",
+        "3.31"
+      ],
+      "word_count": 42,
+      "sources": [],
+      "notes": "Subject: history (archaeology, early dentistry). Plan asked band 7, but S1_comma_conj has no band-7 official items (band7/boundaries.md, appendix), so it is written as a strong band 6: the second clause opens with a because-clause, so the bare-comma and no-mark options look like a dependent clause attaching normally (B also reads as a causal clause of clause 1 until the second subject).",
+      "band_target": 6,
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [
+          "trimmed passage from 48 to 43 words (models’ median 43); explanation quotes updated"
+        ],
+        "status": "fixed"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "S1_comma_conj has no band-7 official items, so it cannot be band 7; a strong band 6: the because-clause opening clause 2 makes the bare-comma and no-mark options read as ordinary subordination until “researchers,” 10 words on."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "A",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "boundaries.S3_dash_pair.hard.w2b1_10",
+      "template": "S3_dash_pair",
+      "subtype": "Closing a dash pair around a supplement that itself contains parentheses",
+      "tier": "hard",
+      "passage": "The archives left by Assyrian merchants at Kanesh, a commercial outpost in central Anatolia, around 1900 BCE—some 23,000 clay tablets, many of them letters from relatives in Assur (frequently wives and sisters who made the textiles the merchants ______ offer an unusually intimate perspective on ancient long-distance trade.",
+      "stem": "Which choice completes the text so that it conforms to the conventions of Standard English?",
+      "options": [
+        "sold)",
+        "sold—",
+        "sold)—",
+        "sold),"
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The dash after “1900 BCE” opens a supplementary element describing the archives, and inside it a parenthesis opens before “frequently wives and sisters.” The closing parenthesis after “sold” ends the inner element, and a closing dash is then needed to end the outer one before the verb “offer.”",
+      "distractors": {
+        "A": {
+          "recipe": "missing required mark",
+          "why_wrong": "This closes the parentheses but not the dash, leaving the element that opens after “1900 BCE” unclosed when the main verb “offer” arrives."
+        },
+        "B": {
+          "recipe": "missing required mark",
+          "why_wrong": "This closes the dash element but leaves the parenthesis that begins “(frequently wives and sisters” without its closing mark."
+        },
+        "D": {
+          "recipe": "mismatched pair",
+          "why_wrong": "A comma can't close an element that opens with a dash; the marks on either side of the element must match."
+        }
+      },
+      "models": [
+        "83898524",
+        "6e071432",
+        "3.15"
+      ],
+      "word_count": 47,
+      "sources": [],
+      "notes": "Subject: history (Old Assyrian trade). Band-7 checks: two levels of supplement in one option (the 83898524 move: a parenthesis inside a dash element); the opening dash is 22 words before the blank and the opening parenthesis 10, so both partners sit outside a 6-word window; the run is the whole 48-word sentence. Menu differs from 83898524's (no comma inside the parenthesis).",
+      "band_target": 7,
+      "band7_moves": [
+        "parentheses nested inside a dash pair, both closed at the blank",
+        "partners 10 and 22 words before the blank",
+        "each wrong option closes only one level or the wrong mark"
+      ],
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      },
+      "band7": {
+        "verdict": "band 7",
+        "why": "The 83898524 move: a parenthesis nested inside a dash element, both closed at the blank, with the dash partner 22 words back and the parenthesis 10; each wrong option closes only one level or mismatches the pair."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "C",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 7
+    },
+    {
+      "id": "boundaries.S1_colon_clauses.hard.w2b1_11",
+      "template": "S1_colon_clauses",
+      "subtype": "Colon between independent clauses: the second explains the first",
+      "tier": "hard",
+      "passage": "In the dry scrublands of eastern Kenya, dwarf mongooses often forage alongside several species of hornbill. The partnership benefits both ______ the birds snap up insects that the mongooses scare out of the grass, and the mongooses heed the hornbills’ alarm calls when hawks approach.",
+      "stem": "Which choice completes the text so that it conforms to the conventions of Standard English?",
+      "options": [
+        "animals and",
+        "animals,",
+        "animals",
+        "animals:"
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The clause “The partnership benefits both animals” makes a general claim, and the clause that follows explains it by describing what each animal gains. A colon is used to join two independent clauses when the second explains the first.",
+      "distractors": {
+        "A": {
+          "recipe": "conjunction without comma",
+          "why_wrong": "Without a comma, “and” can't join these two long independent clauses, and “and” would present the explanation as one more fact rather than as the reason both animals benefit."
+        },
+        "B": {
+          "recipe": "comma splice",
+          "why_wrong": "A comma alone can't join two independent clauses."
+        },
+        "C": {
+          "recipe": "fused sentence",
+          "why_wrong": "With no punctuation, the two independent clauses run together."
+        }
+      },
+      "models": [
+        "8772475b",
+        "e76e74e8",
+        "9d4a701b",
+        "3.16"
+      ],
+      "word_count": 44,
+      "sources": [],
+      "notes": "Subject: science (animal behavior, mutualism). Band 6 as planned; 8772475b's menu (and / comma / none / colon). No “while” option: “, while the birds snap up insects” could be read as acceptable.",
+      "band_target": 6,
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "The 8772475b menu without its band-7 relation-word trap (“while” left out because it could be defended), so the and/comma/none options fail on rule; planned band 6."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "D",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "boundaries.S4_subj_verb.hard.w2b1_12",
+      "template": "S4_subj_verb",
+      "subtype": "No punctuation between a long subject and its verb",
+      "tier": "hard",
+      "passage": "Marketing researchers Joseph Nunes and Xavier Drèze distributed loyalty cards to car wash customers, each card requiring eight purchases to earn a free wash. Customers whose cards contained ten spaces but came with two already ______ were nearly twice as likely as the others to complete their cards.",
+      "stem": "Which choice completes the text so that it conforms to the conventions of Standard English?",
+      "options": [
+        "stamped,",
+        "stamped",
+        "stamped:",
+        "stamped—"
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The subject of the second sentence is the long noun phrase “Customers whose cards contained ten spaces but came with two already stamped,” and its verb is “were.” No punctuation should separate a subject from its verb.",
+      "distractors": {
+        "A": {
+          "recipe": "comma intrudes into a unit",
+          "why_wrong": "The comma separates the subject “Customers whose cards ... stamped” from its verb, “were.”"
+        },
+        "C": {
+          "recipe": "colon in the wrong place",
+          "why_wrong": "A colon must follow an independent clause, but “Customers whose cards ... stamped” is only the subject of the sentence."
+        },
+        "D": {
+          "recipe": "stray dash",
+          "why_wrong": "A single dash between the subject and the verb has no partner and no role; it splits the subject from “were.”"
+        }
+      },
+      "models": [
+        "3.13",
+        "2fd05c15",
+        "2.11"
+      ],
+      "word_count": 47,
+      "sources": [],
+      "notes": "Subject: social science (consumer behavior, the endowed progress effect, 2006). Plan asked band 7, but S4_subj_verb has no band-7 official items, so it is written as a strong band 6: a 12-word subject ending in a participle (“already stamped”) where a pause, and so a comma, feels natural.",
+      "band_target": 6,
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass",
+        "attribution": "Nunes and Drèze’s car wash loyalty-card study (8 stamps vs 10 with 2 pre-stamped) reads right from recall; kept"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "S4_subj_verb has no band-7 official items, so it cannot be band 7; a strong band 6 with a 12-word subject ending in a participle (“already stamped”) where a pause feels natural."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "B",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "boundaries.S1_comma_conj.medium.w2b1_13",
+      "template": "S1_comma_conj",
+      "subtype": "Joining two independent clauses: comma plus and, second clause opening with an adverb",
+      "tier": "medium",
+      "passage": "In 1653, Neapolitan banker Lorenzo de Tonti proposed an unusual scheme for financing the French government. Under his plan, investors would buy shares in a fund paying yearly interest, with each deceased investor’s share redistributed among the remaining ______ eventually a single survivor would collect all the interest.",
+      "stem": "Which choice completes the text so that it conforms to the conventions of Standard English?",
+      "options": [
+        "investors and",
+        "investors",
+        "investors, and",
+        "investors,"
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The second sentence joins two independent clauses: “investors would buy shares in a fund paying yearly interest, with each deceased investor’s share redistributed among the remaining investors” and “eventually a single survivor would collect all the interest.” A comma followed by the coordinating conjunction “and” correctly joins them.",
+      "distractors": {
+        "A": {
+          "recipe": "conjunction without comma",
+          "why_wrong": "When “and” joins two long independent clauses like these, a comma is needed before it."
+        },
+        "B": {
+          "recipe": "fused sentence",
+          "why_wrong": "With no punctuation, the two independent clauses run together."
+        },
+        "D": {
+          "recipe": "comma splice",
+          "why_wrong": "A comma alone can't join two independent clauses; “eventually” opens the second clause rather than linking the two."
+        }
+      },
+      "models": [
+        "2.5",
+        "2.2",
+        "2.17",
+        "2.12"
+      ],
+      "word_count": 47,
+      "sources": [],
+      "notes": "Subject: social science (economic history, the tontine). The second clause opens with the adverb “eventually,” so the bare comma looks like it sets off an adverb, as medium items place a short opener after the boundary.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [
+          "trimmed passage from 53 to 48 words (models’ median 49.5); explanation quotes updated"
+        ],
+        "status": "fixed",
+        "attribution": "Lorenzo de Tonti’s 1653 tontine proposal reads right from recall; kept"
+      }
+    },
+    {
+      "id": "boundaries.S1_period.medium.w2b1_14",
+      "template": "S1_period",
+      "subtype": "Joining two independent clauses: period before an although-clause opener",
+      "tier": "medium",
+      "passage": "In the seventeenth century, Ottoman writer Evliya Çelebi spent some forty years journeying from the Balkans to Egypt, recording his observations in a ten-volume work called the Seyahatname, or Book of ______ some of his stories strain belief, historians prize the work for its detailed accounts of cities, crafts, and languages.",
+      "stem": "Which choice completes the text so that it conforms to the conventions of Standard English?",
+      "options": [
+        "Travels. Although",
+        "Travels, although",
+        "Travels although",
+        "Travels and although"
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The first sentence ends with the work’s English title, “Book of Travels.” The second sentence opens with the dependent clause “Although some of his stories strain belief,” followed by its main clause, “historians prize the work ...” A period correctly separates the two sentences.",
+      "distractors": {
+        "B": {
+          "recipe": "comma splice",
+          "why_wrong": "The comma attaches the although-clause to the first sentence, so the main clause “historians prize the work ...” is joined to it with only a comma."
+        },
+        "C": {
+          "recipe": "misplaced boundary (opener glued to clause 1)",
+          "why_wrong": "Without punctuation, the although-clause runs into the first sentence, and the comma after “belief” then joins two independent clauses, a comma splice."
+        },
+        "D": {
+          "recipe": "conjunction without comma",
+          "why_wrong": "“And” without a comma can't join these two long independent clauses."
+        }
+      },
+      "models": [
+        "2.7",
+        "2.27",
+        "2.10",
+        "2.9"
+      ],
+      "word_count": 50,
+      "sources": [],
+      "notes": "Subject: literature (travel writing, Ottoman). Medium: a short dependent-clause opener (7 words) after the boundary. No semicolon option: “; although some of his stories strain belief, historians prize ...” would be correct.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass",
+        "attribution": "Evliya Çelebi and the Seyahatname read right from recall; kept"
+      }
+    },
+    {
+      "id": "boundaries.S3_comma_pair.medium.w2b1_15",
+      "template": "S3_comma_pair",
+      "subtype": "Closing a comma pair around a participial phrase between subject and verb",
+      "tier": "medium",
+      "passage": "In the Scottish Hebrides, newly woven tweed was traditionally thickened by women who rhythmically pounded the damp cloth against a table. Their waulking songs, performed in Gaelic with a soloist leading and the others responding in ______ helped them keep a steady beat.",
+      "stem": "Which choice completes the text so that it conforms to the conventions of Standard English?",
+      "options": [
+        "chorus—",
+        "chorus;",
+        "chorus",
+        "chorus,"
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The comma after “songs” opens a supplementary phrase, “performed in Gaelic with a soloist leading and the others responding in chorus,” that describes the songs. A second comma is needed after “chorus” to close the phrase before the verb “helped.”",
+      "distractors": {
+        "A": {
+          "recipe": "mismatched pair",
+          "why_wrong": "A dash can't close an element that opens with a comma; the marks on either side of the phrase must match."
+        },
+        "B": {
+          "recipe": "semicolon with a non-clause",
+          "why_wrong": "The semicolon separates the subject “Their waulking songs” from its verb, “helped,” and neither side is an independent clause."
+        },
+        "C": {
+          "recipe": "missing required mark",
+          "why_wrong": "Without a comma after “chorus,” the supplementary phrase opened by the comma after “songs” is never closed."
+        }
+      },
+      "models": [
+        "2.6",
+        "2.1",
+        "2.14"
+      ],
+      "word_count": 42,
+      "sources": [],
+      "notes": "Subject: arts (music and craft, Scotland). Partner comma 12 words before the blank.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "boundaries.S2_trailing.medium.w2b1_16",
+      "template": "S2_trailing",
+      "subtype": "Comma before a trailing participial phrase",
+      "tier": "medium",
+      "passage": "Sheep on North Ronaldsay, the northernmost of Scotland’s Orkney Islands, seldom eat grass. A stone wall built in 1832 to protect the island’s agricultural land runs around almost the entire ______ the animals to the rocky shoreline, where they survive almost exclusively on seaweed for most of the year.",
+      "stem": "Which choice completes the text so that it conforms to the conventions of Standard English?",
+      "options": [
+        "coast; confining",
+        "coast, confining",
+        "coast. Confining",
+        "coast confining"
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The main clause “A stone wall built in 1832 to protect the island’s agricultural land runs around almost the entire coast” is followed by the participial phrase “confining the animals to the rocky shoreline,” which describes what the wall does. A comma correctly separates the main clause from this trailing supplementary phrase.",
+      "distractors": {
+        "A": {
+          "recipe": "semicolon with a non-clause",
+          "why_wrong": "A semicolon must join two independent clauses, but “confining the animals ... for most of the year” has no subject or main verb."
+        },
+        "C": {
+          "recipe": "period leaves a fragment",
+          "why_wrong": "The period leaves “Confining the animals to the rocky shoreline, where they survive ... for most of the year” as a fragment with no main clause."
+        },
+        "D": {
+          "recipe": "missing required mark",
+          "why_wrong": "Without a comma, “confining the animals” attaches to “coast,” as if the coast rather than the wall kept the sheep on the shoreline; a comma is needed to separate the main clause from the supplementary phrase."
+        }
+      },
+      "models": [
+        "2.4",
+        "2.26"
+      ],
+      "word_count": 48,
+      "sources": [],
+      "notes": "Subject: science (animal husbandry and ecology, Orkney). Menu as 2.4 and 2.26 (semicolon, comma, period, none).",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [
+          "trimmed passage from 54 to 49 words (models’ median 50); explanation quote updated"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "boundaries.S3_dash_pair.medium.w2b1_17",
+      "template": "S3_dash_pair",
+      "subtype": "Closing a dash pair around an appositive between subject and verb",
+      "tier": "medium",
+      "passage": "When Tevfik Esenç died in Turkey in 1992, Ubykh—a language of the northwestern Caucasus known among linguists for possessing roughly eighty consonants but only two ______ lost its last fluent speaker, although Esenç had devoted years to helping researchers document it.",
+      "stem": "Which choice completes the text so that it conforms to the conventions of Standard English?",
+      "options": [
+        "vowels,",
+        "vowels;",
+        "vowels—",
+        "vowels"
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The dash after “Ubykh” opens a supplementary element that describes the language. A second dash is needed after “vowels” to close the element before the main verb, “lost.”",
+      "distractors": {
+        "A": {
+          "recipe": "mismatched pair",
+          "why_wrong": "A comma can't close an element that opens with a dash; the marks on either side of the element must match."
+        },
+        "B": {
+          "recipe": "semicolon with a non-clause",
+          "why_wrong": "The semicolon separates the subject “Ubykh” from its verb, “lost,” and neither side is an independent clause."
+        },
+        "D": {
+          "recipe": "missing required mark",
+          "why_wrong": "Without a closing dash, the element that opens after “Ubykh” is never closed."
+        }
+      },
+      "models": [
+        "2.13",
+        "2.18"
+      ],
+      "word_count": 40,
+      "sources": [],
+      "notes": "Subject: language (linguistics, endangered languages). Partner dash 17 words before the blank.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass",
+        "attribution": "Tevfik Esenç as the last fluent Ubykh speaker (died 1992) reads right from recall; kept"
+      }
+    },
+    {
+      "id": "boundaries.S2_colon.medium.w2b1_18",
+      "template": "S2_colon",
+      "subtype": "Colon after a complete clause before an explanation (noun phrase)",
+      "tier": "medium",
+      "passage": "A lightning strike lasts only a fraction of a second, but when it hits sand, the electricity can heat the grains far beyond their melting temperature. The discharge may then leave a permanent record of its ______ fulgurite, a hollow, branching tube of glass that formed as the sand melted and fused.",
+      "stem": "Which choice completes the text so that it conforms to the conventions of Standard English?",
+      "options": [
+        "path: a",
+        "path; a",
+        "path. A",
+        "path a"
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The clause “The discharge may then leave a permanent record of its path” is complete, and the noun phrase that follows, “a fulgurite, a hollow, branching tube of glass ...,” names that record. A colon correctly introduces this explanation.",
+      "distractors": {
+        "B": {
+          "recipe": "semicolon with a non-clause",
+          "why_wrong": "A semicolon must join two independent clauses, but “a fulgurite, a hollow, branching tube of glass ...” is a noun phrase, not an independent clause."
+        },
+        "C": {
+          "recipe": "period leaves a fragment",
+          "why_wrong": "The period leaves “A fulgurite, a hollow, branching tube of glass that formed as the sand melted and fused” as a fragment; “formed” is the verb of the relative clause, not of a main clause."
+        },
+        "D": {
+          "recipe": "missing required mark",
+          "why_wrong": "Without punctuation, “a fulgurite” runs straight into “path,” and nothing introduces the noun phrase that explains what the record is."
+        }
+      },
+      "models": [
+        "2.15",
+        "3.22"
+      ],
+      "word_count": 51,
+      "sources": [],
+      "notes": "Subject: science (geology and physics). No comma or lone-dash option: either mark after “path” could be read as introducing an appositive and defended.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [
+          "trimmed passage from 55 to 52 words (models’ median 52.5); explanation quote updated"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "boundaries.S4_object.easy.w2b1_19",
+      "template": "S4_object",
+      "subtype": "No punctuation between a preposition and its object",
+      "tier": "easy",
+      "passage": "The desert rhubarb, a plant found in the mountains of Israel’s Negev Desert, collects a remarkable amount of rainfall for its size. Its broad leaves are covered ______ deep grooves that channel water down to the plant’s underground root, concentrating the moisture where it is needed.",
+      "stem": "Which choice completes the text so that it conforms to the conventions of Standard English?",
+      "options": [
+        "with:",
+        "with—",
+        "with,",
+        "with"
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "In this sentence, “deep grooves that channel water down to the plant’s underground root” is the object of the preposition “with.” No punctuation should come between a preposition and its object.",
+      "distractors": {
+        "A": {
+          "recipe": "colon in the wrong place",
+          "why_wrong": "A colon must follow an independent clause; here it would separate the preposition “with” from its object."
+        },
+        "B": {
+          "recipe": "stray dash",
+          "why_wrong": "The dash has no partner and no role; it separates the preposition “with” from its object."
+        },
+        "C": {
+          "recipe": "comma intrudes into a unit",
+          "why_wrong": "The comma separates the preposition “with” from its object, “deep grooves.”"
+        }
+      },
+      "models": [
+        "1.9",
+        "1.16",
+        "1.23"
+      ],
+      "word_count": 45,
+      "sources": [],
+      "notes": "Subject: science (botany, desert plants).",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "boundaries.S4_object.easy.w2b1_20",
+      "template": "S4_object",
+      "subtype": "No punctuation between a verb and its object",
+      "tier": "easy",
+      "passage": "The Instructions of Shuruppak, a Sumerian text first recorded around 2500 BCE, is among the oldest surviving works of literature. In it, a father offers his son practical guidance on farming, household management, and other everyday matters, cautioning him never to ______ a donkey that brays.",
+      "stem": "Which choice completes the text so that it conforms to the conventions of Standard English?",
+      "options": [
+        "buy,",
+        "buy",
+        "buy—",
+        "buy:"
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "In this sentence, “a donkey that brays” is the object of the verb “buy.” No punctuation should come between a verb and its object.",
+      "distractors": {
+        "A": {
+          "recipe": "comma intrudes into a unit",
+          "why_wrong": "The comma separates the verb “buy” from its object, “a donkey.”"
+        },
+        "C": {
+          "recipe": "stray dash",
+          "why_wrong": "The dash has no partner and no role; it separates the verb “buy” from its object."
+        },
+        "D": {
+          "recipe": "colon in the wrong place",
+          "why_wrong": "A colon must follow an independent clause, but “cautioning him never to buy” is not one, and the colon would separate the verb from its object."
+        }
+      },
+      "models": [
+        "1.15",
+        "1.16",
+        "1.9"
+      ],
+      "word_count": 45,
+      "sources": [],
+      "notes": "Subject: literature (Sumerian wisdom literature).",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "boundaries.S1_comma_conj.easy.w2b1_21",
+      "template": "S1_comma_conj",
+      "subtype": "Joining two independent clauses: comma plus and",
+      "tier": "easy",
+      "passage": "Spix’s disk-winged bats roost inside young heliconia leaves that are still curled into tubes. Each leaf unrolls within approximately a ______ the bats must therefore find a replacement roost almost every evening.",
+      "stem": "Which choice completes the text so that it conforms to the conventions of Standard English?",
+      "options": [
+        "day,",
+        "day and,",
+        "day, and",
+        "day"
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The second sentence joins two independent clauses: “Each leaf unrolls within approximately a day” and “the bats must therefore find a replacement roost almost every evening.” A comma followed by the coordinating conjunction “and” correctly joins them.",
+      "distractors": {
+        "A": {
+          "recipe": "comma splice",
+          "why_wrong": "A comma alone can't join two independent clauses."
+        },
+        "B": {
+          "recipe": "comma after the conjunction",
+          "why_wrong": "The comma belongs before “and,” not after it; with no comma before “and,” the two clauses are not properly joined."
+        },
+        "D": {
+          "recipe": "fused sentence",
+          "why_wrong": "With no punctuation and no conjunction, the two independent clauses run together."
+        }
+      },
+      "models": [
+        "1.31",
+        "1.2",
+        "1.27",
+        "1.26"
+      ],
+      "word_count": 31,
+      "sources": [],
+      "notes": "Subject: science (bats, roosting behavior). No bare “day and” option: with clauses this short, a comma-less “and” could be defended.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [
+          "trimmed passage from 36 to 32 words (models’ median 33.5); explanation quotes updated"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "boundaries.S2_intro_comma.easy.w2b1_22",
+      "template": "S2_intro_comma",
+      "subtype": "Comma after an introductory dependent clause",
+      "tier": "easy",
+      "passage": "Haida artists have carved argillite, a soft black stone quarried exclusively on the islands of Haida Gwaii, since the early 1800s. Although many early carvings were made for sale to visiting ______ the artists filled them with figures from traditional Haida narratives.",
+      "stem": "Which choice completes the text so that it conforms to the conventions of Standard English?",
+      "options": [
+        "sailors,",
+        "sailors",
+        "sailors;",
+        "sailors."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The dependent clause “Although many early carvings were made for sale to visiting sailors” introduces the main clause “the artists filled them with figures from traditional Haida narratives.” A comma correctly separates an introductory dependent clause from the main clause.",
+      "distractors": {
+        "B": {
+          "recipe": "missing required mark",
+          "why_wrong": "Without a comma, the introductory clause runs straight into the main clause; a comma is needed after “sailors.”"
+        },
+        "C": {
+          "recipe": "semicolon with a non-clause",
+          "why_wrong": "A semicolon must join two independent clauses, but “Although many early carvings were made for sale to visiting sailors” is a dependent clause."
+        },
+        "D": {
+          "recipe": "period leaves a fragment",
+          "why_wrong": "The period leaves “Although many early carvings were made for sale to visiting sailors” as a fragment."
+        }
+      },
+      "models": [
+        "1.6",
+        "1.8",
+        "1.19"
+      ],
+      "word_count": 41,
+      "sources": [],
+      "notes": "Subject: arts (Haida carving, British Columbia).",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "boundaries.S6_question.easy.w2b1_23",
+      "template": "S6_question",
+      "subtype": "Embedded question: statement word order and a period",
+      "tier": "easy",
+      "passage": "Witchweed, a parasitic plant, attacks the roots of crops such as maize and sorghum. Its seeds can remain dormant in the soil for years, and scientists long wondered how ______ A seed germinates only after detecting chemicals released by nearby roots.",
+      "stem": "Which choice completes the text so that it conforms to the conventions of Standard English?",
+      "options": [
+        "do the seeds sense that a host plant is nearby?",
+        "the seeds sense that a host plant is nearby?",
+        "the seeds sense that a host plant is nearby.",
+        "do the seeds sense that a host plant is nearby."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The blank completes the embedded question “how the seeds sense that a host plant is nearby,” which is the object of the verb “wondered.” An embedded question uses statement word order, with the subject “the seeds” before the verb “sense,” and because the whole sentence is a statement, it ends with a period.",
+      "distractors": {
+        "A": {
+          "recipe": "question errors",
+          "why_wrong": "An embedded question doesn't use question word order (“do the seeds sense”), and the sentence is a statement, so it shouldn't end with a question mark."
+        },
+        "B": {
+          "recipe": "question errors",
+          "why_wrong": "The word order is correct, but the sentence as a whole is a statement about what scientists wondered, so it should end with a period, not a question mark."
+        },
+        "D": {
+          "recipe": "question errors",
+          "why_wrong": "An embedded question uses statement word order, so “do the seeds sense” is incorrect."
+        }
+      },
+      "models": [
+        "1.7",
+        "1.24",
+        "1.28"
+      ],
+      "word_count": 40,
+      "sources": [],
+      "notes": "Subject: science (plant biology, parasitic plants). Embedded form (1.7, 1.24, 1.28), since four of our six served S6 items are direct questions.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "boundaries.S5_series.easy.w2b1_24",
+      "template": "S5_series",
+      "subtype": "Commas between items in a simple series",
+      "tier": "easy",
+      "passage": "In Japan, many neighborhoods are served by a kōban, a small police station staffed by a few officers. Besides responding to emergencies, these officers give directions to confused ______ take in lost items found by residents, and patrol the surrounding streets on bicycles.",
+      "stem": "Which choice completes the text so that it conforms to the conventions of Standard English?",
+      "options": [
+        "tourists:",
+        "tourists,",
+        "tourists",
+        "tourists;"
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The sentence lists three things the officers do: “give directions to confused tourists,” “take in lost items found by residents,” and “patrol the surrounding streets on bicycles.” A comma is needed to separate the first item from the second, just as a comma separates the second from the third.",
+      "distractors": {
+        "A": {
+          "recipe": "colon in the wrong place",
+          "why_wrong": "A colon can't separate the items of a simple series."
+        },
+        "C": {
+          "recipe": "missing required mark",
+          "why_wrong": "Without a comma, the first and second items of the series run together."
+        },
+        "D": {
+          "recipe": "series errors",
+          "why_wrong": "Semicolons separate the items of a series only when the items themselves contain commas, and the other items here are separated by a comma."
+        }
+      },
+      "models": [
+        "1.12",
+        "1.3",
+        "1.25"
+      ],
+      "word_count": 42,
+      "sources": [],
+      "notes": "Subject: social science (policing and urban life, Japan).",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "boundaries.S1_period.easy.w2b1_25",
+      "template": "S1_period",
+      "subtype": "Joining two independent clauses: period before a pronoun subject",
+      "tier": "easy",
+      "passage": "Spittlebugs are small insects named for the frothy masses that their young produce on wildflower stems. A young spittlebug hides inside a clump of white ______ creates this foam by pumping air into a sticky liquid it excretes, and the bubbles protect it from predators and dehydration.",
+      "stem": "Which choice completes the text so that it conforms to the conventions of Standard English?",
+      "options": [
+        "foam, it",
+        "foam it",
+        "foam that it",
+        "foam. It"
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The first sentence ends with “a clump of white foam.” The next words, “It creates this foam by pumping air into a sticky liquid it excretes ...,” form a new independent clause with its own subject and verb, so a period is needed after “foam.”",
+      "distractors": {
+        "A": {
+          "recipe": "comma splice",
+          "why_wrong": "A comma alone can't join two independent clauses."
+        },
+        "B": {
+          "recipe": "fused sentence",
+          "why_wrong": "With no punctuation, the two independent clauses run together."
+        },
+        "C": {
+          "recipe": "added word creates the error",
+          "why_wrong": "“That” turns “it creates this foam” into a clause describing the foam, which leaves “creates” with a second object, “this foam,” and makes the sentence ungrammatical."
+        }
+      },
+      "models": [
+        "1.14"
+      ],
+      "word_count": 46,
+      "sources": [],
+      "notes": "Subject: science (insects).",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [
+          "trimmed passage from 51 to 47 words (models’ median 48)"
+        ],
+        "status": "fixed"
+      }
+    }
+  ]
+}

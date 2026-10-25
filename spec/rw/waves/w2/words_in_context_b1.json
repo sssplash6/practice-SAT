@@ -1,0 +1,1458 @@
+{
+  "skill": "Words in Context",
+  "slug": "words_in_context",
+  "part": "w2b1",
+  "domain": "Craft and Structure",
+  "plan": {
+    "templates": [
+      {
+        "code": "B6",
+        "name": "Blank completion, phrase options (word + preposition, a/an + word)"
+      },
+      {
+        "code": "B1",
+        "name": "Blank completion, restatement clue"
+      },
+      {
+        "code": "B3",
+        "name": "Blank completion, contrast clue (including received view then finding)"
+      },
+      {
+        "code": "M1",
+        "name": "Most nearly mean, underlined word"
+      },
+      {
+        "code": "B4",
+        "name": "Blank completion, example-pinned clue"
+      },
+      {
+        "code": "B5",
+        "name": "Blank completion, negated frame"
+      },
+      {
+        "code": "B2",
+        "name": "Blank completion, cause or consequence clue"
+      }
+    ]
+  },
+  "items": [
+    {
+      "id": "words_in_context.B6.hard.w2b1_01",
+      "template": "B6",
+      "subtype": "Blank completion: phrase options",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "In an experiment by Matthew Salganik and colleagues, participants downloaded songs by unknown bands from an online market split into eight independent “worlds.” Because participants saw each song’s download count in their own world, a song that topped one world’s rankings could languish in another, suggesting that its success was partly ______ the choices of its earliest listeners.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "impervious to",
+        "antecedent to",
+        "hostage to",
+        "inimical to"
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "To be “hostage to” something is to be at its mercy, controlled by things outside one’s own control. Participants saw how often each song had already been downloaded, and the same song could top the rankings in one world and languish in another. Since the songs were identical across worlds, what differed was the earlier downloads, so a song’s success depended in part on the choices of the people who heard it first.",
+      "distractors": {
+        "A": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "If success were “impervious to” early listeners’ choices, it would be unaffected by them, and a song would fare about the same in every world. The text says the same song could top one world’s rankings and languish in another, which shows those choices did affect it."
+        },
+        "B": {
+          "recipe": "reversal of order (ANT)",
+          "why_wrong": "“Antecedent to” means coming before. The earliest listeners chose first, and a song’s success in its world followed from those choices, so the success could not have come before them."
+        },
+        "D": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "“Inimical to” means harmful to. Nothing suggests that a song’s success harmed its earliest listeners’ choices; the relation in the text runs the other way, from early choices to later success."
+        }
+      },
+      "models": [
+        "3021d9ef",
+        "1455b754",
+        "5e57efec"
+      ],
+      "band7_moves": [
+        "consequence is the only clue: the reader infers that identical songs diverged because of earlier downloads",
+        "familiar word in a transferred sense (hostage to)",
+        "all four options past corrected rank 20,000",
+        "order-reversal distractor (antecedent to) pairs success with the early choices in the wrong sequence"
+      ],
+      "word_count": 58,
+      "sources": [
+        {
+          "what": "Salganik, Dodds, and Watts (2006, Science): artificial music market with 14,341 participants, eight social-influence worlds where prior downloads were visible; social influence made success more unequal and unpredictable",
+          "url": "https://www.cs.toronto.edu/~bor/303s19/docs/salganik_dodds_watts.pdf"
+        }
+      ],
+      "notes": "Subject: social science (sociology). Key letter C. Steps: 2 (identical songs diverge across worlds only because of earlier downloads, so success depended on early choices; then match that dependence to the transferred sense of “hostage to”). Concessive frame: no. Transferred-sense key: yes (hostage to fortune). Section 6 checks (corrected ranks): impervious to 20,091; antecedent to 35,359; hostage to 26,698; inimical to 27,949; 4 of 4 past 20,000; mean log 4.43; rarest distractor 35,359. Band-5 guard: clear. Simplified: the study also had an independent condition without download counts.",
+      "band7": {
+        "verdict": "band 7",
+        "why": "Corrected ranks impervious to 20,091, antecedent to 35,359, hostage to 26,698, inimical to 27,949: 4 of 4 past 20,000, mean log 4.43, rarest distractor 35,359. Two-step consequence inference (identical songs diverge only through earlier downloads) and a familiar word in a transferred sense, as in 3021d9ef and 5e57efec. Hostage is better known than its old-corpus rank says, so the transferred sense carries the key; no distractor survives a loose reading after germane to went."
+      },
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [
+          "trimmed passage to near the models’ median (65 to 58 words)",
+          "replaced A immune to (corrected 11,666, a student-familiar word) with impervious to (20,091) so the four options sit in one band",
+          "replaced B germane to with antecedent to: read loosely as “related to”, germane to was defensible"
+        ],
+        "status": "fixed"
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "C",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 7
+    },
+    {
+      "id": "words_in_context.B6.hard.w2b1_02",
+      "template": "B6",
+      "subtype": "Blank completion: phrase options",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "Records show far more Atlantic tropical storms in recent decades than in the late nineteenth century. Gabriel Vecchi and Thomas Knutson have argued, however, that much of this apparent increase may be ______ changes in observational capabilities: before satellites, a storm that never crossed a shipping lane or approached a coastline could pass entirely unrecorded.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "an artifact of",
+        "an impediment to",
+        "a harbinger of",
+        "a vestige of"
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "An “artifact of” something is a result produced by the way it was studied or measured rather than by the thing itself. The colon explains that, before satellites, storms far from ships and coasts went unrecorded, so older records count fewer storms than actually formed. Part of the rise in recorded storms therefore comes from better observation, which makes it an artifact of changes in how storms were observed.",
+      "distractors": {
+        "B": {
+          "recipe": "reversal of direction (ANT)",
+          "why_wrong": "An “impediment to” something is an obstacle that hinders it. The text does not present the rise in recorded storms as hindering improvements in observation; it says those improvements produced much of the rise."
+        },
+        "C": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "A “harbinger of” something signals that it is coming. The increase does not foretell changes in observation; according to the text, those changes came first and account for part of the increase."
+        },
+        "D": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "A “vestige of” something is a trace left over from it. The increase is not a remnant of earlier observing methods; it reflects how much more the newer methods detect."
+        }
+      },
+      "models": [
+        "5a97d9cd",
+        "1455b754",
+        "3021d9ef"
+      ],
+      "band7_moves": [
+        "clue is a mechanism after the colon, a level more concrete than the key",
+        "key in a transferred sense (artifact of a method)",
+        "direction-reversal distractor (impediment to: the increase acting on the changes) set against the passage’s causal order",
+        "option set rare throughout; no option echoes the passage"
+      ],
+      "word_count": 55,
+      "sources": [
+        {
+          "what": "Vecchi and Knutson (2008, Journal of Climate) estimate Atlantic tropical storms missed before satellites because of sparse ship tracks; after adjustment the long-term rise in storm counts is weak and not significant",
+          "url": "https://collaborate.princeton.edu/en/publications/on-estimates-of-historical-north-atlantic-tropical-cyclone-activi/"
+        }
+      ],
+      "notes": "Subject: natural science (climate). Key letter A. Steps: 2 (the colon gives a mechanism, missed storms, from which the reader infers that the recorded rise is partly produced by observation; then the key names that relation). Concessive frame: “however” turns against the records. Transferred-sense key: yes (artifact from the laboratory sense). Section 6 checks (corrected ranks): an artifact of 11,666 (modern word, absent from freq.txt); an impediment to 23,789; a harbinger of 32,004; a vestige of 14,248; 4 of 4 past 10,000, 2 past 20,000; mean log 4.28. Band-5 guard: clear. The authors estimate storms missed by the pre-satellite observing network (1878 to 1965).",
+      "band7": {
+        "verdict": "band 7",
+        "why": "Corrected ranks an artifact of 11,666, an impediment to 23,789, a harbinger of 32,004, a vestige of 14,248: 4 of 4 past 10,000, 2 past 20,000, mean log 4.28. Key in a transferred sense (artifact of a method) inferred from a mechanism after the colon, as in 5a97d9cd; vestige is the near miss (a remnant, not a by-product)."
+      },
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [
+          "trimmed passage (61 to 55 words); dropped aircraft reconnaissance, which the source does not discuss",
+          "replaced B a justification for (corrected 7,988, under the band) with an impediment to (23,789); same direction-reversal recipe"
+        ],
+        "status": "fixed"
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "A",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 7
+    },
+    {
+      "id": "words_in_context.B1.hard.w2b1_03",
+      "template": "B1",
+      "subtype": "Blank completion: restatement clue",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "Standard economic models treat money as ______: a household that saves twenty dollars because gasoline has become cheaper should spend that windfall just as it would spend twenty dollars from any other source. Yet when gasoline prices plummeted in 2008, economists Justine Hastings and Jesse Shapiro found, households switched to premium gasoline considerably more frequently than the improvement in their purchasing power could justify.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "convertible",
+        "discretionary",
+        "illiquid",
+        "fungible"
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "Money that is “fungible” is interchangeable: any one dollar can stand in for any other. The colon restates this assumption, since the models expect twenty dollars saved on gasoline to be spent exactly like twenty dollars from anywhere else. The finding that households spent their gasoline savings on better gasoline shows them treating those dollars as different, which is why it challenges the assumption.",
+      "distractors": {
+        "A": {
+          "recipe": "near synonym that fails on one feature (CONNOT)",
+          "why_wrong": "Money is “convertible” when it can be exchanged for another currency or for gold. The colon is about whether dollars from different sources are spent alike, not about exchanging money for something else."
+        },
+        "B": {
+          "recipe": "topic echo (ASSOC)",
+          "why_wrong": "“Discretionary” money is money left over to spend as one chooses. The models’ assumption in the colon is that saved dollars are spent like any others, which says nothing about whether the money is optional spending."
+        },
+        "C": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "“Illiquid” money or assets cannot easily be spent or turned into cash. The colon says the models expect the saved twenty dollars to be spent like any other money, the opposite of treating it as hard to spend."
+        }
+      },
+      "models": [
+        "93665100",
+        "bce4d106",
+        "1eeb9bb8"
+      ],
+      "band7_moves": [
+        "rare key with the restatement after a colon in plain words",
+        "every option is an economics term that collocates with money (collocation trap)",
+        "near synonym that fails on one feature: convertible (exchange for another form, not interchangeable units)",
+        "all four options past rank 20,000"
+      ],
+      "word_count": 64,
+      "sources": [
+        {
+          "what": "Hastings and Shapiro (2013, QJE), Fungibility and Consumer Choice: households shifted toward premium gasoline when gasoline prices fell in 2008 far more than income effects explain, rejecting fungibility of gasoline money",
+          "url": "https://www.chicagobooth.edu/review/2013/september/gas-pump-riddle"
+        }
+      ],
+      "notes": "Subject: social science (economics). Key letter D. Steps: 1 (colon restatement), carried by vocabulary as section 5 allows for one-step B1 (93665100, bce4d106). Concessive frame: no (Yet introduces the finding). Transferred-sense key: no. Section 6 checks (corrected ranks): fungible and illiquid absent from both corpora (modern finance words, rare for students), convertible 45,653, discretionary 20,866; 4 of 4 past 20,000; rarest distractor unseen. Band-5 guard: clear. Collocation trap: all three distractors are economic adjectives that pair with money. Simplified: the study measured grade shifts with grocery-chain fuel data, 2006 to 2009.",
+      "band7": {
+        "verdict": "band 7",
+        "why": "Corrected ranks convertible 45,653, discretionary 20,866, illiquid and fungible unseen in both corpora: 4 of 4 past 20,000. One-step colon restatement carried by vocabulary, as 93665100 and bce4d106; every option collocates with money and convertible is the near synonym that fails on one feature. Band-5 guard clear (no distractor under 10,000)."
+      },
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [
+          "replaced C nominal (corrected 10,075, the commonest option) with illiquid: read loosely as “at face value” (a dollar is a dollar), nominal came close to the restatement"
+        ],
+        "status": "fixed"
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "D",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 7
+    },
+    {
+      "id": "words_in_context.B3.hard.w2b1_04",
+      "template": "B3",
+      "subtype": "Blank completion: contrast clue",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "When the United States terminated the bracero program in 1964, barring the Mexican seasonal workers who had done much of its agricultural labor, officials expected the exclusion to prove ______ for American-born farmworkers. Yet economists Michael Clemens and colleagues found that domestic farmworkers’ wages and employment increased no faster in states that had depended heavily on braceros than elsewhere.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "inconsequential",
+        "salutary",
+        "deleterious",
+        "precarious"
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "“Salutary” means beneficial. “Yet” sets the finding against the officials’ expectation, and the finding is that domestic farmworkers’ wages and employment did not increase faster where braceros had been excluded. For that to contradict the expectation, officials must have expected wages and employment to rise, that is, expected the exclusion to benefit American-born farmworkers.",
+      "distractors": {
+        "A": {
+          "recipe": "reversal: trait of the finding (ANT)",
+          "why_wrong": "“Inconsequential” describes what the economists found, an exclusion with no measurable effect. Officials who had expected no effect would not be contradicted by that finding, but “Yet” marks the finding as a contrast with their expectation."
+        },
+        "C": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "“Deleterious” means harmful. If officials had expected the exclusion to hurt domestic farmworkers, finding that their wages increased no faster where braceros left would not contrast with that expectation."
+        },
+        "D": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "“Precarious” means insecure or risky. The text gives no sign that officials expected the exclusion to make farmworkers’ situation uncertain; the contrast concerns whether wages and employment would rise."
+        }
+      },
+      "models": [
+        "22a41819",
+        "e8fb0744",
+        "6c9f1727"
+      ],
+      "band7_moves": [
+        "received view then finding, blank on the view being challenged",
+        "the finding’s own trait offered as a reversal (inconsequential)",
+        "direction of the expectation left implicit, recovered from a negated comparison",
+        "all four options past rank 10,000"
+      ],
+      "word_count": 59,
+      "sources": [
+        {
+          "what": "Clemens, Lewis, and Postel: 1964 bracero exclusion was meant to raise domestic farm wages and employment; wages and employment in highly exposed states moved like those in unexposed states; growers adopted labor-saving technology",
+          "url": "https://www.nber.org/digest/apr17/effects-excluding-low-skill-foreign-workers"
+        }
+      ],
+      "notes": "Subject: social science (economic history). Key letter B. Steps: 2 (read “Yet” as contrast, then infer the expectation from the negated finding: rose no faster implies an expected rise). Concessive frame: the received view (officials’ expectation) holds the blank and the finding is left implicit about direction. Transferred-sense key: no. Section 6 checks: salutary 23,342; inconsequential 34,175; deleterious 41,092; precarious 13,764; 4 of 4 past 10,000, 3 past 20,000. Band-5 guard: clear. Simplified: the program ended on December 31, 1964; the study notes growers mechanized instead of hiring domestic workers.",
+      "band7": {
+        "verdict": "band 7",
+        "why": "Corrected ranks inconsequential 34,175, salutary 23,342, deleterious 17,822, precarious 13,764: 4 of 4 past 10,000, 2 past 20,000, mean log 4.32. Received view then finding with the blank on the view (B3, as 22a41819 and e8fb0744); the direction of the expectation is recovered from a negated comparison, and the finding’s own trait (inconsequential) is the reversal."
+      },
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 2,
+        "fixes": [],
+        "status": "pass"
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "B",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 7
+    },
+    {
+      "id": "words_in_context.M1.hard.w2b1_05",
+      "template": "M1",
+      "subtype": "Most nearly mean: underlined word",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "The following text is from George Gissing’s 1891 novel New Grub Street. Edwin Reardon, an aspiring writer who has exhausted his savings and is approaching starvation, has applied for a clerkship at a London hospital.\n\nThe applicant was engaged. He had barely strength to walk home; the sudden relief from his miseries made him, for the first time, <u>sensible</u> of the extreme physical weakness into which he had sunk. For the next week he was very ill, but he did not allow this to interfere with his new work, which was easily learnt and not burdensome.",
+      "stem": "As used in the text, what does the word “sensible” most nearly mean?",
+      "options": [
+        "Judicious",
+        "Perceptible",
+        "Cognizant",
+        "Disdainful"
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "Reardon has been hired, and the relief makes him, “for the first time,” notice how weak he has become; the next sentence confirms the weakness by saying he was very ill for a week. To be “sensible of” something in this sense is to be aware of it, so “sensible” most nearly means cognizant.",
+      "distractors": {
+        "A": {
+          "recipe": "another sense of the target (SENSE)",
+          "why_wrong": "“Sensible” often means showing good judgment, but the sentence is not about Reardon acting wisely; it is about his suddenly noticing his own weakness."
+        },
+        "B": {
+          "recipe": "another sense of the target (SENSE)",
+          "why_wrong": "In older usage something “sensible” can be perceptible, able to be noticed by the senses. Here the word describes Reardon, who notices the weakness, not something that can be noticed."
+        },
+        "D": {
+          "recipe": "right field, wrong nuance (CONNOT)",
+          "why_wrong": "Being disdainful of something means scorning it. The text gives no sign that Reardon looks down on his weakness; the relief simply makes him aware of it for the first time."
+        }
+      },
+      "models": [
+        "6557f7fc",
+        "7f935017"
+      ],
+      "band7_moves": [
+        "common target in a non-first sense (sensible of = aware of)",
+        "key mid-frequency (Cognizant), not the plain everyday synonym",
+        "two distractors are real senses of the target (judicious, perceptible)",
+        "near miss on one feature: disdainful (an attitude toward the weakness, not awareness of it)"
+      ],
+      "word_count": 96,
+      "sources": [
+        {
+          "what": "Text of New Grub Street (1891), chapter V, copied from Project Gutenberg",
+          "url": "https://www.gutenberg.org/ebooks/1709"
+        }
+      ],
+      "notes": "Subject: literature. Key letter C. Excerpt copied exactly (one paragraph, chapter V). Steps: 2 (set aside the everyday sense, then read the frame “sensible of” with the clue that he notices his weakness for the first time). Transferred-sense key: yes (archaic sense, aware). Rare clue: no. Option ranks (corrected): Judicious 12,231; Perceptible 7,266; Cognizant 28,383; Disdainful 14,656; mean log 4.14. Key mid-frequency rather than the plain synonym “Aware,” as section 5 asks for M1. Two real senses of the target plus one near miss.",
+      "band7": {
+        "verdict": "band 7",
+        "why": "Corrected ranks Judicious 12,231, Perceptible 7,266, Cognizant 28,383, Disdainful 14,656: mean log 4.14, above both CB M1 band-7 items (6557f7fc 3.88, 7f935017 3.84). Archaic sense (sensible of) held against two real senses, one of them the everyday meaning; mid-rare key. Weaker than the Wharton model in one respect: Judicious and Perceptible fail on the “of” frame rather than fitting loosely."
+      },
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [
+          "replaced D Suspicious (3,985) with Disdainful (14,656): Suspicious sat far below the other options and, with Perceptible, tripped the band-5 guard (key rarest, two distractors under 10,000)"
+        ],
+        "status": "fixed"
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "C",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 7
+    },
+    {
+      "id": "words_in_context.B4.hard.w2b1_06",
+      "template": "B4",
+      "subtype": "Blank completion: example-pinned clue",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "Researchers Frances Trix and Carolyn Psenka analyzed more than 300 recommendation letters for candidates for faculty positions at an American medical school and found that letters for women were more often ______ than letters for men. Such letters tended to be brief and to offer only generalized praise, saying little about the candidate’s research or other particular accomplishments.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "perfunctory",
+        "effusive",
+        "prolix",
+        "uncomplimentary"
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "A “perfunctory” letter is one written with the minimum of effort, as a routine obligation. The second sentence describes exactly such letters: brief, offering only generalized praise, and saying little about the candidate’s particular work. Those features are what make a recommendation letter perfunctory.",
+      "distractors": {
+        "B": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "An “effusive” letter gushes with praise. The text says the letters offered only general praise and said little, the opposite of an effusive letter."
+        },
+        "C": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "A “prolix” letter is long-winded. The text says these letters tended to be brief."
+        },
+        "D": {
+          "recipe": "right field, wrong nuance (CONNOT)",
+          "why_wrong": "An “uncomplimentary” letter is critical of its subject. The letters described do offer praise, though only in general terms; the text faults them for saying little, not for criticizing the applicant."
+        }
+      },
+      "models": [
+        "a06c434d",
+        "9ff88d6b",
+        "dd19befa"
+      ],
+      "band7_moves": [
+        "key is the abstract category the described features instantiate",
+        "two reversals on different features (effusive: amount of praise; prolix: length)",
+        "near miss on one feature: uncomplimentary (negative tone, but the letters do praise)",
+        "all four options past rank 10,000"
+      ],
+      "word_count": 58,
+      "sources": [
+        {
+          "what": "Trix and Psenka (2003, Discourse & Society 14(2)), Exploring the Color of Glass: over 300 letters of recommendation for medical faculty at a large American medical school; letters for women shorter and more often lacking specifics",
+          "url": "https://digitalcommons.usu.edu/advance/276"
+        }
+      ],
+      "notes": "Subject: social science (sociolinguistics). Key letter A. Steps: 2 (generalize from the described features, short, general praise, few specifics, to the abstract category). Concessive frame: no. Transferred-sense key: no. Section 6 checks: perfunctory 14,278; effusive 19,725; prolix 47,476; uncomplimentary 33,455; 4 of 4 past 10,000, 2 past 20,000; rarest distractor 47,476 (just under 50,000). Band-5 guard: clear. Trix and Psenka call these “letters of minimal assurance.” Psenka’s role is not stated because it was not checked.",
+      "band7": {
+        "verdict": "band 7",
+        "why": "Corrected ranks perfunctory 14,278, effusive 19,725, prolix 47,476, uncomplimentary 33,455: 4 of 4 past 10,000, 2 past 20,000, mean log 4.41. Abstract category pinned by the described features (B4, as a06c434d); two reversals on different features and a near miss on tone (uncomplimentary: the letters do praise)."
+      },
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 2,
+        "fixes": [
+          "trimmed passage (63 to 58 words)"
+        ],
+        "status": "fixed"
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "A",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 7
+    },
+    {
+      "id": "words_in_context.B5.medium.w2b1_07",
+      "template": "B5",
+      "subtype": "Blank completion: negated frame",
+      "tier": "medium",
+      "passage": "Museum visitors may imagine that they contemplate celebrated paintings at length, but their viewing is seldom ______. Observing visitors in the galleries of the Metropolitan Museum, researchers Jeffrey Smith and Lisa Smith found that people spent a median of approximately 17 seconds examining each of six renowned masterpieces.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "solitary",
+        "cursory",
+        "orderly",
+        "leisurely"
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "“Leisurely” means unhurried. The text contrasts what visitors imagine, contemplating paintings at length, with what the researchers observed: a median of about 17 seconds per work. Viewing that brief is seldom leisurely.",
+      "distractors": {
+        "A": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Whether visitors look alone or with others is not the point of the contrast, which concerns how long they look."
+        },
+        "B": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "“Cursory” means hasty. A median of 17 seconds is cursory viewing, so saying it is seldom cursory contradicts the finding."
+        },
+        "C": {
+          "recipe": "right field, wrong nuance (CONNOT)",
+          "why_wrong": "“Orderly” describes viewing that follows a neat, systematic sequence. The finding concerns the length of time visitors spend, not whether they look in an orderly way."
+        }
+      },
+      "models": [
+        "2.10",
+        "2.14",
+        "2.21"
+      ],
+      "word_count": 48,
+      "sources": [
+        {
+          "what": "Smith and Smith (2001), Spending time on art: 150 visitors at the Metropolitan Museum of Art viewing six works; mean 27.2 seconds, median 17.0 seconds",
+          "url": "https://journals.sagepub.com/doi/10.2190/5MQM-59JH-X21R-JN5J"
+        }
+      ],
+      "notes": "Subject: social science (psychology of art). Key letter D. Negation in “seldom.” The six works are not named in the passage because they were not checked.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [
+          "trimmed passage (52 to 48 words)"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "words_in_context.B6.medium.w2b1_08",
+      "template": "B6",
+      "subtype": "Blank completion: phrase options",
+      "tier": "medium",
+      "passage": "Artist Lalla Essaydi’s photographic series Les Femmes du Maroc is ______ nineteenth-century European paintings of harem women. Essaydi restages works such as Ingres’s La Grande Odalisque but covers her models in Arabic calligraphy written in henna, countering the painters’ fantasies of silent, exotic women with images of women wrapped in writing.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "an imitation of",
+        "a rejoinder to",
+        "an inspiration for",
+        "a supplement to"
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "A “rejoinder to” something is a reply to it, often one that answers back. Essaydi restages the European paintings, but she changes them in order to counter the painters’ fantasies, so her series answers those paintings rather than simply copying them.",
+      "distractors": {
+        "A": {
+          "recipe": "half the clue (HALF)",
+          "why_wrong": "Essaydi does restage the paintings, but the text stresses that she alters them to counter the painters’ fantasies; “an imitation of” captures only the restaging."
+        },
+        "C": {
+          "recipe": "reversal of direction (ANT)",
+          "why_wrong": "The paintings are from the nineteenth century and Essaydi’s series came later, so her work could not have inspired them; the influence runs the other way."
+        },
+        "D": {
+          "recipe": "right field, wrong nuance (CONNOT)",
+          "why_wrong": "A supplement adds to something in the same spirit. Essaydi’s series counters the paintings’ view of women rather than extending it."
+        }
+      },
+      "models": [
+        "2.4",
+        "2.18",
+        "2.28"
+      ],
+      "word_count": 51,
+      "sources": [
+        {
+          "what": "Lalla Essaydi, Les Femmes du Maroc: restages Orientalist paintings by Ingres, Delacroix, and Gerome; women and surfaces covered in henna calligraphy",
+          "url": "https://zimmerli.rutgers.edu/art/exhibition/lalla-essaydi-les-femmes-du-maroc"
+        },
+        {
+          "what": "Les Femmes du Maroc: La Grande Odalisque (2008), a response to Ingres’s Grande Odalisque with henna calligraphy (VMFA)",
+          "url": "https://vmfa.museum/wp-subsite/?p=482608"
+        }
+      ],
+      "notes": "Subject: humanities and arts (photography). Key letter B. Titles are italic in print. “Countering the painters’ fantasies” is the passage’s evaluative clue; the key does not repeat it.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 2,
+        "fixes": [
+          "trimmed passage (56 to 51 words); \"paintings of North African women\" made \"paintings of harem women\" since La Grande Odalisque is not a North African scene"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "words_in_context.B1.medium.w2b1_09",
+      "template": "B1",
+      "subtype": "Blank completion: restatement clue",
+      "tier": "medium",
+      "passage": "Philadelphia ceramicist Roberto Lugo ______ two traditions that seldom intersect. He produces porcelain vases and teapots in ornate shapes long associated with European royalty, then decorates them with graffiti-inspired patterns and portraits, often pairing a historical figure such as Frederick Douglass with a rapper such as Notorious B.I.G. on a single vessel.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "integrates",
+        "parodies",
+        "sunders",
+        "catalogs"
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The second sentence explains what Lugo does with the two traditions: the ornate shapes come from porcelain long associated with European royalty, and the decoration comes from graffiti and from portraits that pair historical figures with rappers, all on a single vessel. Bringing the two together in one work is to integrate them.",
+      "distractors": {
+        "B": {
+          "recipe": "right field, wrong nuance (CONNOT)",
+          "why_wrong": "Combining hip-hop portraits with ornate porcelain might seem playful, but nothing in the text says Lugo mocks either tradition; it describes him uniting them."
+        },
+        "C": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "To “sunder” is to split apart. Lugo brings the traditions together on the same vessel."
+        },
+        "D": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "To catalog is to list or classify. Lugo makes new objects that combine the traditions; he is not recording them."
+        }
+      },
+      "models": [
+        "2.5",
+        "2.9",
+        "2.16",
+        "2.23"
+      ],
+      "word_count": 52,
+      "sources": [
+        {
+          "what": "Roberto Lugo works in centuries-old European and Asian porcelain traditions associated with royalty, mixing in hip-hop and graffiti; often pairs Black or Latino historical figures (Frederick Douglass among them) with rappers such as Notorious B.I.G.",
+          "url": "https://www.inquirer.com/arts/roberto-lugo-pottery-artist-princeton-kensington-20250303.html"
+        }
+      ],
+      "notes": "Subject: humanities and arts (ceramics). Key letter A. Restatement in the next sentence.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 2,
+        "fixes": [
+          "trimmed passage (55 to 52 words); \"eighteenth-century European luxury wares\" replaced by shapes long associated with European royalty and the pairing stated as the source gives it (historical figures with rappers)",
+          "explanation or why_wrong updated to the trimmed passage"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "words_in_context.B2.medium.w2b1_10",
+      "template": "B2",
+      "subtype": "Blank completion: cause or consequence clue",
+      "tier": "medium",
+      "passage": "When Mary Ann Shadd founded the Provincial Freeman, an antislavery newspaper for Black communities in Canada, in 1853, she placed the name of abolitionist Samuel Ringgold Ward, rather than her own, on its masthead as editor. Knowing that many readers regarded newspaper work as a man’s profession, Shadd evidently hoped to ______ objections to a woman directing the publication.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "provoke",
+        "rebut",
+        "forestall",
+        "document"
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "To “forestall” something is to prevent it by acting in advance. Shadd knew many readers regarded newspaper work as a man’s profession, so she kept her own name off the masthead and listed a man instead; that step was meant to keep objections to a woman editor from arising in the first place.",
+      "distractors": {
+        "A": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "Listing a man as editor would avoid objections, not stir them up, so “provoke” reverses Shadd’s purpose."
+        },
+        "B": {
+          "recipe": "right field, wrong means (CONNOT)",
+          "why_wrong": "To rebut objections is to answer them with arguments after they are made. Shadd did not argue against objections; she hid her role so that they would not arise."
+        },
+        "D": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Nothing in the text suggests Shadd wanted to record objections; her action was aimed at avoiding them."
+        }
+      },
+      "models": [
+        "2.17",
+        "2.22",
+        "2.24",
+        "2.25"
+      ],
+      "word_count": 59,
+      "sources": [
+        {
+          "what": "Shadd founded the Provincial Freeman (1853) and asked Samuel Ringgold Ward to lend his name as editor; she knew her name on the masthead could alienate readers who considered editorships men's affairs",
+          "url": "https://www.biographi.ca/en/bio/6425"
+        },
+        {
+          "what": "Shadd feared a woman’s name on the masthead would drive away readers; Ward listed as editor (Canadian Encyclopedia)",
+          "url": "https://www.thecanadianencyclopedia.ca/en/article/the-provincial-freeman"
+        }
+      ],
+      "notes": "Subject: history. Key letter C. Cause clue: “Knowing that many readers regarded newspaper work as a man’s profession.”",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [
+          "added a reachable source for the core claim (biographi.ca did not resolve here); passage unchanged"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "words_in_context.M1.medium.w2b1_11",
+      "template": "M1",
+      "subtype": "Most nearly mean: underlined word",
+      "tier": "medium",
+      "passage": "The following text is from Herbert Quick’s 1922 novel Vandemark’s Folly. The narrator recalls the settlement of his township in Iowa.\n\nBuckner Gowdy, Doctor Bliven, their associates, and others not yet mentioned will be found helping to make or mar the story all through the future; for an Iowa community was like a growing child in this, that its character in maturity was <u>fixed</u> by its beginnings.",
+      "stem": "As used in the text, what does the word “fixed” most nearly mean?",
+      "options": [
+        "Repaired",
+        "Fastened",
+        "Manipulated",
+        "Determined"
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The narrator compares an Iowa community to a growing child: what it becomes as an adult depends on its early years. A character “fixed by its beginnings” is one settled or determined by them, which is why the people present at the start will shape the whole story.",
+      "distractors": {
+        "A": {
+          "recipe": "another sense of the target (SENSE)",
+          "why_wrong": "To fix something can mean to repair it, but a community’s character is not being mended by its beginnings."
+        },
+        "B": {
+          "recipe": "another sense of the target (SENSE)",
+          "why_wrong": "To fix something can mean to fasten it in place, but the sentence is about what shapes the community’s character, not about attaching anything."
+        },
+        "C": {
+          "recipe": "another sense of the target (SENSE)",
+          "why_wrong": "To fix a contest can mean to rig or manipulate it, but nothing in the sentence suggests anyone dishonestly controlling the community; the point is that its early years settle its character."
+        }
+      },
+      "models": [
+        "2.3",
+        "2.19"
+      ],
+      "word_count": 67,
+      "sources": [
+        {
+          "what": "Text of Vandemark's Folly (1922), copied from Project Gutenberg",
+          "url": "https://www.gutenberg.org/ebooks/12179"
+        }
+      ],
+      "notes": "Subject: literature. Key letter D. Excerpt copied exactly (one paragraph). Abstract sense of a common word, as in the medium models (assumed, quality).",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [
+          "shortened the intro (73 to 67 words); excerpt unchanged"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "words_in_context.B1.easy.w2b1_12",
+      "template": "B1",
+      "subtype": "Blank completion: restatement clue",
+      "tier": "easy",
+      "passage": "Quilter Rosie Lee Tompkins rarely followed a predetermined pattern. Instead, she ______ her designs as she worked, assembling scraps of fabric in vibrant colors and irregular shapes into quilts that often resemble abstract paintings more than traditional bedcovers.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "copied",
+        "improvised",
+        "purchased",
+        "abandoned"
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The first sentence says Tompkins rarely followed a predetermined pattern, and “Instead” introduces what she did: worked out her designs while making the quilts, with irregular shapes. Making something up as one goes is improvising.",
+      "distractors": {
+        "A": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "Copying a design would mean following an existing pattern, which the text says Tompkins rarely did."
+        },
+        "C": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Nothing suggests Tompkins bought her designs; the text says she worked them out as she sewed."
+        },
+        "D": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "The text describes Tompkins completing quilts in vibrant colors and irregular shapes, not giving designs up."
+        }
+      },
+      "models": [
+        "1.11",
+        "1.21",
+        "1.26",
+        "1.51"
+      ],
+      "word_count": 38,
+      "sources": [
+        {
+          "what": "Rosie Lee Tompkins: improvisational patchwork that sometimes cites familiar quilt patterns but never adheres to them (LRB on the BAMPFA retrospective)",
+          "url": "https://www.lrb.co.uk/the-paper/v42/n24/julia-bryan-wilson/at-bampfa"
+        }
+      ],
+      "notes": "Subject: humanities and arts (quilting). Key letter B. Restatement clue: “rarely followed a predetermined pattern.”",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [
+          "trimmed passage (40 to 38 words)"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "words_in_context.B1.easy.w2b1_13",
+      "template": "B1",
+      "subtype": "Blank completion: restatement clue",
+      "tier": "easy",
+      "passage": "Land birds are a surprisingly ______ component of the diet of tiger sharks in the northern Gulf of Mexico. Marcus Drymon and colleagues discovered the remains of such birds in the stomachs of 41 of the 105 sharks they examined.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "dangerous",
+        "rare",
+        "deliberate",
+        "frequent"
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The second sentence gives the evidence: 41 of the 105 sharks examined had eaten land birds. Since more than a third of the sharks had eaten them, land birds are a frequent part of these sharks’ diet.",
+      "distractors": {
+        "A": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "The text says nothing about land birds being dangerous for sharks to eat."
+        },
+        "B": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "Finding land birds in 41 of 105 sharks shows that such meals are common, not rare."
+        },
+        "C": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "The text reports only how often land birds turn up in the sharks’ stomachs; it does not say the sharks seek the birds out on purpose."
+        }
+      },
+      "models": [
+        "1.10",
+        "1.42",
+        "1.53"
+      ],
+      "word_count": 40,
+      "sources": [
+        {
+          "what": "Drymon et al. (2019, Ecology), Tiger sharks eat songbirds: 41 of 105 tiger sharks sampled in the north-central Gulf of Mexico had eaten land birds of 11 species; most in fall migration",
+          "url": "https://www.sciencenews.org/blog/wild-things/tiger-sharks-feast-migratory-birds-fall-out-sky"
+        }
+      ],
+      "notes": "Subject: natural science (marine biology). Key letter D. Clue: 41 of 105 sharks.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 2,
+        "fixes": [
+          "trimmed passage (57 to 40 words); \"juvenile\" and \"songbirds\" dropped (the source counts 105 tiger sharks of all ages and land birds of 11 species, not all songbirds); brown thrasher detail cut",
+          "explanation or why_wrong updated to the trimmed passage"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "words_in_context.B1.easy.w2b1_14",
+      "template": "B1",
+      "subtype": "Blank completion: restatement clue",
+      "tier": "easy",
+      "passage": "Pardhan Gond artist Jangarh Singh Shyam grew up decorating the walls of village houses in central India. After painter Jagdish Swaminathan brought him to Bhopal in the 1980s, Shyam ______ this tradition to paper and canvas, producing vibrant depictions of animals and deities.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "adapted",
+        "explained",
+        "compared",
+        "returned"
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "Shyam had painted on village walls, and in Bhopal he began working on paper and canvas. Changing a wall-painting tradition so that it suits new surfaces is adapting it.",
+      "distractors": {
+        "B": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "The text describes Shyam making new paintings on paper and canvas, not explaining the tradition to anyone."
+        },
+        "C": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Nothing suggests Shyam set the tradition beside paper and canvas to compare them; he carried it onto those surfaces."
+        },
+        "D": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "To return something is to bring it back. The tradition had been practiced on mud walls, so moving it to paper and canvas was not a return."
+        }
+      },
+      "models": [
+        "1.11",
+        "1.13",
+        "1.53",
+        "1.6"
+      ],
+      "word_count": 43,
+      "sources": [
+        {
+          "what": "Jangarh Singh Shyam: J. Swaminathan found him painting on house walls in the 1980s and brought him to Bhopal (Roopankar, Bharat Bhavan), where he moved his work from walls to paper and canvas",
+          "url": "https://saffronart.com/auctions/postwork.aspx?l=20991"
+        }
+      ],
+      "notes": "Subject: humanities and arts (Gond painting). Key letter A. Easy-tier distractor mix: three unsupported words.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 2,
+        "fixes": [
+          "trimmed passage (52 to 43 words); \"early 1980s\" made \"1980s\" as the source gives it"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "words_in_context.M1.easy.w2b1_15",
+      "template": "M1",
+      "subtype": "Most nearly mean: underlined word",
+      "tier": "easy",
+      "passage": "The following text is from W. H. Hudson’s 1918 memoir Far Away and Long Ago, which recalls his childhood in Argentina.\n\nIn spring and early summer the low-lying areas about Canada Seca were pleasant places to see and ride on where the pigs had not defaced them: they <u>kept</u> their bright verdure when the higher grounds were parched and brown; then too, after rain, they were made beautiful with the bright little yellow flower called macachina.",
+      "stem": "As used in the text, what does the word “kept” most nearly mean?",
+      "options": [
+        "Celebrated",
+        "Detained",
+        "Retained",
+        "Raised"
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The low-lying areas stayed bright green while the higher ground dried out and turned brown. They “kept” their verdure, or greenness, in the sense that they retained it.",
+      "distractors": {
+        "A": {
+          "recipe": "another sense of the target (SENSE)",
+          "why_wrong": "People can keep a holiday by celebrating it, but the low grounds are not celebrating their greenness; they still have it while other land dries out."
+        },
+        "B": {
+          "recipe": "another sense of the target (SENSE)",
+          "why_wrong": "To keep someone can mean to detain them, but the text describes land holding on to its color, not holding anyone back."
+        },
+        "D": {
+          "recipe": "another sense of the target (SENSE)",
+          "why_wrong": "Farmers keep animals by raising them, and pigs appear in the text, but the sentence is about the land staying green."
+        }
+      },
+      "models": [
+        "1.8",
+        "1.40",
+        "1.54",
+        "1.56"
+      ],
+      "word_count": 76,
+      "sources": [
+        {
+          "what": "Text of Far Away and Long Ago (1918), chapter on the estancia Canada Seca, copied from Project Gutenberg",
+          "url": "https://www.gutenberg.org/ebooks/6093"
+        }
+      ],
+      "notes": "Subject: literature (memoir). Key letter C. Excerpt copied exactly (one paragraph); “macachina” is italic in the source. Canada Seca is spelled as in the Gutenberg text.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [
+          "shortened the intro to the source line and one clause of context (85 to 76 words); the excerpt is one sentence and is kept whole, so the item stays above the models’ median 58"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "words_in_context.M1.easy.w2b1_16",
+      "template": "M1",
+      "subtype": "Most nearly mean: underlined word",
+      "tier": "easy",
+      "passage": "The following text is from Israel Zangwill’s 1892 novel Children of the Ghetto. Mendel, an elderly immigrant in London, has announced to his wife, Beenah, that he intends to travel to America in search of employment, and she has lamented the hardships he will encounter.\n\n“God will give me strength to do what is right.” The tears were <u>plain</u> enough in his voice now and would not be denied. His words forced themselves out in a husky wheeze.",
+      "stem": "As used in the text, what does the word “plain” most nearly mean?",
+      "options": [
+        "Ordinary",
+        "Obvious",
+        "Simple",
+        "Unattractive"
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "Mendel’s tears “would not be denied,” and his words come out in a husky wheeze, so anyone listening could hear that he was close to crying. Tears that are plain in a voice are obvious.",
+      "distractors": {
+        "A": {
+          "recipe": "another sense of the target (SENSE)",
+          "why_wrong": "“Plain” can mean ordinary, as in plain folks, but the sentence is about how clearly the tears could be heard."
+        },
+        "C": {
+          "recipe": "another sense of the target (SENSE)",
+          "why_wrong": "“Plain” can mean simple, as in plain food, but that sense does not describe tears heard in someone’s voice."
+        },
+        "D": {
+          "recipe": "another sense of the target (SENSE)",
+          "why_wrong": "A “plain” face is one that is not attractive, but the text describes Mendel’s voice, not anyone’s looks."
+        }
+      },
+      "models": [
+        "1.1",
+        "1.14",
+        "1.41",
+        "1.45"
+      ],
+      "word_count": 78,
+      "sources": [
+        {
+          "what": "Text of Children of the Ghetto (1892), copied from Project Gutenberg",
+          "url": "https://www.gutenberg.org/ebooks/12680"
+        }
+      ],
+      "notes": "Subject: literature. Key letter B. Excerpt copied exactly (one paragraph); straight quotes converted to curly.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "words_in_context.M1.easy.w2b1_17",
+      "template": "M1",
+      "subtype": "Most nearly mean: underlined word",
+      "tier": "easy",
+      "passage": "The following text is from Ada Cambridge’s 1891 novel The Three Miss Kings. The King sisters have returned to their family’s former residence in Australia, which a subsequent owner has renovated with bright paint and an iron roof.\n\n“Never mind,” said Patty, who was the first to recover herself. “It looks very <u>smart</u> and tidy. I daresay it wanted doing up badly.”",
+      "stem": "As used in the text, what does the word “smart” most nearly mean?",
+      "options": [
+        "Stylish",
+        "Clever",
+        "Painful",
+        "Quick"
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "Patty is describing the house after its new paint and roof, and she pairs “smart” with “tidy” and says the house needed “doing up.” A house that looks smart in this sense looks fresh and stylish.",
+      "distractors": {
+        "B": {
+          "recipe": "another sense of the target (SENSE)",
+          "why_wrong": "A smart person is clever, but Patty is describing how a house looks, and a house cannot be clever."
+        },
+        "C": {
+          "recipe": "another sense of the target (SENSE)",
+          "why_wrong": "A cut can smart, or sting, but Patty is describing the house’s appearance, not a pain."
+        },
+        "D": {
+          "recipe": "another sense of the target (SENSE)",
+          "why_wrong": "A smart pace is a quick one, but nothing in the passage concerns speed."
+        }
+      },
+      "models": [
+        "1.8",
+        "1.36",
+        "1.38",
+        "1.54"
+      ],
+      "word_count": 62,
+      "sources": [
+        {
+          "what": "Text of The Three Miss Kings (1891), chapter on the return to Seaview Villa, copied from Project Gutenberg",
+          "url": "https://www.gutenberg.org/ebooks/50476"
+        }
+      ],
+      "notes": "Subject: literature. Key letter A. Excerpt copied exactly up to the end of the second sentence of Patty’s speech, where the quotation is closed (the paragraph’s last sentence is trimmed); straight quotes converted to curly. Context from the preceding paragraph: the bright paint, whitewash, iron roof, and missing ivy.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [
+          "trimmed the excerpt at a sentence end, dropping its last sentence (79 to 62 words); the rest is exact"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "words_in_context.M1.easy.w2b1_18",
+      "template": "M1",
+      "subtype": "Most nearly mean: underlined word",
+      "tier": "easy",
+      "passage": "The following text is from Sara Jeannette Duncan’s 1904 novel The Imperialist. Hugh Finlay, a young minister, has just received welcome news from Dr. Drummond, an older minister.\n\nThe young fellow got up, still speechless, and confronted Dr Drummond. He was troubled for something to say; the chambers of his brain seemed empty or reiterating foolish sounds. He <u>pressed</u> the hand the minister offered him and his lips quivered. Then a light came into his face, and he picked up his hat.",
+      "stem": "As used in the text, what does the word “pressed” most nearly mean?",
+      "options": [
+        "Ironed",
+        "Urged",
+        "Flattened",
+        "Clasped"
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "Dr. Drummond offers Finlay his hand, and Finlay, too moved to speak, presses it. Pressing a hand that someone holds out means clasping it warmly.",
+      "distractors": {
+        "A": {
+          "recipe": "another sense of the target (SENSE)",
+          "why_wrong": "Clothes are pressed with an iron, but Finlay is taking a hand that is offered to him."
+        },
+        "B": {
+          "recipe": "another sense of the target (SENSE)",
+          "why_wrong": "To press someone can mean to urge them, but here Finlay presses a hand, not a person to act."
+        },
+        "C": {
+          "recipe": "another sense of the target (SENSE)",
+          "why_wrong": "Flowers are pressed by being flattened, but Finlay takes a hand held out to him in greeting; he is not flattening anything."
+        }
+      },
+      "models": [
+        "1.1",
+        "1.14",
+        "1.41",
+        "1.45"
+      ],
+      "word_count": 82,
+      "sources": [
+        {
+          "what": "Text of The Imperialist (1904), copied from Project Gutenberg",
+          "url": "https://www.gutenberg.org/ebooks/5301"
+        }
+      ],
+      "notes": "Subject: literature. Key letter D. Excerpt copied exactly (one paragraph); “Dr Drummond” without a period as in the source. The welcome news (from the preceding paragraph) is that Finlay is free of an engagement.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [
+          "shortened the intro (88 to 82 words); excerpt unchanged"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "words_in_context.B6.easy.w2b1_19",
+      "template": "B6",
+      "subtype": "Blank completion: phrase options",
+      "tier": "easy",
+      "passage": "Brown thornbills, tiny songbirds of eastern Australia, protect their nests by ______ the alarm calls of other species. When a pied currawong attacks a nest, a thornbill imitates the calls that neighboring birds produce when a hawk approaches; the currawong, roughly forty times the thornbill’s size, hesitates to search for the hawk, giving the nestlings a chance to escape.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "interfering with",
+        "competing with",
+        "drawing on",
+        "hiding from"
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The second sentence explains how the thornbills protect their nests: a thornbill imitates the calls neighboring birds produce when a hawk approaches. Imitating another species’ calls is a way of drawing on them.",
+      "distractors": {
+        "A": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "The thornbill puts the other birds’ calls to use; nothing suggests it disrupts them."
+        },
+        "B": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Nothing suggests the thornbill’s calls compete with those of other species; the thornbill copies them."
+        },
+        "D": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "The thornbill imitates the other species’ calls rather than avoiding them."
+        }
+      },
+      "models": [
+        "1.2",
+        "1.3",
+        "1.29"
+      ],
+      "word_count": 59,
+      "sources": [
+        {
+          "what": "Igic, Magrath et al. (2015, Proc. R. Soc. B): brown thornbills mimic local species' hawk alarm calls when pied currawongs (about 40 times larger) attack nests; currawongs pause, giving nestlings a chance to escape",
+          "url": "https://science.anu.edu.au/news-events/news/birds-cry-wolf-scare-predators"
+        }
+      ],
+      "notes": "Subject: natural science (animal behavior). Key letter C. Verb + preposition options, as in 1.29 (depended on).",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 2,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "words_in_context.B2.easy.w2b1_20",
+      "template": "B2",
+      "subtype": "Blank completion: cause or consequence clue",
+      "tier": "easy",
+      "passage": "The large seeds of Ceratocaryum argenteum, a South African plant, closely resemble the droppings of local antelope in both appearance and odor. Jeremy Midgley and colleagues found that dung beetles, deceived by this disguise, roll the seeds away and ______ them in the soil, as they would genuine dung, placing the seeds safely below ground.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "crack",
+        "bury",
+        "dry",
+        "sort"
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The beetles treat the seeds as they would dung and leave them “in the soil,” and the result is that the seeds end up safely below ground. Putting seeds below ground in the soil is burying them.",
+      "distractors": {
+        "A": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Beetles that cracked the seeds would damage them, but the text says the beetles place the seeds safely below ground."
+        },
+        "C": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Nothing in the text concerns drying the seeds, and drying would not explain how the seeds end up below ground."
+        },
+        "D": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Sorting the seeds would not put them below ground."
+        }
+      },
+      "models": [
+        "1.5",
+        "1.16",
+        "1.35"
+      ],
+      "word_count": 55,
+      "sources": [
+        {
+          "what": "Midgley et al. (2015, Nature Plants): Ceratocaryum argenteum seeds look and smell like antelope dung; dung beetles roll and bury them; burial helps the seeds in fire-prone shrubland",
+          "url": "https://www.sciencenews.org/blog/science-ticker/stinky-seeds-dupe-dung-beetles"
+        }
+      ],
+      "notes": "Subject: natural science (botany). Key letter B. Consequence clue: the seeds end up safely below ground.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [
+          "trimmed passage (67 to 55 words); wildfire clause cut (not in the source)",
+          "explanation or why_wrong updated to the trimmed passage"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "words_in_context.B2.easy.w2b1_21",
+      "template": "B2",
+      "subtype": "Blank completion: cause or consequence clue",
+      "tier": "easy",
+      "passage": "In the early seventeenth century, Gaspar Yanga led a community of formerly enslaved people who had established a settlement in the mountains near Veracruz, in present-day Mexico. Because Spanish forces were unable to subdue the community, colonial authorities eventually agreed in 1618 to ______ it as a free town governed by Yanga and his descendants.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "abandon",
+        "invade",
+        "survey",
+        "recognize"
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "Spanish forces could not subdue the community, so the authorities came to terms with it: the town would be free and governed by Yanga’s family. Agreeing to accept the town officially as free is recognizing it.",
+      "distractors": {
+        "A": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "The community belonged to Yanga’s people, not to the Spanish, so the authorities had nothing there to abandon; the agreement concerned the town’s status."
+        },
+        "B": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "The text says Spanish forces had failed to subdue the community, and the agreement made it a free town, which is the opposite of invading it."
+        },
+        "C": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Surveying the town would not make it a free town governed by Yanga; the agreement concerned its legal status."
+        }
+      },
+      "models": [
+        "1.31",
+        "1.44",
+        "1.47"
+      ],
+      "word_count": 55,
+      "sources": [
+        {
+          "what": "Gaspar Yanga led a maroon community near Veracruz; after years of resistance it was recognized by Spanish authorities in 1618 as a free town governed by Yanga and his descendants",
+          "url": "https://blackpast.org/gah/yanga-gaspar-c-1545"
+        }
+      ],
+      "notes": "Subject: history (colonial Mexico). Key letter D. Sources give 1617 to 1630s for the charter; 1618 follows BlackPast.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "words_in_context.B4.easy.w2b1_22",
+      "template": "B4",
+      "subtype": "Blank completion: example-pinned clue",
+      "tier": "easy",
+      "passage": "Ethiopian artist Elias Sime builds his large wall pieces from ______ materials. Many of his components, including obsolete computer keyboards, circuit boards, and tangles of electrical wire, are bought at open-air markets in Addis Ababa, where electronics thrown away in other countries often end up.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "discarded",
+        "handcrafted",
+        "natural",
+        "fragile"
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The second sentence lists Sime’s materials: obsolete keyboards, circuit boards, and wire, bought at markets where electronics thrown away elsewhere end up. These examples are all discarded materials.",
+      "distractors": {
+        "B": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "The keyboards, circuit boards, and wire were mass-produced and then thrown away; nothing suggests they were made by hand."
+        },
+        "C": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Keyboards, circuit boards, and wire are manufactured, not natural, materials."
+        },
+        "D": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "The text says nothing about the materials being delicate; it stresses that they were thrown away."
+        }
+      },
+      "models": [
+        "1.7",
+        "1.22",
+        "1.34",
+        "1.46"
+      ],
+      "word_count": 45,
+      "sources": [
+        {
+          "what": "Elias Sime builds wall works from salvaged electronics (circuit boards, keyboard keys, wire) bought in the open-air recycling markets of Addis Ababa",
+          "url": "https://hyperallergic.com/867094/elias-sime-brings-out-the-beauty-in-e-waste-arnolfini-bristol/"
+        }
+      ],
+      "notes": "Subject: humanities and arts (sculpture). Key letter A. Examples follow in the next sentence.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [
+          "source replaced (ArtNews link redirects to a paywall); Hyperallergic confirms the core claim; passage unchanged"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "words_in_context.B5.easy.w2b1_23",
+      "template": "B5",
+      "subtype": "Blank completion: negated frame",
+      "tier": "easy",
+      "passage": "The prints in artist Zarina’s 1999 portfolio Home Is a Foreign Place are far from ______. Each of the thirty-six woodcuts pairs a single Urdu word, such as the term for “border,” with one unadorned geometric form, sometimes scarcely more than a line or a rectangle.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "personal",
+        "minimal",
+        "elaborate",
+        "meaningful"
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "Each print has only one word and one unadorned shape, and some are scarcely more than a line or a rectangle. Prints that spare are far from elaborate.",
+      "distractors": {
+        "A": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "The text gives no reason to think the prints are impersonal; it describes how simple they are."
+        },
+        "B": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "A single word and one unadorned shape make the prints minimal, so saying they are far from minimal contradicts the description."
+        },
+        "D": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Nothing suggests the prints lack meaning; each pairs an image with a word chosen for the theme of home."
+        }
+      },
+      "models": [
+        "1.12",
+        "1.24",
+        "1.28",
+        "1.48"
+      ],
+      "word_count": 46,
+      "sources": [
+        {
+          "what": "Zarina, Home Is a Foreign Place (1999): 36 woodcuts, each a geometric monochrome design paired with one Urdu word (threshold, border, door)",
+          "url": "https://www.moma.org/collection/works/132514"
+        }
+      ],
+      "notes": "Subject: humanities and arts (printmaking). Key letter C. Negated frame “far from.”",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [
+          "trimmed passage (56 to 46 words); \"black\" dropped from the form (source says monochrome)"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "words_in_context.B3.easy.w2b1_24",
+      "template": "B3",
+      "subtype": "Blank completion: contrast clue",
+      "tier": "easy",
+      "passage": "Moss that has been frozen in Antarctic permafrost for about 1,500 years might reasonably be expected to be long dead. In 2014, however, Esme Roads and colleagues reported that shoots of such ancient moss, cut from deep beneath the surface on Signy Island, had ______ in their laboratory, producing new green growth.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "decayed",
+        "revived",
+        "fossilized",
+        "evaporated"
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "“However” sets the finding against the expectation that moss frozen for 1,500 years would be long dead, and the sentence ends by saying the ancient shoots produced new growth. Moss that grows again after so long has revived.",
+      "distractors": {
+        "A": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "Decayed moss would have rotted away, but the text says the old shoots produced new growth."
+        },
+        "C": {
+          "recipe": "topic echo (ASSOC)",
+          "why_wrong": "Fossils suit a story about something very old, but fossilized moss could not produce new growth."
+        },
+        "D": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Moss cannot evaporate, and the text says the shoots grew."
+        }
+      },
+      "models": [
+        "1.57",
+        "1.58"
+      ],
+      "word_count": 52,
+      "sources": [
+        {
+          "what": "Roads, Longton, and Convey (2014, Current Biology): Chorisodontium aciphyllum moss frozen in Signy Island permafrost for over 1,500 years regrew in the laboratory; described as the first plant to regrow naturally after so long a freeze",
+          "url": "https://www.sciencenews.org/blog/science-ticker/moss-still-grows-after-1500-year-deep-freeze"
+        }
+      ],
+      "notes": "Subject: natural science (botany). Key letter B. Contrast clue: “however” against the expectation that the moss is long dead. Simplified: the study dated moss layers by carbon dating and grew shoots in an incubator.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 2,
+        "fixes": [
+          "\"more than 1,500 years\" made \"about 1,500 years\" (source: nearly 1,500); \"Esme Roads and Peter Convey\" made \"Esme Roads and colleagues\" (three authors, Roads, Longton and Convey)"
+        ],
+        "status": "fixed"
+      }
+    }
+  ],
+  "removed": []
+}

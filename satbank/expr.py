@@ -19,6 +19,7 @@ from fractions import Fraction as Q
 from math import gcd, isqrt
 
 from .exact import MINUS
+from .item import fold_entry
 
 __all__ = ["Q", "num", "fmt_num", "fmt_frac", "Poly", "linear", "quadratic",
            "fmt_eq", "fmt_point", "fmt_ineq", "fmt_interval", "fn_of",
@@ -362,7 +363,7 @@ class ParseError(ValueError):
 
 def _lex(text: str) -> list:
     out, i = [], 0
-    text = text.replace("−", "-").replace("×", "*").replace("·", "*")
+    text = fold_entry(text).replace("×", "*").replace("·", "*")
     while i < len(text):
         m = _TOKEN.match(text, i)
         if not m:

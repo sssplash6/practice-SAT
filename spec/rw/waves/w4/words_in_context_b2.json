@@ -1,0 +1,1431 @@
+{
+  "skill": "Words in Context",
+  "slug": "words_in_context",
+  "part": "w4b2",
+  "domain": "Craft and Structure",
+  "plan": {
+    "templates": [
+      {
+        "code": "B6",
+        "name": "Blank completion, phrase options (word + preposition, a/an + word)"
+      },
+      {
+        "code": "B1",
+        "name": "Blank completion, restatement clue"
+      },
+      {
+        "code": "B3",
+        "name": "Blank completion, contrast clue (including received view then finding)"
+      },
+      {
+        "code": "M1",
+        "name": "Most nearly mean, underlined word"
+      },
+      {
+        "code": "B2",
+        "name": "Blank completion, cause or consequence clue"
+      },
+      {
+        "code": "B5",
+        "name": "Blank completion, negated frame"
+      },
+      {
+        "code": "B4",
+        "name": "Blank completion, example-pinned clue"
+      }
+    ]
+  },
+  "items": [
+    {
+      "id": "words_in_context.B6.hard.w4b2_01",
+      "template": "B6",
+      "subtype": "Blank completion: phrase options",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Physician Anupam Jena and colleagues found that heart attack patients hospitalized in the United States just after their 80th birthday were less likely to undergo coronary bypass surgery than comparable patients admitted just before it, a discrepancy absent at neighboring birthdays. Some physicians’ judgments, it seems, were ______ the change from a 7 to an 8 in a patient’s age rather than any genuine change in surgical risk.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "impervious to",
+        "swayed by",
+        "vindicated by",
+        "obscured by"
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "Patients hospitalized “just after their 80th birthday” were less likely to undergo bypass surgery than “comparable patients admitted just before it,” and the discrepancy was “absent at neighboring birthdays.” Since the patients were alike, the drop points to physicians being influenced, or swayed, by the new first digit of the age rather than by “any genuine change in surgical risk.”",
+      "distractors": {
+        "A": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "To be impervious to the change would be to be unaffected by it, but surgery became less likely right after the 80th birthday."
+        },
+        "C": {
+          "recipe": "wrong nuance, degree or agent (CONNOT)",
+          "why_wrong": "The move from 79 to 80 is tied to the physicians’ choices, but the text says it reflects no “genuine change in surgical risk,” so it could not justify, or vindicate, those judgments."
+        },
+        "D": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Nothing suggests the judgments were hidden or made unclear by the change in age; the text describes how that change altered them."
+        }
+      },
+      "models": [
+        "3.17",
+        "3.12",
+        "3.23",
+        "5e57efec"
+      ],
+      "word_count": 68,
+      "sources": [
+        {
+          "what": "Olenski, Zimerman, Coussens, Jena, NEJM 2020 (letter, PMC author manuscript): Medicare patients with heart attacks admitted in the 2 weeks after vs before their 80th birthday were similar at baseline, but those after were less likely to undergo CABG (5.3% vs 7.0%), with no corresponding difference at the 77th-79th or 81st-83rd birthdays; consistent with left-digit bias",
+          "url": "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7312750/"
+        }
+      ],
+      "notes": "Subject: social science (behavioral economics in medicine). Key letter B. Steps: 2 (groups alike, gap only at 80, so an irrelevant cue moved the decisions; then match that to swayed by). The passage never names left-digit bias; a different study of that bias (used-car prices, Lacetera et al.) is live as inferences.S2.hard.w2b2_02. Ranks (freq.txt, rarest content word): impervious 20,091; swayed 5,327; vindicated 22,278; obscured 10,364. Near miss: vindicated by (right relation to the age change, wrong evaluation).",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [],
+        "status": "pass",
+        "note": "Left-digit bias overlap with live inferences.S2.hard.w2b2_02 (Lacetera et al., used-car prices at 10,000-mile odometer thresholds) judged not a repeat: different study (Olenski, Jena et al., NEJM 2020), different field (surgery vs car auctions), and this passage never names or explains the bias while w2b2_02 is built on it. The bank already tolerates one mechanism across different studies (four default-effect items on four studies). Lead may overrule. Core claim checked against PMC7312750 full text (CABG 5.3% vs 7.0%, none at 77th to 79th or 81st to 83rd birthdays, consistent with left-digit bias)."
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "Raw ranks: impervious to 20,091; swayed by 5,327; vindicated by 22,278; obscured by 10,364 (obscure 5,213): 2 of 4 past 10,000 by stem, common key, no distractor past 50,000. Two steps (alike groups, gap only at 80, so an irrelevant cue moved the decisions), the band-6 B6 pattern; impervious to falls on the one stated fact that surgery dropped."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "B",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "words_in_context.B6.hard.w4b2_02",
+      "template": "B6",
+      "subtype": "Blank completion: phrase options",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "On a crowded highway, additional vehicles eventually produce a traffic jam, but Laure-Anne Poissonnier, Audrey Dussutour, and colleagues found that Argentine ants manage considerably better. As the researchers increased the density of ants on a bridge leading to food, the flow of ants rose and then stabilized rather than collapsing, since crowded ants adjusted their speed and avoided time-consuming encounters: ant traffic proved ______ congestion.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "conducive to",
+        "oblivious to",
+        "ancillary to",
+        "resistant to"
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "As density increased, the flow of ants “rose and then stabilized rather than collapsing,” unlike highway traffic, which ends in a jam. The crowded ants kept moving by adjusting their speed and avoiding “time-consuming encounters,” so their traffic held off congestion: it was resistant to it.",
+      "distractors": {
+        "A": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "Traffic conducive to congestion would tend to jam, but the ants’ flow held steady instead of collapsing."
+        },
+        "B": {
+          "recipe": "wrong nuance, degree or agent (CONNOT)",
+          "why_wrong": "The ants did not ignore crowding; they kept traffic moving by changing their speed and avoiding encounters, which means they responded to it rather than being oblivious to it."
+        },
+        "C": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Ancillary means secondary or supplementary; nothing in the text presents ant traffic as a minor addition to congestion."
+        }
+      },
+      "models": [
+        "3.17",
+        "3.12",
+        "3.23",
+        "5e57efec"
+      ],
+      "word_count": 65,
+      "sources": [
+        {
+          "what": "Poissonnier, Motsch, Gautrais, Buhl, Dussutour, eLife 8:e48945 (2019), abstract and digest: ants avoid traffic jams at high density; at large density the flow remains constant and no congestion occurs; ants adjust their speed and avoid time-consuming interactions; density varied with colonies of Argentine ants (Linepithema humile) and the width of the bridge to the food source (author first names per Crossref)",
+          "url": "https://pubmed.ncbi.nlm.nih.gov/31635695/"
+        }
+      ],
+      "notes": "Subject: natural science (collective animal behavior). Key letter D. Replaces a first choice (Bornean tree-hole frogs) found already live in boundaries w1b3_13. Steps: 2 (flow plateaus where highway traffic jams, because ants adjust; so congestion does not take hold). Ranks: conducive 24,104; oblivious 9,178; ancillary 69,564; resistant 55,844.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [],
+        "status": "pass",
+        "note": "Core claim checked against PubMed 31635695 abstract; Argentine ants (Linepithema humile) confirmed in the eLife full text (PMC6805160)."
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "Raw ranks: conducive to 24,104; oblivious to 9,178; ancillary to 69,564; resistant to 55,844 (resistant is a modern word the old corpus undercounts; about 15,600 corrected): 3 of 4 past 10,000, but the key is a word every test-taker owns and conducive to falls on the stated plateau. Two-step contrast with highway traffic, a strong band 6."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "D",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "words_in_context.B1.hard.w4b2_03",
+      "template": "B1",
+      "subtype": "Blank completion: restatement",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Linguist Shigeto Kawahara and colleagues analyzed the names of every Japanese Pokémon character available in 2016 and found the relation between a name’s sounds and its character’s traits to be strikingly ______. Names with more voiced consonants, such as b, d, and g, tend to belong to larger, heavier, and stronger characters, and names generally lengthen as characters evolve.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "systematic",
+        "arbitrary",
+        "reciprocal",
+        "contentious"
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The second sentence describes regular patterns: names with more voiced consonants “tend to belong to larger, heavier, and stronger characters,” and names “generally lengthen as characters evolve.” Sounds and traits line up in consistent, predictable ways, so the relation is systematic.",
+      "distractors": {
+        "B": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "An arbitrary relation would follow no pattern, but the text reports consistent links between the sounds of names and the characters’ size, weight, strength, and evolution."
+        },
+        "C": {
+          "recipe": "wrong nuance, degree or agent (CONNOT)",
+          "why_wrong": "Reciprocal describes a two-way exchange in which each side affects the other; the text shows names matching characters’ traits, not traits responding to names."
+        },
+        "D": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Nothing in the text suggests the relation is disputed; it reports what the researchers found."
+        }
+      },
+      "models": [
+        "3.4",
+        "3.8",
+        "3.16",
+        "3.22"
+      ],
+      "word_count": 59,
+      "sources": [
+        {
+          "what": "Kawahara, Noto, Kumagai, Phonetica 75 (2018), abstract: corpus of all Japanese Pokémon names as of October 2016; the number of voiced obstruents correlates positively with size, weight, evolution levels and strength parameters (except speed); the number of moras correlates positively with size, weight, evolution levels and all strength parameters",
+          "url": "https://pubmed.ncbi.nlm.nih.gov/29649803/"
+        }
+      ],
+      "notes": "Subject: social science (linguistics, sound symbolism). Key letter A. Steps: 2 (several correlations of sound with traits, then the abstract category for a rule-like relation). Voiced obstruents simplified to voiced consonants such as b, d, g; mora count simplified to names growing longer. Ranks: systematic 18,766; arbitrary 19,184; reciprocal 30,001; contentious 39,531.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [],
+        "status": "pass"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "Raw ranks: systematic 18,766; arbitrary 19,184; reciprocal 30,001; contentious 39,531: all four past 10,000, but systematic and arbitrary are modern academic words the 1850 to 1928 corpus undercounts and a 1400 scorer owns, and the key is restated by the next sentence's list of regular patterns (the familiar-key-restated case WAVE.md keeps out of band 7). One to two steps, like band-6 B1 models 3d658a5a and 76e4c51d."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "A",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "words_in_context.B3.hard.w4b2_04",
+      "template": "B3",
+      "subtype": "Blank completion: contrast",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "Though the looping script that fills Luigi Serafini’s Codex Seraphinianus (1981), an illustrated encyclopedia of an imaginary world, appears ______, with some letters occurring only at the beginning or end of words, as in certain real alphabets, Serafini declared in a 2009 talk that the script is asemic: there is no meaning whatsoever behind it.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "ornamental",
+        "illegible",
+        "decipherable",
+        "apocryphal"
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The sentence opens with “Though,” so the blank must name an impression that Serafini’s declaration overturns. The script’s letters behave as they do “in certain real alphabets,” which makes it look like writing that encodes a language a reader could work out; yet Serafini said “there is no meaning whatsoever behind it.” The script only appears decipherable.",
+      "distractors": {
+        "A": {
+          "recipe": "reversal: trait of the wrong party (ANT)",
+          "why_wrong": "A merely ornamental script is decorative rather than meaningful, which is what Serafini’s declaration describes; it is not an impression his declaration overturns, and the alphabet-like letter patterns point the other way."
+        },
+        "B": {
+          "recipe": "wrong nuance, degree or agent (CONNOT)",
+          "why_wrong": "Illegible describes only the look of the letters; an impression of illegibility sets up no contrast with Serafini’s declaration that the script has no meaning, and the “Though” clause needs an impression his declaration overturns. The letters that behave “as in certain real alphabets” suggest a script that could be worked out, not one that cannot be read."
+        },
+        "D": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Apocryphal means of doubtful authorship or authenticity; nothing in the text questions whether Serafini made the book."
+        }
+      },
+      "models": [
+        "3.1",
+        "3.10",
+        "3.20",
+        "177ed7dc",
+        "6c9f1727"
+      ],
+      "band7_moves": [
+        "concessive frame, blank on the impression being overturned",
+        "wrong-party reversal (ornamental describes what the script turned out to be)",
+        "long appositive between subject and blank",
+        "all four options past rank 10,000; clue word (asemic) is itself rare"
+      ],
+      "word_count": 55,
+      "sources": [
+        {
+          "what": "Wikipedia, Codex Seraphinianus: illustrated encyclopedia of fantastical flora, fauna, anatomies, fashions and foods, first published in Italy in 1981; “Some letters appear only at the beginning or end of words, similar to Semitic writing systems.” “In a talk at the Oxford University Society of Bibliophiles on 11 May 2009, Serafini stated that there is no meaning behind the Codex's script, which is asemic”",
+          "url": "https://en.wikipedia.org/wiki/Codex_Seraphinianus"
+        }
+      ],
+      "notes": "Subject: humanities (art and book history). Key letter C. Concessive frame: yes (Though ... appears ______, ... declared ...). Blank on the impression being corrected (the source states the letter positions, not any reader’s belief, so the item asserts an appearance only); ornamental is the corrected side’s own trait (wrong-party reversal, as commonplace in e8fb0744). Long interruption between subject and blank (177ed7dc move). Ranks: ornamental 11,620; illegible 30,558; decipherable 54,766; apocryphal 39,430; all four past 10,000, mean log10 4.48. Band-5 guard clear (key is the rarest, but no distractor is under 10,000).",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 2,
+        "fixes": [
+          "option B why_wrong rewritten: illegible concerns the look of the letters and sets up no contrast with the declaration (old text said it would agree with it)"
+        ],
+        "status": "fixed",
+        "note": "Core claim checked against Wikipedia (1981 publication, letters only at word start or end, 11 May 2009 Oxford talk: asemic, no meaning)."
+      },
+      "band7": {
+        "verdict": "band 7",
+        "why": "Raw and corrected ranks: ornamental 11,620; illegible 30,558; decipherable 54,766; apocryphal 39,430: 4 of 4 past 10,000, 3 past 20,000, mean log 4.48; key past 20,000; band-5 guard clear (no distractor under 10,000). Concessive frame with the blank on the impression being overturned and a long appositive between subject and blank (177ed7dc, a5e747f0 moves); ornamental is the wrong-party reversal, supported by looping and agreeing with the declaration, and illegible is the near miss (true of the look, sets up no contrast). Two steps; the key never echoes the passage."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "C",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 7
+    },
+    {
+      "id": "words_in_context.M1.hard.w4b2_05",
+      "template": "M1",
+      "subtype": "Most nearly mean: underlined word",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "The following text is adapted from Joseph Furphy’s 1903 novel Such Is Life. The narrator describes one of several bullock drivers—teamsters who drive oxen hauling wool wagons—whom he encounters while traveling through rural Australia in 1883.\n\nSteve Thompson was a Victorian [from the colony of Victoria]. He was scarcely a typical bullock driver, since fifteen years of that occupation had not brutalised his <u>temper</u>, nor ensanguined his vocabulary, nor frayed the terminal “g” from his participles. Physically, Thompson was tall and lazy, as bullock drivers ought to be.",
+      "stem": "As used in the text, what does the word “temper” most nearly mean?",
+      "options": [
+        "Disposition",
+        "Livelihood",
+        "Irascibility",
+        "Toughness"
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The narrator lists ways Thompson’s rough job had failed to coarsen him: it had not “brutalised his temper,” bloodied his language (“ensanguined his vocabulary”), or made him drop the “g” from words ending in -ing. Temper here is Thompson’s usual nature, the part of him the work might have made brutal, so it means disposition.",
+      "distractors": {
+        "B": {
+          "recipe": "topic echo (ASSOC)",
+          "why_wrong": "The sentence does mention Thompson’s “occupation,” but it says the work had not brutalised something in him, his temper; a man’s means of earning a living is the job itself, not a part of him the job could coarsen."
+        },
+        "C": {
+          "recipe": "another sense of the target (SENSE)",
+          "why_wrong": "Temper can mean a tendency to anger, but the text never suggests Thompson is quick to anger; it lists ways he escaped the coarseness typical of bullock drivers."
+        },
+        "D": {
+          "recipe": "another sense of the target (SENSE)",
+          "why_wrong": "Steel is tempered to give it toughness, but the sentence describes a man’s character, not the hardness of a material."
+        }
+      },
+      "models": [
+        "3.11",
+        "6557f7fc",
+        "7f935017"
+      ],
+      "band7_moves": [
+        "literary prose dense enough to block the clue (ensanguined, participles)",
+        "common target in a secondary sense (temper as disposition; key chosen so that it shares no stem with the target)",
+        "two distractors are real senses that fit loosely (anger, hardness of metal), one is a topic word from the scene (Livelihood)"
+      ],
+      "word_count": 88,
+      "sources": [
+        {
+          "what": "Such Is Life, Project Gutenberg 3470 (Joseph Furphy); excerpt from chapter I, Thompson’s introduction; adapted: the two sentences between “participles.” and “Physically,” are omitted and a bracketed gloss added to “Victorian”; the diary entry is dated September 1883",
+          "url": "https://www.gutenberg.org/ebooks/3470"
+        },
+        {
+          "what": "Wikipedia, Such Is Life (novel): novel by Joseph Furphy, written in 1897 and published in 1903, an account of rural dwellers including bullock drivers in southern New South Wales and northern Victoria",
+          "url": "https://en.wikipedia.org/wiki/Such_Is_Life_(novel)"
+        }
+      ],
+      "notes": "Subject: literature. Key letter A. Dense, Latinate prose (brutalised, ensanguined) with a common target in its older sense of disposition. Two distractors are real senses of temper (anger, hardness of metal) and one is a topic word from the scene (Livelihood, from “occupation”), the band-7 recipe; Irascibility also echoes the stereotype of rough bullock drivers. Equanimity (the keep-your-temper sense) was dropped as too close: “had not brutalised his equanimity” can be read as “had not shattered his calm.” Ranks: Disposition 3,913; Livelihood 12,298; Irascibility 49,913; Toughness 43,320 (3 of 4 past 10,000; the key is the plain word, as in meaning items, where CB keys run commoner than their distractors).",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 2,
+        "fixes": [
+          "band_target lowered from 7 to 6: key Disposition (3,913) misses the all-four-past-10,000 rule and two distractors fail on substitution (see band7)"
+        ],
+        "status": "fixed",
+        "note": "Excerpt matches Gutenberg 3470 (two sentences omitted between participles. and Physically, gloss added); intro details (wool teams, 1883) match chapter I."
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "Raw ranks: Disposition 3,913; Livelihood 12,298; Irascibility 49,913; Toughness 43,320: 3 of 4 past 10,000, misses the all-four rule for band-7 cells. More decisive, as in w2b5_05: the band-7 M1 models keep distractor senses that read sensibly in the sentence (Modesty, Composure in her reserve), but here only Irascibility half survives substitution; had not brutalised his toughness or his livelihood makes no sense, so a student who substitutes is left with two options. No rarer key means what temper means here (Temperament shares the stem; Demeanor, Psyche, Sensibility change the meaning), so it stays a strong band 6: dense Furphy prose, a common target in its older sense, two real senses of temper as distractors."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "A",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "words_in_context.B2.hard.w4b2_06",
+      "template": "B2",
+      "subtype": "Blank completion: cause or consequence",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "When Felix Ebeling and Sebastian Lotz made a pricier “green” electricity contract the default option in a randomized trial in Germany, purchases of that contract rose nearly tenfold. And since local support for the Green Party predicted green purchases only when no default was set, the researchers suggest that a default can ______ people’s own environmental motivations.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "amplify",
+        "dictate",
+        "rationalize",
+        "supersede"
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "Local support for the Green Party, a sign of people’s own environmental views, “predicted green purchases only when no default was set.” Once green power was the default, those views no longer predicted what people bought; the default had taken their place. So a default can supersede people’s motivations.",
+      "distractors": {
+        "A": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "If a default amplified people’s environmental motivations, those motivations would matter more under the default, but local Green Party support predicted purchases only when no default was set."
+        },
+        "B": {
+          "recipe": "wrong nuance, degree or agent (CONNOT)",
+          "why_wrong": "The default came close to dictating what people bought, but nothing suggests it decided what they cared about; their motivations simply stopped predicting their choices."
+        },
+        "C": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "The text says nothing about a default supplying reasons or excuses for people’s motivations."
+        }
+      },
+      "models": [
+        "3.25",
+        "4ce8e2fa",
+        "a1ff8ce3",
+        "c14daa3c"
+      ],
+      "word_count": 57,
+      "sources": [
+        {
+          "what": "Ebeling and Lotz, Nature Climate Change 5:868-871 (2015), abstract: randomized controlled trial in Germany; setting the default to more expensive green energy increased purchases nearly tenfold; county-level preference for the Green party predicted behaviour only in the absence of the nudge, suggesting that default setting potentially overrules motivational aspects of green energy purchases",
+          "url": "https://www.nature.com/articles/nclimate2681"
+        }
+      ],
+      "notes": "Subject: social science (behavioral economics). Key letter D. Steps: 2 (Green support predicts choices only without a default, so with a default motivations stop mattering; then the verb for taking their place). County-level preference simplified to local support. Ranks: amplify 46,600; dictate 13,205; rationalize not in freq.txt (modern); supersede 35,802.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [],
+        "status": "pass"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "Raw ranks: amplify 46,600; dictate 13,205; rationalize unranked; supersede 35,802: 4 of 4 past 10,000 on paper, but amplify and rationalize are modern words the old corpus misses (corrected about 15,600 and still unranked) and all four are owned by a 1400 scorer, so the set gives no vocabulary barrier. The difficulty is a two-step reading of the moderation result (party support predicts only without a default, so the default takes over), with amplify as the lure from the tenfold rise and dictate as the near miss on its object; a strong band 6, as CB band-6 B2 83fd3cf4 (mitigate)."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "D",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "words_in_context.B5.medium.w4b2_07",
+      "template": "B5",
+      "subtype": "Blank completion: negated frame",
+      "tier": "medium",
+      "passage": "Norwegian artist Sissel Tolaas, whose archive preserves thousands of smells in airtight containers, observes that people in the modern West typically evaluate odors in purely aesthetic terms, as pleasant or unpleasant. To Tolaas, however, smell is far from ______: in numerous cultures it remains a fundamental means of interpreting the world and is closely tied to personal and collective identity.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "consequential",
+        "pungent",
+        "superficial",
+        "inexplicable"
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "Tolaas contrasts the Western habit of judging odors “in purely aesthetic terms, as pleasant or unpleasant” with smell’s deeper role as “a fundamental means of interpreting the world” tied to identity. Smell, then, is far from being a matter of surface appeal only: it is far from superficial.",
+      "distractors": {
+        "A": {
+          "recipe": "reversal: negation flip (ANT)",
+          "why_wrong": "Far from consequential would mean smell hardly matters, the opposite of the text’s point that it shapes how people interpret the world and see their identity."
+        },
+        "B": {
+          "recipe": "topic echo (ASSOC)",
+          "why_wrong": "Pungent belongs to the subject of smell, but whether odors are strong or sharp has nothing to do with the contrast between surface judgments and deeper meaning."
+        },
+        "D": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "The text does not discuss whether smell can be explained; it is about how much smell matters."
+        }
+      },
+      "models": [
+        "2.10",
+        "2.11",
+        "2.13",
+        "2.14"
+      ],
+      "word_count": 60,
+      "sources": [
+        {
+          "what": "Wikipedia, Sissel Tolaas: Norwegian artist and researcher known for work with smell; developed a smell archive in over 7,000 airtight jars; her 2005 artist’s statement: “In the modern West, we tend to think of smell in purely aesthetic terms, pleasant or unpleasant. In many other cultures however, smells have provided and still provide a basic means of defining the and interacting with the world... odours are closely associated with personal and group identity.”",
+          "url": "https://en.wikipedia.org/wiki/Sissel_Tolaas"
+        }
+      ],
+      "notes": "Subject: humanities (art). Key letter C. Negated frame (far from). Ranks: consequential 34,533; pungent 14,674; superficial 9,339; inexplicable 7,611.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "words_in_context.B6.medium.w4b2_08",
+      "template": "B6",
+      "subtype": "Blank completion: phrase options",
+      "tier": "medium",
+      "passage": "Until Karl Berg and colleagues investigated green-rumped parrotlets in Venezuela, no experiment had demonstrated how wild parrots acquire their vocalizations. The team found that the distinctive contact call each nestling develops is ______ the calls of the two adults raising it, since the nestling learns its call’s distinguishing features from both of them.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "modeled on",
+        "imitated by",
+        "unrelated to",
+        "drowned out by"
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The nestling “learns its call’s distinguishing features from both” of the two adults raising it. A call built from features learned from those adults is modeled on their calls.",
+      "distractors": {
+        "B": {
+          "recipe": "reversal: direction (ANT)",
+          "why_wrong": "Imitated by would mean the adults copy the nestling, but the text says the nestling learns from the adults."
+        },
+        "C": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "The nestling’s call takes its distinguishing features from the adults’ calls, so it is closely related to them."
+        },
+        "D": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Nothing suggests the adults’ calls are louder than the nestling’s or cover it up; the text is about where the nestling’s call comes from."
+        }
+      },
+      "models": [
+        "2.4",
+        "2.15",
+        "2.18",
+        "2.28"
+      ],
+      "word_count": 53,
+      "sources": [
+        {
+          "what": "Berg, Delgado, Cortopassi, Beissinger, Bradbury, Proc. R. Soc. B 279 (2012), abstract: no experimental studies had demonstrated learned vocal production in wild parrots; in video-rigged nests of green-rumped parrotlets in Venezuela, naive nestlings developed individually unique contact calls in the nest, and signature attributes are learned from both primary care-givers (author name Karl S. Berg per Crossref)",
+          "url": "https://pubmed.ncbi.nlm.nih.gov/21752824/"
+        }
+      ],
+      "notes": "Subject: natural science (animal behavior). Key letter A. Ranks: modeled 28,503 (model 3,427); imitated 15,293; unrelated 40,068; drowned 3,845. Near miss by direction (imitated by).",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "words_in_context.B1.medium.w4b2_09",
+      "template": "B1",
+      "subtype": "Blank completion: restatement",
+      "tier": "medium",
+      "passage": "In the 1970s, before she was known as a composer, Hildegard Westerkamp worked as a researcher for the World Soundscape Project, listening to and cataloguing its substantial archive of field recordings. That experience proved ______ for her: most of the compositions she has produced since then are built by layering and transforming recordings of real places.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "incidental",
+        "formative",
+        "lucrative",
+        "tedious"
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "After cataloguing the project’s “substantial archive of field recordings,” Westerkamp went on to build “most of the compositions she has produced since then” from such recordings. The research shaped the kind of composer she became, so the experience proved formative.",
+      "distractors": {
+        "A": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "An incidental experience would have little lasting effect, but the colon clause shows it shaped most of her later compositions."
+        },
+        "C": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "The text says nothing about how much the work paid."
+        },
+        "D": {
+          "recipe": "topic echo (ASSOC)",
+          "why_wrong": "Cataloguing an archive may sound dull, but the colon clause explains the work’s effect on her composing, not how she felt about doing it."
+        }
+      },
+      "models": [
+        "2.5",
+        "2.9",
+        "2.23",
+        "2.27"
+      ],
+      "word_count": 56,
+      "sources": [
+        {
+          "what": "Wikipedia, Hildegard Westerkamp: research associate with R. Murray Schafer at the World Soundscape Project 1973-80; “she listened to and catalogued the Project's field recording archives, and has since dedicated the majority of her work to pieces that involve the layering and manipulation of field recordings”; the work “greatly influenced her style of composition”",
+          "url": "https://en.wikipedia.org/wiki/Hildegard_Westerkamp"
+        }
+      ],
+      "notes": "Subject: humanities (music, soundscape composition). Key letter B. Ranks: incidental 19,860; formative 45,815; lucrative 23,461; tedious 7,385.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "words_in_context.B2.medium.w4b2_10",
+      "template": "B2",
+      "subtype": "Blank completion: cause or consequence",
+      "tier": "medium",
+      "passage": "In 2006, Anne-Maree Pearse and a colleague reported that in every Tasmanian devil they examined with devil facial tumour disease, a fatal cancer, the tumors exhibited the same complex rearrangement of chromosomes. Given that finding and the devils’ tendency to bite one another during confrontations, the researchers proposed that the tumor cells themselves ______ the disease, passing directly between individuals.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "halt",
+        "diagnose",
+        "propagate",
+        "contract"
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "Identical tumors in every devil, plus the animals’ “tendency to bite one another,” led the researchers to propose that the cancer cells move “directly between individuals.” Cells that carry a disease from one animal to the next propagate it.",
+      "distractors": {
+        "A": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "To halt the disease would be to stop it, but the cells are said to pass it from animal to animal."
+        },
+        "B": {
+          "recipe": "topic echo (ASSOC)",
+          "why_wrong": "Diagnosis is part of the scene, but scientists diagnose diseases; tumor cells cannot."
+        },
+        "D": {
+          "recipe": "wrong nuance, degree or agent (CONNOT)",
+          "why_wrong": "Animals contract, or catch, a disease; the text says the cells themselves are what passes between the devils, so they spread it rather than catch it."
+        }
+      },
+      "models": [
+        "2.17",
+        "2.22",
+        "2.24",
+        "2.25"
+      ],
+      "word_count": 60,
+      "sources": [
+        {
+          "what": "Pearse and Swift, Nature 439:549 (2006), abstract: the chromosomes in devil facial tumours have undergone a complex rearrangement identical for every animal studied; given this and the devils’ fighting behaviour, the disease is proposed to be transmitted by allograft, an infectious cell line passed directly between animals through bites (first author’s first name from the affiliation email anne-maree.pearse)",
+          "url": "https://pubmed.ncbi.nlm.nih.gov/16452970/"
+        }
+      ],
+      "notes": "Subject: natural science (wildlife disease). Key letter C. Second author left unnamed (first name not confirmed). Ranks: halt 5,307; diagnose 41,100; propagate 48,798; contract 5,824.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "words_in_context.B4.medium.w4b2_11",
+      "template": "B4",
+      "subtype": "Blank completion: example-pinned",
+      "tier": "medium",
+      "passage": "Each sculpture in Tomás Saraceno’s Hybrid Webs series is ______. To construct one, Saraceno has spiders of different species—some social, some solitary—spin within a single structure, rotating the structure onto each of its sides so that their silk interweaves, and each work’s title specifies every species involved and the duration each spider required to complete its web.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "homogeneous",
+        "provisional",
+        "ornate",
+        "composite"
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The second sentence describes how a sculpture is made: spiders “of different species” spin in one frame so that “their silk interweaves,” and the title lists “every species involved.” A work made of several different parts combined into one is composite.",
+      "distractors": {
+        "A": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "A homogeneous sculpture would be all of one kind, but each work combines silk from spiders of different species."
+        },
+        "B": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Nothing suggests the sculptures are temporary or meant to be replaced."
+        },
+        "C": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "The text describes how the sculptures are built, not whether they are elaborately decorated."
+        }
+      },
+      "models": [
+        "2.2",
+        "1.46",
+        "1.34"
+      ],
+      "word_count": 57,
+      "sources": [
+        {
+          "what": "Wikipedia, Tomás Saraceno (Hybrid Webs): sculptures made entirely of spider silk incorporating webs woven by spiders who are social, asocial or between the two; the sculptures are turned onto each side, allowing the interweaving of silk from different sorts of spider; titles give the genus and species of spiders employed and the time taken by each spider to complete its web",
+          "url": "https://en.wikipedia.org/wiki/Tom%C3%A1s_Saraceno"
+        }
+      ],
+      "notes": "Subject: humanities (art). Key letter D. Example-pinned: the making of one sculpture instantiates composite. Ranks: homogeneous 35,098; provisional 26,070; ornate 21,070; composite 21,891.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "words_in_context.B1.easy.w4b2_12",
+      "template": "B1",
+      "subtype": "Blank completion: restatement",
+      "tier": "easy",
+      "passage": "Canadian artist Janet Cardiff is known for her audio walks, recorded narrations that guide listeners through a particular location. In The Missing Voice (Case Study B) (1999), which sets out from a library in London’s East End, Cardiff’s recorded voice ______ a fictional story with descriptions of the actual streets the listener is walking along.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "separates",
+        "combines",
+        "rewards",
+        "replaces"
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The recording joins two kinds of material, “a fictional story” and “descriptions of the actual streets the listener is walking along.” Cardiff’s voice combines them.",
+      "distractors": {
+        "A": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "The walk puts the story and the descriptions together; it does not keep them apart."
+        },
+        "C": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "A recording cannot reward a story, and nothing in the text suggests any reward."
+        },
+        "D": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "The text suggests the listener hears both the story and the descriptions, not that one takes the place of the other."
+        }
+      },
+      "models": [
+        "1.15",
+        "1.39",
+        "1.33",
+        "1.53"
+      ],
+      "word_count": 55,
+      "sources": [
+        {
+          "what": "Wikipedia, Janet Cardiff: known for audio walks; The Missing Voice (Case Study B), commissioned in 1999 by Artangel, “an audio tour that leaves from the Whitechapel Library ... and snakes its way through London's East End, weaving fictional narrative with descriptions about the actual l[ocation]”",
+          "url": "https://en.wikipedia.org/wiki/Janet_Cardiff"
+        }
+      ],
+      "notes": "Subject: humanities (sound art). Key letter B. Ranks: separates 25,651 (separate 3,676); combines 30,461 (combine 11,410); rewards 11,977; replaces 48,842.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "words_in_context.B1.easy.w4b2_13",
+      "template": "B1",
+      "subtype": "Blank completion: restatement",
+      "tier": "easy",
+      "passage": "Born into slavery in Tennessee around 1832, Mary Fields later relocated to Montana, where in 1895 she became the first Black woman in the United States to ______ a star route contract, an agreement to deliver mail along a particular route. She transported the mail between the town of Cascade and Saint Peter’s Mission through two four-year contracts, until 1903.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "secure",
+        "decline",
+        "notarize",
+        "audit"
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "Fields went on to transport “the mail between the town of Cascade and Saint Peter’s Mission through two four-year contracts.” To be the first Black woman to hold such a contract, she had to obtain one, so the blank means secure.",
+      "distractors": {
+        "B": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "Fields did not turn the contract down; she carried the mail under it for eight years."
+        },
+        "C": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "To notarize a document is to certify signatures on it as an official witness; the text describes Fields as the person who held the contract and did the work."
+        },
+        "D": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "To audit a contract is to examine it officially, but the text describes Fields carrying out the work, not reviewing the agreement."
+        }
+      },
+      "models": [
+        "1.6",
+        "1.11",
+        "1.23",
+        "1.50"
+      ],
+      "word_count": 60,
+      "sources": [
+        {
+          "what": "Wikipedia, Mary Fields: born into slavery in Hickman County, Tennessee, c. 1832; moved to Montana Territory (St. Peter's Mission); “the first Black woman to be employed as a star route postwoman in the United States”; “had the star route contract for the delivery of U.S. mail from Cascade, Montana, to Saint Peter's Mission. She drove the route for two four-year contracts, from 1895 to 1899 and from 1899 to 1903”",
+          "url": "https://en.wikipedia.org/wiki/Mary_Fields"
+        }
+      ],
+      "notes": "Subject: history (US postal history, the American West). Key letter A. Replaces a first choice (Ka Nupepa Kuokoa) because Hawaiian-language newspapers are already live in boundaries w3 and text structure w2. Ranks: secure 2,148; decline 5,600; notarize not in freq.txt (modern); audit 43,478.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "words_in_context.B1.easy.w4b2_14",
+      "template": "B1",
+      "subtype": "Blank completion: restatement",
+      "tier": "easy",
+      "passage": "The Hang, a percussion instrument of hardened steel developed in Bern, Switzerland, in 2000 by Felix Rohner and Sabina Schärer, resembles a convex lens and is played with the hands. Its inventors named it after a Bernese German word with a ______ meaning: in that regional dialect, “Hang” signifies both “hand” and “hillside.”",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "hidden",
+        "humorous",
+        "precise",
+        "double"
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The colon clause explains that the word “signifies both ‘hand’ and ‘hillside.’” A word with two meanings has a double meaning.",
+      "distractors": {
+        "A": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "The text openly states both meanings; nothing suggests either is hidden."
+        },
+        "B": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Nothing suggests the word is funny; the text simply gives its two meanings."
+        },
+        "C": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "A word that means two quite different things, a hand and a hillside, does not have a single exact meaning."
+        }
+      },
+      "models": [
+        "1.21",
+        "1.51",
+        "1.13",
+        "1.9"
+      ],
+      "word_count": 53,
+      "sources": [
+        {
+          "what": "Wikipedia, Hang (instrument): created by Felix Rohner and Sabina Schärer in Bern, Switzerland, developed in 2000; two half-shells of steel creating the shape of a convex lens; the name comes from a Bernese German word that means both “hand” and “hillside”",
+          "url": "https://en.wikipedia.org/wiki/Hang_(instrument)"
+        }
+      ],
+      "notes": "Subject: humanities (music, instruments). Key letter D. Ranks: hidden 1,267; humorous 5,911; precise 7,141; double 1,883.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "words_in_context.M1.easy.w4b2_15",
+      "template": "M1",
+      "subtype": "Most nearly mean: underlined word",
+      "tier": "easy",
+      "passage": "The following text is adapted from Frederik van Eeden’s 1885 novel Little Johannes (translated by Clara Bell in 1895). Johannes, an imaginative boy, lives with his father in an old house.\n\nMost of all he loved the hanging clock. He pulled up the weights every day with solemn care, and regarded it as an indispensable civility to look up at it whenever it <u>struck</u>. This of course could only be done as long as Johannes remained awake.",
+      "stem": "As used in the text, what does the word “struck” most nearly mean?",
+      "options": [
+        "Hit",
+        "Impressed",
+        "Chimed",
+        "Discovered"
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "Johannes winds the clock (“pulled up the weights”) and politely looks up at it each time it strikes, something he can do only while awake. A clock that strikes sounds the hour, so struck means chimed.",
+      "distractors": {
+        "A": {
+          "recipe": "another sense of the target (SENSE)",
+          "why_wrong": "To strike can mean to hit, but the clock is not hitting anything; it is marking the time."
+        },
+        "B": {
+          "recipe": "another sense of the target (SENSE)",
+          "why_wrong": "Something can strike, or impress, a person, but the text describes a regular event Johannes waits for, not the clock making an impression on him."
+        },
+        "D": {
+          "recipe": "another sense of the target (SENSE)",
+          "why_wrong": "Miners strike, or discover, gold, but a clock does not discover anything."
+        }
+      },
+      "models": [
+        "1.4",
+        "1.19",
+        "1.56",
+        "1.32",
+        "1.41"
+      ],
+      "word_count": 77,
+      "sources": [
+        {
+          "what": "Little Johannes, Project Gutenberg 40656 (translated from the Dutch by Clara Bell, London: William Heinemann, 1895); adapted: the passage begins “But most of all he loved the hanging clock”; “But” is dropped",
+          "url": "https://www.gutenberg.org/ebooks/40656"
+        },
+        {
+          "what": "Wikipedia, Frederik van Eeden: his best known work, De kleine Johannes (Little Johannes), first appeared in the premiere issue of De Nieuwe Gids (1885)",
+          "url": "https://en.wikipedia.org/wiki/Frederik_van_Eeden"
+        }
+      ],
+      "notes": "Subject: literature. Key letter C. Concrete everyday sense of a common word; all distractors are other senses of struck. Ranks: Hit 1,944; Impressed 2,907; Chimed 11,318; Discovered 1,127.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 2,
+        "fixes": [],
+        "status": "pass",
+        "note": "Excerpt matches Gutenberg 40656 (initial But dropped)."
+      }
+    },
+    {
+      "id": "words_in_context.M1.easy.w4b2_16",
+      "template": "M1",
+      "subtype": "Most nearly mean: underlined word",
+      "tier": "easy",
+      "passage": "The following text is adapted from Gunnar Gunnarsson’s 1912–14 novel Guest the One-Eyed (translated by W. W. Worster in 1922). Ormarr, a boy, is in bed; his father sits beside him.\n\nNow in the darkness of the room, [Ormarr] could hardly distinguish [his father’s] features, but in his mind’s eye he saw him clearly, sitting there on the bedside. He knew every line in the calm, composed face, finely <u>framed</u> in the dark hair and brown beard.",
+      "stem": "As used in the text, what does the word “framed” most nearly mean?",
+      "options": [
+        "Built",
+        "Surrounded",
+        "Phrased",
+        "Incriminated"
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The father’s face is set off by “the dark hair and brown beard” around it, the way a frame borders a picture. In this sentence, framed means surrounded.",
+      "distractors": {
+        "A": {
+          "recipe": "another sense of the target (SENSE)",
+          "why_wrong": "A house can be framed, or built, but the father’s face is not being constructed."
+        },
+        "C": {
+          "recipe": "another sense of the target (SENSE)",
+          "why_wrong": "A question can be framed, or phrased, in words, but nothing here is being worded."
+        },
+        "D": {
+          "recipe": "another sense of the target (SENSE)",
+          "why_wrong": "A person can be framed, or falsely blamed, for a crime, but the text describes how the father looks."
+        }
+      },
+      "models": [
+        "1.4",
+        "1.19",
+        "1.56",
+        "1.32",
+        "1.41"
+      ],
+      "word_count": 77,
+      "sources": [
+        {
+          "what": "Guest the One-Eyed, Project Gutenberg 62455 (translated from the Danish by W. W. Worster, New York: Alfred A. Knopf, 1922); adapted: names bracketed in for “he” and “his” in the first sentence; the passage ends at “beard.” (the paragraph continues “Often he had been told ...”)",
+          "url": "https://www.gutenberg.org/ebooks/62455"
+        },
+        {
+          "what": "Wikipedia, Gunnar Gunnarsson: Af Borgslægtens Historie (translated into English as Guest the One-Eyed), four volumes, 1912 to 1914",
+          "url": "https://en.wikipedia.org/wiki/Gunnar_Gunnarsson"
+        }
+      ],
+      "notes": "Subject: literature. Key letter B. Concrete figurative sense (hair and beard around a face, as a frame around a picture), as in 1.56 (supported: Held up). Ranks: Built 1,425; Surrounded 2,275; Phrased 18,288 (phrase 3,193); Incriminated not printed (incriminate 40,472).",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 2,
+        "fixes": [],
+        "status": "pass",
+        "note": "Excerpt matches Gutenberg 62455 (he/his bracketed as [Ormarr], [his father’s])."
+      }
+    },
+    {
+      "id": "words_in_context.M1.easy.w4b2_17",
+      "template": "M1",
+      "subtype": "Most nearly mean: underlined word",
+      "tier": "easy",
+      "passage": "The following text is from Nikolai Leskov’s 1881 short story “The Steel Flea” (translated by Isabel F. Hapgood). Tula is a Russian city known for its metalworkers, and Mount Athos is a group of monasteries in Greece.\n\nThe men of Tula, clever fellows and well versed in the art of metals, are also renowned as the finest judges in religious matters. Their fame in this respect has <u>filled</u> not only their native land, but even holy Mount Athos.",
+      "stem": "As used in the text, what does the word “filled” most nearly mean?",
+      "options": [
+        "Satisfied",
+        "Completed",
+        "Stuffed",
+        "Spread through"
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The men of Tula are “renowned,” and their fame reaches “not only their native land, but even holy Mount Athos,” far away in Greece. Fame that has filled these places has spread through them.",
+      "distractors": {
+        "A": {
+          "recipe": "another sense of the target (SENSE)",
+          "why_wrong": "To fill a need is to satisfy it, but fame does not satisfy a country or a group of monasteries."
+        },
+        "B": {
+          "recipe": "another sense of the target (SENSE)",
+          "why_wrong": "To fill in a form is to complete it, but nothing here is being finished."
+        },
+        "C": {
+          "recipe": "another sense of the target (SENSE)",
+          "why_wrong": "A pillow can be filled, or stuffed, with feathers, but fame is not packed into a place."
+        }
+      },
+      "models": [
+        "1.4",
+        "1.19",
+        "1.56",
+        "1.32",
+        "1.41"
+      ],
+      "word_count": 78,
+      "sources": [
+        {
+          "what": "The Steel Flea, Project Gutenberg 61172 (translated from the Russian by Isabel F. Hapgood; copyright 1890, printed at the Merrymount Press, 1916); excerpt copied exactly (opening of section VII, first two sentences)",
+          "url": "https://www.gutenberg.org/ebooks/61172"
+        },
+        {
+          "what": "Wikipedia, Levsha: “The Tale of Cross-eyed Lefty from Tula and the Steel Flea”, comic story by Nikolai Leskov, 1881",
+          "url": "https://en.wikipedia.org/wiki/Levsha"
+        }
+      ],
+      "notes": "Subject: literature. Key letter D. No translation year in the source line (Hapgood’s copyright is 1890, the printing 1916). Phrase key among single words, as in 1.56 (Held up). Ranks: Satisfied 1,228; Completed 3,596; Stuffed 8,864; Spread 1,357.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 2,
+        "fixes": [],
+        "status": "pass",
+        "note": "Excerpt matches Gutenberg 61172 exactly (section VII opening)."
+      }
+    },
+    {
+      "id": "words_in_context.M1.easy.w4b2_18",
+      "template": "M1",
+      "subtype": "Most nearly mean: underlined word",
+      "tier": "easy",
+      "passage": "The following text is adapted from Sutton E. Griggs’s 1899 novel Imperium in Imperio. Belton Piedmont has returned to his hometown in Virginia after graduating from college.\n\n[Belton] would walk out of town near sunset and, taking his seat on some grassy knoll would gaze on the Blue Ridge mountains. The light would fade out of the sky and the gloom of evening gather, but the mountains would maintain their same bold appearance. Whenever he <u>cast</u> his eyes in their direction, there they stood firm and immovable.",
+      "stem": "As used in the text, what does the word “cast” most nearly mean?",
+      "options": [
+        "Turned",
+        "Molded",
+        "Assigned",
+        "Discarded"
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "Belton sits gazing at the mountains, and whenever he looks “in their direction,” they stand firm. To cast one’s eyes somewhere is to turn them there, so cast means turned.",
+      "distractors": {
+        "B": {
+          "recipe": "another sense of the target (SENSE)",
+          "why_wrong": "Metal can be cast, or molded, into a shape, but Belton is not shaping his eyes."
+        },
+        "C": {
+          "recipe": "another sense of the target (SENSE)",
+          "why_wrong": "An actor can be cast, or assigned, in a role, but no role is being given here."
+        },
+        "D": {
+          "recipe": "another sense of the target (SENSE)",
+          "why_wrong": "Something cast off is discarded, but Belton is looking toward the mountains, not throwing his eyes away."
+        }
+      },
+      "models": [
+        "1.4",
+        "1.19",
+        "1.56",
+        "1.32",
+        "1.41"
+      ],
+      "word_count": 87,
+      "sources": [
+        {
+          "what": "Imperium in Imperio, Project Gutenberg 15454 (Sutton E. Griggs, 1899); adapted: the paragraph’s first sentence is omitted and “He” is replaced by “[Belton]”; earlier in the chapter Belton has graduated from Stowe University and returned home to Winchester",
+          "url": "https://www.gutenberg.org/ebooks/15454"
+        },
+        {
+          "what": "Wikipedia, Imperium in Imperio: novel by Sutton E. Griggs published in 1899; Belton Piedmont is born to a poor family in Virginia",
+          "url": "https://en.wikipedia.org/wiki/Imperium_in_Imperio"
+        }
+      ],
+      "notes": "Subject: literature. Key letter A. Ranks: Turned 203 (key avoids directed, which would echo the passage’s direction); Molded 30,610; Assigned 9,498; Discarded 10,774.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 2,
+        "fixes": [],
+        "status": "pass",
+        "note": "Excerpt matches Gutenberg 15454 (He bracketed as [Belton]; the source has no comma after knoll)."
+      }
+    },
+    {
+      "id": "words_in_context.B6.easy.w4b2_19",
+      "template": "B6",
+      "subtype": "Blank completion: phrase options",
+      "tier": "easy",
+      "passage": "Self-taught Kenyan artist Cyrus Kabiru makes sculptural eyewear from electronic parts and other objects people have thrown away. His approach was ______ a story about his father, who had once repaired a pair of glasses using discarded materials; the story led Kabiru to start creating objects from things that others considered trash.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "unrelated to",
+        "delayed by",
+        "inspired by",
+        "hidden from"
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The text says “the story led Kabiru to start creating objects from things that others considered trash.” A story that leads someone to begin a practice inspired it.",
+      "distractors": {
+        "A": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "The story about his father’s repaired glasses led directly to Kabiru’s work, so his approach is closely related to it."
+        },
+        "B": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Nothing suggests the story held Kabiru back; it got him started."
+        },
+        "D": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "The story is about his father and shaped Kabiru’s work; nothing suggests anything was kept from his father."
+        }
+      },
+      "models": [
+        "1.3",
+        "1.29",
+        "1.52",
+        "1.49"
+      ],
+      "word_count": 52,
+      "sources": [
+        {
+          "what": "Wikipedia, Cyrus Kabiru: self-taught Kenyan visual artist known for sculptural eyewear made of found objects; “Inspired by a story about his father repairing glasses with discarded materials, he became interested in creating objects by upcycling found objects and trash”; materials often electronic parts, junk or other debris",
+          "url": "https://en.wikipedia.org/wiki/Cyrus_Kabiru"
+        }
+      ],
+      "notes": "Subject: humanities (art). Key letter C. Ranks: unrelated 40,068; delayed 5,951; inspired 3,563; hidden 1,267.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "words_in_context.B2.easy.w4b2_20",
+      "template": "B2",
+      "subtype": "Blank completion: cause or consequence",
+      "tier": "easy",
+      "passage": "In recent decades, increasing numbers of blackcaps, small songbirds that breed in continental Europe, have begun wintering in Britain rather than migrating farther south. Food from garden feeders has probably ______ this behavioral shift: although Britain’s winter climate is not ideal for the species, a dependable food supply and a shorter migration compensate for it.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "prevented",
+        "encouraged",
+        "disguised",
+        "measured"
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The colon clause explains why Britain now attracts the birds: “a dependable food supply and a shorter migration compensate for” the poor climate. Food from feeders has helped bring about, or encouraged, the shift.",
+      "distractors": {
+        "A": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "The food makes wintering in Britain worthwhile, so it helped the shift happen rather than stopping it."
+        },
+        "C": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Nothing suggests the shift is hidden; the text openly describes it."
+        },
+        "D": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Bird feeders supply food; they do not measure how the birds’ habits change."
+        }
+      },
+      "models": [
+        "1.16",
+        "1.44",
+        "1.47",
+        "1.31"
+      ],
+      "word_count": 55,
+      "sources": [
+        {
+          "what": "Wikipedia, Eurasian blackcap: in recent decades substantial numbers of continental European birds have taken to wintering in gardens in Great Britain; “Although the British climate is sub-optimal, compensatory factors include the ready availability of food, (particularly from bird tables), a shorter migration distance, and the avoidance of the Alps and the Sahara Desert”; birds west of the migratory divide otherwise head southwest to Iberia or West Africa",
+          "url": "https://en.wikipedia.org/wiki/Eurasian_blackcap"
+        }
+      ],
+      "notes": "Subject: natural science (bird migration). Key letter B. Ranks: prevented 3,932; encouraged 4,564; disguised 7,583; measured 4,489.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "words_in_context.B2.easy.w4b2_21",
+      "template": "B2",
+      "subtype": "Blank completion: cause or consequence",
+      "tier": "easy",
+      "passage": "In 1912, Mabel Ping-Hua Lee, a Chinese immigrant raised in New York City, rode on horseback in the city’s women’s suffrage parade. Yet after the Nineteenth Amendment extended voting rights to women in 1920, Lee herself remained ______ to vote, because the Chinese Exclusion Act still applied to her as a Chinese immigrant.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "ineligible",
+        "hesitant",
+        "invited",
+        "obligated"
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "Lee could not use the newly extended voting rights “because the Chinese Exclusion Act still applied to her as a Chinese immigrant.” A law that keeps someone from voting makes that person ineligible to vote.",
+      "distractors": {
+        "B": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "A woman who rode in a suffrage parade was not unsure about voting; the text gives a law, not her feelings, as the reason."
+        },
+        "C": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "The Chinese Exclusion Act kept Lee from voting; it did not invite her to vote."
+        },
+        "D": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Nothing suggests Lee was required to vote; the text explains why she could not."
+        }
+      },
+      "models": [
+        "1.5",
+        "1.35",
+        "1.44"
+      ],
+      "word_count": 53,
+      "sources": [
+        {
+          "what": "Wikipedia, Mabel Ping-Hua Lee: born in China and raised in New York City; participated in the 1912 New York City women’s suffrage parade, where she rode on horseback; “Following the eventual passage of the Nineteenth Amendment in 1920, Lee still was unable to vote due to her status as a Chinese immigrant per the Chinese Exclusion Act”",
+          "url": "https://en.wikipedia.org/wiki/Mabel_Ping-Hua_Lee"
+        }
+      ],
+      "notes": "Subject: history (women’s suffrage, Chinese American history). Key letter A. Ranks: ineligible 34,632; hesitant 48,415; invited 2,575; obligated 51,819.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "words_in_context.B4.easy.w4b2_22",
+      "template": "B4",
+      "subtype": "Blank completion: example-pinned",
+      "tier": "easy",
+      "passage": "Media Lengua, a language spoken in a handful of communities in Ecuador’s Imbabura province, ______ Spanish and Kichwa, an Indigenous language of the Andes. For example, approximately 90 percent of its vocabulary derives from Spanish, but the suffixes attached to those words, and the typical sequence of words in a sentence, follow the grammatical patterns of Kichwa.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "replaces",
+        "predates",
+        "separates",
+        "blends"
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The example shows parts of both languages in one: its vocabulary mostly “derives from Spanish,” while its suffixes and word order “follow the grammatical patterns of Kichwa.” Media Lengua blends the two languages.",
+      "distractors": {
+        "A": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "The text describes Media Lengua drawing on both languages, not taking their place."
+        },
+        "B": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Nothing in the text says Media Lengua is older than Spanish or Kichwa; it is built from both."
+        },
+        "C": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "Media Lengua mixes Spanish words with Kichwa suffixes and word order, so it brings the languages together rather than keeping them apart."
+        }
+      },
+      "models": [
+        "1.22",
+        "1.25",
+        "1.34",
+        "1.46",
+        "1.18"
+      ],
+      "word_count": 57,
+      "sources": [
+        {
+          "what": "Wikipedia, Media Lengua: a mixed language with Spanish vocabulary and Kichwa grammar, most conspicuously in its morphology; 89% of lexemes of Spanish origin; spoken in Pijal and Angla in Imbabura province; like Kichwa highly agglutinative, normal sentence order SOV",
+          "url": "https://en.wikipedia.org/wiki/Media_Lengua"
+        }
+      ],
+      "notes": "Subject: social science (linguistics, mixed languages). Key letter D. Ranks: replaces 48,842 (replace 10,584); predates not in freq.txt; separates 25,651 (separate 3,676); blends 44,547 (blend 19,486).",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "words_in_context.B5.easy.w4b2_23",
+      "template": "B5",
+      "subtype": "Blank completion: negated frame",
+      "tier": "easy",
+      "passage": "Zimbabwean musician Stella Chiweshe began learning the mbira dzavadzimu, a traditional instrument of the Shona people, in 1966, when social taboos prevented most women from playing it. Chiweshe did not allow those prohibitions to ______ her: after being rejected by numerous teachers, she was instructed by her great-uncle and eventually performed internationally.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "inspire",
+        "describe",
+        "discourage",
+        "entertain"
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "Despite the taboos, Chiweshe kept trying “after being rejected by numerous teachers” and eventually “performed internationally.” She did not allow the prohibitions to discourage her.",
+      "distractors": {
+        "A": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "Taboos that kept women from playing worked against Chiweshe; the text shows her succeeding in spite of them, not being inspired by them."
+        },
+        "B": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "The text is about whether the taboos stopped Chiweshe, not whether they described her."
+        },
+        "D": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Nothing suggests the taboos could amuse Chiweshe; the colon clause describes her overcoming them."
+        }
+      },
+      "models": [
+        "1.12",
+        "1.24",
+        "1.28",
+        "1.48"
+      ],
+      "word_count": 52,
+      "sources": [
+        {
+          "what": "Wikipedia, Stella Chiweshe: Zimbabwean musician known internationally for playing the mbira dzavadzimu, a traditional instrument of the Shona people; learned from 1966 to 1969, when there were social taboos against women playing it; taught by her great-uncle after being refused by many teachers; toured internationally",
+          "url": "https://en.wikipedia.org/wiki/Stella_Chiweshe"
+        }
+      ],
+      "notes": "Subject: humanities (music). Key letter C. Negated frame (did not let ... ). Ranks: inspire 9,540; describe 3,370; discourage 14,655; entertain 5,506.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [],
+        "status": "pass",
+        "note": "Core claim checked against Wikipedia. Mbira also appears in boundaries w4b2_03 (Thomas Mapfumo); different person and subject."
+      }
+    },
+    {
+      "id": "words_in_context.B3.easy.w4b2_24",
+      "template": "B3",
+      "subtype": "Blank completion: contrast",
+      "tier": "easy",
+      "passage": "Photinus carolinus fireflies are famous for flashing in unison, but Raphael Sarfati and colleagues found that this synchrony depends on numbers. In swarms the team recorded, fireflies at low density flashed ______, with no link between one insect’s flashes and another’s, while at high density the swarm flashed together in bursts.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "simultaneously",
+        "independently",
+        "brightly",
+        "rarely"
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "At low density there was “no link between one insect’s flashes and another’s,” in contrast to high density, when “the swarm flashed together.” Fireflies whose flashes have no connection to one another flash independently.",
+      "distractors": {
+        "A": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "Flashing simultaneously is what the swarm did at high density; at low density the flashes had no link to one another."
+        },
+        "C": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "The text says nothing about how bright the flashes were; it compares their timing."
+        },
+        "D": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Nothing suggests the fireflies seldom flashed at low density; the text is about whether their flashes lined up."
+        }
+      },
+      "models": [
+        "1.57",
+        "1.58"
+      ],
+      "word_count": 51,
+      "sources": [
+        {
+          "what": "Sarfati, Hayes, Peleg, Science Advances 7 (2021), abstract: recorded the collective display of thousands of Photinus carolinus fireflies in natural swarms; at low firefly density flashes appear uncorrelated; at high density the swarm produces synchronous flashes within periodic bursts",
+          "url": "https://pubmed.ncbi.nlm.nih.gov/34233879/"
+        }
+      ],
+      "notes": "Subject: natural science (collective animal behavior). Key letter B. Ranks: simultaneously 7,404; independently 16,488 (independent 3,829); brightly 4,929; rarely 2,984.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [],
+        "status": "pass",
+        "note": "Core claim checked against PubMed 34233879. Shares a broad topic (firefly flashing) with official WiC f3fac04f (species-specific flash codes), a different phenomenon; kept."
+      }
+    }
+  ],
+  "done": true
+}

@@ -1,0 +1,1215 @@
+{
+  "skill": "Rhetorical Synthesis",
+  "slug": "rhetorical_synthesis",
+  "part": "w3b5",
+  "domain": "Expression of Ideas",
+  "plan": {
+    "templates": [
+      {
+        "code": "SIM",
+        "name": "Similarity"
+      },
+      {
+        "code": "DIFF",
+        "name": "Difference"
+      },
+      {
+        "code": "RANK",
+        "name": "Order or relative degree"
+      },
+      {
+        "code": "SPEC",
+        "name": "Specify or identify a single fact"
+      },
+      {
+        "code": "EMPH",
+        "name": "Emphasize one attribute"
+      },
+      {
+        "code": "DESC",
+        "name": "Describe"
+      },
+      {
+        "code": "EXPL",
+        "name": "Explain (cause, origin, advantage, mechanism, definition, significance)"
+      },
+      {
+        "code": "EXAMPLE",
+        "name": "Example, or explanation plus example"
+      },
+      {
+        "code": "STUDY",
+        "name": "Research study (aim, method, results)"
+      },
+      {
+        "code": "GEN",
+        "name": "Generalization, with or without support"
+      },
+      {
+        "code": "AUD_NEW",
+        "name": "Introduce or describe to an unfamiliar or new audience"
+      },
+      {
+        "code": "AUD_FAM",
+        "name": "Present or describe to an already familiar audience"
+      },
+      {
+        "code": "QUOTE",
+        "name": "Quotation"
+      }
+    ]
+  },
+  "items": [
+    {
+      "id": "rhetorical_synthesis.STUDY.hard.w3b5_01",
+      "template": "STUDY",
+      "subtype": "Summarize the results of a study (two numeric findings)",
+      "tier": "hard",
+      "passage": "While researching a topic, a student has taken the following notes:\n• In agriculture, a living mulch is a cover crop cultivated between rows of a primary crop.\n• A team of agronomists investigated whether clover could suppress weeds in organic wheat, where synthetic herbicides are prohibited.\n• They compared experimental plots that had clover between the wheat rows with unplanted control plots.\n• Weed biomass was 45% lower in the clover plots than in the control plots.\n• Wheat yields were 7% lower in clover plots, presumably because the clover competed with wheat for water.",
+      "stem": "The student wants to summarize the results of the agronomists’ study. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "The agronomists found that clover grown between the wheat rows reduced weed biomass by 45% while also increasing wheat yields.",
+        "Weed biomass was 45% lower in the clover plots, where wheat yields were 7% lower because the weeds competed with the wheat for water.",
+        "In the agronomists’ trials, clover cultivated between the wheat rows kept weeds in check but also modestly reduced the wheat harvest.",
+        "In experimental plots where clover was grown between the wheat rows, weed biomass was 45% lower than in control plots."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The study had two results: weed biomass was 45% lower in the clover plots, and wheat yields there were 7% lower. Choice C summarizes both without misstating either: the clover held weeds down but also slightly reduced the harvest.",
+      "distractors": {
+        "A": {
+          "recipe": "FALSE (goal-shaped: reversed second finding)",
+          "why_wrong": "The notes say wheat yields were 7% lower in the clover plots, not higher; the sentence reverses the second result."
+        },
+        "B": {
+          "recipe": "FALSE (goal-shaped: cause misattached)",
+          "why_wrong": "The notes say the clover, not the weeds, presumably competed with the wheat for water; weeds were in fact reduced in those plots."
+        },
+        "D": {
+          "recipe": "PART (one finding of two)",
+          "why_wrong": "It reports only the weed result and leaves out the lower wheat yields, so it does not summarize the study’s results."
+        }
+      },
+      "models": [
+        "3.21",
+        "5645f119",
+        "3.10"
+      ],
+      "word_count": 96,
+      "sources": [],
+      "notes": "Subject: natural science (agronomy, living mulches). Generic invented study with illustrative figures attached to an unnamed team (WAVE.md, no fact-checking for this skill). Option fact check: A FALSE goal-shaped (yield up instead of down), B FALSE goal-shaped (weeds instead of clover compete for water), D true but partial. Goal-only solve (without the notes): A, B and C all summarize two results.",
+      "band_target": 7,
+      "band7_moves": [
+        "present-the-findings goal over two numeric findings; the key drops the numbers",
+        "two goal-shaped FALSE options that keep both findings and change one detail: the direction of the yield change, and which plant competed for water",
+        "one PART option with a single finding",
+        "the two findings point in opposite directions (fewer weeds, smaller harvest), so the key must keep the trade-off"
+      ],
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass",
+        "generic_study": "“a team of agronomists”, no place, year or institution; round illustrative figures; not identifiable as a real study"
+      },
+      "band7": {
+        "verdict": "band 7",
+        "why": "Present-the-findings goal over two numeric findings, as 5645f119; key drops the numbers and keeps the trade-off in paraphrase; A (yield direction) and B (weeds, not clover, competed for water) are goal-shaped FALSE options that keep both findings and change one detail; D is a true single-finding PART."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "C",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 7
+    },
+    {
+      "id": "rhetorical_synthesis.GEN.hard.w3b5_02",
+      "template": "GEN",
+      "subtype": "Make a generalization one level above the examples",
+      "tier": "hard",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Indonesian, the official language of Indonesia, developed from Malay, which had long served as a common language for trade throughout the archipelago.\n• For centuries, merchants from India, China, and the Arabian Peninsula traded in the islands, followed eventually by Portuguese and Dutch colonizers.\n• Indonesian’s word for “language,” bahasa, derives from Sanskrit, a classical language of India, and kursi (“chair”) derives from Arabic.\n• Jendela (“window”) and gereja (“church”) originated in Portuguese.\n• Kantor (“office”) and handuk (“towel”) are adaptations of Dutch words.",
+      "stem": "The student wants to make a generalization about what Indonesian’s borrowed words show about the archipelago’s history. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "Indonesian’s borrowed words suggest that European colonizers supplied words for everyday objects, while traders from India and Arabia supplied words for ideas.",
+        "Before Portuguese and Dutch colonizers arrived, the archipelago drew merchants from India, China, and the Arabian Peninsula for centuries.",
+        "Indonesian’s borrowed words, such as jendela (“window”) from Arabic, show that peoples who came to trade or to rule left their mark on the islands.",
+        "Indonesian’s borrowed words reflect the archipelago’s centuries of contact with traders and colonizers from across Asia and Europe."
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The notes give borrowed words from Sanskrit, Arabic, Portuguese, and Dutch, and they say that traders from India and Arabia and colonizers from Portugal and the Netherlands came to the islands. Choice D draws the general point these examples share: the borrowed words reflect long contact with traders and colonizers from Asia and Europe.",
+      "distractors": {
+        "A": {
+          "recipe": "FALSE (goal-shaped: invented pattern)",
+          "why_wrong": "It does generalize, but the pattern is wrong: kursi (“chair”), an everyday object, came from Arabic, a language of traders, not of European colonizers."
+        },
+        "B": {
+          "recipe": "OG (history without the words)",
+          "why_wrong": "It states a fact about the islands’ trade history but says nothing about Indonesian’s borrowed words, so it does not show what those words reveal."
+        },
+        "C": {
+          "recipe": "FALSE (goal-shaped: claim with misattached support)",
+          "why_wrong": "Its generalization is reasonable, but its example misstates the notes: jendela (“window”) came from Portuguese, not Arabic."
+        }
+      },
+      "models": [
+        "3.11",
+        "3b02e88a",
+        "2c61e0b9",
+        "7f5715e4"
+      ],
+      "word_count": 96,
+      "sources": [],
+      "notes": "Subject: social science (linguistics, Indonesian loanwords). Real etymologies known without a search (bahasa from Sanskrit bhasa, kursi from Arabic, jendela and gereja from Portuguese janela and igreja, kantor and handuk from Dutch kantoor and handdoek). Option fact check: A FALSE goal-shaped (kursi breaks the objects/ideas split), B true but about history only, C FALSE goal-shaped (sound generalization supported by a misattached etymology: jendela given as Arabic, the notes say Portuguese). Goal-only solve: A, C and D all generalize about what the words show.",
+      "band_target": 7,
+      "band7_moves": [
+        "the generalization climbs a level: from four etymologies to what they show about the region’s contact history",
+        "key states the derived link (contact with traders and colonizers from Asia and Europe) in words the notes do not use",
+        "one goal-shaped FALSE generalization (objects from Europe, ideas from Asia) that one example in the notes breaks",
+        "a second goal-shaped FALSE generalization whose example misattaches an etymology (jendela as Arabic), and one accurate off-goal history sentence"
+      ],
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [
+          "option C was killed by one obvious fact (it denied the centuries of pre-colonial trade in bullet 2); replaced with the GEN band-7 claim-plus-false-support pattern (7f5715e4 A): a sound generalization whose example misattaches jendela to Arabic"
+        ],
+        "status": "fixed"
+      },
+      "band7": {
+        "verdict": "band 7",
+        "why": "Generalization climbs a level (from six etymologies to the region’s contact history), as 3b02e88a and 2c61e0b9; key uses words the notes do not; after the fix two goal-shaped FALSE options each need a bullet check (A’s objects-versus-ideas split broken by kursi, C’s jendela misattached to Arabic) and B is an accurate off-goal history sentence."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "D",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 7
+    },
+    {
+      "id": "rhetorical_synthesis.DIFF.hard.w3b5_03",
+      "template": "DIFF",
+      "subtype": "Contrast the drawbacks of two methods",
+      "tier": "hard",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Desalination plants remove dissolved salt from seawater to make it drinkable.\n• In thermal distillation, seawater is heated until it evaporates, and the vapor is condensed.\n• Distillation can treat extremely salty or contaminated water, but it uses a lot of energy.\n• In reverse osmosis, pumps force seawater through semipermeable membranes that hold back salt.\n• Reverse osmosis uses far less energy, but its membranes get clogged by microorganisms and must be cleaned or replaced regularly.",
+      "stem": "The student wants to contrast the drawbacks of the two desalination methods. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "Reverse osmosis uses far less energy than distillation, whereas distillation can treat water that is extremely salty or contaminated.",
+        "Distillation demands a great deal of energy, whereas reverse osmosis requires regular upkeep of membranes that become clogged.",
+        "Unlike reverse osmosis, which needs its membranes cleaned or replaced, distillation is limited to water that is only mildly salty.",
+        "Distillation removes salt by evaporating seawater, whereas reverse osmosis removes it by forcing seawater through membranes."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The notes give one drawback for each method: distillation uses a lot of energy, and reverse osmosis has membranes that clog and must be cleaned or replaced. Choice B sets these two drawbacks against each other.",
+      "distractors": {
+        "A": {
+          "recipe": "REL (wrong dimension: advantages)",
+          "why_wrong": "It contrasts an advantage of each method (low energy use, the ability to treat extremely salty water), not their drawbacks."
+        },
+        "C": {
+          "recipe": "FALSE (goal-shaped: misstated drawback)",
+          "why_wrong": "The notes say distillation can treat extremely salty or contaminated water; its drawback is its energy use, not a limit on how salty the water can be."
+        },
+        "D": {
+          "recipe": "OG (contrasts the processes)",
+          "why_wrong": "It contrasts how each method removes salt, which serves a goal of explaining the methods, not of contrasting their drawbacks."
+        }
+      },
+      "models": [
+        "3.14",
+        "de01ccef",
+        "e98b1690"
+      ],
+      "word_count": 89,
+      "sources": [],
+      "notes": "Subject: natural science and technology (desalination). Well-known engineering facts, no named study. Band 6 by plan: every option is a contrast; two wrong ones contrast the wrong dimension (advantages, processes) and one contrasts drawbacks with a misstated drawback.",
+      "band_target": 6,
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "Planned band 6. Every option is a contrast of the two methods; wrong ones contrast advantages, processes, or a misstated drawback, matching the band-6 DIFF models de01ccef and e98b1690."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "B",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "rhetorical_synthesis.SPEC.hard.w3b5_04",
+      "template": "SPEC",
+      "subtype": "Identify a person’s contribution (misattributed role among the options)",
+      "tier": "hard",
+      "passage": "While researching a topic, a student has taken the following notes:\n• In 1959, French researchers reported that people with Down syndrome have 47 chromosomes rather than the usual 46.\n• Counting the chromosomes required growing cells in a laboratory, a procedure called cell culture.\n• Physician Marthe Gautier had learned how to culture cells during her training in the United States.\n• Back in Paris, she prepared the cell cultures in which the team subsequently counted the chromosomes.\n• The team’s report listed geneticist Jérôme Lejeune as first author and Gautier as second author.",
+      "stem": "The student wants to identify Gautier’s contribution to the 1959 research. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "Drawing on techniques she had learned in the United States, Gautier prepared the cell cultures in which the team counted chromosomes.",
+        "Gautier was the lead author of the 1959 report showing that people with Down syndrome have 47 chromosomes rather than 46.",
+        "Gautier contributed to the 1959 research by teaching the team the cell culture procedure she had learned in the United States.",
+        "The 1959 report, which listed Lejeune first and Gautier second, showed that people with Down syndrome have an extra chromosome."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "Gautier’s contribution to the research was preparing the cell cultures in which the team counted the chromosomes. Choice A identifies that contribution and adds where her skill came from.",
+      "distractors": {
+        "B": {
+          "recipe": "FALSE (misattributed role)",
+          "why_wrong": "The notes say Lejeune was listed as first author and Gautier second, so she was not the lead author."
+        },
+        "C": {
+          "recipe": "FALSE (goal-shaped: unsupported role)",
+          "why_wrong": "The notes say Gautier prepared the cell cultures herself; they do not say she taught the procedure to the rest of the team."
+        },
+        "D": {
+          "recipe": "OG (finding and author order)",
+          "why_wrong": "It gives the report’s finding and the order of its authors but never says what Gautier contributed."
+        }
+      },
+      "models": [
+        "3.19",
+        "87d34a39"
+      ],
+      "word_count": 95,
+      "sources": [],
+      "notes": "Subject: history of science (Marthe Gautier and the 1959 trisomy 21 report). Real subject known without a search; only the uncontested record is used (1959 report of 47 chromosomes, Gautier prepared the cultures after training in the US, Lejeune first author and Gautier second). The disputed question of who first saw the extra chromosome is left out. Option fact check: B FALSE (author order), C FALSE goal-shaped (teaching the team is not in the notes), D accurate but off-goal. Plan cell asked band 7, but SPEC has no band-7 official items (spec/rw/band7/rhetorical_synthesis.md), so it is written as a strong band 6 on the 3.19 pattern.",
+      "band_target": 6,
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [
+          "bullet 2: “dividing cells grown in a laboratory, a procedure called cell culture” made the appositive name the cells; now “growing cells in a laboratory, a procedure called cell culture”"
+        ],
+        "status": "fixed",
+        "gautier": "only the undisputed record is used (1959 report of 47 chromosomes, US training in cell culture, she prepared the cultures, Lejeune first and Gautier second author); the priority dispute is absent and no option asserts it"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "SPEC has no band-7 official items, so it cannot be band 7; a strong band 6 on 87d34a39 with one false role (lead author), one goal-shaped unsupported role (teaching the team) and one accurate off-goal option."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "A",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "rhetorical_synthesis.DIFF.medium.w3b5_05",
+      "template": "DIFF",
+      "subtype": "Emphasize a difference between two places",
+      "tier": "medium",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Tides, the periodic rise and fall of sea level, are caused primarily by the Moon’s gravitational pull.\n• Tidal patterns vary considerably between locations, depending partly on the shape of coastlines and ocean basins.\n• Much of the Gulf of Mexico has diurnal tides, with one high tide and one low tide daily.\n• The Atlantic coast of North America has semidiurnal tides, with two high tides and two low tides daily.",
+      "stem": "The student wants to emphasize a difference between the tides of the Gulf of Mexico and those of North America’s Atlantic coast. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "While much of the Gulf of Mexico has one high tide each day, North America’s Atlantic coast has two.",
+        "The tides of both the Gulf of Mexico and the Atlantic coast of North America are caused primarily by the Moon’s gravitational pull.",
+        "Because tidal patterns vary considerably between locations, the tides of the Gulf of Mexico are not the same as those of the Atlantic coast.",
+        "The Atlantic coast of North America has semidiurnal tides, with two high tides and two low tides daily."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "Choice A sets the two tidal patterns side by side: much of the Gulf of Mexico has one high tide a day, while the Atlantic coast has two.",
+      "distractors": {
+        "B": {
+          "recipe": "REL (similarity)",
+          "why_wrong": "It states something the two coasts share, tides caused by the Moon’s pull, so it emphasizes a similarity rather than a difference."
+        },
+        "C": {
+          "recipe": "VAGUE",
+          "why_wrong": "It says the tides are not the same but never says how they differ."
+        },
+        "D": {
+          "recipe": "PART (one side only)",
+          "why_wrong": "It describes only the Atlantic coast’s tides and never mentions the Gulf of Mexico."
+        }
+      },
+      "models": [
+        "2.11",
+        "2.19",
+        "2.10",
+        "2.32"
+      ],
+      "word_count": 84,
+      "sources": [],
+      "notes": "Subject: natural science (tides). Textbook-level facts known without a search; four notes, as in several official items.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.DIFF.medium.w3b5_06",
+      "template": "DIFF",
+      "subtype": "Emphasize a difference between two techniques",
+      "tier": "medium",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Paint consists of pigment combined with a binder, a substance that holds the particles together and makes them adhere to a surface.\n• Encaustic painting, an ancient technique, uses melted beeswax as its binder.\n• Encaustic painters must keep their paint heated while working, since the wax solidifies as it cools.\n• Egg tempera painting uses egg yolk as its binder.\n• Paintings made with either technique can survive for many centuries.",
+      "stem": "The student wants to emphasize a difference between the binders used in encaustic and egg tempera painting. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "Whether bound with beeswax or with egg yolk, encaustic and egg tempera paintings can both survive for many centuries.",
+        "Because the wax solidifies as it cools, encaustic painters must keep their paint heated while they work.",
+        "A binder is the substance in paint that holds the particles of pigment together and makes them adhere to a surface.",
+        "Encaustic painting relies on melted beeswax to bind its pigment, whereas egg tempera uses egg yolk."
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The notes name a different binder for each technique: melted beeswax for encaustic and egg yolk for egg tempera. Choice D contrasts the two binders.",
+      "distractors": {
+        "A": {
+          "recipe": "REL (similarity)",
+          "why_wrong": "It names both binders but stresses what the two kinds of painting share, that they can survive for centuries."
+        },
+        "B": {
+          "recipe": "PART (one technique only)",
+          "why_wrong": "It describes only how encaustic painters must work and says nothing about egg tempera."
+        },
+        "C": {
+          "recipe": "OG (definition)",
+          "why_wrong": "It defines a binder in general without naming either technique’s binder."
+        }
+      },
+      "models": [
+        "2.10",
+        "2.11",
+        "2.19",
+        "2.32"
+      ],
+      "word_count": 84,
+      "sources": [],
+      "notes": "Subject: arts (painting techniques). Standard facts known without a search.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.DIFF.medium.w3b5_07",
+      "template": "DIFF",
+      "subtype": "Emphasize a difference between two designs",
+      "tier": "medium",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Transit planners distinguish two basic designs for a city’s bus network.\n• In a radial network, most routes run between outlying neighborhoods and the city center.\n• Passengers traveling between two outlying neighborhoods often must ride downtown and transfer there.\n• In a grid network, routes run straight across the city in two directions, forming many intersections.\n• Passengers can usually reach any destination with a single transfer, made wherever two routes intersect.",
+      "stem": "The student wants to emphasize a difference in where passengers transfer in radial and grid networks. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "Radial networks and grid networks are two basic designs that arrange a city’s bus routes in noticeably different ways.",
+        "In a grid network, bus routes run straight across the city in two directions, forming many intersections.",
+        "Passengers in a radial network often transfer downtown, whereas those in a grid network can transfer wherever two routes intersect.",
+        "Both radial and grid networks let passengers reach destinations across the city by transferring from one bus route to another."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The notes say passengers in a radial network often transfer downtown, while passengers in a grid network transfer wherever two routes intersect. Choice C contrasts where passengers transfer in each design.",
+      "distractors": {
+        "A": {
+          "recipe": "VAGUE",
+          "why_wrong": "It says the two designs arrange routes differently but never says where passengers transfer in either one."
+        },
+        "B": {
+          "recipe": "PART (one network, layout only)",
+          "why_wrong": "It describes only the layout of a grid network and says nothing about transfers in a radial network."
+        },
+        "D": {
+          "recipe": "REL (similarity)",
+          "why_wrong": "It stresses what the two networks share, that passengers transfer between routes, rather than how the transfers differ."
+        }
+      },
+      "models": [
+        "2.10",
+        "2.11",
+        "2.19",
+        "2.32"
+      ],
+      "word_count": 85,
+      "sources": [],
+      "notes": "Subject: social science (urban transit planning). General planning concepts, no named city or study.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.AUD_NEW.medium.w3b5_08",
+      "template": "AUD_NEW",
+      "subtype": "Describe a place to an audience unfamiliar with its founder",
+      "tier": "medium",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Sake Dean Mahomed (1759–1851) was an Indian-born writer and entrepreneur who settled in Britain.\n• His 1794 book is thought to be the first book published in English by an Indian author.\n• In 1810, he opened the Hindoostanee Coffee House in London.\n• The restaurant, which served Indian dishes, is considered the first Indian restaurant in Britain.\n• After it closed, Mahomed operated a bathhouse in Brighton offering therapeutic massage.",
+      "stem": "The student wants to describe the Hindoostanee Coffee House to an audience unfamiliar with Sake Dean Mahomed. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "The Hindoostanee Coffee House, which Mahomed opened in London in 1810, is considered the first Indian restaurant in Britain.",
+        "Opened in London in 1810 by Indian-born writer and entrepreneur Sake Dean Mahomed, the Hindoostanee Coffee House is considered Britain’s first Indian restaurant.",
+        "Indian-born writer Sake Dean Mahomed published a book in 1794 that is thought to be the first in English by an Indian author.",
+        "After his London restaurant closed, Indian-born entrepreneur Sake Dean Mahomed operated a bathhouse in Brighton offering therapeutic massage."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "An audience unfamiliar with Mahomed needs to be told who he was. Choice B describes the Hindoostanee Coffee House (opened in London in 1810, considered Britain’s first Indian restaurant) and identifies its founder as an Indian-born writer and entrepreneur.",
+      "distractors": {
+        "A": {
+          "recipe": "AUD (founder not identified)",
+          "why_wrong": "It describes the restaurant but refers to “Mahomed” without saying who he was, which this audience would not know."
+        },
+        "C": {
+          "recipe": "OG (his book)",
+          "why_wrong": "It introduces Mahomed through his book and never describes the Hindoostanee Coffee House."
+        },
+        "D": {
+          "recipe": "OG (later bathhouse)",
+          "why_wrong": "It mentions the restaurant only as having closed and focuses on his later bathhouse, so it does not describe the coffee house."
+        }
+      },
+      "models": [
+        "2.34",
+        "2.36",
+        "2.43",
+        "2.8"
+      ],
+      "word_count": 83,
+      "sources": [],
+      "notes": "Subject: history (Sake Dean Mahomed). Real subject known without a search; hedges kept (“is thought to be”, “is considered”).",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.AUD_NEW.medium.w3b5_09",
+      "template": "AUD_NEW",
+      "subtype": "Introduce a concept to a new audience",
+      "tier": "medium",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Xeriscaping is a style of landscaping designed to reduce or eliminate the need for irrigation.\n• The term was coined in 1981 by Denver Water, the public utility serving Denver, Colorado.\n• It combines the Greek xeros (“dry”) with the word landscape.\n• Xeriscaped yards often replace lawns with drought-tolerant plants, gravel, and mulch.\n• Plants with similar requirements are grouped together so that none receive excess water.",
+      "stem": "The student wants to introduce xeriscaping to a new audience. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "Xeriscaping, landscaping meant to reduce or eliminate the need for irrigation, often replaces lawns with drought-tolerant plants.",
+        "In xeriscaped yards, plants with similar water requirements are grouped together so that none of them receive more water than they need.",
+        "Denver Water, the public utility serving Denver, Colorado, coined the term xeriscaping in 1981 from the Greek word xeros.",
+        "Gravel, mulch, and drought-tolerant plants often take the place of lawns in xeriscaped yards."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "A new audience needs to know what xeriscaping is. Choice A defines it as landscaping meant to reduce or eliminate irrigation and then gives a typical feature, drought-tolerant plants in place of lawns.",
+      "distractors": {
+        "B": {
+          "recipe": "AUD (no definition)",
+          "why_wrong": "It gives a detail of xeriscaped yards but never says what xeriscaping is, which a new audience would need."
+        },
+        "C": {
+          "recipe": "OG (origin of the term)",
+          "why_wrong": "It says who coined the term and when, not what xeriscaping is."
+        },
+        "D": {
+          "recipe": "AUD (no definition)",
+          "why_wrong": "It lists features of xeriscaped yards without explaining the concept or its purpose."
+        }
+      },
+      "models": [
+        "2.26",
+        "2.43",
+        "2.8",
+        "2.34"
+      ],
+      "word_count": 80,
+      "sources": [],
+      "notes": "Subject: social science and environment (water-saving landscaping). Real term and origin known without a search.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.EMPH.medium.w3b5_10",
+      "template": "EMPH",
+      "subtype": "Emphasize a quantity (size of a body of work)",
+      "tier": "medium",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Heitor Villa-Lobos (1887–1959) was a Brazilian composer with little formal training in composition.\n• As a young man, he performed on cello and guitar with street musicians in Rio de Janeiro.\n• His nine Bachianas Brasileiras blend the style of Johann Sebastian Bach with Brazilian folk music.\n• Villa-Lobos produced more than 2,000 compositions, including symphonies, operas, and guitar pieces.\n• He is widely regarded as the most influential Brazilian composer of the twentieth century.",
+      "stem": "The student wants to emphasize the size of Villa-Lobos’s body of work. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "With little formal training in composition, Heitor Villa-Lobos performed on cello and guitar with street musicians in Rio de Janeiro as a young man.",
+        "Villa-Lobos’s nine Bachianas Brasileiras blend the style of Johann Sebastian Bach with Brazilian folk music.",
+        "Villa-Lobos produced more than 2,000 compositions, from symphonies and operas to pieces for guitar.",
+        "Villa-Lobos is widely regarded as the most influential Brazilian composer of the twentieth century."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The size of a composer’s body of work is how much he wrote. Choice C gives the total, more than 2,000 compositions, and shows its range, from symphonies to guitar pieces.",
+      "distractors": {
+        "A": {
+          "recipe": "OG (early life)",
+          "why_wrong": "It describes Villa-Lobos’s training and early playing, not how much music he composed."
+        },
+        "B": {
+          "recipe": "OG (one set of works)",
+          "why_wrong": "It describes the style of one group of pieces rather than the size of his whole output."
+        },
+        "D": {
+          "recipe": "OG (reputation)",
+          "why_wrong": "It stresses his influence, not how many works he wrote."
+        }
+      },
+      "models": [
+        "2.6",
+        "2.33",
+        "2.40"
+      ],
+      "word_count": 87,
+      "sources": [],
+      "notes": "Subject: arts (music). Real subject known without a search; “more than 2,000” is the commonly cited count of his works.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.EXPL.medium.w3b5_11",
+      "template": "EXPL",
+      "subtype": "Explain the origin of a name",
+      "tier": "medium",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Cape Horn is a rocky headland at the southernmost tip of South America.\n• Ferocious winds, powerful currents, and icebergs make the surrounding waters notoriously hazardous for ships.\n• In 1616, Dutch navigators Willem Schouten and Jacob Le Maire became the first Europeans to sail around it.\n• Schouten was born in Hoorn, a port city in the Netherlands.\n• He named the headland Kaap Hoorn in honor of his hometown.",
+      "stem": "The student wants to explain the origin of Cape Horn’s name. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "Cape Horn takes its name from the two Dutch navigators who, in 1616, became the first Europeans to sail around the headland.",
+        "Ferocious winds, powerful currents, and icebergs make the waters surrounding Cape Horn, at the tip of South America, hazardous for ships.",
+        "In 1616, Hoorn-born navigator Willem Schouten and Jacob Le Maire became the first Europeans to sail around Cape Horn.",
+        "Willem Schouten named the headland Kaap Hoorn after Hoorn, the Dutch port city where he was born."
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The notes say Schouten named the headland Kaap Hoorn in honor of his hometown, the Dutch city of Hoorn. Choice D gives that origin: who named the cape and what the name honors.",
+      "distractors": {
+        "A": {
+          "recipe": "FALSE (wrong source of the name)",
+          "why_wrong": "The cape was named after the city of Hoorn, not after the two navigators."
+        },
+        "B": {
+          "recipe": "OG (dangerous waters)",
+          "why_wrong": "It describes the cape’s location and dangerous waters but says nothing about its name."
+        },
+        "C": {
+          "recipe": "OG (both facts, no link)",
+          "why_wrong": "It mentions that Schouten came from Hoorn but never says that he named the cape after the city."
+        }
+      },
+      "models": [
+        "2.13",
+        "2.31",
+        "2.15",
+        "2.3"
+      ],
+      "word_count": 83,
+      "sources": [],
+      "notes": "Subject: history (exploration, place names). Real subject known without a search.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.EXPL.medium.w3b5_12",
+      "template": "EXPL",
+      "subtype": "Explain a cause (mechanism)",
+      "tier": "medium",
+      "passage": "While researching a topic, a student has taken the following notes:\n• The bigleaf hydrangea is an ornamental shrub whose blossoms can be pink, purple, or blue.\n• Blossom color depends on whether the plant absorbs aluminum from the surrounding soil.\n• Aluminum dissolves readily in acidic soil, allowing the plant’s roots to absorb it.\n• Within the blossoms, aluminum combines with a pigment called delphinidin to produce blue coloration.\n• In neutral or alkaline soil, little aluminum is available, and the blossoms typically turn pink.",
+      "stem": "The student wants to explain why bigleaf hydrangeas grown in acidic soil tend to have blue blossoms. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "Bigleaf hydrangeas grown in neutral or alkaline soil typically have pink blossoms because little aluminum is available to them.",
+        "In acidic soil, aluminum dissolves and is absorbed by the plant’s roots; in the blossoms, it combines with a pigment to make them blue.",
+        "Bigleaf hydrangeas grown in acidic soil tend to produce blue blossoms rather than pink or purple ones.",
+        "Acidic soil contains delphinidin, a blue pigment that the hydrangea’s roots absorb and carry to the blossoms."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The notes give a chain: aluminum dissolves in acidic soil, the roots absorb it, and in the blossoms it combines with a pigment to make blue. Choice B traces that chain from the soil to the blue color.",
+      "distractors": {
+        "A": {
+          "recipe": "OG (explains the other case)",
+          "why_wrong": "It explains why hydrangeas in neutral or alkaline soil are pink, not why those in acidic soil are blue."
+        },
+        "C": {
+          "recipe": "PART (claim without reason)",
+          "why_wrong": "It says the blossoms can be blue in acidic soil but gives no reason."
+        },
+        "D": {
+          "recipe": "FALSE (wrong mechanism)",
+          "why_wrong": "The notes say delphinidin is a pigment within the blossoms that combines with aluminum from the soil; the soil does not supply the pigment."
+        }
+      },
+      "models": [
+        "2.31",
+        "2.13",
+        "2.15",
+        "2.3"
+      ],
+      "word_count": 86,
+      "sources": [],
+      "notes": "Subject: natural science (plant chemistry). Well-known horticultural fact, no named study.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.SIM.medium.w3b5_13",
+      "template": "SIM",
+      "subtype": "Emphasize a similarity between two festivals",
+      "tier": "medium",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Kites play a central role in several festivals around the world.\n• During Uttarayan, a January festival in Gujarat, India, people fly kites to celebrate the end of winter.\n• Many participants try to cut rivals’ kite strings with glass-coated lines.\n• On November 1 in Sumpango, Guatemala, residents display enormous kites in the town’s cemetery.\n• Smaller kites are flown there to honor deceased relatives.",
+      "stem": "The student wants to emphasize a similarity between Uttarayan and the November 1 celebration in Sumpango. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "Kites are central to both Uttarayan in Gujarat, India, and the November 1 celebration in Sumpango, Guatemala.",
+        "Whereas kites flown during Uttarayan celebrate the end of winter, those flown in Sumpango on November 1 honor deceased relatives.",
+        "During Uttarayan, many participants try to cut rivals’ kite strings with glass-coated lines.",
+        "On November 1, residents of Sumpango, Guatemala, display enormous kites in the town’s cemetery."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "Kites appear in the notes on both celebrations: people fly them during Uttarayan, and in Sumpango they display giant kites and fly smaller ones. Choice A states this shared feature.",
+      "distractors": {
+        "B": {
+          "recipe": "REL (difference)",
+          "why_wrong": "It contrasts the purposes of the kites at the two celebrations, so it emphasizes a difference."
+        },
+        "C": {
+          "recipe": "PART (one festival only)",
+          "why_wrong": "It describes only a custom of Uttarayan and never mentions Sumpango."
+        },
+        "D": {
+          "recipe": "PART (one festival only)",
+          "why_wrong": "It describes only the Sumpango celebration and never mentions Uttarayan."
+        }
+      },
+      "models": [
+        "2.24",
+        "2.30",
+        "2.46"
+      ],
+      "word_count": 78,
+      "sources": [],
+      "notes": "Subject: social science and culture (kite festivals in Gujarat and Guatemala). Real customs known without a search.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.RANK.medium.w3b5_14",
+      "template": "RANK",
+      "subtype": "Emphasize the order of two events",
+      "tier": "medium",
+      "passage": "While researching a topic, a student has taken the following notes:\n• In the seventeenth and eighteenth centuries, few European universities admitted women as students.\n• Elena Cornaro Piscopia, a Venetian scholar, received a doctorate in philosophy from the University of Padua.\n• She was awarded the degree in 1678.\n• Laura Bassi received a doctorate in philosophy from the University of Bologna.\n• She was awarded the degree in 1732 and later taught experimental physics there.",
+      "stem": "The student wants to emphasize the order in which the two scholars received their doctorates. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "In an era when few European universities admitted women, Cornaro Piscopia and Bassi each received a doctorate in philosophy.",
+        "Cornaro Piscopia received her doctorate from the University of Padua several decades after Bassi received hers from Bologna.",
+        "More than fifty years after Cornaro Piscopia earned her doctorate at Padua, Bassi earned the same degree at Bologna.",
+        "Laura Bassi received a doctorate in philosophy from the University of Bologna in 1732 and later taught experimental physics there."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "Cornaro Piscopia received her doctorate in 1678 and Bassi in 1732. Choice C gives that order, with Bassi’s degree coming more than fifty years later.",
+      "distractors": {
+        "A": {
+          "recipe": "OG (context, no order)",
+          "why_wrong": "It says both women earned doctorates when few women could study but does not say which came first."
+        },
+        "B": {
+          "recipe": "FALSE (reversed order)",
+          "why_wrong": "Cornaro Piscopia’s degree (1678) came before Bassi’s (1732), not after it."
+        },
+        "D": {
+          "recipe": "PART (one scholar only)",
+          "why_wrong": "It gives only Bassi’s degree and later career, so it does not compare the two."
+        }
+      },
+      "models": [
+        "2.27",
+        "2.44"
+      ],
+      "word_count": 77,
+      "sources": [],
+      "notes": "Subject: history (women in European universities). Real subject known without a search.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.EXAMPLE.medium.w3b5_15",
+      "template": "EXAMPLE",
+      "subtype": "Provide an example of a category",
+      "tier": "medium",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Ephemeral lakes hold water only intermittently, typically filling after heavy rainfall and drying out through evaporation.\n• They are common in deserts and other arid regions.\n• Kati Thanda–Lake Eyre lies in a remote desert region of South Australia.\n• In most years, its basin is a dry, white crust of salt.\n• When floodwaters arrive from distant rivers, the basin partially fills, sometimes remaining wet for several months.",
+      "stem": "The student wants to provide an example of an ephemeral lake. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "Common in deserts and other arid regions, ephemeral lakes hold water only intermittently.",
+        "One ephemeral lake is South Australia’s Kati Thanda–Lake Eyre, which is usually a dry crust of salt but partially fills when floodwaters arrive.",
+        "Kati Thanda–Lake Eyre, which lies in a remote desert region of South Australia, has a basin covered by a white crust of salt.",
+        "Ephemeral lakes typically fill after heavy rainfall and then dry out through evaporation."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "Choice B names a specific ephemeral lake, Kati Thanda–Lake Eyre, and shows why it belongs to the category: it is usually dry and holds water only after floodwaters arrive.",
+      "distractors": {
+        "A": {
+          "recipe": "OG (where the category occurs)",
+          "why_wrong": "It says where ephemeral lakes are common but names no example."
+        },
+        "C": {
+          "recipe": "OG (instance without the category)",
+          "why_wrong": "It names Kati Thanda–Lake Eyre but describes only its location and salt crust, never presenting it as a lake that fills and dries."
+        },
+        "D": {
+          "recipe": "OG (definition only)",
+          "why_wrong": "It explains how ephemeral lakes behave but gives no example of one."
+        }
+      },
+      "models": [
+        "2.25",
+        "2.42"
+      ],
+      "word_count": 81,
+      "sources": [],
+      "notes": "Subject: natural science (geography). Real subject known without a search; details kept general.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.STUDY.medium.w3b5_16",
+      "template": "STUDY",
+      "subtype": "Present the results of a study",
+      "tier": "medium",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Asphalt schoolyards can become dangerously hot on summer afternoons, when many students are outside at recess.\n• Researchers wanted to determine whether planting shade trees could make schoolyards more comfortable.\n• They measured surface temperatures at six schoolyards with mature trees and six schoolyards without trees.\n• Shaded asphalt was, on average, 15°C cooler than asphalt exposed to direct sunlight.\n• Students at schools with trees also spent more of their recess playing outdoors.",
+      "stem": "The student wants to present the researchers’ findings. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "The researchers wanted to determine whether planting shade trees could make asphalt schoolyards more comfortable for students.",
+        "The researchers measured surface temperatures at six schoolyards with mature trees and at six schoolyards without trees.",
+        "Asphalt schoolyards can become dangerously hot on summer afternoons, when many students are outside at recess.",
+        "Shaded asphalt was about 15°C cooler than sunlit asphalt, and students at schools with trees spent more of recess playing outdoors."
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The findings are what the researchers observed: shaded asphalt was about 15°C cooler, and students at schools with trees spent more of recess outdoors. Choice D presents both.",
+      "distractors": {
+        "A": {
+          "recipe": "OG (aim offered for findings)",
+          "why_wrong": "It states what the researchers wanted to learn, not what they found."
+        },
+        "B": {
+          "recipe": "OG (method offered for findings)",
+          "why_wrong": "It describes how the researchers collected data, not their results."
+        },
+        "C": {
+          "recipe": "OG (background)",
+          "why_wrong": "It gives the problem that prompted the study rather than the study’s findings."
+        }
+      },
+      "models": [
+        "2.5",
+        "2.2",
+        "2.21"
+      ],
+      "word_count": 86,
+      "sources": [],
+      "notes": "Subject: natural science (urban heat, schoolyards). Generic invented study with illustrative figures attached to an unnamed team.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass",
+        "generic_study": "unnamed “researchers”, no place, year or institution; illustrative figures; not identifiable as a real study"
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.AUD_FAM.medium.w3b5_17",
+      "template": "AUD_FAM",
+      "subtype": "Describe a work to an audience already familiar with its creator",
+      "tier": "medium",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Colin McPhee (1900–1964) was a Canadian-born composer based in New York.\n• During the 1930s, he lived for several years on the Indonesian island of Bali.\n• There he studied gamelan, an ensemble music played primarily on gongs and metallophones.\n• His orchestral work Tabuh-Tabuhan (1936) is scored for a Western orchestra and two pianos.\n• In it, the pianos and orchestra imitate the interlocking rhythmic patterns of gamelan.",
+      "stem": "The student wants to describe Tabuh-Tabuhan to an audience already familiar with Colin McPhee. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "In Tabuh-Tabuhan (1936), McPhee had two pianos and a Western orchestra imitate the interlocking rhythmic patterns of gamelan.",
+        "Colin McPhee, a Canadian-born composer who was based in New York, wrote Tabuh-Tabuhan in 1936 for a Western orchestra and two pianos.",
+        "Canadian-born composer Colin McPhee, who studied gamelan in Bali during the 1930s, completed Tabuh-Tabuhan in 1936.",
+        "Gamelan, the music McPhee studied in Bali, is an ensemble music played primarily on gongs and metallophones."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "An audience that already knows McPhee does not need him introduced. Choice A refers to him by name only and spends its words on the piece: two pianos and a Western orchestra imitating gamelan’s interlocking patterns.",
+      "distractors": {
+        "B": {
+          "recipe": "AUD (re-introduces McPhee)",
+          "why_wrong": "It explains who McPhee was, which this audience already knows, and leaves out what the piece imitates."
+        },
+        "C": {
+          "recipe": "AUD (re-introduces McPhee)",
+          "why_wrong": "It spends its words on McPhee’s background and says nothing about what Tabuh-Tabuhan sounds like or is scored for."
+        },
+        "D": {
+          "recipe": "OG (defines gamelan)",
+          "why_wrong": "It describes gamelan, not Tabuh-Tabuhan."
+        }
+      },
+      "models": [
+        "2.18",
+        "2.28",
+        "2.1"
+      ],
+      "word_count": 81,
+      "sources": [],
+      "notes": "Subject: arts (music). Real subject known without a search (McPhee’s Bali years and Tabuh-Tabuhan, 1936, for orchestra and two pianos).",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.SPEC.medium.w3b5_18",
+      "template": "SPEC",
+      "subtype": "Specify a time of year",
+      "tier": "medium",
+      "passage": "While researching a topic, a student has taken the following notes:\n• The harmattan is a dry, dusty wind that blows across West Africa.\n• It originates over the Sahara and blows southwest toward the Gulf of Guinea.\n• The harmattan season generally lasts from late November to mid-March.\n• The wind carries enough fine dust to reduce visibility and disrupt air travel.\n• Relative humidity often drops sharply while the harmattan blows.",
+      "stem": "The student wants to specify when the harmattan season occurs. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "Originating over the Sahara, the harmattan is a dry, dusty wind that blows southwest toward the Gulf of Guinea.",
+        "While the harmattan blows, its fine dust can reduce visibility and disrupt air travel across West Africa.",
+        "The harmattan, a dry, dusty wind in West Africa, generally blows from late November to mid-March.",
+        "Each year, the harmattan blows across West Africa for a season, bringing dust and low humidity."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The notes say the harmattan season generally lasts from late November to mid-March. Choice C gives those months.",
+      "distractors": {
+        "A": {
+          "recipe": "OG (origin and direction)",
+          "why_wrong": "It says where the wind comes from and where it blows, not when."
+        },
+        "B": {
+          "recipe": "OG (effects)",
+          "why_wrong": "It describes the wind’s effects, not the time of year it blows."
+        },
+        "D": {
+          "recipe": "VAGUE",
+          "why_wrong": "It says the harmattan blows for a season but never says which months."
+        }
+      },
+      "models": [
+        "2.39",
+        "2.45"
+      ],
+      "word_count": 73,
+      "sources": [],
+      "notes": "Subject: natural science (climate). Real subject known without a search.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.QUOTE.medium.w3b5_19",
+      "template": "QUOTE",
+      "subtype": "Use a quotation to explain a choice",
+      "tier": "medium",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Book conservators repair damaged books and documents so that they can be preserved.\n• Many conservators follow the principle of reversibility, choosing materials that can later be removed without harming the original.\n• Inés Barragán is a book conservator in Buenos Aires, Argentina.\n• She mends torn pages with thin Japanese paper and a wheat starch paste that dissolves in water.\n• Barragán says, “Whatever I add, the next conservator must be able to take away.”\n• She calls her work “a conversation with everyone who has held the book before.”",
+      "stem": "The student wants to use a quotation from Barragán to explain why she mends pages with a paste that dissolves in water. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "Barragán, a book conservator in Buenos Aires, describes her work as “a conversation with everyone who has held the book before.”",
+        "Barragán mends pages with a paste that dissolves in water because, as she puts it, “whatever I add, the next conservator must be able to take away.”",
+        "Following the principle of reversibility, Barragán chooses repair materials, such as a paste that dissolves in water, that can later be removed.",
+        "Barragán, a book conservator, mends torn pages with thin Japanese paper and a wheat starch paste that dissolves in water."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The goal needs a quotation that explains the choice of paste. Choice B links the water-soluble paste to Barragán’s own words: whatever she adds, the next conservator must be able to remove.",
+      "distractors": {
+        "A": {
+          "recipe": "NOQ (quotation doing another job)",
+          "why_wrong": "It quotes Barragán, but the quotation describes how she sees her work, not why she uses a paste that dissolves in water."
+        },
+        "C": {
+          "recipe": "NOQ (paraphrase, no quotation)",
+          "why_wrong": "It explains the reason but does not quote Barragán, as the goal requires."
+        },
+        "D": {
+          "recipe": "OG (materials only)",
+          "why_wrong": "It names her materials but neither quotes her nor explains why she uses the paste."
+        }
+      },
+      "models": [
+        "2.9",
+        "2.29"
+      ],
+      "word_count": 103,
+      "sources": [],
+      "notes": "Subject: arts (book conservation). Invented conservator with an invented quotation (WAVE.md); the name was searched once and matches no book conservator. The principle of reversibility is real conservation practice.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [],
+        "status": "pass",
+        "name_check": "searched “Inés Barragán” and “Ines Barragan” with book conservator / conservadora de libros: no such conservator found; Barragán is a common Argentine surname, so the name reads as real"
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.SPEC.easy.w3b5_20",
+      "template": "SPEC",
+      "subtype": "Specify a location",
+      "tier": "easy",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Pitch Lake is the largest natural deposit of asphalt in the world.\n• It covers approximately 40 hectares.\n• The lake is located in the village of La Brea in southwestern Trinidad.\n• In 1595, English explorer Walter Raleigh used its asphalt to waterproof the hulls of his ships.\n• Asphalt from the lake has been exported to pave roads in many countries.",
+      "stem": "The student wants to specify the location of Pitch Lake. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "Pitch Lake, which covers approximately 40 hectares, is the world’s largest natural deposit of asphalt.",
+        "In 1595, English explorer Walter Raleigh used asphalt from Pitch Lake to waterproof the hulls of his ships.",
+        "Asphalt from Pitch Lake, the largest natural deposit of asphalt in the world, has been exported to pave roads in many countries.",
+        "Pitch Lake is located in the village of La Brea in southwestern Trinidad."
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The goal asks where Pitch Lake is. Choice D gives its location: the village of La Brea in southwestern Trinidad.",
+      "distractors": {
+        "A": {
+          "recipe": "OG (size)",
+          "why_wrong": "It gives the lake’s size and rank, not its location."
+        },
+        "B": {
+          "recipe": "OG (history)",
+          "why_wrong": "It describes an early use of the asphalt, not where the lake is."
+        },
+        "C": {
+          "recipe": "OG (use)",
+          "why_wrong": "It says the asphalt has been exported, not where the lake is located."
+        }
+      },
+      "models": [
+        "1.9",
+        "1.4"
+      ],
+      "word_count": 75,
+      "sources": [],
+      "notes": "Subject: natural science (geology, Trinidad). Real subject known without a search.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.EMPH.easy.w3b5_21",
+      "template": "EMPH",
+      "subtype": "Emphasize a quantity",
+      "tier": "easy",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Papua New Guinea is a country in the southwestern Pacific Ocean.\n• It shares the island of New Guinea with Indonesia.\n• More than 800 languages are spoken in Papua New Guinea, more than in any other country.\n• Many of these languages have only a few thousand speakers.\n• Tok Pisin, an English-based creole, is widely used as a common language.",
+      "stem": "The student wants to emphasize how many languages are spoken in Papua New Guinea. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "With more than 800 languages, Papua New Guinea is home to more languages than any other country.",
+        "Tok Pisin, an English-based creole, is widely used as a common language in Papua New Guinea.",
+        "Papua New Guinea, a country in the southwestern Pacific Ocean, shares the island of New Guinea with Indonesia.",
+        "Many of the languages spoken in Papua New Guinea have only a few thousand speakers."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "Choice A gives the number of languages, more than 800, and stresses it by noting that no other country has as many.",
+      "distractors": {
+        "B": {
+          "recipe": "OG (common language)",
+          "why_wrong": "It describes one widely used language, not how many languages are spoken."
+        },
+        "C": {
+          "recipe": "OG (location)",
+          "why_wrong": "It says where the country is, not how many languages are spoken there."
+        },
+        "D": {
+          "recipe": "PART (size of each language)",
+          "why_wrong": "It says many languages have few speakers but never says how many languages there are."
+        }
+      },
+      "models": [
+        "1.7",
+        "1.15",
+        "1.16"
+      ],
+      "word_count": 74,
+      "sources": [],
+      "notes": "Subject: social science (languages). Widely cited figure known without a search.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.DESC.easy.w3b5_22",
+      "template": "DESC",
+      "subtype": "Describe a physical structure",
+      "tier": "easy",
+      "passage": "While researching a topic, a student has taken the following notes:\n• A torii is a traditional gate that marks the entrance to a Shinto shrine in Japan.\n• Passing through a torii symbolizes entering a sacred space.\n• A torii consists of two upright pillars joined near the top by two horizontal crossbeams.\n• The upper crossbeam often extends beyond the pillars on both sides.\n• Many torii are painted a bright orange-red.",
+      "stem": "The student wants to describe the structure of a torii. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "A torii is a traditional gate that marks the entrance to a Shinto shrine in Japan.",
+        "Passing through a torii, which is often painted a bright orange-red, symbolizes entering a sacred space.",
+        "A torii has two upright pillars joined near the top by two horizontal crossbeams, the upper of which often extends past the pillars.",
+        "Torii, the gates at Shinto shrines, are built in a traditional style with several connected parts."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "A torii’s structure is how its parts fit together. Choice C describes them: two upright pillars joined near the top by two crossbeams, with the upper beam often extending past the pillars.",
+      "distractors": {
+        "A": {
+          "recipe": "OG (function)",
+          "why_wrong": "It says what a torii is for, not how it is built."
+        },
+        "B": {
+          "recipe": "OG (meaning and color)",
+          "why_wrong": "It gives the gate’s color and symbolic meaning, not its structure."
+        },
+        "D": {
+          "recipe": "VAGUE",
+          "why_wrong": "It says a torii has several connected parts but never says what they are or how they fit together."
+        }
+      },
+      "models": [
+        "1.1",
+        "1.8",
+        "1.18"
+      ],
+      "word_count": 74,
+      "sources": [],
+      "notes": "Subject: arts and culture (architecture, Japan). Real subject known without a search.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.RANK.easy.w3b5_23",
+      "template": "RANK",
+      "subtype": "Compare two quantities",
+      "tier": "easy",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Ocean trenches are long, narrow depressions in the seafloor.\n• The Mariana Trench is located in the western Pacific Ocean.\n• Its deepest point lies approximately 11,000 meters below sea level.\n• The Puerto Rico Trench is located in the Atlantic Ocean, north of Puerto Rico.\n• Its deepest point lies approximately 8,400 meters below sea level.",
+      "stem": "The student wants to compare the depths of the Mariana Trench and the Puerto Rico Trench. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "The Mariana Trench, located in the western Pacific Ocean, reaches about 11,000 meters below sea level at its deepest point.",
+        "At about 11,000 meters below sea level, the Mariana Trench is deeper than the Puerto Rico Trench, which reaches about 8,400 meters.",
+        "Reaching about 8,400 meters below sea level, the Puerto Rico Trench is deeper than the Mariana Trench.",
+        "The Mariana Trench and the Puerto Rico Trench are long, narrow depressions in the seafloor of the Pacific and Atlantic Oceans, respectively."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The Mariana Trench reaches about 11,000 meters and the Puerto Rico Trench about 8,400 meters. Choice B compares them: the Mariana Trench is the deeper of the two.",
+      "distractors": {
+        "A": {
+          "recipe": "PART (one trench only)",
+          "why_wrong": "It gives only the Mariana Trench’s depth, so it does not compare the two."
+        },
+        "C": {
+          "recipe": "FALSE (reversed comparison)",
+          "why_wrong": "At about 8,400 meters, the Puerto Rico Trench is shallower than the Mariana Trench, not deeper."
+        },
+        "D": {
+          "recipe": "OG (category and location)",
+          "why_wrong": "It says what both trenches are and where they lie, not how their depths compare."
+        }
+      },
+      "models": [
+        "1.17",
+        "1.20"
+      ],
+      "word_count": 69,
+      "sources": [],
+      "notes": "Subject: natural science (oceanography). Rounded depths known without a search.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      }
+    }
+  ],
+  "done": true
+}

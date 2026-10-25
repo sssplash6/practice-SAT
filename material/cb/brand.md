@@ -2,7 +2,7 @@
 
 ## Source
 
-- Permission: College Board, by phone to the user, 2026-09-27; written confirmation pending
+- Permission: College Board, by phone to the user, 2026-09-27; confirmed in writing by email (held by the user)
 - Fetched 2026-09-26 UTC: https://privacy.collegeboard.org/copyright-trademark/guidelines
 - Fetched 2026-09-26 UTC: https://privacy.collegeboard.org/copyright-trademark/college-board
 - Fetched 2026-09-26 UTC: https://privacy.collegeboard.org/copyright-trademark/request-instructions

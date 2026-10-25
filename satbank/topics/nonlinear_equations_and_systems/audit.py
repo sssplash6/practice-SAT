@@ -930,7 +930,7 @@ def _gap(a, b, c, m, x):
 def _integer_roots(p):
     k = int(_q(p["k"]))
     sums = sorted({d + k // d for d in range(1, k + 1) if k % d == 0 and d * d <= k})
-    return float(sums[0])
+    return ", ".join(str(v) for v in sums)          # every sum is a right answer
 
 
 # ==================================================================== graphs

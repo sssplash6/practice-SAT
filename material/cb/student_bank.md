@@ -2,7 +2,7 @@
 
 ## Source
 
-- Permission: College Board, by phone to the user, 2026-09-27; written confirmation pending
+- Permission: College Board, by phone to the user, 2026-09-27; confirmed in writing by email (held by the user)
 - Observed 2026-09-26 21:38 UTC, after the user signed in directly: https://mypractice.collegeboard.org/questionbank/search and https://mypractice.collegeboard.org/questionbank/results
 - Comparison source, fetched 2026-09-26 UTC: https://qbank-api.collegeboard.org/msreportingquestionbank-prod/questionbank/digital/get-questions (public Educator Question Bank metadata only; see `cb_index.json`)
 

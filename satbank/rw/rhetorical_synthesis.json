@@ -1,0 +1,2739 @@
+{
+  "skill": "Rhetorical Synthesis",
+  "slug": "rhetorical_synthesis",
+  "part": null,
+  "domain": "Expression of Ideas",
+  "plan": {
+    "templates": [
+      {
+        "code": "SIM",
+        "name": "Similarity",
+        "official_tiers": {
+          "easy": [
+            "1.10",
+            "1.11",
+            "1.22"
+          ],
+          "medium": [
+            "2.24",
+            "2.30",
+            "2.46"
+          ],
+          "hard": [
+            "3.18"
+          ]
+        }
+      },
+      {
+        "code": "DIFF",
+        "name": "Difference",
+        "official_tiers": {
+          "easy": [
+            "1.2",
+            "1.13"
+          ],
+          "medium": [
+            "2.10",
+            "2.11",
+            "2.17",
+            "2.19",
+            "2.23",
+            "2.32",
+            "2.38",
+            "2.41"
+          ],
+          "hard": [
+            "3.3",
+            "3.14"
+          ]
+        }
+      },
+      {
+        "code": "RANK",
+        "name": "Order or relative degree",
+        "official_tiers": {
+          "easy": [
+            "1.17",
+            "1.20"
+          ],
+          "medium": [
+            "2.27",
+            "2.37",
+            "2.44"
+          ],
+          "hard": [
+            "3.15"
+          ]
+        }
+      },
+      {
+        "code": "SPEC",
+        "name": "Specify or identify a single fact",
+        "official_tiers": {
+          "easy": [
+            "1.3",
+            "1.4",
+            "1.5",
+            "1.9"
+          ],
+          "medium": [
+            "2.39",
+            "2.45"
+          ],
+          "hard": [
+            "3.19"
+          ]
+        }
+      },
+      {
+        "code": "EMPH",
+        "name": "Emphasize one attribute",
+        "official_tiers": {
+          "easy": [
+            "1.7",
+            "1.14",
+            "1.15",
+            "1.16"
+          ],
+          "medium": [
+            "2.6",
+            "2.14",
+            "2.20",
+            "2.33",
+            "2.40"
+          ],
+          "hard": []
+        }
+      },
+      {
+        "code": "DESC",
+        "name": "Describe",
+        "official_tiers": {
+          "easy": [
+            "1.1",
+            "1.8",
+            "1.18"
+          ],
+          "medium": [
+            "2.4"
+          ],
+          "hard": [
+            "3.24"
+          ]
+        }
+      },
+      {
+        "code": "EXPL",
+        "name": "Explain (cause, origin, advantage, mechanism, definition, significance)",
+        "official_tiers": {
+          "easy": [
+            "1.6"
+          ],
+          "medium": [
+            "2.3",
+            "2.7",
+            "2.13",
+            "2.15",
+            "2.31"
+          ],
+          "hard": [
+            "3.2",
+            "3.13",
+            "3.17",
+            "3.23"
+          ]
+        }
+      },
+      {
+        "code": "EXAMPLE",
+        "name": "Example, or explanation plus example",
+        "official_tiers": {
+          "easy": [
+            "1.19"
+          ],
+          "medium": [
+            "2.16",
+            "2.25",
+            "2.42"
+          ],
+          "hard": [
+            "3.4"
+          ]
+        }
+      },
+      {
+        "code": "STUDY",
+        "name": "Research study (aim, method, results)",
+        "official_tiers": {
+          "easy": [],
+          "medium": [
+            "2.2",
+            "2.5",
+            "2.21"
+          ],
+          "hard": [
+            "3.1",
+            "3.10",
+            "3.21"
+          ]
+        }
+      },
+      {
+        "code": "GEN",
+        "name": "Generalization, with or without support",
+        "official_tiers": {
+          "easy": [],
+          "medium": [
+            "2.12",
+            "2.22"
+          ],
+          "hard": [
+            "3.11",
+            "3.12",
+            "3.20"
+          ]
+        }
+      },
+      {
+        "code": "OVERVIEW",
+        "name": "Overview or summary",
+        "official_tiers": {
+          "easy": [
+            "1.21"
+          ],
+          "medium": [],
+          "hard": [
+            "3.8",
+            "3.9",
+            "3.22"
+          ]
+        }
+      },
+      {
+        "code": "AUD_NEW",
+        "name": "Introduce or describe to an unfamiliar or new audience",
+        "official_tiers": {
+          "easy": [
+            "1.12"
+          ],
+          "medium": [
+            "2.8",
+            "2.26",
+            "2.34",
+            "2.35",
+            "2.36",
+            "2.43"
+          ],
+          "hard": []
+        }
+      },
+      {
+        "code": "AUD_FAM",
+        "name": "Present or describe to an already familiar audience",
+        "official_tiers": {
+          "easy": [],
+          "medium": [
+            "2.1",
+            "2.18",
+            "2.28"
+          ],
+          "hard": [
+            "3.7",
+            "3.16"
+          ]
+        }
+      },
+      {
+        "code": "QUOTE",
+        "name": "Quotation",
+        "official_tiers": {
+          "easy": [],
+          "medium": [
+            "2.9",
+            "2.29"
+          ],
+          "hard": [
+            "3.6"
+          ]
+        }
+      },
+      {
+        "code": "NARR",
+        "name": "Begin a narrative",
+        "official_tiers": {
+          "easy": [],
+          "medium": [],
+          "hard": [
+            "3.5"
+          ]
+        }
+      }
+    ],
+    "skipped": [
+      [
+        "EMPH",
+        "hard"
+      ],
+      [
+        "STUDY",
+        "easy"
+      ],
+      [
+        "GEN",
+        "easy"
+      ],
+      [
+        "OVERVIEW",
+        "medium"
+      ],
+      [
+        "AUD_NEW",
+        "hard"
+      ],
+      [
+        "AUD_FAM",
+        "easy"
+      ],
+      [
+        "QUOTE",
+        "easy"
+      ],
+      [
+        "NARR",
+        "easy"
+      ],
+      [
+        "NARR",
+        "medium"
+      ]
+    ]
+  },
+  "items": [
+    {
+      "id": "rhetorical_synthesis.SIM.easy",
+      "template": "SIM",
+      "subtype": "Similarity",
+      "tier": "easy",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Pedro Reyes, a Mexican artist, often responds to gun violence in his sculptures and public projects.\n• For Palas por Pistolas (2008), Reyes collected 1,527 weapons that residents of Culiacán, Mexico, donated in exchange for coupons.\n• The weapons were melted down and forged into 1,527 shovels for planting trees.\n• For Imagine (2012), he received 6,700 weapons confiscated by authorities in Ciudad Juárez.\n• Working with six musicians, he turned the weapons’ metal parts into fifty playable instruments.",
+      "stem": "The student wants to emphasize a similarity between Palas por Pistolas and Imagine. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "Whereas the weapons in Palas por Pistolas became shovels, those in Imagine became musical instruments.",
+        "Palas por Pistolas and Imagine are both made from weapons that Reyes obtained in Mexico.",
+        "For Imagine, Reyes received 6,700 weapons that authorities in Ciudad Juárez had confiscated.",
+        "Pedro Reyes is a Mexican artist whose sculptures and public projects often respond to gun violence."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The goal asks for something the two works have in common. The notes say that Palas por Pistolas was made from weapons donated in Culiacán and that Imagine was made from weapons confiscated in Ciudad Juárez, so both works are made from weapons Reyes obtained in Mexico, as choice B says.",
+      "distractors": {
+        "A": {
+          "recipe": "REL: wrong relation or wrong dimension",
+          "why_wrong": "It sets the two works against each other with “whereas,” pointing out what each became, which is a difference, not a similarity."
+        },
+        "C": {
+          "recipe": "PART: delivers only part of what the goal needs",
+          "why_wrong": "It describes where the weapons for Imagine came from but never mentions Palas por Pistolas, so nothing is compared."
+        },
+        "D": {
+          "recipe": "OG: accurate, but serves another goal",
+          "why_wrong": "It introduces the artist and his usual subject but names neither work, so it shows no similarity between them."
+        }
+      },
+      "models": [
+        "1.10",
+        "1.11",
+        "1.22"
+      ],
+      "word_count": 91,
+      "sources": [
+        {
+          "what": "Palas por Pistolas: commissioned by Culiacán; TV ads offered coupons redeemable at local stores in exchange for guns; 1,527 weapons collected, crushed by a steamroller, melted and forged into 1,527 shovelheads used to plant trees",
+          "url": "https://glasstire.com/2013/03/04/pedro-reyes-palas-por-pistolas/"
+        },
+        {
+          "what": "Imagine (2012): 6,700 confiscated weapons from Ciudad Juárez offered by a government official; six musicians over two weeks; 50 wind, percussion and string instruments; Palas por Pistolas 2008, 1,527 weapons into 1,527 shovels",
+          "url": "https://newatlas.com/pedro-reyes-imagine-project/25273"
+        },
+        {
+          "what": "Mexican artist Pedro Reyes; Palas por pistolas 2008 (weapons donated by civilians in Culiacán) and Imagine 2012 (metal from a weapons decommissioning program), works responding to gun violence",
+          "url": "https://www.ngv.vic.gov.au/essay/pedro-reyes-disarm/"
+        }
+      ],
+      "notes": "Some sources give 7,000 weapons for Imagine; 6,700 is the figure in most reports.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 6,
+        "fixes": [],
+        "status": "pass"
+      },
+      "rewrite": "New subject (Pedro Reyes, Palas por Pistolas and Imagine) replacing the famous Arecibo and FAST telescopes; no duplicated bullet sets up the shared trait, which now has to be drawn from two differently worded pairs of notes.",
+      "model_bands": [
+        4,
+        4,
+        3
+      ]
+    },
+    {
+      "id": "rhetorical_synthesis.DIFF.easy",
+      "template": "DIFF",
+      "subtype": "Difference",
+      "tier": "easy",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Japanese lacquerware is often decorated with maki-e, raden, or both.\n• In maki-e, a design drawn in wet lacquer is sprinkled with metal powder, usually gold or silver.\n• The term maki-e means “sprinkled picture.”\n• In raden, iridescent pieces of shell are cut into shapes and embedded in the lacquered surface.\n• This technique came to Japan from Tang dynasty China.",
+      "stem": "The student wants to emphasize a difference between maki-e and raden. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "Maki-e and raden are two different techniques that artisans use to decorate Japanese lacquerware.",
+        "Raden, a technique that came to Japan from Tang dynasty China, uses iridescent pieces of shell.",
+        "Maki-e decorates lacquer with sprinkled metal powder, while raden uses pieces of shell.",
+        "Maki-e, a term that means “sprinkled picture,” is one technique used to decorate Japanese lacquerware."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "To emphasize a difference, the sentence must set the two techniques side by side on the same point. Choice C does this for the material each one adds to the lacquer: maki-e uses sprinkled metal powder, while raden uses pieces of shell.",
+      "distractors": {
+        "A": {
+          "recipe": "VAGUE: names the relation without the content",
+          "why_wrong": "It says the techniques are different but never says how, so no actual difference is emphasized."
+        },
+        "B": {
+          "recipe": "PART: delivers only part of what the goal needs",
+          "why_wrong": "It describes raden only and never mentions maki-e, so nothing is contrasted."
+        },
+        "D": {
+          "recipe": "OG: accurate, but serves another goal",
+          "why_wrong": "It gives the meaning of the term maki-e and its use on lacquerware but says nothing about raden, so no difference is shown."
+        }
+      },
+      "models": [
+        "1.2",
+        "1.13"
+      ],
+      "word_count": 74,
+      "sources": [
+        {
+          "what": "Maki-e: “sprinkled picture”; design drawn in lacquer, metal powder (gold, silver, other metals) sprinkled onto the wet lacquer; often combined with raden, in which mother-of-pearl nacre is embedded in or pasted onto lacquer",
+          "url": "https://en.wikipedia.org/wiki/Maki-e"
+        },
+        {
+          "what": "Raden: inlay of nacre (shell) into lacquer; the technique (Chinese luodian) was introduced from the Tang dynasty into Japan during the Nara period",
+          "url": "https://en.wikipedia.org/wiki/Raden"
+        },
+        {
+          "what": "Raden: shell pieces cut into designs with a knife or needle and glued onto the lacquered surface (usugai method); flourished in the Nara period",
+          "url": "https://www.britannica.com/art/raden"
+        },
+        {
+          "what": "Japan Tourism Agency multilingual database: raden embeds small pieces of mother of pearl in lacquer; introduced from China in the eighth century (Shōsōin relics); maki-e often used with raden",
+          "url": "https://www.mlit.go.jp/tagengo-db/common/001653898.pdf"
+        }
+      ],
+      "notes": "",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 5,
+        "fixes": [
+          "key joined with “while” instead of “whereas” (the file overused “whereas”, 7 items against the bank’s 10 of 92)"
+        ],
+        "status": "fixed"
+      },
+      "rewrite": "New subject (maki-e and raden lacquer decoration) replacing the textbook shield volcano and stratovolcano contrast; the two techniques are no longer described in mirror-image bullets.",
+      "model_bands": [
+        3,
+        3
+      ]
+    },
+    {
+      "id": "rhetorical_synthesis.RANK.easy",
+      "template": "RANK",
+      "subtype": "Order or relative degree",
+      "tier": "easy",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Italian printer Juan Pablos began printing in Mexico City in 1539.\n• Antonio Ricardo, a printer from Turin, Italy, set up the first press in Lima, Peru, in 1584.\n• Ricardo’s catechism in Spanish, Quechua, and Aymara is considered the first book printed in South America.\n• Stephen Daye began operating a press in Cambridge, Massachusetts, in 1639.",
+      "stem": "The student wants to identify which of the three cities was the first to have a printing press. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "Printing began in Mexico City in 1539, decades before presses were operating in Lima (1584) and Cambridge (1639).",
+        "Antonio Ricardo established Lima’s first press in 1584, decades before Daye began printing in Cambridge.",
+        "A catechism printed by Antonio Ricardo in Lima is considered the first book printed in South America.",
+        "Printers from Italy began printing in both Mexico City and Lima during the sixteenth century."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The goal asks which of the three cities had a printing press first. The notes date the first press in Mexico City to 1539, in Lima to 1584 and in Cambridge to 1639, so choice A correctly names Mexico City and shows that it came before both of the others.",
+      "distractors": {
+        "B": {
+          "recipe": "PART: delivers only part of what the goal needs",
+          "why_wrong": "It compares only Lima and Cambridge and leaves out Mexico City, the city that had a press first."
+        },
+        "C": {
+          "recipe": "OG: accurate, but serves another goal",
+          "why_wrong": "It says Lima produced the first book printed in South America, a different first that does not show which of the three cities had a press earliest."
+        },
+        "D": {
+          "recipe": "OG: accurate, but serves another goal",
+          "why_wrong": "It points out that both early printers came from Italy, which is about who the printers were, not which city had a press first."
+        }
+      },
+      "models": [
+        "1.17",
+        "1.20"
+      ],
+      "word_count": 70,
+      "sources": [
+        {
+          "what": "Juan Pablos (Giovanni Paoli), Italian printer from Lombardy sent to Mexico City by Juan Cromberger of Seville; printing in Mexico City began 1539; first documented printer in the Americas",
+          "url": "https://en.wikipedia.org/wiki/Juan_Pablos"
+        },
+        {
+          "what": "Antonio Ricardo, Italian from Turin, first printer in South America, worked in Lima from 1584; Doctrina christiana (1584), trilingual in Spanish, Quechua and Aymara, generally cited as the first book printed in South America",
+          "url": "https://en.wikipedia.org/wiki/Antonio_Ricardo"
+        },
+        {
+          "what": "Antonio Ricardo, a 16th-century printer in Mexico City and Lima; Lima press from 1584",
+          "url": "https://jcblibrary.org/news/antonio-ricardo-16th-century-printer-both-sides-equator/"
+        },
+        {
+          "what": "Stephen Daye ran the first printing press in British North America at Cambridge, Massachusetts, from 1639",
+          "url": "https://historyofinformation.com/detail.php?id=379"
+        }
+      ],
+      "notes": "Some sources date Daye’s first Cambridge printing to 1638/1639; 1639 is the usual date for the start of operation.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 6,
+        "fixes": [],
+        "status": "pass"
+      },
+      "rewrite": "Replaced the three moons and their numeric orbit data (an uncertain tell) with the first printing presses in Mexico City, Lima and Cambridge; key keeps the dates in parentheses and the trap options are a two-city comparison, a different first and a shared trait.",
+      "model_bands": [
+        3,
+        3
+      ]
+    },
+    {
+      "id": "rhetorical_synthesis.SPEC.easy",
+      "template": "SPEC",
+      "subtype": "Specify or identify a single fact",
+      "tier": "easy",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Shubayqa 1 is an archaeological site in Jordan’s Black Desert.\n• Natufian hunter-gatherers lived there about 14,600 to 11,600 years ago.\n• Two of its buildings each had a stone fireplace.\n• In 2018, Amaia Arranz-Otaegui’s team reported charred bits of flatbread in the fireplaces.\n• The bread was made from wild einkorn, a relative of wheat, and tubers of club-rush, a sedge.",
+      "stem": "The student wants to specify what the bread found at Shubayqa 1 was made from. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "Shubayqa 1, a site in Jordan’s Black Desert, was home to Natufian hunter-gatherers about 14,600 to 11,600 years ago.",
+        "Two buildings at Shubayqa 1, an archaeological site in Jordan, each had a stone fireplace.",
+        "Arranz-Otaegui’s team found charred bits of flatbread in the fireplaces at Shubayqa 1.",
+        "According to the 2018 study, the flatbread from Shubayqa 1 was made from wild einkorn and club-rush tubers."
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The goal asks what the bread was made from. The last note gives the ingredients, wild einkorn and club-rush tubers, and choice D states them for the flatbread from Shubayqa 1.",
+      "distractors": {
+        "A": {
+          "recipe": "OG: accurate, but serves another goal",
+          "why_wrong": "It says where the site is and when people lived there, which does not tell what the bread was made from."
+        },
+        "B": {
+          "recipe": "OG: accurate, but serves another goal",
+          "why_wrong": "It describes the fireplaces in which the bread was found, not the bread’s ingredients."
+        },
+        "C": {
+          "recipe": "PART: delivers only part of what the goal needs",
+          "why_wrong": "It reports that flatbread was found but never says what it was made from."
+        }
+      },
+      "models": [
+        "1.3",
+        "1.4",
+        "1.5",
+        "1.9"
+      ],
+      "word_count": 75,
+      "sources": [
+        {
+          "what": "Arranz-Otaegui et al. 2018, PNAS: 24 charred food remains from Shubayqa 1, a Natufian hunter-gatherer site in northeastern Jordan dated to 14.6–11.6 ka cal BP; flat bread-like products made from wild einkorn (Triticum boeoticum) and club-rush tubers (Bolboschoenus glaucus)",
+          "url": "https://discovery.ucl.ac.uk/10052964/"
+        },
+        {
+          "what": "University of Copenhagen release: archaeobotanist Amaia Arranz Otaegui, first author; flatbread baked 14,400 years ago; site in the Black Desert, northeastern Jordan; two buildings, each with a stone fireplace; predates agriculture by at least 4,000 years",
+          "url": "https://humanities.ku.dk/news/2018/archaeologists-discover-bread-that-predates-agriculture-by-4000-years"
+        },
+        {
+          "what": "PNAS abstract via Crossref: wild ancestors of domesticated cereals (e.g. wild einkorn) and club-rush tubers used to produce flat bread-like products",
+          "url": "https://doi.org/10.1073/pnas.1801071115"
+        },
+        {
+          "what": "Bolboschoenus (club-rush) is a genus in the sedge family, Cyperaceae",
+          "url": "https://en.wikipedia.org/wiki/Bolboschoenus"
+        },
+        {
+          "what": "Einkorn wheat: wild einkorn (Triticum boeoticum) is the wild form of einkorn, a species of wheat",
+          "url": "https://en.wikipedia.org/wiki/Einkorn_wheat"
+        }
+      ],
+      "notes": "",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 6,
+        "fixes": [],
+        "status": "pass"
+      },
+      "rewrite": "New subject (Arranz-Otaegui 2018, Natufian flatbread at Shubayqa 1) replacing the ultra-famous Rosetta Stone; the goal now asks for the bread’s ingredients rather than a find spot.",
+      "model_bands": [
+        4,
+        3,
+        4,
+        3
+      ]
+    },
+    {
+      "id": "rhetorical_synthesis.EMPH.easy",
+      "template": "EMPH",
+      "subtype": "Emphasize one attribute",
+      "tier": "easy",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Madagascar is home to a group of miniaturized leaf chameleons in the genus Brookesia.\n• In 2021, Frank Glaw’s team described a new species in this group, Brookesia nana.\n• They had just two specimens, both collected in northern Madagascar.\n• The male’s body is only 13.5 millimeters long, not counting the tail.\n• The team suggests that B. nana may be the world’s smallest reptile.",
+      "stem": "The student wants to emphasize how small Brookesia nana is. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "With a body only 13.5 millimeters long, the male Brookesia nana may be the smallest reptile in the world.",
+        "Brookesia nana belongs to a group of leaf chameleons found in Madagascar.",
+        "Glaw’s team described Brookesia nana in 2021 on the basis of just two specimens.",
+        "The two specimens of Brookesia nana that Glaw’s team described were both collected in northern Madagascar."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "To emphasize the species’ size, the sentence must foreground how small it is. Choice A gives the male’s body length of only 13.5 millimeters and adds that the species may be the world’s smallest reptile.",
+      "distractors": {
+        "B": {
+          "recipe": "OG: accurate, but serves another goal",
+          "why_wrong": "It classifies the species as one of Madagascar’s leaf chameleons but says nothing about how small it is."
+        },
+        "C": {
+          "recipe": "OG: accurate, but serves another goal",
+          "why_wrong": "It stresses how few specimens the team had, not how small the animal is."
+        },
+        "D": {
+          "recipe": "OG: accurate, but serves another goal",
+          "why_wrong": "It tells where the specimens were collected, which says nothing about how small the animal is."
+        }
+      },
+      "models": [
+        "1.7",
+        "1.14",
+        "1.15",
+        "1.16"
+      ],
+      "word_count": 78,
+      "sources": [
+        {
+          "what": "Glaw et al. 2021, Scientific Reports 11: 2522: new miniaturized chameleon described from two individuals; male holotype snout–vent length 13.5 mm (total 21.6 mm); may be the world’s smallest reptile species; known only from a degraded montane rainforest in northern Madagascar; part of the clade of miniaturized Brookesia species",
+          "url": "https://doi.org/10.1038/s41598-020-80955-1"
+        },
+        {
+          "what": "Brookesia nana: described in 2021 by Frank Glaw et al.; Sorata massif, northern Madagascar; one male and one female known",
+          "url": "https://en.wikipedia.org/wiki/Brookesia_nana"
+        },
+        {
+          "what": "Male just shy of 14 mm snout to cloaca, female 19 mm; possibly the smallest reptile on Earth; Brookesia are leaf chameleons",
+          "url": "https://news.mongabay.com/2021/02/newly-described-chameleon-from-madagascar-may-be-worlds-smallest-reptile/"
+        }
+      ],
+      "notes": "“Body ... not counting the tail” renders the paper’s snout–vent length.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 5,
+        "fixes": [],
+        "status": "pass"
+      },
+      "rewrite": "New subject (Glaw 2021, Brookesia nana) replacing the godwit nonstop-flight news record; the size claim keeps the paper’s hedge and the distractors are plain off-goal facts rather than polished paraphrases.",
+      "model_bands": [
+        2,
+        5,
+        3,
+        3
+      ]
+    },
+    {
+      "id": "rhetorical_synthesis.DESC.easy",
+      "template": "DESC",
+      "subtype": "Describe",
+      "tier": "easy",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Teresita Fernández is a Cuban American artist known for her public sculptures.\n• In 2015, she installed Fata Morgana in Madison Square Park in New York City.\n• The work ran for about 500 feet above the park’s walkways.\n• It was made of golden, mirror-polished metal discs that formed canopies over the paths.\n• The discs were cut with patterns that resembled foliage.",
+      "stem": "The student wants to describe the discs used in Fata Morgana. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "Fata Morgana is an installation by Teresita Fernández, a Cuban American artist known for her public sculptures.",
+        "Fata Morgana’s golden, mirror-polished discs were cut with patterns that resembled foliage.",
+        "Fata Morgana was installed in 2015 in Madison Square Park in New York City.",
+        "Fata Morgana ran for about 500 feet above the walkways of Madison Square Park."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "To describe the discs, the sentence must say what they looked like. Choice B merges the last two notes: the discs were golden and mirror-polished and were cut with patterns that resembled foliage.",
+      "distractors": {
+        "A": {
+          "recipe": "OG: accurate, but serves another goal",
+          "why_wrong": "It identifies the artist behind the work but says nothing about what its discs looked like."
+        },
+        "C": {
+          "recipe": "OG: accurate, but serves another goal",
+          "why_wrong": "It gives the year and place of the installation, not a description of its discs."
+        },
+        "D": {
+          "recipe": "OG: accurate, but serves another goal",
+          "why_wrong": "It tells how far the work extended and where, but not what its discs looked like."
+        }
+      },
+      "models": [
+        "1.1",
+        "1.8",
+        "1.18"
+      ],
+      "word_count": 76,
+      "sources": [
+        {
+          "what": "Teresita Fernández: born 1968 in Miami to Cuban exile parents; New York-based visual artist known for public sculptures and unconventional use of materials; Fata Morgana opened June 1, 2015, in Madison Square Park, 500 running feet of gold, mirror-polished discs forming canopies over the paths around the central lawn",
+          "url": "https://en.wikipedia.org/wiki/Teresita_Fern%C3%A1ndez"
+        },
+        {
+          "what": "Fata Morgana (June 1, 2015 to January 10, 2016): about 500 running feet of golden, mirror-polished metal discs forming canopies over the walkways around the park’s central Oval Lawn; metal pierced with patterns resembling foliage",
+          "url": "https://www.lehmannmaupin.com/exhibitions/teresita-fernandez-fata-morgana"
+        },
+        {
+          "what": "Madison Square Park Conservancy description: golden, mirror-polished discs creating canopies above the pathways; perforated patterns suggesting foliage",
+          "url": "https://www.nyartbeat.com/event/2015/EE22"
+        }
+      ],
+      "notes": "“Cuban American” rests on her birth in Miami to Cuban exile parents.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 6,
+        "fixes": [],
+        "status": "pass"
+      },
+      "rewrite": "New subject (Teresita Fernández, Fata Morgana) replacing the famous Guggenheim building; the goal now targets one physical feature of a lesser-known public work.",
+      "model_bands": [
+        3,
+        4,
+        3
+      ]
+    },
+    {
+      "id": "rhetorical_synthesis.EXPL.easy",
+      "template": "EXPL",
+      "subtype": "Explain (cause, origin, advantage, mechanism, definition, significance)",
+      "tier": "easy",
+      "passage": "While researching a topic, a student has taken the following notes:\n• The Okavango Delta, an inland wetland in northern Botswana, does not drain into any sea or ocean.\n• Its floodwater originates as rainfall in Angola’s central highlands, where the rainy season lasts from about September to April.\n• The Okavango River transports this water slowly southward, so it reaches the delta months later.\n• The delta’s inundated area is largest from July to September, late in Botswana’s dry season.",
+      "stem": "The student wants to explain why the Okavango Delta floods during Botswana’s dry season. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "The Okavango Delta is an inland wetland in northern Botswana that does not drain into any sea or ocean.",
+        "The Okavango Delta’s inundated area is largest from July to September, late in Botswana’s dry season.",
+        "Rainfall from Angola’s central highlands is transported slowly southward by the Okavango River.",
+        "Because its floodwater falls as rain in Angola months earlier, the Okavango Delta floods during Botswana’s dry season."
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "An explanation must link the flood to its cause. The notes say the floodwater falls as rain in the Angolan highlands and travels slowly south, reaching the delta months later, so the flood peaks late in Botswana’s dry season. Choice D makes that link with “because.”",
+      "distractors": {
+        "A": {
+          "recipe": "OG: accurate, but serves another goal",
+          "why_wrong": "It describes what kind of place the delta is and notes that it does not drain into a sea, which says nothing about when or why it floods."
+        },
+        "B": {
+          "recipe": "PART: delivers only part of what the goal needs",
+          "why_wrong": "It states when the delta’s inundated area is largest but gives no reason, so nothing is explained."
+        },
+        "C": {
+          "recipe": "PART: delivers only part of what the goal needs",
+          "why_wrong": "It describes where the floodwater comes from and how it travels but never says that the delta floods in the dry season, so the cause is not tied to the flooding."
+        }
+      },
+      "models": [
+        "1.6"
+      ],
+      "word_count": 81,
+      "sources": [
+        {
+          "what": "Okavango Delta: interior delta in the endorheic Kalahari basin of Botswana that does not flow into a sea or ocean; river carries summer rainfall from the Angola highlands; flood levels peak between June and August, during Botswana’s dry winter months",
+          "url": "https://en.wikipedia.org/wiki/Okavango_Delta"
+        },
+        {
+          "what": "Summer rains between November and March in the Angolan highlands; the water makes a slow, roughly four-month journey south into the delta; peak flood in the middle of Botswana’s dry winter",
+          "url": "https://www.okavango.com/okavango-delta-flood-cycle.php"
+        },
+        {
+          "what": "Lourenco et al. (2023), Environmental Monitoring and Assessment: Angolan Highlands rainfall season from September to April, dry season May to August; the annual Okavango Delta flood occurs out of phase with the rainfall season, inundated area lowest in January–February and highest in July–September during the late dry season",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC10279584/"
+        }
+      ],
+      "notes": "Flood timing and the Angolan rainy season follow Lourenco et al. 2023 (peer reviewed); the earlier “November to March” and “four months” figures came from a tourism site and sources disagree on the travel time, so the notes now say “months.”",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 5,
+        "fixes": [
+          "replaced tourism-site figures (rain November to March, a four-month journey, peak June to August) with the peer-reviewed timing in Lourenco et al. 2023 (rain September to April, flooded area largest July to September); options B and C reworded to match"
+        ],
+        "status": "fixed"
+      },
+      "rewrite": "New subject (the Okavango Delta’s dry-season flood) replacing the textbook helium-from-helios anecdote; the key now has to join the timing of the Angolan rains and the slow journey to the flood.",
+      "model_bands": [
+        4
+      ]
+    },
+    {
+      "id": "rhetorical_synthesis.EXAMPLE.easy",
+      "template": "EXAMPLE",
+      "subtype": "Example, or explanation plus example",
+      "tier": "easy",
+      "passage": "While researching a topic, a student has taken the following notes:\n• A ghost forest is a stand of dead trees killed by saltwater intrusion, the movement of seawater inland.\n• Rising sea levels and storm surges can drive seawater into low-lying coastal forests.\n• A 2021 study led by Emily Ury used satellite imagery to map vegetation changes in North Carolina’s Alligator River National Wildlife Refuge.\n• Between 1985 and 2019, as much as 11% of the refuge’s forested area became ghost forest.",
+      "stem": "The student wants to define the term “ghost forest” and provide an example of one. Which choice most effectively uses relevant information from the notes to accomplish these goals?",
+      "options": [
+        "One example of a ghost forest can be found in North Carolina’s Alligator River National Wildlife Refuge.",
+        "Using satellite imagery, Ury’s team mapped vegetation changes from 1985 to 2019 in a wildlife refuge in coastal North Carolina.",
+        "A ghost forest, a stand of dead trees killed by saltwater intrusion, can be found in North Carolina’s Alligator River National Wildlife Refuge.",
+        "Rising sea levels and storm surges can drive seawater into low-lying coastal forests, killing the trees."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The goals require both a definition and an example. Choice C defines a ghost forest as a stand of dead trees killed by saltwater intrusion and names an example: the notes say ghost forest has spread across part of North Carolina’s Alligator River National Wildlife Refuge.",
+      "distractors": {
+        "A": {
+          "recipe": "PART: delivers only part of what the goal needs",
+          "why_wrong": "It gives an example but never explains what a ghost forest is, so the term is not defined."
+        },
+        "B": {
+          "recipe": "OG: accurate, but serves another goal",
+          "why_wrong": "It describes the study’s method and setting but neither defines the term nor names a ghost forest."
+        },
+        "D": {
+          "recipe": "PART: delivers only part of what the goal needs",
+          "why_wrong": "It explains how seawater can kill coastal trees, close to a definition, but never uses the term or gives an example."
+        }
+      },
+      "models": [
+        "1.19"
+      ],
+      "word_count": 84,
+      "sources": [
+        {
+          "what": "Duke release: ghost forests are relics of forests overrun by the inland creep of seawater; rising seas and higher storm surges push saltwater inland; Ury, Yang, Wright and Bernhardt, Ecological Applications, April 4, 2021; 35 years of Landsat images of a 245,000-acre area including Alligator River National Wildlife Refuge; between 1985 and 2019, 11% of the area’s tree cover was taken over by ghost forests",
+          "url": "https://today.duke.edu/2021/04/mapping-north-carolinas-ghost-forests-430-miles"
+        },
+        {
+          "what": "Ury et al. 2021 abstract: rising water tables and salinization penetrate inland, with dramatic changes in freshwater forested wetlands in areas of low topographic relief and low elevation; ghost forest, a land cover type characterized by standing dead trees and fallen trunks; as much as 11% of forested cover in the refuge transitioned to ghost forest; first attempt to map coastal ghost forests using remote sensing",
+          "url": "https://doi.org/10.1002/eap.2339"
+        }
+      ],
+      "notes": "",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 5,
+        "fixes": [
+          "the notes said only that the study area “includes” the refuge, so the key’s claim that a ghost forest is found in the refuge was an inference; the notes now follow the paper’s abstract (as much as 11% of the refuge’s forest cover became ghost forest, 1985 to 2019); option B and the attribution (“a study led by”) reworded"
+        ],
+        "status": "fixed"
+      },
+      "rewrite": "New subject (Ury 2021, ghost forests in North Carolina) replacing the textbook microfinance example; the key has to join the definition and the named example, and one distractor is a near-definition without the term.",
+      "model_bands": [
+        3
+      ]
+    },
+    {
+      "id": "rhetorical_synthesis.OVERVIEW.easy",
+      "template": "OVERVIEW",
+      "subtype": "Overview or summary",
+      "tier": "easy",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Chuño is a freeze-dried potato traditionally produced by Quechua and Aymara communities in the Andes.\n• Bitter, frost-resistant potatoes are spread on the ground and left outdoors for several nights.\n• Exposed to freezing night temperatures and daytime sun, the potatoes freeze and then dehydrate.\n• Producers then trample them by foot to expel water and remove the skins.\n• Once dried, chuño can be stored for years.",
+      "stem": "The student wants to provide an overview of how chuño is made. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "To produce chuño, potatoes are left outdoors to freeze at night and dehydrate by day and are then trampled to expel water.",
+        "Chuño is produced from bitter, frost-resistant potatoes that are spread on the ground and left outdoors for several nights.",
+        "Produced by Quechua and Aymara communities in the Andes, chuño can be stored for years once dried.",
+        "Trampling potatoes by foot is a way to expel their water and remove their skins."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "An overview of the process has to touch each of its stages. Choice A covers them in order: the potatoes are left outdoors, freeze at night and dehydrate by day, and are then trampled to expel water.",
+      "distractors": {
+        "B": {
+          "recipe": "PART: delivers only part of what the goal needs",
+          "why_wrong": "It gives only the first stage, the kind of potato and how it is left outdoors, and leaves out the freezing, drying and trampling."
+        },
+        "C": {
+          "recipe": "OG: accurate, but serves another goal",
+          "why_wrong": "It says who produces chuño and how long it keeps, not how it is made."
+        },
+        "D": {
+          "recipe": "PART: delivers only part of what the goal needs",
+          "why_wrong": "It describes a single step, the trampling, without the freezing and drying that come before it."
+        }
+      },
+      "models": [
+        "1.21"
+      ],
+      "word_count": 80,
+      "sources": [
+        {
+          "what": "Chuño: preserved potato (natural freeze-drying) traditionally made by Quechua and Aymara communities of Bolivia and Peru; bitter, frost-resistant potatoes exposed to low night temperatures, freezing at night and dehydrating in the daytime for about three nights; then trampled by foot to remove water and skins; can last decades once dried",
+          "url": "https://en.wikipedia.org/wiki/Chu%C3%B1o"
+        },
+        {
+          "what": "Black chuño: bitter potatoes left to freeze overnight then crushed to remove the liquids inside until dehydrated",
+          "url": "https://www.atlasobscura.com/foods/chunos-potatoes-feet"
+        },
+        {
+          "what": "Peer-reviewed survey of Aymara food processing (Frontiers in Nutrition 2026): chuño made by arranging potatoes on the ground under night frost and daytime sun; black chuño relies on frost exposure, trampling and sun-drying and can be stored for years",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC13238266/"
+        },
+        {
+          "what": "Bitter Andean potatoes are used to prepare freeze-dried, dehydrated chuño, which is highly storable (Polymers 2023)",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC10674986/"
+        }
+      ],
+      "notes": "",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 5,
+        "fixes": [
+          "“about three nights” (Wikipedia only; peer-reviewed accounts give three to six freeze-thaw cycles) generalised to “several nights”; “stored for decades” corrected to “for years” (black chuño, per a peer-reviewed survey; multi-decade storage is reported for white tunta); options B and C updated"
+        ],
+        "status": "fixed"
+      },
+      "rewrite": "New subject (Andean chuño) replacing the textbook Bessemer process; notes follow the process stage by stage and each distractor gives one stage or an off-goal fact.",
+      "model_bands": [
+        3
+      ]
+    },
+    {
+      "id": "rhetorical_synthesis.AUD_NEW.easy",
+      "template": "AUD_NEW",
+      "subtype": "Introduce or describe to an unfamiliar or new audience",
+      "tier": "easy",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Pacita Abad (1946–2004) was a Filipino American painter.\n• Her best-known works are trapunto paintings, named after a quilting technique.\n• To make them, she stitched and stuffed her painted canvases to give them a sculptural effect.\n• She often attached materials such as cloth, mirrors, beads, and shells to their surfaces.\n• Her final project was painting Singapore’s Alkaff Bridge with 2,350 multicolored circles.",
+      "stem": "The student wants to introduce Pacita Abad to an audience unfamiliar with the artist. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "Abad’s trapunto paintings often have cloth, mirrors, beads, and shells attached to their stitched and stuffed canvases.",
+        "In her final project, Pacita Abad (1946–2004) painted Singapore’s Alkaff Bridge with 2,350 multicolored circles.",
+        "The trapunto paintings that Abad is known for take their name from a quilting technique.",
+        "Filipino American painter Pacita Abad’s best-known works are her trapunto paintings, canvases she stitched and stuffed for a sculptural effect."
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "An audience unfamiliar with Abad first needs to know who she is. Choice D identifies her as a Filipino American painter and then names her best-known works, her stitched and stuffed trapunto paintings.",
+      "distractors": {
+        "A": {
+          "recipe": "AUD: audience mismatch (no identifying context)",
+          "why_wrong": "It describes the paintings in detail but refers to “Abad” without ever saying who she is."
+        },
+        "B": {
+          "recipe": "OG: accurate, but serves another goal",
+          "why_wrong": "It reports her last project, painting a bridge, but does not tell an unfamiliar reader who she was or what she is known for."
+        },
+        "C": {
+          "recipe": "OG: accurate, but serves another goal",
+          "why_wrong": "It explains where the name of her paintings comes from, which assumes the reader already knows the artist."
+        }
+      },
+      "models": [
+        "1.12"
+      ],
+      "word_count": 77,
+      "sources": [
+        {
+          "what": "Pacita Abad: Filipino-American visual artist and painter, born October 1946 in Basco, Batanes, died December 7, 2004; trapunto paintings integrate stitched and stuffed fabric with painting to produce a sculptural effect; added cloth, mirrors, beads, shells and buttons; painted the 55-meter Alkaff Bridge in Singapore with 2,350 circles in the months before her death",
+          "url": "https://en.wikipedia.org/wiki/Pacita_Abad"
+        },
+        {
+          "what": "Trapunto painting named after a quilting technique: stitching and stuffing painted canvases for a three-dimensional, sculptural effect; Alkaff Bridge (2003–2004), her final project",
+          "url": "https://ocula.com/artists/pacita-abad/artworks/"
+        },
+        {
+          "what": "Pacita Abad biography: trapunto paintings, Alkaff Bridge as a gift to Singapore",
+          "url": "https://americanart.si.edu/node/7531"
+        }
+      ],
+      "notes": "",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 6,
+        "fixes": [],
+        "status": "pass"
+      },
+      "rewrite": "New subject (Pacita Abad) replacing Tarsila do Amaral’s famous painting; the distractors are details of her work that never say who she is, and the key leads with the identifying phrase.",
+      "model_bands": [
+        3
+      ]
+    },
+    {
+      "id": "rhetorical_synthesis.SIM.medium",
+      "template": "SIM",
+      "subtype": "Similarity",
+      "tier": "medium",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Yi qi, a small dinosaur described in 2015, lived about 159 million years ago in present-day Hebei, China.\n• Its wings were formed by skin stretched between its fingers and a long, rod-like wrist bone.\n• Ambopteryx longibrachium, described in 2019, lived about 163 million years ago in Liaoning, China.\n• Remnants of a wing membrane are preserved alongside its rod-like wrist bones.\n• Its stomach held gizzard stones and bone fragments.",
+      "stem": "The student wants to emphasize a similarity between Yi qi and Ambopteryx. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "Yi qi lived about 159 million years ago, whereas Ambopteryx lived some four million years earlier.",
+        "The wings of Yi qi were formed by skin stretched between its fingers and a long wrist bone.",
+        "Yi qi and Ambopteryx both had rod-like wrist bones and wings made of a skin membrane.",
+        "Ambopteryx, whose stomach held gizzard stones and bone fragments, was described in 2019."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The notes describe each dinosaur’s wings separately: Yi qi’s were skin stretched to a rod-like wrist bone, and Ambopteryx preserves a wing membrane beside rod-like wrist bones. Choice C draws out what the two share, using “both.”",
+      "distractors": {
+        "A": {
+          "recipe": "REL: wrong relation or wrong dimension",
+          "why_wrong": "It contrasts when the two dinosaurs lived, which is a difference, not a similarity."
+        },
+        "B": {
+          "recipe": "PART: delivers only part of what the goal needs",
+          "why_wrong": "It describes only Yi qi’s wings and never mentions Ambopteryx, so nothing is compared."
+        },
+        "D": {
+          "recipe": "OG: accurate, but serves another goal",
+          "why_wrong": "It gives what Ambopteryx ate and when it was described, facts the notes give for that dinosaur alone."
+        }
+      },
+      "models": [
+        "2.24",
+        "2.30",
+        "2.46"
+      ],
+      "word_count": 84,
+      "sources": [
+        {
+          "what": "Yi qi: Tiaojishan Formation, Qinglong County, Hebei; about 159 million years old; about 380 g; wings formed by a skin membrane stretched between the fingers and a long styliform wrist bone; described by Xu Xing and colleagues in Nature in 2015",
+          "url": "https://en.wikipedia.org/wiki/Yi_(dinosaur)"
+        },
+        {
+          "what": "Ambopteryx longibrachium (Wang, O’Connor, Xu and Zhou 2019, Nature): found near Lingyuan, Liaoning; about 163 million years old; rod-like styliform elements jutting from the wrists; brownish film on one wing thought to be traces of wing membrane; gizzard stones and bone fragments in the stomach",
+          "url": "https://www.nationalgeographic.com/science/article/ambopteryx-new-species-bat-wing-dinosaur-discovered-china"
+        },
+        {
+          "what": "Wang et al. 2019, A new Jurassic scansoriopterygid and the loss of membranous wings in theropod dinosaurs, Nature 569: 256–259",
+          "url": "https://doi.org/10.1038/s41586-019-1137-z"
+        }
+      ],
+      "notes": "",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 6,
+        "fixes": [],
+        "status": "pass"
+      },
+      "rewrite": "New subject (Yi qi and Ambopteryx, membranous-winged dinosaurs) replacing Hokusai’s famous Great Wave; the shared trait is no longer set up by a “same series” bullet but has to be drawn from two differently worded descriptions.",
+      "model_bands": [
+        4,
+        5,
+        4
+      ]
+    },
+    {
+      "id": "rhetorical_synthesis.DIFF.medium",
+      "template": "DIFF",
+      "subtype": "Difference",
+      "tier": "medium",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Egyptian blue, one of the earliest synthetic pigments, has been found on ancient Egyptian sculptures, seals, and beads.\n• It was produced by heating quartz sand, a copper compound, and calcium carbonate to 850–1,000°C.\n• Maya blue, used in Mesoamerica for more than a thousand years, colors the murals of Bonampak and Chichén Itzá.\n• It combines indigo, a dye derived from anil leaves, with palygorskite clay.\n• Murals painted with it have not faded despite centuries of harsh weathering.",
+      "stem": "The student wants to contrast the materials used to make Egyptian blue and Maya blue. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "Egyptian blue was made from sand, a copper compound, and calcium carbonate, whereas Maya blue combines a plant dye with clay.",
+        "Egyptian blue and Maya blue are both blue pigments, but they were made from different materials.",
+        "Maya blue, a pigment that colors the murals of Bonampak and Chichén Itzá, combines indigo, a dye from anil leaves, with palygorskite clay.",
+        "Egyptian blue has been found on sculptures, seals, and beads; Maya blue, by contrast, colors the murals of Bonampak and Chichén Itzá."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The goal names the attribute to contrast: the materials. Choice A gives both sides of it, the sand, copper compound and calcium carbonate of Egyptian blue against the plant dye and clay of Maya blue, joined by “whereas.”",
+      "distractors": {
+        "B": {
+          "recipe": "VAGUE: names the relation without the content",
+          "why_wrong": "It says the materials differ but never says what either pigment was made from."
+        },
+        "C": {
+          "recipe": "PART: delivers only part of what the goal needs",
+          "why_wrong": "It gives Maya blue’s ingredients but says nothing about Egyptian blue’s, so there is nothing to contrast them with."
+        },
+        "D": {
+          "recipe": "REL: wrong relation or wrong dimension",
+          "why_wrong": "It contrasts where the two pigments have been used, not the materials they were made from."
+        }
+      },
+      "models": [
+        "2.10",
+        "2.11",
+        "2.17",
+        "2.19",
+        "2.23",
+        "2.32",
+        "2.38",
+        "2.41"
+      ],
+      "word_count": 92,
+      "sources": [
+        {
+          "what": "Egyptian blue (calcium copper silicate, CaCuSi4O10): considered the first synthetic pigment; earliest evidence about 3250 BC (Naqada III); made by heating quartz sand, a copper compound, calcium carbonate and a little alkali at 800 to 1,000 °C",
+          "url": "https://en.wikipedia.org/wiki/Egyptian_blue"
+        },
+        {
+          "what": "Maya blue: indigo dye from anil leaves combined with palygorskite clay; first appeared around 800 CE; murals at Chichén Itzá, Bonampak and Cacaxtla; paintings coloured with Maya blue have not faded despite harsh weathering",
+          "url": "https://en.wikipedia.org/wiki/Maya_blue"
+        },
+        {
+          "what": "Royal Society of Chemistry: Egyptian blue one of the first synthetic pigments; earliest evidence of use (Fourth Dynasty) on limestone sculptures, cylinder seals and beads; calcium copper silicate from a calcium compound, a copper compound and quartz; fired at 850 to 1,000 °C",
+          "url": "https://edu.rsc.org/resources/egyptian-blue/1625.article"
+        },
+        {
+          "what": "Vázquez de Agredos Pascual et al. 2011: Maya blue on the Late Preclassic (c. 300 BC to AD 300) facade of substructure IIC at Calakmul, earlier than the c. 800 CE date given by Wikipedia",
+          "url": "https://riunet.upv.es/handle/10251/53379"
+        }
+      ],
+      "notes": "Dates removed: Wikipedia’s “around 800 CE” for Maya blue is contradicted by Late Preclassic finds at Calakmul, and the 3250 BCE date for Egyptian blue rests on Wikipedia alone. The wrong-dimension option now contrasts uses instead of dates.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 7,
+        "fixes": [
+          "removed the dates (Maya blue “first appeared around 800 CE” is contradicted by Late Preclassic Maya blue at Calakmul, which made option D’s “more than four thousand years” false; 3250 BCE for Egyptian blue was Wikipedia only); D rebuilt as a contrast of uses (still the wrong dimension); “considered the earliest” softened to “one of the earliest” and the firing range set to 850–1,000°C (RSC)"
+        ],
+        "status": "fixed"
+      },
+      "rewrite": "New subject (Egyptian blue and Maya blue) replacing the encyclopedic Japanese writing systems; the hedged “few exceptions” wording is gone and the wrong-dimension distractor contrasts dates instead of materials.",
+      "model_bands": [
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        5
+      ]
+    },
+    {
+      "id": "rhetorical_synthesis.RANK.medium",
+      "template": "RANK",
+      "subtype": "Order or relative degree",
+      "tier": "medium",
+      "passage": "While researching a topic, a student has taken the following notes:\n• The Oldowan artifacts from Gona, Ethiopia, dated to roughly 2.6 million years ago, were long considered the earliest stone tools.\n• In 2015, archaeologist Sonia Harmand’s team reported stone artifacts from Lomekwi 3, a site on the western shore of Kenya’s Lake Turkana.\n• Dated to 3.3 million years ago, the Lomekwian tools are much larger than Oldowan implements.\n• They also predate the earliest known fossils of the genus Homo.",
+      "stem": "The student wants to emphasize the order in which the Gona tools and the Lomekwi 3 tools were made. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "The Lomekwian tools are much larger than the Oldowan artifacts from Gona.",
+        "In 2015, Harmand’s team reported stone artifacts from Lomekwi 3, a site near Lake Turkana in Kenya.",
+        "According to Harmand’s team, the Lomekwian tools predate the earliest known fossils of the genus Homo.",
+        "The Lomekwi 3 tools were made some 700,000 years before the Oldowan artifacts from Gona."
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The notes date the Gona tools to about 2.6 million years ago and the Lomekwian tools to 3.3 million years ago, so the Lomekwi 3 tools came first, by about 700,000 years. Choice D states that order with “before.”",
+      "distractors": {
+        "A": {
+          "recipe": "REL: wrong relation or wrong dimension",
+          "why_wrong": "It compares the two sets of tools by size, not by when they were made."
+        },
+        "B": {
+          "recipe": "OG: accurate, but serves another goal",
+          "why_wrong": "It reports when and where the Lomekwi 3 tools were described but never mentions the Gona tools, so no order is given."
+        },
+        "C": {
+          "recipe": "OG: accurate, but serves another goal",
+          "why_wrong": "It places the Lomekwian tools before the earliest Homo fossils, an order involving fossils, not the Gona tools."
+        }
+      },
+      "models": [
+        "2.27",
+        "2.37",
+        "2.44"
+      ],
+      "word_count": 83,
+      "sources": [
+        {
+          "what": "Harmand et al. 2015, 3.3-million-year-old stone tools from Lomekwi 3, West Turkana, Kenya, Nature 521: 310–315",
+          "url": "https://doi.org/10.1038/nature14464"
+        },
+        {
+          "what": "Lomekwi 3 tools dated to 3.3 million years ago, on the western shore of Lake Turkana; previously oldest tools from Gona, Ethiopia, dated to 2.6 million years; Lomekwian tools larger and heavier; predate the genus Homo by about 500,000 years; lead author Sonia Harmand",
+          "url": "https://www.sci.news/archaeology/science-lomekwi-3-oldest-stone-tools-02822.html"
+        },
+        {
+          "what": "Lomekwi: the assemblage predates the Oldowan (Gona) by about 700,000 years",
+          "url": "https://en.wikipedia.org/wiki/Lomekwi"
+        },
+        {
+          "what": "Sonia Harmand, archaeologist (Stony Brook University), lead of the West Turkana Archaeological Project",
+          "url": "https://en.wikipedia.org/wiki/Sonia_Harmand"
+        },
+        {
+          "what": "Stony Brook University release: Lomekwi 3 tools dated at 3.3 million years, found on the western shore of Lake Turkana; they predate the previously oldest tools by 700,000 years; “much larger than later Oldowan tools” (Harmand)",
+          "url": "https://news.stonybrookmedicine.edu/news/stony-brook-scientists-discover-oldest-stone-tools-on-record-2/"
+        },
+        {
+          "what": "Earth magazine: Oldowan tools date to about 2.6 million years ago; the Lomekwi tools predate the known origins of Homo",
+          "url": "https://www.earthmagazine.org/article/earliest-stone-tools-pre-date-homo/"
+        }
+      ],
+      "notes": "“Some 700,000 years” in the key is computed from the notes (3.3 minus 2.6 million) and matches the paper’s own statement.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 6,
+        "fixes": [
+          "“larger and heavier” cut to “much larger” (no source gives weight); the “approximately 500,000 years” gap to Homo fossils removed (found only in Wikipedia and secondary news); site described as on the western shore of Lake Turkana to keep the length"
+        ],
+        "status": "fixed"
+      },
+      "rewrite": "New subject (Harmand 2015, Lomekwi 3 tools) replacing the famous Voyager probes; no reversed-order distractor, and the traps are a size comparison and an order relative to Homo fossils.",
+      "model_bands": [
+        5,
+        5,
+        5
+      ]
+    },
+    {
+      "id": "rhetorical_synthesis.SPEC.medium",
+      "template": "SPEC",
+      "subtype": "Specify or identify a single fact",
+      "tier": "medium",
+      "passage": "While researching a topic, a student has taken the following notes:\n• The Kumulipo is a 2,102-line Hawaiian chant recounting the origin of the world and a royal genealogy.\n• Its sixteen sections are called wā, a word meaning “era” or “age.”\n• In 1889, King Kalākaua had the Hawaiian text printed as a pamphlet.\n• His sister and successor, Liliʻuokalani, published the first English translation in 1897.\n• Folklorist Martha Warren Beckwith published her own translation of the chant in 1951.",
+      "stem": "The student wants to specify who produced the first English translation of the Kumulipo. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "Folklorist Martha Warren Beckwith published an English translation of the Kumulipo in 1951.",
+        "Liliʻuokalani, Kalākaua’s sister and successor, produced the first English translation of the Kumulipo.",
+        "King Kalākaua had the Hawaiian text of the Kumulipo printed as a pamphlet in 1889.",
+        "The Kumulipo, a 2,102-line Hawaiian chant recounting the origin of the world, is divided into sixteen sections called wā."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The goal asks who made the first English translation. The fourth note gives the answer, Liliʻuokalani, and choice B names her with the identifying detail from the notes.",
+      "distractors": {
+        "A": {
+          "recipe": "OG: accurate, but serves another goal",
+          "why_wrong": "It names a translator, but Beckwith’s 1951 version came after Liliʻuokalani’s 1897 translation, so it was not the first."
+        },
+        "C": {
+          "recipe": "OG: accurate, but serves another goal",
+          "why_wrong": "It tells who had the Hawaiian text printed, not who translated the chant into English."
+        },
+        "D": {
+          "recipe": "OG: accurate, but serves another goal",
+          "why_wrong": "It describes the chant’s length and structure and names no translator."
+        }
+      },
+      "models": [
+        "2.39",
+        "2.45"
+      ],
+      "word_count": 82,
+      "sources": [
+        {
+          "what": "Kumulipo: Hawaiian creation chant recording royal genealogy; 2,102 lines; 16 wā (era or age); Kalākaua printed a sixty-page pamphlet in 1889; Liliʻuokalani’s translation (made under house arrest) published in 1897; Martha Warren Beckwith, The Kumulipo: A Hawaiian Creation Chant (1951)",
+          "url": "https://en.wikipedia.org/wiki/Kumulipo"
+        },
+        {
+          "what": "Liliʻuokalani: sister of Kalākaua, succeeded him in 1891; her Kumulipo translation published in 1897",
+          "url": "https://en.wikipedia.org/wiki/Lili%CA%BBuokalani"
+        },
+        {
+          "what": "First edition in English of the Kumulipo, Boston: Lee and Shepard, 1897, translated by Liliʻuokalani",
+          "url": "https://www.bonhams.com/auction/28447/lot/43/queen-liliuokalanis-kumulipo-hawaiian-chant-an-account-of-the-creation-of-the-world-according-to-hawaiian-tradition-boston-lee-and-shepard-1897"
+        },
+        {
+          "what": "Martha Warren Beckwith, American folklorist; The Kumulipo: A Hawaiian Creation Chant (University of Chicago Press, 1951)",
+          "url": "https://en.wikipedia.org/wiki/Martha_Warren_Beckwith"
+        }
+      ],
+      "notes": "",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 6,
+        "fixes": [],
+        "status": "pass"
+      },
+      "rewrite": "New subject (the Kumulipo and its translators) replacing the pop-science octopus count; the goal asks who made the first English translation instead of copying the official “specify how many” frame, and a later translator is the trap.",
+      "model_bands": [
+        3,
+        4
+      ]
+    },
+    {
+      "id": "rhetorical_synthesis.EMPH.medium",
+      "template": "EMPH",
+      "subtype": "Emphasize one attribute",
+      "tier": "medium",
+      "passage": "While researching a topic, a student has taken the following notes:\n• In 1879, botanist William James Beal began an experiment at what is now Michigan State University.\n• He sought to determine how long weed seeds could remain viable in soil.\n• He buried 20 glass bottles, each filled with sand and 50 seeds from more than twenty weed species.\n• The bottles are excavated at set intervals, and the experiment is scheduled to end in 2100.\n• In 2021, researchers unearthed another bottle, and some of its moth mullein seeds germinated.",
+      "stem": "The student wants to emphasize how long some of Beal’s seeds remained viable. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "Beal’s experiment, which began in 1879, is scheduled to continue until the year 2100.",
+        "Beal buried 20 glass bottles, each filled with sand and 50 seeds from more than twenty weed species.",
+        "Moth mullein seeds that Beal buried in 1879 were still able to germinate when they were unearthed 142 years later.",
+        "Beal sought to determine how long weed seeds could remain viable in soil."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "Seeds that are viable can still germinate. The notes say the seeds were buried in 1879 and that some moth mullein seeds germinated after the 2021 excavation, so choice C stresses that they survived 142 years in the ground.",
+      "distractors": {
+        "A": {
+          "recipe": "OG: accurate, but serves another goal",
+          "why_wrong": "It stresses how long the experiment is scheduled to run, not how long any seeds actually stayed viable."
+        },
+        "B": {
+          "recipe": "OG: accurate, but serves another goal",
+          "why_wrong": "It describes how Beal set up the experiment, which says nothing about how long the seeds survived."
+        },
+        "D": {
+          "recipe": "VAGUE: names the quality without the specific content",
+          "why_wrong": "It states the question Beal wanted to answer but gives no length of time, so it cannot emphasize how long the seeds lasted."
+        }
+      },
+      "models": [
+        "2.6",
+        "2.14",
+        "2.20",
+        "2.33",
+        "2.40"
+      ],
+      "word_count": 93,
+      "sources": [
+        {
+          "what": "MSU botanist William J. Beal, 1879; wanted to find out how long seeds of weeds could remain viable in soil; filled 20 glass pint bottles with sand and 50 seeds from 23 weed species; April 2021 excavation of the 14th bottle; seeds germinated; four bottles still buried, experiment to continue until 2100",
+          "url": "https://innovationcenter.msu.edu/msu-plant-biologists-shed-light-on-144-year-old-seedy-mystery/"
+        },
+        {
+          "what": "Excavation interval changed from five to 10 years in 1920 and to 20 years in 1980; seedlings identified as moth mullein (Verbascum blattaria) and a hybrid",
+          "url": "https://www.futurity.org/buried-seeds-viable-2995582-2/"
+        },
+        {
+          "what": "Seeds buried 142 years before the 2021 excavation",
+          "url": "https://sjc.edu/news/johnnie-uncovers-mysteries-plant-life-beal-seed-experiment"
+        }
+      ],
+      "notes": "Some accounts give 21 rather than 23 species, so the notes say “more than twenty.” The 142 years in the key is computed from 1879 and 2021.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 6,
+        "fixes": [],
+        "status": "pass"
+      },
+      "rewrite": "New subject (Beal’s buried-seed experiment) replacing the famous mountaineer Junko Tabei; the trap now confuses how long the seeds lasted with how long the experiment is scheduled to run.",
+      "model_bands": [
+        4,
+        4,
+        5,
+        5,
+        4
+      ]
+    },
+    {
+      "id": "rhetorical_synthesis.DESC.medium",
+      "template": "DESC",
+      "subtype": "Describe",
+      "tier": "medium",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Belkis Ayón (1967–1999) was a Cuban printmaker who specialized in collography.\n• In this technique, materials of contrasting textures are affixed to a cardboard printing plate.\n• Her prints explore the myths of the Abakuá, an all-male Afro-Cuban secret society.\n• Her palette consisted mainly of black, white, and shades of gray.\n• Her ghostly figures, often bare silhouettes with large, almond-shaped eyes, have no mouths.",
+      "stem": "The student wants to describe the figures in Ayón’s prints. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "Ayón’s ghostly figures are often bare silhouettes with large, almond-shaped eyes and no mouths.",
+        "Ayón’s palette consisted mainly of black, white, and shades of gray.",
+        "Ayón specialized in collography, affixing materials of contrasting textures to a cardboard printing plate.",
+        "Ayón’s prints explore the myths of the Abakuá, an all-male Afro-Cuban secret society."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "To describe the figures, the sentence must say what they look like. The last note gives their features, and choice A states them: bare silhouettes with large, almond-shaped eyes and no mouths.",
+      "distractors": {
+        "B": {
+          "recipe": "OG: accurate, but serves another goal",
+          "why_wrong": "It describes the colors she generally worked in but says nothing about what her figures look like."
+        },
+        "C": {
+          "recipe": "OG: accurate, but serves another goal",
+          "why_wrong": "It explains the printmaking technique she used, not the appearance of the figures it produced."
+        },
+        "D": {
+          "recipe": "OG: accurate, but serves another goal",
+          "why_wrong": "It names the subject her prints explore but does not describe the figures in them."
+        }
+      },
+      "models": [
+        "2.4"
+      ],
+      "word_count": 78,
+      "sources": [
+        {
+          "what": "Belkis Ayón (1967–1999), Cuban printmaker who specialized in collography; attached materials of widely differing textures to a cardboard base and ran it through a press; worked mainly in black, white and shades of gray; ghost-white figures with oblong heads and empty, almond-shaped eyes; lack of mouths in all of her figures; central theme Abakuá, a secret, exclusively male association, and Princess Sikán",
+          "url": "https://en.wikipedia.org/wiki/Belkis_Ay%C3%B3n"
+        },
+        {
+          "what": "Ayón’s collagraphs based on Abakuá, a secret all-male Afro-Cuban society; myth of Princess Sikán; mouthless figures as a recurring motif",
+          "url": "https://cci.pamm.org/untitled-sikan-with-white-tips"
+        },
+        {
+          "what": "Brooklyn Rail review of Nkame (2017): shadowy, mouthless figures recur; “none of the figures have mouths”; reliance on black and white; collography",
+          "url": "https://brooklynrail.org/2017/09/artseen/BELKIS-AYON-NKAME/"
+        },
+        {
+          "what": "ReVista (Harvard DRCLAS): Ayón’s figures are often “just silhouettes with only the most minimal of facial features”; her “large almond-shaped eyes”",
+          "url": "https://revista.drclas.harvard.edu/a-residual-note-on-weeping"
+        }
+      ],
+      "notes": "",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 6,
+        "fixes": [
+          "“oblong heads” (Wikipedia only) dropped; the figures are now “bare silhouettes with large, almond-shaped eyes” and no mouths, as the Brooklyn Rail and Harvard ReVista describe them; “gradations of gray” simplified to “shades of gray”"
+        ],
+        "status": "fixed"
+      },
+      "rewrite": "New subject (Belkis Ayón’s collagraphs) replacing the famous painter Mondrian; the goal targets the figures rather than “the distinctive style,” so it no longer echoes the official Houser item.",
+      "model_bands": [
+        4
+      ]
+    },
+    {
+      "id": "rhetorical_synthesis.EXPL.medium",
+      "template": "EXPL",
+      "subtype": "Explain (cause, origin, advantage, mechanism, definition, significance)",
+      "tier": "medium",
+      "passage": "While researching a topic, a student has taken the following notes:\n• A team led by hydrologist Joseph McConnell has traced lead pollution in Greenland ice from 1100 BCE to 800 CE.\n• Lead emitted by ancient European mining and smelting drifted on winds more than 4,600 kilometers to Greenland.\n• Most of these emissions resulted from producing silver, a key component of currency.\n• Lead levels peaked at the height of the Roman Empire and plunged after the Antonine Plague struck in 165 CE.",
+      "stem": "The student wants to explain why lead in Greenland ice can serve as a record of ancient economic activity. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "Lead emitted by ancient European mining and smelting drifted on winds more than 4,600 kilometers to Greenland.",
+        "Since most of the lead came from producing silver, a key component of currency, its levels in Greenland ice reflect ancient economic activity.",
+        "Lead levels in Greenland ice peaked at the height of the Roman Empire and plunged after the Antonine Plague.",
+        "McConnell’s team traced lead pollution in Greenland ice over nearly two thousand years, from 1100 BCE to 800 CE."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "An explanation has to give the reason the lead tracks the economy. The notes say most of the emissions came from producing silver, a key component of currency, so the amount of lead reaching Greenland rose and fell with the production of money. Choice B makes the link with “since.”",
+      "distractors": {
+        "A": {
+          "recipe": "OG: accurate, but serves another goal",
+          "why_wrong": "It explains how the lead reached Greenland, not why its levels reflect economic activity."
+        },
+        "C": {
+          "recipe": "PART: delivers only part of what the goal needs",
+          "why_wrong": "It describes how lead levels changed over time but gives no reason those changes reflect the economy."
+        },
+        "D": {
+          "recipe": "OG: accurate, but serves another goal",
+          "why_wrong": "It gives the time span of the team’s record, which does not explain why lead tracks economic activity."
+        }
+      },
+      "models": [
+        "2.3",
+        "2.7",
+        "2.13",
+        "2.15",
+        "2.31"
+      ],
+      "word_count": 85,
+      "sources": [
+        {
+          "what": "University of Oxford release on McConnell et al. 2018 (PNAS): North Greenland Ice Core Project samples; more than 21,000 lead and other chemical measurements; 1100 BC to AD 800; emissions from European ore processing drifted more than 2,800 miles (4,600 km) to Greenland; most emissions linked to the production of silver, a key component of currency; lead emissions a proxy for economic activity; highest sustained levels at the height of the Roman Empire; sharp dives with plagues; Antonine Plague struck in AD 165; Joe McConnell, Research Professor of Hydrology at DRI",
+          "url": "https://www.classics.ox.ac.uk/node/318671"
+        },
+        {
+          "what": "McConnell et al. 2018, PNAS: emissions plunged in the second century coincident with the Antonine plague; silver coinage declined in parallel, reflecting the importance of lead–silver mining in ancient economies",
+          "url": "https://doi.org/10.1073/pnas.1721818115"
+        }
+      ],
+      "notes": "",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 6,
+        "fixes": [],
+        "status": "pass"
+      },
+      "rewrite": "New subject (McConnell 2018, Roman-era lead in Greenland ice) replacing the ultra-famous Leaning Tower of Pisa; the key has to supply the silver-to-currency link, and one distractor explains a different “why” (how the lead traveled).",
+      "model_bands": [
+        4,
+        5,
+        4,
+        5,
+        4
+      ]
+    },
+    {
+      "id": "rhetorical_synthesis.EXAMPLE.medium",
+      "template": "EXAMPLE",
+      "subtype": "Example, or explanation plus example",
+      "tier": "medium",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Participatory budgeting is a process in which residents decide how to spend part of a public budget.\n• It began in Porto Alegre, Brazil, and has since spread to cities around the world.\n• In 2009, Alderman Joe Moore introduced it in Chicago’s 49th Ward, the first such effort in the United States.\n• Ward residents aged 16 and older, regardless of citizenship, could vote on proposed projects.\n• Funded projects included sidewalk repairs, bike lanes, and new street lights.",
+      "stem": "The student wants to provide an explanation and an example of participatory budgeting. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "In 2009, Alderman Joe Moore introduced participatory budgeting in Chicago’s 49th Ward, the first such effort in the United States.",
+        "Residents of Chicago’s 49th Ward aged 16 and older could vote on proposed projects regardless of their citizenship.",
+        "Participatory budgeting, a process in which residents decide how to spend public funds, has spread to cities around the world.",
+        "Participatory budgeting lets residents decide how to spend part of a public budget, as Chicago’s 49th Ward began doing in 2009."
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The goal has two parts. Choice D explains the process (residents decide how to spend part of a public budget) and gives a specific example of it, Chicago’s 49th Ward, where it was introduced in 2009.",
+      "distractors": {
+        "A": {
+          "recipe": "PART: delivers only part of what the goal needs",
+          "why_wrong": "It names an example, Chicago’s 49th Ward, but never explains what participatory budgeting is."
+        },
+        "B": {
+          "recipe": "OG: accurate, but serves another goal",
+          "why_wrong": "It describes who could vote in the ward but neither explains participatory budgeting nor names it as the process being used."
+        },
+        "C": {
+          "recipe": "PART: delivers only part of what the goal needs",
+          "why_wrong": "It explains the process and says it has spread, but it gives no specific example of a place that uses it."
+        }
+      },
+      "models": [
+        "2.16",
+        "2.25",
+        "2.42"
+      ],
+      "word_count": 92,
+      "sources": [
+        {
+          "what": "Participatory budgeting: ordinary people decide how to allocate part of a municipal or public budget; first full process in Porto Alegre, Brazil; later spread across the Americas, Africa, Asia and Europe",
+          "url": "https://en.wikipedia.org/wiki/Participatory_budgeting"
+        },
+        {
+          "what": "49th Ward Alderman Joe Moore brought the process, which had not yet reached the US, to Rogers Park; began in late 2009; residents age 16 and over, regardless of legal status, could vote; funded projects included sidewalk fixes, cycling lanes, street resurfacing and new street lights",
+          "url": "https://www.shareable.net/chicagos-participatory-budgeting-experiment/"
+        },
+        {
+          "what": "Chicago’s 49th Ward: America’s very first experiment with participatory budgeting",
+          "url": "https://harvardpolitics.com/participatory-democracy-in-chicago-participatory-budgeting-is-working-important-and-going-to-stay/"
+        },
+        {
+          "what": "49th Ward voting open to residents age 16 and over regardless of citizenship or voter registration status; street resurfacing, lighting and sidewalk repairs",
+          "url": "https://www.nationalcivicleague.org/promising-practices/chicago-il-participatory-budgeting/"
+        }
+      ],
+      "notes": "Sources date Porto Alegre’s first process to 1989 or 1990, so the notes give no year.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 6,
+        "fixes": [],
+        "status": "pass"
+      },
+      "rewrite": "New subject (participatory budgeting, Chicago’s 49th Ward) replacing the kenning item whose key mirrored an official “for example” structure; the definition-only and example-only options are the traps.",
+      "model_bands": [
+        5,
+        5,
+        4
+      ]
+    },
+    {
+      "id": "rhetorical_synthesis.STUDY.medium",
+      "template": "STUDY",
+      "subtype": "Research study (aim, method, results)",
+      "tier": "medium",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Transitive inference, the use of known relationships to deduce unknown ones, had been documented in vertebrates but not insects.\n• In 2019, a team led by biologist Elizabeth Tibbetts tested whether Polistes paper wasps, whose queens form dominance hierarchies, are capable of it.\n• The wasps were trained on four overlapping pairs from a sequence of five colors, with a mild shock accompanying the later color in each.\n• They were then shown the second and fourth colors, a pairing never encountered in training.\n• The wasps chose the second color significantly more often than the fourth.",
+      "stem": "The student wants to present the study’s results. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "Tibbetts’s team wanted to find out whether paper wasps, whose queens form dominance hierarchies, are capable of transitive inference.",
+        "Shown the second and fourth colors, a pairing never encountered in training, the wasps chose the second significantly more often.",
+        "The wasps were trained on four overlapping pairs of colors, with a mild shock accompanying the later color in each pair.",
+        "The researchers tested how the wasps responded to the second and fourth colors, which had never been paired with each other in training."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "Results are what the researchers found, which the last note gives: shown the second and fourth colors, a pair they had never been trained on, the wasps chose the second significantly more often. Choice B reports that outcome.",
+      "distractors": {
+        "A": {
+          "recipe": "OG: accurate, but serves another goal",
+          "why_wrong": "It states what the researchers set out to learn, the study’s aim, not what they found."
+        },
+        "C": {
+          "recipe": "OG: accurate, but serves another goal",
+          "why_wrong": "It describes how the wasps were trained, which is part of the method, not a result."
+        },
+        "D": {
+          "recipe": "PART: delivers only part of what the goal needs",
+          "why_wrong": "It names the untrained pair the wasps were tested on but never says which color they chose, so no result is given."
+        }
+      },
+      "models": [
+        "2.2",
+        "2.5",
+        "2.21"
+      ],
+      "word_count": 109,
+      "sources": [
+        {
+          "what": "Tibbetts, Agudelo, Pandit and Riojas (2019), “Transitive inference in Polistes paper wasps,” Biology Letters 15: 20190015: TI found in a wide range of vertebrates but not in insects; Polistes dominula and P. metricus; nest-founding queens form linear dominance hierarchies; wasps trained on four color pairs A0 B−, B0 C−, C0 D−, D0 E− (− = electric shock); tested on untrained pairs B vs D and A vs E; wasps chose B more often than D (p ≤ 0.001); first study to show an invertebrate uses TI",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6548734/"
+        },
+        {
+          "what": "University of Michigan release: Tibbetts, paper wasps, transitive inference, published May 8, 2019",
+          "url": "https://prod.lsa.umich.edu/eeb/news-events/all-news/archived-news/201622/05/paper-wasps-capable-of-behavior-that-resembles-logical-reasoning.html"
+        }
+      ],
+      "notes": "The shock was 0.4 V (“mild” in the University of Michigan release); the B versus D result was significant in both species.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 6,
+        "fixes": [
+          "“Tibbetts and colleagues” changed to “a team led by” (“and colleagues” appeared in 9 of 36 items against 3 of 92 official ones)"
+        ],
+        "status": "fixed"
+      },
+      "rewrite": "New subject (Tibbetts 2019 paper wasp transitive inference) replacing the textbook ants-on-stilts study; denser notes, result key without the polished paraphrase, one distractor gives the test without its outcome.",
+      "model_bands": [
+        4,
+        4,
+        5
+      ]
+    },
+    {
+      "id": "rhetorical_synthesis.GEN.medium",
+      "template": "GEN",
+      "subtype": "Generalization, with or without support",
+      "tier": "medium",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Eelgrass meadows shelter fish and invertebrates and store carbon in their sediments.\n• In the 1930s, a wasting disease and a hurricane eliminated the eelgrass in Virginia’s coastal lagoons.\n• Lacking seeds for recolonization, the lagoons remained virtually barren for decades.\n• Beginning in 1999, a team led by marine scientist Robert Orth broadcast over 70 million eelgrass seeds into the lagoons.\n• By 2020, the restored meadows covered more than 3,600 hectares.",
+      "stem": "The student wants to make and support a generalization about the effect of seeding barren coastal lagoons with eelgrass. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "Beginning in 1999, Orth’s team broadcast over 70 million eelgrass seeds into Virginia’s coastal lagoons, which by 2020 held more than 3,600 hectares of meadows.",
+        "After the eelgrass in Virginia’s coastal lagoons was eliminated in the 1930s, no seeds were left to recolonize them, so they remained virtually barren for decades.",
+        "Seeding barren lagoons with eelgrass can bring back meadows that have been missing for decades, as a project that restored more than 3,600 hectares in Virginia shows.",
+        "Seeding can return eelgrass to lagoons where it has long been absent, allowing the meadows to once again shelter fish and store carbon."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The goal has two parts: a broad claim about what seeding barren lagoons does, and a specific case that backs it up. Choice C makes the claim (seeding can bring back meadows missing for decades) and supports it with the Virginia restoration, where seeding produced more than 3,600 hectares of meadows.",
+      "distractors": {
+        "A": {
+          "recipe": "PART: delivers only part of what the goal needs",
+          "why_wrong": "It reports the Virginia case, the support, but never states the general claim it supports."
+        },
+        "B": {
+          "recipe": "OG: accurate, but serves another goal",
+          "why_wrong": "It explains why the lagoons stayed barren before restoration and says nothing about the effect of seeding them."
+        },
+        "D": {
+          "recipe": "PART: delivers only part of what the goal needs",
+          "why_wrong": "It makes a general claim about seeding but offers no specific case from the notes to support it."
+        }
+      },
+      "models": [
+        "2.12",
+        "2.22"
+      ],
+      "word_count": 85,
+      "sources": [
+        {
+          "what": "Orth et al. (2020), “Restoration of seagrass habitat leads to rapid recovery of coastal ecosystem services,” Science Advances 6: eabc6434: since 1999, over 70 million eelgrass (Zostera marina) seeds broadcast into mid-western Atlantic coastal lagoons, leading to recovery of 3612 ha of seagrass; meadows foster productive animal communities and sequester carbon and nitrogen",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7541073/"
+        },
+        {
+          "what": "VIMS release: Robert “JJ” Orth led the study; eelgrass in Virginia’s Eastern Shore seaside bays wiped out in the 1930s by a wasting disease and an intense hurricane; natural recovery blocked by a lack of seeds, bays nearly bare for more than half a century; by 2020 the eelgrass covered almost 9,000 acres (about 3,640 ha); more fish and invertebrates, carbon and nitrogen trapped",
+          "url": "https://www.vims.edu/newsandevents/topstories/2020/eelgrass_recovery.php"
+        }
+      ],
+      "notes": "“More than 3,600 hectares” is consistent with both the paper (3,612 ha) and the VIMS figure for 2020 (almost 9,000 acres).",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 6,
+        "fixes": [
+          "“Orth and colleagues” changed to “a team led by” in the notes and options (stock phrase across the file)"
+        ],
+        "status": "fixed"
+      },
+      "rewrite": "New subject (Orth’s Virginia eelgrass seeding, Science Advances 2020) replacing the news-feature Iceland workweek; denser notes without journalistic phrasing; key is now the longest option.",
+      "model_bands": [
+        4,
+        4
+      ]
+    },
+    {
+      "id": "rhetorical_synthesis.AUD_NEW.medium",
+      "template": "AUD_NEW",
+      "subtype": "Introduce or describe to an unfamiliar or new audience",
+      "tier": "medium",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Margarita Cabrera is a Mexican American artist whose work addresses immigration, labor, and border relations.\n• Her project Space in Between began in 2010 with a workshop in Houston, Texas.\n• Participants, immigrants from Mexico and Central America, created fabric replicas of desert plants indigenous to the US Southwest.\n• The sculptures are sewn from the fabric of US Border Patrol uniforms.\n• Using embroidery techniques of Mexico’s Otomi communities, participants stitched their personal accounts of migration onto the sculptures.",
+      "stem": "The student wants to describe the Space in Between sculptures to an audience unfamiliar with Margarita Cabrera. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "Mexican American artist Margarita Cabrera’s Space in Between features replicas of Southwestern desert plants sewn from Border Patrol uniforms and embroidered with immigrants’ accounts of migration.",
+        "Cabrera’s Space in Between sculptures, which replicate desert plants of the US Southwest, are sewn from the fabric of Border Patrol uniforms.",
+        "Mexican American artist Margarita Cabrera, whose work addresses immigration and labor, began Space in Between with a 2010 workshop in Houston.",
+        "Immigrants from Mexico and Central America who took part in Space in Between used Otomi techniques to embroider accounts of their migration."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "Readers who do not know Cabrera need to be told who she is, and the goal is still to describe the sculptures. Choice A identifies her as a Mexican American artist and describes the works: replicas of desert plants sewn from Border Patrol uniforms and embroidered with immigrants’ stories.",
+      "distractors": {
+        "B": {
+          "recipe": "AUD: audience mismatch",
+          "why_wrong": "It describes the sculptures but uses Cabrera’s name as if readers already knew who she is."
+        },
+        "C": {
+          "recipe": "OG: accurate, but serves another goal",
+          "why_wrong": "It introduces Cabrera and says when and where the project began but never describes the sculptures."
+        },
+        "D": {
+          "recipe": "PART: delivers only part of what the goal needs",
+          "why_wrong": "It explains who embroidered the works and how, but it never says what the sculptures are or who Cabrera is."
+        }
+      },
+      "models": [
+        "2.8",
+        "2.26",
+        "2.34",
+        "2.35",
+        "2.36",
+        "2.43"
+      ],
+      "word_count": 92,
+      "sources": [
+        {
+          "what": "Wellin Museum of Art press release (2018): Margarita Cabrera born in Monterrey, Mexico; Mexican-American artist; Space in Between first presented as a workshop in early 2010 at BOX 13 Artspace in Houston, Texas; participants were immigrants from Mexico and Central America who produced sculptural replicas of desert plants indigenous to the Southwestern United States; made from border-patrol uniforms (border patrol uniform fabric, copper wire, thread); traditional sewing and embroidery techniques of the Otomi indigenous communities (Los Tenangos, Hidalgo); stories of personal experiences of crossing the US border stitched into the material",
+          "url": "https://www.hamilton.edu/documents/WellinCabrera_FINAL.pdf"
+        },
+        {
+          "what": "Cabrera’s work addresses issues related to border relations, labor practices and immigration",
+          "url": "https://en.wikipedia.org/wiki/Margarita_Cabrera"
+        }
+      ],
+      "notes": "",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 7,
+        "fixes": [
+          "the inverted bullet “Embroidered onto them, using techniques of Mexico’s Otomi communities, are the participants’ personal accounts of migration” (read as made dense on purpose) rewritten in plain order"
+        ],
+        "status": "fixed"
+      },
+      "rewrite": "New subject (Margarita Cabrera’s Space in Between) replacing the famous Gateway Arch; denser notes; distractor set varied (one AUD, one artist-plus-origin OG, one process-only PART) instead of two name-only AUD options; key is the longest option.",
+      "model_bands": [
+        4,
+        4,
+        4,
+        5,
+        5,
+        5
+      ]
+    },
+    {
+      "id": "rhetorical_synthesis.AUD_FAM.medium",
+      "template": "AUD_FAM",
+      "subtype": "Present or describe to an already familiar audience",
+      "tier": "medium",
+      "passage": "While researching a topic, a student has taken the following notes:\n• A cyanotype is a photographic print made by exposing paper coated with light-sensitive iron compounds to ultraviolet light.\n• Meghann Riepenhoff is an American artist who makes camera-less cyanotypes.\n• Her series Littoral Drift is named for a geologic term describing wind-driven waves transporting sand and gravel.\n• The prints are made at the ocean’s edge, where waves, rain, wind, and sediment leave inscriptions on the paper.\n• Never wholly processed, the prints continue to change over time.",
+      "stem": "The student wants to describe Riepenhoff’s Littoral Drift series to an audience already familiar with cyanotypes. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "Riepenhoff’s Littoral Drift prints are cyanotypes, which means they were made by exposing paper coated with light-sensitive iron compounds to ultraviolet light.",
+        "Riepenhoff’s series Littoral Drift takes its name from a geologic term for wind-driven waves that transport sand and gravel.",
+        "Meghann Riepenhoff is an American artist who makes cyanotypes, photographic prints that she creates without using a camera.",
+        "Made at the ocean’s edge, Riepenhoff’s Littoral Drift cyanotypes bear inscriptions left by waves, rain, wind, and sediment, and they continue to change over time."
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "An audience that already knows what a cyanotype is needs no explanation of the process, only a description of the series. Choice D uses the term “cyanotypes” without defining it and spends its words on what makes the series distinctive: where the prints are made, the marks the elements leave on them, and the way they keep changing.",
+      "distractors": {
+        "A": {
+          "recipe": "AUD: audience mismatch",
+          "why_wrong": "It explains how a cyanotype is made, which this audience already knows, and says nothing about what sets the series apart."
+        },
+        "B": {
+          "recipe": "OG: accurate, but serves another goal",
+          "why_wrong": "It explains where the series’ title comes from, not what the prints look like or how they are made."
+        },
+        "C": {
+          "recipe": "OG: accurate, but serves another goal",
+          "why_wrong": "It describes Riepenhoff and her medium in general and never mentions the Littoral Drift series."
+        }
+      },
+      "models": [
+        "2.1",
+        "2.18",
+        "2.28"
+      ],
+      "word_count": 90,
+      "sources": [
+        {
+          "what": "Littoral Drift statement: named for a geologic term describing the action of wind-driven waves transporting sand and gravel; camera-less cyanotypes made in collaboration with the landscape and the ocean, at the edges of both; waves, rain, wind and sediment leave physical inscriptions through direct contact with photographic materials; photochemically the pieces are never wholly processed and will continue to change over time",
+          "url": "http://meghannriepenhoff.com/project/littoral-drift/"
+        },
+        {
+          "what": "Meghann Riepenhoff (born 1979), American photographer who makes camera-less cyanotypes",
+          "url": "https://en.wikipedia.org/wiki/Meghann_Riepenhoff"
+        },
+        {
+          "what": "Cyanotype: photographic printing process sensitive to near-ultraviolet light, using iron compounds (ferric ammonium citrate and potassium ferricyanide), producing a blue print",
+          "url": "https://en.wikipedia.org/wiki/Cyanotype"
+        }
+      ],
+      "notes": "",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 5,
+        "fixes": [],
+        "status": "pass"
+      },
+      "rewrite": "New subject (Meghann Riepenhoff’s Littoral Drift cyanotypes) replacing the famous Bashō frog haiku; denser notes; only one distractor re-explains the familiar term, the others are an off-goal title origin and an artist profile.",
+      "model_bands": [
+        5,
+        4,
+        4
+      ]
+    },
+    {
+      "id": "rhetorical_synthesis.QUOTE.medium",
+      "template": "QUOTE",
+      "subtype": "Quotation",
+      "tier": "medium",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Wanuri Kahiu is a Kenyan film director, producer, and author.\n• In a 2017 TED talk, she noted that African art is often expected to address “war, poverty, devastation or AIDS.”\n• Her own stories, by contrast, feature Nairobi pop bands and robots that fall in love.\n• She calls such work AfroBubbleGum: “It’s the advocacy of art for art’s sake. It’s the advocacy of art that is not policy-driven or agenda-driven or based on education, just for the sake of imagination.”\n• She notes that much African art “is still dependent on developmental aid.”",
+      "stem": "The student wants to explain the purpose of AfroBubbleGum using a quotation from Kahiu. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "In a 2017 TED talk, Kahiu noted that African art is often expected to address “war, poverty, devastation or AIDS.”",
+        "According to Kahiu, AfroBubbleGum is “the advocacy of art that is not policy-driven or agenda-driven or based on education, just for the sake of imagination.”",
+        "Kahiu’s AfroBubbleGum promotes stories, like her own tales of Nairobi pop bands and robots in love, that are made for imagination’s sake rather than to serve an agenda.",
+        "Kahiu, a Kenyan film director, producer, and author, observes that much African art “is still dependent on developmental aid.”"
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "Two things are required: a quotation from Kahiu, and one that states what AfroBubbleGum is for. Choice B quotes her own definition: art that is not driven by policy, agenda or education but made “just for the sake of imagination.”",
+      "distractors": {
+        "A": {
+          "recipe": "NOQ: no quotation, or a quotation doing another job",
+          "why_wrong": "It quotes Kahiu, but the quoted words describe what African art is usually expected to address, not the purpose of AfroBubbleGum."
+        },
+        "C": {
+          "recipe": "NOQ: no quotation, or a quotation doing another job",
+          "why_wrong": "It states the purpose of AfroBubbleGum in the student’s own words instead of quoting Kahiu."
+        },
+        "D": {
+          "recipe": "NOQ: no quotation, or a quotation doing another job",
+          "why_wrong": "It quotes Kahiu on how African art is funded, which does not explain what AfroBubbleGum is meant to do."
+        }
+      },
+      "models": [
+        "2.9",
+        "2.29"
+      ],
+      "word_count": 107,
+      "sources": [
+        {
+          "what": "Kahiu, “Fun, fierce and fantastical African art,” TED2017 (transcript): “real African issues like war, poverty, devastation or AIDS”; “My work is about Nairobi pop bands that want to go to space or about seven-foot-tall robots that fall in love”; “AfroBubbleGum is one approach. It’s the advocacy of art for art’s sake. It’s the advocacy of art that is not policy-driven or agenda-driven or based on education, just for the sake of imagination”; “A lot of art is still dependent on developmental aid”",
+          "url": "https://www.ted.com/talks/wanuri_kahiu_fun_fierce_and_fantastical_african_art/transcript"
+        },
+        {
+          "what": "Wanuri Kahiu (born 1980), Kenyan film director, producer, and author",
+          "url": "https://en.wikipedia.org/wiki/Wanuri_Kahiu"
+        }
+      ],
+      "notes": "Quotations follow the TED transcript (no serial comma in “war, poverty, devastation or AIDS”); the transcript says “A lot of art,” which the note renders as “much African art” outside the quotation marks.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 6,
+        "fixes": [],
+        "status": "pass"
+      },
+      "rewrite": "New subject (Wanuri Kahiu’s AfroBubbleGum, TED2017) replacing the famous Smithsonian bequest; two wrong options now quote Kahiu doing other jobs and one paraphrases.",
+      "model_bands": [
+        4,
+        4
+      ]
+    },
+    {
+      "id": "rhetorical_synthesis.SIM.hard",
+      "template": "SIM",
+      "subtype": "Similarity",
+      "tier": "hard",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Archerfish are tropical fish that inhabit mangrove-lined estuaries and freshwater rivers and streams of southern Asia and northern Australia.\n• They are known for preying on terrestrial insects and other small animals.\n• One hunting technique involves spitting a jet of water that dislodges the prey from its perch and knocks it into the water.\n• Another technique involves leaping out of the water, to heights of up to 2.5 times the fish’s body length, to seize prey directly.\n• To generate its jets, an archerfish presses its tongue against a groove in the roof of its mouth, forming a narrow tube.",
+      "stem": "The student wants to emphasize a similarity between the two ways an archerfish hunts. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "While one of the archerfish’s hunting techniques involves spitting jets of water, the other requires the fish to leave the water.",
+        "By pressing its tongue against a groove in the roof of its mouth, an archerfish forms a narrow tube through which it can spit jets of water at prey.",
+        "Whether it spits or leaps, an archerfish captures terrestrial prey from above the water’s surface.",
+        "An archerfish can knock prey down with a jet of water, and it can also leap out of the water to seize prey directly."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The notes never state the shared feature; it has to be worked out. Archerfish prey on terrestrial animals, the jet dislodges the prey from its perch into the water, and the leap takes the fish out of the water to seize its prey, so both techniques capture terrestrial prey from above the surface, as choice C says.",
+      "distractors": {
+        "A": {
+          "recipe": "REL: wrong relation or wrong dimension",
+          "why_wrong": "It sets the two techniques against each other with “while,” which stresses a difference, not a similarity."
+        },
+        "B": {
+          "recipe": "PART: delivers only part of what the goal needs",
+          "why_wrong": "It explains how the archerfish produces its jets, which concerns only one technique, so no similarity is shown."
+        },
+        "D": {
+          "recipe": "LIST: both data points, relation never stated",
+          "why_wrong": "It names both techniques side by side but never says what they have in common."
+        }
+      },
+      "models": [
+        "3.18"
+      ],
+      "word_count": 114,
+      "sources": [
+        {
+          "what": "Archerfish (Toxotidae): tropical fish known for shooting down land-based insects and other small prey with jets of water; most live in freshwater streams, ponds and wetlands, two or three species euryhaline in brackish estuaries and mangroves; prey up to 3 m above the surface; jet formed by a groove in the roof of the mouth and the tongue forming a narrow channel; often leap out of the water and grab an insect within reach",
+          "url": "https://en.wikipedia.org/wiki/Archerfish"
+        },
+        {
+          "what": "Fishes of Australia (Museums Victoria), family Toxotidae: commonly found in mangrove-lined estuaries and freshwater rivers, streams, lakes and lagoons; tropical Indo-west Pacific from India to northern Australia; spit water at terrestrial insects and other animals to knock them into the water; blow tube formed by pressing the tongue against a groove in the roof of the mouth",
+          "url": "https://fishesofaustralia.net.au/home/family/313"
+        },
+        {
+          "what": "Australian Museum, Sevenspot Archerfish: freshwater and estuarine habitats; groove along the roof of the mouth, tongue forms a tube; spits accurately to about 1.5 m",
+          "url": "https://australian.museum/learn/animals/fishes/sevenspot-archerfish-toxotes-chatareus/"
+        },
+        {
+          "what": "Behavioral Ecology (2024) 35, arae040: archerfish hunt by shooting water jets at insects perched above the water, hitting the prey hard enough to dislodge it",
+          "url": "https://doi.org/10.1093/beheco/arae040"
+        },
+        {
+          "what": "Shih et al. (2017), Journal of Experimental Biology 220: archer fish are best known for spitting jets of water to capture prey but also hunt by jumping out of the water to heights of up to 2.5 body lengths",
+          "url": "https://doi.org/10.1242/jeb.145623"
+        }
+      ],
+      "notes": "Habitat, prey and mechanism follow Fishes of Australia and the Australian Museum; the jump height follows Shih et al. 2017. The earlier “prey up to 3 meters above the surface” (Wikipedia) is not supported by institutional sources (about 1.5 m), and the “mainly freshwater, a few species euryhaline” framing was contradicted by FishBase, so both are gone.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 7,
+        "fixes": [
+          "habitat bullet rewritten (Wikipedia’s “freshwater, a few euryhaline species” contradicts FishBase and Fishes of Australia, which put archerfish in mangrove estuaries and fresh water); the unsupported “up to 3 meters” jet range removed; jump height sourced to Shih et al. 2017; key no longer echoes the frigatebird key’s “Each of ... two ... techniques” frame; REL option uses “while”"
+        ],
+        "status": "fixed"
+      },
+      "rewrite": "Same subject; notes rewritten in denser terms (euryhaline, terrestrial, technique), the unsourced refraction bullet replaced by the jet mechanism, and the LIST and PART options reworded so they no longer echo the official frigatebird options.",
+      "model_bands": [
+        6
+      ]
+    },
+    {
+      "id": "rhetorical_synthesis.DIFF.hard",
+      "template": "DIFF",
+      "subtype": "Difference",
+      "tier": "hard",
+      "passage": "While researching a topic, a student has taken the following notes:\n• In Mendez v. Westminster (1947), five Mexican American fathers challenged the segregation of their children into separate “Mexican schools” in Orange County, California.\n• A federal appeals court ruled that this forced segregation was unconstitutional.\n• In Hernandez v. Texas (1954), lawyers for agricultural worker Pete Hernandez challenged the exclusion of Mexican Americans from juries in Jackson County, Texas.\n• No person with a Mexican or Latin American name had served on a jury there in twenty-five years.\n• The US Supreme Court ruled unanimously that the Fourteenth Amendment’s guarantee of equal protection extends to Mexican Americans.",
+      "stem": "The student wants to contrast the forms of discrimination challenged in the two cases. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "Mendez v. Westminster was decided by a federal appeals court in 1947, while Hernandez v. Texas went before the US Supreme Court in 1954.",
+        "Whereas the Mendez case challenged the segregation of Mexican American children in schools, the Hernandez case challenged the exclusion of Mexican Americans from juries.",
+        "Both Mendez v. Westminster and Hernandez v. Texas ended in rulings against discrimination directed at Mexican Americans.",
+        "In Hernandez v. Texas, lawyers for agricultural worker Pete Hernandez showed that no person with a Mexican or Latin American name had served on a jury in Jackson County in twenty-five years."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The goal asks for a contrast on one specific point: the kind of discrimination each case challenged. Choice B sets the two side by side with “whereas”: school segregation in the Mendez case, exclusion from juries in the Hernandez case.",
+      "distractors": {
+        "A": {
+          "recipe": "REL: wrong relation or wrong dimension",
+          "why_wrong": "It contrasts the cases on the wrong point, the court and the year, not the discrimination each one challenged."
+        },
+        "C": {
+          "recipe": "REL: wrong relation or wrong dimension",
+          "why_wrong": "It states what the two cases have in common, a similarity, rather than how the discrimination they challenged differed."
+        },
+        "D": {
+          "recipe": "PART: delivers only part of what the goal needs",
+          "why_wrong": "It gives evidence from the Hernandez case only and says nothing about the discrimination challenged in the Mendez case."
+        }
+      },
+      "models": [
+        "3.3",
+        "3.14"
+      ],
+      "word_count": 109,
+      "sources": [
+        {
+          "what": "Mendez v. Westminster, 1947 federal case (aff’d by the Ninth Circuit en banc, 1947): five Mexican American fathers challenged segregation into separate “Mexican schools” in Orange County, California; forced segregation of Mexican American students held unconstitutional",
+          "url": "https://en.wikipedia.org/wiki/Mendez_v._Westminster"
+        },
+        {
+          "what": "Hernandez v. Texas, 347 U.S. 475 (1954): Pete Hernandez, Mexican-American agricultural worker; lawyers challenged the exclusion of Mexican Americans from juries; in Jackson County no one with a Hispanic surname had served on a jury in the previous 25 years; unanimous ruling that Mexican Americans and other nationality groups have equal protection under the 14th Amendment",
+          "url": "https://en.wikipedia.org/wiki/Hernandez_v._Texas"
+        },
+        {
+          "what": "Hernandez v. Texas, 347 U.S. 475 (opinion text): Jackson County, Texas; State stipulated that for 25 years there was no record of any person with a Mexican or Latin American name serving on a jury; Fourteenth Amendment bars exclusion from jury service because of ancestry or national origin",
+          "url": "https://www.law.cornell.edu/supremecourt/text/347/475"
+        },
+        {
+          "what": "Supreme Court Historical Society: Hernandez a migrant cotton picker in Jackson County; no person of Mexican descent in a jury pool for 25 years; unanimous decision",
+          "url": "https://civics.supremecourthistory.org/article/hernandez-v-texas/"
+        },
+        {
+          "what": "National Park Service: Gonzalo Mendez and four other men (Guzmán, Palomino, Estrada, Ramirez), five families, sued over “Mexican” schools in Orange County; the 1947 Ninth Circuit decision ruled it unconstitutional to segregate Americans because of their heritage",
+          "url": "https://home.nps.gov/articles/000/setting-the-precedent-mendez-et-al-v-westminster-school-district-of-orange-county-et-al-and-the-us-courthouse-and-post-office.htm"
+        },
+        {
+          "what": "US Courts: five families were plaintiffs; the district court ruling was upheld by the Ninth Circuit in 1947",
+          "url": "https://www.uscourts.gov/data-news/judiciary-news/2024/09/26/mendez-v-westminster-how-young-girls-courage-transformed-schools"
+        }
+      ],
+      "notes": "",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 9,
+        "fixes": [
+          "“no one with a Hispanic surname” replaced by the stipulated wording of the opinion (“no person with a Mexican or Latin American name”) in the notes and option D; all case facts confirmed against the opinion text, the NPS, the US Courts and the Supreme Court Historical Society"
+        ],
+        "status": "fixed"
+      },
+      "rewrite": "New subject (Mendez v. Westminster and Hernandez v. Texas) replacing the famous Amundsen and Scott race; the generic “different ways” option is gone, replaced by a wrong-dimension contrast and a one-case detail.",
+      "model_bands": [
+        5,
+        7
+      ]
+    },
+    {
+      "id": "rhetorical_synthesis.RANK.hard",
+      "template": "RANK",
+      "subtype": "Order or relative degree",
+      "tier": "hard",
+      "passage": "While researching a topic, a student has taken the following notes:\n• The Yarrabubba impact structure is located in Western Australia.\n• Its crater originally measured an estimated 70 kilometers across.\n• The impact has been dated to about 2.229 billion years ago.\n• The Vredefort impact structure is located in South Africa.\n• Its crater originally measured an estimated 250 to 280 kilometers across.\n• The impact has been dated to about 2.023 billion years ago.",
+      "stem": "The student wants to emphasize the relative ages of the two impact structures. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "The Yarrabubba and Vredefort impacts have been dated to about 2.229 billion and 2.023 billion years ago, respectively.",
+        "With a crater an estimated 250 to 280 kilometers across, the Vredefort impact structure dwarfs the Yarrabubba structure in Western Australia.",
+        "The Vredefort impact, dated to about 2.023 billion years ago, preceded the Yarrabubba impact by roughly 200 million years.",
+        "The impact that formed the Yarrabubba structure occurred roughly 200 million years before the one that formed the Vredefort structure."
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The goal is a comparison of age, stated with the right direction. Yarrabubba is dated to about 2.229 billion years ago and Vredefort to about 2.023 billion, so Yarrabubba is roughly 200 million years older, as choice D says.",
+      "distractors": {
+        "A": {
+          "recipe": "LIST: both data points, relation never stated",
+          "why_wrong": "It gives both dates but never says which impact is older or by how much."
+        },
+        "B": {
+          "recipe": "REL: wrong relation or wrong dimension",
+          "why_wrong": "It compares the sizes of the two craters, not their ages."
+        },
+        "C": {
+          "recipe": "FALSE: misstates or overstates the notes",
+          "why_wrong": "It reverses the order: 2.229 billion years ago is earlier than 2.023 billion years ago, so Yarrabubba came first."
+        }
+      },
+      "models": [
+        "3.15"
+      ],
+      "word_count": 77,
+      "sources": [
+        {
+          "what": "Yarrabubba impact structure, Western Australia: eroded impact crater, original diameter estimated at 30–70 km; dated in 2020 (Erickson et al., Nature Communications) to 2.229 ± 0.005 billion years by uranium–lead dating of zircon and monazite",
+          "url": "https://en.wikipedia.org/wiki/Yarrabubba_impact_structure"
+        },
+        {
+          "what": "Vredefort impact structure, Free State, South Africa: original crater estimated at 170–300 km across; formed 2.023 billion (± 4 million) years ago",
+          "url": "https://en.wikipedia.org/wiki/Vredefort_impact_structure"
+        },
+        {
+          "what": "Erickson et al. (2020), Nature Communications 11: 300 (abstract): the ~70 km-diameter Yarrabubba impact structure, Western Australia; impact age 2229 ± 5 Ma; extends the terrestrial cratering record back more than 200 million years",
+          "url": "https://doi.org/10.1038/s41467-019-13985-7"
+        },
+        {
+          "what": "Kamo et al. (1996), Earth and Planetary Science Letters: “A 2.023 Ga age for the Vredefort impact event”",
+          "url": "https://doi.org/10.1016/s0012-821x(96)00180-x"
+        },
+        {
+          "what": "NSF news on Allen et al. (2022), Journal of Geophysical Research: Vredefort crater’s original diameter was between 250 and 280 kilometers, near present-day Johannesburg, South Africa",
+          "url": "https://www.nsf.gov/news/asteroid-formed-ancient-crater-larger-previously-believed"
+        }
+      ],
+      "notes": "Ages from the primary papers (2229 ± 5 Ma; 2.023 Ga); difference 0.206 billion years, “roughly 200 million years,” which Erickson et al. state themselves. Crater sizes: ~70 km (Erickson et al.) and 250–280 km (Allen et al. 2022); the earlier Wikipedia ranges (30–70 km, 170–300 km) were replaced. The notes avoid calling Yarrabubba the oldest known impact structure, a title it lost in 2025.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 6,
+        "fixes": [
+          "crater sizes replaced with the figures in primary sources (about 70 km, Erickson et al. 2020; 250 to 280 km, Allen et al. 2022) instead of Wikipedia ranges; both ages confirmed against the original papers; “approximately” simplified to “about”"
+        ],
+        "status": "fixed"
+      },
+      "rewrite": "New subject (Yarrabubba and Vredefort impact structures) replacing the famous Superior and Baikal lakes; no area-versus-volume twist and no false causal option; the wrong options are a list, a size comparison and a reversed order.",
+      "model_bands": [
+        7
+      ]
+    },
+    {
+      "id": "rhetorical_synthesis.SPEC.hard",
+      "template": "SPEC",
+      "subtype": "Specify or identify a single fact",
+      "tier": "hard",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Fa-Hien Lena is a cave in the tropical rainforest of Sri Lanka’s Kalutara District.\n• A 2020 study led by archaeologist Michelle Langley analyzed 130 bone points excavated there that are consistent in size, weight, and wear with projectile points.\n• The points, dated to about 48,000 years ago, constitute the earliest evidence of bow-and-arrow technology outside Africa.\n• The cave’s inhabitants apparently hunted tree-dwelling monkeys and squirrels.\n• Excavations also yielded beads fashioned from ochre and from marine shells.",
+      "stem": "The student wants to specify where the earliest evidence of bow-and-arrow technology outside Africa was found. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "The earliest evidence of bow-and-arrow technology outside Africa was found at Fa-Hien Lena, a cave in Sri Lanka’s Kalutara District.",
+        "Fa-Hien Lena, a cave in Sri Lanka, has yielded the world’s earliest evidence of bow-and-arrow technology.",
+        "Langley’s team analyzed 130 bone points that are consistent in size, weight, and wear with projectile points.",
+        "The inhabitants of Fa-Hien Lena, a rainforest cave in Sri Lanka, apparently hunted tree-dwelling monkeys and squirrels and made beads from ochre and marine shells."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The goal asks for one fact: the place. The notes say the bone points from Fa-Hien Lena, a cave in Sri Lanka’s Kalutara District, are the earliest evidence of bow-and-arrow technology outside Africa, and choice A states exactly that.",
+      "distractors": {
+        "B": {
+          "recipe": "FALSE: misstates or overstates the notes",
+          "why_wrong": "It drops “outside Africa” and claims the world’s earliest evidence, which the notes do not say."
+        },
+        "C": {
+          "recipe": "OG: accurate, but serves another goal",
+          "why_wrong": "It describes the bone points but never says where they were found."
+        },
+        "D": {
+          "recipe": "OG: accurate, but serves another goal",
+          "why_wrong": "It locates Fa-Hien Lena but describes how its inhabitants hunted and what beads they made, never mentioning the bow-and-arrow evidence."
+        }
+      },
+      "models": [
+        "3.19"
+      ],
+      "word_count": 92,
+      "sources": [
+        {
+          "what": "Langley et al. (2020), “Bows and arrows and complex symbolic displays 48,000 years ago in the South Asian tropics,” Science Advances 6: eaba3831: Fa-Hien Lena, Sri Lanka; bow-and-arrow hunting toolkits from 48,000 years before present, the earliest bow-and-arrow technology outside of Africa; one of the oldest rainforest sites of H. sapiens outside Africa; 130 terrestrial-bone artifacts consistent in size, morphology, weight and use wear with projectile points; targeted hunting of arboreal and semi-arboreal monkeys and squirrels; marine shell beads and ochre beads",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7292635/"
+        },
+        {
+          "what": "Fa Hien Cave (Fa-Hien Lena), Kalutara District, Western Province, Sri Lanka; 2020 study by Max Planck Institute, Griffith University and the Sri Lankan Department of Archaeology, lead author Michelle Langley",
+          "url": "https://en.wikipedia.org/wiki/Fa_Hien_Cave"
+        }
+      ],
+      "notes": "",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 7,
+        "fixes": [
+          "“Langley and colleagues” changed to “a 2020 study led by” and “Langley’s team” (stock phrase across the file)"
+        ],
+        "status": "fixed"
+      },
+      "rewrite": "New subject (Fa-Hien Lena bow-and-arrow points, Langley 2020) replacing the famous Harlem Hellfighters; goal is now a location rather than a copy of the official “accomplishment” goal; the false option overstates the notes (drops “outside Africa”) instead of inventing a relationship.",
+      "model_bands": [
+        6
+      ]
+    },
+    {
+      "id": "rhetorical_synthesis.DESC.hard",
+      "template": "DESC",
+      "subtype": "Describe",
+      "tier": "hard",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Zaï is a farming technique traditionally used in the western Sahel to rehabilitate degraded land where the soil is crusted and absorbs little rain.\n• Burkinabé farmer Yacouba Sawadogo, who revived the technique around 1980, received the Right Livelihood Award in 2018.\n• Farmers dig pits that are typically 20 to 30 centimeters wide and 10 to 20 centimeters deep, spaced 60 to 80 centimeters apart.\n• Sawadogo’s innovation was to fill the pits with manure and compost, providing nutrients for plants.\n• The organic matter attracts termites, whose activity helps rainwater soak into the hardened soil.\n• When rain falls, the pits catch water and concentrate it, along with nutrients, where sorghum, millet, or tree seeds are planted.",
+      "stem": "The student wants to describe how zaï pits prepare degraded soil for planting. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "In zaï, termites dig pits in the hardened soil, which farmers then fill with manure so that the pits can catch rainwater.",
+        "Revived around 1980 by Burkinabé farmer Yacouba Sawadogo, zaï is a traditional technique for rehabilitating degraded land in the western Sahel.",
+        "In zaï, farmers dig shallow pits and fill them with manure and compost, which attract termites that help rainwater soak into the soil; the pits then concentrate water and nutrients where seeds are planted.",
+        "Zaï pits are typically 20 to 30 centimeters wide and 10 to 20 centimeters deep and are spaced 60 to 80 centimeters apart."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "Describing how the pits prepare the soil means putting the process in the right order: farmers dig the pits and fill them with manure and compost, termites drawn by the organic matter help rain soak in, and the pits gather water and nutrients around the seeds. Choice C does this.",
+      "distractors": {
+        "A": {
+          "recipe": "FALSE: misstates or overstates the notes",
+          "why_wrong": "It garbles the process: farmers dig the pits, and termites are drawn in afterward by the manure and compost; termites do not create the pits."
+        },
+        "B": {
+          "recipe": "OG: accurate, but serves another goal",
+          "why_wrong": "It introduces the technique and the farmer who revived it but never describes how the pits work."
+        },
+        "D": {
+          "recipe": "PART: delivers only part of what the goal needs",
+          "why_wrong": "It gives the pits’ typical size and spacing but says nothing about how they improve the soil."
+        }
+      },
+      "models": [
+        "3.24"
+      ],
+      "word_count": 131,
+      "sources": [
+        {
+          "what": "Zaï: farming technique of digging pits in less permeable soil to catch water and concentrate compost; pits 15–50 cm across and 5–15 cm deep, about 80 cm apart; traditionally used in the western Sahel (Burkina Faso, Niger, Mali) to restore degraded drylands; Sawadogo filled the pits with manure and compost; manure attracts termites, whose tunnels further break up the soil; used for trees, sorghum and millet",
+          "url": "https://en.wikipedia.org/wiki/Za%C3%AF"
+        },
+        {
+          "what": "Yacouba Sawadogo, Burkinabé farmer; revived zaï from the 1980s (experimenting from the 1970s); filled the holes with manure and other biodegradable waste to provide nutrients; termites break up the soil; Right Livelihood Award 2018",
+          "url": "https://en.wikipedia.org/wiki/Yacouba_Sawadogo"
+        },
+        {
+          "what": "ECHO Technical Note 78, Zai Pit System (Motis, D’Aiuto and Lingbeek 2013): zai pits typically 20–30 cm wide, 10–20 cm deep, spaced 60–80 cm apart; originate in the western Sahel where infertile, encrusted soils receive low rainfall; filling holes with mulch or manure increases termite activity, which increases the rate of water infiltration; rainfall trapped close to crop roots; sorghum and millet",
+          "url": "https://reforestation.me/wp-content/uploads/2020/01/tn-78-zai-pit-system.pdfecho.pdf"
+        },
+        {
+          "what": "Right Livelihood Foundation: Yacouba Sawadogo, Burkina Faso, 2018 Laureate; started around 1980 during severe drought; filled the holes with organic fertiliser or compost before planting",
+          "url": "https://rightlivelihood.org/the-change-makers/find-a-laureate/yacouba-sawadogo/"
+        },
+        {
+          "what": "IDEASS (UNDP South-South innovation brief): zaï rescued since the 1980s by Yacouba Sawadogo, who introduced filling the pits with manure and compost; yields of trees, sorghum and millet",
+          "url": "https://www.ideassonline.org/public/pdf/ZAI-ENG.pdf"
+        }
+      ],
+      "notes": "Pit dimensions vary by source (UNEP 1998: 15–50 cm across, 5–15 cm deep, 80 cm apart; IDEASS: 20–40 cm, 10–20 cm; FAO: 30 cm, 15–20 cm, 90 cm); the notes use ECHO’s “typically” figures. Termite tunnels “breaking up the soil” was Wikipedia only; the notes now say termite activity helps rain soak in (ECHO).",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 9,
+        "fixes": [
+          "pit dimensions (UNEP via Wikipedia; other sources differ) replaced by ECHO’s typical figures with “typically”; Sawadogo’s innovation, revival date (around 1980) and termite role re-sourced to Right Livelihood, IDEASS and ECHO (termite activity raises infiltration, not “tunnels break up the soil”); options A, B, C, D reworded to match"
+        ],
+        "status": "fixed"
+      },
+      "rewrite": "New subject (zaï pits, Yacouba Sawadogo) replacing lost-wax casting; the “Step 1:” labels are gone and the process is told in plain bullets; one option garbles who makes the pits, one gives only dimensions.",
+      "model_bands": [
+        7
+      ]
+    },
+    {
+      "id": "rhetorical_synthesis.EXPL.hard",
+      "template": "EXPL",
+      "subtype": "Explain (cause, origin, advantage, mechanism, definition, significance)",
+      "tier": "hard",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Fog harvesting, the collection of airborne water droplets, can supply fresh water in arid climates.\n• Conventional harvesters use wire meshes, but coarse meshes cannot efficiently capture microscopic fog droplets, and fine meshes tend to clog.\n• In 2018, a team led by Weiwei Shi and Jonathan Boreyko built “fog harps,” harvesters made of rows of vertical wires.\n• In laboratory tests, the thinner the harps’ wires were, the more water they collected, because droplets slid off the wires instead of clogging them.\n• The harps collected fog three times as fast as an equivalent mesh.",
+      "stem": "The student wants to explain an advantage of fog harps over conventional meshes. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "Conventional fog harvesters use wire meshes, but coarse meshes cannot efficiently capture microscopic droplets, and fine meshes tend to clog.",
+        "Because droplets slide off their vertical wires instead of clogging them, fog harps can collect fog three times as fast as an equivalent mesh.",
+        "Fog harps outperform meshes because their thick vertical wires capture the microscopic droplets that coarse meshes miss.",
+        "In 2018, Shi, Boreyko, and their team built fog harvesters made of rows of vertical wires, which they called “fog harps,” and tested them in a laboratory."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "An advantage has to be stated together with its reason. Choice B gives both: droplets slide off the harps’ vertical wires instead of clogging them, so harps collect fog three times as fast as an equivalent mesh.",
+      "distractors": {
+        "A": {
+          "recipe": "PART: delivers only part of what the goal needs",
+          "why_wrong": "It describes the problem with meshes but never mentions fog harps or how they solve it."
+        },
+        "C": {
+          "recipe": "FALSE: misstates or overstates the notes",
+          "why_wrong": "It gets the cause wrong: the harps collected more water as their wires got thinner, because droplets slid off instead of clogging them, not because the wires were thick."
+        },
+        "D": {
+          "recipe": "OG: accurate, but serves another goal",
+          "why_wrong": "It describes who built the harps and what they are made of but gives no advantage over meshes."
+        }
+      },
+      "models": [
+        "3.2",
+        "3.13",
+        "3.17",
+        "3.23"
+      ],
+      "word_count": 108,
+      "sources": [
+        {
+          "what": "Shi, Anderson, Tulkoff, Kennedy and Boreyko (2018), “Fog Harvesting with Harps,” ACS Applied Materials & Interfaces 10(14): fog harvesting obtains fresh water in arid climates; coarse meshes cannot efficiently capture microscopic fog droplets, fine meshes suffer from clogging; fog harps are arrays of vertical wires; harvesting rate of harps continually increased with decreasing wire diameter due to efficient droplet shedding that prevented clogging; 3-fold enhancement over an equivalent mesh under laboratory conditions",
+          "url": "https://doi.org/10.1021/acsami.7b17488"
+        }
+      ],
+      "notes": "Abstract read through the Europe PMC record for DOI 10.1021/acsami.7b17488.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 6,
+        "fixes": [
+          "notes simplified where they read as made dense on purpose (“fine meshes are prone to clogging”; “collection rate rose continually as wire diameter decreased”; “achieved a threefold increase in collection rate”); “and colleagues” changed to “a team led by”; options reworded to match"
+        ],
+        "status": "fixed"
+      },
+      "rewrite": "New subject (fog harps, Shi and Boreyko 2018) replacing the famous Svalbard seed vault; no hypothetical bullet; the false option misreads the cause (thick wires) instead of inventing a fact.",
+      "model_bands": [
+        4,
+        5,
+        7,
+        7
+      ]
+    },
+    {
+      "id": "rhetorical_synthesis.EXAMPLE.hard",
+      "template": "EXAMPLE",
+      "subtype": "Example, or explanation plus example",
+      "tier": "hard",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Founded in 1960, Oulipo is a collective of mainly French-speaking writers and mathematicians who compose works under self-imposed formal constraints.\n• One such constraint is the lipogram, a composition from which a particular letter or group of letters is deliberately excluded.\n• Ernest Vincent Wright wrote his 1939 novel Gadsby, which is over 50,000 words long, without using the letter e.\n• As Wright noted in his introduction, the constraint prohibited such common pronouns as “he,” “she,” and “they.”\n• Oulipo member Georges Perec’s 1969 novel La Disparition likewise omits e.",
+      "stem": "The student wants to provide an explanation and an example of a lipogram. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "To write Gadsby, a novel of over 50,000 words without the letter e, Ernest Vincent Wright had to avoid such common pronouns as “he,” “she,” and “they.”",
+        "One of the constraints used by Oulipo members is the lipogram, a composition from which a particular letter or group of letters is deliberately excluded.",
+        "Founded in 1960, Oulipo was created to promote lipograms such as Georges Perec’s 1969 novel La Disparition.",
+        "Lipograms, compositions from which a particular letter is deliberately excluded, include Ernest Vincent Wright’s Gadsby, a novel of over 50,000 words written without the letter e."
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The goal has two parts: say what a lipogram is, and name one. Choice D defines a lipogram as a composition that deliberately excludes a particular letter and gives Gadsby, a novel of over 50,000 words written without an e, as an instance.",
+      "distractors": {
+        "A": {
+          "recipe": "PART: delivers only part of what the goal needs",
+          "why_wrong": "It describes how Wright wrote Gadsby but never uses the term “lipogram” or explains what one is."
+        },
+        "B": {
+          "recipe": "PART: delivers only part of what the goal needs",
+          "why_wrong": "It explains what a lipogram is but gives no specific example."
+        },
+        "C": {
+          "recipe": "FALSE: misstates or overstates the notes",
+          "why_wrong": "The notes say only that Oulipo members write under constraints, the lipogram among them; they never say the group was created to promote lipograms, and the option does not explain what a lipogram is."
+        }
+      },
+      "models": [
+        "3.4"
+      ],
+      "word_count": 103,
+      "sources": [
+        {
+          "what": "Oulipo: loose gathering of (mainly) French-speaking writers and mathematicians who seek to create works using constrained writing techniques; founded in 1960; Georges Perec a member",
+          "url": "https://en.wikipedia.org/wiki/Oulipo"
+        },
+        {
+          "what": "Lipogram: constrained writing in which a particular letter or group of letters is avoided; Wright’s Gadsby (1939) has over 50,000 words but not a single letter E; his self-imposed rule prohibited words such as “the” and “he”; Perec’s La Disparition (1969), openly inspired by Gadsby, also lacks E",
+          "url": "https://en.wikipedia.org/wiki/Lipogram"
+        },
+        {
+          "what": "Gadsby (Project Gutenberg text of the 1939 edition): Wright’s introduction says the manuscript was typed with the E type-bar tied down and that pronouns such as he, she, they, them could not be used; closing note: not a word containing E in this story of over 50,000 words (the transcriber notes three printed “the”s and one “officers” slipped in)",
+          "url": "https://www.gutenberg.org/cache/epub/47342/pg47342.txt"
+        }
+      ],
+      "notes": "Gadsby is described as “written without” e (Wright’s claim) rather than as containing “not a single letter e,” because the printed 1939 edition has a few stray e’s. Perec’s debt to Gadsby is not stated (unconfirmed).",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 7,
+        "fixes": [
+          "“contains ... not a single letter e” corrected to “written without using the letter e” (the 1939 printing has a few stray e’s, per the Gutenberg transcriber); Wright’s banned words now his own examples (“he,” “she,” “they”) from his introduction instead of “the” and “he”; “Gadsby inspired ... La Disparition” (unconfirmed) dropped; option B’s dangling appositive fixed"
+        ],
+        "status": "fixed"
+      },
+      "rewrite": "Same subject; notes rewritten in denser terms; key no longer copies the official “; X, for instance,” frame; the off-goal option is now an example without the term, and the overreaching option is reworded.",
+      "model_bands": [
+        4
+      ]
+    },
+    {
+      "id": "rhetorical_synthesis.STUDY.hard",
+      "template": "STUDY",
+      "subtype": "Research study (aim, method, results)",
+      "tier": "hard",
+      "passage": "While researching a topic, a student has taken the following notes:\n• In 2016, Sylvain Alem and colleagues investigated whether bumblebees could learn string pulling, an unnatural object-manipulation task.\n• Artificial flowers containing a sucrose reward were placed beneath a transparent table, each attached to a string.\n• None of the 291 untrained bees tested individually retrieved the reward on their first attempt.\n• A separate group of bees first observed a trained demonstrator pulling a string from a distance.\n• Of these 25 observers, 15 retrieved the reward on their first attempt.",
+      "stem": "The student wants to summarize the study’s findings. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "Alem and colleagues found that bees that had observed a trained demonstrator were far more likely than untrained bees to retrieve the reward on their first attempt.",
+        "To learn whether bumblebees could master string pulling, Alem and colleagues placed artificial flowers containing a sucrose reward beneath a transparent table.",
+        "Alem and colleagues found that 15 of the 291 untrained bees retrieved the reward on their first attempt.",
+        "According to Alem and colleagues, 15 of 25 bees that had observed a trained demonstrator retrieved the reward on their first attempt."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The study has two findings that only mean something together: none of the 291 untrained bees succeeded on the first attempt, while 15 of the 25 observers did. Choice A summarizes both by comparing the groups.",
+      "distractors": {
+        "B": {
+          "recipe": "OG: accurate, but serves another goal",
+          "why_wrong": "It gives the study’s aim and setup, not its findings."
+        },
+        "C": {
+          "recipe": "FALSE: misstates or overstates the notes",
+          "why_wrong": "It attaches the 15 successful bees to the wrong group: none of the 291 untrained bees succeeded on the first attempt."
+        },
+        "D": {
+          "recipe": "PART: delivers only part of what the goal needs",
+          "why_wrong": "It reports only the observers’ result, with nothing to compare it to, so it leaves out half of the findings."
+        }
+      },
+      "models": [
+        "3.1",
+        "3.10",
+        "3.21"
+      ],
+      "word_count": 93,
+      "sources": [
+        {
+          "what": "Alem et al. (2016), “Associative Mechanisms Allow for Social Learning and Cultural Transmission of String Pulling in an Insect,” PLOS Biology 14(10): e1002564: bumblebees and a nonnatural object manipulation task (string pulling); artificial flowers with strings under a small transparent Plexiglas table; none of the bees tested singly (n = 291) solved the task on their first attempt; observers watched a trained demonstrator from a distance; 15 of 25 observers pulled the string and obtained the reward on the first trial",
+          "url": "https://journals.plos.org/plosbiology/article?id=10.1371/journal.pbio.1002564"
+        }
+      ],
+      "notes": "The reward is sucrose solution; “first attempt” is the paper’s first 5-minute test.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 5,
+        "fixes": [
+          "“positioned” simplified to “placed” in the notes and option B; numbers (291 untrained bees, 15 of 25 observers) confirmed in the paper’s full text"
+        ],
+        "status": "fixed"
+      },
+      "rewrite": "Same study; notes rewritten in denser terms without the “Finding:” labels that echoed an official item; options reworded to match.",
+      "model_bands": [
+        5,
+        6,
+        7
+      ]
+    },
+    {
+      "id": "rhetorical_synthesis.GEN.hard",
+      "template": "GEN",
+      "subtype": "Generalization, with or without support",
+      "tier": "hard",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Biofluorescence is the absorption of short wavelengths of light, such as ultraviolet, and their re-emission at longer wavelengths.\n• Among mammals, it had been observed in the platypus, an egg-laying monotreme, and in marsupial opossums.\n• It had also been seen in New World flying squirrels, which are placental mammals.\n• A 2021 study by Erik Olson’s team documented it in springhares, nocturnal African rodents.\n• The springhares’ fluorescence appears to derive partly from compounds in their hair called porphyrins.",
+      "stem": "The student wants to make and support a generalization about the mammals known to exhibit biofluorescence. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "The platypus, opossums, New World flying squirrels, and, as of 2021, African springhares have all been found to exhibit biofluorescence.",
+        "Mammals’ biofluorescence derives from porphyrins in their hair, as the study of springhares by Olson’s team shows.",
+        "Biofluorescence occurs across very different groups of mammals, as its presence in monotremes such as the platypus, marsupials such as opossums, and placental mammals such as flying squirrels shows.",
+        "Biofluorescence, the re-emission of absorbed light at longer wavelengths, has been observed in a variety of mammals."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The goal needs a broad claim and specific cases that back it up. Choice C claims that biofluorescence occurs across very different groups of mammals and supports it with examples from all three groups named in the notes: a monotreme, marsupials and placental mammals.",
+      "distractors": {
+        "A": {
+          "recipe": "PART: delivers only part of what the goal needs",
+          "why_wrong": "It lists the mammals in which biofluorescence has been seen but never draws a general conclusion from them."
+        },
+        "B": {
+          "recipe": "FALSE: misstates or overstates the notes",
+          "why_wrong": "It generalizes from one species: the notes say only that the springhares’ fluorescence appears to come partly from porphyrins, not that all mammals’ does."
+        },
+        "D": {
+          "recipe": "PART: delivers only part of what the goal needs",
+          "why_wrong": "It defines biofluorescence and makes a general claim but offers no specific case from the notes to support it."
+        }
+      },
+      "models": [
+        "3.11",
+        "3.12",
+        "3.20"
+      ],
+      "word_count": 92,
+      "sources": [
+        {
+          "what": "Olson et al. (2021), “Vivid biofluorescence discovered in the nocturnal Springhare (Pedetidae),” Scientific Reports 11: 4125: biofluorescence is the absorption of short wavelengths of light and re-emission of longer wavelengths; within mammals observed in New World placental flying squirrels (Glaucomys), New World marsupial opossums (Didelphidae) and the monotreme duck-billed platypus; springhares are nocturnal, endemic to Africa, distant relatives of the biofluorescent rodents in Sciuridae; biofluorescence likely originates in the cuticle of the hair fiber and emanates at least partially from fluorescent porphyrins; may be more broadly distributed throughout Mammalia than previously thought",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7892538/"
+        },
+        {
+          "what": "Monotremes are egg-laying mammals (platypus and echidnas)",
+          "url": "https://en.wikipedia.org/wiki/Monotreme"
+        }
+      ],
+      "notes": "",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 6,
+        "fixes": [
+          "“Olson and colleagues” changed to “Olson’s team”; options A and B no longer open with “Biofluorescence” like C and D (four options sharing an opener)"
+        ],
+        "status": "fixed"
+      },
+      "rewrite": "New subject (mammal biofluorescence, Olson et al. 2021) replacing the textbook Salt March; the claim-only and support-only options are now a definition with a vague claim and a bare list, plus a one-species overgeneralization.",
+      "model_bands": [
+        7,
+        6,
+        6
+      ]
+    },
+    {
+      "id": "rhetorical_synthesis.OVERVIEW.hard",
+      "template": "OVERVIEW",
+      "subtype": "Overview or summary",
+      "tier": "hard",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Saturn’s axis is tilted 26.7 degrees relative to its orbital plane.\n• Its rings are estimated to be only about 100 million years old.\n• In 2022, planetary scientist Jack Wisdom and colleagues hypothesized that Saturn once had an additional moon, Chrysalis.\n• Gravitational interactions with Chrysalis would have kept Saturn’s tilt in resonance with Neptune for billions of years.\n• About 160 million years ago, Chrysalis became unstable and disintegrated in a grazing encounter with Saturn.\n• Its destruction released Saturn from the resonance, and fragments left in orbit may have formed the rings.",
+      "stem": "The student wants to provide an overview of Wisdom and colleagues’ hypothesis. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "Saturn’s rings, estimated to be only about 100 million years old, may have formed from fragments of a moon that disintegrated near the planet.",
+        "Wisdom and colleagues propose that Saturn’s tilt results from an ongoing resonance with Neptune, which a moon called Chrysalis helped to maintain until about 160 million years ago.",
+        "Saturn’s axis is tilted 26.7 degrees relative to its orbital plane, and its rings are estimated to be only about 100 million years old.",
+        "Wisdom and colleagues propose that a moon, Chrysalis, held Saturn’s tilt in resonance with Neptune until it disintegrated about 160 million years ago, perhaps forming the rings."
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "An overview has to cover the whole hypothesis at a high level: a lost moon, what it did to Saturn’s tilt, its destruction, and the rings. Choice D touches each of these stages in one sentence.",
+      "distractors": {
+        "A": {
+          "recipe": "PART: delivers only part of what the goal needs",
+          "why_wrong": "It covers only the end of the story, the possible origin of the rings, and never names Chrysalis or explains the tilt."
+        },
+        "B": {
+          "recipe": "FALSE: misstates or overstates the notes",
+          "why_wrong": "It says the resonance with Neptune is ongoing, but according to the notes the loss of Chrysalis released Saturn from that resonance."
+        },
+        "C": {
+          "recipe": "OG: accurate, but serves another goal",
+          "why_wrong": "It gives the two facts the hypothesis tries to explain but not the hypothesis itself."
+        }
+      },
+      "models": [
+        "3.8",
+        "3.9",
+        "3.22"
+      ],
+      "word_count": 107,
+      "sources": [
+        {
+          "what": "MIT News (Sept. 15, 2022), on Wisdom et al., “Loss of a Satellite Could Explain Saturn’s Obliquity and Young Rings,” Science: Saturn rotates at a 26.7-degree angle relative to its orbital plane; an extra satellite named Chrysalis orbited Saturn for several billion years, keeping its tilt (obliquity) in resonance with Neptune; around 160 million years ago Chrysalis became unstable and was pulled apart in a grazing encounter with Saturn; its loss removed Saturn from the resonance; a fraction of the fragments could have formed the rings, previously estimated at about 100 million years old; Jack Wisdom, professor of planetary sciences at MIT, lead author",
+          "url": "https://news.mit.edu/2022/saturn-rings-tilt-missing-moon-0915"
+        }
+      ],
+      "notes": "",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 7,
+        "fixes": [
+          "notes simplified slightly (“possessed an additional satellite” to “had an additional moon”, “maintained” to “kept”, “Approximately” to “About”); options use “moon” to match"
+        ],
+        "status": "fixed"
+      },
+      "rewrite": "New subject (Wisdom’s 2022 Chrysalis hypothesis for Saturn’s tilt and rings) replacing the textbook Wegener history; the false option misreads one step (resonance said to be ongoing) instead of contradicting the notes wholesale.",
+      "model_bands": [
+        6,
+        6,
+        7
+      ]
+    },
+    {
+      "id": "rhetorical_synthesis.AUD_FAM.hard",
+      "template": "AUD_FAM",
+      "subtype": "Present or describe to an already familiar audience",
+      "tier": "hard",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Lidar is a remote-sensing method that measures distances by timing how long laser light takes to reflect off a surface and return.\n• In 2020, a team led by archaeologist Takeshi Inomata analyzed lidar data that the Mexican government had collected over a large area of Tabasco, Mexico.\n• They identified Aguada Fénix, an artificial plateau about 1,400 meters long and 10 to 15 meters high.\n• Excavations indicated that it was constructed between about 1000 and 800 BCE.\n• It is the oldest and largest monumental structure known in the Maya region.",
+      "stem": "The student wants to present the study’s findings to an audience already familiar with lidar. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "In 2020, Inomata’s team analyzed lidar data that the Mexican government had collected over a large area of Tabasco, Mexico.",
+        "Analyzing lidar data, Inomata’s team identified Aguada Fénix, a 1,400-meter-long plateau built around 1000–800 BCE that is the oldest and largest monumental structure known in the Maya region.",
+        "Lidar data analyzed by Inomata’s team revealed that Aguada Fénix, built between about 1000 and 800 BCE, is the oldest monumental structure ever found in Mexico.",
+        "Using lidar, which measures distances by timing how long laser light takes to reflect off a surface and return, Inomata’s team identified Aguada Fénix, the oldest and largest monumental structure known in the Maya region."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The audience already knows what lidar is, so the sentence should use the term without explaining it and spend its words on what the team found. Choice B does this: Aguada Fénix, a 1,400-meter-long plateau from about 1000–800 BCE, the oldest and largest monumental structure known in the Maya region.",
+      "distractors": {
+        "A": {
+          "recipe": "PART: delivers only part of what the goal needs",
+          "why_wrong": "It describes the data the team analyzed but reports none of the findings."
+        },
+        "C": {
+          "recipe": "FALSE: misstates or overstates the notes",
+          "why_wrong": "It overstates the finding: the notes call Aguada Fénix the oldest monumental structure known in the Maya region, not the oldest ever found in Mexico."
+        },
+        "D": {
+          "recipe": "AUD: audience mismatch",
+          "why_wrong": "It reports the finding but stops to explain how lidar works, which this audience already knows."
+        }
+      },
+      "models": [
+        "3.7",
+        "3.16"
+      ],
+      "word_count": 105,
+      "sources": [
+        {
+          "what": "Aguada Fénix, Tabasco, Mexico: discovered by lidar survey and announced in June 2020 by Takeshi Inomata (University of Arizona); lidar data collected by the Mexican government for a study area of roughly 3,000 km²; rectangular earthen platform about 1,400 m long, rising 10–15 m; built from around 1000 BC to 800 BC; oldest and largest known Maya ceremonial site",
+          "url": "https://en.wikipedia.org/wiki/Aguada_F%C3%A9nix"
+        },
+        {
+          "what": "Inomata et al. (2020), “Monumental architecture at Aguada Fénix and the rise of Maya civilization,” Nature 582: 530–533",
+          "url": "https://doi.org/10.1038/s41586-020-2343-4"
+        },
+        {
+          "what": "Lidar: a method for determining ranges by targeting a surface with a laser and measuring the time for the reflected light to return",
+          "url": "https://en.wikipedia.org/wiki/Lidar"
+        },
+        {
+          "what": "University of Arizona news (June 2020): “Using low-resolution lidar collected by the Mexican government, we noticed this huge platform”; nearly 4,600 feet long, 30 to 50 feet high",
+          "url": "https://news.arizona.edu/news/largest-oldest-maya-monument-suggests-importance-communal-work"
+        }
+      ],
+      "notes": "“Roughly 3,000 square kilometers” (Wikipedia only) generalised to “a large area”; “rectangular earthen platform” replaced by the abstract’s “artificial plateau.” Option C is false: the notes limit the claim to the Maya region, and older Olmec monuments exist in Mexico.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 7,
+        "fixes": [
+          "survey area “roughly 3,000 square kilometers” (Wikipedia only) generalised to data “the Mexican government had collected over a large area” (University of Arizona release); “rectangular earthen platform” replaced by the abstract’s “artificial plateau”; “Inomata and colleagues” changed to “Inomata’s team”"
+        ],
+        "status": "fixed"
+      },
+      "rewrite": "New subject (Aguada Fénix lidar survey, Inomata 2020) replacing the well-known Thaler echolocation study; only one option re-explains the familiar term, the others are a method-only option and an overstated finding.",
+      "model_bands": [
+        4,
+        6
+      ]
+    },
+    {
+      "id": "rhetorical_synthesis.QUOTE.hard",
+      "template": "QUOTE",
+      "subtype": "Quotation",
+      "tier": "hard",
+      "passage": "While researching a topic, a student has taken the following notes:\n• In 2016, a team led by Hjalmar Kühl reported that chimpanzees in four West African populations habitually bang and throw rocks against particular trees.\n• The behavior leaves piles of stones at these trees, sites that the researchers describe as “reminiscent of human cairns.”\n• They call the use of stones in the chimpanzees’ ritualized displays “a novel discovery.”\n• One hypothesis holds that the throwing is a variant of displays in which male chimpanzees drum on trees with their hands and feet.\n• However, the researchers acknowledge, “Our observations raise numerous questions about the potential interpretations of this behaviour.”",
+      "stem": "The student wants to use a quotation to emphasize that the meaning of the chimpanzees’ stone throwing remains uncertain. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "Kühl and his coauthors acknowledge that their “observations raise numerous questions about the potential interpretations of this behaviour.”",
+        "The researchers describe the piles of stones that chimpanzees leave at certain trees as “reminiscent of human cairns.”",
+        "Calling it “a novel discovery,” Kühl’s team reports that chimpanzees in four West African populations use stones in their ritualized displays.",
+        "Why chimpanzees bang and throw rocks against trees is still unclear, though one hypothesis links the behavior to drumming displays."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "Two things are required: a quotation, and one that shows the behavior’s meaning is unsettled. Choice A quotes the researchers’ own admission that their observations “raise numerous questions about the potential interpretations of this behaviour.”",
+      "distractors": {
+        "B": {
+          "recipe": "NOQ: no quotation, or a quotation doing another job",
+          "why_wrong": "It quotes the researchers, but the quoted words compare the stone piles to human cairns rather than express any uncertainty."
+        },
+        "C": {
+          "recipe": "NOQ: no quotation, or a quotation doing another job",
+          "why_wrong": "It quotes the researchers on how new the discovery is, which stresses its importance, not the uncertainty about its meaning."
+        },
+        "D": {
+          "recipe": "NOQ: no quotation, or a quotation doing another job",
+          "why_wrong": "It conveys the uncertainty in the student’s own words and uses no quotation."
+        }
+      },
+      "models": [
+        "3.6"
+      ],
+      "word_count": 112,
+      "sources": [
+        {
+          "what": "Kühl et al. (2016), “Chimpanzee accumulative stone throwing,” Scientific Reports 6: 22219 (first author Hjalmar S. Kühl, Max Planck Institute for Evolutionary Anthropology): four populations in West Africa where chimpanzees habitually bang and throw rocks against trees, resulting in conspicuous stone accumulations; stone accumulation sites “reminiscent of human cairns”; “The habitual incorporation of stone tools into the ritualized display of chimpanzees is a novel discovery”; one hypothesis is a modification of the male display resembling hand and feet drumming; “Our observations raise numerous questions about the potential interpretations of this behaviour.”",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4770594/"
+        }
+      ],
+      "notes": "Quotations keep the paper’s British spelling (“behaviour”).",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 6,
+        "fixes": [
+          "all four options opened with “Kühl and colleagues” (a long shared prefix); openers varied and “and colleagues” dropped from the notes; “conspicuous stone accumulations” and “the incorporation of stone tools into” simplified; quotations re-checked against the full text"
+        ],
+        "status": "fixed"
+      },
+      "rewrite": "New subject (Kühl 2016 chimpanzee accumulative stone throwing) replacing the famous Lovelace; two wrong options quote the paper doing other jobs and one paraphrases the uncertainty.",
+      "model_bands": [
+        4
+      ]
+    },
+    {
+      "id": "rhetorical_synthesis.NARR.hard",
+      "template": "NARR",
+      "subtype": "Begin a narrative",
+      "tier": "hard",
+      "passage": "While researching a topic, a student has taken the following notes:\n• The Navajo Nation Museum in Window Rock, Arizona, works to revitalize and preserve the Navajo language.\n• In 2013, the museum and its director, Manuelito Wheeler (Navajo), completed a Navajo-dubbed version of Star Wars: Episode IV – A New Hope with Lucasfilm.\n• It was the first major motion picture dubbed into Navajo.\n• The museum then collaborated with Disney for more than a year on a Navajo-language version of Finding Nemo.\n• The resulting film premiered in Albuquerque, New Mexico, in 2016.",
+      "stem": "The student wants to begin a narrative about the Navajo Nation Museum’s Navajo-language film projects. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "The Navajo-language version of Finding Nemo that the museum made with Disney premiered in Albuquerque, New Mexico, in 2016.",
+        "After completing its Navajo-dubbed Star Wars, the Navajo Nation Museum went on to collaborate with Disney for more than a year on a Navajo-language version of Finding Nemo.",
+        "In 2013, the Navajo Nation Museum and its director, Manuelito Wheeler, completed a Navajo-dubbed version of Star Wars: Episode IV – A New Hope with Lucasfilm.",
+        "Working first with Lucasfilm and later with Disney, the Navajo Nation Museum produced Navajo-language versions of Star Wars and Finding Nemo."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "A narrative begins with the first event in the sequence. The projects started in 2013 with the Navajo-dubbed Star Wars, so choice C, which introduces the museum and its director at that first project, opens the story.",
+      "distractors": {
+        "A": {
+          "recipe": "OG: accurate, but serves another goal",
+          "why_wrong": "It describes the 2016 premiere, the last event in the notes, which would end the narrative rather than begin it."
+        },
+        "B": {
+          "recipe": "OG: accurate, but serves another goal",
+          "why_wrong": "It describes the Finding Nemo project, the middle of the story, and mentions the first project only in passing."
+        },
+        "D": {
+          "recipe": "OG: accurate, but serves another goal",
+          "why_wrong": "It sums up both projects at once, which would suit a summary of the museum’s work, not the opening of a narrative."
+        }
+      },
+      "models": [
+        "3.5"
+      ],
+      "word_count": 95,
+      "sources": [
+        {
+          "what": "Navajo Nation Museum, Window Rock, Arizona; the museum and its former director Manuelito Wheeler (Navajo) work at reviving and preserving the Navajo language; worked with Lucasfilm on a Navajo-dubbed Star Wars: Episode IV – A New Hope, completed in 2013; in 2015 spent a full year collaborating with Pixar on a Navajo-language Finding Nemo; Nemo Hádéést’íí premiered in Albuquerque in 2016",
+          "url": "https://en.wikipedia.org/wiki/Navajo_Nation_Museum"
+        },
+        {
+          "what": "In 2013, Star Wars became the first major motion picture to be dubbed into the Navajo language",
+          "url": "https://en.wikipedia.org/wiki/Star_Wars_(film)"
+        },
+        {
+          "what": "Manuelito Wheeler described as Navajo Nation Museum director (2016 lecture announcement)",
+          "url": "https://english.clas.asu.edu/content/indigenous-lecture-manuelito-wheeler-navajo-nation-museum-director"
+        },
+        {
+          "what": "KPBS (June 19, 2013): Manuelito Wheeler, director of the Navajo Nation Museum, started the Star Wars dub with Lucasfilm to “promote our language, a way to save our language”; premiere July 3, 2013, in Window Rock; first time a major motion picture translated into a Native American language",
+          "url": "https://www.kpbs.org/news/2013/06/19/translated-into-navajo-star-wars-will-be"
+        },
+        {
+          "what": "Navajo Times (March 10, 2016): the Navajo-dubbed Finding Nemo premiered at the Century Rio 24 theaters in Albuquerque; “Star Wars” in 2013 was the first film dubbed in Navajo",
+          "url": "https://navajotimes.com/reznews/nemo-hadeestii/"
+        },
+        {
+          "what": "Santa Fe New Mexican / AP (December 6, 2014): the Navajo Nation Museum teaming up with Walt Disney Studios to dub Finding Nemo; voice auditions on December 19 and 20 in Window Rock (with the March 2016 premiere, more than a year of work)",
+          "url": "https://www.santafenewmexican.com/news/local_news/finding-nemo-to-be-told-in-navajo-language/article_7fd41f43-fccb-560c-ba06-81dd8e4a181b.html"
+        }
+      ],
+      "notes": "The Nemo project began with auditions in December 2014 and premiered in March 2016, so Wikipedia’s “in 2015 ... spent a full year with Pixar” is replaced by “more than a year” with Disney (the partner named in news reports). The Navajo title is left out to avoid a diacritic error.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 7,
+        "fixes": [
+          "“In 2015, the museum spent a year collaborating with Pixar” (Wikipedia) corrected to “worked with Disney for more than a year” (auditions were in December 2014; news reports name Walt Disney Studios); the Navajo film title dropped (the printed spelling lacked its nasal marks); options A, B and D updated"
+        ],
+        "status": "fixed"
+      },
+      "rewrite": "New subject (Navajo Nation Museum’s Navajo-language Star Wars and Finding Nemo) replacing the famous Nellie Bly; key has no colon flourish; wrong options are the ending, a middle event and a summary.",
+      "model_bands": [
+        7
+      ]
+    }
+  ]
+}

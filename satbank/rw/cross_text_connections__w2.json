@@ -1,0 +1,2001 @@
+{
+  "skill": "Cross-Text Connections",
+  "slug": "cross_text_connections",
+  "part": "w2",
+  "domain": "Craft and Structure",
+  "plan": {
+    "templates": [
+      {
+        "code": "S1_concede_rebut",
+        "name": "Respond: concede part of the target, rebut the rest (two-part options)"
+      },
+      {
+        "code": "S1_solution",
+        "name": "Respond: one text supplies a solution to the other's problem"
+      },
+      {
+        "code": "S1_framework_critique",
+        "name": "Respond: critique of the target's framework or standard"
+      },
+      {
+        "code": "S1_alt_explanation",
+        "name": "Respond: the behavior might be explained without the target's interpretation"
+      },
+      {
+        "code": "S2_joint_inference",
+        "name": "Agree: joint inference from two compatible studies"
+      },
+      {
+        "code": "S4_relate",
+        "name": "Relationship: function of each text"
+      },
+      {
+        "code": "S1_counterexample",
+        "name": "Respond: counterexample to a 'first', 'only' or 'requires' claim"
+      },
+      {
+        "code": "S1_limit_degree",
+        "name": "Respond: limit the degree or scope of the target claim"
+      },
+      {
+        "code": "S1_case_fits_frame",
+        "name": "Respond (Text 1 speaking): Text 2's case fits Text 1's general frame"
+      },
+      {
+        "code": "S2_shared_premise",
+        "name": "Agree: shared premise beneath a visible disagreement"
+      },
+      {
+        "code": "S1_rival_hypothesis",
+        "name": "Respond: rival hypothesis with evidence the target does not account for"
+      },
+      {
+        "code": "S3_difference",
+        "name": "Difference: how the two authors view an object, compared on one axis"
+      },
+      {
+        "code": "S1_refute_data",
+        "name": "Respond: target refuted by new data"
+      },
+      {
+        "code": "S1_second_factor",
+        "name": "Respond: target is incomplete, a second cause or source"
+      },
+      {
+        "code": "S2_hidden_assumption",
+        "name": "Agree: shared methodological assumption under a dispute"
+      }
+    ]
+  },
+  "items": [
+    {
+      "id": "cross_text_connections.S1_concede_rebut.hard.w2b1_01",
+      "template": "S1_concede_rebut",
+      "subtype": "Response prediction",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Text 1\n\nFrances E. W. Harper’s 1892 novel Iola Leroy follows a woman, raised as a rich planter’s daughter, who is enslaved after his death when her mother’s ancestry comes to light. Because Iola could easily pass as white, some critics have read the novel as addressed mainly to white audiences: Harper, they argue, gave her heroine that appearance because nineteenth-century readers sympathized more readily with characters resembling themselves, and wrote the book chiefly to win that sympathy.\n\nText 2\n\nHarper may well have anticipated that Iola’s appearance would move white readers. Yet much of the novel is taken up by long conversations in which Black characters debate education, temperance, and the obligations of educated people to their communities—scenes that contribute little to the plot. These discussions seem meant less to elicit outsiders’ sympathy than to model, for Black readers, the work of rebuilding communities after emancipation.",
+      "stem": "Based on the texts, how would the author of Text 2 most likely respond to the critics’ interpretation of Iola Leroy presented in Text 1?",
+      "options": [
+        "By agreeing that Harper wrote mainly for white readers but objecting that Iola’s appearance would have weakened rather than strengthened their sympathy",
+        "By conceding that the novel’s long conversations slow its plot but insisting that Harper included them to hold the interest of white readers",
+        "By granting that Harper likely hoped Iola’s appearance would appeal to white readers but questioning whether those readers were the novel’s main audience",
+        "By accepting that Harper sought white readers’ sympathy but arguing that the novel’s debates were meant to persuade those readers to support Black schools"
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The critics in Text 1 make two claims: Harper gave Iola a white appearance to gain white readers’ sympathy, and she wrote the novel chiefly for those readers. The author of Text 2 grants the first point (“Harper may well have anticipated that Iola’s appearance would move white readers”) but argues that the novel’s long debates were meant to model community rebuilding “for Black readers.” So the author would grant the point about Iola’s appearance while questioning whether white readers were the main audience.",
+      "distractors": {
+        "A": {
+          "recipe": "D7 half right (wrong concession)",
+          "why_wrong": "Text 2 does not agree that Harper wrote mainly for white readers; that is the claim it disputes. It also never says Iola’s appearance weakened readers’ sympathy."
+        },
+        "B": {
+          "recipe": "D7 half right (right concession, wrong rebuttal)",
+          "why_wrong": "Text 2 does say the conversations do little to advance the plot, but it says they were aimed at Black readers, not meant to hold white readers’ interest."
+        },
+        "D": {
+          "recipe": "D7 half right (right concession, invented rebuttal)",
+          "why_wrong": "Text 2 says the debates model community work for Black readers; it does not say they were meant to persuade white readers to fund schools."
+        }
+      },
+      "models": [
+        "3.9",
+        "3.2"
+      ],
+      "word_count": 147,
+      "sources": [
+        {
+          "what": "Iola Leroy (1892) by Frances E. W. Harper: heroine raised as white, enslaved after her father’s death, rejects passing and devotes herself to uplift; themes include education and temperance",
+          "url": "https://courses.bowdoin.edu/africana-studies-1109-fall-2019-gender-equity/iola-leroy/"
+        }
+      ],
+      "notes": "Area: literature (criticism). Both texts are unattributed views (critics; the author’s own), so no scholar’s position is put in anyone’s mouth. Concession and rebuttal are on different axes (why Iola looks white vs. who the book addresses), not 3.9’s minor-vs-central frame.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [
+          "explanation quoted a sentence the passage no longer contains (“counted on”); now quotes the passage"
+        ],
+        "status": "fixed"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "Concede-then-rebut with two-part options, which the band-7 report calls a band-6 device; two half-right distractors (B, D) and a wrong concession (A) make it a strong band 6, but the key stays inside the two texts’ own claims (2 steps, no synthesis)."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "C",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "cross_text_connections.S1_concede_rebut.hard.w2b1_02",
+      "template": "S1_concede_rebut",
+      "subtype": "Response prediction",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Text 1\n\nIn the early 2000s, the chytrid fungus Batrachochytrium dendrobatidis swept through the mountain forests of central Panama, killing frogs by disrupting the functioning of their skin. Within months, many species had disappeared from streams where they had previously been common. <u>Because the fungus persists in the environment and in tolerant amphibian species long after an outbreak, the worst-hit frog populations seemed unlikely to recover as long as it remained.</u>\n\nText 2\n\nReturning to sites in Panama five to thirteen years after the outbreak, Jamie Voyles and colleagues documented growing numbers of several frog species. The fungus was still present, and laboratory comparisons showed no sign that it had become less virulent. The difference apparently lay with the frogs: skin secretions from wild survivors inhibited the fungus’s growth far more effectively than secretions from frogs taken into captivity before the outbreak.",
+      "stem": "Based on the texts, how would Voyles and colleagues (Text 2) most likely respond to the underlined claim in Text 1?",
+      "options": [
+        "By acknowledging that the fungus can persist long after an outbreak but pointing out that frog populations may rebound even while it remains",
+        "By agreeing that the hardest-hit populations are unlikely to recover but attributing their failure to recover to habitat loss rather than to the fungus",
+        "By accepting that recovery depends on the fungus disappearing but noting that the fungus has become less deadly than it was during the outbreak",
+        "By conceding that the fungus remains as virulent as it was before but suggesting that frogs raised in captivity are better able to resist it"
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The underlined claim says that because the fungus persists, badly hit frog populations were unlikely to recover while it remained. Voyles and colleagues agree that the fungus persists (“The fungus was still present”), but they still “documented growing numbers of several frog species.” They would therefore grant the fungus’s persistence while pointing out that populations can rebound in its presence.",
+      "distractors": {
+        "B": {
+          "recipe": "D7 half right (wrong concession plus add-on)",
+          "why_wrong": "Text 2 reports that several species are recovering, so the researchers would not agree that recovery is unlikely; habitat loss is never mentioned."
+        },
+        "C": {
+          "recipe": "D2 wrong side",
+          "why_wrong": "Text 2 found frogs recovering while the fungus remained, and it found no sign that the fungus had become less virulent."
+        },
+        "D": {
+          "recipe": "D7 half right (right concession, reversed detail)",
+          "why_wrong": "Text 2 does say the fungus is no less virulent, but it found that wild survivors, not frogs taken into captivity, resist the fungus better."
+        }
+      },
+      "models": [
+        "3.2",
+        "3.13"
+      ],
+      "word_count": 142,
+      "sources": [
+        {
+          "what": "Voyles et al. 2018, Science: Panama frog species partly recovering 5 to 13 years after the chytrid epidemic; no evidence the pathogen weakened; skin secretions of wild survivors inhibit Bd more than those of frogs taken into captivity before the outbreak",
+          "url": "https://m.phys.org/news/2018-03-mass-extinctions-lessons-amphibian-die-off.html"
+        }
+      ],
+      "notes": "Area: natural science (disease ecology). Text 1’s pessimistic view is unattributed. 3.2 shape (agree the danger is real, deny it is inevitable), built on a persistence-versus-recovery split rather than 3.2’s possibility-versus-inevitability wording.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [
+          "plainer words to bring the passage toward CB register (writer note: medium and hard ran denser than CB): physiological dropped, abundant to common, evidence to sign",
+          "explanation quoted “becoming more common again”, which is not in the passage; now quotes it exactly"
+        ],
+        "status": "fixed"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "Same concede-rebut shell: D keeps the right concession and reverses the captivity detail, B and C grant what Text 2 denies; 2 steps, no synthesis, so a strong band 6."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "A",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "cross_text_connections.S1_solution.hard.w2b1_03",
+      "template": "S1_solution",
+      "subtype": "Response prediction",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Text 1\n\nFrom 2011 to 2016, a team led by Michael Phelps of the Early Manuscripts Electronic Library imaged dozens of palimpsests—manuscripts whose original writing was scraped away so that the parchment could be reused—at St. Catherine’s Monastery in Egypt. Each page was photographed under a series of wavelengths of light, from ultraviolet to infrared. Because traces of the erased ink reflect these wavelengths differently than the parchment does, software comparing the images could make the hidden writing legible.\n\nText 2\n\nPalimpsests can preserve texts that survive nowhere else, but reading their erased layers has always been difficult. In the nineteenth century, scholars brushed pages with chemical reagents that temporarily darkened the faded ink. The method worked, but the chemicals eventually stained the parchment, leaving some pages harder to read than before. Today, libraries are understandably wary of any treatment that might harm such fragile manuscripts.",
+      "stem": "Based on the texts, how would the author of Text 1 most likely respond to the discussion in Text 2?",
+      "options": [
+        "By contending that libraries’ caution is unwarranted, since the reagents described in Text 2 can be applied safely if the pages are imaged first",
+        "By suggesting that pages darkened by nineteenth-century reagents should be reexamined, since imaging under several wavelengths can remove the stains",
+        "By pointing out that most of the palimpsests at St. Catherine’s Monastery had already been treated with reagents before they were photographed",
+        "By observing that the erased writing in such manuscripts can now be read using a method in which no substance is applied to the pages"
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "Text 2 describes a problem: erased texts in palimpsests are hard to read, the old chemical method damaged the parchment, and libraries now resist any treatment that might harm the manuscripts. Text 1 describes a method that solves this problem: pages are only photographed under different wavelengths of light, and software reveals the hidden writing. The author of Text 1 would therefore observe that such writing can now be read without applying anything to the pages.",
+      "distractors": {
+        "A": {
+          "recipe": "D2 wrong side",
+          "why_wrong": "Text 1 never endorses chemical reagents; its method replaces them, so the author would not call the libraries’ caution unwarranted."
+        },
+        "B": {
+          "recipe": "D3 twisted detail",
+          "why_wrong": "Text 1 says imaging makes erased writing legible; it never says imaging removes stains from parchment."
+        },
+        "C": {
+          "recipe": "D1 unaddressed add-on",
+          "why_wrong": "Neither text says whether the St. Catherine’s palimpsests had been treated with reagents."
+        }
+      },
+      "models": [
+        "3.7",
+        "3.6"
+      ],
+      "word_count": 146,
+      "sources": [
+        {
+          "what": "Sinai Palimpsests Project (EMEL, St. Catherine’s Monastery, UCLA Library), 2011 to 2016: spectral imaging under 12 wavelengths from ultraviolet to near infrared recovered erased texts from 74 palimpsests",
+          "url": "https://sinaied.library.ucla.edu/about-project/"
+        }
+      ],
+      "notes": "Area: humanities (manuscript studies, imaging). Text 1 speaks about Text 2 (3.7 direction); the key is a practice that removes the problem, inferred from the method’s noncontact nature, which Text 1 never states outright. Text 2 is the author’s general account (nineteenth-century reagent use on palimpsests is standard history).",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "Solution mapping with Text 1 speaking, as in band-7 f7c02e89, and B is a band-7 style twisted detail (imaging removes stains); but the link from Text 2’s worry about harm to a method that applies nothing is one short step and C is an add-on, so it reads as a strong band 6."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "D",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "cross_text_connections.S1_framework_critique.hard.w2b1_04",
+      "template": "S1_framework_critique",
+      "subtype": "Response prediction",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Text 1\n\nCreole languages such as Haitian Creole arose where speakers of many languages were brought together under colonial rule, often on plantations worked by enslaved Africans. Some linguists have proposed that creoles can be identified by their structure alone: because they developed so recently, these languages are said to share a set of simple grammatical features, such as little inflection on words, that distinguish them as a separate structural type.\n\nText 2\n\nEvery language, linguist Michel DeGraff notes, developed from earlier languages through contact and gradual change: French itself evolved from the Latin spoken in Roman Gaul. Creoles, he argues, arose through these same ordinary processes. What distinguishes them is the history of the communities that formed them—colonial conquest and enslavement—so the label “creole” describes how a language came into being, not what its grammar is like.",
+      "stem": "Based on the texts, how would Michel DeGraff (Text 2) most likely respond to the argument presented in Text 1?",
+      "options": [
+        "By agreeing that creoles formed more recently than most languages but arguing that their grammars are in fact more complex than those of older languages",
+        "By disputing the assumption that grammatical features can reveal whether a language belongs to a distinct category of creole languages",
+        "By conceding that creoles share certain grammatical features but insisting that those features were inherited from the languages of enslaved Africans",
+        "By arguing that creoles should be studied mainly through the history of colonial plantations rather than through analysis of their grammars"
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "Text 1 presents the view that creoles can be identified by their grammar, since they supposedly share simple features that make them a distinct type. DeGraff argues that creoles developed through the same processes as other languages and that what sets them apart is their history, “not what its grammar is like.” He would therefore dispute the assumption that grammatical features can show whether a language is a creole.",
+      "distractors": {
+        "A": {
+          "recipe": "D7 half right (unsupported concession, invented claim)",
+          "why_wrong": "Text 2 never compares the ages of creoles and other languages, and it says nothing about creole grammars being more complex; DeGraff’s point is that grammar does not define creoles at all."
+        },
+        "C": {
+          "recipe": "D7 half right (wrong concession)",
+          "why_wrong": "DeGraff denies that creoles form a grammatical type, so he would not concede shared features; Text 2 also never discusses inherited African features."
+        },
+        "D": {
+          "recipe": "D3 twisted detail",
+          "why_wrong": "Text 2 says the label “creole” reflects a language’s history; it does not recommend studying history instead of grammar."
+        }
+      },
+      "models": [
+        "3.14"
+      ],
+      "word_count": 138,
+      "sources": [
+        {
+          "what": "DeGraff 2003, Against Creole Exceptionalism (Language 79): challenges the view that creoles form a special structural class and proposes a sociohistorical definition",
+          "url": "https://muse.jhu.edu/article/44746/summary"
+        }
+      ],
+      "notes": "Area: social science (linguistics). Text 1’s view is unattributed (the creole prototype view held by some linguists). Framework critique like 3.14: Text 2 rejects the category, not a single fact.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 2,
+        "fixes": [
+          "plainer words to bring the passage toward CB register (writer note: medium and hard ran denser than CB): emerged to arose (twice), typological class to structural type, observes to notes, created to formed"
+        ],
+        "status": "fixed"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "Framework critique in the respond stem (the one band-7 official uses an agreement stem about the description); A and C are half right and D is a close twisted detail, 2 steps, no synthesis."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "B",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "cross_text_connections.S1_alt_explanation.hard.w2b1_05",
+      "template": "S1_alt_explanation",
+      "subtype": "Response prediction",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Text 1\n\nStone flakes with sharp edges and the smooth, curved fracture surfaces left by a hard blow are among the most common artifacts at early archaeological sites. Because detaching such a flake requires hitting one stone against another at an appropriate angle, archaeologists have generally interpreted these flakes as evidence that hominins were intentionally producing cutting tools, and the oldest ones have been used to establish when toolmaking began.\n\nText 2\n\nIn Brazil’s Serra da Capivara National Park, wild bearded capuchins strike quartz cobbles set in conglomerate rock with handheld stones and then lick the resulting powder, perhaps as a mineral supplement. Tomos Proffitt and colleagues found that this pounding frequently breaks off flakes with the sharp edges and fracture surfaces characteristic of early hominin implements. Yet the flakes seem to be an incidental by-product: the monkeys ignore them and haven’t been seen using them.",
+      "stem": "Based on the texts, how would Proffitt and colleagues (Text 2) most likely respond to the reasoning of the archaeologists discussed in Text 1?",
+      "options": [
+        "It is likely mistaken, because most of the oldest flakes found at early sites were probably made by monkeys rather than by hominins.",
+        "It is sound, because only an animal with considerable skill could strike stones at the angle needed to produce such flakes.",
+        "It may not be reliable, since flakes with these features can be produced by animals that aren’t attempting to make tools at all.",
+        "It is partly correct, because such flakes were made on purpose, but they were probably used to obtain minerals rather than to cut."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The archaeologists in Text 1 reason that sharp flakes with curved fracture surfaces show that hominins were deliberately making tools. Proffitt and colleagues found that capuchins produce flakes with the same features while pounding rocks for dust, and that the monkeys ignore the flakes. They would suggest that the reasoning may not be reliable, since such flakes can be made by animals that are not trying to make tools.",
+      "distractors": {
+        "A": {
+          "recipe": "D5 overstatement",
+          "why_wrong": "Text 2 shows only that monkeys can produce such flakes; it never claims that the flakes at early sites were made by monkeys."
+        },
+        "B": {
+          "recipe": "D2 wrong side",
+          "why_wrong": "Text 2 shows the opposite: monkeys produce these flakes without aiming to, so the flakes do not require deliberate skill."
+        },
+        "D": {
+          "recipe": "D3 twisted detail",
+          "why_wrong": "The minerals come from the dust the monkeys lick, not from the flakes, and Text 2 says the flakes are a by-product, not made on purpose."
+        }
+      },
+      "models": [
+        "3.12"
+      ],
+      "word_count": 146,
+      "sources": [
+        {
+          "what": "Proffitt et al. 2016, Nature (Oxford news release): wild bearded capuchins in Serra da Capivara unintentionally produce sharp-edged flakes with conchoidal fractures resembling hominin tools while pounding quartz to lick the dust; they do not use the flakes",
+          "url": "https://www.ox.ac.uk/node/513260"
+        }
+      ],
+      "notes": "Area: natural science (primatology and archaeology). Text 1 states the general assumption without naming any site (Lomekwi 3 is claimed elsewhere). It-statement shell as in 3.12 and 3.5.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [
+          "plainer words to bring the passage toward CB register (writer note: medium and hard ran denser than CB): manufacturing to producing, embedded to set, observed to seen"
+        ],
+        "status": "fixed",
+        "note": "topic fame borderline: capuchin flakes had wide press in 2016, but not textbook; kept"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "S1_alt_explanation has no band-7 official items, so it cannot be band 7; A (overstatement) and D (twisted detail) are close, B falls quickly."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "C",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "cross_text_connections.S2_joint_inference.hard.w2b1_06",
+      "template": "S2_joint_inference",
+      "subtype": "Agreement",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Text 1\n\nBumblebees spend a great deal of energy keeping their flight muscles warm, so heat itself may be valuable to them. In a 2006 experiment, Adrian Dyer and colleagues offered bumblebees artificial flowers of two colors containing equally concentrated sugar solutions, with the flowers of one color kept several degrees warmer than the others. The bees learned which color indicated warmth and visited those flowers preferentially.\n\nText 2\n\nThe stinking hellebore (Helleborus foetidus) blooms in midwinter in the mountains of southern Spain, when low temperatures limit insect activity. Carlos Herrera and María Pozo found that the plant’s nectar is often colonized by yeasts, which are carried on the bodies of visiting bumblebees. As the yeasts metabolize the nectar’s sugars, they release heat: flowers whose nectar contained dense yeast populations were measurably warmer inside than flowers whose nectar contained few yeasts or none.",
+      "stem": "Based on the texts, if Dyer and colleagues (Text 1) and Herrera and Pozo (Text 2) were aware of the findings of both studies, they would most likely agree with which statement?",
+      "options": [
+        "A hellebore flower whose nectar has been warmed by yeasts may offer visiting bumblebees a reward in addition to the nectar’s sugar.",
+        "Hellebore flowers with dense yeast populations are likely more attractive to bumblebees than other hellebore flowers because their nectar is sweeter.",
+        "Bumblebees can most likely detect the temperature of a flower’s nectar from a distance, before they land on the flower.",
+        "Yeasts in hellebore nectar most likely evolved to warm flowers because warmer flowers attract more of the bees that carry those yeasts."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "Text 1 shows that bumblebees treat warmth as worth seeking: given equally sweet nectar, they chose the warmer flowers. Text 2 shows that yeasts in hellebore nectar make some flowers warmer. Together, the findings suggest that a yeast-warmed hellebore flower may give visiting bumblebees a reward, warmth, beyond the sugar in its nectar. Neither text states this on its own.",
+      "distractors": {
+        "B": {
+          "recipe": "D3 twisted detail",
+          "why_wrong": "Text 2 says the yeasts break down the nectar’s sugar, so yeast-rich nectar would not be sweeter; any added appeal would come from warmth."
+        },
+        "C": {
+          "recipe": "D3 twisted detail",
+          "why_wrong": "Text 1 says the bees learned which color signaled warmth, which suggests they relied on color, not on sensing temperature from a distance."
+        },
+        "D": {
+          "recipe": "D5 overstatement",
+          "why_wrong": "Neither text discusses how the yeasts evolved or claims that warming flowers benefits the yeasts."
+        }
+      },
+      "models": [
+        "3.4"
+      ],
+      "word_count": 143,
+      "sources": [
+        {
+          "what": "Dyer, Whitney, Arnold, Glover and Chittka 2006, Nature 442: bumblebees prefer warmer flowers and learn to use color to predict floral temperature",
+          "url": "https://qmro.qmul.ac.uk/xmlui/bitstream/123456789/278/2/Dyer_et_al_06_Nature.pdf"
+        },
+        {
+          "what": "Herrera and Pozo 2010, Proc. R. Soc. B: nectar yeasts warm the flowers of the winter-blooming Helleborus foetidus; warming depends on yeast density",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC2871880/"
+        }
+      ],
+      "notes": "Area: natural science (pollination ecology). 3.4 logic: two compatible studies; the key needs both. Text 2 deliberately omits any pollinator consequence so the item is not solvable from one text. Two sources because the item rests on two studies.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [
+          "Dyer et al. kept the warm flowers 8 °C warmer (28.8 against 20.8 °C), so “a few degrees” became “several degrees”",
+          "plainer words to bring the passage toward CB register (writer note: medium and hard ran denser than CB): restrict to limit"
+        ],
+        "status": "fixed"
+      },
+      "band7": {
+        "verdict": "band 7",
+        "why": "Joint inference as in a87c3925: the key states a conclusion neither text states (warmth as a second reward in yeast-warmed hellebores), 3 steps, and two twisted-detail distractors (B sweeter nectar, C sensing heat from a distance). Key is shorter than the band-7 norm (22 words). Planned band 6; not hardened."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "A",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "cross_text_connections.S4_relate.hard.w2b1_07",
+      "template": "S4_relate",
+      "subtype": "Relationship",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Text 1\n\nBeginning in 2013, a wasting disease killed millions of sea stars along North America’s Pacific coast, causing their arms to twist and their bodies to disintegrate. In 2014, Ian Hewson and colleagues reported that a densovirus was far more abundant in symptomatic sea stars than in healthy ones and that healthy individuals injected with virus-sized particles from diseased tissue became sick. The virus, the researchers suggested, was the likely cause.\n\nText 2\n\nWhen Hewson’s team later analyzed samples from additional species and years, the virus’s association with wasting held for only one species, the sunflower sea star. Closely related densoviruses were also found in apparently healthy sea stars, an indication that such viruses are common even in unaffected populations. In 2018, Hewson suggested that the densovirus alone could not explain the die-off and that environmental conditions, possibly including unusually warm water, probably played a part.",
+      "stem": "Which choice best describes how Text 1 and Text 2 relate to each other?",
+      "options": [
+        "Text 1 describes a possible cause of a disease, whereas Text 2 argues that environmental conditions, rather than that cause, were mainly responsible for the disease.",
+        "Text 1 presents a hypothesis about a disease’s cause, whereas Text 2 describes later tests confirming that hypothesis for most species examined.",
+        "Text 1 reports that a virus caused a disease, whereas Text 2 explains how unusually warm water allowed that virus to spread among sea stars.",
+        "Text 1 presents findings that led researchers to propose a cause for a disease, whereas Text 2 reports further findings that cast doubt on that proposal."
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "Text 1 reports Hewson’s team’s 2014 findings (more virus in sick sea stars, disease after injection) and their proposal that the virus was the likely cause. Text 2 reports later findings that weaken that proposal: the link held for only one species, related viruses appeared in healthy animals, and Hewson came to doubt that the virus alone could explain the die-off. So Text 2 casts doubt on the cause proposed in Text 1.",
+      "distractors": {
+        "A": {
+          "recipe": "D5 overstatement",
+          "why_wrong": "Text 2 says the densovirus alone could not explain the die-off and that environmental conditions probably played a part; it does not say those conditions, rather than the virus, were mainly responsible."
+        },
+        "B": {
+          "recipe": "D2 wrong side",
+          "why_wrong": "Text 2 says the virus’s link to wasting held for only one species, not for most species examined."
+        },
+        "C": {
+          "recipe": "D3 twisted detail",
+          "why_wrong": "Text 2 mentions warm water as a possible contributing condition; it does not say warm water helped the virus spread, and Text 1 calls the virus only the likely cause."
+        }
+      },
+      "models": [
+        "3.11"
+      ],
+      "word_count": 147,
+      "sources": [
+        {
+          "what": "Hewson et al. 2018, Frontiers in Marine Science: densovirus association with wasting found in only one species (Pycnopodia helianthoides); related viruses in asymptomatic sea stars; earlier 2014 study (PNAS) linked SSaDV to wasting through abundance and inoculation trials; wasting likely has multiple causes",
+          "url": "https://frontiersin.org/journals/marine-science/articles/10.3389/fmars.2018.00077/full"
+        }
+      ],
+      "notes": "Area: natural science (marine disease). 3.11 relation (findings plus explanation, then detail casting doubt) but the doubt comes from the same team’s later work. Text 2 stops at 2018 and names no single cause, so it does not conflict with later work (2025) identifying a bacterium as a cause of wasting in sunflower sea stars.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [
+          "A (“two competing explanations”) died on one fact and the item read easier than band 6 (its model 3.11 is band 5); A now overstates Text 2 (environment rather than the virus mainly responsible), so the reader must weigh “alone” and “played a part”",
+          "plainer words to bring the passage toward CB register (writer note: medium and hard ran denser than CB): detected to found"
+        ],
+        "status": "fixed",
+        "note": "topic fame borderline: sea star wasting is a known die-off, but the densovirus doubt story is not; kept"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "S4_relate has no band-7 official items (its only model, 3.11, is band 5), so it cannot be band 7; with A rewritten as an overstatement of Text 2 it is a fair band 6."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "D",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "cross_text_connections.S1_counterexample.medium.w2b1_08",
+      "template": "S1_counterexample",
+      "subtype": "Response prediction",
+      "tier": "medium",
+      "passage": "Text 1\n\nPhotosynthesis turns light energy into chemical energy, and on Earth that light comes almost entirely from the Sun. Sunlight diminishes rapidly with depth in the ocean, and below about 1,000 meters none is left. <u>For this reason, scientists long assumed that no organism inhabiting the deep sea could survive by photosynthesis.</u> The communities clustered around deep-sea hydrothermal vents instead depend on bacteria that get energy from chemical compounds such as hydrogen sulfide.\n\nText 2\n\nIn 2005, J. Thomas Beatty and colleagues reported isolating a green sulfur bacterium from a hydrothermal vent approximately 2,400 meters below the surface of the Pacific Ocean. The bacterium, called GSB1, can’t grow without light. At that depth, however, the only illumination is the faint glow given off by the vent’s extremely hot water, so the researchers concluded that GSB1 most likely uses this geothermal light for photosynthesis.",
+      "stem": "Based on the texts, what would the researchers in Text 2 most likely say about the assumption in the underlined sentence in Text 1?",
+      "options": [
+        "It is largely accurate, because GSB1 depends on chemicals released at the vent rather than on light.",
+        "It overlooks a source of light in the deep sea that at least one organism appears able to use.",
+        "It underestimates how far sunlight can travel in parts of the ocean where the water is especially clear.",
+        "It was reasonable at the time, but GSB1 shows that some sunlight reaches depths of more than 2,000 meters."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The underlined sentence says scientists assumed no deep-sea organism could live by photosynthesis, since sunlight does not reach the deep sea. Beatty and colleagues found a bacterium at a deep vent that cannot grow without light and concluded that it most likely photosynthesizes using the faint geothermal glow of the vent’s water. They would say the assumption overlooks a source of light, other than sunlight, that at least one deep-sea organism appears to use.",
+      "distractors": {
+        "A": {
+          "recipe": "D2 wrong side",
+          "why_wrong": "Text 2 says GSB1 cannot grow without light and most likely uses the vent’s geothermal light; the chemical-based bacteria are the ones Text 1 describes."
+        },
+        "C": {
+          "recipe": "D1 unaddressed add-on",
+          "why_wrong": "Neither text discusses water clarity or how far sunlight travels in clear water."
+        },
+        "D": {
+          "recipe": "D3 twisted detail",
+          "why_wrong": "The light GSB1 uses comes from the vent’s hot water, not from the Sun; Text 2 never says sunlight reaches the vent."
+        }
+      },
+      "models": [
+        "2.10",
+        "2.4"
+      ],
+      "word_count": 144,
+      "sources": [
+        {
+          "what": "Beatty et al. 2005, PNAS: obligately photosynthetic green sulfur bacterium (GSB1) isolated from a deep-sea hydrothermal vent where the only light is geothermal radiation",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC1166624"
+        }
+      ],
+      "notes": "Area: natural science (microbiology). Counterexample to a ‘no organism could’ claim, as in 2.10 (It-statement shell from the ‘say about’ stem).",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [
+          "plainer words to bring the passage toward CB register (writer note: medium and hard ran denser than CB): converts to turns, roughly/remains to about/is left, extract to get, designated to called, emitted by the scalding water to given off by the extremely hot water"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "cross_text_connections.S1_limit_degree.medium.w2b1_09",
+      "template": "S1_limit_degree",
+      "subtype": "Response prediction",
+      "tier": "medium",
+      "passage": "Text 1\n\nEcologists have documented many cases in which species introduced by people crowd out native species. Islands have been especially vulnerable: their native plants and animals often evolved without mainland competitors or predators, and introductions there have been linked to many extinctions. <u>Thus, the arrival of nonnative species is widely expected to leave island ecosystems with fewer species than they originally supported.</u>\n\nText 2\n\nDov Sax, Steven Gaines, and James Brown compared records of the plant species found on oceanic islands before and after European colonization. Native plants had gone extinct, but relatively few of them, while large numbers of introduced plants had established wild populations. In New Zealand, about 2,000 nonnative species have become naturalized. Overall, plant species counts on the islands have roughly doubled—though the researchers warn that this doesn’t mean the ecosystems are better off.",
+      "stem": "Based on the texts, how would Sax, Gaines, and Brown (Text 2) most likely respond to the expectation presented in the underlined sentence in Text 1?",
+      "options": [
+        "By arguing that introduced plants have generally made the island ecosystems they’ve entered healthier than before",
+        "By pointing out that many native island plants had already gone extinct before Europeans arrived",
+        "By suggesting that most island extinctions have been caused by predators rather than by competitors",
+        "By noting that, at least among plants, introductions have tended to raise rather than lower island species counts"
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "Text 1 says introduced species are widely expected to leave islands with fewer species. Sax, Gaines, and Brown found that for plants, extinctions were relatively few while many introduced species became established, so plant species counts on islands have roughly doubled. They would point out that, for plants at least, introductions have raised rather than lowered the number of species, which limits how far the expectation holds.",
+      "distractors": {
+        "A": {
+          "recipe": "D2 wrong side",
+          "why_wrong": "The researchers explicitly caution that more species does not mean the ecosystems are better off."
+        },
+        "B": {
+          "recipe": "D1 unaddressed add-on",
+          "why_wrong": "Text 2 compares records from before and after colonization but says nothing about extinctions that happened before Europeans arrived."
+        },
+        "C": {
+          "recipe": "D1 unaddressed add-on",
+          "why_wrong": "Neither text compares the roles of predators and competitors in causing island extinctions."
+        }
+      },
+      "models": [
+        "2.9",
+        "2.8"
+      ],
+      "word_count": 139,
+      "sources": [
+        {
+          "what": "Sax, Gaines and Brown 2002, American Naturalist (UCSB release): plant species richness on oceanic islands roughly doubled as naturalizations far exceeded extinctions; New Zealand about 2,000 natives, fewer than 10 extinct, about 2,000 introduced species naturalized; Gaines cautions this is not beneficial",
+          "url": "https://news.ucsb.edu/2002/011661/increasing-biodiversity-not-always-best"
+        }
+      ],
+      "notes": "Area: natural science (ecology). Limits the scope of the underlined expectation (2.9 pattern); the researchers’ caveat sets up the wrong-side trap in A.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [
+          "plainer words to bring the passage toward CB register (writer note: medium and hard ran denser than CB): numerous to many, caution to warn; the semicolon sentence split in two (35 words a sentence)",
+          "key verb “pointing out” changed to “noting” (it otherwise appeared only in distractors across the batch); B takes “pointing out” instead"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "cross_text_connections.S1_limit_degree.medium.w2b1_10",
+      "template": "S1_limit_degree",
+      "subtype": "Response prediction",
+      "tier": "medium",
+      "passage": "Text 1\n\nIn the United States, restaurant customers determine how much to tip after their meal, and the custom is frequently defended on precisely that basis. Because servers’ earnings depend heavily on gratuities, the argument goes, tipping gives servers a powerful incentive to be attentive, and it allows customers to reward excellent service and penalize poor service directly—something a fixed service charge could not accomplish.\n\nText 2\n\nMichael Lynn, who studies consumer behavior at Cornell University, statistically pooled the findings of over a dozen studies examining the relationship between tip size and diners’ evaluations of the service they received. Better service did produce larger tips, but only slightly: service ratings accounted for just a few percent of the variation in what diners left. The size of the bill, by contrast, explained most of it.",
+      "stem": "Based on the texts, how would Lynn (Text 2) most likely respond to the argument presented in Text 1?",
+      "options": [
+        "By suggesting that tips may track service quality too loosely to give servers a powerful incentive",
+        "By claiming that diners who receive poor service usually tip more generously than those who receive good service",
+        "By recommending that restaurants replace tipping with a fixed service charge added to every bill",
+        "By agreeing that tipping strongly motivates servers but noting that diners tend to tip less on large bills"
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "Text 1 argues that tipping lets customers reward good service and so gives servers a powerful incentive. Lynn found that better service brings only slightly larger tips, since service ratings explain just a few percent of the differences in tips. He would therefore suggest that tips track service too loosely to provide the strong incentive Text 1 describes.",
+      "distractors": {
+        "B": {
+          "recipe": "D2 wrong side",
+          "why_wrong": "Lynn found that better service did bring larger tips, only slightly; he never says poor service brings bigger tips."
+        },
+        "C": {
+          "recipe": "D1 unaddressed add-on",
+          "why_wrong": "Text 2 reports findings about tips; it makes no recommendation about service charges."
+        },
+        "D": {
+          "recipe": "D7 half right (wrong concession, twisted detail)",
+          "why_wrong": "Lynn’s findings undercut the claim that tipping strongly motivates servers, and Text 2 says bill size explains most of the variation in tips, not that diners tip less on large bills."
+        }
+      },
+      "models": [
+        "2.8"
+      ],
+      "word_count": 134,
+      "sources": [
+        {
+          "what": "Lynn, Restaurant Tipping and Service Quality: A Tenuous Relationship (meta-analysis of 24 correlations from 14 studies); Lynn: service ratings explain under 4 percent of tip differences, bill size about 70 percent",
+          "url": "https://www.pbs.org/wnet/chasing-the-dream/stories/why-do-we-tip/"
+        },
+        {
+          "what": "Lynn 2001, Restaurant Tipping and Service Quality: A Tenuous Relationship (Cornell H.R.A. Quarterly): 24 correlations from 14 studies; the service-tip link is weak enough to raise doubts about tips as a way to motivate servers",
+          "url": "https://ecommons.cornell.edu/items/042e8740-5c44-486e-ab28-00f05781d153"
+        }
+      ],
+      "notes": "Area: social science (economics, consumer behavior). Limit degree in the 2.8 sense: the effect exists but is weak, so the key hedges (‘may’, ‘too loosely’).",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [
+          "added the Cornell record of Lynn’s 2001 meta-analysis (14 studies) as a second source"
+        ],
+        "status": "fixed",
+        "note": "topic fame borderline: tipping and service is pop-economics fare, but Lynn’s meta-analysis is not widely known; kept"
+      }
+    },
+    {
+      "id": "cross_text_connections.S1_case_fits_frame.medium.w2b1_11",
+      "template": "S1_case_fits_frame",
+      "subtype": "Response prediction",
+      "tier": "medium",
+      "passage": "Text 1\n\nWhen a species expands its range, the individuals that reach new territory first are often the strongest dispersers, and when they breed with one another, their offspring tend to inherit that ability. Some biologists have therefore predicted that dispersal ability should increase at the edge of an expanding range. But traits that aid dispersal, such as large wings, are costly to develop, so the advantage should fade once a population is established.\n\nText 2\n\nTwo species of bush crickets have spread northward across southern Britain in recent decades as the climate has warmed. Most individuals of these species have short wings and rarely fly, but Adam Simmons and Chris Thomas found that long-winged individuals were far more common at recently colonized sites than in long-established populations. Within roughly a decade of colonization, however, the proportion of long-winged crickets had declined to the level typical of older populations.",
+      "stem": "Based on the texts, what would the author of Text 1 most likely say about the findings described in Text 2?",
+      "options": [
+        "They suggest that long wings cost the crickets less to develop than biologists have generally assumed.",
+        "They indicate that the crickets’ spread was driven mainly by changes in wing length rather than by a warming climate.",
+        "They fit the expectation that dispersal ability is favored at the edge of an expanding range, but only for a limited time.",
+        "They show that short-winged crickets are better than long-winged crickets at reaching and colonizing new sites."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "Text 1 predicts that dispersal ability should rise at the edge of an expanding range and then fade once a population is established, because traits like large wings are costly. Text 2 reports that long-winged crickets were far more common at newly colonized sites but declined to the usual level within about ten years. The author of Text 1 would say these findings fit that expectation: dispersal ability was favored at the range edge, but only for a time.",
+      "distractors": {
+        "A": {
+          "recipe": "D2 wrong side",
+          "why_wrong": "The decline in long-winged crickets after colonization is what Text 1 expects if long wings are costly; nothing suggests they cost less than assumed."
+        },
+        "B": {
+          "recipe": "D3 twisted detail",
+          "why_wrong": "Text 2 links the spread to the warming climate; it never says wing length drove the spread."
+        },
+        "D": {
+          "recipe": "D2 wrong side",
+          "why_wrong": "Text 2 found long-winged crickets far more common at newly colonized sites, which suggests they are the better colonizers."
+        }
+      },
+      "models": [
+        "2.2",
+        "2.6"
+      ],
+      "word_count": 149,
+      "sources": [
+        {
+          "what": "Simmons and Thomas 2004, American Naturalist 164: in expanding bush cricket species in Britain, long-winged (dispersive) individuals more frequent in newly colonized populations, falling to core levels 5 to 10 years after colonization",
+          "url": "https://eprints.whiterose.ac.uk/id/eprint/7558/"
+        }
+      ],
+      "notes": "Area: natural science (evolutionary ecology). Text 1 speaks about Text 2 (general frame, then a case that fits it, as in 2.2); They-statement shell from the ‘say about’ stem. Text 1’s frame is unattributed.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 2,
+        "fixes": [
+          "source URL pointed to Thomas et al. 2001 (Nature); replaced with the Simmons and Thomas 2004 record that states the 5 to 10 year decline"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "cross_text_connections.S2_shared_premise.medium.w2b1_12",
+      "template": "S2_shared_premise",
+      "subtype": "Agreement",
+      "tier": "medium",
+      "passage": "Text 1\n\nDesert kites—long, low stone walls converging on an enclosure—were named by aviators who first noticed them from the air in the 1920s and thought they resembled children’s kites. Thousands have since been documented from Arabia to Kazakhstan. Because many enclosures terminate in pits or at the edge of a precipice, archaeologist Rémy Crassard and his colleagues contend that kites functioned as traps for the mass killing of gazelles and other wild ungulates.\n\nText 2\n\nSome researchers have proposed that certain kites were constructed by herders rather than hunters. Walls that funnel animals toward an enclosure would be equally useful for gathering domesticated sheep and goats and for capturing wild gazelles, and the enclosures could have served as corrals where livestock were counted, separated, or protected overnight. Little direct evidence survives, however, to indicate what happened to the animals once they were inside.",
+      "stem": "Based on the texts, Crassard and his colleagues (Text 1) and the researchers in Text 2 would most likely agree with which statement about desert kites?",
+      "options": [
+        "They were most likely built by the communities that were the first to domesticate sheep and goats.",
+        "They were designed so that their converging walls would guide animals into an enclosed area.",
+        "Gazelles were the animals most often driven into the enclosures at the ends of kites.",
+        "The kites in Kazakhstan were built later than those in Arabia and were modeled on them."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The two texts disagree about why kites were built: Crassard and his colleagues see them as hunting traps, while the researchers in Text 2 suggest some were pens for herders. Both, however, describe walls that converge on an enclosure and funnel animals toward it. So both would agree that kites were built to guide animals into an enclosed area.",
+      "distractors": {
+        "A": {
+          "recipe": "D1 unaddressed add-on",
+          "why_wrong": "Text 2 suggests some kites served herders, but neither text says who first domesticated sheep and goats or ties kites to them."
+        },
+        "C": {
+          "recipe": "D4 one text only",
+          "why_wrong": "Crassard’s team sees kites as traps for gazelles and other game, but the researchers in Text 2 think some held sheep and goats, so they would not agree."
+        },
+        "D": {
+          "recipe": "D1 unaddressed add-on",
+          "why_wrong": "Neither text compares when kites in different regions were built."
+        }
+      },
+      "models": [
+        "2.1",
+        "2.3"
+      ],
+      "word_count": 144,
+      "sources": [
+        {
+          "what": "Globalkites project (Rémy Crassard, Olivier Barge): desert kites from Arabia to Kazakhstan, converging walls and enclosures ending in pits or precipices, interpreted as mass hunting traps; the project also tested whether kites served animal domestication",
+          "url": "https://www.archeorient.mom.fr/recherche/projets-finances/projets-archives/globalkites"
+        }
+      ],
+      "notes": "Area: social science (archaeology). Text 2 is unattributed (‘some researchers’); the herding view is a real alternative the Globalkites project tested. Shared premise under a disagreement about purpose, as in 2.1.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "cross_text_connections.S2_shared_premise.medium.w2b1_13",
+      "template": "S2_shared_premise",
+      "subtype": "Agreement",
+      "tier": "medium",
+      "passage": "Text 1\n\nThe banjo is frequently regarded as a distinctively American instrument, but its origins lie in West Africa. In the late 1990s, Jola musician and scholar Daniel Laemouahuma Jatta drew attention to the akonting, a traditional lute of the Jola people of Senegal and the Gambia. Like early banjos, the akonting has a gourd resonator covered with animal hide and a short drone string plucked with the thumb, prompting some researchers to characterize it as the banjo’s living ancestor.\n\nText 2\n\nGourd-bodied lutes were widespread throughout West Africa, and the enslaved people transported to the Caribbean and North America came from numerous regions. It is therefore unlikely that the banjo descends from any single African instrument. More probably, it was invented in the Americas by musicians who combined characteristics of the various lutes they remembered, which may explain the considerable diversity of early banjo designs.",
+      "stem": "Based on the texts, both authors would most likely agree with which statement?",
+      "options": [
+        "The banjo was played in North America before it was played anywhere in the Caribbean.",
+        "The akonting is the single instrument from which the banjo is most directly descended.",
+        "Early banjos usually had more strings than the akonting and were not played with the thumb.",
+        "The banjo’s development drew on instrument traditions that existed in West Africa."
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The authors disagree about the banjo’s ancestry: the author of Text 1 presents the akonting as its living ancestor, while the author of Text 2 argues that the banjo combined features of many West African lutes. Both, though, trace the banjo to West African instruments, so both would agree that its development drew on West African traditions.",
+      "distractors": {
+        "A": {
+          "recipe": "D1 unaddressed add-on",
+          "why_wrong": "Neither text says where the banjo was first played in the Americas."
+        },
+        "B": {
+          "recipe": "D4 one text only",
+          "why_wrong": "Text 1 favors the akonting as the banjo’s ancestor, but Text 2 says the banjo is unlikely to descend from any single instrument."
+        },
+        "C": {
+          "recipe": "D3 twisted detail",
+          "why_wrong": "Text 1 says early banjos, like the akonting, had a short string plucked with the thumb; neither text compares numbers of strings."
+        }
+      },
+      "models": [
+        "2.3",
+        "2.1"
+      ],
+      "word_count": 146,
+      "sources": [
+        {
+          "what": "UCLA Ethnomusicology Review, Historical Narratives of the Akonting and Banjo: Daniel Laemouahuma Jatta’s work on the Jola akonting (presented with Ulf Jägfors from 1999 to 2000) and the view that the banjo likely descends from many West African gourd lutes",
+          "url": "https://ethnomusicologyreview.ucla.edu/node/763"
+        }
+      ],
+      "notes": "Area: arts (music history). Text 2 is the author’s own argument (the composite-origin view also voiced by Jatta, Jägfors and Pestcoe in 2005), so no scholar is misquoted.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "cross_text_connections.S1_rival_hypothesis.medium.w2b1_14",
+      "template": "S1_rival_hypothesis",
+      "subtype": "Response prediction",
+      "tier": "medium",
+      "passage": "Text 1\n\nIn many cities, songbirds that normally sing only during the day can be heard singing well after dark. Because urban areas are brightly lit at night, a common explanation has been that streetlights and other artificial lighting disrupt birds’ perception of time, prompting them to sing at hours when they would ordinarily stay silent. If that explanation is correct, the most brightly lit neighborhoods should have the most nocturnal song.\n\nText 2\n\nRichard Fuller, Philip Warren, and Kevin Gaston recorded European robins at 67 sites around Sheffield, England, measuring both light and noise levels at each location. Robins sang at night primarily where daytime noise was high; the influence of nighttime illumination was considerably weaker. Nocturnal singing costs robins energy they would otherwise save by sleeping, but in noisy environments it may allow their songs to be heard without competing with traffic.",
+      "stem": "Based on the texts, how would Fuller, Warren, and Gaston (Text 2) most likely respond to the explanation presented in Text 1?",
+      "options": [
+        "By arguing that it doesn’t account for the closer link between robins’ nighttime singing and noise during the day",
+        "By suggesting that robins in rural areas sing at night more often than researchers have realized",
+        "By noting that bright light at night makes urban robins less likely to sing during the day",
+        "By questioning whether the streetlights in Sheffield were bright enough to affect the robins’ behavior"
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "Text 1 explains urban birds’ nighttime singing as a response to artificial light. Fuller, Warren, and Gaston found that robins sang at night mainly where daytime noise was high, while nighttime light had a much weaker effect, and they propose that singing at night lets robins avoid competing with traffic. They would argue that the light explanation doesn’t account for the closer link between nighttime song and daytime noise.",
+      "distractors": {
+        "B": {
+          "recipe": "D1 unaddressed add-on",
+          "why_wrong": "Text 2 studied robins around Sheffield and says nothing about how often rural robins sing at night."
+        },
+        "C": {
+          "recipe": "D3 twisted detail",
+          "why_wrong": "Text 2 links nighttime singing to daytime noise; it never says light at night reduces daytime singing."
+        },
+        "D": {
+          "recipe": "D3 twisted detail",
+          "why_wrong": "Text 2 found that light had a weaker effect than noise, not that Sheffield’s lights were too dim to matter."
+        }
+      },
+      "models": [
+        "2.5"
+      ],
+      "word_count": 144,
+      "sources": [
+        {
+          "what": "Fuller, Warren and Gaston 2007, Biology Letters: urban European robins in Sheffield sing at night where daytime noise is high; effect of night light much weaker; 67 sites",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC2390663"
+        }
+      ],
+      "notes": "Area: natural science (behavioral ecology). Rival hypothesis with evidence the target cannot account for, as in 2.5; the key uses ‘arguing’, a verb the official keys rarely use, to avoid the verb tell.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 2,
+        "fixes": [
+          "plainer words to bring the passage toward CB register (writer note: medium and hard ran denser than CB): daylight to the day, illuminated to lit, remain to stay, intense to high, conserve to save"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "cross_text_connections.S1_solution.medium.w2b1_15",
+      "template": "S1_solution",
+      "subtype": "Response prediction",
+      "tier": "medium",
+      "passage": "Text 1\n\nAfter the Civil War, many formerly enslaved people attempted to find spouses, children, parents, and siblings from whom they had been separated by sale. Historians investigating these efforts face a difficulty: enslavers’ records typically identified enslaved people by first name only, if at all, and seldom indicated where family members had been sent. Consequently, the searches themselves left few traces in official documentation.\n\nText 2\n\nMany of those seeking relatives placed notices headed “Information Wanted” in African American newspapers, describing a missing family member and the place where that person had last been seen. Last Seen, a project at Villanova University directed by historian Judith Giesberg, has been collecting thousands of these advertisements and transcribing them into a freely accessible online database, allowing each search to be read in the searcher’s own words.",
+      "stem": "Based on the texts, how would the author of Text 2 most likely respond to the problem presented in Text 1?",
+      "options": [
+        "By arguing that enslavers’ records are more complete than historians have generally assumed",
+        "By suggesting that historians instead study families that were never separated by sale",
+        "By pointing to a kind of source that records these searches in the words of the searchers themselves",
+        "By noting that most of the searches described in these newspaper notices ended in successful family reunions"
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "Text 1’s problem is that the searches formerly enslaved people made for separated family members left few traces in official records. Text 2 describes “Information Wanted” notices, placed by the searchers themselves, that the Last Seen project is collecting and transcribing. The author of Text 2 would respond by pointing to this kind of source, which documents the searches in the searchers’ own words.",
+      "distractors": {
+        "A": {
+          "recipe": "D2 wrong side",
+          "why_wrong": "Text 2 does not dispute Text 1’s account of enslavers’ records; it points to a different source."
+        },
+        "B": {
+          "recipe": "D9 generic academic move",
+          "why_wrong": "Text 2 offers a way to study the searches, not a recommendation to study other families."
+        },
+        "D": {
+          "recipe": "D1 unaddressed add-on",
+          "why_wrong": "Neither text says how many of the searches ended in reunions."
+        }
+      },
+      "models": [
+        "2.11"
+      ],
+      "word_count": 135,
+      "sources": [
+        {
+          "what": "Last Seen: Finding Family After Slavery (Villanova University with Mother Bethel AME Church), directed by Judith Giesberg, digitizes Information Wanted ads placed by freed people in African American newspapers seeking family separated by slavery",
+          "url": "https://www.villanova.edu/villanova/media/pressreleases/2022/history-professor-judith-giesberg.html"
+        }
+      ],
+      "notes": "Area: history. Solution to a stated problem, as in 2.11; the key names the kind of source one level more abstract than the passage.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 2,
+        "fixes": [
+          "plainer words to bring the passage toward CB register (writer note: medium and hard ran denser than CB): locate to find, confront to face, location to place"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "cross_text_connections.S2_shared_premise.easy.w2b1_16",
+      "template": "S2_shared_premise",
+      "subtype": "Agreement",
+      "tier": "easy",
+      "passage": "Text 1\n\nMary Lou Williams is remembered as a gifted pianist, but her greatest influence on jazz came through her writing for other musicians. As the arranger for Andy Kirk’s band, the Clouds of Joy, in the 1930s, she largely shaped the group’s signature sound. Famous bandleaders, including Benny Goodman and Duke Ellington, later sought out her compositions and arrangements for their own bands.\n\nText 2\n\nAfter settling in New York in 1943, Williams mentored younger musicians such as Thelonious Monk and Dizzy Gillespie. These players were creating bebop, a fast, complex new style. Williams, by then a respected veteran, offered advice on their music and encouraged them while bebop was still controversial. This support may have been her most important contribution to jazz.",
+      "stem": "Based on the texts, both authors would most likely agree with which statement?",
+      "options": [
+        "Williams was the first woman to lead a nationally touring jazz band.",
+        "Williams had a significant influence on the music made by other jazz musicians.",
+        "Williams preferred bebop to the big band music of the 1930s.",
+        "Williams was better known as a pianist than as a composer in her lifetime."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The authors disagree about Williams’s most important contribution: the author of Text 1 points to her arrangements and compositions for bands such as Andy Kirk’s, while the author of Text 2 points to her mentoring of young bebop musicians. Both, however, describe Williams shaping other musicians’ work, so both would agree that she had a significant influence on other jazz musicians.",
+      "distractors": {
+        "A": {
+          "recipe": "D1 unaddressed add-on",
+          "why_wrong": "Neither text says Williams led a band of her own, let alone that she was the first woman to do so."
+        },
+        "C": {
+          "recipe": "D1 unaddressed add-on",
+          "why_wrong": "Neither text says which style of music Williams preferred."
+        },
+        "D": {
+          "recipe": "D3 twisted detail",
+          "why_wrong": "Text 1 says she is remembered today as a pianist; neither text compares her fame as a pianist and as a composer during her lifetime."
+        }
+      },
+      "models": [
+        "1.2",
+        "1.13"
+      ],
+      "word_count": 124,
+      "sources": [
+        {
+          "what": "NPR 2019, How Mary Lou Williams Shaped the Sound of the Big Band Era: arranger and composer for Andy Kirk’s Clouds of Joy, wrote for Benny Goodman and Duke Ellington; mentor to bebop musicians including Monk and Gillespie",
+          "url": "https://www.npr.org/2019/09/10/749743012/how-mary-lou-williams-shaped-the-sound-of-the-big-band-era"
+        }
+      ],
+      "notes": "Area: arts (music). Shared premise under a disagreement about emphasis, as in 1.2 and 1.13.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "cross_text_connections.S3_difference.easy.w2b1_17",
+      "template": "S3_difference",
+      "subtype": "Difference",
+      "tier": "easy",
+      "passage": "Text 1\n\nSarah Winnemucca’s 1883 book Life Among the Piutes is commonly described as the first autobiography published by a Native American woman. Historians value it as a firsthand account of Northern Paiute society and of the violent conflicts that followed white settlement in Nevada. Because Winnemucca personally witnessed many events she describes, her book preserves details omitted from official government reports written during that period.\n\nText 2\n\nLife Among the Piutes should be read not as a neutral record but as a deliberate argument. Winnemucca developed large portions of the book from lectures delivered to audiences in eastern cities. She composed it to secure their support for Paiute land claims. Her choices about which events to include, and how to portray them, reflect that purpose, so readers should approach the book as advocacy as much as history.",
+      "stem": "Which choice best describes a difference in how the author of Text 1 and the author of Text 2 view Life Among the Piutes?",
+      "options": [
+        "The author of Text 1 believes that Winnemucca wrote the book alone, whereas the author of Text 2 believes that an editor helped her write it.",
+        "The author of Text 1 focuses on the book’s account of Paiute culture, whereas the author of Text 2 focuses on Winnemucca’s childhood.",
+        "The author of Text 1 doubts that Winnemucca witnessed the events she describes, whereas the author of Text 2 accepts her account as accurate.",
+        "The author of Text 1 values the book mainly as a historical record, whereas the author of Text 2 stresses that it was written to persuade its readers."
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The author of Text 1 presents the book as a valuable “firsthand account” that preserves details missing from government reports. The author of Text 2 argues that the book should be read “not as a neutral record but as a deliberate argument,” written to win support for Paiute land claims. So the author of Text 1 values it mainly as a historical record, whereas the author of Text 2 stresses its persuasive purpose.",
+      "distractors": {
+        "A": {
+          "recipe": "D1 unaddressed add-on",
+          "why_wrong": "Neither text mentions an editor or discusses whether Winnemucca had help writing the book."
+        },
+        "B": {
+          "recipe": "D8 wrong dimension",
+          "why_wrong": "Text 2 is about the book’s persuasive purpose, not Winnemucca’s childhood, and neither text contrasts these topics."
+        },
+        "C": {
+          "recipe": "D2 wrong side",
+          "why_wrong": "Text 1 stresses that Winnemucca witnessed many of the events; Text 2 is the one that treats her account with some caution."
+        }
+      },
+      "models": [
+        "1.9",
+        "1.14"
+      ],
+      "word_count": 138,
+      "sources": [
+        {
+          "what": "Sarah Winnemucca, Life Among the Piutes: Their Wrongs and Claims (1883), often called the first autobiography by a Native American woman; developed from her lectures in the Northeast with help from Mary Peabody Mann; argued for Paiute rights",
+          "url": "https://americacomesalive.com/sarah-winnemucca-ca-1844-1891-educator-and-advocate-for-native-americans/"
+        }
+      ],
+      "notes": "Area: literature and history (autobiography). Both views are unattributed author positions. Whereas-shell on one axis (record vs. advocacy), as in 1.9 and 1.14.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [
+          "explanation quoted “firsthand record” and “not a neutral record but an argument”; now quotes the passage exactly"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "cross_text_connections.S1_concede_rebut.hard.w2b2_01",
+      "template": "S1_concede_rebut",
+      "subtype": "Response prediction",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Text 1\n\nAdult tunicates, or sea squirts, spend their lives anchored to rocks and pilings, filtering seawater through a saclike body that lacks a backbone and, in most species, any trace of the notochord—the flexible rod that stiffens the tail of the free-swimming larva. Lancelets, by contrast, retain a notochord and a fishlike form throughout life. For this reason, <u>zoologists long regarded lancelets, not tunicates, as the closest living relatives of vertebrates</u>.\n\nText 2\n\nThat adult tunicates bear little resemblance to vertebrates is undisputed. In 2006, however, Frédéric Delsuc and colleagues compared 146 genes across dozens of animal species and determined that tunicates share a more recent common ancestor with vertebrates than lancelets do. The tunicate’s simplified adult anatomy, it seems, reflects features lost after its lineage diverged and therefore reveals little about how distant its kinship with vertebrates is.",
+      "stem": "Based on the texts, how would the author of Text 2 most likely respond to the underlined claim in Text 1?",
+      "options": [
+        "By agreeing that adult tunicates differ sharply from vertebrates but arguing that the difference arose because tunicates evolved more slowly than lancelets did",
+        "By accepting that tunicates and lancelets both have a notochord at some stage of life but insisting that lancelets lost features that tunicates retained",
+        "By conceding that adult anatomy favors lancelets but maintaining that the anatomy of tunicate larvae points to a closer kinship with vertebrates",
+        "By granting the anatomical observations on which the claim rests but questioning whether those observations reveal how closely the animals are related"
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "Text 1 reasons from anatomy: adult tunicates lack a backbone and usually a notochord, while lancelets keep a notochord and a fishlike form, so lancelets were thought to be vertebrates’ closest relatives. The author of Text 2 accepts the observation (“That adult tunicates bear little resemblance to vertebrates is undisputed”) but reports Delsuc’s finding that “tunicates share a more recent common ancestor with vertebrates than lancelets do,” adding that the simplified adult anatomy “reveals little about how distant its kinship with vertebrates is.” So the author grants the anatomical observations but questions whether they show how closely the animals are related.",
+      "distractors": {
+        "A": {
+          "recipe": "D7 half right (right concession, invented rebuttal)",
+          "why_wrong": "Text 2 does agree that adult tunicates look very unlike vertebrates, but it explains their simplified anatomy by features lost after their lineage diverged, not by slower evolution."
+        },
+        "B": {
+          "recipe": "D7 half right (reversed rebuttal)",
+          "why_wrong": "Text 2 says it is the tunicates that lost features; it never says lancelets lost features that tunicates kept."
+        },
+        "C": {
+          "recipe": "D7 half right (rebuttal twisted from Text 1's larva)",
+          "why_wrong": "Text 2 never mentions tunicate larvae; its case rests on Delsuc’s comparison of genes. A larval notochord could not favor tunicates in any case, since Text 1 says lancelets keep a notochord throughout life."
+        }
+      },
+      "models": [
+        "3.2",
+        "3.9",
+        "3.13"
+      ],
+      "word_count": 140,
+      "sources": [
+        {
+          "what": "Delsuc, Brinkmann, Chourrout, Philippe 2006, Nature 439: phylogenomic analysis of 146 nuclear genes shows tunicates, not cephalochordates (lancelets), are the closest living relatives of vertebrates; the earlier view rested on morphological similarity",
+          "url": "https://www.nature.com/articles/nature04336"
+        }
+      ],
+      "notes": "Area: natural science (zoology). Text 1 is the standard (morphological) view, unattributed; Text 2 grants the anatomy and rejects the inference (3.2 and 3.9 pattern). The ‘features lost’ sentence is hedged (‘it seems’); Delsuc et al. call for a reappraisal of the morphological data.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 2,
+        "fixes": [
+          "rebuilt C as half right (grants adult anatomy, twists Text 1's larval notochord) in place of a rebuttal killed outright by 'undisputed'; opens with 'conceding' so it does not share the key's 'By granting'"
+        ],
+        "status": "fixed"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "Concede-rebut with two-part options, the band-6 device in the band7 report; the key is a stance on the target reached in two steps (grant the observation, reject the inference) and Text 2 nearly states it; no synthesis. All three distractors now partly right."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "D",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "cross_text_connections.S1_solution.hard.w2b2_02",
+      "template": "S1_solution",
+      "subtype": "Response prediction",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Text 1\n\nSince the 1950s, linguists have recorded thousands of hours of speech in languages that now have few or no speakers left, and these recordings are often the only surviving record of the stories, songs, and words they hold. Yet <u>much of this material is at risk: magnetic tape deteriorates, and many collections sit uncatalogued in researchers’ offices, where no one else knows they exist</u>.\n\nText 2\n\nIn 2003, linguists and musicologists at three Australian universities founded PARADISEC, an archive that borrows field tapes from researchers, converts them to digital files, and describes each recording in a public online catalog. Some tapes arrived already moldy or brittle. Through the catalog, communities whose languages were recorded, including descendants of the original speakers, can find the recordings and request copies.",
+      "stem": "Based on the texts, how would the founders of PARADISEC (Text 2) most likely respond to the underlined portion of Text 1?",
+      "options": [
+        "They would point out that their archive addresses both the physical decay of the tapes and the lack of any public record of where they are kept.",
+        "They would argue that cataloguing collections is more urgent than converting tapes to digital files, since a tape that no one can locate cannot be copied.",
+        "They would grant that magnetic tape deteriorates but argue that a recording is safe from that danger once it has been listed in a public catalog.",
+        "They would maintain that the greater danger to the recordings is that researchers discard them, rather than that the tapes themselves slowly deteriorate."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The underlined portion names two threats: “magnetic tape deteriorates,” and many collections “sit uncatalogued in researchers’ offices, where no one else knows they exist.” PARADISEC answers both: it “converts them to digital files,” which protects the recordings from decay, and “describes each recording in a public online catalog,” so that communities “can find the recordings.” Its founders would therefore point out that the archive addresses both the tapes’ decay and the lack of a public record of where they are.",
+      "distractors": {
+        "B": {
+          "recipe": "D3 twisted detail (ranking not in the text)",
+          "why_wrong": "Text 2 describes digitizing and cataloguing as parts of one service; it never says that one is more urgent than the other."
+        },
+        "C": {
+          "recipe": "D3 twisted detail (method moved to the wrong problem)",
+          "why_wrong": "Listing a recording in a catalog lets people find it but does nothing to stop a tape from decaying; in Text 2, it is converting the tapes to digital files that protects the recordings."
+        },
+        "D": {
+          "recipe": "D7 half right",
+          "why_wrong": "Text 2 treats decay as a real danger (“Some tapes arrived already moldy or brittle”), so its founders would not set it aside in favor of the risk of tapes being discarded."
+        }
+      },
+      "models": [
+        "3.6",
+        "3.7"
+      ],
+      "word_count": 129,
+      "sources": [
+        {
+          "what": "PARADISEC founded 2003 by the University of Sydney, University of Melbourne and ANU to borrow, describe, digitise and curate field recordings at risk (deteriorating, mouldy tapes; collections with no catalogue of their location or contents) and to improve access for recorded communities and descendants",
+          "url": "https://open.sydneyuniversitypress.com.au/9781743324431/r3-paradisec-its-history-and-future.html"
+        }
+      ],
+      "notes": "Area: social science (linguistics). Solution template, 3.6 direction (Text 2’s method answers Text 1’s two-part problem); the key must cover both parts, distractors keep one part or invent a ranking. ‘They would’ shell as in 3.6.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [
+          "rebuilt C (was an add-on about lost recordings) as the method moved to the wrong problem: cataloguing credited with stopping decay"
+        ],
+        "status": "fixed"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "The solution mapping is direct (digitizing for decay, the catalog for unknown collections), while band-7 S1_solution items need an unstated link; two steps. B and C each move one method detail, D keeps a passage detail."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "A",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "cross_text_connections.S1_refute_data.hard.w2b2_03",
+      "template": "S1_refute_data",
+      "subtype": "Response prediction",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Text 1\n\nSauropods, the long-necked giants of the Jurassic and Cretaceous, possessed simple peglike teeth suited to stripping vegetation but not to chewing it. How, then, did they process such fibrous food? Some paleontologists have pointed to the smooth, polished stones occasionally discovered among sauropod skeletons: like the many birds that grind food with swallowed stones in a muscular stomach chamber called a gizzard, sauropods may have relied on a stony “gastric mill.”\n\nText 2\n\nTesting the gastric-mill hypothesis, Oliver Wings and Martin Sander examined ostriches, whose gizzard stones total roughly 1 percent of body mass; the stones abraded rapidly and never became polished. Stones are rarely associated with sauropod skeletons, and even the largest collections amount to well under 0.1 percent of the animals’ estimated mass. Sauropods, the researchers suggest, more likely digested vegetation by retaining food in the gut for extended periods.",
+      "stem": "Based on the texts, how would Wings and Sander (Text 2) most likely describe the view of the paleontologists presented in Text 1?",
+      "options": [
+        "It is plausible for the sauropods whose skeletons have been found with stones, which suggests that sauropod species differed in how they processed food.",
+        "It is reasonable, but it cannot be evaluated, since the contents of a sauropod’s stomach are almost never preserved.",
+        "It rests on a comparison with birds that the evidence from sauropod remains does not bear out.",
+        "It underestimates how quickly gizzard stones wear away, which would explain why so few stones are found with sauropods."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The paleontologists in Text 1 argue that sauropods, “like the many birds that grind food with swallowed stones,” used a gastric mill, citing polished stones found with sauropod skeletons. Wings and Sander tested that comparison: ostrich gizzard stones make up about 1 percent of body mass and “never became polished,” while “even the largest collections” found with sauropods amount to “well under 0.1 percent” of their mass. They would describe the view as resting on a comparison with birds that the sauropod evidence does not support.",
+      "distractors": {
+        "A": {
+          "recipe": "D3 twisted detail",
+          "why_wrong": "Text 2 says “even the largest collections” of stones found with sauropods fall far short of what a gizzard holds, so the view fails even for sauropods found with stones."
+        },
+        "B": {
+          "recipe": "D10 understatement / wrong reason",
+          "why_wrong": "Wings and Sander did evaluate the view, by comparing sauropod stones with the stones in ostrich gizzards; they did not need preserved stomach contents to do so."
+        },
+        "D": {
+          "recipe": "D2 wrong side (recycles “abraded rapidly”)",
+          "why_wrong": "Text 2 uses the ostrich findings against the gastric mill: gizzard stones never become polished, and sauropods had far too few stones. It does not use fast wear to explain why sauropod stones are scarce."
+        }
+      },
+      "models": [
+        "3.3",
+        "3.5"
+      ],
+      "word_count": 144,
+      "sources": [
+        {
+          "what": "Wings and Sander 2007, Proc. R. Soc. B 274: ostrich gastroliths about 1% of body mass, abrade fast and do not polish; sauropod gastrolith mass well under 0.1% of body mass; no gastric mill in sauropods, which likely relied on long retention time",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC2197205"
+        }
+      ],
+      "notes": "Area: natural science (paleontology). 3.5 shell (‘describe the view’, It-statements); the key needs two steps (the bird benchmark, then the sauropod shortfall). The polish point answers Text 1’s ‘polished stones’ without saying so.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "The key needs two linked steps (ostrich benchmark, then the sauropod shortfall) but is a verdict on the view, not a derived fact neither text states. A and D reuse passage details and are partly right."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "C",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "cross_text_connections.S1_second_factor.hard.w2b2_04",
+      "template": "S1_second_factor",
+      "subtype": "Response prediction",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Text 1\n\nNarrated largely by a landowner executed in 1948 and repeatedly reincarnated as animals, Mo Yan’s Life and Death Are Wearing Me Out (2006) follows a village through decades of political upheaval. Mo Yan has said that reading Gabriel García Márquez’s One Hundred Years of Solitude inspired his own work, and <u>many critics have attributed his fusion of the fantastic and the historical to García Márquez’s influence</u>.\n\nText 2\n\nThe parallels with García Márquez are genuine. But Chinese fiction has long situated ghosts and fox spirits among ordinary villagers—most famously in Pu Songling’s seventeenth-century collection Strange Tales from a Chinese Studio—and much of Mo Yan’s early education came from storytellers performing in the markets of Shandong, Pu Songling’s home province as well as his own. His fiction draws on that inheritance as much as on any foreign model.",
+      "stem": "Based on the texts, how would the author of Text 2 most likely characterize the underlined claim in Text 1?",
+      "options": [
+        "As underestimating how much García Márquez himself drew on oral storytelling traditions like those Mo Yan heard in Shandong",
+        "As overlooking precedents in Mo Yan’s own culture for the very features it traces to a foreign writer",
+        "As rightly noting the parallels with García Márquez but overlooking other foreign novelists whose work Mo Yan has admired",
+        "As correctly identifying where Mo Yan’s ghosts and spirits come from but not where his interest in rural history comes from"
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The underlined claim attributes Mo Yan’s “fusion of the fantastic and the historical” to García Márquez’s influence. The author of Text 2 grants the point (“The parallels with García Márquez are genuine”) but points to a Chinese tradition that “situated ghosts and fox spirits among ordinary villagers” and to the market storytellers of Mo Yan’s youth, concluding that his fiction “draws on that inheritance as much as on any foreign model.” So the author would see the claim as overlooking sources within Mo Yan’s own culture for the features it credits to García Márquez.",
+      "distractors": {
+        "A": {
+          "recipe": "D3 twisted detail",
+          "why_wrong": "Text 2 discusses the storytellers Mo Yan heard in Shandong, not the sources García Márquez drew on."
+        },
+        "C": {
+          "recipe": "D7 half right (twisted from “any foreign model”)",
+          "why_wrong": "Text 2 does grant the parallels, but the sources it adds are Chinese (the tradition of Pu Songling’s tales and the storytellers of Shandong), not other foreign novelists."
+        },
+        "D": {
+          "recipe": "D7 half right (reversed)",
+          "why_wrong": "Text 2 disputes the claim on exactly the point this choice says it gets right: the ghosts and spirits, which Text 2 traces to a Chinese tradition as well."
+        }
+      },
+      "models": [
+        "3.8"
+      ],
+      "word_count": 139,
+      "sources": [
+        {
+          "what": "Mo Yan said One Hundred Years of Solitude gave him inspiration for his own work, especially its weaving of real history into fiction; he has been dubbed China's answer to García Márquez's magical realism",
+          "url": "https://colombiareports.com/gabriel-garcia-marquez-influences-chinese-nobel-prize-winner/"
+        },
+        {
+          "what": "Mo Yan’s early education came from listening to market storytellers, local opera troupes and child raconteurs (‘reading with my ears’); his work rooted in folk tradition",
+          "url": "https://lareviewofbooks.org/article/uncle-tall-tale-on-mo-yan-speaks-lectures-and-speeches-by-the-nobel-laureate-from-china/"
+        },
+        {
+          "what": "Life and Death Are Wearing Me Out (2006): Ximen Nao, a landlord executed in 1948 during land reform, reborn as donkey, ox, pig, dog and monkey",
+          "url": "https://en.wikipedia.org/wiki/Life_and_Death_Are_Wearing_Me_Out"
+        }
+      ],
+      "notes": "Area: literature (criticism). 3.8 frame (influence of one writer vs. a wider native tradition) with a different structure: Text 1 rests on the writer’s own testimony. Critics in Text 1 unattributed; Pu Songling (Zichuan, Shandong) and Strange Tales are standard facts; Mo Yan is from Gaomi, Shandong; Text 2’s conclusion is the author’s own.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [
+          "Ximen Nao was executed in 1948, not 1950 (Wikipedia, novel page)",
+          "Text 1 softened to the source: Mo Yan said the novel 'inspired his own work' (was 'among the novels that most influenced him'); critics 'have attributed' the fusion to Garcia Marquez's influence (was 'concluded ... is borrowed')",
+          "rebuilt C (was an add-on about the novel's structure) as half right: grants the parallels, then names other foreign novelists"
+        ],
+        "status": "fixed"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "Same frame as 3.8 (CB band 7), but the key restates Text 2's closing sentence one level up; two steps, no synthesis. Strong 6: A, C and D are all partly right."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "B",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "cross_text_connections.S2_hidden_assumption.hard.w2b2_05",
+      "template": "S2_hidden_assumption",
+      "subtype": "Agreement",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Text 1\n\nWhen Gustav Mahler’s Sixth Symphony was first published in 1906, its turbulent scherzo appeared second among the four movements and its slow, lyrical Andante third. Decades later, the musicologist Erwin Ratz, preparing a critical edition issued in 1963, restored the scherzo to second place, maintaining that this order reflected what Mahler had finally wanted. For decades afterward, most orchestras performed the symphony in the order that Ratz’s edition prescribed.\n\nText 2\n\nShortly before the symphony’s 1906 premiere, Mahler moved the Andante into second place, and later printings of the score kept it there. Whenever he conducted the work, he kept the Andante second, and no surviving letter, note, or score shows that he ever changed his mind; Ratz offered no documents to support his claim. The Andante therefore belongs second, as a newer critical edition now acknowledges.",
+      "stem": "Based on the texts, Ratz (Text 1) and the author of Text 2 would most likely agree with which statement?",
+      "options": [
+        "The order of the two middle movements should be settled by what Mahler himself intended.",
+        "Mahler eventually came to regret having moved the Andante ahead of the scherzo.",
+        "Placing the scherzo second makes the overall design of the symphony easier for listeners to follow.",
+        "Orchestras today should perform the symphony in the order Mahler chose for its premiere."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "Ratz and the author of Text 2 disagree about which movement belongs second, but both argue from the same standard. Ratz justified his order by “maintaining that this order reflected what Mahler had finally wanted,” and the author of Text 2 reasons from Mahler’s own choices (“Whenever he conducted the work, he kept the Andante second”) and from the lack of evidence “that he ever changed his mind” before concluding, “The Andante therefore belongs second.” Both, then, treat Mahler’s intention as what should settle the order.",
+      "distractors": {
+        "B": {
+          "recipe": "D4 one text only",
+          "why_wrong": "This is Ratz’s position; the author of Text 2 rejects it, noting that nothing “shows that he ever changed his mind.”"
+        },
+        "C": {
+          "recipe": "D1 unaddressed add-on",
+          "why_wrong": "Neither Ratz nor the author of Text 2 argues from how listeners experience the symphony’s design."
+        },
+        "D": {
+          "recipe": "D4 one text only (needs a step)",
+          "why_wrong": "The premiere used Mahler’s revised order, with the Andante second; the author of Text 2 favors that order, but Ratz placed the scherzo second instead."
+        }
+      },
+      "models": [
+        "3.1"
+      ],
+      "word_count": 139,
+      "sources": [
+        {
+          "what": "Mahler Sixth: first published with Scherzo second; Mahler reversed the middle movements before the premiere, conducted it only Andante-Scherzo, and it was reprinted that way in his lifetime; Ratz’s 1963 critical edition restored Scherzo-Andante as Mahler’s wish without documentary support; the most recent editor reversed the decision in 2003",
+          "url": "https://www.bso.org/works/symphony-no-6-2"
+        },
+        {
+          "what": "Kahnt 1906 first edition Scherzo-Andante; Mahler reversed the movements at the Essen rehearsals and a second edition followed; Ratz 1963 restored Scherzo-Andante citing no documentary support; Kubik declared Andante-Scherzo in 2004 and the 2010 critical edition follows it",
+          "url": "https://en.wikipedia.org/wiki/Symphony_No._6_(Mahler)"
+        }
+      ],
+      "notes": "Area: arts (music). 3.1 pattern without authorship: the dispute is over movement order and the shared assumption is the criterion (the composer’s intention). Ratz’s claim and its lack of documentary support are documented; Text 2’s conclusion is the author’s own.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [
+          "dropped 'published in 2003': Kubik's statement dates from 2003/2004 and the new critical edition from 2010 (Wikipedia, BSO); added the Wikipedia source that also confirms Ratz cited no documents"
+        ],
+        "status": "fixed"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "S2_hidden_assumption has no band-7 official items, so it cannot be band 7. Strong 6: the shared criterion sits under the dispute, and D needs the premiere-order step."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "A",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "cross_text_connections.S3_difference.hard.w2b2_06",
+      "template": "S3_difference",
+      "subtype": "Difference",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Text 1\n\nThe Royal Commentaries of the Incas (1609) remains among the most detailed accounts of the Inca state, but it should be interpreted with its sources in mind. Garcilaso de la Vega, son of a Spanish captain and an Inca noblewoman, composed it in Spain decades after leaving Peru, relying largely on childhood recollections of stories told by his mother’s relatives—members of the Inca nobility, who remembered their ancestors’ reign as wise and benevolent.\n\nText 2\n\nGarcilaso’s portrayal of the Inca rulers as lawgivers who civilized the Andes owes much to his reading in Spain. In the opening sentence of his preface he calls Cusco “another Rome,” and throughout he characterizes Inca institutions in terminology borrowed from classical histories of Rome. The Royal Commentaries consequently reveals as much about how a Renaissance humanist imagined an empire as about the Andean past.",
+      "stem": "Which choice best describes a difference in how the authors of Text 1 and Text 2 view the Royal Commentaries of the Incas?",
+      "options": [
+        "The author of Text 1 doubts that Garcilaso remembered his relatives’ accounts correctly, while the author of Text 2 doubts that the Roman histories Garcilaso read were themselves accurate.",
+        "The author of Text 1 values the work as a record of what members of the Inca nobility recalled, while the author of Text 2 considers the work to be of no use to students of the Andean past.",
+        "The author of Text 1 traces the work’s portrayal of the Incas mainly to Garcilaso’s years in Spain, while the author of Text 2 traces that portrayal mainly to his childhood in Peru.",
+        "The author of Text 1 ties the work’s flattering view of Inca rule to the people Garcilaso learned from, while the author of Text 2 ties it to the European models he followed."
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "Both authors see the Royal Commentaries as shaped by something other than the Andean past itself, but they locate that influence differently. The author of Text 1 points to Garcilaso’s sources, his mother’s relatives, “who remembered their ancestors’ reign as wise and benevolent.” The author of Text 2 points to “his reading in Spain,” noting that he calls Cusco “another Rome” and characterizes Inca institutions in “terminology borrowed from classical histories of Rome.”",
+      "distractors": {
+        "A": {
+          "recipe": "D7 half right / D3",
+          "why_wrong": "Text 1 questions the outlook of Garcilaso’s relatives, not his memory of what they told him, and Text 2 questions what Garcilaso borrowed from the Roman histories, not whether those histories were accurate."
+        },
+        "B": {
+          "recipe": "D5 overstatement (one half)",
+          "why_wrong": "Text 2 says the work reveals as much about Renaissance thinking “as about the Andean past,” which means it still has value for studying that past."
+        },
+        "C": {
+          "recipe": "D2 swapped values",
+          "why_wrong": "The two halves are reversed: Text 1 stresses what Garcilaso heard as a child from his relatives, and Text 2 stresses his reading in Spain."
+        }
+      },
+      "models": [
+        "3.10"
+      ],
+      "word_count": 142,
+      "sources": [
+        {
+          "what": "Inca Garcilaso de la Vega (born Cuzco 1539, son of Spanish captain Sebastián Garcilaso de la Vega and Inca princess Chimpu Ocllo; left Peru 1560); Comentarios Reales (Lisbon 1609) drew on ‘what I often heard as a child from the lips of my mother and her brothers and uncles and other elders’",
+          "url": "https://en.wikipedia.org/wiki/Inca_Garcilaso_de_la_Vega"
+        },
+        {
+          "what": "Opening (Proemio) of the Comentarios Reales: ‘la ciudad del Cozco, que fue otra Roma en aquel Imperio’",
+          "url": "https://scalar.usc.edu/works/literalia/cusco"
+        }
+      ],
+      "notes": "Area: history. 3.10 pattern (two critiques on different grounds; axis = what shaped the work’s picture of the Incas). Both views unattributed, the authors’ own.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [
+          "'otra Roma' is in the opening sentence of the preface, not of the book (a dedication comes first): reworded",
+          "rebuilt A's Text 2 half (was killed by 'his reading in Spain'): now doubts the Roman histories' accuracy, a twisted detail"
+        ],
+        "status": "fixed"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "S3_difference has no band-7 official items, so it cannot be band 7. Strong 6: both halves must be mapped, C swaps them, A and B are half right."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "D",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "cross_text_connections.S1_counterexample.medium.w2b2_07",
+      "template": "S1_counterexample",
+      "subtype": "Response prediction",
+      "tier": "medium",
+      "passage": "Text 1\n\nIn his Lives of the Artists (1550), Giorgio Vasari credited the Flemish painter Jan van Eyck with inventing oil painting. Earlier European painters had generally bound their pigments with egg, which dries almost immediately; by combining pigments with slow-drying oils, van Eyck could blend colors and build up translucent, luminous layers. Vasari’s account proved remarkably durable, and <u>many subsequent histories of painting locate the origins of oil paint in fifteenth-century Flanders</u>.\n\nText 2\n\nBehind the niches that once held two monumental statues of the Buddha at Bamiyan, Afghanistan, are caves decorated with murals painted around the middle of the seventh century. Analyzing microscopic paint samples with X-ray and infrared techniques, a team including Yoko Taniguchi and Marine Cotte determined that the artists in twelve of the caves had combined their pigments with drying oils, probably extracted from walnuts or poppy seeds.",
+      "stem": "Based on the texts, what would the researchers in Text 2 most likely say about the underlined claim in Text 1?",
+      "options": [
+        "It is accurate, because the oils at Bamiyan were applied to protect finished murals rather than to bind their pigments.",
+        "It dates the beginning of oil painting too late, because painters were mixing pigments with oil centuries before van Eyck.",
+        "It is largely correct, because the murals at Bamiyan were made with a technique unrelated to the one van Eyck used.",
+        "It is incomplete, because van Eyck probably learned to paint with oils from artists who had trained in Central Asia."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The underlined claim says that histories of painting “locate the origins of oil paint in fifteenth-century Flanders,” with van Eyck. The researchers in Text 2 found that artists at Bamiyan, around “the middle of the seventh century,” had “combined their pigments with drying oils.” They would say the claim places the beginning of oil painting far too late.",
+      "distractors": {
+        "A": {
+          "recipe": "D2 wrong side (contradicts Text 2)",
+          "why_wrong": "Text 2 says the artists “combined their pigments with drying oils,” so the oils bound the pigments; they were not a protective coating."
+        },
+        "C": {
+          "recipe": "D2 wrong side",
+          "why_wrong": "Text 2 never says the Bamiyan technique was unrelated to van Eyck’s; it shows that pigments were bound with oil centuries earlier, which undercuts the claim."
+        },
+        "D": {
+          "recipe": "D6 right verdict, wrong reason",
+          "why_wrong": "Text 2 says nothing about how van Eyck learned his technique or about any link between Flanders and Central Asia."
+        }
+      },
+      "models": [
+        "2.4",
+        "2.10"
+      ],
+      "word_count": 143,
+      "sources": [
+        {
+          "what": "ESRF 2008: mid-7th-century murals in caves behind the Bamiyan Buddhas; synchrotron analysis (Taniguchi, Cotte et al.) found oil binders, perhaps walnut and poppy seed oil, in 12 of about 50 caves; earliest clear example of oil painting",
+          "url": "https://www.esrf.fr/news/general-old/general-2008/bamiyan"
+        }
+      ],
+      "notes": "Area: arts (art history). Counterexample to a ‘first’ (invention) claim, 2.4 and 2.10 pattern with 2.10’s ‘It is ..., because’ shell. Vasari’s crediting of van Eyck is standard art history. Reviewer: topic fame moderate (Bamiyan oil murals were reported in 2008 as the world's oldest oil paintings); kept.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "cross_text_connections.S1_counterexample.medium.w2b2_08",
+      "template": "S1_counterexample",
+      "subtype": "Response prediction",
+      "tier": "medium",
+      "passage": "Text 1\n\nReef-building corals depend on symbiotic algae in their tissues, which use sunlight to produce nutrients for their hosts. Turbid water obstructs that light, and the particles responsible can settle on corals and smother them. <u>Coral reefs are therefore widely thought to require clear water and to be unable to grow where waves or rivers keep sediment suspended</u>, and reefs along muddy coastlines are often described as marginal or degraded.\n\nText 2\n\nMiddle Reef lies about four kilometers off Townsville in northeastern Australia, where waves and river floods frequently keep the water clouded with suspended sediment. Yet when Chris Perry and colleagues drilled cores through the reef framework and radiocarbon-dated them, they discovered that it had built upward by more than eight millimeters a year for over 700 years, growing fastest during periods of especially heavy sediment deposition.",
+      "stem": "Based on the texts, how would Perry and colleagues (Text 2) most likely respond to the underlined claim in Text 1?",
+      "options": [
+        "Reefs near muddy coastlines grow quickly only in years when floods carry nutrients down from rivers.",
+        "Sediment poses less danger to corals than the loss of light caused by turbid water does.",
+        "Persistently murky conditions do not necessarily prevent a reef from growing.",
+        "The algae in Middle Reef’s corals depend less on sunlight than the algae in most other corals do."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "Text 1 says reefs are thought “to require clear water and to be unable to grow where waves or rivers keep sediment suspended.” Perry and colleagues found that Middle Reef, where the water is frequently “clouded with suspended sediment,” built upward for over 700 years, “growing fastest during periods of especially heavy sediment deposition.” They would respond that murky water does not necessarily prevent reef growth.",
+      "distractors": {
+        "A": {
+          "recipe": "D3 twisted detail",
+          "why_wrong": "Text 2 mentions river floods only as a source of sediment; it never ties the reef’s growth to nutrients or limits it to flood years."
+        },
+        "B": {
+          "recipe": "D1 unaddressed add-on",
+          "why_wrong": "Neither text compares the danger of sediment with the danger of reduced light."
+        },
+        "D": {
+          "recipe": "D1 unaddressed add-on",
+          "why_wrong": "Text 2 does not discuss the algae in Middle Reef’s corals or how much they rely on sunlight."
+        }
+      },
+      "models": [
+        "2.4",
+        "2.10"
+      ],
+      "word_count": 139,
+      "sources": [
+        {
+          "what": "Perry, Smithers, Gulliver, Browne 2012, Geology: Middle Reef, 4 km off Townsville in a high-turbidity setting, accreted very rapidly for more than 700 years (mean 8.3 mm/yr), fastest during phases of fine terrigenous sediment accumulation",
+          "url": "https://researchonline.jcu.edu.au/23531/"
+        }
+      ],
+      "notes": "Area: natural science (marine ecology). Counterexample to a ‘requires’ claim (2.4 statement shell). Text 1 is the general expectation, unattributed; Browne et al. note inshore reefs are widely perceived as degraded.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "cross_text_connections.S1_limit_degree.medium.w2b2_09",
+      "template": "S1_limit_degree",
+      "subtype": "Response prediction",
+      "tier": "medium",
+      "passage": "Text 1\n\nAs schools replace printed textbooks with tablets and laptops, some educators and parents have expressed concern that students will absorb less of what they read. Reading on screens, these critics argue, encourages skimming and makes it harder to recall where in a text particular information appeared. On this view, <u>students will understand any text less well on a screen than they would understand the same text printed on paper</u>.\n\nText 2\n\nPablo Delgado and colleagues combined the results of 54 studies, involving more than 170,000 participants in all, that compared readers’ understanding of printed and digital texts. Overall, paper held a modest advantage, which grew when readers faced time constraints. But the advantage depended on the kind of text: it appeared for informational texts, such as explanations of scientific topics, yet not in studies that used only narrative texts.",
+      "stem": "Based on the texts, how would Delgado and colleagues (Text 2) most likely respond to the claim in the underlined portion of Text 1?",
+      "options": [
+        "By pointing out that the evidence favors paper for some kinds of texts but not for every kind",
+        "By arguing that the advantage of paper disappears whenever readers are allowed as much time as they need",
+        "By noting that students skim printed texts about as often as they skim texts on screens",
+        "By questioning whether the studies comparing paper and screens included enough participants to be trusted"
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The underlined portion claims that students will understand “any text” less well on a screen. Delgado and colleagues found a modest paper advantage overall, but it “appeared for informational texts, such as explanations of scientific topics, yet not in studies that used only narrative texts.” They would point out that the advantage holds for some kinds of texts but not for all, which limits the claim.",
+      "distractors": {
+        "B": {
+          "recipe": "D3 twisted detail",
+          "why_wrong": "Text 2 says the paper advantage “grew when readers faced time constraints”; it does not say the advantage disappears without them."
+        },
+        "C": {
+          "recipe": "D1 unaddressed add-on",
+          "why_wrong": "Skimming is mentioned only in Text 1, as the critics’ concern; Text 2 reports nothing about how often students skim."
+        },
+        "D": {
+          "recipe": "D9 generic academic move",
+          "why_wrong": "Text 2 relies on the pooled studies, with “more than 170,000 participants,” and gives no reason to doubt their size."
+        }
+      },
+      "models": [
+        "2.8",
+        "2.9"
+      ],
+      "word_count": 141,
+      "sources": [
+        {
+          "what": "Delgado, Vargas, Ackerman, Salmerón 2018, Educational Research Review 25: meta-analysis of 54 studies (171,055 participants); paper advantage overall, larger under time constraints, found for informational and mixed texts but not for studies using only narrative texts",
+          "url": "https://www.uv.es/lasalgon/papers/Delgado%202018%20dont%20throw%20away%20your%20printed%20books.pdf"
+        }
+      ],
+      "notes": "Area: social science (education, psychology). Limit-degree template, 2.9 pattern (a scope limit, not a refutation): Text 2 accepts the overall advantage, so the key limits rather than denies the claim.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "cross_text_connections.S1_case_fits_frame.medium.w2b2_10",
+      "template": "S1_case_fits_frame",
+      "subtype": "Response prediction",
+      "tier": "medium",
+      "passage": "Text 1\n\nTropical forests can contain hundreds of tree species in a single hectare. In the early 1970s, ecologists Daniel Janzen and Joseph Connell independently proposed an explanation: insects and pathogens that specialize on one tree species accumulate near adult trees of that species and destroy most of the seeds and seedlings nearby. Consequently, young trees survive mainly at a distance from their parents, leaving space near each adult for competing species.\n\nText 2\n\nIn an Indiana woodland, Alissa Packer and Keith Clay observed that black cherry seedlings died at higher rates near their parent trees than farther away. In greenhouse experiments, seedlings grown in soil collected beneath adult cherry trees survived better if the soil had been sterilized, whereas sterilizing soil gathered 25 to 30 meters away made no difference. The researchers identified the culprit as Pythium, a root-attacking soil microorganism.",
+      "stem": "Based on the texts, how would the author of Text 1 most likely regard the findings in Text 2?",
+      "options": [
+        "As surprising, because the explanation offered by Janzen and Connell concerned insects rather than microorganisms",
+        "As unpersuasive, because the most important results came from a greenhouse rather than from a forest",
+        "As irrelevant, because Janzen and Connell set out to explain the diversity of tropical rather than temperate forests",
+        "As fitting the mechanism Janzen and Connell proposed, since an enemy living in the soil killed seedlings near their parents"
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "Text 1 describes Janzen and Connell’s proposal that enemies accumulating near adult trees “destroy most of the seeds and seedlings nearby,” so that young trees survive mainly “at a distance from their parents.” In Text 2, black cherry seedlings “died at higher rates near their parent trees than farther away,” and the cause was a root-attacking microorganism in the soil beneath those trees. The author of Text 1 would regard these findings as fitting the proposed mechanism.",
+      "distractors": {
+        "A": {
+          "recipe": "D6 wrong reason (misreads Text 1)",
+          "why_wrong": "Text 1 names “pathogens” as well as insects, so a soil microorganism fits the explanation."
+        },
+        "B": {
+          "recipe": "D6 wrong reason",
+          "why_wrong": "The finding that seedlings died more often near parent trees came from the Indiana woodland; the greenhouse experiments showed why."
+        },
+        "C": {
+          "recipe": "D8 wrong dimension",
+          "why_wrong": "Although the explanation was framed for tropical forests, the mechanism it proposes is exactly what Text 2 observed, so the findings bear on it."
+        }
+      },
+      "models": [
+        "2.2",
+        "2.6"
+      ],
+      "word_count": 142,
+      "sources": [
+        {
+          "what": "Packer and Clay 2000, Nature 404: soil pathogen (Pythium) produces Janzen-Connell patterns of seedling mortality in black cherry (Prunus serotina); seedlings near parents die more, sterilizing soil from 0-5 m improves survival while sterilizing soil from 25-30 m has no effect",
+          "url": "https://www.nature.com/articles/35005072"
+        }
+      ],
+      "notes": "Area: natural science (ecology). Case fits frame, Text 1 speaking; As-adjective shell with D6 wrong-reason distractors as in 1.11 and 3.8. Janzen (1970) and Connell (1971) proposed the hypothesis independently.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "cross_text_connections.S1_case_fits_frame.medium.w2b2_11",
+      "template": "S1_case_fits_frame",
+      "subtype": "Response prediction",
+      "tier": "medium",
+      "passage": "Text 1\n\nIn 1857 the German statistician Ernst Engel analyzed the budgets of working-class families in Belgium and identified a regularity that economists still cite. As household income rises, expenditure on food typically increases as well, but more slowly than income does, so food takes up a shrinking share of total spending. Poorer households, by the same reasoning, devote a larger share of their budgets to food than wealthier households do.\n\nText 2\n\nA 2006 report from the US Bureau of Labor Statistics traced how American households spent their money across the twentieth century. In 1901, food accounted for 42.5 percent of the average household’s spending; by 2002–03, it accounted for only 13.1 percent, while housing’s share of expenditures rose from 23.3 to 32.8 percent. The report attributes the fall in food’s share to improvements in Americans’ standard of living.",
+      "stem": "Based on the texts, what would the author of Text 1 most likely say about the change described in Text 2?",
+      "options": [
+        "It contradicts Engel’s regularity, because the share of spending devoted to housing, another necessity, rose rather than fell.",
+        "It reflects a change in the kinds of food Americans bought rather than a change in their incomes.",
+        "It is what Engel’s regularity would lead one to expect, given the rise in living standards over the period.",
+        "It supports Engel’s regularity only for households whose incomes were below the national average."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "According to Text 1, as income rises, spending on food increases “more slowly than income does, so food takes up a shrinking share of total spending.” Text 2 reports that kind of change: food’s share of household spending fell from 42.5 percent to 13.1 percent, and the report links the fall to improvements in Americans’ “standard of living.” The author of Text 1 would say the change is what Engel’s regularity predicts.",
+      "distractors": {
+        "A": {
+          "recipe": "D8 wrong dimension (twisted detail)",
+          "why_wrong": "Engel’s regularity, as Text 1 describes it, concerns food only; a rising share for housing does not bear on it, and food’s share fell just as the regularity predicts."
+        },
+        "B": {
+          "recipe": "D1 unaddressed add-on",
+          "why_wrong": "Neither text discusses what kinds of food Americans bought; Text 2 attributes the change to a higher standard of living."
+        },
+        "D": {
+          "recipe": "D3 twisted detail",
+          "why_wrong": "Text 2 reports figures for the average household, not for households above or below the average income."
+        }
+      },
+      "models": [
+        "2.2",
+        "2.6"
+      ],
+      "word_count": 140,
+      "sources": [
+        {
+          "what": "BLS Economics Daily (May 2006), from Report 991 ‘100 Years of U.S. Consumer Spending’: food fell from 42.5% of US household expenditures in 1901 to 13.1% in 2002-03, reflecting improved living standards",
+          "url": "https://www.bls.gov/opub/ted/2006/may/wk4/art05.htm"
+        },
+        {
+          "what": "BLS Report 991, 100 Years of U.S. Consumer Spending: 1901 food 42.5% ($327), housing 23.3%; 2002-03 food 13.1%, housing 32.8%; decline in food share reflects improved living standards",
+          "url": "https://www.bls.gov/opub/100-years-of-u-s-consumer-spending.pdf"
+        }
+      ],
+      "notes": "Area: social science (economics). Case fits frame with 2.2’s ‘what would ... say’ It-shell; the trap in A is housing’s rising share, which the food-only regularity does not address. Engel 1857 used Belgian working-class budgets (Ducpétiaux’s data). Report 991: housing 23.3% (1901) to 32.8% (2002-03). The writer’s dollar clause was dropped: food spending rose about 16-fold in current dollars but fell in real terms per household (the report’s own deflator is about 20).",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [
+          "dropped 'many times as many dollars on food': true only in current dollars (about 16-fold, $327 to $5,357); with the report's own deflator (about 20) real food spending per household fell, so the clause overstated Engel's 'expenditure on food increases'",
+          "replaced it with housing's share rising from 23.3 to 32.8 percent (BLS Report 991) and rebuilt A as a wrong-dimension trap on that detail; dropped 'substantial' (source: 'improved living standards'); added the report PDF as a source"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "cross_text_connections.S2_shared_premise.medium.w2b2_12",
+      "template": "S2_shared_premise",
+      "subtype": "Agreement",
+      "tier": "medium",
+      "passage": "Text 1\n\nLao She’s 1937 novel Camel Xiangzi follows a young rickshaw puller in Beijing whose hope of owning a rickshaw is repeatedly crushed by misfortune and exploitation until he abandons all self-respect. When the novel appeared in English in 1945 as Rickshaw Boy, translator Evan King supplied a happy ending, and in doing so he erased the novel’s bleak indictment of the society that destroys its hero.\n\nText 2\n\nKing took considerable liberties with Lao She’s novel, cutting and rearranging passages and inventing an optimistic conclusion. Yet Rickshaw Boy became a best seller in the United States and a Book-of-the-Month Club selection, introducing modern Chinese fiction to a broad American readership. Despite its distortions, the translation established Lao She’s international reputation and built an audience for the more faithful versions that followed.",
+      "stem": "Based on the texts, both authors would most likely agree with which statement?",
+      "options": [
+        "Rickshaw Boy sold well in the United States mainly because of its optimistic ending.",
+        "The 1945 English version departed from the way Lao She had ended his novel.",
+        "The 1945 translation did more to help Lao She’s reputation than to harm his novel.",
+        "Later translators restored the passages that King had cut from Lao She’s novel."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The authors disagree about the value of King’s translation: the author of Text 1 says it “erased the novel’s bleak indictment,” while the author of Text 2 credits it with having “established Lao She’s international reputation.” Both, however, report that King changed the ending: Text 1 says he “supplied a happy ending,” and Text 2 says he invented “an optimistic conclusion.” So both would agree that the English version departed from Lao She’s ending.",
+      "distractors": {
+        "A": {
+          "recipe": "D1 unaddressed add-on",
+          "why_wrong": "Text 2 reports that the translation sold well but never says why, and Text 1 does not discuss its sales at all."
+        },
+        "C": {
+          "recipe": "D4 one text only",
+          "why_wrong": "This matches the view of the author of Text 2, but the author of Text 1 stresses the harm: the new ending “erased the novel’s bleak indictment.”"
+        },
+        "D": {
+          "recipe": "D3 twisted detail",
+          "why_wrong": "Text 2 mentions later, more faithful versions but does not say they restored King’s cuts, and Text 1 does not mention later translations."
+        }
+      },
+      "models": [
+        "2.1",
+        "2.3"
+      ],
+      "word_count": 133,
+      "sources": [
+        {
+          "what": "Britannica, Lao She: Rickshaw Boy (1945), an unauthorized, bowdlerized translation of Luotuo Xiangzi with a happy ending foreign to the original, was a US best seller (Book-of-the-Month Club selection)",
+          "url": "https://www.britannica.com/biography/Lao-She"
+        },
+        {
+          "what": "Evan King’s 1945 Rickshaw Boy cut, rearranged and rewrote the novel and gave it a happy ending; a US best seller and Book of the Month Club selection",
+          "url": "https://en.wikipedia.org/wiki/Rickshaw_Boy"
+        }
+      ],
+      "notes": "Area: literature (translation history). Shared premise under a disagreement about value (2.3 abstraction level: the key restates the shared fact in neutral words).",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [
+          "Britannica source returned 403: added the Wikipedia Rickshaw Boy page, which confirms the happy ending, cuts, best seller and Book of the Month Club"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "cross_text_connections.S1_rival_hypothesis.medium.w2b2_13",
+      "template": "S1_rival_hypothesis",
+      "subtype": "Response prediction",
+      "tier": "medium",
+      "passage": "Text 1\n\nGullies—narrow channels descending the walls of craters and other slopes—are widespread on Mars. In 2006, Michael Malin, Kenneth Edgett, and colleagues reported that bright new deposits had appeared in two gullies between photographs an orbiting spacecraft captured several years apart. Because the deposits appeared to have been transported by a fluid rather than by dry dust, the team proposed that liquid water may still occasionally seep from underground and flow down Martian slopes.\n\nText 2\n\nSince 2006, a higher-resolution camera aboard another orbiter has repeatedly photographed hundreds of gully locations. Colin Dundas and colleagues documented new flows and channels at dozens of them, almost always during the season when frozen carbon dioxide frosts the slopes and temperatures are far too low for liquid water. As the frost converts directly to gas, they propose, it may dislodge sediment and lubricate its descent.",
+      "stem": "Based on the texts, how would Dundas and colleagues (Text 2) most likely respond to the hypothesis presented in Text 1?",
+      "options": [
+        "By conceding that liquid water formed the new deposits but arguing that the water came from melting frost rather than from underground",
+        "By suggesting that the deposits reported in 2006 were too small for the earlier spacecraft’s camera to have detected reliably",
+        "By pointing out that gullies are less widespread on Mars than the hypothesis requires them to be",
+        "By noting that the timing of recent gully activity points to a cause that does not depend on liquid water"
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "Malin, Edgett, and colleagues proposed that “liquid water may still occasionally seep from underground” to form new gully deposits. Dundas and colleagues found new flows “almost always during the season when frozen carbon dioxide frosts the slopes and temperatures are far too low for liquid water,” and they propose that the frost itself moves the sediment. They would respond that the timing of the activity points to a cause that does not depend on liquid water.",
+      "distractors": {
+        "A": {
+          "recipe": "D7 half right / D3",
+          "why_wrong": "Text 2 says the frost “converts directly to gas” when temperatures are “far too low for liquid water,” so it does not concede that liquid water formed the deposits."
+        },
+        "B": {
+          "recipe": "D3 twisted detail",
+          "why_wrong": "Text 2 mentions a higher-resolution camera, but it does not question whether the earlier camera could detect the deposits reported in 2006."
+        },
+        "C": {
+          "recipe": "D1 unaddressed add-on",
+          "why_wrong": "Text 2 describes “hundreds of gully locations” and never suggests gullies are rarer than Text 1 says; Text 1 calls them “widespread.”"
+        }
+      },
+      "models": [
+        "2.5"
+      ],
+      "word_count": 143,
+      "sources": [
+        {
+          "what": "Malin et al. 2006 (Science, ‘Present-day impact cratering rate and contemporary gully activity on Mars’): new light-toned gully deposits between images years apart, interpreted as possible recent liquid water flow",
+          "url": "https://www.msss.com/mars_images/moc/2006/12/06/gullies/index.html"
+        },
+        {
+          "what": "Dundas et al. (HiRISE monitoring, 356 sites): new gully activity at 38 sites, timed with seasonal CO2 frost and temperatures too cold for liquid water; sublimating frost may lubricate dry flows",
+          "url": "https://www.jpl.nasa.gov/news/nasa-spacecraft-observes-further-evidence-of-dry-ice-gullies-on-mars"
+        }
+      ],
+      "notes": "Area: natural science (planetary science). Rival hypothesis with evidence the target cannot account for (2.5 pattern: Artemieva’s iridium is here the timing and temperature).",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [
+          "Text 1 softened to the MSSS source: water 'seeping' from underground (was 'erupt'); deposits carried by a fluid rather than dry dust (was 'resembled sediments laid down by brief floods')"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "cross_text_connections.S1_second_factor.medium.w2b2_14",
+      "template": "S1_second_factor",
+      "subtype": "Response prediction",
+      "tier": "medium",
+      "passage": "Text 1\n\nPacific salmon hatch in freshwater streams, spend years feeding throughout the open ocean, and then migrate back to spawn in the very streams where they originated. In the 1950s, biologist Arthur Hasler and his students demonstrated that juvenile salmon learn the distinctive odor of their natal stream and that migrating adults follow that odor at each fork in the river. Smell, according to this account, explains how salmon navigate home.\n\nText 2\n\nNathan Putman and colleagues analyzed 56 years of fisheries records for sockeye salmon returning from the Pacific to British Columbia’s Fraser River; to reach it, the fish must first detour around Vancouver Island by either a northern or a southern passage. The proportion of fish using each passage shifted as Earth’s geomagnetic field gradually drifted, as though the salmon had memorized the field’s intensity near the river’s mouth and were navigating toward it.",
+      "stem": "Based on the texts, how would Putman and colleagues (Text 2) most likely respond to the explanation in Text 1?",
+      "options": [
+        "By suggesting that it may account for only the final stage of the journey and that salmon also rely on a cue of a different kind",
+        "By arguing that young salmon learn the odor of their natal stream later in life than Hasler’s work indicated",
+        "By claiming that Earth’s magnetic field, rather than smell, is what guides salmon into their home streams",
+        "By cautioning that Fraser River sockeye may depend on smell more heavily than other salmon do"
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "Text 1 says that smell “explains how salmon navigate home,” based on adults that “follow that odor at each fork in the river.” Putman and colleagues found that sockeye heading for the Fraser River chose their passage around Vancouver Island, well before reaching the river, according to changes in Earth’s magnetic field, “as though the salmon had memorized the field’s intensity near the river’s mouth.” They would suggest that smell may explain only the last part of the trip and that salmon also use another kind of cue.",
+      "distractors": {
+        "B": {
+          "recipe": "D3 twisted detail",
+          "why_wrong": "Text 2 says nothing about when salmon learn the odor of their natal stream."
+        },
+        "C": {
+          "recipe": "D5 overstatement",
+          "why_wrong": "Text 2 concerns the route salmon take toward the river’s mouth; it does not claim that magnetism, rather than smell, guides them up their home streams."
+        },
+        "D": {
+          "recipe": "D3 twisted detail",
+          "why_wrong": "Text 2 does not compare how much Fraser River sockeye and other salmon rely on smell."
+        }
+      },
+      "models": [
+        "2.7"
+      ],
+      "word_count": 147,
+      "sources": [
+        {
+          "what": "Putman et al. 2013, Current Biology 23: 56-year fisheries dataset; Fraser River sockeye route choice around Vancouver Island tracked geomagnetic field drift, evidence for geomagnetic imprinting as a homing mechanism",
+          "url": "https://doi.org/10.1016/j.cub.2012.12.041"
+        },
+        {
+          "what": "OSU news on Putman et al.: 56 years of Fraser River sockeye data; route around Vancouver Island tracked geomagnetic field intensity; smell likely takes over only within about 50 to 100 km of the river",
+          "url": "https://news.oregonstate.edu/news/osu-study-salmon-may-use-magnetic-field-navigational-aid"
+        }
+      ],
+      "notes": "Area: natural science (animal navigation). Second factor (2.7 ‘overlooks’ pattern): the key keeps Hasler’s smell for the final stage. Putman et al. also found sea temperature affected route choice; the passage does not claim magnetism is the only influence.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 2,
+        "fixes": [
+          "Elsevier page did not load: added the OSU news page, which confirms the 56-year route data and that smell likely takes over only near the river"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "cross_text_connections.S2_shared_premise.easy.w2b2_15",
+      "template": "S2_shared_premise",
+      "subtype": "Agreement",
+      "tier": "easy",
+      "passage": "Text 1\n\nIn Roman Egypt, from about the first to the third century CE, painted wooden portraits were placed over the faces of mummified people. Some of these panels show signs of having once been framed, suggesting that they hung in homes before being used in burials. On this view, families commissioned portraits while their subjects were alive, displayed them for years, and attached them to mummies only after death.\n\nText 2\n\nMedical scans have now been made of many mummies whose portraits remain in place. In most cases, the age indicated by the body matches the age depicted in the painting, even for young children. Had portraits typically been painted years before death, many would show people noticeably younger than their remains indicate. Most portraits, then, were probably painted close to the time of death, specifically for burial.",
+      "stem": "Based on the texts, both authors would most likely agree with which statement?",
+      "options": [
+        "Most of the portraits were painted many years before the people in them died.",
+        "The portraits were painted by artists who had trained in Rome.",
+        "The portraits were placed with the mummies of the people they show.",
+        "Portraits of children were more common than portraits of adults."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The authors disagree about when the portraits were painted: Text 1 suggests they “hung in homes” for years, while Text 2 argues they were painted “close to the time of death.” Both, however, describe portraits that ended up on the mummies of the people shown: Text 1 says families “attached them to mummies only after death,” and Text 2 says the age shown in a painting usually matches the body beneath it.",
+      "distractors": {
+        "A": {
+          "recipe": "D4 one text only",
+          "why_wrong": "This is the view in Text 1; Text 2 argues that most portraits were painted close to the time of death."
+        },
+        "B": {
+          "recipe": "D1 unaddressed add-on",
+          "why_wrong": "Neither text says where the painters were trained."
+        },
+        "D": {
+          "recipe": "D3 twisted detail",
+          "why_wrong": "Text 2 mentions young children, but neither text compares how common portraits of children and adults were."
+        }
+      },
+      "models": [
+        "1.2",
+        "1.5",
+        "1.6",
+        "1.12",
+        "1.13"
+      ],
+      "word_count": 139,
+      "sources": [
+        {
+          "what": "Fayum mummy portraits (Roman Egypt, 1st-3rd c.): older view that they were painted in life and hung at home (some show traces of framing); CT scans showing correspondence of age and sex between mummy and image favor painting for burial",
+          "url": "https://curationist.org/editorial-features/article/fayum-portraits"
+        }
+      ],
+      "notes": "Area: arts (art history, archaeology). Easy agreement, 1.5 and 1.6 pattern (dispute over when, shared fact about what). Both views unattributed.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 2,
+        "fixes": [
+          "source confirms matching age only: dropped 'and sex' from Text 2 and the explanation"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "cross_text_connections.S1_refute_data.easy.w2b2_16",
+      "template": "S1_refute_data",
+      "subtype": "Response prediction",
+      "tier": "easy",
+      "passage": "Text 1\n\nAbstract expressionist paintings, with their drips, splatters, and blocks of color, often provoke the same remark from museum visitors: “My kid could have painted that.” The remark implies that nothing visible on the canvas distinguishes a celebrated painter’s work from a child’s, and that such paintings are admired only because of the famous names attached to them.\n\nText 2\n\nPsychologists Angelina Hawley-Dolan and Ellen Winner showed college students pairs of abstract paintings. In each pair, one painting was by a well-known abstract expressionist, and the other, selected because it looked similar, was by a child or by an animal such as a chimpanzee or an elephant. Even when the paintings were unlabeled, the students judged the professional’s painting superior more often than not.",
+      "stem": "Based on the texts, how would Hawley-Dolan and Winner (Text 2) most likely respond to the remark discussed in Text 1?",
+      "options": [
+        "Museum visitors prefer abstract paintings by children to those by professional artists.",
+        "Viewers can often see differences between famous abstract paintings and similar works by children.",
+        "Children who are taught to paint produce work that looks more like that of professional artists.",
+        "Paintings by animals are usually judged more favorably than paintings by children."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The remark in Text 1 implies that “nothing visible on the canvas” separates a celebrated painter’s work from a child’s. Hawley-Dolan and Winner found that, “Even when the paintings were unlabeled,” students judged the professional’s painting superior “more often than not.” They would respond that viewers can often see differences between such works.",
+      "distractors": {
+        "A": {
+          "recipe": "D2 wrong side",
+          "why_wrong": "Text 2 found the opposite: students usually judged the professional’s painting to be superior."
+        },
+        "C": {
+          "recipe": "D1 unaddressed add-on",
+          "why_wrong": "Neither text discusses teaching children to paint."
+        },
+        "D": {
+          "recipe": "D3 twisted detail",
+          "why_wrong": "Text 2 mentions paintings by animals, but it does not compare how animals’ and children’s paintings were judged."
+        }
+      },
+      "models": [
+        "1.1",
+        "1.3",
+        "1.16"
+      ],
+      "word_count": 125,
+      "sources": [
+        {
+          "what": "Hawley-Dolan and Winner 2011, Psychological Science 22(4), ‘Seeing the mind behind the art’: students preferred and judged better the works of abstract expressionists over similar works by children and animals, even when unlabeled",
+          "url": "https://journals.sagepub.com/doi/10.1177/0956797611400915"
+        }
+      ],
+      "notes": "Area: arts (psychology of art). Easy refutation by new data, 1.1 pattern with statement options. Reviewer: topic fame risk (the Hawley-Dolan and Winner study is widely covered and is a Cambridge IELTS 11 reading passage); kept for the user to decide.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 2,
+        "fixes": [],
+        "status": "pass"
+      }
+    }
+  ]
+}

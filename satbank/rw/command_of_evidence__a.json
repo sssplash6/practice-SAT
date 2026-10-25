@@ -1,0 +1,2478 @@
+{
+  "skill": "Command of Evidence",
+  "slug": "command_of_evidence",
+  "part": "a",
+  "domain": "Information and Ideas",
+  "plan": {
+    "templates": [
+      {
+        "code": "Q1_P1_lookup",
+        "name": "Data completion: lookup (one cell or bar, reverse lookup, filter)",
+        "official_tiers": {
+          "easy": [
+            "1.2",
+            "1.12",
+            "1.24",
+            "1.30",
+            "1.33",
+            "1.37",
+            "1.38",
+            "1.40",
+            "1.43",
+            "1.44"
+          ],
+          "medium": [
+            "2.41"
+          ],
+          "hard": []
+        }
+      },
+      {
+        "code": "Q1_P2_extreme",
+        "name": "Data completion: extreme or rank (max/min, possibly after a filter)",
+        "official_tiers": {
+          "easy": [
+            "1.9",
+            "1.18",
+            "1.21",
+            "1.23",
+            "1.31",
+            "1.34"
+          ],
+          "medium": [],
+          "hard": [
+            "3.44"
+          ]
+        }
+      },
+      {
+        "code": "Q1_P3_pairwise",
+        "name": "Data completion: pairwise comparison (one or two comparisons)",
+        "official_tiers": {
+          "easy": [
+            "1.3",
+            "1.4",
+            "1.7",
+            "1.27"
+          ],
+          "medium": [
+            "2.18",
+            "2.24",
+            "2.27",
+            "2.28",
+            "2.32",
+            "2.39"
+          ],
+          "hard": [
+            "3.29",
+            "3.30"
+          ]
+        }
+      },
+      {
+        "code": "Q1_P4_trend",
+        "name": "Data completion: change over time",
+        "official_tiers": {
+          "easy": [
+            "1.6",
+            "1.10"
+          ],
+          "medium": [
+            "2.15",
+            "2.34",
+            "2.40"
+          ],
+          "hard": []
+        }
+      },
+      {
+        "code": "Q1_P5_control",
+        "name": "Data completion: condition vs control",
+        "official_tiers": {
+          "easy": [],
+          "medium": [
+            "2.5",
+            "2.14",
+            "2.19"
+          ],
+          "hard": [
+            "3.4",
+            "3.38",
+            "3.46"
+          ]
+        }
+      },
+      {
+        "code": "Q1_P67_criterion",
+        "name": "Data completion: passage criterion or presence/absence combined with the display",
+        "official_tiers": {
+          "easy": [],
+          "medium": [],
+          "hard": [
+            "3.22",
+            "3.27"
+          ]
+        }
+      },
+      {
+        "code": "Q2_P4_trend",
+        "name": "Data description: trend or change over time supports a conclusion",
+        "official_tiers": {
+          "easy": [
+            "1.14"
+          ],
+          "medium": [
+            "2.2",
+            "2.12",
+            "2.22"
+          ],
+          "hard": [
+            "3.13",
+            "3.40"
+          ]
+        }
+      },
+      {
+        "code": "Q2_P5_control",
+        "name": "Data description: condition vs control or group comparison supports a conclusion",
+        "official_tiers": {
+          "easy": [
+            "1.22",
+            "1.28"
+          ],
+          "medium": [
+            "2.3",
+            "2.25"
+          ],
+          "hard": [
+            "3.1",
+            "3.5",
+            "3.43"
+          ]
+        }
+      },
+      {
+        "code": "Q2_P8_quantifier",
+        "name": "Data description: quantified claim (for each, all except one)",
+        "official_tiers": {
+          "easy": [],
+          "medium": [],
+          "hard": [
+            "3.20",
+            "3.23",
+            "3.24"
+          ]
+        }
+      },
+      {
+        "code": "Q2_P8_multipart",
+        "name": "Data description: multi-part, interaction, or passage-plus-data claim",
+        "official_tiers": {
+          "easy": [],
+          "medium": [
+            "2.8",
+            "2.42"
+          ],
+          "hard": [
+            "3.2",
+            "3.16",
+            "3.18",
+            "3.19",
+            "3.26"
+          ]
+        }
+      }
+    ],
+    "skipped": [
+      [
+        "Q1_P1_lookup",
+        "hard"
+      ],
+      [
+        "Q1_P2_extreme",
+        "medium"
+      ],
+      [
+        "Q1_P4_trend",
+        "hard"
+      ],
+      [
+        "Q1_P5_control",
+        "easy"
+      ],
+      [
+        "Q1_P67_criterion",
+        "easy"
+      ],
+      [
+        "Q1_P67_criterion",
+        "medium"
+      ],
+      [
+        "Q2_P8_quantifier",
+        "easy"
+      ],
+      [
+        "Q2_P8_quantifier",
+        "medium"
+      ],
+      [
+        "Q2_P8_multipart",
+        "easy"
+      ]
+    ]
+  },
+  "items": [
+    {
+      "id": "command_of_evidence.Q1_P1_lookup.easy",
+      "template": "Q1_P1_lookup",
+      "subtype": "Data completion (lookup)",
+      "tier": "easy",
+      "passage": "In a 2019 study, a team led by mathematician Chad M. Topaz combined the online catalogs of 18 major US art museums with tens of thousands of judgments from crowdsourced workers to estimate the gender and ethnicity of the artists in each collection. Several of the museums differed sharply from the rest. At the High Museum of Art in Atlanta, for example, the estimated share of artists who are Black or African American is ______",
+      "stem": "Which choice most effectively uses data from the table to complete the text?",
+      "options": [
+        "2.7%.",
+        "10.6%.",
+        "24.9%.",
+        "10.7%."
+      ],
+      "answer_letter": "B",
+      "table": {
+        "title": "Estimated Shares of Women and of Black Artists in Five Museum Collections",
+        "columns": [
+          "Museum",
+          "Artists who are women (%)",
+          "Artists who are Black or African American (%)"
+        ],
+        "rows": [
+          [
+            "Detroit Institute of Arts",
+            "7.4",
+            "1.6"
+          ],
+          [
+            "High Museum of Art",
+            "10.7",
+            "10.6"
+          ],
+          [
+            "Museum of Fine Arts, Houston",
+            "16.1",
+            "1.1"
+          ],
+          [
+            "Museum of Contemporary Art, Los Angeles",
+            "24.9",
+            "2.7"
+          ],
+          [
+            "Whitney Museum of American Art",
+            "22.1",
+            "2.3"
+          ]
+        ],
+        "note": null
+      },
+      "figure": null,
+      "explanation": "The text asks for the estimated share of artists in the High Museum of Art’s collection who are Black or African American. In the table, the High Museum of Art row shows 10.6 in the column for Black or African American artists, so choice B completes the text.",
+      "distractors": {
+        "A": {
+          "recipe": "wrong row",
+          "why_wrong": "2.7% is the estimated share of Black or African American artists at the Museum of Contemporary Art, Los Angeles, not at the High Museum of Art."
+        },
+        "C": {
+          "recipe": "wrong row and column",
+          "why_wrong": "24.9% is the estimated share of women artists at the Museum of Contemporary Art, Los Angeles."
+        },
+        "D": {
+          "recipe": "wrong column",
+          "why_wrong": "10.7% is the High Museum of Art’s estimated share of artists who are women, not its share of Black or African American artists."
+        }
+      },
+      "models": [
+        "1.43",
+        "1.44",
+        "1.33",
+        "1.37"
+      ],
+      "word_count": 75,
+      "sources": [
+        {
+          "what": "Topaz et al. 2019, PLoS One 14(3): e0212852: public online catalogs of 18 major US museums scraped, about 10,000 artist records sent to crowdsourcing (Amazon Mechanical Turk), 45,000 responses; gender and ethnicity inferred; outlier museums identified (HMA stands out for Black/African American artists)",
+          "url": "https://europepmc.org/article/PMC/PMC6426178"
+        },
+        {
+          "what": "Table 2 estimates: DIA women 7.4, Black 1.6; HMA 10.7, 10.6; MFAH 16.1, 1.1; MOCA (Los Angeles) 24.9, 2.7; WMAA 22.1, 2.3; museum names from Table 1 footnote",
+          "url": "https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0212852"
+        },
+        {
+          "what": "Chad Topaz affiliation: Department of Mathematics and Statistics, Williams College (author list of the paper)",
+          "url": "https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0212852"
+        },
+        {
+          "what": "High Museum of Art is in Atlanta, Georgia",
+          "url": "https://en.wikipedia.org/wiki/High_Museum_of_Art"
+        }
+      ],
+      "notes": "Percentages are the paper's observed estimates (Table 2), which come with confidence intervals; the passage says 'estimated'. Subject replaced: national parks lookup (judge tell: clone of the official lookup format with tourist filler).",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 9,
+        "fixes": [
+          "'mathematician Chad M. Topaz and his colleagues' changed to 'a team led by mathematician Chad M. Topaz' ('and colleagues' framing was in 14 of 21 items of this file)"
+        ],
+        "status": "fixed"
+      },
+      "rewrite": "New subject (Topaz 2019 artist demographics in US museum collections) replacing national-park acreage; research framing instead of 'a student writing a report', wrong-column distractor added.",
+      "model_bands": [
+        1,
+        1,
+        2,
+        2
+      ]
+    },
+    {
+      "id": "command_of_evidence.Q1_P1_lookup.medium",
+      "template": "Q1_P1_lookup",
+      "subtype": "Data completion (lookup)",
+      "tier": "medium",
+      "passage": "For its 2021 Digital News Report, the Reuters Institute for the Study of Journalism analyzed a YouGov survey of more than 92,000 online news consumers in 46 markets. The researchers documented a widening gap between respondents’ trust in news generally and their trust in news encountered through intermediaries such as search engines and social media platforms. In Finland, for example, 65 percent of respondents trusted news overall, but only ______",
+      "stem": "Which choice most effectively uses data from the table to complete the text?",
+      "options": [
+        "37 percent trusted news found on social media.",
+        "21 percent trusted news found on social media.",
+        "18 percent trusted news found on social media.",
+        "31 percent trusted news found on social media."
+      ],
+      "answer_letter": "C",
+      "table": {
+        "title": "Trust in News among Online Survey Respondents in Three Markets, 2021",
+        "columns": [
+          "Measure",
+          "Finland (%)",
+          "Peru (%)",
+          "Taiwan (%)"
+        ],
+        "rows": [
+          [
+            "Trust in news overall",
+            "65",
+            "40",
+            "31"
+          ],
+          [
+            "Trust in news on social media",
+            "18",
+            "37",
+            "21"
+          ]
+        ],
+        "note": null
+      },
+      "figure": null,
+      "explanation": "The text needs Finland’s level of trust in news found on social media, set against its 65 percent trust in news overall. In the table’s row for trust in news on social media, the value in the Finland column is 18, so only 18 percent of respondents in Finland trusted news found on social media, which illustrates the gap the researchers documented.",
+      "distractors": {
+        "A": {
+          "recipe": "misplaced value",
+          "why_wrong": "37 percent is Peru’s value for trust in news on social media; in Finland, that value is 18 percent."
+        },
+        "B": {
+          "recipe": "misplaced value",
+          "why_wrong": "21 percent is Taiwan’s value for trust in news on social media; in Finland, that value is 18 percent."
+        },
+        "D": {
+          "recipe": "wrong row",
+          "why_wrong": "31 percent is the share of respondents in Taiwan who trusted news overall, not Finland’s trust in news on social media, which was 18 percent."
+        }
+      },
+      "models": [
+        "2.41"
+      ],
+      "word_count": 70,
+      "sources": [
+        {
+          "what": "Digital News Report 2021 is based on a YouGov survey of over 92,000 online news consumers in 46 markets",
+          "url": "https://reutersinstitute.politics.ox.ac.uk/digital-news-report/2021"
+        },
+        {
+          "what": "trust gap between news in general and news found in aggregated environments (search and social media) has grown",
+          "url": "https://reutersinstitute.politics.ox.ac.uk/digital-news-report/2021/dnr-executive-summary"
+        },
+        {
+          "what": "Finland: trust in news overall 65%, trust in news on social media 18%",
+          "url": "https://reutersinstitute.politics.ox.ac.uk/digital-news-report/2021/finland"
+        },
+        {
+          "what": "Peru: trust in news overall 40%, trust in news on social media 37%",
+          "url": "https://reutersinstitute.politics.ox.ac.uk/digital-news-report/2021/peru"
+        },
+        {
+          "what": "Taiwan: trust in news overall 31%, trust in news on social media 21%",
+          "url": "https://reutersinstitute.politics.ox.ac.uk/digital-news-report/2021/taiwan"
+        }
+      ],
+      "notes": "Survey fieldwork January to February 2021 (online questionnaire by YouGov). Subject replaced: ILO 2024 labor force estimates (judge tell: 2024 data postdate the bank; bare lookup).",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 8,
+        "fixes": [
+          "last sentence and options rebuilt: 'According to the table, news on social media was trusted by ______' with 'N percent of respondents in X' options copied the skeleton of official 2.41; now 'the table shows that trust in news found on social media stood at ______' with 'N percent in X' options",
+          "after blind round 2: the key (Peru, 37 vs 40 overall) did not illustrate the documented gap; the last sentence now sets Finland’s 65 percent overall against the blank, key 18 percent (Finland, social media), distractors two misplaced values and one wrong row"
+        ],
+        "status": "fixed"
+      },
+      "rewrite": "New subject (Reuters Institute Digital News Report 2021 trust survey) replacing 2024 ILO participation rates; passage now states the study's finding, distractors mix wrong row and misplaced value.",
+      "model_bands": [
+        4
+      ]
+    },
+    {
+      "id": "command_of_evidence.Q1_P2_extreme.easy",
+      "template": "Q1_P2_extreme",
+      "subtype": "Data completion (extreme or rank)",
+      "tier": "easy",
+      "passage": "Many medieval stories survive only because a single manuscript escaped fire, decay, or reuse. To estimate how much was lost, Mike Kestemont and Folgert Karsdorp led a team that borrowed statistical methods ecologists use to gauge how many species in a habitat have gone undetected. They applied these methods to chivalric and heroic stories, such as tales of King Arthur, written in six languages. Of the six, the language whose works had the lowest estimated rate of survival was ______",
+      "stem": "Which choice most effectively uses data from the graph to complete the statement?",
+      "options": [
+        "Dutch.",
+        "Icelandic.",
+        "French.",
+        "English."
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": {
+        "kind": "bar graph",
+        "title": "Estimated Survival of Medieval Chivalric and Heroic Works, by Language",
+        "x_axis": "Language",
+        "y_axis": "Estimated share of works that survive (%)",
+        "description": "One bar per language; y-axis 0 to 100 in steps of 10. Dutch about 49, English about 39, French about 54, German about 79, Icelandic about 77, Irish about 81. English is the shortest bar, about 10 points below Dutch.",
+        "data": [
+          {
+            "series": "Estimated share of works that survive (%)",
+            "points": [
+              [
+                "Dutch",
+                49.2
+              ],
+              [
+                "English",
+                38.6
+              ],
+              [
+                "French",
+                53.5
+              ],
+              [
+                "German",
+                79.0
+              ],
+              [
+                "Icelandic",
+                77.3
+              ],
+              [
+                "Irish",
+                81.0
+              ]
+            ]
+          }
+        ]
+      },
+      "explanation": "The graph’s shortest bar belongs to English: an estimated 39% of English chivalric and heroic works survive, lower than any other language shown. So choice D completes the statement.",
+      "distractors": {
+        "A": {
+          "recipe": "near-miss extreme",
+          "why_wrong": "Dutch has the second-lowest estimate (about 49%), but English is lower (about 39%)."
+        },
+        "B": {
+          "recipe": "wrong extreme",
+          "why_wrong": "Icelandic has one of the highest estimates (about 77%), not the lowest."
+        },
+        "C": {
+          "recipe": "wrong extreme",
+          "why_wrong": "French works have an estimated survival of about 54%, higher than both English and Dutch."
+        }
+      },
+      "models": [
+        "1.21",
+        "1.9",
+        "1.31"
+      ],
+      "word_count": 80,
+      "sources": [
+        {
+          "what": "Kestemont, Karsdorp, de Bruijn, Driscoll, Kapitan, Ó Macháin, Sawyer, Sleiderink and Chao 2022, Science 375:765-769, 'Forgotten books: The application of unseen species models to the survival of culture': unseen species models from ecology applied to medieval chivalric and heroic narratives (e.g., romances about King Arthur) in Dutch, English, French, German, Icelandic and Irish; losses from library fires and recycled parchment; Table 1 survival ratios for works: Dutch 0.492, English 0.386, French 0.535, German 0.790, Icelandic 0.773, Irish 0.810",
+          "url": "https://doi.org/10.1126/science.abl7655"
+        },
+        {
+          "what": "paper text (PDF) with Table 1",
+          "url": "https://www.gwern.net/doc/statistics/survival-analysis/2022-kestemont.pdf"
+        },
+        {
+          "what": "coverage: English works survive at about 38%, German, Irish and Icelandic above three-quarters; Dutch and French about half",
+          "url": "https://www.sciencenews.org/article/medieval-lost-books-archaeology-statistics"
+        }
+      ],
+      "notes": "Values are the paper's Chao1 point estimates for works (not documents). Many works survive in a single document (326 singletons among 799 works). Subject replaced: mammal sleep totals (judge tell: trivial single-bar lookup dressed with an irrelevant Savage and West citation).",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 8,
+        "fixes": [
+          "'Mike Kestemont, Folgert Karsdorp, and colleagues' changed to 'Mike Kestemont and Folgert Karsdorp led a team that' (stock 'and colleagues' framing repeated across the file); 'gone unseen' changed to 'gone undetected' to keep the file's easy items at the official density"
+        ],
+        "status": "fixed"
+      },
+      "rewrite": "New subject (estimated survival of medieval chivalric literature, Kestemont et al. 2022) replacing mammal sleep; the extreme asked for is the study's own headline contrast, and the cloned 'Although X ..., still lower than' frame is gone.",
+      "model_bands": [
+        2,
+        2,
+        2
+      ]
+    },
+    {
+      "id": "command_of_evidence.Q1_P2_extreme.hard",
+      "template": "Q1_P2_extreme",
+      "subtype": "Data completion (filter, then earliest)",
+      "tier": "hard",
+      "passage": "Since its founding in 1966, the Duke Lemur Center in North Carolina has accumulated detailed records on nearly 4,200 strepsirrhine primates—the group comprising lemurs, lorises, and galagos—with longitudinal observations that frequently span an animal’s entire life. Drawing on these records, Sarah Zehr and colleagues compiled standardized life-history values, including adult body mass, gestation length, and activity pattern, for 27 taxa. Of the diurnal (day-active) taxa listed in the table, the one with the shortest expected gestation is the ______",
+      "stem": "Which choice most effectively uses data from the table to complete the text?",
+      "options": [
+        "red ruffed lemur, whose adults average about 3,600 grams.",
+        "gray mouse lemur, whose adults average about 80 grams.",
+        "eastern lesser bamboo lemur, whose adults average about 1,000 grams.",
+        "northern giant mouse lemur, whose adults average about 300 grams."
+      ],
+      "answer_letter": "A",
+      "table": {
+        "title": "Life-History Values for Five Strepsirrhine Taxa at the Duke Lemur Center",
+        "columns": [
+          "Taxon",
+          "Activity pattern",
+          "Mean adult body mass (grams)",
+          "Expected gestation length (days)"
+        ],
+        "rows": [
+          [
+            "Gray mouse lemur",
+            "nocturnal",
+            "83",
+            "60"
+          ],
+          [
+            "Northern giant mouse lemur",
+            "nocturnal",
+            "302",
+            "90"
+          ],
+          [
+            "Eastern lesser bamboo lemur",
+            "diurnal",
+            "1,012",
+            "145"
+          ],
+          [
+            "Ring-tailed lemur",
+            "diurnal",
+            "2,455",
+            "130"
+          ],
+          [
+            "Red ruffed lemur",
+            "diurnal",
+            "3,601",
+            "98"
+          ]
+        ],
+        "note": null
+      },
+      "figure": null,
+      "explanation": "Three taxa in the table are listed as diurnal: the eastern lesser bamboo lemur (145 days), the ring-tailed lemur (130 days), and the red ruffed lemur (98 days). The shortest of these expected gestations belongs to the red ruffed lemur, whose mean adult body mass is about 3,600 grams, so choice A completes the text.",
+      "distractors": {
+        "B": {
+          "recipe": "wrong group (ignores filter)",
+          "why_wrong": "The gray mouse lemur has the shortest expected gestation in the table (60 days), but it is nocturnal, not diurnal."
+        },
+        "C": {
+          "recipe": "wrong measure",
+          "why_wrong": "The eastern lesser bamboo lemur is the lightest of the diurnal taxa, but its expected gestation (145 days) is the longest of the three diurnal taxa, not the shortest."
+        },
+        "D": {
+          "recipe": "wrong group (ignores filter)",
+          "why_wrong": "The northern giant mouse lemur’s expected gestation (90 days) is shorter than the red ruffed lemur’s, but the northern giant mouse lemur is nocturnal."
+        }
+      },
+      "models": [
+        "3.44"
+      ],
+      "word_count": 79,
+      "sources": [
+        {
+          "what": "Zehr, Roach, Haring, Taylor, Cameron and Yoder 2014, Scientific Data 1:140019: since its establishment in 1966 the DLC has records for nearly 4,200 individuals from over 40 strepsirrhine taxa (lemurs, lorises and galagos); longitudinal data in many cases span an animal's entire life; life history table for 27 taxa",
+          "url": "https://europepmc.org/article/PMC/PMC4322587"
+        },
+        {
+          "what": "life history table values: mean adult body mass (both sexes) gray mouse lemur 82.65 g, northern giant mouse lemur 302.41 g, eastern lesser bamboo lemur 1012.49 g, ring-tailed lemur 2454.66 g, red ruffed lemur 3601.30 g; expected gestation 60, 90, 145, 130 and 98 days; activity N, N, D, D, D",
+          "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC4322587/fullTextXML"
+        },
+        {
+          "what": "Duke Lemur Center: located on the Duke University campus in Durham, North Carolina; established in 1966",
+          "url": "https://lemur.duke.edu/about/history-mission/"
+        }
+      ],
+      "notes": "Activity pattern follows the dataset's two-way N/D coding (cathemeral taxa are coded D). Masses rounded to whole grams in the table and to round figures in the options. Subject replaced: early digital computers table (judge tell: encyclopedic history-of-computing table with no research source).",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 10,
+        "fixes": [],
+        "status": "pass"
+      },
+      "rewrite": "New subject (Duke Lemur Center life-history data, Zehr et al. 2014) replacing early computers; filter-then-extreme kept, with a filter-ignoring distractor and a lightest-taxon distractor.",
+      "model_bands": [
+        7
+      ]
+    },
+    {
+      "id": "command_of_evidence.Q1_P3_pairwise.easy",
+      "template": "Q1_P3_pairwise",
+      "subtype": "Data completion (pairwise comparison)",
+      "tier": "easy",
+      "passage": "Cigarette butts are the most commonly littered item in the world, and their filters, made of a plastic called cellulose acetate, can persist in the environment for years. RMIT University engineers Halil Kurmus and Abbas Mohajerani have tested one way of recycling this waste. They mixed butts into the clay used to manufacture fired bricks and then measured the bricks’ properties. The results revealed a trade-off: compared with control bricks containing no butts, bricks containing 1% butts by mass ______",
+      "stem": "Which choice most effectively uses data from the table to complete the claim?",
+      "options": [
+        "had a lower thermal conductivity but also a lower compressive strength.",
+        "had a lower thermal conductivity and a higher compressive strength.",
+        "had a higher thermal conductivity but a lower dry density.",
+        "had a higher dry density but a lower compressive strength."
+      ],
+      "answer_letter": "A",
+      "table": {
+        "title": "Properties of Fired Clay Bricks with and without Cigarette Butts",
+        "columns": [
+          "Brick type",
+          "Compressive strength (megapascals)",
+          "Dry density (kilograms per cubic meter)",
+          "Thermal conductivity (watts per meter-kelvin)"
+        ],
+        "rows": [
+          [
+            "Control (no butts)",
+            "48.6",
+            "2,114",
+            "1.078"
+          ],
+          [
+            "1% butts by mass",
+            "30.8",
+            "1,983",
+            "0.898"
+          ]
+        ],
+        "note": null
+      },
+      "figure": null,
+      "explanation": "The table shows that the bricks with 1% butts had a lower thermal conductivity than the control bricks (0.898 versus 1.078), so they let less heat through, but also a lower compressive strength (30.8 versus 48.6 megapascals). Choice A states both comparisons correctly and shows the trade-off.",
+      "distractors": {
+        "B": {
+          "recipe": "reversed comparison",
+          "why_wrong": "The bricks with butts had a lower compressive strength than the control bricks (30.8 versus 48.6 megapascals), not a higher one."
+        },
+        "C": {
+          "recipe": "reversed comparison",
+          "why_wrong": "The bricks with butts had a lower thermal conductivity than the control bricks (0.898 versus 1.078), not a higher one."
+        },
+        "D": {
+          "recipe": "reversed comparison",
+          "why_wrong": "The bricks with butts had a lower dry density than the control bricks (1,983 versus 2,114 kilograms per cubic meter), not a higher one."
+        }
+      },
+      "models": [
+        "1.3"
+      ],
+      "word_count": 80,
+      "sources": [
+        {
+          "what": "Kurmus and Mohajerani 2020, Materials 13(3):790, 'Recycling of Cigarette Butts in Fired Clay Bricks: A New Laboratory Investigation': CBs are the most commonly littered waste in the world; cellulose acetate filters with poor biodegradability can take many years to decompose; bricks with 0.5 to 2% CBs by mass tested against 0% control bricks; compressive strength 48.6 MPa (0%) vs 30.8 MPa (1%); dry density 2114 vs 1983 kg/m3; thermal conductivity 1.078 vs 0.898 W/mK",
+          "url": "https://europepmc.org/article/PMC/PMC7040893"
+        },
+        {
+          "what": "authors' affiliation: School of Engineering, RMIT University, Melbourne",
+          "url": "https://doi.org/10.3390/ma13030790"
+        }
+      ],
+      "notes": "Subject replaced: Seikan and Channel tunnels (judge tell: generic engineering trivia with an irrelevant 'opened six years before' detail and a mechanical 2x2 grid). Options now pair different measures instead of a full larger/smaller factorial.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 8,
+        "fixes": [],
+        "status": "pass"
+      },
+      "replaced": "Galilean moons, Io vs Europa (duplicate of text_structure_and_purpose.S15_phenomenon_refute_two_third.hard)",
+      "rewrite": "New subject (cigarette-butt fired clay bricks, Kurmus and Mohajerani 2020) replacing undersea tunnels; trade-off claim, options pair different measures rather than a 2x2 grid.",
+      "model_bands": [
+        3
+      ]
+    },
+    {
+      "id": "command_of_evidence.Q1_P3_pairwise.medium",
+      "template": "Q1_P3_pairwise",
+      "subtype": "Data completion (pairwise comparison)",
+      "tier": "medium",
+      "passage": "Neglected vacant lots, common in many low-income urban neighborhoods, have been associated with depression among nearby residents. In a citywide trial in Philadelphia, physician Eugenia South and colleagues randomly assigned clusters of vacant lots to greening (trash removal, new grass and trees, and a low wooden fence), to trash cleanup alone, or to no intervention, and they surveyed nearby residents before and after the remediation. The type of intervention appeared to matter: ______",
+      "stem": "Which choice most effectively uses data from the graph to complete the statement?",
+      "options": [
+        "among residents near lots that received no intervention, the share who reported feeling worthless rose from about 7% to about 9%.",
+        "among residents near greened lots, the share who reported feeling worthless fell from about 10% to about 5%, whereas among residents near lots that were only cleaned of trash it changed little.",
+        "before the interventions, about 10% of residents near greened lots and about 10% of residents near trash-cleanup lots reported feeling worthless.",
+        "the share of residents who reported feeling worthless fell by about half near greened lots and by a similar amount near lots that received no intervention."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": {
+        "kind": "bar graph",
+        "title": "Residents Reporting Feeling Worthless before and after Vacant-Lot Interventions",
+        "x_axis": "Study group",
+        "y_axis": "Residents reporting feeling worthless (%)",
+        "description": "Grouped bars for three study groups, each with a before bar (light gray) and an after bar (dark gray); y-axis 0 to 12 in steps of 2. No intervention: before 6.6, after 8.7. Trash cleanup only: before 9.7, after 9.2. Greening: before 10.3, after 5.1. Percentages are residents who said they had felt worthless less than half the time or more often in the past 30 days.",
+        "data": [
+          {
+            "series": "Before intervention",
+            "points": [
+              [
+                "No intervention",
+                6.6
+              ],
+              [
+                "Trash cleanup only",
+                9.7
+              ],
+              [
+                "Greening",
+                10.3
+              ]
+            ]
+          },
+          {
+            "series": "After intervention",
+            "points": [
+              [
+                "No intervention",
+                8.7
+              ],
+              [
+                "Trash cleanup only",
+                9.2
+              ],
+              [
+                "Greening",
+                5.1
+              ]
+            ]
+          }
+        ]
+      },
+      "explanation": "To show that the type of intervention mattered, the data must contrast greening with trash cleanup. The graph shows the share of residents near greened lots who reported feeling worthless dropping from about 10% to about 5%, while the share near trash-cleanup lots stayed near 9% to 10%. Choice B makes that comparison accurately.",
+      "distractors": {
+        "A": {
+          "recipe": "true but irrelevant (control only)",
+          "why_wrong": "The no-intervention values are read correctly, but they describe only the group that received no remediation, so they cannot show that one type of remediation worked better than the other."
+        },
+        "C": {
+          "recipe": "true but irrelevant (before only)",
+          "why_wrong": "Both groups were indeed near 10% before the interventions, but these are preintervention values, so they say nothing about the effect of either intervention."
+        },
+        "D": {
+          "recipe": "half-match (second part false)",
+          "why_wrong": "The share near greened lots did fall by about half, but near lots with no intervention it rose, from about 7% to about 9%; it did not fall."
+        }
+      },
+      "models": [
+        "2.28",
+        "2.39",
+        "2.32"
+      ],
+      "word_count": 73,
+      "sources": [
+        {
+          "what": "South, Hohl, Kondo, MacDonald and Branas 2018, JAMA Network Open 1(3):e180298: citywide cluster randomized trial in Philadelphia, 110 vacant lot clusters assigned to greening (removing trash, grading, planting grass and a few trees, low wooden perimeter fence, monthly maintenance), trash cleanup, or no intervention; residents surveyed before and after; feelings of depression and worthlessness significantly decreased near greened lots",
+          "url": "https://europepmc.org/article/PMC/PMC6324526"
+        },
+        {
+          "what": "Table 2, all neighborhoods, worthless: no intervention 6.6% pre, 8.7% post; greening 10.3% pre, 5.1% post; trash cleanup 9.7% pre, 9.2% post; percentages are participants responding 'less than half the time' or more often in the past 30 days",
+          "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC6324526/fullTextXML"
+        },
+        {
+          "what": "neighborhood physical conditions including vacant or dilapidated spaces and trash are associated with depression (paper's introduction); Eugenia South, MD, Department of Emergency Medicine, University of Pennsylvania",
+          "url": "https://doi.org/10.1001/jamanetworkopen.2018.0298"
+        }
+      ],
+      "notes": "Graph shows unadjusted pre and post percentages from Table 2; the paper's significance tests compare each intervention with no intervention. Subject replaced: Finkenstaedt and Wolff word origins (judge tell: well-known internet chart; distractors simply misstated bar values).",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 10,
+        "fixes": [],
+        "status": "pass"
+      },
+      "rewrite": "New subject (Philadelphia vacant-lot greening trial, South et al. 2018) replacing English word origins; distractors now true-but-irrelevant (control only, before only) and a half-true two-part option.",
+      "model_bands": [
+        5,
+        5,
+        4
+      ]
+    },
+    {
+      "id": "command_of_evidence.Q1_P3_pairwise.hard",
+      "template": "Q1_P3_pairwise",
+      "subtype": "Data completion (paired comparison across rows and columns)",
+      "tier": "hard",
+      "passage": "In the central highlands of Mexico, smallholder farmers who grow maize landraces (traditional varieties adapted to local conditions) store seed from one season to the next in polypropylene woven bags, leaving it exposed to insects such as the maize weevil and the larger grain borer. Researchers at the International Maize and Wheat Improvement Center, led by Sylvanus Odjo, compared this conventional practice with airtight hermetic containers, storing seed of four landraces in both types of storage for three or six months. Seed kept in woven bags sustained considerably more insect damage than seed of the same landrace kept hermetically over an equivalent storage period. For example, whereas Magdalena seed stored hermetically for six months had 1.2% insect damage, ______",
+      "stem": "Which choice most effectively uses data from the table to complete the example?",
+      "options": [
+        "Magdalena seed stored in woven bags for three months had 3.5%.",
+        "VC Rosado seed stored in woven bags for six months had 61.4%.",
+        "Magdalena seed stored in woven bags for six months had 50.5%.",
+        "Magdalena seed stored hermetically for three months had 1.3%."
+      ],
+      "answer_letter": "C",
+      "table": {
+        "title": "Insect Damage to Seed of Four Maize Landraces after Storage",
+        "columns": [
+          "Landrace",
+          "3 months, woven bag (%)",
+          "3 months, hermetic container (%)",
+          "6 months, woven bag (%)",
+          "6 months, hermetic container (%)"
+        ],
+        "rows": [
+          [
+            "Magdalena",
+            "3.5",
+            "1.3",
+            "50.5",
+            "1.2"
+          ],
+          [
+            "VC Amarillo",
+            "2.4",
+            "1.3",
+            "36.2",
+            "2.2"
+          ],
+          [
+            "VC Rosado",
+            "38.1",
+            "4.1",
+            "61.4",
+            "2.4"
+          ],
+          [
+            "SJR Azul",
+            "7.4",
+            "3.8",
+            "59.5",
+            "3.1"
+          ]
+        ],
+        "note": null
+      },
+      "figure": null,
+      "explanation": "The claim compares seed of the same landrace stored for the same length of time in the two kinds of storage. The example starts with Magdalena seed stored hermetically for six months (1.2%), so it must be completed with Magdalena seed stored in woven bags for six months, which the table shows had 50.5% insect damage. Only choice C matches both the landrace and the storage period.",
+      "distractors": {
+        "A": {
+          "recipe": "wrong column (different storage period)",
+          "why_wrong": "This value is for Magdalena seed stored in woven bags for three months, not six, so it does not compare the two kinds of storage over the same period."
+        },
+        "B": {
+          "recipe": "wrong row (different landrace)",
+          "why_wrong": "VC Rosado did have 61.4% damage after six months in woven bags, but the claim compares seed of the same landrace, and the example begins with Magdalena."
+        },
+        "D": {
+          "recipe": "wrong column (same storage type)",
+          "why_wrong": "This value is also for hermetically stored Magdalena seed, after three months, so it compares two hermetic samples rather than woven bags with hermetic containers."
+        }
+      },
+      "models": [
+        "3.29"
+      ],
+      "word_count": 119,
+      "sources": [
+        {
+          "what": "Odjo, Bongianino, González Regalado et al. 2022, Insects 13(10):878, 'Effect of Storage Technologies on Postharvest Insect Pest Control and Seed Germination in Mexican Maize Landraces': central highlands of Mexico; smallholders store landrace seed in polypropylene woven bags (conventional practice), compared with hermetic containers (GrainPro hermetic bags or sealed plastic bottles); four landraces stored three and six months; pests Sitophilus zeamais and Prostephanus truncatus; lead author at CIMMYT",
+          "url": "https://europepmc.org/article/PMC/PMC9604504"
+        },
+        {
+          "what": "Table 2 insect damage (%): Magdalena 3.5 / 1.3 / 50.5 / 1.2; VC Amarillo 2.4 / 1.3 / 36.2 / 2.2; VC Rosado 38.1 / 4.1 / 61.4 / 2.4; SJR Azul 7.4 / 3.8 / 59.5 / 3.1 (3 months PP, 3 months HT, 6 months PP, 6 months HT)",
+          "url": "https://doi.org/10.3390/insects13100878"
+        },
+        {
+          "what": "common names: Sitophilus zeamais is the maize weevil; Prostephanus truncatus is the larger grain borer",
+          "url": "https://en.wikipedia.org/wiki/Prostephanus_truncatus"
+        }
+      ],
+      "notes": "Hermetic containers were GrainPro bags for Magdalena and VC Amarillo and sealed PET bottles for VC Rosado and SJR Azul; the passage and table say 'hermetic container'. Values are means of three replicates. Subject replaced: alcohol and alkane boiling points (judge tell: chemistry textbook explanation; long passage for a trivial row lookup).",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 11,
+        "fixes": [
+          "'Sylvanus Odjo of the International Maize and Wheat Improvement Center and colleagues' changed to 'Researchers at the International Maize and Wheat Improvement Center, led by Sylvanus Odjo,' (stock 'and colleagues' framing); 'typically' dropped to stay at the skill's 119-word maximum"
+        ],
+        "status": "fixed"
+      },
+      "rewrite": "New subject (hermetic vs woven-bag storage of Mexican maize landraces, Odjo et al. 2022) replacing alcohol/alkane boiling points; same-row matched comparison kept, distractors vary row, period and storage type.",
+      "model_bands": [
+        6
+      ]
+    },
+    {
+      "id": "command_of_evidence.Q1_P4_trend.easy",
+      "template": "Q1_P4_trend",
+      "subtype": "Data completion (change over time)",
+      "tier": "easy",
+      "passage": "Although global sea level has risen throughout the past century, several tide gauges in southeastern Alaska record a persistent decline. Analyzing the gauge records, Christopher Larsen’s research group attributed this pattern to rapid uplift of the land itself: as glaciers have retreated since the end of the Little Ice Age, the underlying crust, relieved of the ice’s enormous weight, has been rebounding. Wherever such uplift outpaces the ocean’s rise, relative sea level (the height of the sea measured against the adjacent coastline) decreases. Between 1950 and 2010, for example, relative sea level at ______",
+      "stem": "Which choice most effectively uses data from the graph to complete the example?",
+      "options": [
+        "Grand Isle, Louisiana, fell by about 40 centimeters.",
+        "Ketchikan, Alaska, changed by only a few centimeters.",
+        "Juneau, Alaska, fell by more than 60 centimeters.",
+        "Sitka, Alaska, rose by about 10 centimeters."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": {
+        "kind": "line graph",
+        "title": "Change in Relative Sea Level at Four Tide Gauges since 1950",
+        "x_axis": "Year",
+        "y_axis": "Change in annual mean relative sea level since 1950 (centimeters)",
+        "description": "Four lines at 1950, 1970, 1990 and 2010; y-axis −80 to 60 in steps of 20, with a heavier line at 0. Juneau, Alaska: 0, −24, −49, −72. Sitka, Alaska: 0, 0, −11, −9. Ketchikan, Alaska: 0, +1, −1, +2. Grand Isle, Louisiana: 0, +15, +36, +48. Juneau falls at every point; Grand Isle rises at every point; Ketchikan stays within a few centimeters of 0; Sitka ends about 9 centimeters lower.",
+        "data": [
+          {
+            "series": "Juneau, Alaska",
+            "points": [
+              [
+                1950,
+                0
+              ],
+              [
+                1970,
+                -24
+              ],
+              [
+                1990,
+                -49
+              ],
+              [
+                2010,
+                -72
+              ]
+            ]
+          },
+          {
+            "series": "Sitka, Alaska",
+            "points": [
+              [
+                1950,
+                0
+              ],
+              [
+                1970,
+                0
+              ],
+              [
+                1990,
+                -11
+              ],
+              [
+                2010,
+                -9
+              ]
+            ]
+          },
+          {
+            "series": "Ketchikan, Alaska",
+            "points": [
+              [
+                1950,
+                0
+              ],
+              [
+                1970,
+                1
+              ],
+              [
+                1990,
+                -1
+              ],
+              [
+                2010,
+                2
+              ]
+            ]
+          },
+          {
+            "series": "Grand Isle, Louisiana",
+            "points": [
+              [
+                1950,
+                0
+              ],
+              [
+                1970,
+                15
+              ],
+              [
+                1990,
+                36
+              ],
+              [
+                2010,
+                48
+              ]
+            ]
+          }
+        ]
+      },
+      "explanation": "The example must show relative sea level going down at a gauge in southeastern Alaska. The Juneau line falls at every point, ending about 72 centimeters below its 1950 level in 2010, so choice C completes the example.",
+      "distractors": {
+        "A": {
+          "recipe": "wrong direction",
+          "why_wrong": "Relative sea level at Grand Isle rose from 1950 to 2010, ending about 48 centimeters above its 1950 level; it did not fall."
+        },
+        "B": {
+          "recipe": "true but irrelevant",
+          "why_wrong": "Ketchikan’s line does stay within a few centimeters of its 1950 level, but a nearly unchanged sea level does not illustrate the decline the text describes."
+        },
+        "D": {
+          "recipe": "wrong direction",
+          "why_wrong": "Relative sea level at Sitka ended about 9 centimeters lower in 2010 than in 1950; it did not rise."
+        }
+      },
+      "models": [
+        "1.10",
+        "1.6"
+      ],
+      "word_count": 94,
+      "sources": [
+        {
+          "what": "NOAA Tides and Currents monthly mean sea level, Juneau 9452210, Sitka 9451600, Ketchikan 9450460, Grand Isle 8761724 (metric, relative to station MSL); annual means for 1950, 1970, 1990 and 2010 computed from monthly means",
+          "url": "https://api.tidesandcurrents.noaa.gov/dpapi/prod/webapi/product/sealvltrends.json?station=9452210&details=monthlymeans&units=metric&trendType=SINGLE"
+        },
+        {
+          "what": "NOAA relative sea level trends: Juneau, Sitka and other southeast Alaska gauges negative; Grand Isle strongly positive",
+          "url": "https://tidesandcurrents.noaa.gov/sltrends/"
+        },
+        {
+          "what": "Larsen, Motyka, Freymueller, Echelmeyer and Ivins 2005, Earth and Planetary Science Letters 237:548-560, 'Rapid viscoelastic uplift in southeast Alaska caused by post-Little Ice Age glacial retreat' (uplift up to 32 mm/yr attributed to isostatic rebound after post-LIA ice loss)",
+          "url": "https://doi.org/10.1016/j.epsl.2005.06.032"
+        },
+        {
+          "what": "glaciers thinned rapidly since the end of the Little Ice Age, unloading the crust and causing glacial isostatic rebound; Juneau has experienced a relative decrease in sea level; uplift about 15 mm/yr near Juneau",
+          "url": "https://acrc.alaska.edu/juneau-climate-report/ocean.html"
+        },
+        {
+          "what": "global mean sea level has risen over the past century",
+          "url": "https://www.climate.gov/news-features/understanding-climate/climate-change-global-sea-level"
+        },
+        {
+          "what": "Larsen, Echelmeyer, Freymueller and Motyka 2003, JGR 108(B4), 'Tide gauge records of uplift along the northern Pacific-North American plate boundary, 1937 to 2001': relative sea level changes from tide gauge monthly means at 15 sites; the extremely rapid uplift is attributed entirely to viscoelastic postglacial rebound from tidewater-glacier retreat in Glacier Bay and regional post-Little Ice Age deglaciation (Crossref abstract)",
+          "url": "https://doi.org/10.1029/2001JB001685"
+        }
+      ],
+      "notes": "Graph values are changes in single-year annual means relative to 1950, rounded to whole centimeters, computed with Python from NOAA monthly means. Subject replaced: Sun Belt city populations (judge tell: textbook backstory with explanatory filler, structure cloned from the Singer item).",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 9,
+        "fixes": [
+          "recomputed all 16 graph values from NOAA monthly means (annual means, change since 1950): all match after rounding (Juneau 0/−24/−49/−72, Sitka 0/0/−11/−9, Ketchikan 0/+1/−1/+2, Grand Isle 0/+15/+36/+48)",
+          "added Larsen et al. 2003 (JGR), the tide-gauge paper in which Larsen's group attributes the gauge-recorded uplift to post-Little Ice Age rebound",
+          "'Christopher Larsen and colleagues attributed' changed to 'Analyzing the gauge records, Christopher Larsen’s research group attributed' (stock 'and colleagues' framing)"
+        ],
+        "status": "fixed"
+      },
+      "rewrite": "New subject (falling relative sea level in southeast Alaska from post-Little Ice Age uplift, Larsen et al. 2005, NOAA gauges) replacing Sun Belt city growth; true-but-irrelevant 'nearly unchanged' distractor added.",
+      "model_bands": [
+        3,
+        3
+      ]
+    },
+    {
+      "id": "command_of_evidence.Q1_P4_trend.medium",
+      "template": "Q1_P4_trend",
+      "subtype": "Data completion (change over time)",
+      "tier": "medium",
+      "passage": "Three species of brush-tailed penguins (genus Pygoscelis)—Adélie, chinstrap, and gentoo—breed on Signy Island in Antarctica’s South Orkney Islands. From nearly four decades of breeding-pair counts at regularly monitored colonies there, Michael Dunn and fellow researchers at the British Antarctic Survey found that the three species’ population trajectories differed considerably. Gentoos, for instance, increased substantially: in the study areas, the number of gentoo breeding pairs went from ______",
+      "stem": "Which choice most effectively uses data from the graph to complete the assertion?",
+      "options": [
+        "about 2,050 in 1978–79 to about 1,400 in 2013–14.",
+        "fewer than 500 in 1978–79 to more than 1,500 in 2013–14.",
+        "about 850 in 1999–2000 to about 670 in 2006–07.",
+        "fewer than 500 in 1978–79 to over 1,000 in 2013–14."
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": {
+        "kind": "line graph",
+        "title": "Breeding Pairs of Three Penguin Species in Monitored Colonies on Signy Island, 1978–2014",
+        "x_axis": "Breeding season",
+        "y_axis": "Number of breeding pairs",
+        "description": "Three lines at the 1978–79, 1985–86, 1992–93, 1999–2000, 2006–07 and 2013–14 breeding seasons; y-axis 0 to 3,000 in steps of 250. Adélie (solid, triangles): 1,873; 2,787; 2,546; 1,313; 1,690; 1,731. Chinstrap (dashed, squares): 2,050; 2,219; 2,145; 1,440; 1,527; 1,417. Gentoo (dotted, circles): 370; 407; 536; 851; 668; 1,136. Gentoo starts below 500 and ends above 1,000, with a dip between 1999–2000 and 2006–07; chinstrap ends lower than it starts.",
+        "data": [
+          {
+            "series": "Adélie",
+            "points": [
+              [
+                "1978–79",
+                1873
+              ],
+              [
+                "1985–86",
+                2787
+              ],
+              [
+                "1992–93",
+                2546
+              ],
+              [
+                "1999–2000",
+                1313
+              ],
+              [
+                "2006–07",
+                1690
+              ],
+              [
+                "2013–14",
+                1731
+              ]
+            ]
+          },
+          {
+            "series": "Chinstrap",
+            "points": [
+              [
+                "1978–79",
+                2050
+              ],
+              [
+                "1985–86",
+                2219
+              ],
+              [
+                "1992–93",
+                2145
+              ],
+              [
+                "1999–2000",
+                1440
+              ],
+              [
+                "2006–07",
+                1527
+              ],
+              [
+                "2013–14",
+                1417
+              ]
+            ]
+          },
+          {
+            "series": "Gentoo",
+            "points": [
+              [
+                "1978–79",
+                370
+              ],
+              [
+                "1985–86",
+                407
+              ],
+              [
+                "1992–93",
+                536
+              ],
+              [
+                "1999–2000",
+                851
+              ],
+              [
+                "2006–07",
+                668
+              ],
+              [
+                "2013–14",
+                1136
+              ]
+            ]
+          }
+        ]
+      },
+      "explanation": "The text needs values showing the gentoo increase. The gentoo line starts at about 370 pairs in 1978–79, fewer than 500, and ends at about 1,140 pairs in 2013–14, over 1,000, so choice D completes the text accurately.",
+      "distractors": {
+        "A": {
+          "recipe": "wrong series",
+          "why_wrong": "About 2,050 pairs in 1978–79 and about 1,400 in 2013–14 describe the chinstrap line, which fell; the gentoo line starts below 500."
+        },
+        "B": {
+          "recipe": "near-miss threshold",
+          "why_wrong": "Gentoo pairs did start below 500, but in 2013–14 they numbered about 1,140, not more than 1,500."
+        },
+        "C": {
+          "recipe": "contradicts the claim (true data, wrong span)",
+          "why_wrong": "The gentoo values for 1999–2000 (about 850) and 2006–07 (about 670) are read correctly, but they show a decline, so they cannot illustrate the gentoo increase."
+        }
+      },
+      "models": [
+        "2.15",
+        "2.34"
+      ],
+      "word_count": 67,
+      "sources": [
+        {
+          "what": "Dunn, Jackson, Adlard, Lynnes, Briggs, Fox and Waluda 2016, PLoS One 11(10): e0164025, 'Population Size and Decadal Trends of Three Penguin Species Nesting at Signy Island, South Orkney Islands': Adélie, chinstrap and gentoo; 38 years of annual counts from selected colonies plus decadal island-wide counts; gentoo pairs increased 255%, chinstrap declined 68%, Adélie declined 42% (whole island); lead author at the British Antarctic Survey",
+          "url": "https://europepmc.org/article/PMC/PMC5082682"
+        },
+        {
+          "what": "Table 2, pairs in study areas: Adélie 1873, 2787, 2546, 1313, 1690, 1731; chinstrap 2050, 2219, 2145, 1440, 1527, 1417; gentoo 370, 407, 536, 851, 668, 1136 for 1978/79, 1985/86, 1992/93, 1999/00, 2006/07, 2013/14",
+          "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC5082682/fullTextXML"
+        },
+        {
+          "what": "Pygoscelis is the genus of brush-tailed penguins (Adélie, chinstrap, gentoo)",
+          "url": "https://en.wikipedia.org/wiki/Pygoscelis"
+        }
+      ],
+      "notes": "Seasons chosen at seven-year intervals from the annual study-area counts (Table 2). The study-area Adélie count fluctuates; the passage makes no claim about Adélie. Subject replaced: life expectancy by country (judge tell: generic world-data topic; every distractor another country's line).",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 9,
+        "fixes": [
+          "'Michael Dunn of the British Antarctic Survey and colleagues' changed to 'Michael Dunn and fellow researchers at the British Antarctic Survey' (stock 'and colleagues' framing)",
+          "option C: 'about 650' changed to 'about 670' for the 2006–07 gentoo count of 668 (Table 2), so the true-but-irrelevant distractor is accurate"
+        ],
+        "status": "fixed"
+      },
+      "rewrite": "New subject (Signy Island penguin counts, Dunn et al. 2016) replacing World Bank life expectancy; distractors now mix wrong series, near-miss threshold and true-but-declining span.",
+      "model_bands": [
+        4,
+        4
+      ]
+    },
+    {
+      "id": "command_of_evidence.Q1_P5_control.medium",
+      "template": "Q1_P5_control",
+      "subtype": "Data completion (condition vs control)",
+      "tier": "medium",
+      "passage": "Laboratory experiments have suggested that painting one of a wind turbine’s three rotor blades black minimizes motion smear, the visual blurring that may prevent birds from detecting rotating blades in time to avoid them. Testing this prediction at the Smøla wind-power plant in Norway, Roel May and colleagues painted one blade black on each of four turbines in 2013. Trained dogs then searched for carcasses beneath those turbines and four unpainted control turbines, as they had since 2006. Painting was associated with reduced avian fatalities: ______",
+      "stem": "Which choice most effectively uses data from the graph to complete the statement?",
+      "options": [
+        "after the painting, searchers found 6 carcasses at the painted turbines, compared with 18 at the unpainted control turbines.",
+        "before the painting, searchers found 11 carcasses at the turbines that would later be painted, compared with 7 at the control turbines.",
+        "at the control turbines, searchers found 7 carcasses before the painting and 18 after it.",
+        "at the painted turbines, searchers found 11 carcasses before the painting and 18 after it."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": {
+        "kind": "bar graph",
+        "title": "Bird Carcasses Found at Eight Turbines on Smøla before and after Painting",
+        "x_axis": "Period",
+        "y_axis": "Number of carcasses found",
+        "description": "Grouped bars for two periods, before painting (2006–2013) and after painting (2013–2016); legend: turbines with one blade painted black (dark gray) and unpainted control turbines (light gray). Y-axis 0 to 20 in steps of 2. Before painting: painted turbines 11, control turbines 7. After painting: painted turbines 6, control turbines 18. Willow ptarmigan, which collide with turbine towers, are excluded, as in the study.",
+        "data": [
+          {
+            "series": "Turbines with one blade painted black",
+            "points": [
+              [
+                "Before painting (2006–2013)",
+                11
+              ],
+              [
+                "After painting (2013–2016)",
+                6
+              ]
+            ]
+          },
+          {
+            "series": "Unpainted control turbines",
+            "points": [
+              [
+                "Before painting (2006–2013)",
+                7
+              ],
+              [
+                "After painting (2013–2016)",
+                18
+              ]
+            ]
+          }
+        ]
+      },
+      "explanation": "To show that painting was associated with fewer fatalities, the example must compare painted and unpainted turbines after the painting. The graph shows 6 carcasses at the painted turbines after the painting and 18 at the control turbines, so choice A completes the statement.",
+      "distractors": {
+        "B": {
+          "recipe": "true data, wrong period",
+          "why_wrong": "These values are accurate, but they come from before any blades were painted, so they cannot show an effect of painting; in fact the turbines later painted had more carcasses at that point."
+        },
+        "C": {
+          "recipe": "no comparison (control only)",
+          "why_wrong": "The control-turbine values are accurate, but they say nothing about the painted turbines, so they do not show that painting reduced fatalities."
+        },
+        "D": {
+          "recipe": "misplaced value",
+          "why_wrong": "After the painting, searchers found 6 carcasses at the painted turbines; 18 is the number found at the control turbines."
+        }
+      },
+      "models": [
+        "2.5",
+        "2.19"
+      ],
+      "word_count": 86,
+      "sources": [
+        {
+          "what": "May, Nygård, Falkdalen, Åström, Hamre and Stokke 2020, Ecology and Evolution 10(16):8927-8935, 'Paint it black': lab experiments (Hodos 2003) indicated painting one of three blades black minimizes motion smear; BACI test at the Smøla wind-power plant in Norway; one of three blades painted black at four turbines on 1 to 8 August 2013; fatality searches with trained dogs since 2006; annual fatality rate reduced by over 70% at painted turbines relative to control turbines",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7452767/"
+        },
+        {
+          "what": "Table 1: carcasses excluding willow ptarmigan, before: control 7, impact 11; after: control 18, impact 6; searches 345, 351, 289, 290; data 2006-2016; willow ptarmigan excluded because it collides with the tower base",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7452767/"
+        },
+        {
+          "what": "authors' affiliation: Norwegian Institute for Nature Research (Roel May lead author)",
+          "url": "https://doi.org/10.1002/ece3.6592"
+        }
+      ],
+      "notes": "Search effort was similar for painted and control turbines in each period (Table 1). Subject replaced: Roediger and Karpicke testing effect (judge tell: classic study with a study-tips opener).",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 9,
+        "fixes": [],
+        "status": "pass"
+      },
+      "rewrite": "New subject (Smøla painted-blade BACI study, May et al. 2020) replacing the Roediger and Karpicke testing effect; distractors: true-but-pretreatment, control-only, misplaced value.",
+      "model_bands": [
+        5,
+        6
+      ]
+    },
+    {
+      "id": "command_of_evidence.Q1_P5_control.hard",
+      "template": "Q1_P5_control",
+      "subtype": "Data completion (condition vs control)",
+      "tier": "hard",
+      "passage": "Corporate philanthropy, in which companies donate part of their revenue to charity, often costs firms more than it returns in commercial benefits. Behavioral scientist Ayelet Gneezy and her team proposed that such giving might prove more profitable if customers themselves determined how much to contribute. At a large amusement park, the researchers sold riders souvenir photographs taken during a ride under four conditions, each lasting two days: a fixed price of $12.95 or a pay-what-you-want price, either with or without a pledge that half of the revenue would go to a charitable foundation. As the researchers had proposed, the charitable pledge ______",
+      "stem": "Which choice most effectively uses data from the table to complete the statement?",
+      "options": [
+        "increased the percentage of riders who bought a photo under both pricing methods, especially when riders chose their own price.",
+        "raised photo revenue per rider far more when riders chose their own price than when the price was fixed at $12.95.",
+        "lowered the percentage of riders who bought a photo when riders chose their own price, from 8.39% to 4.49%.",
+        "raised the average amount paid per photo under both pricing methods, though only slightly when riders chose their own price."
+      ],
+      "answer_letter": "B",
+      "table": {
+        "title": "Souvenir Photo Sales under Four Pricing Conditions",
+        "columns": [
+          "Condition",
+          "Riders who bought a photo (%)",
+          "Average amount paid per photo (dollars)",
+          "Photo revenue per rider (cents)"
+        ],
+        "rows": [
+          [
+            "Fixed price",
+            "0.50",
+            "12.95",
+            "6.5"
+          ],
+          [
+            "Fixed price with charitable pledge",
+            "0.59",
+            "12.95",
+            "7.6"
+          ],
+          [
+            "Pay what you want",
+            "8.39",
+            "0.92",
+            "7.7"
+          ],
+          [
+            "Pay what you want with charitable pledge",
+            "4.49",
+            "5.33",
+            "24.0"
+          ]
+        ],
+        "note": null
+      },
+      "figure": null,
+      "explanation": "The researchers proposed that giving would pay off better when customers set the contribution, so the pledge should bring in much more money under pay-what-you-want pricing than under the fixed price. With the fixed price, the pledge raised photo revenue per rider only from 6.5 to 7.6 cents; with pay-what-you-want pricing, it raised it from 7.7 to 24.0 cents. Choice B states this contrast.",
+      "distractors": {
+        "A": {
+          "recipe": "inaccurate (wrong direction)",
+          "why_wrong": "Under pay-what-you-want pricing, the pledge lowered the share of riders who bought a photo, from 8.39% to 4.49%."
+        },
+        "C": {
+          "recipe": "true but does not support the claim",
+          "why_wrong": "The drop is accurate, but fewer buyers says nothing in favor of the pledge paying off; the proposal is about money brought in, which the option leaves out."
+        },
+        "D": {
+          "recipe": "inaccurate (misread values)",
+          "why_wrong": "At the fixed price every buyer paid $12.95 with or without the pledge, and under pay-what-you-want pricing the average rose sharply, from $0.92 to $5.33."
+        }
+      },
+      "models": [
+        "3.46",
+        "3.38",
+        "3.4"
+      ],
+      "sources": [
+        {
+          "what": "Gneezy, Gneezy, Nelson and Brown, 'Shared Social Responsibility: A Field Experiment in Pay-What-You-Want Pricing and Charitable Giving', Science 329:325-327 (2010): CSR costs often higher than commercial benefits; field study at a large amusement park, riders photographed during a ride; 2 x 2 design, $12.95 or PWYW, with or without half of revenue to a patient-support foundation; each treatment two full days; purchase rates 0.50%, 0.59%, 8.39%, 4.49%; mean paid $0.92 (PWYW) vs $5.33 (PWYW + charity); Table 1 photo revenue and riders per condition (revenue per rider computed from it)",
+          "url": "https://marketing.wharton.upenn.edu/wp-content/uploads/2016/10/Gneezy20Gneezy20Nelson2020Brown202010.pdf"
+        },
+        {
+          "what": "Ayelet Gneezy, Professor of Behavioral Sciences and Marketing, Rady School of Management, UC San Diego",
+          "url": "https://rady.ucsd.edu/faculty-research/faculty/distinguished-rady-faculty/ayelet-gneezy.html"
+        }
+      ],
+      "notes": "New subject (was Semmelweis handwashing). Revenue per rider = Table 1 photo revenue / riders, in cents to one decimal; average amount paid for the fixed-price rows is the $12.95 price.",
+      "rewrite": "New subject: Gneezy et al. 2010 pay-what-you-want photo experiment replaces Semmelweis; table of a 2 x 2 design, key on where the pledge raised revenue most; denser register.",
+      "word_count": 102,
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 9,
+        "fixes": [
+          "recomputed photo revenue per rider from Table 1 of the paper (photo revenue / riders): 6.46, 7.62, 7.70 and 23.97 cents, matching the table",
+          "first sentence now follows the source ('CSR-related costs are higher than their commercial benefits') instead of 'cost more than they generate in additional sales'",
+          "prose simplified to near-official density (long words 22.0% to 17.5%); 'and colleagues' changed to 'and her team'; 'Consistent with the researchers’ proposal' changed to 'As the researchers had proposed'"
+        ],
+        "status": "fixed"
+      },
+      "model_bands": [
+        6,
+        7,
+        null
+      ]
+    },
+    {
+      "id": "command_of_evidence.Q1_P67_criterion.hard",
+      "template": "Q1_P67_criterion",
+      "subtype": "Data completion (presence or absence combined with the passage)",
+      "tier": "hard",
+      "passage": "Lithium is destroyed in the cores of stars and the most massive brown dwarfs, but less massive brown dwarfs never become hot enough internally to destroy it. Among the members of a star cluster, which formed simultaneously, the faintest and coolest objects therefore retain their lithium while somewhat warmer ones have lost it, and the temperature marking this transition, the lithium depletion boundary, indicates the cluster’s age. Astrophysicist Eduardo Martín’s team used the Gran Telescopio Canarias to search the spectra of brown dwarfs in the Hyades, the open cluster nearest Earth, for lithium’s signature. Their results imply that in the Hyades, the lithium depletion boundary lies at an effective temperature ______",
+      "stem": "Which choice most effectively uses data from the table to complete the statement?",
+      "options": [
+        "below 1,695 K, the lowest temperature in the table.",
+        "between 1,695 K and 1,758 K.",
+        "between 1,822 K and 1,959 K.",
+        "between 1,758 K and 1,822 K."
+      ],
+      "answer_letter": "D",
+      "table": {
+        "title": "Lithium Detection in Five Brown Dwarfs in the Hyades",
+        "columns": [
+          "Brown dwarf",
+          "Spectral type",
+          "Estimated effective temperature (K)",
+          "Lithium detected"
+        ],
+        "rows": [
+          [
+            "Hya03",
+            "L2.0",
+            "1,959",
+            "no"
+          ],
+          [
+            "Hya08",
+            "L2.0",
+            "1,959",
+            "no"
+          ],
+          [
+            "Hya11",
+            "L3.0",
+            "1,822",
+            "no"
+          ],
+          [
+            "Hya09",
+            "L3.5",
+            "1,758",
+            "yes"
+          ],
+          [
+            "Hya12",
+            "L4.0",
+            "1,695",
+            "yes"
+          ]
+        ],
+        "note": null
+      },
+      "figure": null,
+      "explanation": "Objects cooler than the boundary keep their lithium and warmer ones lose it. Lithium was detected in Hya09 (1,758 K) and Hya12 (1,695 K) but not in Hya11 (1,822 K) or in the two objects at 1,959 K, so the boundary must be warmer than 1,758 K and cooler than 1,822 K. Choice D gives that range.",
+      "distractors": {
+        "A": {
+          "recipe": "reversed direction",
+          "why_wrong": "Lithium was found in objects at 1,695 K and 1,758 K, so the boundary cannot be cooler than 1,695 K; those objects would then have lost their lithium."
+        },
+        "B": {
+          "recipe": "wrong pair of rows",
+          "why_wrong": "Both Hya12 (1,695 K) and Hya09 (1,758 K) kept their lithium, so the boundary lies above both, not between them."
+        },
+        "C": {
+          "recipe": "wrong pair of rows",
+          "why_wrong": "Hya11 (1,822 K) and the objects at 1,959 K all lack lithium, so the boundary lies below all of them, not between them."
+        }
+      },
+      "models": [
+        "3.22",
+        "3.27"
+      ],
+      "sources": [
+        {
+          "what": "Martin, Lodieu, Pavlenko and Bejar, 'The Lithium Depletion Boundary and the Age of the Hyades Cluster', ApJ 856 (2018), arXiv:1802.07155: Li destroyed in cores of stars and high-mass brown dwarfs; LDB is the limit below which cores do not reach Li-burning temperature and is used to date clusters; OSIRIS spectra at the 10.4-m Gran Telescopio Canarias; Hyades is the nearest open cluster; Table 2 spectral types and Teff (Hya03 L2.0 1959 K, Hya08 L2.0 1959 K, Hya11 L3.0 1822 K, Hya09 L3.5 1758 K, Hya12 L4.0 1695 K); Li detected definitively only in Hya09 and Hya12; Hya10 not definitive; coeval cluster assumption",
+          "url": "https://arxiv.org/abs/1802.07155"
+        }
+      ],
+      "notes": "New subject (was planetary magnetic fields). Temperatures are the paper's spectral-type calibrations (uncertainty about 113 K). Hya10 (L3.5, 1758 K, 2.2-sigma feature) is left out because the authors do not count it as a detection.",
+      "rewrite": "New subject: Martin et al. 2018 lithium depletion boundary in the Hyades replaces the textbook planetary-field explainer; presence/absence column combined with the passage's rule to bound the boundary temperature; denser register.",
+      "word_count": 111,
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 9,
+        "fixes": [
+          "'astrophysicist Eduardo Martín and colleagues searched' changed to 'Astrophysicist Eduardo Martín’s team used ... to search' (stock 'and colleagues' framing)"
+        ],
+        "status": "fixed"
+      },
+      "model_bands": [
+        6,
+        6
+      ]
+    },
+    {
+      "id": "command_of_evidence.Q2_P4_trend.easy",
+      "template": "Q2_P4_trend",
+      "subtype": "Data description (trend supports a claim)",
+      "tier": "easy",
+      "passage": "The Catalina Sky Survey, a project based at the University of Arizona, searches the sky for near-Earth objects, the asteroids and comets whose orbits bring them close to Earth. The graph shows how many near-Earth asteroids the survey discovered each year from 2005 to 2015. Reviewing these discovery statistics, a student claims that <u>the survey became considerably more productive over this period</u>.",
+      "stem": "Which choice most effectively uses data from the graph to justify the underlined claim?",
+      "options": [
+        "The survey discovered about 610 near-Earth asteroids in 2010 but only about 570 in 2015.",
+        "The survey discovered about 630 near-Earth asteroids in both 2012 and 2014.",
+        "The survey discovered about 470 near-Earth asteroids in 2005 and about 630 in 2015.",
+        "The survey discovered about 310 near-Earth asteroids in 2005 and about 570 in 2015."
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": {
+        "kind": "line graph",
+        "title": "Near-Earth Asteroids Discovered by the Catalina Sky Survey, 2005–2015",
+        "x_axis": "Year",
+        "y_axis": "Number of near-Earth asteroids discovered",
+        "description": "One line, one point per year 2005 to 2015; y-axis 0 to 700 in steps of 100. Values: 2005 314, 2006 394, 2007 465, 2008 567, 2009 576, 2010 609, 2011 572, 2012 628, 2013 596, 2014 628, 2015 571. The line rises steeply to 2008, then stays between about 570 and 630, dipping in 2011, 2013 and 2015.",
+        "data": [
+          {
+            "series": "Catalina Sky Survey",
+            "points": [
+              [
+                2005,
+                314
+              ],
+              [
+                2006,
+                394
+              ],
+              [
+                2007,
+                465
+              ],
+              [
+                2008,
+                567
+              ],
+              [
+                2009,
+                576
+              ],
+              [
+                2010,
+                609
+              ],
+              [
+                2011,
+                572
+              ],
+              [
+                2012,
+                628
+              ],
+              [
+                2013,
+                596
+              ],
+              [
+                2014,
+                628
+              ],
+              [
+                2015,
+                571
+              ]
+            ]
+          }
+        ]
+      },
+      "explanation": "To show that the survey became more productive over the period, a choice should compare a year near the start with a year near the end. The survey discovered about 310 near-Earth asteroids in 2005 and about 570 in 2015, nearly twice as many, so choice D justifies the claim.",
+      "distractors": {
+        "A": {
+          "recipe": "contradicts the claim",
+          "why_wrong": "These values are accurate, but they show discoveries falling from 2010 to 2015, which does not show the survey becoming more productive."
+        },
+        "B": {
+          "recipe": "sameness offered as change",
+          "why_wrong": "The values are accurate, but equal counts in 2012 and 2014 show no change at all."
+        },
+        "C": {
+          "recipe": "inaccurate (misread values)",
+          "why_wrong": "The survey discovered about 310 near-Earth asteroids in 2005 and about 570 in 2015, not about 470 and 630; those values belong to 2007 and to 2012 and 2014."
+        }
+      },
+      "models": [
+        "1.14"
+      ],
+      "sources": [
+        {
+          "what": "near-Earth asteroids discovered per year by survey, Catalina row: 2005 314 ... 2015 571 (CNEOS Discovery Statistics, data date 2026-Oct-10)",
+          "url": "https://cneos.jpl.nasa.gov/stats/site_all.html"
+        },
+        {
+          "what": "same table as data file",
+          "url": "https://cneos.jpl.nasa.gov/stats/site_all.json"
+        },
+        {
+          "what": "Catalina Sky Survey: NASA-funded project based at the University of Arizona's Lunar and Planetary Lab, dedicated to the discovery and tracking of near-Earth objects",
+          "url": "https://catalina.lpl.arizona.edu/about"
+        }
+      ],
+      "notes": "New subject (was Guinea worm cases through 2024). CNEOS counts are a live database and can shift slightly as discoveries are reattributed; values are as of 2026-10-10. Distractors avoid the min/max mislabel of the model.",
+      "rewrite": "New subject: Catalina Sky Survey near-Earth asteroid discoveries 2005-2015 replace Guinea worm data through 2024; claim no longer cloned from the model, distractors now decline, sameness and misread values; denser register.",
+      "word_count": 62,
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 13,
+        "fixes": [
+          "checked all 11 yearly values against the CNEOS site table (data date 2026-Oct-10): all match",
+          "opening rewritten without the encyclopedic 'Funded by NASA and based at the ... Lunar and Planetary Laboratory' detail the question never uses; 'Reviewing these data' changed to 'Reviewing these discovery statistics'"
+        ],
+        "status": "fixed"
+      },
+      "model_bands": [
+        3
+      ]
+    },
+    {
+      "id": "command_of_evidence.Q2_P4_trend.medium",
+      "template": "Q2_P4_trend",
+      "subtype": "Data description (trend supports a conclusion)",
+      "tier": "medium",
+      "passage": "Since 1958, the Modern Language Association (MLA) has periodically surveyed American colleges and universities about enrollments in languages other than English. Between the 2013 and 2016 censuses, total enrollments declined by more than 9 percent, and of the fifteen most commonly taught languages, only Japanese and Korean registered gains. Analyzing the 2016 census, Dennis Looney and Natalia Lusin observed that Korean’s growth had carried it past three of those languages, advancing it to eleventh place in the rankings.",
+      "stem": "Which choice best describes data from the table that support Looney and Lusin’s claim?",
+      "options": [
+        "Korean enrollments rose in every census year shown, from 7,146 in 2006 to 13,936 in 2016.",
+        "Enrollments in Ancient Greek fell in every census year shown, whereas enrollments in Portuguese rose until 2013 and then fell.",
+        "Korean enrollments were lower than those in Ancient Greek, Biblical Hebrew, and Portuguese in 2013 but higher than those in all three languages in 2016.",
+        "Korean enrollments had surpassed those in Biblical Hebrew and Portuguese by 2013 and then surpassed those in Ancient Greek by 2016."
+      ],
+      "answer_letter": "C",
+      "table": {
+        "title": "Fall Enrollments in Four Languages at US Colleges and Universities, 2006–2016",
+        "columns": [
+          "Language",
+          "2006",
+          "2009",
+          "2013",
+          "2016"
+        ],
+        "rows": [
+          [
+            "Korean",
+            "7,146",
+            "8,449",
+            "12,256",
+            "13,936"
+          ],
+          [
+            "Ancient Greek",
+            "22,842",
+            "21,515",
+            "16,961",
+            "13,264"
+          ],
+          [
+            "Biblical Hebrew",
+            "14,137",
+            "13,764",
+            "12,596",
+            "9,587"
+          ],
+          [
+            "Portuguese",
+            "10,310",
+            "11,273",
+            "12,407",
+            "9,827"
+          ]
+        ],
+        "note": null
+      },
+      "figure": null,
+      "explanation": "To show that Korean overtook three languages, Korean must have been behind them in an earlier census and ahead of them in a later one. In 2013 Korean (12,256) trailed Ancient Greek (16,961), Biblical Hebrew (12,596) and Portuguese (12,407); in 2016 Korean (13,936) led all three (13,264, 9,587 and 9,827). Choice C describes this reversal.",
+      "distractors": {
+        "A": {
+          "recipe": "true data, no comparison",
+          "why_wrong": "Korean enrollments did rise in every census shown, but growth alone does not show that Korean moved past any other language, which is what Looney and Lusin claim."
+        },
+        "B": {
+          "recipe": "accurate but irrelevant",
+          "why_wrong": "Both trends are accurate, but the option says nothing about Korean, so it cannot show Korean overtaking these languages."
+        },
+        "D": {
+          "recipe": "inaccurate (near-equal values misread)",
+          "why_wrong": "In 2013 Korean (12,256) was still slightly behind both Biblical Hebrew (12,596) and Portuguese (12,407); it passed all three only in 2016."
+        }
+      },
+      "models": [
+        "2.2",
+        "2.12",
+        "2.22"
+      ],
+      "sources": [
+        {
+          "what": "Looney and Lusin, 'Enrollments in Languages Other Than English in United States Institutions of Higher Education, Summer 2016 and Fall 2016: Final Report' (MLA, June 2019): MLA censuses since 1958; total enrollments fell 9.2% from 2013 to 2016; of the fifteen most commonly taught languages only Japanese and Korean gained; Korean 'vaulted over Ancient Greek, Biblical Hebrew, and Portuguese to take the eleventh position'; Table 1a fall enrollments 2006, 2009, 2013, 2016 for Korean, Ancient Greek, Biblical Hebrew, Portuguese",
+          "url": "https://www.mla.org/content/download/110154/file/2016-Enrollments-Final-Report.pdf"
+        }
+      ],
+      "notes": "New subject (was FAO world meat production). Values are Table 1a; Ancient Greek and Biblical Hebrew rows are the report's grouped categories (see its table notes).",
+      "rewrite": "New subject: MLA language enrollment census (Looney and Lusin 2019) replaces FAO meat data; table, key on Korean passing three languages between 2013 and 2016; distractor wording no longer copies the Jordanelle item; denser register.",
+      "word_count": 78,
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 10,
+        "fixes": [
+          "the passage attributed two claims to Looney and Lusin (Korean one of only two languages to gain; Korean overtook three languages), so option A (Korean rose in every census) could be argued to support 'their claim'; the gains are now stated as background and the authors' single claim is that Korean passed three languages",
+          "checked all 16 table values against Table 1a of the MLA report: all match",
+          "long-word share 17.5% to 15.8%"
+        ],
+        "status": "fixed"
+      },
+      "model_bands": [
+        4,
+        4,
+        null
+      ]
+    },
+    {
+      "id": "command_of_evidence.Q2_P4_trend.hard",
+      "template": "Q2_P4_trend",
+      "subtype": "Data description (different rates of change support a claim)",
+      "tier": "hard",
+      "passage": "Every five years since 1991, a sociolinguistic survey conducted jointly by the Basque Government, the Government of Navarre, and France’s Public Office of the Basque Language has estimated the percentage of residents aged sixteen and older who speak Basque. That percentage has increased in both of the Spanish regions surveyed. In the Northern Basque Country, however, the portion of the language’s territory administered by France, it has declined steadily since 1996. Analyzing the 2016 results, the survey’s authors determined that within the Northern Basque Country, the decline had been most pronounced in the area where Basque speakers had once made up the largest share of residents.",
+      "stem": "Which choice best describes data from the table that support the authors’ conclusion?",
+      "options": [
+        "The percentage of Basque speakers in the Northern Basque Country as a whole fell in each interval shown, from 26.4% in 1996 to 20.5% in 2016, while remaining well below the percentage in Lower Navarre and Zuberoa.",
+        "Between 1996 and 2016, the percentage of Basque speakers fell by 14.5 points in Lower Navarre and Zuberoa, where it had been highest, but by 8.0 points elsewhere in Lapurdi and 0.7 point in the BAB district.",
+        "The percentage of Basque speakers fell in every area in each interval shown, and it fell most sharply in the BAB district, where it had been lowest.",
+        "In 2016, the percentage of Basque speakers was nearly six times as high in Lower Navarre and Zuberoa (49.5%) as in the BAB district (8.4%)."
+      ],
+      "answer_letter": "B",
+      "table": {
+        "title": "Percentage of Residents Aged 16 and Older Who Speak Basque, Northern Basque Country, 1996–2016",
+        "columns": [
+          "Area",
+          "1996",
+          "2001",
+          "2006",
+          "2016"
+        ],
+        "rows": [
+          [
+            "BAB district (Bayonne-Anglet-Biarritz)",
+            "9.1",
+            "8.8",
+            "8.8",
+            "8.4"
+          ],
+          [
+            "Lapurdi, excluding the BAB district",
+            "31.0",
+            "28.5",
+            "25.6",
+            "23.0"
+          ],
+          [
+            "Lower Navarre and Zuberoa",
+            "64.0",
+            "60.9",
+            "55.5",
+            "49.5"
+          ],
+          [
+            "Northern Basque Country overall",
+            "26.4",
+            "24.7",
+            "22.5",
+            "20.5"
+          ]
+        ],
+        "note": null
+      },
+      "figure": null,
+      "explanation": "The authors’ conclusion links the size of the decline to where Basque had been most widely spoken. Lower Navarre and Zuberoa had the highest share in 1996 (64.0%) and lost the most, 14.5 points; Lapurdi outside the BAB district started lower (31.0%) and lost 8.0 points; the BAB district started lowest (9.1%) and lost only 0.7 point. Choice B states this pattern.",
+      "distractors": {
+        "A": {
+          "recipe": "true but irrelevant (aggregate only)",
+          "why_wrong": "The overall figures are accurate, but they say nothing about which areas lost the most speakers."
+        },
+        "C": {
+          "recipe": "inaccurate",
+          "why_wrong": "The BAB district’s percentage did not change from 2001 to 2006 (8.8%), and its overall decline, 0.7 point, was the smallest, not the largest."
+        },
+        "D": {
+          "recipe": "true data, no change over time",
+          "why_wrong": "The 2016 comparison is accurate, but a gap in a single year does not show where the decline was greatest."
+        }
+      },
+      "models": [
+        "3.13",
+        "3.40"
+      ],
+      "sources": [
+        {
+          "what": "Sixth Sociolinguistic Survey 2016 (Basque Government, Government of Navarre, Public Office of the Basque Language; published 2019): surveys 1991-2016 of residents 16 and over; Basque speakers rose in the BAC and Navarre and fell in the Northern Basque Country (26.4% in 1996 to 20.5% in 2016; 24.7, 22.5, 21.4 in between); the Northern Basque Country series starts in 1996; 'The greatest drop in Basque speakers has occurred in Lower Navarre and Zuberoa' (64% in 1996, 49.5% in 2016); Figure 5 by area: BAB 9.1, 8.8, 8.8, 8.7, 8.4; Lapurdi without the BAB 31.0, 28.5, 25.6, 23.9, 23.0; Lower Navarre/Zuberoa 64.0, 60.9, 55.5, 52.1, 49.5 (1996, 2001, 2006, 2011, 2016)",
+          "url": "https://euskarabidea.es/fitxategiak/ckfinder/files/VI_Inkesta_ENG.pdf"
+        },
+        {
+          "what": "Northern Basque Country section, Figures 4 and 5: overall 26.4, 24.7, 22.5, 21.4, 20.5 (1996-2016); by area BAB 9.1, 8.8, 8.8, 8.7, 8.4; Lapurdi (without the BAB) 31.0, 28.5, 25.6, 23.9, 23.0; Lower Navarre / Zuberoa 64.0, 60.9, 55.5, 52.1, 49.5; 'The greatest drop in Basque speakers has occurred in Lower Navarre and Zuberoa' (14.5 points); note that Northern Basque Country comparisons start from the 1996 survey rather than 1991",
+          "url": "https://euskarabidea.es/fitxategiak/ckfinder/files/VI_Inkesta_ENG.pdf"
+        }
+      ],
+      "notes": "New subject (was EU coal share through 2024). Table omits 2011 to keep five columns. The authors state that the greatest drop occurred in Lower Navarre and Zuberoa; the passage phrases this as the area where Basque had been most widespread, which the 1996 figures show. Reviewer: the survey report says Northern Basque Country comparisons start from 1996 'rather than the one conducted in 1991', so the passage no longer says measurement began there in 1996.",
+      "rewrite": "New subject: Basque Sociolinguistic Survey data for the Northern Basque Country replace EU coal data through 2024; the 'shared factors' frame cloned from the model is gone; key compares declines against starting levels; denser register.",
+      "word_count": 106,
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 12,
+        "fixes": [
+          "'since measurement began there in 1996' removed: the report says a 1991 survey exists and comparisons merely start from 1996",
+          "the authors' finding is that the greatest drop occurred in Lower Navarre and Zuberoa; the passage said 'the districts where Basque speakers had formerly constituted the largest proportion', a broader pattern they did not state; now 'the area where Basque speakers had once made up the largest share of residents' (singular, a true re-description of Lower Navarre and Zuberoa)",
+          "checked all 16 table values against Figures 4 and 5 of the report: all match; recomputed the drops 14.5, 8.0 and 0.7 points and the 2016 ratio 5.9",
+          "long-word share 24.1% to 16.3%"
+        ],
+        "status": "fixed"
+      },
+      "model_bands": [
+        null,
+        7
+      ]
+    },
+    {
+      "id": "command_of_evidence.Q2_P5_control.easy",
+      "template": "Q2_P5_control",
+      "subtype": "Data description (group comparison supports a conclusion)",
+      "tier": "easy",
+      "passage": "In New Mexico’s Rattlesnake Canyon Habitat Management Area, many natural gas wells are paired with compressors, machines that run day and night and make loud noise. Black-chinned hummingbirds tend to nest near this noise, so ecologist Clinton Francis and colleagues wondered whether plants that rely on hummingbirds for pollination might benefit from it. In 2010, the team set out matching patches of artificial flowers, refilled each day with sugar water, near wells with compressors and near similar wells without them. Colored powder dusted on some of the flowers stood in for pollen. Tracking where the powder ended up, the team concluded that the noise had increased pollination by hummingbirds.",
+      "stem": "Which choice best describes data from the table that support the researchers’ conclusion?",
+      "options": [
+        "Powder from a plant in the same patch reached 18% of flowers at noisy sites, compared with only 5% of flowers at quiet sites.",
+        "At noisy sites, 18% of flowers received powder from a plant in the same patch, and 5% received powder from a plant in a different patch.",
+        "At quiet sites, more flowers received powder from a plant in the same patch (5%) than from a plant in a different patch (1%).",
+        "Only 1% of flowers at noisy sites received powder from a plant in a different patch, compared with 5% of flowers at quiet sites."
+      ],
+      "answer_letter": "A",
+      "table": {
+        "title": "Percentage of Artificial Flowers That Received Fluorescent Powder",
+        "columns": [
+          "Source of powder",
+          "Quiet sites",
+          "Noisy sites"
+        ],
+        "rows": [
+          [
+            "A plant in the same patch",
+            "5",
+            "18"
+          ],
+          [
+            "A plant in a different patch",
+            "1",
+            "5"
+          ]
+        ],
+        "note": null
+      },
+      "figure": null,
+      "explanation": "To show that noise increased pollination, the noisy sites have to be compared with the quiet ones. Powder from a plant in the same patch reached 18% of flowers at noisy sites but only 5% at quiet sites, so more flowers were pollinated where it was noisy. Choice A gives this comparison.",
+      "distractors": {
+        "B": {
+          "recipe": "true data, no comparison",
+          "why_wrong": "Both figures are correct for the noisy sites, but without the quiet sites’ figures nothing shows that noise made a difference."
+        },
+        "C": {
+          "recipe": "wrong comparison axis",
+          "why_wrong": "This compares two sources of powder at the quiet sites only; it says nothing about the effect of noise."
+        },
+        "D": {
+          "recipe": "misplaced values",
+          "why_wrong": "The values are reversed: powder from a different patch reached 1% of flowers at quiet sites and 5% at noisy sites."
+        }
+      },
+      "models": [
+        "1.22",
+        "1.28"
+      ],
+      "sources": [
+        {
+          "what": "Francis, Kleist, Ortega and Cruz, 'Noise pollution alters ecological services: enhanced pollination and disrupted seed dispersal', Proc. R. Soc. B 279:2727-2735 (2012): Rattlesnake Canyon Habitat Management Area, northwestern New Mexico; many gas wells coupled with compressors that run continuously at high amplitudes; quiet control sites are wells without compressors, similar in human activity and vegetation; Archilochus alexandri preferentially nests in noisy environments; May 2010 patches of artificial flowers refilled daily with sucrose; fluorescent powder as pollen proxy; within-patch transfer 5% (control) vs 18% (treatment) of flowers, between-patch 1% vs 5%; noise indirectly increased pollination by hummingbirds",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3367785/"
+        },
+        {
+          "what": "full text (archived PMC copy): May 2010 pollination experiment at seven pairs of treatment and control sites; flowers refilled daily with 25% sucrose; one plant per patch marked with yellow or red fluorescent powder; within-patch transfer 5% of control-site flowers vs 18% of treatment-site flowers, between-patch 1% vs 5%",
+          "url": "https://web.archive.org/web/2022/https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3367785/"
+        }
+      ],
+      "notes": "New subject (was John Snow 1854). Percentages are those stated in the paper's results.",
+      "rewrite": "New subject: Francis et al. 2012 compressor-noise pollination experiment replaces John Snow; distractors now no comparison, wrong axis and swapped values; denser register.",
+      "word_count": 109,
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 9,
+        "fixes": [
+          "prose simplified from a dense register far above the official easy level (long words 26.5% to 12.6%; 'preferentially', 'continuously', 'replenished' and similar gone)",
+          "'The researchers concluded that' (stock lead-in used in four items of this file) changed to 'Tracking where the powder ended up, the team concluded that'"
+        ],
+        "status": "fixed"
+      },
+      "model_bands": [
+        5,
+        1
+      ]
+    },
+    {
+      "id": "command_of_evidence.Q2_P5_control.medium",
+      "template": "Q2_P5_control",
+      "subtype": "Data description (treatment vs comparison groups supports a conclusion)",
+      "tier": "medium",
+      "passage": "In 2012, Montgomery County, Maryland, began requiring retailers to charge five cents for each paper or plastic carryout bag. Economist Tatiana Homonoff’s research team documented the bags used by thousands of shoppers leaving supermarkets in the county, both in the months preceding the tax and shortly after its implementation. The team made identical observations at comparable supermarkets in Washington, DC, where a similar tax had been in effect since 2010, and in Arlington County, Virginia, which had never enacted one. Homonoff concluded that the steep decline in disposable bag use in Montgomery County resulted from the tax rather than from a regionwide shift in consumer behavior.",
+      "stem": "Which choice best describes data from the table that support Homonoff’s conclusion?",
+      "options": [
+        "Before Montgomery County’s tax took effect, the percentage of shoppers using a disposable bag was nearly the same there (81.7%) as in Arlington County (82.2%).",
+        "In Montgomery County, the percentage of shoppers using a disposable bag fell from 81.7% to 39.6%, whereas in Washington, DC, and Arlington County it changed by less than 2 percentage points.",
+        "The percentage of shoppers using a disposable bag declined in all three locations after Montgomery County’s tax took effect, though the decline was largest in Montgomery County.",
+        "In both periods, the percentage of shoppers using a disposable bag was lower in Washington, DC, than in either Montgomery County or Arlington County."
+      ],
+      "answer_letter": "B",
+      "table": {
+        "title": "Percentage of Shoppers Using at Least One Disposable Bag, 2011–2012",
+        "columns": [
+          "Location",
+          "Before Montgomery County’s tax (fall 2011)",
+          "After Montgomery County’s tax (early 2012)"
+        ],
+        "rows": [
+          [
+            "Washington, DC",
+            "44.5",
+            "45.7"
+          ],
+          [
+            "Montgomery County, Maryland",
+            "81.7",
+            "39.6"
+          ],
+          [
+            "Arlington County, Virginia",
+            "82.2",
+            "80.8"
+          ]
+        ],
+        "note": null
+      },
+      "figure": null,
+      "explanation": "To show that the tax, not a change across the whole region, caused the decline, Montgomery County’s change has to be compared with places where tax policy stayed the same. Disposable bag use in Montgomery County fell from 81.7% to 39.6%, while in Washington, DC (44.5% to 45.7%) and Arlington County (82.2% to 80.8%) it barely moved. Choice B describes exactly that contrast.",
+      "distractors": {
+        "A": {
+          "recipe": "true data, no comparison over time",
+          "why_wrong": "The two counties did start out alike, but a comparison made only before the tax cannot show that the tax produced the later drop."
+        },
+        "C": {
+          "recipe": "inaccurate",
+          "why_wrong": "Disposable bag use rose slightly in Washington, DC (44.5% to 45.7%), so it did not decline in all three locations."
+        },
+        "D": {
+          "recipe": "inaccurate",
+          "why_wrong": "After the tax took effect, the percentage in Washington, DC (45.7%) was higher than in Montgomery County (39.6%)."
+        }
+      },
+      "models": [
+        "2.25",
+        "2.3"
+      ],
+      "sources": [
+        {
+          "what": "Homonoff, 'Can Small Incentives Have Large Effects? The Impact of Taxes versus Bonuses on Disposable Bag Use' (AEJ: Economic Policy 2018; working-paper text): researchers stood at grocery store exits and recorded each customer's bags; 16,251 customers; 16 stores in Montgomery County, Washington DC (tax two years earlier) and Arlington County (proposed, never passed); pre-period Sept-Nov 2011, post-period Feb-Mar 2012; Table 2 disposable bag use DC 44.5/45.7, Maryland 81.7/39.6, Virginia 82.2/80.8",
+          "url": "https://web.archive.org/web/2023id_/https://wagner.nyu.edu/files/faculty/publications/Homonoff%20-%20Can%20Small%20Incentives%20Have%20Large%20Effects.pdf"
+        },
+        {
+          "what": "Montgomery County Bill 8-11: five-cent charge on each paper or plastic carryout bag provided by retail establishments, effective January 1, 2012",
+          "url": "https://www.montgomerycountymd.gov/bag/law.html"
+        },
+        {
+          "what": "Homonoff's study summarised by the American Economic Association: share of Montgomery County shoppers using disposable bags fell 42 percentage points; more than 16,200 customers",
+          "url": "https://www.aeaweb.org/research/small-incentives-nudge-disposable-bag-tax"
+        },
+        {
+          "what": "original NYU Wagner URL of the same paper (blocked to scripted access on 2026-10-12; the archived copy was used to confirm Table 2: disposable 44.5/45.7 DC, 81.7/39.6 Maryland, 82.2/80.8 Virginia; 16,251 customers; sixteen stores)",
+          "url": "https://wagner.nyu.edu/files/faculty/publications/Homonoff%20-%20Can%20Small%20Incentives%20Have%20Large%20Effects.pdf"
+        }
+      ],
+      "notes": "New subject (was Card and Krueger 1994). Table values are Table 2 of the paper (extensive margin, disposable bags).",
+      "rewrite": "New subject: Homonoff's 2012 Montgomery County bag-tax study replaces Card and Krueger; table with two comparison counties; denser register.",
+      "word_count": 106,
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 10,
+        "fixes": [
+          "checked Table 2 values against the paper (archived copy): all match",
+          "prose trimmed (109 to 106 words, at the medium maximum before) and long-word share 17.6% to 15.9%"
+        ],
+        "status": "fixed"
+      },
+      "model_bands": [
+        4,
+        7
+      ]
+    },
+    {
+      "id": "command_of_evidence.Q2_P5_control.hard",
+      "template": "Q2_P5_control",
+      "subtype": "Data description (two-part claim, treatment vs control)",
+      "tier": "hard",
+      "passage": "Gillnet fisheries, ubiquitous worldwide, are a major source of mortality for sea turtles and seabirds, which become entangled in the nets as bycatch. Working with fishers from the port of Constante in Sechura Bay, Peru, conservation biologist Jeffrey Mangel et al. deployed 114 pairs of bottom-set gillnets, fitting one net in each pair with green light-emitting diodes (LEDs) along its float line and leaving the other unlit, while onboard observers documented the target catch and bycatch of every net. Mangel et al. argue that net illumination is an effective technique for mitigating the bycatch of multiple taxa, one that does not diminish the catch of the fishery’s target species.",
+      "stem": "Which choice best describes data from the table that support the researchers’ conclusion?",
+      "options": [
+        "Compared with unlit nets, illuminated nets caught fewer than half as many green turtles per kilometer per day and fewer than one-fifth as many guanay cormorants.",
+        "Illuminated nets caught about 10 target fish per kilometer per day, whereas they caught fewer than one green turtle and fewer than one guanay cormorant.",
+        "Illuminated nets caught nearly as many target fish per kilometer per day as unlit nets did, while catching far fewer green turtles and guanay cormorants.",
+        "Unlit nets caught more green turtles than guanay cormorants per kilometer per day, whereas illuminated nets caught more guanay cormorants than green turtles while target fish catch barely changed."
+      ],
+      "answer_letter": "C",
+      "table": {
+        "title": "Average Catch in Unlit and Illuminated Gillnets in Sechura Bay, Peru, 2011–2013",
+        "columns": [
+          "Catch",
+          "Unlit nets (number per kilometer of net per day)",
+          "Illuminated nets (number per kilometer of net per day)"
+        ],
+        "rows": [
+          [
+            "Target fish",
+            "10.6",
+            "10.4"
+          ],
+          [
+            "Green turtles",
+            "1.4",
+            "0.5"
+          ],
+          [
+            "Guanay cormorants",
+            "0.97",
+            "0.15"
+          ]
+        ],
+        "note": null
+      },
+      "figure": null,
+      "explanation": "The conclusion has two parts: lights reduce bycatch of more than one kind of animal, and they do not reduce the catch of target fish. Illuminated nets caught 10.4 target fish per kilometer per day against 10.6 for unlit nets, but only 0.5 green turtles against 1.4 and 0.15 guanay cormorants against 0.97. Only choice C covers both parts.",
+      "distractors": {
+        "A": {
+          "recipe": "half of the claim",
+          "why_wrong": "The reductions are accurate, but the option leaves out target fish, so it cannot show that the lights did not cut the fishers’ catch."
+        },
+        "B": {
+          "recipe": "no comparison",
+          "why_wrong": "The figures are accurate for illuminated nets, but without the unlit nets’ figures nothing shows that the lights reduced bycatch or left the fish catch unchanged."
+        },
+        "D": {
+          "recipe": "inaccurate (order reversed)",
+          "why_wrong": "Illuminated nets still caught more green turtles (0.5) than guanay cormorants (0.15) per kilometer per day."
+        }
+      },
+      "models": [
+        "3.43",
+        "3.5",
+        "2.3"
+      ],
+      "sources": [
+        {
+          "what": "Mangel et al., 'Illuminating gillnets to save seabirds and the potential for multi-taxa bycatch mitigation', R. Soc. Open Sci. 5:180254 (2018): Constante, Sechura Bay, Peru, 2011-2013; 114 pairs of control and illuminated bottom-set gillnets, green LEDs along the float line; onboard observers counted target catch and bycatch; guanay cormorant CPUE 0.97 (control) vs 0.15 (illuminated) per 1000 m x 24 h; gillnet bycatch a major source of mortality for seabirds and turtles; global ubiquity of net fisheries; net illumination an effective multi-taxa technique with no impact on target catch",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6083706/"
+        },
+        {
+          "what": "Ortiz et al. 2016 (MEPS 545:251-259), same 114 paired sets: green turtles 0.5 vs 1.4 individuals/km/day, target fish 10.4 vs 10.6 individual fish/km/day (illuminated vs unlit)",
+          "url": "https://conservationevidencejournal.com/individual-study/10459"
+        },
+        {
+          "what": "Ortiz et al. 2016 author list (N. Ortiz, J.C. Mangel and others), DOI 10.3354/meps11610",
+          "url": "https://doi.org/10.3354/meps11610"
+        }
+      ],
+      "notes": "New subject (was Perry Preschool). Turtle and fish rates are the Conservation Evidence summary of Ortiz et al. 2016; cormorant rates are Mangel et al. 2018; both papers report the same 114 paired sets, and both units are animals per km of net per 24 h.",
+      "rewrite": "New subject: LED-illuminated gillnets in Peru (Ortiz 2016, Mangel 2018) replace Perry Preschool; three-row table, two-part conclusion; denser register.",
+      "word_count": 109,
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 10,
+        "fixes": [
+          "'conservation biologist Jeffrey Mangel and colleagues' changed to 'Jeffrey Mangel et al.' and the stock 'The researchers concluded that' to 'Mangel et al. argue that' (both framings were repeated across the file)",
+          "the conclusion's noun stack 'effective multitaxa bycatch mitigation technique' loosened to 'an effective technique for mitigating the bycatch of multiple taxa'; long-word share 17.9% to 14.0%"
+        ],
+        "status": "fixed"
+      },
+      "model_bands": [
+        7,
+        7,
+        7
+      ]
+    },
+    {
+      "id": "command_of_evidence.Q2_P8_quantifier.hard",
+      "template": "Q2_P8_quantifier",
+      "subtype": "Data description (claim that holds across every part of a process)",
+      "tier": "hard",
+      "passage": "Because filter feeders such as oysters take in suspended particles as they feed, they are likely to swallow microplastics, the tiny plastic fragments that build up in the ocean. Rossana Sussarellu and colleagues exposed adult Pacific oysters (Crassostrea gigas) to polystyrene microspheres for two months while the oysters’ eggs and sperm were developing, then compared the oysters’ digestion and reproduction, as well as the growth of their larvae, with those of unexposed oysters. They concluded that the exposure harmed reproduction at each stage they examined, affecting eggs, sperm, and offspring alike.",
+      "stem": "Which choice best describes data from the table that support the researchers’ conclusion?",
+      "options": [
+        "For every measure in the table, the value for oysters exposed to microplastics was lower than the value for unexposed oysters.",
+        "Exposed females produced about 2.3 million eggs each, compared with about 3.8 million for unexposed females, and their eggs were about 1.6 micrometers smaller in diameter.",
+        "Compared with unexposed oysters, exposed oysters produced fewer and smaller eggs and slower-swimming sperm, and the larvae produced from their gametes had shorter shells at 17 days.",
+        "Exposed oysters absorbed a greater percentage of their algal food than unexposed oysters did, which suggests that the microplastics did not interfere with the oysters’ ability to feed."
+      ],
+      "answer_letter": "C",
+      "table": {
+        "title": "Selected Measures for Pacific Oysters Exposed and Not Exposed to Microplastics",
+        "columns": [
+          "Measure",
+          "Unexposed oysters",
+          "Exposed oysters"
+        ],
+        "rows": [
+          [
+            "Absorption efficiency (% of food absorbed)",
+            "46.6",
+            "51.8"
+          ],
+          [
+            "Eggs per female (millions)",
+            "3.8",
+            "2.3"
+          ],
+          [
+            "Egg diameter (micrometers)",
+            "32.2",
+            "30.6"
+          ],
+          [
+            "Sperm swimming speed (micrometers per second)",
+            "77.5",
+            "59.5"
+          ],
+          [
+            "Shell length of larvae at 17 days (micrometers)",
+            "279.8",
+            "227.5"
+          ]
+        ],
+        "note": null
+      },
+      "figure": null,
+      "explanation": "The conclusion says the exposure harmed reproduction at each stage the team examined: eggs, sperm, and offspring. Exposed oysters had fewer eggs (2.3 versus 3.8 million) and smaller eggs (30.6 versus 32.2 micrometers), slower sperm (59.5 versus 77.5 micrometers per second), and larvae with shorter shells (227.5 versus 279.8 micrometers). Only choice C covers all three stages.",
+      "distractors": {
+        "A": {
+          "recipe": "inaccurate (quantifier stretched to every row)",
+          "why_wrong": "Absorption efficiency was higher for exposed oysters (51.8%) than for unexposed oysters (46.6%), so not every measure was lower."
+        },
+        "B": {
+          "recipe": "half of the claim",
+          "why_wrong": "The egg values are accurate, but they cover only one of the three stages; they say nothing about sperm or the larvae."
+        },
+        "D": {
+          "recipe": "true data, wrong measure",
+          "why_wrong": "Absorption is read correctly, but it concerns feeding, not reproduction, so it cannot show that eggs, sperm, and offspring were all harmed."
+        }
+      },
+      "models": [
+        "3.20",
+        "3.24"
+      ],
+      "sources": [
+        {
+          "what": "Sussarellu et al. 2016, 'Oyster reproduction is affected by exposure to polystyrene microplastics', PNAS 113(9): adult Crassostrea gigas exposed to 2 and 6 micrometer polystyrene microspheres for 2 months during gametogenesis; filter feeders ingest microplastics while feeding; absorption efficiency 51.8% vs 46.6% (control); oocytes 2.3 vs 3.8 million; oocyte diameter 30.6 vs 32.2 micrometers; sperm velocity 59.5 vs 77.5 micrometers/s; larval shell length at 17 days 227.5 vs 279.8 micrometers for progeny of exposed vs control parents; 'strong negative effects were observed on reproductive health indices, which significantly impacted fecundity and offspring performance'",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4780615/"
+        },
+        {
+          "what": "plastics accumulate as waste in the marine environment; microplastics enter as fragments (abstract)",
+          "url": "https://www.pnas.org/doi/10.1073/pnas.1519019113"
+        }
+      ],
+      "notes": "New subject (was Mendel's pea counts). Percentage of motile sperm (40% vs 51%, not significant) left out of the table; the claim and key cite sperm speed, which differed significantly.",
+      "rewrite": "New subject: Sussarellu et al. 2016 oysters and microplastics replaces Mendel; quantified three-stage claim with a non-reproductive row as the scope trap.",
+      "word_count": 91,
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 9,
+        "fixes": [
+          "checked all ten table values against the paper (PMC4780615): all match",
+          "prose simplified (long words 23.1% to 17.6%; 'minute', 'detrimental', 'subsequent generation' gone) and the stock 'The researchers concluded that' changed to 'They concluded that'"
+        ],
+        "status": "fixed"
+      },
+      "model_bands": [
+        6,
+        7
+      ]
+    },
+    {
+      "id": "command_of_evidence.Q2_P8_multipart.medium",
+      "template": "Q2_P8_multipart",
+      "subtype": "Data description (passage criterion combined with the table)",
+      "tier": "medium",
+      "passage": "Plants native to ultramafic soils, which are naturally rich in nickel, sometimes concentrate the metal in their leaves. Botanists classify a species as a nickel hyperaccumulator if the dried leaves of at least some individuals contain more than 1,000 micrograms of nickel per gram (µg/g). Revising the classification of the Argophyllum species endemic to New Caledonia, Yohan Pillon and Vanessa Hequet measured the nickel in herbarium specimens of each species with a handheld X-ray spectrometer. Pillon and Hequet concluded that A. nitidum, the only species never found on ultramafic soils, is also the only one that does not qualify as a hyperaccumulator.",
+      "stem": "Which choice best describes data from the table that support Pillon and Hequet’s conclusion?",
+      "options": [
+        "A. montanum had the lowest median nickel content of the species in which nickel was detected, and it was also the only one of them whose highest value fell short of 1,000 µg/g.",
+        "Only A. ellipticum had a mean nickel content above 1,000 µg/g, and no nickel was detected in any of the A. nitidum specimens.",
+        "A. ellipticum had both the highest maximum and the highest mean nickel content of the five species in the table.",
+        "Every species in the table except A. nitidum had at least one specimen with more than 1,000 µg/g of nickel, whereas no nickel was detected in A. nitidum."
+      ],
+      "answer_letter": "D",
+      "table": {
+        "title": "Leaf Nickel Content in Herbarium Specimens of Five Argophyllum Species",
+        "columns": [
+          "Species",
+          "Specimens analyzed",
+          "Highest value (µg/g)",
+          "Mean (µg/g)",
+          "Median (µg/g)"
+        ],
+        "rows": [
+          [
+            "A. brevipetalum",
+            "4",
+            "1,675",
+            "483",
+            "129"
+          ],
+          [
+            "A. ellipticum",
+            "12",
+            "6,670",
+            "1,215",
+            "371"
+          ],
+          [
+            "A. montanum",
+            "10",
+            "1,110",
+            "316",
+            "89"
+          ],
+          [
+            "A. nitidum",
+            "9",
+            "not detected",
+            "not detected",
+            "not detected"
+          ],
+          [
+            "A. vernicosum",
+            "10",
+            "1,872",
+            "608",
+            "387"
+          ]
+        ],
+        "note": null
+      },
+      "figure": null,
+      "explanation": "By the stated rule, a species qualifies if at least some individuals exceed 1,000 µg/g, so the highest value is the one to check. A. brevipetalum (1,675), A. ellipticum (6,670), A. montanum (1,110) and A. vernicosum (1,872) all have a specimen above 1,000 µg/g, while no nickel was detected in A. nitidum. Choice D states exactly this.",
+      "distractors": {
+        "A": {
+          "recipe": "inaccurate (near-miss threshold)",
+          "why_wrong": "A. montanum’s highest value, 1,110 µg/g, is above 1,000 µg/g, so it does qualify as a hyperaccumulator."
+        },
+        "B": {
+          "recipe": "true data, wrong measure",
+          "why_wrong": "The means are reported accurately, but the rule depends on whether some individuals exceed 1,000 µg/g, not on the average, so the option does not show that the other species qualify."
+        },
+        "C": {
+          "recipe": "accurate but irrelevant",
+          "why_wrong": "A. ellipticum does lead on both measures, but that says nothing about which species fall above or below the threshold."
+        }
+      },
+      "models": [
+        "2.8",
+        "2.42"
+      ],
+      "sources": [
+        {
+          "what": "Pillon and Hequet, 'Taxonomic Revision of Argophyllum (Argophyllaceae) in New Caledonia', Plants 10(4) 2021: seven endemic species; handheld XRF on herbarium specimens; nickel exceeds 1000 µg/g in at least some individuals of six species (hyperaccumulators), all except A. nitidum, which never occurs on ultramafic substrates and is below detection; Table 1 number of specimens, max, mean, median",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC8065558/"
+        },
+        {
+          "what": "ultramafic (serpentine) soils contain high concentrations of nickel and other heavy metals",
+          "url": "https://en.wikipedia.org/wiki/Serpentine_soil"
+        }
+      ],
+      "notes": "New subject (was mountain prominence and ultras). Table rows are five of the seven species in Table 1 (A. grunowii and A. riparium, both hyperaccumulators, left out to keep five rows).",
+      "rewrite": "New subject: Pillon and Hequet 2021 nickel hyperaccumulators replace the prominence and ultras explainer; researchers' conclusion instead of a student claim; distractors use the near-miss threshold and the mean column as traps; denser register.",
+      "word_count": 102,
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 10,
+        "fixes": [
+          "checked all 15 table values against Table 1 of the paper: all match",
+          "prose simplified (long words 19.3% to 15.7%; final 'They concluded' changed to 'Pillon and Hequet concluded' ('They concluded' also closes the oyster item); 'designate', 'foliage', 'X-ray fluorescence', 'substrates' gone)"
+        ],
+        "status": "fixed"
+      },
+      "model_bands": [
+        4,
+        5
+      ]
+    },
+    {
+      "id": "command_of_evidence.Q2_P8_multipart.hard",
+      "template": "Q2_P8_multipart",
+      "subtype": "Data description (effect that varies by group)",
+      "tier": "hard",
+      "passage": "Soil scientist John P. Reganold and his collaborators sampled strawberries from 13 pairs of side-by-side commercial fields near Watsonville, California, choosing each pair so that its organic and conventional fields shared the same soil type, microclimate, and strawberry variety. Besides measuring the berries’ mineral and antioxidant content, the team asked consumer panels, told as little as possible about the study’s purpose, to rate the berries’ overall acceptance and sweetness on a nine-point scale. The researchers concluded that whether consumers preferred organic strawberries depended on the variety: such a preference appeared for one of the three varieties sampled but not for the other two.",
+      "stem": "Which choice best describes data from the table that support the researchers’ conclusion?",
+      "options": [
+        "Consumers gave organic ‘Diamante’ strawberries an average overall acceptance rating of 6.09, compared with an average of 5.35 for conventional ‘Diamante’ strawberries.",
+        "Among the organically grown strawberries, ‘Lanai’ received the highest average ratings for both overall acceptance and sweetness, while ‘San Juan’ received the lowest average sweetness rating.",
+        "For each of the three varieties, organic strawberries received a higher average sweetness rating than conventional strawberries did, though the difference was greatest for ‘Diamante.’",
+        "Organic ‘Diamante’ strawberries outscored conventional ‘Diamante’ strawberries in both overall acceptance and sweetness, whereas for ‘Lanai’ and ‘San Juan’ the organic and conventional averages never differed by as much as 0.3 points."
+      ],
+      "answer_letter": "D",
+      "table": {
+        "title": "Average Consumer Ratings of Organic and Conventional Strawberries (1–9 scale)",
+        "columns": [
+          "Variety",
+          "Overall acceptance: organic",
+          "Overall acceptance: conventional",
+          "Sweetness: organic",
+          "Sweetness: conventional"
+        ],
+        "rows": [
+          [
+            "Diamante",
+            "6.09",
+            "5.35",
+            "5.56",
+            "4.73"
+          ],
+          [
+            "Lanai",
+            "6.24",
+            "6.24",
+            "5.69",
+            "5.56"
+          ],
+          [
+            "San Juan",
+            "6.09",
+            "6.36",
+            "5.52",
+            "5.74"
+          ]
+        ],
+        "note": null
+      },
+      "figure": null,
+      "explanation": "The conclusion has two parts: consumers preferred organic berries of one variety, and they did not prefer organic berries of the other two. Organic ‘Diamante’ berries beat conventional ones on both measures (6.09 versus 5.35 and 5.56 versus 4.73), while for ‘Lanai’ and ‘San Juan’ the organic and conventional averages were within 0.27 points of each other. Only choice D covers both parts.",
+      "distractors": {
+        "A": {
+          "recipe": "half of the claim",
+          "why_wrong": "The ‘Diamante’ comparison is accurate, but by itself it cannot show that the preference was absent for the other two varieties, which is the second half of the conclusion."
+        },
+        "B": {
+          "recipe": "wrong comparison axis",
+          "why_wrong": "These comparisons among organic berries are accurate, but they compare varieties with one another instead of comparing organic with conventional berries of the same variety."
+        },
+        "C": {
+          "recipe": "inaccurate",
+          "why_wrong": "Organic ‘San Juan’ berries were rated less sweet (5.52) than conventional ‘San Juan’ berries (5.74)."
+        }
+      },
+      "models": [
+        "3.18",
+        "3.26",
+        "3.2"
+      ],
+      "sources": [
+        {
+          "what": "Reganold et al. 2010, PLOS ONE 5(9): e12346: 13 pairs of side-by-side organic and conventional commercial strawberry fields in the Watsonville area, California; each pair had the same soil type, microclimate and variety; consumer-sensory panels given minimal information about the study; nine-point hedonic/intensity scale; Table 3 overall acceptance and sweetness by variety; 'In one variety, sensory panels judged organic strawberries to be sweeter and have better flavor, overall acceptance, and appearance'; 'Organic and conventional Lanai and San Juan berries were rated similarly'",
+          "url": "https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0012346"
+        },
+        {
+          "what": "full text with tables (Europe PMC) and the 2010 correction, which concerns only the Table 1 mineral data",
+          "url": "https://europepmc.org/article/PMC/PMC2931688"
+        },
+        {
+          "what": "John P. Reganold, Department of Crop and Soil Sciences, Washington State University",
+          "url": "https://europepmc.org/article/PMC/PMC2931688"
+        }
+      ],
+      "notes": "New subject (was Festinger and Carlsmith 1959). Table uses two of the four variety-specific sensory measures in Table 3 of the paper.",
+      "rewrite": "New subject: Reganold et al. 2010 organic vs conventional strawberries, effect by variety, replaces Festinger and Carlsmith; denser register.",
+      "word_count": 103,
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 10,
+        "fixes": [
+          "checked all 12 table values against Table 3 of the paper: all match; recomputed the 'Lanai' and 'San Juan' gaps (0.00, 0.13, 0.27, 0.22 points)",
+          "'and colleagues' changed to 'and his collaborators'; prose simplified (long words 20.6% to 18.6%)"
+        ],
+        "status": "fixed"
+      },
+      "model_bands": [
+        6,
+        7,
+        3
+      ]
+    }
+  ]
+}

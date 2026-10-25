@@ -1,0 +1,1290 @@
+{
+  "skill": "Rhetorical Synthesis",
+  "slug": "rhetorical_synthesis",
+  "part": "w4b3",
+  "domain": "Expression of Ideas",
+  "plan": {
+    "templates": [
+      {
+        "code": "SIM",
+        "name": "Similarity"
+      },
+      {
+        "code": "DIFF",
+        "name": "Difference"
+      },
+      {
+        "code": "RANK",
+        "name": "Order or relative degree"
+      },
+      {
+        "code": "SPEC",
+        "name": "Specify or identify a single fact"
+      },
+      {
+        "code": "EMPH",
+        "name": "Emphasize one attribute"
+      },
+      {
+        "code": "DESC",
+        "name": "Describe"
+      },
+      {
+        "code": "EXPL",
+        "name": "Explain (cause, origin, advantage, mechanism, definition, significance)"
+      },
+      {
+        "code": "STUDY",
+        "name": "Research study (aim, method, results)"
+      },
+      {
+        "code": "GEN",
+        "name": "Generalization, with or without support"
+      },
+      {
+        "code": "OVERVIEW",
+        "name": "Overview or summary"
+      },
+      {
+        "code": "AUD_NEW",
+        "name": "Introduce or describe to an unfamiliar or new audience"
+      },
+      {
+        "code": "AUD_FAM",
+        "name": "Present or describe to an already familiar audience"
+      },
+      {
+        "code": "NARR",
+        "name": "Begin a narrative"
+      }
+    ]
+  },
+  "items": [
+    {
+      "id": "rhetorical_synthesis.EXPL.hard.w4b3_01",
+      "template": "EXPL",
+      "subtype": "Explain how (chain of three bullets)",
+      "tier": "hard",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Nijō Castle in Kyoto, Japan, has wooden corridors with “nightingale floors,” named for the birdlike chirps they emit underfoot.\n• Each floorboard is fastened to the supporting beams with nails held in metal clamps.\n• A footstep pushes the board down slightly, displacing the nails within their clamps.\n• As each nail shifts, it rubs against its clamp, producing a high, chirping squeak.\n• Visitors are frequently told the floors were designed to detect intruders, but the sound may have been unintentional.",
+      "stem": "The student wants to explain how nightingale floors produce their sound. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "When someone walks on a nightingale floor, its boards bend and rub against one another, and this rubbing produces the birdlike chirp.",
+        "Each footstep on a nightingale floor makes the metal clamps vibrate against the beams below, and those vibrations produce a high, chirping squeak.",
+        "A footstep presses a board down slightly, shifting the nails that hold it so that they scrape against their metal clamps and chirp.",
+        "Visitors to Nijō Castle are often told that its nightingale floors, named for their birdlike chirps, were meant to warn of intruders."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The goal is to explain how nightingale floors produce their sound. The notes trace a chain: “A footstep pushes the board down slightly, displacing the nails within their clamps,” and “As each nail shifts, it rubs against its clamp, producing a high, chirping squeak.” Choice C follows that chain in its own words: the pressed board shifts the nails, which scrape against their clamps and chirp.",
+      "distractors": {
+        "A": {
+          "recipe": "FALSE (goal-shaped: wrong parts rub)",
+          "why_wrong": "It explains the chirp as the boards rubbing against one another, but the notes say the sound comes from the nails: each one “rubs against its clamp.”"
+        },
+        "B": {
+          "recipe": "FALSE (goal-shaped: agent swapped)",
+          "why_wrong": "It names the clamps but has them vibrating against the beams; according to the notes, the squeak comes when each nail “rubs against its clamp.”"
+        },
+        "D": {
+          "recipe": "OG (the intruder story, not how)",
+          "why_wrong": "It reports what visitors are told about the floors’ purpose, which the notes say may have been unintentional, and does not explain how the floors produce their sound."
+        }
+      },
+      "models": [
+        "ee51ad04",
+        "8fe4f4ab",
+        "2.31"
+      ],
+      "word_count": 94,
+      "sources": [],
+      "notes": "Reviewer replacement (w4 review): the drafted subject, fog collectors catching the camanchaca in Chile, repeated the live rhetorical_synthesis.EXPL.hard fog-harp item (satbank/rw/rhetorical_synthesis.json) and three other fog-net items in the bank. Subject: technology and history (nightingale floors, Nijō Castle, Kyoto). Mechanism and the hedge on intent as on https://en.wikipedia.org/wiki/Nightingale_floor (flooring nails rub against a clamp; a sign at the castle says the sound is not intentional). No invented names or figures. Option fact check: A FALSE goal-shaped (boards rub each other), B FALSE goal-shaped (clamps against beams), D true but off-goal (the intruder story). Goal-only solve (without the notes): A, B and C all explain how.",
+      "band_target": 7,
+      "band7_moves": [
+        "how-goal over a three-bullet chain (footstep presses the board, the nails shift, each nail rubs on its clamp)",
+        "key restates the chain in its own words (presses, shifting, scrape)",
+        "two goal-shaped FALSE options that keep the parts but swap which ones rub (board on board, clamp on beam)",
+        "one accurate OG option (the intruder story the notes hedge)"
+      ],
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [
+          "replaced the subject: fog collectors in Chile repeated the live rhetorical_synthesis.EXPL.hard fog-harp item (satbank/rw/rhetorical_synthesis.json) and three other fog-net items; rewrote notes, stem, options, explanation and distractors on nightingale floors (Nijō Castle) with the same band-7 architecture; claims.txt: WITHDRAWN line plus new claim",
+          "the replacement was written by the reviewer, so its solve is not blind (one defensible answer by construction: only C has the nails rub on the clamps)"
+        ],
+        "status": "fixed",
+        "band7": {
+          "verdict": "band 7",
+          "why": "EXPL how-chain as in ee51ad04 and 8fe4f4ab: the key paraphrases a three-bullet chain (presses, shifting, scrape); A and B are goal-shaped FALSE mechanisms that keep the notes' parts but swap which ones rub; D is an accurate off-goal option. Without the notes, A, B and C all fit the goal."
+        }
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "C",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "rhetorical_synthesis.GEN.hard.w4b3_02",
+      "template": "GEN",
+      "subtype": "Make and support a generalization (one level above the cases)",
+      "tier": "hard",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Paleontologists compare extinct island mammals with related mainland species to determine how body size changes on islands.\n• The Cyprus dwarf hippopotamus, which disappeared about 10,000 years ago, weighed about 200 kilograms.\n• The common hippopotamus, a close relative from mainland Africa, can weigh over 1,500 kilograms.\n• Nuralagus rex, an extinct rabbit from the Mediterranean island of Menorca, weighed about 12 kilograms.\n• The European rabbit, a relative from the nearby mainland, typically weighs less than 2 kilograms.",
+      "stem": "The student wants to make and support a generalization about how island mammals’ body sizes can compare with those of related mainland species. Which choice most effectively uses relevant information from the notes to accomplish these goals?",
+      "options": [
+        "Island mammals can become either much smaller or much larger than related mainland species, as the Cyprus dwarf hippopotamus and Menorca’s Nuralagus rex show.",
+        "Like the Cyprus dwarf hippopotamus, which weighed a fraction of what its mainland relative does, mammals that colonize islands such as Menorca tend to shrink over time.",
+        "At about 200 kilograms, the Cyprus dwarf hippopotamus weighed far more than Nuralagus rex, an extinct rabbit from Menorca that weighed about 12 kilograms.",
+        "According to paleontologists who study island mammals, both the Cyprus dwarf hippopotamus and Menorca’s Nuralagus rex disappeared about 10,000 years ago."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The goal is a generalization, with support, about how island mammals’ sizes compare with related mainland species. The dwarf hippopotamus weighed “about 200 kilograms” against the common hippopotamus’s “over 1,500 kilograms,” while Nuralagus rex weighed “about 12 kilograms” against the European rabbit’s “less than 2 kilograms.” Choice A generalizes that island mammals can become either much smaller or much larger and cites both animals as support.",
+      "distractors": {
+        "B": {
+          "recipe": "FALSE (goal-shaped: over-generalization)",
+          "why_wrong": "It makes and supports a generalization, but the generalization is wrong: Nuralagus rex, from Menorca, weighed far more than the European rabbit, so island mammals do not simply tend to shrink."
+        },
+        "C": {
+          "recipe": "REL (wrong comparison, no generalization)",
+          "why_wrong": "It compares the two island animals with each other rather than with related mainland species, and it makes no generalization."
+        },
+        "D": {
+          "recipe": "FALSE (conflation, off-goal)",
+          "why_wrong": "The notes give the date of disappearance only for the Cyprus dwarf hippopotamus, and the sentence says nothing about body size."
+        }
+      },
+      "models": [
+        "3dcc7140",
+        "7f5715e4",
+        "3b02e88a"
+      ],
+      "word_count": 91,
+      "sources": [],
+      "notes": "Subject: natural science (body-size change in island mammals). Real subject known without a search (WAVE.md: no fact-checking); the term “island rule” and the famous Flores cases are left out to avoid a topic-fame tell. Weights rounded (Cyprus dwarf hippo about 200 kg; Nuralagus rex about 12 kg). Option fact check: B FALSE goal-shaped, D FALSE conflation, C true but the wrong comparison.",
+      "band_target": 7,
+      "band7_moves": [
+        "generalization one level above the two cases (size can shift in either direction), derived from two pairs of weights the notes never compare",
+        "goal-shaped FALSE: a one-direction generalization supported by one case while the notes’ second case contradicts it",
+        "FALSE conflation that gives one animal’s date to both",
+        "a true wrong-comparison option (the two island animals compared with each other)"
+      ],
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [
+          "notes: 'usually weighs' to 'typically weighs' (keeps the hard tier at CB's long-word share after the 01 rewrite)"
+        ],
+        "status": "fixed",
+        "band7": {
+          "verdict": "band 7",
+          "why": "The generalization climbs a level (size can shift either way) from two weight pairs the notes never compare; B is a goal-shaped make-and-support that the rabbit case contradicts, D a date conflation, C a true comparison of the wrong pair. Matches 3dcc7140 and 7f5715e4."
+        }
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "A",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "rhetorical_synthesis.OVERVIEW.hard.w4b3_03",
+      "template": "OVERVIEW",
+      "subtype": "Historical overview",
+      "tier": "hard",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Guano, the accumulated excrement of seabirds, is rich in nitrogen and phosphorus, nutrients essential to agriculture.\n• On Peru’s arid Chincha Islands, guano had accumulated over centuries into deposits more than 30 meters deep.\n• Beginning in the 1840s, Peru shipped millions of tons of it to Europe and the United States.\n• For approximately three decades, these exports were the Peruvian government’s largest source of revenue.\n• By the 1870s, the richest deposits were exhausted, and the guano boom ended.",
+      "stem": "The student wants to provide an overview of Peru’s guano boom. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "Over centuries, guano rich in nitrogen and phosphorus accumulated on Peru’s arid Chincha Islands in deposits more than 30 meters deep.",
+        "From the 1840s to the 1870s, guano exports provided much of Peru’s revenue, until cheaper fertilizers from other countries brought the boom to an end.",
+        "Beginning in the 1840s, Peru shipped millions of tons of guano to Europe and the United States, where it was used to fertilize crops.",
+        "From the 1840s until the richest deposits ran out in the 1870s, guano exports brought the Peruvian government more revenue than any other source."
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "An overview should span the boom from start to finish. Choice D gives its start (“Beginning in the 1840s”), its importance (the exports were “the Peruvian government’s largest source of revenue,” which D restates as more revenue than any other source) and its end, when “the richest deposits were exhausted” in the 1870s.",
+      "distractors": {
+        "A": {
+          "recipe": "PART (origin of the deposits only)",
+          "why_wrong": "It explains how the guano deposits formed, which comes before the boom, and says nothing about the exports or how the boom ended."
+        },
+        "B": {
+          "recipe": "FALSE (goal-shaped: wrong cause of the end)",
+          "why_wrong": "It spans the whole boom, but the notes say it ended because “the richest deposits were exhausted,” not because of cheaper fertilizers from other countries."
+        },
+        "C": {
+          "recipe": "PART (start only)",
+          "why_wrong": "It describes how the exports began but says nothing about their importance to Peru or how the boom ended."
+        }
+      },
+      "models": [
+        "964c6055",
+        "3.8",
+        "3.9"
+      ],
+      "word_count": 93,
+      "sources": [],
+      "notes": "Subject: history (Peru’s nineteenth-century guano boom). Real subject known without a search (WAVE.md: no fact-checking for this skill); figures kept round (deposits more than 30 m deep, millions of tons, about three decades).",
+      "band_target": 7,
+      "band7_moves": [
+        "overview spanning the arc (start, importance, end and its cause) in one sentence",
+        "goal-shaped FALSE: a full-arc overview that gives the wrong cause for the end",
+        "two accurate PART options, each covering one stage of the arc"
+      ],
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [
+          "key D paraphrased ('brought the Peruvian government more revenue than any other source') so it no longer copies the notes' 'largest source of revenue'; explanation updated"
+        ],
+        "status": "fixed",
+        "band7": {
+          "verdict": "band 7",
+          "why": "Keeps 964c6055's PART, PART shape and adds a goal-shaped FALSE full-arc overview (wrong cause of the end); the key now restates the revenue bullet instead of copying it. Borderline: A and C are quick rejections, so the item rests on B."
+        }
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "D",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "rhetorical_synthesis.SIM.hard.w4b3_04",
+      "template": "SIM",
+      "subtype": "Significance of a similarity (derived)",
+      "tier": "hard",
+      "passage": "While researching a topic, a student has taken the following notes:\n• In southern Niger, the rainy season lasts approximately 90 days; millet still ripening afterward yields little grain.\n• Researchers there grew two new varieties of pearl millet alongside a traditional variety in a drought year.\n• The traditional variety matured in about 110 days; Varieties 1 and 2 matured in about 80 and 85 days.\n• Variety 1 produced 30% more grain than the traditional variety; Variety 2 produced 25% more.\n• Variety 1 also had shorter stalks, which farmers often use to feed livestock.",
+      "stem": "The student wants to emphasize the significance of a similarity between Varieties 1 and 2. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "Since Varieties 1 and 2 each produced 30% more grain than the traditional variety did, farmers could expect either one to outperform it in a drought year.",
+        "Varieties 1 and 2 both mature in less time than the rainy season usually lasts, so unlike the traditional variety, they can ripen before the rains end.",
+        "In the researchers’ trial, Varieties 1 and 2 matured within about five days of each other.",
+        "Varieties 1 and 2 both have shorter stalks than the traditional variety does, which may make them less useful to farmers who feed stalks to livestock."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The goal is the significance of a similarity. Varieties 1 and 2 “matured in about 80 and 85 days,” both less than the rainy season’s “approximately 90 days,” while the traditional variety needed “about 110 days.” Because millet “still ripening afterward yields little grain,” Choice B gives the shared trait and why it matters: both new varieties can ripen before the rains end.",
+      "distractors": {
+        "A": {
+          "recipe": "FALSE (goal-shaped: number misattached)",
+          "why_wrong": "Only Variety 1 produced 30% more grain than the traditional variety; Variety 2 “produced 25% more,” so the stated similarity is wrong."
+        },
+        "C": {
+          "recipe": "PART (similarity without its significance)",
+          "why_wrong": "It notes that the two varieties matured at about the same time but never says why that matters."
+        },
+        "D": {
+          "recipe": "FALSE (goal-shaped: one variety’s trait given to both)",
+          "why_wrong": "The notes say only that “Variety 1 also had shorter stalks”; nothing is said about Variety 2’s stalks."
+        }
+      },
+      "models": [
+        "19b08ead",
+        "3.18",
+        "9551ef8b"
+      ],
+      "word_count": 97,
+      "sources": [],
+      "notes": "Subject: natural science and agriculture (early-maturing pearl millet in the Sahel). Unnamed, plainly generic study with invented figures (WAVE.md wave-3 lesson); no real study or variety named. Architecture differs from 19b08ead: two new varieties against one local check, and the significance comes from the length of the rainy season rather than from a ranking of three.",
+      "band_target": 7,
+      "band7_moves": [
+        "significance-of-a-similarity goal; the shared trait (maturing within the season) is derived by comparing numbers across two bullets",
+        "two goal-shaped FALSE options that state a similarity and a significance but give one variety’s figure or trait to both",
+        "a true similarity with no significance (C), as in 19b08ead"
+      ],
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass",
+        "note": "invented figures sit on an unnamed, plainly generic trial ('Researchers there'); no real study, institute or variety is named or identifiable",
+        "band7": {
+          "verdict": "band 7",
+          "why": "Same architecture as 19b08ead: the significance of a similarity is derived by setting 80 and 85 days against the 90-day season and the 110-day local variety; A and D are goal-shaped FALSE similarities (a number and a trait given to both); C is a true similarity with no significance."
+        }
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "B",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "rhetorical_synthesis.NARR.hard.w4b3_05",
+      "template": "NARR",
+      "subtype": "Begin a narrative",
+      "tier": "hard",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Latvian-born immigrant Annie Cohen Kopchovsky lived in Boston with her husband and three young children.\n• In June 1894, she departed Boston on a bicycle, intending to circumnavigate the globe.\n• A spring water company paid her to display its advertisement, and she adopted its name, Londonderry.\n• Traveling by bicycle, steamship, and train, she crossed portions of Europe and Asia before returning to America.\n• She completed the journey in September 1895, approximately fifteen months after she set out.",
+      "stem": "The student wants to begin a narrative about Kopchovsky’s journey around the world. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "In June 1894, Annie Cohen Kopchovsky, a Boston mother of three, set off on a bicycle with an ambitious plan: to travel around the world.",
+        "Sponsored by a Boston newspaper, Latvian-born immigrant Annie Londonderry pedaled out of the city in June 1894, bound for a trip around the world.",
+        "By September 1895, Kopchovsky, who had taken the name Londonderry from a spring water company, had completed her trip around the world.",
+        "Traveling by bicycle, steamship, and train, Annie Londonderry crossed portions of Europe and Asia before returning to America."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "A narrative should start at the beginning of the story. Choice A opens at the chronological start, “In June 1894,” introduces Kopchovsky as a Boston mother of three, and sets up the trip around the world she began when she “departed Boston on a bicycle,” leaving the rest of the story to follow.",
+      "distractors": {
+        "B": {
+          "recipe": "FALSE (goal-shaped: wrong sponsor)",
+          "why_wrong": "It opens at the right moment, but the notes say “A spring water company paid her to display its advertisement,” not a Boston newspaper."
+        },
+        "C": {
+          "recipe": "OG (jumps to the end)",
+          "why_wrong": "It starts with the end of the journey in September 1895, which suits a conclusion rather than the opening of a narrative."
+        },
+        "D": {
+          "recipe": "PART (middle of the story)",
+          "why_wrong": "It describes her route partway through the trip without first introducing her or the start of the journey."
+        }
+      },
+      "models": [
+        "af88c47a"
+      ],
+      "word_count": 92,
+      "sources": [],
+      "notes": "Subject: history (Annie Cohen Kopchovsky, known as Annie Londonderry). Real subject known without a search (WAVE.md: no fact-checking for this skill); only core, widely reported facts used (left Boston in June 1894 on a bicycle, a spring water company’s sponsorship and name, finished in September 1895).",
+      "band_target": 7,
+      "band7_moves": [
+        "narrative-opening goal over notes that run identity, start, sponsor, route, end",
+        "goal-shaped FALSE: an opener at the right moment that misstates the sponsor, recast so it no longer mirrors the key",
+        "OG jump to the outcome and a PART from the middle of the trip"
+      ],
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [
+          "option B recast ('Sponsored by a Boston newspaper, ... pedaled out of the city in June 1894') so it no longer mirrors the key's 'In June 1894, Annie ..., a ...' frame; same single false fact (the sponsor)",
+          "notes: 'after departing' to 'after she set out' (hard tier chars per word back under CB + 0.20)"
+        ],
+        "status": "fixed",
+        "note": "real person; only her widely reported journey facts, no invented finding",
+        "band7": {
+          "verdict": "band 7",
+          "why": "af88c47a's OG and PART shape plus one goal-shaped FALSE opener (wrong sponsor), now recast so it does not mirror the key; the key opens at the chronological start. Borderline: C and D are quick rejections."
+        }
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "A",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "rhetorical_synthesis.DIFF.medium.w4b3_06",
+      "template": "DIFF",
+      "subtype": "Difference",
+      "tier": "medium",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Tivaevae are colorful quilts sewn collaboratively by women in the Cook Islands, often as ceremonial gifts.\n• A tivaevae taorei is pieced together from thousands of small fabric squares.\n• Its patterns, frequently floral, are assembled square by square.\n• A tivaevae manu features one large design cut from folded fabric and stitched onto a contrasting background.\n• Its designs are also frequently inspired by flowers.",
+      "stem": "The student wants to emphasize a difference in how the two kinds of tivaevae are made. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "Both tivaevae taorei and tivaevae manu frequently have designs that are inspired by flowers.",
+        "Although both are quilts from the Cook Islands, a tivaevae taorei and a tivaevae manu are made in very different ways.",
+        "Tivaevae, colorful quilts sewn collaboratively by women in the Cook Islands, are often given as ceremonial gifts.",
+        "Whereas a tivaevae taorei is pieced together from thousands of small squares, a tivaevae manu features one large design stitched onto a background."
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The goal is a difference in how the quilts are made. A taorei is “pieced together from thousands of small fabric squares,” while a manu “features one large design cut from folded fabric and stitched onto a contrasting background.” Choice D sets the two methods side by side with “Whereas.”",
+      "distractors": {
+        "A": {
+          "recipe": "REL (similarity instead of difference)",
+          "why_wrong": "It states something the two kinds of quilt share, designs inspired by flowers, rather than a difference in how they are made."
+        },
+        "B": {
+          "recipe": "VAGUE",
+          "why_wrong": "It says the two kinds are made in different ways but never says how either one is made."
+        },
+        "C": {
+          "recipe": "OG (introduces tivaevae)",
+          "why_wrong": "It describes tivaevae in general and how they are used, without distinguishing the two kinds."
+        }
+      },
+      "models": [
+        "2.19",
+        "2.11",
+        "2.10"
+      ],
+      "word_count": 78,
+      "sources": [],
+      "notes": "Subject: arts (Cook Islands quilting). Real subject known without a search; no named people (WAVE.md). One shared trait (floral designs) feeds the REL option; one differing attribute (construction) is the goal.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.DIFF.medium.w4b3_07",
+      "template": "DIFF",
+      "subtype": "Difference (named attribute)",
+      "tier": "medium",
+      "passage": "While researching a topic, a student has taken the following notes:\n• The begena and the krar are Ethiopian lyres.\n• The begena is a large lyre with ten strings and a deep, buzzing tone.\n• It is traditionally played to accompany prayer and meditation, especially in the weeks before Easter.\n• The krar is a smaller lyre with five or six strings and a bright tone.\n• It is commonly played at weddings and other celebrations to accompany singing and dancing.",
+      "stem": "The student wants to contrast the occasions on which the two lyres are typically played. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "The krar, a smaller lyre with five or six strings, is commonly played at weddings and other celebrations.",
+        "While the begena traditionally accompanies prayer and meditation, the krar is commonly played at weddings and other celebrations.",
+        "The begena is a large lyre with ten strings and a deep, buzzing tone, whereas the krar is smaller, with five or six strings and a bright tone.",
+        "Both the begena and the krar are lyres that are played in Ethiopia."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The goal is to contrast when the two lyres are played. The begena “is traditionally played to accompany prayer and meditation,” while the krar “is commonly played at weddings and other celebrations.” Choice B sets these occasions side by side with “While.”",
+      "distractors": {
+        "A": {
+          "recipe": "PART (one lyre only)",
+          "why_wrong": "It gives the occasions for the krar only; the begena is not mentioned, so there is no contrast."
+        },
+        "C": {
+          "recipe": "REL (wrong dimension)",
+          "why_wrong": "It contrasts the lyres’ size, strings, and tone, not the occasions on which they are played."
+        },
+        "D": {
+          "recipe": "REL (similarity instead of contrast)",
+          "why_wrong": "It states what the two lyres have in common rather than contrasting when they are played."
+        }
+      },
+      "models": [
+        "2.17",
+        "2.32",
+        "2.10"
+      ],
+      "word_count": 82,
+      "sources": [],
+      "notes": "Subject: arts (Ethiopian music). Real instruments known without a search; no named people (WAVE.md). Two differing attributes in the notes (size and strings, occasion); the goal names one, and the other feeds the wrong-dimension option.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.AUD_NEW.medium.w4b3_08",
+      "template": "AUD_NEW",
+      "subtype": "Describe a work to an unfamiliar audience",
+      "tier": "medium",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Gonkar Gyatso is a contemporary artist who was born in Lhasa, Tibet, in 1961.\n• He trained as a painter in Beijing and later relocated to London.\n• Many of his artworks depict the traditional seated figure of the Buddha.\n• Rather than applying paint, he fills the outline of the figure with hundreds of colorful stickers.\n• The stickers feature cartoon characters, corporate logos, and other imagery from popular culture.",
+      "stem": "The student wants to describe Gyatso’s images of the Buddha to an audience unfamiliar with the artist. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "Gyatso fills the outlines of his seated Buddhas with hundreds of colorful stickers featuring cartoon characters, corporate logos, and other imagery from popular culture.",
+        "Born in Lhasa, Tibet, in 1961, Gonkar Gyatso trained as a painter in Beijing before relocating to London.",
+        "Tibetan-born artist Gonkar Gyatso creates images of the seated Buddha by filling the figure’s outline with hundreds of stickers drawn from popular culture.",
+        "Contemporary artist Gonkar Gyatso, who was born in Tibet, uses unusual materials in his images of the Buddha."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "An audience unfamiliar with Gyatso needs to learn who he is as well as what the images look like. Choice C identifies him as a Tibetan-born artist (he “was born in Lhasa, Tibet”) and describes the images: he “fills the outline of the figure with hundreds of colorful stickers” featuring “imagery from popular culture.”",
+      "distractors": {
+        "A": {
+          "recipe": "AUD (no identifying context)",
+          "why_wrong": "It describes the images well but uses the name Gyatso without saying who he is, which an unfamiliar audience would need."
+        },
+        "B": {
+          "recipe": "OG (biography)",
+          "why_wrong": "It introduces the artist’s background but never describes his images of the Buddha."
+        },
+        "D": {
+          "recipe": "VAGUE",
+          "why_wrong": "It identifies the artist but says only that he uses “unusual materials,” without describing the stickers or what they show."
+        }
+      },
+      "models": [
+        "2.36",
+        "2.34",
+        "1.12"
+      ],
+      "word_count": 83,
+      "sources": [],
+      "notes": "Subject: arts (Gonkar Gyatso, Tibetan-born contemporary artist known for sticker collages of the Buddha). Real artist known without a search (WAVE.md: no fact-checking for this skill); only widely reported facts used (born in Lhasa in 1961, studied in Beijing, later lived in London, Buddha figures filled with pop-culture stickers). No work titles or dates of works named.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [],
+        "status": "pass",
+        "note": "real artist; only widely reported biography and the sticker Buddhas, no invented finding"
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.AUD_NEW.medium.w4b3_09",
+      "template": "AUD_NEW",
+      "subtype": "Explain a process to an unfamiliar audience",
+      "tier": "medium",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Anthotypes are photographic images made with light-sensitive juices from plants.\n• British scientist John Herschel developed the process in 1842.\n• To make one, a photographer coats paper with juice crushed from flower petals, berries, or leaves.\n• An object is positioned on the coated paper, which is then exposed to sunlight for days or weeks.\n• Exposed areas of the coating fade, while covered areas retain their color, leaving an image.",
+      "stem": "The student wants to explain how an anthotype’s image forms to an audience unfamiliar with anthotypes. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "An anthotype, a photograph made with plant juices, forms as sunlight fades the exposed parts of the juice-coated paper while covered parts keep their color.",
+        "When an anthotype is left in sunlight, its exposed areas fade while the areas covered by an object keep their color.",
+        "British scientist John Herschel developed the anthotype, a kind of photographic image, in 1842.",
+        "To make an anthotype, a photographer coats paper with juice crushed from flower petals, berries, or leaves and then places an object on the coated paper."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "An unfamiliar audience needs to learn what an anthotype is before the process makes sense. Choice A defines it as a photograph made with plant juices (anthotypes are “photographic images made with light-sensitive juices from plants”) and explains how the image forms: “Exposed areas of the coating fade, while covered areas retain their color.”",
+      "distractors": {
+        "B": {
+          "recipe": "AUD (no definition)",
+          "why_wrong": "It explains how the image forms but never says what an anthotype is, which an unfamiliar audience would need."
+        },
+        "C": {
+          "recipe": "OG (history)",
+          "why_wrong": "It says who developed the process and when but not how an anthotype’s image forms."
+        },
+        "D": {
+          "recipe": "PART (first steps only)",
+          "why_wrong": "It describes preparing the paper but stops before explaining how sunlight produces the image."
+        }
+      },
+      "models": [
+        "2.43",
+        "2.26",
+        "2.8"
+      ],
+      "word_count": 84,
+      "sources": [],
+      "notes": "Subject: arts and science (anthotypes, a nineteenth-century photographic process using plant juices). Real subject known without a search (WAVE.md: no fact-checking for this skill); John Herschel’s 1842 work on plant-juice images is well documented.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [],
+        "status": "pass",
+        "note": "John Herschel's 1842 plant-juice process is real; nothing invented is attributed to him"
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.EMPH.medium.w4b3_10",
+      "template": "EMPH",
+      "subtype": "Emphasize one attribute (size)",
+      "tier": "medium",
+      "passage": "While researching a topic, a student has taken the following notes:\n• The Wieliczka Salt Mine is located near Kraków, in southern Poland.\n• Rock salt was extracted there continuously from the thirteenth century until 1996.\n• Over the centuries, miners excavated passages that extend for more than 280 kilometers.\n• The mine reaches a depth of 327 meters below the surface.\n• Miners also sculpted chapels and statues from the salt, many of which remain accessible to visitors.",
+      "stem": "The student wants to emphasize the size of the Wieliczka Salt Mine. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "Located near Kraków, in southern Poland, the Wieliczka Salt Mine contains chapels and statues that miners sculpted from salt, many of which remain accessible to visitors.",
+        "The Wieliczka Salt Mine reaches 327 meters below the surface, and its passages extend for more than 280 kilometers.",
+        "Rock salt was extracted at Wieliczka for roughly seven centuries, from the thirteenth century until 1996.",
+        "Over the centuries, miners at the Wieliczka Salt Mine excavated many passages."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The goal is to emphasize the mine’s size. Choice B gives both of its dimensions: it “reaches a depth of 327 meters below the surface,” and its passages “extend for more than 280 kilometers.”",
+      "distractors": {
+        "A": {
+          "recipe": "OG (location and carvings)",
+          "why_wrong": "It gives the mine’s location and mentions the sculpted chapels and statues, which say nothing about its size."
+        },
+        "C": {
+          "recipe": "OG (duration)",
+          "why_wrong": "It emphasizes how long the mine was worked, not how large it is."
+        },
+        "D": {
+          "recipe": "VAGUE",
+          "why_wrong": "It mentions passages but gives no length or depth, so it does not convey the mine’s size."
+        }
+      },
+      "models": [
+        "2.40",
+        "2.6",
+        "1.16"
+      ],
+      "word_count": 79,
+      "sources": [],
+      "notes": "Subject: history (Wieliczka Salt Mine, Poland). Real subject known without a search (WAVE.md: no fact-checking for this skill); figures kept round (depth 327 m, more than 280 km of passages).",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.EMPH.medium.w4b3_11",
+      "template": "EMPH",
+      "subtype": "Emphasize one attribute (scale)",
+      "tier": "medium",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Estonians, Latvians, and Lithuanians joined hands on August 23, 1989, to form the Baltic Way.\n• The protest marked fifty years since a 1939 pact that led to Soviet rule over the three countries.\n• The human chain stretched about 675 kilometers, linking the capitals Tallinn, Riga, and Vilnius.\n• Roughly two million people took part.\n• Within about two years, all three countries had regained their independence.",
+      "stem": "The student wants to emphasize the scale of the Baltic Way. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "The Baltic Way took place on August 23, 1989, fifty years after a pact that led to Soviet rule over Estonia, Latvia, and Lithuania.",
+        "Within about two years of the Baltic Way, Estonia, Latvia, and Lithuania had all regained their independence.",
+        "During the Baltic Way, Estonians, Latvians, and Lithuanians joined hands in protest.",
+        "Roughly two million people joined hands in the Baltic Way, forming a human chain that stretched about 675 kilometers across three countries."
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The goal is to emphasize the protest’s scale. Choice D gives both of its measures: “Roughly two million people took part,” and the chain “stretched about 675 kilometers” across Estonia, Latvia, and Lithuania.",
+      "distractors": {
+        "A": {
+          "recipe": "OG (date and occasion)",
+          "why_wrong": "It gives the date and what the protest marked, not how large it was."
+        },
+        "B": {
+          "recipe": "OG (outcome)",
+          "why_wrong": "It reports what happened to the three countries afterward, not the scale of the protest."
+        },
+        "C": {
+          "recipe": "VAGUE",
+          "why_wrong": "It says people in three countries joined hands but gives neither the number of people nor the length of the chain."
+        }
+      },
+      "models": [
+        "1.15",
+        "2.6",
+        "2.40"
+      ],
+      "word_count": 80,
+      "sources": [],
+      "notes": "Subject: history (the Baltic Way, 1989). Real event known without a search (WAVE.md: no fact-checking for this skill); widely reported round figures used (about two million people, about 675 km).",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.EXPL.medium.w4b3_12",
+      "template": "EXPL",
+      "subtype": "Explain a cause",
+      "tier": "medium",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Kiruna is Sweden’s northernmost town, located well above the Arctic Circle.\n• The town grew up around one of the world’s largest underground iron ore mines.\n• As ore is extracted deep below, the ground above gradually cracks and sinks.\n• This zone of unstable ground has been spreading toward the town center.\n• Since the 2010s, many buildings have been demolished or moved to a new center about three kilometers east.",
+      "stem": "The student wants to explain why many of Kiruna’s buildings have been moved. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "Many of Kiruna’s buildings have been moved because mining deep beneath the town is making the ground crack and sink in a zone spreading toward the center.",
+        "Kiruna, Sweden’s northernmost town, lies well above the Arctic Circle and grew up around an iron ore mine.",
+        "Since the 2010s, many of Kiruna’s buildings have been demolished or moved to a new center about three kilometers east.",
+        "Kiruna is home to one of the world’s largest underground iron ore mines, and since the 2010s, many of its buildings have been moved to a new center about three kilometers east."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The goal is to explain why the buildings have been moved. The notes say that as ore is extracted, “the ground above gradually cracks and sinks,” and that this zone “has been spreading toward the town center.” Choice A links the moves to that cause with “because.”",
+      "distractors": {
+        "B": {
+          "recipe": "OG (location and history)",
+          "why_wrong": "It describes where Kiruna is and how it began but says nothing about why buildings have been moved."
+        },
+        "C": {
+          "recipe": "PART (effect without cause)",
+          "why_wrong": "It reports that buildings have been demolished or moved but not why."
+        },
+        "D": {
+          "recipe": "OG (both facts, no link)",
+          "why_wrong": "It mentions both the mine and the moved buildings but never says that the mining is the reason the buildings have been moved."
+        }
+      },
+      "models": [
+        "2.31",
+        "2.15",
+        "1.6"
+      ],
+      "word_count": 84,
+      "sources": [],
+      "notes": "Subject: social science and geography (relocation of Kiruna, Sweden). Real subject known without a search (WAVE.md: no fact-checking for this skill); no figures beyond the distance to the new center (about 3 km).",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.EXPL.medium.w4b3_13",
+      "template": "EXPL",
+      "subtype": "Explain a cause (two linked bullets)",
+      "tier": "medium",
+      "passage": "While researching a topic, a student has taken the following notes:\n• A moonbow, or lunar rainbow, forms when moonlight rather than sunlight is refracted by water droplets.\n• Moonbows are frequently observed near waterfalls, such as Victoria Falls, on nights with a full moon.\n• Moonlight is far fainter than sunlight.\n• In dim conditions, the cells in the human eye that perceive color respond only weakly.\n• To most observers, a moonbow looks like a pale white arc, but long-exposure photographs reveal its colors.",
+      "stem": "The student wants to explain why moonbows usually look white to observers. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "Moonbows, which form when moonlight is refracted by water droplets, are frequently observed near waterfalls.",
+        "Although a moonbow looks like a pale white arc to most observers, long-exposure photographs reveal its colors.",
+        "Because moonlight is so faint, the color-detecting cells in observers’ eyes respond only weakly to a moonbow, so it looks pale white.",
+        "A moonbow is a rainbow formed by moonlight, which is far fainter than sunlight."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The goal is to explain why moonbows look white. The notes say that “Moonlight is far fainter than sunlight” and that “In dim conditions, the cells in the human eye that perceive color respond only weakly.” Choice C joins these facts to explain the pale white appearance.",
+      "distractors": {
+        "A": {
+          "recipe": "OG (how and where moonbows form)",
+          "why_wrong": "It explains how moonbows form and where they are seen, not why they look white."
+        },
+        "B": {
+          "recipe": "PART (effect without cause)",
+          "why_wrong": "It states that moonbows look white to most observers but gives no reason."
+        },
+        "D": {
+          "recipe": "PART (one half of the cause)",
+          "why_wrong": "It notes that moonlight is faint but never connects that faintness to how the eye sees color, or to the moonbow’s white appearance."
+        }
+      },
+      "models": [
+        "2.31",
+        "2.13",
+        "2.3"
+      ],
+      "word_count": 86,
+      "sources": [],
+      "notes": "Subject: natural science (moonbows and night vision). Real phenomenon known without a search (WAVE.md: no fact-checking for this skill). The link between the two causal bullets is left for the key to state.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.SIM.medium.w4b3_14",
+      "template": "SIM",
+      "subtype": "Similarity",
+      "tier": "medium",
+      "passage": "While researching a topic, a student has taken the following notes:\n• The Kailasa temple at Ellora, India, dates to the eighth century.\n• Rather than being constructed from blocks, it was carved downward into a single mass of basalt.\n• The Monolithic Church of Saint-Émilion, in southwestern France, dates to the twelfth century.\n• It was not constructed from blocks either; workers excavated it from a limestone hillside.\n• The temple stands open to the sky, while the church lies largely underground.",
+      "stem": "The student wants to emphasize a similarity between the Kailasa temple and the Monolithic Church of Saint-Émilion. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "The Kailasa temple stands open to the sky, whereas the Monolithic Church of Saint-Émilion lies largely underground.",
+        "Neither the Kailasa temple nor the Monolithic Church of Saint-Émilion was constructed from blocks; each was carved out of solid rock.",
+        "The Monolithic Church of Saint-Émilion, which dates to the twelfth century, was excavated from a limestone hillside in southwestern France.",
+        "The Kailasa temple at Ellora dates to the eighth century, roughly four hundred years before the Monolithic Church of Saint-Émilion."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The goal is a similarity. The temple was not made from blocks but “carved downward into a single mass of basalt,” and the church “was not constructed from blocks either”: workers “excavated it from a limestone hillside.” Choice B states this shared method with “Neither” and “nor.”",
+      "distractors": {
+        "A": {
+          "recipe": "REL (difference instead of similarity)",
+          "why_wrong": "It contrasts the two structures, one open to the sky and one underground, rather than stating something they share."
+        },
+        "C": {
+          "recipe": "PART (one structure only)",
+          "why_wrong": "It describes only the church; the Kailasa temple is not mentioned, so no similarity is stated."
+        },
+        "D": {
+          "recipe": "REL (order in time)",
+          "why_wrong": "It compares when the two were made, which is a difference, not a similarity."
+        }
+      },
+      "models": [
+        "2.46",
+        "2.24",
+        "1.11"
+      ],
+      "word_count": 83,
+      "sources": [],
+      "notes": "Subject: arts and history (rock-cut architecture in India and France). Real monuments known without a search (WAVE.md: no fact-checking for this skill); dates given by century only. One shared trait (carved rather than built) and one difference (open to the sky vs underground).",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.RANK.medium.w4b3_15",
+      "template": "RANK",
+      "subtype": "Relative degree (derived comparative)",
+      "tier": "medium",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Old Tjikko is a Norway spruce growing on Fulufjället Mountain in central Sweden.\n• Its visible trunk is only a few hundred years old.\n• In harsh mountain environments, spruces can regenerate trunks from their roots.\n• Radiocarbon dating of wood beneath the tree indicated that its root system is about 9,500 years old.\n• Geographer Leif Kullman, who identified the tree, named it after his late dog.",
+      "stem": "The student wants to emphasize how the age of Old Tjikko’s root system compares with the age of its trunk. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "Old Tjikko, a Norway spruce on Fulufjället Mountain in central Sweden, was named by geographer Leif Kullman after his late dog.",
+        "Radiocarbon dating of wood beneath Old Tjikko indicated that the spruce’s root system is about 9,500 years old.",
+        "Like other spruces in harsh mountain environments, Old Tjikko can regenerate a trunk from its roots.",
+        "Old Tjikko’s root system is thousands of years older than its visible trunk."
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The goal is to compare two ages. The trunk “is only a few hundred years old,” while the root system “is about 9,500 years old.” Choice D states the relation directly, that the roots are thousands of years older than the trunk.",
+      "distractors": {
+        "A": {
+          "recipe": "OG (naming)",
+          "why_wrong": "It explains who named the tree and after what, not how the ages of its roots and trunk compare."
+        },
+        "B": {
+          "recipe": "PART (one age only)",
+          "why_wrong": "It gives the age of the root system but not the age of the trunk, so nothing is compared."
+        },
+        "C": {
+          "recipe": "OG (how spruces regrow)",
+          "why_wrong": "It explains how a spruce can grow a new trunk from old roots but does not compare the two ages."
+        }
+      },
+      "models": [
+        "2.44",
+        "2.37",
+        "2.27"
+      ],
+      "word_count": 80,
+      "sources": [],
+      "notes": "Subject: natural science (Old Tjikko, a clonal Norway spruce in Dalarna, Sweden). Real subject known without a search (WAVE.md: no fact-checking for this skill); widely reported facts only (root system about 9,500 years old by radiocarbon dating, trunk a few centuries old, named by Leif Kullman after his dog).",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [],
+        "status": "pass",
+        "note": "Leif Kullman really identified and named the tree; no invented finding"
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.SPEC.medium.w4b3_16",
+      "template": "SPEC",
+      "subtype": "Identify a single fact",
+      "tier": "medium",
+      "passage": "While researching a topic, a student has taken the following notes:\n• The takin is a large, heavily built mammal closely related to goats and sheep.\n• It inhabits forests and alpine meadows in the eastern Himalayas.\n• Its thick, oily coat provides insulation in cold, wet weather.\n• Several takins reside in a protected wildlife preserve in Thimphu, Bhutan’s capital.\n• In 2005, the takin was officially designated Bhutan’s national animal.",
+      "stem": "The student wants to identify the takin’s official status in Bhutan. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "A large, heavily built relative of goats and sheep, the takin inhabits forests and alpine meadows in the eastern Himalayas.",
+        "Several takins reside in a protected wildlife preserve in Thimphu, the capital city of Bhutan.",
+        "In 2005, the takin was officially designated the national animal of Bhutan.",
+        "The takin’s thick, oily coat provides insulation in the cold, wet weather of the eastern Himalayas."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The goal asks for the takin’s official status in Bhutan. Choice C gives it: “In 2005, the takin was officially designated Bhutan’s national animal.”",
+      "distractors": {
+        "A": {
+          "recipe": "OG (what and where)",
+          "why_wrong": "It describes the takin and its habitat, not its official status in Bhutan."
+        },
+        "B": {
+          "recipe": "OG (a Bhutan fact that is not a status)",
+          "why_wrong": "It mentions Bhutan, but saying where some takins live does not identify the animal’s official status."
+        },
+        "D": {
+          "recipe": "OG (coat)",
+          "why_wrong": "It describes the takin’s coat, not its status in Bhutan."
+        }
+      },
+      "models": [
+        "2.39",
+        "2.45",
+        "1.9"
+      ],
+      "word_count": 72,
+      "sources": [],
+      "notes": "Subject: natural science (the takin, Budorcas taxicolor). Real subject known without a search (WAVE.md: no fact-checking for this skill): national animal of Bhutan since 2005; Motithang Takin Preserve in Thimphu. A second Bhutan bullet makes the near-miss option.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.STUDY.medium.w4b3_17",
+      "template": "STUDY",
+      "subtype": "Present the study’s results",
+      "tier": "medium",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Libraries usually shelve books spine-out, so that only the narrow spine and title are visible.\n• Some libraries also display selected books face-out, with the front cover turned toward browsers.\n• Researchers investigated whether displaying books face-out would affect how frequently they were borrowed.\n• For eight weeks, a public library shelved 200 novels face-out and 200 comparable novels spine-out.\n• The face-out novels were borrowed approximately three times as often as the spine-out novels.",
+      "stem": "The student wants to present the study’s results. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "In the study, novels displayed face-out were borrowed approximately three times as often as comparable novels shelved spine-out.",
+        "The researchers investigated whether displaying books with their front covers turned toward browsers would affect how frequently the books were borrowed.",
+        "For eight weeks, a public library in the study shelved 200 novels face-out and 200 comparable novels spine-out.",
+        "Whereas libraries usually shelve books spine-out, with only the narrow spine and title visible, some display selected books face-out."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The goal is to present the study’s results. Choice A reports the finding: “The face-out novels were borrowed approximately three times as often as the spine-out novels.”",
+      "distractors": {
+        "B": {
+          "recipe": "OG (aim instead of results)",
+          "why_wrong": "It states what the researchers wanted to find out, not what they found."
+        },
+        "C": {
+          "recipe": "OG (method instead of results)",
+          "why_wrong": "It describes how the study was set up but not its outcome."
+        },
+        "D": {
+          "recipe": "OG (background)",
+          "why_wrong": "It explains the two ways of shelving books but says nothing about the study or its results."
+        }
+      },
+      "models": [
+        "2.5",
+        "2.2",
+        "2.21"
+      ],
+      "word_count": 87,
+      "sources": [],
+      "notes": "Subject: social science (library displays and borrowing). Unnamed, plainly generic study with invented figures (WAVE.md wave-3 lesson); no real study, library or researcher named. Three slot-swap distractors (aim, method, background), as in 2.5.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass",
+        "note": "invented figures sit on an unnamed, plainly generic study ('a public library'); no library or researcher named"
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.AUD_FAM.medium.w4b3_18",
+      "template": "AUD_FAM",
+      "subtype": "Present findings to a familiar audience",
+      "tier": "medium",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Chit funds, common in India, are savings groups whose members contribute a predetermined sum to a shared pool each month.\n• Each month, the pool is awarded to whichever member bids to accept the smallest amount.\n• The remainder is divided among the other members.\n• Researchers surveyed chit fund members in one Indian city about their payouts.\n• Most respondents had used their payout for a substantial expense, such as a wedding or tuition.",
+      "stem": "The student wants to present the survey’s findings to an audience already familiar with chit funds. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "In chit funds, members pay a fixed sum into a shared pool each month; in one Indian city, most surveyed members had used their payout for a substantial expense.",
+        "Most chit fund members surveyed in one Indian city had used their payout for a substantial expense, such as a wedding or tuition.",
+        "Chit funds are savings groups common in India in which the monthly pool is awarded to whichever member bids to accept the smallest amount, with the remainder shared among the others.",
+        "Researchers surveyed members of chit funds in one Indian city about how they had used their payouts."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "An audience already familiar with chit funds needs no explanation of how they work. Choice B goes straight to the finding, that “Most respondents had used their payout for a substantial expense, such as a wedding or tuition,” without redefining chit funds.",
+      "distractors": {
+        "A": {
+          "recipe": "AUD (re-explains the known term)",
+          "why_wrong": "It reports the finding but first explains how chit funds work, which this audience already knows."
+        },
+        "C": {
+          "recipe": "AUD and OG (explanation only)",
+          "why_wrong": "It explains how chit funds operate, which the audience already knows, and gives no finding from the survey."
+        },
+        "D": {
+          "recipe": "PART (survey without its findings)",
+          "why_wrong": "It says what the researchers asked about but not what they found."
+        }
+      },
+      "models": [
+        "2.1",
+        "2.18",
+        "2.28"
+      ],
+      "word_count": 87,
+      "sources": [],
+      "notes": "Subject: social science and economics (chit funds, rotating savings groups in India). The institution is real and described in general terms; the survey is unnamed and plainly generic, with an invented finding (WAVE.md wave-3 lesson).",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass",
+        "note": "invented finding sits on an unnamed survey ('one Indian city'); no researcher or institution named"
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.GEN.medium.w4b3_19",
+      "template": "GEN",
+      "subtype": "Make a generalization",
+      "tier": "medium",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Japan’s school year begins in April, when cherry trees typically bloom.\n• South Korea’s school year begins in early March.\n• In Brazil, the school year generally begins in February, during the Southern Hemisphere’s summer.\n• In most of the United States, the school year begins in late August or early September.\n• In each of these countries, the school year is divided into two or more terms separated by vacations.",
+      "stem": "The student wants to make a generalization about when the school year begins in different countries. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "The school year begins in April in Japan, in early March in South Korea, and usually in February in Brazil.",
+        "In Japan, South Korea, Brazil, and the United States, the school year is divided into two or more terms separated by vacations.",
+        "While Japan’s school year begins in April, when cherry trees typically bloom, most schools in the United States start their year in late August or early September.",
+        "The month in which the school year begins varies from country to country, from February in some places to late August or September in others."
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The goal is a generalization about when school years begin. The notes give four starting points, from “February” in Brazil to “late August or early September” in most of the United States. Choice D draws the general point from them: the starting month varies from country to country.",
+      "distractors": {
+        "A": {
+          "recipe": "PART (examples without a generalization)",
+          "why_wrong": "It lists when the school year begins in three countries but does not draw any general conclusion from them."
+        },
+        "B": {
+          "recipe": "OG (generalization about something else)",
+          "why_wrong": "It generalizes about how school years are divided into terms, not about when they begin."
+        },
+        "C": {
+          "recipe": "REL (contrast of two cases)",
+          "why_wrong": "It contrasts two countries rather than making a general statement about when school years begin."
+        }
+      },
+      "models": [
+        "2.12",
+        "2.22"
+      ],
+      "word_count": 83,
+      "sources": [],
+      "notes": "Subject: social science (school calendars). Real facts known without a search (WAVE.md: no fact-checking for this skill): Japan April, South Korea March, Brazil February, most of the US late August or early September. A second shared trait (terms and vacations) feeds the wrong-generalization option.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.DESC.medium.w4b3_20",
+      "template": "DESC",
+      "subtype": "Describe a style",
+      "tier": "medium",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Kaiping is a county in southern China.\n• In the early twentieth century, its villagers built more than 3,000 diaolou, multistory fortified towers.\n• Many were financed by residents who had emigrated to North America and Southeast Asia.\n• The towers combine traditional Chinese building forms with Western features such as arched windows, columns, and domes.\n• About 1,800 diaolou survive, and in 2007 they were added to the UNESCO World Heritage List.",
+      "stem": "The student wants to describe the architectural style of the diaolou. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "Many of Kaiping’s diaolou were financed by residents who had emigrated to North America and Southeast Asia.",
+        "More than 3,000 diaolou were built in Kaiping in the early twentieth century, and about 1,800 survive today.",
+        "The diaolou of Kaiping combine traditional Chinese building forms with Western features such as arched windows, columns, and domes.",
+        "Kaiping’s diaolou, about 1,800 of which survive, were added to the UNESCO World Heritage List in 2007."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The goal is to describe the towers’ architectural style. Choice C does so, noting that they “combine traditional Chinese building forms with Western features such as arched windows, columns, and domes.”",
+      "distractors": {
+        "A": {
+          "recipe": "OG (how they were paid for)",
+          "why_wrong": "It explains who financed the towers, not what they look like."
+        },
+        "B": {
+          "recipe": "OG (numbers)",
+          "why_wrong": "It gives how many towers were built and how many survive, not their style."
+        },
+        "D": {
+          "recipe": "OG (recognition)",
+          "why_wrong": "It reports how many survive and when they were listed by UNESCO, not their style."
+        }
+      },
+      "models": [
+        "2.4",
+        "1.8",
+        "1.18"
+      ],
+      "word_count": 85,
+      "sources": [],
+      "notes": "Subject: history and architecture (the diaolou of Kaiping, Guangdong). Real subject known without a search (WAVE.md: no fact-checking for this skill); round figures (more than 3,000 built, about 1,800 survive) and the 2007 World Heritage listing.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.EMPH.easy.w4b3_21",
+      "template": "EMPH",
+      "subtype": "Emphasize one attribute (length)",
+      "tier": "easy",
+      "passage": "While researching a topic, a student has taken the following notes:\n• The giant oarfish is a ribbon-shaped fish with a worldwide distribution.\n• It typically inhabits depths between about 200 and 1,000 meters.\n• A bright red dorsal fin runs along its entire back.\n• The giant oarfish can grow to about 8 meters long, making it the longest known bony fish.\n• Because it rarely approaches the surface, it is seldom observed alive.",
+      "stem": "The student wants to emphasize how long the giant oarfish can grow. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "Growing to about 8 meters long, the giant oarfish is the longest known bony fish.",
+        "The giant oarfish typically inhabits depths between about 200 and 1,000 meters below the ocean’s surface.",
+        "The giant oarfish, a ribbon-shaped fish, has a bright red dorsal fin that runs along its entire back.",
+        "Because the giant oarfish rarely approaches the surface, it is seldom observed alive."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The goal is to emphasize the fish’s length. Choice A gives its length, “about 8 meters,” and adds that this makes it “the longest known bony fish.”",
+      "distractors": {
+        "B": {
+          "recipe": "OG (depth)",
+          "why_wrong": "It tells how deep the oarfish lives, not how long it grows."
+        },
+        "C": {
+          "recipe": "OG (appearance)",
+          "why_wrong": "It describes the fish’s shape and fin, not its length."
+        },
+        "D": {
+          "recipe": "OG (rarely seen)",
+          "why_wrong": "It explains why the fish is seldom seen alive, not how long it grows."
+        }
+      },
+      "models": [
+        "1.15",
+        "1.7",
+        "1.16"
+      ],
+      "word_count": 75,
+      "sources": [],
+      "notes": "Subject: natural science (the giant oarfish, Regalecus glesne). Real subject known without a search (WAVE.md: no fact-checking for this skill); widely cited round length (about 8 m).",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.SIM.easy.w4b3_22",
+      "template": "SIM",
+      "subtype": "Similarity",
+      "tier": "easy",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Salamanders typically lose their gills during metamorphosis into adults.\n• The mudpuppy, which has four legs, lives in lakes and rivers of eastern North America.\n• It keeps its feathery external gills throughout its life.\n• The greater siren, which has only two small front legs, lives in swamps of the southeastern United States.\n• It, too, keeps its feathery external gills throughout its life.",
+      "stem": "The student wants to emphasize a similarity between the mudpuppy and the greater siren. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "The mudpuppy has four legs, while the greater siren has only two small front legs.",
+        "The greater siren keeps its feathery external gills throughout its life.",
+        "Salamanders typically lose their gills during metamorphosis into adults.",
+        "Unlike most salamanders, the mudpuppy and the greater siren both keep their feathery external gills throughout their lives."
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The goal is a similarity. Each animal “keeps its feathery external gills throughout its life,” and Choice D states this shared trait with “both.”",
+      "distractors": {
+        "A": {
+          "recipe": "REL (difference instead of similarity)",
+          "why_wrong": "It contrasts the two animals’ legs rather than stating something they share."
+        },
+        "B": {
+          "recipe": "PART (one animal only)",
+          "why_wrong": "It describes only the greater siren, so no similarity is stated."
+        },
+        "C": {
+          "recipe": "OG (background)",
+          "why_wrong": "It describes salamanders in general without mentioning either animal."
+        }
+      },
+      "models": [
+        "1.11",
+        "1.22"
+      ],
+      "word_count": 77,
+      "sources": [],
+      "notes": "Subject: natural science (mudpuppy and greater siren, two salamanders that keep larval gills). Real animals known without a search (WAVE.md: no fact-checking for this skill). One shared trait (gills) and one difference (legs).",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.DIFF.easy.w4b3_23",
+      "template": "DIFF",
+      "subtype": "Difference",
+      "tier": "easy",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Humans have two principal types of adipose, or fat, tissue.\n• White fat stores surplus energy for later use.\n• It constitutes most of the fat in an adult’s body.\n• Brown fat burns energy to generate heat.\n• Its color comes from iron-rich mitochondria inside its cells.\n• Newborns have proportionally more brown fat than adults, which helps them stay warm.",
+      "stem": "The student wants to emphasize a difference between what white fat and brown fat do. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "Brown fat, which gets its color from iron-rich mitochondria, burns energy to generate heat.",
+        "White fat stores surplus energy for later use, while brown fat burns energy to generate heat.",
+        "Humans have two principal types of fat tissue: white fat and brown fat.",
+        "Newborns have proportionally more brown fat than adults, which helps them stay warm."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The goal is a difference in what the two kinds of fat do. White fat “stores surplus energy for later use,” while brown fat “burns energy to generate heat.” Choice B sets the two jobs side by side with “while.”",
+      "distractors": {
+        "A": {
+          "recipe": "PART (one kind only)",
+          "why_wrong": "It describes only brown fat, so there is no contrast with white fat."
+        },
+        "C": {
+          "recipe": "OG (introduces the two types)",
+          "why_wrong": "It names the two kinds of fat but does not say what either one does."
+        },
+        "D": {
+          "recipe": "REL (wrong comparison)",
+          "why_wrong": "It contrasts newborns and adults rather than what white fat and brown fat do."
+        }
+      },
+      "models": [
+        "1.13",
+        "1.2"
+      ],
+      "word_count": 74,
+      "sources": [],
+      "notes": "Subject: natural science (white and brown adipose tissue). Real, well-established facts (WAVE.md: no fact-checking for this skill); no named people.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.OVERVIEW.easy.w4b3_24",
+      "template": "OVERVIEW",
+      "subtype": "Overview of a process",
+      "tier": "easy",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Float glass is the flat glass manufactured for most windows.\n• The float process was developed in Britain in the 1950s.\n• In this process, molten glass is poured continuously onto a shallow bath of molten tin.\n• The glass floats on the tin and spreads into a smooth, flat sheet of uniform thickness.\n• The sheet is then gradually cooled and cut to size.",
+      "stem": "The student wants to provide an overview of the float glass process. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "Developed in Britain in the 1950s, float glass is the flat glass manufactured for most windows.",
+        "In the float glass process, molten glass is poured continuously onto a shallow bath of molten tin.",
+        "In the float glass process, molten glass floats on a bath of molten tin, spreading into a smooth, flat sheet that is then gradually cooled and cut.",
+        "After float glass spreads into a smooth sheet, it is gradually cooled and cut to size."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "An overview should cover the whole process. Choice C does: molten glass is poured onto “a shallow bath of molten tin,” it “spreads into a smooth, flat sheet,” and the sheet is “gradually cooled and cut to size.”",
+      "distractors": {
+        "A": {
+          "recipe": "OG (history and use)",
+          "why_wrong": "It says where and when the process was developed and what the glass is used for, not how the process works."
+        },
+        "B": {
+          "recipe": "PART (first step only)",
+          "why_wrong": "It gives only the first step of the process."
+        },
+        "D": {
+          "recipe": "PART (last step only)",
+          "why_wrong": "It gives only the final steps, cooling and cutting."
+        }
+      },
+      "models": [
+        "1.21"
+      ],
+      "word_count": 77,
+      "sources": [],
+      "notes": "Subject: technology (the float glass process). Real process known without a search (WAVE.md: no fact-checking for this skill); no named people.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      }
+    }
+  ],
+  "done": true
+}

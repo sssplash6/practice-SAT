@@ -1,0 +1,1341 @@
+{
+  "skill": "Words in Context",
+  "slug": "words_in_context",
+  "part": "w3b8",
+  "domain": "Craft and Structure",
+  "plan": {
+    "templates": [
+      {
+        "code": "B6",
+        "name": "Blank completion, phrase options (word + preposition, a/an + word)"
+      },
+      {
+        "code": "B1",
+        "name": "Blank completion, restatement clue"
+      },
+      {
+        "code": "B3",
+        "name": "Blank completion, contrast clue (including received view then finding)"
+      },
+      {
+        "code": "B5",
+        "name": "Blank completion, negated frame"
+      },
+      {
+        "code": "B2",
+        "name": "Blank completion, cause or consequence clue"
+      },
+      {
+        "code": "M1",
+        "name": "Most nearly mean, underlined word"
+      },
+      {
+        "code": "B4",
+        "name": "Blank completion, example-pinned clue"
+      }
+    ]
+  },
+  "items": [
+    {
+      "id": "words_in_context.B6.hard.w3b8_01",
+      "template": "B6",
+      "subtype": "Blank completion: phrase options",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Participants in a study by researchers Andrew Geier, Paul Rozin, and Gheorghe Doros could take unlimited quantities of free Tootsie Rolls or pretzels, yet they selected a considerably greater weight of food when the individual pieces were large than when they were small. This pattern suggests that people habitually treat a single unit of food as ______ an appropriate portion.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "a deviation from",
+        "a fraction of",
+        "a proxy for",
+        "an impediment to"
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "Participants could take as many pieces as they liked, yet larger pieces led them to take much more food. That pattern makes sense if people count a single piece as the right portion whatever it weighs: one unit stands in for, or is a proxy for, an appropriate amount.",
+      "distractors": {
+        "A": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "People avoid what they see as a departure from a proper amount, yet participants readily took whole pieces of either size; the pattern shows they accepted a piece as the right amount."
+        },
+        "B": {
+          "recipe": "wrong nuance, degree (CONNOT)",
+          "why_wrong": "If people saw one piece as only part of a proper portion, they would make up the difference by taking more of the small pieces, and the weight they took would not depend so much on piece size. Instead, larger pieces meant much more food."
+        },
+        "D": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Nothing suggests that a piece kept anyone from eating an appropriate amount; the study is about how piece size shaped how much people took."
+        }
+      },
+      "models": [
+        "3.12",
+        "3.17",
+        "3.2",
+        "3.23"
+      ],
+      "word_count": 59,
+      "sources": [
+        {
+          "what": "Geier, Rozin, Doros 2006, Psychological Science, abstract (PubMed 16771803): “People seem to think that a unit of some entity (with certain constraints) is the appropriate and optimal amount.” and “people choose, and presumably eat, much greater weights of Tootsie Rolls and pretzels when offered a large as opposed to a small unit size (and given the option of taking as many units as they choose at no monetary cost).”",
+          "url": "https://pubmed.ncbi.nlm.nih.gov/16771803/"
+        }
+      ],
+      "notes": "Subject: social science (psychology of eating). Key letter C. Built on the Tootsie Roll and pretzel result, not the better-known M&M spoon result. Steps: 2 (more weight with bigger pieces at free choice; so a piece is taken as the right amount, a stand-in for it). Near miss: a fraction of (would predict compensation). Ranks (tools/data/freq.txt, rarest content word): a deviation from 29,531; a fraction of 12,184; a proxy for 24,197; an impediment to 23,789; 4 of 4 past 10,000.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 2,
+        "fixes": [],
+        "status": "pass"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "Raw ranks a deviation from 29,531; a fraction of 12,184; a proxy for 24,197; an impediment to 23,789: 4 of 4 past 10,000, mean log 4.33, rarest distractor 29,531 (check 2 misses). Two steps (more weight with bigger pieces at free choice, so one piece is taken as the portion) with a fraction of as a real near miss on direction. But a deviation from and a fraction of are everyday modern phrases the 1850 to 1928 corpus overrates, the clue is in plain words, and impediment falls to one fact: a strong band 6 as targeted."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "C",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "words_in_context.B1.hard.w3b8_02",
+      "template": "B1",
+      "subtype": "Blank completion: restatement clue",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Economists Michael Conlin, Ted O’Donoghue, and Timothy Vogelsang analyzed catalog orders for cold-weather merchandise and found that the colder the temperature on the day an order was placed, the greater the likelihood that the item would be returned. This pattern indicates that consumers forecasting how they would feel about a purchase once it arrived gave excessive weight to ______ conditions.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "transient",
+        "hypothetical",
+        "anticipated",
+        "domestic"
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The weather on the day an order is placed passes quickly, yet colder order days led to more returns. So shoppers let a short-lived, or transient, condition shape a purchase meant for later, when that day’s chill no longer mattered.",
+      "distractors": {
+        "B": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "The cold that swayed shoppers was real weather on the day they ordered, not an imagined situation."
+        },
+        "C": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "Conditions expected at delivery are what shoppers should have weighed; the returns show they weighed the weather of the order day instead."
+        },
+        "D": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Catalog orders may be placed from home, but the text connects returns to the outdoor temperature on the order day, not to conditions inside shoppers’ households."
+        }
+      },
+      "models": [
+        "3.4",
+        "3.8",
+        "3.16",
+        "3.22"
+      ],
+      "word_count": 59,
+      "sources": [
+        {
+          "what": "Conlin, O’Donoghue, Vogelsang 2007, American Economic Review 97(4), abstract (RePEc): “Using data on catalog orders of cold-weather items, we find evidence of projection bias over the weather—specifically, people’s decisions are overinfluenced by the current weather. Our estimates suggest that if the order-date temperature declines by 30°F, the return probability increases by 3.95 percent.”",
+          "url": "https://ideas.repec.org/a/aea/aecrev/v97y2007i4p1217-1249.html"
+        }
+      ],
+      "notes": "Subject: social science (behavioral economics). Key letter A. Technical paraphrase: projection bias (order-date weather overweighted) has to be turned into the short-lived nature of that weather. Steps: 2. Ranks: transient 12,088; hypothetical 26,699; anticipated 5,310; domestic 2,924.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 2,
+        "fixes": [],
+        "status": "pass"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "Raw ranks transient 12,088; hypothetical 26,699; anticipated 5,310; domestic 2,924: 2 of 4 past 10,000, mean log 3.92 (band-6 level). Two steps (order-day temperature predicts returns, so the overweighted conditions are the momentary ones), anticipated a reversal near miss; domestic falls to one fact. Band 6 as targeted."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "A",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "words_in_context.B3.hard.w3b8_03",
+      "template": "B3",
+      "subtype": "Blank completion: contrast clue",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "Rebecca Clarke’s Viola Sonata tied for first place among 72 entries in a 1919 composition competition sponsored by music patron Elizabeth Sprague Coolidge. Though the sonata was Clarke’s own work, journalists ______ her authorship, speculating that “Rebecca Clarke” was merely a pseudonym for Ernest Bloch, the composer with whom she had tied.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "corroborated",
+        "eulogized",
+        "usurped",
+        "impugned"
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The journalists guessed that “Rebecca Clarke” was a cover name for Bloch, so they called into question whether Clarke had written the sonata at all. To impugn something is to challenge it as false or doubtful, so the journalists impugned her authorship.",
+      "distractors": {
+        "A": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "To corroborate something is to confirm it. The journalists did the opposite: they suggested the sonata was really Bloch’s, which is why the text opens by saying that the sonata was in fact Clarke’s own work."
+        },
+        "B": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "To eulogize is to praise highly. The sonata shared first place, but the text describes the journalists’ doubts about who wrote it, not praise for it."
+        },
+        "C": {
+          "recipe": "wrong agent (CONNOT)",
+          "why_wrong": "To usurp something is to seize it for oneself without right. The journalists did dispute Clarke’s claim, but they credited the sonata to Bloch; they did not take the authorship for themselves."
+        }
+      },
+      "models": [
+        "22a41819",
+        "e8fb0744",
+        "a5e747f0",
+        "177ed7dc"
+      ],
+      "band7_moves": [
+        "concessive frame (Though ... was Rebecca Clarke’s own work) that hides the direction of the blank",
+        "blank on the view being challenged (the journalists’), with the opposite attitude (credulous) as a reversal",
+        "near miss censorious: right field (a negative stance toward the work) but wrong feature (condemning, not doubting)",
+        "all four options past rank 10,000"
+      ],
+      "word_count": 51,
+      "sources": [
+        {
+          "what": "Wikipedia, Rebecca Clarke (composer): “Clarke’s compositional career peaked in a brief period, beginning with the viola sonata she entered in a 1919 competition sponsored by Elizabeth Sprague Coolidge. In a field of 72 entrants, Clarke’s sonata tied for first place with a composition by Ernest Bloch; Coolidge gave Bloch her casting vote. Reporters speculated that “Rebecca Clarke” was a pseudonym for Bloch himself.”",
+          "url": "https://en.wikipedia.org/wiki/Rebecca_Clarke_(composer)"
+        }
+      ],
+      "notes": "Subject: humanities (music). Key letter D. Concessive frame (Though the sonata was Clarke’s own work) with the blank on the journalists’ challenged view; the participle (speculating ... merely a pseudonym) is the clue. Steps: 1 to 2; the vocabulary carries the item, as in 93665100 (repudiates). Near miss: usurped (disputes her claim but takes it for the journalists, wrong agent). Ranks (tools/data/freq.txt, raw): corroborated 22,317; eulogized 54,908; usurped 24,241; impugned 51,519; 4 of 4 past 20,000, mean log10 4.55, rarest distractor past 50,000, key not the rarest. Reviewer replaced the drafted adjective set (credulous, censorious, effusive, skeptical) because skeptical is a word strong students own.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [
+          "key skeptical (a word strong students own; its 25,228 rank is a spelling split, sceptical 15,537) glossed directly by the speculating clause read band 6; slot changed from “were ______ about its authorship” to “______ her authorship” and options replaced with corroborated (ANT), eulogized (UNSUP, past rank 50,000), usurped (wrong-agent near miss), impugned (key, 51,519); explanation, distractors, notes and word count rewritten",
+          "passage lengthened to 51 words with the field size (72 entries, from the source) after the slot change shortened it below the models’ median"
+        ],
+        "status": "fixed"
+      },
+      "band7": {
+        "verdict": "band 7",
+        "why": "As drafted (skeptical, credulous, censorious, effusive) it read band 6: skeptical is a word strong students own (its 25,228 rank is a spelling split; sceptical is 15,537) and the participle (speculating ... merely a pseudonym) glosses any doubt word, so one step with a known key. After the fix: impugned 51,519; corroborated 22,317; eulogized 54,908; usurped 24,241 (raw freq.txt): 4 of 4 past 20,000, mean log 4.55, rarest distractor past 50,000, key not the rarest; checks 1 to 3 pass and the band-5 guard is clear. One-step logic carried by vocabulary, as in repudiates and paucity of (section 2 point 3), inside a concessive Though frame; usurped is the near miss that fails on one feature (it disputes her claim but takes the work for the journalists). No key echo; all four are past-tense verbs, so the option type gives nothing away."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "D",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 7
+    },
+    {
+      "id": "words_in_context.B5.hard.w3b8_04",
+      "template": "B5",
+      "subtype": "Blank completion: negated frame",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Raja Ravi Varma’s lithographic press, established in Mumbai in 1894, printed affordable reproductions of his paintings of Hindu deities, which remained very popular for many years. The enterprise itself, however, was by no means ______ for Varma and his brother, who managed it: by 1899 the press was deeply indebted, and in 1901 it was sold.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "insolvent",
+        "lucrative",
+        "innovative",
+        "burdensome"
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The colon explains the “by no means” claim: the press sank into debt and was sold. A business that loses money that way was by no means lucrative, or profitable, for the people running it, even though its prints sold well.",
+      "distractors": {
+        "A": {
+          "recipe": "reversal, negation flip (ANT)",
+          "why_wrong": "“By no means insolvent” would say the press could pay its debts, but the text says it was deeply in debt and had to be sold."
+        },
+        "C": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "The text gives no information about the press’s methods; the explanation after the colon is about money, not innovation."
+        },
+        "D": {
+          "recipe": "reversal, negation flip (ANT)",
+          "why_wrong": "“By no means burdensome” would say the press caused the brothers no trouble, but debt and a forced sale show it was a heavy burden."
+        }
+      },
+      "models": [
+        "3.13",
+        "3.14",
+        "3.21",
+        "3.24"
+      ],
+      "word_count": 55,
+      "sources": [
+        {
+          "what": "Wikipedia, Raja Ravi Varma: “Ravi Varma started a lithographic printing press in Ghatkopar, Mumbai in 1894” ... “The oleographs produced by the press were mostly of Hindu gods and goddesses ... These oleographs were very popular and continued to be printed in thousands for many years” ... “The press was managed by Varma’s brother, Raja Varma, but under their management, it was a commercial failure. By 1899 the press was deeply in debt and in 1901, the press was sold”",
+          "url": "https://en.wikipedia.org/wiki/Raja_Ravi_Varma"
+        }
+      ],
+      "notes": "Subject: humanities and history (Indian art, printing). Key letter B. Negation stated plainly (by no means), band-6 style, with two negation-flip reversals as in e7d37666 (3.13). Steps: 2 (popular prints, however; debt and sale; negate a word for profitable). Ranks: insolvent 38,416; lucrative 23,461; innovative 57,486; burdensome 27,124; 4 of 4 past 10,000.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [],
+        "status": "pass"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "Raw ranks insolvent 38,416; lucrative 23,461; innovative 57,486; burdensome 27,124: 4 of 4 past 10,000, but innovative is common in modern prose (the old corpus overrates it). The negation is stated plainly (by no means) and two distractors are negation flips, the band-6-only pattern (section 4); innovative falls to one fact. Band 6 as targeted."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "B",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "words_in_context.B2.hard.w3b8_05",
+      "template": "B2",
+      "subtype": "Blank completion: cause or consequence clue",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Sociologist Max Weber famously credited the economic prosperity of Protestant regions to a distinctive work ethic. Using county data from nineteenth-century Prussia, economists Sascha Becker and Ludger Woessmann offer another explanation: Protestants’ higher literacy, which grew out of the expectation that believers would read the Bible themselves, ______ most of that economic advantage.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "underpinned",
+        "mirrored",
+        "impeded",
+        "postdated"
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The economists offer an alternative to Weber’s explanation: they credit literacy, not a work ethic, as the cause of the advantage. Saying literacy underpinned, or formed the basis of, most of that advantage gives literacy that causal role.",
+      "distractors": {
+        "B": {
+          "recipe": "wrong nuance (CONNOT)",
+          "why_wrong": "Literacy and prosperity were both higher in Protestant areas, but “mirrored” would only say they ran in parallel. The economists offer literacy as the explanation in place of Weber’s, so it must be a cause, not a reflection."
+        },
+        "C": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "An explanation of the advantage cannot be something that held it back; the text presents literacy as the source of Protestant prosperity."
+        },
+        "D": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "The text says nothing about literacy coming after the prosperity; it traces literacy to Bible reading and offers it as the reason for the advantage."
+        }
+      },
+      "models": [
+        "3.25",
+        "3.6"
+      ],
+      "word_count": 52,
+      "sources": [
+        {
+          "what": "Becker, Woessmann 2009, “Was Weber Wrong? A Human Capital Theory of Protestant Economic History,” Quarterly Journal of Economics, abstract (RePEc): “Max Weber attributed the higher economic prosperity of Protestant regions to a Protestant work ethic. We provide an alternative theory: Protestant economies prospered because instruction in reading the Bible generated the human capital crucial to economic prosperity. We test the theory using county-level data from late-nineteenth-century Prussia ... Our results are consistent with Protestants’ higher literacy accounting for most of the gap in economic prosperity.”",
+          "url": "https://ideas.repec.org/a/oup/qjecon/v124y2009i2p531-596..html"
+        }
+      ],
+      "notes": "Subject: social science (economic history). Key letter A. Cause clue: “argue instead” turns literacy into the cause set against Weber’s work ethic. Steps: 2. Near miss: mirrored (correlation, not cause). Ranks: underpinned not in freq.txt (underpin absent, underpinning 69,049); mirrored 18,841; impeded 21,186; postdated not in freq.txt.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "Raw ranks underpinned unseen (underpinning 69,049); mirrored 18,841; impeded 21,186; postdated unseen: 4 of 4 past 10,000 and checks 1 to 3 pass on paper, but underpin and postdate are modern words the old corpus misses, and the clue (another explanation, so literacy is the cause) is one plain step; impeded and postdated each fall to one fact, mirrored is the only near miss (correlation, not cause). A strong band 6 as targeted."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "A",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "words_in_context.B5.medium.w3b8_06",
+      "template": "B5",
+      "subtype": "Blank completion: negated frame",
+      "tier": "medium",
+      "passage": "A team of behavioral economists found that a reminder about free workplace influenza vaccinations did not have to be ______ to be effective. When employees’ reminder mailings included a brief prompt asking them to write down the specific date and time they intended to be vaccinated, vaccination rates increased by 4.2 percentage points.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "concise",
+        "anonymous",
+        "cordial",
+        "elaborate"
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The prompt that raised vaccination rates was brief: it only asked employees to note a date and time. So the reminder did not need to be elaborate, or detailed and complicated, to work.",
+      "distractors": {
+        "A": {
+          "recipe": "reversal, negation flip (ANT)",
+          "why_wrong": "“Did not have to be concise” would imply that a longer message was needed, but the effective prompt was brief."
+        },
+        "B": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Nothing in the text concerns whether the sender of the reminder was named."
+        },
+        "C": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "The text says nothing about the tone of the reminder; the finding is about a short planning prompt."
+        }
+      },
+      "models": [
+        "2.13",
+        "2.21",
+        "2.10",
+        "2.14"
+      ],
+      "word_count": 52,
+      "sources": [
+        {
+          "what": "Milkman, Beshears, Choi, Laibson, Madrian 2011, PNAS, abstract (PubMed 21670283): “All employees eligible for study participation received reminder mailings that listed the times and locations of the relevant vaccination clinics. Mailings to employees randomly assigned to the treatment conditions additionally included a prompt to write down either (i) the date the employee planned to be vaccinated or (ii) the date and time ...” and “Employees who received the more specific prompt to write down both a date and a time had a 4.2 percentage point higher vaccination rate”",
+          "url": "https://pubmed.ncbi.nlm.nih.gov/21670283/"
+        }
+      ],
+      "notes": "Subject: social science (behavioral science, health). Key letter D. Negated frame (did not have to be). Steps: 2 (a brief prompt worked; so length or complexity was unnecessary). Katy Milkman, the study’s first author, is named in official Boundaries item 626a1642 (3.34), so the passage leaves the team unnamed. Ranks: concise 24,282; anonymous 11,694; cordial 5,193; elaborate 5,039.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "words_in_context.B6.medium.w3b8_07",
+      "template": "B6",
+      "subtype": "Blank completion: phrase options",
+      "tier": "medium",
+      "passage": "In 1938 and 1939, while staying as a guest at E-1027, the modernist seaside villa that Irish designer Eileen Gray had conceived with architect Jean Badovici, Le Corbusier painted vibrant murals across the building’s plain white walls. Gray, incensed by this alteration, considered the murals ______ her design.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "a tribute to",
+        "a defacement of",
+        "a continuation of",
+        "a model for"
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "Gray was incensed that murals had been painted across the plain walls of a house she had helped design. She saw them as spoiling her work, that is, as a defacement of her design.",
+      "distractors": {
+        "A": {
+          "recipe": "wrong nuance (CONNOT)",
+          "why_wrong": "A tribute honors a work, but Gray’s fury shows she did not take the murals as an honor to her design."
+        },
+        "C": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "A continuation would carry her design forward, but bright murals covered walls she had left plain, and she was angry about them."
+        },
+        "D": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "The murals were painted on a house that already existed, so they could not have served as a pattern for its design."
+        }
+      },
+      "models": [
+        "2.15",
+        "2.18",
+        "2.28",
+        "2.4"
+      ],
+      "word_count": 47,
+      "sources": [
+        {
+          "what": "Wikipedia, E-1027: “It was designed and built from 1926–1929 by the Irish architect and furniture designer Eileen Gray and the French/Romanian Architect Jean Badovici.” and “While staying as a guest of Badovici in his house in 1938 and 1939, Le Corbusier painted bright murals on its plain white walls with his permission ... That change to her ex-lover’s house infuriated Gray, who considered the murals outright vandalism.”",
+          "url": "https://en.wikipedia.org/wiki/E-1027"
+        }
+      ],
+      "notes": "Subject: humanities (architecture, design). Key letter B. Restatement through Gray’s reaction (incensed by this alteration). Ranks: a tribute to 6,590; a defacement of not in freq.txt (deface 52,912, defaced 25,519); a continuation of 19,496; a model for 3,427.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "words_in_context.B1.medium.w3b8_08",
+      "template": "B1",
+      "subtype": "Blank completion: restatement clue",
+      "tier": "medium",
+      "passage": "As the Nazi government denounced modernist movements in the 1930s, Expressionist painter Gabriele Münter ______ the artworks that she, Wassily Kandinsky, and other members of the Blaue Reiter group had created. She had the collection transported to her house and concealed it there, and despite several searches of the house during World War II, the works were never discovered.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "abandoned",
+        "catalogued",
+        "safeguarded",
+        "reproduced"
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "Münter hid the works in her house, and they survived the war undiscovered despite searches. She protected, or safeguarded, them.",
+      "distractors": {
+        "A": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "Münter kept the works with her and hid them; she did not leave them behind."
+        },
+        "B": {
+          "recipe": "wrong nuance (CONNOT)",
+          "why_wrong": "Cataloguing means listing and recording works. The text is about hiding them so they would not be found, not about keeping records of them."
+        },
+        "D": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Nothing suggests Münter made copies of the works; she hid the originals."
+        }
+      },
+      "models": [
+        "2.5",
+        "2.9",
+        "2.23",
+        "2.27"
+      ],
+      "word_count": 58,
+      "sources": [
+        {
+          "what": "Wikipedia, Gabriele Münter: “In the 1930s, as tension started to grip Europe, and modernist movements were condemned in Germany by the Nazi government, she had all of the art works done by her, Kandinsky, and the other members of the Blaue Reiter transported to her house, where she hid them. In spite of her financial problems, she preserved them with care during World War II. Through several house searches, the pieces were never found.”",
+          "url": "https://en.wikipedia.org/wiki/Gabriele_M%C3%BCnter"
+        }
+      ],
+      "notes": "Subject: humanities and history (modern art). Key letter C. Restatement in the next sentence (concealed the collection; never discovered). Ranks: abandoned 3,393; catalogued 40,236; safeguarded 55,904; reproduced 14,519.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "words_in_context.B2.medium.w3b8_09",
+      "template": "B2",
+      "subtype": "Blank completion: cause or consequence clue",
+      "tier": "medium",
+      "passage": "Volcanic lightning arises when colliding particles of rock, ash, and sometimes ice generate static electricity within an eruption plume. Scientists suspect that ice plays an especially important role in certain plumes, and the observation that lightning activity increases dramatically once a plume rises above the freezing level, where its water vapor can eventually freeze, ______ that hypothesis.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "strengthens",
+        "contradicts",
+        "paraphrases",
+        "supersedes"
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "Above the freezing level, water in the plume can turn to ice. If lightning becomes far more frequent at exactly that point, the observation is evidence that ice helps charge the plume, so it strengthens the hypothesis.",
+      "distractors": {
+        "B": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "More lightning where ice can form fits the idea that ice matters; it does not go against it."
+        },
+        "C": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "An observation of when lightning increases is evidence about the hypothesis, not a restatement of it in other words."
+        },
+        "D": {
+          "recipe": "wrong nuance (CONNOT)",
+          "why_wrong": "A finding that supersedes a hypothesis replaces it with a better explanation. This observation leaves the ice hypothesis in place and adds support for it."
+        }
+      },
+      "models": [
+        "2.17",
+        "2.22",
+        "2.24",
+        "2.25"
+      ],
+      "word_count": 56,
+      "sources": [
+        {
+          "what": "Wikipedia, Volcanic lightning: “The water is initially transported as a hot vapor, which condenses to liquid in the rising column and ultimately freezes to ice if the plume cools well below freezing.” ... “Volcanic lightning arises from colliding and fragmenting particles of volcanic ash (and sometimes ice), which generate static electricity within the volcanic plume” ... “Ice charging is thought to play an important role in certain types of eruption plumes” ... “Support for the ice-charging hypothesis includes the observation that lightning activity greatly increases once volcanic plumes rise above the freezing level”",
+          "url": "https://en.wikipedia.org/wiki/Volcanic_lightning"
+        }
+      ],
+      "notes": "Subject: natural science (volcanology, atmospheric electricity). Key letter A. Consequence clue: the observation bears on the hypothesis, as in 1.31 (findings justify skepticism). Steps: 2 (freezing level means ice can form; more lightning there supports a role for ice). Ranks (printed forms; -s forms are rare in the old corpus): strengthens 28,572; contradicts 34,980; paraphrases 41,432; supersedes 74,128.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "words_in_context.M1.medium.w3b8_10",
+      "template": "M1",
+      "subtype": "Most nearly mean: underlined word",
+      "tier": "medium",
+      "passage": "The following text is adapted from August Strindberg’s 1879 novel The Red Room (translated by Ellie Schleussner in 1913). Struve, a journalist, is welcoming guests to his home; Borg, one of the guests, is a medical student.\n\nStruve, who possessed the <u>faculty</u> of ennobling his environment, introduced Candidate Borg as Dr. Borg. The latter, without a sign of either pleasure or annoyance, held out his arm to his companion, who pulled off the coat and hung it on the hinge of the front door.",
+      "stem": "As used in the text, what does the word “faculty” most nearly mean?",
+      "options": [
+        "Staff",
+        "Privilege",
+        "Department",
+        "Ability"
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "Struve has a knack for making the people around him seem grander: he introduces a student as a doctor. In this sentence, faculty means a natural ability.",
+      "distractors": {
+        "A": {
+          "recipe": "another sense of the target (SENSE)",
+          "why_wrong": "A school’s faculty is its teaching staff, but Struve does not possess a group of teachers; the sentence describes a habit of his."
+        },
+        "B": {
+          "recipe": "another sense of the target, wrong nuance (SENSE, CONNOT)",
+          "why_wrong": "In an old sense, a faculty is a right granted by an authority. Struve has no authority to grant titles; he simply inflates them, which is a personal knack, not a privilege."
+        },
+        "C": {
+          "recipe": "another sense of the target (SENSE)",
+          "why_wrong": "A faculty can be a division of a university, such as a faculty of medicine, but Struve does not possess an academic department."
+        }
+      },
+      "models": [
+        "2.3",
+        "2.19"
+      ],
+      "word_count": 84,
+      "sources": [
+        {
+          "what": "The Red Room, Project Gutenberg 37039 (authorized translation by Ellie Schleussner, London, 1913); excerpt copied from the text, ending cut after “front door”",
+          "url": "https://www.gutenberg.org/ebooks/37039"
+        },
+        {
+          "what": "Wikipedia, The Red Room (Strindberg novel): first edition 1879, translator Ellie Schleussner",
+          "url": "https://en.wikipedia.org/wiki/The_Red_Room_(Strindberg_novel)"
+        }
+      ],
+      "notes": "Subject: literature. Key letter D. Abstract sense of a common noun, as in 2.3 (quality: Characteristic). Adapted: the second sentence is cut after “front door” (the original continues “, an act which drew from Mrs. Struve the remark ...”). Borg is a candidate in medicine (his letters later mention “my medical degree”); Struve is “Journalist Struve” in the novel. Ranks: Staff 3,608; Privilege 3,580; Department 4,432; Ability 4,130.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "words_in_context.B1.easy.w3b8_11",
+      "template": "B1",
+      "subtype": "Blank completion: restatement clue",
+      "tier": "easy",
+      "passage": "The numbat, an insect-eating marsupial now restricted to a few small colonies in Western Australia, has a highly ______ diet: it consumes almost nothing but termites, extracting them from shallow underground passages with its claws and capturing them with its long, sticky tongue. An adult numbat requires as many as 20,000 termites daily.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "varied",
+        "specialized",
+        "seasonal",
+        "unpredictable"
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The numbat eats almost nothing but termites, so its diet is limited to one particular kind of food. That makes it highly specialized.",
+      "distractors": {
+        "A": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "A varied diet includes many kinds of food, but the numbat eats almost only termites."
+        },
+        "C": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "The text does not say the numbat’s diet changes with the seasons; it says the animal eats termites almost exclusively."
+        },
+        "D": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Nothing suggests the numbat’s diet is hard to predict; it consistently eats termites."
+        }
+      },
+      "models": [
+        "1.15",
+        "1.11",
+        "1.39",
+        "1.6"
+      ],
+      "word_count": 52,
+      "sources": [
+        {
+          "what": "Wikipedia, Numbat: “The numbat ... is an insectivorous marsupial. It is diurnal and its diet consists almost exclusively of termites.” ... “An adult numbat requires up to 20,000 termites each day.” ... “It digs them up from loose earth with its front claws and captures them with its long, sticky tongue.” ... “shallow and unfortified underground galleries” ... “now restricted to several small colonies in Western Australia”",
+          "url": "https://en.wikipedia.org/wiki/Numbat"
+        }
+      ],
+      "notes": "Subject: natural science (zoology). Key letter B. Restatement after the colon. Ranks: varied 5,463; specialized 34,794; seasonal 45,224; unpredictable 69,096.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "words_in_context.B1.easy.w3b8_12",
+      "template": "B1",
+      "subtype": "Blank completion: restatement clue",
+      "tier": "easy",
+      "passage": "Following a protracted and bitter dispute with his former business partner Emery Walker over the rights to the Doves Press typeface, bookbinder and printer T. J. Cobden-Sanderson ______ the type rather than allowing those rights to pass to Walker. Beginning in 1916, he made approximately 170 trips to Hammersmith Bridge, dropping the type’s punches and matrices into the River Thames.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "repaired",
+        "advertised",
+        "destroyed",
+        "purchased"
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "Cobden-Sanderson threw the pieces used to make the type into the river so that Walker could never have them. He destroyed the type.",
+      "distractors": {
+        "A": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Nothing suggests the type was broken or fixed; Cobden-Sanderson threw it away."
+        },
+        "B": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "The text describes Cobden-Sanderson dropping the type into the Thames, not promoting it."
+        },
+        "D": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "Buying the type would mean acquiring it, but the text describes him throwing it into the Thames."
+        }
+      },
+      "models": [
+        "1.33",
+        "1.51",
+        "1.53",
+        "1.27"
+      ],
+      "word_count": 59,
+      "sources": [
+        {
+          "what": "Wikipedia, Doves Press: “By 1909, on the dissolution of their partnership, Cobden-Sanderson and Walker were in a protracted and bitter dispute involving the rights to Doves Type. As part of the partnership dissolution agreement, all rights to Doves Type were to pass to Walker upon the death of Cobden-Sanderson. Instead of letting this happen ... Cobden-Sanderson threw the matrices and punches into the River Thames off Hammersmith Bridge ... he began the destruction of the typeface matrices and punches ... beginning on 31 August 1916 ... after 170 trips to the river”",
+          "url": "https://en.wikipedia.org/wiki/Doves_Press"
+        }
+      ],
+      "notes": "Subject: history (printing, Arts and Crafts). Key letter C. Restatement (threw it into the water rather than let it pass to Walker). Ranks: repaired 9,436; advertised 12,675; destroyed 3,212; purchased 6,209.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "words_in_context.B1.easy.w3b8_13",
+      "template": "B1",
+      "subtype": "Blank completion: restatement clue",
+      "tier": "easy",
+      "passage": "Between 1908 and 1940, Sears, Roebuck and Co. sold houses by mail through its Modern Homes catalogs. The houses arrived ______: a typical kit, shipped by railroad boxcar, contained more than 30,000 parts, including precut lumber stamped with codes that matched the blueprints, and many buyers, helped by relatives and neighbors, put the pieces together themselves.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "unassembled",
+        "insured",
+        "finished",
+        "damaged"
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The houses came as kits of thousands of separate parts that buyers then put together. So they arrived unassembled.",
+      "distractors": {
+        "B": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "The text says nothing about insurance; it describes the kits’ parts and how buyers built them."
+        },
+        "C": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "A finished house would need no building, but buyers had to put the pieces together themselves."
+        },
+        "D": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Nothing suggests the parts were harmed in shipping; the text explains that they arrived as a kit to be built."
+        }
+      },
+      "models": [
+        "1.39",
+        "1.15",
+        "1.26",
+        "1.21"
+      ],
+      "word_count": 55,
+      "sources": [
+        {
+          "what": "Wikipedia, Sears Modern Homes (formerly Sears Catalog Home): “In 1908, Sears issued its first specialty catalog for houses” ... “The last ‘Modern Homes’ catalog was issued in 1940.” ... “Shipped by railroad boxcar, and then usually trucked to a home site, the average Sears Modern Home kit had about 25 tons of materials, with more than 30,000 parts.” ... “letter/number codes were stamped on the pre-cut lumber pieces, coordinating with labels found on the blueprints” ... “many of these houses were assembled by the new homeowner, relatives, friends and neighbors”",
+          "url": "https://en.wikipedia.org/wiki/Sears_Modern_Homes"
+        }
+      ],
+      "notes": "Subject: history (American housing). Key letter A. Restatement after the colon. Ranks: unassembled not in freq.txt (assembled 4,875); insured 19,747; finished 915; damaged 13,159.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [
+          "source URL updated to the article’s current title, Sears Modern Homes (the old title now redirects); core claim confirmed there"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "words_in_context.M1.easy.w3b8_14",
+      "template": "M1",
+      "subtype": "Most nearly mean: underlined word",
+      "tier": "easy",
+      "passage": "The following text is from Johan Bojer’s 1916 novel The Great Hunger (translated by W. J. Alexander Worster and C. Archer in 1918).\n\nSome years had passed—a good many years—and once more summer had come, and June. A passenger steamer, <u>bound</u> from Antwerp to Christiania, was ploughing her way one evening over a sea so motionlessly calm that it seemed a single vast mirror filled with a sky of grey and pink-tinged clouds.",
+      "stem": "As used in the text, what does the word “bound” most nearly mean?",
+      "options": [
+        "Tied",
+        "Headed",
+        "Obliged",
+        "Covered"
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The steamer is making a voyage from Antwerp to Christiania. In this sentence, bound means headed, or on its way.",
+      "distractors": {
+        "A": {
+          "recipe": "another sense of the target (SENSE)",
+          "why_wrong": "Something bound with rope is tied, but the steamer is moving across the sea, not fastened in place."
+        },
+        "C": {
+          "recipe": "another sense of the target (SENSE)",
+          "why_wrong": "A person can be bound, or obliged, to do something, but the sentence describes the ship’s route, not a duty."
+        },
+        "D": {
+          "recipe": "another sense of the target (SENSE)",
+          "why_wrong": "A book can be bound, or covered, in leather, but nothing in the sentence is being wrapped."
+        }
+      },
+      "models": [
+        "1.4",
+        "1.19",
+        "1.56"
+      ],
+      "word_count": 73,
+      "sources": [
+        {
+          "what": "The Great Hunger, Project Gutenberg 2943 (translated from the Norwegian by W. J. Alexander Worster and C. Archer); excerpt copied exactly (opening of a chapter), double hyphens printed as closed em dashes",
+          "url": "https://www.gutenberg.org/ebooks/2943"
+        },
+        {
+          "what": "Wikipedia, Johan Bojer: “Den store hunger – The Great Hunger (1916/English 1918)”",
+          "url": "https://en.wikipedia.org/wiki/Johan_Bojer"
+        }
+      ],
+      "notes": "Subject: literature. Key letter B. All three distractors are other senses of “bound” (tied, obliged, covered). Christiania is the former name of Oslo; the sense of “bound” does not depend on knowing that. Ranks: Tied 2,199; Headed 2,322; Obliged 1,510; Covered 900.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "words_in_context.M1.easy.w3b8_15",
+      "template": "M1",
+      "subtype": "Most nearly mean: underlined word",
+      "tier": "easy",
+      "passage": "The following text is adapted from Vicente Blasco Ibáñez’s 1909 novel The Dead Command (translated by Frances Douglas in 1919). Jaime often goes fishing in a narrow channel between the island of Ibiza and the Vedra, a towering rock off its coast.\n\nIn calm weather this was a river of blue water with submarine rocks which peeped their black heads above the surface. When the wind blew fresh and strong, the half submerged heads were <u>crowned</u> with foam and roared ominously.",
+      "stem": "As used in the text, what does the word “crowned” most nearly mean?",
+      "options": [
+        "Honored",
+        "Enthroned",
+        "Topped",
+        "Completed"
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The rocks poke their “black heads” above the water, and in strong wind foam covers those tops. In this sentence, crowned means topped.",
+      "distractors": {
+        "A": {
+          "recipe": "another sense of the target (SENSE)",
+          "why_wrong": "A champion may be crowned, or honored, but the rocks are not receiving an honor; foam is sitting on them."
+        },
+        "B": {
+          "recipe": "another sense of the target (SENSE)",
+          "why_wrong": "A monarch is crowned, or enthroned, but no one is being made a ruler here."
+        },
+        "D": {
+          "recipe": "another sense of the target (SENSE)",
+          "why_wrong": "A career can be crowned, or completed, by a final success, but the sentence describes foam on rocks, not something being finished."
+        }
+      },
+      "models": [
+        "1.4",
+        "1.19",
+        "1.56"
+      ],
+      "word_count": 81,
+      "sources": [
+        {
+          "what": "The Dead Command, Project Gutenberg 27068 (from the Spanish Los muertos mandan, translation by Frances Douglas, Duffield, 1919); adapted: the middle sentence (“The giant allowed itself to be approached ...”) omitted and the passage ended at “ominously” (a semicolon in the original)",
+          "url": "https://www.gutenberg.org/ebooks/27068"
+        },
+        {
+          "what": "Wikipedia, Vicente Blasco Ibáñez, list of works: “Los muertos mandan (1909)”",
+          "url": "https://en.wikipedia.org/wiki/Vicente_Blasco_Ib%C3%A1%C3%B1ez"
+        }
+      ],
+      "notes": "Subject: literature. Key letter C. Concrete figurative sense (foam on top of rocks), as in 1.56 (supported: Held up). The translation spells the island Iviza; the intro line uses the modern name. Ranks: Honored 7,093; Enthroned 18,899; Topped 11,313; Completed 3,596.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "words_in_context.M1.easy.w3b8_16",
+      "template": "M1",
+      "subtype": "Most nearly mean: underlined word",
+      "tier": "easy",
+      "passage": "The following text is from Paul Heyse’s 1855 short story “L’Arrabiata” (translated by Mary Wilson in 1867). After a quarrel, Laurella has leapt from Antonio’s rowboat into the sea and then swum back to it.\n\nAgile as she was, she swung herself on board without assistance, and <u>gained</u> her former seat; as soon as he saw that she was safe, he took to his oars again, while she began quietly wringing out her dripping clothes, and shaking the water from her hair.",
+      "stem": "As used in the text, what does the word “gained” most nearly mean?",
+      "options": [
+        "Earned",
+        "Increased",
+        "Profited",
+        "Reached"
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "Laurella climbs into the boat and gets back to the seat she had before. In this sentence, gained means reached.",
+      "distractors": {
+        "A": {
+          "recipe": "another sense of the target (SENSE)",
+          "why_wrong": "One can gain, or earn, a reward, but Laurella is not being rewarded with a seat; she is climbing back to it."
+        },
+        "B": {
+          "recipe": "another sense of the target (SENSE)",
+          "why_wrong": "Things can gain, or increase, in size or weight, but nothing grows here."
+        },
+        "C": {
+          "recipe": "another sense of the target (SENSE)",
+          "why_wrong": "A person who gains from a deal has profited, but Laurella is not benefiting from a transaction; she is climbing back to her seat."
+        }
+      },
+      "models": [
+        "1.4",
+        "1.19",
+        "1.56"
+      ],
+      "word_count": 82,
+      "sources": [
+        {
+          "what": "L’Arrabiata and Other Tales, Project Gutenberg 33583 (from the German by Mary Wilson, Tauchnitz, Leipzig, 1867); excerpt copied exactly; earlier in the story Laurella “leapt into the sea, and sank” and Antonio calls her “to come into the boat again”",
+          "url": "https://www.gutenberg.org/ebooks/33583"
+        },
+        {
+          "what": "Wikipedia, Paul Heyse: “his most famous short story, ‘L’Arrabbiata’ (‘The Fury’, 1853, published in 1855)”",
+          "url": "https://en.wikipedia.org/wiki/Paul_Heyse"
+        }
+      ],
+      "notes": "Subject: literature. Key letter D. Title spelled as in the 1867 translation (Wikipedia spells it L’Arrabbiata). Ranks: Earned 4,837; Increased 2,145; Profited 15,932; Reached 513.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "words_in_context.M1.easy.w3b8_17",
+      "template": "M1",
+      "subtype": "Most nearly mean: underlined word",
+      "tier": "easy",
+      "passage": "The following text is adapted from Bankim Chandra Chatterjee’s 1873 novel The Poison Tree (translated by Miriam S. Knight in 1884). Nagendra is walking to a village on a dark evening after a heavy storm.\n\nThe assembled frogs, rejoicing in the newly fallen rain, <u>held</u> high festival; and if you listened attentively the voice of the cricket might be heard. Amid the sounds might be distinguished the fall of the rain-drops on the leaves of the trees, and that of the leaves into the pools beneath.",
+      "stem": "As used in the text, what does the word “held” most nearly mean?",
+      "options": [
+        "Celebrated",
+        "Grasped",
+        "Contained",
+        "Believed"
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The frogs are “rejoicing in the newly fallen rain,” loudly enjoying themselves. To hold a festival is to celebrate one, so held means celebrated.",
+      "distractors": {
+        "B": {
+          "recipe": "another sense of the target (SENSE)",
+          "why_wrong": "One can hold, or grasp, an object, but the frogs are not gripping anything."
+        },
+        "C": {
+          "recipe": "another sense of the target (SENSE)",
+          "why_wrong": "A jar can hold, or contain, water, but a festival is not something kept inside the frogs."
+        },
+        "D": {
+          "recipe": "another sense of the target (SENSE)",
+          "why_wrong": "People can hold, or believe, an opinion, but the sentence describes the frogs’ noisy rejoicing, not a belief."
+        }
+      },
+      "models": [
+        "1.4",
+        "1.19",
+        "1.56"
+      ],
+      "word_count": 86,
+      "sources": [
+        {
+          "what": "The Poison Tree: A Tale of Hindu Life in Bengal, Project Gutenberg 17455 (translated by Miriam S. Knight, T. Fisher Unwin, London, 1884); adapted: the first sentence is cut after “might be heard” (the original continues “, like the undying crackle of Ravana’s funeral pyre”)",
+          "url": "https://www.gutenberg.org/ebooks/17455"
+        },
+        {
+          "what": "Wikipedia, Bishabriksha: “1873 novel by Bankim Chandra Chattopadhyay” (English: The Poison Tree)",
+          "url": "https://en.wikipedia.org/wiki/Bishabriksha"
+        }
+      ],
+      "notes": "Subject: literature. Key letter A. The text begins at “The assembled frogs”; the preceding aside (“A woman’s anger does not die away suddenly.”) is left out by starting at the next sentence. Ranks: Celebrated 5,437; Grasped 3,138; Contained 2,445; Believed 869.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "words_in_context.B6.easy.w3b8_18",
+      "template": "B6",
+      "subtype": "Blank completion: phrase options",
+      "tier": "easy",
+      "passage": "In Austria, Friedrich Schmiedl launched the first rocket mail: an experimental rocket carrying 102 pieces of mail between the towns of Schöckl and St. Radegund. Over the following years, similar postal experiments took place in several other countries, where they were usually ______ philatelists, or stamp collectors, whose contributions covered much of their cost.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "opposed by",
+        "backed by",
+        "named for",
+        "delayed by"
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The stamp collectors paid much of the cost of the experiments, so the experiments were backed by, or supported by, philatelists.",
+      "distractors": {
+        "A": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "People who pay for experiments are supporting them, not opposing them."
+        },
+        "C": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Nothing suggests the experiments took their names from stamp collectors."
+        },
+        "D": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "The collectors helped pay for the experiments; the text gives no sign that they slowed them down."
+        }
+      },
+      "models": [
+        "1.52",
+        "1.17",
+        "1.29",
+        "1.49"
+      ],
+      "word_count": 53,
+      "sources": [
+        {
+          "what": "Wikipedia, Rocket mail: “Friedrich Schmiedl launched the first rocket mail (V-7, Experimental Rocket 7) with 102 pieces of mail between the Austrian towns of Schöckl and St. Radegund. Several other launches by Schmiedl occurred through 1932, and similar experiments occurred in several other countries, usually subsidized by philatelists.”",
+          "url": "https://en.wikipedia.org/wiki/Rocket_mail"
+        }
+      ],
+      "notes": "Subject: history (postal history). Key letter B. Restatement (whose money covered much of their cost). Ranks: opposed by 6,009; backed by 4,692; named for 1,949; delayed by 5,951.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "words_in_context.B2.easy.w3b8_19",
+      "template": "B2",
+      "subtype": "Blank completion: cause or consequence clue",
+      "tier": "easy",
+      "passage": "When a viscous liquid such as shampoo is poured in a thin stream onto a surface, a jet occasionally rebounds from the accumulating heap, a phenomenon first described by British engineer Alan Kaye in 1963. The Kaye effect usually escapes observation, however, because it is so ______: the rebounding jet seldom persists for more than about 300 milliseconds.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "messy",
+        "dramatic",
+        "fleeting",
+        "predictable"
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The effect goes unnoticed because the jet seldom lasts more than about 300 milliseconds, less than a third of a second. Something that brief is fleeting.",
+      "distractors": {
+        "A": {
+          "recipe": "topic echo (ASSOC)",
+          "why_wrong": "Spilled shampoo may be messy, but the reason given for missing the effect is how briefly it lasts."
+        },
+        "B": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "A dramatic effect would attract attention, but the text explains why this one usually goes unnoticed."
+        },
+        "D": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "The text says the jet only sometimes appears and lasts very briefly; nothing suggests it is easy to predict, and predictability would not explain why people miss it."
+        }
+      },
+      "models": [
+        "1.5",
+        "1.16",
+        "1.31",
+        "1.44"
+      ],
+      "word_count": 57,
+      "sources": [
+        {
+          "what": "Wikipedia, Kaye effect: “The Kaye effect is a phenomenon observed in some complex liquids which was first described by the British engineer Alan Kaye in 1963.” ... “Common household liquids in this category are liquid hand soaps, shampoos and non-drip paint. The effect usually goes unnoticed, however, because it seldom lasts more than about 300 milliseconds.”",
+          "url": "https://en.wikipedia.org/wiki/Kaye_effect"
+        }
+      ],
+      "notes": "Subject: natural science (physics of fluids). Key letter C. Cause clue (escapes observation because ...). Ranks: messy 47,289; dramatic 4,575; fleeting 9,174; predictable not in freq.txt.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "words_in_context.B2.easy.w3b8_20",
+      "template": "B2",
+      "subtype": "Blank completion: cause or consequence clue",
+      "tier": "easy",
+      "passage": "In social insect colonies, risky defensive behavior is more common among individuals whose capacity for other tasks has diminished. Biologist Jan Šobotník and colleagues found that as workers of the termite Neocapritermes taracua age and become less effective at collecting food, they grow increasingly willing to ______ themselves for the colony: during confrontations, an older worker’s body ruptures, releasing a toxic droplet.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "camouflage",
+        "feed",
+        "isolate",
+        "sacrifice"
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "An older worker’s body bursts open in a fight to release a toxic droplet, so the worker gives up its own life to protect the colony. It sacrifices itself.",
+      "distractors": {
+        "A": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "Camouflaging themselves would mean hiding from enemies, but the older workers burst open in fights."
+        },
+        "B": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "The text says older workers become worse at gathering food; it does not describe them feeding themselves for the colony."
+        },
+        "C": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Nothing suggests the workers separate themselves from the colony; they defend it in fights."
+        }
+      },
+      "models": [
+        "1.5",
+        "1.16",
+        "1.35",
+        "1.44"
+      ],
+      "word_count": 61,
+      "sources": [
+        {
+          "what": "Šobotník et al. 2012, “Explosive backpacks in old termite workers,” Science, abstract (PubMed 22837520): “In social insects, such behavior is more likely to occur in individuals whose potential for other tasks is diminished. We show that workers of the termite Neocapritermes taracua develop an exceptional two-component suicidal apparatus ... During aggressive encounters, their bodies rupture, and the crystals react with the salivary gland secretion to produce a toxic droplet. Both the amount of defensive substances and the readiness to explode increase with workers’ age, as their food-collecting ability declines.”",
+          "url": "https://pubmed.ncbi.nlm.nih.gov/22837520/"
+        }
+      ],
+      "notes": "Subject: natural science (entomology). Key letter D. Cause clue (as workers grow worse at gathering food, they become more ready to ...). Ranks: camouflage not in freq.txt; feed 4,098; isolate 33,716; sacrifice 1,691.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "words_in_context.B4.easy.w3b8_21",
+      "template": "B4",
+      "subtype": "Blank completion: example-pinned clue",
+      "tier": "easy",
+      "passage": "The animals in the work of eighteenth-century Japanese painter Itō Jakuchū show remarkable ______. Although hens and roosters appear most often, he also painted cranes, cockatoos, parrots, and phoenixes, and one of his folding screens shows a white elephant surrounded by other animals in a garden.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "diversity",
+        "uniformity",
+        "fragility",
+        "violence"
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The second sentence runs from hens and roosters to cranes, cockatoos, parrots, phoenixes, and a white elephant. These examples show the diversity of the animals he painted.",
+      "distractors": {
+        "B": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "Hens and roosters appear most often, but the many other animals listed show that his subjects were far from uniform."
+        },
+        "C": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Nothing in the text suggests the animals look delicate or easily harmed; it lists many different kinds of animals."
+        },
+        "D": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "The text does not describe fighting or harm; one screen even shows animals together in a garden."
+        }
+      },
+      "models": [
+        "1.7",
+        "1.34",
+        "1.25",
+        "1.46"
+      ],
+      "word_count": 45,
+      "sources": [
+        {
+          "what": "Wikipedia, Itō Jakuchū: “Itō Jakuchū (2 March 1716 – 27 October 1800) was a Japanese painter of the mid-Edo period” ... “A very common theme among his work is birds, in particular hens and roosters, though several of his more famous paintings depict cranes, cockatoos, parrots, and phoenixes.” ... “The piece, one of a pair of sixfold screens, depicts a white elephant and a number of other animals in a garden.”",
+          "url": "https://en.wikipedia.org/wiki/It%C5%8D_Jakuch%C5%AB"
+        }
+      ],
+      "notes": "Subject: humanities (Japanese painting). Key letter A. Example-pinned: the list in the second sentence instantiates the abstract key. Ranks: diversity 26,406; uniformity 27,071; fragility 36,610; violence 3,233.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "words_in_context.B5.easy.w3b8_22",
+      "template": "B5",
+      "subtype": "Blank completion: negated frame",
+      "tier": "easy",
+      "passage": "Swiss schoolteacher Rodolphe Töpffer initially drew humorous picture stories simply to entertain his students, but he did not ______ the form after those early experiments. He subsequently published several illustrated books of this kind, now regarded as possibly the earliest European comics, and composed theoretical essays examining the form.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "adopt",
+        "abandon",
+        "patent",
+        "reinterpret"
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "After his first stories, Töpffer kept working in the form: he published several more books and wrote essays about it. So he did not abandon it.",
+      "distractors": {
+        "A": {
+          "recipe": "reversal, negation flip (ANT)",
+          "why_wrong": "“Did not adopt the form” would mean he never took it up, but he published several books in it."
+        },
+        "C": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Nothing in the text concerns legal rights to the form; it describes Töpffer publishing more books and writing essays."
+        },
+        "D": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "The text gives no sign of whether he reinterpreted the form; the second sentence explains that he kept making and writing about it."
+        }
+      },
+      "models": [
+        "1.12",
+        "1.24",
+        "1.37",
+        "1.48"
+      ],
+      "word_count": 48,
+      "sources": [
+        {
+          "what": "Wikipedia, Rodolphe Töpffer: “He is best known for his illustrated books ... which are possibly the earliest European comics.” ... “Töpffer worked as a schoolteacher at a boarding school, where he entertained students with his caricatures.” ... “Töpffer published several more of these books, and wrote theoretical essays on the form.”",
+          "url": "https://en.wikipedia.org/wiki/Rodolphe_T%C3%B6pffer"
+        }
+      ],
+      "notes": "Subject: humanities (history of comics). Key letter B. Negated frame (did not ...). Ranks: adopt 7,196; abandon 5,885; patent 7,236; reinterpret not in freq.txt.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "words_in_context.B3.easy.w3b8_23",
+      "template": "B3",
+      "subtype": "Blank completion: contrast clue",
+      "tier": "easy",
+      "passage": "Draco lizards of Southeast Asia possess membranes of skin, supported by elongated ribs, that they can extend like wings. As late as the mid-twentieth century, some scholars who had never observed the lizards themselves doubted that these membranes contributed significantly to the animals’ gliding, but research conducted in the late 1950s ______ the membranes’ aerodynamic function.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "denied",
+        "assumed",
+        "confirmed",
+        "overlooked"
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "“But” sets the research against the earlier doubts: where some scholars doubted that the membranes mattered for gliding, the research showed that they do. It confirmed their function.",
+      "distractors": {
+        "A": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "Denying the membranes’ role in gliding would agree with the doubters, but “but” signals that the research went against their doubts."
+        },
+        "B": {
+          "recipe": "wrong nuance (CONNOT)",
+          "why_wrong": "To assume is to take something for granted without proof, but research that settles a doubt provides evidence rather than assuming."
+        },
+        "D": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Research that answers the doubts about the membranes paid close attention to their function; it did not overlook it."
+        }
+      },
+      "models": [
+        "1.57",
+        "1.58"
+      ],
+      "word_count": 55,
+      "sources": [
+        {
+          "what": "Wikipedia, Draco (lizard): “These lizards are capable of gliding flight via membranes that may be extended to create wings (patagia), formed by a support structure from an enlarged set of ribs.” ... “Some scholars as late as the early-mid 20th century who had not seen the animal in person doubted its flight capabilities or whether the patagia played a significant role in the gliding, but research in the late 1950s firmly established the gliding function of the patagia.” ... “They are found across Southeast Asia and Southern India”",
+          "url": "https://en.wikipedia.org/wiki/Draco_(lizard)"
+        }
+      ],
+      "notes": "Subject: natural science (zoology). Key letter C. Contrast clue (doubted ... but research). Ranks: denied 3,725; assumed 3,022; confirmed 5,199; overlooked 7,646.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass"
+      }
+    }
+  ],
+  "done": true
+}

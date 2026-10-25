@@ -1,0 +1,1345 @@
+{
+  "skill": "Words in Context",
+  "slug": "words_in_context",
+  "part": "w3b7",
+  "domain": "Craft and Structure",
+  "plan": {
+    "templates": [
+      {
+        "code": "B6",
+        "name": "Blank completion, phrase options (word + preposition, a/an + word)"
+      },
+      {
+        "code": "B1",
+        "name": "Blank completion, restatement clue"
+      },
+      {
+        "code": "B3",
+        "name": "Blank completion, contrast clue (including received view then finding)"
+      },
+      {
+        "code": "B5",
+        "name": "Blank completion, negated frame"
+      },
+      {
+        "code": "B2",
+        "name": "Blank completion, cause or consequence clue"
+      },
+      {
+        "code": "M1",
+        "name": "Most nearly mean, underlined word"
+      },
+      {
+        "code": "B4",
+        "name": "Blank completion, example-pinned clue"
+      }
+    ]
+  },
+  "items": [
+    {
+      "id": "words_in_context.B6.hard.w3b7_01",
+      "template": "B6",
+      "subtype": "Blank completion: phrase options",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "Orkney’s remote location north of the Scottish mainland makes it tempting to see the islands’ Neolithic culture as ______ developments in southern Britain. Excavations at the Ness of Brodgar, a large complex of stone buildings, complicate that assumption, however: distinctive motifs on the site’s Grooved Ware pottery later appear on vessels manufactured far to the south.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "inimical to",
+        "contemporaneous with",
+        "derivative of",
+        "antecedent to"
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "Derivative of means copied from or based on. Orkney’s remote location might suggest that its culture simply followed what was happening farther south, but the finds point the other way: motifs on pottery from the Ness of Brodgar later turn up far to the south, so southern potters seem to have borrowed from Orkney. That is why the finds complicate the picture of Orkney’s culture as derivative of southern developments.",
+      "distractors": {
+        "A": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Inimical to means hostile or harmful to. Orkney’s remote location gives no reason to think its culture was hostile to developments in the south, and the pottery finds say nothing about hostility."
+        },
+        "B": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Contemporaneous with means existing at the same time as. A remote location does not make it tempting to think Orkney kept pace with the south; the passage is about which region borrowed from which, not about whether they existed at the same time."
+        },
+        "D": {
+          "recipe": "reversal (ANT), direction",
+          "why_wrong": "Antecedent to means coming before. The finds suggest that Orkney’s styles did come first and then spread south, so this is what the evidence supports, not the tempting view that the evidence complicates."
+        }
+      },
+      "models": [
+        "3021d9ef",
+        "1455b754",
+        "7afb470b",
+        "5a97d9cd"
+      ],
+      "band7_moves": [
+        "concessive 'tempting to treat A as ______ B' frame: the blank names the view the finding undercuts",
+        "the key is the converse of what the evidence shows; the direction reversal (antecedent to) is the trap",
+        "academic word + preposition key; all four options past rank 10,000 in freq.txt"
+      ],
+      "word_count": 55,
+      "sources": [
+        {
+          "what": "Wikipedia, Ness of Brodgar: structures 1 and 8 built around 3100 BC; the Grooved Ware styles found at the Ness in structure 12 later spread southwards from Orkney through repeated motifs such as the eyebrow and the Brodgar Butterfly",
+          "url": "https://en.wikipedia.org/wiki/Ness_of_Brodgar"
+        }
+      ],
+      "notes": "Subject: social science (archaeology). Key letter C. Steps: 2 (remoteness invites the view that Orkney copied the south; motifs spreading south reverse the direction; the blank names the reversed view). Concessive frame: yes (it is tempting to treat ... complicate that picture). Transferred sense: no. Raw ranks, tools/data/freq.txt: inimical 27,949; contemporaneous 38,886; derivative 31,569 (modern corpus 3,996); antecedent 35,359. 4 of 4 past 10,000; mean log10 of raw ranks about 4.5. Band-5 guard clear (key is not the only rare option). Trap: antecedent to is the direction reversal, the relation the evidence actually supports.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 2,
+        "fixes": [],
+        "status": "pass"
+      },
+      "band7": {
+        "verdict": "band 7",
+        "why": "B6 'tempting to see A as ______ B' frame as in 3021d9ef, with the blank on the received view and the finding's relation (antecedent to) as the trap, as in e8fb0744 (section 3 move 7). Corrected ranks: inimical 27,949, contemporaneous 38,886, antecedent 35,359, derivative 3,962 (raw 31,569; the modern rank is pulled down by the calculus sense), so 3 of 4 past 10,000 (4 of 4 raw), mean log 4.30; combined gate passes. Steps 2 (remoteness implies dependence; southward spread of motifs reverses it). Weak points: no near-synonym distractor, and antecedent to is the key's converse; kept because swapping it for a resemblance or subordination word (redolent of, analogous to, ancillary to) would make a second option defensible in this frame."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "C",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 7
+    },
+    {
+      "id": "words_in_context.B1.hard.w3b7_02",
+      "template": "B1",
+      "subtype": "Blank completion: restatement clue",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "Entomologists Paul Marek and Wendy Moore propose that the glow warning predators away from cyanide-producing Motyxia millipedes was ______ over the genus’s history. In their analysis, the faint light of the earliest species may first have helped those millipedes withstand the physiological stress of hot, dry environments, becoming a warning signal only in later, more brightly glowing species.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "co-opted",
+        "attenuated",
+        "atrophied",
+        "sequestered"
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "A trait that is co-opted is taken over for a new use. According to Marek and Moore, the millipedes’ light may first have served another purpose, helping early species cope with the stress of hot, dry habitats, and only later became a warning to predators. A glow that began with one job and was later put to another was co-opted.",
+      "distractors": {
+        "B": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "Attenuated means weakened or made fainter. The text says the earliest species had a dim light and later species glow more brightly, so the glow grew stronger, not weaker."
+        },
+        "C": {
+          "recipe": "wrong nuance, degree or agent (CONNOT), near miss",
+          "why_wrong": "A trait that has atrophied has wasted away or lost its use over time. The glow did change over the genus’s history, but it gained a use, becoming a warning signal, rather than losing one."
+        },
+        "D": {
+          "recipe": "topic echo (ASSOC)",
+          "why_wrong": "Sequestered means set apart or stored away, a word often used of toxins in animals’ bodies. Nothing suggests the glow was hidden or stored; the text describes how its use changed."
+        }
+      },
+      "models": [
+        "93665100",
+        "5444db38",
+        "1eeb9bb8",
+        "bce4d106"
+      ],
+      "band7_moves": [
+        "familiar word in a transferred sense (co-opted, from politics to evolution)",
+        "clue is a plain two-stage history; the key names the pattern a level more abstractly",
+        "near-miss distractor that fails on the direction of change (atrophied)",
+        "all four options past rank 10,000"
+      ],
+      "word_count": 57,
+      "sources": [
+        {
+          "what": "Marek and Moore 2015, PNAS (PubMed abstract): Motyxia bioluminescence is aposematic, forewarning of cyanide-based toxins; faint light emission may have served another function and been co-opted as an aposematic signal later; luminescence in stem-group taxa may have initially evolved to cope with reactive oxygen stress in a hot, dry environment and was repurposed for aposematism by high-elevation crown-group taxa; evolution by gradual, directional change",
+          "url": "https://pubmed.ncbi.nlm.nih.gov/25941389/"
+        }
+      ],
+      "notes": "Subject: natural science (evolutionary biology). Key letter A. Steps: 2 (two-stage history of the trait; then the word for a trait recruited to a new job). Transferred sense: yes (co-opt, a word from politics and organizations, used of evolution). Brighter later species: Wikipedia Motyxia reports higher-elevation millipedes glow brighter; the abstract describes gradual, directional change. Hedged as in the source (may first have helped). Raw ranks, tools/data/freq.txt: co-opted not in freq.txt (neither co-opted, coopted nor opted appears; reviewer recount: unseen in freq.txt and under 3 hits in the modern corpus, so rank 1,000,000); attenuated 18,327; atrophied 46,636; sequestered 18,058 (modern corpus 3,831). All four past 10,000. Near miss: atrophied (evolutionary change, wrong direction of function).",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [
+          "notes only: recount finds co-opted unseen in freq.txt and under 3 hits in the modern corpus, so rank 1,000,000 (not about 12,747)"
+        ],
+        "status": "pass"
+      },
+      "band7": {
+        "verdict": "band 7",
+        "why": "Familiar political word in a transferred evolutionary sense (co-opted), with the clue a plain two-stage history one level less abstract than the key (B1 as in 5444db38 exploited, 1eeb9bb8 inertia). Recount: co-opted unseen in both corpora (rank 1,000,000), attenuated 18,327, atrophied 46,636, sequestered 18,058 raw (3,683 corrected, carbon sense), so 3 of 4 past 10,000, mean log 4.62; gate passes. Near miss atrophied fails on the direction of change in function; attenuated needs the student to know it means weakened before 'more brightly glowing' can kill it. Steps 2."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "A",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 7
+    },
+    {
+      "id": "words_in_context.B3.hard.w3b7_03",
+      "template": "B3",
+      "subtype": "Blank completion: contrast clue",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Archaeologists long assumed that building monumental earthworks was ______ for societies that lived by hunting and gathering rather than by farming. In 1997, however, Joe Saunders and colleagues demonstrated that the eleven earthen mounds at Watson Brake in northern Louisiana, raised about 5,400 years ago, were the accomplishment of precisely such a society.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "unremarkable",
+        "ceremonial",
+        "hazardous",
+        "impractical"
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The passage sets an old assumption against Saunders’s finding. The finding is that hunter-gatherers did build the Watson Brake mounds, and “however” signals that this overturned the assumption. So archaeologists must have assumed that such building was impractical for people who did not farm, that is, beyond what they could manage.",
+      "distractors": {
+        "A": {
+          "recipe": "reversal (ANT), side of the finding",
+          "why_wrong": "If archaeologists had assumed that raising earthworks was unremarkable for hunter-gatherers, the Watson Brake finding would have confirmed the assumption rather than overturned it, as “however” indicates."
+        },
+        "B": {
+          "recipe": "topic echo (ASSOC)",
+          "why_wrong": "Mounds are often linked with ceremony, but the passage is about whether hunter-gatherers could build them at all. Showing that hunter-gatherers built the mounds would not contradict a belief that the building was ceremonial."
+        },
+        "C": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Nothing in the passage concerns danger, and the finding that hunter-gatherers built the mounds would not overturn a belief that the work was dangerous."
+        }
+      },
+      "models": [
+        "b35e2fdc",
+        "3.10",
+        "3.1",
+        "3.20"
+      ],
+      "word_count": 52,
+      "sources": [
+        {
+          "what": "Wikipedia, Watson Brake: oldest earthwork mound complex in North America, about 5400 years ago; eleven mounds; its 1997 dating changed archaeologists’ ideas, as it was built by a hunter-gatherer society rather than a sedentary society dependent on maize cultivation; Joe W. Saunders",
+          "url": "https://en.wikipedia.org/wiki/Watson_Brake"
+        }
+      ],
+      "notes": "Subject: social science (archaeology). Key letter D. Band 6 by plan (B3 hard, band_target 6). Received view then finding, blank on the view being challenged (as in 3.10 and e8fb0744, different frame). Steps: 2 (the finding is stated only as 'just such people'; the reader must recover that the view was the opposite). The key is never paraphrased in the text; only the contrast pins it. Raw ranks: unremarkable 64,876; ceremonial 12,754; hazardous 16,196; impractical 35,575. Distractors: ANT (the finding's side), ASSOC (mounds and ceremony), UNSUP.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 5,
+        "fixes": [],
+        "status": "pass"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "Band 6 by plan and by reading. Its numbers would pass check 1 (unremarkable 64,876, impractical 13,649 corrected / 35,575 raw, ceremonial 12,754, hazardous 7,041 corrected; 3 of 4 past 10,000, mean log 4.23), but the words are transparent by morphology (un-remarkable, im-practical), the key is a plain everyday word, the distractors die on one obvious fact each, and there is no concessive frame or transferred sense: a strong received-view-then-finding band 6 like b35e2fdc."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "D",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "words_in_context.B5.hard.w3b7_04",
+      "template": "B5",
+      "subtype": "Blank completion: negated frame",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "After Arrernte painter Albert Namatjira died in 1959, some critics dismissed his watercolors of Central Australia as products of assimilation into Western culture. That view has been largely abandoned, and the paintings seem far less ______ than those critics claimed, depicting country Namatjira was deeply connected to in colors close to the ochres his ancestors used.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "eclectic",
+        "imitative",
+        "iconoclastic",
+        "perfunctory"
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The critics’ charge was that Namatjira’s watercolors were products of assimilation, that is, imitations of Western art. To say the paintings are far less imitative than the critics claimed rejects that charge, and the evidence that follows fits: the works show country Namatjira was deeply connected to, in colors close to the ochres his ancestors used.",
+      "distractors": {
+        "A": {
+          "recipe": "wrong nuance, degree or agent (CONNOT), near miss",
+          "why_wrong": "Eclectic means drawing on many different sources. The critics did not claim that the paintings mixed influences; they claimed the paintings simply followed Western culture. The ochre colors, if anything, point to a blend of sources, so the paintings are not less eclectic than claimed."
+        },
+        "C": {
+          "recipe": "reversal (ANT), implied logic",
+          "why_wrong": "Iconoclastic means attacking established traditions. Critics who saw the paintings as products of assimilation were claiming the opposite, that the works conformed, so the paintings cannot be less iconoclastic than those critics claimed."
+        },
+        "D": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Perfunctory means done with little care. The critics’ objection concerned where the paintings’ style came from, not how carefully they were made."
+        }
+      },
+      "models": [
+        "d3ca5d59",
+        "d7807ec8",
+        "6017ae31",
+        "d5ad34f0"
+      ],
+      "band7_moves": [
+        "negation carried by a comparative (far less ... than those critics claimed), not by not or no",
+        "the key restates the critics' charge in another register (products of assimilation = imitative)",
+        "reversal of the implied logic (iconoclastic) instead of a negation flip",
+        "near miss on the kind of influence (eclectic); all four options past rank 10,000"
+      ],
+      "word_count": 55,
+      "sources": [
+        {
+          "what": "Wikipedia, Albert Namatjira: Western Arrernte painter (1902 to 1959) of Central Australian landscapes in watercolour; his style was denounced soon after his death by some critics as a product of his assimilation into western culture rather than his own connection to his subject matter, a view since largely abandoned; his colours were similar to the ochres his ancestors had used to depict the same landscape",
+          "url": "https://en.wikipedia.org/wiki/Albert_Namatjira"
+        }
+      ],
+      "notes": "Subject: humanities (art). Key letter B. Steps: 3 (the critics' charge must be translated into a trait; 'far less ... than those critics claimed' means the blank is that trait; the closing evidence (country he was connected to, ancestral ochres) confirms it). Negation hidden in a comparative, not stated as not or no. Concessive frame: no. Transferred sense: no. Raw ranks, tools/data/freq.txt: eclectic 39,598; imitative 26,701; iconoclastic 51,496; perfunctory 14,278. 4 of 4 past 10,000; mean log10 about 4.5. Band-5 guard clear. Near miss: eclectic (a kind of influence, but mixing rather than copying). No negation-flip distractor (band-6 pattern); iconoclastic reverses the implied logic.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 5,
+        "fixes": [],
+        "status": "pass"
+      },
+      "band7": {
+        "verdict": "band 7",
+        "why": "B5 with the negation hidden in a comparative ('far less ______ than those critics claimed'), as d7807ec8 hides it in 'less ______ observers'; the student must translate 'products of assimilation into Western culture' into a trait (imitative) with no echo of passage wording. All four options past 10,000 (eclectic 39,598, imitative 26,701, iconoclastic 51,496, perfunctory 14,278), 3 past 20,000, mean log 4.47, rarest distractor past 50,000; every check in section 6 passes. Distractors: near miss on the kind of influence (eclectic), reversal of the implied logic (iconoclastic, not a negation flip), rare UNSUP (perfunctory). Steps 3."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "B",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 7
+    },
+    {
+      "id": "words_in_context.B2.hard.w3b7_05",
+      "template": "B2",
+      "subtype": "Blank completion: cause or consequence clue",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "In 1885 California’s Supreme Court ruled that San Francisco could not exclude Mamie Tape, a Chinese American student, from public school. Though the decision stood, the Tapes’ victory proved largely ______, as lawmakers soon authorized segregated schools for Chinese children, and Mamie was subsequently enrolled at the city’s new Chinese Primary School.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "nominal",
+        "provisional",
+        "consequential",
+        "vindictive"
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "A nominal victory is a victory in name only. The court ruled for the Tapes, but lawmakers quickly allowed separate schools for Chinese children, and Mamie ended up at the new Chinese Primary School, a segregated school, rather than the school she had been barred from. The family won the case without getting what they had gone to court for.",
+      "distractors": {
+        "B": {
+          "recipe": "wrong nuance, degree or agent (CONNOT), near miss",
+          "why_wrong": "Provisional means temporary or in force only until something replaces it. The text says the decision stood: it was never overturned, so the victory was lasting but hollow, a win in name only rather than a temporary one."
+        },
+        "C": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "Consequential means having important effects. Because of the new law, Mamie still ended up in a segregated school, so the victory changed little in practice."
+        },
+        "D": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Vindictive means seeking revenge. Nothing suggests the Tapes’ victory was spiteful; the as clause explains why the victory achieved little, not what motivated it."
+        }
+      },
+      "models": [
+        "571cf537",
+        "0e033f9b",
+        "a756aa95",
+        "e26d23c4",
+        "7bc05fa2"
+      ],
+      "band7_moves": [
+        "cause in an as clause in the same sentence; evaluative key with a precise meaning (in name only)",
+        "near miss that fails on one feature (provisional: temporary rather than empty), blocked by a concession",
+        "all four options past rank 10,000"
+      ],
+      "word_count": 51,
+      "sources": [
+        {
+          "what": "Wikipedia, Tape v. Hurley: in 1885 the California Supreme Court upheld the ruling that excluding Mamie Tape from public school because of her ancestry was unlawful; the state assembly then passed AB 268 allowing separate schools for Chinese children, and San Francisco set up the Chinese Primary School; Mamie could no longer enroll at the school near her home, and her mother enrolled her in the Chinese School",
+          "url": "https://en.wikipedia.org/wiki/Tape_v._Hurley"
+        }
+      ],
+      "notes": "Subject: history (law, education). Key letter A. Steps: 2 (the ruling stood, yet the as clause shows nothing changed for Mamie; then the evaluative word for a victory in name only). Cause in an as clause in the same sentence, evaluative key, as in 571cf537 and 0e033f9b (different subject and frame). Raw ranks, tools/data/freq.txt: nominal 15,878; provisional 26,070; consequential 34,533; vindictive 10,537. 4 of 4 past 10,000. Near miss: provisional (limited, but by time rather than by effect), blocked by 'Though the decision stood'. Simplified: the trial court ruled in January 1885 and the state Supreme Court upheld it in March 1885.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [
+          "why_wrong B (provisional) tightened: the ruling was never overturned, so the victory was lasting but hollow (old text said 'emptied of effect from the start', which 'soon' does not support)",
+          "notes quote the passage correctly ('Though the decision stood')"
+        ],
+        "status": "fixed"
+      },
+      "band7": {
+        "verdict": "band 7",
+        "why": "B2 with the cause in an as clause and a concessive 'Though the decision stood' that blocks the near miss (provisional: temporary, not hollow), as in 571cf537 tenuous and 0e033f9b prudent. Corrected ranks: nominal 9,752 (raw 15,878; engineering sense lowers it), provisional 20,379, consequential 34,533, vindictive 10,537, so 3 of 4 past 10,000, mean log 4.21; gate passes, band-5 guard clear (key is the commonest option). Key sense (in name only) is not the 'very small' sense most students know. Steps 2. Closest call of the set: consequential and vindictive fall on one fact each, but CB's band-7 B2 distractors are no harder (unoriginal, optimistic)."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "A",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 7
+    },
+    {
+      "id": "words_in_context.B5.medium.w3b7_06",
+      "template": "B5",
+      "subtype": "Blank completion: negated frame",
+      "tier": "medium",
+      "passage": "Architects Anne Lacaton and Jean-Philippe Vassal are reluctant to ______ a building that could instead be improved: collaborating with Frédéric Druot, they transformed the Bois-le-Prêtre tower, a 1960s low-income housing block in Paris, without relocating its residents, enlarging every apartment by attaching winter gardens and balconies to the existing structure.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "renovate",
+        "inspect",
+        "demolish",
+        "subdivide"
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The first sentence contrasts the blank with improving a building, and the Bois-le-Prêtre project shows the architects’ preference: they kept the tower and its residents and added space to the existing structure. So what they are reluctant to do is demolish a building that could be improved instead.",
+      "distractors": {
+        "A": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "Renovating the tower is exactly what the architects did at Bois-le-Prêtre, and renovating is a way of improving a building, so they cannot be reluctant to renovate a building that could be improved."
+        },
+        "B": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Nothing suggests that the architects avoid inspecting buildings, and inspecting a building is not an alternative to improving it."
+        },
+        "D": {
+          "recipe": "wrong nuance, degree or agent (CONNOT)",
+          "why_wrong": "Subdividing changes a building, but the architects enlarged the apartments rather than splitting them, and subdividing is not the alternative to improvement that the sentence describes."
+        }
+      },
+      "models": [
+        "2.28",
+        "2.20",
+        "2.10",
+        "2.21"
+      ],
+      "word_count": 49,
+      "sources": [
+        {
+          "what": "Wikipedia, Lacaton & Vassal: their philosophy is to never demolish what could be redeemed; with Frédéric Druot they completed the renovation of the 1960s Bois-le-Prêtre tower in northern Paris in 2010 without moving the occupants, adding space to all the apartments by grafting on balconies and winter gardens",
+          "url": "https://en.wikipedia.org/wiki/Lacaton_%26_Vassal"
+        }
+      ],
+      "notes": "Subject: humanities (architecture). Key letter C. Negated frame: reluctant to ... instead. Steps: 1 to 2 (the example shows what they do; the blank is its opposite). Raw ranks: renovate not in freq.txt (renovated 46,252); inspect 11,868; demolish 33,152; subdivide not in freq.txt. Medium mix: reversal (renovate; preserve was dropped because 'reluctant to preserve ... instead be improved' could be read as keeping a building unchanged), unsupported (inspect), near miss (subdivide: an alteration, the wrong one).",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "words_in_context.B6.medium.w3b7_07",
+      "template": "B6",
+      "subtype": "Blank completion: phrase options",
+      "tier": "medium",
+      "passage": "In 1916 Marion E. Wong wrote, directed, and produced The Curse of Quon Gwon, regarded as the first Chinese American feature film. For decades afterward, however, the film remained largely ______ audiences and historians: it received only two screenings in the ninety years following 1917, and merely two of its eight reels survive.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "beloved by",
+        "objectionable to",
+        "inaccessible to",
+        "indebted to"
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The colon introduces the reason for the blank: the film was shown only twice in ninety years, and most of it is lost. A film that almost no one could see was inaccessible to audiences and historians.",
+      "distractors": {
+        "A": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "A film that was screened only twice in ninety years could hardly be beloved by audiences; the text stresses how rarely anyone saw it."
+        },
+        "B": {
+          "recipe": "wrong nuance, degree or agent (CONNOT), near miss",
+          "why_wrong": "Objectionable to would give a reason for the film’s absence, namely that people disliked or were offended by it. The text explains the absence by lost reels and rare screenings, not by any objection to the film."
+        },
+        "D": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "To be indebted to someone is to owe them something. Nothing suggests the film owed anything to audiences or historians."
+        }
+      },
+      "models": [
+        "2.18",
+        "2.28",
+        "2.4",
+        "2.15",
+        "2.7"
+      ],
+      "word_count": 52,
+      "sources": [
+        {
+          "what": "Wikipedia, Marion E. Wong: in 1916 she founded the Mandarin Film Company and wrote, produced, and directed The Curse of Quon Gwon, regarded as the first Chinese-American feature film; since its last screening in 1917 it was screened only twice over the following ninety years; only two reels of the eight-reel film survive; added to the National Film Registry in 2006",
+          "url": "https://en.wikipedia.org/wiki/Marion_E._Wong"
+        }
+      ],
+      "notes": "Subject: humanities (film history). Key letter C. Word + preposition options as in 2.18 and 2.28. Clue: colon restatement (screened twice in ninety years, two of eight reels). Raw ranks: beloved 2,555; objectionable 12,381; inaccessible 14,858; indebted 11,122. Near miss: objectionable to (offers a different reason for absence).",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "words_in_context.B1.medium.w3b7_08",
+      "template": "B1",
+      "subtype": "Blank completion: restatement clue",
+      "tier": "medium",
+      "passage": "Whereas English speakers can simply say “blue,” Russian speakers must categorize any blue as either goluboy (lighter) or siniy (darker). Jonathan Winawer and colleagues found in 2007 that this ______ linguistic distinction influences perception: Russian participants discriminated between two blues more quickly when the colors straddled the goluboy-siniy boundary.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "optional",
+        "arbitrary",
+        "archaic",
+        "obligatory"
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The first sentence says that Russian speakers must choose between goluboy and siniy whenever they name a blue, while English speakers need not make any such choice. A distinction that speakers are required to make is obligatory.",
+      "distractors": {
+        "A": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "Optional means left to choice. The text says Russian speakers must use one word or the other, so the distinction is required, not optional."
+        },
+        "B": {
+          "recipe": "wrong nuance, degree or agent (CONNOT), near miss",
+          "why_wrong": "Arbitrary means based on chance or whim rather than reason. The text says nothing about how the line between the two blues was drawn; what it stresses is that speakers must observe it."
+        },
+        "C": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Archaic means old-fashioned and no longer in common use. The text describes how Russian speakers name blues today, so nothing suggests the distinction is out of date."
+        }
+      },
+      "models": [
+        "2.5",
+        "2.16",
+        "2.23",
+        "2.9"
+      ],
+      "word_count": 48,
+      "sources": [
+        {
+          "what": "Winawer et al. 2007, PNAS (PubMed abstract): unlike English, Russian makes an obligatory distinction between lighter blues (goluboy) and darker blues (siniy); Russian speakers were faster to discriminate two colors when they fell into different linguistic categories than when they were from the same category",
+          "url": "https://pubmed.ncbi.nlm.nih.gov/17470790/"
+        }
+      ],
+      "notes": "Subject: social science (linguistics, psychology). Key letter D. Clue: restatement in the previous sentence (must call a given blue either ... or ...). Raw ranks: optional 60,612; arbitrary 19,184; archaic 23,550; obligatory 38,535. The source abstract uses the key word; the passage does not. Near miss: arbitrary (a common claim about linguistic categories, but not what the text says).",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "words_in_context.B2.medium.w3b7_09",
+      "template": "B2",
+      "subtype": "Blank completion: cause or consequence clue",
+      "tier": "medium",
+      "passage": "The flowers of the bee orchid (Ophrys apifera) resemble female bees in both appearance and scent. In the Mediterranean, male Eucera longicornis bees attempting to mate with the flowers carry off their pollen, but in the orchid’s northern range the flowers are almost exclusively self-pollinating, which makes this elaborate disguise seem ______ there.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "indispensable",
+        "superfluous",
+        "conspicuous",
+        "deceptive"
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The flowers’ bee-like look and smell serve to lure male bees, which carry pollen between plants. In the north, though, the flowers pollinate themselves almost entirely, so the lure does no work there. A disguise that serves no purpose seems superfluous, that is, unnecessary.",
+      "distractors": {
+        "A": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "Indispensable means absolutely necessary. In the north the flowers pollinate themselves, so the disguise that attracts bees is not needed there at all."
+        },
+        "C": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Nothing in the text concerns how noticeable the flowers are, and self-pollination would not make the disguise any easier to notice."
+        },
+        "D": {
+          "recipe": "topic echo (ASSOC)",
+          "why_wrong": "The disguise is deceptive everywhere, since it tricks bees into treating flowers as mates. Self-pollination in the north does nothing to make the disguise seem more deceptive there; it makes the disguise seem unnecessary."
+        }
+      },
+      "models": [
+        "2.24",
+        "2.25",
+        "2.17",
+        "2.22"
+      ],
+      "word_count": 52,
+      "sources": [
+        {
+          "what": "Wikipedia, Ophrys apifera: an example of sexually deceptive pollination and floral mimicry; the labellum mimics a bee and the flowers emit allomones that mimic the scent of the female bee; flowers are almost exclusively self-pollinating in the northern ranges, while pollination by the solitary bee Eucera longicornis, whose males try to copulate with the flowers, occurs in the Mediterranean region",
+          "url": "https://en.wikipedia.org/wiki/Ophrys_apifera"
+        }
+      ],
+      "notes": "Subject: natural science (botany). Key letter B. Clue: consequence (self-pollination makes the lure unnecessary); steps 2 (what the disguise is for, then what follows where it is not used). Raw ranks: indispensable 10,496; superfluous 9,923; conspicuous 6,466; deceptive 17,391. Topic echo: deceptive (the disguise is deceptive, but self-pollination is not why).",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "words_in_context.M1.medium.w3b7_10",
+      "template": "M1",
+      "subtype": "Most nearly mean: underlined word",
+      "tier": "medium",
+      "passage": "The following text is from Rabindranath Tagore’s 1916 novel The Home and the World (translated by Surendranath Tagore in 1919). Nikhil is reflecting on his wife, Bimala.\n\n[Bimala] could not fully realize that I <u>held</u> as weakness all imposition of force. Only the weak dare not be just. They shirk their responsibility of fairness and try quickly to get at results through the short-cuts of injustice.",
+      "stem": "As used in the text, what does the word “held” most nearly mean?",
+      "options": [
+        "Clutched",
+        "Regarded",
+        "Contained",
+        "Restrained"
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "Here held means considered or judged. Nikhil says he held all use of force as weakness, and the next sentences explain that view: only the weak are unwilling to be just and take the short-cuts of injustice. He regarded the imposition of force as a sign of weakness.",
+      "distractors": {
+        "A": {
+          "recipe": "another sense of the target (SENSE)",
+          "why_wrong": "Hold can mean to grip something in the hand, but Nikhil is not gripping anything; he is stating how he judges the use of force."
+        },
+        "C": {
+          "recipe": "another sense of the target (SENSE)",
+          "why_wrong": "Hold can mean to contain, as when a jar holds water, but Nikhil is not containing force; the sentence concerns his opinion of it."
+        },
+        "D": {
+          "recipe": "another sense of the target (SENSE)",
+          "why_wrong": "Hold can mean to restrain, as in holding a crowd back, but the sentence is not about Nikhil keeping force in check; it is about what he considers force to be."
+        }
+      },
+      "models": [
+        "2.3",
+        "2.19"
+      ],
+      "word_count": 66,
+      "sources": [
+        {
+          "what": "Project Gutenberg 7166, The Home and the World by Rabindranath Tagore, translated by Surendranath Tagore (1919); excerpt from the section Nikhil's Story, copied exactly from the second sentence of its paragraph, with [Bimala] in place of She (line-break hyphen in short-cuts closed as in the printed word)",
+          "url": "https://www.gutenberg.org/ebooks/7166"
+        }
+      ],
+      "notes": "Subject: literature. Key letter B. Bengali original Ghare Baire, 1916; English translation 1919 (intro format as in the Svarna Kumari Devi and Spyri items). Target held is not underlined in any official item or any of ours (hold, a different form, appears once in our bank). Abstract sense (hold as = consider), as quality and assumed in 2.3 and 2.19; all three distractors are other senses of hold. Raw ranks: clutched 5,651; regarded 1,218; contained 2,445; restrained 5,774. The one earlier hold item (w2b7_16) keys Engage with Own, Grasp, Host; this one uses a different sense and different distractors. Excerpt 38 words, total 66 (official medium meaning items 60 to 78).",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 2,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "words_in_context.B1.easy.w3b7_11",
+      "template": "B1",
+      "subtype": "Blank completion: restatement clue",
+      "tier": "easy",
+      "passage": "Hired as a seamstress for an Arctic expedition, Iñupiaq woman Ada Blackjack was left alone on remote Wrangel Island in 1923 after her companions either departed across the ice to seek help or died. She proved remarkably ______, teaching herself to hunt foxes and construct a boat, and survived until her rescue that August.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "resourceful",
+        "careless",
+        "talkative",
+        "homesick"
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "Resourceful means able to find clever ways to deal with difficult situations. Left alone on an Arctic island, Blackjack learned to hunt foxes and build a boat and survived until she was rescued, which shows exactly that ability.",
+      "distractors": {
+        "B": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "Careless means not paying attention or taking care. Teaching herself to hunt and build a boat and surviving alone for months suggest the opposite."
+        },
+        "C": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Talkative means fond of talking. Blackjack was alone on the island, and nothing in the text concerns how much she talked."
+        },
+        "D": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Homesick means missing one’s home. Blackjack may well have missed home, but the text describes what she did to survive, not how she felt about being away."
+        }
+      },
+      "models": [
+        "1.13",
+        "1.6",
+        "1.39",
+        "1.15"
+      ],
+      "word_count": 53,
+      "sources": [
+        {
+          "what": "Wikipedia, Ada Blackjack: Iñupiaq woman who accompanied an Arctic expedition to Wrangel Island as a seamstress; in January 1923 three men set out across the frozen Chukchi Sea for help and were never seen again, and Lorne Knight died in June 1923; she survived alone, learning to hunt foxes, build boats, and sew parkas, until her rescue on August 19, 1923",
+          "url": "https://en.wikipedia.org/wiki/Ada_Blackjack"
+        }
+      ],
+      "notes": "Subject: history (Arctic exploration). Key letter A. Clue: restatement by example in the same sentence. Raw ranks: resourceful 24,584; careless 2,563; talkative 13,443; homesick 14,564. Simplified: she was left with the ailing Knight from January and fully alone from June; 'left alone ... after her companions either set out for help or died' covers both.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "words_in_context.B1.easy.w3b7_12",
+      "template": "B1",
+      "subtype": "Blank completion: restatement clue",
+      "tier": "easy",
+      "passage": "In 1954 Japanese artist Kazuo Shiraga abandoned his brushes and invented an unconventional painting technique. Laying a canvas flat on the floor, he ______ thick oil paint across its surface with his feet, producing broad, swirling marks that became the signature feature of his abstract compositions.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "dried",
+        "sold",
+        "stored",
+        "spread"
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "Shiraga gave up brushes and used his feet on a canvas laid on the floor, leaving broad, swirling marks. Moving thick paint across a surface in this way is spreading it.",
+      "distractors": {
+        "A": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Nothing in the text says Shiraga dried the paint; the broad, swirling marks come from moving wet paint around with his feet."
+        },
+        "B": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Selling paint has nothing to do with how Shiraga applied it to the canvas, which is what the sentence describes."
+        },
+        "C": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Storing paint does not leave marks on a canvas; the sentence describes how Shiraga painted, not how he kept his supplies."
+        }
+      },
+      "models": [
+        "1.9",
+        "1.13",
+        "1.6",
+        "1.11"
+      ],
+      "word_count": 45,
+      "sources": [
+        {
+          "what": "Wikipedia, Kazuo Shiraga: best known for his foot paintings, made by spreading oil paint on paper and later on canvas with his feet, a method he invented in 1954; the canvases were placed horizontally on the floor",
+          "url": "https://en.wikipedia.org/wiki/Kazuo_Shiraga"
+        }
+      ],
+      "notes": "Subject: humanities (art). Key letter D. Clue: restatement (instead of brushes, feet on a canvas on the floor; broad, swirling marks). Raw ranks: dried 4,162; sold 1,984; stored 1,813; spread 1,357. The Gutai group is not named (another item uses it).",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 2,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "words_in_context.B1.easy.w3b7_13",
+      "template": "B1",
+      "subtype": "Blank completion: restatement clue",
+      "tier": "easy",
+      "passage": "During the Bengal famine of 1943, painter Zainul Abedin produced a series of sketches documenting starving people dying by the roadside. His materials were ______: he drew on cheap packing paper, using ink he made himself by burning charcoal. Exhibited in 1944, the sketches brought him widespread recognition.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "imported",
+        "humble",
+        "colorful",
+        "rare"
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The colon introduces the explanation: Abedin drew on cheap packing paper with ink he made himself from burned charcoal. Materials that are cheap, ordinary, and homemade are humble.",
+      "distractors": {
+        "A": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Nothing suggests the materials came from abroad; the ink was made by Abedin himself, and the paper was ordinary packing paper."
+        },
+        "C": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "The text mentions only charcoal ink on packing paper, so nothing suggests the sketches used bright colors."
+        },
+        "D": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "Rare means hard to find. Cheap packing paper and homemade ink are the opposite of rare materials."
+        }
+      },
+      "models": [
+        "1.39",
+        "1.13",
+        "1.23",
+        "1.9"
+      ],
+      "word_count": 47,
+      "sources": [
+        {
+          "what": "Wikipedia, Zainul Abedin: became well known in 1944 through his series depicting the Bengal famine of 1943; he made his own ink by burning charcoal and used it on cheap, ordinary packing paper; he depicted starving people dying by the roadside; the famine set exhibited in 1944 brought him critical acclaim",
+          "url": "https://en.wikipedia.org/wiki/Zainul_Abedin"
+        }
+      ],
+      "notes": "Subject: humanities (art). Key letter B. Clue: restatement after a colon. Raw ranks: imported 9,001; humble 2,300; colorful 70,399; rare 1,888.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "words_in_context.B1.easy.w3b7_14",
+      "template": "B1",
+      "subtype": "Blank completion: restatement clue",
+      "tier": "easy",
+      "passage": "The Río Tinto in southwestern Spain owes its deep red color to dissolved iron. The river is also extremely ______: with a pH of approximately 2, its water is chemically closer to lemon juice than to ordinary river water, yet certain microorganisms thrive in it.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "cold",
+        "shallow",
+        "acidic",
+        "salty"
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The colon explains the blank: the river’s water has a pH of about 2, close to that of lemon juice. A low pH like this means the water is acidic.",
+      "distractors": {
+        "A": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Nothing in the text concerns the water’s temperature; the pH and the comparison with lemon juice describe its chemistry."
+        },
+        "B": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "The text says nothing about the river’s depth, and a pH value has nothing to do with how deep a river is."
+        },
+        "D": {
+          "recipe": "plausible but unsupported (UNSUP), near miss",
+          "why_wrong": "Salty water contains dissolved salt, but the clue is the pH of about 2 and the comparison with lemon juice, which describe sourness, not saltiness."
+        }
+      },
+      "models": [
+        "1.9",
+        "1.42",
+        "1.11",
+        "1.13"
+      ],
+      "word_count": 44,
+      "sources": [
+        {
+          "what": "Wikipedia, Río Tinto (river): river in southwestern Spain with a red and orange colour from its extremely acidic water, high in iron and heavy metals; very acidic (pH 2) with a deep reddish hue due to dissolved iron; some extremophile microorganisms thrive in these conditions",
+          "url": "https://en.wikipedia.org/wiki/Rio_Tinto_(river)"
+        }
+      ],
+      "notes": "Subject: natural science (geochemistry, microbiology). Key letter C. Clue: restatement after a colon (pH 2, lemon juice). Raw ranks: cold 425; shallow 5,089; acidic not in freq.txt (modern corpus 11,665); salty 36,852. Lemon juice has a pH of about 2 (general knowledge).",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "words_in_context.M1.easy.w3b7_15",
+      "template": "M1",
+      "subtype": "Most nearly mean: underlined word",
+      "tier": "easy",
+      "passage": "The following text is from Arnold Bennett’s 1902 novel Anna of the Five Towns. Henry Mynors is a guest of Ephraim Tellwright, a wealthy but miserly man.\n\n‘Let me light that,’ Mynors exclaimed, and the gas was lighted before Mr. Tellwright had struck a match. Mynors turned on the full force of gas. Then Mr. Tellwright carefully <u>lowered</u> it. The summer quarter’s gas-bill at that house did not exceed five shillings.",
+      "stem": "As used in the text, what does the word “lowered” most nearly mean?",
+      "options": [
+        "Humbled",
+        "Hid",
+        "Downgraded",
+        "Reduced"
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "Here lowered means turned down. Mynors turns the gas on at full force, and the thrifty Mr. Tellwright then carefully turns it down, which is why his gas bill stays so small. He reduced the flow of gas.",
+      "distractors": {
+        "A": {
+          "recipe": "another sense of the target (SENSE)",
+          "why_wrong": "Lower can mean to humble, as in lowering oneself, but Mr. Tellwright is adjusting the gas, not humbling anyone."
+        },
+        "B": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Nothing suggests that Mr. Tellwright hid the gas light; the next sentence about the small gas bill shows he turned it down to save money."
+        },
+        "C": {
+          "recipe": "another sense of the target (SENSE)",
+          "why_wrong": "Lower can mean to downgrade, moving someone or something down in rank or status, but the gas has no rank; Mr. Tellwright is turning down its flow."
+        }
+      },
+      "models": [
+        "1.32",
+        "1.1",
+        "1.56",
+        "1.54"
+      ],
+      "word_count": 71,
+      "sources": [
+        {
+          "what": "Project Gutenberg 35505, Anna of the Five Towns by Arnold Bennett (1902); excerpt from chapter 2 copied exactly (British single quotation marks kept, made curly)",
+          "url": "https://www.gutenberg.org/ebooks/35505"
+        }
+      ],
+      "notes": "Subject: literature. Key letter D. Concrete everyday sense of a common verb (turned down), pinned by the full force of gas and the gas bill, as marked = priced in 1.32. Target not underlined in any official item or any of ours. Raw ranks: humbled 2,300; hid 2,393; downgraded not in freq.txt; reduced 4,241.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "words_in_context.M1.easy.w3b7_16",
+      "template": "M1",
+      "subtype": "Most nearly mean: underlined word",
+      "tier": "easy",
+      "passage": "The following text is from H. G. Wells’s 1905 novel Kipps: The Story of a Simple Soul. Kipps, a young draper’s assistant, admires Helen Walshingham, who taught a wood-carving class he attended.\n\nThe two ladies were standing in the manner of those who have completed their purchases and are waiting for their change. Mrs. Walshingham regarded some remnants with impersonal interest; Helen’s eyes searched the shop. They distinctly <u>lit</u> up when they discovered Kipps.",
+      "stem": "As used in the text, what does the word “lit” most nearly mean?",
+      "options": [
+        "Ignited",
+        "Landed",
+        "Brightened",
+        "Narrowed"
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "Helen’s eyes are searching the shop, and they light up when she finds Kipps. Eyes that light up show pleasure; they brighten.",
+      "distractors": {
+        "A": {
+          "recipe": "another sense of the target (SENSE)",
+          "why_wrong": "Light can mean to set on fire, but nothing is burning; the sentence describes how Helen’s eyes look when she sees Kipps."
+        },
+        "B": {
+          "recipe": "another sense of the target (SENSE)",
+          "why_wrong": "Light can mean to land or settle, as when a bird lights on a branch, but Helen’s eyes do not land anywhere; they change expression."
+        },
+        "D": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Eyes can narrow, but that is not a meaning of lit; narrowed would suggest suspicion, while lit up shows Helen is pleased to see Kipps."
+        }
+      },
+      "models": [
+        "1.1",
+        "1.45",
+        "1.54",
+        "1.38"
+      ],
+      "word_count": 74,
+      "sources": [
+        {
+          "what": "Project Gutenberg 39162, Kipps: The Story of a Simple Soul by H. G. Wells (1905); excerpt copied exactly; Helen Walshingham conducts the wood-carving class Kipps attends",
+          "url": "https://www.gutenberg.org/ebooks/39162"
+        }
+      ],
+      "notes": "Subject: literature. Key letter C. Common verb in a figurative, everyday sense (eyes lit up = brightened). Target lit not underlined in any official item or any of ours. Raw ranks: ignited 26,225; landed 535; brightened 5,161; narrowed 1,044.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 2,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "words_in_context.M1.easy.w3b7_17",
+      "template": "M1",
+      "subtype": "Most nearly mean: underlined word",
+      "tier": "easy",
+      "passage": "The following text is from Virginia Woolf’s 1922 novel Jacob’s Room. A violent storm has persisted throughout the night over the seaside town in Cornwall where young Jacob Flanders and his family are staying.\n\nOutside the rain poured down more directly and powerfully as the wind <u>fell</u> in the early hours of the morning. The aster was beaten to the earth.",
+      "stem": "As used in the text, what does the word “fell” most nearly mean?",
+      "options": [
+        "Weakened",
+        "Tumbled",
+        "Happened",
+        "Surrendered"
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "As the wind dies down, the rain no longer blows sideways and instead pours straight down more directly and powerfully. Here fell means weakened.",
+      "distractors": {
+        "B": {
+          "recipe": "another sense of the target (SENSE)",
+          "why_wrong": "Fall can mean to tumble to the ground, but wind cannot tumble; the sentence explains why the rain came down more directly."
+        },
+        "C": {
+          "recipe": "another sense of the target (SENSE)",
+          "why_wrong": "Fall can mean to happen, as when a holiday falls on a Monday, but the sentence describes a change in the wind, not an event taking place."
+        },
+        "D": {
+          "recipe": "another sense of the target (SENSE)",
+          "why_wrong": "Fall can mean to surrender or be defeated, as a city falls, but nothing is defeated here; the wind simply dies down."
+        }
+      },
+      "models": [
+        "1.1",
+        "1.40",
+        "1.4",
+        "1.45"
+      ],
+      "word_count": 61,
+      "sources": [
+        {
+          "what": "Project Gutenberg 5670, Jacob’s Room by Virginia Woolf (1922); excerpt from the last paragraph of chapter 1, its first two sentences copied exactly (the paragraph goes on with the child’s bucket and a crab)",
+          "url": "https://www.gutenberg.org/ebooks/5670"
+        }
+      ],
+      "notes": "Subject: literature. Key letter A. Weather sense of a common verb (the wind fell = died down), pinned by the rain falling more directly. Only phrasal uses (fell in with, fell to) appear among our targets; this single-word sense is new. Woolf’s Night and Day is an official TSP excerpt; Jacob’s Room is not used anywhere. Raw ranks: weakened 10,052; tumbled 5,582; happened 568; surrendered 4,537.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 2,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "words_in_context.B6.easy.w3b7_18",
+      "template": "B6",
+      "subtype": "Blank completion: phrase options",
+      "tier": "easy",
+      "passage": "Composer Raymond Scott was never hired to write music for animated films, yet his compositions are now closely ______ cartoons. Carl Stalling, musical director for Warner Bros. cartoons, adapted Scott’s pieces for more than 120 Looney Tunes and Merrie Melodies films, where generations of viewers encountered them alongside the characters’ antics.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "hidden from",
+        "associated with",
+        "opposed to",
+        "competing against"
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "Although Scott never wrote for cartoons, Carl Stalling used his music in more than 120 Warner Bros. cartoons. Music heard in so many cartoons is closely associated with them.",
+      "distractors": {
+        "A": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "Scott’s music was heard in more than 120 cartoons, so it was anything but hidden from them."
+        },
+        "C": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Nothing suggests that Scott’s music opposed cartoons; the text describes how often it was used in them."
+        },
+        "D": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Music that accompanies cartoons is not competing with them; the text says Scott’s tunes were adapted for use in the films."
+        }
+      },
+      "models": [
+        "1.49",
+        "1.17",
+        "1.2",
+        "1.52"
+      ],
+      "word_count": 50,
+      "sources": [
+        {
+          "what": "Wikipedia, Raymond Scott: though Scott was never contracted to compose for animation, Carl W. Stalling adapted his music for more than 120 Looney Tunes and Merrie Melodies films produced by Warner Bros. Cartoons",
+          "url": "https://en.wikipedia.org/wiki/Raymond_Scott"
+        }
+      ],
+      "notes": "Subject: humanities (music). Key letter B. Word + preposition options. Clue: example (120 cartoons) after a contrast (never hired ... yet). Raw ranks: hidden 1,267; associated 4,687; opposed 6,009; competing 21,157 (against ignored). 'Never hired to write music for animated films' follows the source (never contracted to compose for animation); his 1962 County Fair Bread jingles were for animated commercials, not films.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 2,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "words_in_context.B2.easy.w3b7_19",
+      "template": "B2",
+      "subtype": "Blank completion: cause or consequence clue",
+      "tier": "easy",
+      "passage": "Hydnora africana, a parasitic plant native to southern Africa, lives almost entirely underground, attached to the roots of neighboring Euphorbia plants. Only its fleshy flower emerges through the soil, and because the flower releases an odor resembling dung, it ______ the dung beetles and carrion beetles that pollinate it.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "attracts",
+        "repels",
+        "imitates",
+        "hides"
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The flower smells like dung, and dung beetles and carrion beetles are drawn to such smells. Because of its smell, the flower attracts the beetles that pollinate it.",
+      "distractors": {
+        "B": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "Repel means to drive away. A dung smell draws dung beetles rather than driving them off, and the beetles are the flower’s pollinators."
+        },
+        "C": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "The text says the flower smells like dung, not that it looks or acts like a beetle."
+        },
+        "D": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Nothing suggests the flower hides the beetles; the smell explains why the beetles come to the flower."
+        }
+      },
+      "models": [
+        "1.16",
+        "1.35",
+        "1.44",
+        "1.5"
+      ],
+      "word_count": 48,
+      "sources": [
+        {
+          "what": "Wikipedia, Hydnora africana: achlorophyllous plant native to southern Africa, parasitic on the roots of Euphorbiaceae; it grows underground except for a fleshy flower that emits an odour of faeces to attract its pollinators, dung beetles and carrion beetles",
+          "url": "https://en.wikipedia.org/wiki/Hydnora_africana"
+        }
+      ],
+      "notes": "Subject: natural science (botany). Key letter A. Clue: cause (because ... smell like dung). Raw ranks: attracts 5,414; repels 16,874; imitates 10,889; hides 1,586.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "words_in_context.B2.easy.w3b7_20",
+      "template": "B2",
+      "subtype": "Blank completion: cause or consequence clue",
+      "tier": "easy",
+      "passage": "The cobra lily (Darlingtonia californica) is a carnivorous plant that traps insects inside its hooded, tubular leaves. The hood conceals the true exit hole, and translucent patches of tissue resemble openings, so trapped insects ______ themselves repeatedly attempting to escape through these false exits and eventually fall to the bottom of the trap.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "camouflage",
+        "groom",
+        "nourish",
+        "exhaust"
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "Because the translucent (see-through) patches look like openings, trapped insects keep trying to fly out through them. Trying again and again to escape wears them out, and they finally fall into the trap. They exhaust themselves.",
+      "distractors": {
+        "A": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "To camouflage oneself is to blend into one’s surroundings. The insects are not trying to hide; they keep flying at the false exits until they fall."
+        },
+        "B": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Insects do groom themselves, but nothing in the text concerns cleaning; it explains how repeated escape attempts lead the insects into the trap."
+        },
+        "C": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Nothing suggests the insects find food while trying to escape; they are about to become the plant’s food, not feeding themselves."
+        }
+      },
+      "models": [
+        "1.47",
+        "1.16",
+        "1.31",
+        "1.35"
+      ],
+      "word_count": 52,
+      "sources": [
+        {
+          "what": "Wikipedia, Darlingtonia californica: the curled hood hides the tiny exit hole from trapped insects and offers multiple translucent false exits; after trying many times to escape via the false exits, the insect tires and falls down into the trap",
+          "url": "https://en.wikipedia.org/wiki/Darlingtonia_californica"
+        }
+      ],
+      "notes": "Subject: natural science (botany). Key letter D. Clue: consequence (so ... eventually fall). Raw ranks: camouflage not in freq.txt; groom 5,920; nourish 23,479; exhaust 19,847.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "words_in_context.B4.easy.w3b7_21",
+      "template": "B4",
+      "subtype": "Blank completion: example-pinned clue",
+      "tier": "easy",
+      "passage": "Miami painter Purvis Young frequently created art from ______ materials: he glued his early drawings into old books and magazines found on the street, and in the 1970s he painted on scraps of wood collected around his Overtown neighborhood, nailing the paintings to boarded-up storefronts.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "expensive",
+        "borrowed",
+        "discarded",
+        "imported"
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The examples show what kind of materials Young used: old books and magazines found on the street and scraps of wood picked up around his neighborhood. These are things other people had thrown away, so his materials were discarded ones.",
+      "distractors": {
+        "A": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "Books and magazines found on the street and scraps of wood picked up in the neighborhood cost nothing, so they are the opposite of expensive."
+        },
+        "B": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Borrowed things are lent by someone and given back. Young found his materials on the street; nothing suggests anyone lent them to him."
+        },
+        "D": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Imported goods come from another country. The examples are things Young picked up in his own neighborhood."
+        }
+      },
+      "models": [
+        "1.46",
+        "1.18",
+        "1.25",
+        "1.22"
+      ],
+      "word_count": 44,
+      "sources": [
+        {
+          "what": "Wikipedia, Purvis Young: glued thousands of small drawings into discarded books and magazines he found on the streets; in the early 1970s he painted on wood he found on the streets and nailed the paintings to the boarded-up storefronts of a vacant alley (Goodbread Alley) in Overtown, Miami",
+          "url": "https://en.wikipedia.org/wiki/Purvis_Young"
+        }
+      ],
+      "notes": "Subject: humanities (art). Key letter C. Clue: two examples that instantiate the category (example-pinned). The source uses the key word; the passage does not. Raw ranks: expensive 6,205; borrowed 2,132; discarded 10,774; imported 9,001.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "words_in_context.B5.easy.w3b7_22",
+      "template": "B5",
+      "subtype": "Blank completion: negated frame",
+      "tier": "easy",
+      "passage": "Almost all animals rely on oxygen to convert food into energy, a process carried out by cellular structures called mitochondria. In 2020, however, Dayana Yahalomi, Dorothée Huchon, and colleagues reported that Henneguya salminicola, a microscopic parasite of salmon, lacks a mitochondrial genome and therefore does not ______ oxygen in this way.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "release",
+        "use",
+        "detect",
+        "store"
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "Most animals rely on oxygen to make energy, but this parasite lacks the mitochondrial genome that the process requires. So, unlike other animals, it does not use oxygen to turn food into energy.",
+      "distractors": {
+        "A": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Releasing oxygen is something plants do; the text is about animals taking in oxygen to make energy, which Henneguya salminicola cannot do."
+        },
+        "C": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Nothing in the text concerns sensing oxygen; it concerns the process of turning food into energy."
+        },
+        "D": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "The text says nothing about storing oxygen; the point is that the parasite lacks what animals need to make energy from oxygen at all."
+        }
+      },
+      "models": [
+        "1.48",
+        "1.24",
+        "1.37",
+        "1.12"
+      ],
+      "word_count": 50,
+      "sources": [
+        {
+          "what": "Yahalomi et al. 2020, PNAS (PubMed abstract): the myxozoan Henneguya salminicola, a cnidarian parasite of salmon, has no mitochondrial genome and has lost the ability to perform aerobic cellular respiration",
+          "url": "https://pubmed.ncbi.nlm.nih.gov/32094163/"
+        }
+      ],
+      "notes": "Subject: natural science (biology). Key letter B. Negated frame (does not ______). Raw ranks: release 3,675; use 421; detect 7,123; store 1,813. Simplified: mitochondria and the mitochondrial genome are treated together as in the source abstract (no mitochondrial genome, so no aerobic respiration).",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "words_in_context.B3.easy.w3b7_23",
+      "template": "B3",
+      "subtype": "Blank completion: contrast clue",
+      "tier": "easy",
+      "passage": "Swiss healer Emma Kunz’s large geometric drawings, created on graph paper beginning in 1938, now appear in art exhibitions alongside abstract paintings. Kunz herself might have found this ______: she never intended the drawings to be considered art, and instead of assigning them titles or dates, she recorded what she understood to be their medical significance.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "surprising",
+        "predictable",
+        "profitable",
+        "fashionable"
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The drawings are now shown as art, but Kunz did not make them to be seen as art; she treated them as part of her healing work. Seeing them in art exhibitions would therefore probably have surprised her.",
+      "distractors": {
+        "B": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "Kunz did not intend the drawings to be seen as art, so their appearance in art exhibitions is the opposite of what she would have expected."
+        },
+        "C": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Nothing in the text concerns money; the contrast is between how the drawings are shown now and how Kunz regarded them."
+        },
+        "D": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "The text does not say whether showing the drawings is fashionable; it says Kunz did not see them as art at all."
+        }
+      },
+      "models": [
+        "1.58",
+        "1.57"
+      ],
+      "word_count": 55,
+      "sources": [
+        {
+          "what": "Wikipedia, Emma Kunz: Swiss healer, researcher and artist who from 1938 made large drawings on graph paper; she did not intend her works to be seen in a fine arts context, left none titled or dated, and recorded their medical meanings in books; exhibitions include the Serpentine Gallery (2019) and 3 x Abstraction with Hilma af Klint and Agnes Martin (2005)",
+          "url": "https://en.wikipedia.org/wiki/Emma_Kunz"
+        }
+      ],
+      "notes": "Subject: humanities (art). Key letter A. Clue: contrast (now shown as art; she did not intend them as art). Raw ranks: surprising 686; predictable not in freq.txt; profitable 8,932; fashionable 2,674.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [],
+        "status": "pass"
+      }
+    }
+  ],
+  "done": true
+}

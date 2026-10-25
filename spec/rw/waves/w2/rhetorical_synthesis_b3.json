@@ -1,0 +1,1204 @@
+{
+  "skill": "Rhetorical Synthesis",
+  "slug": "rhetorical_synthesis",
+  "part": "w2b3",
+  "domain": "Expression of Ideas",
+  "plan": {
+    "templates": [
+      {
+        "code": "SIM",
+        "name": "Similarity"
+      },
+      {
+        "code": "DIFF",
+        "name": "Difference"
+      },
+      {
+        "code": "RANK",
+        "name": "Order or relative degree"
+      },
+      {
+        "code": "SPEC",
+        "name": "Specify or identify a single fact"
+      },
+      {
+        "code": "EMPH",
+        "name": "Emphasize one attribute"
+      },
+      {
+        "code": "DESC",
+        "name": "Describe"
+      },
+      {
+        "code": "EXPL",
+        "name": "Explain (cause, origin, advantage, mechanism, definition, significance)"
+      },
+      {
+        "code": "EXAMPLE",
+        "name": "Example, or explanation plus example"
+      },
+      {
+        "code": "STUDY",
+        "name": "Research study (aim, method, results)"
+      },
+      {
+        "code": "GEN",
+        "name": "Generalization, with or without support"
+      },
+      {
+        "code": "AUD_NEW",
+        "name": "Introduce or describe to an unfamiliar or new audience"
+      },
+      {
+        "code": "AUD_FAM",
+        "name": "Present or describe to an already familiar audience"
+      },
+      {
+        "code": "QUOTE",
+        "name": "Quotation"
+      }
+    ]
+  },
+  "items": [
+    {
+      "id": "rhetorical_synthesis.EXPL.hard.w2b3_01",
+      "template": "EXPL",
+      "subtype": "Explain a mechanism (how a machine used the tide)",
+      "tier": "hard",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Tide mills harnessed tidal movement to grind grain along European coastlines for over a millennium.\n• Each incoming tide pushed open floodgates in a dam, filling an enclosed reservoir called a millpond.\n• As the tide retreated, pressure from the impounded water forced the floodgates shut.\n• Once the sea had subsided below the pond’s level, the miller raised a sluice, releasing a current that powered the waterwheel.\n• Because tides arrive approximately fifty minutes later each day, millers’ working schedules shifted continually.",
+      "stem": "The student wants to explain how tide mills harnessed the tides to grind grain. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "Tide mills were driven by the incoming tide: as seawater pushed through the floodgates into the millpond, its flow powered the waterwheel.",
+        "Once the tide began to fall, the weight of the water in the millpond pushed the floodgates back open, sending a strong current through the waterwheel.",
+        "Tide mills held back the seawater that filled their millponds at high tide, then released it through a sluice to power the waterwheel after the tide had gone out.",
+        "Because tides arrive approximately fifty minutes later each day, the hours during which a tide mill could grind grain kept shifting from one day to the next."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The notes describe three steps: the incoming tide floods the millpond, the floodgates close to hold the water in, and once the sea has subsided the miller raises a sluice so the escaping current powers the waterwheel. Choice C puts those steps together to explain how the mill drew its power from the tides.",
+      "distractors": {
+        "A": {
+          "recipe": "FALSE (goal-shaped: wrong phase of the tide)",
+          "why_wrong": "The incoming seawater only floods the millpond; according to the notes, the waterwheel is powered by the current released through the sluice after the sea has subsided."
+        },
+        "B": {
+          "recipe": "FALSE (goal-shaped: floodgates pushed open instead of shut)",
+          "why_wrong": "The notes say the pressure of the impounded water forced the floodgates shut as the tide retreated; the water was let out later, when the miller raised a sluice."
+        },
+        "D": {
+          "recipe": "OG (true, explains the miller’s timetable)",
+          "why_wrong": "It explains why a mill’s working hours kept changing, not how the mill used the tides to grind grain."
+        }
+      },
+      "models": [
+        "8fe4f4ab",
+        "ee51ad04",
+        "3fa48bf3"
+      ],
+      "sources": [],
+      "notes": "Subject: history of technology (tide mills). No named people. Band 7 recipe: two goal-shaped FALSE options (A puts the power stroke on the incoming tide; B says the falling tide pushed the floodgates open, when the notes say shut) and one OG that explains the tides’ timing. Key compresses bullets 2 to 4; no bullet says the mill ran on stored water. Section 6 checks: 2 FALSE, both goal-shaped; goal-only solve leaves A, B and C (each explains a mechanism); derived relation: holding back the high tide is stated by no bullet; register 5.5 chars per word, 18% words past 9 letters.",
+      "word_count": 95,
+      "band_target": 7,
+      "band7_moves": [
+        "a “how” goal over a three-bullet chain (flood, hold, release), as in 8fe4f4ab",
+        "two goal-shaped FALSE options that each explain a mechanism and misstate one step (phase of the tide; floodgates opened instead of shut)",
+        "an OG option about the tides that explains something else (the miller’s hours)",
+        "the key states a mechanism (holding back the high tide) that no single bullet states"
+      ],
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [
+          "key C: \"once the sea had subsided\" (bullet 4 verbatim) paraphrased to \"after the tide had gone out\""
+        ],
+        "status": "fixed"
+      },
+      "band7": {
+        "verdict": "band 7",
+        "why": "how-goal over a three-bullet chain (flood, hold, release); two goal-shaped FALSE options that each explain a mechanism and misstate one step (power on the incoming tide; floodgates reopened instead of forced shut); OG on the timetable; the key derives holding back the high tide, which no bullet states, and now paraphrases bullet 4, matching 8fe4f4ab and ee51ad04"
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "C",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "rhetorical_synthesis.DIFF.hard.w2b3_02",
+      "template": "DIFF",
+      "subtype": "Compare on a named dimension (how salt is handled)",
+      "tier": "hard",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Mangroves thrive in intertidal environments along tropical coastlines, though too much salt can damage their tissue.\n• The red mangrove is supported by arching prop roots.\n• Specialized membranes in those roots keep out more than 90 percent of the salt in seawater.\n• The black mangrove has pneumatophores, pencil-like roots that protrude above the mud to take in atmospheric oxygen.\n• It takes in salty water but excretes the excess through glands on its leaves, which frequently become encrusted with salt.",
+      "stem": "The student wants to compare how the two mangroves keep salt from building up in their tissues. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "The red mangrove’s roots keep out most of the salt in seawater, whereas the black mangrove lets salty water in and then sheds the extra salt through its leaves.",
+        "The red mangrove filters out salt with membranes in its roots, while the black mangrove relies on its pencil-like pneumatophores to expel excess salt.",
+        "Although the red mangrove keeps out more salt than the black mangrove does, both trees accumulate the excess salt they absorb inside their leaves.",
+        "The red mangrove is supported by arching prop roots, whereas the black mangrove has pencil-like roots that protrude above the mud to take in oxygen."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The goal is to compare how each tree keeps salt from building up. The red mangrove’s root membranes keep most of the salt out, while the black mangrove takes salty water in and gets rid of the excess through glands on its leaves. Choice A sets these two strategies side by side.",
+      "distractors": {
+        "B": {
+          "recipe": "FALSE (goal-shaped: wrong organ for the black mangrove)",
+          "why_wrong": "The red mangrove half is right, but according to the notes the pneumatophores take in oxygen; the black mangrove gets rid of salt through glands on its leaves."
+        },
+        "C": {
+          "recipe": "FALSE (goal-shaped: “accumulate inside” for “excrete”)",
+          "why_wrong": "The notes say the black mangrove excretes its excess salt through glands on its leaves rather than accumulating it inside them, and they say nothing about the red mangrove holding salt in its leaves."
+        },
+        "D": {
+          "recipe": "REL (true difference on the wrong dimension)",
+          "why_wrong": "It contrasts the trees’ roots, which support the trunk and take in oxygen, not the ways the trees keep salt from building up."
+        }
+      },
+      "models": [
+        "8e9e473d",
+        "459df2ba",
+        "c34d6bff"
+      ],
+      "sources": [],
+      "notes": "Subject: science (plant ecology). Standard botany. Band 7 recipe as in 8e9e473d (FALSE, FALSE, REL): B gets one tree right and gives the other tree’s air roots a salt job; C concedes a true difference in degree, then misstates both trees; D is a true contrast of roots (the c34d6bff wrong-dimension pattern). Each salt mechanism is stated once. Section 6 checks: 2 FALSE, both goal-shaped; goal-only solve leaves A, B and C (each compares the two trees’ salt handling); derived relation: the contrast of keeping salt out against taking it in is stated by no bullet; register about 5.2 chars per word. Reviewer: C opens with a derivable comparison (red keeps out more salt) before the false claim, so it is goal-shaped and fails only on the second half.",
+      "word_count": 94,
+      "band_target": 7,
+      "band7_moves": [
+        "the compared dimension (salt handling) sits beside a second, true difference (roots) that a distractor contrasts instead",
+        "goal-shaped FALSE that is half right (B)",
+        "goal-shaped FALSE that concedes a true comparison and then misstates both trees (C)",
+        "the key sets keeping salt out against taking it in and excreting it; no bullet states the difference"
+      ],
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [
+          "key A: black-mangrove half (\"takes in salty water and then excretes the excess\", bullet 5 verbatim) paraphrased to \"lets salty water in and then sheds the extra salt\""
+        ],
+        "status": "fixed"
+      },
+      "band7": {
+        "verdict": "band 7",
+        "why": "FALSE, FALSE, REL as in 8e9e473d: B is half right and gives the air roots a salt job, C concedes a true difference in degree and then misstates both trees, D is a true contrast on the wrong dimension (roots); the key contrasts keeping salt out with taking it in and shedding it, which no bullet states; key paraphrased so verbatim matching no longer finds it. Dimension is named in the goal, so it sits at the easy edge of band 7"
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "A",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "rhetorical_synthesis.GEN.hard.w2b3_03",
+      "template": "GEN",
+      "subtype": "Make and support a generalization (origins of typefaces)",
+      "tier": "hard",
+      "passage": "While researching a topic, a student has taken the following notes:\n• In 1916, calligrapher Edward Johnston designed a typeface for the signs and posters of the London Underground.\n• A modified version is still used throughout London’s transportation network.\n• In 1931, the London newspaper The Times commissioned a typeface that would make its pages easier to read.\n• Named Times New Roman, it was subsequently licensed to other printers and is now among the most widely used typefaces.",
+      "stem": "The student wants to make and support a generalization about the origins of some typefaces. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "In 1916, Edward Johnston designed a typeface for the London Underground, and in 1931, The Times commissioned Times New Roman.",
+        "Typefaces made for one organization generally remain in that organization’s exclusive use, as the typefaces of the London Underground and The Times both have.",
+        "Some typefaces stay in use long after they are created, as both Johnston’s typeface and Times New Roman have.",
+        "Some typefaces were originally created for a single organization, as Johnston’s was for the London Underground and Times New Roman was for The Times."
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "Choice D makes a general claim about where some typefaces come from (they were first made for a single organization) and supports it with the two cases in the notes: Johnston’s typeface for the London Underground and Times New Roman for The Times.",
+      "distractors": {
+        "A": {
+          "recipe": "PART (support without the generalization)",
+          "why_wrong": "It reports both cases but never draws the general point they share, so it makes no generalization."
+        },
+        "B": {
+          "recipe": "FALSE (claim plus support the notes contradict)",
+          "why_wrong": "Times New Roman was licensed to other printers and is now widely used, so it did not remain in The Times’s exclusive use."
+        },
+        "C": {
+          "recipe": "OG (generalization about another aspect)",
+          "why_wrong": "It makes and supports a generalization about how long typefaces last, not about their origins."
+        }
+      },
+      "models": [
+        "0acc26b2",
+        "622a351d",
+        "b0620764"
+      ],
+      "sources": [],
+      "notes": "Subject: arts and design (typography). Johnston (1916, London Underground) and Times New Roman (commissioned by The Times, 1931 to 1932) are standard design history. Band 6: PART, FALSE, OG. C is a supported generalization about the wrong aspect (longevity), as 3.20 C is about stars instead of exoplanets.",
+      "word_count": 80,
+      "band_target": 6,
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "band_target 6: make-and-support generalization with PART, FALSE (exclusive use, contradicted by the licensing bullet) and a supported generalization about the wrong aspect (longevity); the key derives single-organization origin without echoing a bullet. Band-6 GEN shape (claim plus support), not the climb-a-level band-7 shape"
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "D",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "rhetorical_synthesis.SPEC.hard.w2b3_04",
+      "template": "SPEC",
+      "subtype": "Identify who did something (wrong-agent trap)",
+      "tier": "hard",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Chilkat weaving is a textile tradition of the Tlingit and neighboring peoples of the Northwest Coast.\n• Chilkat robes, worn on ceremonial occasions, combine mountain goat wool with strands of cedar bark.\n• Their curvilinear designs frequently represent clan animals, such as the raven or the bear.\n• Traditionally, male artists painted these designs on wooden templates called pattern boards.\n• Women then wove the robes, reproducing the designs from the boards.\n• A single robe could require a year or more of continuous weaving.",
+      "stem": "The student wants to identify who traditionally created the designs on Chilkat robes. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "Chilkat robes, worn on ceremonial occasions by the Tlingit and neighboring peoples, combine mountain goat wool with strands of cedar bark.",
+        "Traditionally, the curvilinear designs on Chilkat robes were created by male artists, who painted them on wooden pattern boards.",
+        "Chilkat robes were traditionally designed by the women who wove them, and their designs frequently represent clan animals.",
+        "A single Chilkat robe, with its curvilinear designs representing clan animals such as the raven, could require a year or more of weaving."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The notes say male artists painted the designs on wooden pattern boards and that women then reproduced them as they wove. Choice B identifies those male artists as the ones who created the designs.",
+      "distractors": {
+        "A": {
+          "recipe": "OG (materials and use)",
+          "why_wrong": "It tells what the robes are made of and when they are worn, not who created their designs."
+        },
+        "C": {
+          "recipe": "FALSE (wrong agent)",
+          "why_wrong": "The women wove the robes, but the notes say they reproduced designs that male artists had painted on pattern boards; they did not create the designs."
+        },
+        "D": {
+          "recipe": "OG (time needed to weave)",
+          "why_wrong": "It tells how long a robe could take to weave, not who created the designs."
+        }
+      },
+      "models": [
+        "87d34a39"
+      ],
+      "sources": [],
+      "notes": "Subject: arts and culture (Northwest Coast weaving). Division of labor (men painted pattern boards, women wove) is the standard account. SPEC has no band-7 official items, so this is a strong band 6 on 87d34a39’s shape (OG, OG, wrong-agent FALSE). Plan cell asked for band 7; WAVE.md sets 6.",
+      "word_count": 97,
+      "band_target": 6,
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "SPEC has no band-7 official items, so it cannot be band 7; strong band 6 on 87d34a39 (OG, OG, wrong-agent FALSE that gives the designs to the weavers). Answerable from bullet 4 alone, which is the template ceiling, not a defect"
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "B",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "rhetorical_synthesis.DIFF.medium.w2b3_05",
+      "template": "DIFF",
+      "subtype": "Difference on a named attribute (duration)",
+      "tier": "medium",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Both radiation fog and advection fog are clouds that form at ground level.\n• Radiation fog develops on calm, clear nights, when the ground loses heat and chills the air immediately above it.\n• It typically dissipates by midmorning, once sunlight warms the ground.\n• Advection fog develops when warm, moist air moves horizontally over a cooler surface, such as cold ocean water.\n• Along some coastlines, it can persist for several days.",
+      "stem": "The student wants to emphasize a difference in how long the two kinds of fog last. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "Radiation fog develops when the ground chills the air above it, while advection fog develops when moist air moves over a cooler surface.",
+        "Radiation fog typically dissipates by midmorning, whereas advection fog can persist for several days.",
+        "Along some coastlines, advection fog, which develops when warm, moist air moves over cold ocean water, can persist for several days.",
+        "Radiation fog and advection fog are both clouds that form at ground level."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The goal is about how long each fog lasts. Choice B contrasts radiation fog, which typically dissipates by midmorning, with advection fog, which can persist for several days.",
+      "distractors": {
+        "A": {
+          "recipe": "REL (wrong dimension)",
+          "why_wrong": "It contrasts how the two fogs develop, not how long they last."
+        },
+        "C": {
+          "recipe": "PART (one side only)",
+          "why_wrong": "It says how long advection fog can last but says nothing about radiation fog."
+        },
+        "D": {
+          "recipe": "REL (a similarity)",
+          "why_wrong": "It states what the two kinds of fog have in common, not a difference."
+        }
+      },
+      "models": [
+        "2.11",
+        "2.10",
+        "2.41"
+      ],
+      "sources": [],
+      "notes": "Subject: science (weather). General knowledge; no named people. Distractors REL (dimension), PART, REL (similarity). Key is the shortest option. Reviewer: the served rhetorical_synthesis.EXPL.hard is about fog-harvesting hardware (fog harps against meshes); this item is about how long two fog types last, a different subject, so it stays.",
+      "word_count": 85,
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.DIFF.medium.w2b3_06",
+      "template": "DIFF",
+      "subtype": "Difference on a named attribute (how operated)",
+      "tier": "medium",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Bunraku, from Japan, and wayang kulit, from Indonesia, are two traditions of puppet theater.\n• Bunraku puppets are carved from wood and can stand more than a meter tall.\n• Each one is manipulated by a team of three puppeteers.\n• Wayang kulit puppets are flat leather figures whose shadows are projected onto a screen.\n• A single puppeteer, the dalang, manipulates every puppet in a performance while also voicing the characters.",
+      "stem": "The student wants to contrast how the puppets in the two traditions are operated. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "Bunraku puppets are carved from wood and can stand more than a meter tall, whereas wayang kulit puppets are flat figures made of leather.",
+        "Bunraku and wayang kulit, from Japan and Indonesia, respectively, are both traditions of puppet theater.",
+        "In wayang kulit, a single puppeteer called the dalang manipulates every puppet while also voicing the characters.",
+        "Whereas each bunraku puppet is manipulated by a team of three puppeteers, a single dalang manipulates every puppet in wayang kulit."
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The goal is about how the puppets are operated. Choice D contrasts bunraku, in which three puppeteers work each puppet, with wayang kulit, in which one dalang works all of them.",
+      "distractors": {
+        "A": {
+          "recipe": "REL (wrong dimension)",
+          "why_wrong": "It contrasts what the puppets are made of and how big they are, not how they are operated."
+        },
+        "B": {
+          "recipe": "OG (introduces the two traditions)",
+          "why_wrong": "It names the two traditions and where they come from without contrasting how their puppets are operated."
+        },
+        "C": {
+          "recipe": "PART (one side only)",
+          "why_wrong": "It describes how wayang kulit puppets are operated but says nothing about bunraku."
+        }
+      },
+      "models": [
+        "113f16da",
+        "2.10",
+        "2.41"
+      ],
+      "sources": [],
+      "notes": "Subject: arts (puppet theater). Standard facts; no named people. Distractors REL (materials), OG, PART. The goal says “operated” where the notes say “manipulated”.",
+      "word_count": 84,
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.DIFF.medium.w2b3_07",
+      "template": "DIFF",
+      "subtype": "Difference in what is known",
+      "tier": "medium",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Linear A was a script used on Crete during the Bronze Age, from approximately 1800 to 1450 BCE.\n• Linear B, adapted from Linear A, appears on clay tablets excavated on Crete and the Greek mainland.\n• In 1952, architect Michael Ventris demonstrated that Linear B records an early form of Greek.\n• Linear A remains undeciphered, and the language it records is unknown.",
+      "stem": "The student wants to contrast how much scholars understand about the two scripts. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "Although Linear B was adapted from Linear A, scholars understand the two scripts to very different degrees.",
+        "In 1952, architect Michael Ventris demonstrated that the Linear B script records an early form of Greek.",
+        "Linear B is known to record an early form of Greek, but the language recorded in Linear A remains a mystery.",
+        "Linear A was used on Crete, whereas Linear B appears on clay tablets excavated on both Crete and the Greek mainland."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "Scholars know that Linear B records an early form of Greek, but Linear A remains undeciphered. Choice C sets these two states of knowledge side by side.",
+      "distractors": {
+        "A": {
+          "recipe": "VAGUE (names the difference without its content)",
+          "why_wrong": "It says scholars understand the scripts to different degrees but never says what is known about either one."
+        },
+        "B": {
+          "recipe": "PART (one side only)",
+          "why_wrong": "It tells what was learned about Linear B but says nothing about Linear A."
+        },
+        "D": {
+          "recipe": "REL (wrong dimension)",
+          "why_wrong": "It contrasts where the scripts were used, not how much scholars understand about them."
+        }
+      },
+      "models": [
+        "2.11",
+        "2.10"
+      ],
+      "sources": [],
+      "notes": "Subject: history (Aegean scripts). Ventris’s 1952 decipherment is standard. Distractors VAGUE, PART, REL (dimension). Reviewer: A (VAGUE) names a contrast in understanding but gives no content, so it does not survive \"most effectively uses relevant information\".",
+      "word_count": 76,
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.AUD_NEW.medium.w2b3_08",
+      "template": "AUD_NEW",
+      "subtype": "Describe a work to an unfamiliar audience",
+      "tier": "medium",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Hassan Hajjaj is a Moroccan British photographer and designer who divides his time between London and Marrakech.\n• The frames of his vividly colored portraits are often lined with rows of everyday products, such as soda cans or tins of tomato paste.\n• His sitters often wear clothing he designed, combining traditional Moroccan garments with bold patterns.\n• His series Kesh Angels depicts women in Marrakech posing on motorbikes.",
+      "stem": "The student wants to describe Hajjaj’s frames to an audience unfamiliar with the artist. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "Moroccan British photographer Hassan Hajjaj often lines the frames of his vividly colored portraits with rows of everyday products, such as soda cans.",
+        "Hajjaj’s frames are often lined with rows of everyday products, such as soda cans or tins of tomato paste.",
+        "Hassan Hajjaj, who divides his time between London and Marrakech, created Kesh Angels, a series depicting women posing on motorbikes.",
+        "A Moroccan British photographer and designer, Hajjaj often dresses his sitters in clothing that combines traditional Moroccan garments with bold patterns."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "An audience that does not know Hajjaj needs to learn who he is as well as what his frames look like. Choice A identifies him as a Moroccan British photographer of colorful portraits and then describes the everyday products that line his frames.",
+      "distractors": {
+        "B": {
+          "recipe": "AUD (no identifying context)",
+          "why_wrong": "It describes the frames but treats Hajjaj as someone the audience already knows."
+        },
+        "C": {
+          "recipe": "OG (another work)",
+          "why_wrong": "It introduces Hajjaj but describes one of his series, not his frames."
+        },
+        "D": {
+          "recipe": "OG (the sitters’ clothing)",
+          "why_wrong": "It introduces Hajjaj but describes the clothing his sitters wear, not his frames."
+        }
+      },
+      "models": [
+        "2.36",
+        "2.34",
+        "2.26"
+      ],
+      "sources": [],
+      "notes": "Subject: arts (photography). Hajjaj’s identity, portraits, self-designed clothing, product-lined frames and the Kesh Angels series are widely documented; no year given. Distractors AUD, OG, OG.",
+      "word_count": 81,
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.AUD_NEW.medium.w2b3_09",
+      "template": "AUD_NEW",
+      "subtype": "Introduce a concept to a new audience",
+      "tier": "medium",
+      "passage": "While researching a topic, a student has taken the following notes:\n• In the 1970s, Japanese botanist Akira Miyawaki developed a technique for cultivating small, dense forests.\n• In the Miyawaki method, saplings of indigenous trees and shrubs are planted close together, often three or more per square meter.\n• The crowded saplings compete for sunlight and therefore grow rapidly.\n• Since the 2010s, Miyawaki forests no larger than a tennis court have been established in urban neighborhoods across Europe and Asia.",
+      "stem": "The student wants to introduce the Miyawaki method to a new audience. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "Since the 2010s, Miyawaki forests no larger than a tennis court have been established in urban neighborhoods across Europe and Asia.",
+        "Akira Miyawaki, a Japanese botanist, began developing a technique for cultivating forests in the 1970s.",
+        "Developed by Japanese botanist Akira Miyawaki, the Miyawaki method cultivates small, dense forests by planting indigenous saplings close together.",
+        "Because they are crowded together, the saplings in a Miyawaki forest compete for sunlight and therefore grow rapidly."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "A new audience needs to learn what the Miyawaki method is. Choice C says who developed it, what it produces (small, dense forests) and how (indigenous saplings planted close together).",
+      "distractors": {
+        "A": {
+          "recipe": "AUD (term used as if known)",
+          "why_wrong": "It mentions Miyawaki forests without explaining what the method is or how such forests are grown."
+        },
+        "B": {
+          "recipe": "PART (developer only)",
+          "why_wrong": "It names the method’s developer but never says what the technique involves."
+        },
+        "D": {
+          "recipe": "AUD (detail without the concept)",
+          "why_wrong": "It describes how the saplings grow but never explains what the Miyawaki method is."
+        }
+      },
+      "models": [
+        "2.26",
+        "2.8"
+      ],
+      "sources": [],
+      "notes": "Subject: science and environment (urban forestry). Miyawaki’s method (1970s, dense native planting, tennis-court-sized urban plots since the 2010s) is standard. Distractors AUD, PART, AUD.",
+      "word_count": 82,
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.EMPH.medium.w2b3_10",
+      "template": "EMPH",
+      "subtype": "Emphasize the scale of a project",
+      "tier": "medium",
+      "passage": "While researching a topic, a student has taken the following notes:\n• The Dictionary of American Regional English (DARE) documents vocabulary that varies across the United States.\n• It was founded by linguist Frederic G. Cassidy at the University of Wisconsin.\n• Between 1965 and 1970, its fieldworkers visited 1,002 communities in all 50 states.\n• Using a questionnaire of more than 1,600 questions about everyday life, they interviewed 2,777 people.\n• The dictionary’s fifth volume was published in 2012.",
+      "stem": "The student wants to emphasize the scale of DARE’s fieldwork. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "Founded by linguist Frederic G. Cassidy at the University of Wisconsin, DARE documents vocabulary that varies across the United States.",
+        "The fifth volume of DARE, a dictionary of vocabulary that varies across the United States, was published in 2012.",
+        "Between 1965 and 1970, DARE’s fieldworkers interviewed people about the vocabulary of everyday life.",
+        "DARE’s fieldworkers visited 1,002 communities in all 50 states, interviewing 2,777 people with more than 1,600 questions."
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The goal is to stress how large the fieldwork was. Choice D gives its full reach: 1,002 communities in every state, 2,777 people interviewed and more than 1,600 questions.",
+      "distractors": {
+        "A": {
+          "recipe": "OG (the dictionary’s founder and subject)",
+          "why_wrong": "It tells who founded DARE and what it documents, not how extensive its fieldwork was."
+        },
+        "B": {
+          "recipe": "OG (publication date)",
+          "why_wrong": "It tells when the fifth volume appeared, not how extensive the fieldwork was."
+        },
+        "C": {
+          "recipe": "PART (the fieldwork without its scale)",
+          "why_wrong": "It mentions the fieldwork but gives no sense of how many places, people or questions it covered."
+        }
+      },
+      "models": [
+        "2.6",
+        "2.40"
+      ],
+      "sources": [],
+      "notes": "Subject: social science (dialect research). DARE fieldwork figures (1965 to 1970, 1,002 communities, 2,777 informants, a questionnaire of about 1,800 questions, given here as “more than 1,600”) and Cassidy as founder are well documented. Distractors OG, OG, PART.",
+      "word_count": 80,
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.EMPH.medium.w2b3_11",
+      "template": "EMPH",
+      "subtype": "Emphasize an amount",
+      "tier": "medium",
+      "passage": "While researching a topic, a student has taken the following notes:\n• The Clark’s nutcracker is a bird of western North America’s mountain forests.\n• In autumn, it extracts seeds from pine cones and carries them in a pouch beneath its tongue.\n• A single bird may bury tens of thousands of seeds, distributed among thousands of separate locations.\n• It retrieves many of them months later, during winter and spring.\n• Seeds that are never retrieved can germinate into new trees.",
+      "stem": "The student wants to emphasize the amount of food a Clark’s nutcracker stores. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "The Clark’s nutcracker carries the seeds it extracts from pine cones in a pouch beneath its tongue.",
+        "A single Clark’s nutcracker may bury tens of thousands of seeds in thousands of separate locations.",
+        "Seeds that a Clark’s nutcracker buries but never retrieves can germinate into new trees.",
+        "Months after burying its seeds, a Clark’s nutcracker retrieves many of them to eat during winter and spring."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The goal is to stress how much food the bird stores. Choice B gives the amount: tens of thousands of seeds buried in thousands of separate locations.",
+      "distractors": {
+        "A": {
+          "recipe": "OG (how seeds are carried)",
+          "why_wrong": "It explains how the bird carries seeds, not how many it stores."
+        },
+        "C": {
+          "recipe": "OG (effect on forests)",
+          "why_wrong": "It tells what happens to seeds the bird never retrieves, not how much it stores."
+        },
+        "D": {
+          "recipe": "PART (retrieval without amount)",
+          "why_wrong": "It says the bird later eats many of its seeds but gives no sense of how many it stores."
+        }
+      },
+      "models": [
+        "2.40",
+        "2.33"
+      ],
+      "sources": [],
+      "notes": "Subject: science (animal behavior). Standard natural history (pouch under the tongue; caches of tens of thousands of seeds; unretrieved seeds sprout). Distractors OG, OG, PART.",
+      "word_count": 82,
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.EXPL.medium.w2b3_12",
+      "template": "EXPL",
+      "subtype": "Explain a cause (why something was built)",
+      "tier": "medium",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Around 500 BCE, farmers began settling salt marshes along the North Sea coast of the present-day Netherlands.\n• The marsh soil was fertile, making it good land for grazing livestock and growing crops.\n• Storm tides, however, periodically flooded the marshes.\n• The farmers heaped up earth, sod, and manure into mounds called terpen and constructed their farmsteads on top.\n• After dikes were constructed around the eleventh century, many terpen were excavated for their fertile soil.",
+      "stem": "The student wants to explain why farmers on the North Sea salt marshes built terpen. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "Farmers built terpen so that their farmsteads would stand above the storm tides that periodically flooded the salt marshes.",
+        "Farmers settled the North Sea salt marshes because the fertile soil was good land for grazing livestock and growing crops.",
+        "Terpen, mounds of earth, sod, and manure on which farmers constructed their farmsteads, rose from the salt marshes along the North Sea coast.",
+        "Many terpen were excavated for their fertile soil once dikes had been constructed around the eleventh century."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The notes say storm tides periodically flooded the marshes and that farmers constructed their farmsteads on the mounds. Choice A links the two: the terpen kept the farmsteads above the floodwater.",
+      "distractors": {
+        "B": {
+          "recipe": "OG (a reason for something else)",
+          "why_wrong": "It explains why farmers settled the marshes, not why they built terpen."
+        },
+        "C": {
+          "recipe": "OG (what terpen are)",
+          "why_wrong": "It describes what terpen were made of and what stood on them but gives no reason for building them."
+        },
+        "D": {
+          "recipe": "OG (a later reason)",
+          "why_wrong": "It explains why many terpen were later excavated, not why they were built."
+        }
+      },
+      "models": [
+        "2.31",
+        "2.7"
+      ],
+      "sources": [],
+      "notes": "Subject: history (coastal settlement). Terpen (wierden) are standard Dutch and German archaeology. Two distractors give reasons for other things (settling, excavating), the trap for an EXPL goal.",
+      "word_count": 89,
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.SIM.medium.w2b3_13",
+      "template": "SIM",
+      "subtype": "Similarity in how two foods are made",
+      "tier": "medium",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Injera, a soft, spongy flatbread, is a staple food in Ethiopia and Eritrea.\n• It is prepared from a batter of teff flour and water that ferments for several days.\n• Dosa, a thin, crisp pancake, is a popular breakfast dish in southern India.\n• Its batter, made from ground rice and black lentils, ferments overnight.",
+      "stem": "The student wants to emphasize a similarity between injera and dosa. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "Injera is soft and spongy, whereas dosa is thin and crisp.",
+        "Injera, a staple food in Ethiopia and Eritrea, is prepared from a batter of teff flour and water that ferments for several days.",
+        "Dosa, a popular breakfast dish in southern India, is made from a batter of ground rice and black lentils that ferments overnight.",
+        "Though made from different ingredients, injera and dosa are both prepared from a batter that is left to ferment."
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The notes say injera’s teff batter ferments for several days and dosa’s rice-and-lentil batter ferments overnight. Choice D states that shared step: both are made from fermented batter.",
+      "distractors": {
+        "A": {
+          "recipe": "REL (a difference)",
+          "why_wrong": "It contrasts the textures of the two foods instead of stating something they share."
+        },
+        "B": {
+          "recipe": "PART (injera only)",
+          "why_wrong": "It describes how injera is made but never mentions dosa."
+        },
+        "C": {
+          "recipe": "PART (dosa only)",
+          "why_wrong": "It describes how dosa is made but never mentions injera."
+        }
+      },
+      "models": [
+        "2.24",
+        "2.30",
+        "2.46"
+      ],
+      "sources": [],
+      "notes": "Subject: social science and culture (food). Standard facts. One shared trait in the notes, stated once per food. Distractors REL, PART, PART.",
+      "word_count": 68,
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.RANK.medium.w2b3_14",
+      "template": "RANK",
+      "subtype": "Order in time",
+      "tier": "medium",
+      "passage": "While researching a topic, a student has taken the following notes:\n• In the 1420s, the astronomer and ruler Ulugh Beg built an observatory in Samarkand, in present-day Uzbekistan.\n• Its main instrument, a huge curved arc set partly underground, measured the positions of stars.\n• Ulugh Beg’s star catalog, completed there in 1437, listed nearly 1,000 stars.\n• In 1576, Danish astronomer Tycho Brahe began constructing an observatory called Uraniborg on the island of Hven.",
+      "stem": "The student wants to compare when the two observatories were built. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "Tycho Brahe’s Uraniborg, on the island of Hven, was constructed several decades before Ulugh Beg’s observatory in Samarkand.",
+        "Ulugh Beg built his observatory in Samarkand about 150 years before Tycho Brahe began constructing Uraniborg.",
+        "Ulugh Beg’s star catalog, which listed nearly 1,000 stars, was completed in 1437.",
+        "Ulugh Beg and Tycho Brahe were both astronomers who built observatories, one in Samarkand and the other on Hven."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "Ulugh Beg’s observatory went up in the 1420s and Tycho Brahe began Uraniborg in 1576. Choice B states the order and the gap, about 150 years, without listing the dates.",
+      "distractors": {
+        "A": {
+          "recipe": "FALSE (reversed order)",
+          "why_wrong": "Uraniborg was begun in 1576, about 150 years after Ulugh Beg’s observatory, not decades before it."
+        },
+        "C": {
+          "recipe": "OG (the star catalog)",
+          "why_wrong": "It gives the date of Ulugh Beg’s catalog and says nothing about when Uraniborg was built."
+        },
+        "D": {
+          "recipe": "REL (a similarity)",
+          "why_wrong": "It says what the two astronomers had in common rather than comparing when their observatories were built."
+        }
+      },
+      "models": [
+        "2.27",
+        "2.44",
+        "1.17"
+      ],
+      "sources": [],
+      "notes": "Subject: history of science. Ulugh Beg’s observatory (1420s), catalog (1437, about 1,000 stars) and Uraniborg (begun 1576, Hven) are standard. Distractors FALSE (reversed), OG, REL. Key derives “about 150 years”.",
+      "word_count": 76,
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.EXAMPLE.medium.w2b3_15",
+      "template": "EXAMPLE",
+      "subtype": "Explanation plus example",
+      "tier": "medium",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Trompe-l’oeil (“deceive the eye” in French) is a painting technique that makes flat surfaces appear three-dimensional.\n• In the 1680s, Italian painter Andrea Pozzo decorated Rome’s Church of Sant’Ignazio, whose planned dome had never been constructed.\n• Pozzo instead painted a dome on a flat canvas installed in the ceiling.\n• From a marked spot on the floor, the painting appears to rise far above the nave.",
+      "stem": "The student wants to provide an explanation and an example of trompe-l’oeil. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "In Rome’s Church of Sant’Ignazio, Andrea Pozzo painted a dome on a flat canvas that was installed in the ceiling.",
+        "Trompe-l’oeil, which means “deceive the eye” in French, is a technique that makes flat painted surfaces appear three-dimensional.",
+        "Trompe-l’oeil is a painting technique that makes flat surfaces appear three-dimensional, as in Andrea Pozzo’s painted dome in Rome’s Church of Sant’Ignazio.",
+        "In the 1680s, Italian painter Andrea Pozzo decorated Rome’s Church of Sant’Ignazio, whose planned dome had never been constructed."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The goal has two parts. Choice C explains trompe-l’oeil (a technique that makes flat surfaces appear three-dimensional) and gives an example, Pozzo’s painted dome in Sant’Ignazio.",
+      "distractors": {
+        "A": {
+          "recipe": "PART (example only)",
+          "why_wrong": "It describes Pozzo’s dome but never explains what trompe-l’oeil is."
+        },
+        "B": {
+          "recipe": "PART (explanation only)",
+          "why_wrong": "It explains the technique but gives no example of it."
+        },
+        "D": {
+          "recipe": "OG (history of the church)",
+          "why_wrong": "It tells who decorated the church and when, without explaining trompe-l’oeil or presenting the painted dome as an example."
+        }
+      },
+      "models": [
+        "2.16",
+        "2.42"
+      ],
+      "sources": [],
+      "notes": "Subject: arts (painting). Pozzo’s false dome in Sant’Ignazio (1680s, flat canvas, viewed from a floor marker) is standard art history. Distractors PART, PART, OG.",
+      "word_count": 79,
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.STUDY.medium.w2b3_16",
+      "template": "STUDY",
+      "subtype": "Present the methods",
+      "tier": "medium",
+      "passage": "While researching a topic, a student has taken the following notes:\n• In rice-duck farming, ducks released into flooded paddies feed on weeds and insects.\n• Agronomist Tran Minh Quan and colleagues investigated whether the practice could replace chemical herbicides.\n• They randomly assigned 24 paddies in Vietnam’s Mekong Delta to two treatment groups.\n• In one group, ducks foraged for ten weeks; the other was treated with herbicide.\n• At harvest, the groups showed statistically similar weed growth and rice yields.",
+      "stem": "The student wants to present the methods Tran and colleagues used. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "Tran and colleagues randomly assigned 24 rice paddies to two groups, letting ducks forage in one for ten weeks and treating the other with herbicide.",
+        "Tran and colleagues investigated whether rice-duck farming could replace chemical herbicides in the paddies of Vietnam’s Mekong Delta.",
+        "At harvest, paddies where ducks had foraged showed weed growth and rice yields statistically similar to those of paddies treated with herbicide.",
+        "In rice-duck farming, ducks released into flooded rice paddies feed on the weeds and insects that live among the plants."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The goal asks for the methods, the steps the researchers took. Choice A says they split 24 paddies into two groups at random, let ducks forage in one and treated the other with herbicide.",
+      "distractors": {
+        "B": {
+          "recipe": "OG (the aim)",
+          "why_wrong": "It states what the researchers wanted to find out, not how they went about it."
+        },
+        "C": {
+          "recipe": "OG (the results)",
+          "why_wrong": "It reports what the study found, not the methods used."
+        },
+        "D": {
+          "recipe": "OG (background)",
+          "why_wrong": "It explains what rice-duck farming is, not how the study was carried out."
+        }
+      },
+      "models": [
+        "dede8260",
+        "63a4fa29"
+      ],
+      "sources": [],
+      "notes": "Subject: science (agriculture). Invented researchers and study (WAVE.md: no fact-checking for Rhetorical Synthesis); rice-duck farming itself is a real practice. Three slot swaps (aim, results, background). Reviewer: researcher renamed from Nguyen Thi Lan (a real Prof. Dr. Nguyen Thi Lan directs the Vietnam National University of Agriculture) to Tran Minh Quan (no agricultural researcher of that name found).",
+      "word_count": 82,
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [
+          "invented researcher Nguyen Thi Lan renamed Tran Minh Quan in notes, stem and options A and B: a real Prof. Dr. Nguyen Thi Lan directs the Vietnam National University of Agriculture, so the made-up study read as hers"
+        ],
+        "status": "fixed",
+        "names_checked": [
+          "Nguyen Thi Lan (real VNUA director, replaced)",
+          "Tran Minh Quan (no agricultural researcher found)"
+        ]
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.AUD_FAM.medium.w2b3_17",
+      "template": "AUD_FAM",
+      "subtype": "Describe to an audience that knows the term",
+      "tier": "medium",
+      "passage": "While researching a topic, a student has taken the following notes:\n• A shinbashira is the central pillar of a traditional Japanese pagoda.\n• It is thought to help pagodas survive earthquakes by swaying separately from the floors around it.\n• Tokyo Skytree, a broadcasting tower completed in 2012, rises 634 meters.\n• At its center, inside a steel frame, stands a concrete column roughly 375 meters tall, modeled on the shinbashira.\n• During earthquakes, the column and the frame sway out of phase, reducing the tower’s overall motion.",
+      "stem": "The student wants to describe the design of Tokyo Skytree to an audience already familiar with shinbashira. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "Tokyo Skytree has a concrete shinbashira at its center, like the central pillar that rises through a traditional Japanese pagoda.",
+        "Inside Tokyo Skytree’s steel frame stands a 375-meter concrete shinbashira, which sways out of phase with the frame during earthquakes, reducing the tower’s motion.",
+        "Like a shinbashira, the central pillar thought to help traditional Japanese pagodas survive earthquakes, the column inside Tokyo Skytree sways out of phase with its frame.",
+        "Completed in 2012, Tokyo Skytree is a broadcasting tower that rises 634 meters."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "An audience that already knows what a shinbashira is needs no definition. Choice B uses the term on its own and spends its words on Skytree’s design: a 375-meter concrete shinbashira inside the steel frame that sways out of phase with it during earthquakes.",
+      "distractors": {
+        "A": {
+          "recipe": "AUD (re-explains the term)",
+          "why_wrong": "It explains what a shinbashira is, which this audience already knows, and says nothing about how Skytree’s column works."
+        },
+        "C": {
+          "recipe": "AUD (re-explains the term)",
+          "why_wrong": "It describes the column’s role but spends half the sentence explaining what a shinbashira is, which this audience already knows."
+        },
+        "D": {
+          "recipe": "OG (date and height)",
+          "why_wrong": "It gives the tower’s date and height but says nothing about its design."
+        }
+      },
+      "models": [
+        "2.1",
+        "2.18",
+        "2.28"
+      ],
+      "sources": [],
+      "notes": "Subject: science and engineering (architecture). Skytree’s concrete central column (about 375 m, modeled on the pagoda shinbashira, moving out of phase with the steel frame) is widely documented. Distractors AUD, AUD, OG; C is otherwise complete and fails only by redefining the term (the 2.1 D test).",
+      "word_count": 89,
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.SPEC.medium.w2b3_18",
+      "template": "SPEC",
+      "subtype": "Specify a material",
+      "tier": "medium",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Kumis is a fermented beverage of the Central Asian steppes.\n• It is traditionally made from mare’s milk, which contains more sugar than cow’s milk.\n• The milk is churned in a leather bag or wooden vessel for several days as it ferments.\n• The finished drink is slightly sour, effervescent, and mildly alcoholic.\n• In Kyrgyzstan, families often prepare kumis at summer pastures.",
+      "stem": "The student wants to specify what kumis is traditionally made from. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "Kumis is traditionally made from a kind of milk that contains more sugar than cow’s milk.",
+        "To make kumis, milk is churned in a leather bag or wooden vessel for several days as it ferments.",
+        "In Kyrgyzstan, families often prepare kumis, a slightly sour and effervescent beverage, at summer pastures.",
+        "Kumis, a fermented beverage of the Central Asian steppes, is traditionally made from mare’s milk."
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The goal asks what kumis is made from. Choice D names it directly: mare’s milk.",
+      "distractors": {
+        "A": {
+          "recipe": "VAGUE (never names the milk)",
+          "why_wrong": "It says the milk has more sugar than cow’s milk but never says which animal’s milk it is."
+        },
+        "B": {
+          "recipe": "OG (process)",
+          "why_wrong": "It describes how the milk is fermented, not what kind of milk is used."
+        },
+        "C": {
+          "recipe": "OG (where it is made and how it tastes)",
+          "why_wrong": "It tells where families make kumis and what it is like, not what it is made from."
+        }
+      },
+      "models": [
+        "2.39",
+        "2.45"
+      ],
+      "sources": [],
+      "notes": "Subject: social science and culture (food, Central Asia). Standard facts. Distractors VAGUE (like 2.39 C), OG, OG.",
+      "word_count": 76,
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.QUOTE.medium.w2b3_19",
+      "template": "QUOTE",
+      "subtype": "Use a quotation to explain why",
+      "tier": "medium",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Marisol Ccama is a Peruvian artist who creates large installations from discarded fishing nets.\n• She collects them from fishing villages on Peru’s southern coast, where worn-out nets are often burned.\n• Her installation Marea Alta (2019) suspends 40 meters of knotted blue netting from a gallery ceiling.\n• Of the nets she uses, Ccama says, “A used net still holds the work of everyone who mended it.”\n• She hopes visitors will “walk underneath and feel how much the ocean is carrying.”",
+      "stem": "The student wants to use a quotation from Ccama to explain why she makes her installations from discarded fishing nets. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "Ccama creates her installations from discarded fishing nets because, as she puts it, “a used net still holds the work of everyone who mended it.”",
+        "Ccama hopes that visitors to Marea Alta will “walk underneath and feel how much the ocean is carrying.”",
+        "Ccama collects discarded nets from villages on Peru’s southern coast, where worn-out nets are often burned.",
+        "Marea Alta, a 2019 installation by Peruvian artist Marisol Ccama, suspends 40 meters of knotted blue netting from a gallery ceiling."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "Choice A quotes Ccama’s own words about the nets, that a used net “still holds the work of everyone who mended it,” and ties them to her choice of material, explaining why she uses discarded nets.",
+      "distractors": {
+        "B": {
+          "recipe": "NOQ (a quotation that does another job)",
+          "why_wrong": "It quotes Ccama, but the quotation is about what she wants visitors to feel, not why she uses discarded nets."
+        },
+        "C": {
+          "recipe": "NOQ (no quotation)",
+          "why_wrong": "It tells where she finds the nets and what happens to them otherwise, but it uses no quotation from Ccama."
+        },
+        "D": {
+          "recipe": "OG (describes one work)",
+          "why_wrong": "It describes Marea Alta without a quotation and without explaining why she uses discarded nets."
+        }
+      },
+      "models": [
+        "2.29",
+        "570dd854",
+        "2c7dced2"
+      ],
+      "sources": [],
+      "notes": "Subject: arts (installation). Invented artist, work and quotations (WAVE.md: invented names where unverified; no real person is quoted). Distractors NOQ (other job), NOQ (paraphrase), OG. Reviewer: no real artist named Marisol Ccama found (search returned only the sculptor Marisol); Ccama is a Quechua surname, so the name reads as real.",
+      "word_count": 95,
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass",
+        "names_checked": [
+          "Marisol Ccama (no real person found)"
+        ]
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.SPEC.easy.w2b3_20",
+      "template": "SPEC",
+      "subtype": "Identify a field of study",
+      "tier": "easy",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Ruth Patrick (1907–2013) was an American scientist at the Academy of Natural Sciences in Philadelphia.\n• She specialized in diatoms, single-celled algae with walls made of silica.\n• Different species of diatoms tolerate different levels of pollution.\n• She showed that a river’s mix of diatom species can reveal its health.\n• In 1996, she received the National Medal of Science.",
+      "stem": "The student wants to identify the type of organism that Ruth Patrick specialized in. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "Ruth Patrick (1907–2013) was an American scientist at the Academy of Natural Sciences in Philadelphia.",
+        "In 1996, American scientist Ruth Patrick received the National Medal of Science.",
+        "Ruth Patrick specialized in diatoms, which are single-celled algae with walls made of silica.",
+        "Patrick showed that the mix of species living in a river can reveal its health."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The goal asks what kind of organism Patrick specialized in. Choice C answers it: diatoms, a kind of single-celled algae.",
+      "distractors": {
+        "A": {
+          "recipe": "OG (dates and workplace)",
+          "why_wrong": "It tells when Patrick lived and where she worked, not what organism she studied."
+        },
+        "B": {
+          "recipe": "OG (an award)",
+          "why_wrong": "It names an honor she received, not what organism she studied."
+        },
+        "D": {
+          "recipe": "OG (a finding)",
+          "why_wrong": "It describes what she showed about rivers without naming the organism she specialized in."
+        }
+      },
+      "models": [
+        "1.9",
+        "1.4"
+      ],
+      "sources": [],
+      "notes": "Subject: science (ecology). Ruth Patrick (1907 to 2013), Academy of Natural Sciences, diatoms as indicators of river health, National Medal of Science 1996: standard facts. Distractors OG, OG, OG.",
+      "word_count": 73,
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.EMPH.easy.w2b3_21",
+      "template": "EMPH",
+      "subtype": "Emphasize an amount of effort",
+      "tier": "easy",
+      "passage": "While researching a topic, a student has taken the following notes:\n• The Canal du Midi, in southern France, connects Toulouse to the Mediterranean Sea.\n• It was proposed by Pierre-Paul Riquet, a wealthy tax collector.\n• Construction began in 1666 and was completed in 1681.\n• At times, about 12,000 laborers were excavating the canal by hand.\n• Today, the canal is used primarily by tourist boats.",
+      "stem": "The student wants to emphasize how much labor it took to build the Canal du Midi. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "Building the Canal du Midi took fifteen years, with as many as 12,000 laborers at a time excavating it by hand.",
+        "Proposed by Pierre-Paul Riquet, a wealthy tax collector, the Canal du Midi connects Toulouse to the Mediterranean Sea.",
+        "Today, the Canal du Midi, a waterway in southern France, is used primarily by tourist boats.",
+        "Construction of the Canal du Midi, a waterway in southern France, began in 1666."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The goal is to stress how much work the canal took. Choice A combines the fifteen years of construction with the 12,000 laborers excavating by hand.",
+      "distractors": {
+        "B": {
+          "recipe": "OG (who proposed it and where it runs)",
+          "why_wrong": "It tells who proposed the canal and where it goes, not how much labor it took."
+        },
+        "C": {
+          "recipe": "OG (present-day use)",
+          "why_wrong": "It tells how the canal is used today, not how much labor it took to build."
+        },
+        "D": {
+          "recipe": "PART (start date only)",
+          "why_wrong": "It gives only the year construction began, which says nothing about how much labor was involved."
+        }
+      },
+      "models": [
+        "1.15",
+        "264e7415"
+      ],
+      "sources": [],
+      "notes": "Subject: history (engineering). Riquet, 1666 to 1681, about 12,000 workers: standard facts. Key derives “fifteen years”. Distractors OG, OG, PART.",
+      "word_count": 68,
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.DESC.easy.w2b3_22",
+      "template": "DESC",
+      "subtype": "Describe a shape",
+      "tier": "easy",
+      "passage": "While researching a topic, a student has taken the following notes:\n• The ulu is an all-purpose knife traditionally used by Inuit and Yupik women.\n• Its blade is crescent shaped, with the cutting edge along the curve.\n• The handle is positioned directly above the middle of the blade’s straight back.\n• This design concentrates the user’s force directly over the cutting edge.\n• Ulus are used for skinning animals, scraping hides, and preparing food.",
+      "stem": "The student wants to describe the shape of an ulu. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "Inuit and Yupik women traditionally use the ulu for skinning animals, scraping hides, and preparing food.",
+        "An ulu has a crescent-shaped blade, with a handle positioned directly above the middle of the blade’s straight back.",
+        "The design of an ulu concentrates the user’s force directly over the cutting edge.",
+        "The ulu is an all-purpose knife traditionally used by Inuit and Yupik women."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The goal asks for the ulu’s shape. Choice B combines the two notes about its form: a crescent-shaped blade with the handle directly above the middle of its straight back.",
+      "distractors": {
+        "A": {
+          "recipe": "OG (uses)",
+          "why_wrong": "It lists what the ulu is used for, not what it looks like."
+        },
+        "C": {
+          "recipe": "OG (what the design does)",
+          "why_wrong": "It explains what the design does for the user but does not describe the knife’s shape."
+        },
+        "D": {
+          "recipe": "OG (identity)",
+          "why_wrong": "It says what an ulu is and who uses it, not what shape it has."
+        }
+      },
+      "models": [
+        "1.8",
+        "1.1"
+      ],
+      "sources": [],
+      "notes": "Subject: social science and culture (Arctic tools). Standard facts. Distractors OG, OG, OG.",
+      "word_count": 76,
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.RANK.easy.w2b3_23",
+      "template": "RANK",
+      "subtype": "Identify the highest of three",
+      "tier": "easy",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Green, oolong, and black teas all come from the leaves of Camellia sinensis.\n• After harvesting, tea leaves begin to oxidize, a chemical reaction that darkens them and alters their flavor.\n• For green tea, the leaves are heated soon after harvesting, which prevents oxidation.\n• Oolong tea leaves are permitted to oxidize only partially.\n• Black tea leaves are permitted to oxidize completely.",
+      "stem": "The student wants to identify which of the three teas is the most oxidized. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "Oolong tea is more oxidized than green tea, whose leaves are heated soon after harvesting to prevent oxidation.",
+        "Green, oolong, and black teas all come from the leaves of the same plant, Camellia sinensis.",
+        "Of the three teas, black tea is the most oxidized, since its leaves are permitted to oxidize completely.",
+        "Oxidation is a chemical reaction that darkens tea leaves and alters their flavor."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "Green tea leaves are heated to prevent oxidation, oolong leaves oxidize partially and black tea leaves oxidize completely. Choice C identifies black tea as the most oxidized of the three.",
+      "distractors": {
+        "A": {
+          "recipe": "PART (two of the three)",
+          "why_wrong": "It compares oolong and green tea but leaves out black tea, which is the most oxidized."
+        },
+        "B": {
+          "recipe": "OG (shared source)",
+          "why_wrong": "It says where all three teas come from, not which is most oxidized."
+        },
+        "D": {
+          "recipe": "OG (definition)",
+          "why_wrong": "It explains what oxidation does without saying which tea is most oxidized."
+        }
+      },
+      "models": [
+        "1.20",
+        "1.17"
+      ],
+      "sources": [],
+      "notes": "Subject: science (food chemistry). Standard facts. Distractors PART (like 1.20 A), OG, OG.",
+      "word_count": 76,
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      }
+    }
+  ]
+}

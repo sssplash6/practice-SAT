@@ -1,0 +1,1786 @@
+{
+  "skill": "Command of Evidence",
+  "slug": "command_of_evidence",
+  "part": "w3b6",
+  "domain": "Information and Ideas",
+  "plan": {
+    "templates": [
+      {
+        "code": "T1_single",
+        "name": "Hypothetical finding supports or weakens a single claim (causal, comparison, existence, generalization, prediction)"
+      },
+      {
+        "code": "T1_compete",
+        "name": "Hypothetical finding discriminates between competing explanations (support or weaken)"
+      },
+      {
+        "code": "Q2_P8_multipart",
+        "name": "Data description: multi-part, interaction, or passage-plus-data claim"
+      },
+      {
+        "code": "T2_lit_quote",
+        "name": "Quotation from a literary work illustrates a claim (single trait, two-part, contrast)"
+      },
+      {
+        "code": "T3_person_quote",
+        "name": "Quotation from a person (participant, respondent, historian, critic, article) supports or challenges a claim"
+      },
+      {
+        "code": "Q1_P5_control",
+        "name": "Data completion: condition vs control"
+      },
+      {
+        "code": "Q2_P8_quantifier",
+        "name": "Data description: quantified claim (for each, all except one)"
+      },
+      {
+        "code": "Q1_P67_criterion",
+        "name": "Data completion: passage criterion or presence/absence combined with the display"
+      },
+      {
+        "code": "Q1_P3_pairwise",
+        "name": "Data completion: pairwise comparison (one or two comparisons)"
+      },
+      {
+        "code": "Q1_P4_trend",
+        "name": "Data completion: change over time"
+      },
+      {
+        "code": "Q2_P4_trend",
+        "name": "Data description: trend or change over time supports a conclusion"
+      },
+      {
+        "code": "Q1_P1_lookup",
+        "name": "Data completion: lookup (one cell or bar, reverse lookup, filter)"
+      },
+      {
+        "code": "Q1_P2_extreme",
+        "name": "Data completion: extreme or rank (max/min, possibly after a filter)"
+      }
+    ]
+  },
+  "done": true,
+  "items": [
+    {
+      "id": "command_of_evidence.T1_single.hard.w3b6_01",
+      "template": "T1_single",
+      "subtype": "Hypothetical finding supports a conclusion (a separate emotion, not a variety of a related one; dissociation)",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Spanish speakers use the term “grima” to describe the intensely unpleasant sensation provoked by certain sounds, such as fingernails scraping across a chalkboard, an experience for which neither English nor German has a single equivalent term. When psychologists Inge Schweiger Gallo, José-Miguel Fernández-Dols, and colleagues asked Spanish speakers to evaluate the meanings of various emotion words, grima was judged more similar to disgust than to any other emotion, which might suggest that it is merely a mild variety of disgust. On the basis of subsequent experiments, however, the researchers concluded that grima constitutes a distinct emotion in its own right.",
+      "stem": "Which finding, if true, would most directly support the researchers’ conclusion?",
+      "options": [
+        "Participants who listened to recordings of scraping sounds and recordings of retching reported similar levels of discomfort and showed the same changes in heart rate in response to both.",
+        "Participants who rehearsed a plan for suppressing grima reacted less strongly to scraping sounds than other participants did but just as strongly to disgusting sounds.",
+        "Spanish speakers of all ages reported knowing the word “grima,” though younger speakers said they used it in conversation less often than older speakers did.",
+        "English and German speakers who heard the same scraping sounds reported feeling uncomfortable but used several different words to describe the feeling."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The researchers conclude that grima is its own emotion rather than a mild version of disgust. If a strategy aimed at grima weakened people’s reactions to grima-inducing sounds while leaving their reactions to disgusting sounds untouched, the two reactions would be working separately, which is what a distinct emotion would predict. Choice B therefore supports the conclusion.",
+      "distractors": {
+        "A": {
+          "recipe": "OPP: the rival’s prediction",
+          "why_wrong": "Matching discomfort and the same heart-rate changes for scraping sounds and disgusting sounds would make grima look like a form of disgust, the view the researchers reject."
+        },
+        "C": {
+          "recipe": "OFF: how the word is used, not what the emotion is",
+          "why_wrong": "How often different age groups use the word says nothing about whether the feeling it names is separate from disgust."
+        },
+        "D": {
+          "recipe": "TRAP: consistent with both views",
+          "why_wrong": "Speakers of other languages describing the feeling with several words fits grima being a distinct emotion or a variety of disgust equally well; it concerns vocabulary, not the emotion."
+        }
+      },
+      "models": [
+        "3.7",
+        "3.31",
+        "3.25",
+        "3.12"
+      ],
+      "sources": [
+        {
+          "what": "Schweiger Gallo, Fernández-Dols, Gollwitzer and Keil 2017, Frontiers in Psychology 8:131, Grima: A Distinct Emotion Concept?: no single English or German term; Study 1 affective meaning closer to disgust than to other emotion concepts; Study 3 different heart-rate effects; Study 4 implementation intention weakened grima but not disgust; conclusion that grima is a distinctive, separate emotional concept",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC5289974/"
+        }
+      ],
+      "notes": "Key is the study's Study 4 result (implementation intentions weakened grima-related but not disgust-related responses), paraphrased. A is a counterfactual of Study 3 (heart rate actually differed). Study 1's real result is stated in the passage as the setup for the rival view, so no option repeats it.",
+      "word_count": 100,
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [],
+        "status": "pass",
+        "band7": {
+          "verdict": "band 6",
+          "why": "Dissociation logic needs two steps and A is a credible rival prediction, D a vocabulary TRAP; stem does not name the claimant and the key is one stated study result, so a solid band 6."
+        }
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "B",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "command_of_evidence.T1_single.hard.w3b6_02",
+      "template": "T1_single",
+      "subtype": "Hypothetical finding supports a claim (the key supplies the missing premise linking the crop's benefit to one group)",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "Swarna-Sub1 is a version of Swarna, a widely cultivated rice variety in India, into which plant breeders introduced a gene enabling the plants to survive complete submergence by floodwater for up to approximately two weeks. In a randomized experiment conducted in 128 villages in the Indian state of Odisha, Manzoor H. Dar, Alain de Janvry, and colleagues found that Swarna-Sub1 produced substantially larger harvests than Swarna in fields that remained flooded for 7 to 14 days and equally large harvests in fields that did not flood. The researchers argue that the new variety stands to benefit farmers from historically disadvantaged lower castes more than it benefits other farmers in these villages.",
+      "stem": "Which finding about the villages in the study, if true, would most directly support the argument made by Dar, de Janvry, and colleagues?",
+      "options": [
+        "When fields flooded for about ten days, Swarna-Sub1 raised harvests by roughly the same percentage on plots farmed by lower-caste households as on plots farmed by other households.",
+        "Lower-caste households planted rice on a smaller share of their land than other households did, using most of their fields for crops sown after the flood season.",
+        "In fields that did not flood, lower-caste farmers and other farmers alike obtained about the same harvests from Swarna-Sub1 as from Swarna.",
+        "Lower-caste households farmed a disproportionate share of the low-lying plots in the villages, where floodwater tends to collect and remain the longest."
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "Swarna-Sub1 does better than Swarna only when fields are under water for a long time; otherwise the two varieties yield the same. So the new variety helps most the farmers whose fields flood most. If lower-caste households farm a disproportionate share of the low-lying plots where floodwater collects and stays, they would gain more from it than other farmers, which is the researchers’ argument. Choice D supplies that link.",
+      "distractors": {
+        "A": {
+          "recipe": "TRAP: affects both groups equally",
+          "why_wrong": "An equal gain per flood for both groups shows no reason that lower-caste farmers would benefit more; the argument depends on how often their fields flood, which this choice does not address."
+        },
+        "B": {
+          "recipe": "OPP: less exposure to the benefit (fewer rice fields)",
+          "why_wrong": "If lower-caste households grew rice on less of their land during the flood season, fewer of their fields would be ones where Swarna-Sub1 could make a difference, so this would, if anything, weaken the argument."
+        },
+        "C": {
+          "recipe": "TRAP: no difference between groups",
+          "why_wrong": "That neither group loses anything by planting Swarna-Sub1 in dry years restates the study’s result for both groups and gives no reason one group gains more."
+        }
+      },
+      "models": [
+        "3.45",
+        "3.28",
+        "3.36",
+        "3.39"
+      ],
+      "sources": [
+        {
+          "what": "Dar, de Janvry, Emerick, Raitzer and Sadoulet 2013, Scientific Reports 3:3315: randomized experiment in 128 villages of Orissa (Odisha); Swarna-Sub1 (SUB1 introgressed into Swarna) raises yields when fields are submerged 7 to 14 days with no yield penalty without flooding; low-lying, flood-prone areas more heavily occupied by lower-caste groups, so the variety disproportionately benefits them",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3837307/"
+        }
+      ],
+      "notes": "Band-7 moves: the key supplies the unstated premise (lower-caste farmers hold the flood-prone low-lying plots), which is the paper's own finding; the passage gives only the flood-dependent benefit and the claim. Stem names the study and the claimants (22 words). Distractors: A TRAP (equal effect per flood), C TRAP (no-difference restatement), B OPP (crop choice; reviewer replaced the old B, which was the key's exact reverse). Three steps: benefit only under flooding; who floods; therefore who gains.",
+      "word_count": 111,
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [
+          "replaced B, the key's exact reverse (lower-caste plots on higher ground), with an opposite-direction finding through crop choice, so no wrong option mirrors the key"
+        ],
+        "status": "fixed",
+        "band7": {
+          "verdict": "band 7",
+          "why": "111-word passage, stem names the claimants (22 words); the key supplies the unstated premise (lower-caste farmers hold the long-flooding plots), three steps; two TRAPs (A equal gain per flood, C no difference without floods) and an OPP that must be reasoned through the flood-only benefit. Same shape as the band-7 official models 3.45 and 3.36, where the key supplies the premise the claim needs."
+        }
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "D",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 7
+    },
+    {
+      "id": "command_of_evidence.T1_compete.hard.w3b6_03",
+      "template": "T1_compete",
+      "subtype": "Hypothetical finding discriminates between two explanations for a floral trait",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Since Charles Darwin, botanists have puzzled over heteranthery, the presence of two morphologically distinct sets of anthers (the pollen-producing structures of a flower) within a single flower. The traditional explanation proposes a division of labor: bees consume pollen from one conspicuous set of anthers, while a second, inconspicuous set deposits pollen on parts of the bees’ bodies that they rarely groom, so that it is transported to other flowers. Investigating Clarkia, a genus of wildflowers found predominantly in California, biologist Kathleen M. Kay and colleagues propose instead that the two sets enable a flower to release its pollen gradually, increasing the quantity that reaches other flowers.",
+      "stem": "Which finding about heterantherous Clarkia flowers, if true, would most directly support Kay and colleagues’ proposal?",
+      "options": [
+        "The less noticeable anthers release their pollen only after the conspicuous anthers have released most of theirs, and bees both eat and carry away pollen from each set.",
+        "Bees gather pollen almost entirely from the conspicuous anthers, while pollen from the other set ends up mostly on parts of the bees’ bodies that they cannot reach when grooming.",
+        "Clarkia species whose flowers have two sets of anthers are pollinated mainly by bees, whereas Clarkia species with a single set are often pollinated by other insects as well.",
+        "Flowers with two sets of anthers produce more pollen in total than do the flowers of related Clarkia species that have only one set."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "Kay and colleagues propose that the two sets of anthers stagger the release of pollen. If the second set opens only after the first has mostly emptied, the flower offers its pollen in stages, and if bees eat and carry away pollen from both sets, neither set is specialized as food or as a pollen dispenser, so the division-of-labor explanation does not fit. Choice A therefore supports the proposal.",
+      "distractors": {
+        "B": {
+          "recipe": "OPP: the rival explanation’s prediction",
+          "why_wrong": "One set used as food and the other placing pollen where bees cannot groom it is exactly what the division-of-labor explanation predicts."
+        },
+        "C": {
+          "recipe": "TRAP: consistent with both explanations",
+          "why_wrong": "Both explanations involve bees, so a link between two sets of anthers and bee pollination does not favor either one."
+        },
+        "D": {
+          "recipe": "TRAP: irrelevant property of the same flowers",
+          "why_wrong": "A larger total amount of pollen says nothing about whether it is released gradually or divided between food and pollination."
+        }
+      },
+      "models": [
+        "3.8",
+        "3.10",
+        "3.15",
+        "3.14"
+      ],
+      "sources": [
+        {
+          "what": "Kay, Jogesh, Tataru and Akiba 2020, Proceedings of the Royal Society B 287: 20202593, Darwin's vexing contrivance: tests division of labour against gradual pollen release in Clarkia (annual herbs mostly endemic to the California Floristic Province); the inconspicuous outer whorl dehisces after the conspicuous inner whorl; bees forage on and export pollen from each whorl when it is dehiscing; no support for division of labour",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7779490/"
+        }
+      ],
+      "notes": "The key matches the study's real findings (delayed dehiscence of the cryptic whorl; bees forage on and export pollen from each whorl). Corresponding author Kathleen M. Kay (UC Santa Cruz). B is the division-of-labour prediction; C and D fit both views (heteranthery is in fact associated with bee pollination, which both views assume).",
+      "word_count": 106,
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [],
+        "status": "pass",
+        "band7": {
+          "verdict": "band 6",
+          "why": "Competing-explanation item with the rival's prediction (B) and two fits-both traps; the key's 'release ... after' sits close to the proposal's wording, so not band 7."
+        }
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "A",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "command_of_evidence.Q2_P8_multipart.hard.w3b6_04",
+      "template": "Q2_P8_multipart",
+      "subtype": "Data description (the top-ranked row changes between two measures)",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Livestock convert only a fraction of their feed into food for people, since animals expend much of the energy and protein they consume on growth, movement, and bodily maintenance. Peter Alexander and colleagues estimated, for six common animal products, the percentage of the energy and the percentage of the protein contained in animal feed that is ultimately converted into the edible product. A student analyzing these estimates argues that identifying the most efficiently produced animal product depends on whether efficiency is measured in terms of energy or in terms of protein.",
+      "stem": "Which choice best describes data from the table that support the student’s argument?",
+      "options": [
+        "Beef has the lowest energy efficiency of the six products, 1.9%, and it also has the lowest protein efficiency, 3.8%.",
+        "Poultry meat has a higher energy efficiency than pork, 13% compared with 8.6%, and it also has a higher protein efficiency than pork, 19.6% compared with 8.5%.",
+        "Whole milk has the highest energy efficiency of the six products, 24%, but eggs have the highest protein efficiency, 25%.",
+        "Eggs have the highest energy efficiency of the six products, 19%, while whole milk has the highest protein efficiency, 24%."
+      ],
+      "answer_letter": "C",
+      "table": {
+        "title": "Estimated Feed Conversion Efficiency of Six Animal Products",
+        "columns": [
+          "Animal product",
+          "Energy efficiency (% of feed energy converted)",
+          "Protein efficiency (% of feed protein converted)"
+        ],
+        "rows": [
+          [
+            "Beef",
+            "1.9",
+            "3.8"
+          ],
+          [
+            "Eggs",
+            "19",
+            "25"
+          ],
+          [
+            "Lamb and mutton",
+            "4.4",
+            "6.3"
+          ],
+          [
+            "Pork",
+            "8.6",
+            "8.5"
+          ],
+          [
+            "Poultry meat",
+            "13",
+            "19.6"
+          ],
+          [
+            "Whole milk",
+            "24",
+            "24"
+          ]
+        ],
+        "note": null
+      },
+      "figure": null,
+      "explanation": "The student argues that the most efficient product is not the same under the two measures. The table shows that whole milk has the highest energy efficiency (24%) but that eggs, not milk, have the highest protein efficiency (25%). Choice C reports exactly this change at the top of the ranking.",
+      "distractors": {
+        "A": {
+          "recipe": "IRREL: accurate, but the same product ranks the same on both measures",
+          "why_wrong": "Beef is lowest on both measures, which shows agreement between the two measures rather than a difference in which product is most efficient."
+        },
+        "B": {
+          "recipe": "IRREL: accurate comparison of the wrong rows, same ranking on both measures",
+          "why_wrong": "The values are correct, but poultry beats pork on both measures and neither is the most efficient product, so this does not show the answer changing with the measure."
+        },
+        "D": {
+          "recipe": "INACC: the two leaders swapped",
+          "why_wrong": "The table shows the reverse: milk, at 24%, has the highest energy efficiency, and eggs, at 25%, have the highest protein efficiency."
+        }
+      },
+      "models": [
+        "3.18",
+        "3.26",
+        "3.16",
+        "3.19"
+      ],
+      "sources": [
+        {
+          "what": "Our World in Data, protein efficiency of meat and dairy production (Alexander et al. 2016, Global Environmental Change): beef 3.8, eggs 25, lamb/mutton 6.3, pork 8.5, poultry 19.6, whole milk 24 (% of feed protein)",
+          "url": "https://ourworldindata.org/grapher/protein-efficiency-of-meat-and-dairy-production"
+        },
+        {
+          "what": "Our World in Data, energy efficiency of meat and dairy production (Alexander et al. 2016): beef 1.9, eggs 19, lamb/mutton 4.4, pork 8.6, poultry 13, whole milk 24 (% of feed calories)",
+          "url": "https://ourworldindata.org/grapher/energy-efficiency-of-meat-and-dairy-production"
+        }
+      ],
+      "notes": "Real values (OWID labels them 2013). Checked in Python: milk is the energy maximum (24 > 19), eggs the protein maximum (25 > 24); beef is the minimum on both; poultry > pork on both. Peter Alexander (University of Edinburgh) is the first author of the cited paper. Authors (Peter Alexander, Calum Brown, Almut Arneth, John Finnigan, Mark Rounsevell) confirmed via Crossref for doi 10.1016/j.gloenvcha.2016.09.005.",
+      "word_count": 91,
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 12,
+        "fixes": [
+          "option B now says 'Poultry meat', matching the table row"
+        ],
+        "status": "fixed",
+        "band7": {
+          "verdict": "band 6",
+          "why": "Top-ranked row changes between two measures; two accurate irrelevant comparisons and a swapped-leader misreading; no passage proxy beyond the claim, so band 6."
+        }
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "C",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "command_of_evidence.T2_lit_quote.hard.w3b6_05",
+      "template": "T2_lit_quote",
+      "subtype": "Literary quotation illustrates a two-part claim (translated drama; lure on the word love)",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "The Cid is a 1637 play by Pierre Corneille, translated in 1896 by Roscoe Mongan. After Rodrigo kills her father in a duel, Chimène acknowledges to Rodrigo that her affection for him persists but insists that it will not deter her from pursuing his punishment: ______",
+      "stem": "Which quotation from a translation of The Cid most effectively illustrates the claim?",
+      "options": [
+        "“My father is dead, Elvira; and the first sword with which Rodrigo armed himself has cut his thread of life. Weep, weep, mine eyes, and dissolve yourselves into tears!”",
+        "“However strongly my love may plead in thy favor, my steadfast courage must respond to thine. Even in offending me, thou hast proved thyself worthy of me; I must, by thy death, prove myself worthy of thee.”",
+        "“Ah, Rodrigo, it is true, although thine enemy, I cannot blame thee for having shunned disgrace; and in whatever manner my griefs burst forth I do not accuse [thee], I [only] lament my misfortunes.”",
+        "“Thou hast avenged thyself without aid, and dost thou wish to give me thine [aid]? I shall follow thy example; and I have too much courage to endure that my glory shall be divided with thee. My father and mine honor shall owe nothing to the dictates of thy love and of thy despair.”"
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The claim has two parts: Chimène admits to Rodrigo that she still cares for him, and she says this will not stop her from seeking his punishment. In choice B she tells him that her love pleads in his favor, yet she must prove herself worthy of him by his death. Only this quotation contains both her admission and her resolve.",
+      "distractors": {
+        "A": {
+          "recipe": "OFF: nearby emotion (grief), spoken to someone else",
+          "why_wrong": "Chimène mourns her father to Elvira; she neither admits her feelings for Rodrigo nor says she will pursue his punishment."
+        },
+        "C": {
+          "recipe": "HALF: understanding toward Rodrigo without resolve",
+          "why_wrong": "Chimène says she cannot blame Rodrigo and only laments her misfortunes; she says nothing about seeking his punishment."
+        },
+        "D": {
+          "recipe": "LURE: resolve, but the love named is Rodrigo’s",
+          "why_wrong": "Chimène insists on avenging her father herself, but the love she mentions is Rodrigo’s (‘thy love’), not her own, so she does not concede that her affection persists."
+        }
+      },
+      "models": [
+        "3.17",
+        "3.11",
+        "3.35",
+        "3.37"
+      ],
+      "sources": [
+        {
+          "what": "Corneille, The Cid, a literal translation by Roscoe Mongan (Hinds & Noble, 1896), Act III, Scene III (A, to Elvira) and Scene IV (B, C, D, to Rodrigo); all four quotations are exact substrings of the Gutenberg text (straight quotes rendered curly; translator's bracketed words kept). Le Cid premiered and was published in 1637.",
+          "url": "https://www.gutenberg.org/ebooks/14954"
+        }
+      ],
+      "notes": "A is from Act III Scene III; B, C and D from Scene IV (D is Chimène's reply 'O cruel! ...', trimmed at a sentence boundary). D's last sentence names Rodrigo's love, a lure for students matching the word love. Key not the longest option.",
+      "word_count": 46,
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [],
+        "status": "pass",
+        "band7": {
+          "verdict": "band 6",
+          "why": "Two-part claim with a LURE on the word love (Rodrigo's love, not hers) and a half match; quotations verified verbatim against the Gutenberg Mongan translation."
+        }
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "B",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "command_of_evidence.T3_person_quote.hard.w3b6_06",
+      "template": "T3_person_quote",
+      "subtype": "Quotation from a critic supports a student's argument (rival reading named in the passage)",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Nellie Campobello’s Cartucho (1931) consists of brief vignettes about soldiers who followed the revolutionary leader Pancho Villa in northern Mexico, narrated from the perspective of a young girl and drawn from Campobello’s childhood recollections and from stories recounted by her mother. The narrator describes executions and battlefield deaths in a composed, almost matter-of-fact voice, which might suggest that the child does not comprehend what she witnesses. A student writing about the book argues instead that this composure serves the book’s purpose of preserving the memory of men whom many accounts of the Revolution in Campobello’s day either ignored or disparaged.",
+      "stem": "Which quotation from a literary critic would best support the student’s argument?",
+      "options": [
+        "“Campobello’s narrator watches the dead pass much as a child might watch a parade: the bodies are part of the spectacle, and the absence of grief in her descriptions shows how little she understands of what the fighting costs.”",
+        "“Later editions of Cartucho added many vignettes to the thirty-three of the original and altered the fates of some characters, which suggests that Campobello continued to reshape her childhood memories for years after the book first appeared.”",
+        "“Because Campobello was known to admire Villa at a time when most writers and filmmakers were hostile to him, Cartucho was largely overlooked when it was first published, and its reputation grew only decades later.”",
+        "“What looks like a child’s indifference is a witness’s discipline: by not letting horror interrupt her, the narrator keeps attention on each soldier’s name and final moments, leaving a record of men the official story preferred to forget.”"
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The student argues that the narrator’s calm is not a sign of incomprehension but a way of preserving the memory of Villa’s followers, whom other accounts ignored or disparaged. Choice D says the apparent indifference is a witness’s discipline that keeps attention on each soldier’s name and death and leaves a record of men the official story wanted forgotten, which supports both parts of the argument.",
+      "distractors": {
+        "A": {
+          "recipe": "OPP: sides with the reading the student rejects",
+          "why_wrong": "This critic treats the narrator’s calm as a sign that she does not understand the cost of the fighting, the very reading the student argues against."
+        },
+        "B": {
+          "recipe": "OFF: true detail about revisions, not the narrator’s voice",
+          "why_wrong": "How Campobello revised the book says nothing about what the narrator’s composure accomplishes."
+        },
+        "C": {
+          "recipe": "HALF: the disparaged-Villistas context without the narrator’s composure",
+          "why_wrong": "This explains why the book was overlooked, which fits the idea that Villa’s followers were disparaged, but it does not connect the narrator’s calm voice to preserving their memory."
+        }
+      },
+      "models": [
+        "3.32",
+        "3.33",
+        "3.21",
+        "3.3"
+      ],
+      "sources": [
+        {
+          "what": "Cartucho (Wikipedia, citing Meyer 1988, Parra 2010, Poniatowska 1988, Linhard 2005): 1931 semi-autobiographical novella of brief vignettes about Villistas in Chihuahua told from a young girl's perspective, drawn from Campobello's memories and her mother's stories; first edition 33 vignettes, later editions nearly twice that with some fates changed; overlooked at first partly because Campobello was marginalized as a Villista when most literature and films of the Revolution were against Villa",
+          "url": "https://en.wikipedia.org/wiki/Cartucho"
+        }
+      ],
+      "notes": "Quotations are from an unnamed critic (invented, as in official T3 items); facts in B and C match the source. The view in the passage ('might suggest') is not attributed to anyone. Quotations 37 to 44 words, arguing, as in band 6/7 T3 models.",
+      "word_count": 100,
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [
+          "reworded the key's last clause ('preserving men' to 'leaving a record of men') so it no longer echoes the passage's 'preserving the memory'"
+        ],
+        "status": "fixed",
+        "band7": {
+          "verdict": "band 6",
+          "why": "Arguing critic quotations of 37 to 44 words with an OPP that sides with the rejected reading and a context HALF; after the echo fix a fair band 6."
+        }
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "D",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "command_of_evidence.Q1_P5_control.hard.w3b6_07",
+      "template": "Q1_P5_control",
+      "subtype": "Data completion (condition vs control; the result that runs against a stated expectation)",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "Improved cookstoves, which burn wood more cleanly than traditional stoves do or run on electricity, can reduce indoor air pollution, but households in many regions have been slow to adopt them. In a field experiment in the Indian Himalayas, Subhrendu K. Pattanayak and colleagues offered households in some villages a program that combined home delivery of improved stoves, demonstrations, and payment in installments; each household in these villages was also randomly assigned one of three rebates on the price, the smallest of which was negligible. Households in comparison villages received no program. Although the stoves’ cost is often assumed to be the chief obstacle to adoption, the researchers found that ______",
+      "stem": "Which choice most effectively uses data from the table to complete the statement?",
+      "options": [
+        "28% of households offered only the negligible rebate bought an improved stove, whereas no households in the comparison villages did, suggesting that the program’s other features raised purchases even without a meaningful discount.",
+        "74% of households offered the largest rebate, a third of the stove’s price, bought an improved stove, a rate more than two and a half times that among households offered the negligible rebate.",
+        "households in the comparison villages bought improved stoves at about the same rate as households offered the negligible rebate, suggesting that only the larger rebates led households to purchase stoves.",
+        "no households in the comparison villages bought an improved stove, whereas nearly three-quarters of the households offered the largest rebate did, suggesting that the program greatly increased the number of households that purchased stoves."
+      ],
+      "answer_letter": "A",
+      "table": {
+        "title": "Share of Households That Bought at Least One Improved Cookstove, by Experimental Group",
+        "columns": [
+          "Group",
+          "Households that bought an improved stove (%)"
+        ],
+        "rows": [
+          [
+            "Comparison villages (no program)",
+            "0"
+          ],
+          [
+            "Program with negligible rebate",
+            "28"
+          ],
+          [
+            "Program with rebate of about 20% of price",
+            "55"
+          ],
+          [
+            "Program with rebate of 33% of price",
+            "74"
+          ]
+        ],
+        "note": null
+      },
+      "figure": null,
+      "explanation": "The sentence sets up a contrast with the assumption that price is the main obstacle. Households offered only a negligible rebate faced essentially the full price, so any difference between them and the comparison villages must come from the program’s other features: delivery, demonstrations, and installment payments. The table shows that 28% of those households bought a stove while 0% of comparison households did, so choice A gives the finding that runs against the assumption.",
+      "distractors": {
+        "B": {
+          "recipe": "IRREL: accurate comparison of rebate levels, which fits the expectation",
+          "why_wrong": "The values are correct (74% against 28%), but more purchases at a larger discount is what the cost assumption predicts, so it is not a finding that runs against that assumption."
+        },
+        "C": {
+          "recipe": "INACC: false reading of the control row",
+          "why_wrong": "The comparison villages bought no stoves (0%), far below the 28% of households offered the negligible rebate."
+        },
+        "D": {
+          "recipe": "IRREL: accurate comparison with the wrong group (control against the largest rebate)",
+          "why_wrong": "The values are correct, but households offered the largest rebate paid a third less than the full price, so their much higher purchase rate could come from the discount itself; this comparison cannot show that something other than cost held adoption back."
+        }
+      },
+      "models": [
+        "3.38",
+        "3.46",
+        "3.4"
+      ],
+      "sources": [
+        {
+          "what": "Pattanayak et al. 2019, PNAS 116(27):13282, Experimental evidence on promotion of electric and improved biomass cookstoves: nearly 1,000 households in the Indian Himalayas; supply-and-promotion intervention (delivery, demonstration, installment finance) with household-level rebates; zero purchase in control villages; purchase rates 28% with the negligible rebate ('High price'), 55% with the medium rebate (about 20% of retail price), 74% with the highest rebate (33% of retail price); 'Even among households that received a negligible price discount, the upgraded supply chain alone induced a 28 percentage-point increase'",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6612920/"
+        }
+      ],
+      "notes": "Band-7 moves: passage relation (the negligible-rebate arm isolates the non-price parts of the program, which the passage defines), a stated expectation the key runs against (as in 3.38), options are 30 to 33 word compound clauses. Operations: read the expectation, pick the negligible-rebate row, compare with the control row, reject the accurate price-effect comparison (B). B 74/28 = 2.64, 'more than two and a half times' checked. The comparison villages' 0% is partly structural (they were never offered the stoves); the paper itself reads the negligible-rebate arm against control as 'the upgraded supply chain alone induced a 28 percentage-point increase', which is what the key says. First author's full name (Subhrendu K. Pattanayak, Sanford School, Duke, the paper's affiliation a) confirmed at https://scholars.duke.edu/person/subhrendu.pattanayak. Reviewer replaced D (OUTS, stove use not in the table) with an accurate control-versus-largest-rebate comparison, so two distractors are accurate (B, D).",
+      "word_count": 111,
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 5,
+        "fixes": [
+          "replaced D (stove use, a measure the table lacks) with an accurate comparison of the control villages against the largest rebate, so two distractors (B, D) are accurate but wrong-group; C kept as the one false reading"
+        ],
+        "status": "fixed",
+        "band7": {
+          "verdict": "band 7",
+          "why": "Surprise relative to the stated cost expectation (the Q1_P5 band-7 trap); 111-word passage; options 27 to 33 words; the passage relation (negligible rebate isolates the non-price features) must be applied; operations: expectation, pick the negligible row, compare with control, reject two accurate rebate-confounded comparisons. Matches the one band-7 official Q1_P5 item (3.38, the non-host plant that gained mass against the stated expectation): accurate comparisons that fit the expectation or use the wrong group as distractors."
+        }
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "A",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 7
+    },
+    {
+      "id": "command_of_evidence.Q2_P8_quantifier.hard.w3b6_08",
+      "template": "Q2_P8_quantifier",
+      "subtype": "Data description (all-but-one claim about a change in a difference)",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Women outlive men in almost every country, but the size of their advantage varies considerably. Life expectancy at birth estimates how long a newborn would live, on average, if the death rates of a given year persisted throughout that newborn’s life. During the 1990s, men’s life expectancy declined sharply in several former Soviet republics, leaving women there with an unusually large advantage. Comparing United Nations estimates for 2000 and 2019 in five countries, a student claims that in all but one of the countries, the difference between women’s and men’s life expectancy narrowed over that period.",
+      "stem": "Which choice best describes data from the table that support the student’s claim?",
+      "options": [
+        "Both women’s and men’s life expectancy were higher in 2019 than in 2000 in all five countries, with men’s rising by about 11 years in Kazakhstan.",
+        "In 2000, women’s life expectancy exceeded men’s by more than 10 years in every country except Mongolia, where the difference was about 6 years.",
+        "The difference between women’s and men’s life expectancy was smaller in 2019 than in 2000 in Belarus, Estonia, Kazakhstan, and Russia, but in Mongolia it grew from about 6 years to about 9 years.",
+        "The difference between women’s and men’s life expectancy was smaller in 2019 than in 2000 in every country except Russia, where it remained at about 13 years."
+      ],
+      "answer_letter": "C",
+      "table": {
+        "title": "Life Expectancy at Birth (Years) in Five Countries, 2000 and 2019",
+        "columns": [
+          "Country",
+          "Women, 2000",
+          "Men, 2000",
+          "Women, 2019",
+          "Men, 2019"
+        ],
+        "rows": [
+          [
+            "Belarus",
+            "74.4",
+            "62.7",
+            "79.0",
+            "69.2"
+          ],
+          [
+            "Estonia",
+            "76.3",
+            "65.6",
+            "82.7",
+            "74.4"
+          ],
+          [
+            "Kazakhstan",
+            "69.7",
+            "58.1",
+            "77.7",
+            "69.2"
+          ],
+          [
+            "Mongolia",
+            "66.4",
+            "60.6",
+            "75.5",
+            "66.2"
+          ],
+          [
+            "Russia",
+            "72.1",
+            "58.6",
+            "78.2",
+            "67.7"
+          ]
+        ],
+        "note": null
+      },
+      "figure": null,
+      "explanation": "The claim concerns the change in the gap between women and men in every country but one. From the table, the gap fell from 11.7 to 9.8 years in Belarus, 10.7 to 8.3 in Estonia, 11.6 to 8.5 in Kazakhstan, and 13.5 to 10.5 in Russia, while in Mongolia it rose from 5.8 to 9.3. Choice C reports this pattern, so it supports the claim.",
+      "distractors": {
+        "A": {
+          "recipe": "IRREL: accurate levels, not the gap",
+          "why_wrong": "Both sexes did live longer in 2019 in every country, and Kazakh men gained about 11 years, but rising life expectancy says nothing about whether the gap between women and men narrowed."
+        },
+        "B": {
+          "recipe": "PART: accurate single-year reading in an all-but-one frame",
+          "why_wrong": "The 2000 gaps are read correctly, but a single year cannot show whether the gap narrowed between 2000 and 2019."
+        },
+        "D": {
+          "recipe": "INACC: wrong exception",
+          "why_wrong": "Russia’s gap narrowed from 13.5 to 10.5 years; the country where it grew was Mongolia."
+        }
+      },
+      "models": [
+        "3.20",
+        "3.23",
+        "3.24"
+      ],
+      "sources": [
+        {
+          "what": "Our World in Data, life expectancy at birth by sex (UN World Population Prospects 2024): 2000 and 2019 values for Belarus, Estonia, Kazakhstan, Mongolia, Russia; also shows men's life expectancy falling in Russia (63.8 to 58.6), Belarus and Kazakhstan between 1990 and 2000",
+          "url": "https://ourworldindata.org/grapher/female-and-male-life-expectancy-at-birth-in-years"
+        }
+      ],
+      "notes": "Values rounded to one decimal; gaps computed from the rounded table: Belarus 11.7 to 9.8, Estonia 10.7 to 8.3, Kazakhstan 11.6 to 8.5, Mongolia 5.8 to 9.3, Russia 13.5 to 10.5. A: Kazakh men 58.1 to 69.2 (+11.1); all ten 2000-to-2019 changes positive. B: 2000 gaps above 10 except Mongolia 5.8. Checked in Python. Mongolia is not a former Soviet republic, so the passage's 1990s sentence does not single out the exception.",
+      "word_count": 96,
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 20,
+        "fixes": [],
+        "status": "pass",
+        "band7": {
+          "verdict": "band 6",
+          "why": "All-but-one claim on a change in a difference: ten subtractions, an accurate levels IRREL, a single-year PART and a wrong-exception INACC."
+        }
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "C",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "command_of_evidence.Q1_P67_criterion.hard.w3b6_09",
+      "template": "Q1_P67_criterion",
+      "subtype": "Data completion (a quantity defined in the passage computed from two columns)",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "A crop’s yield gap is the difference between the yield that farmers in a region actually obtain and the attainable yield, which is the yield achieved with the best current practices, such as adequate fertilization and irrigation, by farmers in places with a similar climate. Closing such gaps could substantially increase food production without converting additional land to agriculture. Because attainable yields vary considerably from place to place, however, the country with the lowest actual yields in a region does not necessarily have the largest yield gap. Corn production in several African countries illustrates this point: ______",
+      "stem": "Which choice most effectively uses data from the table to complete the example?",
+      "options": [
+        "Rwanda had both the lowest actual yield of the five countries and the largest yield gap, a difference of more than 5 metric tons per hectare.",
+        "Mozambique had the lowest actual yield of the five countries, about 0.7 metric tons per hectare, but its yield gap was smaller than that of Rwanda, whose actual yield was about twice as high.",
+        "Burkina Faso and Kenya had nearly identical actual yields, about 1.8 metric tons per hectare, and therefore had yield gaps of nearly the same size.",
+        "Ethiopia had the highest actual yield of the five countries, about 3.7 metric tons per hectare, as well as an attainable yield of more than 5 metric tons per hectare."
+      ],
+      "answer_letter": "B",
+      "table": {
+        "title": "Actual Corn Yields in 2020 and Attainable Corn Yields in Five African Countries",
+        "columns": [
+          "Country",
+          "Actual yield, 2020 (metric tons per hectare)",
+          "Attainable yield (metric tons per hectare)"
+        ],
+        "rows": [
+          [
+            "Burkina Faso",
+            "1.76",
+            "3.12"
+          ],
+          [
+            "Ethiopia",
+            "3.71",
+            "5.77"
+          ],
+          [
+            "Kenya",
+            "1.77",
+            "4.20"
+          ],
+          [
+            "Mozambique",
+            "0.71",
+            "3.99"
+          ],
+          [
+            "Rwanda",
+            "1.52",
+            "6.98"
+          ]
+        ],
+        "note": null
+      },
+      "figure": null,
+      "explanation": "The example must show that the country with the lowest actual yield need not have the largest yield gap, where the gap is attainable yield minus actual yield. Mozambique has the lowest actual yield (0.71), but its gap (3.99 − 0.71 = 3.28) is smaller than Rwanda’s (6.98 − 1.52 = 5.46), even though Rwanda’s actual yield is about twice Mozambique’s. Choice B therefore completes the example.",
+      "distractors": {
+        "A": {
+          "recipe": "INACC: wrong row for the lowest actual yield",
+          "why_wrong": "Rwanda does have the largest gap, but Mozambique, not Rwanda, has the lowest actual yield; and a country lowest in yield and largest in gap would contradict the point rather than illustrate it."
+        },
+        "C": {
+          "recipe": "WDIR (proxy misapplied): equal actual yields taken to mean equal gaps",
+          "why_wrong": "Burkina Faso and Kenya do have nearly equal actual yields, but their attainable yields differ, so their gaps (1.36 and 2.43) are not nearly the same."
+        },
+        "D": {
+          "recipe": "IRREL: accurate readings that do not bear on the point",
+          "why_wrong": "The values are correct, but the country with the highest actual yield says nothing about whether the country with the lowest actual yield has the largest gap."
+        }
+      },
+      "models": [
+        "3.22",
+        "3.27"
+      ],
+      "sources": [
+        {
+          "what": "Our World in Data, corn attainable yields (Mueller et al. 2012, Nature, Closing yield gaps through nutrient and water management) and corn yields (FAO): attainable Burkina Faso 3.12, Ethiopia 5.77, Kenya 4.20, Mozambique 3.99, Rwanda 6.98 t/ha; actual 2020 yields 1.76, 3.71, 1.77, 0.71, 1.52 t/ha; yield gap defined as attainable minus actual",
+          "url": "https://ourworldindata.org/grapher/maize-attainable-yield"
+        }
+      ],
+      "notes": "Actual 2020 yields from https://ourworldindata.org/grapher/maize-yields (FAO). Gaps checked in Python: Burkina Faso 1.36, Ethiopia 2.06, Kenya 2.43, Mozambique 3.28, Rwanda 5.46. Rwanda/Mozambique actual ratio 2.14 ('about twice').",
+      "word_count": 97,
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 10,
+        "fixes": [],
+        "status": "pass",
+        "band7": {
+          "verdict": "band 6",
+          "why": "Passage defines the gap that must be computed from two columns; WDIR proxy distractor (equal actuals, equal gaps) and an INACC compound; options about 20 to 28 words, below the band-7 Q1 length."
+        }
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "B",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "command_of_evidence.T1_single.medium.w3b6_10",
+      "template": "T1_single",
+      "subtype": "Hypothetical finding supports a conclusion (diet before a known date; right time window)",
+      "tier": "medium",
+      "band_target": null,
+      "passage": "For several thousand years before the first farmers reached the Danube Gorges of the central Balkans, around 6200 BCE, the region was home to foragers who lived by fishing, hunting, and gathering wild plants. Archaeologist Emanuela Cristiani and colleagues analyzed starch grains and other microscopic traces of plants trapped in the hardened dental plaque of individuals buried at five sites in the gorges. On the basis of these remains, the researchers concluded that the foragers were already eating the grains of wild grasses closely related to wheat long before agriculture arrived in the region.",
+      "stem": "Which finding, if true, would most directly support Cristiani and colleagues’ conclusion?",
+      "options": [
+        "Starch grains from domesticated wheat were identified in the dental plaque of individuals who were buried in the gorges several centuries after 6200 BCE.",
+        "Fish bones and the bones of wild deer were common among the food remains recovered from the foragers’ settlements in the gorges.",
+        "Starch from goatgrass, a wild relative of wheat, was found in the plaque of people buried in the gorges more than a thousand years before 6200 BCE.",
+        "Grinding stones from farming villages in other parts of the Balkans show wear consistent with the processing of domesticated cereals."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The researchers conclude that foragers in the gorges ate the grains of wild relatives of wheat well before farming reached the area around 6200 BCE. Starch from goatgrass, a wild relative of wheat, in the plaque of people buried more than a thousand years before that date would show exactly this, so choice C supports the conclusion.",
+      "distractors": {
+        "A": {
+          "recipe": "SUBJ/time: domesticated grain after farming arrived",
+          "why_wrong": "Domesticated wheat eaten after 6200 BCE reflects farming that had already arrived; it says nothing about wild grains eaten before then."
+        },
+        "B": {
+          "recipe": "OFF: other foods of the foragers",
+          "why_wrong": "Fish and deer show that the foragers fished and hunted, which the passage already says; they do not show that the foragers ate wild grains."
+        },
+        "D": {
+          "recipe": "SUBJ: farmers elsewhere",
+          "why_wrong": "Wear on grinding stones from farming villages elsewhere concerns farmers and domesticated cereals, not the foragers of the gorges."
+        }
+      },
+      "models": [
+        "2.21",
+        "2.38",
+        "2.6",
+        "2.16"
+      ],
+      "sources": [
+        {
+          "what": "Cristiani et al. 2021, eLife 10:e72976: starch grain and phytolith analyses of dental calculus from 60 Mesolithic and Early Neolithic individuals at five Danube Gorges sites; foragers lived there for millennia before the first farmers about 6200 cal BC; Aegilops (goatgrass) grains used since the Early Mesolithic",
+          "url": "https://elifesciences.org/articles/72976"
+        }
+      ],
+      "notes": "Key restates the study's result in plain terms (Aegilops = goatgrass, a wild relative of wheat; Early Mesolithic is more than a thousand years before 6200 BCE). A is the right kind of evidence in the wrong time window.",
+      "word_count": 94,
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "command_of_evidence.T1_single.medium.w3b6_11",
+      "template": "T1_single",
+      "subtype": "Hypothetical finding supports a claim (comparison with the right group)",
+      "tier": "medium",
+      "band_target": null,
+      "passage": "Artisanal gold miners in the Madre de Dios region of the Peruvian Amazon use mercury to separate gold particles from river sediment, and much of that mercury is eventually released into local waterways. Mercury becomes especially hazardous once microorganisms convert it into methylmercury, a compound that accumulates in fish and in the people who consume them. Mining has also created thousands of small ponds across the landscape. Jacqueline R. Gerson and colleagues claim that these artificial ponds make the mercury released by mining considerably more dangerous than it would be if it remained in the region’s rivers.",
+      "stem": "Which finding, if true, would most directly support Gerson and colleagues’ claim?",
+      "options": [
+        "Mercury that settled in the mining ponds was converted into methylmercury several times faster than mercury in nearby stretches of river was.",
+        "The total area covered by ponds in heavily mined parts of the region grew many times over between 1985 and 2018.",
+        "Rivers flowing through heavily mined parts of the region carried more mercury than did rivers in parts of the region where little or no mining took place.",
+        "Some miners in the region have begun using equipment that captures mercury after use so that less of it escapes into the environment."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The claim is that mercury in the ponds is more hazardous than mercury in the rivers. The passage explains that mercury is most dangerous once microbes turn it into methylmercury. If mercury in the ponds becomes methylmercury several times faster than mercury in rivers, the ponds make it a greater hazard, so choice A supports the claim.",
+      "distractors": {
+        "B": {
+          "recipe": "PART: true background without the comparison",
+          "why_wrong": "More pond area shows that the ponds are spreading, but not that mercury in them is more dangerous than mercury in rivers."
+        },
+        "C": {
+          "recipe": "Wrong comparison: rivers against rivers",
+          "why_wrong": "This compares mined and unmined rivers; it says nothing about ponds compared with rivers."
+        },
+        "D": {
+          "recipe": "OFF: a way to reduce mercury use",
+          "why_wrong": "Equipment that captures mercury concerns how much mercury is released, not whether ponds make it more hazardous."
+        }
+      },
+      "models": [
+        "2.21",
+        "2.38",
+        "2.6",
+        "2.16"
+      ],
+      "sources": [
+        {
+          "what": "Gerson et al. 2020, Science Advances 6: eabd4953, Artificial lake expansion amplifies mercury pollution from gold mining: Madre de Dios, Peru; lake area in heavily mined watersheds up 670% from 1985 to 2018; lakes (mining ponds) convert mercury into methylmercury at net rates five to seven times greater than rivers; increasing exposure risk",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7695464/"
+        }
+      ],
+      "notes": "Key paraphrases the study's central result. B is the study's other true finding, insufficient on its own.",
+      "word_count": 97,
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "command_of_evidence.T2_lit_quote.medium.w3b6_12",
+      "template": "T2_lit_quote",
+      "subtype": "Literary quotation illustrates a two-part claim (loss recognized, sacrifice judged right)",
+      "tier": "medium",
+      "band_target": null,
+      "passage": "Farewell Love! is an 1887 novel by Matilde Serao, translated by Aline Harland. In the novel, Giustino, an impoverished young man, informs Anna, the wealthy noblewoman he loves, that her guardian has forbidden their marriage. Serao suggests that Giustino recognizes how much he will sacrifice by relinquishing Anna but nevertheless believes that doing so is right: ______",
+      "stem": "Which quotation from a translation of Farewell Love! most effectively illustrates the claim?",
+      "options": [
+        "“Why shouldn’t I say it, Anna? The sweet dream that we have been dreaming together—any day we may have to wake from it. They aren’t willing that we should live together.”",
+        "“Cesare Dias was right, my dearest Anna. I couldn’t answer him. I’m a poor young fellow, without a farthing.”",
+        "“Because you have money, and I have none. Because you are noble, and I’m not.”",
+        "“Anna, Anna, it is I who lose everything; and yet I advise you to forget this youthful fancy.”"
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The claim has two parts: Giustino understands what he will lose, and he believes giving Anna up is the right thing to do. In choice D he says that he is the one who loses everything and yet advises Anna to forget their love, so he both recognizes his loss and urges the separation.",
+      "distractors": {
+        "A": {
+          "recipe": "HALF: sorrow, but the separation is imposed by others",
+          "why_wrong": "Giustino mourns their dream, but he presents the separation as others’ decision (‘They aren’t willing’), not as something he believes is right."
+        },
+        "B": {
+          "recipe": "HALF: judges the refusal right, no sense of loss",
+          "why_wrong": "Giustino agrees with the guardian and explains that he is poor, but he says nothing about what he himself will lose."
+        },
+        "C": {
+          "recipe": "OFF: the reasons for the guardian’s refusal",
+          "why_wrong": "Giustino only explains why the guardian refuses; he expresses neither his own loss nor his view that parting is right."
+        }
+      },
+      "models": [
+        "2.26",
+        "2.13",
+        "2.36",
+        "2.11"
+      ],
+      "sources": [
+        {
+          "what": "Matilde Serao, Farewell Love! (Addio, amore!, 1887), translated from the Italian by Mrs. Henry Harland (Aline Harland), London Book Co. edition of 1906 on Gutenberg; Part I, chapter I, Giustino and Anna; all four quotations are exact substrings (double hyphen rendered as a closed em dash, straight quotes curly). The introduction dates Addio Amore to 1887.",
+          "url": "https://www.gutenberg.org/ebooks/54619"
+        }
+      ],
+      "notes": "No translation year in the source line: the Gutenberg copy is a 1906 printing and the first English edition's year was not confirmed. All quotations are Giustino's, from one conversation.",
+      "word_count": 57,
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "command_of_evidence.Q1_P3_pairwise.medium.w3b6_13",
+      "template": "Q1_P3_pairwise",
+      "subtype": "Data completion (one comparison per year, grouped bars)",
+      "tier": "medium",
+      "band_target": null,
+      "passage": "Coffee yields, the weight of green (unroasted) coffee beans harvested from each hectare of land, can change considerably when growers switch to new plant varieties or cultivation methods. A student looking at yields in four coffee-growing countries notices that Brazil’s yields changed sharply compared with those of the other countries over a thirty-year period. In 1990, for example, Brazil’s yield was ______",
+      "stem": "Which choice most effectively uses data from the graph to complete the statement?",
+      "options": [
+        "higher than Vietnam’s, but by 2020 Brazil’s yield had fallen below Vietnam’s.",
+        "lower than both Colombia’s and Honduras’s, but by 2020 Brazil’s yield was higher than both of theirs.",
+        "lower than both Colombia’s and Honduras’s, and in 2020 Brazil’s yield was still lower than Colombia’s.",
+        "lower than Vietnam’s, and by 2020 Brazil’s yield had risen to more than twice Vietnam’s."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": {
+        "kind": "bar graph",
+        "title": "Coffee Yields in Four Countries, 1990 and 2020",
+        "x_axis": "Country",
+        "y_axis": "Yield (metric tons per hectare)",
+        "description": "Grouped bar graph, two bars per country (1990 and 2020); y-axis 0 to 3 in steps of 0.5. Brazil: about 0.5 in 1990, about 1.95 in 2020. Colombia: about 0.84 in 1990, about 0.99 in 2020. Honduras: about 0.83 in 1990, about 1.13 in 2020. Vietnam: about 1.49 in 1990, about 2.77 in 2020.",
+        "data": [
+          {
+            "series": "1990",
+            "points": [
+              [
+                "Brazil",
+                0.5
+              ],
+              [
+                "Colombia",
+                0.84
+              ],
+              [
+                "Honduras",
+                0.83
+              ],
+              [
+                "Vietnam",
+                1.49
+              ]
+            ]
+          },
+          {
+            "series": "2020",
+            "points": [
+              [
+                "Brazil",
+                1.95
+              ],
+              [
+                "Colombia",
+                0.99
+              ],
+              [
+                "Honduras",
+                1.13
+              ],
+              [
+                "Vietnam",
+                2.77
+              ]
+            ]
+          }
+        ]
+      },
+      "explanation": "In 1990 Brazil’s bar (about 0.5) is below both Colombia’s and Honduras’s (about 0.8 each), and in 2020 Brazil’s bar (about 1.95) is above both of theirs (about 1.0 and 1.1). Choice B states both comparisons correctly and shows the dramatic change the passage describes.",
+      "distractors": {
+        "A": {
+          "recipe": "WDIR: reversed 1990 comparison",
+          "why_wrong": "In 1990 Brazil’s yield (about 0.5) was lower than Vietnam’s (about 1.5), not higher."
+        },
+        "C": {
+          "recipe": "INACC: second comparison false",
+          "why_wrong": "The 1990 part is correct, but in 2020 Brazil’s yield (about 1.95) was higher than Colombia’s (about 1.0)."
+        },
+        "D": {
+          "recipe": "INACC: second comparison false",
+          "why_wrong": "Brazil’s yield was lower than Vietnam’s in 1990, but in 2020 it was still lower than Vietnam’s (about 1.95 against 2.77), not twice as high."
+        }
+      },
+      "models": [
+        "2.32",
+        "2.28",
+        "2.24",
+        "2.18"
+      ],
+      "sources": [
+        {
+          "what": "Our World in Data, coffee bean yields (FAO 2025), tonnes per hectare: Brazil 0.50 (1990), 1.95 (2020); Colombia 0.84, 0.99; Honduras 0.83, 1.13; Vietnam 1.49, 2.77",
+          "url": "https://ourworldindata.org/grapher/coffee-yields"
+        }
+      ],
+      "notes": "Values rounded to two decimals. Every comparison an option makes involves bars at least 0.3 t/ha apart (more than half a gridline); Colombia and Honduras in 1990 (0.84, 0.83) are compared only with Brazil (0.50), never with each other.",
+      "word_count": 62,
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 8,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "command_of_evidence.Q1_P4_trend.medium.w3b6_14",
+      "template": "Q1_P4_trend",
+      "subtype": "Data completion (endpoints of one line in a multi-line graph)",
+      "tier": "medium",
+      "band_target": null,
+      "passage": "Access to electricity, defined by the World Bank as having a power source capable of providing basic lighting and charging a phone or operating a radio for four hours daily, expanded rapidly in parts of Africa and Asia between 2000 and 2020. Some of the most remarkable gains occurred in countries where access had initially been quite limited. In Cambodia, for example, the proportion of the population with access to electricity rose from ______",
+      "stem": "Which choice most effectively uses data from the graph to complete the example?",
+      "options": [
+        "about 17% in 2000 to about 45% in 2020.",
+        "about 13% in 2000 to about 50% in 2020.",
+        "less than 10% in 2000 to about 40% in 2020.",
+        "about 17% in 2000 to more than 85% in 2020."
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": {
+        "kind": "line graph",
+        "title": "Share of the Population with Access to Electricity in Four Countries, 2000–2020",
+        "x_axis": "Year",
+        "y_axis": "Percent of population with access to electricity",
+        "description": "Four lines at 2000, 2004, 2008, 2012, 2016 and 2020; y-axis 0 to 100 in steps of 10. Cambodia: about 17, 14, 26, 42, 69, 86. Ethiopia: about 13, 15, 22, 29, 43, 51. Tanzania: about 9, 11, 12, 15, 33, 40. Zambia: about 17, 20, 26, 29, 35, 45. All four lines start below 20% in 2000; by 2020 Cambodia is highest, then Ethiopia, Zambia and Tanzania.",
+        "data": [
+          {
+            "series": "Cambodia",
+            "points": [
+              [
+                "2000",
+                16.6
+              ],
+              [
+                "2004",
+                14.2
+              ],
+              [
+                "2008",
+                26.4
+              ],
+              [
+                "2012",
+                42.3
+              ],
+              [
+                "2016",
+                68.8
+              ],
+              [
+                "2020",
+                86.4
+              ]
+            ]
+          },
+          {
+            "series": "Ethiopia",
+            "points": [
+              [
+                "2000",
+                12.7
+              ],
+              [
+                "2004",
+                15.2
+              ],
+              [
+                "2008",
+                22.0
+              ],
+              [
+                "2012",
+                29.0
+              ],
+              [
+                "2016",
+                42.9
+              ],
+              [
+                "2020",
+                51.1
+              ]
+            ]
+          },
+          {
+            "series": "Tanzania",
+            "points": [
+              [
+                "2000",
+                8.7
+              ],
+              [
+                "2004",
+                11.4
+              ],
+              [
+                "2008",
+                11.5
+              ],
+              [
+                "2012",
+                15.3
+              ],
+              [
+                "2016",
+                32.8
+              ],
+              [
+                "2020",
+                39.9
+              ]
+            ]
+          },
+          {
+            "series": "Zambia",
+            "points": [
+              [
+                "2000",
+                16.7
+              ],
+              [
+                "2004",
+                20.3
+              ],
+              [
+                "2008",
+                25.7
+              ],
+              [
+                "2012",
+                29.2
+              ],
+              [
+                "2016",
+                35.4
+              ],
+              [
+                "2020",
+                44.6
+              ]
+            ]
+          }
+        ]
+      },
+      "explanation": "The sentence needs Cambodia’s share at the start and end of the period. The Cambodia line begins at about 17% in 2000 and ends at about 86% in 2020, so choice D completes the example accurately.",
+      "distractors": {
+        "A": {
+          "recipe": "WGRP: Zambia’s line (same starting point)",
+          "why_wrong": "Zambia also started near 17%, but it reached only about 45% in 2020; Cambodia ended above 85%."
+        },
+        "B": {
+          "recipe": "WGRP: Ethiopia’s line",
+          "why_wrong": "These values belong to Ethiopia, which ended near 51%, not to Cambodia."
+        },
+        "C": {
+          "recipe": "WGRP: Tanzania’s line",
+          "why_wrong": "These values belong to Tanzania; Cambodia started near 17% and ended above 85%."
+        }
+      },
+      "models": [
+        "2.15",
+        "2.34",
+        "2.40"
+      ],
+      "sources": [
+        {
+          "what": "Our World in Data, share of the population with access to electricity (World Bank): Cambodia 16.6 (2000), 86.4 (2020); Ethiopia 12.7, 51.1; Tanzania 8.7, 39.9; Zambia 16.7, 44.6; definition: a source that can provide very basic lighting and charge a phone or power a radio for 4 hours per day",
+          "url": "https://ourworldindata.org/grapher/share-of-the-population-with-access-to-electricity"
+        }
+      ],
+      "notes": "Values rounded to one decimal in figure.data. Each wrong option is true of another line and false of Cambodia at the 2020 endpoint (45, 51, 40 against 86). Reviewer made Cambodia the example and replaced Kenya's line with Zambia's: Kenya's electricity access is the subject of command_of_evidence.Q2_P8_multipart.b7.",
+      "word_count": 74,
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 8,
+        "fixes": [
+          "made Cambodia the example and replaced Kenya's line with Zambia's (OWID World Bank data): Kenya's electricity access is already the subject of command_of_evidence.Q2_P8_multipart.b7; options, figure description, explanation and distractors rewritten, key stays D"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "command_of_evidence.Q2_P4_trend.medium.w3b6_15",
+      "template": "Q2_P4_trend",
+      "subtype": "Data description (a decline interrupted by a rise)",
+      "tier": "medium",
+      "band_target": null,
+      "passage": "In the United Kingdom, egg-laying hens are housed in cages (including larger, furnished “enriched” cages), in barns where they move freely indoors, or in free-range and organic systems that also provide outdoor access. Examining estimates of how the country’s laying hens were housed, a student concludes that the transition away from cages was not continuous: after declining for several years, the proportion of hens kept in cages temporarily increased before resuming its decline.",
+      "stem": "Which choice best describes data from the table that support the student’s conclusion?",
+      "options": [
+        "The share of hens kept in cages fell from 62.7% in 2006 to 48.6% in 2012, rose to 51.1% in 2015, and then fell to 35.4% in 2021.",
+        "The share of hens kept in barns fell from 5.1% in 2006 to 1.8% in 2021 and was lower in each year shown than in the year before.",
+        "The share of hens kept in cages fell from 62.7% in 2006 to 35.4% in 2021, while the share kept in free-range systems more than doubled.",
+        "The share of hens kept in cages fell in every period shown, while the share kept in free-range systems rose in every period shown."
+      ],
+      "answer_letter": "A",
+      "table": {
+        "title": "Percentage of Laying Hens in the United Kingdom by Housing System",
+        "columns": [
+          "Housing system",
+          "2006",
+          "2012",
+          "2015",
+          "2021"
+        ],
+        "rows": [
+          [
+            "Cages",
+            "62.7",
+            "48.6",
+            "51.1",
+            "35.4"
+          ],
+          [
+            "Barns",
+            "5.1",
+            "3.6",
+            "2.4",
+            "1.8"
+          ],
+          [
+            "Free range (not organic)",
+            "27.2",
+            "45.2",
+            "44.2",
+            "59.0"
+          ],
+          [
+            "Organic",
+            "5.0",
+            "2.6",
+            "2.4",
+            "3.8"
+          ]
+        ],
+        "note": null
+      },
+      "figure": null,
+      "explanation": "The student says the share of hens in cages fell, rose briefly, and then fell again. The cages row shows 62.7% in 2006, 48.6% in 2012, 51.1% in 2015, and 35.4% in 2021: a decline, a small rise, and a further decline. Choice A describes exactly this pattern.",
+      "distractors": {
+        "B": {
+          "recipe": "IRREL: accurate trend in the wrong row",
+          "why_wrong": "The barn figures are read correctly, but they concern barns, not cages, and they show a steady decline rather than an interrupted one."
+        },
+        "C": {
+          "recipe": "PART: endpoints only",
+          "why_wrong": "The endpoints are accurate, but comparing only 2006 and 2021 hides the rise between 2012 and 2015 that the conclusion depends on."
+        },
+        "D": {
+          "recipe": "INACC: contradicts the table",
+          "why_wrong": "The cage share rose from 48.6% to 51.1% between 2012 and 2015, and the free-range share dipped from 45.2% to 44.2%, so neither changed in the same direction in every period."
+        }
+      },
+      "models": [
+        "2.12",
+        "2.22",
+        "2.2"
+      ],
+      "sources": [
+        {
+          "what": "Our World in Data, share of eggs produced by different housing systems (European Commission and other sources), United Kingdom: cages (conventional and enriched) 62.7, 48.6, 51.1, 35.4; barns 5.1, 3.6, 2.4, 1.8; free range non-organic 27.2, 45.2, 44.2, 59.0; organic 5.0, 2.6, 2.4, 3.8 (2006, 2012, 2015, 2021); OWID labels the series share of egg-laying hens and notes that UK hen shares are approximated from the share of eggs produced in each system",
+          "url": "https://ourworldindata.org/grapher/share-of-eggs-produced-by-different-housing-systems"
+        }
+      ],
+      "notes": "Values rounded to one decimal; the four rows sum to 100 in each year (2006 100.0, 2012 100.0, 2015 100.1, 2021 100.0 after rounding). C: free range 27.2 to 59.0 is 2.17 times. B: barns fall in each step (5.1, 3.6, 2.4, 1.8).",
+      "word_count": 73,
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 16,
+        "fixes": [
+          "passage now says 'estimates of how the country's laying hens were housed' instead of 'official statistics': OWID approximates UK hen shares from egg-production shares"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "command_of_evidence.T1_compete.medium.w3b6_16",
+      "template": "T1_compete",
+      "subtype": "Hypothetical finding discriminates between two readings of an isotope signal (needs a comparison group)",
+      "tier": "medium",
+      "band_target": null,
+      "passage": "In animal bone, the ratio of heavy to light nitrogen isotopes generally increases with each step up a food chain, so the exceptionally high ratios measured in some cave bears that inhabited what is now Romania tens of thousands of years ago have been interpreted as evidence that those bears consumed meat. Nitrogen ratios also vary considerably among plants depending on soil and climate, however, so a herbivore can exhibit elevated values if the vegetation it eats does. After analyzing nitrogen in individual amino acids from the bears’ bones, Yuichi I. Naito and colleagues concluded that the Romanian cave bears relied heavily on plants.",
+      "stem": "Which finding, if true, would most directly support Naito and colleagues’ conclusion?",
+      "options": [
+        "The Romanian cave bears had nitrogen ratios about as high as those of wolves and other meat-eating animals whose bones were found in the same caves.",
+        "Cave bears from other parts of Europe had lower nitrogen ratios, on average, than the cave bears from Romania did.",
+        "The Romanian cave bears had nitrogen ratios no higher than those of deer and other plant-eaters that lived in the same area at the same time.",
+        "The Romanian cave bears were, on average, larger than the brown bears that live in Europe today."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The passage gives two ways the bears’ high nitrogen ratios could arise: eating meat, or eating plants that themselves had high ratios. If the bears’ ratios were no higher than those of deer and other plant-eaters living in the same place and time, the high values would reflect the local plants rather than a step up the food chain, which supports the conclusion that the bears ate mainly plants. Choice C shows this.",
+      "distractors": {
+        "A": {
+          "recipe": "OPP: the meat-eating explanation’s prediction",
+          "why_wrong": "Ratios as high as those of meat-eaters from the same caves would suggest that the bears ate meat, the explanation Naito and colleagues reject."
+        },
+        "B": {
+          "recipe": "TRAP: consistent with both explanations",
+          "why_wrong": "Lower ratios in other European cave bears fit either explanation: the Romanian bears could have eaten more meat or eaten plants with higher ratios."
+        },
+        "D": {
+          "recipe": "OFF: irrelevant property of the bears",
+          "why_wrong": "Body size says nothing about whether the high nitrogen ratios came from meat or from plants."
+        }
+      },
+      "models": [
+        "2.9",
+        "2.30",
+        "1.25"
+      ],
+      "sources": [
+        {
+          "what": "Naito et al. 2020, Scientific Reports 10:6612, Heavy reliance on plants for Romanian cave bears evidenced by amino acid nitrogen isotope analysis: some Romanian cave bears show exceptionally high bulk collagen nitrogen isotope values that might indicate meat; herbivory on high-value plants cannot be ruled out by bulk values; amino acid (glutamate, phenylalanine) values offset baseline variation and indicate reliance on plants",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7170912/"
+        }
+      ],
+      "notes": "Key is a hypothetical comparison with same-site herbivores (the baseline logic the amino acid method also relies on); the study's conclusion is the real one. B restates the study's context and fits both views.",
+      "word_count": 104,
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [
+          "source note: article number corrected to Scientific Reports 10:6612"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "command_of_evidence.Q1_P1_lookup.easy.w3b6_17",
+      "template": "Q1_P1_lookup",
+      "subtype": "Data completion (one cell, value-only options)",
+      "tier": "easy",
+      "band_target": null,
+      "passage": "Literacy rates rose across much of Europe in the early twentieth century, though at very different speeds from one country to another. A student researching the history of education compares estimates of the share of adults who could read and write in several European countries in 1900 and 1920. According to the table, the literacy rate in Spain rose from 41.3% in 1900 to ______",
+      "stem": "Which choice most effectively uses data from the table to complete the statement?",
+      "options": [
+        "34.8% in 1920.",
+        "53.3% in 1920.",
+        "86.6% in 1920.",
+        "56.0% in 1920."
+      ],
+      "answer_letter": "D",
+      "table": {
+        "title": "Estimated Adult Literacy Rates in Five European Countries, 1900 and 1920",
+        "columns": [
+          "Country",
+          "1900 (%)",
+          "1920 (%)"
+        ],
+        "rows": [
+          [
+            "Belgium",
+            "80.4",
+            "92.2"
+          ],
+          [
+            "Bulgaria",
+            "29.6",
+            "53.3"
+          ],
+          [
+            "Hungary",
+            "60.1",
+            "86.6"
+          ],
+          [
+            "Portugal",
+            "26.6",
+            "34.8"
+          ],
+          [
+            "Spain",
+            "41.3",
+            "56.0"
+          ]
+        ],
+        "note": null
+      },
+      "figure": null,
+      "explanation": "The table’s row for Spain gives a literacy rate of 41.3% in 1900 and 56.0% in 1920, so choice D completes the statement.",
+      "distractors": {
+        "A": {
+          "recipe": "WGRP: Portugal’s 1920 value",
+          "why_wrong": "34.8% is Portugal’s literacy rate in 1920, not Spain’s."
+        },
+        "B": {
+          "recipe": "WGRP: Bulgaria’s 1920 value",
+          "why_wrong": "53.3% is Bulgaria’s literacy rate in 1920, not Spain’s."
+        },
+        "C": {
+          "recipe": "WGRP: Hungary’s 1920 value",
+          "why_wrong": "86.6% is Hungary’s literacy rate in 1920, not Spain’s."
+        }
+      },
+      "models": [
+        "1.30",
+        "1.37",
+        "1.38",
+        "1.44"
+      ],
+      "sources": [
+        {
+          "what": "Our World in Data, literacy rate (UNESCO 1957 and other sources; share of adults who can read and write a simple statement): Belgium 80.4 (1900), 92.2 (1920); Bulgaria 29.6, 53.3; Hungary 60.1, 86.6; Portugal 26.6, 34.8; Spain 41.3, 56.0",
+          "url": "https://ourworldindata.org/grapher/cross-country-literacy-rates"
+        }
+      ],
+      "notes": "All three wrong options are other countries' 1920 values from the same column.",
+      "word_count": 65,
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 10,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "command_of_evidence.T1_single.easy.w3b6_18",
+      "template": "T1_single",
+      "subtype": "Hypothetical finding supports a hypothesis (one step, comparison with a control)",
+      "tier": "easy",
+      "band_target": null,
+      "passage": "Guttation is the secretion of small droplets of fluid, derived from a plant’s sap, along the edges of its leaves. Numerous kinds of insects can be observed drinking these droplets. Scientists had generally assumed that the droplets serve insects only as a source of water. Working with highbush blueberry plants, Pablo Urbaneja-Bernat and colleagues hypothesized that guttation droplets also provide insects with nutritious food.",
+      "stem": "Which finding, if true, would most directly support Urbaneja-Bernat and colleagues’ hypothesis?",
+      "options": [
+        "Insects fed guttation droplets from the plants lived longer and produced more offspring than insects given only water.",
+        "Guttation droplets appeared on the blueberry leaves on most days of the growing season, including days when the plants were not in bloom.",
+        "Insects were more likely to visit blueberry leaves on mornings when guttation droplets were present than on mornings when they were not.",
+        "Some of the insects that drank guttation droplets were predators that also hunted other insects living on the blueberry plants."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The researchers hypothesize that guttation droplets give insects food, not just water. If insects fed the droplets lived longer and had more offspring than insects given plain water, the droplets must supply something beyond water, so choice A supports the hypothesis.",
+      "distractors": {
+        "B": {
+          "recipe": "OFF: when the droplets are available",
+          "why_wrong": "How often the droplets appear says nothing about whether they contain food."
+        },
+        "C": {
+          "recipe": "OFF: consistent with water alone",
+          "why_wrong": "Insects seeking out the droplets could simply be looking for water, so this does not show the droplets are food."
+        },
+        "D": {
+          "recipe": "OFF: which insects drink",
+          "why_wrong": "Knowing that some drinkers are predators does not show what the droplets provide."
+        }
+      },
+      "models": [
+        "1.1",
+        "1.17",
+        "1.35",
+        "1.41"
+      ],
+      "sources": [
+        {
+          "what": "Urbaneja-Bernat, Tena, González-Cabrera and Rodriguez-Saona 2020, Proceedings of the Royal Society B 287: 20201080, Plant guttation provides nutrient-rich food for insects: previous studies treated guttation as a water source; hypothesis that it is a food source; highbush blueberry droplets contain carbohydrates and proteins; a herbivore, a parasitic wasp and a predator lived longer and were more fecund on guttation than on water",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7542811/"
+        }
+      ],
+      "notes": "Key is the study's real result. B echoes the study's other finding (droplets present all season) but bears on reliability, not on food.",
+      "word_count": 64,
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "command_of_evidence.Q1_P2_extreme.easy.w3b6_19",
+      "template": "Q1_P2_extreme",
+      "subtype": "Data completion (maximum of a single-series bar graph)",
+      "tier": "easy",
+      "band_target": null,
+      "passage": "The amount of milk produced per dairy animal varies widely from one country to another, reflecting differences in breeds, feed, and farming systems. A student researching agriculture compares international estimates of the average annual milk production per animal in five countries in 2022. Of these five countries, ______",
+      "stem": "Which choice most effectively uses data from the graph to complete the statement?",
+      "options": [
+        "Japan had the highest average milk production per animal.",
+        "Argentina had the highest average milk production per animal.",
+        "Denmark had the highest average milk production per animal.",
+        "New Zealand had the highest average milk production per animal."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": {
+        "kind": "bar graph",
+        "title": "Average Milk Production per Dairy Animal in Five Countries, 2022",
+        "x_axis": "Country",
+        "y_axis": "Milk per animal (kilograms per year)",
+        "description": "Five bars; y-axis 0 to 12,000 in steps of 2,000. Argentina about 7,600; Brazil about 2,300; Denmark about 10,200; Japan about 8,800; New Zealand about 4,600. Denmark's bar is the tallest and Brazil's the shortest.",
+        "data": [
+          {
+            "series": "Milk per animal",
+            "points": [
+              [
+                "Argentina",
+                7616
+              ],
+              [
+                "Brazil",
+                2255
+              ],
+              [
+                "Denmark",
+                10187
+              ],
+              [
+                "Japan",
+                8840
+              ],
+              [
+                "New Zealand",
+                4554
+              ]
+            ]
+          }
+        ]
+      },
+      "explanation": "Denmark’s bar, at about 10,200 kilograms per animal, is the tallest of the five, so choice C completes the statement.",
+      "distractors": {
+        "A": {
+          "recipe": "Wrong extreme: second highest",
+          "why_wrong": "Japan’s bar, about 8,800 kilograms, is the second tallest, below Denmark’s."
+        },
+        "B": {
+          "recipe": "Wrong row",
+          "why_wrong": "Argentina’s bar, about 7,600 kilograms, is lower than both Denmark’s and Japan’s."
+        },
+        "D": {
+          "recipe": "Wrong row",
+          "why_wrong": "New Zealand’s bar, about 4,600 kilograms, is among the shortest."
+        }
+      },
+      "models": [
+        "1.9",
+        "1.21",
+        "1.31"
+      ],
+      "sources": [
+        {
+          "what": "Our World in Data, milk per animal (FAO 2025; production from cattle, sheep, goats and other animals divided by the number of animals used for milk), kilograms per animal, 2022: Denmark 10,187; Japan 8,840; Argentina 7,616; New Zealand 4,554; Brazil 2,255",
+          "url": "https://ourworldindata.org/grapher/milk-yields-per-animal"
+        }
+      ],
+      "notes": "Denmark exceeds Japan by about 1,350 kg (two thirds of a gridline). Options are full clauses after 'Of these five countries,' (as in 1.9).",
+      "word_count": 48,
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 5,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "command_of_evidence.T3_person_quote.easy.w3b6_20",
+      "template": "T3_person_quote",
+      "subtype": "Quotation from a historian supports a curator's claim (two traditions combined)",
+      "tier": "easy",
+      "band_target": null,
+      "passage": "Lacquer, a glossy coating derived from tree sap, had traditionally been used in Vietnam as a decorative finish for objects. In the 1930s, painter Nguyễn Gia Trí, who studied at the École des Beaux-Arts de l’Indochine in Hanoi, became one of the first artists to master lacquer as a medium for paintings. In a statement accompanying a new exhibition, a museum curator claims that Nguyễn Gia Trí’s lacquer paintings combine techniques from Vietnamese and European artistic traditions.",
+      "stem": "Which quotation from a work by an art historian would be the most effective evidence for the curator to include in support of this claim?",
+      "options": [
+        "“In addition to painting, Nguyễn Gia Trí drew cartoons for Hanoi magazines during the 1930s, many of which mocked or criticized French colonial rule in Vietnam.”",
+        "“Nguyễn Gia Trí built up his pictures in many thin coats of lacquer, a Vietnamese craft method, and used the layers to create depth as European painters did.”",
+        "“Several of Nguyễn Gia Trí’s lacquer paintings show young women gathered in gardens among flowering trees.”",
+        "“Many of Nguyễn Gia Trí’s works are now in the collection of the Vietnam National Museum of Fine Arts in Hanoi.”"
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The curator claims that Nguyễn Gia Trí combined Vietnamese and European techniques. Choice B says he built his paintings from many coats of lacquer, a long-standing Vietnamese craft method, and used those layers to create depth as in European painting, so it names a technique from each tradition.",
+      "distractors": {
+        "A": {
+          "recipe": "OFF: another kind of work",
+          "why_wrong": "His political cartoons say nothing about the techniques in his lacquer paintings."
+        },
+        "C": {
+          "recipe": "OFF: subject matter, not technique",
+          "why_wrong": "What the paintings show does not reveal which artistic techniques he used."
+        },
+        "D": {
+          "recipe": "OFF: where the works are kept",
+          "why_wrong": "The museum that holds his works says nothing about how they were made."
+        }
+      },
+      "models": [
+        "1.15",
+        "1.19",
+        "1.20"
+      ],
+      "sources": [
+        {
+          "what": "Nguyễn Gia Trí (Wikipedia, citing McLeod and Nguyen 2001 and the Smithsonian's An Ocean Apart, 1995): lacquer painter who transformed the traditional decorative art of lacquer; among the first to master lacquer painting; his work 'combined techniques from the West and the East, using the multiple layers in lacquer painting to convey depth'; studied at the École des Beaux-Arts de l'Indochine from 1932; political cartoons criticizing French rule; works in the Vietnam National Museum of Fine Arts; garden scenes",
+          "url": "https://en.wikipedia.org/wiki/Nguy%E1%BB%85n_Gia_Tr%C3%AD"
+        }
+      ],
+      "notes": "Quotations from an unnamed art historian; their factual content matches the source page. Key paraphrases McLeod's description of his method.",
+      "word_count": 77,
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "command_of_evidence.T2_lit_quote.easy.w3b6_21",
+      "template": "T2_lit_quote",
+      "subtype": "Literary quotation illustrates a single-trait claim (poem)",
+      "tier": "easy",
+      "band_target": null,
+      "passage": "“California” is an 1871 poem by Ina Coolbrith. In the poem, California, personified as a woman, portrays herself as a peaceful land rather than a warlike one: ______",
+      "stem": "Which quotation from “California” most effectively illustrates the claim?",
+      "options": [
+        "“Lo! I have waited long! / How longer yet must my strung harp be dumb, / Ere its great master come? / Till the fair singer comes to wake the strong, / Rapt chords of it unto the new, glad song!”",
+        "“Sea-born and goddess, blossom of the foam, / Pale Aphrodite, shadowy as a mist / Not any sun hath kissed!”",
+        "“Am I less fair, less fair, / Because that my hands bear / Neither a sword, nor any flaming brand, / To blacken and make desolate my land, / But on my brows are leaves of olive boughs, / And in mine arms a dove!”",
+        "“Are not the fruit and vine / Fair on my hills, and in my vales the rose? / The palm-tree and the pine / Strike hands together under the same skies / In every wind that blows.”"
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The claim is that California presents herself as peaceful rather than warlike. In choice C she says her hands hold neither a sword nor a flaming brand to lay waste to the land, and that she wears olive leaves and carries a dove, both symbols of peace.",
+      "distractors": {
+        "A": {
+          "recipe": "OFF: longing for a poet",
+          "why_wrong": "California says she is waiting for a great singer to praise her; nothing here concerns peace or war."
+        },
+        "B": {
+          "recipe": "OFF: addresses a goddess’s appearance",
+          "why_wrong": "California describes Aphrodite as pale and misty, which says nothing about peace."
+        },
+        "D": {
+          "recipe": "OFF: the land’s abundance",
+          "why_wrong": "California points to her fruit, flowers, and trees, showing her richness rather than her peacefulness."
+        }
+      },
+      "models": [
+        "1.16",
+        "1.11",
+        "1.36"
+      ],
+      "sources": [
+        {
+          "what": "Ina Coolbrith, California (Book Club of California edition, 1918, on Gutenberg); all four quotations are exact text (line breaks shown as slashes, straight apostrophes curly). Wikipedia's Ina Coolbrith article (citing Gale 2001) dates California to 1871, the commencement ode she wrote for the University of California.",
+          "url": "https://www.gutenberg.org/ebooks/63451"
+        }
+      ],
+      "notes": "Date source: https://en.wikipedia.org/wiki/Ina_Coolbrith ('California', the commencement ode she wrote for the University of California in 1871). Lines quoted avoid the poem's passages on Native peoples. A separate stanza ('Upon my brows the leaves of olive boughs') also signals peace and is deliberately not used as an option.",
+      "word_count": 28,
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 5,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "command_of_evidence.T1_compete.easy.w3b6_22",
+      "template": "T1_compete",
+      "subtype": "Hypothetical finding supports one side of a debate (dated evidence)",
+      "tier": "easy",
+      "band_target": null,
+      "passage": "Scientists have long debated whether part of Spitsbergen, an island in the Arctic archipelago of Svalbard, was covered by ice during the Last Glacial Maximum. That period, when continental ice sheets reached their greatest extent, ended approximately 20,000 years ago. After analyzing sediments retrieved from the bottom of a lake on the island’s northwest coast, geologists Willem van der Bilt and Christine Lane claim that the surrounding land remained free of ice throughout much of that period.",
+      "stem": "Which finding, if true, would most directly support van der Bilt and Lane’s claim?",
+      "options": [
+        "Remains of mosses that grew on the land around the lake were found in its sediments and dated to between about 30,000 and 20,000 years ago.",
+        "The lake’s sediments contain a gap, with no material deposited, covering the entire period from about 30,000 to 20,000 years ago.",
+        "Sediments that began to accumulate about 11,000 years ago, after the ice had melted, were found at the bottom of other lakes on Spitsbergen.",
+        "Ash from volcanic eruptions in the Azores, a group of islands in the Atlantic Ocean, can be carried by the wind thousands of kilometers to the Arctic."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "Van der Bilt and Lane claim the land around the lake was free of ice during the Last Glacial Maximum, which ended about 20,000 years ago. Mosses that grew around the lake between about 30,000 and 20,000 years ago could only have grown on land that was not buried under ice, so choice A supports the claim.",
+      "distractors": {
+        "B": {
+          "recipe": "OPP: the ice-covered view’s prediction",
+          "why_wrong": "A gap with no sediment during that period would suggest the lake was sealed under ice, which would weaken the claim."
+        },
+        "C": {
+          "recipe": "Wrong time window",
+          "why_wrong": "Sediments from after the ice melted, about 11,000 years ago, say nothing about conditions during the earlier period."
+        },
+        "D": {
+          "recipe": "OFF: how ash travels",
+          "why_wrong": "That ash can travel to the Arctic does not show whether the land around the lake was free of ice."
+        }
+      },
+      "models": [
+        "1.25"
+      ],
+      "sources": [
+        {
+          "what": "van der Bilt and Lane 2019, Science Advances 5: eaaw5980: decades of debate over whether northwest Spitsbergen was ice-covered; first pre-Holocene lake sediments from Svalbard (Lake Hajeren); bryophyte (moss) radiocarbon ages show the catchment unglaciated and vegetated from about 30 to 20 ka during the global LGM; Azorean tephra; later overrun by nonerosive ice until about 11 ka",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6810458/"
+        }
+      ],
+      "notes": "Key is the study's own dated moss evidence. Christine S. Lane, Willem G. M. van der Bilt.",
+      "word_count": 77,
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [],
+        "status": "pass"
+      }
+    }
+  ]
+}

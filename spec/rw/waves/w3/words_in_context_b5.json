@@ -1,0 +1,1336 @@
+{
+  "skill": "Words in Context",
+  "slug": "words_in_context",
+  "part": "w3b5",
+  "domain": "Craft and Structure",
+  "plan": {
+    "templates": [
+      {
+        "code": "B6",
+        "name": "Blank completion, phrase options (word + preposition, a/an + word)"
+      },
+      {
+        "code": "B1",
+        "name": "Blank completion, restatement clue"
+      },
+      {
+        "code": "B3",
+        "name": "Blank completion, contrast clue (including received view then finding)"
+      },
+      {
+        "code": "B5",
+        "name": "Blank completion, negated frame"
+      },
+      {
+        "code": "M1",
+        "name": "Most nearly mean, underlined word"
+      },
+      {
+        "code": "B2",
+        "name": "Blank completion, cause or consequence clue"
+      },
+      {
+        "code": "M2",
+        "name": "Most nearly mean, underlined phrase or phrase options"
+      },
+      {
+        "code": "B4",
+        "name": "Blank completion, example-pinned clue"
+      }
+    ]
+  },
+  "done": true,
+  "items": [
+    {
+      "id": "words_in_context.B6.hard.w3b5_01",
+      "template": "B6",
+      "subtype": "Blank completion: phrase options",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "In a field experiment in India, economist Benjamin Feigenberg and colleagues randomly assigned first-time microfinance borrowers to repayment groups that met either weekly or monthly. Nearly two years later, members of weekly groups socialized more frequently and were substantially less likely to default on their second loan, suggesting that frequent meetings were ______ the informal ties that help borrowers withstand financial hardship.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "contingent on",
+        "incidental to",
+        "conducive to",
+        "inimical to"
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "Something conducive to an outcome helps bring it about. Because the meeting schedule was set by chance, the later differences can be traced to the meetings themselves: clients who met weekly went on to socialize more and to default less. So the frequent meetings helped build the informal ties that help borrowers withstand hardship.",
+      "distractors": {
+        "A": {
+          "recipe": "wrong direction of dependence (CONNOT)",
+          "why_wrong": "Contingent on means depending on. The meeting schedule was assigned at random, so it did not depend on any ties among the clients; the text shows the ties following from the meetings, not the other way around."
+        },
+        "B": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "Incidental to means only loosely connected to. The weekly groups ended up with more social contact and fewer defaults, so the meetings were closely connected to the ties, not peripheral to them."
+        },
+        "D": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "Inimical to means harmful to. Clients who met more often socialized more, so frequent meetings strengthened the ties rather than damaging them."
+        }
+      },
+      "models": [
+        "5a97d9cd",
+        "5e57efec",
+        "1455b754",
+        "3021d9ef"
+      ],
+      "band7_moves": [
+        "academic word + preposition key (conducive to)",
+        "random assignment is the clue that rules out the reverse direction, so the near miss contingent on fails on one feature",
+        "consequence is the only clue: more contact and fewer defaults imply the meetings fostered the ties",
+        "all four options past rank 10,000"
+      ],
+      "word_count": 62,
+      "sources": [
+        {
+          "what": "Feigenberg, Field, Pande, The Economic Returns to Social Interaction: Experimental Evidence from Microfinance (2013): microfinance clients of an Indian lender randomly assigned to repayment groups meeting weekly or monthly in their first loan cycle; weekly clients interacted more often nearly two years later and were three times less likely to default on their second loan; the authors trace this to informal risk-pooling",
+          "url": "https://www.povertyactionlab.org/sites/default/files/research-paper/101_290%20Social%20Interactions%20Feb2013.pdf"
+        }
+      ],
+      "notes": "Subject: social science (development economics). Key letter C. Steps: 2 (random assignment rules out ties driving the schedule; weekly meetings then produced more contact and fewer defaults, so the meetings fostered the ties). Concessive frame: no. Transferred-sense key: no. Raw ranks, tools/data/freq.txt (rarest content word): contingent on 17,762; incidental to 19,860; conducive to 24,104; inimical to 27,949; 4 of 4 past 10,000, 2 past 20,000, mean log 4.34. Band-5 guard: clear (key not the rarest; inimical is). Near miss: contingent on (a dependence relation, wrong direction). Two reversals (incidental to, inimical to), never three.",
+      "band7": {
+        "verdict": "band 7",
+        "why": "Raw ranks contingent on 17,762, incidental to 19,860, conducive to 24,104, inimical to 27,949: 4 of 4 past 10,000, mean log 4.34, key not the rarest (band-5 guard clear); checks 1 and 3 pass, check 2 misses (rarest distractor 27,949). Academic word + preposition key in the register of mediated by and independent of; two steps (random assignment rules out the reverse dependence, then more contact and fewer defaults imply the meetings fostered the ties), with contingent on the near miss on direction. Caveat: incidental to and inimical to each fall to one fact once known, so the vocabulary carries the item, as in 5a97d9cd. No key echo; option type gives nothing away."
+      },
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass"
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "C",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 7
+    },
+    {
+      "id": "words_in_context.B1.hard.w3b5_02",
+      "template": "B1",
+      "subtype": "Blank completion: restatement clue",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "Bacteria are typically microscopic, so biologist Olivier Gros initially mistook the threadlike filaments he discovered on submerged mangrove leaves in Guadeloupe for a fungus. In 2022 a team including Gros and Jean-Marie Volland reported that the organism is a bacterium, albeit a strikingly ______ one: each filament, a single cell up to two centimeters long, is visible without magnification.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "anomalous",
+        "colonial",
+        "ubiquitous",
+        "pathogenic"
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "Anomalous means departing from what is normal for a group. The text sets up the norm (bacteria are typically microscopic) and then describes a bacterium whose single cell can be seen without magnification. That makes it a strikingly unusual bacterium.",
+      "distractors": {
+        "B": {
+          "recipe": "near miss on one feature (CONNOT)",
+          "why_wrong": "Colonial describes organisms that live as a colony of many cells, which is how bacteria are usually seen without a microscope. The text stresses that each filament is a single cell, so the organism is visible on its own, not as a colony."
+        },
+        "C": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Ubiquitous means found everywhere. The text mentions only filaments found on sunken mangrove leaves in Guadeloupe and says nothing about the bacterium being widespread."
+        },
+        "D": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Pathogenic means causing disease. Nothing in the text suggests the bacterium harms any host; the point after the colon concerns its size."
+        }
+      },
+      "models": [
+        "93665100",
+        "5444db38",
+        "1eeb9bb8",
+        "bce4d106"
+      ],
+      "band7_moves": [
+        "rare academic key restated by a contrast with the norm (usually seen only through a microscope)",
+        "near-synonym distractor failing on one feature (colonial: visible as many cells, not one)",
+        "all four options past rank 10,000, three past 20,000, one unseen"
+      ],
+      "word_count": 59,
+      "sources": [
+        {
+          "what": "Thiomargarita magnifica: average about 1 cm, up to 2 cm, visible to the unaided eye; found on sunken red mangrove leaves in Guadeloupe; Olivier Gros at first thought it was a fungus; described by Volland et al., Science 2022, A centimeter-long bacterium",
+          "url": "https://en.wikipedia.org/wiki/Thiomargarita_magnifica"
+        }
+      ],
+      "notes": "Subject: natural science (microbiology). Key letter A. Steps: 2 (the first sentence states the norm; the colon clause shows this bacterium breaks it, so it is atypical). Transferred-sense key: no. Raw ranks, tools/data/freq.txt: anomalous 24,259; colonial 10,466; ubiquitous 25,257; pathogenic absent; 4 of 4 past 10,000, 3 past 20,000, mean log 4.70. Band-5 guard: clear (key is not the rarest; pathogenic is unseen). Near miss: colonial. Check that no option shares a five-letter stem with the passage: none.",
+      "band7": {
+        "verdict": "band 7",
+        "why": "Raw ranks anomalous 24,259, colonial 10,466, ubiquitous 25,257, pathogenic unseen: 4 of 4 past 10,000, mean log 4.70, rarest distractor unseen; checks 1, 2 and 3 pass, key not the rarest. One-to-two-step B1 carried by vocabulary like bce4d106 (ubiquity) and 93665100: the norm (typically microscopic) is stated in a plain register and the key names the deviation abstractly; colonial is a near miss on one feature (visible as a colony, not a single cell), and ubiquitous and pathogenic are rare unsupported words a student cannot rule out without knowing them. No key echo."
+      },
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [],
+        "status": "pass"
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "A",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 7
+    },
+    {
+      "id": "words_in_context.B3.hard.w3b5_03",
+      "template": "B3",
+      "subtype": "Blank completion: contrast clue",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Victorian commentators warned that penny dreadfuls—sensational serialized stories sold in weekly one-penny installments to young working-class readers—bred crime; one 1893 editorial declared that such fiction “makes thieves of the coming generation.” Many historians, however, consider the stories largely ______, and some suggest that they may even have helped improve literacy among the very readers critics feared they would corrupt.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "derivative",
+        "benign",
+        "pernicious",
+        "lucrative"
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "Benign means harmless. The word however sets historians against the critics who claimed the stories would turn readers into thieves, and the rest of the sentence adds that the stories may even have helped readers learn to read. So historians see the stories as largely harmless, the opposite of the critics' view.",
+      "distractors": {
+        "A": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Derivative means copied from earlier work. The text says nothing about where the stories came from; the contrast with the critics concerns whether the stories did harm."
+        },
+        "C": {
+          "recipe": "reversal: trait of the wrong party (ANT)",
+          "why_wrong": "Pernicious means harmful, which is the critics' view. The word however marks the historians' view as different from the critics', so it cannot be the same judgment."
+        },
+        "D": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Lucrative means profitable. The stories may well have sold widely, but the text does not discuss profits, and profit would not answer the critics' charge that the stories corrupted readers."
+        }
+      },
+      "models": [
+        "b35e2fdc",
+        "e8fb0744",
+        "22a41819"
+      ],
+      "word_count": 59,
+      "sources": [
+        {
+          "what": "Penny dreadful: weekly parts costing one penny, aimed at young working-class men; an editorial in the first number of The Half-penny Marvel (1893) said of the penny dreadful, “It makes thieves of the coming generation, and so helps fill our gaols”; the serials were sensational but generally harmless and resulted in increasingly literate youth",
+          "url": "https://en.wikipedia.org/wiki/Penny_dreadful"
+        }
+      ],
+      "notes": "Subject: history (Victorian publishing). Key letter B. Received view (critics) then the historians' view, blank in the historians' side; pernicious is the critics' side offered as a reversal. Steps: 2 (however reverses the critics' charge; the literacy clause confirms a favorable or at least harmless judgment). Raw ranks, tools/data/freq.txt: derivative 31,569; benign 21,143; pernicious 21,825; lucrative 23,461. Band 6 by plan; written as a plain strong hard item. Quotation is the editorial's own wording as given by the source.",
+      "band7": {
+        "verdict": "band 6",
+        "why": "Meets its band-6 target. Raw ranks derivative 31,569, benign 21,143, pernicious 21,825, lucrative 23,461 (4 of 4 past 20,000, mean log 4.39), but the logic is a plain however contrast with the critics’ view spelled out, and pernicious is the critics’ side offered as the reversal, so a student who knows benign and pernicious solves it in one move; the even clause confirms. B3 received view then finding with the blank on the finding side, the band-6 shape (b35e2fdc)."
+      },
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [
+          "quotation misquoted the 1893 editorial (“make thieves” for the source’s “makes thieves”); first sentence rebuilt so the quoted words are verbatim; source line updated with the exact wording and venue (The Half-penny Marvel, first number)"
+        ],
+        "status": "fixed"
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "B",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "words_in_context.B5.hard.w3b5_04",
+      "template": "B5",
+      "subtype": "Blank completion: negated frame",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "The delicate wings of Heliconius butterflies belie the insects’ ______: whereas their closest relatives typically live for about six weeks as adults, many Heliconius species survive for several months in the wild, sustained in part by the protein-rich pollen they gather on their proboscises to supplement the sugary nectar that most butterflies drink.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "frailty",
+        "fecundity",
+        "voracity",
+        "longevity"
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "Longevity means long life. To belie something is to give a false impression of it, so the butterflies’ delicate wings must hide a quality they actually have. The text then shows that quality: many Heliconius live for several months, far longer than their relatives' six weeks.",
+      "distractors": {
+        "A": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "Frailty is weakness, which is just what delicate wings suggest. Wings cannot belie, or misrepresent, a quality they actually display, and the text goes on to describe the butterflies’ unusually long lives."
+        },
+        "B": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Fecundity means the ability to produce many offspring. The text says nothing about how many eggs Heliconius lay; its evidence after the colon is about how long the adults live."
+        },
+        "C": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Voracity means a huge appetite. The text says the butterflies add pollen to nectar, not that they eat great amounts, and the comparison after the colon concerns lifespan."
+        }
+      },
+      "models": [
+        "6017ae31",
+        "d5ad34f0",
+        "d3ca5d59",
+        "d7807ec8"
+      ],
+      "band7_moves": [
+        "negation hidden in a verb (belie), as preclude and fail to hide it in the band-7 models",
+        "counterintuitive key: the delicate look suggests the opposite of the trait",
+        "no negation-flip distractor; frailty is a reversal of the implied logic",
+        "all four options past rank 20,000"
+      ],
+      "word_count": 53,
+      "sources": [
+        {
+          "what": "Foley et al. (Nature Communications) as reported by Sci.News: many Heliconius species live for several months in the wild, against roughly six weeks for close relatives in the Heliconiini; they supplement nectar with pollen collected on the proboscis, and its amino acids help fuel the long lifespan",
+          "url": "https://www.sci.news/biology/heliconius-butterflies-longevity-14863.html"
+        }
+      ],
+      "notes": "Subject: natural science (entomology). Key letter D. Steps: 2 (belie reverses what the wings suggest; the colon clause supplies the true trait). Concessive frame: no; hidden negation in the verb. Raw ranks, tools/data/freq.txt: frailty 24,307; fecundity 43,739; voracity 54,224; longevity 51,649; 4 of 4 past 20,000, mean log 4.62. Band-5 guard: clear (all four are rare; key is not the rarest). Passage says “in part” because pollen-deprived Heliconius still outlive their relatives (source).",
+      "band7": {
+        "verdict": "band 7",
+        "why": "Raw ranks frailty 24,307, fecundity 43,739, voracity 54,224, longevity 51,649: 4 of 4 past 20,000, mean log 4.62, rarest distractor past 50,000; checks 1, 2 and 3 pass, key not the rarest. B5 with the negation hidden in a verb (belie), as preclude and fail to hide it in 6017ae31 and d5ad34f0; frailty is the reversal of the implied logic (what delicate wings suggest) and traps a student who misreads belie; fecundity and voracity are rare unsupported words. Two steps. The key does not echo live or survive."
+      },
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass"
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "D",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 7
+    },
+    {
+      "id": "words_in_context.M1.hard.w3b5_05",
+      "template": "M1",
+      "subtype": "Most nearly mean: underlined word",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "The following text is from an 1893 translation of Marie von Ebner-Eschenbach’s 1885 story “Countess Paula.” The narrator has been reading the novel Don Quixote.\n\nI could not keep my rapture in it for myself, and day by day as I read, I told the story to my father, and day by day his interest in Dulcinea’s knight grew warmer.\n\n“What has the donkey been doing to-day?” he would ask, and for a while I <u>suffered</u> it to be “the donkey.” Not for long, though. Soon I laughed no longer; rather melted with sympathy, burned with admiration.",
+      "stem": "As used in the text, what does the word “suffered” most nearly mean?",
+      "options": [
+        "Grieved",
+        "Permitted",
+        "Underwent",
+        "Worsened"
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "Here suffered means allowed. The father jokingly calls the hero “the donkey,” and the narrator lets the nickname stand for a while. The next sentences show that this did not last: once she came to sympathize with and admire the knight, she no longer laughed along with the joke.",
+      "distractors": {
+        "A": {
+          "recipe": "another sense of the target (SENSE)",
+          "why_wrong": "Suffer can mean to feel grief, and the narrator later melts with sympathy, but she is not grieving over the nickname; for a while she laughs along with it."
+        },
+        "C": {
+          "recipe": "another sense of the target (SENSE)",
+          "why_wrong": "Suffer can mean to undergo, as in suffering a defeat, but the narrator does not undergo the nickname; it is something she lets her father use."
+        },
+        "D": {
+          "recipe": "another sense of the target (SENSE)",
+          "why_wrong": "Suffer can mean to get worse, as when work suffers, but nothing here declines; the narrator is describing how she responded to her father’s joke."
+        }
+      },
+      "models": [
+        "9b22bf7b",
+        "6557f7fc",
+        "7f935017"
+      ],
+      "word_count": 97,
+      "sources": [
+        {
+          "what": "Text of The Two Countesses (Cassell, 1893; translated by Ellen Waugh), Project Gutenberg 76750; excerpt copied exactly from Countess Paula, the narrator's memoirs (Zwei Comtessen, 1885)",
+          "url": "https://www.gutenberg.org/ebooks/76750"
+        }
+      ],
+      "notes": "Subject: literature. Key letter B. Archaic sense of a common verb (suffer = allow), as determine = dictate in 9b22bf7b; all three distractors are other senses of suffer. Raw ranks, tools/data/freq.txt: Grieved 5,805; Permitted 2,349; Underwent 18,074; Worsened 69,354. Excerpt copied exactly: two consecutive paragraphs, the second ending at the end of a sentence. No option that also fits the frame (Endured, Tolerated, Believed) is offered. Band 6 by plan.",
+      "band7": {
+        "verdict": "band 6",
+        "why": "Meets its band-6 target. M1 archaic sense of a common verb (suffer = allow), the band-6 pattern of 9b22bf7b (determine = dictate); key Permitted is common (2,349) and only Underwent (18,074) and Worsened (69,354) pass rank 10,000, so check 1 fails. The three distractors are real senses of suffer, which keeps it a strong band 6 rather than band 7."
+      },
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [],
+        "status": "pass"
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "B",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "words_in_context.B5.medium.w3b5_06",
+      "template": "B5",
+      "subtype": "Blank completion: negated frame",
+      "tier": "medium",
+      "passage": "In rope-pulling experiments published in 1913, French agricultural engineer Max Ringelmann found that individual efforts are not ______ in a group. As more participants pulled simultaneously, each one exerted less force, so a team’s combined pull consistently fell short of the total of its members’ separate pulls.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "additive",
+        "reciprocal",
+        "diminished",
+        "voluntary"
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "Additive means combining by simple addition. Ringelmann found that a team pulled with less force than its members did when their separate pulls were added up, because each person pulled less in the group. So individual efforts do not simply add together in a group.",
+      "distractors": {
+        "B": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Reciprocal means given in return. The trials measured how hard people pulled, not whether group members returned one another’s efforts."
+        },
+        "C": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "The text says each person exerted less force in a group, so efforts are diminished there; saying they are not diminished contradicts the finding."
+        },
+        "D": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Voluntary means done by choice. The text gives no information about whether the pullers chose to take part or how hard to pull."
+        }
+      },
+      "models": [
+        "2.10",
+        "2.11",
+        "2.21",
+        "2.14"
+      ],
+      "word_count": 47,
+      "sources": [
+        {
+          "what": "Social loafing: Ringelmann found that people pulling a rope together did not pull as hard collectively as they did when each pulled alone; the more participants, the less of their maximum effort each contributed",
+          "url": "https://en.wikipedia.org/wiki/Social_loafing"
+        }
+      ],
+      "notes": "Subject: social science (psychology of groups). Key letter A. Negator in the blank's sentence (not), the medium pattern. Steps: 1 (the clause after the colon paraphrases not additive). Raw ranks, tools/data/freq.txt: additive 61,782; reciprocal 30,001; diminished 9,980; voluntary 9,013. Avoided offering constant or cumulative, which the evidence would also deny or restate.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 2,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "words_in_context.B6.medium.w3b5_07",
+      "template": "B6",
+      "subtype": "Blank completion: phrase options",
+      "tier": "medium",
+      "passage": "In 1876 British explorer Henry Wickham shipped thousands of rubber tree seeds from Brazil to London’s Kew Gardens, which sent the seedlings on to British colonies in Asia. The plantations established there eventually outproduced the wild rubber trees of the Amazon, making Wickham’s shipment ______ the collapse of the region’s rubber boom.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "subsequent to",
+        "immune to",
+        "unrelated to",
+        "instrumental in"
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "Instrumental in means playing an important part in bringing something about. Wickham's seeds grew into Asian plantations that outproduced the Amazon's wild rubber trees, so his shipment helped cause the end of the Amazon rubber boom.",
+      "distractors": {
+        "A": {
+          "recipe": "direction reversal (ANT)",
+          "why_wrong": "Subsequent to means coming after. The seeds were shipped in 1876 and the plantations grown from them later outproduced the Amazon, so the shipment came before the collapse, not after it."
+        },
+        "B": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Immune to means unaffected by. The shipment was not affected by the collapse; the text presents it as one of the collapse's causes."
+        },
+        "C": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "The text links the shipment directly to the collapse through the Asian plantations, so the two events were not unrelated."
+        }
+      },
+      "models": [
+        "2.18",
+        "2.4",
+        "2.20"
+      ],
+      "word_count": 52,
+      "sources": [
+        {
+          "what": "Henry Wickham: seeds from the Santarém area arrived at Kew in June 1876; seedlings sent to Ceylon, Malaya and Singapore; Asian plantations outproduced Brazil and Peru, dooming the Amazon rubber boom",
+          "url": "https://en.wikipedia.org/wiki/Henry_Wickham_(explorer)"
+        }
+      ],
+      "notes": "Subject: history (economic history). Key letter D. Steps: 1 (seeds led to plantations that outproduced the Amazon, so the shipment helped cause the collapse). Raw ranks, tools/data/freq.txt: subsequent to 8,245; immune to 30,918; unrelated to 40,068; instrumental in 23,291. Count of seeds kept vague (thousands): Wickham's own figure of 70,000 is thought embellished.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "words_in_context.B1.medium.w3b5_08",
+      "template": "B1",
+      "subtype": "Blank completion: restatement clue",
+      "tier": "medium",
+      "passage": "The title characters of Karagöz and Hacivat, a shadow play popular in the Ottoman era, form a deliberately ______ pair. Hacivat is educated and speaks Ottoman Turkish in an elaborate, literary style, whereas Karagöz represents the illiterate but straightforward public, though his native wit frequently allows him to outmaneuver his learned companion.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "inseparable",
+        "interchangeable",
+        "mismatched",
+        "reclusive"
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "Mismatched means poorly suited to each other because of their differences. The text sets the two characters against each other: one is educated and speaks in a literary style, the other illiterate and plainspoken. They are a pair built on contrast.",
+      "distractors": {
+        "A": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Inseparable means always together. The text says nothing about the two never being apart; what follows the colon describes how different they are."
+        },
+        "B": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "Interchangeable means able to replace each other. The text stresses the characters’ differences in education and speech, so they are anything but interchangeable."
+        },
+        "D": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Reclusive means avoiding other people. Nothing in the text suggests the characters shut themselves away; it describes their differences."
+        }
+      },
+      "models": [
+        "2.5",
+        "2.16",
+        "2.23"
+      ],
+      "word_count": 52,
+      "sources": [
+        {
+          "what": "Karagöz and Hacivat: lead characters of a traditional shadow play popular in the Ottoman era; Hacivat is educated and speaks Ottoman Turkish in a poetical and literary style, Karagöz represents the illiterate but straightforward public and often bests Hacivat with native wit",
+          "url": "https://en.wikipedia.org/wiki/Karag%C3%B6z_and_Hacivat"
+        }
+      ],
+      "notes": "Subject: humanities (theater). Key letter C. Restatement after a colon. Steps: 1. Raw ranks, tools/data/freq.txt: inseparable 12,724; interchangeable 45,956; mismatched 63,671; reclusive absent.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "words_in_context.B2.medium.w3b5_09",
+      "template": "B2",
+      "subtype": "Blank completion: cause or consequence clue",
+      "tier": "medium",
+      "passage": "In 1995 psychologist Diana Deutsch noticed that a recorded spoken phrase, “sometimes behave so strangely,” began to sound sung once she had heard it repeated several times. One explanation holds that the brain ordinarily inhibits its processing of pitch during speech and that exact repetition ______ this inhibition, allowing the phrase’s pitches to emerge as melody.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "conceals",
+        "relaxes",
+        "reinforces",
+        "duplicates"
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "To relax a restraint is to loosen it. The explanation says the brain normally holds back its processing of pitch during speech, and the result of repetition is that the pitches emerge as melody. That can happen only if repetition loosens the usual inhibition.",
+      "distractors": {
+        "A": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Conceals means hides. Hiding the inhibition would not change its effect, and nothing in the text suggests the inhibition is hidden; the point is that it stops holding pitch back."
+        },
+        "C": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "If repetition strengthened the inhibition, the brain would process pitch even less, and the phrase would not start to sound like a song."
+        },
+        "D": {
+          "recipe": "topic echo (ASSOC)",
+          "why_wrong": "Duplicates echoes the idea of repetition in the text, but repeating the phrase does not copy the brain’s inhibition; the text says repetition lets pitch emerge."
+        }
+      },
+      "models": [
+        "2.17",
+        "2.22",
+        "2.25"
+      ],
+      "word_count": 56,
+      "sources": [
+        {
+          "what": "Speech-to-song illusion: discovered by Diana Deutsch in 1995 with the phrase sometimes behave so strangely; after several repetitions listeners hear speech as song; speech may normally inhibit pitch processing and exact repetition may disinhibit it",
+          "url": "https://en.wikipedia.org/wiki/Speech-to-song_illusion"
+        }
+      ],
+      "notes": "Subject: social science (psychology of music perception). Key letter B. Cause and consequence: the result (pitches emerge as melody) fixes what repetition does to the inhibition. Steps: 1. Raw ranks, tools/data/freq.txt: conceals 3,228; relaxes 12,872; reinforces 44,169; duplicates 17,771. Deutsch's absolute-pitch study is claimed by another item; this is a different finding.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "words_in_context.M2.medium.w3b5_10",
+      "template": "M2",
+      "subtype": "Most nearly mean: underlined phrase or phrase options",
+      "tier": "medium",
+      "passage": "The following text is adapted from a 1919 translation of Louis Couperus’s 1906 novel Old People and the Things That Pass. Ina is observing a family gathering at the household of her married daughter, Lily, whose maid is named Jansje.\n\nJansje, in her eagerness to clear the table, dropped and broke a plate, whereupon exclamations from Jansje and reproaches from Lily and despairing glances of Ina at her son-in-law Frits. No, Lily did not get that slovenliness from [Ina], for she <u>took after</u> the IJsselmondes and they were correct; Lily got it from the Derckszes.",
+      "stem": "As used in the text, what does the phrase “took after” most nearly mean?",
+      "options": [
+        "Resembled",
+        "Chased after",
+        "Came later than",
+        "Disapproved of"
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "To take after relatives is to resemble them. The text is about where Lily’s carelessness came from: not from Ina, because Ina was like the orderly IJsselmondes, but from the Derckszes. Ina shared her family’s correct habits.",
+      "distractors": {
+        "B": {
+          "recipe": "another sense of the target (SENSE)",
+          "why_wrong": "Take after can mean to chase, but Ina is not pursuing anyone; the sentence explains which family she is like."
+        },
+        "C": {
+          "recipe": "another sense of the target (SENSE)",
+          "why_wrong": "After can mean later in time, but the sentence is not about Ina coming later than the IJsselmondes; it contrasts the family traits Ina and Lily inherited."
+        },
+        "D": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "The text calls the IJsselmondes correct and uses them to explain why Ina is not careless, so she is like them rather than critical of them."
+        }
+      },
+      "models": [
+        "2.8",
+        "2.1",
+        "2.26"
+      ],
+      "word_count": 95,
+      "sources": [
+        {
+          "what": "Text of Old People and the Things That Pass (Dodd, Mead, 1919; translated by Alexander Teixeira de Mattos), Project Gutenberg 48271; excerpt from chapter XVIII copied exactly except that it opens mid-sentence at Jansje and a pronoun is replaced by [Ina] (Van oude menschen, de dingen, die voorbij gaan, 1906)",
+          "url": "https://www.gutenberg.org/ebooks/48271"
+        }
+      ],
+      "notes": "Subject: literature. Key letter A. Phrasal target with options that are other senses of take after and of after. Raw ranks, tools/data/freq.txt: Resembled 7,185; Chased after 2,852; Came later than 503; Disapproved of 14,483. The italic she of the original is printed roman (transcripts drop italics). Adapted: excerpt begins mid-sentence and one pronoun is bracketed.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "words_in_context.B1.easy.w3b5_11",
+      "template": "B1",
+      "subtype": "Blank completion: restatement clue",
+      "tier": "easy",
+      "passage": "For London’s Fourth Plinth, which displays a rotating series of contemporary commissions, Iraqi American artist Michael Rakowitz ______ a lamassu—an ancient Assyrian guardian sculpture depicting a winged bull with a human head—that the militant group ISIS had demolished in 2015. Rakowitz’s version, unveiled in 2018, was assembled from empty cans of Iraqi date syrup.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "photographed",
+        "purchased",
+        "reconstructed",
+        "excavated"
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "To reconstruct something is to build it again. The original lamassu had been destroyed, and the text describes Rakowitz’s own version assembled from date syrup cans. So he made a new version of the lost sculpture.",
+      "distractors": {
+        "A": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "The original sculpture had been destroyed in 2015, and the text describes a version Rakowitz built, not photographs he took."
+        },
+        "B": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "The original no longer existed to be bought; Rakowitz’s version was assembled from empty cans."
+        },
+        "D": {
+          "recipe": "topic echo (ASSOC)",
+          "why_wrong": "Excavating fits the archaeology of ancient Assyria, but Rakowitz did not dig anything up; he built a new version from date syrup cans."
+        }
+      },
+      "models": [
+        "1.53",
+        "1.26",
+        "1.33"
+      ],
+      "word_count": 54,
+      "sources": [
+        {
+          "what": "Fourth plinth, Trafalgar Square: Michael Rakowitz, The Invisible Enemy Should Not Exist (2018–2020), a recreation of a lamassu destroyed by ISIS in 2015, made of empty Iraqi date syrup cans",
+          "url": "https://en.wikipedia.org/wiki/Fourth_plinth,_Trafalgar_Square"
+        }
+      ],
+      "notes": "Subject: humanities (contemporary art). Key letter C. Restatement in the next sentence (his version, built from cans). Steps: 1. Raw ranks, tools/data/freq.txt: photographed 5,890; purchased 4,388; reconstructed 24,385; excavated 34,114.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "words_in_context.B1.easy.w3b5_12",
+      "template": "B1",
+      "subtype": "Blank completion: restatement clue",
+      "tier": "easy",
+      "passage": "Filming with a camera that recorded 10,000 frames per second, biologist Joan Edwards and colleagues found that the flowers of the bunchberry dogwood open with astonishing ______. The petals flip backward and the stamens catapult pollen into the air in less than half a millisecond, one of the fastest movements documented in plants.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "reluctance",
+        "symmetry",
+        "regularity",
+        "speed"
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The text says the flowers open in less than half a millisecond, one of the fastest movements known in plants, and that a camera recording 10,000 frames per second was needed to film it. So the flowers open with astonishing speed.",
+      "distractors": {
+        "A": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "Reluctance means unwillingness or slowness to act, the opposite of a movement that takes less than half a millisecond."
+        },
+        "B": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Nothing in the text describes the shape or balance of the opening flower; it describes how fast the flower opens."
+        },
+        "C": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "The text does not say the flowers open on a regular schedule; it reports how quickly a single flower opens."
+        }
+      },
+      "models": [
+        "1.11",
+        "1.42",
+        "1.6"
+      ],
+      "word_count": 53,
+      "sources": [
+        {
+          "what": "Cornus canadensis: the flower’s petals flip back and its stamens throw pollen in less than half a millisecond, one of the fastest plant actions found so far; filming required a camera shooting 10,000 frames per second (Edwards and colleagues, Nature 2005, A record-breaking pollen catapult)",
+          "url": "https://en.wikipedia.org/wiki/Cornus_canadensis"
+        },
+        {
+          "what": "Joan Edwards, Dwight Whitaker, Sarah Klionsky and Marta J. Laskowski, A record-breaking pollen catapult, Nature 435:164 (2005): bunchberry flowers open in under 0.5 ms, the fastest movement so far recorded in a plant",
+          "url": "https://doi.org/10.1038/435164a"
+        }
+      ],
+      "notes": "Subject: natural science (botany). Key letter D. Restatement after the colon. Steps: 1. Raw ranks, tools/data/freq.txt: reluctance 6,598; symmetry 22,266; regularity 12,389; speed 1,894.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [
+          "confirmed the first name: the 2005 Nature paper is by Joan Edwards and colleagues; added it as a source"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "words_in_context.B1.easy.w3b5_13",
+      "template": "B1",
+      "subtype": "Blank completion: restatement clue",
+      "tier": "easy",
+      "passage": "Printed in Venice in 1539, Swedish cleric Olaus Magnus’s Carta marina was the first map of the Nordic countries to provide detailed place names. It is also remarkable for its ______ seas: whales, walruses, and imaginary creatures such as the Sea Swine populate the waters surrounding Scandinavia.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "crowded",
+        "uncharted",
+        "empty",
+        "frozen"
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The text says whales, walruses, and imaginary creatures populate the waters on the map. Seas full of creatures are crowded seas.",
+      "distractors": {
+        "B": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Uncharted means not yet mapped, but the seas appear on the map, and the text describes what fills them rather than any lack of information."
+        },
+        "C": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "The text says creatures populate the waters, so the seas on the map are not empty."
+        },
+        "D": {
+          "recipe": "topic echo (ASSOC)",
+          "why_wrong": "Frozen seas suit a map of the far north, but the text describes the seas as full of creatures, not covered in ice."
+        }
+      },
+      "models": [
+        "1.10",
+        "1.21",
+        "1.27"
+      ],
+      "word_count": 47,
+      "sources": [
+        {
+          "what": "Carta marina: by the Swedish ecclesiastic Olaus Magnus, first copies printed in Venice in 1539; first map of the Nordic countries to give details and place names; the sea is filled with numerous animals, including whales, walrus and the mythical Sea Swine",
+          "url": "https://en.wikipedia.org/wiki/Carta_marina"
+        }
+      ],
+      "notes": "Subject: history (cartography). Key letter A. Restatement after the colon (creatures populate the waters). Steps: 1. Raw ranks, tools/data/freq.txt: crowded 863; uncharted 44,358; empty 1,117; frozen 4,145.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "words_in_context.B1.easy.w3b5_14",
+      "template": "B1",
+      "subtype": "Blank completion: restatement clue",
+      "tier": "easy",
+      "passage": "In 1985 Belgian psychologist Jozef Nuttin reported that people tend to ______ the letters in their own names. When asked to choose between pairs of letters, participants more often selected the letters that appeared in their names, usually without realizing why, and this preference was strongest for their initials.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "forget",
+        "favor",
+        "mispronounce",
+        "avoid"
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "To favor something is to prefer it. Nuttin’s participants more often chose the letters from their own names when picking between pairs, and the text calls this a preference. So people tend to favor the letters in their names.",
+      "distractors": {
+        "A": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "The study was about which letters people chose, not about which letters they forgot."
+        },
+        "C": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "The participants chose between letters; nothing in the text concerns how they pronounced them."
+        },
+        "D": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "Participants chose the letters in their names more often, which is the opposite of avoiding them."
+        }
+      },
+      "models": [
+        "1.51",
+        "1.13",
+        "1.39"
+      ],
+      "word_count": 49,
+      "sources": [
+        {
+          "what": "Name-letter effect: discovered in 1985 by Belgian psychologist Jozef Nuttin; people prefer the letters in their own names, usually without realizing it; the original study had participants judge letter pairs; the effect is strongest for initials",
+          "url": "https://en.wikipedia.org/wiki/Name-letter_effect"
+        }
+      ],
+      "notes": "Subject: social science (psychology). Key letter B. Restatement in the next sentence (selected more often, this preference). Steps: 1. Raw ranks, tools/data/freq.txt: forget 692; favor 2,497; mispronounce absent; avoid 2,101.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "words_in_context.M1.easy.w3b5_15",
+      "template": "M1",
+      "subtype": "Most nearly mean: underlined word",
+      "tier": "easy",
+      "passage": "The following text is adapted from Theodor Storm’s 1849 novella Immensee. Reinhard and his childhood friend Eric are approaching Eric’s country estate.\n\nThe stork had meanwhile come to earth and was striding solemnly between the vegetable beds. The bird slowly rose and flew on to the roof of a new building, which <u>ran</u> along the end of the kitchen-garden, and whose walls were covered with the branches of the peach and apricot trees that were trained over them.",
+      "stem": "As used in the text, what does the word “ran” most nearly mean?",
+      "options": [
+        "Hurried",
+        "Operated",
+        "Stretched",
+        "Flowed"
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The word describes a building’s position: it lay along the end of the kitchen garden. In this sense, ran means stretched or extended.",
+      "distractors": {
+        "A": {
+          "recipe": "another sense of the target (SENSE)",
+          "why_wrong": "Ran can mean moved quickly, but a building cannot hurry; the word describes where the building lies."
+        },
+        "B": {
+          "recipe": "another sense of the target (SENSE)",
+          "why_wrong": "Ran can mean managed, as in running a business, but the building is the subject of the verb, and it does not manage the garden."
+        },
+        "D": {
+          "recipe": "another sense of the target (SENSE)",
+          "why_wrong": "Ran can describe liquid flowing, but the subject is a building, which stays in place along the garden."
+        }
+      },
+      "models": [
+        "1.4",
+        "1.38",
+        "1.54",
+        "1.45",
+        "1.1",
+        "1.14"
+      ],
+      "word_count": 78,
+      "sources": [
+        {
+          "what": "Text of Immensee (translated by C. W. Bell), Project Gutenberg 6650; two sentences copied exactly from the section Immensee, with Eric's intervening remark and the paragraph break between them left out (Immensee first published 1849)",
+          "url": "https://www.gutenberg.org/ebooks/6650"
+        }
+      ],
+      "notes": "Subject: literature. Key letter C. Common verb in a spatial sense (ran = extended), as spread = extended in 1.4; all three distractors are other senses of run. Raw ranks, tools/data/freq.txt: Hurried 1,289; Operated 15,602; Stretched 1,569; Flowed 4,461. Adapted: one line of dialogue between the two sentences is omitted. The translation is undated in the Gutenberg edition, so the source line gives only the novella's year, as some official items do.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "words_in_context.M1.easy.w3b5_16",
+      "template": "M1",
+      "subtype": "Most nearly mean: underlined word",
+      "tier": "easy",
+      "passage": "The following text is from a 1901 translation of Eliza Orzeszkowa’s 1900 novel The Argonauts (translated by Jeremiah Curtin). Malvina is sitting alone in a study late at night, preoccupied with her troubles.\n\nThus, altogether motionless, [Malvina] dropped into an abyss of regrets, reminiscences, and fears. The night flowed on. The clock among the flowers in that study struck the first hour after midnight, then the second hour, and each time in the darkness of the drawing-rooms another clock <u>answered</u> in tones which were deeper and more resonant.",
+      "stem": "As used in the text, what does the word “answered” most nearly mean?",
+      "options": [
+        "Solved",
+        "Responded",
+        "Obeyed",
+        "Opened"
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "Each time the study clock struck the hour, another clock in the dark drawing rooms sounded in deeper tones, as if replying to it. In this sense, answered means responded.",
+      "distractors": {
+        "A": {
+          "recipe": "another sense of the target (SENSE)",
+          "why_wrong": "Answer can mean to solve, as with a riddle, but there is nothing to solve; the second clock simply strikes after the first."
+        },
+        "C": {
+          "recipe": "another sense of the target (SENSE)",
+          "why_wrong": "Answer can mean to obey, as in answering a command, but one clock is not following orders from another; it chimes in reply."
+        },
+        "D": {
+          "recipe": "another sense of the target (SENSE)",
+          "why_wrong": "Answer can mean to open a door to a caller, but no one is at a door; the text describes the sound of a second clock."
+        }
+      },
+      "models": [
+        "1.1",
+        "1.14",
+        "1.45"
+      ],
+      "word_count": 88,
+      "sources": [
+        {
+          "what": "Text of The Argonauts (translated by Jeremiah Curtin), Project Gutenberg 20537; excerpt copied exactly, with she replaced by [Malvina] (Argonauci, 1900; Curtin's translation 1901)",
+          "url": "https://www.gutenberg.org/ebooks/20537"
+        }
+      ],
+      "notes": "Subject: literature. Key letter B. Common verb used of a sound (answered = responded); all three distractors are other senses of answer. Raw ranks, tools/data/freq.txt: Solved 8,902; Responded 1,968; Obeyed 2,667; Opened 293. Another batch (w3b4_17) underlines struck; struck stays in this excerpt but is not the target.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "words_in_context.M1.easy.w3b5_17",
+      "template": "M1",
+      "subtype": "Most nearly mean: underlined word",
+      "tier": "easy",
+      "passage": "The following text is from Vsevolod Garshin’s 1887 short story “The Signal.” Semyon Ivanov is a track-walker, a railroad employee responsible for inspecting a particular stretch of track.\n\nSemyon Ivanov’s health had been completely <u>shattered</u>. Nine years before he had served right through the war as servant to an officer. The sun had roasted him, the cold frozen him, and hunger famished him on the forced marches of forty and fifty versts [about 27–33 miles] a day in the heat and the cold and the rain and the shine.",
+      "stem": "As used in the text, what does the word “shattered” most nearly mean?",
+      "options": [
+        "Splintered",
+        "Startled",
+        "Interrupted",
+        "Ruined"
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The text explains why Semyon’s health was shattered: during the war he endured heat, cold, hunger, and long forced marches. His health was badly damaged, so shattered means ruined.",
+      "distractors": {
+        "A": {
+          "recipe": "another sense of the target (SENSE)",
+          "why_wrong": "Shattered can mean broken into pieces, as glass is, but health cannot literally splinter; the text describes lasting damage to Semyon’s health."
+        },
+        "B": {
+          "recipe": "another sense of the target (SENSE)",
+          "why_wrong": "Shattered can describe a person who is badly shaken, but the sentence is about Semyon’s health, which was worn down by years of hardship, not by a sudden fright."
+        },
+        "C": {
+          "recipe": "another sense of the target (SENSE)",
+          "why_wrong": "A silence can be shattered, or interrupted, but the text describes health that was damaged for good by war, not something briefly broken off."
+        }
+      },
+      "models": [
+        "1.19",
+        "1.41",
+        "1.36"
+      ],
+      "word_count": 89,
+      "sources": [
+        {
+          "what": "Text of The Signal by V. M. Garshin in Best Russian Short Stories (ed. Thomas Seltzer, 1917), Project Gutenberg 13437; first sentences of the second paragraph copied exactly, with a bracketed gloss of versts added (story first published 1887)",
+          "url": "https://www.gutenberg.org/ebooks/13437"
+        }
+      ],
+      "notes": "Subject: literature. Key letter D. Figurative sense of a physical verb (shattered health = ruined); all three distractors are other senses of shatter. Raw ranks, tools/data/freq.txt: Splintered 18,063; Startled 1,450; Interrupted 1,362; Ruined 1,890. The gloss converts 40 and 50 versts (1 verst = about 0.66 mile). Translator not named in the 1917 anthology, so the source line gives only the story's year.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [
+          "source line said the opening sentences; the excerpt opens the story’s second paragraph"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "words_in_context.B6.easy.w3b5_18",
+      "template": "B6",
+      "subtype": "Blank completion: phrase options",
+      "tier": "easy",
+      "passage": "Pseudoscorpions are tiny arachnids, usually only 2–8 millimeters long, that resemble scorpions without tails. Some species travel by hitchhiking: they are often found ______ flies and other insects larger than themselves, which transport them to new locations.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "clinging to",
+        "hiding from",
+        "related to",
+        "competing with"
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The text says some pseudoscorpions travel by hitchhiking and that flies and other larger insects carry them to new places. To be carried this way, the pseudoscorpions must hold on to the insects, so they are found clinging to them.",
+      "distractors": {
+        "B": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "The pseudoscorpions use these insects for transportation, so they stay on them rather than hiding from them."
+        },
+        "C": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "The text says nothing about which animals pseudoscorpions are related to; it describes how they travel on insects."
+        },
+        "D": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Nothing suggests the pseudoscorpions compete with the insects; the insects carry them to new locations."
+        }
+      },
+      "models": [
+        "1.43",
+        "1.52",
+        "1.2"
+      ],
+      "word_count": 37,
+      "sources": [
+        {
+          "what": "Pseudoscorpion: usually 2 to 8 mm long; pincer-like pedipalps that resemble those of scorpions, but the abdomen does not extend into a segmented tail and stinger as in true scorpions; phoresy, riding on larger insects such as flies for transport",
+          "url": "https://en.wikipedia.org/wiki/Pseudoscorpion"
+        }
+      ],
+      "notes": "Subject: natural science (zoology). Key letter A. Restatement in the same sentence (hitchhiking, which transport them). Steps: 1. Raw ranks, tools/data/freq.txt: clinging to 3,603; hiding from 1,586; related to 3,252; competing with 21,157.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [
+          "cut “Unable to cover great distances on their own,” (not in the source or the phoresis article); “resemble scorpions without tails” kept, since the source gives scorpion-like pincers and an abdomen with no tail or stinger"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "words_in_context.B6.easy.w3b5_19",
+      "template": "B6",
+      "subtype": "Blank completion: phrase options",
+      "tier": "easy",
+      "passage": "Vallenato, the accordion-based music of northern Colombia, developed from the songs of cattle herders in the Greater Magdalena region. In 2015 UNESCO designated traditional vallenato as cultural heritage in need of urgent safeguarding, warning that a newer wave of vallenato was ______ the traditional music and pushing it to the margins.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "imitated by",
+        "eager for",
+        "crowding out",
+        "unaware of"
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "To crowd something out is to push it aside by taking its place. UNESCO warned that newer vallenato was pushing the traditional music to the margins, which is why the older style needed urgent protection.",
+      "distractors": {
+        "A": {
+          "recipe": "reversal (direction) (ANT)",
+          "why_wrong": "The text does not say the traditional music copied the newer wave; it says the newer wave was pushing the traditional music aside."
+        },
+        "B": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Music cannot be eager for anything, and the text describes the newer wave as a threat to traditional vallenato, not as wanting it."
+        },
+        "D": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "The text gives no information about awareness; its point is that the newer wave was pushing the traditional music to the margins."
+        }
+      },
+      "models": [
+        "1.2",
+        "1.17",
+        "1.3"
+      ],
+      "word_count": 51,
+      "sources": [
+        {
+          "what": "UNESCO, Traditional Vallenato music of the Greater Magdalena region: songs of cow-herders, played with accordion, small hand drum and scraped ribbed stick; inscribed in 2015 on the List of Intangible Cultural Heritage in Need of Urgent Safeguarding; a new wave of vallenato is marginalizing traditional vallenato",
+          "url": "https://ich.unesco.org/en/USL/traditional-vallenato-music-of-the-greater-magdalena-region-01095"
+        }
+      ],
+      "notes": "Subject: humanities (music). Key letter C. Restatement in the same sentence (pushing it to the margins). Steps: 1. Raw ranks, tools/data/freq.txt: imitated by 10,889; eager for 1,205; crowding out 863; unaware of 8,556.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "words_in_context.B2.easy.w3b5_20",
+      "template": "B2",
+      "subtype": "Blank completion: cause or consequence clue",
+      "tier": "easy",
+      "passage": "While a female Eurasian hoopoe is incubating her eggs, a gland near the base of her tail produces a secretion that smells like rotting meat, which she rubs into her plumage. Because this odor is thought to discourage predators and parasites, the substance may help ______ the nest and the vulnerable nestlings inside it.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "locate",
+        "decorate",
+        "abandon",
+        "protect"
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The text says the smell is thought to discourage predators and parasites. Keeping those threats away would help keep the nest and the young birds safe, so the secretion may help protect them.",
+      "distractors": {
+        "A": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "A strong smell might seem to lead animals to a nest, but the text says the odor discourages predators and parasites, which keeps them away rather than helping anything find the nest."
+        },
+        "B": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "The secretion is rubbed into the female’s plumage for its odor; nothing suggests it makes the nest more attractive."
+        },
+        "C": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "The text describes the female caring for her eggs, and the secretion keeps threats away; nothing suggests it leads the birds to leave the nest."
+        }
+      },
+      "models": [
+        "1.35",
+        "1.44",
+        "1.5"
+      ],
+      "word_count": 54,
+      "sources": [
+        {
+          "what": "Eurasian hoopoe: the uropygial gland of the incubating and brooding female produces a foul-smelling liquid, rubbed into the plumage, that smells like rotting meat and is thought to help deter predators and parasites",
+          "url": "https://en.wikipedia.org/wiki/Eurasian_hoopoe"
+        }
+      ],
+      "notes": "Subject: natural science (ornithology). Key letter D. Cause in a because clause. Steps: 1. Raw ranks, tools/data/freq.txt: locate 15,870; decorate 24,688; abandon 5,885; protect 2,995.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "words_in_context.B4.easy.w3b5_21",
+      "template": "B4",
+      "subtype": "Blank completion: example-pinned clue",
+      "tier": "easy",
+      "passage": "The Shipibo-Conibo people of the Peruvian Amazon are known for kené, intricate geometric patterns that appear on a remarkably ______ assortment of objects. Women embroider kené on textiles and paint it in red and black on pottery, and the designs also decorate clothing and tools.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "identical",
+        "diverse",
+        "imported",
+        "ancient"
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The text lists the many kinds of objects that carry kené: textiles, pottery, clothing, and tools. A range of objects this varied is a diverse one.",
+      "distractors": {
+        "A": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "The objects listed are of many different kinds, from pottery to tools, so they are not identical."
+        },
+        "C": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "The text says Shipibo-Conibo women make and decorate these objects; nothing suggests the objects come from elsewhere."
+        },
+        "D": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "The text does not say how old the objects are; the examples in the second sentence show how many kinds of objects carry kené."
+        }
+      },
+      "models": [
+        "1.46",
+        "1.22",
+        "1.25"
+      ],
+      "word_count": 45,
+      "sources": [
+        {
+          "what": "Shipibo-Conibo people: embroidery featuring the pattern known as kené; designs found in their clothing, pottery, tools and textiles; pottery decorated with maze-like red and black geometric patterns",
+          "url": "https://en.wikipedia.org/wiki/Shipibo-Conibo_people"
+        }
+      ],
+      "notes": "Subject: humanities (visual art). Key letter B. Example-pinned: the list in the second sentence instantiates the key. Steps: 1. Raw ranks, tools/data/freq.txt: identical 10,292; diverse 20,773; imported 9,001; ancient 1,340.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "words_in_context.B5.easy.w3b5_22",
+      "template": "B5",
+      "subtype": "Blank completion: negated frame",
+      "tier": "easy",
+      "passage": "Lightning is anything but ______ over the marshy area where the Catatumbo River flows into Lake Maracaibo in Venezuela: storms there produce lightning on roughly 140–160 nights a year, with flashes sometimes occurring 16–40 times a minute. In the nineteenth century, the display was described as guiding navigators like a lighthouse.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "rare",
+        "frequent",
+        "colorful",
+        "dangerous"
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "Anything but means not at all. Lightning appears there on about 140 to 160 nights a year, sometimes dozens of times a minute, so lightning in that area is not at all rare.",
+      "distractors": {
+        "B": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "With lightning on 140 to 160 nights a year, the lightning is frequent; saying it is anything but frequent contradicts the text."
+        },
+        "C": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "The text does not describe the lightning’s colors; its figures are about how often the lightning occurs."
+        },
+        "D": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "The text says nothing about danger; it reports how often the lightning flashes and how it once helped navigators."
+        }
+      },
+      "models": [
+        "1.12",
+        "1.37",
+        "1.48"
+      ],
+      "word_count": 51,
+      "sources": [
+        {
+          "what": "Catatumbo lightning: occurs over the bog where the Catatumbo River flows into Lake Maracaibo on about 140 to 160 nights a year, 16 to 40 flashes per minute; Codazzi (1841) wrote that it directs navigators as a lighthouse",
+          "url": "https://en.wikipedia.org/wiki/Catatumbo_lightning"
+        }
+      ],
+      "notes": "Subject: natural science (meteorology). Key letter A. Negated frame (anything but), as in 1.12 (don't lose their ______ nature). Steps: 2 (undo the negation, then match the frequency figures). Raw ranks, tools/data/freq.txt: rare 1,888; frequent 3,996; colorful 70,399; dangerous 1,553.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "words_in_context.B3.easy.w3b5_23",
+      "template": "B3",
+      "subtype": "Blank completion: contrast clue",
+      "tier": "easy",
+      "passage": "Unlike paintings intended to hang in a single location, the phad paintings of the Indian state of Rajasthan are ______. Each phad, painted on a long piece of cloth, illustrates the legend of a folk hero such as Pabuji. Priest-singers known as bhopas carry these scrolls with them while performing, treating them as mobile temples.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "permanent",
+        "colorless",
+        "portable",
+        "secret"
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The text contrasts phads with paintings that hang in one place and says bhopas carry the cloth scrolls with them as mobile temples. Something made to be carried from place to place is portable.",
+      "distractors": {
+        "A": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "Permanent suggests staying fixed in one place, which describes the paintings that phads are contrasted with, not the scrolls that bhopas carry."
+        },
+        "B": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "The text says nothing about the paintings lacking color; the contrast is about staying in one place versus being carried."
+        },
+        "D": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "The phads are carried to performances, where they are shown to audiences, so nothing suggests they are kept secret."
+        }
+      },
+      "models": [
+        "1.57",
+        "1.58"
+      ],
+      "word_count": 55,
+      "sources": [
+        {
+          "what": "Phad painting: religious scroll painting of Rajasthan on a long piece of cloth (phad) narrating folk deities such as Pabuji and Devnarayan; the bhopa priest-singers carry the painted scrolls with them while performing and use them as mobile temples",
+          "url": "https://en.wikipedia.org/wiki/Phad_painting"
+        }
+      ],
+      "notes": "Subject: humanities (folk art). Key letter C. Contrast (Unlike paintings intended to hang in a single location), confirmed by the next sentence. Steps: 1. Raw ranks, tools/data/freq.txt: permanent 6,682; colorless 12,066; portable 20,596; secret 631.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass"
+      }
+    }
+  ]
+}

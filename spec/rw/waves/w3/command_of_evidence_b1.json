@@ -1,0 +1,1730 @@
+{
+  "skill": "Command of Evidence",
+  "slug": "command_of_evidence",
+  "part": "w3b1",
+  "domain": "Information and Ideas",
+  "plan": {
+    "templates": [
+      {
+        "code": "T1_single",
+        "name": "Hypothetical finding supports or weakens a single claim (causal, comparison, existence, generalization, prediction)"
+      },
+      {
+        "code": "T1_compete",
+        "name": "Hypothetical finding discriminates between competing explanations (support or weaken)"
+      },
+      {
+        "code": "T2_lit_quote",
+        "name": "Quotation from a literary work illustrates a claim (single trait, two-part, contrast)"
+      },
+      {
+        "code": "T3_person_quote",
+        "name": "Quotation from a person (participant, respondent, historian, critic, article) supports or challenges a claim"
+      },
+      {
+        "code": "Q1_P1_lookup",
+        "name": "Data completion: lookup (one cell or bar, reverse lookup, filter)"
+      },
+      {
+        "code": "Q1_P2_extreme",
+        "name": "Data completion: extreme or rank (max/min, possibly after a filter)"
+      },
+      {
+        "code": "Q1_P3_pairwise",
+        "name": "Data completion: pairwise comparison (one or two comparisons)"
+      },
+      {
+        "code": "Q1_P4_trend",
+        "name": "Data completion: change over time"
+      },
+      {
+        "code": "Q2_P4_trend",
+        "name": "Data description: trend or change over time supports a conclusion"
+      },
+      {
+        "code": "Q2_P5_control",
+        "name": "Data description: condition vs control or group comparison supports a conclusion"
+      },
+      {
+        "code": "Q2_P8_quantifier",
+        "name": "Data description: quantified claim (for each, all except one)"
+      },
+      {
+        "code": "Q2_P8_multipart",
+        "name": "Data description: multi-part, interaction, or passage-plus-data claim"
+      }
+    ]
+  },
+  "items": [
+    {
+      "id": "command_of_evidence.T1_single.hard.w3b1_01",
+      "template": "T1_single",
+      "subtype": "Hypothetical finding supports a claim (adaptation versus side effect; the key supplies the missing premise)",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "Malaria is caused by single-celled parasites that pass between people through the bites of mosquitoes. In 2004, near Mbita in western Kenya, Renaud Lacroix and colleagues piped air from tents in which children lay into a chamber of Anopheles mosquitoes and counted how many mosquitoes were drawn toward each tent. Some children infected with the parasite Plasmodium falciparum attracted noticeably more mosquitoes than uninfected children did, and the difference disappeared once the infections had been cleared with medication. Such a pattern might be an incidental effect of infection on the human body, but the researchers proposed that it is instead an adaptation of the parasite, which benefits from making its host more appealing to the insects that carry it onward.",
+      "stem": "Which finding, if true, would most directly support Lacroix and colleagues’ proposal about the parasite?",
+      "options": [
+        "Children who had fevers caused by illnesses other than malaria attracted about as many additional mosquitoes as the infected children in the study did.",
+        "Among the infected children, those with the largest numbers of parasites in their blood tended to attract the largest numbers of mosquitoes.",
+        "Children whose blood held gametocytes, the only form of the parasite that a biting mosquito can pick up and pass on, attracted more mosquitoes than children with other forms did.",
+        "Mosquitoes that had fed on infected children were about as likely to survive through the following week as mosquitoes that had fed on uninfected children were."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The researchers argue that the extra attraction is not a side effect of being sick but something that helps the parasite spread. Only gametocytes can be passed on to a mosquito, so if children are more attractive only when they carry that form, the change appears exactly when it would help the parasite reach new hosts, which a general side effect of infection would not explain. Choice C therefore supports the proposal.",
+      "distractors": {
+        "A": {
+          "recipe": "OPP: the rival's prediction",
+          "why_wrong": "If other fevers raised attraction just as much, the extra mosquitoes would look like a general effect of illness on the body, the explanation the researchers reject."
+        },
+        "B": {
+          "recipe": "TRAP: consistent with both explanations",
+          "why_wrong": "More parasites drawing more mosquitoes fits a side effect of heavier infection as well as an adaptation, so it does not tell the two explanations apart."
+        },
+        "D": {
+          "recipe": "OFF: different outcome variable",
+          "why_wrong": "Whether mosquitoes survive after feeding says nothing about whether infected children are more attractive because of an adaptation of the parasite."
+        }
+      },
+      "models": [
+        "3.45",
+        "3.42",
+        "3.39",
+        "3.28"
+      ],
+      "sources": [
+        {
+          "what": "Lacroix, Mukabana, Gouagna and Koella 2005, PLoS Biology 3(9): e298: Mbita, western Kenya, 2004; children carrying gametocytes attracted about twice as many Anopheles gambiae as uninfected or asexual-stage children; no difference after treatment; gametocytes are the only stage transmitted to mosquitoes; authors suggest the parasite manipulates attractiveness to boost transmission",
+          "url": "https://journals.plos.org/plosbiology/article?id=10.1371/journal.pbio.0030298"
+        }
+      ],
+      "notes": "Band-7 moves: the key supplies the unstated premise (gametocytes are the only transmissible form) that turns a stage-specific effect into evidence of adaptation; the rival (incidental effect of infection) is in the passage. A OPP fits the rival, B TRAP fits both, D OFF. Three steps. The key matches the study's real result.",
+      "word_count": 120,
+      "band7": {
+        "verdict": "band 7",
+        "why": "Passage 120 words, stem names the study and claimant. The key supplies an unstated premise (gametocytes are the only transmissible stage), turning a stage-specific effect into evidence for adaptation over the incidental rival. OPP A fits the incidental-effect rival, TRAP B (parasite density) fits both, OFF D."
+      },
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass"
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "C",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "command_of_evidence.T1_single.hard.w3b1_02",
+      "template": "T1_single",
+      "subtype": "Hypothetical finding supports a conclusion (natural experiment; the comparison must discriminate)",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "In professional football (soccer), home teams tend not only to win more often than visiting teams but also to receive fewer yellow cards, the cautions that referees give to players for fouls and misconduct. Part of this imbalance could reflect differences in play, since visiting players have traveled and are less familiar with the field. When the COVID-19 pandemic led leagues in several countries to play matches without spectators in 2020, travel and familiarity with the field were unaffected, but the home crowd was gone. Using these matches as a natural experiment, economist Alex Bryson and colleagues concluded that home crowds had been tilting referees’ decisions against visiting teams, likely through social pressure.",
+      "stem": "Which finding from Bryson and colleagues’ study, if true, would most directly support their conclusion?",
+      "options": [
+        "Visiting teams received noticeably fewer yellow cards per match in matches without spectators than in earlier matches with spectators, while home teams received about as many as before.",
+        "Home teams and visiting teams alike received fewer yellow cards per match in matches without spectators than in earlier matches with spectators, by about the same amount.",
+        "In matches without spectators, home teams received fewer yellow cards per match than visiting teams had received in earlier matches with spectators.",
+        "In matches without spectators, visiting players were called for more fouls than home players were, by about the same margin as in the earlier matches with spectators."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "Because travel and familiarity with the field did not change when spectators were absent, any change in how referees treated the two teams can be traced to the missing crowd. Choice A shows that visiting teams’ yellow cards fell once the crowd was gone while home teams’ stayed about the same, so the extra cards given to visiting teams shrank, which is what the conclusion that crowds had been tilting referees against visitors predicts.",
+      "distractors": {
+        "B": {
+          "recipe": "TRAP: parallel decline, gap unchanged",
+          "why_wrong": "If both teams’ cards fell by about the same amount, the gap between visiting and home teams stayed the same, so removing the crowd did not change any tilt against visiting teams."
+        },
+        "C": {
+          "recipe": "TRAP: mismatched comparison",
+          "why_wrong": "It compares home teams without a crowd with visiting teams with a crowd, two cells that differ in both team and setting, so it cannot show what removing the crowd did."
+        },
+        "D": {
+          "recipe": "OPP: referees' calls unchanged without the crowd",
+          "why_wrong": "If referees kept calling extra fouls on visiting players just as before, removing the crowd did not change their decisions, which works against the conclusion."
+        }
+      },
+      "models": [
+        "3.39",
+        "3.42",
+        "3.36",
+        "3.25"
+      ],
+      "sources": [
+        {
+          "what": "Bryson, Dolton, Reade, Schreyer and Singleton, Causal effects of an absent crowd on performances and refereeing decisions during Covid-19 (IZA DP 13578, 2020; Economics Letters 198, 2021): matches behind closed doors in several countries; without a crowd fewer yellow cards went to away teams, reducing home advantage; implications for social pressure on referees",
+          "url": "https://www.iza.org/publications/dp/13578"
+        }
+      ],
+      "notes": "Band-7 moves: the key is a difference across conditions (the home-away gap with and without crowds); B TRAP gives a level change with no gap, C TRAP crosses cells, D OPP shows referees' calls unchanged. Passage says only 'several countries' as the source does; no numbers.",
+      "word_count": 113,
+      "band7": {
+        "verdict": "band 7",
+        "why": "Passage 113 words, stem names the study and claimant. Key is a difference of differences the student must assemble from two reads, with the rival (differences in play) held fixed by the passage. TRAP B (parallel decline), TRAP C (crossed cells), OPP D (fouls called by the same margin)."
+      },
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [
+          "source: the paper says absent crowds cut away teams' yellow cards and draws 'implications' for social pressure; the conclusion now attributes the effect to crowds, with social pressure as the likely route",
+          "hardened: key A split into its two reads (visitors' cards fell, home teams' unchanged) so the narrowing gap must be inferred; B rewritten as a parallel-decline TRAP (both fell equally, gap unchanged)"
+        ],
+        "status": "fixed"
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "A",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "command_of_evidence.T1_single.hard.w3b1_03",
+      "template": "T1_single",
+      "subtype": "Hypothetical finding supports a causal claim (equalizing the proposed cause removes the effect)",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Trees growing among crops usually compete with them for sunlight, water, and nutrients, so farmers throughout much of southern Africa routinely clear trees from cultivated fields. The widespread tree Faidherbia albida follows an unusual seasonal cycle, however: it sheds its foliage early in the rainy season, precisely when crops such as maize are being planted, and regrows it only after the rainy season concludes. In Zambia, maize cultivated beneath the trees has yielded more than twice as much grain as maize cultivated outside their canopies. Agronomists attribute much of this advantage to the trees’ fallen leaves, which decompose and supply the soil with additional nitrogen.",
+      "stem": "Which finding, if true, would most directly support the agronomists’ claim?",
+      "options": [
+        "Maize growing beneath F. albida had more water available near its roots during the growing season than maize growing outside the trees’ canopies did.",
+        "Maize growing beneath other trees that add nitrogen to the soil but keep their leaves through the rainy season yielded less than maize growing in the open.",
+        "During the dry season, when F. albida is in full leaf, cattle gather in its shade and graze on the grasses that grow beneath its branches.",
+        "Where farmers spread nitrogen fertilizer evenly over entire fields, maize growing beneath F. albida yielded little more than maize growing in the open."
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The agronomists credit the extra yield mainly to nitrogen from the trees’ fallen leaves. If fertilizer gives the whole field plenty of nitrogen and the advantage of growing beneath the trees then nearly disappears, the advantage must have depended on the extra nitrogen the trees supplied, so choice D supports the claim.",
+      "distractors": {
+        "A": {
+          "recipe": "OFF: a different mechanism",
+          "why_wrong": "More water near the roots would point to moisture, not nitrogen from fallen leaves, as a reason for the higher yields."
+        },
+        "B": {
+          "recipe": "TRAP: wrong subject, points to shading",
+          "why_wrong": "Other nitrogen-adding trees lowering yields suggests that shade during the growing season matters, not that F. albida’s benefit comes from nitrogen."
+        },
+        "C": {
+          "recipe": "OFF: wrong season and outcome",
+          "why_wrong": "What cattle do beneath the trees in the dry season says nothing about whether the leaves’ nitrogen raises maize yields."
+        }
+      },
+      "models": [
+        "3.31",
+        "3.25",
+        "3.7",
+        "3.12"
+      ],
+      "sources": [
+        {
+          "what": "FAO Conservation Agriculture case study, Malawi and Zambia: Faidherbia albida loses its leaves in the early rainy season as crops are planted and regrows them at the end of the wet season; soil under the trees has up to twice the organic matter and nitrogen, from decaying leaves; Zambia maize 4.7 t/ha under the canopy vs 1.9 t/ha outside; gains higher where soil fertility is low",
+          "url": "https://www.fao.org/conservation-agriculture/case-studies/malawi-and-zambia/en"
+        }
+      ],
+      "notes": "Band 6: two steps (equalize nitrogen, see the advantage vanish). Options are hypothetical findings.",
+      "word_count": 105,
+      "band7": {
+        "verdict": "band 6",
+        "why": "Target 6. Two steps: equalize nitrogen and see the advantage vanish. A (water) and C (cattle under the canopy) are rival routes, B tests the wrong variable (shade). Passage 105 words."
+      },
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass"
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "D",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "command_of_evidence.T1_compete.hard.w3b1_04",
+      "template": "T1_compete",
+      "subtype": "Finding that discriminates competing explanations (weaken)",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Recurring slope lineae (RSL) are narrow dark streaks that appear on steep Martian slopes during warm seasons, lengthen gradually downslope, and fade during cold seasons, only to reappear the following year. Because the streaks appear and disappear seasonally, and because hydrated salts have been detected at several of them, many researchers concluded that RSL mark locations where small quantities of briny water seep from the ground. Others have argued that the streaks are instead avalanches of dry sand and dust. Like grains sliding down the face of a sand dune, such avalanches would continue moving only while the underlying slope remains sufficiently steep.",
+      "stem": "Which finding, if true, would most directly weaken the hypothesis that RSL are produced by seeping water?",
+      "options": [
+        "The hydrated salts detected along the streaks are most abundant during the seasons when the streaks are at their longest.",
+        "At site after site, the streaks end at about the same steepness, stopping where the ground levels off instead of continuing onto gentler slopes.",
+        "The streaks form far more often on slopes that face toward the Sun than on slopes that face away from it.",
+        "The streaks occur across a wide range of latitudes, from near the planet’s equator to the middle latitudes of both its northern and southern hemispheres."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "Water seeping from the ground would be expected to keep flowing onto gentler slopes, whereas dry grains stop once the slope is no longer steep enough to keep them sliding. Streaks that consistently end where the slope eases behave like dry avalanches, not like water, so choice B weakens the seeping-water hypothesis.",
+      "distractors": {
+        "A": {
+          "recipe": "OPP: supports the water view",
+          "why_wrong": "Salts that are most plentiful when the streaks are longest would tie the streaks more closely to salty water, supporting rather than weakening the hypothesis."
+        },
+        "C": {
+          "recipe": "TRAP: consistent with both explanations",
+          "why_wrong": "A preference for warmer, sun-facing slopes fits the seasonal pattern that both explanations already have to account for, so it does not count against water."
+        },
+        "D": {
+          "recipe": "OFF: irrelevant property of the same features",
+          "why_wrong": "Where on the planet the streaks occur does not show whether they are made by water or by dry grains."
+        }
+      },
+      "models": [
+        "3.10",
+        "3.8",
+        "3.48",
+        "3.14"
+      ],
+      "sources": [
+        {
+          "what": "Dundas et al. 2017, Nature Geoscience, as reported by LPL Arizona: RSL appear in warm seasons and fade, hydrated salts detected, interpreted as brine seeps; Dundas et al. found RSL end on slopes matching the angle of repose of dry sand, consistent with dry granular flows, since water could flow onto shallower slopes",
+          "url": "https://www.lpl.arizona.edu/news/spotlight/recurring-martian-streaks-flowing-sand-not-water"
+        }
+      ],
+      "notes": "Weaken polarity; rival views unattributed as in CB style. Key mirrors the real Dundas finding.",
+      "word_count": 103,
+      "band7": {
+        "verdict": "band 6",
+        "why": "Target 6, weaken polarity. Key needs the bridge from 'stops where the slope levels off' to the dry-avalanche account; A supports water, C fits both (warm slopes), D irrelevant property of the same streaks."
+      },
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass"
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "B",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "command_of_evidence.Q2_P8_multipart.hard.w3b1_05",
+      "template": "Q2_P8_multipart",
+      "subtype": "Data description (two-measure trade-off checked against every other row)",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Manufacturers can build lithium-ion batteries from several electrode chemistries, and selecting one involves compromises. Specific energy, the amount of energy a battery stores per kilogram of its weight, determines how far an electric vehicle can travel between charges, whereas cycle life, the number of full charging and draining cycles a battery can withstand before its capacity drops substantially, determines how long it stays useful. A student investigating batteries for city buses, which may be recharged many times a day, argues that lithium titanate (LTO) gains durability at the expense of specific energy relative to each of the other chemistries she examined.",
+      "stem": "Which choice best describes data from the table that support the student’s argument?",
+      "options": [
+        "LTO has a lower specific energy than any of the other four chemistries, 50–80 watt-hours per kilogram, yet a longer cycle life than any of them, 3,000–7,000 cycles.",
+        "LTO has both the lowest nominal voltage of the five chemistries, 2.40 volts per cell, and the lowest specific energy, 50–80 watt-hours per kilogram.",
+        "NCA has a higher specific energy than LMO, 200–260 compared with 100–150 watt-hours per kilogram, but a shorter cycle life than NMC, 500 compared with 1,000–2,000 cycles.",
+        "LTO has a lower specific energy than NCA, 50–80 compared with 200–260 watt-hours per kilogram, and a longer cycle life than NCA, 3,000–7,000 compared with 500 cycles."
+      ],
+      "answer_letter": "A",
+      "table": {
+        "title": "Properties of Five Lithium-Ion Battery Chemistries",
+        "columns": [
+          "Chemistry",
+          "Nominal voltage per cell (volts)",
+          "Specific energy (watt-hours per kilogram)",
+          "Cycle life (full charge cycles)"
+        ],
+        "rows": [
+          [
+            "Lithium cobalt oxide (LCO)",
+            "3.60",
+            "150–200",
+            "500–1,000"
+          ],
+          [
+            "Lithium manganese oxide (LMO)",
+            "3.70",
+            "100–150",
+            "300–700"
+          ],
+          [
+            "Lithium nickel manganese cobalt oxide (NMC)",
+            "3.60–3.70",
+            "150–220",
+            "1,000–2,000"
+          ],
+          [
+            "Lithium nickel cobalt aluminum oxide (NCA)",
+            "3.60",
+            "200–260",
+            "500"
+          ],
+          [
+            "Lithium titanate (LTO)",
+            "2.40",
+            "50–80",
+            "3,000–7,000"
+          ]
+        ],
+        "note": null
+      },
+      "figure": null,
+      "explanation": "The student argues that, compared with each of the other chemistries, LTO stores less energy per kilogram but lasts longer. The table shows that LTO’s specific energy (50–80 watt-hours per kilogram) is below the lowest value for every other chemistry (100 for LMO) and that its cycle life (3,000–7,000 cycles) is above the highest value for every other chemistry (2,000 for NMC). Choice A reports both halves of that trade-off for all four comparisons.",
+      "distractors": {
+        "B": {
+          "recipe": "HALF: true, wrong second measure (voltage)",
+          "why_wrong": "Both readings are accurate, but nominal voltage is not part of the student’s argument, and the choice says nothing about cycle life, so it shows the cost of LTO without the durability it gains."
+        },
+        "C": {
+          "recipe": "IRREL: accurate comparison of the wrong rows",
+          "why_wrong": "The values are read correctly, but they compare NCA with LMO and NMC; they say nothing about how LTO compares with the other chemistries."
+        },
+        "D": {
+          "recipe": "PART: accurate trade-off for one chemistry only",
+          "why_wrong": "Both readings are accurate, but they compare LTO with NCA alone; the student argues that LTO trades specific energy for durability relative to each of the other chemistries, which this choice does not show."
+        }
+      },
+      "models": [
+        "3.18",
+        "3.26",
+        "3.16"
+      ],
+      "sources": [
+        {
+          "what": "BU-205 Types of Lithium-ion (Battery University): nominal voltage, specific energy and cycle life for LCO (3.60 V, 150–200 Wh/kg, 500–1000), LMO (3.70 V, 100–150, 300–700), NMC (3.60/3.70 V, 150–220, 1000–2000), NCA (3.60 V, 200–260, 500), LTO (2.40 V, 50–80, 3,000–7,000)",
+          "url": "https://batteryuniversity.com/article/bu-205-types-of-lithium-ion"
+        }
+      ],
+      "notes": "LFP left out because its cycle life is given only as \"2000 and higher\", which would make the LTO comparison unreadable. NMC voltage given in the source as \"3.60V, 3.70V nominal\", shown as 3.60–3.70. Ranges compared as whole ranges (A above B means A's low end exceeds B's high end); every option checked in Python.",
+      "word_count": 101,
+      "band7": {
+        "verdict": "band 6",
+        "why": "Target 6. Every wrong option is now an accurate reading (HALF B, IRREL C, PART D); the key needs every row checked on two measures (8 comparisons) against the claim's 'each'. No passage proxy, so not band 7."
+      },
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 5,
+        "fixes": [
+          "D (a compound with one false clause, killed by one cell) replaced by a PART distractor: the accurate LTO-versus-NCA trade-off, which covers one chemistry where the claim says each",
+          "source is an industry reference (Battery University BU-205), not a paper; all five rows match it, kept"
+        ],
+        "status": "fixed",
+        "note": "Writer flagged a weak source: Battery University is an industry reference, not peer reviewed; its values are the standard ones and match the table exactly."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "A",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "command_of_evidence.T2_lit_quote.hard.w3b1_06",
+      "template": "T2_lit_quote",
+      "subtype": "Literary quotation illustrates a claim (indirect claim; translated drama)",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "The Storm is an 1859 play by Alexander Ostrovsky, translated in 1899 by Constance Garnett. In the play, Katerina, a young wife living under her mother-in-law’s oppressive authority, confides to her sister-in-law that she has been overwhelmed by a romantic longing she considers sinful. Katerina suggests that her own determined attempts to overcome this longing have proved unsuccessful: ______",
+      "stem": "Which quotation from a translation of The Storm most effectively illustrates the claim?",
+      "options": [
+        "“I lived without a care in my heart, as free as a bird. Mother adored me, dressed me up like a doll, and never forced me to work; I could do just as I liked.”",
+        "“I have such a terror in my heart, such terror! As though I am standing on the edge of a precipice and someone is pushing me in, and I have nothing to cling to.”",
+        "“A dream keeps creeping into my mind, and I cannot get away from it. I try to think—I can’t collect my thoughts, I try to pray—but I can’t get free by prayer.”",
+        "“And how passionately I loved being in church! It was like stepping into Paradise, and I saw no one and had no thought of time and did not hear when the service was over.”"
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The claim is that Katerina’s own efforts to master her longing have not worked. In choice C she says the dream keeps returning and that she tries to think and tries to pray but cannot get free, so she describes attempts to resist that have failed.",
+      "distractors": {
+        "A": {
+          "recipe": "OFF: nearby feeling (nostalgia)",
+          "why_wrong": "Katerina recalls the freedom of her girlhood, which says nothing about trying and failing to overcome her present longing."
+        },
+        "B": {
+          "recipe": "HALF: helplessness without any effort",
+          "why_wrong": "Katerina expresses terror and a sense of being pushed toward a fall, but she does not describe any attempt of her own to resist."
+        },
+        "D": {
+          "recipe": "LURE: shares the idea of prayer, opposite outcome",
+          "why_wrong": "Katerina remembers how fully church once absorbed her, a past joy in worship rather than a failed effort to escape her longing."
+        }
+      },
+      "models": [
+        "3.17",
+        "3.34",
+        "3.11",
+        "3.37"
+      ],
+      "sources": [
+        {
+          "what": "Ostrovsky, The Storm, translated by Constance Garnett (Duckworth, 1899); Act I, Scene VII, Katerina and Varvara; all four quotations checked as exact substrings of the Gutenberg text (double hyphens rendered as em dashes, straight apostrophes as curly)",
+          "url": "https://www.gutenberg.org/ebooks/7991"
+        }
+      ],
+      "notes": "Play first performed 1859; HathiTrust lists Garnett's translation, London: Duckworth, 1899. All quotations from the same scene: nostalgia (A), terror (B), failed effort (C, key), remembered joy in church (D).",
+      "word_count": 59,
+      "band7": {
+        "verdict": "band 6",
+        "why": "Target 6. All four from one speech scene; B (terror) is the nearby emotion, A and D nostalgia; the key needs the claim's 'attempts' mapped to trying to think and pray."
+      },
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [],
+        "status": "pass"
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "C",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "command_of_evidence.T3_person_quote.hard.w3b1_07",
+      "template": "T3_person_quote",
+      "subtype": "Quotation from an art historian supports a student's claim",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "In 1947, the teenage Algerian artist Baya (later known as Baya Mahieddine) had her first major exhibition, at the Galerie Maeght in Paris. Her gouaches of women, birds, and musical instruments, painted in flat, brilliant colors, earned the admiration of André Breton, the leader of the Surrealist movement, who wrote the introduction to the exhibition catalog. Critics and historians subsequently classified her work as Surrealist, as naive, or as the untutored expression of a child’s imagination. A student argues, however, that such labels overlook how extensively Baya’s paintings draw on the visual traditions of Algerian women.",
+      "stem": "Which quotation from an art historian best supports the student’s argument?",
+      "options": [
+        "“Baya’s gouaches owe little to any tradition. Their flattened space, floating figures, and freely invented creatures are best understood as the work of a young imagination that answered to nothing but its own inner logic.”",
+        "“Baya worked in a ceramics studio in Vallauris in 1948, where Picasso was also working, and some critics have suggested that his later paintings of Algerian women owe a debt to her example.”",
+        "“Her palette is startling: deep blues and roses set side by side without shading, so that each woman seems to have been cut from colored paper and laid flat upon the page.”",
+        "“The turquoise and deep pink that fill so many of her paintings are the colors of the dresses worn by Kabyle women, and the bands of pattern framing her figures recall the pottery those women decorated.”"
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The student argues that labels such as Surrealist or naive miss how much Baya’s paintings draw on the visual culture of Algerian women. Choice D traces her colors to the dresses worn by Kabyle women and her patterned borders to the pottery those women decorated, which is direct evidence for that argument.",
+      "distractors": {
+        "A": {
+          "recipe": "OPP: sides with the labels",
+          "why_wrong": "Describing the paintings as owing little to any tradition supports the view the student rejects."
+        },
+        "B": {
+          "recipe": "TRAP: wrong direction of influence",
+          "why_wrong": "This concerns Baya’s possible influence on Picasso, not the sources her own paintings draw on."
+        },
+        "C": {
+          "recipe": "HALF: the colors without their source",
+          "why_wrong": "It describes her color and flatness but does not connect them to anything in the culture of Algerian women."
+        }
+      },
+      "models": [
+        "3.33",
+        "3.32",
+        "3.3",
+        "3.21"
+      ],
+      "sources": [
+        {
+          "what": "AWARE (Archives of Women Artists), Baya: Maeght organised an exhibition of her work at his gallery in 1947, which caught the Surrealists' attention; her work associated with the 'naive', 'primitivist' and 'art brut' categories; her colours reminiscent of the colourful clothes worn by women in Kabylia; 1948 ceramics at the Madoura workshop in Vallauris, where she met Picasso. Breton wrote the preface to the 1947 catalogue (Derriere le miroir)",
+          "url": "https://awarewomenartists.com/en/artiste/baya/"
+        }
+      ],
+      "notes": "Quotations are attributed to an unnamed art historian, as CB does. The key's pottery detail is a plausible extension (Kabyle pottery is a women's craft); the core claim rests on the Grey Art Gallery source.",
+      "word_count": 96,
+      "band7": {
+        "verdict": "band 6",
+        "why": "Target 6 (T3 band-7 needs a rebuttal or underlined-claim frame). OPP A sides with the labels, TRAP B is Baya's influence on others, HALF C gives the colours without a source; the key needs the bridge from colours and patterns to the traditions of Algerian women."
+      },
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [
+          "source URL (Grey Art press release) returns 404; replaced with the AWARE entry, which states the 1947 Maeght show, the labels, the Kabyle-dress colours and Vallauris",
+          "'her native Kabylie' changed to 'Kabyle women' (sources give Kabyle heritage; her birthplace is near Algiers)",
+          "'sixteen-year-old' changed to 'teenage' (sources split on 15 or 16 at the November 1947 show)"
+        ],
+        "status": "fixed"
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "D",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "command_of_evidence.Q2_P8_quantifier.hard.w3b1_09",
+      "template": "Q2_P8_quantifier",
+      "subtype": "Data description (all but one, from differences between columns)",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Glaciers in Montana’s Glacier National Park reached their maximum recent extent during the Little Ice Age, a cooler interval that peaked in the mid-nineteenth century. Moraines, ridges of debris deposited at the glaciers’ margins, still mark their boundaries at that time. Combining these moraines with aerial and satellite photographs, US Geological Survey researchers have reconstructed the area of every named glacier in the park at its Little Ice Age maximum and at several subsequent dates. Examining measurements for five individual glaciers, a student argues that despite the substantial losses of recent decades, for all but one of the five, most of the shrinkage since the Little Ice Age occurred before 1966.",
+      "stem": "Which choice best describes data from the table that support the student’s argument?",
+      "options": [
+        "Of the five glaciers, Agassiz Glacier lost the most area between its Little Ice Age maximum and 2015, shrinking from about 4.25 to about 0.74 square kilometers.",
+        "Each of the five glaciers lost more area between its Little Ice Age maximum and 1966 than it lost in the nearly fifty years between 1966 and 2015.",
+        "Lupfer Glacier lost more area between 1966 and 2015 than it had lost between its Little Ice Age maximum and 1966, falling to about 0.07 square kilometers.",
+        "Agassiz, Grinnell, Sperry, and Weasel Collar Glaciers each lost more area before 1966 than between 1966 and 2015, while Lupfer Glacier lost more area after 1966."
+      ],
+      "answer_letter": "D",
+      "table": {
+        "title": "Areas of Five Named Glaciers in Glacier National Park",
+        "columns": [
+          "Glacier",
+          "Area at Little Ice Age maximum (square kilometers)",
+          "Area in 1966 (square kilometers)",
+          "Area in 2015 (square kilometers)"
+        ],
+        "rows": [
+          [
+            "Agassiz",
+            "4.25",
+            "1.60",
+            "0.74"
+          ],
+          [
+            "Grinnell",
+            "1.98",
+            "1.02",
+            "0.56"
+          ],
+          [
+            "Lupfer",
+            "0.17",
+            "0.13",
+            "0.07"
+          ],
+          [
+            "Sperry",
+            "3.79",
+            "1.34",
+            "0.80"
+          ],
+          [
+            "Weasel Collar",
+            "0.81",
+            "0.56",
+            "0.50"
+          ]
+        ],
+        "note": null
+      },
+      "figure": null,
+      "explanation": "The student claims that for all but one of the five glaciers, more area was lost between the Little Ice Age maximum and 1966 than between 1966 and 2015. Subtracting the columns shows this pattern for Agassiz (2.65 before, 0.86 after), Grinnell (0.96, 0.46), Sperry (2.45, 0.54), and Weasel Collar (0.25, 0.06), while Lupfer lost more after 1966 (0.06) than before (0.04). Choice D reports both the four glaciers that fit and the one exception.",
+      "distractors": {
+        "A": {
+          "recipe": "IRREL: accurate extreme that does not split the periods",
+          "why_wrong": "Agassiz did lose the most area overall, but the total loss says nothing about how much of it came before 1966 rather than after."
+        },
+        "B": {
+          "recipe": "INACC: all instead of all but one",
+          "why_wrong": "Lupfer Glacier lost more area after 1966 (about 0.06 square kilometers) than before (about 0.04), so the statement is false for one of the five glaciers, and it would leave no exception."
+        },
+        "C": {
+          "recipe": "PART: the exception alone",
+          "why_wrong": "The reading is accurate, but it describes only the one glacier that does not fit; it does not show that most of the shrinking came before 1966 for the other four."
+        }
+      },
+      "models": [
+        "3.24",
+        "3.23",
+        "3.20"
+      ],
+      "sources": [
+        {
+          "what": "USGS table, Area of the Named Glaciers of Glacier National Park at Little Ice Age maximum extent, 1966, 1998, 2005 and 2015 (Agassiz 4.2470/1.6006/0.7367; Grinnell 1.9765/1.0202/0.5637; Lupfer 0.1712/0.1264/0.0733; Sperry 3.7933/1.3395/0.8017; Weasel Collar 0.8098/0.5581/0.4997 km²); LIA extent from moraines, margins from aerial and satellite imagery; mean reduction 1966 to 2015 of 40%",
+          "url": "https://d9-wret.s3.us-west-2.amazonaws.com/assets/palladium/production/s3fs-public/media/files/Table%20of%20Area%20of%20the%20Named%20Glaciers_USGS%20Logo.pdf"
+        }
+      ],
+      "notes": "Areas rounded to two decimals from the USGS four-decimal values; every option checked in Python on both the full and the rounded values. Lupfer chosen as the one exception (lost 0.045 km² before 1966 and 0.053 after).",
+      "word_count": 111,
+      "band7": {
+        "verdict": "band 6",
+        "why": "Target 6. Ten subtractions across five rows; B fails only on Lupfer, C states the exception alone, A is an accurate but irrelevant extreme."
+      },
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 5,
+        "fixes": [],
+        "status": "pass"
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "D",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "command_of_evidence.Q2_P4_trend.hard.w3b1_10",
+      "template": "Q2_P4_trend",
+      "subtype": "Data description (change read through a passage definition; interrupted onset)",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "Demographers divide a country’s population change into two parts: natural change, the difference between the numbers of births and deaths in a year, and net migration, the difference between the numbers of people moving in and moving out. Whenever deaths outnumber births, a population experiences natural decrease, even if immigration keeps its total size growing. In Japan, where fertility has been low for decades and the population is aging rapidly, natural decrease began in the mid-2000s. Examining government statistics, a demographer argues that this transition did not happen all at once: natural decrease appeared, was briefly reversed, and then became established.",
+      "stem": "Which choice best describes data from the table that support the demographer’s argument?",
+      "options": [
+        "Births exceeded deaths in 2004 and 2006, but deaths exceeded births in 2005, 2007, and 2008.",
+        "Japan’s population on October 1 grew in every year from 2004 to 2008, reaching about 128.08 million, even though fewer babies were born in 2008 than in 2004.",
+        "The number of deaths rose in every year from 2004 to 2008 and was greater than the number of births in every year after 2004.",
+        "The number of births fell from 2004 to 2005, rose in 2006, and then stayed close to 1.09 million in both 2007 and 2008, below its 2004 level."
+      ],
+      "answer_letter": "A",
+      "table": {
+        "title": "Births, Deaths, and Population in Japan, 2004–2008",
+        "columns": [
+          "Year",
+          "Live births",
+          "Deaths",
+          "Population on October 1 (millions)"
+        ],
+        "rows": [
+          [
+            "2004",
+            "1,110,721",
+            "1,028,602",
+            "127.69"
+          ],
+          [
+            "2005",
+            "1,062,530",
+            "1,083,796",
+            "127.77"
+          ],
+          [
+            "2006",
+            "1,092,674",
+            "1,084,451",
+            "127.90"
+          ],
+          [
+            "2007",
+            "1,089,818",
+            "1,108,334",
+            "128.03"
+          ],
+          [
+            "2008",
+            "1,091,156",
+            "1,142,407",
+            "128.08"
+          ]
+        ],
+        "note": null
+      },
+      "figure": null,
+      "explanation": "The text defines natural decrease as a year in which deaths outnumber births, so the argument must be checked by comparing the two columns year by year. Births exceeded deaths in 2004 and 2006 (1,092,674 to 1,084,451), while deaths exceeded births in 2005 (1,083,796 to 1,062,530), 2007, and 2008. Put in order, Choice A shows natural decrease appearing in 2005, reversed in 2006, and then lasting from 2007 on, the sequence the demographer describes.",
+      "distractors": {
+        "B": {
+          "recipe": "IRREL: levels of the wrong measure (total population)",
+          "why_wrong": "Both readings are accurate, but total population includes migration, which the text says can keep a population growing during natural decrease; the choice never compares births with deaths."
+        },
+        "C": {
+          "recipe": "INACC: constancy, one misread cell",
+          "why_wrong": "Deaths did rise every year, but in 2006 births (1,092,674) exceeded deaths (1,084,451), so deaths were not greater than births in every year after 2004, and the choice leaves out the reversal the demographer describes."
+        },
+        "D": {
+          "recipe": "IRREL: fluctuation in births alone",
+          "why_wrong": "The readings are accurate, but births by themselves cannot show natural decrease, which depends on whether deaths outnumber births each year."
+        }
+      },
+      "models": [
+        "3.40",
+        "3.13"
+      ],
+      "sources": [
+        {
+          "what": "Demographics of Japan, vital statistics table (statistics since 1873): live births, deaths, natural change and average population (Oct 1) for 2004 to 2008 (births 1,110,721 / 1,062,530 / 1,092,674 / 1,089,818 / 1,091,156; deaths 1,028,602 / 1,083,796 / 1,084,451 / 1,108,334 / 1,142,407; natural change negative in 2005, positive 8,223 in 2006, negative from 2007; population 127,687,000 to 128,084,000)",
+          "url": "https://en.wikipedia.org/wiki/Demographics_of_Japan"
+        }
+      ],
+      "notes": "Population column rounded to hundredths of a million from the source (127,687,000 etc.). Band 7: proxy is the passage's definition of natural decrease (births versus deaths), and the population column is the tempting wrong measure; operations: five yearly births-versus-deaths comparisons, then the sequence (appear, reverse, return) (3+). Distractors: levels of the wrong measure (B), constancy with one misread cell (C), fluctuation in births alone (D).",
+      "word_count": 101,
+      "band7": {
+        "verdict": "band 7",
+        "why": "Passage 101 words. Proxy: the passage's definition of natural decrease (births against deaths), with population the tempting wrong measure. Operations: five yearly comparisons plus ordering them into the sequence. Distractors: wrong measure (B), constancy with one misread cell (C), births alone (D)."
+      },
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [
+          "hardened: key A no longer restates the claim's three-phase sequence in order; it groups years by which count was larger, so the student must reorder them to see appear, reverse, establish"
+        ],
+        "status": "fixed"
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "A",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "command_of_evidence.T1_single.medium.w3b1_11",
+      "template": "T1_single",
+      "subtype": "Hypothetical finding supports a conclusion (speed of change over time, comparison group)",
+      "tier": "medium",
+      "band_target": null,
+      "passage": "Many shared activities, from team sports to craft workshops, can bring people closer together, but researchers Eiluned Pearce, Jacques Launay, and Robin Dunbar suspected that singing might do so unusually quickly. To find out, they followed newly formed adult education classes in singing, crafts, and creative writing over seven months, asking members at several points how close they felt to their classmates. Based on the results, the team concluded that singing acts as an “ice-breaker,” allowing groups of strangers to form bonds faster than other shared activities do, though not necessarily more strongly in the long run.",
+      "stem": "Which finding, if true, would most directly support the team’s conclusion?",
+      "options": [
+        "By the seventh month, members of the singing classes and members of the other classes reported feeling about equally close to their classmates.",
+        "In the first month, members of the singing classes reported a larger increase in closeness to their classmates than members of the other classes did, but by the seventh month the groups reported similar closeness.",
+        "Members of the singing classes reported a larger improvement in mood over the course of each class than members of the other classes did.",
+        "Members of the craft and writing classes were more likely than members of the singing classes to have known one another before the classes began."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The conclusion is that singing helps strangers bond faster than other activities do, though not necessarily more strongly over time. Choice B shows singers gaining more closeness than the craft and writing groups in the first month, with the other groups catching up by the seventh month, which matches both parts of the conclusion.",
+      "distractors": {
+        "A": {
+          "recipe": "HALF: the later time point only",
+          "why_wrong": "Equal closeness at seven months fits the conclusion’s last part but gives no evidence that singers bonded faster at the start."
+        },
+        "C": {
+          "recipe": "OFF: a different outcome (mood)",
+          "why_wrong": "A better mood during class is not the same as feeling closer to classmates sooner."
+        },
+        "D": {
+          "recipe": "OFF: a background difference between groups",
+          "why_wrong": "Who knew whom beforehand says nothing about how quickly the singing classes bonded."
+        }
+      },
+      "models": [
+        "2.7",
+        "2.21",
+        "2.33",
+        "2.1"
+      ],
+      "sources": [
+        {
+          "what": "Pearce, Launay and Dunbar 2015, The ice-breaker effect: singing mediates fast social bonding, Royal Society Open Science 2: 150221; newly formed adult education classes in singing vs crafts or creative writing over seven months; singers showed a greater increase in closeness at month 1, non-singers caught up later",
+          "url": "https://royalsocietypublishing.org/doi/10.1098/rsos.150221"
+        }
+      ],
+      "notes": "Key matches the study's real first-month result.",
+      "word_count": 97,
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "command_of_evidence.T1_single.medium.w3b1_12",
+      "template": "T1_single",
+      "subtype": "Hypothetical finding supports a causal claim (association with the proposed cause within a group)",
+      "tier": "medium",
+      "band_target": null,
+      "passage": "Horses often grow small, nonfunctional premolars called wolf teeth immediately in front of their large cheek teeth, in the region of the mouth where a bit rests. Mongolian herders today routinely extract these teeth from young horses, and the custom appears to be ancient: after examining horse remains from archaeological sites across Mongolia, archaeologist William Taylor and colleagues determined that many of the animals had also had their wolf teeth extracted. The team argues that the practice originated in response to a change in riding equipment, the introduction of metal bits, which give riders greater control.",
+      "stem": "Which finding, if true, would most directly support the team’s argument?",
+      "options": [
+        "Horses buried at the more recent sites were, on average, larger than horses buried at the older sites.",
+        "Some young horses buried more than 3,000 years ago had baby teeth that had been partly cut away, apparently because the teeth had grown in crooked.",
+        "Among horses buried after metal bits came into use, those with tooth wear typical of metal bits were far more likely to be missing their wolf teeth than those without it.",
+        "Wolf teeth had been removed from horses buried long before metal bits came into use about as often as from horses buried afterward."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The team argues that herders began removing wolf teeth because of metal bits. If, among horses from the same period, the ones that show signs of having worn metal bits were the ones most often missing wolf teeth, the removal is tied to bit use, as choice C indicates.",
+      "distractors": {
+        "A": {
+          "recipe": "OFF: a different variable",
+          "why_wrong": "A change in body size says nothing about why wolf teeth were removed."
+        },
+        "B": {
+          "recipe": "TRAP: a different kind of dental care",
+          "why_wrong": "Trimming crooked baby teeth shows early dental work of another sort, not a link between wolf-tooth removal and metal bits."
+        },
+        "D": {
+          "recipe": "OPP: removal just as common before metal bits",
+          "why_wrong": "If the practice was as common before metal bits existed, the bits could not have been what started it."
+        }
+      },
+      "models": [
+        "2.7",
+        "2.6",
+        "2.43",
+        "2.1"
+      ],
+      "sources": [
+        {
+          "what": "Taylor et al. 2018, PNAS, Origins of equine dentistry, as reported by Discover: earliest dental work on malerupted milk teeth about 3,150 years ago; wolf-tooth removal became nearly universal in juvenile horses about 2,700 years ago, coinciding with the regional spread of metal bits, which allowed greater control by the rider; Mongolian herders still remove wolf teeth",
+          "url": "https://www.discovermagazine.com/the-earliest-horse-dentist-was-justsawful-12689"
+        }
+      ],
+      "notes": "",
+      "word_count": 96,
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "command_of_evidence.T2_lit_quote.medium.w3b1_13",
+      "template": "T2_lit_quote",
+      "subtype": "Literary quotation illustrates a two-part claim",
+      "tier": "medium",
+      "band_target": null,
+      "passage": "“Soliloquy” is a 1918 poem by Irish writer Francis Ledwidge. The poem’s speaker, a soldier stationed in France during World War I, reflects on his childhood and contemplates the approaching battle. In the poem, the speaker acknowledges that a youthful ambition can no longer be accomplished while also finding consolation in what he has become: ______",
+      "stem": "Which quotation from “Soliloquy” most effectively illustrates the claim?",
+      "options": [
+        "“It is too late now to retrieve / A fallen dream, too late to grieve / A name unmade, but not too late / To thank the gods for what is great; / A keen-edged sword, a soldier’s heart, / Is greater than a poet’s art.”",
+        "“When I was young I had a care / Lest I should cheat me of my share / Of that which makes it sweet to strive / For life, and dying still survive, / A name in sunshine written higher / Than lark or poet dare aspire.”",
+        "“But I grew weary doing well, / Besides, ’twas sweeter in that hell, / Down with the loud banditti people / Who robbed the orchards, climbed the steeple / For jackdaws’ eggs and made the cock / Crow ere ’twas daylight on the clock.”",
+        "“And now I’m drinking wine in France, / The helpless child of circumstance. / To-morrow will be loud with war, / How will I be accounted for?”"
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The claim has two parts: the speaker accepts that an early ambition is out of reach, and he takes comfort in what he now is. In choice A he says it is too late to recover “a fallen dream” or grieve “a name unmade,” and then gives thanks that a soldier’s heart is greater than a poet’s art.",
+      "distractors": {
+        "B": {
+          "recipe": "HALF: the ambition without the acceptance",
+          "why_wrong": "The speaker describes his youthful wish for lasting fame but neither gives it up nor finds comfort in anything."
+        },
+        "C": {
+          "recipe": "OFF: boyhood mischief",
+          "why_wrong": "The speaker recalls the fun of his wild boyhood, which concerns neither a lost ambition nor present comfort."
+        },
+        "D": {
+          "recipe": "HALF: present situation, no comfort",
+          "why_wrong": "The speaker describes himself in France on the eve of battle and wonders about his fate, which shows unease rather than consolation."
+        }
+      },
+      "models": [
+        "2.37",
+        "2.26",
+        "2.20",
+        "2.11"
+      ],
+      "sources": [
+        {
+          "what": "Francis Ledwidge, Soliloquy, in Last Songs (1918), Complete Poems on Project Gutenberg; all four quotations are consecutive stanzas checked as exact substrings (straight apostrophes rendered curly)",
+          "url": "https://www.gutenberg.org/ebooks/53621"
+        }
+      ],
+      "notes": "Ledwidge (1887-1917) was killed in Flanders in July 1917; Last Songs appeared in 1918.",
+      "word_count": 56,
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "command_of_evidence.Q1_P3_pairwise.medium.w3b1_14",
+      "template": "Q1_P3_pairwise",
+      "subtype": "Data completion (pairwise comparison on two measures)",
+      "tier": "medium",
+      "band_target": null,
+      "passage": "The Finger Lakes, a group of eleven long, narrow lakes in central New York, occupy valleys that advancing glaciers excavated and deepened during the last ice age. Although the lakes share this geological origin, they differ considerably in both surface area and depth, and a lake that covers a larger area is not necessarily deeper than a lake that covers a smaller one. For example, ______",
+      "stem": "Which choice most effectively uses data from the table to complete the example?",
+      "options": [
+        "Owasco Lake covers a smaller area than Skaneateles Lake and is also less deep.",
+        "Canandaigua Lake covers a larger area than Keuka Lake and is also deeper.",
+        "Honeoye Lake is the shallowest of the five lakes, at only 30 feet deep.",
+        "Keuka Lake covers a larger area than Canandaigua Lake but is about 90 feet shallower."
+      ],
+      "answer_letter": "D",
+      "table": {
+        "title": "Surface Area and Maximum Depth of Five Finger Lakes",
+        "columns": [
+          "Lake",
+          "Surface area (acres)",
+          "Maximum depth (feet)"
+        ],
+        "rows": [
+          [
+            "Honeoye Lake",
+            "1,772",
+            "30"
+          ],
+          [
+            "Owasco Lake",
+            "6,665",
+            "177"
+          ],
+          [
+            "Skaneateles Lake",
+            "8,960",
+            "300"
+          ],
+          [
+            "Canandaigua Lake",
+            "10,558",
+            "276"
+          ],
+          [
+            "Keuka Lake",
+            "11,584",
+            "183"
+          ]
+        ],
+        "note": null
+      },
+      "figure": null,
+      "explanation": "The example must show a lake that covers a larger area than another lake but is not deeper. According to the table, Keuka Lake covers 11,584 acres and Canandaigua Lake 10,558 acres, yet Keuka Lake’s maximum depth is 183 feet, compared with 276 feet for Canandaigua Lake, a difference of about 90 feet. Choice D states this comparison.",
+      "distractors": {
+        "A": {
+          "recipe": "CONTRA: accurate pair that fits the opposite pattern",
+          "why_wrong": "The comparison is accurate, but a smaller lake that is also shallower fits the idea that bigger lakes are deeper; it does not show that a larger lake can be shallower."
+        },
+        "B": {
+          "recipe": "INACC: area comparison reversed",
+          "why_wrong": "Canandaigua Lake covers 10,558 acres, less than Keuka Lake’s 11,584 acres, so it does not cover a larger area."
+        },
+        "C": {
+          "recipe": "IRREL: single accurate value, no comparison",
+          "why_wrong": "Honeoye Lake is the shallowest lake shown, but this fact about one lake does not compare the area and depth of two lakes, so it cannot show that a larger lake may be shallower."
+        }
+      },
+      "models": [
+        "2.24",
+        "2.28",
+        "2.18"
+      ],
+      "sources": [
+        {
+          "what": "Finger Lakes: eleven long, narrow lakes in overdeepened glacial valleys; summary table (from NYSDEC lake facts) gives area and maximum depth: Honeoye 1,772 acres, 30 ft; Owasco 6,665 acres, 177 ft; Skaneateles 8,960 acres, 300 ft; Canandaigua 10,558 acres, 276 ft; Keuka 11,584 acres, 183 ft",
+          "url": "https://en.wikipedia.org/wiki/Finger_Lakes"
+        }
+      ],
+      "notes": "Real data, five of the eleven lakes. Other valid larger-but-shallower pairs (Keuka vs Skaneateles, Canandaigua vs Skaneateles) are kept out of the options.",
+      "word_count": 66,
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 5,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "command_of_evidence.Q1_P4_trend.medium.w3b1_15",
+      "template": "Q1_P4_trend",
+      "subtype": "Data completion (change over time in one series of a multi-line graph)",
+      "tier": "medium",
+      "band_target": null,
+      "passage": "Electricity generated by wind turbines increased substantially in many countries during the 2010s, but from markedly different starting points. In Denmark and Portugal, for instance, wind already supplied more than 15% of national electricity production in 2010, so growth there began from an already substantial base. Some of the most dramatic increases over the decade, however, occurred in countries such as Uruguay, whose share of electricity generated from wind went from ______",
+      "stem": "Which choice most effectively uses data from the graph to complete the assertion?",
+      "options": [
+        "about 10% in 2010 to more than 35% in 2020.",
+        "about 20% in 2010 to more than 55% in 2020.",
+        "less than 5% in 2010 to about 40% in 2020.",
+        "less than 20% in 2010 to about 25% in 2020."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": {
+        "kind": "line graph",
+        "title": "Share of Electricity Generated from Wind in Four Countries, 2010–2020",
+        "x_axis": "Year",
+        "y_axis": "Percent of electricity generated from wind",
+        "description": "Four lines at 2010, 2012, 2014, 2016, 2018 and 2020; y-axis 0 to 60 in steps of 10. Denmark: about 20, 34, 41, 42, 46, 57. Ireland: about 10, 15, 20, 21, 28, 37. Portugal: about 17, 23, 23, 21, 22, 24. Uruguay: about 1, 1, 6, 22, 32, 40. Uruguay starts lowest and rises most steeply; Portugal stays between about 17 and 24.",
+        "data": [
+          {
+            "series": "Denmark",
+            "points": [
+              [
+                "2010",
+                20.2
+              ],
+              [
+                "2012",
+                33.6
+              ],
+              [
+                "2014",
+                40.8
+              ],
+              [
+                "2016",
+                42.0
+              ],
+              [
+                "2018",
+                46.0
+              ],
+              [
+                "2020",
+                57.1
+              ]
+            ]
+          },
+          {
+            "series": "Ireland",
+            "points": [
+              [
+                "2010",
+                10.2
+              ],
+              [
+                "2012",
+                15.0
+              ],
+              [
+                "2014",
+                20.2
+              ],
+              [
+                "2016",
+                20.6
+              ],
+              [
+                "2018",
+                28.3
+              ],
+              [
+                "2020",
+                36.5
+              ]
+            ]
+          },
+          {
+            "series": "Portugal",
+            "points": [
+              [
+                "2010",
+                17.2
+              ],
+              [
+                "2012",
+                22.6
+              ],
+              [
+                "2014",
+                23.4
+              ],
+              [
+                "2016",
+                21.1
+              ],
+              [
+                "2018",
+                21.6
+              ],
+              [
+                "2020",
+                23.9
+              ]
+            ]
+          },
+          {
+            "series": "Uruguay",
+            "points": [
+              [
+                "2010",
+                0.7
+              ],
+              [
+                "2012",
+                1.0
+              ],
+              [
+                "2014",
+                5.6
+              ],
+              [
+                "2016",
+                21.6
+              ],
+              [
+                "2018",
+                32.4
+              ],
+              [
+                "2020",
+                40.4
+              ]
+            ]
+          }
+        ]
+      },
+      "explanation": "The sentence needs Uruguay’s share of electricity from wind at the start and end of the decade. The Uruguay line begins near 1% in 2010, well below 5%, and rises to about 40% in 2020, so choice C completes the assertion accurately.",
+      "distractors": {
+        "A": {
+          "recipe": "WGRP: Ireland’s line",
+          "why_wrong": "About 10% in 2010 and more than 35% in 2020 are Ireland’s values; Uruguay’s share in 2010 was close to 0%."
+        },
+        "B": {
+          "recipe": "WGRP: Denmark’s line",
+          "why_wrong": "About 20% in 2010 and more than 55% in 2020 are Denmark’s values, not Uruguay’s."
+        },
+        "D": {
+          "recipe": "WGRP / INACC: Portugal’s line",
+          "why_wrong": "These values fit Portugal; Uruguay’s share in 2020 was about 40%, not about 25%."
+        }
+      },
+      "models": [
+        "2.15",
+        "2.34",
+        "2.40"
+      ],
+      "sources": [
+        {
+          "what": "Our World in Data, share of electricity from wind (Ember data), percent: Uruguay 2010 0.65, 2012 1.04, 2014 5.62, 2016 21.56, 2018 32.38, 2020 40.38; Ireland 10.16, 15.02, 20.19, 20.63, 28.29, 36.50; Denmark 20.15, 33.60, 40.82, 42.04, 46.01, 57.14; Portugal 17.17, 22.58, 23.38, 21.12, 21.63, 23.93",
+          "url": "https://ourworldindata.org/grapher/share-electricity-wind"
+        }
+      ],
+      "notes": "Values rounded to one decimal in figure.data. Each wrong option is true of another line (Ireland, Denmark, Portugal) and false of Uruguay.",
+      "word_count": 72,
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "command_of_evidence.Q2_P5_control.medium.w3b1_16",
+      "template": "Q2_P5_control",
+      "subtype": "Data description (treated vs control across categories supports a conclusion)",
+      "tier": "medium",
+      "band_target": null,
+      "passage": "White-tailed deer feed extensively on the shoots and leaves of young trees, and oaks are among the species they prefer. To evaluate the consequences of this browsing, a team of researchers counted every oak seedling in two adjacent plots in Virginia’s Matthews State Forest, one surrounded by protective fencing that excluded deer and the other left open, and categorized the seedlings by height. The researchers suggested that oak seedlings germinated about as frequently in the open plot as in the fenced plot but were less likely to grow taller there.",
+      "stem": "Which choice best describes data from the graph that support the researchers’ claim?",
+      "options": [
+        "The fenced plot contained 40 oak seedlings shorter than 6 inches, which is far more than the number of oak seedlings it contained in either of the taller height categories.",
+        "The two plots contained similar numbers of oak seedlings shorter than 6 inches, but the fenced plot contained more seedlings 6 to 12 inches tall than the open plot did.",
+        "In each of the two plots, there were many more oak seedlings shorter than 6 inches than there were oak seedlings 6 to 12 inches tall.",
+        "The open plot contained more oak seedlings than the fenced plot did in every height category, including the category of seedlings 12 to 24 inches tall."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": {
+        "kind": "bar graph",
+        "title": "Oak Seedlings in a Fenced Plot and an Open Plot, by Height",
+        "x_axis": "Seedling height",
+        "y_axis": "Number of oak seedlings",
+        "description": "Grouped bar graph, two bars per height category (fenced plot, open plot); y-axis 0 to 50 in steps of 10. Shorter than 6 inches: fenced plot 40, open plot 43. 6 to 12 inches: fenced plot 6, open plot 1. 12 to 24 inches: no seedlings in either plot (0 and 0).",
+        "data": [
+          {
+            "series": "Fenced plot (deer kept out)",
+            "points": [
+              [
+                "Shorter than 6 inches",
+                40
+              ],
+              [
+                "6 to 12 inches",
+                6
+              ],
+              [
+                "12 to 24 inches",
+                0
+              ]
+            ]
+          },
+          {
+            "series": "Open plot",
+            "points": [
+              [
+                "Shorter than 6 inches",
+                43
+              ],
+              [
+                "6 to 12 inches",
+                1
+              ],
+              [
+                "12 to 24 inches",
+                0
+              ]
+            ]
+          }
+        ]
+      },
+      "explanation": "The claim has two parts: oaks sprouted about equally in both plots, but fewer grew tall where deer could reach them. The graph shows 40 seedlings shorter than 6 inches in the fenced plot and 43 in the open plot, nearly the same, while the fenced plot had 6 seedlings 6 to 12 inches tall and the open plot only 1. Choice B describes both parts.",
+      "distractors": {
+        "A": {
+          "recipe": "PART: one group only",
+          "why_wrong": "The count is accurate, but it describes only the fenced plot; without the open plot for comparison, it says nothing about the effect of deer."
+        },
+        "C": {
+          "recipe": "IRREL: wrong comparison axis",
+          "why_wrong": "This is true, but it compares height categories within each plot; because it holds for both plots, it does not show that seedlings grew taller where deer were kept out."
+        },
+        "D": {
+          "recipe": "INACC",
+          "why_wrong": "The open plot had more seedlings only in the shortest category; it had fewer 6 to 12 inches tall (1 versus 6), and neither plot had any 12 to 24 inches tall."
+        }
+      },
+      "models": [
+        "2.3",
+        "2.25"
+      ],
+      "sources": [
+        {
+          "what": "Madigan, Barkman, Barrett, Olinger and Carter, Virginia Cooperative Extension CNRE-138NP: fenced deer exclosure and adjacent unfenced control plot (1,024 sq ft each) at Matthews State Forest, Grayson County, Virginia; Table 3, oak seedlings, 2017-Burn site: under 6 in 40 inside vs 43 outside, 6.1-12 in 6 vs 1, 12.1-24 in 0 vs 0; authors: similar germination inside and outside, but browsing keeps seedlings outside from reaching taller categories",
+          "url": "https://www.pubs.ext.vt.edu/CNRE/CNRE-138/CNRE-138.html"
+        }
+      ],
+      "notes": "Uses the 2017-Burn site only (the study had two sites). Height classes A to C renamed by their ranges; class D (over 24 in) had no oaks and is left out.",
+      "word_count": 90,
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [],
+        "status": "pass",
+        "note": "Writer flagged a weak source: it is a Virginia Cooperative Extension case study by Virginia Tech students and faculty (two sites). Table 3 counts (40/43, 6/1, 0/0) match exactly and 'suggested' matches the source's 'could indicate'; no one is named, so kept."
+      }
+    },
+    {
+      "id": "command_of_evidence.T3_person_quote.medium.w3b1_17",
+      "template": "T3_person_quote",
+      "subtype": "Quotation from a historian supports a student's claim",
+      "tier": "medium",
+      "band_target": null,
+      "passage": "Between 1907 and 1923, more than 15,000 Japanese and Korean women traveled to Hawaii to marry men they knew only from photographs and letters, frequently exchanged through matchmakers or relatives. Most of the prospective husbands worked on the islands’ sugar plantations. In an essay about these arranged marriages, a student argues that the photographs on which they were based often gave the women a misleading impression of what awaited them.",
+      "stem": "Which quotation from a work by a historian would be the most effective evidence for the student to include in support of this claim?",
+      "options": [
+        "“Many grooms mailed photographs taken years earlier or retouched to look younger, and some posed beside cars and houses that were not theirs, so brides often met husbands older and poorer than the men in the pictures.”",
+        "“The Gentlemen’s Agreement of 1907 barred new Japanese laborers from entering the United States but allowed men already living there to send for their wives, an exception that made marriage by photograph an attractive option.”",
+        "“Brides and grooms usually met for the first time at the immigration station in Honolulu, and many couples were married there in group ceremonies before the women were allowed to leave.”",
+        "“By 1920, women made up about a seventh of the workers on Hawaii’s sugar plantations, where they weeded fields and stripped dry leaves from the cane, often for less pay than men received.”"
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The student argues that the photographs often misled the brides. Choice A explains how: grooms sent old or retouched pictures and posed with property that was not theirs, so the women found husbands older and poorer than they had been shown.",
+      "distractors": {
+        "B": {
+          "recipe": "OFF: legal background",
+          "why_wrong": "It explains why marriage by photograph arose, not whether the photographs misled the brides."
+        },
+        "C": {
+          "recipe": "OFF: the process of arrival",
+          "why_wrong": "It describes where and how couples married, without saying the brides found anything different from what the photographs showed."
+        },
+        "D": {
+          "recipe": "HALF: the hard life without the misleading photographs",
+          "why_wrong": "It shows the work many women faced but not that the photographs had led them to expect something else."
+        }
+      },
+      "models": [
+        "2.29",
+        "2.23"
+      ],
+      "sources": [
+        {
+          "what": "Picture bride: 14,276 Japanese and 951 Korean picture brides arrived in Hawaii between 1907 and 1923; men sent photos that were retouched, old, or of other men, some posing with cars and houses they did not own; grooms often 10 to 15 years older; 1907 Gentlemen's Agreement; women 14 percent of plantation workers in 1920, weeding and stripping cane, often paid less",
+          "url": "https://en.wikipedia.org/wiki/Picture_bride"
+        }
+      ],
+      "notes": "Historian quotations are invented and unattributed, as in CB items; their facts follow the source.",
+      "word_count": 70,
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "command_of_evidence.Q1_P1_lookup.easy.w3b1_18",
+      "template": "Q1_P1_lookup",
+      "subtype": "Data completion (reverse lookup in a table)",
+      "tier": "easy",
+      "band_target": null,
+      "passage": "The Faroe Islands, an archipelago in the North Atlantic Ocean, consist of 18 islands, and all except tiny Lítla Dímun have permanent residents. The population is distributed very unevenly, however: nearly half of the approximately 50,000 inhabitants live on a single island, Streymoy, which contains the capital, Tórshavn. A student comparing several of the larger islands notes that the island with an area of 166.0 square kilometers had ______",
+      "stem": "Which choice most effectively uses data from the table to complete the statement?",
+      "options": [
+        "24,276 residents in 2018.",
+        "3,271 residents in 2018.",
+        "5,261 residents in 2018.",
+        "4,588 residents in 2018."
+      ],
+      "answer_letter": "D",
+      "table": {
+        "title": "Area and Population of Five of the Faroe Islands",
+        "columns": [
+          "Island",
+          "Area (square kilometers)",
+          "Population (2018)"
+        ],
+        "rows": [
+          [
+            "Streymoy",
+            "373.5",
+            "24,276"
+          ],
+          [
+            "Eysturoy",
+            "286.3",
+            "11,490"
+          ],
+          [
+            "Vágar",
+            "177.6",
+            "3,271"
+          ],
+          [
+            "Suðuroy",
+            "166.0",
+            "4,588"
+          ],
+          [
+            "Borðoy",
+            "95.0",
+            "5,261"
+          ]
+        ],
+        "note": null
+      },
+      "figure": null,
+      "explanation": "According to the table, the island with an area of 166.0 square kilometers is Suðuroy, and Suðuroy had 4,588 residents in 2018. Choice D gives that population.",
+      "distractors": {
+        "A": {
+          "recipe": "WGRP: the island named in the passage",
+          "why_wrong": "24,276 is the population of Streymoy, which has an area of 373.5 square kilometers."
+        },
+        "B": {
+          "recipe": "WGRP: island with the nearest area",
+          "why_wrong": "3,271 is the population of Vágar, whose area of 177.6 square kilometers is close to, but not, 166.0."
+        },
+        "C": {
+          "recipe": "WGRP: neighboring row",
+          "why_wrong": "5,261 is the population of Borðoy, which has an area of 95.0 square kilometers."
+        }
+      },
+      "models": [
+        "1.37",
+        "1.38",
+        "1.30"
+      ],
+      "sources": [
+        {
+          "what": "List of islands of the Faroe Islands: 18 islands, Lítla Dímun the only uninhabited one; total population 50,235 (2017); table area / population (12-2018): Streymoy 373.5 / 24,276 (Tórshavn); Eysturoy 286.3 / 11,490; Vágar 177.6 / 3,271; Suðuroy 166.0 / 4,588; Borðoy 95.0 / 5,261",
+          "url": "https://en.wikipedia.org/wiki/List_of_islands_of_the_Faroe_Islands"
+        }
+      ],
+      "notes": "Reverse lookup: area to population. Vágar (177.6, the nearest area) and Borðoy (the next row) are the traps.",
+      "word_count": 69,
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 5,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "command_of_evidence.T1_single.easy.w3b1_19",
+      "template": "T1_single",
+      "subtype": "Hypothetical finding supports a claim (effect of an intervention)",
+      "tier": "easy",
+      "band_target": null,
+      "passage": "Many homes in the low-income neighborhoods of Ahmedabad, India, have thin roofs of metal or cement sheeting that absorb sunlight and trap heat. As part of the city’s strategy for protecting residents during heat waves, the Mahila Housing Trust, a local nonprofit organization, began coating such roofs with a paint that reflects sunlight back into the atmosphere. Supporters of these “cool roofs” claim that they make homes safer in hot weather by reducing indoor temperatures.",
+      "stem": "Which finding, if true, would most directly support the supporters’ claim?",
+      "options": [
+        "Most residents whose roofs were painted said that they liked the bright new color of their roofs better than the old one.",
+        "On hot afternoons, rooms under painted roofs were several degrees cooler than rooms under unpainted roofs nearby.",
+        "The reflective paint cost less per home than an electric fan did.",
+        "Painted roofs had to be repainted every few years to keep reflecting sunlight."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The supporters claim that cool roofs keep indoor temperatures down. Choice B compares rooms under painted and unpainted roofs and finds the painted ones several degrees cooler, which directly supports that claim.",
+      "distractors": {
+        "A": {
+          "recipe": "OFF: residents' taste",
+          "why_wrong": "Liking the color says nothing about whether the rooms were cooler."
+        },
+        "C": {
+          "recipe": "OFF: cost",
+          "why_wrong": "The paint’s price does not show that it lowers indoor temperatures."
+        },
+        "D": {
+          "recipe": "OFF: upkeep",
+          "why_wrong": "How often the paint must be renewed does not show whether it cools the homes."
+        }
+      },
+      "models": [
+        "1.29",
+        "1.8",
+        "1.17",
+        "1.45"
+      ],
+      "sources": [
+        {
+          "what": "Ahmedabad Heat Action Plan (2013); city cool-roof pilot in 2017; Mahila Housing Trust installed over 100 cool roofs with solar-reflective paint in low-income communities; cool roofs keep indoor temperatures 2 to 5 degrees C lower than traditional roofs",
+          "url": "https://codeblue.galencentre.org/2022/08/how-an-indian-city-saved-1000-lives-a-year/"
+        }
+      ],
+      "notes": "",
+      "word_count": 75,
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 2,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "command_of_evidence.Q1_P2_extreme.easy.w3b1_20",
+      "template": "Q1_P2_extreme",
+      "subtype": "Data completion (maximum in a table column)",
+      "tier": "easy",
+      "band_target": null,
+      "passage": "Over several centuries, a series of European churches held the record as the world’s tallest church, some for only a few years and others for more than two centuries. Several of their towering spires later collapsed or were destroyed by fire. Of the five churches in the table, the one that reached the greatest height was ______",
+      "stem": "Which choice most effectively uses data from the table to complete the statement?",
+      "options": [
+        "Strasbourg Cathedral.",
+        "Beauvais Cathedral.",
+        "Lincoln Cathedral.",
+        "Old St Paul’s Cathedral."
+      ],
+      "answer_letter": "C",
+      "table": {
+        "title": "Five Churches That Were Once the Tallest in the World",
+        "columns": [
+          "Church",
+          "Years as world’s tallest church",
+          "Height (meters)"
+        ],
+        "rows": [
+          [
+            "Malmesbury Abbey",
+            "1180–1240",
+            "131"
+          ],
+          [
+            "Old St Paul’s Cathedral",
+            "1240–1311",
+            "149"
+          ],
+          [
+            "Lincoln Cathedral",
+            "1311–1549",
+            "160"
+          ],
+          [
+            "Beauvais Cathedral",
+            "1569–1573",
+            "153"
+          ],
+          [
+            "Strasbourg Cathedral",
+            "1647–1874",
+            "142"
+          ]
+        ],
+        "note": null
+      },
+      "figure": null,
+      "explanation": "The table gives each church’s height. Lincoln Cathedral, at 160 meters, is taller than every other church shown, so choice C completes the statement.",
+      "distractors": {
+        "A": {
+          "recipe": "WGRP: latest record holder, not the tallest",
+          "why_wrong": "Strasbourg Cathedral held the record until 1874, but at 142 meters it is shorter than three of the other churches."
+        },
+        "B": {
+          "recipe": "INACC: second highest value",
+          "why_wrong": "Beauvais Cathedral, at 153 meters, is the second tallest; Lincoln Cathedral is taller."
+        },
+        "D": {
+          "recipe": "INACC: lower value",
+          "why_wrong": "Old St Paul’s Cathedral reached 149 meters, less than Lincoln Cathedral’s 160 meters."
+        }
+      },
+      "models": [
+        "1.21",
+        "1.9",
+        "1.31"
+      ],
+      "sources": [
+        {
+          "what": "List of tallest church buildings, table of churches that were the world’s tallest: Malmesbury Abbey 1180–1240, 131.0 m (spire collapsed c. 1500); Old St Paul’s 1240–1311, 149.0 m (spire until 1561); Lincoln Cathedral 1311–1549, 160.0 m (central spire collapsed 1549); Beauvais 1569–1573, 153.0 m (tower collapsed 1573); Strasbourg 1647–1874, 142.0 m",
+          "url": "https://en.wikipedia.org/wiki/List_of_tallest_church_buildings"
+        }
+      ],
+      "notes": "Five of the record holders (St. Mary’s, Stralsund, omitted). Lincoln’s fame is low among students; Strasbourg and Beauvais are the likelier guesses.",
+      "word_count": 57,
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 5,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "command_of_evidence.Q1_P3_pairwise.easy.w3b1_21",
+      "template": "Q1_P3_pairwise",
+      "subtype": "Data completion (two comparisons, full factorial options)",
+      "tier": "easy",
+      "band_target": null,
+      "passage": "Meteorologists describe a hurricane’s intensity in two principal ways: by its maximum sustained wind speed and by its minimum central pressure, the lowest atmospheric pressure measured at the storm’s center. Generally, the lower a hurricane’s central pressure, the faster its winds, but the two measurements do not always correspond. For example, compared with Hurricane Allen in 1980, Hurricane Gilbert in 1988 had ______",
+      "stem": "Which choice most effectively uses data from the table to complete the example?",
+      "options": [
+        "slower maximum winds but a lower minimum pressure.",
+        "slower maximum winds and a higher minimum pressure.",
+        "faster maximum winds and a lower minimum pressure.",
+        "faster maximum winds but a higher minimum pressure."
+      ],
+      "answer_letter": "A",
+      "table": {
+        "title": "Peak Strength of Four Atlantic Hurricanes",
+        "columns": [
+          "Hurricane",
+          "Year",
+          "Maximum sustained wind speed (miles per hour)",
+          "Minimum central pressure (millibars)"
+        ],
+        "rows": [
+          [
+            "Allen",
+            "1980",
+            "190",
+            "899"
+          ],
+          [
+            "Gilbert",
+            "1988",
+            "185",
+            "888"
+          ],
+          [
+            "Mitch",
+            "1998",
+            "180",
+            "905"
+          ],
+          [
+            "Rita",
+            "2005",
+            "180",
+            "895"
+          ]
+        ],
+        "note": null
+      },
+      "figure": null,
+      "explanation": "According to the table, Gilbert’s maximum sustained winds reached 185 miles per hour, slower than Allen’s 190, yet Gilbert’s minimum pressure of 888 millibars was lower than Allen’s 899. Choice A describes this mismatch between the two measures.",
+      "distractors": {
+        "B": {
+          "recipe": "WDIR: pressure comparison reversed",
+          "why_wrong": "Gilbert’s winds were slower, but its minimum pressure (888 millibars) was lower than Allen’s (899 millibars), not higher."
+        },
+        "C": {
+          "recipe": "WDIR: wind comparison reversed",
+          "why_wrong": "Gilbert’s pressure was lower, but its winds (185 miles per hour) were slower than Allen’s (190 miles per hour), not faster."
+        },
+        "D": {
+          "recipe": "WDIR: both comparisons reversed",
+          "why_wrong": "Gilbert’s winds were slower than Allen’s, not faster, and its minimum pressure was lower, not higher."
+        }
+      },
+      "models": [
+        "1.3",
+        "1.4",
+        "1.27"
+      ],
+      "sources": [
+        {
+          "what": "List of Category 5 Atlantic hurricanes (HURDAT): peak 1-minute sustained winds and minimum pressure: Allen 1980 165 kn (190 mph), 899 hPa; Gilbert 1988 160 kn (185 mph), 888 hPa; Mitch 1998 155 kn (180 mph), 905 hPa; Rita 2005 155 kn (180 mph), 895 hPa",
+          "url": "https://en.wikipedia.org/wiki/List_of_Category_5_Atlantic_hurricanes"
+        }
+      ],
+      "notes": "Knots converted to mph as the source rounds them (to the nearest 5); hPa equals millibars. Full 2x2 option set as in 1.3.",
+      "word_count": 63,
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "command_of_evidence.T2_lit_quote.easy.w3b1_22",
+      "template": "T2_lit_quote",
+      "subtype": "Literary quotation illustrates a single-trait claim",
+      "tier": "easy",
+      "band_target": null,
+      "passage": "The Harbor is a 1915 novel by Ernest Poole. Its narrator, Billy, spends his childhood in a house a few blocks above the crowded docks of New York City. In the novel, Billy remembers that, as a small boy, he was powerfully attracted to a neighborhood street that his mother had prohibited the children from entering: ______",
+      "stem": "Which quotation from The Harbor most effectively illustrates the claim?",
+      "options": [
+        "“Belle, who was bony, tall and grim, would sit by the little angels reading her shabby Bible.”",
+        "“As I walked home from church with my mother that day the streets seemed as quiet and safe as her eyes.”",
+        "“I would often watch her intently, with a sudden sharp anxiety, for I loved my mother with all my soul and I could not bear to see her unhappy.”",
+        "“Sunday after Sunday passed, and still in fascinated dread I would steal quietly out to the gate and watch this street forbidden.”"
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The claim is that young Billy was drawn to a street he was not allowed to go down. In choice D he describes slipping out to the gate Sunday after Sunday to watch “this street forbidden,” which shows that pull.",
+      "distractors": {
+        "A": {
+          "recipe": "OFF: describes another character",
+          "why_wrong": "It describes Belle, the family’s servant, not Billy’s attraction to the street."
+        },
+        "B": {
+          "recipe": "LURE: mentions streets, opposite feeling",
+          "why_wrong": "Billy notes how quiet and safe the streets seemed on the walk home, not his pull toward the forbidden street."
+        },
+        "C": {
+          "recipe": "OFF: a different feeling",
+          "why_wrong": "It shows Billy’s love and worry for his mother, not his interest in the street."
+        }
+      },
+      "models": [
+        "1.39",
+        "1.11",
+        "1.16",
+        "1.36"
+      ],
+      "sources": [
+        {
+          "what": "Ernest Poole, The Harbor (1915), Project Gutenberg #29932, Chapter II; all four quotations checked as exact substrings (straight apostrophes and quotation marks rendered curly)",
+          "url": "https://www.gutenberg.org/ebooks/29932"
+        }
+      ],
+      "notes": "The street slopes down from the house toward the docks; the mother forbids the children to go down it.",
+      "word_count": 57,
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [],
+        "status": "pass"
+      }
+    }
+  ],
+  "done": true,
+  "removed": [
+    {
+      "id": "command_of_evidence.Q2_P5_control.hard.w3b1_08",
+      "reason": "Topic fame: Gerber, Green and Larimer's 2006 Michigan social-pressure mailings (the neighbors' voting records letter) are the canonical get-out-the-vote field experiment, widely covered in textbooks and the press, so the item fails GENERATE.md's 'a well-read adult would not already know it' test whatever names are kept. Blind solve agreed (B)."
+    }
+  ]
+}

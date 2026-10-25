@@ -1,0 +1,402 @@
+{
+  "skill": "Command of Evidence",
+  "slug": "command_of_evidence",
+  "part": "b7",
+  "domain": "Information and Ideas",
+  "plan": {
+    "templates": [
+      {
+        "code": "T1_single",
+        "name": "Textual: hypothetical finding, one claim"
+      },
+      {
+        "code": "T1_compete",
+        "name": "Textual: finding that discriminates rival explanations"
+      },
+      {
+        "code": "Q1_P67_criterion",
+        "name": "Quantitative completion: passage relation or criterion combined with the display"
+      },
+      {
+        "code": "Q2_P8_multipart",
+        "name": "Quantitative description: multipart or cross-cell comparison"
+      }
+    ]
+  },
+  "source": "spec/rw/band7/pilot (written to spec/rw/band7/WRITE.md, reviewed to spec/rw/VERIFY.md, gated per PROXY.md, blind safety solve)",
+  "items": [
+    {
+      "id": "command_of_evidence.T1_single.b7",
+      "template": "T1_single",
+      "subtype": "Hypothetical finding supports a claim (missing premise)",
+      "passage": "Male great bowerbirds (Chlamydera nuchalis) of northern Australia construct a narrow avenue of upright sticks that opens onto a court strewn with gray and white objects, predominantly stones, bones, and shells. John Endler and colleagues documented that males arrange these decorations so that their size increases with distance from the avenue’s entrance; when the researchers experimentally reversed this gradient, the males restored it within three days. Because an object of a given size appears progressively smaller the farther it is from an observer, the team claims that the gradient produces forced perspective for the females that attend a male’s display, making the decorations appear more uniform in size than randomly distributed objects would.",
+      "stem": "Which finding, if true, would most directly support Endler and colleagues’ claim about the size gradient on great bowerbirds’ courts?",
+      "options": [
+        "Females usually watch a male’s display from the far edge of the court, looking back across the objects toward the avenue.",
+        "When the researchers reversed the gradient, males moved the larger objects back toward the far edge of the court before moving the smaller ones.",
+        "Females watch a male’s display only from inside the avenue, so they always view the objects on the court from nearly the same position.",
+        "The objects on great bowerbirds’ courts are mostly gray and white, whereas males of some other bowerbird species collect brightly colored objects."
+      ],
+      "answer_letter": "C",
+      "explanation": "Forced perspective works only for a viewer at a particular spot: objects that grow larger with distance from the avenue’s entrance look uniform in size only when seen from that entrance. The claim therefore needs a premise the text never states, that females view the court from that position. Choice C supplies it: if females watch only from inside the avenue, the gradient is arranged for exactly their viewpoint.",
+      "distractors": {
+        "A": {
+          "recipe": "opposite (OPP): a fixed viewpoint on the wrong side",
+          "why_wrong": "From the far edge of the court, the largest objects would be the nearest ones and the smallest the farthest, so the gradient would make the objects look more unequal in size, not more uniform. This finding would weaken the claim."
+        },
+        "B": {
+          "recipe": "logical trap (TRAP): fits both explanations",
+          "why_wrong": "How males rebuild the gradient shows that they maintain it, which the text already reports, but says nothing about how the arrangement looks to females; it is as consistent with the gradient serving some other purpose as with forced perspective."
+        },
+        "D": {
+          "recipe": "off target (OFF)",
+          "why_wrong": "The colors of the objects, and what other species collect, have no bearing on whether the size gradient creates an illusion for female great bowerbirds."
+        }
+      },
+      "models": [
+        "4987f743",
+        "ebe1eabd",
+        "124fdcd7",
+        "44da37eb"
+      ],
+      "band7_moves": [
+        "T1_single with a missing premise: the claim holds only if the audience has a fixed viewpoint, which the passage never says; the key supplies that premise (as ALSOL’s fixed travel cost and PCFG’s kelp beds do)",
+        "the fact the key depends on (distance measured from the avenue’s entrance) sits in sentence 2, away from the claim",
+        "stem names the study and the claimant and narrows the claim (19 words)",
+        "distractors: one OPP (a fixed viewpoint on the wrong side of the court, which the gradient would work against, so it is wrong only through the gradient’s direction), one TRAP (a rebuilding detail consistent with any account of the gradient), one OFF"
+      ],
+      "sources": [
+        {
+          "what": "Endler, Endler and Doerr 2010, Current Biology 20: 1679-1684: males build a long avenue from within which females view the display; this predictable viewpoint is a prerequisite for forced perspective; gray and white court objects increase in size with distance from the avenue entrance, making visual angles more uniform than random placement; after experimental reversal, males recovered their gradients within 3 days",
+          "url": "https://doi.org/10.1016/j.cub.2010.08.033"
+        },
+        {
+          "what": "Great bowerbird (Chlamydera nuchalis), northern Australia; court decorations of stones, bones and shells",
+          "url": "https://en.wikipedia.org/wiki/Great_bowerbird"
+        }
+      ],
+      "notes": "Section 6 checks (textual). (1) 113 prose words (gate 100), models' median 102.5. (2) stem 19 words, names the claimants and narrows the claim. (3) T1 finding item. (5) steps 3: the key supplies a premise the passage never states (a fixed female viewpoint at the avenue), which forced perspective requires because the gradient runs from the avenue's entrance. (6) TRAP present (B: a rebuilding detail consistent with any account of the gradient); recipes OPP, TRAP, OFF. Blind solve: C only; A would weaken. The premise in the key is in fact the paper's own (females view from within the avenue), so the if-true finding is also true. Originality: no official or bank item on bowerbirds or forced perspective (grep). Kelley and Endler's 2012 mating-success claim was disputed (Borgia et al. 2012); the item uses only the 2010 geometry and reversal findings.",
+      "word_count": 113,
+      "tier": "hard",
+      "band_target": 7,
+      "table": null,
+      "figure": null,
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 9,
+        "fixes": [
+          "replaced A (viewpoint varies), an exact mirror of the key that let students pick C by elimination, with a fixed viewpoint on the wrong side of the court; it is now wrong only through the gradient’s direction (geometry from Endler, Endler and Doerr 2010 abstract, researchonline.jcu.edu.au/16872)"
+        ],
+        "status": "fixed",
+        "band7": {
+          "verdict": "band 7",
+          "why": "The key supplies a premise the passage never states (a fixed viewpoint at the avenue), which forced perspective needs. After the fix, A offers a fixed viewpoint too, so the student must work out that from the far edge the gradient exaggerates size differences; B is a real TRAP (rebuilding is consistent with any function of the gradient). As written, the A/C mirror pair made it band 6."
+        }
+      },
+      "band": 7,
+      "band_basis": "pilot gate: reads band 7 against official anchors, or the proxy is blind there and the reviewer judged band 7"
+    },
+    {
+      "id": "command_of_evidence.T1_compete.b7",
+      "template": "T1_compete",
+      "subtype": "Hypothetical finding discriminates two explanations",
+      "passage": "Because a woodpecker’s head decelerates abruptly each time its beak strikes wood, many researchers have maintained that the bird’s skull, which contains spongy bone, functions as a shock absorber protecting the brain—a hypothesis that has inspired designs for protective helmets. Yet when Sam Van Wassenbergh and colleagues analyzed high-speed video of three woodpecker species, they found that the braincase decelerated approximately as sharply as the beak did, indicating that the skull operates as a stiff hammer rather than as a cushion. The researchers nonetheless concluded that woodpeckers’ brains are not at risk of concussion, attributing this resilience to the diminutive size of the birds’ braincases rather than to any absorption of shock by the skull.",
+      "stem": "Which finding, if true, would most directly support Van Wassenbergh and colleagues’ explanation of why woodpeckers’ brains are not at risk of concussion?",
+      "options": [
+        "For any given deceleration, the pressure that an abrupt stop produces within the brain rises with the length of the braincase.",
+        "The spongy bone in a woodpecker’s skull is densest in the regions that lie directly between the base of the beak and the brain.",
+        "Woodpeckers can strike trees thousands of times each day over many years without showing any behavioral or anatomical signs of brain injury.",
+        "The beaks of the three species studied differ in length and shape, reflecting differences in the hardness of the wood that each species typically excavates for food."
+      ],
+      "answer_letter": "A",
+      "explanation": "The team rejects the shock-absorber account and credits the brain’s safety to the small size of the braincase. For size to protect the brain, a smaller braincase must expose the brain to less stress at the same deceleration, a premise the text does not state. Choice A supplies it: if the pressure in the brain grows with the braincase’s length, a woodpecker’s short braincase keeps that pressure low even though its head stops as sharply as its beak.",
+      "distractors": {
+        "B": {
+          "recipe": "opposite (OPP): the rival’s prediction",
+          "why_wrong": "Spongy bone placed between the beak and the brain is what the shock-absorber account would predict, so this finding fits the explanation the team rejects; it says nothing about braincase size."
+        },
+        "C": {
+          "recipe": "logical trap (TRAP): consistent with both explanations",
+          "why_wrong": "Both accounts agree that woodpeckers’ brains escape injury; the absence of injury cannot show whether that is due to small size or to shock absorption."
+        },
+        "D": {
+          "recipe": "irrelevant property of the same animals (OFF)",
+          "why_wrong": "Differences in beak shape among species say nothing about why the brain is protected."
+        }
+      },
+      "models": [
+        "0240d11c",
+        "a44bbd6b",
+        "b32c4b3a"
+      ],
+      "band7_moves": [
+        "T1_compete: two named explanations (received shock-absorber view vs the team’s size explanation); the key is evidence only one predicts, reached through an unstated premise (at a given deceleration, pressure in the brain rises with braincase length), stated without the passage’s size words",
+        "TRAP: an observation both accounts predict (no injuries), the strongest wrong option",
+        "OPP built from the rival’s mechanism (spongy bone between beak and brain), not refuted by the passage’s measurement; one irrelevant property of the same animals",
+        "stem names the claimants and narrows the claim (22 words)"
+      ],
+      "sources": [
+        {
+          "what": "Van Wassenbergh et al. 2022, Current Biology 32: 3189-3194: skull hypothesized to be a shock absorber that inspired helmets; in vivo decelerations during pecking in three species show the cranial skeleton is a stiff hammer, not a shock-absorbing system; simulations of braincase size and shape show the brains are still safe below concussion thresholds",
+          "url": "https://doi.org/10.1016/j.cub.2022.05.052"
+        },
+        {
+          "what": "High-speed video of pecking; no difference between beak and brain deceleration; small size lets smaller animals withstand higher decelerations",
+          "url": "https://www.smithsonianmag.com/smart-news/woodpecker-skulls-dont-absorb-shock-like-previously-thought-180980426/"
+        },
+        {
+          "what": "simulations of braincase size and shape and intracranial pressure: brains stay below primate concussion thresholds; smaller brains withstand the decelerations; larger woodpeckers would face concussion risk",
+          "url": "https://www.sci.news/biology/woodpecker-pecking-11004.html"
+        }
+      ],
+      "notes": "Section 6 checks (textual). (1) 115 prose words, models' median 113. (2) stem 22 words, names the claimants. (5) steps 3: the key adds the unstated premise that tolerable deceleration rises as brain size falls, the only way size could protect the brain. (6) TRAP present (C: no injuries, predicted by both accounts). (7) discrimination: shock-absorber account predicts B and C, the size account predicts A and C, so only A splits them. Recipes OPP, TRAP, OFF. Blind solve: A only. Originality: no official or bank item on woodpeckers (grep). Key-to-distractor length kept at or below the longest distractor (A 156 chars, D 165).",
+      "word_count": 115,
+      "tier": "hard",
+      "band_target": 7,
+      "table": null,
+      "figure": null,
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 8,
+        "fixes": [
+          "key reworded: it said brains withstand harder jolts 'the smaller they are ... as small as a woodpecker’s', echoing the passage’s 'diminutive size' and spelling out the inference; it now states the premise as physics without size words (pressure in the brain rises with braincase length at a given deceleration), close to the study’s own braincase-size and intracranial-pressure simulations (sci.news report of Van Wassenbergh et al. 2022)",
+          "B replaced: 'spongy bone compresses enough to reduce the force reaching the braincase' was flatly refuted by the passage’s measurement (braincase decelerates as sharply as the beak); it is now a structural fact that fits the rival account without being refuted",
+          "explanation and B why_wrong rewritten to match; source added"
+        ],
+        "status": "fixed",
+        "band7": {
+          "verdict": "band 7",
+          "why": "Lower edge of band 7. The student must see that the size explanation needs smaller braincases to expose the brain to less stress at the same deceleration and recognise that premise in the key’s pressure-length relation; C (no injuries) is a TRAP both accounts predict, and B fits the rival. As written it was band 6: the key repeated the passage’s size wording and B was refuted by the passage itself, leaving A against C."
+        }
+      },
+      "band": 7,
+      "band_basis": "pilot gate: reads band 7 against official anchors, or the proxy is blind there and the reviewer judged band 7"
+    },
+    {
+      "id": "command_of_evidence.Q1_P67_criterion.b7",
+      "template": "Q1_P67_criterion",
+      "subtype": "Data completion through a definition stated in the passage",
+      "passage": "Mobile money services, which allow users to store, transfer, and receive funds through a mobile phone without visiting a bank branch or an automated teller machine, have proliferated across much of sub-Saharan Africa since Kenya’s M-Pesa service was introduced in 2007. The World Bank’s Global Findex survey, conducted periodically since 2011, documents this expansion; its 2021 edition drew on interviews with about 128,000 adults in 123 economies. Findex classifies an adult as having an account if that adult has an account at a bank or comparable financial institution, has personally used a mobile money service in the twelve months before the survey, or both. Examining 2021 Findex data for four African economies with very different financial systems, a student concludes that ______",
+      "stem": "Which choice most effectively uses data from the table to complete the student’s conclusion?",
+      "options": [
+        "in South Africa, more than a third of adults rely on a mobile money account as their only account, a larger share than in any of the other three economies.",
+        "mobile money spread more slowly in Nigeria than in the other three economies because most Nigerian adults already had an account at a financial institution.",
+        "in Tanzania, more adults have both kinds of account than have only a mobile money account, whereas in Côte d’Ivoire the reverse is true.",
+        "in Côte d’Ivoire and Tanzania, about three in ten adults have only a mobile money account, while in Nigeria and South Africa almost none do."
+      ],
+      "answer_letter": "D",
+      "table": {
+        "title": "Account Ownership among Adults in Four African Economies, 2021",
+        "columns": [
+          "Economy",
+          "Any account (% of adults)",
+          "Account at a financial institution (% of adults)",
+          "Mobile money account (% of adults)"
+        ],
+        "rows": [
+          [
+            "Côte d’Ivoire",
+            "51",
+            "21",
+            "40"
+          ],
+          [
+            "Nigeria",
+            "45",
+            "45",
+            "9"
+          ],
+          [
+            "South Africa",
+            "85",
+            "84",
+            "37"
+          ],
+          [
+            "Tanzania",
+            "52",
+            "23",
+            "45"
+          ]
+        ],
+        "note": null
+      },
+      "explanation": "Because Findex counts an account of either kind, or both, the share of adults whose only account is a mobile money account equals the share with any account minus the share with a financial-institution account. That is 51 − 21 = 30 points in Côte d’Ivoire and 52 − 23 = 29 in Tanzania, but 45 − 45 = 0 in Nigeria and 85 − 84 = 1 in South Africa. Choice D states this.",
+      "distractors": {
+        "A": {
+          "recipe": "definition applied the wrong way (WDIR)",
+          "why_wrong": "It reads South Africa’s mobile money column (37%) as the share with only mobile money. Since 85% have some account and 84% have a financial-institution account, only about 1% have mobile money alone."
+        },
+        "B": {
+          "recipe": "outside the data (OUTS)",
+          "why_wrong": "The table gives 2021 levels only; it cannot show how quickly mobile money spread or why, and the text gives no cause."
+        },
+        "C": {
+          "recipe": "compound with one false clause (INACC)",
+          "why_wrong": "In Tanzania, 29% have only mobile money (52 − 23), so the 45% with mobile money include only about 16% with both kinds of account; fewer have both than have mobile money alone. The clause about Côte d’Ivoire is true (30% only mobile money, about 10% both)."
+        }
+      },
+      "models": [
+        "4411e15b",
+        "43f4013a",
+        "a16128e2"
+      ],
+      "band7_moves": [
+        "Q1_P67: the passage states a definition (an account of either kind, or both) that must be applied to the display before any option can be checked; no column shows the quantity the key is about",
+        "the blank asks for a conclusion about people (who relies on mobile money alone), not a restatement of a cell",
+        "options are compound clauses of 25 to 31 words",
+        "distractors: the definition applied the wrong way (WDIR: the mobile money column read as mobile-only), a cause and a rate the display cannot settle (OUTS), a compound with one false clause that also needs the definition (INACC)"
+      ],
+      "sources": [
+        {
+          "what": "World Bank WDI/Findex API, 2021 values: account ownership (account.t.d) Côte d’Ivoire 50.8, Nigeria 45.3, South Africa 85.4, Tanzania 52.4; financial institution account (fiaccount.t.d) 20.6, 45.1, 84.1, 23.3; mobile money account (mobileaccount.t.d) 40.4, 8.7, 36.6, 44.6 (rounded in the table)",
+          "url": "https://api.worldbank.org/v2/country/CIV;NGA;ZAF;TZA/indicator/account.t.d?format=json&date=2021"
+        },
+        {
+          "what": "SDG 8.10.2 metadata: account = account at a bank or other financial institution, or personally using a mobile money service in the past 12 months; Findex 2021 covered 123 economies, about 128,000 people",
+          "url": "https://worldbank.github.io/sdg-metadata/metadata/en/8-10-2"
+        },
+        {
+          "what": "Global Findex launched in 2011",
+          "url": "https://www.worldbank.org/en/publication/globalfindex"
+        },
+        {
+          "what": "M-Pesa launched in Kenya in 2007",
+          "url": "https://en.wikipedia.org/wiki/M-Pesa"
+        }
+      ],
+      "notes": "Section 6 checks (quantitative). (8) 121 prose words (gate 100). check_rw flags this passage as below the models' median of 171, but that median counts the table text that cb_api inlines in its passages; the same three models have 121, 124 and 106 prose words (median 121), which this passage meets. Tables here follow the GENERATE schema (separate table field), so the flag is a tool artifact. (9) option mean 26.0 words (gate 25). (10) exactly one option true: verified with Python from the table (mobile-only = any minus institution account: CIV 30, NGA 0, ZAF 1, TZA 29; both = mobile minus mobile-only: CIV 10, NGA 9, ZAF 36, TZA 16). (12) proxy: the either-or-both definition must be applied before any option can be checked. (13) operations 4 or more: two subtractions per economy, then comparisons across economies. Distractors WDIR, OUTS, INACC. Data are real (World Bank API, 2021 Findex values, rounded to whole percentages). Originality: no official or bank item on mobile money or Findex (grep).",
+      "word_count": 122,
+      "tier": "hard",
+      "band_target": 7,
+      "figure": null,
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 17,
+        "fixes": [
+          "sentence 2: untangled the stacked participle and 'whose 2021 edition incorporated interviews with approximately 128,000 people' clause into a main clause plus a separate clause after a semicolon (sample size and 123 economies verified, SDG 8.10.2 metadata); passage stays at the models' prose median"
+        ],
+        "status": "fixed",
+        "band7": {
+          "verdict": "band 7",
+          "why": "No column shows the quantity the key is about: the passage’s either-or-both definition must be applied (mobile only = any account minus institution account) before any option can be checked, four subtractions and cross-economy comparisons. A is the definition misapplied (WDIR), C a compound with one false clause that also needs the definition, B a cause the data cannot settle. Exactly one option true; all 12 cells match the World Bank API 2021 values when rounded."
+        }
+      },
+      "band": 7,
+      "band_basis": "pilot gate: reads band 7 against official anchors, or the proxy is blind there and the reviewer judged band 7"
+    },
+    {
+      "id": "command_of_evidence.Q2_P8_multipart.b7",
+      "template": "Q2_P8_multipart",
+      "subtype": "Data description: cross-cell comparison of changes",
+      "passage": "According to World Bank estimates, the share of people with access to electricity rose sharply in both Kenya and Rwanda, two East African countries, between 2010 and 2020. Because connecting scattered rural homesteads to a power grid costs considerably more per household than connecting densely settled urban neighborhoods, rural residents in many countries gain access only after most urban residents have it. In 2015, however, Kenya began its Last Mile Connectivity Project, which extends power lines to households located within 600 meters of an existing transformer, many of them in rural areas. A student argues that over the decade Kenya narrowed the gap between urban and rural access to electricity, whereas Rwanda did not.",
+      "stem": "Which choice best describes data from the table that support the student’s argument?",
+      "options": [
+        "In Kenya, rural access in 2020 exceeded urban access in 2010, whereas in Rwanda, rural access in 2020 remained below urban access in 2010.",
+        "In Kenya, rural access rose by more percentage points than urban access did, whereas in Rwanda, urban access rose by more percentage points than rural access did.",
+        "Rural access rose by more percentage points in Kenya than in Rwanda, whereas urban access rose by more percentage points in Rwanda than in Kenya.",
+        "In Kenya, rural access rose roughly ninefold between 2010 and 2020, whereas in Rwanda, rural access rose by less than half that factor over the same period."
+      ],
+      "answer_letter": "B",
+      "table": {
+        "title": "Percentage of Population with Access to Electricity in Kenya and Rwanda",
+        "columns": [
+          "Country and area",
+          "2010",
+          "2020"
+        ],
+        "rows": [
+          [
+            "Kenya, urban",
+            "58",
+            "94"
+          ],
+          [
+            "Kenya, rural",
+            "7",
+            "63"
+          ],
+          [
+            "Rwanda, urban",
+            "45",
+            "94"
+          ],
+          [
+            "Rwanda, rural",
+            "3",
+            "35"
+          ]
+        ],
+        "note": null
+      },
+      "explanation": "A gap narrows when the lower figure rises by more than the higher one. In Kenya, rural access rose 56 points (7 to 63) while urban access rose 36 (58 to 94), so the gap fell from 51 to 31 points. In Rwanda, urban access rose 49 points (45 to 94) while rural access rose 32 (3 to 35), so the gap grew from 42 to 59. Choice B describes exactly these two comparisons.",
+      "distractors": {
+        "A": {
+          "recipe": "accurate comparison of the wrong cells (IRREL)",
+          "why_wrong": "Both comparisons are accurate (63 is above 58, and 35 is below 45), but they set rural access in one year against urban access in another. Rwanda’s rural access in 2020 could fall short of its urban access in 2010 even if its gap had narrowed, so this choice cannot show that Rwanda’s gap did not narrow."
+        },
+        "C": {
+          "recipe": "accurate comparison of the wrong cells (IRREL): changes compared across countries",
+          "why_wrong": "Both statements are accurate (rural +56 in Kenya against +32 in Rwanda; urban +49 in Rwanda against +36 in Kenya), but they compare the countries with each other. Whether a gap narrowed depends on rural against urban change within each country, which this choice never compares."
+        },
+        "D": {
+          "recipe": "inaccurate reading (INACC)",
+          "why_wrong": "Kenya’s rural access did rise about ninefold (7 to 63), but Rwanda’s rose more than tenfold (3 to 35), not by less than half that factor; growth factors also do not measure the gap."
+        }
+      },
+      "models": [
+        "627d93e3",
+        "010fa3f0",
+        "80fd9454"
+      ],
+      "band7_moves": [
+        "Q2_P8 multipart: the claim is an interaction (country by area by year), so the key must compare changes across cells, not levels",
+        "all options share the key’s two-clause frame (“In Kenya ..., whereas in Rwanda ...”)",
+        "distractors: two accurate comparisons of the wrong cells (IRREL): one cross-year and cross-area, one comparing changes across countries in the key’s own frame; one compound inaccurate in one clause (INACC)",
+        "the passage gives a general expectation (rural access lags) that the Kenyan data run against"
+      ],
+      "sources": [
+        {
+          "what": "World Bank WDI, access to electricity, urban (EG.ELC.ACCS.UR.ZS) and rural (EG.ELC.ACCS.RU.ZS), current vintage: Kenya urban 58.2 (2010), 94.1 (2020); Kenya rural 7.2, 62.7; Rwanda urban 44.5, 93.9; Rwanda rural 2.6, 34.9 (rounded in the table)",
+          "url": "https://api.worldbank.org/v2/country/KEN;RWA/indicator/EG.ELC.ACCS.RU.ZS?format=json&date=2010:2020"
+        },
+        {
+          "what": "Urban series",
+          "url": "https://api.worldbank.org/v2/country/KEN;RWA/indicator/EG.ELC.ACCS.UR.ZS?format=json&date=2010:2020"
+        },
+        {
+          "what": "Kenya Power Last Mile Connectivity Project: connectivity began September 2015; low-voltage network extended to households within 600 meters of a transformer",
+          "url": "https://www.kplc.co.ke/last-mile-connectivity"
+        },
+        {
+          "what": "Lee, Miguel and Wolfram 2020, Journal of Political Economy 128(4): considerable scale economies in rural connection costs in Kenya (denser connection is cheaper per household)",
+          "url": "https://epic.uchicago.edu/research/experimental-evidence-on-the-economics-of-rural-electrification/"
+        }
+      ],
+      "notes": "Section 6 checks (quantitative). (8) 114 prose words. check_rw flags this as below the models' median of 191, which again counts inlined table text; the models' prose-only lengths are 89, 113 and 115 (median 113), which this passage meets. (10) one option true and sufficient, verified with Python: Kenya rural +56 vs urban +36 (gap 51 to 31); Rwanda urban +49 vs rural +32 (gap 42 to 59); A and C are accurate but irrelevant to the change in the gap; D is false (Rwanda rural rose about 11.7-fold, Kenya about 9-fold). (12) relation: a gap narrows only when the lower series rises more, applied across a country by area by year table. (13) operations: four differences and two comparisons. This is the file's one key-longest item (162 chars vs 156, 138, 138), needed to keep the key-longest rate near the official 27%. Data are World Bank WDI modeled estimates (current vintage), rounded. The student is hypothetical, as in band-7 model 80fd9454; the data and the Last Mile project are real.",
+      "word_count": 114,
+      "tier": "hard",
+      "band_target": 7,
+      "figure": null,
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 12,
+        "fixes": [
+          "replaced C (2020 levels only, sorted out by type: B was the only option about changes) with an accurate cross-country change comparison in the key’s own frame (Kenya rural +56 vs Rwanda +32, Rwanda urban +49 vs Kenya +36), which never compares rural with urban within a country; verified with Python that B is the only option both accurate and sufficient",
+          "A why_wrong sharpened: Rwanda’s 2020 rural level below its 2010 urban level does not rule out a narrowing gap"
+        ],
+        "status": "fixed",
+        "band7": {
+          "verdict": "band 7",
+          "why": "An interaction (country by area by year): the student must compute four changes and compare rural with urban within each country. After the fix two distractors are accurate comparisons of the wrong cells, one in the key’s exact frame (the difference taken across countries instead of within them), as in the official band-7 models; D is false through growth factors. Before the fix it was band 6, because option type alone pointed to B."
+        }
+      },
+      "band": 7,
+      "band_basis": "pilot gate: reads band 7 against official anchors, or the proxy is blind there and the reviewer judged band 7"
+    }
+  ]
+}

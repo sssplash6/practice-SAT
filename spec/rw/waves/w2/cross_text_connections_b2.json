@@ -1,0 +1,1001 @@
+{
+  "skill": "Cross-Text Connections",
+  "slug": "cross_text_connections",
+  "part": "w2b2",
+  "domain": "Craft and Structure",
+  "plan": {
+    "templates": [
+      {
+        "code": "S1_concede_rebut",
+        "name": "Respond: concede part of the target, rebut the rest (two-part options)"
+      },
+      {
+        "code": "S1_solution",
+        "name": "Respond: one text supplies a solution to the other's problem"
+      },
+      {
+        "code": "S1_refute_data",
+        "name": "Respond: target refuted by new data"
+      },
+      {
+        "code": "S1_second_factor",
+        "name": "Respond: target is incomplete, a second cause or source"
+      },
+      {
+        "code": "S2_hidden_assumption",
+        "name": "Agree: shared methodological assumption under a dispute"
+      },
+      {
+        "code": "S3_difference",
+        "name": "Difference: how the two authors view an object, compared on one axis"
+      },
+      {
+        "code": "S1_counterexample",
+        "name": "Respond: counterexample to a 'first', 'only' or 'requires' claim"
+      },
+      {
+        "code": "S1_limit_degree",
+        "name": "Respond: limit the degree or scope of the target claim"
+      },
+      {
+        "code": "S1_case_fits_frame",
+        "name": "Respond (Text 1 speaking): Text 2's case fits Text 1's general frame"
+      },
+      {
+        "code": "S2_shared_premise",
+        "name": "Agree: shared premise beneath a visible disagreement"
+      },
+      {
+        "code": "S1_rival_hypothesis",
+        "name": "Respond: rival hypothesis with evidence the target does not account for"
+      }
+    ]
+  },
+  "items": [
+    {
+      "id": "cross_text_connections.S1_concede_rebut.hard.w2b2_01",
+      "template": "S1_concede_rebut",
+      "subtype": "Response prediction",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Text 1\n\nAdult tunicates, or sea squirts, spend their lives anchored to rocks and pilings, filtering seawater through a saclike body that lacks a backbone and, in most species, any trace of the notochord—the flexible rod that stiffens the tail of the free-swimming larva. Lancelets, by contrast, retain a notochord and a fishlike form throughout life. For this reason, <u>zoologists long regarded lancelets, not tunicates, as the closest living relatives of vertebrates</u>.\n\nText 2\n\nThat adult tunicates bear little resemblance to vertebrates is undisputed. In 2006, however, Frédéric Delsuc and colleagues compared 146 genes across dozens of animal species and determined that tunicates share a more recent common ancestor with vertebrates than lancelets do. The tunicate’s simplified adult anatomy, it seems, reflects features lost after its lineage diverged and therefore reveals little about how distant its kinship with vertebrates is.",
+      "stem": "Based on the texts, how would the author of Text 2 most likely respond to the underlined claim in Text 1?",
+      "options": [
+        "By agreeing that adult tunicates differ sharply from vertebrates but arguing that the difference arose because tunicates evolved more slowly than lancelets did",
+        "By accepting that tunicates and lancelets both have a notochord at some stage of life but insisting that lancelets lost features that tunicates retained",
+        "By conceding that adult anatomy favors lancelets but maintaining that the anatomy of tunicate larvae points to a closer kinship with vertebrates",
+        "By granting the anatomical observations on which the claim rests but questioning whether those observations reveal how closely the animals are related"
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "Text 1 reasons from anatomy: adult tunicates lack a backbone and usually a notochord, while lancelets keep a notochord and a fishlike form, so lancelets were thought to be vertebrates’ closest relatives. The author of Text 2 accepts the observation (“That adult tunicates bear little resemblance to vertebrates is undisputed”) but reports Delsuc’s finding that “tunicates share a more recent common ancestor with vertebrates than lancelets do,” adding that the simplified adult anatomy “reveals little about how distant its kinship with vertebrates is.” So the author grants the anatomical observations but questions whether they show how closely the animals are related.",
+      "distractors": {
+        "A": {
+          "recipe": "D7 half right (right concession, invented rebuttal)",
+          "why_wrong": "Text 2 does agree that adult tunicates look very unlike vertebrates, but it explains their simplified anatomy by features lost after their lineage diverged, not by slower evolution."
+        },
+        "B": {
+          "recipe": "D7 half right (reversed rebuttal)",
+          "why_wrong": "Text 2 says it is the tunicates that lost features; it never says lancelets lost features that tunicates kept."
+        },
+        "C": {
+          "recipe": "D7 half right (rebuttal twisted from Text 1's larva)",
+          "why_wrong": "Text 2 never mentions tunicate larvae; its case rests on Delsuc’s comparison of genes. A larval notochord could not favor tunicates in any case, since Text 1 says lancelets keep a notochord throughout life."
+        }
+      },
+      "models": [
+        "3.2",
+        "3.9",
+        "3.13"
+      ],
+      "word_count": 140,
+      "sources": [
+        {
+          "what": "Delsuc, Brinkmann, Chourrout, Philippe 2006, Nature 439: phylogenomic analysis of 146 nuclear genes shows tunicates, not cephalochordates (lancelets), are the closest living relatives of vertebrates; the earlier view rested on morphological similarity",
+          "url": "https://www.nature.com/articles/nature04336"
+        }
+      ],
+      "notes": "Area: natural science (zoology). Text 1 is the standard (morphological) view, unattributed; Text 2 grants the anatomy and rejects the inference (3.2 and 3.9 pattern). The ‘features lost’ sentence is hedged (‘it seems’); Delsuc et al. call for a reappraisal of the morphological data.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 2,
+        "fixes": [
+          "rebuilt C as half right (grants adult anatomy, twists Text 1's larval notochord) in place of a rebuttal killed outright by 'undisputed'; opens with 'conceding' so it does not share the key's 'By granting'"
+        ],
+        "status": "fixed"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "Concede-rebut with two-part options, the band-6 device in the band7 report; the key is a stance on the target reached in two steps (grant the observation, reject the inference) and Text 2 nearly states it; no synthesis. All three distractors now partly right."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "D",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "cross_text_connections.S1_solution.hard.w2b2_02",
+      "template": "S1_solution",
+      "subtype": "Response prediction",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Text 1\n\nSince the 1950s, linguists have recorded thousands of hours of speech in languages that now have few or no speakers left, and these recordings are often the only surviving record of the stories, songs, and words they hold. Yet <u>much of this material is at risk: magnetic tape deteriorates, and many collections sit uncatalogued in researchers’ offices, where no one else knows they exist</u>.\n\nText 2\n\nIn 2003, linguists and musicologists at three Australian universities founded PARADISEC, an archive that borrows field tapes from researchers, converts them to digital files, and describes each recording in a public online catalog. Some tapes arrived already moldy or brittle. Through the catalog, communities whose languages were recorded, including descendants of the original speakers, can find the recordings and request copies.",
+      "stem": "Based on the texts, how would the founders of PARADISEC (Text 2) most likely respond to the underlined portion of Text 1?",
+      "options": [
+        "They would point out that their archive addresses both the physical decay of the tapes and the lack of any public record of where they are kept.",
+        "They would argue that cataloguing collections is more urgent than converting tapes to digital files, since a tape that no one can locate cannot be copied.",
+        "They would grant that magnetic tape deteriorates but argue that a recording is safe from that danger once it has been listed in a public catalog.",
+        "They would maintain that the greater danger to the recordings is that researchers discard them, rather than that the tapes themselves slowly deteriorate."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The underlined portion names two threats: “magnetic tape deteriorates,” and many collections “sit uncatalogued in researchers’ offices, where no one else knows they exist.” PARADISEC answers both: it “converts them to digital files,” which protects the recordings from decay, and “describes each recording in a public online catalog,” so that communities “can find the recordings.” Its founders would therefore point out that the archive addresses both the tapes’ decay and the lack of a public record of where they are.",
+      "distractors": {
+        "B": {
+          "recipe": "D3 twisted detail (ranking not in the text)",
+          "why_wrong": "Text 2 describes digitizing and cataloguing as parts of one service; it never says that one is more urgent than the other."
+        },
+        "C": {
+          "recipe": "D3 twisted detail (method moved to the wrong problem)",
+          "why_wrong": "Listing a recording in a catalog lets people find it but does nothing to stop a tape from decaying; in Text 2, it is converting the tapes to digital files that protects the recordings."
+        },
+        "D": {
+          "recipe": "D7 half right",
+          "why_wrong": "Text 2 treats decay as a real danger (“Some tapes arrived already moldy or brittle”), so its founders would not set it aside in favor of the risk of tapes being discarded."
+        }
+      },
+      "models": [
+        "3.6",
+        "3.7"
+      ],
+      "word_count": 129,
+      "sources": [
+        {
+          "what": "PARADISEC founded 2003 by the University of Sydney, University of Melbourne and ANU to borrow, describe, digitise and curate field recordings at risk (deteriorating, mouldy tapes; collections with no catalogue of their location or contents) and to improve access for recorded communities and descendants",
+          "url": "https://open.sydneyuniversitypress.com.au/9781743324431/r3-paradisec-its-history-and-future.html"
+        }
+      ],
+      "notes": "Area: social science (linguistics). Solution template, 3.6 direction (Text 2’s method answers Text 1’s two-part problem); the key must cover both parts, distractors keep one part or invent a ranking. ‘They would’ shell as in 3.6.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [
+          "rebuilt C (was an add-on about lost recordings) as the method moved to the wrong problem: cataloguing credited with stopping decay"
+        ],
+        "status": "fixed"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "The solution mapping is direct (digitizing for decay, the catalog for unknown collections), while band-7 S1_solution items need an unstated link; two steps. B and C each move one method detail, D keeps a passage detail."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "A",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "cross_text_connections.S1_refute_data.hard.w2b2_03",
+      "template": "S1_refute_data",
+      "subtype": "Response prediction",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Text 1\n\nSauropods, the long-necked giants of the Jurassic and Cretaceous, possessed simple peglike teeth suited to stripping vegetation but not to chewing it. How, then, did they process such fibrous food? Some paleontologists have pointed to the smooth, polished stones occasionally discovered among sauropod skeletons: like the many birds that grind food with swallowed stones in a muscular stomach chamber called a gizzard, sauropods may have relied on a stony “gastric mill.”\n\nText 2\n\nTesting the gastric-mill hypothesis, Oliver Wings and Martin Sander examined ostriches, whose gizzard stones total roughly 1 percent of body mass; the stones abraded rapidly and never became polished. Stones are rarely associated with sauropod skeletons, and even the largest collections amount to well under 0.1 percent of the animals’ estimated mass. Sauropods, the researchers suggest, more likely digested vegetation by retaining food in the gut for extended periods.",
+      "stem": "Based on the texts, how would Wings and Sander (Text 2) most likely describe the view of the paleontologists presented in Text 1?",
+      "options": [
+        "It is plausible for the sauropods whose skeletons have been found with stones, which suggests that sauropod species differed in how they processed food.",
+        "It is reasonable, but it cannot be evaluated, since the contents of a sauropod’s stomach are almost never preserved.",
+        "It rests on a comparison with birds that the evidence from sauropod remains does not bear out.",
+        "It underestimates how quickly gizzard stones wear away, which would explain why so few stones are found with sauropods."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The paleontologists in Text 1 argue that sauropods, “like the many birds that grind food with swallowed stones,” used a gastric mill, citing polished stones found with sauropod skeletons. Wings and Sander tested that comparison: ostrich gizzard stones make up about 1 percent of body mass and “never became polished,” while “even the largest collections” found with sauropods amount to “well under 0.1 percent” of their mass. They would describe the view as resting on a comparison with birds that the sauropod evidence does not support.",
+      "distractors": {
+        "A": {
+          "recipe": "D3 twisted detail",
+          "why_wrong": "Text 2 says “even the largest collections” of stones found with sauropods fall far short of what a gizzard holds, so the view fails even for sauropods found with stones."
+        },
+        "B": {
+          "recipe": "D10 understatement / wrong reason",
+          "why_wrong": "Wings and Sander did evaluate the view, by comparing sauropod stones with the stones in ostrich gizzards; they did not need preserved stomach contents to do so."
+        },
+        "D": {
+          "recipe": "D2 wrong side (recycles “abraded rapidly”)",
+          "why_wrong": "Text 2 uses the ostrich findings against the gastric mill: gizzard stones never become polished, and sauropods had far too few stones. It does not use fast wear to explain why sauropod stones are scarce."
+        }
+      },
+      "models": [
+        "3.3",
+        "3.5"
+      ],
+      "word_count": 144,
+      "sources": [
+        {
+          "what": "Wings and Sander 2007, Proc. R. Soc. B 274: ostrich gastroliths about 1% of body mass, abrade fast and do not polish; sauropod gastrolith mass well under 0.1% of body mass; no gastric mill in sauropods, which likely relied on long retention time",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC2197205"
+        }
+      ],
+      "notes": "Area: natural science (paleontology). 3.5 shell (‘describe the view’, It-statements); the key needs two steps (the bird benchmark, then the sauropod shortfall). The polish point answers Text 1’s ‘polished stones’ without saying so.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "The key needs two linked steps (ostrich benchmark, then the sauropod shortfall) but is a verdict on the view, not a derived fact neither text states. A and D reuse passage details and are partly right."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "C",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "cross_text_connections.S1_second_factor.hard.w2b2_04",
+      "template": "S1_second_factor",
+      "subtype": "Response prediction",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Text 1\n\nNarrated largely by a landowner executed in 1948 and repeatedly reincarnated as animals, Mo Yan’s Life and Death Are Wearing Me Out (2006) follows a village through decades of political upheaval. Mo Yan has said that reading Gabriel García Márquez’s One Hundred Years of Solitude inspired his own work, and <u>many critics have attributed his fusion of the fantastic and the historical to García Márquez’s influence</u>.\n\nText 2\n\nThe parallels with García Márquez are genuine. But Chinese fiction has long situated ghosts and fox spirits among ordinary villagers—most famously in Pu Songling’s seventeenth-century collection Strange Tales from a Chinese Studio—and much of Mo Yan’s early education came from storytellers performing in the markets of Shandong, Pu Songling’s home province as well as his own. His fiction draws on that inheritance as much as on any foreign model.",
+      "stem": "Based on the texts, how would the author of Text 2 most likely characterize the underlined claim in Text 1?",
+      "options": [
+        "As underestimating how much García Márquez himself drew on oral storytelling traditions like those Mo Yan heard in Shandong",
+        "As overlooking precedents in Mo Yan’s own culture for the very features it traces to a foreign writer",
+        "As rightly noting the parallels with García Márquez but overlooking other foreign novelists whose work Mo Yan has admired",
+        "As correctly identifying where Mo Yan’s ghosts and spirits come from but not where his interest in rural history comes from"
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The underlined claim attributes Mo Yan’s “fusion of the fantastic and the historical” to García Márquez’s influence. The author of Text 2 grants the point (“The parallels with García Márquez are genuine”) but points to a Chinese tradition that “situated ghosts and fox spirits among ordinary villagers” and to the market storytellers of Mo Yan’s youth, concluding that his fiction “draws on that inheritance as much as on any foreign model.” So the author would see the claim as overlooking sources within Mo Yan’s own culture for the features it credits to García Márquez.",
+      "distractors": {
+        "A": {
+          "recipe": "D3 twisted detail",
+          "why_wrong": "Text 2 discusses the storytellers Mo Yan heard in Shandong, not the sources García Márquez drew on."
+        },
+        "C": {
+          "recipe": "D7 half right (twisted from “any foreign model”)",
+          "why_wrong": "Text 2 does grant the parallels, but the sources it adds are Chinese (the tradition of Pu Songling’s tales and the storytellers of Shandong), not other foreign novelists."
+        },
+        "D": {
+          "recipe": "D7 half right (reversed)",
+          "why_wrong": "Text 2 disputes the claim on exactly the point this choice says it gets right: the ghosts and spirits, which Text 2 traces to a Chinese tradition as well."
+        }
+      },
+      "models": [
+        "3.8"
+      ],
+      "word_count": 139,
+      "sources": [
+        {
+          "what": "Mo Yan said One Hundred Years of Solitude gave him inspiration for his own work, especially its weaving of real history into fiction; he has been dubbed China's answer to García Márquez's magical realism",
+          "url": "https://colombiareports.com/gabriel-garcia-marquez-influences-chinese-nobel-prize-winner/"
+        },
+        {
+          "what": "Mo Yan’s early education came from listening to market storytellers, local opera troupes and child raconteurs (‘reading with my ears’); his work rooted in folk tradition",
+          "url": "https://lareviewofbooks.org/article/uncle-tall-tale-on-mo-yan-speaks-lectures-and-speeches-by-the-nobel-laureate-from-china/"
+        },
+        {
+          "what": "Life and Death Are Wearing Me Out (2006): Ximen Nao, a landlord executed in 1948 during land reform, reborn as donkey, ox, pig, dog and monkey",
+          "url": "https://en.wikipedia.org/wiki/Life_and_Death_Are_Wearing_Me_Out"
+        }
+      ],
+      "notes": "Area: literature (criticism). 3.8 frame (influence of one writer vs. a wider native tradition) with a different structure: Text 1 rests on the writer’s own testimony. Critics in Text 1 unattributed; Pu Songling (Zichuan, Shandong) and Strange Tales are standard facts; Mo Yan is from Gaomi, Shandong; Text 2’s conclusion is the author’s own.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [
+          "Ximen Nao was executed in 1948, not 1950 (Wikipedia, novel page)",
+          "Text 1 softened to the source: Mo Yan said the novel 'inspired his own work' (was 'among the novels that most influenced him'); critics 'have attributed' the fusion to Garcia Marquez's influence (was 'concluded ... is borrowed')",
+          "rebuilt C (was an add-on about the novel's structure) as half right: grants the parallels, then names other foreign novelists"
+        ],
+        "status": "fixed"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "Same frame as 3.8 (CB band 7), but the key restates Text 2's closing sentence one level up; two steps, no synthesis. Strong 6: A, C and D are all partly right."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "B",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "cross_text_connections.S2_hidden_assumption.hard.w2b2_05",
+      "template": "S2_hidden_assumption",
+      "subtype": "Agreement",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Text 1\n\nWhen Gustav Mahler’s Sixth Symphony was first published in 1906, its turbulent scherzo appeared second among the four movements and its slow, lyrical Andante third. Decades later, the musicologist Erwin Ratz, preparing a critical edition issued in 1963, restored the scherzo to second place, maintaining that this order reflected what Mahler had finally wanted. For decades afterward, most orchestras performed the symphony in the order that Ratz’s edition prescribed.\n\nText 2\n\nShortly before the symphony’s 1906 premiere, Mahler moved the Andante into second place, and later printings of the score kept it there. Whenever he conducted the work, he kept the Andante second, and no surviving letter, note, or score shows that he ever changed his mind; Ratz offered no documents to support his claim. The Andante therefore belongs second, as a newer critical edition now acknowledges.",
+      "stem": "Based on the texts, Ratz (Text 1) and the author of Text 2 would most likely agree with which statement?",
+      "options": [
+        "The order of the two middle movements should be settled by what Mahler himself intended.",
+        "Mahler eventually came to regret having moved the Andante ahead of the scherzo.",
+        "Placing the scherzo second makes the overall design of the symphony easier for listeners to follow.",
+        "Orchestras today should perform the symphony in the order Mahler chose for its premiere."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "Ratz and the author of Text 2 disagree about which movement belongs second, but both argue from the same standard. Ratz justified his order by “maintaining that this order reflected what Mahler had finally wanted,” and the author of Text 2 reasons from Mahler’s own choices (“Whenever he conducted the work, he kept the Andante second”) and from the lack of evidence “that he ever changed his mind” before concluding, “The Andante therefore belongs second.” Both, then, treat Mahler’s intention as what should settle the order.",
+      "distractors": {
+        "B": {
+          "recipe": "D4 one text only",
+          "why_wrong": "This is Ratz’s position; the author of Text 2 rejects it, noting that nothing “shows that he ever changed his mind.”"
+        },
+        "C": {
+          "recipe": "D1 unaddressed add-on",
+          "why_wrong": "Neither Ratz nor the author of Text 2 argues from how listeners experience the symphony’s design."
+        },
+        "D": {
+          "recipe": "D4 one text only (needs a step)",
+          "why_wrong": "The premiere used Mahler’s revised order, with the Andante second; the author of Text 2 favors that order, but Ratz placed the scherzo second instead."
+        }
+      },
+      "models": [
+        "3.1"
+      ],
+      "word_count": 139,
+      "sources": [
+        {
+          "what": "Mahler Sixth: first published with Scherzo second; Mahler reversed the middle movements before the premiere, conducted it only Andante-Scherzo, and it was reprinted that way in his lifetime; Ratz’s 1963 critical edition restored Scherzo-Andante as Mahler’s wish without documentary support; the most recent editor reversed the decision in 2003",
+          "url": "https://www.bso.org/works/symphony-no-6-2"
+        },
+        {
+          "what": "Kahnt 1906 first edition Scherzo-Andante; Mahler reversed the movements at the Essen rehearsals and a second edition followed; Ratz 1963 restored Scherzo-Andante citing no documentary support; Kubik declared Andante-Scherzo in 2004 and the 2010 critical edition follows it",
+          "url": "https://en.wikipedia.org/wiki/Symphony_No._6_(Mahler)"
+        }
+      ],
+      "notes": "Area: arts (music). 3.1 pattern without authorship: the dispute is over movement order and the shared assumption is the criterion (the composer’s intention). Ratz’s claim and its lack of documentary support are documented; Text 2’s conclusion is the author’s own.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [
+          "dropped 'published in 2003': Kubik's statement dates from 2003/2004 and the new critical edition from 2010 (Wikipedia, BSO); added the Wikipedia source that also confirms Ratz cited no documents"
+        ],
+        "status": "fixed"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "S2_hidden_assumption has no band-7 official items, so it cannot be band 7. Strong 6: the shared criterion sits under the dispute, and D needs the premiere-order step."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "A",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "cross_text_connections.S3_difference.hard.w2b2_06",
+      "template": "S3_difference",
+      "subtype": "Difference",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Text 1\n\nThe Royal Commentaries of the Incas (1609) remains among the most detailed accounts of the Inca state, but it should be interpreted with its sources in mind. Garcilaso de la Vega, son of a Spanish captain and an Inca noblewoman, composed it in Spain decades after leaving Peru, relying largely on childhood recollections of stories told by his mother’s relatives—members of the Inca nobility, who remembered their ancestors’ reign as wise and benevolent.\n\nText 2\n\nGarcilaso’s portrayal of the Inca rulers as lawgivers who civilized the Andes owes much to his reading in Spain. In the opening sentence of his preface he calls Cusco “another Rome,” and throughout he characterizes Inca institutions in terminology borrowed from classical histories of Rome. The Royal Commentaries consequently reveals as much about how a Renaissance humanist imagined an empire as about the Andean past.",
+      "stem": "Which choice best describes a difference in how the authors of Text 1 and Text 2 view the Royal Commentaries of the Incas?",
+      "options": [
+        "The author of Text 1 doubts that Garcilaso remembered his relatives’ accounts correctly, while the author of Text 2 doubts that the Roman histories Garcilaso read were themselves accurate.",
+        "The author of Text 1 values the work as a record of what members of the Inca nobility recalled, while the author of Text 2 considers the work to be of no use to students of the Andean past.",
+        "The author of Text 1 traces the work’s portrayal of the Incas mainly to Garcilaso’s years in Spain, while the author of Text 2 traces that portrayal mainly to his childhood in Peru.",
+        "The author of Text 1 ties the work’s flattering view of Inca rule to the people Garcilaso learned from, while the author of Text 2 ties it to the European models he followed."
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "Both authors see the Royal Commentaries as shaped by something other than the Andean past itself, but they locate that influence differently. The author of Text 1 points to Garcilaso’s sources, his mother’s relatives, “who remembered their ancestors’ reign as wise and benevolent.” The author of Text 2 points to “his reading in Spain,” noting that he calls Cusco “another Rome” and characterizes Inca institutions in “terminology borrowed from classical histories of Rome.”",
+      "distractors": {
+        "A": {
+          "recipe": "D7 half right / D3",
+          "why_wrong": "Text 1 questions the outlook of Garcilaso’s relatives, not his memory of what they told him, and Text 2 questions what Garcilaso borrowed from the Roman histories, not whether those histories were accurate."
+        },
+        "B": {
+          "recipe": "D5 overstatement (one half)",
+          "why_wrong": "Text 2 says the work reveals as much about Renaissance thinking “as about the Andean past,” which means it still has value for studying that past."
+        },
+        "C": {
+          "recipe": "D2 swapped values",
+          "why_wrong": "The two halves are reversed: Text 1 stresses what Garcilaso heard as a child from his relatives, and Text 2 stresses his reading in Spain."
+        }
+      },
+      "models": [
+        "3.10"
+      ],
+      "word_count": 142,
+      "sources": [
+        {
+          "what": "Inca Garcilaso de la Vega (born Cuzco 1539, son of Spanish captain Sebastián Garcilaso de la Vega and Inca princess Chimpu Ocllo; left Peru 1560); Comentarios Reales (Lisbon 1609) drew on ‘what I often heard as a child from the lips of my mother and her brothers and uncles and other elders’",
+          "url": "https://en.wikipedia.org/wiki/Inca_Garcilaso_de_la_Vega"
+        },
+        {
+          "what": "Opening (Proemio) of the Comentarios Reales: ‘la ciudad del Cozco, que fue otra Roma en aquel Imperio’",
+          "url": "https://scalar.usc.edu/works/literalia/cusco"
+        }
+      ],
+      "notes": "Area: history. 3.10 pattern (two critiques on different grounds; axis = what shaped the work’s picture of the Incas). Both views unattributed, the authors’ own.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [
+          "'otra Roma' is in the opening sentence of the preface, not of the book (a dedication comes first): reworded",
+          "rebuilt A's Text 2 half (was killed by 'his reading in Spain'): now doubts the Roman histories' accuracy, a twisted detail"
+        ],
+        "status": "fixed"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "S3_difference has no band-7 official items, so it cannot be band 7. Strong 6: both halves must be mapped, C swaps them, A and B are half right."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "D",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "cross_text_connections.S1_counterexample.medium.w2b2_07",
+      "template": "S1_counterexample",
+      "subtype": "Response prediction",
+      "tier": "medium",
+      "passage": "Text 1\n\nIn his Lives of the Artists (1550), Giorgio Vasari credited the Flemish painter Jan van Eyck with inventing oil painting. Earlier European painters had generally bound their pigments with egg, which dries almost immediately; by combining pigments with slow-drying oils, van Eyck could blend colors and build up translucent, luminous layers. Vasari’s account proved remarkably durable, and <u>many subsequent histories of painting locate the origins of oil paint in fifteenth-century Flanders</u>.\n\nText 2\n\nBehind the niches that once held two monumental statues of the Buddha at Bamiyan, Afghanistan, are caves decorated with murals painted around the middle of the seventh century. Analyzing microscopic paint samples with X-ray and infrared techniques, a team including Yoko Taniguchi and Marine Cotte determined that the artists in twelve of the caves had combined their pigments with drying oils, probably extracted from walnuts or poppy seeds.",
+      "stem": "Based on the texts, what would the researchers in Text 2 most likely say about the underlined claim in Text 1?",
+      "options": [
+        "It is accurate, because the oils at Bamiyan were applied to protect finished murals rather than to bind their pigments.",
+        "It dates the beginning of oil painting too late, because painters were mixing pigments with oil centuries before van Eyck.",
+        "It is largely correct, because the murals at Bamiyan were made with a technique unrelated to the one van Eyck used.",
+        "It is incomplete, because van Eyck probably learned to paint with oils from artists who had trained in Central Asia."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The underlined claim says that histories of painting “locate the origins of oil paint in fifteenth-century Flanders,” with van Eyck. The researchers in Text 2 found that artists at Bamiyan, around “the middle of the seventh century,” had “combined their pigments with drying oils.” They would say the claim places the beginning of oil painting far too late.",
+      "distractors": {
+        "A": {
+          "recipe": "D2 wrong side (contradicts Text 2)",
+          "why_wrong": "Text 2 says the artists “combined their pigments with drying oils,” so the oils bound the pigments; they were not a protective coating."
+        },
+        "C": {
+          "recipe": "D2 wrong side",
+          "why_wrong": "Text 2 never says the Bamiyan technique was unrelated to van Eyck’s; it shows that pigments were bound with oil centuries earlier, which undercuts the claim."
+        },
+        "D": {
+          "recipe": "D6 right verdict, wrong reason",
+          "why_wrong": "Text 2 says nothing about how van Eyck learned his technique or about any link between Flanders and Central Asia."
+        }
+      },
+      "models": [
+        "2.4",
+        "2.10"
+      ],
+      "word_count": 143,
+      "sources": [
+        {
+          "what": "ESRF 2008: mid-7th-century murals in caves behind the Bamiyan Buddhas; synchrotron analysis (Taniguchi, Cotte et al.) found oil binders, perhaps walnut and poppy seed oil, in 12 of about 50 caves; earliest clear example of oil painting",
+          "url": "https://www.esrf.fr/news/general-old/general-2008/bamiyan"
+        }
+      ],
+      "notes": "Area: arts (art history). Counterexample to a ‘first’ (invention) claim, 2.4 and 2.10 pattern with 2.10’s ‘It is ..., because’ shell. Vasari’s crediting of van Eyck is standard art history. Reviewer: topic fame moderate (Bamiyan oil murals were reported in 2008 as the world's oldest oil paintings); kept.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "cross_text_connections.S1_counterexample.medium.w2b2_08",
+      "template": "S1_counterexample",
+      "subtype": "Response prediction",
+      "tier": "medium",
+      "passage": "Text 1\n\nReef-building corals depend on symbiotic algae in their tissues, which use sunlight to produce nutrients for their hosts. Turbid water obstructs that light, and the particles responsible can settle on corals and smother them. <u>Coral reefs are therefore widely thought to require clear water and to be unable to grow where waves or rivers keep sediment suspended</u>, and reefs along muddy coastlines are often described as marginal or degraded.\n\nText 2\n\nMiddle Reef lies about four kilometers off Townsville in northeastern Australia, where waves and river floods frequently keep the water clouded with suspended sediment. Yet when Chris Perry and colleagues drilled cores through the reef framework and radiocarbon-dated them, they discovered that it had built upward by more than eight millimeters a year for over 700 years, growing fastest during periods of especially heavy sediment deposition.",
+      "stem": "Based on the texts, how would Perry and colleagues (Text 2) most likely respond to the underlined claim in Text 1?",
+      "options": [
+        "Reefs near muddy coastlines grow quickly only in years when floods carry nutrients down from rivers.",
+        "Sediment poses less danger to corals than the loss of light caused by turbid water does.",
+        "Persistently murky conditions do not necessarily prevent a reef from growing.",
+        "The algae in Middle Reef’s corals depend less on sunlight than the algae in most other corals do."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "Text 1 says reefs are thought “to require clear water and to be unable to grow where waves or rivers keep sediment suspended.” Perry and colleagues found that Middle Reef, where the water is frequently “clouded with suspended sediment,” built upward for over 700 years, “growing fastest during periods of especially heavy sediment deposition.” They would respond that murky water does not necessarily prevent reef growth.",
+      "distractors": {
+        "A": {
+          "recipe": "D3 twisted detail",
+          "why_wrong": "Text 2 mentions river floods only as a source of sediment; it never ties the reef’s growth to nutrients or limits it to flood years."
+        },
+        "B": {
+          "recipe": "D1 unaddressed add-on",
+          "why_wrong": "Neither text compares the danger of sediment with the danger of reduced light."
+        },
+        "D": {
+          "recipe": "D1 unaddressed add-on",
+          "why_wrong": "Text 2 does not discuss the algae in Middle Reef’s corals or how much they rely on sunlight."
+        }
+      },
+      "models": [
+        "2.4",
+        "2.10"
+      ],
+      "word_count": 139,
+      "sources": [
+        {
+          "what": "Perry, Smithers, Gulliver, Browne 2012, Geology: Middle Reef, 4 km off Townsville in a high-turbidity setting, accreted very rapidly for more than 700 years (mean 8.3 mm/yr), fastest during phases of fine terrigenous sediment accumulation",
+          "url": "https://researchonline.jcu.edu.au/23531/"
+        }
+      ],
+      "notes": "Area: natural science (marine ecology). Counterexample to a ‘requires’ claim (2.4 statement shell). Text 1 is the general expectation, unattributed; Browne et al. note inshore reefs are widely perceived as degraded.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "cross_text_connections.S1_limit_degree.medium.w2b2_09",
+      "template": "S1_limit_degree",
+      "subtype": "Response prediction",
+      "tier": "medium",
+      "passage": "Text 1\n\nAs schools replace printed textbooks with tablets and laptops, some educators and parents have expressed concern that students will absorb less of what they read. Reading on screens, these critics argue, encourages skimming and makes it harder to recall where in a text particular information appeared. On this view, <u>students will understand any text less well on a screen than they would understand the same text printed on paper</u>.\n\nText 2\n\nPablo Delgado and colleagues combined the results of 54 studies, involving more than 170,000 participants in all, that compared readers’ understanding of printed and digital texts. Overall, paper held a modest advantage, which grew when readers faced time constraints. But the advantage depended on the kind of text: it appeared for informational texts, such as explanations of scientific topics, yet not in studies that used only narrative texts.",
+      "stem": "Based on the texts, how would Delgado and colleagues (Text 2) most likely respond to the claim in the underlined portion of Text 1?",
+      "options": [
+        "By pointing out that the evidence favors paper for some kinds of texts but not for every kind",
+        "By arguing that the advantage of paper disappears whenever readers are allowed as much time as they need",
+        "By noting that students skim printed texts about as often as they skim texts on screens",
+        "By questioning whether the studies comparing paper and screens included enough participants to be trusted"
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The underlined portion claims that students will understand “any text” less well on a screen. Delgado and colleagues found a modest paper advantage overall, but it “appeared for informational texts, such as explanations of scientific topics, yet not in studies that used only narrative texts.” They would point out that the advantage holds for some kinds of texts but not for all, which limits the claim.",
+      "distractors": {
+        "B": {
+          "recipe": "D3 twisted detail",
+          "why_wrong": "Text 2 says the paper advantage “grew when readers faced time constraints”; it does not say the advantage disappears without them."
+        },
+        "C": {
+          "recipe": "D1 unaddressed add-on",
+          "why_wrong": "Skimming is mentioned only in Text 1, as the critics’ concern; Text 2 reports nothing about how often students skim."
+        },
+        "D": {
+          "recipe": "D9 generic academic move",
+          "why_wrong": "Text 2 relies on the pooled studies, with “more than 170,000 participants,” and gives no reason to doubt their size."
+        }
+      },
+      "models": [
+        "2.8",
+        "2.9"
+      ],
+      "word_count": 141,
+      "sources": [
+        {
+          "what": "Delgado, Vargas, Ackerman, Salmerón 2018, Educational Research Review 25: meta-analysis of 54 studies (171,055 participants); paper advantage overall, larger under time constraints, found for informational and mixed texts but not for studies using only narrative texts",
+          "url": "https://www.uv.es/lasalgon/papers/Delgado%202018%20dont%20throw%20away%20your%20printed%20books.pdf"
+        }
+      ],
+      "notes": "Area: social science (education, psychology). Limit-degree template, 2.9 pattern (a scope limit, not a refutation): Text 2 accepts the overall advantage, so the key limits rather than denies the claim.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "cross_text_connections.S1_case_fits_frame.medium.w2b2_10",
+      "template": "S1_case_fits_frame",
+      "subtype": "Response prediction",
+      "tier": "medium",
+      "passage": "Text 1\n\nTropical forests can contain hundreds of tree species in a single hectare. In the early 1970s, ecologists Daniel Janzen and Joseph Connell independently proposed an explanation: insects and pathogens that specialize on one tree species accumulate near adult trees of that species and destroy most of the seeds and seedlings nearby. Consequently, young trees survive mainly at a distance from their parents, leaving space near each adult for competing species.\n\nText 2\n\nIn an Indiana woodland, Alissa Packer and Keith Clay observed that black cherry seedlings died at higher rates near their parent trees than farther away. In greenhouse experiments, seedlings grown in soil collected beneath adult cherry trees survived better if the soil had been sterilized, whereas sterilizing soil gathered 25 to 30 meters away made no difference. The researchers identified the culprit as Pythium, a root-attacking soil microorganism.",
+      "stem": "Based on the texts, how would the author of Text 1 most likely regard the findings in Text 2?",
+      "options": [
+        "As surprising, because the explanation offered by Janzen and Connell concerned insects rather than microorganisms",
+        "As unpersuasive, because the most important results came from a greenhouse rather than from a forest",
+        "As irrelevant, because Janzen and Connell set out to explain the diversity of tropical rather than temperate forests",
+        "As fitting the mechanism Janzen and Connell proposed, since an enemy living in the soil killed seedlings near their parents"
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "Text 1 describes Janzen and Connell’s proposal that enemies accumulating near adult trees “destroy most of the seeds and seedlings nearby,” so that young trees survive mainly “at a distance from their parents.” In Text 2, black cherry seedlings “died at higher rates near their parent trees than farther away,” and the cause was a root-attacking microorganism in the soil beneath those trees. The author of Text 1 would regard these findings as fitting the proposed mechanism.",
+      "distractors": {
+        "A": {
+          "recipe": "D6 wrong reason (misreads Text 1)",
+          "why_wrong": "Text 1 names “pathogens” as well as insects, so a soil microorganism fits the explanation."
+        },
+        "B": {
+          "recipe": "D6 wrong reason",
+          "why_wrong": "The finding that seedlings died more often near parent trees came from the Indiana woodland; the greenhouse experiments showed why."
+        },
+        "C": {
+          "recipe": "D8 wrong dimension",
+          "why_wrong": "Although the explanation was framed for tropical forests, the mechanism it proposes is exactly what Text 2 observed, so the findings bear on it."
+        }
+      },
+      "models": [
+        "2.2",
+        "2.6"
+      ],
+      "word_count": 142,
+      "sources": [
+        {
+          "what": "Packer and Clay 2000, Nature 404: soil pathogen (Pythium) produces Janzen-Connell patterns of seedling mortality in black cherry (Prunus serotina); seedlings near parents die more, sterilizing soil from 0-5 m improves survival while sterilizing soil from 25-30 m has no effect",
+          "url": "https://www.nature.com/articles/35005072"
+        }
+      ],
+      "notes": "Area: natural science (ecology). Case fits frame, Text 1 speaking; As-adjective shell with D6 wrong-reason distractors as in 1.11 and 3.8. Janzen (1970) and Connell (1971) proposed the hypothesis independently.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "cross_text_connections.S1_case_fits_frame.medium.w2b2_11",
+      "template": "S1_case_fits_frame",
+      "subtype": "Response prediction",
+      "tier": "medium",
+      "passage": "Text 1\n\nIn 1857 the German statistician Ernst Engel analyzed the budgets of working-class families in Belgium and identified a regularity that economists still cite. As household income rises, expenditure on food typically increases as well, but more slowly than income does, so food takes up a shrinking share of total spending. Poorer households, by the same reasoning, devote a larger share of their budgets to food than wealthier households do.\n\nText 2\n\nA 2006 report from the US Bureau of Labor Statistics traced how American households spent their money across the twentieth century. In 1901, food accounted for 42.5 percent of the average household’s spending; by 2002–03, it accounted for only 13.1 percent, while housing’s share of expenditures rose from 23.3 to 32.8 percent. The report attributes the fall in food’s share to improvements in Americans’ standard of living.",
+      "stem": "Based on the texts, what would the author of Text 1 most likely say about the change described in Text 2?",
+      "options": [
+        "It contradicts Engel’s regularity, because the share of spending devoted to housing, another necessity, rose rather than fell.",
+        "It reflects a change in the kinds of food Americans bought rather than a change in their incomes.",
+        "It is what Engel’s regularity would lead one to expect, given the rise in living standards over the period.",
+        "It supports Engel’s regularity only for households whose incomes were below the national average."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "According to Text 1, as income rises, spending on food increases “more slowly than income does, so food takes up a shrinking share of total spending.” Text 2 reports that kind of change: food’s share of household spending fell from 42.5 percent to 13.1 percent, and the report links the fall to improvements in Americans’ “standard of living.” The author of Text 1 would say the change is what Engel’s regularity predicts.",
+      "distractors": {
+        "A": {
+          "recipe": "D8 wrong dimension (twisted detail)",
+          "why_wrong": "Engel’s regularity, as Text 1 describes it, concerns food only; a rising share for housing does not bear on it, and food’s share fell just as the regularity predicts."
+        },
+        "B": {
+          "recipe": "D1 unaddressed add-on",
+          "why_wrong": "Neither text discusses what kinds of food Americans bought; Text 2 attributes the change to a higher standard of living."
+        },
+        "D": {
+          "recipe": "D3 twisted detail",
+          "why_wrong": "Text 2 reports figures for the average household, not for households above or below the average income."
+        }
+      },
+      "models": [
+        "2.2",
+        "2.6"
+      ],
+      "word_count": 140,
+      "sources": [
+        {
+          "what": "BLS Economics Daily (May 2006), from Report 991 ‘100 Years of U.S. Consumer Spending’: food fell from 42.5% of US household expenditures in 1901 to 13.1% in 2002-03, reflecting improved living standards",
+          "url": "https://www.bls.gov/opub/ted/2006/may/wk4/art05.htm"
+        },
+        {
+          "what": "BLS Report 991, 100 Years of U.S. Consumer Spending: 1901 food 42.5% ($327), housing 23.3%; 2002-03 food 13.1%, housing 32.8%; decline in food share reflects improved living standards",
+          "url": "https://www.bls.gov/opub/100-years-of-u-s-consumer-spending.pdf"
+        }
+      ],
+      "notes": "Area: social science (economics). Case fits frame with 2.2’s ‘what would ... say’ It-shell; the trap in A is housing’s rising share, which the food-only regularity does not address. Engel 1857 used Belgian working-class budgets (Ducpétiaux’s data). Report 991: housing 23.3% (1901) to 32.8% (2002-03). The writer’s dollar clause was dropped: food spending rose about 16-fold in current dollars but fell in real terms per household (the report’s own deflator is about 20).",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [
+          "dropped 'many times as many dollars on food': true only in current dollars (about 16-fold, $327 to $5,357); with the report's own deflator (about 20) real food spending per household fell, so the clause overstated Engel's 'expenditure on food increases'",
+          "replaced it with housing's share rising from 23.3 to 32.8 percent (BLS Report 991) and rebuilt A as a wrong-dimension trap on that detail; dropped 'substantial' (source: 'improved living standards'); added the report PDF as a source"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "cross_text_connections.S2_shared_premise.medium.w2b2_12",
+      "template": "S2_shared_premise",
+      "subtype": "Agreement",
+      "tier": "medium",
+      "passage": "Text 1\n\nLao She’s 1937 novel Camel Xiangzi follows a young rickshaw puller in Beijing whose hope of owning a rickshaw is repeatedly crushed by misfortune and exploitation until he abandons all self-respect. When the novel appeared in English in 1945 as Rickshaw Boy, translator Evan King supplied a happy ending, and in doing so he erased the novel’s bleak indictment of the society that destroys its hero.\n\nText 2\n\nKing took considerable liberties with Lao She’s novel, cutting and rearranging passages and inventing an optimistic conclusion. Yet Rickshaw Boy became a best seller in the United States and a Book-of-the-Month Club selection, introducing modern Chinese fiction to a broad American readership. Despite its distortions, the translation established Lao She’s international reputation and built an audience for the more faithful versions that followed.",
+      "stem": "Based on the texts, both authors would most likely agree with which statement?",
+      "options": [
+        "Rickshaw Boy sold well in the United States mainly because of its optimistic ending.",
+        "The 1945 English version departed from the way Lao She had ended his novel.",
+        "The 1945 translation did more to help Lao She’s reputation than to harm his novel.",
+        "Later translators restored the passages that King had cut from Lao She’s novel."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The authors disagree about the value of King’s translation: the author of Text 1 says it “erased the novel’s bleak indictment,” while the author of Text 2 credits it with having “established Lao She’s international reputation.” Both, however, report that King changed the ending: Text 1 says he “supplied a happy ending,” and Text 2 says he invented “an optimistic conclusion.” So both would agree that the English version departed from Lao She’s ending.",
+      "distractors": {
+        "A": {
+          "recipe": "D1 unaddressed add-on",
+          "why_wrong": "Text 2 reports that the translation sold well but never says why, and Text 1 does not discuss its sales at all."
+        },
+        "C": {
+          "recipe": "D4 one text only",
+          "why_wrong": "This matches the view of the author of Text 2, but the author of Text 1 stresses the harm: the new ending “erased the novel’s bleak indictment.”"
+        },
+        "D": {
+          "recipe": "D3 twisted detail",
+          "why_wrong": "Text 2 mentions later, more faithful versions but does not say they restored King’s cuts, and Text 1 does not mention later translations."
+        }
+      },
+      "models": [
+        "2.1",
+        "2.3"
+      ],
+      "word_count": 133,
+      "sources": [
+        {
+          "what": "Britannica, Lao She: Rickshaw Boy (1945), an unauthorized, bowdlerized translation of Luotuo Xiangzi with a happy ending foreign to the original, was a US best seller (Book-of-the-Month Club selection)",
+          "url": "https://www.britannica.com/biography/Lao-She"
+        },
+        {
+          "what": "Evan King’s 1945 Rickshaw Boy cut, rearranged and rewrote the novel and gave it a happy ending; a US best seller and Book of the Month Club selection",
+          "url": "https://en.wikipedia.org/wiki/Rickshaw_Boy"
+        }
+      ],
+      "notes": "Area: literature (translation history). Shared premise under a disagreement about value (2.3 abstraction level: the key restates the shared fact in neutral words).",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [
+          "Britannica source returned 403: added the Wikipedia Rickshaw Boy page, which confirms the happy ending, cuts, best seller and Book of the Month Club"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "cross_text_connections.S1_rival_hypothesis.medium.w2b2_13",
+      "template": "S1_rival_hypothesis",
+      "subtype": "Response prediction",
+      "tier": "medium",
+      "passage": "Text 1\n\nGullies—narrow channels descending the walls of craters and other slopes—are widespread on Mars. In 2006, Michael Malin, Kenneth Edgett, and colleagues reported that bright new deposits had appeared in two gullies between photographs an orbiting spacecraft captured several years apart. Because the deposits appeared to have been transported by a fluid rather than by dry dust, the team proposed that liquid water may still occasionally seep from underground and flow down Martian slopes.\n\nText 2\n\nSince 2006, a higher-resolution camera aboard another orbiter has repeatedly photographed hundreds of gully locations. Colin Dundas and colleagues documented new flows and channels at dozens of them, almost always during the season when frozen carbon dioxide frosts the slopes and temperatures are far too low for liquid water. As the frost converts directly to gas, they propose, it may dislodge sediment and lubricate its descent.",
+      "stem": "Based on the texts, how would Dundas and colleagues (Text 2) most likely respond to the hypothesis presented in Text 1?",
+      "options": [
+        "By conceding that liquid water formed the new deposits but arguing that the water came from melting frost rather than from underground",
+        "By suggesting that the deposits reported in 2006 were too small for the earlier spacecraft’s camera to have detected reliably",
+        "By pointing out that gullies are less widespread on Mars than the hypothesis requires them to be",
+        "By noting that the timing of recent gully activity points to a cause that does not depend on liquid water"
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "Malin, Edgett, and colleagues proposed that “liquid water may still occasionally seep from underground” to form new gully deposits. Dundas and colleagues found new flows “almost always during the season when frozen carbon dioxide frosts the slopes and temperatures are far too low for liquid water,” and they propose that the frost itself moves the sediment. They would respond that the timing of the activity points to a cause that does not depend on liquid water.",
+      "distractors": {
+        "A": {
+          "recipe": "D7 half right / D3",
+          "why_wrong": "Text 2 says the frost “converts directly to gas” when temperatures are “far too low for liquid water,” so it does not concede that liquid water formed the deposits."
+        },
+        "B": {
+          "recipe": "D3 twisted detail",
+          "why_wrong": "Text 2 mentions a higher-resolution camera, but it does not question whether the earlier camera could detect the deposits reported in 2006."
+        },
+        "C": {
+          "recipe": "D1 unaddressed add-on",
+          "why_wrong": "Text 2 describes “hundreds of gully locations” and never suggests gullies are rarer than Text 1 says; Text 1 calls them “widespread.”"
+        }
+      },
+      "models": [
+        "2.5"
+      ],
+      "word_count": 143,
+      "sources": [
+        {
+          "what": "Malin et al. 2006 (Science, ‘Present-day impact cratering rate and contemporary gully activity on Mars’): new light-toned gully deposits between images years apart, interpreted as possible recent liquid water flow",
+          "url": "https://www.msss.com/mars_images/moc/2006/12/06/gullies/index.html"
+        },
+        {
+          "what": "Dundas et al. (HiRISE monitoring, 356 sites): new gully activity at 38 sites, timed with seasonal CO2 frost and temperatures too cold for liquid water; sublimating frost may lubricate dry flows",
+          "url": "https://www.jpl.nasa.gov/news/nasa-spacecraft-observes-further-evidence-of-dry-ice-gullies-on-mars"
+        }
+      ],
+      "notes": "Area: natural science (planetary science). Rival hypothesis with evidence the target cannot account for (2.5 pattern: Artemieva’s iridium is here the timing and temperature).",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [
+          "Text 1 softened to the MSSS source: water 'seeping' from underground (was 'erupt'); deposits carried by a fluid rather than dry dust (was 'resembled sediments laid down by brief floods')"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "cross_text_connections.S1_second_factor.medium.w2b2_14",
+      "template": "S1_second_factor",
+      "subtype": "Response prediction",
+      "tier": "medium",
+      "passage": "Text 1\n\nPacific salmon hatch in freshwater streams, spend years feeding throughout the open ocean, and then migrate back to spawn in the very streams where they originated. In the 1950s, biologist Arthur Hasler and his students demonstrated that juvenile salmon learn the distinctive odor of their natal stream and that migrating adults follow that odor at each fork in the river. Smell, according to this account, explains how salmon navigate home.\n\nText 2\n\nNathan Putman and colleagues analyzed 56 years of fisheries records for sockeye salmon returning from the Pacific to British Columbia’s Fraser River; to reach it, the fish must first detour around Vancouver Island by either a northern or a southern passage. The proportion of fish using each passage shifted as Earth’s geomagnetic field gradually drifted, as though the salmon had memorized the field’s intensity near the river’s mouth and were navigating toward it.",
+      "stem": "Based on the texts, how would Putman and colleagues (Text 2) most likely respond to the explanation in Text 1?",
+      "options": [
+        "By suggesting that it may account for only the final stage of the journey and that salmon also rely on a cue of a different kind",
+        "By arguing that young salmon learn the odor of their natal stream later in life than Hasler’s work indicated",
+        "By claiming that Earth’s magnetic field, rather than smell, is what guides salmon into their home streams",
+        "By cautioning that Fraser River sockeye may depend on smell more heavily than other salmon do"
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "Text 1 says that smell “explains how salmon navigate home,” based on adults that “follow that odor at each fork in the river.” Putman and colleagues found that sockeye heading for the Fraser River chose their passage around Vancouver Island, well before reaching the river, according to changes in Earth’s magnetic field, “as though the salmon had memorized the field’s intensity near the river’s mouth.” They would suggest that smell may explain only the last part of the trip and that salmon also use another kind of cue.",
+      "distractors": {
+        "B": {
+          "recipe": "D3 twisted detail",
+          "why_wrong": "Text 2 says nothing about when salmon learn the odor of their natal stream."
+        },
+        "C": {
+          "recipe": "D5 overstatement",
+          "why_wrong": "Text 2 concerns the route salmon take toward the river’s mouth; it does not claim that magnetism, rather than smell, guides them up their home streams."
+        },
+        "D": {
+          "recipe": "D3 twisted detail",
+          "why_wrong": "Text 2 does not compare how much Fraser River sockeye and other salmon rely on smell."
+        }
+      },
+      "models": [
+        "2.7"
+      ],
+      "word_count": 147,
+      "sources": [
+        {
+          "what": "Putman et al. 2013, Current Biology 23: 56-year fisheries dataset; Fraser River sockeye route choice around Vancouver Island tracked geomagnetic field drift, evidence for geomagnetic imprinting as a homing mechanism",
+          "url": "https://doi.org/10.1016/j.cub.2012.12.041"
+        },
+        {
+          "what": "OSU news on Putman et al.: 56 years of Fraser River sockeye data; route around Vancouver Island tracked geomagnetic field intensity; smell likely takes over only within about 50 to 100 km of the river",
+          "url": "https://news.oregonstate.edu/news/osu-study-salmon-may-use-magnetic-field-navigational-aid"
+        }
+      ],
+      "notes": "Area: natural science (animal navigation). Second factor (2.7 ‘overlooks’ pattern): the key keeps Hasler’s smell for the final stage. Putman et al. also found sea temperature affected route choice; the passage does not claim magnetism is the only influence.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 2,
+        "fixes": [
+          "Elsevier page did not load: added the OSU news page, which confirms the 56-year route data and that smell likely takes over only near the river"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "cross_text_connections.S2_shared_premise.easy.w2b2_15",
+      "template": "S2_shared_premise",
+      "subtype": "Agreement",
+      "tier": "easy",
+      "passage": "Text 1\n\nIn Roman Egypt, from about the first to the third century CE, painted wooden portraits were placed over the faces of mummified people. Some of these panels show signs of having once been framed, suggesting that they hung in homes before being used in burials. On this view, families commissioned portraits while their subjects were alive, displayed them for years, and attached them to mummies only after death.\n\nText 2\n\nMedical scans have now been made of many mummies whose portraits remain in place. In most cases, the age indicated by the body matches the age depicted in the painting, even for young children. Had portraits typically been painted years before death, many would show people noticeably younger than their remains indicate. Most portraits, then, were probably painted close to the time of death, specifically for burial.",
+      "stem": "Based on the texts, both authors would most likely agree with which statement?",
+      "options": [
+        "Most of the portraits were painted many years before the people in them died.",
+        "The portraits were painted by artists who had trained in Rome.",
+        "The portraits were placed with the mummies of the people they show.",
+        "Portraits of children were more common than portraits of adults."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The authors disagree about when the portraits were painted: Text 1 suggests they “hung in homes” for years, while Text 2 argues they were painted “close to the time of death.” Both, however, describe portraits that ended up on the mummies of the people shown: Text 1 says families “attached them to mummies only after death,” and Text 2 says the age shown in a painting usually matches the body beneath it.",
+      "distractors": {
+        "A": {
+          "recipe": "D4 one text only",
+          "why_wrong": "This is the view in Text 1; Text 2 argues that most portraits were painted close to the time of death."
+        },
+        "B": {
+          "recipe": "D1 unaddressed add-on",
+          "why_wrong": "Neither text says where the painters were trained."
+        },
+        "D": {
+          "recipe": "D3 twisted detail",
+          "why_wrong": "Text 2 mentions young children, but neither text compares how common portraits of children and adults were."
+        }
+      },
+      "models": [
+        "1.2",
+        "1.5",
+        "1.6",
+        "1.12",
+        "1.13"
+      ],
+      "word_count": 139,
+      "sources": [
+        {
+          "what": "Fayum mummy portraits (Roman Egypt, 1st-3rd c.): older view that they were painted in life and hung at home (some show traces of framing); CT scans showing correspondence of age and sex between mummy and image favor painting for burial",
+          "url": "https://curationist.org/editorial-features/article/fayum-portraits"
+        }
+      ],
+      "notes": "Area: arts (art history, archaeology). Easy agreement, 1.5 and 1.6 pattern (dispute over when, shared fact about what). Both views unattributed.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 2,
+        "fixes": [
+          "source confirms matching age only: dropped 'and sex' from Text 2 and the explanation"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "cross_text_connections.S1_refute_data.easy.w2b2_16",
+      "template": "S1_refute_data",
+      "subtype": "Response prediction",
+      "tier": "easy",
+      "passage": "Text 1\n\nAbstract expressionist paintings, with their drips, splatters, and blocks of color, often provoke the same remark from museum visitors: “My kid could have painted that.” The remark implies that nothing visible on the canvas distinguishes a celebrated painter’s work from a child’s, and that such paintings are admired only because of the famous names attached to them.\n\nText 2\n\nPsychologists Angelina Hawley-Dolan and Ellen Winner showed college students pairs of abstract paintings. In each pair, one painting was by a well-known abstract expressionist, and the other, selected because it looked similar, was by a child or by an animal such as a chimpanzee or an elephant. Even when the paintings were unlabeled, the students judged the professional’s painting superior more often than not.",
+      "stem": "Based on the texts, how would Hawley-Dolan and Winner (Text 2) most likely respond to the remark discussed in Text 1?",
+      "options": [
+        "Museum visitors prefer abstract paintings by children to those by professional artists.",
+        "Viewers can often see differences between famous abstract paintings and similar works by children.",
+        "Children who are taught to paint produce work that looks more like that of professional artists.",
+        "Paintings by animals are usually judged more favorably than paintings by children."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The remark in Text 1 implies that “nothing visible on the canvas” separates a celebrated painter’s work from a child’s. Hawley-Dolan and Winner found that, “Even when the paintings were unlabeled,” students judged the professional’s painting superior “more often than not.” They would respond that viewers can often see differences between such works.",
+      "distractors": {
+        "A": {
+          "recipe": "D2 wrong side",
+          "why_wrong": "Text 2 found the opposite: students usually judged the professional’s painting to be superior."
+        },
+        "C": {
+          "recipe": "D1 unaddressed add-on",
+          "why_wrong": "Neither text discusses teaching children to paint."
+        },
+        "D": {
+          "recipe": "D3 twisted detail",
+          "why_wrong": "Text 2 mentions paintings by animals, but it does not compare how animals’ and children’s paintings were judged."
+        }
+      },
+      "models": [
+        "1.1",
+        "1.3",
+        "1.16"
+      ],
+      "word_count": 125,
+      "sources": [
+        {
+          "what": "Hawley-Dolan and Winner 2011, Psychological Science 22(4), ‘Seeing the mind behind the art’: students preferred and judged better the works of abstract expressionists over similar works by children and animals, even when unlabeled",
+          "url": "https://journals.sagepub.com/doi/10.1177/0956797611400915"
+        }
+      ],
+      "notes": "Area: arts (psychology of art). Easy refutation by new data, 1.1 pattern with statement options. Reviewer: topic fame risk (the Hawley-Dolan and Winner study is widely covered and is a Cambridge IELTS 11 reading passage); kept for the user to decide.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 2,
+        "fixes": [],
+        "status": "pass"
+      }
+    }
+  ],
+  "removed": []
+}

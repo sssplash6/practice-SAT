@@ -7,13 +7,14 @@ from __future__ import annotations
 import itertools
 import random
 import re
+import unicodedata
 from dataclasses import dataclass, field
 from fractions import Fraction
 
 from .exact import E, Exact
 
 __all__ = ["Item", "Mis", "assemble", "assemble_text", "ItemError", "numeral",
-           "norm_text", "shortlist", "hands_the_key_over", "gridin_mistakes",
+           "norm_text", "fold_entry", "shortlist", "hands_the_key_over", "gridin_mistakes",
            "unit_word"]
 
 
@@ -21,6 +22,24 @@ def unit_word(value, one: str, many: str) -> str:
     """Choose a unit from the printed quantity, including fractions and decimals."""
     printed = str(value).replace(",", "").replace("−", "-")
     return one if abs(Fraction(printed)) == 1 else many
+
+# every glyph a keyboard, phone or typesetter can give for a minus sign
+_MINUS = re.compile("[\u2212\u2010-\u2015\u207b\u208b\u02d7\ufe58\ufe63\uff0d\u2796]")
+# invisible or soft characters a paste or an IME leaves in a field
+_INVISIBLE = re.compile("[\u00ad\u200b-\u200f\u202a-\u202e\u2060\u2066-\u2069\ufeff]")
+_SLASH = str.maketrans({"\u2044": "/", "\u2215": "/", "\u29f8": "/", "\u066b": ".", "\u066c": ",", "\u00f7": "/"})
+
+
+def fold_entry(s) -> str:
+    """One spelling for what a student typed: ASCII minus, slash, point and digits.
+
+    Any minus, dash or hyphen is a minus; fullwidth, Arabic-Indic and other script digits are
+    the digits they stand for; a fraction slash or a vulgar fraction (1/2) is a slash;
+    non-breaking and zero-width characters vanish. The client's `spr.clean` does the same."""
+    t = _INVISIBLE.sub("", unicodedata.normalize("NFKC", str(s))).translate(_SLASH)
+    t = "".join(str(unicodedata.digit(c)) if c.isdigit() and not c.isascii() and unicodedata.digit(c, None) is not None else c for c in t)
+    return _MINUS.sub("-", t)
+
 
 SUPERSCRIPT = str.maketrans("⁰¹²³⁴⁵⁶⁷⁸⁹", "0123456789")
 
@@ -38,8 +57,8 @@ def norm_text(s) -> str:
     4πr³ and 4pi*r^3 are one answer -- and kept between bare numerals, where
     3·39 and 339 are two different answers.
     """
-    t = (str(s).translate(SUPERSCRIPT)
-         .replace(",", "").replace(" ", "").replace("−", "-")
+    t = (fold_entry(s).translate(SUPERSCRIPT)
+         .replace(",", "").replace(" ", "")
          .replace("·", "*").replace("×", "*").replace("π", "pi")
          .replace("√", "sqrt").replace("^", "")).lower()
     if any(c.isalpha() for c in t.replace("pi", "")):
@@ -59,7 +78,7 @@ def numeral(text: str) -> float | None:
     # value, or be a symbol that cannot be a variable.
     t = raw if (re.search(r"[A-Za-z]$", raw) and not re.search(r"[\s°%]", raw)) \
         else UNIT_SUFFIX.sub("", raw)
-    t = t.replace(",", "").replace(" ", "").replace("−", "-").lstrip("$")
+    t = fold_entry(t).replace(",", "").replace(" ", "").lstrip("$")
     try:
         if "/" in t:
             a, b = t.split("/", 1)
@@ -130,6 +149,7 @@ class Item:
     table: list[list[str]] | None = None
     params: dict = field(default_factory=dict)   # what the audit re-derives from
     source_id: str | None = None   # official item this template was learned from
+    text: str | None = None        # a Reading and Writing passage, shown above the stem
 
     def pretty(self, show_reasons: bool = True) -> str:
         head = f"[{self.template} | {self.difficulty} | seed={self.seed}]"

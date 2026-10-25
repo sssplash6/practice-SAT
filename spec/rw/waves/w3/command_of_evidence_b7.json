@@ -1,0 +1,1836 @@
+{
+  "skill": "Command of Evidence",
+  "slug": "command_of_evidence",
+  "part": "w3b7",
+  "domain": "Information and Ideas",
+  "plan": {
+    "templates": [
+      {
+        "code": "T1_single",
+        "name": "Hypothetical finding supports or weakens a single claim (causal, comparison, existence, generalization, prediction)"
+      },
+      {
+        "code": "T1_compete",
+        "name": "Hypothetical finding discriminates between competing explanations (support or weaken)"
+      },
+      {
+        "code": "T2_lit_quote",
+        "name": "Quotation from a literary work illustrates a claim (single trait, two-part, contrast)"
+      },
+      {
+        "code": "T3_person_quote",
+        "name": "Quotation from a person (participant, respondent, historian, critic, article) supports or challenges a claim"
+      },
+      {
+        "code": "Q1_P1_lookup",
+        "name": "Data completion: lookup (one cell or bar, reverse lookup, filter)"
+      },
+      {
+        "code": "Q1_P2_extreme",
+        "name": "Data completion: extreme or rank (max/min, possibly after a filter)"
+      },
+      {
+        "code": "Q1_P3_pairwise",
+        "name": "Data completion: pairwise comparison (one or two comparisons)"
+      },
+      {
+        "code": "Q1_P4_trend",
+        "name": "Data completion: change over time"
+      },
+      {
+        "code": "Q1_P5_control",
+        "name": "Data completion: condition vs control"
+      },
+      {
+        "code": "Q1_P67_criterion",
+        "name": "Data completion: passage criterion or presence/absence combined with the display"
+      },
+      {
+        "code": "Q2_P4_trend",
+        "name": "Data description: trend or change over time supports a conclusion"
+      },
+      {
+        "code": "Q2_P8_quantifier",
+        "name": "Data description: quantified claim (for each, all except one)"
+      },
+      {
+        "code": "Q2_P8_multipart",
+        "name": "Data description: multi-part, interaction, or passage-plus-data claim"
+      }
+    ]
+  },
+  "done": true,
+  "items": [
+    {
+      "id": "command_of_evidence.T1_single.hard.w3b7_01",
+      "template": "T1_single",
+      "subtype": "Hypothetical finding supports a claim (the key supplies the self-selection the argument depends on)",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "In medieval Europe, courts sometimes resolved criminal accusations by ordeal: a defendant might be required to retrieve a ring from a cauldron of boiling water, for instance, and was declared innocent if the arm emerged unharmed. A register maintained at the basilica of Várad, in medieval Hungary, indicates that nearly two-thirds of the defendants who underwent ordeals there passed them. Economist Peter Leeson argues that such outcomes reflect neither chance nor miracles and that ordeals accurately distinguished guilty defendants from innocent ones: because people believed that God would reveal the truth through the test, he reasons, only innocent defendants were willing to face one, and priests, recognizing this, arranged for them to pass.",
+      "stem": "Which finding about medieval ordeals, if true, would most directly support Leeson’s argument about how they worked?",
+      "options": [
+        "Defendants who were later shown by other evidence to be guilty had agreed to undergo ordeals just as readily as defendants later shown to be innocent had.",
+        "Many defendants who had been ordered to undergo an ordeal confessed to the crime they were accused of before the ordeal could take place.",
+        "In the Hungarian register, the share of defendants who passed their ordeals was about the same for those accused of theft as for those accused of violent crimes.",
+        "Ordeals by cold water, in which a defendant who sank was declared innocent, exonerated a larger share of defendants than ordeals by hot iron did."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "Leeson’s argument depends on guilty defendants refusing to face an ordeal, so that those who went through with one were innocent. If many defendants ordered to undergo an ordeal confessed beforehand, the guilty were removing themselves before the test, which is exactly the sorting his argument requires; the priests could then safely let the remaining defendants pass.",
+      "distractors": {
+        "A": {
+          "recipe": "OPP: no self-selection",
+          "why_wrong": "If guilty defendants were just as willing as innocent ones to undergo ordeals, willingness would reveal nothing about innocence, which would undercut Leeson’s argument rather than support it."
+        },
+        "C": {
+          "recipe": "TRAP: a no-difference comparison neither view predicts",
+          "why_wrong": "Leeson’s argument says nothing about how pass rates should differ by type of crime, so equal pass rates for theft and violent crimes neither show that guilty defendants avoided ordeals nor that the ordeals were accurate."
+        },
+        "D": {
+          "recipe": "OFF: compares two kinds of ordeal",
+          "why_wrong": "A difference in exoneration rates between cold-water and hot-iron ordeals concerns the methods, not whether the people who chose to undergo an ordeal were the innocent ones."
+        }
+      },
+      "models": [
+        "3.28",
+        "3.36",
+        "3.45",
+        "124fdcd7",
+        "df91532e"
+      ],
+      "sources": [
+        {
+          "what": "Peter T. Leeson, 'Ordeals', Journal of Law and Economics 55 (2012): abstract (ordeals accurately assigned guilt and innocence; belief in iudicium Dei meant only innocent defendants were willing to undergo ordeals; priests manipulated ordeals to exonerate them); boiling-water ring ordeal; Varad register 1208 to 1235, 130 of 208 probands (62.5 percent) passed",
+          "url": "https://www.peterleeson.com/Ordeals.pdf"
+        }
+      ],
+      "notes": "The register is the Regestrum Varadinense from the basilica of Nagyvarad (then Hungary). Findings in the options are hypothetical. DOI 10.1086/664010.",
+      "band7_moves": [
+        "key supplies the missing premise (the guilty actually opted out) without the passage's wording",
+        "OPP distractor states the rival's prediction (no self-selection)",
+        "TRAP: a no-difference comparison neither view predicts",
+        "stem names the subject and the claimant (13+ words)"
+      ],
+      "word_count": 113,
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass"
+      },
+      "band7": {
+        "verdict": "band 7",
+        "why": "113 words; 17-word stem naming the claimant; the key brings in a route the passage never states (guilty defendants confess rather than face the ordeal) that the student must link to self-selection; OPP (guilty just as willing), a no-difference TRAP (theft vs violent crimes) and one OFF."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "B",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 7
+    },
+    {
+      "id": "command_of_evidence.T1_single.hard.w3b7_02",
+      "template": "T1_single",
+      "subtype": "Hypothetical finding supports an explanation (visibility of spending)",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Each week, the Dutch Postcode Lottery randomly selects a postal code and gives prizes, including cash and a new BMW, to ticket holders who live there. Because the winning code is chosen by chance, economists Peter Kuhn, Peter Kooreman, Adriaan Soetevent, and Arie Kapteyn could treat the drawings as natural experiments. They found that households that lived next door to winners but had not bought tickets themselves had significantly higher levels of car consumption than other nonparticipating households did. One possible explanation for this social effect is that households adjust their own spending after observing what the people around them buy.",
+      "stem": "Which finding, if true, would most directly support this explanation?",
+      "options": [
+        "Lottery winners spent most of their prize money on cars and other long-lasting goods rather than on food, clothing, travel, or other everyday purchases.",
+        "Many lottery winners gave part of their prize money to their next-door neighbors, who used it for a variety of purchases.",
+        "Nonparticipating households throughout the Netherlands spent more on cars during the years of the study than they had in earlier years.",
+        "Nonparticipants next door to winners spent more than other nonparticipants on cars and exterior home repairs but not on furniture or kitchen equipment."
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The explanation is that neighbors spend more because they see what winners buy. If the extra spending by next-door nonparticipants went only to things others can see, such as cars and the outside of a house, and not to things kept indoors, the effect follows visibility, as the explanation predicts.",
+      "distractors": {
+        "A": {
+          "recipe": "SUBJ: accurate about winners, not neighbors",
+          "why_wrong": "This describes the winners’ own spending; it says nothing about why their nonparticipating neighbors spent more on cars."
+        },
+        "B": {
+          "recipe": "OPP: the rival mechanism (shared money)",
+          "why_wrong": "If winners passed money to neighbors, the neighbors’ extra spending could come from the gift itself rather than from observing the winners’ purchases, which points to a different explanation."
+        },
+        "C": {
+          "recipe": "TRAP: affects both groups equally",
+          "why_wrong": "A nationwide rise in car spending applies to all nonparticipants, including those far from any winner, so it cannot explain why next-door neighbors spent more than other nonparticipants."
+        }
+      },
+      "models": [
+        "3.7",
+        "3.12",
+        "3.25",
+        "3.31"
+      ],
+      "sources": [
+        {
+          "what": "Kuhn, Kooreman, Soetevent and Kapteyn, 'The Effects of Lottery Prizes on Winners and Their Neighbors: Evidence from the Dutch Postcode Lottery', American Economic Review 101(5), 2011: abstract (weekly random postal code, cash and a new BMW to participants; winners' consumption confined to cars and durables; nonparticipants next door to winners have significantly higher car consumption)",
+          "url": "https://doi.org/10.1257/aer.101.5.2226"
+        }
+      ],
+      "notes": "The explanation is stated unattributed ('One possible explanation'), as in CB 3.9, since the paper reports a social effect without committing to this mechanism. Findings in the options are hypothetical.",
+      "word_count": 101,
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "At target 6. The key needs the unstated visibility premise (cars and house exteriors are seen, kitchens are not), which is band-7 reasoning, but the generic 11-word stem and a SUBJ distractor (winners' own spending) keep it a strong band 6."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "D",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "command_of_evidence.T1_compete.hard.w3b7_03",
+      "template": "T1_compete",
+      "subtype": "Hypothetical finding weakens one of two competing explanations (an unstated condition the explanation needs)",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "Many small songbirds lay pale eggs marked with reddish-brown spots of a pigment called protoporphyrin. The spots have often been explained as camouflage that makes eggs harder for predators to find. But in a study of great tits at a geologically varied site, where the calcium available to birds differs greatly from place to place, ornithologist Andrew Gosler and colleagues found that the spots specifically marked thinner areas of shell, with darker spots marking even thinner shell, and that birds with less calcium available laid eggs with more pigmentation. The team proposed that the pigment instead compensates for shell made thin by a shortage of calcium.",
+      "stem": "Which finding, if true, would most directly weaken the camouflage explanation for the spots on great tit eggs?",
+      "options": [
+        "Great tits lay their eggs inside enclosed tree holes, so dark that the animals that raid their nests locate eggs by touch and smell rather than by sight.",
+        "At the study site, clutches with heavily spotted eggs were taken by predators less often than were clutches with lightly spotted eggs.",
+        "The pigment that forms the spots is added to the shell during the final hours before the egg is laid, after the hard outer layer of the shell has already formed.",
+        "Within a single clutch, the eggs laid last tended to have more extensive spotting than the eggs laid first did."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "Camouflage works only if a predator would otherwise see the eggs. If great tits’ eggs sit in tree holes too dark for sight and their predators find eggs by touch and smell, spots could not hide the eggs from anything, so the camouflage explanation cannot account for them, leaving the shell-strength explanation as the better fit.",
+      "distractors": {
+        "B": {
+          "recipe": "OPP: the camouflage view's own prediction",
+          "why_wrong": "If heavily spotted clutches escaped predators more often, the spots would appear to protect eggs from predators, which would support the camouflage explanation rather than weaken it."
+        },
+        "C": {
+          "recipe": "TRAP: an irrelevant property of the same objects",
+          "why_wrong": "When the pigment is added says nothing about what it does; spots added late could serve as camouflage or as reinforcement equally well."
+        },
+        "D": {
+          "recipe": "TRAP: consistent with both explanations",
+          "why_wrong": "More spotting on later eggs could reflect a female’s calcium running low as she lays, but it is equally compatible with spots that hide eggs, so it does not count against camouflage."
+        }
+      },
+      "models": [
+        "3.6",
+        "3.9",
+        "3.14",
+        "3.48",
+        "156ff681",
+        "0d7f4966"
+      ],
+      "sources": [
+        {
+          "what": "Gosler, Higham and Reynolds 2005, 'Why are birds' eggs speckled?', Ecology Letters 8: abstract (protoporphyrin spots on passerine eggs; geologically variable site with a range of calcium availability; spots demarcate thinner shell, darker spots thinner still; calcium availability affects eggshell mass (+) and pigmentation (−); pigment may compensate for reduced shell thickness caused partly by calcium deficiency)",
+          "url": "https://doi.org/10.1111/j.1461-0248.2005.00816.x"
+        }
+      ],
+      "notes": "The population was great tits (Parus major) at Wytham Woods; the follow-up paper by the same group (Higham and Gosler 2006, Oecologia, doi 10.1007/s00442-006-0484-2) is titled 'Speckled eggs: water-loss and incubation behaviour in the great tit Parus major'. Great tits nest in cavities and nest boxes. The camouflage view is stated as a common explanation, not attributed. Findings in the options are hypothetical.",
+      "band7_moves": [
+        "weaken polarity",
+        "key supplies an unstated condition the rival explanation needs (visual predators)",
+        "OPP fits the rival view",
+        "two TRAPs: an irrelevant property of the spots and a pattern consistent with both views"
+      ],
+      "word_count": 106,
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass"
+      },
+      "band7": {
+        "verdict": "band 7",
+        "why": "Weaken polarity on a T1_compete; the key removes a condition camouflage needs (predators that hunt by sight); B fits the rival view, D is consistent with both, C is an irrelevant property of the spots. Discrimination check: camouflage predicts visually hunting predators, the calcium view predicts nothing about them, so A splits the two and D does not."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "A",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 7
+    },
+    {
+      "id": "command_of_evidence.Q2_P8_multipart.hard.w3b7_04",
+      "template": "Q2_P8_multipart",
+      "subtype": "Data description (two-part claim read through a passage relation: spread of values, not levels)",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "Ecologists characterize a food web by its length, the number of feeding levels separating top predators from primary producers, and by its width, the diversity of energy sources supporting it. Chemical analysis of animal tissues can estimate both: a consumer’s nitrogen-15 value increases by a roughly constant amount at every successive trophic level, whereas its carbon-13 value indicates the energy source at the web’s base. Comparing these isotope values in fishes from the San Juan River in Utah and from Lake Powell, the reservoir into which the river empties, ecologist Casey A. Pennock and colleagues concluded that the reservoir’s food web is shorter and wider than the river’s.",
+      "stem": "Which choice best describes data from the table that support Pennock and colleagues’ conclusion?",
+      "options": [
+        "Each of the four species had a higher nitrogen-15 value in the reservoir than in the river and a lower carbon-13 value in the reservoir than in the river.",
+        "The four species’ nitrogen-15 values varied less in the reservoir, from 11.6 to 14.0, than in the river, where they ranged from 7.9 to 11.8, and every species had a lower carbon-13 value in the reservoir than in the river.",
+        "The four species’ nitrogen-15 values spanned a narrower range in the reservoir than in the river, while their carbon-13 values spanned a wider range in the reservoir than in the river.",
+        "In both habitats, channel catfish had a higher nitrogen-15 value than razorback sucker did, and flannelmouth sucker had a carbon-13 value more than 2 units higher than that of common carp."
+      ],
+      "answer_letter": "C",
+      "table": {
+        "title": "Average Isotope Values of Four Fish Species in the San Juan River and Lake Powell",
+        "columns": [
+          "Species",
+          "Nitrogen-15, river",
+          "Nitrogen-15, reservoir",
+          "Carbon-13, river",
+          "Carbon-13, reservoir"
+        ],
+        "rows": [
+          [
+            "Channel catfish",
+            "11.8",
+            "14.0",
+            "−23.3",
+            "−28.5"
+          ],
+          [
+            "Common carp",
+            "7.9",
+            "12.5",
+            "−23.9",
+            "−30.5"
+          ],
+          [
+            "Flannelmouth sucker",
+            "10.4",
+            "11.6",
+            "−21.7",
+            "−25.0"
+          ],
+          [
+            "Razorback sucker",
+            "11.3",
+            "12.1",
+            "−21.3",
+            "−26.0"
+          ]
+        ],
+        "note": "Values are in parts per thousand."
+      },
+      "figure": null,
+      "explanation": "By the passage’s reasoning, a shorter food web shows up as a smaller spread of nitrogen-15 values among species, and a wider one as a larger spread of carbon-13 values. In the river, nitrogen-15 runs from 7.9 to 11.8 (a spread of 3.9) and carbon-13 from −23.9 to −21.3 (2.6); in the reservoir, nitrogen-15 runs from 11.6 to 14.0 (2.4) and carbon-13 from −30.5 to −25.0 (5.5). Choice C states both halves of that comparison.",
+      "distractors": {
+        "A": {
+          "recipe": "IRREL: accurate shift in levels where the claim needs spreads",
+          "why_wrong": "Every species did shift this way, but moving all species up or down says nothing about how far apart they are, which is what the length and width of the web depend on."
+        },
+        "B": {
+          "recipe": "HALF + IRREL: the shorter part right, the wider part read as a shift in level",
+          "why_wrong": "The narrower nitrogen-15 range is accurate and fits a shorter web, but a lower carbon-13 value for every species shows that the fishes’ energy sources shifted, not that they became more varied; only a wider spread of carbon-13 values would show a wider web."
+        },
+        "D": {
+          "recipe": "IRREL: accurate comparisons of the wrong cells",
+          "why_wrong": "Both comparisons hold in each habitat, but they compare particular species with each other; they do not show how the overall spread of values differs between the river and the reservoir."
+        }
+      },
+      "models": [
+        "3.26",
+        "3.16",
+        "3.18",
+        "a7c52fa4",
+        "df37c087"
+      ],
+      "sources": [
+        {
+          "what": "Pennock, Ahrens, McKinstry, Budy and Gido 2021, Scientific Reports, 'Trophic niches of native and nonnative fishes along a river-reservoir continuum': Table 1 marginal mean d13C and d15N by species and habitat (river upstream and reservoir values used); abstract: in the reservoir species were more constrained in d15N and differed more in d13C, representing a shorter, wider food web",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC8190098/"
+        }
+      ],
+      "notes": "Four species found in both the upstream river reach and the reservoir; Colorado pikeminnow (river only) and gizzard shad (reservoir only) left out, and the conclusion still holds for these four (paper: all species). 'River' is the reach upstream of the Piute Farms Waterfall. The paper assumes 3.4 per mil d15N per trophic step ('a few units'). All option statements checked in Python.",
+      "band7_moves": [
+        "passage relation needed to read the display (spread of d15N = length, spread of d13C = width)",
+        "accurate readings of the wrong quantity (levels) in the key's frame",
+        "half-match with real numbers",
+        "four operations to verify the key"
+      ],
+      "word_count": 108,
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 9,
+        "fixes": [
+          "option B was a verbatim half of the key (same nitrogen-15 ranges, nothing else), so the key read as the 'complete' version; B now pairs the accurate narrower nitrogen-15 range with a lower carbon-13 value for every species (a level shift, not a wider spread), in the key's frame"
+        ],
+        "status": "fixed"
+      },
+      "band7": {
+        "verdict": "band 7",
+        "why": "Passage relation needed twice (spread of nitrogen-15 = length, spread of carbon-13 = width); four operations (two ranges per habitat per isotope); every distractor is an accurate reading, two of them in the key's two-part frame, wrong only through the proxy (levels for spreads)."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "C",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 7
+    },
+    {
+      "id": "command_of_evidence.T2_lit_quote.hard.w3b7_05",
+      "template": "T2_lit_quote",
+      "subtype": "Literary quotation illustrates a claim (indirect two-part claim; translated drama)",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "The Great Galeoto is an 1881 play by José Echegaray, translated from the Spanish in 1895 by Hannah Lynch. Early in the play, Ernest, an aspiring dramatist unable to begin a new drama, tears a blank sheet of paper to pieces in exasperation. He then intimates that this outburst embarrasses him but has not weakened his resolve: ______",
+      "stem": "Which quotation from a translation of The Great Galeoto most effectively illustrates the claim?",
+      "options": [
+        "“But nothing more irritating, more insolent, meaner than this insolent pen of mine, nothing worse than this white sheet of paper. Oh, if I cannot fill it, at least I may destroy it—vile accomplice of my ambition and my eternal humiliation.”",
+        "“Let Don Julian say what he will, I won’t abandon the undertaking. That would be signal cowardice. Never retreat—always forward.”",
+        "“How lucky that nobody saw me! For in truth such fury is absurd and unjust. No, I will not yield. I will think and think, until either I have conquered or am crushed.”",
+        "“Dreaming! yes. Nonsense! perhaps. I talk both dreams and nonsense. But you are sensible and always right.”"
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The claim has two parts: Ernest is embarrassed by his outburst, and he is still determined to write. In choice C he is relieved that “nobody saw me” and calls his fury “absurd and unjust,” which hints at embarrassment, and then declares “I will not yield,” which shows his resolve is intact.",
+      "distractors": {
+        "A": {
+          "recipe": "LURE: shares the idea of humiliation, but it is the rage itself",
+          "why_wrong": "These are the words that lead up to the outburst: Ernest blames the pen and paper and resolves to destroy the page. His “humiliation” comes from failing to write, not from shame at his fury, and he expresses no determination to go on."
+        },
+        "B": {
+          "recipe": "HALF: resolve without the embarrassment",
+          "why_wrong": "Ernest vows to keep going, but the shame he mentions is the cowardice of giving up, not embarrassment about tearing up the paper; this comes later, after Don Julian has urged him to drop the play."
+        },
+        "D": {
+          "recipe": "HALF/OPP: self-deprecation with a concession instead of resolve",
+          "why_wrong": "Ernest makes fun of his own talk and defers to Don Julian, who has just called the play impossible, but he is speaking of his ideas, not of an outburst, and the quotation expresses no determination to keep writing."
+        }
+      },
+      "models": [
+        "3.37",
+        "3.17",
+        "3.34",
+        "825dc766"
+      ],
+      "sources": [
+        {
+          "what": "Project Gutenberg text of The Great Galeoto, Hannah Lynch's English prose translation (John Lane, 1895); prologue, scenes I, II and IV, quotations copied exactly (stage direction removed from A); premiere 19 March 1881 stated in the introduction",
+          "url": "https://www.gutenberg.org/ebooks/55981"
+        }
+      ],
+      "notes": "Quotations are Ernest's own words from the prologue (scene I for A and C, scene II for D, scene IV for B). Source punctuation kept; the stage direction [throws it away] removed from A, as CB trims.",
+      "band7_moves": [
+        "indirect claim verb (intimates)",
+        "two-part claim where each distractor holds one part or a near emotion",
+        "lure on humiliation/cowardice words that point at shame of a different kind"
+      ],
+      "word_count": 58,
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 6,
+        "fixes": [
+          "option D (Ernest's helplessness before the outburst) replaced by his self-deprecating concession to Don Julian ('I talk both dreams and nonsense. But you are sensible and always right.'), copied exactly from prologue scene II, so each wrong option now holds one tempting half: humiliation without resolve (A), resolve with a shame word (B), self-mockery with a concession (D)"
+        ],
+        "status": "fixed"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "Hardened as far as the text allows, but the language is plain and the key is found by matching two explicit cues ('nobody saw me', 'I will not yield'); band-7 literary items rest on hard language (Richard II, Lear). Strong band 6, as the writer flagged."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "C",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "command_of_evidence.T3_person_quote.hard.w3b7_06",
+      "template": "T3_person_quote",
+      "subtype": "Quotation from a scholar supports an argument that rejects a dichotomy (claim inside the authors' rebuttal)",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "Much scholarship on skateboarding has treated it as an act of subversion: skaters repurpose handrails, benches, and plazas for uses their designers never intended, frequently in defiance of regulations and of the security guards who enforce them. That interpretation became harder to sustain once skateboarding developed formal competitions with judges and scoring criteria and was eventually admitted to the Olympic Games. Scholars Brian Glenney and Steve Mull decline to choose between the two characterizations, arguing that skateboarding is simultaneously a sport and a form of subversion: even when it takes place within rule-governed competition, they maintain, it remains distinctly subversive.",
+      "stem": "Which quotation from a work by a sports historian would be the most effective evidence for Glenney and Mull to include in support of their argument?",
+      "options": [
+        "“Once skateboarding accepted judges, scorecards, and medals, it surrendered what had made it distinctive. A skater performing a routine for points differs little from a gymnast; genuine skateboarding still happens in parking lots and plazas, where no one has granted permission and no one is keeping score.”",
+        "“Skateboarding today is really two activities sharing one name: a competitive sport practiced in purpose-built parks and a street culture that still treats the city as its playground. Many skaters move between these two worlds, but the values of one rarely carry over into the other.”",
+        "“Skateboarding’s inclusion in the Olympics confirmed what participants had long known: the activity demands years of disciplined practice, precise technique, and considerable courage. Like other athletic pursuits, it has developed standards by which performances can be ranked, and its best practitioners deserve recognition as athletes.”",
+        "“Watch a contest and the old defiance is still there. Judges give their highest marks to skaters who treat a course’s rails and ledges as something other than what they were built for, prizing the same improvisation that once drew complaints from shopkeepers. The scorecard rewards the very mischief it was meant to discipline.”"
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "Glenney and Mull argue that skateboarding is both a sport and subversive, and that its subversiveness survives inside rule-governed competition. Choice D describes judged contests (the sport) in which skaters win by using rails and ledges for something other than their intended purpose (the subversion), so that the scoring system rewards the very defiance it might have been expected to suppress. That is the claim that skateboarding stays subversive even within competition.",
+      "distractors": {
+        "A": {
+          "recipe": "OPP: sides with the view the authors reject",
+          "why_wrong": "This historian says competition stripped skateboarding of its subversive character, which is the opposite of Glenney and Mull’s claim that it stays subversive within competition."
+        },
+        "B": {
+          "recipe": "TRAP: a reconciliation that misses the claim",
+          "why_wrong": "This quotation grants that skateboarding is both a sport and a street culture, but it treats them as separate activities whose values rarely mix, so it denies that subversion persists inside competition."
+        },
+        "C": {
+          "recipe": "HALF: the sport side only",
+          "why_wrong": "The historian argues that skateboarding is a genuine athletic pursuit but says nothing about its remaining subversive, so the quotation supports only half of the argument."
+        }
+      },
+      "models": [
+        "3.3",
+        "3.21",
+        "3.32",
+        "3.33",
+        "04cbeca3",
+        "378c66d5"
+      ],
+      "sources": [
+        {
+          "what": "Glenney and Mull 2018, 'Skateboarding and the Ecology of Urban Space', Journal of Sport and Social Issues 42(6): abstract (most skateboarding scholarship treats it as subversion of rule governance, a view hard to square with rule-governed competitions now including the Olympics; skateboarding's engagement in rule-governed competition is distinctly subversive, so it is both sport and subversion)",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6269152/"
+        }
+      ],
+      "notes": "Authors confirmed through Crossref (Brian Glenney, Norwich University; Steve Mull, independent scholar). The quotations are from an unnamed historian, as CB's T3 items use; none is attributed to a real person.",
+      "band7_moves": [
+        "claim sits inside the authors' rebuttal of a dichotomy",
+        "40 to 55 word quotations that argue",
+        "TRAP: a reconciliation that grants both sides but misses the claim",
+        "OPP sides with the rejected view; HALF supports one side only"
+      ],
+      "word_count": 100,
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 2,
+        "fixes": [
+          "key D echoed the passage ('in ways its builders never anticipated' against 'uses their designers never intended') and closed by restating the authors' thesis; rewritten so the historian argues the point in other terms (judges reward treating rails and ledges as something other than what they were built for; 'the scorecard rewards the very mischief it was meant to discipline')",
+          "passage brought from 95 to 100 words ('in defiance of regulations and of the security guards who enforce them')"
+        ],
+        "status": "fixed"
+      },
+      "band7": {
+        "verdict": "band 7",
+        "why": "100 words; claim sits inside the authors' rebuttal of a dichotomy; 40-to-55-word quotations that argue; OPP sides with the rejected view, B is a reconciliation that misses the claim (TRAP), C supports the sport half only; the key no longer shares wording with the passage or states the thesis."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "D",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 7
+    },
+    {
+      "id": "command_of_evidence.Q1_P5_control.hard.w3b7_07",
+      "template": "Q1_P5_control",
+      "subtype": "Data completion: treatments compared with a dark control on the right measure",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Some ecologists have suggested that the color of artificial lighting, not merely its presence, determines how severely it disrupts interactions between plants and insects at night. Michiel P. Boom, Kamiel Spoelstra, and colleagues grew white campion (Silene latifolia) under white, green, or red light at night or in darkness and monitored the moth Hadena bicruris, which pollinates the plant’s flowers but also deposits eggs in them, producing caterpillars that consume the developing seeds. The researchers concluded that the consequences of illumination for the plant depend on the light’s color: for example, ______",
+      "stem": "Which choice most effectively uses data from the table to complete the example?",
+      "options": [
+        "the proportion of infested fruits was nearly twice as high under green light as in darkness but only slightly higher under red light than in darkness.",
+        "the proportions of flowers fertilized under white, green, and red light all fell within 0.05 of the proportion of flowers that were fertilized in darkness.",
+        "under green light, the proportion of fruits infested by caterpillars was higher than the proportion of ovules that were fertilized under green light.",
+        "the proportion of fruits infested by caterpillars was higher under red light than under white light and lower under green light than in darkness."
+      ],
+      "answer_letter": "A",
+      "table": {
+        "title": "Effects of Light Treatment on White Campion",
+        "columns": [
+          "Treatment",
+          "Proportion of flowers fertilized",
+          "Proportion of fruits infested",
+          "Proportion of ovules fertilized"
+        ],
+        "rows": [
+          [
+            "Darkness",
+            "0.73",
+            "0.28",
+            "0.56"
+          ],
+          [
+            "White light",
+            "0.78",
+            "0.44",
+            "0.49"
+          ],
+          [
+            "Green light",
+            "0.75",
+            "0.53",
+            "0.43"
+          ],
+          [
+            "Red light",
+            "0.71",
+            "0.33",
+            "0.47"
+          ]
+        ],
+        "note": null
+      },
+      "figure": null,
+      "explanation": "To show that the effect of light depends on its color, the example must compare different colors against the darkness control on the same measure. Infestation was 0.53 under green light against 0.28 in darkness (nearly twice as high), but 0.33 under red light (only slightly higher). Choice A makes that comparison.",
+      "distractors": {
+        "B": {
+          "recipe": "CONTRA: accurate, but shows no effect of color",
+          "why_wrong": "The figures are accurate (0.78, 0.75, and 0.71 against 0.73), but they show that flower fertilization barely changed under any color, which is not an example of color mattering."
+        },
+        "C": {
+          "recipe": "IRREL: two measures compared within one treatment",
+          "why_wrong": "Both values are under green light, so the comparison involves neither darkness nor another color; it cannot show how color changes the effect of light."
+        },
+        "D": {
+          "recipe": "INACC: both comparisons reversed",
+          "why_wrong": "Infestation under red light (0.33) was lower than under white light (0.44), and infestation under green light (0.53) was higher than in darkness (0.28), not lower."
+        }
+      },
+      "models": [
+        "3.4",
+        "3.38",
+        "3.46"
+      ],
+      "sources": [
+        {
+          "what": "Boom, Spoelstra, Biere, Knop and Visser 2020, Scientific Reports, 'Pollination and fruit infestation under artificial light at night: light colour matters': Table 1 proportions of flowers fertilized, fruits infested and ovules fertilized under dark, white, green and red treatments; abstract (Silene latifolia and Hadena bicruris, a pollinating seed predator; effects possibly reduced by spectra other than white; infestation higher under green and white)",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7591485/"
+        }
+      ],
+      "notes": "Table values are means (standard errors and sample sizes omitted). Every option checked against the table in Python.",
+      "word_count": 92,
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 13,
+        "fixes": [
+          "opening sentence reframed on light color ('Some ecologists have suggested that the color of artificial lighting, not merely its presence, determines how severely it disrupts interactions between plants and insects at night') so the item no longer opens like the bank's light-at-night pollination item (Knop 2017, text_structure_and_purpose w2b1_24); the subject differs (light color, Boom et al. 2020), kept"
+        ],
+        "status": "fixed"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "At target 6 (Q1_P5 reaches band 7 only with a built-in trap). Needs the darkness control on one measure across two colors; B is accurate but shows no color effect, C compares two measures within one treatment."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "A",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "command_of_evidence.Q2_P8_quantifier.hard.w3b7_08",
+      "template": "Q2_P8_quantifier",
+      "subtype": "Data description (claim quantified over each habitat; the combined column is a trap)",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "In some high mountain ecosystems, flies rather than bees are the most frequent visitors to flowers. Ecologists Xin Xu, Hong Wang, and colleagues collected flower-visiting insects in two contrasting habitats at an elevation of about 3,200 meters in the mountains of Yunnan Province, China—wet meadows and drier pine-oak forests—over two consecutive flowering seasons (2018 and 2019), recording the date and timing of each visit throughout the daylight hours and sorting the 4,988 specimens they caught into six functional groups. A student reviewing their data concludes that at this location, bees, not flies, were overwhelmingly the dominant flower visitors in both habitats.",
+      "stem": "Which choice best describes data from the table that support the student’s conclusion?",
+      "options": [
+        "Across both habitats combined, bumblebees and honeybees together made up 76.5% of the insects collected, while flies made up only 15.3%.",
+        "Bees of all three groups made up nearly 80% of the insects collected in the meadows and about 81% of those in the forests, compared with 16.0% and 12.8% for flies.",
+        "In the forests, bumblebees made up 41.5% of the insects collected and honeybees made up 34.3%, together far more than the 12.8% made up by flies.",
+        "More flies were collected in the meadows (615) than in the forests (147), and more bumblebees were collected in the meadows (1,878) than in the forests (478)."
+      ],
+      "answer_letter": "B",
+      "table": {
+        "title": "Flower-Visiting Insects Collected in Two Mountain Habitats",
+        "columns": [
+          "Group",
+          "Meadows",
+          "Forests",
+          "Combined"
+        ],
+        "rows": [
+          [
+            "Bumblebees",
+            "1,878 (49.0%)",
+            "478 (41.5%)",
+            "2,356 (47.2%)"
+          ],
+          [
+            "Honeybees",
+            "1,065 (27.8%)",
+            "395 (34.3%)",
+            "1,460 (29.3%)"
+          ],
+          [
+            "Flies",
+            "615 (16.0%)",
+            "147 (12.8%)",
+            "762 (15.3%)"
+          ],
+          [
+            "Solitary bees",
+            "103 (2.7%)",
+            "63 (5.5%)",
+            "166 (3.3%)"
+          ],
+          [
+            "Butterflies and moths",
+            "86 (2.2%)",
+            "54 (4.7%)",
+            "140 (2.8%)"
+          ],
+          [
+            "Other insects",
+            "89 (2.3%)",
+            "15 (1.3%)",
+            "104 (2.1%)"
+          ],
+          [
+            "Total",
+            "3,836",
+            "1,152",
+            "4,988"
+          ]
+        ],
+        "note": null
+      },
+      "figure": null,
+      "explanation": "The student’s conclusion is about both habitats, so the data must show bees dominating in the meadows and in the forests, and bees include all three bee groups. Adding those rows gives 49.0% + 27.8% + 2.7%, nearly 80%, of the insects in the meadows and 41.5% + 34.3% + 5.5%, about 81%, in the forests, against 16.0% and 12.8% for flies. Choice B reports exactly these figures.",
+      "distractors": {
+        "A": {
+          "recipe": "PART: the combined column where the claim needs each habitat",
+          "why_wrong": "The percentages are accurate, but they pool both habitats; because far more insects came from the meadows, a pooled figure could hide a different pattern in the forests, so it does not show what happened in each habitat."
+        },
+        "C": {
+          "recipe": "PART: one habitat only",
+          "why_wrong": "The forest figures are accurate and fit the conclusion, but the choice says nothing about the meadows, so it cannot show the pattern held in each habitat."
+        },
+        "D": {
+          "recipe": "IRREL: accurate comparison along the wrong axis (habitat, not insect group)",
+          "why_wrong": "These counts compare the two habitats with each other; they do not show that bees made up a majority of visitors within either habitat or that bees outnumbered flies."
+        }
+      },
+      "models": [
+        "3.20",
+        "3.23",
+        "3.24",
+        "56f477fb"
+      ],
+      "sources": [
+        {
+          "what": "Xu, Ren, Trunschke, Kuppler, Zhao, Knop and Wang 2021, Ecology and Evolution, 'Bimodal activity of diurnal flower visitation at high elevation': Table 1 counts and percentages of six functional groups in high-elevation meadows and forests over two flowering seasons on Yulong Snow Mountain, SW China; 4,988 flower visitors in total; methods: sites at about 3,200 m, wet meadows and drier pine-oak forests, date and time of each visit recorded during daylight hours (08:00 to 20:00)",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC8495799/"
+        }
+      ],
+      "notes": "Group names translated: Diptera as flies, Lepidoptera as butterflies and moths. The mountain (Yulong Snow Mountain, Yunnan) is not named in the passage because another of our items (w2b6_13) is about its glaciers. The opening sentence is a hedged general statement, not attributed. Sums checked in Python.",
+      "band7_moves": [
+        "claim quantified over each habitat, with a combined column as a trap (overall majority)",
+        "key needs three rows summed in two columns",
+        "all distractors accurate readings in the key's frame"
+      ],
+      "word_count": 101,
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 8,
+        "fixes": [
+          "the student's claim spelled out the key's shape ('in each habitat considered separately, the three groups of bees together accounted for a large majority ... and far outnumbered flies'); trimmed to 'bees, not flies, were overwhelmingly the dominant flower visitors in both habitats', so the student must see that both habitats need separate figures and that bees means all three bee groups",
+          "passage brought from 93 to 101 words with verified study details (about 3,200 m, wet meadows and drier pine-oak forests, 2018 and 2019, visits timed through daylight hours)",
+          "Lead 2026-10-20: table column 'Both habitats' renamed 'Combined' so the claim's 'in both habitats' (each habitat) cannot be matched to the pooled column; the quick-check solver read A as defensible through that label."
+        ],
+        "status": "fixed"
+      },
+      "band7": {
+        "verdict": "band 7",
+        "why": "Quantifier over both habitats with the pooled column as a trap (the 'every region plus overall' recipe); key needs three rows summed in two columns and compared with flies; A (pooled) and C (one habitat) are accurate but insufficient, D accurate on the wrong axis."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "B",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 7
+    },
+    {
+      "id": "command_of_evidence.Q1_P67_criterion.hard.w3b7_09",
+      "template": "Q1_P67_criterion",
+      "subtype": "Data completion (passage criterion applied to the table; conclusion about the people, not the numbers)",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "The strontium isotope ratio preserved in a person’s bones and teeth reflects the bedrock and soils of the landscape where that person spent childhood, so archaeologists compare ratios in human remains with the range measured in plants, water, and soil around a burial site; a ratio outside that local range indicates that the person probably grew up elsewhere. For the part of southern Sweden containing the Late Bronze Age cemetery of Simris II, Pernille Ladegaard-Pedersen and colleagues established a local range of about 0.7080 to 0.7140. One individual they analyzed, a teenager of about 15, had been buried in an urn shaped like a house, a style often associated with long-distance contacts. Their results suggest that ______",
+      "stem": "Which choice most effectively uses data from the table to complete the statement?",
+      "options": [
+        "the teenager buried in the house-shaped urn probably grew up away from Simris II, since that individual’s ratio differs from the ratios of the adults buried in graves 60 and 80.",
+        "most of the individuals buried at Simris II traveled widely as adults, even though only the individual in grave 93 appears to have spent childhood outside the region.",
+        "the adult in grave 93 and the child in grave 102 both probably spent their childhoods away from Simris II, since their ratios are the two highest of the six.",
+        "the house-shaped urn need not mean that the teenager came from far away, since that individual’s ratio is within the local range, but the adult in grave 93 likely grew up elsewhere."
+      ],
+      "answer_letter": "D",
+      "table": {
+        "title": "Strontium Isotope Ratios of Six Individuals Buried at Simris II",
+        "columns": [
+          "Grave",
+          "Individual",
+          "Strontium isotope ratio"
+        ],
+        "rows": [
+          [
+            "60",
+            "adult male",
+            "0.71182"
+          ],
+          [
+            "66",
+            "adult female",
+            "0.71177"
+          ],
+          [
+            "71",
+            "teenager, about 15 years old",
+            "0.71177"
+          ],
+          [
+            "80",
+            "adult female",
+            "0.71191"
+          ],
+          [
+            "93",
+            "adult male",
+            "0.71505"
+          ],
+          [
+            "102",
+            "child, 10–15 years old",
+            "0.71223"
+          ]
+        ],
+        "note": null
+      },
+      "figure": null,
+      "explanation": "By the criterion in the passage, a ratio between about 0.7080 and 0.7140 fits a childhood near Simris II. The teenager in grave 71, the one buried in the house-shaped urn, has a ratio of 0.71177, inside that range, so the urn style does not show a distant origin; only the adult in grave 93, at 0.71505, falls outside the range. Choice D draws both conclusions.",
+      "distractors": {
+        "A": {
+          "recipe": "WDIR: criterion misapplied (any difference read as nonlocal)",
+          "why_wrong": "The teenager’s ratio (0.71177) differs from those of the adults in graves 60 and 80 only in the fourth decimal place and lies well inside the local range, which by the passage’s criterion points to a local childhood."
+        },
+        "B": {
+          "recipe": "OUTS: a claim the table cannot settle",
+          "why_wrong": "The ratios reflect where people spent childhood; they say nothing about whether anyone traveled as an adult."
+        },
+        "C": {
+          "recipe": "INACC: compound with one false clause",
+          "why_wrong": "The child in grave 102 has a ratio of 0.71223, which is within the local range of about 0.7080 to 0.7140; being second highest does not place it outside the range."
+        }
+      },
+      "models": [
+        "3.22",
+        "3.27"
+      ],
+      "sources": [
+        {
+          "what": "Ladegaard-Pedersen, Sabatini, Frei, Kristiansen and Frei 2021, PLOS ONE, 'Testing Late Bronze Age mobility in southern Sweden in the light of a new multi-proxy strontium isotope baseline of Scania': Table 1 ratios for graves 60, 66, 71 (c. 15 years, cremated tooth enamel), 80, 93, 102; Simris II lies within Area 3-4, baseline 0.7110 ± 0.0030 (2 sigma); grave 93 the only individual of apparent nonlocal origin; the young individual in the house (door) urn of grave 71 agrees with the local baseline",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC8059841/"
+        }
+      ],
+      "notes": "Local range = Area 3-4 baseline 0.7110 ± 0.0030, i.e. 0.7080 to 0.7140. Grave 93 held two adult males mixed in one urn; the paper analyzed one (petrous bone), shown as 'adult male'. Ratios are 87Sr/86Sr; the table header says 'strontium isotope ratio' to avoid the official shark-teeth item's wording. Every option checked against the table in Python.",
+      "band7_moves": [
+        "passage criterion needed to read the display (local range)",
+        "blank concludes about people, not numbers",
+        "compound options of 25 to 35 words",
+        "WDIR from misapplying the criterion, OUTS, and a compound with one false clause"
+      ],
+      "word_count": 117,
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 7,
+        "fixes": [],
+        "status": "pass"
+      },
+      "band7": {
+        "verdict": "band 7",
+        "why": "117 words; passage criterion (local range 0.7080 to 0.7140) must be applied to the display; the blank concludes about people (the urn does not mark a distant origin); compound options of 25 to 35 words; WDIR (any difference read as nonlocal), OUTS (adult travel), INACC (compound with one false clause)."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "D",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 7
+    },
+    {
+      "id": "command_of_evidence.T1_single.medium.w3b7_10",
+      "template": "T1_single",
+      "subtype": "Hypothetical finding supports a causal claim",
+      "tier": "medium",
+      "band_target": null,
+      "passage": "Many people say they want close, meaningful relationships, yet conversations between strangers tend to stay on safe subjects such as the weather or weekend plans. In a series of experiments, behavioral scientists Michael Kardas, Amit Kumar, and Nicholas Epley paired strangers to discuss either shallow questions or deep, personal ones and asked participants beforehand how they expected the conversations to go. The researchers concluded that people avoid deeper conversations partly because they underestimate how much a stranger will care about what they reveal.",
+      "stem": "Which finding, if true, would most directly support the researchers’ conclusion?",
+      "options": [
+        "Pairs who discussed deep questions talked for about as long as pairs who discussed shallow questions did.",
+        "Before their conversations, participants accurately predicted how interested their partners would be in hearing their answers to deep, personal questions.",
+        "Participants who were told that strangers usually enjoy hearing others’ personal stories chose deeper questions than participants who were not told this.",
+        "Participants expected conversations about deep questions to feel less awkward with close friends than the same conversations would feel with strangers."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The conclusion is that underestimating a stranger’s interest holds people back from deeper conversation. If correcting that expectation, by telling participants that strangers are usually very interested, led them to choose deeper questions, then the underestimate was indeed part of what kept their conversations shallow.",
+      "distractors": {
+        "A": {
+          "recipe": "OFF: a different outcome (conversation length)",
+          "why_wrong": "How long the conversations lasted says nothing about what participants expected their partners to feel or about why people avoid deep topics."
+        },
+        "B": {
+          "recipe": "OPP: no underestimate",
+          "why_wrong": "If participants predicted their partners’ interest accurately, there would be no underestimate to explain their avoidance of deep conversation, which would weaken the conclusion."
+        },
+        "D": {
+          "recipe": "SUBJ: friends rather than strangers",
+          "why_wrong": "Expecting talks with friends to be easier is not evidence that people underestimate how much strangers care, or that this belief steers them away from deep topics."
+        }
+      },
+      "models": [
+        "2.1",
+        "2.16",
+        "2.21",
+        "2.38"
+      ],
+      "sources": [
+        {
+          "what": "Kardas, Kumar and Epley 2022, 'Overly shallow?: Miscalibrated expectations create a barrier to deeper conversation', Journal of Personality and Social Psychology 122(3): abstract (people underestimate how caring and interested strangers are in their disclosures; this creates a barrier to deeper conversation; deep vs shallow conversations; expectations vs experiences)",
+          "url": "https://doi.org/10.1037/pspa0000281"
+        }
+      ],
+      "notes": "Abstract fetched through Europe PMC. Findings in the options are hypothetical (C resembles the paper's experiments 7a and 7b).",
+      "word_count": 83,
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 2,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "command_of_evidence.T1_single.medium.w3b7_11",
+      "template": "T1_single",
+      "subtype": "Hypothetical finding supports a causal conclusion",
+      "tier": "medium",
+      "band_target": null,
+      "passage": "On October 17, 2015, approximately 180 million tons of rock detached from a mountainside near the terminus of Tyndall Glacier and plunged into Taan Fiord in Alaska, generating a tsunami that surged as high as 193 meters up the opposite slope, one of the highest tsunami runups ever documented. The glacier had occupied the entire fjord as recently as 1961 but has since retreated considerably. Geologist Bretwood Higman and colleagues concluded that this retreat contributed to the collapse by removing ice that had previously buttressed the fjord’s steep wall.",
+      "stem": "Which finding, if true, would most directly support Higman and colleagues’ conclusion?",
+      "options": [
+        "Measurements of the slope show that it began creeping slowly downhill in the years after the glacier’s ice thinned and pulled back from its base, long before the 2015 collapse.",
+        "The tsunami’s waves grew smaller with distance from the landslide, so forests near the slide were damaged far more severely than forests near the mouth of the fjord.",
+        "Slopes along parts of the fjord that glacial ice never covered have experienced large landslides just as often as slopes that the glacier recently uncovered.",
+        "Several other glaciers in southern Alaska retreated even farther than Tyndall Glacier did during the same decades."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The conclusion is that the glacier’s retreat removed the support holding up the fjord wall. If the slope started slowly moving only after the ice thinned and withdrew from its base, the loss of the ice is linked in time to the slope’s growing instability, which is what the conclusion predicts.",
+      "distractors": {
+        "B": {
+          "recipe": "OFF: the tsunami's effects, not the slope's cause",
+          "why_wrong": "How the waves weakened with distance describes what the tsunami did, not why the slope failed in the first place."
+        },
+        "C": {
+          "recipe": "OPP: no link between ice removal and landslides",
+          "why_wrong": "If slopes never covered by ice failed just as often, losing glacial support would not seem to matter, which would weaken the conclusion."
+        },
+        "D": {
+          "recipe": "SUBJ: other glaciers",
+          "why_wrong": "How far other glaciers retreated says nothing about whether Tyndall Glacier’s retreat destabilized the slope above Taan Fiord."
+        }
+      },
+      "models": [
+        "2.7",
+        "2.16",
+        "2.21",
+        "2.33"
+      ],
+      "sources": [
+        {
+          "what": "Higman et al. 2018, Scientific Reports, 'The 2015 landslide and tsunami in Taan Fiord, Alaska': abstract (17 October 2015 slope failure at the terminus of Tyndall Glacier, 180 million tons of rock, runup as high as 193 m, one of the highest ever documented; glacial retreat exposed unstable slopes; precursory deformation began decades before failure); text (glacier filled Taan Fiord as recently as 1961, 17 km of terminus retreat; retreat debuttressed the fjord wall)",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6127189/"
+        }
+      ],
+      "notes": "Findings in the options are hypothetical (A echoes the paper's precursory deformation in general terms).",
+      "word_count": 89,
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "command_of_evidence.T2_lit_quote.medium.w3b7_12",
+      "template": "T2_lit_quote",
+      "subtype": "Literary quotation illustrates a claim (two-part claim; translated novel)",
+      "tier": "medium",
+      "band_target": null,
+      "passage": "Doña Perfecta is an 1876 novel by Benito Pérez Galdós. In the novel, Pepe Rey’s plan to marry his cousin is blocked at every turn, and he eventually accuses her mother, his aunt Doña Perfecta, of having hidden her hostility toward him behind a show of warmth: ______",
+      "stem": "Which quotation from a translation of Doña Perfecta most effectively illustrates the claim?",
+      "options": [
+        "“[Y]ou have let loose upon me in the dark and from behind an ambush a swarm of lawsuits; you have deprived me of the official commission which I brought to Orbajosa; you have brought me into disrepute in the town.”",
+        "“[Y]ou determined from the first day to drive me to desperation, to tire me out; and with smiles and affectionate words on your lips you have been killing me, roasting me at the slow fire.”",
+        "“Doña Perfecta smiled with maternal kindness at her nephew, as she pointed toward the leafy avenue which was visible through the glass door.”",
+        "“Don’t suppose,” said the young man, “that I accuse any one in this house. But that my implacable and cruel enemy is in this city, I am persuaded.”"
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The claim has two parts: Pepe says his aunt was hostile to him, and he says she hid that hostility behind warmth. In choice B he charges that she set out “from the first day” to drive him to desperation while keeping “smiles and affectionate words” on her lips, which joins the hostility to the show of affection.",
+      "distractors": {
+        "A": {
+          "recipe": "HALF: hostility (even hidden hostility) without the show of warmth",
+          "why_wrong": "Pepe lists harms his aunt has done him “in the dark,” but nothing in the quotation mentions the kindness or affection she showed him while doing them."
+        },
+        "C": {
+          "recipe": "HALF: warmth without hostility or accusation",
+          "why_wrong": "The narrator shows Doña Perfecta acting kindly toward Pepe, but there is no hostility here and no accusation from Pepe."
+        },
+        "D": {
+          "recipe": "OPP: Pepe clears the household",
+          "why_wrong": "Here Pepe says he accuses no one in his aunt’s house and places his enemy elsewhere in the town, the opposite of accusing his aunt."
+        }
+      },
+      "models": [
+        "2.26",
+        "2.10",
+        "2.36",
+        "2.37"
+      ],
+      "sources": [
+        {
+          "what": "Project Gutenberg text of Doña Perfecta, translated from the Spanish by Mary J. Serrano; quotations from chapters on Pepe's arrival, his talk with his aunt about an enemy in Orbajosa, and his final accusation, copied exactly",
+          "url": "https://www.gutenberg.org/ebooks/2462"
+        },
+        {
+          "what": "publication year 1876 and plot: Pepe Rey comes to Orbajosa to marry his cousin Rosario, a match arranged by his father and his aunt Perfecta",
+          "url": "https://en.wikipedia.org/wiki/Do%C3%B1a_Perfecta"
+        }
+      ],
+      "notes": "Translation year left out (the Gutenberg file does not state it). A and B are from the same speech by Pepe; [Y] marks the capital where the quotation starts mid-sentence, and the closing semicolons of the source are replaced by periods.",
+      "word_count": 48,
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 5,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "command_of_evidence.Q1_P3_pairwise.medium.w3b7_13",
+      "template": "Q1_P3_pairwise",
+      "subtype": "Data completion: one comparison across settings, chosen from accurate comparisons on the wrong axis",
+      "tier": "medium",
+      "band_target": null,
+      "passage": "Growing food in private yards and shared urban plots has attracted increasing interest from city planners and nutrition educators. In a 2021 study, economist Carola Grebitus surveyed 420 residents of Detroit, Michigan, asking how frequently they cultivated fruits and vegetables in home gardens and in community gardens. A student reviewing the survey results observes that respondents were considerably more likely to grow produce at home than in a community garden. For example, ______",
+      "stem": "Which choice most effectively uses data from the table to complete the example?",
+      "options": [
+        "about 24% of respondents always grew vegetables in a community garden, whereas only about 11% always grew vegetables at home.",
+        "about 34% of respondents never grew vegetables at home, whereas about 48% never grew fruits at home.",
+        "nearly equal shares of respondents, about 10%, grew fruits and vegetables in a community garden most of the time.",
+        "fewer than half of respondents never grew fruits at home, whereas more than two-thirds never grew fruits in a community garden."
+      ],
+      "answer_letter": "D",
+      "table": {
+        "title": "How Often Survey Respondents Grew Fruits and Vegetables (% of respondents)",
+        "columns": [
+          "Frequency",
+          "Fruits, home garden",
+          "Vegetables, home garden",
+          "Fruits, community garden",
+          "Vegetables, community garden"
+        ],
+        "rows": [
+          [
+            "Never",
+            "47.86",
+            "34.05",
+            "69.50",
+            "65.87"
+          ],
+          [
+            "Sometimes",
+            "17.38",
+            "15.00",
+            "6.90",
+            "7.16"
+          ],
+          [
+            "About half the time",
+            "10.24",
+            "10.48",
+            "5.48",
+            "5.97"
+          ],
+          [
+            "Most of the time",
+            "8.81",
+            "16.43",
+            "9.76",
+            "10.26"
+          ],
+          [
+            "Always",
+            "15.71",
+            "24.05",
+            "8.81",
+            "10.74"
+          ]
+        ],
+        "note": null
+      },
+      "figure": null,
+      "explanation": "The example must compare the same kind of produce in the two settings. The table shows that 47.86% of respondents never grew fruits at home (fewer than half), while 69.50% never grew fruits in a community garden (more than two-thirds), so far more respondents grew fruits at home. Choice D states this comparison accurately.",
+      "distractors": {
+        "A": {
+          "recipe": "WDIR: the two settings' values swapped",
+          "why_wrong": "About 24% of respondents always grew vegetables at home and about 11% always grew them in a community garden, the reverse of what this choice says."
+        },
+        "B": {
+          "recipe": "IRREL: accurate comparison on the wrong axis (fruits vs vegetables)",
+          "why_wrong": "Both figures are accurate, but both are for home gardens; comparing fruits with vegetables says nothing about home gardens versus community gardens."
+        },
+        "C": {
+          "recipe": "IRREL: sameness within one setting",
+          "why_wrong": "The figures (9.76% and 10.26%) are accurate, but they describe community gardens only and show no difference between settings."
+        }
+      },
+      "models": [
+        "2.18",
+        "2.24",
+        "2.27"
+      ],
+      "sources": [
+        {
+          "what": "Grebitus 2021, PLOS ONE, 'Small-scale urban agriculture: Drivers of growing produce at home and in community gardens in Detroit': online survey of 420 Detroit residents; Table 1 frequency of growing fruits and vegetables in home and community gardens (percentages used)",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC8423299/"
+        }
+      ],
+      "notes": "The comparison of settings is stated as a student's observation from the table, not attributed to the author. Grebitus is a food economist at Arizona State University (title kept general: economist). Every option checked against the table in Python.",
+      "word_count": 73,
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 6,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "command_of_evidence.Q1_P4_trend.medium.w3b7_14",
+      "template": "Q1_P4_trend",
+      "subtype": "Data completion: change over time across three lines",
+      "tier": "medium",
+      "band_target": null,
+      "passage": "Mexico produces far more avocados than any other country, but rising international demand for the fruit has encouraged farmers in South America and East Africa to establish extensive new orchards, and harvests in several of those countries have expanded considerably. That expansion has been uneven, however. A student investigating avocado production observes, for example, that from 2016 to 2020, the harvest in ______",
+      "stem": "Which choice most effectively uses data from the graph to complete the example?",
+      "options": [
+        "Peru more than doubled, staying above the harvest in Colombia.",
+        "Kenya declined, falling below the harvests in both Colombia and Peru.",
+        "Colombia more than doubled, rising above the harvest in Peru.",
+        "Colombia increased slightly, remaining below the harvest in Peru."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": {
+        "kind": "line graph",
+        "title": "Avocado Production in Three Countries, 2010–2020",
+        "x_axis": "Year",
+        "y_axis": "Production (thousands of metric tons)",
+        "description": "Three lines at 2010, 2012, 2014, 2016, 2018 and 2020; y-axis 0 to 900 in steps of 100. Colombia: about 205, 255, 289, 294, 445, 829. Peru: about 184, 269, 349, 455, 505, 672. Kenya: about 202, 167, 219, 176, 234, 323. Colombia is below Peru from 2012 to 2018 and rises steeply after 2016 to end above it; Kenya stays lowest after 2010.",
+        "data": [
+          {
+            "series": "Colombia",
+            "points": [
+              [
+                "2010",
+                205
+              ],
+              [
+                "2012",
+                255
+              ],
+              [
+                "2014",
+                289
+              ],
+              [
+                "2016",
+                294
+              ],
+              [
+                "2018",
+                445
+              ],
+              [
+                "2020",
+                829
+              ]
+            ]
+          },
+          {
+            "series": "Peru",
+            "points": [
+              [
+                "2010",
+                184
+              ],
+              [
+                "2012",
+                269
+              ],
+              [
+                "2014",
+                349
+              ],
+              [
+                "2016",
+                455
+              ],
+              [
+                "2018",
+                505
+              ],
+              [
+                "2020",
+                672
+              ]
+            ]
+          },
+          {
+            "series": "Kenya",
+            "points": [
+              [
+                "2010",
+                202
+              ],
+              [
+                "2012",
+                167
+              ],
+              [
+                "2014",
+                219
+              ],
+              [
+                "2016",
+                176
+              ],
+              [
+                "2018",
+                234
+              ],
+              [
+                "2020",
+                323
+              ]
+            ]
+          }
+        ]
+      },
+      "explanation": "The example must show uneven growth between 2016 and 2020. The graph shows Colombia’s harvest rising from about 294 thousand metric tons in 2016 to about 829 thousand in 2020, more than double, and moving from below Peru’s harvest (about 455 thousand) to above it (about 672 thousand). Choice C states this accurately.",
+      "distractors": {
+        "A": {
+          "recipe": "INACC: wrong series credited with the surge",
+          "why_wrong": "Peru’s harvest grew from about 455 to about 672 thousand metric tons, well short of doubling, and by 2020 it was below Colombia’s, not above it."
+        },
+        "B": {
+          "recipe": "WDIR: Kenya rose, not fell",
+          "why_wrong": "Kenya’s harvest increased from about 176 to about 323 thousand metric tons from 2016 to 2020; it had already been below both other countries’ harvests in 2016."
+        },
+        "D": {
+          "recipe": "INACC: understates the change and reverses the order",
+          "why_wrong": "Colombia’s harvest nearly tripled rather than increasing slightly, and by 2020 it was above Peru’s, not below it."
+        }
+      },
+      "models": [
+        "2.15",
+        "2.34",
+        "2.40"
+      ],
+      "sources": [
+        {
+          "what": "Our World in Data, avocado production by country (FAO data): Colombia, Peru and Kenya, 2010 to 2020, in metric tons (shown here in thousands, rounded); Mexico far larger than any other producer",
+          "url": "https://ourworldindata.org/grapher/avocado-production"
+        }
+      ],
+      "notes": "Values fetched from the grapher's CSV (csvType=full) on 2026-10-20 and rounded to thousands of metric tons. Every option checked against the series in Python.",
+      "word_count": 63,
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 18,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "command_of_evidence.Q2_P4_trend.medium.w3b7_15",
+      "template": "Q2_P4_trend",
+      "subtype": "Data description: crossing lines support a change in rank",
+      "tier": "medium",
+      "band_target": null,
+      "passage": "Throughout the 2000s, Malaysia generated more of its electricity from natural gas than from any other source. During that decade, however, the amount of electricity the country generated from coal rose every year. A student researching Malaysia’s electricity supply concludes that during the 2010s, coal went from a smaller source than natural gas to the country’s largest source.",
+      "stem": "Which choice best describes data from the graph that support the student’s conclusion?",
+      "options": [
+        "Coal-fired plants generated less electricity than natural gas plants did in 2010, 2012, and 2014 but more than both natural gas plants and hydropower dams in 2018 and 2020.",
+        "Natural gas plants generated less electricity in 2020 than in any other year shown, while hydropower dams generated more than four times as much electricity in 2020 as in 2010.",
+        "Natural gas generation declined in every two-year period from 2010 to 2020, while coal generation increased in every two-year period.",
+        "Coal generation rose by about 80 percent from 2010 to 2020, increasing from about 49 terawatt-hours to about 89 terawatt-hours."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": {
+        "kind": "line graph",
+        "title": "Electricity Generation in Malaysia from Three Sources, 2010–2020",
+        "x_axis": "Year",
+        "y_axis": "Electricity generated (terawatt-hours)",
+        "description": "Three lines at 2010, 2012, 2014, 2016, 2018 and 2020; y-axis 0 to 100 in steps of 10. Coal: about 49, 56, 56, 69, 77, 89. Natural gas: about 65, 61, 74, 65, 64, 54. Hydropower: about 6, 9, 13, 20, 26, 27. Coal is below natural gas in 2010, 2012 and 2014, just above it in 2016, and well above both other lines in 2018 and 2020; hydropower stays lowest.",
+        "data": [
+          {
+            "series": "Coal",
+            "points": [
+              [
+                "2010",
+                49.4
+              ],
+              [
+                "2012",
+                55.62
+              ],
+              [
+                "2014",
+                55.83
+              ],
+              [
+                "2016",
+                69.15
+              ],
+              [
+                "2018",
+                77.29
+              ],
+              [
+                "2020",
+                88.88
+              ]
+            ]
+          },
+          {
+            "series": "Natural gas",
+            "points": [
+              [
+                "2010",
+                65.22
+              ],
+              [
+                "2012",
+                60.99
+              ],
+              [
+                "2014",
+                73.84
+              ],
+              [
+                "2016",
+                65.23
+              ],
+              [
+                "2018",
+                64.05
+              ],
+              [
+                "2020",
+                53.69
+              ]
+            ]
+          },
+          {
+            "series": "Hydropower",
+            "points": [
+              [
+                "2010",
+                6.36
+              ],
+              [
+                "2012",
+                9.25
+              ],
+              [
+                "2014",
+                13.39
+              ],
+              [
+                "2016",
+                20.02
+              ],
+              [
+                "2018",
+                26.33
+              ],
+              [
+                "2020",
+                27.3
+              ]
+            ]
+          }
+        ]
+      },
+      "explanation": "The student concludes that coal started the 2010s behind natural gas and ended them as Malaysia’s largest source. Choice A shows both halves: coal-fired plants generated less electricity than natural gas plants in 2010, 2012, and 2014, and by 2018 and 2020 they generated more than both natural gas plants and hydropower dams, the other sources shown.",
+      "distractors": {
+        "B": {
+          "recipe": "IRREL: accurate statements about the other two sources",
+          "why_wrong": "Both readings are accurate (about 54 terawatt-hours from natural gas in 2020, and hydropower rising from about 6 to about 27), but they say nothing about coal, so they cannot show coal moving ahead of natural gas."
+        },
+        "C": {
+          "recipe": "INACC: one false clause (gas rose 2012 to 2014)",
+          "why_wrong": "Natural gas generation rose from about 61 terawatt-hours in 2012 to about 74 in 2014, so it did not decline in every two-year period, even though coal generation did rise in each one."
+        },
+        "D": {
+          "recipe": "PART: coal growth with no comparison",
+          "why_wrong": "The growth is accurately described, but without comparing coal with natural gas it cannot show that coal went from a smaller source than natural gas to the largest one."
+        }
+      },
+      "models": [
+        "2.2",
+        "2.12"
+      ],
+      "sources": [
+        {
+          "what": "Our World in Data, electricity production by source, Malaysia (Ember and Energy Institute data): coal, gas, hydropower, oil, bioenergy and solar in terawatt-hours, 2000 to 2020; gas the largest source every year 2000 to 2015, coal rising every year 2000 to 2012 and the largest source from 2016",
+          "url": "https://ourworldindata.org/grapher/electricity-prod-source-stacked?country=~MYS"
+        }
+      ],
+      "notes": "Reviewer replaced the writer's Kenya geothermal subject: Kenya's electricity is already the subject of the live item command_of_evidence.Q2_P8_multipart.b7. Values from the grapher CSV (csvType=full) fetched 2026-10-20, kept to two decimals. Oil, bioenergy and solar are left out of the graph; each was under 7 TWh in every year shown, so coal was also the largest source overall from 2016 on. The key cites 2018 and 2020, where coal's lead is plain on the graph (2016 is a close 69 against 65). Every option checked in Python.",
+      "word_count": 58,
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 18,
+        "fixes": [
+          "subject replaced: Kenya's electricity duplicated the live item command_of_evidence.Q2_P8_multipart.b7 (Kenya and Rwanda electricity access); new subject Malaysia's electricity generation 2010 to 2020, coal overtaking natural gas (OWID, Ember and Energy Institute data, fetched 2026-10-20), claimed in claims.txt; passage, figure, options, explanation and distractors rewritten in the same design (key: smaller than gas early, larger than both other sources late; IRREL, INACC, PART), every option checked in Python against the CSV"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "command_of_evidence.T3_person_quote.medium.w3b7_16",
+      "template": "T3_person_quote",
+      "subtype": "Quotation from a critic supports a claim about an artist's process",
+      "tier": "medium",
+      "band_target": null,
+      "passage": "Brazilian artist Sonia Gomes creates abstract sculptures by combining secondhand textiles with ordinary materials such as driftwood and wire, which she twists, knots, and binds together. In an essay about Gomes, a student claims that her sculptures develop through a kind of dialogue with her materials rather than from a design she has settled on in advance.",
+      "stem": "Which quotation from an art critic best supports the student’s claim?",
+      "options": [
+        "“Gomes did not enroll in art school until she was 45, after years of practicing law, and that late start sets her apart from most artists of her generation.”",
+        "“Gomes works spontaneously: she lets the cast-off fabrics and objects that reach her studio suggest their forms, adjusting each knot as she goes.”",
+        "“By pairing soft cloth with hard materials such as wood, Gomes gives her sculptures a sense of motion that recalls the popular dances of her native Brazil.”",
+        "“Gomes was born in Caetanópolis, a town often described as the birthplace of Brazil’s textile industry, and fabric has been part of her life since childhood.”"
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The student claims that Gomes’s sculptures grow out of her response to her materials rather than from a fixed plan. Choice B says she works spontaneously and lets the fabrics and objects suggest their forms, adjusting as she works, which describes exactly that kind of process.",
+      "distractors": {
+        "A": {
+          "recipe": "OFF: biography (late start)",
+          "why_wrong": "When Gomes began studying art says nothing about how her sculptures take shape."
+        },
+        "C": {
+          "recipe": "OFF: the finished works' effect",
+          "why_wrong": "The critic describes how the sculptures look and what they recall, not whether Gomes works without a set design."
+        },
+        "D": {
+          "recipe": "LURE: shares the textile theme",
+          "why_wrong": "The link between Gomes’s hometown and fabric explains her familiarity with textiles, not a process in which the materials guide the form."
+        }
+      },
+      "models": [
+        "2.23",
+        "2.29"
+      ],
+      "sources": [
+        {
+          "what": "Wikipedia, Sonia Gomes: born 1948 in Caetanopolis, Minas Gerais, considered the birthplace of Brazil's textile industry; left a legal career at 45 (1994) for the Guignard School of Art; combines secondhand textiles with driftwood, wire and furniture; twists, stretches and bundles them; juxtaposes soft and hard materials, creating movement that alludes to popular Brazilian dances; materials 'always tell [her] what they want to be' (Frieze interview)",
+          "url": "https://en.wikipedia.org/wiki/Sonia_Gomes"
+        }
+      ],
+      "notes": "Quotations are from an unnamed critic, as in CB's T3 items; every fact in them is from the Wikipedia article. 'Works spontaneously' follows the article's 'spontaneous and casual practice' and her statement that materials tell her what they want to be.",
+      "word_count": 57,
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [
+          "option B said Gomes 'seldom begins with a sketch', which the source does not state; now 'Gomes works spontaneously', as the source describes her practice"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "command_of_evidence.Q1_P1_lookup.easy.w3b7_17",
+      "template": "Q1_P1_lookup",
+      "subtype": "Data completion: lookup of one cell",
+      "tier": "easy",
+      "band_target": null,
+      "passage": "Before railroads spread across the United States, states and private companies built hundreds of miles of canals to carry agricultural products, coal, and timber to distant markets. A student investigating these waterways learns that the Illinois and Michigan Canal, completed in 1848, linked the Great Lakes to the Mississippi River system. According to the table, the Illinois and Michigan Canal was ______",
+      "stem": "Which choice most effectively uses data from the table to complete the statement?",
+      "options": [
+        "308 miles long.",
+        "184.5 miles long.",
+        "44 miles long.",
+        "96 miles long."
+      ],
+      "answer_letter": "D",
+      "table": {
+        "title": "Five Nineteenth-Century US Canals",
+        "columns": [
+          "Canal",
+          "State(s)",
+          "Year completed",
+          "Length (miles)"
+        ],
+        "rows": [
+          [
+            "Ohio and Erie Canal",
+            "Ohio",
+            "1832",
+            "308"
+          ],
+          [
+            "Delaware and Raritan Canal",
+            "New Jersey",
+            "1834",
+            "44"
+          ],
+          [
+            "Miami and Erie Canal",
+            "Ohio",
+            "1845",
+            "274"
+          ],
+          [
+            "Illinois and Michigan Canal",
+            "Illinois",
+            "1848",
+            "96"
+          ],
+          [
+            "Chesapeake and Ohio Canal",
+            "Maryland",
+            "1850",
+            "184.5"
+          ]
+        ],
+        "note": null
+      },
+      "figure": null,
+      "explanation": "The table’s row for the Illinois and Michigan Canal gives a length of 96 miles, so choice D completes the statement accurately.",
+      "distractors": {
+        "A": {
+          "recipe": "WGRP: another row's length",
+          "why_wrong": "308 miles is the length of the Ohio and Erie Canal."
+        },
+        "B": {
+          "recipe": "WGRP: another row's length",
+          "why_wrong": "184.5 miles is the length of the Chesapeake and Ohio Canal."
+        },
+        "C": {
+          "recipe": "WGRP: another row's length",
+          "why_wrong": "44 miles is the length of the Delaware and Raritan Canal."
+        }
+      },
+      "models": [
+        "1.30",
+        "1.33",
+        "1.37",
+        "1.43"
+      ],
+      "sources": [
+        {
+          "what": "Wikipedia canal articles (infobox and text): Ohio and Erie Canal 308 mi, completed 1832; Delaware and Raritan Canal main section 44 mi, completed 1834; Miami and Erie Canal 274 mi, completed 1845; Illinois and Michigan Canal 96 mi, finished 1848, connected the Great Lakes to the Mississippi River; Chesapeake and Ohio Canal 184.5 mi, completed 1850",
+          "url": "https://en.wikipedia.org/wiki/Illinois_and_Michigan_Canal"
+        }
+      ],
+      "notes": "Other rows checked on https://en.wikipedia.org/wiki/Ohio_and_Erie_Canal, /Delaware_and_Raritan_Canal, /Miami_and_Erie_Canal and /Chesapeake_and_Ohio_Canal (the C&O ran from Washington, DC, through Maryland; state given as Maryland). Erie Canal left out (it appears in another skill's official item).",
+      "word_count": 62,
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 10,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "command_of_evidence.T1_single.easy.w3b7_18",
+      "template": "T1_single",
+      "subtype": "Hypothetical finding supports a claim (one step)",
+      "tier": "easy",
+      "band_target": null,
+      "passage": "Research vessels use echosounders, instruments that emit pulses of sound and record their echoes, to map the seafloor and locate fish. Beaked whales, which hunt in deep water using clicks of their own, are especially sensitive to underwater noise. During surveys in the western North Atlantic, biologist Danielle Cholewiak and colleagues switched a ship’s echosounders on and off on alternate days while listening for the whales. They concluded that beaked whales change their behavior in response to echosounders.",
+      "stem": "Which finding, if true, would most directly support the researchers’ conclusion?",
+      "options": [
+        "The echosounders located more schools of fish on days when the sea was calm than on days when it was rough.",
+        "Beaked whales were sighted more frequently in some regions of the survey area than in others.",
+        "The whales’ clicks were recorded far less often on days when the echosounders were active than on days when they were inactive.",
+        "The clicks produced by beaked whales were higher in pitch than the sound pulses produced by the echosounders."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The conclusion is that the whales behave differently when echosounders are running. If their clicks were recorded far less often on days with the echosounders active than on days with them inactive, the whales were changing their behavior, such as falling silent or moving away, in response to the devices.",
+      "distractors": {
+        "A": {
+          "recipe": "OFF: the echosounders' performance",
+          "why_wrong": "How well the echosounders found fish in different sea conditions says nothing about how the whales responded to them."
+        },
+        "B": {
+          "recipe": "OFF: location, not echosounder use",
+          "why_wrong": "Differences in sightings between regions do not involve the echosounders at all, so they cannot show a response to them."
+        },
+        "D": {
+          "recipe": "OFF: a property of the sounds",
+          "why_wrong": "A difference in pitch between the two kinds of sound does not show that the whales behaved any differently when the echosounders were on."
+        }
+      },
+      "models": [
+        "1.1",
+        "1.17",
+        "1.29",
+        "1.41"
+      ],
+      "sources": [
+        {
+          "what": "Cholewiak, DeAngelis, Palka, Corkeron and Van Parijs 2017, Royal Society Open Science, 'Beaked whales demonstrate a marked acoustic response to the use of shipboard echosounders': abstract (2011 and 2013 surveys in the western North Atlantic; echosounders alternated daily between active and passive mode; significantly fewer acoustic detections, only 3%, when active; beaked whales detect and change their behaviour in response to echosounders)",
+          "url": "https://doi.org/10.1098/rsos.170940"
+        }
+      ],
+      "notes": "Findings in the options are hypothetical; C restates the paper's main result in general terms, as easy officials do (1.1).",
+      "word_count": 78,
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "command_of_evidence.Q1_P2_extreme.easy.w3b7_19",
+      "template": "Q1_P2_extreme",
+      "subtype": "Data completion: minimum of one series",
+      "tier": "easy",
+      "band_target": null,
+      "passage": "Urbanization usually reduces wildlife populations, but some lizards appear to benefit from human construction. Ecologist Antonio C. de Andrade surveyed the lagartixa (Tropidurus hispidus), a lizard of northeastern Brazil, at sites ranging from densely built neighborhoods of João Pessoa to nearby farmland. Contrary to the usual pattern, lagartixa density was lowest at the ______",
+      "stem": "Which choice most effectively uses data from the graph to complete the statement?",
+      "options": [
+        "rural sites.",
+        "highly urbanized sites.",
+        "mildly urbanized sites.",
+        "peri-urban sites."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": {
+        "kind": "bar graph",
+        "title": "Density of Lagartixas at Four Levels of Urbanization",
+        "x_axis": "Level of urbanization",
+        "y_axis": "Lizards per hectare",
+        "description": "Four bars; y-axis 0 to 10 in steps of 2. Highly urbanized: about 4.5. Mildly urbanized: about 6.9. Peri-urban: about 8.7. Rural: about 1.8. The rural bar is the shortest and the peri-urban bar the tallest.",
+        "data": [
+          {
+            "series": "Density",
+            "points": [
+              [
+                "Highly urbanized",
+                4.5
+              ],
+              [
+                "Mildly urbanized",
+                6.89
+              ],
+              [
+                "Peri-urban",
+                8.7
+              ],
+              [
+                "Rural",
+                1.79
+              ]
+            ]
+          }
+        ]
+      },
+      "explanation": "The graph shows the lowest bar, about 1.8 lizards per hectare, for the rural sites, below the highly urbanized (about 4.5), mildly urbanized (about 6.9), and peri-urban (about 8.7) sites. Choice A completes the statement accurately.",
+      "distractors": {
+        "B": {
+          "recipe": "WGRP: the lowest of the urban sites, not of all four",
+          "why_wrong": "At about 4.5 lizards per hectare, the highly urbanized sites had a higher density than the rural sites."
+        },
+        "C": {
+          "recipe": "WGRP: another bar",
+          "why_wrong": "The mildly urbanized sites had about 6.9 lizards per hectare, far above the rural sites."
+        },
+        "D": {
+          "recipe": "WDIR: the highest bar",
+          "why_wrong": "The peri-urban sites had the highest density shown, about 8.7 lizards per hectare."
+        }
+      },
+      "models": [
+        "1.21",
+        "1.23",
+        "1.9",
+        "1.31"
+      ],
+      "sources": [
+        {
+          "what": "de Andrade 2020, Ecology and Evolution, 'Metropolitan lizards? Urbanization gradient and the density of lagartixas (Tropidurus hispidus) in a tropical city': Table 2 densities (individuals/ha) high 4.5, medium 6.89, peri-urban 8.7, rural 1.79; sites in Joao Pessoa, Paraiba, and rural sites 8 and 12 km north",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7042683/"
+        }
+      ],
+      "notes": "The paper's 'medium' level is described as mildly urbanized in its site table; labels follow the site descriptors.",
+      "word_count": 54,
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "command_of_evidence.T3_person_quote.easy.w3b7_20",
+      "template": "T3_person_quote",
+      "subtype": "Quotation from an article supports a claim about a historical figure",
+      "tier": "easy",
+      "band_target": null,
+      "passage": "Tye Leung Schulze was born in San Francisco in 1887. In 1912, she became the first Chinese American woman to vote in a United States election, and she was also the first Chinese American woman to pass the civil service examinations. In a presentation about Leung, a student claims that throughout her life, Leung used her bilingual abilities to help fellow Chinese Americans navigate official institutions.",
+      "stem": "Which quotation from an article about Leung would most directly support the student’s claim?",
+      "options": [
+        "“Leung stood a little over four feet tall, and Donaldina Cameron, who directed the San Francisco mission home where Leung lived as a teenager, nicknamed her ‘Tiny.’”",
+        "“Leung’s 1912 vote drew wide attention, and one San Francisco newspaper declared her the first Chinese woman in the history of the world to exercise the right to vote.”",
+        "“After losing her government job when she married, Leung spent a year working at the Chinese Tea Garden in San Francisco.”",
+        "“For decades, Leung interpreted for Chinese immigrants in courts and immigration offices, and she later connected Chinatown residents with lawyers and immigration services.”"
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The student claims that Leung spent her life using both of her languages to help Chinese Americans with official institutions. Choice D describes her interpreting in courts and immigration offices for decades and connecting Chinatown residents with lawyers and immigration services, which directly supports that claim.",
+      "distractors": {
+        "A": {
+          "recipe": "OFF: a personal detail",
+          "why_wrong": "Leung’s height and nickname have nothing to do with how she used her languages to help others."
+        },
+        "B": {
+          "recipe": "OFF: her vote",
+          "why_wrong": "The attention her vote received concerns her own historic first, not her help to other Chinese Americans."
+        },
+        "C": {
+          "recipe": "OFF: a job unrelated to the claim",
+          "why_wrong": "Working at a tea garden does not show Leung helping anyone deal with courts, agencies, or other institutions."
+        }
+      },
+      "models": [
+        "1.15",
+        "1.19",
+        "1.20"
+      ],
+      "sources": [
+        {
+          "what": "Wikipedia, Tye Leung Schulze: born 1887 in San Francisco; first Chinese American woman to vote in the US (May 19, 1912); first Chinese American to pass the civil service examinations; interpreter for girls in the courts and at the Angel Island Immigration Station; nicknamed 'Tiny' by Donaldina Cameron; lost the Angel Island job after marrying Charles Schulze; a year at the Chinese Tea Garden; night-shift telephone operator at the China Exchange who connected Chinese Americans with lawyers, courts and immigration services; San Francisco Call quotation",
+          "url": "https://en.wikipedia.org/wiki/Tye_Leung_Schulze"
+        }
+      ],
+      "notes": "Quotations are from an unnamed article, as in CB 1.20; every fact in them is from the Wikipedia article.",
+      "word_count": 66,
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 5,
+        "fixes": [
+          "passage said 'the federal civil service examinations'; the source says 'the civil service examinations', so 'federal' removed"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "command_of_evidence.T2_lit_quote.easy.w3b7_21",
+      "template": "T2_lit_quote",
+      "subtype": "Literary quotation illustrates a claim (single trait)",
+      "tier": "easy",
+      "band_target": null,
+      "passage": "The Story Girl is a 1911 novel by L.M. Montgomery. In the novel, the narrator describes his cousin Sara Stanley, the Story Girl, as having a voice that brings to life whatever she says: ______",
+      "stem": "Which quotation from The Story Girl most effectively illustrates the claim?",
+      "options": [
+        "“No, she was not pretty. She was tall for her fourteen years, slim and straight; around her long, white face—rather too long and too white—fell sleek, dark-brown curls, tied above either ear with rosettes of scarlet ribbon.”",
+        "“If voices had colour, hers would have been like a rainbow. It made words live. Whatever she said became a breathing entity, not a mere verbal statement or utterance.”",
+        "“From that moment we were as good friends as if we had known each other for a hundred years.”",
+        "“She lifted her hand and beckoned blithely to us; and, the orchard forgotten, we followed her summons.”"
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The claim is that the Story Girl’s voice seems to bring her words to life. In choice B the narrator says her voice “made words live” and that whatever she said “became a breathing entity,” which states exactly that.",
+      "distractors": {
+        "A": {
+          "recipe": "OFF: her appearance",
+          "why_wrong": "This describes how the Story Girl looks, not her voice."
+        },
+        "C": {
+          "recipe": "OFF: friendship",
+          "why_wrong": "This tells how quickly the narrator and his brother became her friends; it says nothing about her voice."
+        },
+        "D": {
+          "recipe": "OFF: a gesture that draws them to her",
+          "why_wrong": "The children follow her beckoning hand, but the quotation is about a gesture, not about the effect of her voice on her words."
+        }
+      },
+      "models": [
+        "1.11",
+        "1.16",
+        "1.36",
+        "1.42"
+      ],
+      "sources": [
+        {
+          "what": "Project Gutenberg text of The Story Girl (1911), chapter 1, quotations copied exactly (LIVE, printed in capitals for italics, set in lowercase)",
+          "url": "https://www.gutenberg.org/ebooks/5342"
+        },
+        {
+          "what": "publication year 1911 and narrator/cousins on Prince Edward Island",
+          "url": "https://en.wikipedia.org/wiki/The_Story_Girl"
+        }
+      ],
+      "notes": "Narrator is Beverley King; Sara Stanley is his cousin. The source's double hyphens are rendered as closed em dashes.",
+      "word_count": 35,
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [],
+        "status": "pass"
+      }
+    }
+  ]
+}

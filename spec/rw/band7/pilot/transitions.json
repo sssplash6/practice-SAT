@@ -1,0 +1,358 @@
+{
+  "skill": "Transitions",
+  "slug": "transitions",
+  "part": null,
+  "domain": "Expression of Ideas",
+  "tier": "hard",
+  "band_target": 7,
+  "plan": {
+    "templates": [
+      {
+        "code": "M1_emphasis",
+        "name": "Emphasis: B gives a stronger same-direction fact that confirms A's claim of exceptionality",
+        "band7_count": 3,
+        "band7_models": [
+          "00e0170f",
+          "47e238be",
+          "a266d876"
+        ]
+      },
+      {
+        "code": "E1_consequence",
+        "name": "Consequence or conclusion licensed by A, with B's content carrying its own contrast",
+        "band7_count": 3,
+        "band7_models": [
+          "a2bff07e",
+          "a965c6ed",
+          "f5a00eff"
+        ]
+      },
+      {
+        "code": "A1_addition",
+        "name": "Addition: B points back to the same object as A and adds a new feature",
+        "band7_count": 2,
+        "band7_models": [
+          "7ce14583",
+          "8fbf206d"
+        ]
+      },
+      {
+        "code": "U1_culmination_alt",
+        "name": "Culmination (ultimately) or alternative",
+        "band7_count": 2,
+        "band7_models": [
+          "332e75bf",
+          "e225cf02"
+        ]
+      }
+    ],
+    "not_chosen": "Every other template has 1 band-7 item (E2, K2, C3, S1, T1, R1_named_relation); none ties the top four."
+  },
+  "items": [
+    {
+      "id": "transitions.M1_emphasis.b7",
+      "notes": "Subject: botany. 66 words (models' median 55). Section 6: key outside core 13 yes; no sequence or summary decoy yes; surface-contrast proxy passes (key not adversative, That said offered, not in the blank's sentence); chars per word 5.25 (just under 5.3); combined gate passes. Trap annotation: B read alone looks like a contrast (another species with short-lived leaves) while its relation to A is emphasis. Decoy pull: That said catches a reader who sees two species with opposite values; Likewise catches a reader who stops at renowned for exceptional longevity. Blind solve: only In fact survives; That said fails because B supports rather than limits the record claim.",
+      "template": "M1_emphasis",
+      "subtype": "Emphasis: A calls the case a record or exception; B shows another case with the opposite value",
+      "passage": "Welwitschia, a gymnosperm endemic to the Namib Desert, can survive for more than 1,500 years while producing only two leaves, which elongate continuously from their base. A 2021 genomic analysis led by botanist Tao Wan described these as the longest-lived leaves in the plant kingdom. ______ the needles of the Great Basin bristlecone pine, a conifer renowned for exceptional longevity, do not persist beyond five decades.",
+      "stem": "Which choice completes the text with the most logical transition?",
+      "options": [
+        "That said,",
+        "Likewise,",
+        "In fact,",
+        "Consequently,"
+      ],
+      "answer_letter": "C",
+      "explanation": "The text claims that Welwitschia’s two leaves are the longest-lived leaves of any plant. The sentence with the blank backs up that claim with a striking comparison: even the bristlecone pine, a tree famous for living a long time, keeps its needles for no more than about fifty years. “In fact” signals that this sentence reinforces and strengthens the previous claim.",
+      "distractors": {
+        "A": {
+          "recipe": "false opposition",
+          "why_wrong": "“That said” introduces a concession that limits the previous claim, but the bristlecone pine’s short-lived needles do not limit the claim about Welwitschia; they support it."
+        },
+        "B": {
+          "recipe": "false parallel",
+          "why_wrong": "“Likewise” would mean the bristlecone pine’s needles share Welwitschia’s trait, but they last at most five decades, far less than Welwitschia’s leaves."
+        },
+        "D": {
+          "recipe": "unearned cause",
+          "why_wrong": "Nothing about Welwitschia’s leaves causes the bristlecone pine’s needles to last about fifty years; the two facts are compared, not causally linked."
+        }
+      },
+      "models": [
+        "00e0170f",
+        "47e238be",
+        "a266d876"
+      ],
+      "band7_moves": [
+        "surface contrast with a supporting relation: B describes another species with the opposite value, so the content looks adversative while the relation is emphasis",
+        "key outside the core 13 (In fact)",
+        "false-opposition decoy (That said)",
+        "false-parallel decoy (Likewise) pulled by B's phrase renowned for its own longevity",
+        "dense technical register (chars per word target 5.3+)",
+        "new architecture: the claim of exceptionality sits in a source attribution in sentence 2, not in an outlier noun before a semicolon"
+      ],
+      "sources": [
+        {
+          "what": "Wan et al. 2021, Nature Communications 12:4247: Welwitschia is a gymnosperm (Gnetales); two leaves that grow continuously throughout the plant's life from a basal meristem; growth can last several thousand years, \"resulting in the longest-lived leaves in the plant kingdom\"; some individuals over 1,500 years old by carbon-14; arid coastal desert of northern Namibia and southern Angola (the Namib)",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC8275611"
+        },
+        {
+          "what": "paper title, lead author Tao Wan, Leitch co-authors, DOI 10.1038/s41467-021-24528-4",
+          "url": "https://repository.up.ac.za/items/1a057917-325e-4135-988b-a752d4b275b3"
+        },
+        {
+          "what": "bristlecone pines are among the longest-lived trees (Methuselah tree about 4,850 years)",
+          "url": "https://en.wikipedia.org/wiki/Bristlecone_pine"
+        },
+        {
+          "what": "Pinus longaeva leaves show among the longest persistence of any plant, some remaining green for 45 years (an ESA 2012 abstract reports up to 49 years), so not beyond five decades",
+          "url": "https://en.wikipedia.org/wiki/Pinus_longaeva"
+        }
+      ],
+      "tier": "hard",
+      "band_target": 7,
+      "word_count": 66,
+      "table": null,
+      "figure": null,
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 7,
+        "fixes": [
+          "band7_moves claimed a concessive yet inside A; there is none, clause removed",
+          "replaced the unreachable eco.confex source with Wikipedia Pinus longaeva (needles green for up to 45 years; 49 in the ESA abstract)"
+        ],
+        "status": "fixed"
+      },
+      "band7": {
+        "verdict": "band 7",
+        "why": "Same mechanism as 47e238be and a266d876: A makes a superlative claim, B gives another case with the opposite value, so the content looks like a contrast while the relation is emphasis. That said and Likewise each catch a real first-read misreading (opposite values; renowned for longevity), Consequently is the weak one, as in the models. Only In fact is defensible."
+      }
+    },
+    {
+      "id": "transitions.E1_consequence.b7",
+      "notes": "Subject: political science. 70 words (models' median 64). Section 6: key outside core 13 yes; no obvious decoy yes; surface-contrast proxy passes (rather than in the blank's sentence, However and That said offered); chars per word 5.69; combined gate passes. Trap annotation: B read alone looks like a turn (challenges an assumption) while it is the conclusion of A. Decoy pull: However and That said for a reader who keys on challenges; Specifically for a reader who takes B as a detail of the finding. Blind solve: only Hence holds. Figures kept general (about twice as often) because sources quote 53 against 26 or 23 percent. Reviewer: key changed from As such to Hence so the item no longer copies a2bff07e's key with the same repudiation frame.",
+      "template": "E1_consequence",
+      "subtype": "Conclusion licensed by a finding, where B challenges a widely held view",
+      "passage": "In 2011, political scientists Erica Chenoweth and Maria Stephan published an analysis of 323 campaigns, waged between 1900 and 2006, that sought regime change, an occupier’s expulsion, or secession. Campaigns relying on strikes, boycotts, and other nonviolent methods succeeded about twice as often as violent insurgencies did. ______ the study challenges the widely held assumption that armed struggle, rather than civil resistance, is the more effective path to such goals.",
+      "stem": "Which choice completes the text with the most logical transition?",
+      "options": [
+        "Hence,",
+        "However,",
+        "Specifically,",
+        "That said,"
+      ],
+      "answer_letter": "A",
+      "explanation": "The text reports that nonviolent campaigns succeeded about twice as often as violent ones. The sentence with the blank states what follows from that finding: the study undercuts the belief that armed struggle works better. Although that sentence contains a challenge, it is a conclusion drawn from the finding, so “Hence” is the logical transition.",
+      "distractors": {
+        "B": {
+          "recipe": "false opposition",
+          "why_wrong": "“However” signals a contrast with the finding, but the challenge to the belief in armed struggle is a consequence of the finding, not a contradiction of it."
+        },
+        "C": {
+          "recipe": "wrong grain (specification)",
+          "why_wrong": "The sentence does not give a more specific detail about the finding; it states the broader conclusion that the finding supports."
+        },
+        "D": {
+          "recipe": "false opposition",
+          "why_wrong": "“That said” introduces a qualification of what came before, but the sentence does not qualify the finding; it draws a conclusion from it."
+        }
+      },
+      "models": [
+        "a2bff07e",
+        "a965c6ed"
+      ],
+      "band7_moves": [
+        "consequence whose content is a repudiation: B contains its own contrast (challenges the widely held assumption) while following from A",
+        "two false-opposition decoys (However, That said) as a near-synonym pair",
+        "wrong-grain decoy (Specifically) instead of an obvious sequence or summary decoy",
+        "key outside the core 13 (Hence)",
+        "three-sentence build: the deciding finding sits in sentence 2, the conclusion after the blank"
+      ],
+      "sources": [
+        {
+          "what": "Chenoweth and Stephan, Why Civil Resistance Works (Columbia University Press, 2011): 323 violent and nonviolent campaigns, 1900 to 2006, seeking regime change, expulsion of foreign occupiers, or secession; nonviolent campaigns nearly twice as likely to succeed",
+          "url": "https://globalpolicyjournal.com/blog/29/11/2013/book-review-why-civil-resistance-works-strategic-logic-nonviolent-conflict-erica"
+        },
+        {
+          "what": "success rates of 53 percent (nonviolent) against 26 percent (violent); the book challenges conventional wisdom that violence is more effective",
+          "url": "https://westernfriend.org/magazine/on-patriotism/why-civil-resistance-works-review/"
+        }
+      ],
+      "tier": "hard",
+      "band_target": 7,
+      "word_count": 70,
+      "table": null,
+      "figure": null,
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 6,
+        "fixes": [
+          "key As such changed to Hence: a2bff07e already keys As such on the same finding-then-repudiation frame (cloned-frame tell), and Hence avoids the loose use of as such without a noun antecedent"
+        ],
+        "status": "fixed"
+      },
+      "band7": {
+        "verdict": "band 7",
+        "why": "B contains its own contrast (challenges a widely held assumption), so However and That said pull on first read, while the relation is a conclusion from the finding in sentence 2, the a2bff07e and a965c6ed mechanism. Specifically is a plausible wrong grain. One defensible answer."
+      }
+    },
+    {
+      "id": "transitions.A1_addition.b7",
+      "notes": "Subject: literature and book design. Reviewer rebuild: in the draft the sentence before the blank was about the texts and B was about the maps and a prize, so Specifically and For instance never bit (band 6) and the prize line was trivia. Now B points back to the islands of the sentence just before it (same referent, new member, as in 8fbf206d). Section 6: key outside core 13 yes; no obvious decoy yes; chars per word checked by check_rw. Decoy pull: Specifically and For instance for a reader who takes each of these islands as a detail of the portraits; Nevertheless for a reader who sets impressionistic prose against mapmaking. Blind solve: only Additionally holds. Map scale left out (sources disagree).",
+      "template": "A1_addition",
+      "subtype": "Addition: B returns to the same islands and adds a new feature of the book (maps and design)",
+      "passage": "German writer Judith Schalansky’s Atlas of Remote Islands (2009) profiles fifty isolated islands, recounting episodes from their natural and human histories. Composed in a subjective, often impressionistic register, her portraits of the islands resemble personal meditations far more than encyclopedic entries. ______ Schalansky, a trained communication designer, drew a map of each of these islands by hand and designed the volume herself.",
+      "stem": "Which choice completes the text with the most logical transition?",
+      "options": [
+        "Specifically,",
+        "Nevertheless,",
+        "For instance,",
+        "Additionally,"
+      ],
+      "answer_letter": "D",
+      "explanation": "The text first describes Schalansky’s portraits of fifty islands, which read like personal meditations. The sentence with the blank returns to the islands of the sentence before it but adds a different feature of the book: Schalansky drew a map of each island herself and designed the volume. Because this sentence adds new information rather than specifying, illustrating, or contrasting with the portraits, “Additionally” is the logical transition.",
+      "distractors": {
+        "A": {
+          "recipe": "wrong grain (specification)",
+          "why_wrong": "The sentence refers back to the same islands, but it does not give a more specific account of the portraits; it turns to a separate feature of the book, its maps and design."
+        },
+        "B": {
+          "recipe": "false opposition",
+          "why_wrong": "Drawing the maps and designing the book does not run counter to writing subjective, impressionistic portraits, so there is nothing for a concession word to set the sentence against."
+        },
+        "C": {
+          "recipe": "wrong grain (example)",
+          "why_wrong": "Schalansky’s hand-drawn maps and book design are not an example of portraits that read like personal meditations; they are a separate feature of the book."
+        }
+      },
+      "models": [
+        "7ce14583",
+        "8fbf206d"
+      ],
+      "band7_moves": [
+        "same referent, new member: B returns to the islands named in the sentence just before the blank (each of these islands), so Specifically and For instance look like they introduce a detail or an instance of the portraits",
+        "one adversative decoy (Nevertheless) for a reader who sets subjective prose against mapmaking",
+        "key outside the core 13 (Additionally)",
+        "no sequence or summary decoys; the prize trivia of the draft removed"
+      ],
+      "sources": [
+        {
+          "what": "Atlas der abgelegenen Inseln, 2009; maps of 50 islands with texts on their natural and human histories, often written in a subjective, impressionistic style",
+          "url": "https://en.wikipedia.org/wiki/Atlas_of_Remote_Islands"
+        },
+        {
+          "what": "Schalansky has degrees in art history and communication design",
+          "url": "https://en.wikipedia.org/wiki/Judith_Schalansky"
+        },
+        {
+          "what": "fifty maps drawn by the author; maps of each island that she drew",
+          "url": "https://complete-review.com/reviews/moddeut/schalanskyd2.htm"
+        },
+        {
+          "what": "each map rendered by Schalansky; her comments read as musings on the islands",
+          "url": "https://stevenhsilver.com/atlas.html"
+        },
+        {
+          "what": "Schalansky designed Atlas of Remote Islands and typeset it herself",
+          "url": "https://www.essaydaily.org/2011/04/this-is-way-better-than-everything-else.html"
+        }
+      ],
+      "tier": "hard",
+      "band_target": 7,
+      "word_count": 62,
+      "table": null,
+      "figure": null,
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 6,
+        "fixes": [
+          "rebuilt the passage so the blank's sentence returns to the referent of the sentence before it (band-7 same-referent move); the draft's preceding sentence was about the texts, B about maps, so the wrong-grain decoys did not pull",
+          "removed the prize clause (encyclopedia trivia the question never used)",
+          "sources: added complete-review (maps drawn by the author) and essaydaily (designed and typeset herself); dropped the unreachable fontsinuse link",
+          "rewrote explanation and why_wrong for the new passage"
+        ],
+        "status": "fixed"
+      },
+      "band7": {
+        "verdict": "band 7",
+        "why": "After the rebuild B points back to the same islands as the sentence before the blank while adding a new feature, the 8fbf206d move, so the specification and example decoys pull on first read; the draft read as band 6 because B changed topic and gave Additionally away. One defensible answer."
+      }
+    },
+    {
+      "id": "transitions.U1_culmination_alt.b7",
+      "notes": "Subject: literature (novel). Reviewer rebuild. Author's flag (B reverses A, so an adversative would be defensible; none offered): logically sound, since no adversative is offered and neither official U1 item offers one, but the reversal killed Consequently, To that end and In addition with one observation, the shape of band-6 6e0c60da. The draft also listed resigning before taking in Shiraha (he moved in first) and called the interview reluctant (unsourced). Now A holds both pulls and B is the conclusion, as in 332e75bf, so Consequently tempts but the tension does not entail which side wins. Decoy pull: Consequently for a reader who takes the conclusion as a result of the pressure; To that end for a reader who links B to the goal in A. Blind solve: only Ultimately holds.",
+      "template": "U1_culmination_alt",
+      "subtype": "Culmination: a tension between two pulls, then the final conclusion",
+      "passage": "In Sayaka Murata’s 2016 novel Convenience Store Woman, Keiko Furukura has worked part-time at one Tokyo convenience store for eighteen years. Throughout the novel, she is suspended between the store, whose corporate manual prescribes her every action, and relatives and friends who insist that she marry or pursue a respectable career. ______ Keiko concludes that she is, above all, a convenience store worker and that such employment constitutes her purpose in life.",
+      "stem": "Which choice completes the text with the most logical transition?",
+      "options": [
+        "Consequently,",
+        "Ultimately,",
+        "To that end,",
+        "In addition,"
+      ],
+      "answer_letter": "B",
+      "explanation": "The text says that Keiko is suspended between two pulls: the convenience store and relatives and friends who insist that she marry or pursue a respectable career. The sentence with the blank gives the point where that tension finally lands: Keiko concludes that convenience store work is her purpose. “Ultimately” signals this final conclusion.",
+      "distractors": {
+        "A": {
+          "recipe": "unearned cause",
+          "why_wrong": "Being suspended between the store and the demands of relatives and friends does not by itself produce Keiko’s conclusion; the tension could have been resolved either way. The sentence gives the final outcome of that tension, not its direct result."
+        },
+        "C": {
+          "recipe": "unearned cause (purpose)",
+          "why_wrong": "Keiko’s conclusion does not serve the goal named in the text (marrying or pursuing a respectable career); it sets that goal aside, and a conclusion is not an action taken for a purpose."
+        },
+        "D": {
+          "recipe": "additive decoy",
+          "why_wrong": "The sentence does not add another fact of the same kind to the description of Keiko’s situation; it states how that situation is finally resolved."
+        }
+      },
+      "models": [
+        "332e75bf",
+        "e225cf02"
+      ],
+      "band7_moves": [
+        "culmination after a two-sided tension (the store against social pressure), as in 332e75bf, so B is where the struggle lands rather than a reversal of A",
+        "unearned-cause decoy (Consequently) pulled by B following A as an outcome",
+        "purpose decoy (To that end) pulled by the goal others set for Keiko in A",
+        "additive decoy (In addition)",
+        "no adversative offered, as in both official U1 models (332e75bf, 6e0c60da)",
+        "key outside the core 13 (Ultimately)"
+      ],
+      "sources": [
+        {
+          "what": "published 2016; Keiko has worked part-time at a Tokyo konbini for 18 years; each action prescribed by the corporate manual; social pressure over being single and in the job; she says her purpose in life is to be a konbini employee and plans to find a new konbini",
+          "url": "https://en.wikipedia.org/wiki/Convenience_Store_Woman"
+        },
+        {
+          "what": "plot summary: pressure from family and friends to marry or get a proper job, the ending",
+          "url": "https://www.litcharts.com/lit/convenience-store-woman/summary"
+        }
+      ],
+      "tier": "hard",
+      "band_target": 7,
+      "word_count": 72,
+      "table": null,
+      "figure": null,
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 6,
+        "fixes": [
+          "fact: draft put resigning before taking in the former coworker (Shiraha moves in first) and called the interview reluctant (not in sources); events replaced",
+          "rebuilt A as a two-sided tension and B as its landing (332e75bf), because the draft's reversal let every decoy die on one observation (band-6 6e0c60da shape)",
+          "ruling on the author's flag: the draft was sound (no adversative offered, as in both official U1 items) but too easy; in the rebuild an adversative would still be arguable, so none is offered",
+          "rewrote explanation and why_wrong"
+        ],
+        "status": "fixed"
+      },
+      "band7": {
+        "verdict": "band 7",
+        "why": "Borderline but at the model's level: like 332e75bf, A is a struggle and B the conclusion it lands on, so Consequently (and To that end) tempt and only the culmination reading fits. The draft was band 6: B reversed A, so the three same-direction decoys fell together."
+      }
+    }
+  ]
+}

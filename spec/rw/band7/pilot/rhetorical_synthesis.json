@@ -1,0 +1,382 @@
+{
+  "skill": "Rhetorical Synthesis",
+  "slug": "rhetorical_synthesis",
+  "part": null,
+  "domain": "Expression of Ideas",
+  "tier": "hard",
+  "band_target": 7,
+  "plan": {
+    "templates": [
+      {
+        "code": "GEN",
+        "name": "Generalization (with or without support), one level above the notes",
+        "band7_count": 4,
+        "band7_models": [
+          "2c61e0b9",
+          "3b02e88a",
+          "3dcc7140",
+          "7f5715e4"
+        ]
+      },
+      {
+        "code": "EXPL",
+        "name": "Explain how or why, from a chain of bullets",
+        "band7_count": 3,
+        "band7_models": [
+          "3fa48bf3",
+          "8fe4f4ab",
+          "ee51ad04"
+        ]
+      },
+      {
+        "code": "DIFF",
+        "name": "Compare or contrast two items on a non-obvious dimension",
+        "band7_count": 3,
+        "band7_models": [
+          "459df2ba",
+          "8e9e473d",
+          "c34d6bff"
+        ]
+      },
+      {
+        "code": "STUDY",
+        "name": "Study slots; band-7 form: present the findings",
+        "band7_count": 2,
+        "band7_models": [
+          "5645f119",
+          "973632d2"
+        ]
+      }
+    ],
+    "not_chosen": "Every other template has 1 band-7 item (OVERVIEW, SIM, RANK, DESC, AUD_NEW, NARR, CONTEXT, REFUTE)."
+  },
+  "items": [
+    {
+      "id": "rhetorical_synthesis.GEN.b7",
+      "notes": "Subject: history of art (medieval manuscripts). Section 6: (1) notes register: chars per word 5.5, rare-word share well above 14%; (2) not a study-slot item; (3) option fact check: A FALSE and goal-shaped (several women for one), D FALSE and goal-shaped (unlike men), C true but generalizes about the evidence, so 2 FALSE and 3 goal-shaped; (4) derived relation: yes, may be larger than it appears is stated in no bullet; (5) goal-only solve: A, B and D all make and support a hedged generalization about women, C nearly, so the notes are needed. Blind solve: B is the only option that both generalizes about women and is true to the notes. Hardened after a Haiku solve put 0.85 on B with about 5% on each wrong option. Re-solve after hardening (Haiku, 6 fresh runs): key mean 0.71, A 0.07 to 0.28; Opus check: one key.",
+      "template": "GEN",
+      "subtype": "Make and support a generalization",
+      "passage": "While researching a topic, a student has taken the following notes:\n\n• Ultramarine, a costly pigment made from lapis lazuli, was reserved, like gold and silver, for the most luxurious medieval manuscripts.\n\n• Many medieval scribes and illuminators left their work unsigned, a practice especially common among women.\n\n• In 2019, archaeologist Anita Radini and colleagues identified lapis lazuli particles in the dental calculus (hardened plaque) of a woman buried around 1000–1200 CE at a monastery in Dalheim, Germany.\n\n• The researchers concluded that she most likely painted with ultramarine, licking her brush as she worked.",
+      "stem": "The student wants to make and support a generalization about women’s role in producing medieval manuscripts. Which choice most effectively uses relevant information from the notes to accomplish these goals?",
+      "options": [
+        "Lapis lazuli in the teeth of women buried at a Dalheim monastery suggests that medieval women, who often left their work unsigned, did more to produce luxury manuscripts than signatures alone would show.",
+        "Because women often left their work unsigned, their role in making luxury manuscripts may be larger than it appears, as lapis lazuli in a Dalheim woman’s teeth suggests.",
+        "Because many medieval illuminators, especially women, left their work unsigned, physical traces such as the lapis lazuli in a Dalheim woman’s teeth can help reveal who painted luxury manuscripts.",
+        "Unlike male scribes and illuminators, medieval women left their work unsigned, so women’s role in making luxury manuscripts, hinted at by lapis lazuli in a Dalheim woman’s teeth, may be larger than it appears."
+      ],
+      "answer_letter": "B",
+      "explanation": "Choice B makes a generalization about women’s role in producing medieval manuscripts (it may be larger than it appears, because women often left their work unsigned) and supports it with the Dalheim woman, whose teeth held lapis lazuli, the source of the costly pigment used in luxury manuscripts. Choice A turns the one Dalheim burial into several women; the notes describe a single woman. Choice C generalizes about the evidence researchers can use (physical traces can reveal who painted manuscripts), not about women’s role. Choice D says that women, unlike men, left their work unsigned, but the notes say that many scribes and illuminators left their work unsigned and that the practice was only especially common among women.",
+      "distractors": {
+        "A": {
+          "recipe": "FALSE (goal-shaped: scope shift, one burial becomes several)",
+          "why_wrong": "It makes and supports the right generalization, but the notes describe lapis lazuli in the teeth of one woman, not of several women buried at Dalheim."
+        },
+        "C": {
+          "recipe": "OG (accurate generalization and support, but about the evidence, not women’s role)",
+          "why_wrong": "Every part is true to the notes, but its generalization is about what physical traces can reveal about who painted manuscripts, not about women’s role in producing them."
+        },
+        "D": {
+          "recipe": "FALSE (goal-shaped: invented contrast with men)",
+          "why_wrong": "The notes say many scribes and illuminators left their work unsigned and that the practice was especially common among women, not that men signed their work and women did not."
+        }
+      },
+      "models": [
+        "3b02e88a",
+        "3dcc7140"
+      ],
+      "band7_moves": [
+        "generalization climbs a level: from one burial to women's hidden share of luxury manuscript work",
+        "derived claim: the key joins the unsigned-work bullet and the Dalheim finding; neither states it",
+        "two goal-shaped FALSE distractors that make and support the same hedged generalization and misstate one detail: several women instead of one (A), an invented contrast with men (D)",
+        "an accurate generalization-plus-support about the evidence rather than women (C), as 3dcc7140 B generalizes about counts rather than definitions",
+        "no hedge tell: A, C and D are hedged like the key",
+        "dense notes with glossed technical terms (lapis lazuli, dental calculus, ultramarine)"
+      ],
+      "sources": [
+        {
+          "what": "Radini et al. 2019, Science Advances 5:eaau7126, \"Medieval women's early involvement in manuscript production suggested by lapis lazuli identification in dental calculus\"; author list",
+          "url": "https://test01.ku.dk/:obvius/pureproxy/3974268/en/publications/medieval-womens-early-involvement-in-manuscript-production-sugges"
+        },
+        {
+          "what": "woman buried at a small women's monastery at Dalheim, Germany, died around 1000-1200 AD; hundreds of tiny blue particles identified as lapis lazuli; lapis from the mines of Afghanistan; ultramarine reserved, with gold and silver, for the most luxurious manuscripts; most likely scenario: she painted with the pigment and licked the end of the brush; many scribes and painters did not sign their work, a practice that especially applied to women",
+          "url": "https://www.shh.mpg.de/1162492/lapis-warinner"
+        },
+        {
+          "what": "lapis lazuli pigment (ultramarine) among the most expensive artist materials of the European Middle Ages",
+          "url": "https://www.sciencedaily.com/releases/2019/01/190109142616.htm"
+        }
+      ],
+      "word_count": 96,
+      "tier": "hard",
+      "band_target": 7,
+      "table": null,
+      "figure": null,
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 7,
+        "fixes": [
+          "A replaced: it rested on Dalheim signatures, which the unsigned-work bullet rules out at a glance; the new A uses the real Dalheim evidence but overgeneralizes it (common work for medieval women)",
+          "explanation updated to name why each distractor fails",
+          "hardening: A, C and D replaced (A several women buried at Dalheim, C an accurate generalization about physical evidence, D an invented contrast with men); explanation, distractors, band7_moves and band7.why rewritten"
+        ],
+        "status": "fixed"
+      },
+      "band7": {
+        "verdict": "band 7",
+        "why": "The generalization climbs a level (women's share may be larger than it appears), derived from two bullets, as in 3dcc7140. A and D make and support the same hedged generalization and each misstates one detail (several women; unlike men), and C is accurate and generalizes from both bullets but about the evidence, not women, so goal fit and hedging no longer pick the key; the notes must be checked word by word."
+      },
+      "hardened": {
+        "what": "All three distractors replaced. The old A (common work) and C (rarely permitted) were killed by one glaring word and D gave only the support; the key was the only hedged option. Now two options copy the key's hedged make-and-support shape with one wrong detail each, and one is accurate but generalizes about the evidence.",
+        "tempting": [
+          "A: same claim and support as the key; only the plural (women buried, not a woman) is wrong, and a reader who does not reread bullet 3 will not see it",
+          "C: true to every bullet, hedged, generalizes and supports with the Dalheim case, and mentions women; it fails only on the goal noun (evidence, not women's role)",
+          "D: sharpens the key's reasoning with a contrast to men that sounds like a paraphrase of especially common among women"
+        ]
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.EXPL.b7",
+      "notes": "Subject: earth science (glaciology and microbiology). Reviewer hardening (first pass): the draft's distractors each died on one obvious word. Second hardening after a Haiku solve put 0.92 on D: the reflects-more reversal and the shielding mechanism contradicted themselves in the same clause, so both went. Now A traces the full chain with an unsupported reason for the pigments (the algae need liquid water), C traces it with the 13% stretched to glaciers and snowfields each summer, and B accurately explains why darker snow melts with the algae left out. Option fact check: A FALSE goal-shaped, C FALSE goal-shaped, B true but about the snow, not the algae. Goal-only solve: A, C and D all explain how algae speed melting; B never names the algae. Blind solve: D only. Re-solve after hardening (Haiku, 4 fresh runs): key mean 0.76, A 0.06 to 0.15, C 0.05 to 0.12; Opus check: one key.",
+      "template": "EXPL",
+      "subtype": "Explain how",
+      "passage": "While researching a topic, a student has taken the following notes:\n\n• Snow algae proliferate on glaciers and snowfields each summer.\n\n• Many produce reddish carotenoid pigments that shield their cells from excessive sunlight.\n\n• These pigments darken the snow’s surface, lowering its albedo (the proportion of incoming sunlight a surface reflects).\n\n• A darker surface absorbs more solar radiation, accelerating melting and, in turn, supplying the liquid water the algae require.\n\n• In 2016, Stefanie Lutz and colleagues estimated that red algal blooms reduced Arctic snow’s albedo by approximately 13% over a single melt season.",
+      "stem": "The student wants to explain how snow algae can accelerate the melting of snow. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "Because snow algae need liquid water, they produce reddish pigments that darken the snow’s surface, lowering its albedo so that the snow absorbs more solar radiation and melts faster.",
+        "Because a darker surface absorbs more solar radiation, snow with a lower albedo, which reflects a smaller proportion of incoming sunlight, melts faster than brighter snow.",
+        "By producing reddish pigments that darken the snow, snow algae lower the albedo of glaciers and snowfields by about 13% each summer, so the snow absorbs more solar radiation and melts faster.",
+        "By producing reddish pigments that darken the snow’s surface, snow algae reduce the proportion of sunlight the snow reflects, so it absorbs more solar radiation and melts faster."
+      ],
+      "answer_letter": "D",
+      "explanation": "Choice D traces the chain in the notes: the algae’s reddish pigments darken the snow, a darker surface reflects a smaller proportion of incoming sunlight (that is what a lower albedo means), and so the snow absorbs more solar radiation and melts faster. Choice A traces the same chain but says the algae produce the pigments because they need liquid water; the notes say the pigments shield the algae’s cells from excessive sunlight. Choice B explains why darker snow melts faster but never mentions the algae, so it does not explain how they speed melting. Choice C stretches the 13% figure: Lutz and colleagues estimated it for red algal blooms on Arctic snow over a single melt season, not for glaciers and snowfields every summer.",
+      "distractors": {
+        "A": {
+          "recipe": "FALSE (goal-shaped: full chain, misstated reason for the pigments)",
+          "why_wrong": "It explains the melting chain but says the algae make the pigments because they need liquid water; the notes say the pigments shield the algae’s cells from excessive sunlight."
+        },
+        "B": {
+          "recipe": "OG (accurate, explains a neighbor: why darker snow melts, with the algae left out)",
+          "why_wrong": "It accurately explains why snow with a lower albedo melts faster, but it never mentions snow algae or their pigments, so it does not explain how the algae accelerate melting."
+        },
+        "C": {
+          "recipe": "FALSE (goal-shaped: scope shift that merges bullet 1 into bullet 5)",
+          "why_wrong": "The 13% is Lutz and colleagues’ estimate for red algal blooms on Arctic snow over a single melt season; the notes do not say algae lower the albedo of glaciers and snowfields by that much every summer."
+        }
+      },
+      "models": [
+        "8fe4f4ab",
+        "ee51ad04"
+      ],
+      "band7_moves": [
+        "explain how from a chain of three bullets (pigment, darker surface and lower albedo, more absorbed energy)",
+        "key paraphrases albedo through its gloss (reduce the proportion of sunlight the snow reflects) instead of copying the bullet",
+        "goal-shaped FALSE distractor that traces the whole chain and adds an unsupported reason for the pigments (the algae need liquid water), tying in bullet 4",
+        "goal-shaped FALSE distractor with the right chain and the 13% stretched from Arctic snow over one melt season to glaciers and snowfields each summer, wording lifted from bullet 1 (scope shift, as in 3fa48bf3 A)",
+        "OG distractor that accurately explains the last two links (lower albedo, more absorption, faster melt) but leaves out the algae, a reason for a neighbor as in ee51ad04 D",
+        "glossed technical term (albedo) and dense notes"
+      ],
+      "sources": [
+        {
+          "what": "Lutz et al. 2016, Nature Communications 7:11968: red-pigmented snow algal blooms lower snow albedo by about 13% over one melt season; samples from Greenland, Iceland, Svalbard and northern Sweden",
+          "url": "https://www.gfz.de/en/press/news/details/cosmopolitan-snow-algae-accelerate-the-melting-of-arctic-glaciers"
+        },
+        {
+          "what": "paper title and authors",
+          "url": "https://research-information.bris.ac.uk/en/publications/the-biogeography-of-red-snow-microbiomes-and-their-role-in-meltin/"
+        },
+        {
+          "what": "albedo is the reflection of sunlight by snow and ice; darkening gives less albedo and higher heat uptake; more thawing lets more algae bloom (runaway effect)",
+          "url": "https://www.gfz.de/en/press/news/details/cosmopolitan-snow-algae-accelerate-the-melting-of-arctic-glaciers"
+        },
+        {
+          "what": "red secondary carotenoid (astaxanthin) in snow algae shields the chloroplast from excess light (photoprotection)",
+          "url": "https://inis.iaea.org/records/ee7eq-6cr47"
+        }
+      ],
+      "word_count": 96,
+      "tier": "hard",
+      "band_target": 7,
+      "table": null,
+      "figure": null,
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 6,
+        "fixes": [
+          "all three distractors replaced: the draft's were each killed by one obvious word (raising albedo; amount of snow plus shielding the snow; no melting at all)",
+          "key reworded to state lower albedo through its gloss rather than copy bullets 2 to 4",
+          "explanation and why_wrong rewritten",
+          "hardening: A, B and C replaced (A full chain with an unsupported reason for the pigments, B the melting physics with the algae left out, C the 13% stretched to glaciers and snowfields each summer); explanation, distractors, band7_moves and band7.why rewritten"
+        ],
+        "status": "fixed"
+      },
+      "band7": {
+        "verdict": "band 7",
+        "why": "Like ee51ad04 the key needs a chain of three bullets. A and C trace the same chain and each misstates one detail a skimmer will not check (why the algae make pigments; where and when the 13% applies); B is true and explains the melting physics but leaves out the algae. Goal fit leaves three options; only bullet-by-bullet checking leaves D."
+      },
+      "hardened": {
+        "what": "All three distractors replaced. The old A (lower albedo, reflects more) and C (pigments shield the snow) were self-refuting and B did not address melting, so a cheap solver put 0.92 on D. Now two options trace the same three-link chain as the key with one wrong detail each, and the accurate option explains the melting physics with the algae left out.",
+        "tempting": [
+          "A: the full three-link chain plus bullet 4's liquid water, so it looks like the most complete use of the notes; the reason clause (because they need liquid water) is the only error",
+          "B: true to bullets 3 and 4 and uses the albedo gloss correctly, so it reads as a precise mechanism; only a reader who rechecks the goal sees that the algae, the subject of the goal, never appear",
+          "C: the key's chain plus a precise figure, and its scope words (glaciers and snowfields, each summer) are lifted from bullet 1, so it reads as the most complete option; only a reader who rechecks bullet 5 sees the estimate was for Arctic snow over one season"
+        ]
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.DIFF.b7",
+      "notes": "Subject: ecology. Reviewer hardening (first pass): the draft's B swapped the two agents and D said the circles receive no rainfall at all. Second hardening after a Haiku solve put 0.86 on A: B (termites storing rainwater) and D (lack of rain) were contradicted at a glance. Now B and D both state the termites-versus-grasses contrast and each misstates one detail (grasses inside use up the water; termites found at every circle rather than most), and C sets Jürgens's observation against Getzin's conclusion. Option fact check: B FALSE goal-shaped, D FALSE goal-shaped, C true but mismatched halves. Goal-only solve: all four are contrasts. Blind solve: A only. The dispute is still open, so each view is attributed to its authors. Re-solve after hardening (Haiku, 2 fresh runs on the final version): key mean 0.79, C 0.10 to 0.12; Opus check: one key, competition for water a fair paraphrase of bullets 4 and 5.",
+      "template": "DIFF",
+      "subtype": "Contrast two explanations",
+      "passage": "While researching a topic, a student has taken the following notes:\n\n• Fairy circles are bare, approximately circular patches encircled by grasses in the Namib Desert.\n\n• In 2013, ecologist Norbert Jürgens found the sand termite Psammotermes allocerus present at most circles he examined.\n\n• Jürgens argued that termites create the circles by consuming grass roots, leaving bare soil that stores rainwater.\n\n• In 2022, ecologist Stephan Getzin’s team documented that grasses inside the circles died shortly after rainfall.\n\n• The team concluded that surrounding grasses depleted the circles’ soil moisture, killing the grasses inside through water stress.",
+      "stem": "The student wants to contrast the two explanations of how fairy circles form. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "Whereas Jürgens blames the bare patches on sand termites that eat grass roots, Getzin’s team blames competition for water from the grasses surrounding the circles.",
+        "Jürgens holds that sand termites create the circles by eating grass roots, whereas Getzin’s team holds that the grasses inside the circles use up the soil’s moisture and die of water stress.",
+        "Jürgens found sand termites at most of the circles he examined, whereas Getzin’s team concluded that the surrounding grasses drain the circles’ soil moisture.",
+        "Jürgens blames the bare patches on the sand termites he found at every circle he examined, which consume grass roots, whereas Getzin’s team blames the surrounding grasses, which drain the circles’ soil moisture."
+      ],
+      "answer_letter": "A",
+      "explanation": "The two explanations differ in what kills the grass inside a fairy circle: Jürgens blames sand termites that eat grass roots, while Getzin’s team blames the surrounding grasses, which draw water out of the circle and so outcompete the grasses inside. Choice A states this contrast accurately, calling the second mechanism competition for water. Choice B gives the water use to the grasses inside the circles; Getzin’s team found that the surrounding grasses depleted the circles’ soil moisture. Choice C sets what Jürgens observed against what Getzin’s team concluded, so Jürgens’s explanation (termites eating grass roots) is missing. Choice D states the right contrast but says Jürgens found the termites at every circle he examined; the notes say most.",
+      "distractors": {
+        "B": {
+          "recipe": "FALSE (goal-shaped: wrong grasses in Getzin’s mechanism)",
+          "why_wrong": "Getzin’s team concluded that the surrounding grasses depleted the circles’ soil moisture; the grasses inside are the ones that die, not the ones that use up the water."
+        },
+        "C": {
+          "recipe": "REL (accurate, mismatched halves: an observation against an explanation)",
+          "why_wrong": "Both halves are accurate, but the first gives what Jürgens observed (termites at most circles), not his explanation of how the circles form, so the two explanations are not contrasted."
+        },
+        "D": {
+          "recipe": "FALSE (goal-shaped: scope shift, most becomes every)",
+          "why_wrong": "The termites-versus-grasses contrast is right, but Jürgens found the termites at most of the circles he examined, not at every one."
+        }
+      },
+      "models": [
+        "459df2ba",
+        "8e9e473d"
+      ],
+      "band7_moves": [
+        "non-obvious compared dimension: what kills the grass inside the circles, not what each team observed",
+        "two goal-shaped FALSE distractors that get the termites-versus-grasses contrast right and misstate one detail: the grasses inside for the surrounding grasses (B), every circle for most circles (D), so every clause must be checked",
+        "an accurate contrast with mismatched halves (Jürgens's observation against Getzin's conclusion) that names both agents, as 459df2ba B gives one hypothesis and only a date for the other",
+        "key derives the relation (competition for water) from bullets 4 and 5 instead of copying them, while B, C and D reuse the notes' wording"
+      ],
+      "sources": [
+        {
+          "what": "Juergens, Science, March 2013: sand termite Psammotermes allocerus the only creature found consistently at the majority of patches; termites appear to feed on grass roots; bare soil stores water that helps grass survive at the rims",
+          "url": "https://www.nbcnews.com/news/all/termites-might-be-behind-mystery-desert-fairy-circles-flna1C9132875"
+        },
+        {
+          "what": "Getzin, Holch, Yizhaq and Wiegand 2022, Perspectives in Plant Ecology, Evolution and Systematics 57:125698: soil moisture recorded every 30 minutes; grasses within the circles died immediately after rainfall; termites did not cause the bare patches; surrounding grasses strongly depleted the water within the circles, likely killing the grasses inside",
+          "url": "https://www.uni-goettingen.de/en/3240.html?id=6841"
+        },
+        {
+          "what": "paper title: Plant water stress, not termite herbivory, causes Namibia's fairy circles",
+          "url": "https://www.sci.news/biology/namibian-fairy-circles-11322.html"
+        }
+      ],
+      "word_count": 98,
+      "tier": "hard",
+      "band_target": 7,
+      "table": null,
+      "figure": null,
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 6,
+        "fixes": [
+          "B replaced: a plain agent swap mirrored the key; now it misstates Jürgens's mechanism (termites storing rainwater)",
+          "D replaced: no rainfall at all was an absolute killed at a glance; now it gives Getzin a lack-of-rain explanation the last two bullets rule out",
+          "C changed from methods to findings, the nearer wrong dimension",
+          "why_wrong rewritten",
+          "hardening: B, C and D replaced (B gives the water use to the grasses inside, C sets Jürgens's observation against Getzin's conclusion, D says every circle for most circles); explanation, distractors, band7_moves and band7.why rewritten; bullet 2 drops consistently, which could be read as always and blur D's every-for-most slip; key reworded to a derived phrase (competition for water from the surrounding grasses), same letter and meaning"
+        ],
+        "status": "fixed"
+      },
+      "band7": {
+        "verdict": "band 7",
+        "why": "Like 459df2ba every option is a contrast, and B and D state the right one (termites against grasses) with one detail wrong deep in a clause, as 8e9e473d B keeps the comparison and flips one fact; C is accurate and names both agents but sets Jürgens's observation against Getzin's conclusion. Goal fit leaves four options and the right agents leave three; only checking each clause against bullets 3 and 5 leaves A."
+      },
+      "hardened": {
+        "what": "All three distractors replaced. The old B and D misstated a mechanism the bullets flatly contradict and C plainly contrasted findings, so a cheap solver put 0.86 on A. Now B and D carry the key's contrast (termites against grasses) with one wrong detail each, and C is accurate and names both agents but sets Jürgens's observation against Getzin's conclusion. The key now names Getzin's mechanism with a derived phrase (competition for water) instead of copying bullet 5, so the distractors read closer to the notes than the key does.",
+        "tempting": [
+          "B: names both the right agents and water stress; only which grasses use up the moisture (inside, not surrounding) is wrong",
+          "C: accurate on both halves and names the same two agents as the key (termites, surrounding grasses), so it looks like the termites-versus-grasses contrast; only a reader who checks that each half is an explanation sees Jürgens's half is just an observation",
+          "D: the termites-versus-grasses contrast is exactly right and complete; the one wrong word (every for most) sits in a relative clause about Jürgens's survey, the kind of quantifier a careless reader does not recheck"
+        ]
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.STUDY.b7",
+      "notes": "Subject: social science (education and sleep). Reviewer hardening: the draft's D swapped 34 and 4.5 into nonsense units (sleep by 4.5%), a one-glance kill, and the key copied 5645f119's not only ... but also frame. Now D keeps both findings and the right numbers but widens biology grades to overall grades. Option fact check: A FALSE goal-shaped, D FALSE goal-shaped, B true but aim and method. Goal-only solve: A, C and D all present findings. Blind solve: C only. Most high schools moved (UW release), so bullet 1 says most.",
+      "template": "STUDY",
+      "subtype": "Present the findings of a study",
+      "passage": "While researching a topic, a student has taken the following notes:\n\n• In 2016, most of Seattle’s public high schools postponed their start time by 55 minutes, to 8:45 a.m.\n\n• Biologist Gideon Dunster and colleagues had sophomores at two schools wear wrist activity monitors for two weeks, one group before the change and another afterward.\n\n• Finding: students’ median nightly sleep on school nights increased by 34 minutes.\n\n• Finding: final grades in the students’ biology classes were 4.5% higher after the change.\n\n• During puberty, adolescents’ circadian rhythms shift later, making early waking particularly difficult.",
+      "stem": "The student wants to present the findings of the study. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "Dunster and colleagues found that postponing the start time to 8:45 a.m. gave students 55 more minutes of nightly sleep and raised their biology grades by 4.5%.",
+        "Dunster and colleagues had two groups of sophomores at two schools wear wrist activity monitors for two weeks, one group before the start time changed and the other afterward.",
+        "Dunster and colleagues found that once the start time was postponed, students slept longer on school nights and earned higher final grades in biology.",
+        "Dunster and colleagues found that the later start time increased students’ median sleep on school nights by 34 minutes and raised their overall grade averages by 4.5%."
+      ],
+      "answer_letter": "C",
+      "explanation": "The study has two findings: after the later start time, students’ median sleep on school nights rose (by 34 minutes) and their final biology grades were higher (by 4.5%). Choice C presents both findings accurately, without misattaching either number.",
+      "distractors": {
+        "A": {
+          "recipe": "FALSE (goal-shaped: number attached to the wrong noun)",
+          "why_wrong": "Fifty-five minutes is how much the start time was postponed; the students’ median sleep rose by 34 minutes."
+        },
+        "B": {
+          "recipe": "OG (accurate, presents the method)",
+          "why_wrong": "It describes how the researchers collected their data, not what they found."
+        },
+        "D": {
+          "recipe": "FALSE (goal-shaped: scope shift)",
+          "why_wrong": "The 4.5% rise was in the students’ final grades in their biology classes; the notes say nothing about their grades overall."
+        }
+      },
+      "models": [
+        "5645f119"
+      ],
+      "band7_moves": [
+        "present the findings (not the aim) with two numeric findings",
+        "key drops the raw numbers and joins both findings (worded apart from 5645f119's not only ... but also key)",
+        "two goal-shaped FALSE distractors that keep both findings: one misattaches the 55-minute delay as extra sleep, one widens biology grades to overall grades",
+        "a context bullet (circadian rhythms) that invites an off-goal reading"
+      ],
+      "sources": [
+        {
+          "what": "Seattle high schools moved from 7:50 a.m. to 8:45 a.m. for fall 2016; Roosevelt and Franklin; 92 sophomores in spring 2016 and 88 after the change; wrist activity monitors for two weeks; median increase of 34 minutes of sleep; final biology grades 4.5 percent higher; lead author Gideon Dunster, senior author Horacio de la Iglesia; Science Advances, December 12, 2018; puberty lengthens the circadian cycle so teens fall asleep later and wake later",
+          "url": "https://www.washington.edu/news/2018/12/12/high-school-start-times-study"
+        },
+        {
+          "what": "study page: Sleepmore in Seattle: later school start times are associated with more sleep and better performance",
+          "url": "https://www.biology.washington.edu/publications/sleepmore-seattle-later-school-start-times-are-associated-more-sleep-and-better"
+        }
+      ],
+      "word_count": 97,
+      "tier": "hard",
+      "band_target": 7,
+      "table": null,
+      "figure": null,
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 7,
+        "fixes": [
+          "fact: the UW release says most high schools moved to 8:45 a.m.; bullet 1 now says most of Seattle's public high schools",
+          "D replaced: the 34%/4.5% swap was a nonsense-unit kill; now a scope shift (overall grades) with both findings present",
+          "key reworded away from the model's not only ... but also frame",
+          "B: dropped an aim clause the notes do not state, so B is a pure, accurate method statement"
+        ],
+        "status": "fixed"
+      },
+      "band7": {
+        "verdict": "band 7",
+        "why": "The 5645f119 build: two numeric findings, a key that drops the numbers, and two distractors that present both findings with one detail wrong (the 55-minute delay as sleep; biology grades widened to overall), so goal fit alone leaves three options."
+      }
+    }
+  ]
+}

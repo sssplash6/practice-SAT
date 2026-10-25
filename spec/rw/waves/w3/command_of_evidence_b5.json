@@ -1,0 +1,1818 @@
+{
+  "skill": "Command of Evidence",
+  "slug": "command_of_evidence",
+  "part": "w3b5",
+  "domain": "Information and Ideas",
+  "plan": {
+    "templates": [
+      {
+        "code": "T1_single",
+        "name": "Hypothetical finding supports or weakens a single claim (causal, comparison, existence, generalization, prediction)"
+      },
+      {
+        "code": "T1_compete",
+        "name": "Hypothetical finding discriminates between competing explanations (support or weaken)"
+      },
+      {
+        "code": "Q2_P8_multipart",
+        "name": "Data description: multi-part, interaction, or passage-plus-data claim"
+      },
+      {
+        "code": "T2_lit_quote",
+        "name": "Quotation from a literary work illustrates a claim (single trait, two-part, contrast)"
+      },
+      {
+        "code": "T3_person_quote",
+        "name": "Quotation from a person (participant, respondent, historian, critic, article) supports or challenges a claim"
+      },
+      {
+        "code": "Q1_P5_control",
+        "name": "Data completion: condition vs control"
+      },
+      {
+        "code": "Q2_P8_quantifier",
+        "name": "Data description: quantified claim (for each, all except one)"
+      },
+      {
+        "code": "Q1_P67_criterion",
+        "name": "Data completion: passage criterion or presence/absence combined with the display"
+      },
+      {
+        "code": "Q1_P3_pairwise",
+        "name": "Data completion: pairwise comparison (one or two comparisons)"
+      },
+      {
+        "code": "Q2_P4_trend",
+        "name": "Data description: trend or change over time supports a conclusion"
+      },
+      {
+        "code": "Q1_P1_lookup",
+        "name": "Data completion: lookup (one cell or bar, reverse lookup, filter)"
+      },
+      {
+        "code": "Q1_P2_extreme",
+        "name": "Data completion: extreme or rank (max/min, possibly after a filter)"
+      }
+    ]
+  },
+  "items": [
+    {
+      "id": "command_of_evidence.T1_single.hard.w3b5_01",
+      "template": "T1_single",
+      "subtype": "Hypothetical finding supports a claim (key supplies a missing premise: where reindeer lived)",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "Combs assembled from thin plates of deer antler fastened with rivets were among the earliest products of specialized craftworkers in Ribe, a trading settlement established on the west coast of present-day Denmark in the early 700s CE. Because antler from different deer species is nearly indistinguishable once it has been sawn and polished, archaeologist Steven Ashby and colleagues determined the species behind hundreds of combs and fragments of manufacturing waste from Ribe by analyzing proteins preserved in the antler. The researchers claim that Ribe’s craftworkers were already obtaining raw materials from the Scandinavian Peninsula by the 780s CE, before the raids and voyages that historians conventionally treat as the beginning of the Viking Age.",
+      "stem": "Which finding about Ribe, if true, would most directly support the claim made by Ashby and colleagues?",
+      "options": [
+        "Craftworkers in Ribe in the 780s also produced glass beads, using raw glass that had been transported to the town from regions far to the south of present-day Denmark.",
+        "Some comb-making waste from layers dated to the 780s came from reindeer, which at that time lived only far to the north, in the mountains of the Scandinavian Peninsula.",
+        "Reindeer antler made up a steadily growing share of the combs and comb-making waste at Ribe in the decades after 850 CE.",
+        "Most of the antler worked in Ribe during the 780s came from red deer, which then lived both in the forests around the town and on the Scandinavian Peninsula."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The researchers claim that Ribe was getting materials from the Scandinavian Peninsula by the 780s. Choice B supplies the fact the passage leaves out: waste from the 780s came from reindeer, an animal found then only far to the north on the Scandinavian Peninsula, so that antler must have reached Ribe from there by that date.",
+      "distractors": {
+        "A": {
+          "recipe": "SUBJ: evidence of long-distance exchange, but with the wrong region",
+          "why_wrong": "Imported glass shows that Ribe traded with someone, but the glass came from the south, so it says nothing about materials from the Scandinavian Peninsula."
+        },
+        "C": {
+          "recipe": "TRAP: right material, wrong time window",
+          "why_wrong": "Reindeer antler after 850 shows contact with the north only after the Viking Age had begun; the claim is about the 780s, before it."
+        },
+        "D": {
+          "recipe": "TRAP: a species found both locally and on the peninsula, so the source is undecided",
+          "why_wrong": "Red deer lived in the forests around Ribe as well as on the Scandinavian Peninsula, so their antler could have come from nearby; this finding cannot show that any material reached Ribe from the peninsula."
+        }
+      },
+      "models": [
+        "3.28",
+        "3.36",
+        "3.45"
+      ],
+      "word_count": 114,
+      "sources": [
+        {
+          "what": "Ashby, Coutu and Sindbæk 2015, European Journal of Archaeology: ZooMS species identification of antler combs and waste from Ribe; reindeer antler in use from the 780s at the latest, earliest evidence of exchange between southern North Sea towns and the Scandinavian Peninsula, before the Viking Age expansion",
+          "url": "https://doi.org/10.1179/1461957115Y.0000000003"
+        }
+      ],
+      "notes": "Passage gives only the method (protein analysis) and the claim; the key adds the unstated premise (reindeer lived only in the far north then). Ribe founded in the early 700s (c. 700 to 710).",
+      "band7_moves": [
+        "key supplies a premise the passage never states (reindeer range)",
+        "TRAP: right material, wrong time window",
+        "TRAP: right decade and region named, but a species also found locally",
+        "SUBJ: exchange with the wrong partner",
+        "stem names the study and the claimant"
+      ],
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [
+          "hardened: D (red deer, local, killed at a glance) now says red deer lived both near Ribe and on the Scandinavian Peninsula, a TRAP naming the right decade and region, so the key is no longer the only option with the claim's words",
+          "core claim confirmed in the White Rose manuscript: Ribe phases E and F (c. 780 to 800) hold reindeer production waste, earliest evidence of links with the Scandinavian Peninsula"
+        ],
+        "status": "fixed"
+      },
+      "band7": {
+        "verdict": "band 7",
+        "why": "Passage 114 words, stem names the study and claimant. The key supplies the unstated premise (reindeer lived only on the peninsula), three steps. After the fix every wrong option is evidence that looks like a test: TRAP C (reindeer, wrong window), TRAP D (right decade and region, but a species also found locally), SUBJ A (imports from the south)."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "B",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "command_of_evidence.T1_single.hard.w3b5_02",
+      "template": "T1_single",
+      "subtype": "Hypothetical finding supports a causal conclusion (needs the right comparison)",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "In Qingtian County in China’s Zhejiang Province, farmers have raised carp in flooded rice paddies for more than 1,200 years, a practice the United Nations has designated a globally important agricultural heritage system. Surveying farms throughout the county, ecologist Jian Xie and colleagues found that fields combining rice and fish produced yields comparable to those of fields planted with rice alone, even though the rice-fish fields received 68 percent less pesticide. The researchers concluded that the fish themselves suppress populations of rice pests, which allows farmers to depend less on chemical controls.",
+      "stem": "Which finding, if true, would most directly support the researchers’ conclusion?",
+      "options": [
+        "Many of the pesticides commonly sprayed on rice in the region are highly toxic to carp, so farmers who raise fish in their paddies tend to avoid applying those pesticides at all.",
+        "When the same amount of pesticide was applied to every plot, rice pests were about as abundant in rice-fish plots as in plots of rice alone.",
+        "Carp raised in rice paddies grew more slowly than carp raised in nearby ponds, but they sold for higher prices at local markets.",
+        "In experimental plots that received no pesticide at all, planthoppers and other rice pests were far less abundant where fish were present than where rice was grown alone."
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The researchers conclude that the fish themselves reduce rice pests. Choice D compares plots with and without fish while holding pesticide use the same (none), so the lower pest numbers can be credited to the fish, which is what the conclusion requires.",
+      "distractors": {
+        "A": {
+          "recipe": "TRAP: a rival reason for spraying less",
+          "why_wrong": "If farmers avoid pesticides only to protect their fish, the lower pesticide use would have nothing to do with fish controlling pests, so this does not support the conclusion."
+        },
+        "B": {
+          "recipe": "OPP: no difference between conditions",
+          "why_wrong": "Equal pest numbers with and without fish would suggest that the fish do not reduce pests, which weakens the conclusion."
+        },
+        "C": {
+          "recipe": "OFF: same fish, different variable",
+          "why_wrong": "Growth rates and market prices of the carp say nothing about whether the fish reduce rice pests."
+        }
+      },
+      "models": [
+        "3.7",
+        "3.31",
+        "3.25"
+      ],
+      "word_count": 92,
+      "sources": [
+        {
+          "what": "Xie et al. 2011, PNAS: rice-fish coculture in south China (GIAHS) maintained over 1,200 years; similar rice yield to monoculture with 68% less pesticide and 24% less fertilizer; fish reduce rice pests",
+          "url": "https://doi.org/10.1073/pnas.1111043108"
+        }
+      ],
+      "notes": "Qingtian County is the paper's study site and the FAO GIAHS rice-fish site (designated 2005); 'the United Nations' kept general (FAO is a UN agency).",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "Target 6. One bridge: hold pesticide constant (none) to credit the fish. TRAP A (rival reason for spraying less), OPP B (no difference), OFF C. Passage 92 words."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "D",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "command_of_evidence.T1_compete.hard.w3b5_03",
+      "template": "T1_compete",
+      "subtype": "Finding discriminates between two explanations (weaken the alternative)",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "Bumblebees with long tongues tend to specialize on flowers with deep corolla tubes, whereas bees with shorter tongues forage on flowers of many shapes. Comparing specimens collected between 1966 and 1980 with bees collected from 2012 to 2014 in the Rocky Mountains of Colorado, Nicole Miller-Struttmann and colleagues found that average tongue length had declined substantially in two alpine bumblebee species. During the intervening decades, warmer summers had diminished the abundance of flowers on the mountain slopes, and the researchers concluded that this scarcity favored generalist bees able to exploit many kinds of flowers. An alternative explanation, however, is that the bees simply became smaller overall as their developing larvae received less nourishment.",
+      "stem": "Which finding from Miller-Struttmann and colleagues’ study, if true, would most directly weaken the alternative explanation presented in the text?",
+      "options": [
+        "Relative to the size of their bodies, the bees collected from 2012 to 2014 had shorter tongues than the earlier specimens did.",
+        "The bees collected from 2012 to 2014 were lighter on average than the earlier specimens, and in both collections the smaller bees tended to have shorter tongues.",
+        "The earlier specimens and the more recent bees were collected at the same sites and measured using the same methods.",
+        "The flowers growing on the mountain slopes had not developed shallower tubes during the decades between the two collections."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The alternative explanation says the tongues are shorter only because the whole bee became smaller. If that were all, the tongues would have kept the same size relative to the bodies. Choice A reports that the tongues shortened relative to body size, so the change in the tongues went beyond any overall shrinking, which weakens that explanation.",
+      "distractors": {
+        "B": {
+          "recipe": "OPP: the rival's prediction (bodies shrank, tongues track body size)",
+          "why_wrong": "Lighter bees, with the smaller bees carrying the shorter tongues, is what the alternative explanation predicts, so this finding would support it rather than weaken it."
+        },
+        "C": {
+          "recipe": "TRAP: consistent with both explanations",
+          "why_wrong": "Using the same sites and methods shows that the decline is real, but both explanations accept the decline; it does not tell them apart."
+        },
+        "D": {
+          "recipe": "TRAP: rules out a different rival",
+          "why_wrong": "Unchanged flower tubes rule out the idea that bees were tracking shallower flowers, but bees could still have shrunk overall, so the body-size explanation is untouched."
+        }
+      },
+      "models": [
+        "3.9",
+        "3.14",
+        "3.48"
+      ],
+      "word_count": 113,
+      "sources": [
+        {
+          "what": "Miller-Struttmann et al. 2015, Science: tongue length decreased over 40 years in two alpine bumble bee species; flowers have not become shallower; declining floral resources from warmer summers favored generalist foraging",
+          "url": "https://doi.org/10.1126/science.aab0868"
+        }
+      ],
+      "notes": "The alternative (smaller bodies) is framed as an unattributed possibility. Collection years 1966 to 1980 and 2012 to 2014 as in the study (Colorado, Pennsylvania Mountain, Mount Evans, Niwot Ridge); 'markedly shorter' avoids citing the exact percentage.",
+      "band7_moves": [
+        "weaken polarity",
+        "key needs a proportional step (overall shrinking keeps tongue-to-body proportion)",
+        "two TRAPs: consistent with both, and a finding that rules out a different rival",
+        "OPP is the rival's prediction, not the key's mirror",
+        "stem names the study and the explanation tested"
+      ],
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [
+          "hardened: key A was the plain negation of 'smaller overall' (same body size) and B its mirror; A now reports tongues shorter relative to body size (needs the proportional step) and B is the rival's prediction in a different form (lighter bees, smaller bees with shorter tongues)"
+        ],
+        "status": "fixed"
+      },
+      "band7": {
+        "verdict": "band 7",
+        "why": "Weaken polarity, stem names the study. After the fix the key needs the proportional step (overall shrinking would keep tongue-to-body proportion) instead of negating 'smaller overall'. Discrimination: the alternative predicts tongues shrinking with bodies, the researchers' view a tongue-specific decline; only A splits them. OPP B is the rival's prediction, TRAP C fits both, TRAP D rules out a different rival."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "A",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "command_of_evidence.Q2_P8_multipart.hard.w3b5_04",
+      "template": "Q2_P8_multipart",
+      "subtype": "Data description: interaction (sex by age group) plus a cross-country comparison",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "In 1994, Bangladesh expanded nationwide a program that provides stipends to girls in rural areas who remain enrolled in secondary school, and girls’ secondary enrollment increased dramatically in the following years. Bangladeshis who were 15 to 24 years old in 2019 had all reached secondary-school age after the program began, whereas many older adults had not. Examining World Bank literacy statistics for four South Asian countries in 2019, a student claims that by 2019 young women in Bangladesh had surpassed young men in literacy, a reversal that had occurred neither among Bangladeshi adults as a whole nor among young people in neighboring countries.",
+      "stem": "Which choice best describes data from the table that support the student’s claim?",
+      "options": [
+        "Women aged 15 to 24 had a higher literacy rate than men of the same age in both Bangladesh and India, while women aged 15 and older had a lower rate than men aged 15 and older in all four countries.",
+        "In each of the four countries, women aged 15 to 24 had a higher literacy rate than women aged 15 and older did, and the difference between those two groups was largest in Nepal.",
+        "Only in Bangladesh did women aged 15 to 24 have a higher literacy rate than men of the same age, and even there, women aged 15 and older had a lower rate than men aged 15 and older.",
+        "Bangladeshi women aged 15 to 24 had a literacy rate of 96.1%, higher than the 93.7% for Bangladeshi men of the same age and the 71.9% for Bangladeshi women aged 15 and older."
+      ],
+      "answer_letter": "C",
+      "table": {
+        "title": "Literacy Rates (%) in Four South Asian Countries, 2019",
+        "columns": [
+          "Country",
+          "Women aged 15 and older",
+          "Men aged 15 and older",
+          "Women aged 15–24",
+          "Men aged 15–24"
+        ],
+        "rows": [
+          [
+            "Bangladesh",
+            "71.9",
+            "77.4",
+            "96.1",
+            "93.7"
+          ],
+          [
+            "India",
+            "67.0",
+            "82.8",
+            "93.2",
+            "96.2"
+          ],
+          [
+            "Nepal",
+            "59.4",
+            "79.8",
+            "92.1",
+            "96.8"
+          ],
+          [
+            "Pakistan",
+            "46.5",
+            "69.3",
+            "65.2",
+            "79.7"
+          ]
+        ],
+        "note": null
+      },
+      "figure": null,
+      "explanation": "The student claims three things: young Bangladeshi women outpaced young Bangladeshi men, Bangladeshi women overall did not, and young women in the other countries did not. Choice C covers all three: Bangladesh is the only country where women aged 15 to 24 (96.1%) beat men of that age (93.7%), and among those 15 and older, Bangladeshi women (71.9%) still trail men (77.4%).",
+      "distractors": {
+        "A": {
+          "recipe": "INACC: compound with one false clause",
+          "why_wrong": "In India, women aged 15 to 24 (93.2%) had a lower rate than men of that age (96.2%), so the first half of this choice misreads the table."
+        },
+        "B": {
+          "recipe": "IRREL: accurate comparison on the wrong axis (age, not sex)",
+          "why_wrong": "Both parts are accurate, but they compare younger and older women; the claim is about women compared with men, so this choice does not address it."
+        },
+        "D": {
+          "recipe": "PART: accurate, but only part of the comparison",
+          "why_wrong": "The figures are accurate and show that young Bangladeshi women outpaced young men, but the choice gives no rate for older men or for the other countries, so it cannot show that the reversal was absent among all adults and in nearby countries."
+        }
+      },
+      "models": [
+        "3.26",
+        "3.16",
+        "3.24"
+      ],
+      "word_count": 103,
+      "sources": [
+        {
+          "what": "World Bank literacy indicators, 2019 values: adult (15+) female SE.ADT.LITR.FE.ZS and male SE.ADT.LITR.MA.ZS; youth (15-24) female SE.ADT.1524.LT.FE.ZS and male SE.ADT.1524.LT.MA.ZS, for Bangladesh, India, Nepal, Pakistan",
+          "url": "https://data.worldbank.org/indicator/SE.ADT.1524.LT.FE.ZS?locations=BD-IN-NP-PK"
+        },
+        {
+          "what": "Bangladesh female secondary stipend program: free tuition for girls 1990, Female Secondary School Assistance Program nationwide from 1994 (World Bank working paper)",
+          "url": "https://documents1.worldbank.org/curated/en/442221468210891194/pdf/810610WP0P10620Box0379826B00PUBLIC0.pdf"
+        }
+      ],
+      "notes": "Values pulled from the World Bank API on 2026-10-20 (2019 is the latest year with all four countries); one decimal as published. The stipend link is the student's claim, not stated as fact. Checked in Python: only Bangladesh has youth F > M (96.1 vs 93.7); adult F < M in all four; youth minus adult female gap BD 24.2, IN 26.2, NP 32.7, PK 18.7 (largest Nepal).",
+      "band7_moves": [
+        "interaction: sex gap by age group",
+        "cross-cell comparison across countries",
+        "distractors are accurate readings of the wrong cells or wrong axis in the key's frame"
+      ],
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 17,
+        "fixes": [
+          "'statistics for 2019 and four South Asian countries' reordered to 'for four South Asian countries in 2019'"
+        ],
+        "status": "fixed"
+      },
+      "band7": {
+        "verdict": "band 7",
+        "why": "Interaction (sex gap by age) plus a cross-country check: four youth comparisons and one adult comparison verify the key. PART D and IRREL B are accurate readings in the key's frame, INACC A needs the India row. Passage 103 words."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "C",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "command_of_evidence.T2_lit_quote.hard.w3b5_05",
+      "template": "T2_lit_quote",
+      "subtype": "Literary quotation illustrates a two-part claim (translated drama, indirect verb)",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "Shakuntala is a circa fourth- or fifth-century CE play by Kalidasa, translated in 1912 by Arthur W. Ryder. Shakuntala, raised in a forest retreat by the sage Kanva, is leaving to join King Dushyanta, whom she has married, at his court. As she says farewell, Shakuntala intimates that her eagerness for married life is checked by a reluctance to part with the place where she grew up: ______",
+      "stem": "Which quotation from Shakuntala most effectively illustrates the claim?",
+      "options": [
+        "“Father, there is the pregnant doe, wandering about near the cottage. When she becomes a happy mother, you must send some one to bring me the good news. Do not forget.”",
+        "“I am torn from my father’s breast like a vine stripped from a sandal-tree on the Malabar hills. How can I live in another soil?”",
+        "“Vine sister, embrace me too with your arms, these branches. I shall be far away from you after to-day. Father, you must care for her as you did for me.”",
+        "“Priyamvada, I long to see my husband, and yet my feet will hardly move. It is hard, hard to leave the hermitage.”"
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The claim has two parts: Shakuntala wants the married life ahead of her, and something holds her back from leaving the hermitage. In choice D she says she longs to see her husband, and yet her feet will hardly move because it is hard to leave the hermitage, so both the eagerness and the reluctance appear together.",
+      "distractors": {
+        "A": {
+          "recipe": "HALF: attachment to the hermitage only",
+          "why_wrong": "Her concern for the doe shows her attachment to her home, but nothing in it expresses eagerness for her life with her husband."
+        },
+        "B": {
+          "recipe": "HALF with a nearby emotion: grief and dread, no eagerness",
+          "why_wrong": "She mentions the new place she is going to, but only with dread at being uprooted; there is no sign that she looks forward to married life."
+        },
+        "C": {
+          "recipe": "HALF: attachment to the hermitage only",
+          "why_wrong": "Her farewell to the vine shows affection for the hermitage, but the quotation says nothing about wanting the life that awaits her."
+        }
+      },
+      "models": [
+        "3.37",
+        "3.17"
+      ],
+      "word_count": 68,
+      "sources": [
+        {
+          "what": "Kalidasa, Shakuntala, Act IV, in Arthur W. Ryder, Translations of Shakuntala and Other Works (1912), Project Gutenberg #16659; all four quotations copied exactly",
+          "url": "https://www.gutenberg.org/ebooks/16659"
+        }
+      ],
+      "notes": "All four quotations are Shakuntala's own lines in Act IV, string-matched against the Gutenberg text (spellings 'some one' and 'to-day' as printed). Kalidasa is usually dated to the fourth or fifth century CE, hence 'circa fourth- or fifth-century'. Kalidasa's Meghaduta appears in a transitions item; this is a different work.",
+      "band7_moves": [
+        "indirect claim verb (intimates)",
+        "claim paraphrased away from the key's wording",
+        "translated drama",
+        "distractors are the same speaker in nearby emotions (attachment, grief and dread)"
+      ],
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [
+          "setup no longer uses 'husband' and 'hermitage' (the key's words): 'raised in a forest retreat by the sage Kanva, is leaving to join King Dushyanta, whom she has married'"
+        ],
+        "status": "fixed"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "Drama, indirect verb, nearby-emotion distractors, as in the band-7 officials, but the key states both halves outright in plain modern English ('I long to see my husband, and yet ... hard to leave'), while the Richard II and Lear keys need an inference. The setup no longer lends the key its words, but none of Shakuntala's Act IV lines offers an opposite-stance distractor, so it stays a strong band 6."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "D",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "command_of_evidence.T3_person_quote.hard.w3b5_06",
+      "template": "T3_person_quote",
+      "subtype": "Quotation from a critic supports an underlined rebuttal (direction of influence)",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "After seven years in Paris, where she studied with the painter Alexandra Exter and absorbed the principles of Cubism, Amelia Peláez returned to Havana in 1934 and settled in her family’s colonial-style house. The still lifes she painted there fragment fruit, fish, and household objects into flat, overlapping planes of brilliant color enclosed by heavy black contours, and critics have often characterized them as Cuban subjects rendered in an imported European style. <u>But that characterization reverses the direction of influence: the features critics call Cubist were already present in the houses Peláez painted, whose stained-glass windows divide sunlight into colored segments framed by dark strips of lead.</u>",
+      "stem": "Which quotation from an art historian most effectively supports the underlined claim?",
+      "options": [
+        "“Whatever colonial windows and iron grilles appear in her canvases, the way Peláez painted them—splitting objects into facets and flattening space—was something she learned from Exter in Paris. Without that training, those architectural details would have remained picturesque decoration rather than the structure of her compositions.”",
+        "“Peláez did not need Paris to teach her to divide a form into planes of color bounded by dark lines. The fan-shaped windows above Havana’s doorways had been doing exactly that with sunlight for generations; what she found in Exter’s classes was permission to treat that familiar geometry as a modern language.”",
+        "“Asking whether Peláez’s art is fundamentally Cuban or fundamentally European leads nowhere. Her still lifes belong to a broader modernism of the Americas, in which artists from Mexico City to São Paulo adapted the innovations of Paris to their own surroundings, and that shared project matters more than any single source.”",
+        "“Peláez returned again and again to the interiors of colonial Havana—their columns, wrought-iron grilles, and stained-glass windows—treating these features of old houses as subjects worthy of the same attention that European painters had long given to bowls of fruit and draped tablecloths.”"
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The underlined claim is that the so-called Cubist features of Peláez’s style came from Havana’s own architecture rather than from Europe: colored glass divided by dark lead lines. Choice B argues exactly this, saying the windows above Havana’s doorways had long divided light into planes bounded by dark lines and that Paris only gave her permission to use that geometry.",
+      "distractors": {
+        "A": {
+          "recipe": "OPP: sides with the view the passage rejects",
+          "why_wrong": "It credits the fragmented style to her training with Exter in Paris, which is the critics’ view that the underlined sentence argues against."
+        },
+        "C": {
+          "recipe": "TRAP: a reconciliation that sets the question aside",
+          "why_wrong": "It dismisses the question of whether the style is Cuban or European, so it gives no support to the claim that the style’s source lay in Havana."
+        },
+        "D": {
+          "recipe": "HALF: Havana as subject matter, not as the source of the style",
+          "why_wrong": "It shows that colonial interiors were her subjects, which the critics already grant; it says nothing about those interiors supplying the style itself."
+        }
+      },
+      "models": [
+        "3.21",
+        "3.3"
+      ],
+      "word_count": 107,
+      "sources": [
+        {
+          "what": "Amelia Peláez: studied in Paris from 1927, classes with Alexandra Exter, returned to Havana in 1934 to her mother's colonial-style house; her colors and thick lines derived from Spanish-colonial architecture (Elliot 2010)",
+          "url": "https://en.wikipedia.org/wiki/Amelia_Pel%C3%A1ez"
+        },
+        {
+          "what": "Smarthistory on Peláez: flattened forms and color blocks from Cubism applied to Havana interiors; stained-glass windows (mediopuntos) of Havana houses in her work",
+          "url": "https://smarthistory.org/?p=69956"
+        }
+      ],
+      "notes": "All four quotations are attributed to an unnamed art historian and are invented, as T3 options are; no real person is quoted. The underlined sentence is the passage's own argument and matches the scholarly reading cited (Elliot: thick lines derived from colonial architecture).",
+      "band7_moves": [
+        "claim sits inside the author's rebuttal",
+        "quotations of 45 to 52 words that argue",
+        "OPP sides with the rejected view, TRAP reconciles, HALF matches subject but not source of style"
+      ],
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass"
+      },
+      "band7": {
+        "verdict": "band 7",
+        "why": "Matches the recipe: 45 to 52 word arguing quotations, the claim inside the author's rebuttal, OPP A (Paris training), TRAP C (reconciliation), HALF D (Havana as subject, and the one option that echoes 'stained-glass windows'). The key paraphrases the underlined sentence (fan-shaped windows, planes bounded by dark lines). Passage 107 words."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "B",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "command_of_evidence.Q1_P5_control.hard.w3b5_07",
+      "template": "Q1_P5_control",
+      "subtype": "Data completion: third condition separates the active ingredient from the routine",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Infection of the umbilical cord stump, a condition called omphalitis, endangers newborns in many communities where babies are delivered at home. To determine whether cleansing the cord helps, Luke Mullany and colleagues randomly assigned communities in Sarlahi, Nepal, to one of three regimens: cleansing the cord with chlorhexidine, an antiseptic; cleansing it on the identical schedule with mild soap and water; or keeping it clean and dry without cleansing, the practice then recommended internationally. The researchers concluded that chlorhexidine’s benefit came from its antiseptic properties rather than from the routine of cleansing itself, since ______",
+      "stem": "Which choice most effectively uses data from the table to complete the statement?",
+      "options": [
+        "newborns whose cords were cleansed with chlorhexidine had 0.3 severe infections per 100, compared with 1.1 per 100 among newborns who received dry cord care.",
+        "newborns whose cords were cleansed with soap and water died at a rate of 19.2 per 1,000, nearly the same as the rate of 19.3 per 1,000 among newborns who received dry cord care.",
+        "newborns whose cords were cleansed with soap and water had infection and death rates close to those of newborns who received dry cord care, while newborns treated with chlorhexidine had lower rates on every measure.",
+        "newborns whose cords were cleansed with soap and water had fewer infections with redness of the cord than newborns who received dry cord care did, though they had more such infections than newborns treated with chlorhexidine."
+      ],
+      "answer_letter": "C",
+      "table": {
+        "title": "Cord Infections and Newborn Deaths by Cord-Care Regimen in Sarlahi, Nepal",
+        "columns": [
+          "Cord-care regimen",
+          "Infections with redness of the cord (per 100 newborns)",
+          "Severe infections (per 100 newborns)",
+          "Deaths in first 28 days (per 1,000 newborns)"
+        ],
+        "rows": [
+          [
+            "Chlorhexidine",
+            "10.3",
+            "0.3",
+            "14.6"
+          ],
+          [
+            "Soap and water",
+            "15.7",
+            "1.1",
+            "19.2"
+          ],
+          [
+            "Dry cord care",
+            "15.2",
+            "1.1",
+            "19.3"
+          ]
+        ],
+        "note": null
+      },
+      "figure": null,
+      "explanation": "To show that the benefit came from the antiseptic and not from the act of cleansing, the data must show that cleansing alone (soap and water) did no better than dry care while chlorhexidine, given on the same schedule, did better. Choice C states both: soap-and-water rates (15.7, 1.1, 19.2) are close to dry-care rates (15.2, 1.1, 19.3), and chlorhexidine rates (10.3, 0.3, 14.6) are lower on every measure.",
+      "distractors": {
+        "A": {
+          "recipe": "PART: treatment against control only",
+          "why_wrong": "The figures are accurate and show that chlorhexidine helped, but without the soap-and-water group they cannot show whether the antiseptic or the cleansing routine was responsible."
+        },
+        "B": {
+          "recipe": "HALF: the routine alone, without the antiseptic",
+          "why_wrong": "This accurately shows that cleansing with soap and water did not lower deaths, but it says nothing about chlorhexidine, so it cannot show that chlorhexidine’s antiseptic action produced a benefit."
+        },
+        "D": {
+          "recipe": "INACC: misreads the soap-and-water infection rate",
+          "why_wrong": "Newborns cleansed with soap and water had more infections with redness (15.7 per 100) than newborns given dry care (15.2 per 100), not fewer."
+        }
+      },
+      "models": [
+        "3.38",
+        "3.46",
+        "3.4"
+      ],
+      "word_count": 95,
+      "sources": [
+        {
+          "what": "Mullany et al. 2006, Lancet, cluster-randomised trial in Sarlahi, Nepal: 4.0% chlorhexidine vs soap and water vs dry cord care; Table 3 omphalitis incidence per 100 neonatal periods (algorithm 1: 10.3, 15.7, 15.2; algorithm 3 severe: 0.3, 1.1, 1.1); Table 5 neonatal mortality per 1,000 (14.6, 19.2, 19.3)",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC2367116/"
+        }
+      ],
+      "notes": "Infection rates are per 100 neonatal periods (28 infant-days) in the paper, shown here as per 100 newborns over the first 28 days; mortality per 1,000 live births shown as per 1,000 newborns. 'Infections with redness' is the paper's algorithm 1 (moderate or severe redness); 'severe' is algorithm 3 (severe redness with pus). Dry cord care was the WHO recommendation the authors say should be reconsidered. Every option checked in Python against the table.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 9,
+        "fixes": [],
+        "status": "pass"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "Target 6. Design wrinkle (third condition separates antiseptic from routine); PART A and HALF B are accurate but incomplete, INACC D a near misread (15.7 against 15.2). A strong band 6."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "C",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "command_of_evidence.Q2_P8_quantifier.hard.w3b5_08",
+      "template": "Q2_P8_quantifier",
+      "subtype": "Data description: two quantified claims, each read against a threshold stated in the passage",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "In 2010, nearly every country in the world adopted the Aichi Biodiversity Targets, which included a pledge to protect, by 2020, at least 17 percent of land and inland waters and at least 10 percent of coastal and marine areas. Governments meet such targets by designating national parks, reserves, and other protected areas, where activities such as logging, mining, and commercial fishing are restricted. Examining World Bank statistics for five Central American countries, a student concludes that their record was uneven: by 2020, nearly all of the countries had met the target for land, whereas most had fallen far short of the target for the sea.",
+      "stem": "Which choice best describes data from the table that support the student’s conclusion?",
+      "options": [
+        "Four of the five countries had protected at least 17% of their land, but only two had protected at least 10% of their territorial waters, and the other three had each protected less than 5%.",
+        "Belize and Panama had each protected more than 10% of their territorial waters and more than 30% of their land, the two largest shares of land shown in the table.",
+        "In every one of the five countries, the percentage of land that was protected was greater than the percentage of territorial waters that was protected.",
+        "Four of the five countries had protected at least 17% of their land, but only Panama had protected at least 10% of its territorial waters, and the other four had each protected less than 5%."
+      ],
+      "answer_letter": "A",
+      "table": {
+        "title": "Protected Areas in Five Central American Countries, 2020",
+        "columns": [
+          "Country",
+          "Protected land (% of land area)",
+          "Protected marine areas (% of territorial waters)"
+        ],
+        "rows": [
+          [
+            "Belize",
+            "37.5",
+            "11.0"
+          ],
+          [
+            "Costa Rica",
+            "28.4",
+            "2.7"
+          ],
+          [
+            "El Salvador",
+            "8.6",
+            "0.7"
+          ],
+          [
+            "Honduras",
+            "23.5",
+            "4.6"
+          ],
+          [
+            "Panama",
+            "31.9",
+            "11.6"
+          ]
+        ],
+        "note": null
+      },
+      "figure": null,
+      "explanation": "The conclusion has two quantified parts, each tied to a target stated in the passage: nearly all countries met the 17% land target, and most fell far short of the 10% marine target. Choice A covers both: four of five countries are at or above 17% for land (only El Salvador, at 8.6%, is not), and three of five are below 5% for waters (Costa Rica 2.7%, El Salvador 0.7%, Honduras 4.6%).",
+      "distractors": {
+        "B": {
+          "recipe": "PART: accurate, but only the two countries that met both targets",
+          "why_wrong": "Both readings are correct, but they describe only Belize and Panama; they show neither that nearly all five met the land target nor that most fell short at sea."
+        },
+        "C": {
+          "recipe": "IRREL: accurate comparison that ignores the targets",
+          "why_wrong": "It is true that every country protected a larger share of land than of water, but that comparison says nothing about whether the countries reached 17% and 10%."
+        },
+        "D": {
+          "recipe": "INACC: the key's frame with one misread row (Belize)",
+          "why_wrong": "Belize protected 11.0% of its territorial waters, so it also reached the 10% target; Panama was not the only one, and not all of the other four were below 5%."
+        }
+      },
+      "models": [
+        "3.24",
+        "3.23",
+        "3.20"
+      ],
+      "word_count": 106,
+      "sources": [
+        {
+          "what": "World Bank indicators ER.LND.PTLD.ZS (terrestrial protected areas, % of land area) and ER.MRN.PTMR.ZS (marine protected areas, % of territorial waters), 2020 values for Belize, Costa Rica, El Salvador, Honduras, Panama (UNEP-WCMC WDPA)",
+          "url": "https://data.worldbank.org/indicator/ER.LND.PTLD.ZS?locations=BZ-CR-SV-HN-PA"
+        },
+        {
+          "what": "Aichi Biodiversity Target 11: by 2020, at least 17% of terrestrial and inland water areas and 10% of coastal and marine areas conserved",
+          "url": "https://www.cbd.int/aichi-targets/target/11"
+        }
+      ],
+      "notes": "Values pulled from the World Bank API on 2026-10-20 (2020 column). The series is revised from year to year (for example, Costa Rica marine 29% in 2022), so only the single 2020 snapshot is shown and the passage dates the claim to 2020. Guatemala and Nicaragua left out to keep five rows. Checked in Python: land >= 17 for all but El Salvador; marine >= 10 only Belize and Panama; the other three < 5; land > marine in all five.",
+      "band7_moves": [
+        "two quantifiers over two measures, each read against a threshold from the passage",
+        "PART and IRREL are accurate readings in the key's frame",
+        "INACC compounds two near misreadings"
+      ],
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 11,
+        "fixes": [
+          "hardened: D ('all five met the land target') died at a glance on El Salvador's 8.6; now the key's frame with Belize misread (only Panama at 10%, other four under 5%)"
+        ],
+        "status": "fixed"
+      },
+      "band7": {
+        "verdict": "band 7",
+        "why": "Two quantifiers, each read against a threshold stated only in the passage (17% and 10%): ten threshold checks plus counts. PART B and IRREL C are accurate; after the fix INACC D sits in the key's frame and fails only on the Belize row."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "A",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "command_of_evidence.Q1_P67_criterion.hard.w3b5_09",
+      "template": "Q1_P67_criterion",
+      "subtype": "Data completion: a ratio read through the relation stated in the passage to conclude about growth rates",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "When a government abolishes fees for primary school, enrollment typically surges, and whether classrooms become overcrowded depends on how quickly additional teachers are hired. Researchers often monitor this with the pupil-teacher ratio, the number of students enrolled in primary school divided by the number of primary teachers: the ratio rises when enrollment grows faster than the teaching workforce and falls when the workforce grows faster than enrollment. Uganda abolished tuition fees for primary school in 1997 as part of its Universal Primary Education policy, and enrollment surged in the years that followed. Taken together, the ratios in the table suggest that ______",
+      "stem": "Which choice most effectively uses data from the table to complete the statement?",
+      "options": [
+        "Uganda’s teaching workforce grew faster than enrollment in the year that fees were abolished, when the ratio rose sharply, but enrollment grew faster than the workforce between 1997 and 2015.",
+        "more students were enrolled in Uganda’s primary schools in 2015 than in any other year shown, even though the number of pupils for each teacher declined steadily after 1997.",
+        "enrollment grew much faster than the teaching workforce in the year that fees were abolished, and by 2015 years of steady hiring had brought the number of pupils per teacher back below its 1996 level.",
+        "enrollment grew much faster than the teaching workforce in the year that fees were abolished, but afterward the workforce grew faster than enrollment, though not enough to restore the 1996 ratio."
+      ],
+      "answer_letter": "D",
+      "table": {
+        "title": "Pupil-Teacher Ratio in Uganda’s Primary Schools",
+        "columns": [
+          "Year",
+          "Pupils per teacher"
+        ],
+        "rows": [
+          [
+            "1996",
+            "37.6"
+          ],
+          [
+            "1997",
+            "59.4"
+          ],
+          [
+            "2003",
+            "52.4"
+          ],
+          [
+            "2009",
+            "49.3"
+          ],
+          [
+            "2015",
+            "42.9"
+          ]
+        ],
+        "note": null
+      },
+      "figure": null,
+      "explanation": "By the passage, a rising ratio means enrollment outpaced the teaching workforce and a falling ratio means the workforce outpaced enrollment. The ratio jumped from 37.6 in 1996 to 59.4 in 1997, then fell to 52.4, 49.3, and 42.9, which never got back down to 37.6. Choice D states all of this.",
+      "distractors": {
+        "A": {
+          "recipe": "WDIR: the passage relation applied backward",
+          "why_wrong": "A rising ratio means enrollment grew faster than the workforce, not the reverse, and the falling ratio after 1997 means the workforce grew faster than enrollment."
+        },
+        "B": {
+          "recipe": "OUTS: a claim the table cannot settle",
+          "why_wrong": "The table gives only pupils per teacher, not the number of students enrolled, so it cannot show in which year enrollment was highest."
+        },
+        "C": {
+          "recipe": "INACC: compound with one false clause",
+          "why_wrong": "The first part is right, but the ratio in 2015 (42.9) was still above its 1996 level (37.6), not below it."
+        }
+      },
+      "models": [
+        "3.27",
+        "3.22"
+      ],
+      "word_count": 102,
+      "sources": [
+        {
+          "what": "World Bank indicator SE.PRM.ENRL.TC.ZS, pupil-teacher ratio, primary, Uganda: 1996 37.6, 1997 59.4, 2003 52.4, 2009 49.3, 2015 42.9; Uganda's Universal Primary Education (UPE) abolished primary tuition fees in 1997",
+          "url": "https://data.worldbank.org/indicator/SE.PRM.ENRL.TC.ZS?locations=UG"
+        }
+      ],
+      "notes": "Values pulled from the World Bank API on 2026-10-20, rounded to one decimal. The display was kept to one country and five years so that the deciding step is the passage relation (ratio up = enrollment outpaced hiring), not reading. The inference that the workforce grew faster after 1997 follows from the falling ratio in every interval shown. UPE in 1997 is standard (Deininger 2003 and others).",
+      "band7_moves": [
+        "proxy: the ratio must be translated through the stated relation",
+        "blank concludes about the world (growth rates), not about the numbers",
+        "WDIR applies the relation backward; OUTS claims enrollment totals the table cannot give",
+        "compound options of 25 to 35 words"
+      ],
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 6,
+        "fixes": [],
+        "status": "pass"
+      },
+      "band7": {
+        "verdict": "band 7",
+        "why": "Proxy: the passage's ratio relation must be applied before any option follows; the blank concludes about growth rates. Compound options of 25 to 35 words; WDIR A, OUTS B, INACC C (2015 below 1996) as in the recipe. Passage 102 words."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "D",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "command_of_evidence.T1_single.medium.w3b5_10",
+      "template": "T1_single",
+      "subtype": "Hypothetical finding supports a hypothesis (treatment compared with control)",
+      "tier": "medium",
+      "passage": "When caterpillars feed on a tomato plant, the plant responds by producing chemicals that make its leaves less nutritious and harder to digest. Ecologist John Orrock and colleagues hypothesized that these defenses protect the plant in an unexpected way: by making the leaves so unappealing that caterpillars begin eating one another instead. To test this idea, the researchers sprayed tomato plants with different concentrations of methyl jasmonate, a compound that triggers the plants’ defenses, and then placed beet armyworm caterpillars on the plants.",
+      "stem": "Which finding, if true, would most directly support the researchers’ hypothesis?",
+      "options": [
+        "Tomato plants sprayed with high concentrations of methyl jasmonate grew more slowly than plants that were not sprayed.",
+        "Caterpillars on plants sprayed with high concentrations of methyl jasmonate ate less leaf tissue than caterpillars on unsprayed plants did.",
+        "Caterpillars on plants sprayed with high concentrations of methyl jasmonate began eating other caterpillars sooner than caterpillars on unsprayed plants did.",
+        "Caterpillars ate other caterpillars at about the same rate whether or not the plants they had been placed on were sprayed."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The hypothesis is that a plant’s chemical defenses push caterpillars to eat one another. Choice C shows that caterpillars on plants with their defenses switched on turned to cannibalism sooner than caterpillars on unsprayed plants, which is the outcome the hypothesis predicts.",
+      "distractors": {
+        "A": {
+          "recipe": "OFF: same plants, different variable",
+          "why_wrong": "How fast the plants grew says nothing about whether their defenses made caterpillars eat one another."
+        },
+        "B": {
+          "recipe": "partial: shows the defenses work, not how",
+          "why_wrong": "Less leaf eating fits the idea that the defenses protect the plant, but it does not show that caterpillars turned on one another."
+        },
+        "D": {
+          "recipe": "OPP: no difference between conditions",
+          "why_wrong": "If spraying made no difference to cannibalism, the defenses would not be causing it, which weakens the hypothesis."
+        }
+      },
+      "models": [
+        "2.7",
+        "2.33",
+        "2.16"
+      ],
+      "word_count": 83,
+      "sources": [
+        {
+          "what": "Orrock, Connolly and Kitchen 2017, Nature Ecology & Evolution: induced defences in tomato (methyl jasmonate) increase cannibalism in herbivorous caterpillars, which reduces herbivory",
+          "url": "https://doi.org/10.1038/s41559-017-0231-6"
+        }
+      ],
+      "notes": "The study used beet armyworm (Spodoptera exigua) on tomato plants sprayed with a range of methyl jasmonate concentrations.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "command_of_evidence.T1_single.medium.w3b5_11",
+      "template": "T1_single",
+      "subtype": "Hypothetical finding supports a causal argument (needs a comparison group)",
+      "tier": "medium",
+      "passage": "In the Alwar district of Rajasthan, India, nearly all of the annual rainfall arrives during a few monsoon months. Since 1985, villagers collaborating with the organization Tarun Bharat Sangh have built thousands of johads, crescent-shaped earthen embankments that capture monsoon runoff in shallow ponds. Rajendra Singh, the organization’s chairman, argues that johads do more than store water at the surface: by holding runoff long enough for it to percolate into the ground, they replenish the groundwater that villagers’ wells depend on throughout the dry season.",
+      "stem": "Which finding, if true, would most directly support Singh’s argument?",
+      "options": [
+        "During the dry season, water levels were higher in wells downhill from johads than in wells in similar villages without johads.",
+        "Most of the water held behind johads evaporated within a few weeks after the monsoon rains ended.",
+        "The number of johads in the Alwar district grew more quickly during the 1990s than it had during the late 1980s, when the work began.",
+        "Villagers living near johads often used the water in the ponds for their livestock during the monsoon months."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "Singh argues that johads let runoff percolate into the ground and so replenish the groundwater that wells use in the dry season. Choice A compares dry-season water levels in wells near johads with those in similar villages without johads and finds them higher, which is what his argument predicts.",
+      "distractors": {
+        "B": {
+          "recipe": "OPP: the water is lost before it can soak in",
+          "why_wrong": "If most of the stored water evaporated, little of it would reach the ground water, which works against the argument."
+        },
+        "C": {
+          "recipe": "OFF: about how many johads were built",
+          "why_wrong": "The pace of construction says nothing about whether johads raise the water table."
+        },
+        "D": {
+          "recipe": "OFF: surface use in the wet season",
+          "why_wrong": "Using pond water during the monsoon concerns water stored at the surface, not ground water available to wells in the dry season."
+        }
+      },
+      "models": [
+        "2.4",
+        "2.16",
+        "2.33"
+      ],
+      "word_count": 85,
+      "sources": [
+        {
+          "what": "Tarun Bharat Sangh, Alwar, Rajasthan: chaired by Rajendra Singh since 1985; johads for rainwater harvesting built with villagers; rivers including the Arvari revived; 2015 Stockholm Water Prize",
+          "url": "https://en.wikipedia.org/wiki/Tarun_Bharat_Sangh"
+        }
+      ],
+      "notes": "Singh's argument is paraphrased, not quoted; groundwater recharge is the stated purpose of johads in TBS's work and in the Arvari studies (Glendenning and Vervoort 2010, 2011).",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 2,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "command_of_evidence.T2_lit_quote.medium.w3b5_12",
+      "template": "T2_lit_quote",
+      "subtype": "Literary quotation illustrates a two-part claim (admiration and fear)",
+      "tier": "medium",
+      "passage": "Effi Briest is an 1895 novel by Theodor Fontane, translated in 1914 by William A. Cooper. Effi, still a teenager, is engaged to Baron Geert von Innstetten, a government administrator more than twice her age. Conversing with her mother before the wedding, Effi suggests that although she appreciates Innstetten’s admirable qualities, she is nonetheless intimidated by him: ______",
+      "stem": "Which quotation from Effi Briest most effectively illustrates the claim?",
+      "options": [
+        "“Geert is a man, a handsome man, a man with whom I can shine and he will make something of himself in the world.”",
+        "“You see, mama, there is something about this that worries me and makes me uneasy. He is so dear and good to me and so considerate, but I am afraid of him.”",
+        "“Love comes first, but right after love come splendor and honor, and then comes amusement—yes, amusement, always something new, always something to make me laugh or weep.”",
+        "“He hasn’t the faintest suspicion that I care nothing for jewelry. I care more for climbing and swinging and am always happiest when I expect every moment that something will give way or break and cause me to tumble.”"
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The claim has two parts: Effi values Innstetten’s good qualities, and he intimidates her. In choice B she calls him dear, good, and considerate, and in the same breath says she is afraid of him.",
+      "distractors": {
+        "A": {
+          "recipe": "HALF: admiration only",
+          "why_wrong": "Effi praises Innstetten here, but nothing in the quotation suggests that he intimidates her."
+        },
+        "C": {
+          "recipe": "OFF: her own values",
+          "why_wrong": "Effi lists what she wants from life; she says nothing about Innstetten’s qualities or about fearing him."
+        },
+        "D": {
+          "recipe": "LURE: a mismatch with Innstetten, but no fear and no praise",
+          "why_wrong": "Effi notes that Innstetten misjudges her tastes, but she neither praises him nor says he makes her afraid."
+        }
+      },
+      "models": [
+        "2.26",
+        "2.11",
+        "2.36"
+      ],
+      "word_count": 58,
+      "sources": [
+        {
+          "what": "Theodor Fontane, Effi Briest (1895), translated by William A. Cooper, in The German Classics of the Nineteenth and Twentieth Centuries, vol. 12 (1914), Project Gutenberg #14470, chapter IV; all four quotations copied exactly",
+          "url": "https://www.gutenberg.org/ebooks/14470"
+        }
+      ],
+      "notes": "All four quotations are Effi's words to her mother in chapter IV, string-matched against the Gutenberg text; the translation's double hyphen is set as a closed em dash. Innstetten is 38 ('Thirty-eight') and Effi is in her seventeenth year.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "command_of_evidence.T2_lit_quote.medium.w3b5_13",
+      "template": "T2_lit_quote",
+      "subtype": "Literary quotation illustrates a contrast between two characters",
+      "tier": "medium",
+      "passage": "The Patriot is an 1895 novel by Antonio Fogazzaro, translated from the Italian in 1906 by M. Prichard-Agnetti. Set in the 1850s on the shores of Lake Lugano, the novel follows a young married couple, Franco and Luisa. Fogazzaro contrasts the ways the two disclose their emotions, portraying Franco as demonstrative and Luisa as considerably more restrained: ______",
+      "stem": "Which quotation from The Patriot most effectively illustrates the claim?",
+      "options": [
+        "“Franco was conservative only in matters of religion and art; he was an ardent radical as far as the domestic walls were concerned, always planning transformations of ceilings, walls, floors, and drapery.”",
+        "“And she would make suggestions without appearing to do so, letting him believe the ideas were his own, for Franco was jealous of the paternity of ideas, while Luisa was quite indifferent to this sort of maternity.”",
+        "“Luisa had worked far harder than her husband, and still continued to do so, but whereas he was proud of his labours and glad to speak of them, Luisa, on the contrary, never mentioned hers, nor was she in the least proud of them.”",
+        "“Thus Franco’s sentiments always flamed out in his eyes, his face, his words, while Luisa’s seldom burst into flames, and only tinged the depths of her penetrating glance, and her soft voice.”"
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The claim contrasts how the two show their feelings: Franco openly, Luisa with restraint. Choice D says Franco’s feelings flamed out in his eyes, face, and words, while Luisa’s seldom did and showed only faintly in her glance and voice.",
+      "distractors": {
+        "A": {
+          "recipe": "HALF: Franco only, and not about feelings",
+          "why_wrong": "It describes Franco’s tastes in religion, art, and decorating; it neither shows him expressing feelings nor mentions Luisa."
+        },
+        "B": {
+          "recipe": "near miss: a contrast about credit for ideas",
+          "why_wrong": "It contrasts the two, but over who gets credit for ideas, not over how openly each shows feelings."
+        },
+        "C": {
+          "recipe": "near miss: a contrast about work and pride",
+          "why_wrong": "It contrasts how the two talk about their labors, not how they reveal their feelings."
+        }
+      },
+      "models": [
+        "2.10",
+        "2.13",
+        "2.20"
+      ],
+      "word_count": 58,
+      "sources": [
+        {
+          "what": "Antonio Fogazzaro, The Patriot (Piccolo mondo antico, 1895), translated by M. Prichard-Agnetti (Putnam, 1906), Project Gutenberg #33778; all four quotations copied exactly",
+          "url": "https://www.gutenberg.org/ebooks/33778"
+        }
+      ],
+      "notes": "All four quotations come from one narrative passage describing Franco and Luisa's household (Part Second), string-matched against the Gutenberg text; British spelling 'labours' kept. Novel dated 1895 (the translator's introduction gives 1896 for the Milan edition; 1895 is the usual date).",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "command_of_evidence.Q1_P3_pairwise.medium.w3b5_14",
+      "template": "Q1_P3_pairwise",
+      "subtype": "Data completion: two comparisons that together make an example",
+      "tier": "medium",
+      "passage": "Among mammals, larger species generally live longer than smaller ones: an elephant can outlive a horse, which in turn can outlive a rabbit. Researchers who study aging have nonetheless identified several small species whose longevity considerably exceeds what their body size would predict. Consulting AnAge, a database of animal life spans compiled by aging researchers, a biology student observes that one such species is Brandt’s bat, which ______",
+      "stem": "Which choice most effectively uses data from the table to complete the example?",
+      "options": [
+        "weighs less than the common shrew but has a maximum recorded life span more than ten times as long as the shrew’s.",
+        "weighs about five times as much as the naked mole-rat but has a maximum recorded life span about ten years longer.",
+        "weighs about as much as the common shrew, and both species have maximum recorded life spans of more than thirty years.",
+        "weighs more than the house mouse but has a maximum recorded life span about ten times as long as the mouse’s."
+      ],
+      "answer_letter": "A",
+      "table": {
+        "title": "Adult Body Mass and Maximum Recorded Life Span of Five Small Mammals",
+        "columns": [
+          "Species",
+          "Adult body mass (grams)",
+          "Maximum recorded life span (years)"
+        ],
+        "rows": [
+          [
+            "Brandt’s bat",
+            "7",
+            "41"
+          ],
+          [
+            "Common shrew",
+            "9",
+            "3.2"
+          ],
+          [
+            "House mouse",
+            "20.5",
+            "4"
+          ],
+          [
+            "Naked mole-rat",
+            "35",
+            "31"
+          ],
+          [
+            "Brown rat",
+            "300",
+            "3.8"
+          ]
+        ],
+        "note": null
+      },
+      "figure": null,
+      "explanation": "The example needs a small species that lives much longer than its size predicts. The table shows that Brandt’s bat (7 grams) is lighter than the common shrew (9 grams) yet has lived 41 years, more than ten times the shrew’s 3.2 years, which is what choice A says.",
+      "distractors": {
+        "B": {
+          "recipe": "WDIR: weight comparison reversed",
+          "why_wrong": "The bat does live about ten years longer than the naked mole-rat (41 years against 31), but it weighs about one-fifth as much as the mole-rat (7 grams against 35), not five times as much."
+        },
+        "C": {
+          "recipe": "INACC: second clause misreads the shrew",
+          "why_wrong": "The two species are close in weight, but the common shrew’s maximum recorded life span is 3.2 years, not more than thirty."
+        },
+        "D": {
+          "recipe": "WDIR: weight comparison reversed",
+          "why_wrong": "The bat’s life span is about ten times the mouse’s, but the bat weighs less than the house mouse (7 grams against 20.5), not more."
+        }
+      },
+      "models": [
+        "2.27",
+        "2.18",
+        "2.24"
+      ],
+      "word_count": 68,
+      "sources": [
+        {
+          "what": "AnAge (Human Ageing Genomic Resources) species entries: Myotis brandtii 7 g, 41 years (wild); Sorex araneus 9 g, 3.2 years; Mus musculus 20.5 g, 4 years; Heterocephalus glaber 35 g, 31 years; Rattus norvegicus 300 g, 3.8 years",
+          "url": "https://genomics.senescence.info/species/entry.php?species=Myotis_brandtii"
+        }
+      ],
+      "notes": "Adult weight and maximum longevity as listed in each AnAge entry (fetched 2026-10-20). 41/3.2 = 12.8 and 41/4 = 10.25 checked in Python; only A is true.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 2,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "command_of_evidence.Q2_P4_trend.medium.w3b5_15",
+      "template": "Q2_P4_trend",
+      "subtype": "Data description: one series rises while two others fall",
+      "tier": "medium",
+      "passage": "Geographers use the term “forest transition” for the point at which a country stops losing forest cover and begins regaining it, often as farming retreats from marginal land and tree planting expands. A geographer studying mainland Southeast Asia argues that Vietnam has undergone such a transition: since 1990, its forest cover has increased steadily, even as forest cover in neighboring Cambodia and Laos has diminished.",
+      "stem": "Which choice best describes data from the graph that support the geographer’s argument?",
+      "options": [
+        "Laos had a larger percentage of its land covered by forest than Vietnam did in every year shown, while Thailand’s percentage changed very little from 1990 to 2020.",
+        "Vietnam’s percentage of forest cover rose in every five-year period from 1990 to 2020, from about 29% to about 47%, while the percentages for Cambodia and Laos fell.",
+        "Vietnam’s percentage of forest cover rose from about 29% in 1990 to about 47% in 2020, while Cambodia’s percentage rose from about 45% to about 62%.",
+        "Cambodia’s percentage of forest cover fell much more sharply between 2010 and 2020 than it had between 1990 and 2010."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": {
+        "kind": "line graph",
+        "title": "Forest Area as a Percentage of Land Area in Four Southeast Asian Countries, 1990–2020",
+        "x_axis": "Year",
+        "y_axis": "Forest area (% of land area)",
+        "description": "Four lines at 1990, 1995, 2000, 2005, 2010, 2015 and 2020; y-axis 0 to 70 in steps of 10. Vietnam: about 29, 33, 38, 40, 43, 45, 47. Cambodia: about 62, 62, 61, 61, 60, 50, 45. Laos: about 62, 62, 61, 60, 59, 58, 57. Thailand: about 40 in every year. Vietnam rises in every interval; Cambodia and Laos fall, Cambodia most steeply after 2010.",
+        "data": [
+          {
+            "series": "Vietnam",
+            "points": [
+              [
+                "1990",
+                28.8
+              ],
+              [
+                "1995",
+                32.5
+              ],
+              [
+                "2000",
+                37.9
+              ],
+              [
+                "2005",
+                40.2
+              ],
+              [
+                "2010",
+                42.7
+              ],
+              [
+                "2015",
+                44.9
+              ],
+              [
+                "2020",
+                46.8
+              ]
+            ]
+          },
+          {
+            "series": "Cambodia",
+            "points": [
+              [
+                "1990",
+                62.3
+              ],
+              [
+                "1995",
+                61.7
+              ],
+              [
+                "2000",
+                61.1
+              ],
+              [
+                "2005",
+                60.5
+              ],
+              [
+                "2010",
+                60.0
+              ],
+              [
+                "2015",
+                50.1
+              ],
+              [
+                "2020",
+                44.6
+              ]
+            ]
+          },
+          {
+            "series": "Laos",
+            "points": [
+              [
+                "1990",
+                62.4
+              ],
+              [
+                "1995",
+                61.6
+              ],
+              [
+                "2000",
+                60.9
+              ],
+              [
+                "2005",
+                60.0
+              ],
+              [
+                "2010",
+                59.2
+              ],
+              [
+                "2015",
+                57.9
+              ],
+              [
+                "2020",
+                57.3
+              ]
+            ]
+          },
+          {
+            "series": "Thailand",
+            "points": [
+              [
+                "1990",
+                39.6
+              ],
+              [
+                "1995",
+                39.5
+              ],
+              [
+                "2000",
+                39.5
+              ],
+              [
+                "2005",
+                39.4
+              ],
+              [
+                "2010",
+                39.3
+              ],
+              [
+                "2015",
+                39.3
+              ],
+              [
+                "2020",
+                39.8
+              ]
+            ]
+          }
+        ]
+      },
+      "explanation": "The geographer argues that Vietnam’s forest cover has grown steadily since 1990 while Cambodia’s and Laos’s have shrunk. The graph shows Vietnam rising in every interval, from about 29% to about 47%, while Cambodia and Laos both decline, which is what choice B states.",
+      "distractors": {
+        "A": {
+          "recipe": "IRREL: levels and a fourth country instead of change",
+          "why_wrong": "Both readings are accurate, but they compare levels of forest cover and describe Thailand; they say nothing about Vietnam gaining forest while Cambodia and Laos lost it."
+        },
+        "C": {
+          "recipe": "INACC: Cambodia’s direction reversed",
+          "why_wrong": "Cambodia’s forest cover fell from about 62% to about 45%; it did not rise."
+        },
+        "D": {
+          "recipe": "PART: accurate, but about Cambodia alone",
+          "why_wrong": "The reading is accurate, but it says nothing about Vietnam’s gains or about Laos."
+        }
+      },
+      "models": [
+        "2.12",
+        "2.22",
+        "2.2"
+      ],
+      "word_count": 65,
+      "sources": [
+        {
+          "what": "World Bank indicator AG.LND.FRST.ZS (forest area, % of land area; FAO data) for Vietnam, Cambodia, Laos, Thailand, 1990 to 2020",
+          "url": "https://data.worldbank.org/indicator/AG.LND.FRST.ZS?locations=VN-KH-LA-TH"
+        }
+      ],
+      "notes": "Values pulled from the World Bank API on 2026-10-20, one decimal. Vietnam rises in all six intervals; Cambodia and Laos fall in all six; Thailand stays between 39.3 and 39.8. The 'forest transition' term is standard (Mather 1992; Meyfroidt and Lambin on Vietnam); the geographer is unnamed.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 28,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "command_of_evidence.T1_compete.medium.w3b5_16",
+      "template": "T1_compete",
+      "subtype": "Finding supports a new explanation over an older one",
+      "tier": "medium",
+      "passage": "In the desert valleys around Nasca, Peru, people built puquios, underground channels that collect groundwater and carry it to fields and settlements; some continue to supply water today. Along many puquios are ojos, funnel-shaped openings that spiral downward from the surface to the channel below. Archaeologists have long regarded the ojos simply as access points that allowed workers to climb down and maintain the channels. After studying the puquios with satellite imagery, however, Rosa Lasaponara and colleagues proposed that the ojos also served a hydraulic function: wind entering the spirals created pressure that helped push water through the channels.",
+      "stem": "Which finding, if true, would most directly support Lasaponara and colleagues’ proposal?",
+      "options": [
+        "Workers who maintain the puquios today still climb down through the ojos to remove sand and debris that collect in the channels.",
+        "Several of the puquios were built more than a thousand years ago and continue to carry water to fields in the valleys.",
+        "When wind blew across the openings of the ojos, water in the channels below flowed faster than it did on calm days.",
+        "The ojos are spaced at fairly regular intervals along each puquio, usually a few dozen meters apart."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "Lasaponara and colleagues propose that wind entering the ojos pushed water through the channels. Choice C links wind at the openings to faster flow below, which is what that proposal predicts and what the access-point view alone would not lead us to expect.",
+      "distractors": {
+        "A": {
+          "recipe": "OPP: fits the older access-point view",
+          "why_wrong": "Workers climbing down through the ojos supports the long-held view that they are access points; it says nothing about wind moving water."
+        },
+        "B": {
+          "recipe": "OFF: age and durability of the puquios",
+          "why_wrong": "How old the channels are and whether they still work does not show what role the ojos play."
+        },
+        "D": {
+          "recipe": "TRAP: consistent with both views",
+          "why_wrong": "Regular spacing would suit access shafts as well as wind openings, so it does not favor the new proposal."
+        }
+      },
+      "models": [
+        "2.9",
+        "2.30"
+      ],
+      "word_count": 99,
+      "sources": [
+        {
+          "what": "Lasaponara and colleagues (2016) used satellite imagery to study the Nasca puquios and proposed that the spiral ojos channeled wind into the underground canals, pushing water through them; ojos had been assumed to be wells or maintenance access points",
+          "url": "https://www.space.com/32604-ancient-peruvian-mystery-solved-from-space.html"
+        }
+      ],
+      "notes": "Wikipedia (Puquios) gives the standard view that ojos permit access for maintenance and repair (Lane 2017) and that some puquios still supply water.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 2,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "command_of_evidence.Q1_P1_lookup.easy.w3b5_17",
+      "template": "Q1_P1_lookup",
+      "subtype": "Data completion: read one named cell",
+      "tier": "easy",
+      "passage": "The Bosporus, a narrow strait that runs through Istanbul, Türkiye, separates the city’s European neighborhoods from its Asian ones. Until 1973, when the first bridge across the strait opened, travelers crossed by ferry. Since then, two more bridges and two underwater tunnels have been built. A student researching these crossings notes that the Marmaray Tunnel carries trains beneath the strait, while the Eurasia Tunnel, which carries cars and trucks, opened in ______",
+      "stem": "Which choice most effectively uses data from the table to complete the statement?",
+      "options": [
+        "1973.",
+        "1988.",
+        "2013.",
+        "2016."
+      ],
+      "answer_letter": "D",
+      "table": {
+        "title": "Fixed Crossings of the Bosporus",
+        "columns": [
+          "Crossing",
+          "Type",
+          "Year opened"
+        ],
+        "rows": [
+          [
+            "15 July Martyrs Bridge",
+            "bridge",
+            "1973"
+          ],
+          [
+            "Fatih Sultan Mehmet Bridge",
+            "bridge",
+            "1988"
+          ],
+          [
+            "Marmaray Tunnel",
+            "tunnel",
+            "2013"
+          ],
+          [
+            "Yavuz Sultan Selim Bridge",
+            "bridge",
+            "2016"
+          ],
+          [
+            "Eurasia Tunnel",
+            "tunnel",
+            "2016"
+          ]
+        ],
+        "note": null
+      },
+      "figure": null,
+      "explanation": "The table lists the Eurasia Tunnel with an opening year of 2016, so choice D completes the statement.",
+      "distractors": {
+        "A": {
+          "recipe": "WGRP: another crossing’s year",
+          "why_wrong": "1973 is the year the 15 July Martyrs Bridge opened, not the Eurasia Tunnel."
+        },
+        "B": {
+          "recipe": "WGRP: another crossing’s year",
+          "why_wrong": "1988 is the year the Fatih Sultan Mehmet Bridge opened."
+        },
+        "C": {
+          "recipe": "WGRP: the other tunnel’s year",
+          "why_wrong": "2013 is the year the Marmaray Tunnel, which carries trains, opened."
+        }
+      },
+      "models": [
+        "1.30",
+        "1.38",
+        "1.24"
+      ],
+      "word_count": 72,
+      "sources": [
+        {
+          "what": "Bosporus crossings: 15 July Martyrs Bridge 1973, Fatih Sultan Mehmet Bridge 1988, Marmaray railway tunnel 29 October 2013, Yavuz Sultan Selim Bridge August 2016, Eurasia road tunnel December 2016",
+          "url": "https://en.wikipedia.org/wiki/Bosporus"
+        }
+      ],
+      "notes": "'Two more bridges and two undersea tunnels' after the 1973 bridge matches the five rows.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 5,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "command_of_evidence.T1_single.easy.w3b5_18",
+      "template": "T1_single",
+      "subtype": "Hypothetical finding supports a hypothesis (one step)",
+      "tier": "easy",
+      "passage": "Chalkbrood is a disease of honeybee colonies caused by the fungus Ascosphaera apis, which infects developing bee larvae and turns them into hard, chalky lumps. The fungus grows poorly at high temperatures. Worker bees can warm their hive by rapidly contracting their flight muscles. Biologist Philip Starks and his colleagues hypothesized that workers respond to a chalkbrood infection by raising the temperature of the comb where the larvae develop, in effect giving the colony a fever.",
+      "stem": "Which finding, if true, would most directly support the researchers’ hypothesis?",
+      "options": [
+        "Colonies infected with Ascosphaera apis stored less honey over the summer than colonies that were not infected.",
+        "After exposure to Ascosphaera apis, colonies raised the temperature of their brood comb, while unexposed colonies did not.",
+        "Larvae infected with Ascosphaera apis had grown larger than uninfected larvae of the same age by the time they died.",
+        "In infected colonies, worker bees removed dead larvae from the comb more quickly than workers in uninfected colonies did."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The hypothesis is that workers heat the brood comb when the colony is infected. Choice B reports exactly that: exposed colonies raised their brood-comb temperature, and unexposed colonies did not.",
+      "distractors": {
+        "A": {
+          "recipe": "OFF: honey storage",
+          "why_wrong": "How much honey a colony stores says nothing about whether workers raise the comb’s temperature."
+        },
+        "C": {
+          "recipe": "OFF: larval size",
+          "why_wrong": "The size of infected larvae does not show any response by the workers, let alone heating."
+        },
+        "D": {
+          "recipe": "OFF: a different defense",
+          "why_wrong": "Removing dead larvae is a different response to disease; it does not show that workers raise the temperature."
+        }
+      },
+      "models": [
+        "1.1",
+        "1.17",
+        "1.45"
+      ],
+      "word_count": 76,
+      "sources": [
+        {
+          "what": "Starks, Blackie and Seeley 2000, Naturwissenschaften: honeybees generate a brood-comb fever in response to infection by the heat-sensitive pathogen Ascosphaera apis (chalkbrood)",
+          "url": "https://doi.org/10.1007/s001140050709"
+        }
+      ],
+      "notes": "Workers warm the nest by contracting their flight muscles (standard bee thermoregulation).",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "command_of_evidence.Q1_P2_extreme.easy.w3b5_19",
+      "template": "Q1_P2_extreme",
+      "subtype": "Data completion: the row that is extreme on two columns",
+      "tier": "easy",
+      "passage": "Dams built across major African rivers in the mid-twentieth century created some of the world’s largest artificial lakes, or reservoirs. Lake Volta in Ghana, for example, covers about 3.6 percent of the country’s land area. Comparing five of these reservoirs, a student notes that the earliest one to be completed also holds the greatest volume of water: ______",
+      "stem": "Which choice most effectively uses data from the table to complete the statement?",
+      "options": [
+        "Lake Kariba.",
+        "Lake Volta.",
+        "Cahora Bassa.",
+        "Lake Kossou."
+      ],
+      "answer_letter": "A",
+      "table": {
+        "title": "Five Large Reservoirs in Africa",
+        "columns": [
+          "Reservoir",
+          "Country or countries",
+          "Year completed",
+          "Volume (cubic kilometers)"
+        ],
+        "rows": [
+          [
+            "Lake Kariba",
+            "Zambia and Zimbabwe",
+            "1959",
+            "180.6"
+          ],
+          [
+            "Lake Volta",
+            "Ghana",
+            "1965",
+            "150"
+          ],
+          [
+            "Lake Nasser",
+            "Egypt and Sudan",
+            "1971",
+            "132"
+          ],
+          [
+            "Cahora Bassa",
+            "Mozambique",
+            "1974",
+            "55.8"
+          ],
+          [
+            "Lake Kossou",
+            "Côte d’Ivoire",
+            "1972",
+            "30"
+          ]
+        ],
+        "note": null
+      },
+      "figure": null,
+      "explanation": "Lake Kariba has the earliest completion year in the table (1959) and the greatest volume (180.6 cubic kilometers), so choice A completes the statement.",
+      "distractors": {
+        "B": {
+          "recipe": "WGRP: second-largest volume",
+          "why_wrong": "Lake Volta holds the second-greatest volume (150) and was completed in 1965, after Lake Kariba."
+        },
+        "C": {
+          "recipe": "WGRP: the opposite extreme on completion year",
+          "why_wrong": "Cahora Bassa was the last of the five to be completed (1974), and its volume (55.8) is far smaller than Lake Kariba’s."
+        },
+        "D": {
+          "recipe": "WGRP: smallest volume, completed late",
+          "why_wrong": "Lake Kossou was completed in 1972, well after Lake Kariba, and has the smallest volume in the table (30)."
+        }
+      },
+      "models": [
+        "1.23",
+        "1.34",
+        "1.9"
+      ],
+      "word_count": 58,
+      "sources": [
+        {
+          "what": "List of reservoirs by volume (Wikipedia): Lake Kariba 1959, 180.6 km3; Lake Volta 1965, 150 km3; Lake Nasser 1971, 132 km3; Cahora Bassa 1974, 55.8 km3; Lake Kossou 1961, 30 km3",
+          "url": "https://en.wikipedia.org/wiki/List_of_reservoirs_by_volume"
+        },
+        {
+          "what": "Kossou Dam (Wikipedia): opened 1972, power plant commissioned 1972 to 1973; the reservoir list's 1961 is an error",
+          "url": "https://en.wikipedia.org/wiki/Kossou_Dam"
+        }
+      ],
+      "notes": "All five rows from the same Wikipedia list (years and volumes as listed there; Volta is listed as 150 with an alternative 148). Lake Volta area about 8,502 km2 against Ghana's 238,535 km2, about 3.6 percent. Reviewer: Kossou year corrected to 1972 from the dam's own page.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 6,
+        "fixes": [
+          "Lake Kossou completion year 1961 corrected to 1972 (Kossou Dam page: opened 1972; the reservoir list was wrong); D's explanation and recipe rewritten, source added"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "command_of_evidence.T3_person_quote.easy.w3b5_20",
+      "template": "T3_person_quote",
+      "subtype": "Quotation from a participant illustrates a claim",
+      "tier": "easy",
+      "passage": "Kodomo shokudō, or “children’s cafeterias,” are community-run dining rooms in Japan that serve meals to children for little or no cost. The first is usually traced to a vegetable shop in Tokyo’s Ōta ward, whose owner began serving meals in 2012. A national survey counted more than 9,000 by 2023. Although the cafeterias were established to feed children, a sociologist claims that many have also become places where isolated adults, especially elderly people who live alone, find company.",
+      "stem": "Which quotation from a participant would best illustrate the sociologist’s claim?",
+      "options": [
+        "“My daughter and I come every Thursday after school. The meals are healthy and cheap, and she has made friends with children from other schools nearby.”",
+        "“We cook with vegetables donated by local farmers, so we can keep the price for children at one hundred yen or less.”",
+        "“I’m eighty and have lived alone since my husband died. Eating here with the children and their parents gives me the only real conversation I have all week.”",
+        "“Some of the children who eat here stay afterward to do their homework, and the high school volunteers help them with math.”"
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The sociologist claims that the cafeterias also give isolated adults, especially elderly people living alone, a place to find company. In choice C, an eighty-year-old who lives alone says that eating at the cafeteria gives her the only real conversation she has all week.",
+      "distractors": {
+        "A": {
+          "recipe": "OFF: benefits for a child",
+          "why_wrong": "The speaker describes healthy meals and friendships for her daughter; nothing suggests an isolated adult finding company."
+        },
+        "B": {
+          "recipe": "OFF: how the cafeteria is run",
+          "why_wrong": "This explains how the cafeteria keeps prices low, not how it eases anyone’s isolation."
+        },
+        "D": {
+          "recipe": "OFF: help with schoolwork",
+          "why_wrong": "This describes homework help for children, not company for lonely adults."
+        }
+      },
+      "models": [
+        "1.13",
+        "1.20",
+        "1.26"
+      ],
+      "word_count": 78,
+      "sources": [
+        {
+          "what": "Kodomo shokudō (Wikipedia): first children's cafeteria in a greengrocer in Ota ward, Tokyo, 2012 (Hiroko Kondo); 9,132 nationwide in the FY2023 Musubie survey; in areas with many elderly people, many attend because it is better than staying home alone",
+          "url": "https://en.wikipedia.org/wiki/Kodomo_shokud%C5%8D"
+        }
+      ],
+      "notes": "The sociologist and all four participant quotations are invented and unnamed, as in the official items.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "command_of_evidence.T2_lit_quote.easy.w3b5_21",
+      "template": "T2_lit_quote",
+      "subtype": "Literary quotation illustrates a single trait",
+      "tier": "easy",
+      "passage": "The Peterkin Papers is an 1880 collection of stories by Lucretia P. Hale. In one story, Mrs. Peterkin accidentally puts salt in her coffee, and her family seeks assistance from a chemist and an herb-woman before consulting a visitor known as the lady from Philadelphia. Hale portrays the lady from Philadelphia as someone who recognizes a straightforward solution that everyone else has overlooked: ______",
+      "stem": "Which quotation from The Peterkin Papers most effectively illustrates the claim?",
+      "options": [
+        "“At last Agamemnon, who had been to college, said, ‘Why don’t we go over and ask the advice of the chemist?’”",
+        "“The lady from Philadelphia listened very attentively, and then said, ‘Why doesn’t your mother make a fresh cup of coffee?’”",
+        "“The chemist said that all he had done ought to have taken out the salt. The theory remained the same, although the experiment had failed.”",
+        "“So the old woman shook her head, and muttered a few words, and said she must go. She believed the coffee was bewitched.”"
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The claim is that the lady from Philadelphia recognizes a simple fix that everyone else missed. In choice B, after hearing the whole story, she simply suggests making a fresh cup of coffee, the obvious answer no one else thought of.",
+      "distractors": {
+        "A": {
+          "recipe": "LURE: a suggestion, but the complicated one",
+          "why_wrong": "Agamemnon proposes consulting the chemist, which leads to more complicated attempts, not a simple solution; and the claim is about the lady from Philadelphia."
+        },
+        "C": {
+          "recipe": "OFF: the chemist’s failure",
+          "why_wrong": "This shows the chemist’s elaborate efforts failing; it says nothing about the lady from Philadelphia."
+        },
+        "D": {
+          "recipe": "OFF: the herb-woman gives up",
+          "why_wrong": "This describes the herb-woman abandoning the problem, not anyone seeing a simple solution."
+        }
+      },
+      "models": [
+        "1.39",
+        "1.11",
+        "1.36"
+      ],
+      "word_count": 64,
+      "sources": [
+        {
+          "what": "Lucretia P. Hale, The Peterkin Papers (1880), 'The Lady Who Put Salt in Her Coffee', Project Gutenberg #3028; all four quotations copied exactly",
+          "url": "https://www.gutenberg.org/ebooks/3028"
+        }
+      ],
+      "notes": "Quotations string-matched against the Gutenberg text; inner double quotation marks rendered as single marks inside the option quotation, as CB does. The story first appeared in a magazine before the 1880 book; the book date is given, as the stem names the book.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "command_of_evidence.Q2_P4_trend.easy.w3b5_22",
+      "template": "Q2_P4_trend",
+      "subtype": "Data description: endpoints show overall change despite variation",
+      "tier": "easy",
+      "passage": "Most of Ethiopia’s grain is grown by smallholder farmers working modest plots. As a result, the quantity of grain harvested from each hectare strongly influences the country’s food supply. An agricultural economist notes that Ethiopia’s cereal yields declined in some years between 2000 and 2020 but claims that <u>over the period as a whole, yields more than doubled</u>.",
+      "stem": "Which choice most effectively uses data from the graph to support the underlined claim?",
+      "options": [
+        "Ethiopia’s cereal yield was about 1,100 kilograms per hectare in 2000 and about 2,700 kilograms per hectare in 2020.",
+        "Ethiopia’s cereal yield was about 1,350 kilograms per hectare in 2002 and about 1,150 kilograms per hectare in 2004.",
+        "Ethiopia’s cereal yield was about 2,350 kilograms per hectare in 2016 and rose to about 2,500 kilograms per hectare in 2018.",
+        "The lowest cereal yield shown on the graph is about 1,550 kilograms per hectare, in 2006."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": {
+        "kind": "line graph",
+        "title": "Cereal Yield in Ethiopia, 2000–2020",
+        "x_axis": "Year",
+        "y_axis": "Cereal yield (kilograms per hectare)",
+        "description": "One line at 2000, 2002, 2004, 2006, 2008, 2010, 2012, 2014, 2016, 2018 and 2020; y-axis 0 to 3,000 in steps of 500. Values about 1,100, 1,350, 1,150, 1,550, 1,450, 1,750, 1,950, 2,250, 2,350, 2,500, 2,700. The line dips in 2004 and 2008 but ends far above where it starts.",
+        "data": [
+          {
+            "series": "Ethiopia",
+            "points": [
+              [
+                "2000",
+                1116
+              ],
+              [
+                "2002",
+                1353
+              ],
+              [
+                "2004",
+                1162
+              ],
+              [
+                "2006",
+                1563
+              ],
+              [
+                "2008",
+                1426
+              ],
+              [
+                "2010",
+                1760
+              ],
+              [
+                "2012",
+                1940
+              ],
+              [
+                "2014",
+                2228
+              ],
+              [
+                "2016",
+                2327
+              ],
+              [
+                "2018",
+                2522
+              ],
+              [
+                "2020",
+                2713
+              ]
+            ]
+          }
+        ]
+      },
+      "explanation": "To show that yields more than doubled over the whole period, the data must compare the start and end of the period. Choice A does: about 1,100 kilograms per hectare in 2000 and about 2,700 in 2020, which is more than twice as much.",
+      "distractors": {
+        "B": {
+          "recipe": "CONTRA: a true dip offered as evidence of growth",
+          "why_wrong": "These readings are accurate, but they show one of the declines, not the overall rise."
+        },
+        "C": {
+          "recipe": "PART: a single short interval",
+          "why_wrong": "These readings are accurate, but a rise from about 2,350 to about 2,500 over two years does not show that yields more than doubled across the whole period."
+        },
+        "D": {
+          "recipe": "INACC: wrong low point",
+          "why_wrong": "The lowest yield on the graph is about 1,100 kilograms per hectare, in 2000, not about 1,550 in 2006."
+        }
+      },
+      "models": [
+        "1.14"
+      ],
+      "word_count": 58,
+      "sources": [
+        {
+          "what": "World Bank indicator AG.YLD.CREL.KG (cereal yield, kg per hectare; FAO data), Ethiopia 2000 to 2020: 1,116 (2000), 1,353 (2002), 1,162 (2004), 1,563 (2006), 1,426 (2008), 1,760 (2010), 1,940 (2012), 2,228 (2014), 2,327 (2016), 2,522 (2018), 2,713 (2020)",
+          "url": "https://data.worldbank.org/indicator/AG.YLD.CREL.KG?locations=ET"
+        }
+      ],
+      "notes": "Values pulled from the World Bank API on 2026-10-20, rounded to whole kilograms. 2,713 / 1,116 = 2.43, more than double. Options read values to the nearest 50, as CB's 'about' readings do.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 11,
+        "fixes": [],
+        "status": "pass"
+      }
+    }
+  ],
+  "done": true
+}

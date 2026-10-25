@@ -1,0 +1,1916 @@
+{
+  "skill": "Inferences",
+  "slug": "inferences",
+  "part": null,
+  "domain": "Information and Ideas",
+  "plan": {
+    "templates": [
+      {
+        "code": "S1",
+        "name": "Controlled comparison of two groups",
+        "official_tiers": {
+          "easy": [
+            "1.1",
+            "1.4",
+            "1.14"
+          ],
+          "medium": [
+            "2.6",
+            "2.10"
+          ],
+          "hard": [
+            "3.17",
+            "3.21"
+          ]
+        }
+      },
+      {
+        "code": "S2",
+        "name": "Principle plus case leads to consequence (S10 trade-off folded in)",
+        "official_tiers": {
+          "easy": [
+            "1.3",
+            "1.15"
+          ],
+          "medium": [
+            "2.3",
+            "2.12",
+            "2.22"
+          ],
+          "hard": [
+            "3.2",
+            "3.3",
+            "3.4",
+            "3.8",
+            "3.9",
+            "3.11",
+            "3.12",
+            "3.13",
+            "3.16",
+            "3.18",
+            "3.28",
+            "3.30",
+            "3.33",
+            "3.34",
+            "3.31"
+          ]
+        }
+      },
+      {
+        "code": "S3",
+        "name": "Rule or timeline plus observation rejects a premise",
+        "official_tiers": {
+          "easy": [
+            "1.5"
+          ],
+          "medium": [
+            "2.5",
+            "2.16"
+          ],
+          "hard": [
+            "3.5",
+            "3.27",
+            "3.32"
+          ]
+        }
+      },
+      {
+        "code": "S4",
+        "name": "Elimination of alternatives",
+        "official_tiers": {
+          "easy": [],
+          "medium": [
+            "2.17"
+          ],
+          "hard": [
+            "3.1",
+            "3.23"
+          ]
+        }
+      },
+      {
+        "code": "S5",
+        "name": "Undercut leads to a hedged conclusion",
+        "official_tiers": {
+          "easy": [],
+          "medium": [
+            "2.11",
+            "2.18",
+            "2.20"
+          ],
+          "hard": []
+        }
+      },
+      {
+        "code": "S6",
+        "name": "X but not Y, so Z",
+        "official_tiers": {
+          "easy": [
+            "1.10",
+            "1.12"
+          ],
+          "medium": [
+            "2.7"
+          ],
+          "hard": [
+            "3.20",
+            "3.25",
+            "3.29"
+          ]
+        }
+      },
+      {
+        "code": "S7",
+        "name": "Two cases or two accounts lead to a conditional or a common ground",
+        "official_tiers": {
+          "easy": [
+            "1.2"
+          ],
+          "medium": [
+            "2.8",
+            "2.14"
+          ],
+          "hard": [
+            "3.14",
+            "3.15"
+          ]
+        }
+      },
+      {
+        "code": "S8",
+        "name": "Co-occurrence or repeated pattern leads to a link",
+        "official_tiers": {
+          "easy": [
+            "1.7"
+          ],
+          "medium": [
+            "2.19",
+            "2.21"
+          ],
+          "hard": []
+        }
+      },
+      {
+        "code": "S9",
+        "name": "Behaviour, design or content reveals a motive or belief (S12 example folded in)",
+        "official_tiers": {
+          "easy": [
+            "1.8",
+            "1.9",
+            "1.11",
+            "1.6"
+          ],
+          "medium": [
+            "2.9",
+            "2.1"
+          ],
+          "hard": [
+            "3.6",
+            "3.7",
+            "3.19",
+            "3.22"
+          ]
+        }
+      },
+      {
+        "code": "S11",
+        "name": "Received view plus counterevidence leads to revision",
+        "official_tiers": {
+          "easy": [
+            "1.13"
+          ],
+          "medium": [
+            "2.2",
+            "2.4",
+            "2.13",
+            "2.15"
+          ],
+          "hard": [
+            "3.10",
+            "3.24",
+            "3.26"
+          ]
+        }
+      }
+    ],
+    "skipped": [
+      [
+        "S4",
+        "easy"
+      ],
+      [
+        "S5",
+        "easy"
+      ],
+      [
+        "S5",
+        "hard"
+      ],
+      [
+        "S8",
+        "hard"
+      ]
+    ]
+  },
+  "items": [
+    {
+      "id": "inferences.S1.easy",
+      "template": "S1",
+      "subtype": "Controlled comparison of two groups",
+      "tier": "easy",
+      "passage": "Many factories are laid out so that supervisors can watch workers at all times, on the assumption that being observed makes workers more productive. Management researcher Ethan Bernstein tested this assumption at a large electronics factory in China. There, about sixteen production lines assembled nearly identical wireless data devices, and workers had been assigned to the lines at random. Bernstein had curtains hung around two of the lines, hiding their workers from supervisors’ view. After the curtains went up, the number of defect-free devices produced per hour on those two lines rose by as much as 10–15 percent and remained higher than on the other lines for the rest of the five-month experiment. This finding suggests that ______",
+      "stem": "Which choice most logically completes the text?",
+      "options": [
+        "the products assembled on the curtained lines were easier to make than those assembled on the other lines.",
+        "workers may be more productive when they are not continuously observed by supervisors.",
+        "supervisors paid closer attention to the curtained lines than to the other lines during the experiment.",
+        "factories should stop employing supervisors to oversee their production lines."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The lines made nearly identical products and their workers were assigned at random, so the main difference was the curtain that hid two lines from supervisors. Those two lines then produced more than the others for months, which suggests that workers may be more productive when they are not constantly watched, as B says.",
+      "distractors": {
+        "A": {
+          "recipe": "VAR (wrong variable)",
+          "why_wrong": "The passage says all the lines assembled nearly identical devices, so the products did not differ in difficulty."
+        },
+        "C": {
+          "recipe": "REV (reversal)",
+          "why_wrong": "The curtains shielded the two lines from supervisors' view, so supervisors could watch them less, not more."
+        },
+        "D": {
+          "recipe": "REC (recommendation)",
+          "why_wrong": "The study only shows that less observation raised output; it gives no basis for telling factories to do without supervisors altogether."
+        }
+      },
+      "models": [
+        "1.1",
+        "1.4",
+        "1.14"
+      ],
+      "word_count": 118,
+      "subject_area": "social science (management)",
+      "sources": [
+        {
+          "what": "Bernstein 2012, The Transparency Paradox, Administrative Science Quarterly 57(2): second largest mobile phone factory in the world, in China; on average 16 lines producing nearly the same products (3G USB datacards); operators randomly assigned to lines; two lines curtained for five months; output in defect-free units per hour rose by as much as 10-15 percent and kept a lead over control lines",
+          "url": "https://iacmr.org/wp-content/uploads/sites/26/2024/05/3.-Bernstein，E.S.2012的副本.pdf"
+        },
+        {
+          "what": "HBS Working Knowledge summary: curtained line more productive; workers hid improvements when watched",
+          "url": "https://www.library.hbs.edu/working-knowledge/hiding-from-managers-can-increase-your-productivity"
+        }
+      ],
+      "notes": "Two lines ran day and night shifts (four line-shifts) against 28 control line-shifts; the passage simplifies to 'two of the lines'.",
+      "rewrite": "new subject (Bernstein's curtained production lines) replacing the IKEA effect study; denser register; key reworded",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 6,
+        "fixes": [
+          "plainer wording for the easy tier (opening sentence, output measure no longer a technical parenthetical)",
+          "facts rechecked in the full text of Bernstein 2012 (16 lines on average, two randomly selected, random assignment of operators, 10–15 percent, five months)"
+        ],
+        "status": "fixed"
+      },
+      "model_bands": [
+        4,
+        2,
+        3
+      ]
+    },
+    {
+      "id": "inferences.S1.medium",
+      "template": "S1",
+      "subtype": "Controlled comparison of two groups",
+      "tier": "medium",
+      "passage": "On Fijian reefs, the branching coral Acropora nasuta hosts mutualistic gobies, small fish that shelter among its branches. Marine biologists Danielle Dixson and Mark Hay placed strands of Chlorodesmis fastigiata, a seaweed whose chemical compounds are toxic to corals, against A. nasuta colonies. Resident gobies converged on the contact zone within minutes and trimmed the seaweed, whereas colonies without gobies were badly damaged. The researchers then investigated which cues attracted the fish. Gobies swam toward seawater collected where the seaweed touched A. nasuta and toward seawater from injured A. nasuta tissue, but they displayed no attraction to seawater from the seaweed alone or from a different coral species in contact with the seaweed. Dixson and Hay therefore proposed that ______",
+      "stem": "Which choice most logically completes the text?",
+      "options": [
+        "the gobies are drawn to toxic compounds that C. fastigiata releases into the surrounding water.",
+        "the gobies would protect any coral species they inhabited from contact with C. fastigiata.",
+        "A. nasuta colonies without gobies are more vulnerable to seaweed than are colonies of other coral species.",
+        "A. nasuta may release a chemical signal when harmed by the seaweed, prompting the gobies to defend it."
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "Water from injured A. nasuta and from the spot where the seaweed touched it attracted the gobies, while water from the seaweed alone did not. So the cue seems to come from the harmed coral, not from the seaweed, which fits D: the coral seems to send a chemical signal that brings the gobies to remove the seaweed.",
+      "distractors": {
+        "A": {
+          "recipe": "REV (reversal)",
+          "why_wrong": "Water from the seaweed alone did not attract the gobies, so its compounds are not what draws them."
+        },
+        "B": {
+          "recipe": "EXT (overreach)",
+          "why_wrong": "Water from a different coral species touching the seaweed did not attract the gobies, so nothing supports a response on behalf of any coral."
+        },
+        "C": {
+          "recipe": "CMP (unsupported comparison)",
+          "why_wrong": "The study never compared how vulnerable A. nasuta and other coral species are to seaweed."
+        }
+      },
+      "models": [
+        "2.6",
+        "2.10"
+      ],
+      "word_count": 120,
+      "subject_area": "natural science (marine ecology)",
+      "sources": [
+        {
+          "what": "Dixson and Hay 2012, Science 338: 804, Georgia Tech; Fiji reefs; Acropora nasuta, toxic seaweed Chlorodesmis fastigiata, gobies Gobiodon histrio and Paragobiodon echinocephalus; gobies reach the contact site within minutes and trim the seaweed; corals without gobies badly damaged; water from the contact zone and from damaged coral attracts gobies, water from seaweed alone or from another coral species touching the seaweed does not",
+          "url": "https://www.sciencedaily.com/releases/2012/11/121108142740.htm"
+        },
+        {
+          "what": "Georgia Tech release on the same study (chemical signal summons gobies)",
+          "url": "https://biosciences.gatech.edu/node/2262"
+        }
+      ],
+      "notes": "",
+      "rewrite": "new subject (Dixson and Hay's coral-goby chemical cue) replacing the painted-eyes cattle study; no narrative framing; denser register",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 6,
+        "fixes": [
+          "'colonies experimentally deprived of their gobies' changed to 'colonies without gobies': the source describes control corals that had no gobies, not an experimental removal",
+          "lead-in changed from ', suggesting that' (overused in this file) to 'Dixson and Hay therefore proposed that'"
+        ],
+        "status": "fixed"
+      },
+      "model_bands": [
+        4,
+        5
+      ]
+    },
+    {
+      "id": "inferences.S1.hard",
+      "template": "S1",
+      "subtype": "Controlled comparison of two groups",
+      "tier": "hard",
+      "passage": "Bilingual children have been found to outperform monolingual peers at interpreting a speaker’s intended meaning, an advantage sometimes attributed to bilinguals’ enhanced executive control (the capacity to regulate attention and behavior). Psychologists Samantha Fan, Zoe Liberman, Boaz Keysar, and Katherine Kinzler tested monolingual and bilingual 4- to 6-year-olds alongside children who spoke mainly English but were regularly exposed to another language. An adult asked each child to move “the small car,” though the smallest of three cars was concealed from the adult’s view. Monolingual children selected the medium car, which the adult must have meant, about half the time; the exposure and bilingual groups did so 76% and 77% of the time, although the exposure group’s executive-function scores were lower than the bilingual group’s, suggesting that ______",
+      "stem": "Which choice most logically completes the text?",
+      "options": [
+        "bilingual children’s skill at interpreting what speakers mean may owe more to the social experience of being surrounded by multiple languages than to executive control.",
+        "the exposure group most likely succeeded because of the same heightened executive control that has been credited for bilinguals’ performance on such tasks.",
+        "interpreting a speaker’s intended meaning is likely more difficult for children aged four to six than it is for older children.",
+        "children who regularly hear a second language at home are likely to become fluent speakers of it by the time they reach adolescence."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "Children who only heard another language did as well as bilingual children (76% and 77%), even though their executive-function scores were lower. So matching the bilinguals did not require strong executive control; what the two groups share is growing up around several languages. That points to the social experience, rather than executive control, as the source of the advantage, as A says.",
+      "distractors": {
+        "B": {
+          "recipe": "REV (reversal)",
+          "why_wrong": "The exposure group's executive-function scores were lower than the bilinguals', so their success cannot come from the same heightened executive control."
+        },
+        "C": {
+          "recipe": "CMP (unsupported comparison)",
+          "why_wrong": "Only 4- to 6-year-olds were tested; the study gives no basis for comparing them with older children."
+        },
+        "D": {
+          "recipe": "FUT (speculative future)",
+          "why_wrong": "The study measured how children interpreted a request, not whether they will later become fluent in the language they hear."
+        }
+      },
+      "models": [
+        "3.17",
+        "3.21"
+      ],
+      "word_count": 127,
+      "subject_area": "social science (developmental psychology)",
+      "sources": [
+        {
+          "what": "Fan, Liberman, Keysar, Kinzler 2015, Psychological Science 26(7): exposure children performed as well as bilinguals despite lower executive-function scores; advantage may be social in origin, not due to enhanced executive control",
+          "url": "https://www.psychologicalscience.org/journals/psychological-science/0956797615574699/"
+        },
+        {
+          "what": "72 children aged 4 to 6, three groups; small car task (adult sees only medium and large car); monolinguals about 50%, exposure 76%, bilinguals 77%; exposure children primarily heard and spoke English",
+          "url": "https://www.psychologicalscience.org/news/releases/children-exposed-to-multiple-languages-may-be-better-natural-communicators.html"
+        },
+        {
+          "what": "University of Chicago release on the same study",
+          "url": "https://news.uchicago.edu/article/2015/05/11/children-exposed-multiple-languages-may-be-better-natural-communicators"
+        },
+        {
+          "what": "full text (PMC): Exposure children primarily heard and spoke English; 'Exposure children were just as successful as Bilingual children at the social communication task, despite having lower executive function scores'; bilingual advantages had been attributed to superior executive function",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4791950/"
+        }
+      ],
+      "notes": "",
+      "rewrite": "new subject (Fan et al. multilingual exposure study) replacing the monarch rearing study; key without policy tail; distractors no longer matched partial truths",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 6,
+        "fixes": [
+          "'spoke only English' corrected to 'spoke mainly English' (the exposure children primarily spoke English)",
+          "executive-function comparison made explicit ('lower than the bilingual group’s'), as in the paper"
+        ],
+        "status": "fixed"
+      },
+      "model_bands": [
+        6,
+        7
+      ]
+    },
+    {
+      "id": "inferences.S2.easy",
+      "template": "S2",
+      "subtype": "Principle plus case leads to consequence",
+      "tier": "easy",
+      "passage": "Tomato flowers release their pollen only when they are vibrated, a process known as buzz pollination. Honeybees cannot vibrate flowers in this way, so greenhouse growers in many countries use bumblebees, which can. Bumblebees are not native to Australia, however, and growers there have instead vibrated each flower by hand with an electric wand. Entomologist Katja Hogendoorn and colleagues tested a native species, the blue-banded bee Amegilla chlorocyanea, in greenhouses. Tomatoes from flowers the bees visited freely weighed 21 percent more than tomatoes from wand-pollinated flowers, a result similar to those achieved with bumblebees. For Australian growers, the blue-banded bee may therefore ______",
+      "stem": "Which choice most logically completes the text?",
+      "options": [
+        "be less effective than honeybees at pollinating tomato flowers.",
+        "require growers to keep vibrating each flower with a wand after the bees have visited it.",
+        "offer a native alternative to bumblebees for pollinating greenhouse tomatoes.",
+        "become a more popular choice than bumblebees among tomato growers outside Australia."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "Australian growers lack bumblebees and use wands instead. Blue-banded bees are native, and their visits produced heavier tomatoes than the wand, with results like those of bumblebees. So for these growers the native bee could do the job that bumblebees do elsewhere, as C says.",
+      "distractors": {
+        "A": {
+          "recipe": "REV (reversal)",
+          "why_wrong": "The passage says honeybees cannot perform the vibrations tomato flowers need, so they are not more effective."
+        },
+        "B": {
+          "recipe": "REV (reversal)",
+          "why_wrong": "Flowers the bees visited produced heavier tomatoes than wand-pollinated ones, so nothing suggests the wand would still be needed."
+        },
+        "D": {
+          "recipe": "CMP (unsupported comparison)",
+          "why_wrong": "The passage says nothing about growers outside Australia choosing between blue-banded bees and bumblebees."
+        }
+      },
+      "models": [
+        "1.3",
+        "1.15"
+      ],
+      "word_count": 103,
+      "subject_area": "natural science (agricultural entomology)",
+      "sources": [
+        {
+          "what": "Hogendoorn, Gross, Sedgley, Keller 2006, J. Econ. Entomol. 99: 828-833: Amegilla chlorocyanea as greenhouse tomato pollinator; unlimited visits increased fruit weight 21% vs industrial pollination wand; comparable with bumblebee pollination; native alternative to overseas bumblebees",
+          "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/search?query=DOI:10.1603/0022-0493-99.3.828&resultType=core&format=json"
+        },
+        {
+          "what": "poricidal anthers release pollen only when vibrated; honeybees cannot buzz pollinate; bumblebee colonies in greenhouses worldwide; bumblebees not native to Australia, blue-banded bees studied instead; growers traditionally used electric vibrators",
+          "url": "https://en.wikipedia.org/wiki/Buzz_pollination"
+        },
+        {
+          "what": "PubMed abstract: single buzz +11%, unlimited visits +21% fruit weight vs industrial pollination wand; comparable with bumblebee pollination; valid alternative to bumblebees in Australia",
+          "url": "https://pubmed.ncbi.nlm.nih.gov/16813318/"
+        }
+      ],
+      "notes": "Author first name Katja confirmed in the Europe PMC author list of the 2006 paper.",
+      "rewrite": "new subject (blue-banded bees as tomato pollinators) replacing the Shinkansen kingfisher story; compressed build, denser register",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 6,
+        "fixes": [
+          "plainer wording for the easy tier in the first three sentences (density was the highest of the easy items)"
+        ],
+        "status": "fixed"
+      },
+      "model_bands": [
+        3,
+        3
+      ]
+    },
+    {
+      "id": "inferences.S2.medium",
+      "template": "S2",
+      "subtype": "Principle plus case leads to consequence",
+      "tier": "medium",
+      "passage": "Maize, domesticated in southwestern Mexico about 9,000 years ago, uses a form of photosynthesis known as the C4 pathway, which leaves a distinctive carbon isotope signature in the plant and, ultimately, in the bones of the people who eat it; the C3 plants that dominate lowland tropical forests leave a markedly different signature. Archaeologist Douglas Kennett and colleagues analyzed carbon isotopes in 52 radiocarbon-dated skeletons from two rock shelters in the Maya Mountains of Belize. Individuals dating from before about 4,700 years ago showed no clear evidence of maize consumption, whereas maize constituted more than 70 percent of the diet of individuals dating from after 4,000 years ago. These results suggest that ______",
+      "stem": "Which choice most logically completes the text?",
+      "options": [
+        "maize may have become a staple food in the region only thousands of years after it was first domesticated.",
+        "the people of the Maya Mountains likely domesticated maize independently of farmers in southwestern Mexico.",
+        "C3 plants likely disappeared from local diets soon after maize was introduced to the region.",
+        "individuals buried in the rock shelters before 4,700 years ago probably consumed more maize than did those buried after 4,000 years ago."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "Maize leaves a recognizable isotope signature in the bones of people who eat it. In these skeletons that signature is absent before about 4,700 years ago and dominant after 4,000 years ago, long after maize was domesticated about 9,000 years ago. So maize seems to have become a staple in the region only thousands of years after domestication, as A says.",
+      "distractors": {
+        "B": {
+          "recipe": "OUT (off-topic claim)",
+          "why_wrong": "The study measured diet, not where maize was domesticated; the passage gives no evidence of a separate domestication in Belize."
+        },
+        "C": {
+          "recipe": "EXT (overreach)",
+          "why_wrong": "Maize made up more than 70 percent of later diets, not all of them, so C3 plants did not necessarily disappear."
+        },
+        "D": {
+          "recipe": "REV (reversal)",
+          "why_wrong": "Individuals from before 4,700 years ago showed no clear evidence of maize, while later ones ate mostly maize, so the direction is reversed."
+        }
+      },
+      "models": [
+        "2.3",
+        "2.12",
+        "2.22"
+      ],
+      "word_count": 113,
+      "subject_area": "history and archaeology",
+      "sources": [
+        {
+          "what": "Kennett et al. 2020, Science Advances, Early isotopic evidence for maize as a staple grain in the Americas: 52 radiocarbon-dated skeletons from two rock shelters in the Maya Mountains of Belize; no clear maize before about 4,700 cal B.P.; after 4,000 cal B.P. more than 70% of total diet",
+          "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/search?query=DOI:10.1126/sciadv.aba3245&resultType=core&format=json"
+        },
+        {
+          "what": "full text: maize uses the C4 pathway with more positive isotope values, lowland tropical plants are C3 with more negative values; bone isotopes reflect diet; domestication about 9,000 cal B.P. in the Balsas region; rock shelters Mayahak Cab Pek and Saki Tzul",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7269666/"
+        }
+      ],
+      "notes": "",
+      "rewrite": "new subject (Kennett et al. maize isotopes in Belize) replacing Pagel's word-frequency study; no source-language padding; EXT foil without 'must ... exactly'",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 5,
+        "fixes": [
+          "first sentence rewritten: 'so-called' and the undefined 'considerably lower values' replaced by a plain contrast of signatures"
+        ],
+        "status": "fixed"
+      },
+      "model_bands": [
+        4,
+        6,
+        5
+      ]
+    },
+    {
+      "id": "inferences.S2.hard",
+      "template": "S2",
+      "subtype": "Principle plus case leads to consequence",
+      "tier": "hard",
+      "passage": "Cantonese is a tonal language, in which a syllable’s pitch contour can distinguish otherwise identical words. Cantopop long maintained a convention, inherited from Cantonese opera, of aligning musical notes with the tones of the corresponding lyrics, and vocalists who deviate from notated pitches risk sacrificing intelligibility. Nevertheless, cover versions, which retained foreign melodies (more than half of them Japanese) while substituting Cantonese lyrics, accounted for 139 of the 477 songs on Radio Television Hong Kong’s weekly chart of top hits during the 1980s. In adapting these imported melodies, lyricists would therefore have been ______",
+      "stem": "Which choice most logically completes the text?",
+      "options": [
+        "free to alter the borrowed melodies so that their rises and falls followed the tones of Cantonese words translating the original lyrics.",
+        "less constrained than lyricists writing for original Cantopop compositions, since the foreign melodies had not been written to follow any tones.",
+        "unable to write lyrics that listeners could understand, since none of the borrowed melodies had been composed with Cantonese tones in mind.",
+        "obliged to choose words whose tones fit melodies they could not change, which would often have ruled out closely translating the original lyrics."
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "Cantopop matched notes to the tones of the words, and covers kept the foreign melody while replacing the lyrics. So the lyricist had to find Cantonese words whose tones suited a fixed tune; a faithful translation of the original words would seldom have the right tones, so it would often be ruled out, as D says.",
+      "distractors": {
+        "A": {
+          "recipe": "MIX (right pieces, wrong link)",
+          "why_wrong": "Covers retained the foreign melodies, so it was the words that had to fit the tune, not the tune that changed to fit the words."
+        },
+        "B": {
+          "recipe": "REV (reversal)",
+          "why_wrong": "The tone-matching convention still applied, and with a fixed melody not written for Cantonese the lyricist had less freedom, not more."
+        },
+        "C": {
+          "recipe": "EXT (overreach)",
+          "why_wrong": "The covers were chart hits, and the passage describes matching as a constraint, not an impossibility; nothing shows the lyrics were unintelligible."
+        }
+      },
+      "models": [
+        "3.9",
+        "3.3",
+        "3.12"
+      ],
+      "word_count": 94,
+      "subject_area": "humanities (music, linguistics)",
+      "sources": [
+        {
+          "what": "Cantonese a pitch-sensitive tonal language; Cantopop maintained the Cantonese opera tradition of matching musical notes with tones; singers have less room to change pitch without sacrificing intelligibility; hit Cantopop largely covers of foreign melodies with Cantonese lyrics; in the 1980s 139 of 477 songs on the weekly gold songs chart (RTHK Top Ten Gold Songs) were covers, 52% of them of Japanese songs",
+          "url": "https://en.wikipedia.org/wiki/Cantopop"
+        },
+        {
+          "what": "Yau 2012, Cover Versions in Hong Kong and Japan: Reflections on Music Authenticity, Journal of Comparative Asian Development 11(2): 320-348 (the source the Wikipedia chart figures cite; record confirmed on Crossref)",
+          "url": "https://doi.org/10.1080/15339114.2012.732744"
+        },
+        {
+          "what": "Yang, Wu and Duan 2021 (ISMIR): tones of lyrics and melody contours move in similar patterns in Cantonese pop; earlier studies (Chan 1987, Ho) found significant tone-melody correspondence",
+          "url": "https://archives.ismir.net/ismir2021/latebreaking/000046.pdf"
+        }
+      ],
+      "notes": "Unattributed principle, as in official 3.13. The chart counts (139 of 477 covers on the RTHK weekly gold songs chart in the 1980s, 52% of them Japanese) come from the Wikipedia Cantopop article, which cites Yau 2012; the paper exists (Crossref) but is paywalled, so the counts rest on that citation and a search-engine summary of the paper page. Tone-melody matching is confirmed by the ISMIR 2021 study.",
+      "rewrite": "new subject (tone matching in Cantopop covers) replacing Venuti's translation theory; no theorist catchphrase or 'By X's logic' frame",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 5,
+        "fixes": [],
+        "status": "pass"
+      },
+      "model_bands": [
+        5,
+        7,
+        6
+      ]
+    },
+    {
+      "id": "inferences.S3.easy",
+      "template": "S3",
+      "subtype": "Rule or timeline plus observation rejects a premise",
+      "tier": "easy",
+      "passage": "Excavations at L’Anse aux Meadows, on the northern tip of Newfoundland, have uncovered the remains of a short-lived Norse settlement. Precisely when it was occupied, however, long remained uncertain. Margot Kuitems, Michael Dee, and colleagues examined pieces of wood from the site that bore distinctive marks of cutting by metal blades. A burst of cosmic radiation in the year 993 left a radiocarbon signature in tree rings, and by locating it, the team established that the trees had been felled in 1021. The Indigenous inhabitants of the region did not produce metal tools at that time. This evidence suggests that ______",
+      "stem": "Which choice most logically completes the text?",
+      "options": [
+        "the Indigenous inhabitants of the region probably began producing metal tools earlier than researchers had assumed.",
+        "trees near L’Anse aux Meadows grew more slowly in the early eleventh century than trees in the region do today.",
+        "the Norse settlement at L’Anse aux Meadows was most likely occupied for several centuries after 1021.",
+        "Norse settlers were most likely present at the site, felling trees, in 1021."
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The wood was cut with metal blades, and the trees were felled in 1021, when the Indigenous inhabitants of the region did not produce metal tools. The cutting was therefore most likely done by the metal-using Norse, which places them at the site in 1021, as D says.",
+      "distractors": {
+        "A": {
+          "recipe": "REV (reversal)",
+          "why_wrong": "The passage states that the Indigenous inhabitants did not produce metal tools at that time; the option contradicts it."
+        },
+        "B": {
+          "recipe": "OUT (off-topic claim)",
+          "why_wrong": "Tree growth rates are never measured or compared; the tree rings were used only to date the felling."
+        },
+        "C": {
+          "recipe": "REV (reversal)",
+          "why_wrong": "The passage calls the settlement short-lived, so centuries of occupation contradict it."
+        }
+      },
+      "models": [
+        "1.5"
+      ],
+      "word_count": 101,
+      "subject_area": "history and archaeology",
+      "sources": [
+        {
+          "what": "Kuitems et al., Evidence for European presence in the Americas in AD 1021 (Nature): Vikings present in Newfoundland in AD 1021, dated with the cosmic-ray radiocarbon upsurge of AD 993",
+          "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/search?query=DOI:10.1038/s41586-021-03972-8&resultType=core&format=json"
+        },
+        {
+          "what": "Kuitems, Dee (University of Groningen), wood cut by metal blades, metal not produced by the Indigenous population, year 1021, short-lived camp",
+          "url": "https://www.heritagedaily.com/2021/10/study-identifies-date-of-norse-settlement-in-the-americas/141730"
+        },
+        {
+          "what": "news coverage of the 2021 Nature paper",
+          "url": "https://www.npr.org/2021/10/21/1047797376/researchers-discovered-the-date-vikings-arrived-in-canada"
+        }
+      ],
+      "notes": "",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 6,
+        "fixes": [],
+        "status": "pass"
+      },
+      "rewrite": "subject kept (judge p 0.35); passage made denser (cosmic-ray radiocarbon signature named instead of 'special dating method'), distractors reworded",
+      "model_bands": [
+        5
+      ]
+    },
+    {
+      "id": "inferences.S3.medium",
+      "template": "S3",
+      "subtype": "Rule or timeline plus observation rejects a premise",
+      "tier": "medium",
+      "passage": "Nuclear weapons tests conducted in the atmosphere between 1954 and 1963 sharply raised the amount of radiocarbon (carbon-14) in the air, and plants that grew afterward took up this excess radiocarbon. Researchers Laura Hendriks, Irka Hajdas, and colleagues analyzed two microsamples from a painting signed “Sarah Honn” and dated 1866. A canvas fiber yielded a broad range of possible ages, extending from the late seventeenth to the mid-twentieth century, whereas the linseed oil binding the paint, which is pressed from flax seeds, contained excess radiocarbon. The researchers therefore concluded that ______",
+      "stem": "Which choice most logically completes the text?",
+      "options": [
+        "the canvas must have been woven in the late seventeenth century, roughly two hundred years before the date on the painting.",
+        "the painting was made after the mid-1950s, even though its canvas could date from the 1800s.",
+        "radiocarbon dating is more reliable for canvas fibers than it is for paint binders.",
+        "the canvas fiber had most likely absorbed excess radiocarbon in the years after the nuclear tests."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "Only plants grown after the nuclear tests carry excess radiocarbon, and the oil in the paint carries it, so the paint was made from flax grown after the mid-1950s. The canvas's broad date range still includes the nineteenth century, so the canvas may be old, but the painting itself cannot be from 1866, as B says.",
+      "distractors": {
+        "A": {
+          "recipe": "EXT (overreach)",
+          "why_wrong": "The canvas gave a broad range from the late seventeenth to the mid-twentieth century; nothing fixes it at the earliest end of that range."
+        },
+        "C": {
+          "recipe": "REV (reversal)",
+          "why_wrong": "It was the binder that gave the decisive result; the canvas gave only a broad range of possible ages."
+        },
+        "D": {
+          "recipe": "MIX (wrong material)",
+          "why_wrong": "The excess radiocarbon was found in the linseed oil binder, not in the canvas fiber."
+        }
+      },
+      "models": [
+        "2.5",
+        "2.16"
+      ],
+      "word_count": 91,
+      "subject_area": "humanities (art authentication)",
+      "sources": [
+        {
+          "what": "Hendriks, Hajdas et al. 2019, PNAS, Uncovering modern paint forgeries by radiocarbon dating: two microsamples (canvas fiber and paint chip) from an artwork dated 1866; binder gives post-1950 creation on reused canvas",
+          "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/search?query=DOI:10.1073/pnas.1901540116&resultType=core&format=json"
+        },
+        {
+          "what": "full text: painting signed 'Sarah Honn', dated May 5, 1866 (forgery by Robert Trotter); canvas range late 17th to mid-20th century; oil binder with excess carbon-14, seeds harvested 1958-1961 or 1983-1989; nuclear tests 1954 to 1963 raised atmospheric carbon-14",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6613091/"
+        }
+      ],
+      "notes": "",
+      "rewrite": "new subject (bomb-peak radiocarbon in a forged 1866 painting) replacing the Enewetak drilling case; named researchers; denser register",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 6,
+        "fixes": [
+          "first sentence made less dense ('sharply elevated concentrations ... incorporated ... into their tissues' simplified); facts rechecked in the PMC full text"
+        ],
+        "status": "fixed"
+      },
+      "model_bands": [
+        4,
+        4
+      ]
+    },
+    {
+      "id": "inferences.S3.hard",
+      "template": "S3",
+      "subtype": "Rule or timeline plus observation rejects a premise",
+      "tier": "hard",
+      "passage": "The Pacific rat (Rattus exulans) reached New Zealand only by being transported by Polynesian voyagers; once introduced, these omnivorous rodents proliferated rapidly, leaving distinctive incisor marks on the hard seed cases of indigenous trees. Radiocarbon dates obtained in the 1990s on rat bones, some as early as about 200 BCE, therefore indicated human colonization more than a millennium before the earliest archaeological evidence of settlement, around 1280 CE. Paleoecologist Janet Wilmshurst and colleagues instead dated rat-gnawed seed cases from numerous deposits on both main islands. None predated about 1280, although ungnawed seeds from some of the same deposits were thousands of years old. These findings imply that ______",
+      "stem": "Which choice most logically completes the text?",
+      "options": [
+        "Pacific rats had reached New Zealand by about 200 BCE but did not begin feeding on the seeds of native trees until roughly 1280.",
+        "Polynesian voyagers had settled New Zealand by about 200 BCE but did not introduce the Pacific rat until roughly a millennium later.",
+        "the earlier dates on rat bones were most likely erroneous and people probably did not reach New Zealand until about 1280.",
+        "seed cases provide more reliable radiocarbon dates than bones do for the arrival of any animal species on a previously uninhabited island."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "Rats multiplied quickly once introduced and marked the seeds they gnawed, so a rat population present since 200 BCE should have left gnawed seeds in deposits older than 1280. Old seeds in those deposits are ungnawed, and gnawed ones appear only from about 1280, so rats, and the people who carried them, probably arrived then and the early bone dates are likely wrong, as C says.",
+      "distractors": {
+        "A": {
+          "recipe": "MIX (right pieces, wrong link)",
+          "why_wrong": "The passage says the rats multiplied quickly and gnawed seed cases once introduced, so a millennium of presence without gnawed seeds is not supported."
+        },
+        "B": {
+          "recipe": "MIX (wrong timing attached to people)",
+          "why_wrong": "The only evidence for 200 BCE was the rat-bone dates, and the earliest archaeological evidence of settlement is about 1280; nothing places people there a millennium earlier."
+        },
+        "D": {
+          "recipe": "EXT (overreach)",
+          "why_wrong": "The study concerns one rat species in New Zealand; it gives no basis for a rule about every animal species on every island."
+        }
+      },
+      "models": [
+        "3.5",
+        "3.27",
+        "3.32"
+      ],
+      "word_count": 108,
+      "subject_area": "history and archaeology (with ecology)",
+      "sources": [
+        {
+          "what": "Wilmshurst, Anderson, Higham, Worthy 2008, PNAS: radiocarbon dates on rat-gnawed seeds and rat bones show the Pacific rat (Rattus exulans) reached both main islands about 1280 A.D., a millennium later than previously assumed; matches earliest archaeological sites",
+          "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/search?query=DOI:10.1073/pnas.0801507105&resultType=core&format=json"
+        },
+        {
+          "what": "full text: 1990s bone dates as early as about 200 B.C. implied arrival over a millennium before archaeological evidence; rats carried by prehistoric people and multiplied quickly; distinctive incisor marks on seed cases of native trees; intact seeds from the same North Island deposits much older (about 3,895 BP); early bone dates not reproducible",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC2409139/"
+        },
+        {
+          "what": "news report of the study: the seeds dated from 100 to 3,000 years ago, but seeds with rat tooth marks appeared only in the last 780 years",
+          "url": "https://itwire.com/science-news/biology/rats-help-new-zealand-study-find-date-of-first-humans"
+        },
+        {
+          "what": "earlier rat-bone dating implied human contact about 200 BC; not supported by the new dates",
+          "url": "https://www.sciencedaily.com/releases/2008/06/080603162919.htm"
+        }
+      ],
+      "notes": "Janet Wilmshurst is a paleoecologist at Manaaki Whenua Landcare Research; the role is given generically.",
+      "rewrite": "new subject (Wilmshurst's rat-gnawed seed dates for New Zealand settlement) replacing Mayr's hummingbird fossils; no institution, compact setup, key not an 'X rather than Y' contrast",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 7,
+        "fixes": [
+          "lead-in changed from ', suggesting that' (overused in this file) to a new sentence 'These findings imply that'"
+        ],
+        "status": "fixed"
+      },
+      "model_bands": [
+        6,
+        6,
+        7
+      ]
+    },
+    {
+      "id": "inferences.S4.medium",
+      "template": "S4",
+      "subtype": "Elimination of alternatives",
+      "tier": "medium",
+      "passage": "Along exposed Atlantic coastlines, boulders weighing many tonnes sometimes lie stranded on cliff tops far above the high-water mark. Because only exceptionally powerful waves could have emplaced such boulders, researchers have interpreted comparable deposits in several locations as evidence of past tsunamis. Geologist Rónadh Cox and colleagues compared photographs of coastal boulder deposits in western Ireland taken before and after the winter of 2013–2014, a season of severe Atlantic storms during which no tsunami reached the coast. Eighteen boulders weighing more than 50 tonnes had been displaced, the largest weighing roughly 620 tonnes, and some boulders had been transported at elevations as high as 29 meters above high water. Cox and her colleagues concluded that ______",
+      "stem": "Which choice most logically completes the text?",
+      "options": [
+        "storm waves are capable of moving boulders as massive as some that have been attributed to tsunamis.",
+        "the displaced boulders had most likely been moved by a small tsunami that went unrecorded during the winter of 2013–2014.",
+        "tsunamis are less capable than storm waves of moving large boulders onto cliff tops.",
+        "boulders on the west coast of Ireland are generally larger than those on other exposed Atlantic coastlines."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "Only very powerful waves can move such boulders, and the two candidates are tsunamis and storm waves. No tsunami reached the coast that winter, yet boulders of up to about 620 tonnes moved, so storm waves must have moved them. Storm waves can therefore shift boulders as large as some that researchers have credited to tsunamis, as A says.",
+      "distractors": {
+        "B": {
+          "recipe": "REV (contradicts a stated fact)",
+          "why_wrong": "The passage states that no tsunami reached the coast that winter."
+        },
+        "C": {
+          "recipe": "CMP (unsupported comparison)",
+          "why_wrong": "The study shows that storm waves can move very large boulders; it never compares their power with that of tsunamis, so nothing shows that tsunamis are less capable."
+        },
+        "D": {
+          "recipe": "CMP (unsupported comparison)",
+          "why_wrong": "The study never compared the size of Irish boulders with boulders on other coasts."
+        }
+      },
+      "models": [
+        "2.17"
+      ],
+      "word_count": 116,
+      "subject_area": "natural science (geology)",
+      "sources": [
+        {
+          "what": "Cox, Jahn, Watkins, Cox 2018, Earth-Science Reviews 177, abstract: before-and-after photos of coastal boulder deposits in the west of Ireland; storms of winter 2013-2014 moved boulders at elevations up to 29 m above high water; eighteen boulders over 50 t, largest 620 t; boulders larger than many interpreted elsewhere as tsunami-moved, so size alone cannot distinguish tsunami from storm emplacement",
+          "url": "https://api.semanticscholar.org/graph/v1/paper/DOI:10.1016/j.earscirev.2017.12.014?fields=title,authors,year,abstract"
+        },
+        {
+          "what": "paper (open access), Extraordinary boulder transport by storm waves (west of Ireland, winter 2013-2014)",
+          "url": "https://www.sciencedirect.com/science/article/pii/S0012825217302350"
+        }
+      ],
+      "notes": "That no tsunami reached the coast that winter rests on the paper's attribution of all the movement to the 2013-2014 storm waves.",
+      "rewrite": "new subject (Cox et al. storm-moved boulders in Ireland) replacing the Federalist stylometry case; no 'Barring the possibility' frame, no exact count tables",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 6,
+        "fixes": [
+          "option C rewritten from an absolute overreach ('all boulder deposits ... must have been emplaced by storms') to an unsupported comparison of storm waves and tsunamis",
+          "lead-in varied: three items used the identical 'The researchers therefore concluded that'"
+        ],
+        "status": "fixed"
+      },
+      "model_bands": [
+        4
+      ]
+    },
+    {
+      "id": "inferences.S4.hard",
+      "template": "S4",
+      "subtype": "Elimination of alternatives",
+      "tier": "hard",
+      "passage": "Acorn ants from urban colonies in Cleveland, Ohio, whose acorn nests are warmed by the city’s heat island, tolerate higher temperatures than do acorn ants from surrounding rural colonies. Biologist Sarah Diamond and colleagues found that the difference persists among laboratory-born offspring of field-collected queens reared under identical conditions, which rules out the possibility that workers simply adjust to the temperatures they experience as they develop. Because those queens had matured in the field, however, maternal environmental effects remained possible. In a subsequent experiment, Diamond’s team reared workers whose mothers had themselves been born in the laboratory, and these workers exhibited the same urban–rural difference, suggesting that ______",
+      "stem": "Which choice most logically completes the text?",
+      "options": [
+        "urban workers acquire their heat tolerance by acclimating to the warmer temperatures they experience during development.",
+        "the greater heat tolerance of urban colonies most likely reflects evolved genetic differences between urban and rural populations.",
+        "the conditions that field-collected queens experienced were primarily responsible for the urban workers’ greater heat tolerance.",
+        "acorn ant populations in other cities have probably evolved greater heat tolerance more rapidly than those in Cleveland have."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "Three explanations are in play: workers acclimate during development, mothers' field conditions shape their offspring, or the populations differ genetically. Rearing under identical conditions ruled out the first, and the difference survived even when the mothers too were laboratory-born, which rules out the second. What remains is an evolved genetic difference, as B says.",
+      "distractors": {
+        "A": {
+          "recipe": "REV (accepts an eliminated alternative)",
+          "why_wrong": "The passage says rearing under identical conditions excludes acclimation during development, yet the difference persisted."
+        },
+        "C": {
+          "recipe": "MIX (eliminated alternative attached to the result)",
+          "why_wrong": "Workers whose mothers were born in the laboratory, and so never experienced field conditions, still showed the difference."
+        },
+        "D": {
+          "recipe": "CMP (unsupported comparison)",
+          "why_wrong": "Only Cleveland's populations are described; nothing is said about ants in other cities or rates of evolution."
+        }
+      },
+      "models": [
+        "3.23",
+        "3.1"
+      ],
+      "word_count": 108,
+      "subject_area": "natural science (evolutionary ecology)",
+      "sources": [
+        {
+          "what": "Martin, Chick, Yilmaz, Diamond 2019, Evolutionary Applications, abstract: F2 workers (offspring of laboratory-born queens) showed the same urban-rural divergence as field-born workers, so evolution rather than transgenerational plasticity explains higher heat tolerance in urban acorn ants",
+          "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/search?query=DOI:10.1111/eva.12826&resultType=core&format=json"
+        },
+        {
+          "what": "full text: Cleveland, Ohio urbanization gradient; earlier work (Diamond et al. 2017, 2018) found field-born and F1 (lab-born workers of field-caught queens) urban workers under common garden had higher heat tolerance; that design could not rule out transgenerational plasticity; urban acorn microhabitats more than 4 C warmer (urban heat island)",
+          "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC6708418/fullTextXML"
+        }
+      ],
+      "notes": "The species, Temnothorax curvispinosus, is left unnamed because official item 3.22 names its congener T. nylanderi. Diamond is senior author of the 2019 study (led by Ryan Martin) and lead author of the earlier F1 studies.",
+      "rewrite": "new subject (acorn ant heat tolerance, elimination of plasticity) replacing the Perupithecus rafting case; no 'Barring the possibility' frame or em-dash date parenthetical",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 7,
+        "fixes": [
+          "one dense clause made plainer ('excludes acclimation of workers ...'); facts rechecked in the PMC full text of Martin et al. 2019"
+        ],
+        "status": "fixed"
+      },
+      "model_bands": [
+        6,
+        7
+      ]
+    },
+    {
+      "id": "inferences.S5.medium",
+      "template": "S5",
+      "subtype": "Undercut leads to a hedged conclusion",
+      "tier": "medium",
+      "passage": "Studies linking pet ownership to benefits such as increased exercise and improved survival after heart attacks are frequently cited as evidence that companion animals promote human health, but most such studies are correlational. Analyzing responses from more than 42,000 participants in a California health survey, researchers Jessica Saunders, Layla Parast, and colleagues found that pet owners differed systematically from non-owners. Owners were more likely, for example, to live in rural areas and in houses and to belong to households in which everyone was employed full time, characteristics that are themselves associated with health. An observed association between pet ownership and better health, therefore, ______",
+      "stem": "Which choice most logically completes the text?",
+      "options": [
+        "proves that pets improve the health of people who live in rural areas.",
+        "shows that healthier people are more likely than others to choose to own pets.",
+        "could arise even if owning a pet had no effect on a person’s health.",
+        "suggests that dogs benefit their owners’ health more than cats do."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "Pet owners differ from non-owners in traits such as where they live and whether their household members work, and those traits are themselves linked to health. So a health difference between owners and non-owners could come from those traits rather than from the pets, which means the association could exist even if pets had no effect, as C says.",
+      "distractors": {
+        "A": {
+          "recipe": "EXT (overreach)",
+          "why_wrong": "The passage gives a reason to doubt that the association shows any effect of pets, so it certainly does not prove one for rural residents."
+        },
+        "B": {
+          "recipe": "EXT (overreach in the other direction)",
+          "why_wrong": "The study shows that owners differ in background traits, not that health itself leads people to acquire pets; 'shows' claims far more than the evidence supports."
+        },
+        "D": {
+          "recipe": "CMP (unsupported comparison)",
+          "why_wrong": "The passage never compares the effects of dogs and cats."
+        }
+      },
+      "models": [
+        "2.18",
+        "2.11",
+        "2.20"
+      ],
+      "word_count": 104,
+      "subject_area": "social science (public health)",
+      "sources": [
+        {
+          "what": "Saunders, Parast, Babey, Miles 2017, PLoS ONE 12(6): e0179494: conflicting, largely correlational evidence on pets and health; California survey (CHIS 2003), n = 42,044; pet owners differ from non-owners in many traits",
+          "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/search?query=DOI:10.1371/journal.pone.0179494&resultType=core&format=json"
+        },
+        {
+          "what": "full text: pet owners more likely to live in rural areas, in houses, and in households where everyone is employed full time; these socio-demographic variables are related to health; reviewed studies on dog owners' exercise and pets and survival after heart attack",
+          "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC5482437/fullTextXML"
+        }
+      ],
+      "notes": "The study itself found no general-health difference after adjustment, so the passage does not claim that this survey showed owners to be healthier.",
+      "rewrite": "new subject (Saunders et al. on how pet owners differ from non-owners) replacing Sutton Hoo; no em-dash gloss; key worded as a possibility, not a negated-evidence reversal",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 6,
+        "fixes": [],
+        "status": "pass"
+      },
+      "model_bands": [
+        5,
+        5,
+        4
+      ]
+    },
+    {
+      "id": "inferences.S6.easy",
+      "template": "S6",
+      "subtype": "X but not Y, so Z",
+      "tier": "easy",
+      "passage": "Japanese tits (Parus minor) are small songbirds that produce several distinct alarm calls. One of these vocalizations is given only when a bird encounters a predatory snake. Biologist Toshitaka Suzuki tested whether hearing this call alters what other tits attend to. In field experiments, he played recordings of the snake-specific call while moving a wooden stick in a snakelike manner nearby, and the birds approached the stick. When Suzuki instead played other types of tit calls, the birds rarely approached the same stick. They also seldom approached it when the snake call was played but the stick did not move like a snake. These results suggest that hearing the snake call may ______",
+      "stem": "Which choice most logically completes the text?",
+      "options": [
+        "make the birds avoid any object that moves near them.",
+        "prompt the birds to look specifically for objects that resemble snakes.",
+        "cause the birds to repeat the snake call even when no snake is present.",
+        "frighten the birds more than the sight of an actual snake does."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The birds approached the stick when two things came together: they heard the snake call and the stick moved like a snake. Other calls, or a stick that did not move like a snake, seldom drew them. So the snake call seems to make the birds look out for things that resemble snakes, as B says.",
+      "distractors": {
+        "A": {
+          "recipe": "REV (reversal)",
+          "why_wrong": "When they heard the snake call, the birds approached the snakelike stick rather than avoiding it."
+        },
+        "C": {
+          "recipe": "OUT (off-topic claim)",
+          "why_wrong": "The passage reports where the birds went, not whether they called; nothing says they repeated the call."
+        },
+        "D": {
+          "recipe": "CMP (unsupported comparison)",
+          "why_wrong": "No real snake was used, so the call's effect was never compared with the sight of an actual snake."
+        }
+      },
+      "models": [
+        "1.10",
+        "1.12"
+      ],
+      "word_count": 113,
+      "subject_area": "natural science (animal behavior)",
+      "sources": [
+        {
+          "what": "Suzuki 2018, PNAS, Alarm calls evoke a visual search image of a predator in birds: Japanese tits (Parus minor) give specific alarm calls only when encountering a predatory snake; during playback of these calls tits approach a wooden stick moved in a snake-like fashion, but not when hearing other call types or when the stick's movement is dissimilar to a snake's",
+          "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/search?query=DOI:10.1073/pnas.1718884115&resultType=core&format=json"
+        },
+        {
+          "what": "Kyoto University release: tits produce particular alarm calls when, and only when, encountering a predatory snake; approached a stick moved in a serpentine fashion during snake-call playback; did not respond to the same stick with other calls or non-snake-like movement",
+          "url": "https://www.kyoto-u.ac.jp/en/research-news/2018-01-30"
+        }
+      ],
+      "notes": "PMC full text is behind a bot check; the passage uses only what the abstract and the Kyoto University release state. 'Rarely approached' follows the paper's figure legend wording.",
+      "rewrite": "new subject (Suzuki's snake-specific alarm call in Japanese tits) replacing the Johnson and Goldstein default-effect study; denser register",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 5,
+        "fixes": [
+          "key B reworded from 'snake-shaped objects' to 'objects that resemble snakes': the experiment varied the stick's movement, not its shape",
+          "'ignored' softened to 'rarely approached' to match the reported results"
+        ],
+        "status": "fixed"
+      },
+      "model_bands": [
+        3,
+        4
+      ]
+    },
+    {
+      "id": "inferences.S6.medium",
+      "template": "S6",
+      "subtype": "X but not Y, so Z",
+      "tier": "medium",
+      "passage": "In 1970, archaeologists excavating the ancient synagogue at En-Gedi, which had been destroyed by fire around 600 CE, recovered the remains of a scroll so thoroughly burned that it had become a lump of charcoal. Because any attempt to unroll it would have destroyed it, its contents remained unknown for decades. Computer scientist Brent Seales and colleagues eventually scanned the scroll using x-ray micro-computed tomography and then applied software that virtually unwrapped its layers, producing columns of text legible enough for scholars to identify the writing as part of the book of Leviticus. This achievement suggests that ______",
+      "stem": "Which choice most logically completes the text?",
+      "options": [
+        "virtual unwrapping is a less costly way to study ancient scrolls than unrolling them by hand.",
+        "other ancient documents too fragile to be opened may nonetheless contain texts that can be recovered.",
+        "the fire that destroyed the synagogue at En-Gedi probably left the innermost layers of the scroll undamaged.",
+        "the text preserved in the En-Gedi scroll differs from that of later copies of the book of Leviticus."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The scroll could not be opened without destroying it, yet scanning and virtual unwrapping made its text readable. If one document too fragile to open can be read this way, others in a similar state may also hold texts that can be recovered, as B says.",
+      "distractors": {
+        "A": {
+          "recipe": "OUT (off-topic claim)",
+          "why_wrong": "The passage never mentions cost; it says only that unrolling this scroll would have destroyed it."
+        },
+        "C": {
+          "recipe": "CAUSE (rival explanation)",
+          "why_wrong": "The passage says the scroll was burned to charcoal; the text was recovered by scanning and software, not because some layers escaped the fire."
+        },
+        "D": {
+          "recipe": "OUT (off-topic claim)",
+          "why_wrong": "The passage says only that scholars identified the writing as part of Leviticus; it never compares the scroll’s text with other copies."
+        }
+      },
+      "models": [
+        "2.7"
+      ],
+      "word_count": 98,
+      "subject_area": "history and archaeology (with computer imaging)",
+      "sources": [
+        {
+          "what": "Seales, Parker, Segal, Tov, Shor and Porath 2016, Science Advances 2: e1601247: 1970 discovery at the En-Gedi synagogue, destroyed by fire circa 600 CE; scroll burned and crushed into chunks of charcoal, physical intervention unthinkable; x-ray micro-CT and virtual unwrapping; text revealed as the book of Leviticus; readable columns; new pathway for discoveries in damaged materials",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC5031465/"
+        }
+      ],
+      "notes": "",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 6,
+        "fixes": [
+          "option A replaced: its 'should stop ... instead' recommendation repeated the wording of S1.easy D"
+        ],
+        "status": "fixed"
+      },
+      "rewrite": "new subject (Seales et al. 2016 virtual unwrapping of the En-Gedi scroll) replacing the daguerreotype and calotype contrast; key is a forward inference rather than a matched purpose",
+      "model_bands": [
+        4
+      ]
+    },
+    {
+      "id": "inferences.S6.hard",
+      "template": "S6",
+      "subtype": "X but not Y, so Z",
+      "tier": "hard",
+      "passage": "On Kenyan savannas, ant species compete for exclusive possession of whistling thorn acacias, which house ant colonies in swollen thorns and supply them with nectar. Crematogaster mimosae depends on this nectar and aggressively defends its host against browsers, whereas C. sjostedti, which does not rely on plant rewards, facilitates infestation of its host by stem-boring beetles. After ecologist Todd Palmer and colleagues excluded large herbivores from experimental plots for a decade, the acacias there produced less nectar and fewer swollen thorns, suggesting that the disappearance of large herbivores ______",
+      "stem": "Which choice most logically completes the text?",
+      "options": [
+        "may allow whistling thorn acacias to grow faster and live longer, since the trees would no longer need ants to defend them against browsers.",
+        "could cause stem-boring beetles to reduce the amount of nectar and the number of swollen thorns that the acacias produce.",
+        "is likely to favor C. mimosae, since that species would no longer need to expend effort defending its host trees.",
+        "could, by tipping the competition among ants toward C. sjostedti, leave whistling thorn acacias more exposed to stem-boring beetles."
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "Removing large herbivores cut the nectar and shelter the trees offer. That loss matters to C. mimosae, which depends on the nectar, but not to C. sjostedti, which does not rely on plant rewards. Since the two compete for trees, the balance should tip toward C. sjostedti, whose hosts are more open to stem-boring beetles. So losing large herbivores could leave the trees more exposed to beetles, as D says.",
+      "distractors": {
+        "A": {
+          "recipe": "REV (reversal)",
+          "why_wrong": "The reasoning runs the other way: with less nectar, the defending ant loses ground to the species that lets beetles in, so the trees are worse off, not better."
+        },
+        "B": {
+          "recipe": "CAUSE (rival mechanism)",
+          "why_wrong": "The passage ties the drop in nectar and swollen thorns to the exclusion of large herbivores, not to beetles."
+        },
+        "C": {
+          "recipe": "MIX (benefit attached to the wrong ant)",
+          "why_wrong": "C. mimosae depends on the nectar that declined, so the change should hurt it; the species that does not need rewards is the one favored."
+        }
+      },
+      "models": [
+        "3.20",
+        "3.25",
+        "3.29"
+      ],
+      "word_count": 89,
+      "subject_area": "natural science (ecology)",
+      "sources": [
+        {
+          "what": "Palmer, Stanton, Young, Goheen et al. 2008, Science 319: 192-195: ten years of large-herbivore exclusion reduced nectar and housing provided to ants; competitive dominance shifted from the nectar-dependent mutualist to an antagonistic species that does not depend on plant rewards; trees occupied by the antagonist suffered increased attack by stem-boring beetles, grew more slowly and had doubled mortality (abstract)",
+          "url": "https://doi.org/10.1126/science.1151579"
+        },
+        {
+          "what": "abstract text (Europe PMC, PMID 18187652)",
+          "url": "https://europepmc.org/article/MED/18187652"
+        },
+        {
+          "what": "whistling thorn (Vachellia drepanolobium) in Kenya: Crematogaster and Tetraponera species compete for exclusive possession of trees; shelter in swollen spines (domatia) and nectar; C. mimosae aggressively defends trees; C. sjostedti facilitates parasitism by stem-boring beetles; trees reduced nectar glands and swollen spines when large herbivores were excluded",
+          "url": "https://en.wikipedia.org/wiki/Vachellia_drepanolobium"
+        }
+      ],
+      "notes": "The tree is now classified as Vachellia drepanolobium; the paper and the passage call it an acacia.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 7,
+        "fixes": [],
+        "status": "pass"
+      },
+      "rewrite": "new subject (Palmer et al. 2008, ant-acacia mutualism after herbivore exclusion) replacing the bumblebee imidacloprid study; denser register; near-miss distractors (CAUSE, MIX)",
+      "model_bands": [
+        7,
+        6,
+        6
+      ]
+    },
+    {
+      "id": "inferences.S7.easy",
+      "template": "S7",
+      "subtype": "Two cases lead to a conditional",
+      "tier": "easy",
+      "passage": "Biochar is a form of charcoal made by heating crop waste, wood, or other plant material in an environment with very little oxygen. Farmers can mix it directly into their fields. Adding it to soil has been proposed as one way to raise agricultural productivity. To evaluate this proposal, soil scientist Simon Jeffery and his colleagues combined the results of more than one hundred published studies of biochar applied to crops. In the tropics, where farm soils are often acidic and low in nutrients, adding biochar increased crop yields by about 25% on average. In temperate regions, however, where soils are typically less acidic and more fertile and farmers generally apply more fertilizer, biochar had, on average, no effect on yields. Applying biochar to farmland would therefore likely ______",
+      "stem": "Which choice most logically completes the text?",
+      "options": [
+        "raise crop yields more in regions with heavy rainfall than in regions with little rainfall.",
+        "be most useful on fertile soils that already receive large amounts of fertilizer.",
+        "improve harvests on many tropical farms but do little for most temperate ones.",
+        "allow farmers in temperate regions to use less fertilizer than they currently do."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The same treatment gave opposite results in two settings: about 25% higher yields in the tropics and, on average, no change in temperate regions. So adding biochar would likely help many tropical farms while doing little for most temperate ones, as C says.",
+      "distractors": {
+        "A": {
+          "recipe": "VAR (wrong variable)",
+          "why_wrong": "The analysis compared tropical and temperate regions; rainfall is never mentioned."
+        },
+        "B": {
+          "recipe": "REV (reversal)",
+          "why_wrong": "Biochar had no average effect on the more fertile, heavily fertilized temperate soils; it helped on poorer tropical soils."
+        },
+        "D": {
+          "recipe": "REV (reversal)",
+          "why_wrong": "In temperate regions biochar had, on average, no effect on yields, so nothing suggests it could stand in for some of the fertilizer farmers there apply."
+        }
+      },
+      "models": [
+        "1.2"
+      ],
+      "word_count": 129,
+      "subject_area": "natural science (soil science, agriculture)",
+      "sources": [
+        {
+          "what": "Jeffery, Abalos, Prodana, Bastos, van Groenigen, Hungate and Verheijen 2017, Environmental Research Letters 12: 053001, 'Biochar boosts tropical but not temperate crop yields': 25% average yield increase in the tropics, on average no effect in temperate latitudes; tropical arable soils low in pH and fertility with low fertilizer inputs; temperate soils moderate in pH, higher in fertility, higher fertilizer inputs; 109 independent studies (111 publications)",
+          "url": "https://iopscience.iop.org/article/10.1088/1748-9326/aa67bd"
+        },
+        {
+          "what": "biochar defined as solid material from thermochemical conversion of biomass in an oxygen-limited environment, a form of charcoal; feedstocks include crop waste and wood; may increase soil fertility and agricultural productivity",
+          "url": "https://en.wikipedia.org/wiki/Biochar"
+        }
+      ],
+      "notes": "",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 6,
+        "fixes": [],
+        "status": "pass"
+      },
+      "rewrite": "new subject (Jeffery et al. 2017 biochar meta-analysis, tropical vs temperate yields) replacing the Tierra del Fuego beavers; key phrased as a concrete contrast rather than 'depends on'",
+      "model_bands": [
+        4
+      ]
+    },
+    {
+      "id": "inferences.S7.medium",
+      "template": "S7",
+      "subtype": "Rival accounts share an implication",
+      "tier": "medium",
+      "passage": "Ochre, a clay earth whose iron oxides yield pigments ranging from yellow to red, was being processed by people in Africa as early as about 300,000 years ago. Excavations at Blombos Cave in South Africa in 2008 uncovered a workshop roughly 100,000 years old containing ochre, bone, charcoal, grindstones, and hammerstones, as well as two abalone shells in which a liquefied ochre-rich mixture had been produced and stored. Archaeologists Christopher Henshilwood, Francesco d’Errico, and colleagues, who described the find, could not establish how the mixture was ultimately applied, proposing that it may have served either as decoration or as a means of protecting the skin. Under either interpretation, the workshop indicates that ______",
+      "stem": "Which choice most logically completes the text?",
+      "options": [
+        "people at Blombos Cave could plan a process of gathering, combining, and storing several materials.",
+        "the abalone shells found in the workshop were themselves ground up and added to the ochre mixture as an ingredient.",
+        "the inhabitants of Blombos Cave applied ochre to their skin mainly to shield it from the sun.",
+        "ochre was more highly valued at Blombos Cave than it was at other early human sites in Africa."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "Whether the mixture was used for decoration or for skin protection, making it required collecting ochre, bone, and charcoal, processing them with grindstones and hammerstones, combining them into a liquid, and keeping it in shells. Both accounts therefore share the implication in A: the people at Blombos could plan a process of gathering, combining, and storing several materials.",
+      "distractors": {
+        "B": {
+          "recipe": "MIX (right object, wrong role)",
+          "why_wrong": "The abalone shells held the mixture; the passage says it was produced and stored in them, not that they were ground into it."
+        },
+        "C": {
+          "recipe": "PART (fits one account only)",
+          "why_wrong": "It picks the skin-protection account, which the researchers offered only as one possibility, and adds an unsupported purpose (sun protection)."
+        },
+        "D": {
+          "recipe": "CMP (unsupported comparison)",
+          "why_wrong": "No other site’s use of ochre is compared with Blombos Cave."
+        }
+      },
+      "models": [
+        "2.14",
+        "2.8"
+      ],
+      "word_count": 113,
+      "subject_area": "history and archaeology",
+      "sources": [
+        {
+          "what": "Henshilwood, d'Errico, van Niekerk, Coquinot, Jacobs, Lauritzen et al. 2011, Science 334: 219-222: excavations in 2008 at Blombos Cave revealed a processing workshop where a liquefied ochre-rich mixture was produced and stored in two Haliotis midae (abalone) shells 100,000 years ago; ochre, bone, charcoal, grindstones and hammerstones form the toolkit; application unknown, possibilities include decoration and skin protection; ability to source, combine and store substances a benchmark of complex cognition (abstract)",
+          "url": "https://doi.org/10.1126/science.1211535"
+        },
+        {
+          "what": "abstract text (Europe PMC, PMID 21998386)",
+          "url": "https://europepmc.org/article/MED/21998386"
+        },
+        {
+          "what": "ochre: natural clay earth pigments of ferric oxide with clay and sand, yellow to deep orange or brown, red from hematite; red ochre processing in Africa dates to around 300,000 years ago",
+          "url": "https://en.wikipedia.org/wiki/Ochre"
+        }
+      ],
+      "notes": "",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 6,
+        "fixes": [
+          "attribution fixed: the 2008 excavation is no longer credited to d’Errico personally; the named researchers are now those who described the find (Science 2011 author list)"
+        ],
+        "status": "fixed"
+      },
+      "rewrite": "new subject (Henshilwood et al. 2011 Blombos Cave ochre workshop) replacing the lapis lazuli in dental plaque; lead-in changed from 'Either explanation suggests' to 'Under either interpretation'",
+      "model_bands": [
+        6,
+        6
+      ]
+    },
+    {
+      "id": "inferences.S7.hard",
+      "template": "S7",
+      "subtype": "Two cases lead to a conditional",
+      "tier": "hard",
+      "passage": "Neighboring plants compete for resources, but they can also help one another by accumulating nutrients, providing shade, or offering protection from herbivores. Ecologist Ragan Callaway and colleagues compared the growth of plants with and without nearby neighbors in subalpine and alpine communities spread across 11 mountain ranges. Competition generally dominated at lower elevations, where conditions are less physically stressful, whereas at higher, harsher elevations neighbors mostly helped one another. Across all sites, positive interactions also mattered more where early-summer temperatures were low, and competition prevailed at warmer sites. These patterns indicate that if early summers in these mountains become warmer, ______",
+      "stem": "Which choice most logically completes the text?",
+      "options": [
+        "alpine plants will likely benefit more from their neighbors than they do now, since warmer conditions would ease the stress that plants experience.",
+        "the effect that neighboring plants have on one another may shift toward competition at sites where those plants currently aid one another.",
+        "plants now restricted to lower elevations will probably spread upward in order to escape competition from their neighbors.",
+        "herbivores will probably become the principal threat to alpine plants, since neighboring plants would no longer shield them."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "Neighbors mostly helped one another where conditions were harsh and early summers cold, but mostly competed where conditions were milder and warmer. If early summers warm, sites where plants now aid one another would come to resemble the warmer sites, so their interactions may shift toward competition, as B says.",
+      "distractors": {
+        "A": {
+          "recipe": "REV (reversal)",
+          "why_wrong": "Positive interactions were strongest at cold, stressful sites; easing the stress points to less help from neighbors, not more."
+        },
+        "C": {
+          "recipe": "FUT (speculative future)",
+          "why_wrong": "The study compared interactions among neighbors at different sites; it says nothing about plants moving to new elevations."
+        },
+        "D": {
+          "recipe": "ECHO (detail recycled into an unsupported claim)",
+          "why_wrong": "Protection from herbivores is mentioned only as one way plants can help each other; nothing suggests herbivores would become the principal threat."
+        }
+      },
+      "models": [
+        "3.14",
+        "3.15"
+      ],
+      "word_count": 101,
+      "subject_area": "natural science (plant ecology)",
+      "sources": [
+        {
+          "what": "Callaway, Brooker, Choler, Kikvidze, Lortie et al. 2002, Nature 417: 844-848: positive effects via accumulation of nutrients, shade, amelioration of disturbance, protection from herbivores; biomass, growth and reproduction higher when other plants are nearby; 115 species in 11 mountain ranges; competition dominates at lower, less stressful elevations, interactions predominantly positive at high elevations; positive interactions more important at sites with low early-summer temperatures, competition prevails at warmer sites (abstract)",
+          "url": "https://doi.org/10.1038/nature00812"
+        },
+        {
+          "what": "abstract text (Europe PMC, PMID 12075350)",
+          "url": "https://europepmc.org/article/MED/12075350"
+        }
+      ],
+      "notes": "The blank applies the study's temperature pattern to a warming scenario; the passage itself makes no claim about climate change effects.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 5,
+        "fixes": [
+          "lead-in changed from ', suggesting that' (overused in this file) to 'These patterns indicate that'",
+          "one abstract-like clause made plainer (densest passage in the file)"
+        ],
+        "status": "fixed"
+      },
+      "rewrite": "new subject (Callaway et al. 2002 alpine facilitation versus competition) replacing the hippo dung pair of studies; no em-dash gloss; key applies the condition forward instead of stating 'depending on'",
+      "model_bands": [
+        6,
+        6
+      ]
+    },
+    {
+      "id": "inferences.S8.easy",
+      "template": "S8",
+      "subtype": "Co-occurrence leads to a link",
+      "tier": "easy",
+      "passage": "Wind turbines generate electricity without burning fossil fuels, but they can also have unexpected effects on the wildlife around them. In the Western Ghats mountains of India, ecologist Maria Thaker and her colleagues compared areas with wind turbines to areas without them. In the areas with turbines, predatory birds such as buzzards and kites were less abundant and less active. The researchers also found that the superb large fan-throated lizard, which these birds prey on, was more common in the areas with turbines than in the areas without them. The researchers therefore reasoned that ______",
+      "stem": "Which choice most logically completes the text?",
+      "options": [
+        "the turbines likely reduced lizard populations by disturbing the plants and insects that the lizards depend on.",
+        "the lizards were drawn to the turbines because the structures offered them new places to hide.",
+        "buzzards and kites are likely to abandon the Western Ghats as more wind farms are built there.",
+        "the scarcity of predatory birds near the turbines may have allowed lizard numbers there to increase."
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "Areas with turbines had fewer and less active predatory birds, and the same areas had more of the lizards those birds hunt. Fewer predators and more prey in the same places point to a link: with fewer birds hunting them, the lizards could become more numerous, as D says.",
+      "distractors": {
+        "A": {
+          "recipe": "REV (reversal)",
+          "why_wrong": "Lizards were more common, not less common, where the turbines stood; plants and insects are never mentioned."
+        },
+        "B": {
+          "recipe": "CAUSE (rival mechanism)",
+          "why_wrong": "The passage never mentions hiding places; the only difference it reports between the areas is the number and activity of predatory birds."
+        },
+        "C": {
+          "recipe": "FUT (speculative future)",
+          "why_wrong": "The study compared areas with and without turbines at one time; it makes no prediction about future wind farms or about the whole region."
+        }
+      },
+      "models": [
+        "1.7"
+      ],
+      "word_count": 95,
+      "subject_area": "natural science (ecology)",
+      "sources": [
+        {
+          "what": "Thaker, Zambre and Bhosale 2018, Nature Ecology & Evolution 2: 1854-1858: in the Western Ghats, wind farms reduce the abundance and activity of predatory birds (Buteo, Butastur and Elanus species), which increases the density of the lizard Sarada superba (abstract)",
+          "url": "https://doi.org/10.1038/s41559-018-0707-z"
+        },
+        {
+          "what": "abstract text (Europe PMC record, PMID 30397304)",
+          "url": "https://europepmc.org/article/MED/30397304"
+        },
+        {
+          "what": "common name superb large fan-throated lizard; found in Maharashtra, India",
+          "url": "https://en.wikipedia.org/wiki/Sarada_superba"
+        }
+      ],
+      "notes": "Only findings stated in the abstract are used; the paper's behavioural and hormonal results are left out because the full text could not be checked.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 5,
+        "fixes": [
+          "lead-in varied: three items used the identical 'The researchers therefore concluded that'",
+          "plainer wording for the easy tier (three phrases simplified)"
+        ],
+        "status": "fixed"
+      },
+      "rewrite": "new subject (Thaker 2018, wind farms, predatory birds and fan-throated lizards) replacing the hurricane lizard study; denser register; no 'Taken together' frame",
+      "model_bands": [
+        3
+      ]
+    },
+    {
+      "id": "inferences.S8.medium",
+      "template": "S8",
+      "subtype": "Co-occurrence leads to a link",
+      "tier": "medium",
+      "passage": "Literary scholars Ted Underwood, David Bamman, and Sabrina Lee analyzed a large corpus of English-language fiction published between the late eighteenth and early twenty-first centuries. They found that the descriptive language applied to fictional men and women became steadily less differentiated after the mid-nineteenth century, as characters’ actions and attributes were sorted less consistently into gender categories. Yet between 1850 and 1950, the proportion of fiction titles written by women diminished by roughly half, from about 50% to about 25%, and the number of characters who are women or girls also fell over that century. These simultaneous declines in authorship and representation suggest that ______",
+      "stem": "Which choice most logically completes the text?",
+      "options": [
+        "the share of fiction written by women may have influenced how many women and girls appeared among fictional characters.",
+        "as fewer women wrote fiction, novelists increasingly described men and women characters in sharply different terms.",
+        "English-language fiction gave less attention to women characters than did fiction written in other languages.",
+        "readers in the early twentieth century generally preferred novels about men to novels about women."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "Over the same century, the share of fiction written by women fell by half and the number of women and girls among characters also fell. Two declines that track each other point to a link between who wrote fiction and how many women characters it contained, as A says, stated as a possibility rather than a proven cause.",
+      "distractors": {
+        "B": {
+          "recipe": "REV (reversal)",
+          "why_wrong": "The researchers found that men and women characters were described in less differentiated language over time, not more sharply different terms."
+        },
+        "C": {
+          "recipe": "CMP (unsupported comparison)",
+          "why_wrong": "Only English-language fiction was examined; fiction in other languages is never compared."
+        },
+        "D": {
+          "recipe": "CAUSE (rival explanation)",
+          "why_wrong": "The passage reports nothing about readers’ preferences, so it gives no support for this explanation of the decline."
+        }
+      },
+      "models": [
+        "2.19",
+        "2.21"
+      ],
+      "word_count": 105,
+      "subject_area": "humanities (literature, digital humanities)",
+      "sources": [
+        {
+          "what": "Underwood, Bamman and Lee 2018, Journal of Cultural Analytics, 'The Transformation of Gender in English-Language Fiction': fiction from the end of the eighteenth century to the beginning of the twenty-first; gender divisions between characters less sharply marked over the last 170 years (actions and attributes less clearly sorted into gender categories); proportion of fiction written by women drops by half, from roughly 50% of titles to roughly 25%, from 1850 to 1950; the number of characters who are women or girls also drops (abstract)",
+          "url": "https://doi.org/10.22148/16.019"
+        },
+        {
+          "what": "abstract text (Semantic Scholar record)",
+          "url": "https://api.semanticscholar.org/graph/v1/paper/DOI:10.22148/16.019?fields=title,abstract,year"
+        }
+      ],
+      "notes": "Only findings stated in the abstract are used (the journal page is behind a bot check); the corpus size is left out because it could not be checked.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 5,
+        "fixes": [],
+        "status": "pass"
+      },
+      "rewrite": "new subject (Underwood, Bamman and Lee 2018 on gender in English-language fiction) replacing the Thoreau flowering study; key is the longest option here",
+      "model_bands": [
+        3,
+        5
+      ]
+    },
+    {
+      "id": "inferences.S9.easy",
+      "template": "S9",
+      "subtype": "Action or design reveals a motive",
+      "tier": "easy",
+      "passage": "Many typefaces are designed to look uniform, so characters with similar shapes, such as the capital letter O and the numeral 0, can look nearly identical. For readers with low vision, however, such characters can be hard to tell apart. In 2019 the Braille Institute, which serves people with vision impairments, introduced a typeface called Atkinson Hyperlegible. Its designers gave similar characters clearly different shapes, adding angled spurs and longer tails, and tested samples with readers who had various kinds of vision loss. The designers were therefore most likely willing to ______",
+      "stem": "Which choice most logically completes the text?",
+      "options": [
+        "follow the tradition of uniform design more strictly than the designers of most other typefaces do.",
+        "sacrifice some visual uniformity in order to make individual characters easier to recognize.",
+        "limit the typeface to the letters and numbers that low-vision readers most often confuse.",
+        "postpone the typeface’s release until it could also be reproduced in braille."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "Typefaces are usually designed to look uniform, which leaves look-alike characters that low-vision readers find hard to tell apart. The designers broke with that tradition on purpose, giving similar characters different shapes and testing them with readers with vision loss. That choice shows they accepted less uniformity in return for characters that are easier to recognize, as B says.",
+      "distractors": {
+        "A": {
+          "recipe": "REV (reversal)",
+          "why_wrong": "The designers broke with uniform design by giving similar characters different shapes; they did not follow it more strictly."
+        },
+        "C": {
+          "recipe": "OUT (off-topic claim)",
+          "why_wrong": "The passage says the designers reshaped similar characters, not that the typeface left out every other letter and number."
+        },
+        "D": {
+          "recipe": "OUT (off-topic claim)",
+          "why_wrong": "Braille appears only in the organization’s name; nothing suggests the typeface was meant to be reproduced in braille."
+        }
+      },
+      "models": [
+        "1.8",
+        "1.9",
+        "1.11",
+        "1.6"
+      ],
+      "word_count": 92,
+      "subject_area": "humanities (type design)",
+      "sources": [
+        {
+          "what": "Braille Institute font page: designed in 2019 for low-vision readers; letters and numbers hard to distinguish; similarly shaped letters made distinct; angled spurs and longer tails; named for founder J. Robert Atkinson",
+          "url": "https://www.brailleinstitute.org/freefont/"
+        },
+        {
+          "what": "README: low-vision readers find certain letters and numbers hard to distinguish (examples include O vs 0); differentiated letterforms; Fast Company 2019 Innovation by Design Award",
+          "url": "https://github.com/googlefonts/atkinson-hyperlegible"
+        },
+        {
+          "what": "typeface rejects letterform norms that valorize uniformity; Braille Institute tested design samples with people with varying vision impairments; 2019 project with Applied Design Works",
+          "url": "https://www.printmag.com/design-news/braille-institute-s-atkinson-hyperlegible-typeface-launches-on-google-fonts-for-visually-impaired/"
+        }
+      ],
+      "notes": "",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 5,
+        "fixes": [
+          "opening made plainer for the easy tier (colon-led 'Typographic convention has long favored uniformity' hook removed); option A and explanation follow the new wording"
+        ],
+        "status": "fixed"
+      },
+      "rewrite": "new subject (Atkinson Hyperlegible typeface, Braille Institute 2019) replacing Jacob Lawrence's Migration Series; trade-off motive instead of a jokey cost distractor; denser register",
+      "model_bands": [
+        2,
+        5,
+        2,
+        3
+      ]
+    },
+    {
+      "id": "inferences.S9.medium",
+      "template": "S9",
+      "subtype": "Action or design reveals a motive",
+      "tier": "medium",
+      "passage": "In the mid-sixteenth century, the town council of Tlaxcala, an Indigenous city-state whose warriors had helped Hernán Cortés defeat the Mexica, commissioned the Lienzo de Tlaxcala, a pictorial narrative of the conquest in 87 scenes. Copies were dispatched to King Charles V of Spain and to Mexico City, the administrative capital of the colony, while Tlaxcalan leaders were petitioning for privileges, particularly protection from the encomienda, a system that rewarded conquistadors with the compulsory labor of conquered populations. The Lienzo omits the hostilities between Tlaxcalans and Spaniards that preceded their alliance. Given the work’s intended recipients, this omission was most likely meant to ______",
+      "stem": "Which choice most logically completes the text?",
+      "options": [
+        "spare Spanish viewers scenes of violence that they might have found too disturbing to look at.",
+        "keep the Mexica from learning how much Tlaxcalan warriors had contributed to their defeat.",
+        "suggest that Cortés had won his victories without relying on any Indigenous allies.",
+        "present Tlaxcala as an ally whose loyalty to the Spanish had never been in question."
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The Lienzo went to the Spanish king and the colonial capital while Tlaxcala’s leaders were asking those same authorities for privileges. Leaving out the early fighting between Tlaxcalans and Spaniards keeps only the alliance in view, which makes sense if the aim was to show Tlaxcala as a loyal ally whose service deserved reward, as D says.",
+      "distractors": {
+        "A": {
+          "recipe": "CAUSE (rival motive)",
+          "why_wrong": "The Lienzo is a history of a conquest, so it is full of warfare; avoiding violence cannot explain leaving out this one episode."
+        },
+        "B": {
+          "recipe": "MIX (wrong audience)",
+          "why_wrong": "The copies went to the Spanish king and the colonial capital, not to the Mexica, so hiding anything from the Mexica was not the point."
+        },
+        "C": {
+          "recipe": "REV (reversal)",
+          "why_wrong": "The work was made to stress Tlaxcala’s help in the conquest; leaving out the early fighting highlights the alliance rather than denying it."
+        }
+      },
+      "models": [
+        "2.9",
+        "2.1"
+      ],
+      "word_count": 104,
+      "subject_area": "history (colonial Mexico, Indigenous pictorial history)",
+      "sources": [
+        {
+          "what": "Lienzo de Tlaxcala: made in the mid-sixteenth century at the request of the Tlaxcalan cabildo, probably by Indigenous Tlaxcalan artists; 87 scenes of the conquest of 1519-1521; presents Tlaxcala as a valuable Spanish ally and omits the initial hostile battle between the two sides; copies sent to King Charles V, to Mexico City, and kept in Tlaxcala; appeal for rights, mainly to protect Tlaxcalans from encomienda",
+          "url": "https://en.wikipedia.org/wiki/Lienzo_de_Tlaxcala"
+        },
+        {
+          "what": "encomienda rewarded Spain's conquistadors with the labour of conquered peoples",
+          "url": "https://en.wikipedia.org/wiki/Encomienda"
+        },
+        {
+          "what": "student history journal (CSU), 'Privilege Campaigning in Tlaxcala': the Lienzo as a justificatory document and petition for privileges based on the Tlaxcalan alliance",
+          "url": "https://journals.calstate.edu/tthr/article/view/2276"
+        }
+      ],
+      "notes": "“Compulsory labor” paraphrases the encomienda grant of conquered peoples’ labour.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 6,
+        "fixes": [],
+        "status": "pass"
+      },
+      "rewrite": "new subject (Lienzo de Tlaxcala, a petition in pictures to the Spanish crown) replacing Frank Lloyd Wright's compression and release; no quoted resident; motive inferred from an omission and its audience",
+      "model_bands": [
+        4,
+        5
+      ]
+    },
+    {
+      "id": "inferences.S9.hard",
+      "template": "S9",
+      "subtype": "Design reveals a belief",
+      "tier": "hard",
+      "passage": "When pathologist Kurt Benirschke began cryopreserving living cells from rare and endangered animals at the San Diego Zoo in the 1970s, the cloning of a mammal from an adult somatic cell was still about two decades away. No available reproductive technology could have transformed his samples into living animals. Benirschke’s collection, now known as the Frozen Zoo, nevertheless supplied the cell line from which a Przewalski’s horse was cloned in 2020, reintroducing genetic variation that had vanished from a species whose entire surviving population descends from just 12 individuals. Benirschke’s decision to begin the collection when he did suggests that he believed ______",
+      "stem": "Which choice most logically completes the text?",
+      "options": [
+        "zoos would eventually be able to stop breeding endangered animals in captivity and rely on cloning instead.",
+        "the techniques available at the time would allow the stored cells to be used to restore lost genetic variation within a few years.",
+        "cells preserved without any immediate application might eventually serve conservation purposes that were not yet achievable.",
+        "the Przewalski’s horse was at greater risk of losing genetic variation than were the other species represented in his collection."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "Benirschke began storing cells at a time when no technology could turn them into animals; cloning a mammal from an adult cell became possible only about twenty years later. Starting the collection anyway makes sense only if he believed such samples could later serve purposes that were not yet achievable, as C says. The 2020 Przewalski’s horse clone shows that use arriving decades afterward.",
+      "distractors": {
+        "A": {
+          "recipe": "EXT (overreach)",
+          "why_wrong": "Nothing suggests he expected cloning to take the place of captive breeding; the passage describes a single clone produced decades later, which restored variation to a population that is still bred."
+        },
+        "B": {
+          "recipe": "REV (reversal)",
+          "why_wrong": "The passage says no technology of the time could turn the cells into animals; the first adult-cell mammal clone came about two decades later, so he could not have counted on existing techniques."
+        },
+        "D": {
+          "recipe": "CMP (unsupported comparison)",
+          "why_wrong": "The horse is one later use of a collection begun years earlier; the passage never compares the risk to the horse with the risk to other species in the collection."
+        }
+      },
+      "models": [
+        "3.6",
+        "3.7",
+        "3.19",
+        "3.22"
+      ],
+      "word_count": 103,
+      "subject_area": "natural science (conservation biology)",
+      "sources": [
+        {
+          "what": "Benirschke a pathologist and geneticist; began the frozen collection in the 1970s at the San Diego Zoo; had no technology to use the material when he started; collected 'for reasons you don't yet understand'",
+          "url": "https://en.wikipedia.org/wiki/Kurt_Benirschke"
+        },
+        {
+          "what": "1975 start: Benirschke began freezing living cells from various animals with liquid nitrogen; uses unknown at the time; collection named the Frozen Zoo",
+          "url": "https://sandiegozoowildlifealliance.org/story-hub/frozen-zoo-50-years-making"
+        },
+        {
+          "what": "Przewalski's horse clone Kurt born August 6, 2020 from a cell line cryopreserved since 1980 at the Frozen Zoo; carries genetic variation lost from the living gene pool; all 2,000+ living horses descend from 12 individuals",
+          "url": "https://reviverestore.org/projects/przewalskis-horse/"
+        },
+        {
+          "what": "Dolly the sheep (1996), first mammal cloned from an adult somatic cell",
+          "url": "https://en.wikipedia.org/wiki/Dolly_(sheep)"
+        }
+      ],
+      "notes": "“Rare and endangered animals” follows Wikipedia (“dozens of highly endangered species”); the passage gives the 1970s rather than 1975 because sources date the first frozen samples differently.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 7,
+        "fixes": [],
+        "status": "pass"
+      },
+      "rewrite": "new subject (Frozen Zoo, Benirschke, 2020 Przewalski's horse clone) replacing the Toyota andon case; denser register; researcher-centred belief inference",
+      "model_bands": [
+        7,
+        7,
+        6,
+        6
+      ]
+    },
+    {
+      "id": "inferences.S11.easy",
+      "template": "S11",
+      "subtype": "Received view plus counterevidence leads to revision",
+      "tier": "easy",
+      "passage": "For decades, many archaeologists held that hunter-gatherers, who typically lived in small, widely scattered bands, lacked the political organization needed to mobilize large workforces. About 3,200 years ago, however, people who lived by hunting, fishing, and gathering built Poverty Point, a complex of earthworks in present-day Louisiana. Its largest structure, Mound A, contains roughly 238,000 cubic meters of soil, all of it carried there in baskets. Archaeologists Anthony Ortmann and Tristram Kidder examined the successive layers of soil inside the mound. Although the region receives heavy rainfall, they found no evidence that rain had eroded any layer before the next one was added. They concluded that the mound was completed within a few months, a pace that would have required thousands of workers. Mound A thus provides evidence that ______",
+      "stem": "Which choice most logically completes the text?",
+      "options": [
+        "some hunter-gatherer societies were capable of organizing large-scale construction projects.",
+        "the people of Poverty Point probably relied on farming to feed the workers who built Mound A.",
+        "heavy rainfall in the region likely damaged many of the other mounds at Poverty Point.",
+        "Mound A was built more quickly than any other earthen monument in North America."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The old view held that hunter-gatherers could not mobilize large workforces. Yet hunter-gatherers built Mound A, and the soil layers show it went up within a few months, which would have taken thousands of workers. So at least some hunter-gatherer societies could organize projects on that scale, as A says.",
+      "distractors": {
+        "B": {
+          "recipe": "REV (reversal)",
+          "why_wrong": "The passage says the builders lived by hunting, fishing, and gathering; nothing indicates they farmed."
+        },
+        "C": {
+          "recipe": "OUT (off-topic claim)",
+          "why_wrong": "The study examined only Mound A, where it found no rain erosion at all; other mounds are never discussed."
+        },
+        "D": {
+          "recipe": "CMP (unsupported comparison)",
+          "why_wrong": "No other North American monument is compared with Mound A."
+        }
+      },
+      "models": [
+        "1.13"
+      ],
+      "word_count": 130,
+      "subject_area": "history and archaeology",
+      "sources": [
+        {
+          "what": "Ortmann and Kidder 2013, Geoarchaeology 28(1): Mound A built in less than 90 days, perhaps 30; no signs of rainfall or erosion during construction; about 3,200 years old; about 238,500 cubic meters of soil carried in baskets; about 3,000 laborers; consensus held that hunter-gatherers (small, widely scattered bands of foragers) lacked the political organization to mobilize so many people",
+          "url": "https://www.sciencedaily.com/releases/2013/01/130130183652.htm"
+        },
+        {
+          "what": "Archaeology magazine summary of the same study: rapid construction of Mound A",
+          "url": "https://archaeology.org/issues/may-june-2013/digs-discoveries/louisiana-poverty-point-mound-a-construction/"
+        }
+      ],
+      "notes": "",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 6,
+        "fixes": [
+          "lead-in varied ('suggest(s) that' was used in a third of the items)"
+        ],
+        "status": "fixed"
+      },
+      "rewrite": "new subject (Ortmann and Kidder 2013, Poverty Point Mound A built in months) replacing Maus; no 'might seem... However... award suggests' frame; denser register",
+      "model_bands": [
+        3
+      ]
+    },
+    {
+      "id": "inferences.S11.medium",
+      "template": "S11",
+      "subtype": "Received view plus counterevidence (negative frame)",
+      "tier": "medium",
+      "passage": "Many governments provide poor households with food or other goods rather than cash, a preference that may stem partly from a widespread concern that recipients would spend cash on alcohol and tobacco. Economists David Evans and Anna Popova reviewed 19 studies, conducted in ten countries across Latin America, Africa, and Asia, that measured how cash transfer programs affected households’ spending on these goods. Of the 44 estimates reported in the studies, all but two showed either no significant change or a significant decrease, and those two showed only very small increases. These findings undermine the assumption that ______",
+      "stem": "Which choice most logically completes the text?",
+      "options": [
+        "cash transfer programs can lead some households to spend less on alcohol and tobacco than they did before.",
+        "programs that provide food are less costly to run than programs that provide cash.",
+        "poor households that receive cash transfers will spend much of that money on alcohol and tobacco.",
+        "the effects of cash transfers on spending differ greatly between Latin America and Africa."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The concern was that poor households would spend cash transfers on alcohol and tobacco. Yet nearly all of the 44 estimates showed no significant change or a significant decrease in that spending, and the two increases were very small. The findings therefore undermine the assumption stated in C.",
+      "distractors": {
+        "A": {
+          "recipe": "POL (polarity trap)",
+          "why_wrong": "Some estimates showed significant decreases in such spending, so the findings support this idea; the frame asks what they undermine."
+        },
+        "B": {
+          "recipe": "OUT (off-topic claim)",
+          "why_wrong": "The review looked only at spending on alcohol and tobacco; the cost of running either kind of program is never mentioned."
+        },
+        "D": {
+          "recipe": "CMP (unsupported comparison)",
+          "why_wrong": "The passage lists the regions the studies came from but never compares results between them."
+        }
+      },
+      "models": [
+        "2.4",
+        "2.2",
+        "2.13",
+        "2.15"
+      ],
+      "word_count": 98,
+      "subject_area": "social science (development economics)",
+      "sources": [
+        {
+          "what": "Evans and Popova 2014, World Bank Policy Research Working Paper 6886, Cash Transfers and Temptation Goods: A Review of Global Evidence: concern that poor households will use transfers for alcohol and tobacco; such concerns may explain why many countries prefer in-kind transfers; 19 studies from 10 countries in Latin America, Africa and Asia; 44 estimates: 12 negative and significant, 24 negative and insignificant, 6 positive and insignificant, 2 positive and significant; the two positive results weakly significant and very small (less than a penny, 21 cents); concerns unfounded",
+          "url": "https://documents1.worldbank.org/curated/en/617631468001808739/pdf/WPS6886.pdf"
+        },
+        {
+          "what": "published version: Evans and Popova 2017, Cash Transfers and Temptation Goods, Economic Development and Cultural Change 65(2): 189-221 (Crossref record)",
+          "url": "https://doi.org/10.1086/689575"
+        }
+      ],
+      "notes": "Counts are from the 2014 working paper, which is open access; the journal version is paywalled. Evans and Popova are World Bank economists.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 7,
+        "fixes": [
+          "subject replaced: the open-plan office study repeated S1.easy's researcher (Ethan Bernstein) and a widely publicised finding; new subject Evans and Popova's review of cash transfers and spending on alcohol and tobacco, same negative frame, key kept at C",
+          "blind answer C refers to the replaced open-plan item (agreed with its key); the new item was written by the reviewer, re-solved as a student: only C is undermined by the findings"
+        ],
+        "status": "fixed",
+        "second_blind": {
+          "answer": "C",
+          "agreed": true,
+          "note": "independent solve from passage, stem and options only: the findings undermine the concern that cash goes to alcohol and tobacco; A is supported, B and D are off topic"
+        }
+      },
+      "rewrite": "new subject (Bernstein and Turban 2018 open-plan office sensor study) replacing the Giza workers' town; no em-dash tail; frame changed to 'undermines the assumption that'; reviewer then replaced the subject (open-plan study duplicated S1.easy's researcher and was widely publicised): Evans and Popova on cash transfers and temptation goods",
+      "model_bands": [
+        6,
+        4,
+        5,
+        4
+      ]
+    },
+    {
+      "id": "inferences.S11.hard",
+      "template": "S11",
+      "subtype": "Received view plus counterevidence leads to revision",
+      "tier": "hard",
+      "passage": "Several widely cited studies reported that the seawater acidity projected for the end of this century would profoundly impair the behavior of coral reef fishes, even leaving some fish attracted to the chemical cues of predators. Timothy Clark and colleagues, however, found negligible effects of such acidity on predator-cue avoidance, activity levels, and lateralization (a preference for turning left or right). Their data simulations also indicated that the large effects reported earlier were highly improbable, suggesting that ______",
+      "stem": "Which choice most logically completes the text?",
+      "options": [
+        "the behavioral impairments described in the earlier studies are unlikely to be a major consequence of ocean acidification for coral reef fishes.",
+        "the lateralization of coral reef fishes is more sensitive to increased acidity than is their avoidance of the chemical cues of predators.",
+        "coral reef fishes will become steadily more vulnerable to predators as the acidity of the seawater around them increases.",
+        "ocean acidification is unlikely to harm the corals on which many coral reef fishes depend for food and shelter."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "Earlier studies predicted severe behavioral harm, but Clark’s team found only negligible effects on the same kinds of behavior, and its simulations showed the earlier results were highly improbable. Together these findings point to behavioral impairment not being a major consequence of acidification for reef fishes, as A says.",
+      "distractors": {
+        "B": {
+          "recipe": "MIX (wrong comparison inside the study)",
+          "why_wrong": "Clark’s team found negligible effects on lateralization and on predator-cue avoidance alike; nothing ranks one as more sensitive."
+        },
+        "C": {
+          "recipe": "REV (reversal)",
+          "why_wrong": "This restates the earlier claim that the new findings undercut: acidity had negligible effects on predator-cue avoidance."
+        },
+        "D": {
+          "recipe": "OUT (off-topic claim)",
+          "why_wrong": "The study concerned fish behavior; it says nothing about how acidification affects corals."
+        }
+      },
+      "models": [
+        "3.10",
+        "3.24",
+        "3.26"
+      ],
+      "word_count": 78,
+      "subject_area": "natural science (marine biology)",
+      "sources": [
+        {
+          "what": "Clark, Raby, Roche, Binning, Speers-Roesch, Jutfelt and Sundin 2020, Nature 577: 370-375: high-profile papers reported profound behavioural impairments, e.g. attraction to predator chemical cues, at end-of-century acidification; this study found negligible effects on predator-cue avoidance, activity levels and behavioural lateralization (left-right turning preference); data simulations show the earlier large effect sizes and small variances are highly improbable; behavioural perturbations will not be a major consequence (abstract)",
+          "url": "https://doi.org/10.1038/s41586-019-1903-y"
+        },
+        {
+          "what": "abstract text (Europe PMC, PMID 31915382)",
+          "url": "https://europepmc.org/article/MED/31915382"
+        }
+      ],
+      "notes": "Every finding is taken from the abstract; no species counts or durations are given because the full text was not checked.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 5,
+        "fixes": [],
+        "status": "pass"
+      },
+      "rewrite": "new subject (Clark et al. 2020 ocean acidification and reef fish behaviour) replacing the ultimatum game; no absolute-word overreach foil; denser register",
+      "model_bands": [
+        7,
+        6,
+        7
+      ]
+    }
+  ]
+}

@@ -1,0 +1,1473 @@
+{
+  "skill": "Inferences",
+  "slug": "inferences",
+  "part": "w3b1",
+  "domain": "Information and Ideas",
+  "plan": {
+    "templates": [
+      {
+        "code": "S2",
+        "name": "Principle plus case leads to consequence (S10 trade-off folded in)"
+      },
+      {
+        "code": "S9",
+        "name": "Behaviour, design or content reveals a motive or belief (S12 example folded in)"
+      },
+      {
+        "code": "S3",
+        "name": "Rule or timeline plus observation rejects a premise"
+      },
+      {
+        "code": "S6",
+        "name": "X but not Y, so Z"
+      },
+      {
+        "code": "S1",
+        "name": "Controlled comparison of two groups"
+      },
+      {
+        "code": "S4",
+        "name": "Elimination of alternatives"
+      },
+      {
+        "code": "S11",
+        "name": "Received view plus counterevidence leads to revision"
+      },
+      {
+        "code": "S5",
+        "name": "Undercut leads to a hedged conclusion"
+      },
+      {
+        "code": "S8",
+        "name": "Co-occurrence or repeated pattern leads to a link"
+      }
+    ]
+  },
+  "items": [
+    {
+      "id": "inferences.S2.hard.w3b1_01",
+      "template": "S2",
+      "subtype": "T3 consequence: a toll rule applied to the person it binds",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Between 1429 and 1857, foreign merchant vessels entering or leaving the Baltic were obligated to anchor at Helsingør, beside the narrow Øresund strait, and pay the Danish crown a toll. In 1567 this toll became a modest percentage of each cargo’s valuation, a figure that captains were permitted to declare themselves, although the crown reserved the right to purchase any cargo at precisely the declared valuation. Under these conditions, a captain determining what valuation to declare would most likely have ______",
+      "stem": "Which choice most logically completes the text?",
+      "options": [
+        "avoided naming a figure far below the price the goods would fetch if he sold them himself.",
+        "named a figure well above his cargo’s worth, since the crown would then have no interest in buying it.",
+        "declared as low a figure as he could, since the toll was charged on the valuation he declared rather than on what the cargo was truly worth.",
+        "expected to pay less than captains had probably paid before 1567, since the toll was now only a modest percentage."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The toll was a percentage of the value the captain declared, so a low figure would lower his toll. But the crown could buy the cargo at that same figure, so a captain who declared far less than his goods would sell for risked losing them for much less than they were worth. Weighing the two rules together, he would most likely have avoided understating the value by much, as A says.",
+      "distractors": {
+        "B": {
+          "recipe": "half the rule (MIX)",
+          "why_wrong": "A high figure would make a purchase by the crown unlikely, but the toll was a percentage of the declared value, so naming a figure well above the cargo’s worth would only raise the captain’s toll."
+        },
+        "C": {
+          "recipe": "half the rule (MIX)",
+          "why_wrong": "The toll did depend on the declared figure, but the crown could buy the cargo at that same figure, so declaring as little as possible risked losing the goods for far less than they were worth."
+        },
+        "D": {
+          "recipe": "unsupported comparison (CMP)",
+          "why_wrong": "The text never says how the toll was charged before 1567 or how much captains paid then, so there is no basis for saying they paid less afterward."
+        }
+      },
+      "models": [
+        "4889580c",
+        "0dccbf17",
+        "3f236877"
+      ],
+      "sources": [
+        {
+          "what": "Sound Dues: foreign ships stopped at Helsingør from 1429 until 1857; in 1567 the toll became a 1 to 2 percent tax on cargo value, and to keep captains from understating it the right to purchase the cargo at the stated value was reserved",
+          "url": "https://en.wikipedia.org/wiki/Sound_Dues"
+        }
+      ],
+      "notes": "Area: history (economic history). S2: percentage toll on a self-declared value plus a purchase right at that value, applied to the captain's choice. Distractors: MIX (overstate to avoid purchase, ignores the toll), MIX (understate to cut the toll, ignores the purchase right), CMP (pre-1567 toll).",
+      "word_count": 82,
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [
+          "read easier than band 6 (C plain OUT): C rebuilt as the other half of the rule (declare as little as possible to cut the toll, ignoring the purchase right), so B and C each keep one true rule and drop the other; re-solved, A only",
+          "lead-in 'would have had reason to' changed to 'would most likely have' (options to past tense), so the blank asks for the net choice under both rules and C's true half-reason cannot be defended as 'a reason'; re-solved, A only"
+        ],
+        "status": "fixed",
+        "note": "key seen while inspecting the file layout before the blind solve; own solve reached A independently"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "Two linked steps (the toll falls with the declared figure; the purchase right at that figure punishes understating), both rules a sentence or two before the blank; key negative ('avoid'), B and C each keep half the rule, D a plain CMP. Strong band 6. On a fast-model solve the new C drew the solver (p 0.84); an independent safety solve found no second defensible option; the lead-in was then tightened to ask for the net choice."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "A",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "inferences.S2.hard.w3b1_02",
+      "template": "S2",
+      "subtype": "T4 explanation: a recording principle explains an instrument's design",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Before microphones came into widespread use in the mid-1920s, musicians made recordings by performing into a large horn that funneled sound to a thin diaphragm, whose vibrations drove a stylus engraving a groove into a wax disc; because the process involved no electrical amplification, only sound reaching the horn with considerable force left a distinct impression. Studios therefore frequently substituted a tuba for the double bass. Many studios also favored the Stroh violin, in which the instrument’s wooden body was replaced by a metal resonator connected to a flared metal horn, most likely because this design ______",
+      "stem": "Which choice most logically completes the text?",
+      "options": [
+        "gave the violin the bright, brassy tone that listeners of the period expected to hear on records.",
+        "boosted the violin’s sound electrically, so that it reached the recording horn with greater force.",
+        "concentrated the violin’s sound in one direction, so that less of it was lost before it could be recorded.",
+        "kept the vibrations of the instrument’s wooden body from blurring the groove that the stylus cut into the disc."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "Acoustic recording used no electrical amplification, so only sound that reached the recording horn with considerable force left a clear trace. A flared horn sends sound out in one direction rather than letting it spread all around, as an ordinary wooden violin does, so a Stroh violin aimed at the recording horn would deliver more of its sound there. That is why studios would favor it, as C says.",
+      "distractors": {
+        "A": {
+          "recipe": "rival motive (CAUSE)",
+          "why_wrong": "The text says nothing about what listeners expected to hear; its explanation for the studios’ choices is how forcefully sound reached the horn, not the tone of an instrument."
+        },
+        "B": {
+          "recipe": "reversal of a stated condition (REV)",
+          "why_wrong": "The text says acoustic recording involved no electrical amplification, and the Stroh violin’s resonator and horn are metal parts, not electrical ones; the design strengthened the sound at the horn without electricity."
+        },
+        "D": {
+          "recipe": "rival mechanism (CAUSE)",
+          "why_wrong": "The text gives no information about vibrations from a wooden body affecting the groove; the problem it describes is sound too weak to leave a clear trace."
+        }
+      },
+      "models": [
+        "03701ef3",
+        "61228830",
+        "0dccbf17"
+      ],
+      "sources": [
+        {
+          "what": "Stroh violin: metal resonator and horn in place of a wooden body; its loud, directional projection made it useful in early acoustic phonograph recording, until electric microphone recording in the later 1920s (tuba for double bass: a smaller detail, also in recordinghistory.org)",
+          "url": "https://en.wikipedia.org/wiki/Stroh_violin"
+        }
+      ],
+      "notes": "Area: humanities (music, history of recording). S2: acoustic recording needs forceful sound at the horn; the Stroh horn sends the violin's sound one way. Distractors: CAUSE (listener taste), REV (electrical boost, against the stated no-amplification condition), CAUSE (wood vibration).",
+      "word_count": 97,
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [
+          "read easier than band 6 (key echoed 'reached the horn', the only option tied to the force principle; B died to the tuba fact): B rebuilt as a force option that breaks the stated no-amplification condition, key paraphrased (concentrated in one direction, less lost before recording); re-solved, C only"
+        ],
+        "status": "fixed"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "Two steps (only forceful sound recorded; a horn sends sound one way, so more of it reaches the recorder); B now also argues force but breaks the aside, A and D are rival causes. Band 6."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "C",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "inferences.S2.hard.w3b1_03",
+      "template": "S2",
+      "subtype": "T3 consequence: evidence about why people miss court applied to a penalty policy",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "In New York City, individuals issued a summons for a low-level offense, such as littering or drinking in public, are required to appear in court on a specified date, and failure to appear automatically results in a warrant for their arrest; officials have traditionally tried to discourage such absences through stricter enforcement of these warrants. But when researchers redesigned the summons to display the date, time, and location of the appearance prominently and sent some recipients text-message reminders, absences declined substantially. These results suggest that a policy relying exclusively on harsher penalties would ______",
+      "stem": "Which choice most logically completes the text?",
+      "options": [
+        "lower attendance, since people facing stiffer penalties would be more afraid to appear in court at all.",
+        "make reminders unnecessary, since the threat of arrest would lead people to keep better track of their court dates.",
+        "likely prove more effective for people charged with serious crimes than for those charged with low-level offenses.",
+        "do little for the many people who miss court not by choice but because they overlooked or forgot the date."
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "Clearer information and reminders cut absences substantially, which suggests that many people who missed court had lost track of when or where to appear rather than deciding to stay away. Harsher penalties are meant to deter a deliberate choice, so they would do little for those people, as D says.",
+      "distractors": {
+        "A": {
+          "recipe": "rival mechanism (CAUSE)",
+          "why_wrong": "The text gives no evidence that fear of penalties keeps people away from court; the results point instead to people losing track of their court dates."
+        },
+        "B": {
+          "recipe": "reversal (REV)",
+          "why_wrong": "A warrant already follows every missed date, yet a clearer summons and reminders still reduced absences, which suggests that the threat of arrest does not keep people from losing track of their dates."
+        },
+        "C": {
+          "recipe": "unsupported comparison (CMP)",
+          "why_wrong": "The text discusses only summonses for low-level offenses; it offers no information about people charged with serious crimes."
+        }
+      },
+      "models": [
+        "4b3d6062",
+        "3f236877",
+        "0dccbf17"
+      ],
+      "sources": [
+        {
+          "what": "J-PAL summary of the NYC randomized evaluation: summonses for littering or drinking in public; failure to appear automatically brings an arrest warrant; traditional approach of stricter warrant enforcement; many fail to appear inadvertently (not knowing or forgetting the date); a redesigned form with date, time and location at the top cut FTA 6.4 points and text reminders cut it 21 to 26 percent",
+          "url": "https://www.povertyactionlab.org/evaluation/text-message-reminders-decreased-failure-appear-court-new-york-city"
+        }
+      ],
+      "notes": "Area: social science (policy, behavioral economics). S2: evidence that absences are largely inadvertent applied to a deterrence policy. Distractors: CAUSE (fear), REV (threat of arrest fixes forgetting), CMP (serious crimes).",
+      "word_count": 94,
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [],
+        "status": "pass"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "Two steps (clearer summons and reminders cut absences, so many absences are forgetting; penalties do not reach forgetting); key paraphrased away from the passage, A a rival cause and B a reversal both partly right, C a CMP. Band 6."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "D",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "inferences.S2.hard.w3b1_04",
+      "template": "S2",
+      "subtype": "T2 someone's reasoning: an information principle applied to employers after a policy change",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Economists have long argued that when employers can’t learn something they care about from a job application, some will fill the gap with assumptions about the groups to which applicants belong. Amanda Agan and Sonja Starr tested this idea by sending roughly 15,000 online applications from fictitious, otherwise similar Black and white applicants to employers in New Jersey and New York City before and after “ban the box” laws prohibited those employers from asking about criminal records. Among employers that had asked, the racial gap in callbacks grew roughly sixfold, suggesting that some of those employers ______",
+      "stem": "Which choice most logically completes the text?",
+      "options": [
+        "called back fewer applicants of every race once they lost a way to screen out applicants who might be risky hires.",
+        "began relying on an applicant’s race to guess whether that applicant was likely to have a criminal record.",
+        "gave more weight to applicants’ work histories, which the researchers had made comparable across races.",
+        "had given little weight to applicants’ answers about criminal records when deciding whom to call back."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The applications were alike except for race, and the gap between Black and white applicants widened once employers could no longer ask about criminal records. Following the economists’ argument, some employers apparently filled in the missing information with an assumption that Black applicants were more likely to have records, as B says.",
+      "distractors": {
+        "A": {
+          "recipe": "off the finding (OUT)",
+          "why_wrong": "The finding concerns the gap between Black and white applicants, not the total number of callbacks; fewer callbacks for everyone would not by itself widen the gap."
+        },
+        "C": {
+          "recipe": "pieces swapped (MIX)",
+          "why_wrong": "Relying more on work histories that were comparable across races could not produce a wider racial gap, which is what the researchers found."
+        },
+        "D": {
+          "recipe": "reversal (REV)",
+          "why_wrong": "Removing the question changed how these employers treated applicants, which suggests that the answers about criminal records had mattered to them."
+        }
+      },
+      "models": [
+        "4889580c",
+        "6b8a7c74",
+        "65502c46"
+      ],
+      "sources": [
+        {
+          "what": "Agan and Starr field experiment: about 15,000 online applications from fictitious Black and white applicants in New Jersey and New York City before and after ban-the-box; at employers that had asked about records the Black-white callback gap grew about sixfold (7 percent to 43 to 45 percent), read as statistical discrimination (employers guessing records from race)",
+          "url": "https://conference.nber.org/conf_papers/f88761/f88761.pdf"
+        }
+      ],
+      "notes": "Area: social science (labor economics, law). S2 T2: information-gap principle applied to employers after the box was removed. Distractors: OUT (fewer callbacks overall), MIX (work histories), REV (record answers had not mattered).",
+      "word_count": 97,
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [],
+        "status": "pass"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "Principle in sentence 1 maps onto the case with one bridge (the lost record question leaves a gap that race fills); A and D partly right, C a MIX on the 'otherwise similar' detail. The stated principle carries much of the step: band 6, not higher."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "B",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "inferences.S2.hard.w3b1_05",
+      "template": "S2",
+      "subtype": "T4 explanation: a durability principle applied to earlier events",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Coastal organisms have occasionally crossed oceans by clinging to floating objects, but natural rafts such as driftwood generally become waterlogged, decay, and sink. After a tsunami struck Japan in 2011, marine biologist James Carlton and colleagues spent six years examining debris that washed ashore in North America and Hawaii—much of it plastic or fiberglass, materials that became common only in the mid-twentieth century—and identified 289 living Japanese coastal species aboard. No comparable arrivals were recorded after the major Japanese tsunamis of 1896 and 1933, most likely because ______",
+      "stem": "Which choice most logically completes the text?",
+      "options": [
+        "Japanese coastal species of that era could not have survived a voyage lasting more than a few months.",
+        "ocean currents in those years carried floating objects away from North America rather than toward it.",
+        "the debris those tsunamis swept out to sea was made of materials that break down before they can cross an ocean.",
+        "far fewer kinds of coastal species lived along Japan’s shores in the late nineteenth and early twentieth centuries."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The 2011 debris that carried species across the Pacific was largely plastic or fiberglass, materials that were not common before the mid-twentieth century. Debris from the 1896 and 1933 tsunamis would therefore have been mostly natural material such as wood, which the text says becomes waterlogged, decays, and sinks, so it most likely broke down before reaching North America, as C says.",
+      "distractors": {
+        "A": {
+          "recipe": "unsupported claim about the organisms (CAUSE)",
+          "why_wrong": "The text gives no reason to think earlier coastal species were less hardy, and it shows that such species can survive a crossing of years when they have a lasting raft."
+        },
+        "B": {
+          "recipe": "rival mechanism (CAUSE)",
+          "why_wrong": "The text says nothing about ocean currents in earlier years; its contrast is between the materials of the 2011 debris and natural rafts that decay."
+        },
+        "D": {
+          "recipe": "unsupported comparison (CMP)",
+          "why_wrong": "The text gives no information about how many coastal species lived in Japan in earlier periods."
+        }
+      },
+      "models": [
+        "61228830",
+        "03701ef3",
+        "2a075bd1"
+      ],
+      "sources": [
+        {
+          "what": "Physics Today on Carlton et al. 2017 (Science): a team led by James Carlton of Williams College found at least 289 living species carried across the Pacific on 2011 tsunami debris; Japan had Tohoku-scale tsunamis in 1896 and 1933 but no reports of Japanese debris reaching North America then, when coastal regions did not use fiberglass, polystyrene foam and other nonbiodegradable materials",
+          "url": "https://physicstoday.aip.org/news/cruising-the-seas-on-the-wreckage-of-a-natural-disaster"
+        }
+      ],
+      "notes": "Area: natural science (marine biology). S2 T4: durable rafts needed for long crossings; earlier tsunamis predate plastic and fiberglass. Distractors: CAUSE (hardiness), CAUSE (currents), CMP (species richness).",
+      "word_count": 88,
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [
+          "source replaced (Axios returns 403): Physics Today states the 1896 and 1933 tsunamis, no debris reports then, and no fiberglass or foam in use"
+        ],
+        "status": "fixed"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "Two steps (plastic and fiberglass date from the mid-twentieth century, in a dash aside; natural rafts decay), premise two sentences back; distractors are rival causes and a CMP, none partly right. Band 6."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "C",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "inferences.S2.hard.w3b1_06",
+      "template": "S2",
+      "subtype": "T3 consequence: a dispersal hypothesis applied to the period between two dispersers",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Numerous trees in Costa Rica’s lowland forests produce large, hard-shelled fruits that in many places simply fall and rot beneath the parent tree. In 1982 ecologists Daniel Janzen and Paul Martin proposed that these fruits evolved to be eaten by gomphotheres and other enormous mammals that swallowed them whole and deposited the seeds considerable distances away—animals that disappeared from the region approximately 10,000 years ago. Janzen and Martin also noted that horses and cattle, introduced by European colonists, readily eat such fruits and pass the seeds intact, suggesting that during the intervening millennia these trees likely ______",
+      "stem": "Which choice most logically completes the text?",
+      "options": [
+        "evolved smaller fruits that the remaining animals of the forest were able to swallow whole and disperse.",
+        "spread mainly into open grasslands, where horses and cattle grazed on their fallen fruit.",
+        "produced fewer fruits each year, since no animals remained that could eat them in large numbers.",
+        "became confined to smaller areas, with few of their seeds carried far from the parent trees."
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The fruits were suited to large mammals that carried the seeds far away, and those animals vanished about 10,000 years ago; horses and cattle, which can do the same job, arrived only with European colonists. In between, the fruits mostly rotted under the parent trees, so the trees likely spread little and grew in more limited areas, as D says.",
+      "distractors": {
+        "A": {
+          "recipe": "reversal (REV)",
+          "why_wrong": "The text says these trees still produce large, hard-shelled fruits, so they did not evolve smaller ones that other animals could swallow."
+        },
+        "B": {
+          "recipe": "wrong period (MIX)",
+          "why_wrong": "Horses and cattle arrived only with European colonists, after the period in question, so they could not have spread the trees during those millennia."
+        },
+        "C": {
+          "recipe": "rival mechanism (CAUSE)",
+          "why_wrong": "The text says nothing about how many fruits the trees produced; the loss of the large mammals affected where the seeds ended up, not how much fruit the trees bore."
+        }
+      },
+      "models": [
+        "0dccbf17",
+        "4b3d6062",
+        "03701ef3"
+      ],
+      "sources": [
+        {
+          "what": "Janzen and Martin 1982 (Science), Neotropical anachronisms: the fruits were eaten by megafauna (gomphotheres among them) extinct about 10,000 years ago; tree ranges were altered by the extinction and partly restored by introduced horses and cattle",
+          "url": "https://pubmed.ncbi.nlm.nih.gov/17790450"
+        }
+      ],
+      "notes": "Area: natural science (ecology, evolution). S2 T3: dispersal by large mammals lost, then partly replaced by livestock; consequence for the gap between. Distractors: REV (smaller fruits), MIX (livestock placed too early), CAUSE (fruit numbers).",
+      "word_count": 93,
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [
+          "'Janzen later observed' changed to 'Janzen and Martin also noted' (the 1982 paper already names horses and cattle as partial restorers)",
+          "'today mostly fall and rot' changed to 'in many places simply fall and rot' so it no longer clashes with livestock readily eating the fruit",
+          "source replaced with the 1982 Science abstract (PubMed), which states the 10,000-year extinction and the livestock point"
+        ],
+        "status": "fixed"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "Two steps (megafauna carried seeds far; with them gone seeds stay near the parent, so ranges shrink), premise three sentences back; B (livestock placed too early) and C (fruit numbers) partly plausible, A a reversal of sentence 1. Band 6."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "D",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "inferences.S9.hard.w3b1_07",
+      "template": "S9",
+      "subtype": "T2 motive: a procedure's timing reveals its purpose",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "In classical Athens, most legal disputes were decided by juries of several hundred ordinary citizens. By the fourth century BCE, jurors were selected using a kleroterion, a stone slab inscribed with rows of slots: each candidate’s identification token was inserted into a slot, and black and white dice released from an attached tube determined which rows would serve. Although the cases to be heard each day were announced beforehand, the selected jurors were distributed among the day’s courts, likewise by lot, only on the morning of the trials themselves—an arrangement suggesting that the Athenians wanted to ______",
+      "stem": "Which choice most logically completes the text?",
+      "options": [
+        "spread the work evenly among the courts so that none received more jurors than its cases required.",
+        "make it hard for anyone involved in a case to learn beforehand which jurors would decide it.",
+        "let jurors choose the cases that best matched their own knowledge of the law.",
+        "keep jurors from learning in advance which cases the courts would hear that day."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "Anyone with a case could know when it would be heard, but no one could know which jurors would hear it, because jurors were assigned to courts by lot only on the morning of the trials. Keeping the assignment secret until the last moment would make it hard for people involved in a case to approach the jurors deciding it, as B says.",
+      "distractors": {
+        "A": {
+          "recipe": "true of the step but not of its timing (REP)",
+          "why_wrong": "Sending the right number of jurors to each court could be arranged at any time; it does not explain why the assignment was made only on the morning of the trials."
+        },
+        "C": {
+          "recipe": "reversal (REV)",
+          "why_wrong": "Jurors were assigned to courts by lot, so they could not choose their cases."
+        },
+        "D": {
+          "recipe": "right timing, wrong secret (MIX)",
+          "why_wrong": "The text says each day’s cases were announced beforehand, so they were no secret; what stayed unknown until that morning was which jurors would sit in which court, and so which jurors would decide each case."
+        }
+      },
+      "models": [
+        "08395130",
+        "1bf2173e",
+        "5d20f560"
+      ],
+      "sources": [
+        {
+          "what": "Papakonstantinou, Colloquium Atticum 2012: Athenian jurors allotted to courts early in the morning on the day of the trial (groups by 409 BC, individual jurors daily perhaps from 378/7 BC), using the kleroterion; Wikipedia Kleroterion for the slab, slots, tokens and black and white dice; the courts published each day's schedule of cases (Wikipedia, Kleroterion)",
+          "url": "https://www.geschichte.uni-hamburg.de/arbeitsbereiche/alte-geschichte/tagungen/colloquium-atticum/_ressourcen/ca-1-2012-papakonstninou-vortrag.pdf"
+        }
+      ],
+      "notes": "Area: history (ancient Greece, law). S9: last-minute allotment reveals the aim of keeping juries unknown in advance. Distractors: REP (even spread, true of allotment, not of the timing), REV (choice of cases), MIX (secret cases, against the announced schedule).",
+      "word_count": 97,
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [
+          "D (no time to prepare, killed by the timing) rebuilt on the aside: keeping the day's cases secret, which the announced schedule rules out; re-solved, B only"
+        ],
+        "status": "fixed"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "Two steps (cases known ahead, jurors placed only that morning, so no one could know a case's jurors in advance); premise in an 'although' clause, A true of allotment but not of its timing, D keeps the secrecy and timing but the wrong secret. Band 6."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "B",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "inferences.S3.hard.w3b1_08",
+      "template": "S3",
+      "subtype": "T1 dating: physical evidence predates the written record",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Stockfish, cod dried on outdoor racks in the cold air of northern Norway, became one of medieval Europe’s most important commodities, but the earliest written evidence of its export dates only to the twelfth century. Because it keeps for years without spoiling, stockfish also served as provisions on long voyages. Analyzing ancient DNA from cod bones excavated at Haithabu, a Viking Age trading settlement in northern Germany occupied between roughly 800 and 1066, Bastiaan Star and colleagues determined that the fish belonged not to local populations but to the Arctic population that spawns off Norway’s Lofoten Islands, indicating that ______",
+      "stem": "Which choice most logically completes the text?",
+      "options": [
+        "fish from Arctic waters were reaching continental Europe earlier than written sources alone would suggest.",
+        "the people of Haithabu preferred dried Arctic cod to the fish they could catch in nearby waters.",
+        "stockfish had already become one of the main goods traded at Haithabu well before the end of the Viking Age.",
+        "the twelfth-century documents had misdated the beginning of the trade in stockfish from Norway."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The written record of stockfish exports begins in the twelfth century, but Haithabu was abandoned by about 1066, and its cod bones came from the Arctic population off northern Norway. So cod from those waters were already reaching continental Europe before the earliest written evidence, as A says.",
+      "distractors": {
+        "B": {
+          "recipe": "rival motive (CAUSE)",
+          "why_wrong": "The text says nothing about what Haithabu’s residents preferred; the bones show only where the fish came from, and the text notes that stockfish also traveled as provisions on voyages."
+        },
+        "C": {
+          "recipe": "overreach (EXT)",
+          "why_wrong": "Bones of Arctic cod show that such fish reached Haithabu, not that stockfish was one of its main goods; the fish could even have been travelers’ provisions."
+        },
+        "D": {
+          "recipe": "overreach (EXT)",
+          "why_wrong": "The documents are only the earliest surviving written evidence of the trade; the finding shows that the trade predates them, not that they misdated anything."
+        }
+      },
+      "models": [
+        "b5e9f3c2",
+        "5c7e0d62",
+        "aaddd60f"
+      ],
+      "sources": [
+        {
+          "what": "Star et al. 2017 (PNAS): ancient DNA traces Viking Age (800 to 1066) cod bones from Haithabu to the Northeast Arctic cod population fished off Lofoten; earliest definite historical evidence of the stockfish trade is twelfth century; the bones could also be travellers' provisions",
+          "url": "https://www.cam.ac.uk/research/news/dna-from-viking-cod-bones-suggests-1000-years-of-european-fish-trade"
+        }
+      ],
+      "notes": "Area: history and archaeology. S3: occupation dates plus DNA origin put Arctic cod in Germany before the written record. Distractors: CAUSE (taste), EXT (main trade good), EXT (documents misdated).",
+      "word_count": 100,
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [],
+        "status": "pass"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "Two steps across three dates (Haithabu 800 to 1066, Arctic origin, written evidence only from the twelfth century), premise two sentences back; C and D overreach the finding and B a rival motive, all partly right. Strong band 6."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "A",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "inferences.S6.hard.w3b1_09",
+      "template": "S6",
+      "subtype": "T4 function: two look-alike species differ only in UV, and predators cannot see UV",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Under visible light, the Ambon damselfish (Pomacentrus amboinensis) and the lemon damselfish (P. moluccensis), which compete for territory on Indo-Pacific reefs, look nearly identical, but their faces bear distinct patterns of ultraviolet (UV) markings. Biologist Ulrike Siebeck and colleagues found that territorial Ambon damselfish distinguished members of their own species from lemon damselfish when UV light was present but not when it was filtered out. Because many of the fish that prey on damselfish cannot perceive UV light, these facial patterns likely ______",
+      "stem": "Which choice most logically completes the text?",
+      "options": [
+        "help Ambon damselfish blend in with lemon damselfish, making it harder for predators to single out either species.",
+        "make it easier for those predators to distinguish Ambon damselfish from lemon damselfish.",
+        "let Ambon damselfish recognize their own kind without becoming any easier for those predators to spot.",
+        "hide Ambon damselfish from the predators that hunt them by sight."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "Ambon damselfish told their own species from lemon damselfish only when UV light was present, so the UV facial patterns serve as a means of recognition. Since many predators cannot see UV light, these markings would not make the fish more noticeable to those predators, so the fish can recognize one another without drawing their attention, as C says.",
+      "distractors": {
+        "A": {
+          "recipe": "pieces swapped (MIX)",
+          "why_wrong": "The two species look alike in visible light, but the UV patterns are what differ between them; the text links the patterns to recognition, not to blending in."
+        },
+        "B": {
+          "recipe": "reversal (REV)",
+          "why_wrong": "The text says many predators cannot perceive UV light, so the UV patterns could not help them tell the species apart."
+        },
+        "D": {
+          "recipe": "overreach (EXT)",
+          "why_wrong": "Many predators cannot see the UV markings, so the markings add nothing those predators could notice, but that does not hide the fish themselves; nothing in the text suggests the markings conceal the damselfish."
+        }
+      },
+      "models": [
+        "5cd55c77",
+        "a68fd3e7",
+        "0dba14e6"
+      ],
+      "sources": [
+        {
+          "what": "National Geographic on Siebeck and colleagues: Ambon damselfish (Pomacentrus amboinensis) and lemon damselfish look alike to us but differ in UV face patterns; territorial males told the species apart with UV but not with UV filtered out; common local predators (wrasses, rock cod, coral trout) have eyes that block UV",
+          "url": "https://www.nationalgeographic.com/science/article/the-hidden-face-codes-of-fish"
+        }
+      ],
+      "notes": "Area: natural science (animal behaviour, vision). S6: species alike in visible light but not in UV, and predators blind to UV, so recognition stays covert. Distractors: MIX (camouflage), REV (predators can tell), EXT (markings hide the fish).",
+      "word_count": 83,
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [
+          "D (lemon damselfish harmless, killed by 'compete for territory') rebuilt as an overreach of the private signal (markings hide the fish from predators); re-solved, C only",
+          "source replaced: ScienceDaily page did not state that predators cannot see UV; National Geographic does (wrasses, rock cod, coral trout)"
+        ],
+        "status": "fixed"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "Two steps (UV patterns separate the species; predators cannot see UV, so the signal is private); A and D each keep a true piece (look-alike in visible light; predators blind to UV) with the wrong link, B a reversal. Band 6."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "C",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "inferences.S1.hard.w3b1_10",
+      "template": "S1",
+      "subtype": "T4 cause: a randomized comparison isolates the factor",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Judges are expected to base their rulings on statutes and earlier court decisions, not on an encyclopedia that anyone can edit. But do they consult Wikipedia? To find out, a team led by MIT researcher Neil Thompson and legal scholar Brian Flanagan had law students compose more than 150 Wikipedia articles about decisions of Ireland’s Supreme Court, then randomly selected half of the articles for publication on Wikipedia and withheld the remainder. Over the following several years, cases with published articles were cited roughly 20 percent more frequently in Irish judicial rulings than cases without, and rulings citing them frequently echoed the articles’ wording; this effect was concentrated in Ireland’s lower courts. These results suggest that ______",
+      "stem": "Which choice most logically completes the text?",
+      "options": [
+        "the judges who cited these cases had likely read the full Supreme Court decisions rather than any summary of them.",
+        "Irish judges now cite Wikipedia articles as legal authorities in many of their rulings.",
+        "the law students had chosen to write about the cases that judges were already most likely to cite.",
+        "the articles themselves probably shaped which precedents some judges relied on and how they described them."
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "Because chance alone decided which articles went online, the published and unpublished cases should not have differed in any other systematic way. Yet the published cases were cited more often, and rulings echoed the articles’ wording. The likeliest explanation is that the articles themselves influenced some judges, as D says.",
+      "distractors": {
+        "A": {
+          "recipe": "reversal (REV)",
+          "why_wrong": "Rulings that cited the published cases tended to echo the Wikipedia articles’ wording, which points to judges having read the articles, not only the full decisions."
+        },
+        "B": {
+          "recipe": "overreach (EXT)",
+          "why_wrong": "The judges cited the Supreme Court cases, not the Wikipedia articles; the articles showed up only in the wording of some rulings, which does not mean judges treat them as legal authorities."
+        },
+        "C": {
+          "recipe": "reversal of the design (REV)",
+          "why_wrong": "The students wrote articles on all the cases, and the researchers then chose at random which ones to publish, so the cases the students picked cannot explain the difference between the two groups."
+        }
+      },
+      "models": [
+        "cae97f58",
+        "e6e6be2d"
+      ],
+      "sources": [
+        {
+          "what": "Trial by Internet (Thompson, MIT; Flanagan and McKenzie, Maynooth): law students wrote over 150 articles on Irish Supreme Court decisions, half randomly uploaded to Wikipedia; citations of those cases rose a significant 22 percent, judgments showed textual similarity to the articles, and first-instance judges used them most",
+          "url": "https://www.legalfutures.co.uk/latest-news/trial-by-internet-judges-turn-to-wikipedia-to-aid-reasoning"
+        }
+      ],
+      "notes": "Area: social science (law, information). S1 hard: randomized publication isolates the articles as the cause. Distractors: REV (read only the full decisions), EXT (Wikipedia cited as an authority), REV (selection by students, undone by randomization).",
+      "word_count": 103,
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [
+          "lead-in 'Because chance alone determined which articles were published' removed (it handed over the randomization step); passage restored to length with an opening line on what judges are expected to rely on",
+          "C why_wrong reworded to point back to the random selection"
+        ],
+        "status": "fixed"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "Two steps (random publication rules out case choice, so the articles caused the citation rise; echoed wording shows influence on description too), randomization now two sentences back; B and C partly right, A a reversal. Band 6."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "D",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "inferences.S4.hard.w3b1_11",
+      "template": "S4",
+      "subtype": "T4 cause by elimination: feeding damage ruled out",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "In autumn, apple leaves mined by caterpillars of the moth Phyllonorycter blancardella often develop “green islands”: patches of living, nutrient-rich tissue surrounding the mines while the remainder of the leaf yellows. Such islands could result from the leaf’s own response to feeding damage or from some contribution by the insect. When entomologists Wilfried Kaiser, David Giron, and colleagues used antibiotics to eliminate the bacteria living inside some caterpillars, those caterpillars fed at least as voraciously as untreated ones, yet their mines developed no green islands, suggesting that ______",
+      "stem": "Which choice most logically completes the text?",
+      "options": [
+        "the caterpillars’ bacteria likely play a role in forming the islands that feeding damage alone does not explain.",
+        "the leaf forms islands in response to feeding only when caterpillars eat more of it than the treated caterpillars did.",
+        "the bacteria could produce green islands even in leaves on which no caterpillars had fed.",
+        "all leaf-mining insects depend on bacteria to keep alive the leaves on which they feed."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The text offers two possible sources of green islands: the leaf’s response to feeding damage, or a contribution from the insect. Caterpillars without their bacteria still fed at least as much, so feeding damage was present, yet no islands formed. That rules out feeding damage alone and points to the bacteria the caterpillars carry, as A says.",
+      "distractors": {
+        "B": {
+          "recipe": "rescue of the rival account (REV)",
+          "why_wrong": "The treated caterpillars fed at least as heavily as the untreated ones, whose mines did form islands, so the amount eaten cannot explain why the treated caterpillars’ mines had none."
+        },
+        "C": {
+          "recipe": "overreach of the key (EXT)",
+          "why_wrong": "The experiment removed the bacteria from caterpillars that were feeding; it never tested bacteria without feeding, so it shows that the bacteria are needed, not that they are enough by themselves."
+        },
+        "D": {
+          "recipe": "overreach (EXT)",
+          "why_wrong": "The study concerns one moth on apple leaves; it gives no basis for a claim about all leaf-mining insects."
+        }
+      },
+      "models": [
+        "58e9e497",
+        "f1bfbed3"
+      ],
+      "sources": [
+        {
+          "what": "Kaiser, Huguet, Casas, Commin and Giron 2010 (Proc. R. Soc. B): the leaf-miner Phyllonorycter blancardella relies on bacterial endosymbionts, probably Wolbachia, for green islands on apple leaves; curing the insects of the bacteria abolished green islands and led to increased compensatory larval feeding",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC2894905"
+        }
+      ],
+      "notes": "Area: natural science (entomology, plant biology). S4: two candidate sources, feeding damage present without islands, so the insect's bacteria. Distractors: REV (rescue of the leaf-response account by amount eaten), EXT (bacteria alone suffice), EXT (all leaf miners).",
+      "word_count": 88,
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [
+          "read easier than band 6 (key restated the two-candidate sentence, B and C each killed by one fact): options rebuilt as a set over the two candidates (B rescues the leaf-response account by amount eaten, killed by 'at least as voraciously'; C overreaches to bacteria alone), key paraphrased; re-solved, A only"
+        ],
+        "status": "fixed"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "Two steps (feeding unchanged, islands gone, so feeding damage alone does not explain them; the removed bacteria must contribute); B and C keep a true piece and break one link, D a plain EXT. Band 6."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "A",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "inferences.S11.hard.w3b1_12",
+      "template": "S11",
+      "subtype": "T1 revision: dating evidence undercuts a migration route",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Researchers long held that the first people to reach the Americas walked south from Beringia through an ice-free corridor that opened between two ice sheets covering present-day Canada. But analyzing ancient DNA preserved in lake sediments along the corridor, Mikkel Pedersen and colleagues determined that although it was open by about 13,000 years ago, it lacked the vegetation and animals travelers would have required for fuel and food until approximately 12,600 years ago. Archaeological evidence, however, indicates that people were living south of the ice sheets well before that time, suggesting that ______",
+      "stem": "Which choice most logically completes the text?",
+      "options": [
+        "the ice sheets covering present-day Canada began to retreat later than researchers had assumed.",
+        "the earliest inhabitants of the Americas probably reached the lands south of the ice by another route.",
+        "the first people to reach the Americas used the corridor only after about 12,600 years ago, once it could supply fuel and food.",
+        "the first people to enter the Americas may have been able to survive for long periods without access to wood or game."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The corridor could not support travelers until about 12,600 years ago, but people were already living south of the ice sheets well before that. So the first people to arrive there could not have come through the corridor and most likely took some other route, as B says.",
+      "distractors": {
+        "A": {
+          "recipe": "pieces swapped (MIX)",
+          "why_wrong": "The text says the corridor was open by about 13,000 years ago; what it lacked until later was plants and animals, not an opening in the ice."
+        },
+        "C": {
+          "recipe": "sequence swap (MIX)",
+          "why_wrong": "The corridor could support travelers only from about 12,600 years ago, but people were already living south of the ice sheets well before that, so the first arrivals cannot have come through it after that date."
+        },
+        "D": {
+          "recipe": "rival rescue of the old view (CAUSE)",
+          "why_wrong": "The text says travelers would have needed fuel and food from the corridor; nothing suggests people could do without them for a long journey."
+        }
+      },
+      "models": [
+        "a13c1c66",
+        "e185a21f",
+        "f27559d4"
+      ],
+      "sources": [
+        {
+          "what": "Pedersen et al. 2016 (Nature): ancient DNA from lake sediments at a corridor bottleneck shows it was open around 13,000 years ago but lacked wood and game until about 12,600 years ago, while people were south of the ice sheets long before, so the first Americans probably took another route, likely the Pacific coast",
+          "url": "https://www.cam.ac.uk/research/news/textbook-story-of-how-humans-populated-america-is-biologically-unviable-study-finds"
+        }
+      ],
+      "notes": "Area: history and archaeology (with ecology). S11: received route view plus dating evidence, so a different route. Distractors: MIX (ice retreat), MIX (corridor used only after 12,600), CAUSE (survive without resources).",
+      "word_count": 91,
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [
+          "C (no game after 12,600, killed by a stated date) rebuilt as a sequence rescue (the first people used the corridor only once it could feed them), killed by people living south well before; 'considerably earlier' given its referent ('well before that time'); re-solved, B only"
+        ],
+        "status": "fixed"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "Two steps (corridor not viable until about 12,600; people already south well before then, so another route); C and D rescue the received view, A a MIX of opening and viability. Topic is well known. Band 6."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "B",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "inferences.S11.medium.w3b1_13",
+      "template": "S11",
+      "subtype": "T1 revision: a large find widens the known uses of a script",
+      "tier": "medium",
+      "band_target": null,
+      "passage": "Runes, the letters once used to write Scandinavian languages, survive mostly in inscriptions carved on memorial stones, and many scholars long doubted that they served for much beyond names and formulaic phrases, especially after Christianity introduced the Latin alphabet. But after a fire in 1955 destroyed part of Bryggen, the historic harbor district of Bergen, Norway, excavations uncovered more than 600 runic inscriptions on wood and bone dating from approximately 1150 to 1350, including tags identifying the owners of merchandise, business letters, and personal messages. These discoveries suggest that ______",
+      "stem": "Which choice most logically completes the text?",
+      "options": [
+        "most residents of medieval Bergen could read the Latin alphabet as easily as they could read runes.",
+        "runic inscriptions on memorial stones became more common in Norway after about 1150.",
+        "runes may have served a far wider range of everyday purposes than many scholars had assumed.",
+        "Bergen’s merchants learned to carve runes from the Christian missionaries who brought the Latin alphabet."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "Scholars doubted that runes were used for much beyond names and set phrases. The Bryggen finds include ownership tags, business letters, and personal messages from about 1150 to 1350, so runes were evidently used for many ordinary purposes, more than scholars had assumed, as C says.",
+      "distractors": {
+        "A": {
+          "recipe": "off-topic claim (OUT)",
+          "why_wrong": "The finds are runic inscriptions; they tell us nothing about how well Bergen’s residents could read the Latin alphabet."
+        },
+        "B": {
+          "recipe": "unsupported comparison (CMP)",
+          "why_wrong": "The Bryggen inscriptions are on wood and bone, not memorial stones, and the text gives no information about how common stone inscriptions were in any period."
+        },
+        "D": {
+          "recipe": "reversal (REV)",
+          "why_wrong": "The text links the missionaries to the Latin alphabet, not to runes, which were already in use; nothing suggests merchants learned runes from them."
+        }
+      },
+      "models": [
+        "bcf2f169",
+        "df654a2b",
+        "55688b3c"
+      ],
+      "sources": [
+        {
+          "what": "Bryggen inscriptions: about 670 medieval runic inscriptions on wood and bone found after the 1955 Bergen fire, roughly 1150 to 1350, including ownership tags, business letters and personal messages; before the find, runes were thought to have been used for little beyond names and solemn phrases",
+          "url": "https://en.wikipedia.org/wiki/Bryggen_inscriptions"
+        }
+      ],
+      "notes": "Area: history and archaeology (medieval Scandinavia, writing). S11: received view of rune use plus the Bryggen finds. Distractors: OUT (Latin literacy), CMP (memorial stones), REV (runes from missionaries).",
+      "word_count": 90,
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "inferences.S11.medium.w3b1_14",
+      "template": "S11",
+      "subtype": "T1 revision: decay found before farming",
+      "tier": "medium",
+      "band_target": null,
+      "passage": "Tooth decay is commonly associated with the development of agriculture, since cultivated crops such as wheat and maize supply the starchy carbohydrates on which decay-causing bacteria thrive. However, when Louise Humphrey and colleagues examined the remains of hunter-gatherers buried approximately 15,000 to 13,700 years ago at Taforalt, a cave in Morocco, they discovered cavities in more than half of the adults’ teeth, together with charred remains of acorns and pine nuts that the group had systematically harvested and processed. This evidence suggests that ______",
+      "stem": "Which choice most logically completes the text?",
+      "options": [
+        "a diet rich in starchy wild plants may have caused widespread tooth decay well before people began farming.",
+        "the people of Taforalt had begun cultivating acorns and pine nuts as crops.",
+        "hunter-gatherers were probably more prone to tooth decay than early farmers were.",
+        "acorns and pine nuts contain fewer carbohydrates than wheat and maize do."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "Decay is usually tied to farming because crops supply starchy carbohydrates. The Taforalt people did not farm, yet more than half of their teeth had cavities, and they ate gathered acorns and pine nuts. So a starchy diet of wild plants, without farming, may already have caused widespread decay, as A says.",
+      "distractors": {
+        "B": {
+          "recipe": "reversal (REV)",
+          "why_wrong": "The text calls the Taforalt people hunter-gatherers who harvested and processed acorns and pine nuts, not farmers who cultivated them."
+        },
+        "C": {
+          "recipe": "overreach (EXT)",
+          "why_wrong": "The text describes one group of hunter-gatherers and gives no rates for early farmers, so it cannot support a general comparison."
+        },
+        "D": {
+          "recipe": "unsupported comparison (CMP)",
+          "why_wrong": "The text never compares the carbohydrates in these foods; if anything, the decay at Taforalt points to a starchy diet."
+        }
+      },
+      "models": [
+        "55688b3c",
+        "bcf2f169",
+        "df654a2b"
+      ],
+      "sources": [
+        {
+          "what": "Humphrey et al. 2014 (PNAS): Taforalt hunter-gatherers, 15,000 to 13,700 cal BP, caries in 51.2 percent of teeth in adult dentitions; systematic harvesting and processing of wild plants including acorns and pine nuts; earliest evidence of high caries before food production",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3903197"
+        }
+      ],
+      "notes": "Area: history and archaeology (bioarchaeology). S11: decay linked to farming, revised by a pre-farming population. Distractors: REV (cultivation), EXT (all hunter-gatherers), CMP (carbohydrate content).",
+      "word_count": 84,
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "inferences.S2.medium.w3b1_15",
+      "template": "S2",
+      "subtype": "T3 consequence: a spending tendency applied to someone's goal",
+      "tier": "medium",
+      "band_target": null,
+      "passage": "Marketing researchers Priya Raghubir and Joydeep Srivastava have documented what they call the denomination effect: individuals are less inclined to spend a sum of money when they hold it as a single large bill than when they hold an equivalent amount in smaller bills. In one experiment, for instance, gas-station customers given one $5 bill were less likely to buy anything than customers given five $1 bills. Given this tendency, a consumer who wants to resist impulse purchases might reasonably ______",
+      "stem": "Which choice most logically completes the text?",
+      "options": [
+        "carry several small bills, since they make it easier to keep track of each purchase.",
+        "avoid carrying cash, since cash of any kind may encourage more spending than payment cards do.",
+        "break large bills into smaller ones before shopping so that each purchase uses only what is needed.",
+        "withdraw cash in a few large bills rather than in many small ones."
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "People are less likely to spend money held as one large bill than the same amount in small bills. Someone trying to resist impulse purchases could use this tendency by keeping cash in large bills, for instance by withdrawing it that way, as D says.",
+      "distractors": {
+        "A": {
+          "recipe": "reversal (REV)",
+          "why_wrong": "Small bills are the form in which people spend more readily, so carrying them would work against the goal; the text says nothing about keeping track of purchases."
+        },
+        "B": {
+          "recipe": "unsupported comparison (CMP)",
+          "why_wrong": "The text compares large and small bills only; it gives no information about payment cards."
+        },
+        "C": {
+          "recipe": "reversal (REV)",
+          "why_wrong": "Breaking large bills into small ones would make the money easier to spend, the opposite of what the consumer wants."
+        }
+      },
+      "models": [
+        "299c5303",
+        "6409016a",
+        "db876fd5"
+      ],
+      "sources": [
+        {
+          "what": "Raghubir and Srivastava 2009, The denomination effect (Journal of Consumer Research): spending is less likely when money is held as one large bill; gas-station customers given one $5 bill bought less often than those given five $1 bills; large denominations used as a precommitment device for self-control",
+          "url": "https://en.wikipedia.org/wiki/Denomination_effect"
+        }
+      ],
+      "notes": "Area: social science (consumer psychology). S2: the denomination effect applied to a person who wants to spend less. Distractors: REV (small bills), CMP (cards), REV (break bills).",
+      "word_count": 81,
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "inferences.S1.medium.w3b1_16",
+      "template": "S1",
+      "subtype": "T1 conclusion: three presentation formats compared, against a stated belief",
+      "tier": "medium",
+      "band_target": null,
+      "passage": "Asked what matters most when evaluating a musical performance, most people, professional musicians included, identify the sound. To examine this belief, Chia-Jung Tsay conducted a series of experiments in which she showed participants six-second clips of the three finalists from each of ten prestigious international classical music competitions and asked them to identify the winner. Some participants watched silent videos, others heard audio recordings only, and still others watched videos with sound. Both novices and professional musicians identified the actual winners at better-than-chance rates only when watching silent videos; with sound alone or with sound and video combined, their selections were no more accurate than random guessing. These results suggest that ______",
+      "stem": "Which choice most logically completes the text?",
+      "options": [
+        "professional musicians are likely better than novices at picking the winners of music competitions.",
+        "visual cues from performers may influence judgments of their music more than most people realize.",
+        "longer clips would have allowed participants to identify the winners from sound alone.",
+        "the judges at these competitions had difficulty hearing the finalists’ performances clearly."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "Most people say sound matters most, yet participants could pick the winners only from silent video, the format with no sound at all. That suggests that what people see of a performance shapes how it is judged more than they believe, as B says.",
+      "distractors": {
+        "A": {
+          "recipe": "reversal (REV)",
+          "why_wrong": "The text says novices and professional musicians did equally well and equally badly in the same formats; it gives no advantage to the musicians."
+        },
+        "C": {
+          "recipe": "speculative claim (FUT)",
+          "why_wrong": "Every clip was six seconds long, so the study offers no basis for predicting what longer clips would show."
+        },
+        "D": {
+          "recipe": "off-topic claim (OUT)",
+          "why_wrong": "The text says nothing about the competition judges’ hearing; it concerns how the study’s participants picked the winners."
+        }
+      },
+      "models": [
+        "5432d1de",
+        "575e67df"
+      ],
+      "sources": [
+        {
+          "what": "Tsay 2013 (PNAS), Sight over sound in the judgment of music performance: most people, including professional musicians, say sound matters most; six-second clips of the top three finalists from ten international competitions; novices and professionals picked winners above chance only from silent video, at or below chance with sound only or video with sound",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3767512"
+        }
+      ],
+      "notes": "Area: social science and arts (psychology of music). S1: three formats compared; only silent video works, against the stated belief. Distractors: REV (musicians better), FUT (longer clips), OUT (judges' hearing).",
+      "word_count": 112,
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "inferences.S5.medium.w3b1_17",
+      "template": "S5",
+      "subtype": "T5 evidential status: a rival species matches the key evidence",
+      "tier": "medium",
+      "band_target": null,
+      "passage": "In 2005 a team of ornithologists announced that the ivory-billed woodpecker, a large bird widely considered extinct in the United States for decades, still survived in Arkansas. Their evidence included a brief, blurry video of a bird in flight whose wingbeat frequency, approximately 8.6 beats per second, was claimed to exceed the range of the similar-looking pileated woodpecker. But in 2007 biologist Martin Collinson analyzed footage of pileated woodpeckers fleeing a bird feeder and found that they could attain that frequency during the initial moments of escape flight. The bird’s wingbeat frequency, therefore, ______",
+      "stem": "Which choice most logically completes the text?",
+      "options": [
+        "cannot on its own settle whether the bird was an ivory-billed woodpecker.",
+        "shows that the bird in the video must have been a pileated woodpecker.",
+        "now offers stronger support for the claim that the bird was an ivory-billed woodpecker.",
+        "suggests that ivory-billed woodpeckers beat their wings more slowly than pileated woodpeckers do."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The wingbeat rate counted as evidence only because it seemed too fast for a pileated woodpecker. Collinson found that pileated woodpeckers can reach that rate when they flee, so the rate no longer rules them out, and it cannot by itself show which species the bird was, as A says.",
+      "distractors": {
+        "B": {
+          "recipe": "overreach (EXT)",
+          "why_wrong": "Showing that pileated woodpeckers can reach the rate means the rate fits either species; it does not prove the bird was a pileated woodpecker."
+        },
+        "C": {
+          "recipe": "reversal (REV)",
+          "why_wrong": "Collinson’s finding removes the reason the rate seemed to rule out the pileated woodpecker, so it weakens the claim rather than strengthening it."
+        },
+        "D": {
+          "recipe": "unsupported comparison (CMP)",
+          "why_wrong": "The text gives no measurements of ivory-billed woodpeckers’ wingbeats; it shows only that pileated woodpeckers can match the rate in the video."
+        }
+      },
+      "models": [
+        "5105ca38",
+        "485962a6",
+        "d8b78a2b"
+      ],
+      "sources": [
+        {
+          "what": "Collinson 2007 (BMC Biology): the 2004 Arkansas (Luneau) video, central to the 2005 rediscovery claim, shows a wingbeat of 8.6 per second, claimed to be outside the pileated woodpecker's range; pileated woodpeckers filmed at a feeder reached equivalent rates in escape flight, so the identification is unsafe",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC1838407"
+        }
+      ],
+      "notes": "Area: natural science (ornithology). S5: evidence for P matched by a rival, so not conclusive. Distractors: EXT (must be pileated), REV (stronger support), CMP (ivory-bill slower).",
+      "word_count": 94,
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "inferences.S3.medium.w3b1_18",
+      "template": "S3",
+      "subtype": "T1 condition: a mineral that forms only in cold water",
+      "tier": "medium",
+      "band_target": null,
+      "passage": "Glendonites are star-shaped clusters of calcite crystals that replace ikaite, a mineral that forms only in water colder than approximately 7°C. The Early Cretaceous period, roughly 145 to 100 million years ago, is frequently characterized as a warm “greenhouse” interval, when much of the planet lacked permanent ice. Nevertheless, geologists have identified glendonites in Early Cretaceous marine sediments of the Eromanga Basin in central Australia, which was then positioned at high southern latitudes. Therefore, it is likely that ______",
+      "stem": "Which choice most logically completes the text?",
+      "options": [
+        "temperatures across the entire planet were lower during the Early Cretaceous than they are today.",
+        "ikaite was able to form in warmer water during the Early Cretaceous than it can today.",
+        "the sea over that part of Australia was, at least at times, quite cold.",
+        "the Eromanga Basin was located nearer to the equator in the Early Cretaceous than it is now."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "Glendonites replace ikaite, which forms only in water colder than about 7°C. Finding glendonites in Early Cretaceous marine sediments of the Eromanga Basin means that ikaite formed there, so the water over the basin was cold at least some of the time, despite the period’s warm reputation, as C says.",
+      "distractors": {
+        "A": {
+          "recipe": "overreach (EXT)",
+          "why_wrong": "Evidence from one basin shows only that its waters were cold at times; it cannot show that the whole planet was colder than it is today."
+        },
+        "B": {
+          "recipe": "reversal of the rule (REV)",
+          "why_wrong": "The conclusion depends on ikaite forming only in cold water; the text gives no reason to think it once formed in warmer water."
+        },
+        "D": {
+          "recipe": "reversal (REV)",
+          "why_wrong": "The text says the basin then lay at high southern latitudes, which is far from the equator, not nearer to it."
+        }
+      },
+      "models": [
+        "8fbed1cb",
+        "25fc2534"
+      ],
+      "sources": [
+        {
+          "what": "Lower Cretaceous strata of the southwestern Eromanga and Carpentaria basins show strongly seasonal climates at high paleolatitudes, including glendonites (calcite pseudomorphs after ikaite), known to form only below about 7 degrees C",
+          "url": "https://www.osti.gov/biblio/379405"
+        }
+      ],
+      "notes": "Area: natural science (geology, paleoclimate). S3: ikaite forms only in cold water, glendonites found, so the water was cold. Distractors: EXT (whole planet), REV (rule broken), REV (location).",
+      "word_count": 79,
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [],
+        "status": "pass",
+        "note": "source live (osti.gov refuses the fetch); abstract confirmed via search: glendonites in Lower Cretaceous southwestern Eromanga strata at high paleolatitude, forming only below about 7 C"
+      }
+    },
+    {
+      "id": "inferences.S8.medium.w3b1_19",
+      "template": "S8",
+      "subtype": "T1 link: a poem's images line up with a dated eruption",
+      "tier": "medium",
+      "band_target": null,
+      "passage": "Norse settlers began arriving in Iceland around 874 CE, and within a few generations the island experienced its largest volcanic eruption of the Common Era, the Eldgjá lava flood, which a team led by volcanologist Clive Oppenheimer has dated to 939–940. No contemporary Icelandic written account of the eruption survives. However, the poem Völuspá, generally thought to have been composed in Iceland in the late tenth century, describes the destruction of the pagan gods in terms of a blackened sun, billowing steam, and flames leaping toward the sky. Because these images correspond closely to the effects of such an eruption, the researchers propose that ______",
+      "stem": "Which choice most logically completes the text?",
+      "options": [
+        "Icelanders recorded detailed descriptions of the Eldgjá eruption in writing soon after it occurred.",
+        "Völuspá was composed before the first Norse settlers arrived in Iceland.",
+        "Eldgjá was likely a larger eruption than any described in other Norse poems.",
+        "the poem’s account of the gods’ destruction may have been shaped by people’s memories of the eruption."
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "Völuspá was composed in Iceland a few decades after Eldgjá, and its images of a blackened sun, steam, and fire in the sky match what such an eruption produces. Those two facts together point to a link: the poem may draw on memories of the eruption, as D says.",
+      "distractors": {
+        "A": {
+          "recipe": "reversal (REV)",
+          "why_wrong": "The text says no contemporary Icelandic written account of the eruption survives, so it gives no support for detailed written records made soon after it."
+        },
+        "B": {
+          "recipe": "timeline reversed (REV)",
+          "why_wrong": "The text dates the poem to the late tenth century, long after settlers began arriving around 874."
+        },
+        "C": {
+          "recipe": "unsupported comparison (CMP)",
+          "why_wrong": "The text mentions no other Norse poems, so it offers no basis for comparing the eruptions they describe."
+        }
+      },
+      "models": [
+        "7afdcca2",
+        "7ae8065c"
+      ],
+      "sources": [
+        {
+          "what": "Oppenheimer et al. 2018 (Climatic Change): Eldgja, Iceland's largest eruption of the Common Era, dated to spring 939 to at least autumn 940, after settlement around 874; lines of Voluspa describe eruptive activity and draw on first-hand experience of Eldgja; no Icelandic texts of the period describe it directly",
+          "url": "https://www.repository.cam.ac.uk/handle/1810/275940"
+        }
+      ],
+      "notes": "Area: humanities and history (Old Norse literature, volcanology). S8: dated eruption plus matching imagery in a later local poem, so a link. Distractors: REV (written records), REV (timeline), CMP (other poems).",
+      "word_count": 105,
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "inferences.S9.medium.w3b1_20",
+      "template": "S9",
+      "subtype": "T2 motive: a conservation method reveals its aim",
+      "tier": "medium",
+      "band_target": null,
+      "passage": "In 1962 Mark Rothko painted a series of large murals for a dining room at Harvard University, where sunlight from expansive windows illuminated them daily. One of the red pigments Rothko used, Lithol Red, is extremely sensitive to light, and within a few years the murals’ crimson backgrounds had faded dramatically, so by 1979 the paintings had been removed from display. When Harvard exhibited them again in 2014, conservators did not retouch the paint; instead, they projected precisely calculated colored light onto each canvas, making the faded areas appear as they originally had. This approach suggests that the conservators wanted to ______",
+      "stem": "Which choice most logically completes the text?",
+      "options": [
+        "keep the murals from fading any further while they were on display.",
+        "restore the murals’ original appearance without altering the paint Rothko had applied.",
+        "recreate the lighting conditions of the dining room where the murals were first displayed.",
+        "determine which pigments Rothko had used in painting each of the murals."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The conservators made the faded areas look as they originally had, but they chose projected light over retouching the paint. Light can be switched off and leaves the canvas untouched, so the choice suggests they wanted to bring back the murals’ look without changing Rothko’s own paint, as B says.",
+      "distractors": {
+        "A": {
+          "recipe": "rival motive (CAUSE)",
+          "why_wrong": "The projected light changes how the faded areas look; nothing in the text suggests it protects the paint, and the text says light is what faded the pigment."
+        },
+        "C": {
+          "recipe": "pieces swapped (MIX)",
+          "why_wrong": "The dining room’s sunlight is what faded the murals; the conservators’ light was calculated to restore the original colors, not to copy the room’s lighting."
+        },
+        "D": {
+          "recipe": "off-topic claim (OUT)",
+          "why_wrong": "The text already identifies Lithol Red as the light-sensitive pigment; the projection was used to change the murals’ appearance, not to analyze their materials."
+        }
+      },
+      "models": [
+        "350e2336",
+        "d748c3fd"
+      ],
+      "sources": [
+        {
+          "what": "Harvard Art Museums and Harvard Magazine: Rothko's Harvard Murals, installed in 1964 in a Holyoke Center dining room with large windows, faded because of the light-sensitive Lithol Red and were removed within 15 years; for the 2014 exhibition a camera-projector system cast calculated compensating color onto the canvases instead of altering the paint",
+          "url": "https://harvardartmuseums.org/article/in-a-new-light"
+        }
+      ],
+      "notes": "Area: humanities (art conservation). S9: choosing reversible projected light over retouching reveals the aim of leaving the paint untouched. Distractors: CAUSE (prevent fading), MIX (dining room lighting), OUT (identify pigments).",
+      "word_count": 102,
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "inferences.S9.easy.w3b1_21",
+      "template": "S9",
+      "subtype": "T6 function: what an object's placement shows it was for",
+      "tier": "easy",
+      "band_target": null,
+      "passage": "Traditional Japanese kimonos had no pockets. During the Edo period (1603–1868), men carried personal belongings such as tobacco pouches and medicine containers by suspending them from a silk cord. The cord was threaded behind the obi, the wide sash wrapped around the waist, so that the container hung below the sash. A small carved and decorated toggle called a netsuke was fastened to the other end of the cord, positioned above the sash. The netsuke was most likely attached to the cord because it ______",
+      "stem": "Which choice most logically completes the text?",
+      "options": [
+        "kept the cord from slipping down through the sash.",
+        "showed others what was stored inside the container.",
+        "made the kimono easier to fold and put away.",
+        "helped hold the sash securely around the waist."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The cord passed behind the sash, with the container hanging below and the netsuke above. Without something at the top end, the weight of the container could pull the cord down through the sash, so the netsuke most likely held it in place, as A says.",
+      "distractors": {
+        "B": {
+          "recipe": "off-topic claim (OUT)",
+          "why_wrong": "The text says nothing about the netsuke showing what a container held; it describes only where the netsuke sat on the cord."
+        },
+        "C": {
+          "recipe": "off-topic claim (OUT)",
+          "why_wrong": "The text does not discuss folding or storing kimonos; the netsuke was attached to the cord, not to the kimono."
+        },
+        "D": {
+          "recipe": "wrong part (MIX)",
+          "why_wrong": "The sash was already tied around the waist; the netsuke was fastened to the cord that passed behind it, not to the sash itself."
+        }
+      },
+      "models": [
+        "787729be",
+        "dbbbc5dd",
+        "7a895def"
+      ],
+      "sources": [
+        {
+          "what": "Atlas Obscura, What are netsuke: kimonos had no pockets; men hung tobacco pouches, pipes, purses and medicine boxes (sagemono) on a cord from the obi, with a small toggle, the netsuke, to stop the cord slipping through the obi",
+          "url": "https://www.atlasobscura.com/articles/what-are-netsuke"
+        }
+      ],
+      "notes": "Area: humanities (Japanese decorative arts, dress). S9 easy: placement of the toggle reveals its function. Distractors: OUT (labels contents), OUT (folding the kimono), MIX (holds the sash).",
+      "word_count": 85,
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [],
+        "status": "pass",
+        "note": "source live (Atlas Obscura refuses the fetch); netsuke as the toggle that keeps the cord from slipping through the obi confirmed via search"
+      }
+    },
+    {
+      "id": "inferences.S1.easy.w3b1_22",
+      "template": "S1",
+      "subtype": "T1 conclusion: one waitress, two ways of taking orders",
+      "tier": "easy",
+      "band_target": null,
+      "passage": "To find out whether people respond more warmly to someone who imitates them, psychologist Rick van Baaren and his colleagues studied a waitress at a restaurant in the Netherlands. When taking orders from half of her customers, the waitress repeated each order back exactly as the customer had stated it; with the other half, she did not repeat the customers’ words. After each meal, the researchers recorded the amount of the tip. The waitress received considerably larger tips from customers whose orders she had repeated word for word. This finding suggests that ______",
+      "stem": "Which choice most logically completes the text?",
+      "options": [
+        "customers leave larger tips when their food arrives quickly.",
+        "customers may tip more when servers copy their gestures than when servers copy their words.",
+        "people may be more generous toward someone who imitates what they say.",
+        "restaurants should train servers to write down every order."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The only difference between the two groups of customers was whether the waitress repeated their words exactly. Those whose words she repeated left larger tips, which suggests that being imitated can make people more generous, as C says.",
+      "distractors": {
+        "A": {
+          "recipe": "wrong variable (VAR)",
+          "why_wrong": "The study changed only how the waitress took orders; it never measured how quickly the food arrived."
+        },
+        "B": {
+          "recipe": "wrong variable (VAR)",
+          "why_wrong": "The waitress copied only her customers’ words; the study never tested copying gestures, so it cannot compare the two."
+        },
+        "D": {
+          "recipe": "recommendation (REC)",
+          "why_wrong": "The text says nothing about writing orders down; the finding concerns repeating customers’ words aloud."
+        }
+      },
+      "models": [
+        "6bc0e595",
+        "5b4829d2"
+      ],
+      "sources": [
+        {
+          "what": "van Baaren, Holland, Steenaert and van Knippenberg 2003, Mimicry for money (Journal of Experimental Social Psychology): a waitress either mimicked half her customers by literally repeating their order or did not, and received significantly larger tips when she mimicked them",
+          "url": "https://stafforini.com/works/van-baaren-2003-mimicry-money-behavioral/"
+        }
+      ],
+      "notes": "Area: social science (social psychology). S1 easy: one factor varied (repeating the order), outcome (tips) differs. Distractors: VAR (speed), VAR (gestures), REC (writing orders).",
+      "word_count": 93,
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "inferences.S2.easy.w3b1_23",
+      "template": "S2",
+      "subtype": "T3 consequence: an acoustic mechanism applied to listening",
+      "tier": "easy",
+      "band_target": null,
+      "passage": "The ancient Greek theater at Epidaurus is famous for its remarkable acoustics: on a calm day, an actor speaking on the stage can be heard clearly in the back rows, almost 60 meters away. Acoustics researchers Nico Declercq and Cindy Dekeyser wanted to understand why. Their calculations suggested that the theater’s rows of stone seats act as a kind of filter. The rows weaken low-pitched sounds, such as the murmuring of a crowd, more than they weaken the higher-pitched sounds of actors’ voices. If this explanation is correct, the seats help audiences hear the actors by ______",
+      "stem": "Which choice most logically completes the text?",
+      "options": [
+        "making the actors’ voices sound lower in pitch than they really are.",
+        "reducing background noise that could otherwise drown out the actors’ voices.",
+        "keeping audience members seated far away from one another.",
+        "allowing the actors to perform without having to face the audience directly."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The seats weaken low-pitched sounds like a crowd’s murmuring more than the higher-pitched sounds of actors’ voices. Cutting that crowd noise would make the actors’ voices easier to hear, as B says.",
+      "distractors": {
+        "A": {
+          "recipe": "reversal (REV)",
+          "why_wrong": "The seats weaken low-pitched sounds, so they would not make voices sound lower; the text says the higher-pitched sounds of voices come through."
+        },
+        "C": {
+          "recipe": "off-topic claim (OUT)",
+          "why_wrong": "The text says nothing about the spacing between audience members; the explanation concerns how the seats affect sound."
+        },
+        "D": {
+          "recipe": "off-topic claim (OUT)",
+          "why_wrong": "The text never discusses which way actors face; it explains how the seats filter sound."
+        }
+      },
+      "models": [
+        "20000f5f",
+        "4025e00c"
+      ],
+      "sources": [
+        {
+          "what": "Nature news 2007 on Declercq and Dekeyser (Georgia Tech): at Epidaurus a performer can be heard in the back rows almost 60 metres away; their calculations suggest the stepped stone seats suppress low-frequency sound, the main component of background noise, while passing the higher frequencies of performers' voices",
+          "url": "https://www.nature.com/news/2007/070319/full/news070319-16.html"
+        }
+      ],
+      "notes": "Area: humanities and science (ancient theater, acoustics). S2 easy: filter mechanism applied to hearing actors. Distractors: REV (lower pitch), OUT (spacing), OUT (facing). Written as what the calculations suggested, since later measurements dispute the finding.",
+      "word_count": 97,
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "inferences.S11.easy.w3b1_24",
+      "template": "S11",
+      "subtype": "T1 revision: growth data overturn an assumption about old trees",
+      "tier": "easy",
+      "band_target": null,
+      "passage": "Many scientists long assumed that trees grow more slowly as they age, so that large old trees add little new wood each year and therefore absorb little carbon from the atmosphere. To test this assumption, ecologist Nathan Stephenson and dozens of colleagues analyzed repeated measurements of trees from 403 species in forests around the world. They found that for most species, the bigger a tree became, the faster it accumulated mass. In fact, a single big tree could add as much carbon in one year as an entire mid-sized tree contains. This finding suggests that ______",
+      "stem": "Which choice most logically completes the text?",
+      "options": [
+        "young trees take in more carbon each year than old trees do.",
+        "trees in tropical forests probably grow faster than trees in temperate and other kinds of forests.",
+        "planting new forests is the best way to reduce carbon in the atmosphere.",
+        "big old trees may remove more carbon from the air than many scientists expected."
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "Scientists assumed big old trees add little wood and absorb little carbon. Stephenson’s team found the opposite: for most species, the bigger a tree gets, the faster it adds mass, and one big tree can add a great deal of carbon in a year. So these trees may take in more carbon than scientists thought, as D says.",
+      "distractors": {
+        "A": {
+          "recipe": "reversal (REV)",
+          "why_wrong": "The study found that bigger trees add mass faster, so it does not support the claim that young trees take in more carbon."
+        },
+        "B": {
+          "recipe": "unsupported comparison (CMP)",
+          "why_wrong": "The text does not compare tropical forests with other forests; it compares trees of different sizes."
+        },
+        "C": {
+          "recipe": "recommendation (REC)",
+          "why_wrong": "The text says nothing about planting new forests, and its finding points to the value of large old trees, not new ones."
+        }
+      },
+      "models": [
+        "1d0b5bf4",
+        "df654a2b",
+        "bcf2f169"
+      ],
+      "sources": [
+        {
+          "what": "Stephenson et al. 2014 (Nature), Rate of tree carbon accumulation increases continuously with tree size: 403 tropical and temperate species; for most species mass growth rate increases with size, so large old trees are not merely senescent carbon reservoirs, and one big tree can add in a year as much carbon as a mid-sized tree contains",
+          "url": "https://www.usgs.gov/publications/rate-tree-carbon-accumulation-increases-continuously-tree-size"
+        }
+      ],
+      "notes": "Area: natural science (forest ecology). S11 easy: assumption about old trees revised by growth data. Distractors: REV (young trees), CMP (tropical), REC (plant new forests).",
+      "word_count": 98,
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [
+          "'For many years, scientists commonly assumed' changed to 'Many scientists long assumed' (the paper speaks of conflicting assumptions, not a consensus)"
+        ],
+        "status": "fixed"
+      }
+    }
+  ],
+  "done": true
+}

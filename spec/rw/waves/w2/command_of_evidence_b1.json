@@ -1,0 +1,1737 @@
+{
+  "skill": "Command of Evidence",
+  "slug": "command_of_evidence",
+  "part": "w2b1",
+  "domain": "Information and Ideas",
+  "plan": {
+    "templates": [
+      {
+        "code": "T1_single",
+        "name": "Hypothetical finding supports or weakens a single claim (causal, comparison, existence, generalization, prediction)"
+      },
+      {
+        "code": "T1_compete",
+        "name": "Hypothetical finding discriminates between competing explanations (support or weaken)"
+      },
+      {
+        "code": "T2_lit_quote",
+        "name": "Quotation from a literary work illustrates a claim (single trait, two-part, contrast)"
+      },
+      {
+        "code": "T3_person_quote",
+        "name": "Quotation from a person (participant, respondent, historian, critic, article) supports or challenges a claim"
+      },
+      {
+        "code": "Q1_P1_lookup",
+        "name": "Data completion: lookup (one cell or bar, reverse lookup, filter)"
+      },
+      {
+        "code": "Q1_P2_extreme",
+        "name": "Data completion: extreme or rank (max/min, possibly after a filter)"
+      },
+      {
+        "code": "Q1_P3_pairwise",
+        "name": "Data completion: pairwise comparison (one or two comparisons)"
+      },
+      {
+        "code": "Q1_P4_trend",
+        "name": "Data completion: change over time"
+      },
+      {
+        "code": "Q1_P5_control",
+        "name": "Data completion: condition vs control"
+      },
+      {
+        "code": "Q2_P4_trend",
+        "name": "Data description: trend or change over time supports a conclusion"
+      },
+      {
+        "code": "Q2_P5_control",
+        "name": "Data description: condition vs control or group comparison supports a conclusion"
+      },
+      {
+        "code": "Q2_P8_quantifier",
+        "name": "Data description: quantified claim (for each, all except one)"
+      },
+      {
+        "code": "Q2_P8_multipart",
+        "name": "Data description: multi-part, interaction, or passage-plus-data claim"
+      }
+    ]
+  },
+  "items": [
+    {
+      "id": "command_of_evidence.T1_single.hard.w2b1_01",
+      "template": "T1_single",
+      "subtype": "Hypothetical finding supports a claim (acquired versus inherited trait; same-origin comparison)",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "In the backreef of Ofu Island in American Samoa, shallow pools differ considerably in temperature: during summer low tides, the water in one pool regularly approaches 35°C, whereas the water in a neighboring pool stays several degrees cooler. Colonies of the coral Acropora hyacinthus native to the warmer pool bleach less than colonies from the cooler pool when both are subjected to identical heat stress in the laboratory. After transplanting coral fragments between the pools, Stephen Palumbi and colleagues concluded that part of the warm-pool corals’ advantage is not inherited but acquired through acclimatization, a physiological adjustment to the conditions in which a coral grows.",
+      "stem": "Which finding from Palumbi and colleagues’ transplant experiment, if true, would most directly support their conclusion?",
+      "options": [
+        "Colonies native to the warm pool bleached less in heat tests than fragments of cool-pool colonies that had been moved into the warm pool two years earlier.",
+        "During an unusually hot summer, colonies in both pools lost some of their color, but colonies in the warm pool regained their color more quickly.",
+        "Fragments of cool-pool colonies that had grown in the warm pool for two years bleached less in heat tests than fragments of the same colonies that had stayed in the cool pool.",
+        "Fragments of warm-pool colonies that had grown in the cool pool for two years resisted bleaching in heat tests as well as fragments of the same colonies that had stayed in the warm pool."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The conclusion is that some of the warm-pool corals’ heat tolerance is acquired from living in hot water rather than inherited. To show that, the comparison has to hold a colony’s ancestry constant and vary only where it grew. Choice C does this: fragments of the very same cool-pool colonies resisted bleaching better after two years in the warm pool than after two years in the cool pool, so the difference can only come from the conditions where they grew.",
+      "distractors": {
+        "A": {
+          "recipe": "TRAP: comparison that cannot decide the claim",
+          "why_wrong": "Natives outperforming transplants says that warm-pool colonies have some advantage the transplants lack, which fits an inherited advantage; it gives no evidence that any tolerance was gained by growing in the warm pool."
+        },
+        "B": {
+          "recipe": "TRAP: consistent with both explanations",
+          "why_wrong": "Faster recovery in the warm pool would be expected whether the warm-pool colonies’ advantage was inherited or acquired, because those colonies differ in both ancestry and growing conditions."
+        },
+        "D": {
+          "recipe": "OPP: the inherited-trait prediction",
+          "why_wrong": "If warm-pool colonies kept their tolerance after two years in cool water, the tolerance would look fixed rather than shaped by conditions, which points toward inheritance."
+        }
+      },
+      "models": [
+        "3.39",
+        "3.42",
+        "3.36"
+      ],
+      "word_count": 105,
+      "sources": [
+        {
+          "what": "Palumbi, Barshis, Traylor-Knowles and Bay 2014, Science 344: 895-898, Ofu backreef highly and moderately variable pools; reciprocal transplants of Acropora hyacinthus; acclimatization plus fixed effects explain heat tolerance",
+          "url": "https://www.science.org/doi/10.1126/science.1251336"
+        }
+      ],
+      "notes": "Band 7 moves: difference of differences held by ancestry (same colonies, different pools); TRAP natives vs transplants (true in the study, but it speaks to the fixed part); TRAP both pools in a hot summer; OPP reverse transplant keeps tolerance. Pool temperatures rounded.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass"
+      },
+      "band7": {
+        "verdict": "band 7",
+        "why": "Passage 105 words, stem names the study and its claim. Key holds ancestry constant (same cool-pool colonies, two pools), a premise the passage only implies through 'not inherited but acquired'. TRAP A (natives beat transplants: true, but speaks to the fixed part), TRAP B (both pools, hot summer, not separable), OPP D (reverse transplant keeps tolerance)."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "C",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "command_of_evidence.T1_single.hard.w2b1_02",
+      "template": "T1_single",
+      "subtype": "Hypothetical finding supports a claim (key supplies the missing premise)",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "Divers excavating the wreck of an English warship that sank off Alderney, in the Channel Islands, in 1592 recovered a weathered block of calcite, the transparent mineral also known as Iceland spar. Because calcite splits incoming light into two separate images, rotating such a crystal until both images appear equally bright reveals the sun’s position even when clouds hide it. Noting that the crystal was found alongside dividers used for plotting courses on navigational charts, physicist Guy Ropars and colleagues claim that the crew kept it as a backup instrument, to be consulted whenever the ship’s usual means of finding direction could not be trusted.",
+      "stem": "Which finding, if true, would most directly support the claim made by Ropars and colleagues about the crystal found in the wreck?",
+      "options": [
+        "The iron cannons that warships of the period carried could pull a nearby compass needle many degrees away from magnetic north.",
+        "Clear calcite of the kind found on the wreck was mined in Iceland and was traded widely in Europe during the sixteenth century.",
+        "Centuries on the seafloor have clouded the crystal’s surface, so it no longer splits light into two distinct images.",
+        "Calcite crystals were commonly ground into powder in the sixteenth century for use in medicines and cosmetics."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "Ropars and colleagues claim the crystal was a backup for times when the ship’s usual means of finding direction could not be trusted, which assumes that there were such times on this ship. A ship of the period found direction mainly with a magnetic compass, so if a warship’s iron cannons could throw a nearby compass needle far off magnetic north, the crew would have had good reason to carry a second way of finding direction, one that relies on the sun instead of magnetism. Choice A supplies that missing reason.",
+      "distractors": {
+        "B": {
+          "recipe": "TRAP: consistent with both uses",
+          "why_wrong": "Wide trade in calcite explains how the crystal could have reached the ship, but it does so whether the crew used it for navigation or for anything else."
+        },
+        "C": {
+          "recipe": "TRAP: wrong time window",
+          "why_wrong": "The crystal’s present condition after centuries underwater says nothing about how the crew used it in 1592."
+        },
+        "D": {
+          "recipe": "OPP: a rival use",
+          "why_wrong": "A common medicinal or cosmetic use offers another reason for calcite to be on board, which weakens rather than supports the navigational explanation."
+        }
+      },
+      "models": [
+        "3.45",
+        "3.28",
+        "3.36"
+      ],
+      "word_count": 105,
+      "sources": [
+        {
+          "what": "Alderney Elizabethan wreck (English warship sank 1592 off Alderney, Channel Islands); Iceland spar calcite found within about 1 m of navigation dividers; Guy Ropars (University of Rennes) and colleagues, Proceedings of the Royal Society A 2013; crystal suggested as a sunstone usable when cannons deflected the compass",
+          "url": "https://www.livescience.com/27696-viking-sunstone-shipwreck.html"
+        }
+      ],
+      "notes": "Band 7 moves: key supplies a premise the passage never states (cannons deflect compasses); TRAP consistent with both (trade in Iceland spar); TRAP wrong time window (present weathering); OPP rival use. The cannon point is the researchers' own argument in press coverage, written as a finding.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [
+          "hardened: claim sentence now says the crew consulted the crystal when 'the ship’s usual means of finding direction could not be trusted' instead of naming the compass, so the key no longer echoes the passage and needs the bridge usual means = compass",
+          "'even beneath heavy cloud cover' softened to 'even when clouds hide it' (the press reports cloudy skies, not heavy overcast)"
+        ],
+        "status": "fixed"
+      },
+      "band7": {
+        "verdict": "band 7",
+        "why": "After the fix the claim names only 'the ship’s usual means of finding direction', so the key must supply two unstated links: ships steered by compass, and iron cannons made it unreliable. TRAP B (trade: fits any use), TRAP C (present condition, wrong time window), OPP D (rival use). Passage 105 words, stem 20 words naming Ropars."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "A",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "command_of_evidence.T1_single.hard.w2b1_03",
+      "template": "T1_single",
+      "subtype": "Hypothetical finding supports a claim (comparison controlling a stated factor)",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Absolute pitch, the ability to identify a musical note without hearing a reference note, is uncommon even among professional musicians, and those who possess it almost invariably began musical training in early childhood. Psychologist Diana Deutsch has observed that in tone languages such as Mandarin, altering the pitch of a syllable can entirely change a word’s meaning, so speakers of these languages learn from infancy to attend carefully to subtle differences in pitch. She therefore claims that speaking a tone language, and not merely an early start in music lessons, makes absolute pitch considerably easier to acquire.",
+      "stem": "Which finding, if true, would most directly support Deutsch’s claim?",
+      "options": [
+        "Mandarin-speaking music students were no better than English-speaking music students at identifying the interval between two notes played one after the other.",
+        "Music students who began lessons before age six were more likely to have absolute pitch than those who began after age nine, whether or not they spoke a tone language.",
+        "Music students at a conservatory in Beijing, most of whom began lessons before age six, had absolute pitch more often than students at a US conservatory, most of whom began after age eight.",
+        "Among music students who began lessons at the same age, those who spoke Mandarin were far more likely to have absolute pitch than those who spoke only languages without tones."
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The passage notes that starting lessons early is linked to absolute pitch, so a fair test of Deutsch’s claim must compare tone-language and nontone-language speakers who began lessons at the same age. Choice D does exactly that and finds far more absolute pitch among the Mandarin speakers, which points to the language itself.",
+      "distractors": {
+        "A": {
+          "recipe": "OFF: different ability",
+          "why_wrong": "Identifying intervals is relative pitch, not absolute pitch, so equal performance on it says nothing about the claim."
+        },
+        "B": {
+          "recipe": "PART: the other factor only",
+          "why_wrong": "This shows the effect of starting age, which the passage already mentions; it says nothing about whether speaking a tone language matters."
+        },
+        "C": {
+          "recipe": "TRAP: confounded comparison",
+          "why_wrong": "The Beijing students also started lessons earlier, so their higher rate of absolute pitch could be due to starting age rather than language."
+        }
+      },
+      "models": [
+        "3.41",
+        "3.31",
+        "3.25"
+      ],
+      "word_count": 97,
+      "sources": [
+        {
+          "what": "Deutsch, Henthorn, Marvin and Xu 2006, Journal of the Acoustical Society of America: absolute pitch far more prevalent among Mandarin-speaking students at the Central Conservatory of Music, Beijing, than among nontone-language students at Eastman, at every age of onset of training",
+          "url": "https://acousticstoday.org/issues/2006AT/Oct2006/files/basic-html/page17.html"
+        }
+      ],
+      "notes": "Band 6: one bridge (control for starting age, named earlier in the passage). C is a confounded version of the real comparison.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "Target 6. One bridge: control for starting age, which the passage names earlier. TRAP C is the confounded real comparison; PART B; OFF A (relative pitch). Passage 97 words."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "D",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "command_of_evidence.T1_compete.hard.w2b1_04",
+      "template": "T1_compete",
+      "subtype": "Finding that discriminates competing explanations (weaken)",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Carolina bays are shallow, elliptical depressions, many of them encircled by low sandy rims, that number in the hundreds of thousands across the Atlantic Coastal Plain of the United States, and their long axes are generally oriented in the same northwest–southeast direction. Some researchers have proposed that the bays were created simultaneously about 12,900 years ago, when fragments of a comet exploded above or collided with the region. Others maintain that the bays developed gradually, over many thousands of years, as prevailing winds and groundwater reshaped preexisting ponds and their surrounding sands.",
+      "stem": "Which finding, if true, would most directly weaken the hypothesis that the bays were formed by a comet impact?",
+      "options": [
+        "Sediments in several bays contain tiny glassy spheres of a kind that typically forms at the very high temperatures produced by impacts.",
+        "Dating of sand grains shows that the rims of many bays formed tens of thousands of years before the proposed impact.",
+        "The sand rims of many bays were reshaped by wind and water in the thousands of years after the bays first formed.",
+        "Bays in the Carolinas are, on average, larger and more closely spaced than bays in Georgia or Virginia."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "If the comet hypothesis were correct, no bay could be older than about 12,900 years, since the bays would have been created at that moment. Rims deposited tens of thousands of years earlier would mean that many bays already existed long before the proposed impact, so choice B directly weakens the hypothesis.",
+      "distractors": {
+        "A": {
+          "recipe": "OPP: supports the impact view",
+          "why_wrong": "Glassy spheres formed at impact temperatures would be evidence for, not against, an impact origin."
+        },
+        "C": {
+          "recipe": "TRAP: consistent with both explanations",
+          "why_wrong": "Later reshaping of the rims could happen to bays of any origin, so it does not tell against the claim that the bays were first formed by an impact."
+        },
+        "D": {
+          "recipe": "OFF: irrelevant property of the same objects",
+          "why_wrong": "Differences in size and spacing from state to state do not bear on when or how the bays formed."
+        }
+      },
+      "models": [
+        "3.10",
+        "3.8",
+        "3.48"
+      ],
+      "word_count": 92,
+      "sources": [
+        {
+          "what": "OSL dating of Carolina bay rims: concentric rims progressively younger toward the center, Big Bay rims dated about 35,660 to 2,150 years ago; rims cluster over the past 130 ka, so bays are not single-event features; comet impact origin proposed by Firestone et al. 2007",
+          "url": "https://gsa.confex.com/gsa/2003AM/webprogram/Paper64899.html"
+        }
+      ],
+      "notes": "Weaken polarity. Rival views left unattributed as in CB style.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [],
+        "status": "pass"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "Target 6. Weaken polarity through timing (simultaneous 12,900 years ago vs rims tens of thousands of years older); OPP A supports impact, TRAP C fits both views, OFF D. Two steps, passage 92 words."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "B",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "command_of_evidence.Q2_P8_multipart.hard.w2b1_05",
+      "template": "Q2_P8_multipart",
+      "subtype": "Data description (passage criterion combined with the display)",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "Mars has two small, irregularly shaped moons, Phobos and Deimos, which some planetary scientists suspect are asteroids captured long ago by the planet’s gravity. A moon whose orbital period is shorter than the time its planet requires to complete one rotation is gradually drawn inward by the tidal forces it exerts on the planet, whereas a moon whose period is longer slowly migrates outward. Mars completes one rotation approximately every 24.6 hours. Applying this principle, astronomers have concluded that Phobos will eventually either collide with Mars or disintegrate into a ring of debris, but that Deimos faces no comparable fate.",
+      "stem": "Which choice best describes data from the table that support the astronomers’ conclusion?",
+      "options": [
+        "Phobos orbits at an average distance of about 9,400 kilometers from the center of Mars, less than half the distance at which Deimos orbits.",
+        "Phobos has a mean diameter of about 22 kilometers, nearly twice that of Deimos, which makes Phobos the larger of the two moons.",
+        "Phobos completes an orbit in under 8 hours, much less than the time Mars takes to rotate, whereas Deimos takes about 30 hours, more than that time.",
+        "Both moons complete an orbit in less time than Mars takes to rotate once, but Phobos completes each of its orbits about four times as quickly as Deimos does."
+      ],
+      "answer_letter": "C",
+      "table": {
+        "title": "Selected Characteristics of the Moons of Mars",
+        "columns": [
+          "Moon",
+          "Mean diameter (kilometers)",
+          "Average distance from center of Mars (kilometers)",
+          "Orbital period (hours)"
+        ],
+        "rows": [
+          [
+            "Phobos",
+            "22.2",
+            "9,377",
+            "7.66"
+          ],
+          [
+            "Deimos",
+            "12.6",
+            "23,460",
+            "30.3"
+          ]
+        ],
+        "note": null
+      },
+      "figure": null,
+      "explanation": "According to the passage, a moon is pulled inward if its orbital period is shorter than the planet’s rotation period of about 24.6 hours and drifts outward if its period is longer. The table shows that Phobos orbits in 7.66 hours, well under 24.6 hours, while Deimos takes 30.3 hours, more than 24.6 hours. Only choice C compares each moon’s period with Mars’s rotation, which is what the conclusion depends on.",
+      "distractors": {
+        "A": {
+          "recipe": "IRREL: accurate, wrong measure",
+          "why_wrong": "The distances are read correctly, but the passage ties a moon’s fate to its orbital period compared with Mars’s rotation, not to its distance from the planet."
+        },
+        "B": {
+          "recipe": "IRREL: accurate, wrong measure",
+          "why_wrong": "The diameters are read correctly, but a moon’s size has nothing to do with the rule the astronomers applied."
+        },
+        "D": {
+          "recipe": "INACC: proxy applied to a misread cell",
+          "why_wrong": "Deimos’s period of 30.3 hours is longer than Mars’s 24.6-hour rotation, so the first part is false; and if both periods were shorter, both moons would be drawn inward."
+        }
+      },
+      "models": [
+        "3.16",
+        "3.26"
+      ],
+      "word_count": 100,
+      "sources": [
+        {
+          "what": "Phobos 22.2 km, semi-major axis 9,377 km, period 7.66 h; Deimos 12.6 km, 23,460 km, about 30.3 h; Phobos orbits faster than Mars rotates and is spiraling inward (impact or ring), Deimos just outside synchronous orbit and slowly receding; capture hypothesis",
+          "url": "https://en.wikipedia.org/wiki/Moons_of_Mars"
+        }
+      ],
+      "notes": "Band 7 moves: passage number (24.6 h) combined with the display; two accurate-but-irrelevant comparisons in the key's frame (distance, size); D applies the rule to a misread cell. Mars sidereal day 24.62 h (NASA fact sheet).",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 6,
+        "fixes": [],
+        "status": "pass"
+      },
+      "band7": {
+        "verdict": "band 7",
+        "why": "Passage 100 words. Proxy: the passage's rule (period vs Mars's 24.6-hour rotation, a number given only in the passage) must be applied to the table; four reads and comparisons. A and B are accurate comparisons of the wrong columns in the key's frame. Weak spot: D is killed by one misread cell (Deimos 30.3 > 24.6)."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "C",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "command_of_evidence.T2_lit_quote.hard.w2b1_06",
+      "template": "T2_lit_quote",
+      "subtype": "Literary quotation illustrates a two-part claim (ambivalence)",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "Coriolanus is a circa 1608 play by William Shakespeare. Its title character, a Roman general who scorns the city’s common people, is repeatedly urged to humble himself before them, first to win their votes and later to calm their anger. Coriolanus reluctantly consents while suggesting that doing so would compromise his integrity: ______",
+      "stem": "Which quotation from Coriolanus most effectively illustrates the claim?",
+      "options": [
+        "“Better it is to die, better to starve, / Than crave the hire which first we do deserve.”",
+        "“Must I / With my base tongue give to my noble heart / A lie that it must bear? Well, I will do’t.”",
+        "“I will not do’t, / Lest I surcease to honour mine own truth / And, by my body’s action, teach my mind / A most inherent baseness.”",
+        "“What must I say? / ‘I pray, sir’—plague upon’t! I cannot bring / My tongue to such a pace.”"
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The claim has two parts: Coriolanus consents to ask for the citizens’ votes, and he suggests that doing so would compromise his integrity. In choice B he complains that his tongue will force his noble heart to bear a lie, which shows he sees the act as a betrayal of his integrity, and then he says “Well, I will do’t,” agreeing to go through with it.",
+      "distractors": {
+        "A": {
+          "recipe": "HALF: reluctance without agreement",
+          "why_wrong": "Coriolanus says that dying or starving would be better than begging for what he has earned, which shows his distaste but not any agreement to go along."
+        },
+        "C": {
+          "recipe": "HALF / opposite stance",
+          "why_wrong": "Coriolanus does speak of betraying his own truth, but he refuses (“I will not do’t”), so the quotation shows the opposite of agreeing."
+        },
+        "D": {
+          "recipe": "OFF: nearby emotion",
+          "why_wrong": "Coriolanus says he cannot bring himself to speak the humble words, which expresses inability and disgust, not consent."
+        }
+      },
+      "models": [
+        "3.37",
+        "3.17",
+        "3.34"
+      ],
+      "word_count": 53,
+      "sources": [
+        {
+          "what": "Coriolanus, Project Gutenberg text: Act 2 scene 3 (What must I say?; Better it is to die), Act 3 scene 2 (Must I / With my base tongue ...; I will not do't, / Lest I surcease ...); quotations copied exactly, double hyphen rendered as em dash",
+          "url": "https://www.gutenberg.org/ebooks/1535"
+        }
+      ],
+      "notes": "Band 7 moves: indirect two-part claim; distractors are the same speaker in near emotions, one with the opposite stance and the same 'own truth' idea. All four quotations verified as exact substrings of the Gutenberg text.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [],
+        "status": "pass",
+        "literary_text": "checked verbatim against the Project Gutenberg text named in sources; no change; all four quotations exact in Gutenberg #1535; in D the source's double quotation marks around ‘I pray, sir’ are rendered as single marks because the quotation is nested"
+      },
+      "band7": {
+        "verdict": "band 7",
+        "why": "Pre-1929 drama, indirect two-part claim (consents, yet sees it as compromising integrity). Distractors are the same speaker in nearby states: scorn without consent (A), the same 'own truth' idea with the opposite stance (C), distaste and inability (D). Three official band-7 T2 items exist."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "B",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "command_of_evidence.T3_person_quote.hard.w2b1_07",
+      "template": "T3_person_quote",
+      "subtype": "Quotation from a critic challenges an underlined claim",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "During the 1920s and 1930s, Yankton Dakota artist Mary Sully (1896–1963) produced more than 130 colored-pencil triptychs that she called “personality prints,” each representing a celebrated public figure of her era, such as the aviator Amelia Earhart or the writer Gertrude Stein. The upper panel of each triptych typically presents imagery associated with its subject, while the two panels beneath dissolve into abstract geometric patterns. Observing how closely those patterns resemble the Art Deco designs that dominated magazines and department stores at the time, <u>some critics have characterized the prints as purely modernist compositions with little connection to Sully’s Dakota heritage.</u>",
+      "stem": "Which quotation from an art historian most directly challenges the underlined claim?",
+      "options": [
+        "“Sully came of age just as the angular ornament of Art Deco was spreading through American magazines, theaters, and department stores; the sharp zigzags and fanned sunbursts of her prints place them squarely among the commercial and decorative designs of that era.”",
+        "“Each upper panel works almost like a riddle, offering a few objects or scenes linked to its subject. Sully expected viewers to identify the celebrity from these clues, much as newspaper readers of her day recognized famous people from cartoons and photographs.”",
+        "“The middle panels show Sully at her most daring: with no recognizable imagery left, she lets repeated shapes and colors carry a personality on their own, an approach few American artists of the 1920s had attempted.”",
+        "“In the lowest panel of nearly every triptych, Sully rebuilds her subject from stepped triangles, diamonds, and mirrored bands, the vocabulary of the beadwork that women in Sully’s community had practiced for generations. The celebrity is thus rendered in a visual language she grew up with rather than one she found in magazines.”"
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The underlined claim is that the prints are purely modernist and have little connection to Sully’s Dakota heritage. Choice D argues that the bottom panels are built from the shapes of the beadwork made by women in Sully’s own community, a visual language she grew up with rather than one taken from magazines, which directly contradicts the claim.",
+      "distractors": {
+        "A": {
+          "recipe": "OPP: sides with the claim",
+          "why_wrong": "Placing the prints among the commercial designs of the Art Deco era supports, rather than challenges, the view that they are purely modernist."
+        },
+        "B": {
+          "recipe": "TRAP: the wrong panel, sources outside the claim",
+          "why_wrong": "This explains how the upper panels identify each celebrity, but it says nothing about the abstract patterns below them or about any connection to Dakota art, so it does not challenge the claim."
+        },
+        "C": {
+          "recipe": "HALF: abstraction without the heritage",
+          "why_wrong": "Praising the boldness of the abstract middle panels says nothing about whether the patterns draw on the art of Sully’s community."
+        }
+      },
+      "models": [
+        "3.21",
+        "3.3"
+      ],
+      "word_count": 101,
+      "sources": [
+        {
+          "what": "Mary Sully (1896-1963), Yankton Dakota; 134 colored-pencil 'personality prints' (triptychs) from the late 1920s into the 1930s, subjects including Amelia Earhart and Gertrude Stein; Philip J. Deloria, Becoming Mary Sully (2019), on modernism and Dakota women's design traditions",
+          "url": "https://news.harvard.edu/gazette/story/2019/07/in-sioux-aunts-work-historian-finds-art-on-fringes-of-modernism-tradition/"
+        }
+      ],
+      "notes": "Band 7 moves: challenge polarity on an underlined claim; quotations of 40 to 55 words that argue; OPP sides with the claim, TRAP reconciliation, HALF abstraction only. Quotations are invented and attributed to an unnamed art historian, as in CB items.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 5,
+        "fixes": [
+          "old B ('to ask whether the prints are modernist or Dakota is to force a choice the works resist') denied 'purely modernist' and was a second defensible challenge; rewritten as a TRAP about the upper panels",
+          "key reworded: 'Dakota women' and 'inherited' (echoes of the underlined 'Dakota heritage') replaced by 'women in Sully’s community' and 'a visual language she grew up with rather than one she found in magazines'; 'quillwork' dropped since the source names beadwork only",
+          "quotations stay unnamed and invented ('an art historian'); Philip J. Deloria, the real historian of Sully, is not quoted"
+        ],
+        "status": "fixed"
+      },
+      "band7": {
+        "verdict": "band 7",
+        "why": "After the fixes: challenge polarity on an underlined claim, quotations of 36 to 53 words that argue. The key no longer repeats 'Dakota' or 'heritage': the solver must link 'women in Sully’s community' to the Yankton Dakota identity in the first sentence. OPP A (Art Deco), TRAP B (upper panels and popular imagery), HALF C (abstraction only)."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "D",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "command_of_evidence.Q1_P5_control.hard.w2b1_08",
+      "template": "Q1_P5_control",
+      "subtype": "Data completion (treated vs untreated against an expected baseline)",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "In January 2014, Mexico began taxing sugar-sweetened beverages at one peso per liter and nonessential energy-dense foods, such as chips and candy, at 8%. Using national household surveys conducted between 2008 and 2018, researchers at Mexico’s National Institute of Public Health estimated how much of each kind of product households would have bought after 2014 had the taxes never been introduced, then compared these expected amounts with what households actually bought. One possible objection is that falling purchases of taxed products might simply reflect households buying less of everything, but the data cast doubt on that explanation: ______",
+      "stem": "Which choice most effectively uses data from the table to complete the statement?",
+      "options": [
+        "although purchases of taxed beverages were 4.4% lower than expected, purchases of untaxed beverages were 10.9% higher than expected.",
+        "purchases of taxed foods were 7.0% lower than expected, and purchases of taxed beverages were 4.4% lower than expected.",
+        "purchases of untaxed foods and untaxed beverages were both lower than expected, though by less than purchases of taxed products were.",
+        "purchases of untaxed foods were 1.7% lower than expected, a decline in a group of products that the taxes did not cover."
+      ],
+      "answer_letter": "A",
+      "table": {
+        "title": "Expected and Observed Weekly Purchases per Person after Mexico’s 2014 Taxes",
+        "columns": [
+          "Product group",
+          "Expected purchases without the taxes",
+          "Observed purchases",
+          "Difference from expected (%)"
+        ],
+        "rows": [
+          [
+            "Taxed foods (grams)",
+            "98.6",
+            "92.1",
+            "−7.0"
+          ],
+          [
+            "Untaxed foods (grams)",
+            "5,481.9",
+            "5,392.3",
+            "−1.7"
+          ],
+          [
+            "Taxed beverages (milliliters)",
+            "1,019.5",
+            "976.5",
+            "−4.4"
+          ],
+          [
+            "Untaxed beverages (milliliters)",
+            "3,514.7",
+            "3,946.8",
+            "10.9"
+          ]
+        ],
+        "note": null
+      },
+      "figure": null,
+      "explanation": "To show that the drop in taxed purchases was not just part of a general decline in buying, the text needs a comparison in which taxed products fell while untaxed products did not. The table shows taxed beverages 4.4% below the expected amount and untaxed beverages 10.9% above it, so households bought more of the untaxed drinks even as they bought fewer taxed ones.",
+      "distractors": {
+        "B": {
+          "recipe": "PART: condition without the comparison",
+          "why_wrong": "Both figures are accurate, but they describe only taxed products; without the untaxed groups for comparison, they cannot rule out a general decline in buying."
+        },
+        "C": {
+          "recipe": "INACC",
+          "why_wrong": "Purchases of untaxed beverages were 10.9% higher than expected, not lower."
+        },
+        "D": {
+          "recipe": "CONTRA: true data pointing the other way",
+          "why_wrong": "The figure is accurate, but a drop in purchases of an untaxed group is what the objection would predict, so it does not cast doubt on that explanation."
+        }
+      },
+      "models": [
+        "3.4",
+        "3.38"
+      ],
+      "word_count": 98,
+      "sources": [
+        {
+          "what": "Garcia-Chavez, Barrientos-Gutierrez, Ng, Rivera and Colchero 2025, BMJ Public Health, National Institute of Public Health (Cuernavaca); Table 3 expected vs observed purchases after the January 2014 taxes (1 peso per liter on SSBs, 8% on nonessential energy-dense foods): taxed foods 98.6 vs 92.1 g (-7.0%), untaxed foods 5,481.9 vs 5,392.3 g (-1.7%), taxed beverages 1,019.5 vs 976.5 mL (-4.4%), untaxed beverages 3,514.7 vs 3,946.8 mL (+10.9%)",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC12164364/"
+        }
+      ],
+      "notes": "Design wrinkle: the comparison is against a modeled expected amount, and one untaxed group also fell slightly (D). Taxed foods vs untaxed foods (-7.0 vs -1.7) would also argue against a general decline, so no option offers that pair.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 9,
+        "fixes": [],
+        "status": "pass"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "Target 6. Q1_P5 against a modeled baseline with a design wrinkle: one untaxed group also fell (D), so the solver must pick the untaxed group that rose. PART B, INACC C. Passage 98 words."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "A",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "command_of_evidence.Q2_P8_quantifier.hard.w2b1_09",
+      "template": "Q2_P8_quantifier",
+      "subtype": "Data description (quantified claim with an exception, filtered by a table column)",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "Most of the large lakes of eastern Africa occupy long, narrow basins along the Rift Valley, where the gradual separation of tectonic plates has caused elongated blocks of crust to subside, sometimes far below the surrounding plateau. Lake Victoria, the region’s largest lake by surface area, is an exception: it occupies a broad, comparatively shallow depression between the rift’s eastern and western branches. A geography student argues that although location within the rift is generally associated with considerable depth, it does not guarantee it: most of the rift lakes she examined are deeper than Lake Victoria, but not all of them.",
+      "stem": "Which choice best describes data from the table that support the student’s argument?",
+      "options": [
+        "Lake Victoria has a far larger surface area than any of the other lakes shown, even though its maximum depth is only 81 meters.",
+        "The maximum depth of Lake Tanganyika, 1,470 meters, is more than 18 times the maximum depth of Lake Victoria, 81 meters.",
+        "Lakes Tanganyika, Malawi, and Turkana are each deeper than Lake Victoria’s 81 meters, but Lake Albert, also in the rift, reaches only 51 meters.",
+        "Lakes Tanganyika and Malawi are each more than eight times as deep as Lake Victoria, whereas Lakes Turkana and Albert, also in the rift, are not."
+      ],
+      "answer_letter": "C",
+      "table": {
+        "title": "Surface Areas and Maximum Depths of Five East African Lakes",
+        "columns": [
+          "Lake",
+          "Lies within the Rift Valley",
+          "Surface area (square kilometers)",
+          "Maximum depth (meters)"
+        ],
+        "rows": [
+          [
+            "Victoria",
+            "no",
+            "68,800",
+            "81"
+          ],
+          [
+            "Tanganyika",
+            "yes",
+            "32,900",
+            "1,470"
+          ],
+          [
+            "Malawi",
+            "yes",
+            "30,000",
+            "706"
+          ],
+          [
+            "Turkana",
+            "yes",
+            "6,405",
+            "109"
+          ],
+          [
+            "Albert",
+            "yes",
+            "5,300",
+            "51"
+          ]
+        ],
+        "note": null
+      },
+      "figure": null,
+      "explanation": "The argument has two parts: most rift lakes are deeper than Lake Victoria, and at least one is not. The table marks Tanganyika, Malawi, Turkana, and Albert as rift lakes; the first three reach 1,470, 706, and 109 meters, all more than Victoria’s 81, while Albert reaches only 51. Choice C reports both parts.",
+      "distractors": {
+        "A": {
+          "recipe": "IRREL: accurate, wrong measure",
+          "why_wrong": "Victoria’s area and depth are read correctly, but they say nothing about how the rift lakes compare with Victoria in depth."
+        },
+        "B": {
+          "recipe": "HALF: one part of the claim",
+          "why_wrong": "The comparison is accurate and fits the idea that rift lakes tend to be deep, but it covers a single lake and gives no case of a rift lake shallower than Victoria."
+        },
+        "D": {
+          "recipe": "TRAP: accurate comparison in the key's frame that cannot decide the claim",
+          "why_wrong": "The ratios are accurate (about 18 and 9 times), but a lake that is less than eight times as deep as Victoria may still be deeper than it, as Turkana is; the choice shows neither that most rift lakes are deeper than Victoria nor that any is shallower."
+        }
+      },
+      "models": [
+        "3.24",
+        "3.20",
+        "3.23"
+      ],
+      "word_count": 101,
+      "sources": [
+        {
+          "what": "Rift Valley lakes: Victoria 68,800 km2 and not in the rift (in a depression between the eastern and western branches); Tanganyika 32,900 km2; Malawi 30,000 km2; Turkana 6,405 km2; Albert 5,300 km2. Maximum depths from the lakes' own Wikipedia pages: Victoria 81 m, Tanganyika 1,470 m, Malawi 706 m, Turkana 109 m, Albert 51 m",
+          "url": "https://en.wikipedia.org/wiki/Rift_Valley_lakes"
+        }
+      ],
+      "notes": "Band 7 moves: the 'Lies within the Rift Valley' column filters the rows the quantifier covers (Victoria excluded); key needs four depth comparisons plus the exception; B is accurate but half; D names the wrong exception. Surface areas are rounded published figures; sources differ by a few percent (Victoria is sometimes given as about 59,900 km2).",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 10,
+        "fixes": [
+          "hardened: D (a false reading, 'every rift lake except Turkana') replaced by an accurate TRAP in the key's frame ('Tanganyika and Malawi more than eight times as deep, Turkana and Albert not'), so every distractor is now true and none is killed by one cell",
+          "'basins' made 'long, narrow basins' (passage 99 to 101 words)"
+        ],
+        "status": "fixed"
+      },
+      "band7": {
+        "verdict": "band 7",
+        "why": "Filter by the 'Lies within the Rift Valley' column, four depth comparisons with 81 m, then the exception: five or more operations. After the fix all three distractors are accurate (IRREL A, PART B, key-frame TRAP D on 'more than eight times as deep'). Passage 101 words. No proxy relation, so this rests on the filter and the quantifier."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "C",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "command_of_evidence.Q2_P4_trend.hard.w2b1_10",
+      "template": "Q2_P4_trend",
+      "subtype": "Data description (rate of change compared across periods, read through a stated standardization)",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "On the Alakaʻi Plateau of Kauaʻi, Hawaii, native forest birds have long found refuge in the cool interior, where low temperatures restrict the mosquitoes that transmit avian malaria. Analyzing surveys of the plateau conducted between 1981 and 2012, Eben Paxton and colleagues expressed each trend in a species’ population density as the average change over a 25-year period, so that trends calculated over periods of different lengths could be compared directly. Four of the species in the table are honeycreepers; the fifth, the Kauaʻi ʻelepaio, is a monarch flycatcher. The researchers concluded that declines in the interior have accelerated dramatically since 2000, consistent with warming temperatures that have allowed mosquitoes to spread upslope.",
+      "stem": "Which choice best describes data from the table that support Paxton and colleagues’ conclusion?",
+      "options": [
+        "For the ʻanianiau, ʻiʻiwi, ʻapapane, and Kauaʻi ʻamakihi, the interior trend for 2000–2012 shows a steeper decline than the interior trend for 1981–2012 does.",
+        "For the ʻanianiau, ʻiʻiwi, ʻapapane, and Kauaʻi ʻamakihi, the trend at the plateau’s edge for 2000–2012 shows a steeper decline than the interior trend for 2000–2012 does.",
+        "For 2000–2012, the Kauaʻi ʻamakihi declined by 91% in the interior and by 98% at the edge, the steepest declines shown in the table for either area.",
+        "In 2012, the ʻapapane and the Kauaʻi ʻelepaio occurred at far higher densities than any of the other species shown did."
+      ],
+      "answer_letter": "A",
+      "table": {
+        "title": "Density in 2012 and 25-Year Density Trends for Five Native Forest Birds on the Alakaʻi Plateau",
+        "columns": [
+          "Species",
+          "Density in 2012 (birds per hectare)",
+          "Interior trend, 1981–2012",
+          "Interior trend, 2000–2012",
+          "Edge trend, 2000–2012"
+        ],
+        "rows": [
+          [
+            "ʻanianiau",
+            "1.657",
+            "−17%",
+            "−57%",
+            "−91%"
+          ],
+          [
+            "ʻiʻiwi",
+            "0.477",
+            "−63%",
+            "−86%",
+            "−97%"
+          ],
+          [
+            "ʻapapane",
+            "8.489",
+            "−27%",
+            "−67%",
+            "−89%"
+          ],
+          [
+            "Kauaʻi ʻamakihi",
+            "0.611",
+            "−16%",
+            "−91%",
+            "−98%"
+          ],
+          [
+            "Kauaʻi ʻelepaio",
+            "7.141",
+            "41%",
+            "88%",
+            "−64%"
+          ]
+        ],
+        "note": null
+      },
+      "figure": null,
+      "explanation": "Because every trend is scaled to the same 25-year period, the 1981–2012 and 2000–2012 interior trends can be compared directly, and a steeper decline in the later column means the rate of decline has increased. For four species the interior decline grows from 17% to 57%, 63% to 86%, 27% to 67%, and 16% to 91%, so choice A shows the acceleration the researchers describe.",
+      "distractors": {
+        "B": {
+          "recipe": "IRREL: accurate comparison of the wrong cells",
+          "why_wrong": "The edge trends are steeper than the interior trends, but this compares two places in the same period; the conclusion is about a change over time within the interior."
+        },
+        "C": {
+          "recipe": "PART: single species, single period",
+          "why_wrong": "The figures are accurate, but they come from 2000–2012 alone, so they cannot show that declines sped up compared with the earlier period."
+        },
+        "D": {
+          "recipe": "IRREL: levels instead of changes",
+          "why_wrong": "Densities in a single year say nothing about how quickly populations have been changing."
+        }
+      },
+      "models": [
+        "3.40",
+        "3.13"
+      ],
+      "word_count": 113,
+      "sources": [
+        {
+          "what": "Paxton, Camp, Gorresen, Crampton, Leonard and VanderWerf 2016, Science Advances 2: e1600029, Table 1: 2012 density (birds/ha) and 25-year trends, interior 1981-2012, interior 2000-2012, exterior 2000-2012: anianiau 1.657, -17%, -57%, -91%; iiwi 0.477, -63%, -86%, -97%; apapane 8.489, -27%, -67%, -89%; Kauai amakihi 0.611, -16%, -91%, -98%; Kauai elepaio 7.141, +41%, +88%, -64%; trends are the average change in density over a 25-year period; malaria and its mosquito vector moving upslope with warming",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC5014469/"
+        }
+      ],
+      "notes": "Band 7 moves: the passage's standardization (25-year trend) is what licenses comparing the two periods; distractors are an accurate comparison across place rather than time, a single-period cherry-pick, and levels instead of changes. The elepaio (not a honeycreeper) increased in the interior; the key names only the four declining species. 'Edge' stands for the paper's 'exterior' survey area.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 21,
+        "fixes": [],
+        "status": "pass"
+      },
+      "band7": {
+        "verdict": "band 7",
+        "why": "Passage 113 words. Proxy: the 25-year standardization stated in the passage is what licenses comparing the two interior periods. Four paired comparisons. All three distractors are accurate: place instead of time (B), one period and one species (C), levels instead of changes (D)."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "A",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "command_of_evidence.T2_lit_quote.medium.w2b1_11",
+      "template": "T2_lit_quote",
+      "subtype": "Literary quotation illustrates a two-part claim",
+      "tier": "medium",
+      "passage": "A Hero of Our Time is an 1840 novel by Mikhail Lermontov, translated in 1912 by J. H. Wisdom and Marr Murray. In the novel, the restless young officer Grigory Pechorin acknowledges that he causes suffering to the people around him but insists that he experiences comparable unhappiness himself: ______",
+      "stem": "Which quotation from A Hero of Our Time most effectively illustrates the claim?",
+      "options": [
+        "“I feel within me that insatiate hunger which devours everything it meets upon the way; I look upon the sufferings and joys of others only from the point of view of their relation to myself, regarding them as the nutriment which sustains my spiritual forces.”",
+        "“Mine is an unfortunate disposition; whether it is the result of my upbringing or whether it is innate—I know not. I only know this, that if I am the cause of unhappiness in others I myself am no less unhappy.”",
+        "“In my early youth, from the moment I ceased to be under the guardianship of my relations, I began madly to enjoy all the pleasures which money could buy—and, of course, such pleasures became irksome to me.”",
+        "“The air is pure and fresh, like the kiss of a child; the sun is bright, the sky is blue—what more could one possibly wish for? What need, in such a place as this, of passions, desires, regrets?”"
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The claim has two parts: Pechorin admits that he makes others miserable, and he insists that he is no happier himself. In choice B he says that if he is the cause of unhappiness in others, he himself is no less unhappy, which covers both parts.",
+      "distractors": {
+        "A": {
+          "recipe": "HALF: others' suffering only",
+          "why_wrong": "Pechorin describes feeding on the sufferings of others, but he says nothing about being unhappy himself."
+        },
+        "C": {
+          "recipe": "HALF: his own dissatisfaction only",
+          "why_wrong": "Pechorin says pleasures grew tiresome to him, but he does not mention making anyone else unhappy."
+        },
+        "D": {
+          "recipe": "OFF: opposite mood",
+          "why_wrong": "Here Pechorin delights in the landscape and wants nothing more, which shows neither misery caused to others nor his own unhappiness."
+        }
+      },
+      "models": [
+        "2.26",
+        "2.11",
+        "2.20"
+      ],
+      "word_count": 50,
+      "sources": [
+        {
+          "what": "A Hero of Our Time, Wisdom and Murray translation (first published in London in 1912 as The Heart of a Russian), Project Gutenberg #913: Bela, chapter IX (unfortunate disposition; early youth) and Princess Mary (insatiate hunger; the air is pure and fresh); quotations copied exactly, double hyphen rendered as em dash",
+          "url": "https://www.gutenberg.org/ebooks/913"
+        }
+      ],
+      "notes": "All four quotations verified as exact substrings of the Gutenberg text (dashes normalized).",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 5,
+        "fixes": [],
+        "status": "pass",
+        "literary_text": "checked verbatim against the Project Gutenberg text named in sources"
+      }
+    },
+    {
+      "id": "command_of_evidence.T2_lit_quote.medium.w2b1_12",
+      "template": "T2_lit_quote",
+      "subtype": "Literary quotation illustrates a contrast claim",
+      "tier": "medium",
+      "passage": "“At the Carnival” is a 1922 poem by Harlem Renaissance poet Anne Spencer. In the poem, the speaker, wandering through a shabby carnival, contrasts the dreariness and vulgarity surrounding the fairgoers with the radiant innocence of a young girl who performs in a diving tank: ______",
+      "stem": "Which quotation from “At the Carnival” most effectively illustrates the claim?",
+      "options": [
+        "“I know you—a glance, and what you are / Sits-by-the-fire in my heart.”",
+        "“The color of life was gray. / Everywhere the setting seemed right / For my mood.”",
+        "“Here the sausage and garlic booth / Sent unholy incense skyward;”",
+        "“Gleaming Girl, how intimately pure and free / The gaze you send the crowd, / As though you know the dearth of beauty / In its sordid life.”"
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The claim is that the speaker contrasts the drab, coarse world of the fairgoers with the diver’s purity. In choice D the speaker calls the diver’s gaze “pure and free” while describing the crowd’s life as “sordid” and lacking beauty, so the quotation presents both sides of the contrast.",
+      "distractors": {
+        "A": {
+          "recipe": "HALF: the diver only",
+          "why_wrong": "The speaker expresses warmth toward the diver, but nothing here describes the fairgoers or their world."
+        },
+        "B": {
+          "recipe": "HALF: the setting only",
+          "why_wrong": "The speaker describes a gray setting that suits her mood, but the diver does not appear, so there is no contrast."
+        },
+        "C": {
+          "recipe": "HALF: the carnival only",
+          "why_wrong": "The lines mock the smell of a food stand at the carnival but do not mention the diver."
+        }
+      },
+      "models": [
+        "2.37",
+        "2.36",
+        "2.20"
+      ],
+      "word_count": 46,
+      "sources": [
+        {
+          "what": "Anne Spencer, “At the Carnival,” in The Book of American Negro Poetry, ed. James Weldon Johnson (Harcourt, Brace, 1922), Project Gutenberg #11986; quotations copied exactly, double hyphen rendered as em dash",
+          "url": "https://www.gutenberg.org/ebooks/11986"
+        }
+      ],
+      "notes": "All four quotations verified as exact substrings. The key is the only option naming both the diver and the crowd's life; lines that set the two side by side elsewhere in the poem (malodorous mechanics, heavy ones of earth) were kept out of the options.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 5,
+        "fixes": [
+          "'wandering alone through a shabby traveling carnival' trimmed to 'wandering through a shabby carnival' (the poem says neither alone nor traveling)",
+          "passage lengthened to the models' median after the trim ('Harlem Renaissance poet Anne Spencer'; 'a young girl who performs in a diving tank')"
+        ],
+        "status": "fixed",
+        "literary_text": "checked verbatim against the Project Gutenberg text named in sources"
+      }
+    },
+    {
+      "id": "command_of_evidence.T1_single.medium.w2b1_13",
+      "template": "T1_single",
+      "subtype": "Hypothetical finding supports a claim (function of a genre for an audience)",
+      "tier": "medium",
+      "passage": "Literatura de cordel, inexpensive booklets of rhymed verse traditionally sold at outdoor markets in northeastern Brazil, has often been studied as a folk tradition that preserves medieval legends and tales of chivalry. However, researchers who analyzed dozens of booklets published after the death of President Getúlio Vargas in 1954 discovered that many poets presented themselves as reporters and drew their details from other news media. Some scholars of the genre therefore claim that for many rural readers in the region, cordel booklets served as a main source of news.",
+      "stem": "Which finding, if true, would most directly support the scholars’ claim?",
+      "options": [
+        "Many residents of rural towns in the northeast first learned the details of Vargas’s death from cordel booklets sold at local markets, before any newspaper reached them.",
+        "Residents of Rio de Janeiro, then Brazil’s capital, could choose among several daily newspapers that reported on Vargas’s death in detail.",
+        "Most of the cordel booklets about Vargas’s death were printed several months after the event, by which time news of it had already spread throughout the rural northeast.",
+        "Cordel booklets about Vargas’s death often featured woodcut illustrations on their covers, a style also used for booklets retelling medieval legends."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The scholars claim that rural readers in the northeast relied on cordel booklets for news. If many rural residents first learned the details of Vargas’s death from booklets sold at their markets, before newspapers arrived, the booklets were in fact their source of news about the event, as choice A states.",
+      "distractors": {
+        "B": {
+          "recipe": "SUBJ: wrong group of readers",
+          "why_wrong": "This concerns city readers in Rio de Janeiro, not rural readers in the northeast, and it describes newspapers rather than cordel."
+        },
+        "C": {
+          "recipe": "OPP",
+          "why_wrong": "If the booklets appeared months later, after the news had spread, readers could not have relied on them to learn of the event, which weakens the claim."
+        },
+        "D": {
+          "recipe": "OFF: the booklets' appearance",
+          "why_wrong": "The style of the cover illustrations says nothing about whether readers used the booklets as a source of news."
+        }
+      },
+      "models": [
+        "2.33",
+        "2.7",
+        "2.21"
+      ],
+      "word_count": 89,
+      "sources": [
+        {
+          "what": "Analysis of 39 cordel folhetos on the death of Getulio Vargas (1954): poets presented themselves as reporters and drew on other media; comparison with Jornal do Brasil coverage",
+          "url": "https://periodicos.ufsc.br/index.php/eb/article/view/34619"
+        }
+      ],
+      "notes": "Core claim (cordel poets as reporters, cordel as the 'newspaper of the sertao') checked; the finding in the key is hypothetical.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [
+          "'drew their details from newspaper and radio coverage' generalized to 'from other news media' (the source abstract says other information media)"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "command_of_evidence.Q1_P3_pairwise.medium.w2b1_14",
+      "template": "Q1_P3_pairwise",
+      "subtype": "Data completion (two comparisons between two groups)",
+      "tier": "medium",
+      "passage": "Black rhinoceroses have poor eyesight and are typically solitary, lacking a herd to watch for predators. Red-billed oxpeckers, birds that ride on rhinos and feed on the ticks embedded in their skin, produce a loud alarm call whenever humans approach; in Swahili, the bird is called askari wa kifaru, “the rhino’s guard.” To determine whether the birds genuinely protect rhinos, Roan Plotz and Wayne Linklater repeatedly approached rhinos on foot in South Africa’s Hluhluwe-iMfolozi Park. The birds’ presence made a considerable difference: ______",
+      "stem": "Which choice most effectively uses data from the table to complete the statement?",
+      "options": [
+        "rhinos without oxpeckers detected the researchers in 23% of approaches and at an average distance of 61 meters, while rhinos with oxpeckers detected them at only 27 meters.",
+        "rhinos with oxpeckers detected the researchers at an average distance of 27 meters, more than twice the distance at which rhinos without oxpeckers detected them.",
+        "rhinos with oxpeckers detected the researchers in every approach, at an average of 61 meters, compared with 23% of approaches, at 27 meters, for rhinos without them.",
+        "rhinos with and without oxpeckers detected the researchers at similar distances, although rhinos with oxpeckers detected the researchers in more of the approaches."
+      ],
+      "answer_letter": "C",
+      "table": {
+        "title": "Black Rhinos’ Detection of Researchers Approaching on Foot",
+        "columns": [
+          "Rhinos",
+          "Approaches in which the rhino detected the researchers (%)",
+          "Average distance at detection (meters)"
+        ],
+        "rows": [
+          [
+            "Without oxpeckers",
+            "23",
+            "27"
+          ],
+          [
+            "With oxpeckers",
+            "100",
+            "61"
+          ]
+        ],
+        "note": null
+      },
+      "figure": null,
+      "explanation": "The table shows that rhinos with oxpeckers detected the researchers in 100% of approaches, at an average of 61 meters, while rhinos without oxpeckers did so in only 23% of approaches, at an average of 27 meters. Choice C reports both differences accurately.",
+      "distractors": {
+        "A": {
+          "recipe": "INACC: misplaced values",
+          "why_wrong": "The 61-meter distance belongs to rhinos with oxpeckers, and 27 meters to rhinos without them, not the reverse."
+        },
+        "B": {
+          "recipe": "WDIR: groups reversed",
+          "why_wrong": "Rhinos with oxpeckers detected the researchers at 61 meters, not 27; it was rhinos without oxpeckers that detected them at the shorter distance."
+        },
+        "D": {
+          "recipe": "INACC: sameness where there is a difference",
+          "why_wrong": "The distances, 61 and 27 meters, are not similar."
+        }
+      },
+      "models": [
+        "2.18",
+        "2.27",
+        "2.24"
+      ],
+      "word_count": 83,
+      "sources": [
+        {
+          "what": "Plotz and Linklater 2020, Current Biology 30: 1965-1969, 'Oxpeckers help rhinos evade humans': 86 approaches to 11 black rhinos in Hluhluwe-iMfolozi Park; detection rate 23% without vs 100% with oxpeckers; detection distance 27 m vs 61 m; Swahili name askari wa kifaru, the rhino's guard",
+          "url": "https://doi.org/10.1016/j.cub.2020.03.015"
+        }
+      ],
+      "notes": "Values from the paper's abstract (27 +/- 6 m and 61 +/- 4 m).",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 5,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "command_of_evidence.Q1_P4_trend.medium.w2b1_15",
+      "template": "Q1_P4_trend",
+      "subtype": "Data completion (change over time in one series of three)",
+      "tier": "medium",
+      "passage": "Since 1968, researchers at the University of California, Davis, have monitored the clarity of Lake Tahoe by lowering a white disk, called a Secchi disk, into the water and recording the depth at which it becomes invisible; greater depths indicate clearer water. The lake has become considerably less transparent over the decades, though the decline has varied substantially from season to season. Summer clarity, for example, went from ______",
+      "stem": "Which choice most effectively uses data from the graph to complete the example?",
+      "options": [
+        "about 110 feet in 1968 to about 74 feet in 2018.",
+        "about 94 feet in 1968 to about 62 feet in 2018.",
+        "about 102 feet in 1968 to about 71 feet in 2018.",
+        "about 94 feet in 1968 to about 50 feet in 2018."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": {
+        "kind": "line graph",
+        "title": "Average Secchi Depth in Lake Tahoe, 1968–2018",
+        "x_axis": "Year",
+        "y_axis": "Secchi depth (feet)",
+        "description": "Three lines at 1968, 1978, 1988, 1998, 2008 and 2018. Winter (December–March): about 110, 88, 77, 76, 85, 74 feet. Annual average: about 102, 85, 81, 66, 70, 71 feet. Summer (June–September): about 94, 82, 92, 60, 51, 62 feet. All three lines end lower in 2018 than they began in 1968.",
+        "data": [
+          {
+            "series": "Winter",
+            "points": [
+              [
+                "1968",
+                109.6
+              ],
+              [
+                "1978",
+                87.6
+              ],
+              [
+                "1988",
+                77.4
+              ],
+              [
+                "1998",
+                76.1
+              ],
+              [
+                "2008",
+                85.3
+              ],
+              [
+                "2018",
+                73.5
+              ]
+            ]
+          },
+          {
+            "series": "Annual average",
+            "points": [
+              [
+                "1968",
+                102.4
+              ],
+              [
+                "1978",
+                85.0
+              ],
+              [
+                "1988",
+                81.0
+              ],
+              [
+                "1998",
+                65.9
+              ],
+              [
+                "2008",
+                69.6
+              ],
+              [
+                "2018",
+                70.9
+              ]
+            ]
+          },
+          {
+            "series": "Summer",
+            "points": [
+              [
+                "1968",
+                94.2
+              ],
+              [
+                "1978",
+                82.0
+              ],
+              [
+                "1988",
+                91.9
+              ],
+              [
+                "1998",
+                59.7
+              ],
+              [
+                "2008",
+                50.5
+              ],
+              [
+                "2018",
+                61.7
+              ]
+            ]
+          }
+        ]
+      },
+      "explanation": "The summer line begins at about 94 feet in 1968 and ends at about 62 feet in 2018, a drop that shows summer clarity declining. Choice B gives these values.",
+      "distractors": {
+        "A": {
+          "recipe": "WGRP: winter line",
+          "why_wrong": "About 110 and 74 feet are the winter values for 1968 and 2018, not the summer values."
+        },
+        "C": {
+          "recipe": "WGRP: annual line",
+          "why_wrong": "About 102 and 71 feet are the annual averages, not the summer values."
+        },
+        "D": {
+          "recipe": "INACC: wrong end point",
+          "why_wrong": "The summer value for 2018 is about 62 feet; about 50 feet is the summer value for 2008."
+        }
+      },
+      "models": [
+        "2.15",
+        "2.34",
+        "2.40"
+      ],
+      "word_count": 69,
+      "sources": [
+        {
+          "what": "UC Davis Tahoe Environmental Research Center, Average Lake Tahoe Secchi Depth (annual, winter Dec-Mar, summer Jun-Sep, 1968-2018, feet): 1968 102.4/109.6/94.2; 1978 85.0/87.6/82.0; 1988 81.0/77.4/91.9; 1998 65.9/76.1/59.7; 2008 69.6/85.3/50.5; 2018 70.9/73.5/61.7",
+          "url": "https://tahoe.ucdavis.edu/sites/g/files/dgvnsk4286/files/files/page/Secchi_Averages_2018.pdf"
+        }
+      ],
+      "notes": "Ten-year sampling of the TERC yearly table. Any other true summer decline (for example 1988 to 2008) is kept out of the options.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 18,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "command_of_evidence.Q2_P5_control.medium.w2b1_16",
+      "template": "Q2_P5_control",
+      "subtype": "Data description (treated locations vs comparison locations, before and after)",
+      "tier": "medium",
+      "passage": "Images of watching eyes have been shown to encourage honest behavior in settings such as office kitchens where beverages are purchased on an honor system. To determine whether such images could also deter crime, Daniel Nettle, Kenneth Nott, and Melissa Bateson installed signs displaying staring eyes and the warning “Cycle thieves: we are watching you” above bicycle racks at three frequently targeted locations on the Newcastle University campus in England. Comparing reported thefts during the year before and the year after installation, with the remainder of the campus serving as a comparison, they concluded that the signs reduced thefts where they were displayed.",
+      "stem": "Which choice best describes data from the graph that support the researchers’ conclusion?",
+      "options": [
+        "In the year after the signs were posted, thefts at the locations with signs fell to 15 from 39 the year before, whereas thefts at locations without signs rose.",
+        "In the year after the signs were posted, there were 15 thefts at the locations with signs.",
+        "Thefts at locations without signs rose from 31 to 51, so the campus as a whole had nearly as many reported thefts in the year after the signs were posted as in the year before.",
+        "In the year before the signs were posted, more thefts occurred at locations without signs than at locations with signs."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": {
+        "kind": "bar graph",
+        "title": "Bicycle Thefts on Campus before and after the Signs Were Posted",
+        "x_axis": "Location",
+        "y_axis": "Number of reported thefts",
+        "description": "Two pairs of bars. Locations with signs: 39 thefts in the 12 months before, 15 in the 12 months after. Locations without signs: 31 thefts before, 51 after.",
+        "data": [
+          {
+            "series": "12 months before",
+            "points": [
+              [
+                "Locations with signs",
+                39
+              ],
+              [
+                "Locations without signs",
+                31
+              ]
+            ]
+          },
+          {
+            "series": "12 months after",
+            "points": [
+              [
+                "Locations with signs",
+                15
+              ],
+              [
+                "Locations without signs",
+                51
+              ]
+            ]
+          }
+        ]
+      },
+      "explanation": "The conclusion is that the signs reduced thefts where they were posted. The graph shows thefts at the signed locations falling from 39 to 15 while thefts at the comparison locations rose from 31 to 51, so the drop cannot be explained by a campus-wide decline in theft. Choice A reports both parts of that comparison.",
+      "distractors": {
+        "B": {
+          "recipe": "PART: one cell, no comparison",
+          "why_wrong": "The figure is accurate, but a single count shows neither a change over time nor a difference from locations without signs."
+        },
+        "C": {
+          "recipe": "CONTRA / IRREL: true data about the wrong question",
+          "why_wrong": "The figures are accurate, but they concern what happened away from the signs and suggest thefts moved elsewhere; they do not show that thefts fell where the signs were posted."
+        },
+        "D": {
+          "recipe": "INACC",
+          "why_wrong": "Before the signs were posted, there were 31 thefts at locations without signs and 39 at locations with signs, so fewer, not more, occurred at locations without signs."
+        }
+      },
+      "models": [
+        "2.3",
+        "2.25"
+      ],
+      "word_count": 103,
+      "sources": [
+        {
+          "what": "Nettle, Nott and Bateson 2012, PLoS ONE 7(12): e51738: signs with watching eyes and 'Cycle thieves, we are watching you' at three high-theft locations on the Newcastle University campus; thefts 39 to 15 at experimental locations and 31 to 51 at control locations over 12 months before and after",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3520908/"
+        }
+      ],
+      "notes": "Design wrinkle: thefts rose at the comparison locations (displacement), which C reports. Sign wording simplified from the paper's capitals.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 5,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "command_of_evidence.T3_person_quote.medium.w2b1_17",
+      "template": "T3_person_quote",
+      "subtype": "Quotation from a scholar supports a student's claim",
+      "tier": "medium",
+      "passage": "Working with the Tokyo publisher Watanabe Shōzaburō from 1918 onward, Japanese artist Kawase Hasui (1883–1957) designed hundreds of woodblock prints of snowy temple grounds, rain-swept bridges, and quiet villages. A student writing about Hasui argues that his prints appealed to buyers abroad by showing them an old Japan that was fast disappearing as the country built new factories and cities.",
+      "stem": "Which quotation from an art historian would be the most effective evidence for the student to include in support of this claim?",
+      "options": [
+        "“Hasui studied Western-style painting before he turned to woodblock prints, and his handling of light and shadow owes much to that early training.”",
+        "“The Great Kantō earthquake of 1923 destroyed many of Hasui’s sketchbooks along with the carved woodblocks for his early prints, forcing him to begin a large part of his work anew.”",
+        "“Late in life, Hasui was named a Living National Treasure, an honor that recognized his mastery of the traditional craft of woodblock printing.”",
+        "“Hasui’s lantern-lit lanes and thatched farmhouses, in which smokestacks and streetcars almost never appear, sold especially well to American collectors, who prized them as glimpses of an older Japan.”"
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The student claims that Hasui’s prints appealed to foreign buyers by showing a traditional Japan that industrialization was erasing. Choice D says that his scenes leave out smokestacks and streetcars and that American collectors valued them as views of an older Japan, which supports both parts of the claim.",
+      "distractors": {
+        "A": {
+          "recipe": "OFF: influence on the artist, not on buyers",
+          "why_wrong": "This describes how Western training shaped Hasui’s style, not how his prints appealed to buyers abroad."
+        },
+        "B": {
+          "recipe": "OFF: true biography",
+          "why_wrong": "The loss of his sketchbooks and woodblocks in 1923 says nothing about what his prints showed or who bought them."
+        },
+        "C": {
+          "recipe": "OFF: recognition at home",
+          "why_wrong": "An honor from Japan for his craft does not show that his prints appealed to foreign buyers or what image of Japan they presented."
+        }
+      },
+      "models": [
+        "2.23",
+        "2.29"
+      ],
+      "word_count": 60,
+      "sources": [
+        {
+          "what": "Kawase Hasui (1883-1957), shin-hanga landscape designer; worked with publisher Watanabe Shozaburo from 1918; Great Kanto earthquake of 1923 destroyed early sketchbooks and blocks; Living National Treasure 1956; works collected widely in the United States",
+          "url": "https://en.wikipedia.org/wiki/Hasui_Kawase"
+        }
+      ],
+      "notes": "Quotations are invented and attributed to an unnamed art historian, as in CB items; the facts inside B and C are real.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "command_of_evidence.Q1_P1_lookup.easy.w2b1_18",
+      "template": "Q1_P1_lookup",
+      "subtype": "Data completion (one cell)",
+      "tier": "easy",
+      "passage": "Five-story pagodas, tall wooden towers constructed at Buddhist temples, are among the oldest surviving wooden buildings in Japan, and several have withstood centuries of earthquakes. A student researching these towers notes that the pagoda at Daigo-ji, a temple in Kyoto, was completed in 951 and is the oldest wooden building still standing in Kyoto. According to the table, the Daigo-ji pagoda is ______",
+      "stem": "Which choice most effectively uses data from the table to complete the statement?",
+      "options": [
+        "54.8 meters tall.",
+        "38.2 meters tall.",
+        "16.1 meters tall.",
+        "50.8 meters tall."
+      ],
+      "answer_letter": "B",
+      "table": {
+        "title": "Five Wooden Pagodas in Japan",
+        "columns": [
+          "Temple",
+          "Location",
+          "Year completed",
+          "Height (meters)"
+        ],
+        "rows": [
+          [
+            "Tō-ji",
+            "Kyoto",
+            "1644",
+            "54.8"
+          ],
+          [
+            "Kōfuku-ji",
+            "Nara",
+            "1426",
+            "50.8"
+          ],
+          [
+            "Daigo-ji",
+            "Kyoto",
+            "951",
+            "38.2"
+          ],
+          [
+            "Hōryū-ji",
+            "Ikaruga",
+            "about 700",
+            "31.5"
+          ],
+          [
+            "Murō-ji",
+            "Uda",
+            "about 800",
+            "16.1"
+          ]
+        ],
+        "note": null
+      },
+      "figure": null,
+      "explanation": "The table lists the Daigo-ji pagoda, completed in 951, as 38.2 meters tall.",
+      "distractors": {
+        "A": {
+          "recipe": "WGRP: neighboring row",
+          "why_wrong": "54.8 meters is the height of the Tō-ji pagoda, which is also in Kyoto."
+        },
+        "C": {
+          "recipe": "WGRP: neighboring row",
+          "why_wrong": "16.1 meters is the height of the Murō-ji pagoda."
+        },
+        "D": {
+          "recipe": "WGRP: neighboring row",
+          "why_wrong": "50.8 meters is the height of the Kōfuku-ji pagoda."
+        }
+      },
+      "models": [
+        "1.43",
+        "1.44",
+        "1.24"
+      ],
+      "word_count": 63,
+      "sources": [
+        {
+          "what": "Japanese five-story pagodas (Japanese Wikipedia list): To-ji 54.8 m (1644), Kofuku-ji 50.8 m (1426), Daigo-ji 38.2 m (951, oldest building in Kyoto), Horyu-ji 31.5 m (late 7th to early 8th century), Muro-ji 16.1 m (late Nara to early Heian)",
+          "url": "https://ja.wikipedia.org/wiki/五重塔"
+        }
+      ],
+      "notes": "Hōryū-ji and Murō-ji dates given as approximate years; heights as listed in the Japanese Wikipedia table (English sources sometimes give Kōfuku-ji as about 50.1 m).",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 10,
+        "fixes": [
+          "'oldest building still standing in the city' made 'oldest wooden building still standing in Kyoto' (ja.wikipedia: oldest wooden building in Kyoto Prefecture)"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "command_of_evidence.T1_single.easy.w2b1_19",
+      "template": "T1_single",
+      "subtype": "Hypothetical finding supports a claim (one step)",
+      "tier": "easy",
+      "passage": "In the mid-1900s, Ga carpenters in Teshie, a coastal town near Accra, Ghana, began building abebuu adekai, or “proverb boxes”: brightly painted coffins carved in the shapes of fish, airplanes, onions, and other objects. Seth Kane Kwei, who is often credited with establishing the tradition, trained apprentices such as Paa Joe, who later became internationally recognized. A student claims that the shape chosen for a coffin usually reflects the life of the person buried in it.",
+      "stem": "Which finding, if true, would most directly support the student’s claim?",
+      "options": [
+        "Some of Paa Joe’s coffins have been displayed in art museums in Europe and North America.",
+        "A single coffin can take a carpenter in Teshie several weeks to carve and paint.",
+        "Coffins made in Teshie are often shaped like an object linked to the dead person’s work, such as a fish for a fisherman.",
+        "The wood used for the coffins usually comes from trees that grow in the forests of southern Ghana."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The student claims that a coffin’s shape usually reflects the life of the person buried in it. If coffins are often shaped like something tied to the person’s work, such as a fish for a fisherman, the shape reflects that person’s life, as choice C states.",
+      "distractors": {
+        "A": {
+          "recipe": "OFF: the coffins' later fame",
+          "why_wrong": "Museum displays show that the coffins are admired as art, not that their shapes reflect the lives of the people buried in them."
+        },
+        "B": {
+          "recipe": "OFF: how long they take to make",
+          "why_wrong": "The time needed to build a coffin says nothing about why a particular shape is chosen."
+        },
+        "D": {
+          "recipe": "OFF: the material",
+          "why_wrong": "Where the wood comes from has no bearing on whether the shape reflects the person’s life."
+        }
+      },
+      "models": [
+        "1.29",
+        "1.8",
+        "1.17"
+      ],
+      "word_count": 76,
+      "sources": [
+        {
+          "what": "Ga figurative coffins (abebuu adekai), Teshie near Accra; Seth Kane Kwei often credited with starting the tradition, Paa Joe his apprentice; shapes reflect the dead person's occupation or status (a fish for a fisherman)",
+          "url": "https://www.atlasobscura.com/articles/3516"
+        },
+        {
+          "what": "Fantasy coffin (Ga abebuu adekai): Kane Kwei's workshop in Teshie credited with the first figurative coffins, Paa Joe trained there; shapes reflect the dead person's life or work (a fish for a fisherman); used because the Atlas Obscura page returned 403",
+          "url": "https://en.wikipedia.org/wiki/Fantasy_coffin"
+        }
+      ],
+      "notes": "",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "command_of_evidence.Q1_P2_extreme.easy.w2b1_20",
+      "template": "Q1_P2_extreme",
+      "subtype": "Data completion (maximum in a bar graph)",
+      "tier": "easy",
+      "passage": "Mass timber is manufactured by pressing or gluing layers of wood together into large panels and beams strong enough to support heavy loads. Since the 2010s, architects have used it to construct apartment and office towers considerably taller than earlier wooden buildings. Of the four mass-timber buildings shown in the graph, the tallest is ______",
+      "stem": "Which choice most effectively uses data from the graph to complete the statement?",
+      "options": [
+        "Treet.",
+        "Brock Commons.",
+        "HAUT.",
+        "Mjøstårnet."
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": {
+        "kind": "bar graph",
+        "title": "Heights of Four Mass-Timber Buildings",
+        "x_axis": "Building (year completed)",
+        "y_axis": "Height (meters)",
+        "description": "Four bars. Treet, Norway (2015): about 53 meters. Brock Commons, Canada (2017): about 53 meters. Mjøstårnet, Norway (2019): about 85 meters, the tallest. HAUT, Netherlands (2021): about 73 meters.",
+        "data": [
+          {
+            "series": "Height",
+            "points": [
+              [
+                "Treet (2015)",
+                52.8
+              ],
+              [
+                "Brock Commons (2017)",
+                53
+              ],
+              [
+                "Mjøstårnet (2019)",
+                85.4
+              ],
+              [
+                "HAUT (2021)",
+                73
+              ]
+            ]
+          }
+        ]
+      },
+      "explanation": "The tallest bar in the graph is Mjøstårnet’s, at about 85 meters, so choice D completes the statement.",
+      "distractors": {
+        "A": {
+          "recipe": "wrong extreme",
+          "why_wrong": "Treet, at about 53 meters, is one of the two shortest buildings in the graph, far shorter than Mjøstårnet."
+        },
+        "B": {
+          "recipe": "wrong row",
+          "why_wrong": "Brock Commons is about 53 meters tall, far shorter than Mjøstårnet."
+        },
+        "C": {
+          "recipe": "wrong row: most recent",
+          "why_wrong": "HAUT is the most recently completed building, but at about 73 meters it is shorter than Mjøstårnet."
+        }
+      },
+      "models": [
+        "1.21",
+        "1.9",
+        "1.31"
+      ],
+      "word_count": 55,
+      "sources": [
+        {
+          "what": "List of tallest wooden buildings: Mjostarnet (Brumunddal, Norway) 85.4 m, 2019; HAUT (Amsterdam) 73 m, 2021; Brock Commons Tallwood House (Vancouver) 53 m, 2017; Treet (Bergen) 52.8 m, 2015",
+          "url": "https://en.wikipedia.org/wiki/List_of_tallest_wooden_buildings"
+        }
+      ],
+      "notes": "Ascent (Milwaukee, 86.6 m, 2022) is taller but is not among the four shown; the passage limits the statement to the graph.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 8,
+        "fixes": [
+          "why_wrong A no longer calls Treet 'the shortest' (52.8 m against 53 m is not readable on the bars)"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "command_of_evidence.Q1_P3_pairwise.easy.w2b1_21",
+      "template": "Q1_P3_pairwise",
+      "subtype": "Data completion (two comparisons, full factorial options)",
+      "tier": "easy",
+      "passage": "Only a handful of research stations operate continuously in the interior of Antarctica, where the ice sheet rises thousands of meters above sea level and winter temperatures are extraordinarily low. Two of the oldest are Amundsen–Scott South Pole Station, operated by the United States, and Vostok Station, established by the Soviet Union and now operated by Russia. Compared with Amundsen–Scott, Vostok Station opened ______",
+      "stem": "Which choice most effectively uses data from the table to complete the statement?",
+      "options": [
+        "earlier and lies at a lower elevation.",
+        "later and lies at a higher elevation.",
+        "earlier and lies at a higher elevation.",
+        "later and lies at a lower elevation."
+      ],
+      "answer_letter": "B",
+      "table": {
+        "title": "Two Research Stations on the Antarctic Ice Sheet",
+        "columns": [
+          "Station",
+          "Year opened",
+          "Elevation (meters)",
+          "Lowest recorded temperature (°C)"
+        ],
+        "rows": [
+          [
+            "Amundsen–Scott",
+            "1956",
+            "2,835",
+            "−82.8"
+          ],
+          [
+            "Vostok",
+            "1957",
+            "3,488",
+            "−89.2"
+          ]
+        ],
+        "note": null
+      },
+      "figure": null,
+      "explanation": "The table shows that Vostok opened in 1957, a year after Amundsen–Scott (1956), and lies at 3,488 meters, higher than Amundsen–Scott’s 2,835 meters. Choice B gives both comparisons correctly.",
+      "distractors": {
+        "A": {
+          "recipe": "WDIR: both comparisons reversed",
+          "why_wrong": "Vostok opened later, in 1957, and lies higher, at 3,488 meters."
+        },
+        "C": {
+          "recipe": "WDIR: year reversed",
+          "why_wrong": "Vostok does lie higher, but it opened in 1957, a year after Amundsen–Scott, not earlier."
+        },
+        "D": {
+          "recipe": "WDIR: elevation reversed",
+          "why_wrong": "Vostok did open later, but at 3,488 meters it lies higher than Amundsen–Scott, not lower."
+        }
+      },
+      "models": [
+        "1.3",
+        "1.4",
+        "1.7"
+      ],
+      "word_count": 64,
+      "sources": [
+        {
+          "what": "Vostok Station: elevation 3,488 m, established 16 December 1957, record low -89.2 C (21 July 1983); Amundsen-Scott South Pole Station: elevation 2,835 m, established November 1956, record low -82.8 C",
+          "url": "https://en.wikipedia.org/wiki/Vostok_Station"
+        }
+      ],
+      "notes": "Amundsen-Scott figures from its own Wikipedia page.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 6,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "command_of_evidence.T2_lit_quote.easy.w2b1_22",
+      "template": "T2_lit_quote",
+      "subtype": "Literary quotation illustrates a single-trait claim",
+      "tier": "easy",
+      "passage": "Botchan is a 1906 novel by Natsume Sōseki, translated in 1919 by Yasotaro Morri. In the novel, the narrator admits that his impulsive nature has caused him trouble throughout his life: ______",
+      "stem": "Which quotation from Botchan most effectively illustrates the claim?",
+      "options": [
+        "“Because of an hereditary recklessness, I have been playing always a losing game since my childhood.”",
+        "“Father did not like me in the least, and mother always sided with my big brother.”",
+        "“My brother was to be seen studying English hard, saying that he was going to be a businessman.”",
+        "“Kantaro was, it happens, a mollycoddle. Nevertheless he had the temerity to come over the fence to our yard and steal my chestnuts.”"
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The claim is that the narrator’s habit of acting without thinking has caused him trouble all his life. In choice A he blames a “hereditary recklessness” for making him play “a losing game” ever since childhood.",
+      "distractors": {
+        "B": {
+          "recipe": "OFF: family attitudes",
+          "why_wrong": "The narrator describes how his parents treated him, not his own recklessness."
+        },
+        "C": {
+          "recipe": "SUBJ: another character",
+          "why_wrong": "This describes the brother’s ambitions, not the narrator’s behavior."
+        },
+        "D": {
+          "recipe": "SUBJ: another character",
+          "why_wrong": "This describes a neighbor boy who stole chestnuts, not the narrator’s own rashness."
+        }
+      },
+      "models": [
+        "1.11",
+        "1.36",
+        "1.16"
+      ],
+      "word_count": 32,
+      "sources": [
+        {
+          "what": "Botchan (Master Darling), translated by Yasotaro Morri, revised by J. R. Kennedy, 1919, Project Gutenberg #8868, chapter I; quotations copied exactly",
+          "url": "https://www.gutenberg.org/ebooks/8868"
+        }
+      ],
+      "notes": "Rash episodes from chapter I (the jump, the pen-knife, the mother's remark on his recklessness) are kept out of the options, since each would also illustrate the trait.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 5,
+        "fixes": [],
+        "status": "pass",
+        "literary_text": "checked verbatim against the Project Gutenberg text named in sources"
+      }
+    }
+  ]
+}

@@ -20,7 +20,9 @@ import sys
 from collections import defaultdict
 
 HERE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-MATERIAL = os.path.join(HERE, "material")
+# math PDFs live in material/, Reading and Writing in material/rw (pass it as an argument)
+_ROOT = next((a for a in sys.argv[1:] if not a.startswith("--")), "material")
+MATERIAL = os.path.join(HERE, _ROOT)
 KEYS = os.path.join(MATERIAL, "keys")
 ITEMS = os.path.join(MATERIAL, "items")
 
@@ -97,11 +99,11 @@ def main() -> int:
                 if not keys_only:
                     os.rename(os.path.join(out_dir, img), os.path.join(out_dir, dest))
                 key["items"].append({**row, "tier": tier,
-                                     "image": f"material/items/{s}/{tier}/{dest}"})
+                                     "image": os.path.relpath(os.path.join(out_dir, dest), HERE)})
         with open(os.path.join(KEYS, f"{s}.json"), "w") as fh:
             json.dump(key, fh, indent=2)
         summary.append((topic, s, len(key["items"])))
-        print(f"  {topic:<40} {len(key['items']):3d} items -> material/keys/{s}.json")
+        print(f"  {topic:<40} {len(key['items']):3d} items -> {os.path.relpath(KEYS, HERE)}/{s}.json")
 
     print(f"\n{len(summary)} topics, {sum(n for _, _, n in summary)} items")
     return 0

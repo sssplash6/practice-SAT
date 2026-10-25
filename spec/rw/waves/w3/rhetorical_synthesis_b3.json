@@ -1,0 +1,1288 @@
+{
+  "skill": "Rhetorical Synthesis",
+  "slug": "rhetorical_synthesis",
+  "part": "w3b3",
+  "domain": "Expression of Ideas",
+  "plan": {
+    "templates": [
+      {
+        "code": "SIM",
+        "name": "Similarity"
+      },
+      {
+        "code": "DIFF",
+        "name": "Difference"
+      },
+      {
+        "code": "RANK",
+        "name": "Order or relative degree"
+      },
+      {
+        "code": "SPEC",
+        "name": "Specify or identify a single fact"
+      },
+      {
+        "code": "EMPH",
+        "name": "Emphasize one attribute"
+      },
+      {
+        "code": "DESC",
+        "name": "Describe"
+      },
+      {
+        "code": "EXPL",
+        "name": "Explain (cause, origin, advantage, mechanism, definition, significance)"
+      },
+      {
+        "code": "EXAMPLE",
+        "name": "Example, or explanation plus example"
+      },
+      {
+        "code": "STUDY",
+        "name": "Research study (aim, method, results)"
+      },
+      {
+        "code": "GEN",
+        "name": "Generalization, with or without support"
+      },
+      {
+        "code": "OVERVIEW",
+        "name": "Overview or summary"
+      },
+      {
+        "code": "AUD_NEW",
+        "name": "Introduce or describe to an unfamiliar or new audience"
+      },
+      {
+        "code": "AUD_FAM",
+        "name": "Present or describe to an already familiar audience"
+      },
+      {
+        "code": "QUOTE",
+        "name": "Quotation"
+      }
+    ]
+  },
+  "items": [
+    {
+      "id": "rhetorical_synthesis.EXPL.hard.w3b3_01",
+      "template": "EXPL",
+      "subtype": "Explain how (chain of three bullets)",
+      "tier": "hard",
+      "passage": "While researching a topic, a student has taken the following notes:\n• In Lake Tanganyika, in East Africa, many cichlid species are mouthbrooders.\n• Immediately after spawning, a mouthbrooding female collects her fertilized eggs in her mouth, where the developing young remain protected for several weeks.\n• The cuckoo catfish (Synodontis multipunctatus) deposits its own eggs among a cichlid’s eggs during spawning.\n• The cichlid then collects the catfish eggs in her mouth along with her own.\n• The catfish embryos hatch first and consume the cichlid’s own eggs inside her mouth.",
+      "stem": "The student wants to explain how the cuckoo catfish gets cichlids to shelter its young. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "The cuckoo catfish deposits its eggs directly into a female cichlid’s mouth, where she then protects the young catfish for several weeks.",
+        "Hatching before the cichlid’s own eggs do, young cuckoo catfish feed on those eggs while sheltered inside the female cichlid’s mouth.",
+        "By slipping its eggs in with a spawning cichlid’s, the cuckoo catfish leads her to take them into her mouth as though they were her own.",
+        "The cuckoo catfish’s eggs hatch before the cichlid’s do, and the female cichlid then gathers the newly hatched catfish into her mouth along with her own eggs."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The goal is to explain how the catfish gets cichlids to shelter its young. The notes link three facts: a mouthbrooding cichlid scoops her eggs into her mouth and keeps the young there, the catfish releases its eggs among hers while she spawns, and she gathers the catfish eggs along with her own. Choice C joins these facts: because the catfish mixes its eggs into the cichlid’s, she takes them into her mouth with her own.",
+      "distractors": {
+        "A": {
+          "recipe": "FALSE (goal-shaped: wrong placement of the eggs)",
+          "why_wrong": "The notes say the catfish releases its eggs among the cichlid’s eggs and the cichlid gathers them; the catfish does not place its eggs in her mouth."
+        },
+        "B": {
+          "recipe": "PART (what happens inside the mouth, not how the young get there)",
+          "why_wrong": "It describes what the young catfish do once inside the cichlid’s mouth but not how they come to be there, so it does not explain how the catfish gets the cichlid to shelter them."
+        },
+        "D": {
+          "recipe": "FALSE (goal-shaped: a true fact, hatching first, put at the wrong point in the chain)",
+          "why_wrong": "The notes say the cichlid gathers the catfish eggs along with her own right after spawning and that the catfish hatch inside her mouth; she does not gather young catfish that have already hatched."
+        }
+      },
+      "models": [
+        "3.17",
+        "3.23",
+        "ee51ad04"
+      ],
+      "sources": [],
+      "notes": "Subject: natural science (brood parasitism in Lake Tanganyika). Real phenomenon known without a search; no named researchers (WAVE.md, no fact-checking for this skill). Option fact check: A FALSE goal-shaped (eggs put straight into the mouth), D FALSE goal-shaped (cichlid gathers already hatched catfish; reviewer rewrite), B true but only the second half of the chain. Goal-only solve (without the notes): A, C and D each explain how the catfish gets its young sheltered.",
+      "band_target": 7,
+      "band7_moves": [
+        "how-goal over a three-bullet chain (mouthbrooding, eggs released during spawning, cichlid gathers them with her own)",
+        "key states the derived link (the cichlid treats the catfish eggs as her own) in words the notes do not use",
+        "two goal-shaped FALSE options that run the whole explanation with one wrong fact: eggs placed in the mouth, hatched young gathered (the true hatch-first fact put at the wrong point)",
+        "one PART option (the young catfish inside the mouth, without how they got there)"
+      ],
+      "word_count": 76,
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [
+          "D rewritten: was \"waits until a cichlid’s eggs have hatched\", killed by one obvious timing fact; now gathers already hatched catfish, misplacing the true hatch-first bullet (goal-shaped FALSE)"
+        ],
+        "status": "fixed"
+      },
+      "band7": {
+        "verdict": "band 7",
+        "why": "After the D rewrite: two goal-shaped FALSE options (eggs put in the mouth; hatched young gathered, misplacing the true hatch-first bullet) and one true PART; key derives \"as though they were her own\"; notes 29% rare words. Shape of 3fa48bf3 and ee51ad04."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "C",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 7
+    },
+    {
+      "id": "rhetorical_synthesis.GEN.hard.w3b3_02",
+      "template": "GEN",
+      "subtype": "Generalization one level up (what a kind of record can reveal)",
+      "tier": "hard",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Herbaria are collections of pressed, dried plant specimens, some over a century old.\n• Each specimen’s label records where and when it was collected; many were collected in flower.\n• A team of researchers examined thousands of spring-flowering specimens collected in the northeastern United States since the 1850s.\n• From the collection dates, the team estimated when each species flowered each year.\n• The species flowered earlier in warmer years, and their flowering dates have shifted earlier as springs have warmed.",
+      "stem": "The student wants to make a generalization about what herbarium specimens can reveal. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "Herbarium specimens, many of them gathered in bloom and labeled with collection dates, can reveal how plants’ flowering times have shifted over many decades.",
+        "Herbarium specimens can reveal how flowering times have shifted as springs have warmed, since each label records the date on which the plant first bloomed that year.",
+        "Because each label records the temperature on the day a plant was collected, herbarium specimens can reveal how warming affects flowering.",
+        "A team of researchers used thousands of specimens collected since the 1850s to estimate when spring-flowering species in the northeastern United States flowered."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The goal calls for a broad statement about herbarium specimens in general, not a report on one study. The notes explain why specimens hold this kind of information (many were collected in flower, and labels give the date) and show one team using them to track flowering dates over more than a century. Choice A makes that generalization: herbarium specimens can reveal how flowering times have changed over decades.",
+      "distractors": {
+        "B": {
+          "recipe": "FALSE (goal-shaped: right generalization, false reason about the label)",
+          "why_wrong": "According to the notes, a label records where and when a plant was collected, and the team had to estimate flowering times from those dates; nothing says a label records when the plant first bloomed."
+        },
+        "C": {
+          "recipe": "FALSE (goal-shaped: wrong detail on the label)",
+          "why_wrong": "According to the notes, a label records where and when a plant was collected; nothing says it records the temperature that day."
+        },
+        "D": {
+          "recipe": "OG (the method of one study)",
+          "why_wrong": "It reports what one team did with the specimens; it does not make a generalization about what herbarium specimens can reveal."
+        }
+      },
+      "models": [
+        "3.11",
+        "2c61e0b9",
+        "3b02e88a"
+      ],
+      "sources": [],
+      "notes": "Subject: natural science (herbarium records and flowering times). The kind of study is real and well known to botanists; the team is unnamed and its details are plausible, unverified (WAVE.md). Option fact check: B FALSE goal-shaped (label records first bloom; reviewer rewrite of a plain reversal), C FALSE goal-shaped (labels record temperature), D true but specific to one study. Goal-only solve: A, B and C are all generalizations about what herbarium specimens can reveal.",
+      "band_target": 7,
+      "band7_moves": [
+        "the generalization climbs a level, from one team’s finding to what herbarium specimens in general can reveal",
+        "key adds the derived reason (collected in flower and dated) in its own words",
+        "two goal-shaped FALSE generalizations whose support misstates what a label records (the date of first bloom; the temperature that day)",
+        "one accurate specific option (the study’s method) for the student who reads the goal loosely"
+      ],
+      "word_count": 77,
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [
+          "key A reworded: \"Since many were collected in flower and dated\" put \"many\" ahead of its noun and copied the note; now \"many of them gathered in bloom and labeled with collection dates\"",
+          "B rewritten: the reversal (\"later in warmer years\") died on bullet 5 word for word and on common knowledge; now a claim with false support (labels record first bloom), as 7f5715e4 A"
+        ],
+        "status": "fixed"
+      },
+      "band7": {
+        "verdict": "band 7",
+        "why": "Generalization climbs from one study to what specimens can reveal (2c61e0b9); after the B rewrite both FALSE options are right-sounding generalizations with false label support and D is an accurate specific study option. Notes 12.7% rare words but 5.38 chars per word."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "A",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 7
+    },
+    {
+      "id": "rhetorical_synthesis.OVERVIEW.hard.w3b3_03",
+      "template": "OVERVIEW",
+      "subtype": "Overview of a process",
+      "tier": "hard",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Asin tibuok, whose name means “unbroken salt,” is a traditional salt produced in the Philippine province of Bohol.\n• Producers first submerge dried coconut husks in shallow seawater-filled pits for several months.\n• The saturated husks are subsequently chopped into pieces, dried again, and burned to ash.\n• Seawater filtered through the resulting ash dissolves the accumulated salt, creating a concentrated brine.\n• The brine is boiled for many hours in earthenware pots until it solidifies into a dense, egg-shaped block.",
+      "stem": "The student wants to provide an overview of how asin tibuok is made. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "To make asin tibuok, producers soak coconut husk ash in seawater for several months and then boil the resulting brine in earthenware pots until it solidifies.",
+        "Producers make asin tibuok by soaking coconut husks in seawater for months, burning them to ash, and boiling that ash in earthenware pots until it hardens into a block.",
+        "Asin tibuok, whose name means “unbroken salt,” is a traditional Philippine salt that solidifies into a dense, egg-shaped block in earthenware pots.",
+        "Asin tibuok is made by burning coconut husks that have soaked in seawater for months, rinsing the ash with seawater, and boiling the brine until it hardens."
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "An overview of how the salt is made must cover the whole process at a high level: husks soaked in seawater for months, burned to ash, the ash rinsed with seawater to make brine, and the brine boiled until it hardens. Choice D covers each stage in the right order.",
+      "distractors": {
+        "A": {
+          "recipe": "FALSE (goal-shaped: wrong material soaked)",
+          "why_wrong": "It gives an overview, but the notes say the husks, not the ash, soak in seawater for months; the ash is rinsed with seawater only after the husks are burned."
+        },
+        "B": {
+          "recipe": "FALSE (goal-shaped: skips the brine and boils the ash)",
+          "why_wrong": "The notes say seawater is filtered through the ash to make a brine and that the brine, not the ash, is boiled in the pots."
+        },
+        "C": {
+          "recipe": "OG (name and finished product)",
+          "why_wrong": "It gives the salt’s name and its final shape but leaves out how it is made."
+        }
+      },
+      "models": [
+        "3.22",
+        "3.8",
+        "3.9"
+      ],
+      "sources": [],
+      "notes": "Subject: culture and technology (traditional salt making in Bohol, Philippines). Real practice known without a search; no named people (WAVE.md). Option fact check: A FALSE goal-shaped (ash instead of husks soaked), B FALSE goal-shaped (ash boiled, brine step skipped; reviewer rewrite), C true but off-goal. Goal-only solve: A, B and D each give an overview of the process.",
+      "band_target": 7,
+      "band7_moves": [
+        "a four-stage process in which each stage is a different bullet",
+        "two goal-shaped FALSE overviews that swap one stage (what soaks for months; what is boiled in the pots)",
+        "one accurate off-goal option built from the name and the finished block"
+      ],
+      "word_count": 77,
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [
+          "B rewritten: \"left to evaporate in the sun\" died on one obvious step; now the ash itself is boiled and the brine step dropped, so the student must trace bullets 3 to 5"
+        ],
+        "status": "fixed"
+      },
+      "band7": {
+        "verdict": "band 7",
+        "why": "After the B rewrite both FALSE overviews swap one stage of a four-stage process (husks or ash soaked; brine or ash boiled), so the student must trace bullets 2 to 5 as in b07a7634; C is an easy off-goal option. Notes 26% rare words."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "D",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 7
+    },
+    {
+      "id": "rhetorical_synthesis.SIM.hard.w3b3_04",
+      "template": "SIM",
+      "subtype": "Significance of a similarity (derived from a definition and a rule)",
+      "tier": "hard",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Anadromous fish hatch in freshwater rivers, mature in the ocean, and return to rivers to reproduce.\n• Catadromous fish follow the opposite pattern, hatching in the ocean and returning there to reproduce.\n• Dams can prevent anadromous fish from reaching upstream spawning locations.\n• The sea lamprey hatches in rivers, matures in the ocean as a parasite, and migrates upriver to spawn.\n• The American eel hatches in the Sargasso Sea and matures in freshwater streams before returning to the Sargasso Sea to spawn.\n• The Atlantic sturgeon hatches in coastal rivers and returns to those rivers to spawn after years in marine environments.",
+      "stem": "The student wants to emphasize the significance of a similarity between two of the fish. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "Because the sea lamprey and the American eel both hatch in rivers, dams can keep either fish from reaching its spawning grounds.",
+        "Since the sea lamprey and the Atlantic sturgeon are both anadromous, dams can keep each of them from reaching its spawning grounds.",
+        "The sea lamprey and the Atlantic sturgeon both hatch in rivers and then spend part of their lives in the ocean.",
+        "Because the American eel and the Atlantic sturgeon both return to the ocean to spawn, dams pose less of a threat to them than to the sea lamprey."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The sea lamprey and the Atlantic sturgeon both hatch in rivers, mature at sea and return to rivers to spawn, so both fit the notes’ definition of anadromous fish. The notes add that dams can block anadromous fish from their spawning grounds. Choice B states the similarity and why it matters: dams can keep both fish from spawning.",
+      "distractors": {
+        "A": {
+          "recipe": "FALSE (goal-shaped: wrong pair, wrong fact)",
+          "why_wrong": "The American eel hatches in the Sargasso Sea, not in rivers, so the similarity the sentence claims is false."
+        },
+        "C": {
+          "recipe": "PART (true similarity without its significance)",
+          "why_wrong": "It names a real similarity between the lamprey and the sturgeon but does not say why that similarity matters."
+        },
+        "D": {
+          "recipe": "FALSE (goal-shaped: wrong pair, wrong fact)",
+          "why_wrong": "The Atlantic sturgeon returns to rivers, not the ocean, to spawn, so the claimed similarity and the conclusion drawn from it are both false."
+        }
+      },
+      "models": [
+        "19b08ead",
+        "3.18"
+      ],
+      "sources": [],
+      "notes": "Subject: natural science (migratory fish life cycles). Real, textbook-level biology of these species; no named researchers (WAVE.md). Option fact check: A FALSE (eel hatches at sea), D FALSE (sturgeon spawns in rivers), C true similarity with no significance. Goal-only solve: A, B and D each state a similarity and why it matters.",
+      "band_target": 7,
+      "band7_moves": [
+        "the goal does not name the pair: the student must find which two fish share the significant trait",
+        "the similarity is derived (each life cycle checked against the definition of anadromous) and its significance comes from a rule bullet (dams)",
+        "two goal-shaped FALSE options pairing the eel with another fish, each resting on one misstated life-cycle fact",
+        "one true similarity with no significance, as 19b08ead C"
+      ],
+      "word_count": 99,
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      },
+      "band7": {
+        "verdict": "band 7",
+        "why": "Significance of a similarity, as 19b08ead: the pair is not named, anadromy must be derived from each life cycle and its significance from the dams bullet; A and D are goal-shaped FALSE pairings with one misstated life-cycle fact, C a true similarity without significance."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "B",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 7
+    },
+    {
+      "id": "rhetorical_synthesis.QUOTE.hard.w3b3_05",
+      "template": "QUOTE",
+      "subtype": "Use a quotation to emphasize a drawback",
+      "tier": "hard",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Tactical urbanism refers to inexpensive, temporary changes to city streets, such as painted bicycle lanes or pedestrian plazas furnished with planters.\n• Supporters argue that such projects let cities test ideas before investing in permanent construction.\n• Urban designer Tomás Ilarregui describes tactical projects as “a rough draft that residents can revise.”\n• Geographer Hanne Vestergaard evaluated dozens of such projects in European cities.\n• She concluded that many projects “depend on a handful of volunteers and quietly disappear once those volunteers move on.”",
+      "stem": "The student wants to use a quotation to emphasize a potential drawback of tactical urbanism. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "Ilarregui describes tactical urbanism projects as “a rough draft that residents can revise,” since they allow municipalities to test ideas before building anything permanent.",
+        "According to Vestergaard, many tactical urbanism projects rely on a small number of volunteers and are abandoned once those people leave.",
+        "After examining dozens of projects, Vestergaard warned that many “depend on a handful of volunteers and quietly disappear once those volunteers move on.”",
+        "Ilarregui cautions that tactical projects are only “a rough draft,” arguing that cities should commit to permanent construction instead."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The goal has two parts: the sentence must quote the notes, and the quotation must point to a drawback. Vestergaard’s words, that many projects “depend on a handful of volunteers and quietly disappear,” name a weakness of tactical urbanism. Choice C quotes them and ties them to her study.",
+      "distractors": {
+        "A": {
+          "recipe": "NOQ (a quotation that does another job)",
+          "why_wrong": "It quotes Ilarregui, but his words present tactical urbanism favorably; they do not point to a drawback."
+        },
+        "B": {
+          "recipe": "NOQ (paraphrase, no quotation)",
+          "why_wrong": "It states Vestergaard’s concern but in its own words, so it does not use a quotation as the goal requires."
+        },
+        "D": {
+          "recipe": "FALSE (goal-shaped: misrepresents the speaker)",
+          "why_wrong": "It turns Ilarregui’s praise into a criticism; the notes give no sign that he thinks cities should skip tactical projects in favor of permanent construction."
+        }
+      },
+      "models": [
+        "3.6",
+        "e8494245"
+      ],
+      "sources": [],
+      "notes": "Subject: social science (urban planning). Tactical urbanism is a real planning approach; both people and their words are invented (WAVE.md), and each name was searched once with no match in the field. Band 6 by plan: Quotation has no band-7 official items (spec/rw/band7/rhetorical_synthesis.md), so it is written as a strong band 6 on e8494245 (two NOQ plus one goal-shaped FALSE).",
+      "band_target": 6,
+      "word_count": 80,
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 2,
+        "fixes": [],
+        "status": "pass",
+        "note": "Invented names searched 2026-10-20: no urban designer named Tomás Ilarregui (Ilarregui is a real Navarrese surname) and no geographer named Hanne Vestergaard (only Danish directory listings); both read as real names and no real person in the field holds them."
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "Quotation has no band-7 official items (spec/rw/band7/rhetorical_synthesis.md), so it cannot be band 7; a strong band 6 on e8494245 (two NOQ, one goal-shaped FALSE)."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "C",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "rhetorical_synthesis.DIFF.medium.w3b3_06",
+      "template": "DIFF",
+      "subtype": "Difference between two items (parallel pair)",
+      "tier": "medium",
+      "passage": "While researching a topic, a student has taken the following notes:\n• The komuz and the dombra are long-necked lutes traditionally played in Central Asia.\n• Musicians pluck or strum both instruments, often while singing or reciting epic poetry.\n• The komuz, which is considered the national instrument of Kyrgyzstan, has three strings.\n• The dombra, which is considered the national instrument of Kazakhstan, has two strings.\n• Both instruments are frequently played at weddings, festivals, and other celebrations.",
+      "stem": "The student wants to emphasize a difference between the komuz and the dombra. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "The komuz and the dombra are both long-necked lutes, but the komuz has three strings and the dombra has two.",
+        "Musicians often sing or recite epic poetry while plucking or strumming the komuz and the dombra, both of which are long-necked lutes.",
+        "The komuz and the dombra, two long-necked lutes from Central Asia, differ from each other in some respects.",
+        "Considered the national instrument of Kazakhstan, the dombra is a long-necked lute with two strings."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The notes give one feature that sets the instruments apart: the komuz has three strings and the dombra has two. Choice A states that difference, naming both instruments and the attribute on which they differ.",
+      "distractors": {
+        "B": {
+          "recipe": "REL (a similarity)",
+          "why_wrong": "It describes something the two instruments have in common, so it does not emphasize a difference."
+        },
+        "C": {
+          "recipe": "VAGUE (says they differ without saying how)",
+          "why_wrong": "It asserts that the instruments differ but never says in what way."
+        },
+        "D": {
+          "recipe": "PART (one instrument only)",
+          "why_wrong": "It describes only the dombra; without the komuz, no difference is shown."
+        }
+      },
+      "models": [
+        "2.10",
+        "2.11",
+        "2.19",
+        "2.41"
+      ],
+      "sources": [],
+      "notes": "Subject: arts (Central Asian music). Real instruments known without a search; no named people (WAVE.md). Only one contrasting attribute pair (strings) appears in any option; the national-instrument facts are kept out of the contrast options.",
+      "word_count": 63,
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.DIFF.medium.w3b3_07",
+      "template": "DIFF",
+      "subtype": "Difference in a process",
+      "tier": "medium",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Speleothems are mineral formations that develop in caves as dripping or seeping water deposits calcite.\n• Stalactites form where water drips from a cave’s ceiling.\n• Because each drop falls straight down, stalactites grow vertically downward.\n• Helictites form where water seeps through a tiny central canal so slowly that it never forms drops.\n• Without the pull of falling drops, helictites can grow sideways, upward, or in twisting curves.",
+      "stem": "The student wants to emphasize a difference in how stalactites and helictites grow. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "Speleothems, such as stalactites and helictites, are mineral formations that develop as water deposits calcite in caves.",
+        "Both stalactites and helictites are speleothems, formations that develop as water deposits calcite inside caves.",
+        "Helictites, which form where water seeps through a tiny canal too slowly to make drops, can grow sideways, upward, or in twisting curves.",
+        "Whereas stalactites grow straight down as water drips from them, helictites, fed by water too slow to drip, can grow in many directions."
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The notes contrast the direction of growth: stalactites grow straight down because water drips from them, while helictites, fed by water that never forms drops, can grow sideways, upward or in curves. Choice D sets these side by side with “Whereas.”",
+      "distractors": {
+        "A": {
+          "recipe": "OG (defines the category)",
+          "why_wrong": "It explains what speleothems are; it does not say how the two formations grow differently."
+        },
+        "B": {
+          "recipe": "REL (a similarity)",
+          "why_wrong": "It names what stalactites and helictites have in common rather than a difference."
+        },
+        "C": {
+          "recipe": "PART (one side only)",
+          "why_wrong": "It describes only how helictites grow, so no contrast with stalactites is drawn."
+        }
+      },
+      "models": [
+        "2.10",
+        "2.11",
+        "2.19",
+        "2.41"
+      ],
+      "sources": [],
+      "notes": "Subject: natural science (cave geology). Real formations, known without a search; no named people (WAVE.md).",
+      "word_count": 66,
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.AUD_NEW.medium.w3b3_08",
+      "template": "AUD_NEW",
+      "subtype": "Describe a work to an audience unfamiliar with its author",
+      "tier": "medium",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Mahmud al-Kashgari was an eleventh-century scholar from Kashgar, a city in present-day western China.\n• He completed his Compendium of the Languages of the Turks in Baghdad around 1074.\n• Written in Arabic, the book explained Turkic vocabulary and grammar to Arabic-speaking readers.\n• It also contains a circular map depicting the world as its author understood it.\n• The only surviving manuscript, copied in 1266, is preserved in a library in Istanbul.",
+      "stem": "The student wants to describe the Compendium of the Languages of the Turks to an audience unfamiliar with Mahmud al-Kashgari. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "Al-Kashgari’s Compendium of the Languages of the Turks, written in Arabic, explained Turkic vocabulary and includes a circular map of the world.",
+        "Written by Mahmud al-Kashgari, an eleventh-century scholar from Kashgar, the Compendium of the Languages of the Turks explained Turkic vocabulary to Arabic-speaking readers.",
+        "Mahmud al-Kashgari, a scholar from the city of Kashgar in present-day western China, lived and worked during the eleventh century.",
+        "The only surviving manuscript of the Compendium of the Languages of the Turks, copied in 1266, is preserved in a library in Istanbul."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "An audience that does not know al-Kashgari needs to be told who he was before the book is described. Choice B identifies him as an eleventh-century scholar from Kashgar and then says what the book did: it explained Turkic vocabulary to Arabic-speaking readers.",
+      "distractors": {
+        "A": {
+          "recipe": "AUD (no identifying context)",
+          "why_wrong": "It describes the book but uses al-Kashgari’s name without saying who he was, which an unfamiliar audience would need."
+        },
+        "C": {
+          "recipe": "PART (the author, not the work)",
+          "why_wrong": "It identifies al-Kashgari but says nothing about the Compendium itself."
+        },
+        "D": {
+          "recipe": "OG (the surviving copy)",
+          "why_wrong": "It tells where the surviving copy is kept; it does not describe the book or identify its author."
+        }
+      },
+      "models": [
+        "2.34",
+        "2.36",
+        "2.8",
+        "2.43"
+      ],
+      "sources": [],
+      "notes": "Subject: history (medieval scholarship, Turkic languages). Real author and book known without a search; details kept to the well-known core (WAVE.md).",
+      "word_count": 69,
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.AUD_NEW.medium.w3b3_09",
+      "template": "AUD_NEW",
+      "subtype": "Introduce a program to a new audience",
+      "tier": "medium",
+      "passage": "While researching a topic, a student has taken the following notes:\n• The Friendship Bench is a mental health program developed in Zimbabwe.\n• It was created by Zimbabwean psychiatrist Dixon Chibanda.\n• The program trains older women from local communities, known as “grandmothers,” to provide talk therapy.\n• Sessions take place on wooden benches set up outside health clinics.\n• In a 2016 study, participants showed fewer symptoms of depression than patients who received standard care.",
+      "stem": "The student wants to introduce the Friendship Bench to a new audience. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "In a 2016 study, participants in the program showed fewer symptoms of depression than patients who received standard care.",
+        "The program’s “grandmothers” meet with participants on wooden benches set up outside health clinics.",
+        "Dixon Chibanda is a psychiatrist in Zimbabwe who created a program to address mental health.",
+        "Created by Zimbabwean psychiatrist Dixon Chibanda, the Friendship Bench is a mental health program in which trained older women offer talk therapy outside clinics."
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "A new audience needs to learn what the Friendship Bench is before any detail. Choice D names the program, says who created it and where, and explains what it does: trained older women offer talk therapy outside clinics.",
+      "distractors": {
+        "A": {
+          "recipe": "OG (a study result)",
+          "why_wrong": "It reports a study finding without saying what the program is, so it does not introduce it."
+        },
+        "B": {
+          "recipe": "AUD (assumes the audience knows the program)",
+          "why_wrong": "It refers to “the program” and its “grandmothers” without explaining what the Friendship Bench is."
+        },
+        "C": {
+          "recipe": "PART (the founder, not the program)",
+          "why_wrong": "It never names the Friendship Bench or says how it works."
+        }
+      },
+      "models": [
+        "2.26",
+        "2.8",
+        "2.43",
+        "2.34"
+      ],
+      "sources": [],
+      "notes": "Subject: social science (community mental health). Real program and founder known without a search; the study result is stated in general terms (WAVE.md).",
+      "word_count": 61,
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.EMPH.medium.w3b3_10",
+      "template": "EMPH",
+      "subtype": "Emphasize the extent of someone’s knowledge",
+      "tier": "medium",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Tupaia was a navigator and priest from Raiatea, one of the Society Islands in the South Pacific.\n• In 1769, he joined the British expedition led by James Cook aboard the Endeavour in Tahiti.\n• Tupaia drew a chart for the crew showing 74 islands spread across thousands of kilometers of ocean.\n• He later served as an interpreter between the expedition and Māori communities in New Zealand.\n• Tupaia died in 1770, before the expedition returned to Britain.",
+      "stem": "The student wants to emphasize the extent of Tupaia’s knowledge of Pacific islands. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "The chart that Tupaia drew for the Endeavour’s crew showed 74 islands scattered across thousands of kilometers of the Pacific.",
+        "Tupaia, a navigator and priest from Raiatea, joined James Cook’s expedition aboard the Endeavour when it reached Tahiti in 1769.",
+        "Before his death in 1770, Tupaia served as an interpreter between Cook’s expedition and Māori communities in New Zealand.",
+        "A navigator from the Society Islands, Tupaia drew a chart of Pacific islands for the crew of the Endeavour."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The notes measure Tupaia’s knowledge through his chart: it showed 74 islands spread across thousands of kilometers. Choice A gives both the number of islands and the distance they covered.",
+      "distractors": {
+        "B": {
+          "recipe": "OG (background)",
+          "why_wrong": "It says who Tupaia was and when he joined the ship, not how much he knew about the islands."
+        },
+        "C": {
+          "recipe": "OG (another role on the voyage)",
+          "why_wrong": "It describes his help with communication in New Zealand, not the extent of his knowledge of Pacific islands."
+        },
+        "D": {
+          "recipe": "VAGUE (the chart without its extent)",
+          "why_wrong": "It mentions the chart but leaves out how many islands it showed and how far they spread, the details that convey the extent of his knowledge."
+        }
+      },
+      "models": [
+        "2.6",
+        "2.14",
+        "2.33",
+        "2.40"
+      ],
+      "sources": [],
+      "notes": "Subject: history (Pacific navigation). Real person and voyage known without a search (WAVE.md).",
+      "word_count": 75,
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.EMPH.medium.w3b3_11",
+      "template": "EMPH",
+      "subtype": "Emphasize the length of a record",
+      "tier": "medium",
+      "passage": "While researching a topic, a student has taken the following notes:\n• The ocean quahog (Arctica islandica) is a North Atlantic clam.\n• Like a tree, it adds a visible growth band to its shell annually.\n• The width of each band reflects environmental conditions, such as water temperature, during that year.\n• One quahog collected near Iceland in 2006 proved to be 507 years old.\n• By matching growth bands of living and long-dead quahogs, researchers constructed a record of ocean conditions spanning more than 1,000 years.",
+      "stem": "The student wants to emphasize the length of the record that researchers built from quahog shells. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "A quahog collected near Iceland in 2006 turned out to be 507 years old.",
+        "The ocean quahog, a North Atlantic clam, adds a visible growth band to its shell each year, just as a tree does.",
+        "Researchers who matched growth bands from living and long-dead quahogs produced a record of North Atlantic ocean conditions spanning over a millennium.",
+        "Because the width of each growth band reflects conditions such as that year’s water temperature, quahog shells can serve as records of the ocean’s past."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The goal is about the record that researchers built, so the sentence must give how much time it covers. Choice C does: by matching bands from living and long-dead quahogs, researchers produced a record spanning more than a thousand years.",
+      "distractors": {
+        "A": {
+          "recipe": "OG (one clam’s age)",
+          "why_wrong": "It gives the age of a single quahog, not the length of the record researchers built from many shells."
+        },
+        "B": {
+          "recipe": "OG (what the quahog is)",
+          "why_wrong": "It introduces the clam and its growth bands but says nothing about the record’s length."
+        },
+        "D": {
+          "recipe": "PART (why shells are records, not how long the record is)",
+          "why_wrong": "It explains why quahog shells can serve as records but not how far back the researchers’ record reaches."
+        }
+      },
+      "models": [
+        "2.6",
+        "2.14",
+        "2.20",
+        "2.40"
+      ],
+      "sources": [],
+      "notes": "Subject: natural science (sclerochronology). Real species and research known without a search; the team is unnamed (WAVE.md). Angled to the length of the combined record rather than the record age of one clam.",
+      "word_count": 72,
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.EXPL.medium.w3b3_12",
+      "template": "EXPL",
+      "subtype": "Explain the origin of a term",
+      "tier": "medium",
+      "passage": "While researching a topic, a student has taken the following notes:\n• A mondegreen is a misheard word or phrase that unintentionally gives the original a new meaning.\n• The term was introduced by American writer Sylvia Wright in a 1954 magazine essay.\n• As a child, Wright frequently heard a traditional Scottish ballad containing the line “And laid him on the green.”\n• She misheard the line as “And Lady Mondegreen.”\n• She imagined Lady Mondegreen as a tragic noblewoman who appeared in the ballad.",
+      "stem": "The student wants to explain the origin of the term “mondegreen.” Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "Sylvia Wright, an American writer, introduced the term “mondegreen” in a magazine essay she published in 1954.",
+        "The term “mondegreen” comes from Sylvia Wright’s childhood mishearing of the ballad line “And laid him on the green” as “And Lady Mondegreen.”",
+        "A mondegreen is a misheard word or phrase, such as a song lyric, that takes on a meaning different from the original.",
+        "As a child, Sylvia Wright imagined that a Scottish ballad told of a tragic noblewoman named Lady Mondegreen."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "To explain where the word came from, the sentence must connect it to the misheard line. Choice B does: Wright, as a child, heard “And laid him on the green” as “And Lady Mondegreen,” and the term comes from that mistake.",
+      "distractors": {
+        "A": {
+          "recipe": "OG (who introduced the term and when)",
+          "why_wrong": "It says who introduced the term and when, not where the word itself came from."
+        },
+        "C": {
+          "recipe": "OG (definition)",
+          "why_wrong": "It defines a mondegreen but does not explain the origin of the term."
+        },
+        "D": {
+          "recipe": "PART (the imagined character without the mishearing)",
+          "why_wrong": "It mentions Lady Mondegreen but never says that the name came from a misheard line, so the origin of the term is not explained."
+        }
+      },
+      "models": [
+        "2.13",
+        "2.7",
+        "2.31"
+      ],
+      "sources": [],
+      "notes": "Subject: language and literature (word origins). Real, well-documented origin known without a search (WAVE.md).",
+      "word_count": 70,
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [
+          "stem punctuation: “mondegreen”. to “mondegreen.” (CB style, as 4e063114)"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.SIM.medium.w3b3_13",
+      "template": "SIM",
+      "subtype": "Similarity between two works or objects",
+      "tier": "medium",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Elaborate feather cloaks were produced in several Polynesian societies.\n• In Hawaiʻi, ʻahuʻula were constructed by attaching bundles of red and yellow feathers to a netting of olonā fiber.\n• ʻAhuʻula were worn exclusively by aliʻi, or chiefs.\n• In Aotearoa New Zealand, kahu huruhuru were produced by weaving feathers into a cloth of flax fiber.\n• Kahu huruhuru were worn by individuals of high rank.",
+      "stem": "The student wants to emphasize a similarity between ʻahuʻula and kahu huruhuru. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "While ʻahuʻula were made by tying feathers to a net, kahu huruhuru were made by weaving feathers into cloth.",
+        "In Hawaiʻi, ʻahuʻula, which were cloaks of red and yellow feathers tied to a net of olonā fiber, were worn only by chiefs.",
+        "In Aotearoa New Zealand, people of high rank wore kahu huruhuru, cloaks made by weaving feathers into a cloth of flax fiber.",
+        "The ʻahuʻula of Hawaiʻi and the kahu huruhuru of Aotearoa New Zealand were both feather cloaks worn by people of high rank."
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The notes say that ʻahuʻula were worn only by chiefs and that kahu huruhuru were worn by people of high rank. Choice D names both cloaks and states what they share: both were feather cloaks worn by high-ranking people.",
+      "distractors": {
+        "A": {
+          "recipe": "REL (a difference)",
+          "why_wrong": "It contrasts how the two cloaks were made instead of emphasizing a similarity."
+        },
+        "B": {
+          "recipe": "PART (one cloak only)",
+          "why_wrong": "It describes only the ʻahuʻula, so no similarity with kahu huruhuru is shown."
+        },
+        "C": {
+          "recipe": "PART (one cloak only)",
+          "why_wrong": "It describes only kahu huruhuru, so no similarity with ʻahuʻula is shown."
+        }
+      },
+      "models": [
+        "2.24",
+        "2.30",
+        "2.46"
+      ],
+      "sources": [],
+      "notes": "Subject: arts and history (Polynesian featherwork). Real objects known without a search; no named people (WAVE.md). Hawaiian words keep the ʻokina and kahakō.",
+      "word_count": 62,
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.RANK.medium.w3b3_14",
+      "template": "RANK",
+      "subtype": "Relative degree with a derived difference",
+      "tier": "medium",
+      "passage": "While researching a topic, a student has taken the following notes:\n• A blue hole is a marine sinkhole that appears as a dark blue circle amid shallower water.\n• Dean’s Blue Hole is located in a bay on Long Island in the Bahamas.\n• Divers have measured its maximum depth at approximately 202 meters.\n• Dragon Hole is located in the Paracel Islands in the South China Sea.\n• A 2016 scientific survey measured its maximum depth at approximately 300 meters.",
+      "stem": "The student wants to emphasize how the depth of Dragon Hole compares with that of Dean’s Blue Hole. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "Dragon Hole, in the South China Sea, is roughly 100 meters deeper than Dean’s Blue Hole in the Bahamas.",
+        "Dean’s Blue Hole is about 202 meters deep, and Dragon Hole is about 300 meters deep.",
+        "Blue holes, such as Dean’s Blue Hole and Dragon Hole, are marine sinkholes that look like dark blue circles amid shallower water.",
+        "A survey conducted in 2016 measured Dragon Hole, in the Paracel Islands, at a depth of about 300 meters."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "Dragon Hole is about 300 meters deep and Dean’s Blue Hole about 202 meters, so Dragon Hole is roughly 100 meters deeper. Choice A states that comparison directly.",
+      "distractors": {
+        "B": {
+          "recipe": "LIST (both values, no comparison)",
+          "why_wrong": "It gives both depths side by side but never states how they compare."
+        },
+        "C": {
+          "recipe": "OG (defines blue holes)",
+          "why_wrong": "It explains what blue holes are rather than comparing the depths of the two."
+        },
+        "D": {
+          "recipe": "PART (one blue hole only)",
+          "why_wrong": "It gives Dragon Hole’s depth but says nothing about Dean’s Blue Hole."
+        }
+      },
+      "models": [
+        "2.27",
+        "2.37",
+        "2.44"
+      ],
+      "sources": [],
+      "notes": "Subject: natural science (marine geology). Real sites; depths rounded as commonly reported, no named people (WAVE.md). Notes avoid any “deepest” record framing.",
+      "word_count": 66,
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.EXAMPLE.medium.w3b3_15",
+      "template": "EXAMPLE",
+      "subtype": "Explanation plus example of a term",
+      "tier": "medium",
+      "passage": "While researching a topic, a student has taken the following notes:\n• A retronym is a new name created for an existing thing to distinguish it from a newer version of that thing.\n• The term was coined by American journalist Frank Mankiewicz around 1980.\n• For centuries, guitars were simply called guitars, since no other kind existed.\n• After electric guitars became widespread in the mid-twentieth century, people began referring to traditional guitars as “acoustic guitars.”\n• “Acoustic guitar” is therefore a retronym.",
+      "stem": "The student wants to provide an explanation and an example of a retronym. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "A retronym is a name created for something that already exists in order to distinguish it from a newer version of that thing.",
+        "After electric guitars became widespread, people began calling traditional guitars “acoustic guitars.”",
+        "A retronym, such as “acoustic guitar,” is a new name given to an existing thing to set it apart from a newer version.",
+        "The term “retronym” has been in use since around 1980, when American journalist Frank Mankiewicz coined it."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The goal has two parts: what a retronym is and an instance of one. Choice C gives both: a retronym is a new name for an existing thing that sets it apart from a newer version, and “acoustic guitar” is an example.",
+      "distractors": {
+        "A": {
+          "recipe": "PART (explanation only)",
+          "why_wrong": "It explains what a retronym is but gives no example."
+        },
+        "B": {
+          "recipe": "PART (example only)",
+          "why_wrong": "It describes how “acoustic guitar” came into use but never says what a retronym is or calls this one."
+        },
+        "D": {
+          "recipe": "OG (who coined the term)",
+          "why_wrong": "It tells who coined the term and when, without explaining it or giving an example."
+        }
+      },
+      "models": [
+        "2.16",
+        "2.25",
+        "2.42"
+      ],
+      "sources": [],
+      "notes": "Subject: language (word formation). Real term; the coinage by Frank Mankiewicz is the standard account, known without a search (WAVE.md).",
+      "word_count": 68,
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.STUDY.medium.w3b3_16",
+      "template": "STUDY",
+      "subtype": "Present the study’s results (two findings)",
+      "tier": "medium",
+      "passage": "While researching a topic, a student has taken the following notes:\n• The rice borer moth is a pest whose larvae feed inside the stems of rice plants.\n• In Spain’s Ebro Delta, a team of researchers investigated whether soprano pipistrelle bats could help control the moth.\n• The team installed bat boxes, which serve as artificial roosts, near rice fields.\n• By analyzing DNA in bat droppings, the researchers found that the bats consumed large numbers of rice borer moths.\n• Fields close to the bat boxes contained fewer moth larvae than fields farther away.",
+      "stem": "The student wants to present the study’s results. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "The researchers wanted to know whether soprano pipistrelle bats could help control the rice borer moth in Spain’s Ebro Delta.",
+        "The study found that soprano pipistrelles ate many rice borer moths and that rice fields near the bat boxes had fewer of the moths’ larvae.",
+        "To study the bats, the researchers installed artificial roosts near rice fields and analyzed DNA in the bats’ droppings.",
+        "The rice borer moth, whose larvae feed inside rice stems, is a pest in rice-growing areas such as Spain’s Ebro Delta."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The study’s results are what the researchers found: the bats ate large numbers of rice borer moths, and fields near the bat boxes had fewer larvae. Choice B presents both results.",
+      "distractors": {
+        "A": {
+          "recipe": "OG (aim offered for results)",
+          "why_wrong": "It states what the researchers set out to learn, not what they found."
+        },
+        "C": {
+          "recipe": "OG (method offered for results)",
+          "why_wrong": "It describes how the study was carried out, not its results."
+        },
+        "D": {
+          "recipe": "OG (background)",
+          "why_wrong": "It explains why the moth matters, which is background to the study, not a result."
+        }
+      },
+      "models": [
+        "2.2",
+        "2.5",
+        "2.21"
+      ],
+      "sources": [],
+      "notes": "Subject: natural science (pest control by bats). The kind of study is real; the team is unnamed and its details are plausible, unverified (WAVE.md).",
+      "word_count": 80,
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.AUD_FAM.medium.w3b3_17",
+      "template": "AUD_FAM",
+      "subtype": "Present a study’s findings to a familiar audience",
+      "tier": "medium",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Otoliths are tiny ear stones that help fish sense balance and movement.\n• They grow in yearly layers whose chemistry reflects the water’s temperature.\n• A team of researchers analyzed otoliths from fish remains at a 5,000-year-old archaeological site on Peru’s coast.\n• The team compared them with otoliths from fish recently caught in the same area.\n• The ancient otoliths indicated that summer waters there were once several degrees warmer.",
+      "stem": "The student wants to present the study’s findings to an audience already familiar with otoliths. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "Otoliths from fish remains at a 5,000-year-old site in Peru suggest that the area’s summer waters were once several degrees warmer than they are today.",
+        "Otoliths, tiny ear stones that grow in layers reflecting water temperature, show that summer waters off Peru were once several degrees warmer than they are now.",
+        "Researchers studied otoliths, the ear stones that help fish sense balance and movement, from fish remains found at an ancient site in Peru.",
+        "The researchers compared otoliths from 5,000-year-old fish remains with otoliths from fish caught in the same area of Peru today."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "An audience that already knows what otoliths are needs only the findings. Choice A uses the term without explaining it and reports what the study found: summer waters off Peru were once several degrees warmer.",
+      "distractors": {
+        "B": {
+          "recipe": "AUD (explains the familiar term)",
+          "why_wrong": "It reports the finding but stops to explain what otoliths are, which this audience already knows."
+        },
+        "C": {
+          "recipe": "AUD and PART (explains the term, no finding)",
+          "why_wrong": "It explains what otoliths are and never gives the study’s finding."
+        },
+        "D": {
+          "recipe": "PART (method without findings)",
+          "why_wrong": "It describes the comparison the researchers made but not what it showed."
+        }
+      },
+      "models": [
+        "2.1",
+        "2.18",
+        "2.28"
+      ],
+      "sources": [],
+      "notes": "Subject: natural science and archaeology (past ocean temperatures). The kind of study is real; the team is unnamed and the site details are plausible, unverified (WAVE.md). Option B is complete except for the redefinition, as 2.1 D.",
+      "word_count": 67,
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.SPEC.medium.w3b3_18",
+      "template": "SPEC",
+      "subtype": "Specify when",
+      "tier": "medium",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Lençóis Maranhenses National Park is in northeastern Brazil.\n• The park’s landscape consists of white sand dunes up to 40 meters high.\n• Heavy seasonal rains fall in the region from roughly January to June.\n• Rainwater accumulates in the hollows between the dunes, forming thousands of lagoons.\n• The lagoons are at their fullest from approximately July to September.",
+      "stem": "The student wants to specify when the lagoons in Lençóis Maranhenses are at their fullest. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "From about January to June, heavy rains fall in the region of northeastern Brazil where Lençóis Maranhenses National Park is located.",
+        "Lençóis Maranhenses National Park, in northeastern Brazil, is covered by white sand dunes up to 40 meters high.",
+        "Rainwater collecting in the hollows between the park’s dunes forms thousands of lagoons.",
+        "The lagoons that form between the dunes of Lençóis Maranhenses are at their fullest from about July to September."
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The goal asks when the lagoons are fullest. The notes answer directly: from about July to September. Choice D gives that time.",
+      "distractors": {
+        "A": {
+          "recipe": "OG (when the rains fall)",
+          "why_wrong": "It gives the months of the rainy season, not the months when the lagoons are fullest."
+        },
+        "B": {
+          "recipe": "OG (location and dunes)",
+          "why_wrong": "It tells where the park is and how high its dunes are, not when the lagoons are fullest."
+        },
+        "C": {
+          "recipe": "OG (how the lagoons form)",
+          "why_wrong": "It explains how the lagoons form but gives no time at all."
+        }
+      },
+      "models": [
+        "2.39",
+        "2.45"
+      ],
+      "sources": [],
+      "notes": "Subject: natural science (geography of a Brazilian national park). Real place known without a search; months rounded (WAVE.md).",
+      "word_count": 56,
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.GEN.medium.w3b3_19",
+      "template": "GEN",
+      "subtype": "Make and support a generalization",
+      "tier": "medium",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Pysanky are Ukrainian eggs decorated with intricate patterns.\n• Artists draw patterns on the eggs in beeswax and then dip them in dyes; areas covered with wax keep their earlier color.\n• Many motifs on pysanky have traditional meanings.\n• A stalk of wheat, for instance, represents a good harvest.\n• A sun represents good fortune.",
+      "stem": "The student wants to make and support a generalization about the motifs on pysanky. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "On pysanky, a stalk of wheat represents a good harvest, and a sun represents good fortune.",
+        "The motifs on pysanky often carry traditional meanings; a stalk of wheat, for example, stands for a good harvest.",
+        "To decorate pysanky, artists draw patterns in beeswax and dip the eggs in dyes, so that waxed areas keep their earlier color.",
+        "Pysanky, decorated Ukrainian eggs, are known for their intricate patterns and for the many meanings of their motifs."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The goal has two parts: a broad claim about the motifs and a specific case that backs it up. Choice B makes the claim (the motifs often carry traditional meanings) and supports it with the wheat stalk, which stands for a good harvest.",
+      "distractors": {
+        "A": {
+          "recipe": "PART (support without the generalization)",
+          "why_wrong": "It gives two examples but never makes a general claim about the motifs."
+        },
+        "C": {
+          "recipe": "OG (how pysanky are made)",
+          "why_wrong": "It describes the decorating process, not the motifs’ meanings."
+        },
+        "D": {
+          "recipe": "PART (claim without support)",
+          "why_wrong": "It states that the motifs have many meanings but gives no example to support that claim."
+        }
+      },
+      "models": [
+        "2.12",
+        "2.22"
+      ],
+      "sources": [],
+      "notes": "Subject: arts (Ukrainian folk art). Real craft known without a search; motif meanings kept to common, widely cited ones (WAVE.md).",
+      "word_count": 52,
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.DESC.medium.w3b3_20",
+      "template": "DESC",
+      "subtype": "Describe a process",
+      "tier": "medium",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Ondol is a traditional Korean method of heating a room from below.\n• A fire is lit in a firebox, frequently the kitchen stove, located outside the room.\n• Hot smoke travels from the fire through horizontal channels beneath the room’s stone floor.\n• The heated stones gradually warm the room, and the smoke eventually exits through a chimney.",
+      "stem": "The student wants to describe how an ondol heats a room. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "Ondol is a traditional Korean method of heating rooms from below.",
+        "The firebox for an ondol system is often a kitchen stove that sits outside the room being heated.",
+        "Smoke from a fire in a firebox flows through channels under the room’s stone floor, heating the stones, which in turn warm the room.",
+        "Rooms heated by ondol have stone floors with channels running beneath them."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "Describing how an ondol heats a room means tracing the heat: smoke from the fire passes through channels under the stone floor, the stones heat up, and the warm stones heat the room. Choice C describes that sequence.",
+      "distractors": {
+        "A": {
+          "recipe": "VAGUE (names the method without describing it)",
+          "why_wrong": "It says ondol heats rooms from below but not how the heat gets there."
+        },
+        "B": {
+          "recipe": "PART (where the fire is)",
+          "why_wrong": "It says where the fire is often lit but not how its heat reaches the room."
+        },
+        "D": {
+          "recipe": "PART (the floor’s structure without the process)",
+          "why_wrong": "It describes the floor but not how smoke and heat move through it."
+        }
+      },
+      "models": [
+        "2.4"
+      ],
+      "sources": [],
+      "notes": "Subject: social science and technology (Korean housing). Real system known without a search; no named people (WAVE.md).",
+      "word_count": 56,
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.EMPH.easy.w3b3_21",
+      "template": "EMPH",
+      "subtype": "Emphasize a quantity",
+      "tier": "easy",
+      "passage": "While researching a topic, a student has taken the following notes:\n• The Etruscan shrew is a tiny mammal inhabiting parts of southern Europe, northern Africa, and Asia.\n• It weighs approximately 1.8 grams.\n• It feeds primarily on insects and must eat frequently to survive.\n• Its heart can beat up to 1,500 times per minute.\n• By comparison, a resting adult human heart beats about 60 to 100 times per minute.",
+      "stem": "The student wants to emphasize how fast the Etruscan shrew’s heart can beat. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "Found in parts of southern Europe, northern Africa, and Asia, the Etruscan shrew is a tiny mammal.",
+        "The Etruscan shrew weighs only about 1.8 grams.",
+        "The Etruscan shrew feeds mainly on insects and must eat often to survive.",
+        "The Etruscan shrew’s heart can beat as many as 1,500 times per minute, many times faster than a resting human heart."
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The goal is about the speed of the shrew’s heartbeat. Choice D gives the rate, up to 1,500 beats per minute, and stresses it by comparing it with the much slower human heart.",
+      "distractors": {
+        "A": {
+          "recipe": "OG (where it lives)",
+          "why_wrong": "It tells where the shrew is found, not how fast its heart beats."
+        },
+        "B": {
+          "recipe": "OG (its weight)",
+          "why_wrong": "It emphasizes the shrew’s small size, not its heart rate."
+        },
+        "C": {
+          "recipe": "OG (its diet)",
+          "why_wrong": "It describes what the shrew eats, not how fast its heart beats."
+        }
+      },
+      "models": [
+        "1.7",
+        "1.14",
+        "1.15",
+        "1.16"
+      ],
+      "sources": [],
+      "notes": "Subject: natural science (mammal physiology). Real species known without a search; figures rounded (WAVE.md). Angled to heart rate rather than the shrew’s record small size.",
+      "word_count": 57,
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.SIM.easy.w3b3_22",
+      "template": "SIM",
+      "subtype": "Similarity between two items (parallel pair)",
+      "tier": "easy",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Senet and mehen are two board games that were popular in ancient Egypt.\n• Senet was played on a rectangular board of thirty squares arranged in three rows.\n• Senet boards have been discovered in numerous ancient Egyptian tombs.\n• Mehen was played on a circular board resembling a coiled snake.\n• Mehen boards have also been discovered in ancient Egyptian tombs.\n• Senet remained popular for more than two thousand years.",
+      "stem": "The student wants to emphasize a similarity between senet and mehen. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "Boards for both senet and mehen have been found in ancient Egyptian tombs.",
+        "Senet was played on a rectangular board with thirty squares, while mehen was played on a round board shaped like a coiled snake.",
+        "Senet, which was played on a rectangular board of thirty squares, remained popular for more than two thousand years.",
+        "Mehen was an ancient Egyptian board game played on a round board shaped like a coiled snake."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The notes say that boards for senet and for mehen have both been found in ancient Egyptian tombs. Choice A states this shared trait with “both.”",
+      "distractors": {
+        "B": {
+          "recipe": "REL (a difference)",
+          "why_wrong": "It contrasts the shapes of the two boards instead of emphasizing a similarity."
+        },
+        "C": {
+          "recipe": "PART (senet only)",
+          "why_wrong": "It describes only senet, so no similarity with mehen is shown."
+        },
+        "D": {
+          "recipe": "PART (mehen only)",
+          "why_wrong": "It describes only mehen, so no similarity with senet is shown."
+        }
+      },
+      "models": [
+        "1.10",
+        "1.11",
+        "1.22"
+      ],
+      "sources": [],
+      "notes": "Subject: history (ancient Egyptian games). Real games known without a search (WAVE.md).",
+      "word_count": 67,
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.DIFF.easy.w3b3_23",
+      "template": "DIFF",
+      "subtype": "Difference in a process (parallel pair)",
+      "tier": "easy",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Bizen ware and raku ware are two traditional kinds of Japanese pottery.\n• Both are frequently used in the Japanese tea ceremony.\n• Bizen ware is fired gradually in a wood-burning kiln for approximately two weeks.\n• Raku ware was first produced in Kyoto during the sixteenth century.\n• It is removed from the kiln while still glowing hot and then cooled rapidly.",
+      "stem": "The student wants to emphasize a difference between how Bizen ware and raku ware are fired. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "Bizen ware and raku ware are both traditional kinds of Japanese pottery that are often used in the tea ceremony.",
+        "Bizen ware is fired slowly for about two weeks, while raku ware is pulled from the kiln still glowing hot and cooled quickly.",
+        "Raku ware, which potters first produced in Kyoto during the sixteenth century, is removed from the kiln while it is still glowing hot.",
+        "Used in the Japanese tea ceremony, Bizen ware is a traditional kind of Japanese pottery."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The goal names the firing. The notes say Bizen ware is fired slowly for about two weeks, while raku ware is taken out of the kiln glowing hot and cooled quickly. Choice B joins the two with “while.”",
+      "distractors": {
+        "A": {
+          "recipe": "REL (a similarity)",
+          "why_wrong": "It states what the two kinds of pottery have in common, not a difference."
+        },
+        "C": {
+          "recipe": "PART (raku only)",
+          "why_wrong": "It describes only how raku ware is fired, so no contrast with Bizen ware is drawn."
+        },
+        "D": {
+          "recipe": "OG (what Bizen ware is)",
+          "why_wrong": "It identifies Bizen ware and its use but says nothing about firing or about raku ware."
+        }
+      },
+      "models": [
+        "1.2",
+        "1.13"
+      ],
+      "sources": [],
+      "notes": "Subject: arts (Japanese ceramics). Real wares known without a search; firing time rounded (WAVE.md).",
+      "word_count": 59,
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.EXAMPLE.easy.w3b3_24",
+      "template": "EXAMPLE",
+      "subtype": "Define a term and provide an example",
+      "tier": "easy",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Portolan charts are nautical charts that show coastlines and harbors crossed by networks of straight lines marking compass directions.\n• Sailors in the Mediterranean used portolan charts from the thirteenth century onward.\n• The Carta Pisana was drawn around 1275.\n• It is the oldest surviving portolan chart.\n• It is held by the National Library of France in Paris.",
+      "stem": "The student wants to define the term “portolan chart” and provide an example of one. Which choice most effectively uses relevant information from the notes to accomplish these goals?",
+      "options": [
+        "The Carta Pisana, which was drawn around 1275, is held today by the National Library of France in the city of Paris.",
+        "Portolan charts are nautical charts showing coastlines and harbors crossed by lines that mark compass directions.",
+        "Portolan charts, such as the Carta Pisana, are nautical charts showing coastlines and harbors crossed by lines that mark compass directions.",
+        "Drawn around 1275, the Carta Pisana is the oldest surviving portolan chart."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The goals call for a definition and an example. Choice C defines portolan charts (nautical charts showing coastlines and harbors crossed by lines marking compass directions) and names one, the Carta Pisana.",
+      "distractors": {
+        "A": {
+          "recipe": "OG (where the chart is kept)",
+          "why_wrong": "It tells when the Carta Pisana was drawn and where it is kept, without defining the term or calling it a portolan chart."
+        },
+        "B": {
+          "recipe": "PART (definition only)",
+          "why_wrong": "It defines portolan charts but gives no example."
+        },
+        "D": {
+          "recipe": "PART (example only)",
+          "why_wrong": "It names an example of a portolan chart but does not define the term."
+        }
+      },
+      "models": [
+        "1.19"
+      ],
+      "sources": [],
+      "notes": "Subject: history (medieval cartography). Real chart known without a search (WAVE.md). Two-part goal, so the stem uses “these goals” as 1.19 does.",
+      "word_count": 56,
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      }
+    }
+  ],
+  "done": true
+}

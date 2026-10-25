@@ -1,0 +1,388 @@
+{
+  "skill": "Cross-Text Connections",
+  "slug": "cross_text_connections",
+  "part": "b7",
+  "domain": "Craft and Structure",
+  "plan": {
+    "templates": [
+      {
+        "code": "S1_solution",
+        "name": "Respond: one text supplies a solution to the other's problem"
+      },
+      {
+        "code": "S1_second_factor",
+        "name": "Respond: target is incomplete, a second cause or source"
+      },
+      {
+        "code": "S1_refute_data",
+        "name": "Respond: target refuted by new data"
+      },
+      {
+        "code": "apply_model",
+        "name": "New: explain an experiment's outcome using the model in the other text"
+      }
+    ]
+  },
+  "source": "spec/rw/band7/pilot (written to spec/rw/band7/WRITE.md, reviewed to spec/rw/VERIFY.md, gated per PROXY.md, blind safety solve)",
+  "items": [
+    {
+      "id": "cross_text_connections.S1_solution.b7",
+      "template": "S1_solution",
+      "subtype": "Respond: one text supplies a solution to the other’s problem (Text 1 speaking)",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "Text 1\n\nTissue-thin parchment made the first pocket Bibles possible in thirteenth-century Europe, but scholars still disagree about which animals supplied it: some have proposed the skins of unborn calves or lambs, and older scholarship even suggested rabbits or squirrels. Such claims have proven difficult to settle. Identifying a skin’s species from the pattern of hair follicles on its surface is often inconclusive, and custodians of such precious manuscripts rarely permit samples to be cut from them.\n\nText 2\n\nSarah Fiddyment and colleagues found that gently rubbing parchment with a PVC eraser, a step borrowed from standard conservation cleaning, generates a static charge that lifts proteins from the surface, and that analyzing those proteins reveals the species from which a page was made. Applying the technique to 72 pocket Bibles, the team found no evidence of unexpected animals, although some individual manuscripts contained skins from more than one species.",
+      "stem": "Based on the texts, how would the author of Text 1 most likely respond to the research described in Text 2?",
+      "options": [
+        "By concluding that the research settles the disagreement about the parchment, showing that it came from unborn calves or lambs rather than from rabbits or squirrels",
+        "By maintaining that the technique, like the study of hair follicles, relies on traces taken from a page’s surface and so is likely to prove similarly inconclusive",
+        "By recognizing that the technique avoids both of the difficulties that have so far kept scholars from settling which animals supplied the parchment of the pocket Bibles",
+        "By recognizing that the technique gets around the inconclusiveness of follicle patterns but not custodians’ reluctance to let material be removed from such precious manuscripts"
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "Text 1 names two difficulties in settling which animals supplied the parchment: follicle patterns are often inconclusive, and custodians rarely let samples be cut from such precious manuscripts. Text 2 describes a method that identifies species from surface proteins collected by gently rubbing a page with an eraser, a step taken from standard conservation cleaning. The method needs neither follicle patterns nor cut samples, so the author of Text 1 would most likely see it as getting around both difficulties, a conclusion neither text states. It does not settle every claim, though: it identifies species, not whether an animal was unborn.",
+      "distractors": {
+        "A": {
+          "recipe": "D3 twisted detail (one word, unborn, carried over from Text 1 as if Text 2 had shown it)",
+          "why_wrong": "Text 2 says the proteins reveal the species a page came from, not whether the animal was unborn, and it never names the species it found. Ruling out unexpected animals does not show that the skins came from unborn calves or lambs, so the disagreement is not settled in that way."
+        },
+        "B": {
+          "recipe": "D3 fair summary of Text 1’s view applied where it does not hold",
+          "why_wrong": "Text 1 calls follicle patterns on the surface often inconclusive, but Text 2’s method does not read follicles: it analyzes proteins lifted from the surface, which reveal the species, and it was applied to 72 Bibles. Text 1’s author has no reason to expect the same failure."
+        },
+        "D": {
+          "recipe": "D7 half right: the key's first half, then the second obstacle wrongly kept (one detail moved: surface material lifted versus samples cut)",
+          "why_wrong": "The first half is right, but the second obstacle is also avoided. Text 1’s concern is that custodians rarely let samples be cut; Text 2’s method only rubs the page with an eraser, a step borrowed from standard conservation cleaning that custodians already allow."
+        }
+      },
+      "models": [
+        "f3c45b4f",
+        "f7c02e89",
+        "4b4ab04e"
+      ],
+      "band7_moves": [
+        "Text 1 speaks and must be extended to a method it never mentions (as in 4b4ab04e and f7c02e89)",
+        "key states a conclusion neither text states, abstractly: the student must match each of Text 1's two difficulties to a feature of Text 2's method",
+        "A carries one word (unborn) from Text 1 into a claim Text 2 cannot support: the method names species, not age",
+        "B restates Text 1's view (surface evidence is inconclusive) where it no longer applies; D is half right: it grants the key's first half and keeps the custodian obstacle, which the conservation-cleaning clause removes"
+      ],
+      "word_count": 145,
+      "sources": [
+        {
+          "what": "Fiddyment et al., Animal origin of 13th-century uterine vellum revealed using noninvasive peptide fingerprinting, PNAS 112(49): 15066 to 15071 (2015): tissue-thin parchment made the first pocket Bibles possible; some suggested fetal calf or sheep skin; a simple technique using standard conservation treatments; protein extracted by the electrostatic charge of gentle rubbing with a PVC eraser; 72 pocket Bibles; more than one mammal species in a single manuscript",
+          "url": "https://eprints.whiterose.ac.uk/id/eprint/93097"
+        },
+        {
+          "what": "72 pocket Bibles from France, England and Italy and 293 other samples; no evidence for unexpected animals; older scholarship suggested rabbit or squirrel",
+          "url": "https://www.sciencedaily.com/releases/2015/11/151123201941.htm"
+        },
+        {
+          "what": "for cultural heritage such as manuscripts preservation is the primary concern, making physical sampling very unlikely; eZooMS developed with conservators at the Borthwick Archive; eraser crumbs collected and analyzed",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC8550019"
+        },
+        {
+          "what": "species identification by hair and follicle patterns is often inconclusive, leading to speculation and unresolved debate",
+          "url": "https://eprints.whiterose.ac.uk/id/eprint/175128/1/s40494_021_00503_6.pdf"
+        },
+        {
+          "what": "PNAS abstract and full text: tissue-thin parchment and pocket Bibles; PVC eraser electrostatic extraction; standard conservation treatments; PVC erasers widely accepted by conservators as a noninvasive cleaning measure; follicle patterns not always discernible; no evidence of unexpected species such as rabbit or squirrel; more than one species in a single manuscript",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4679014/"
+        }
+      ],
+      "notes": "Subject: humanities and science (history of the book, biomolecular archaeology). Key letter C. Steps: 3 (find Text 1's two obstacles, match each to a feature of Text 2's method, conclude the method makes the claims testable). Synthesis key: yes. Text 1 speaks: yes. Section 6 checks: key 26 words; mean option length 27.8 words; mean share of distractor content words found in the passage 0.46 (band 7 mean 0.51, band 6 0.44); both texts together 151 words. Reviewer: key made abstract (it had spelled out the mapping to follicles and cutting); custodian sentence hedged to \"rarely permit\", as the sources support (preservation makes physical sampling very unlikely), not an absolute ban. Hardening pass 2026-10-16: see hardened; key now 27 words, mean option length 26.2 words, passage 145 words (earlier section 6 figures in this note predate the pass).",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 8,
+        "fixes": [
+          "custodian claim hedged: \"custodians of such precious manuscripts rarely permit samples to be cut\" (no source states an absolute refusal; PMC8550019 says physical sampling is very unlikely)",
+          "key rewritten abstractly so the student must map both difficulties to the method",
+          "options A, B and D rewritten: A claims the research settles the dispute for unborn calves or lambs (the method shows species, not age); B reasserts Text 1's doubt about surface evidence; D half right (avoids the follicle problem but supposedly not custodians' reluctance); \"Collaborating with conservators\" dropped so D dies only on the conservation-cleaning clause (hardening pass 2026-10-16); key lengthened to name what the difficulties block (settling which animals supplied the parchment)"
+        ],
+        "status": "fixed"
+      },
+      "band7": {
+        "verdict": "band 7",
+        "why": "Follows f7c02e89 and 4b4ab04e: Text 1 speaks and must be extended to a method it never mentions, the key is a synthesis neither text states, and the hardest distractor (D) moves one detail (surface material lifted versus samples cut) and is answered only by Text 2's note that the eraser step is standard conservation cleaning. Two twisted-detail distractors reuse passage nouns."
+      },
+      "hardened": {
+        "what": "A, B and D replaced. A now claims the research settles the dispute in favor of unborn calves or lambs (the method shows species only, and Text 2 names none). B reasserts Text 1's own doubt about surface evidence against a method that reads proteins, not follicles. D is now half right: the technique avoids the follicle problem but not the custodians' reluctance. \"Collaborating with conservators\" dropped from Text 2, so D dies only on the conservation-cleaning clause.",
+        "tempting": [
+          "D: it agrees with the key on the first difficulty and the eraser really does lift material from every page, so a reader who equates any removal with Text 1's cut samples keeps the second obstacle; only \"standard conservation cleaning\" shows custodians already permit the step",
+          "A: no unexpected animals seems to clear away rabbits and squirrels and leave Text 1's other proposal standing; only a reader who checks what the method measures (species, not age) sees that unborn is unsupported"
+        ]
+      },
+      "band": 6,
+      "band_basis": "pilot gate: reads band 6 against official anchors after hardening; served as hard"
+    },
+    {
+      "id": "cross_text_connections.S1_second_factor.b7",
+      "template": "S1_second_factor",
+      "subtype": "Respond: target is incomplete, a second cause or source",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "Text 1\n\nKelly Jakubowski and colleagues compared songs that participants reported experiencing as involuntary, repetitive “earworms” with comparable songs that went unreported. The earworms tended to feature faster tempos, overall melodic contours common in Western popular music, and unusual intervals or repetitions. <u>Findings like these suggest that whether a song becomes an earworm is determined by characteristics intrinsic to the song itself</u>.\n\nText 2\n\nAnalyzing detailed reports from more than 600 people, Victoria Williamson and colleagues classified the circumstances in which earworms originate. The most frequent trigger was recent exposure to the song, whether on the radio, in a public place, or through someone humming it, but earworms also arose from reminders such as a word or location associated with a song, from particular emotional states, and during periods of diminished attention, such as boredom.",
+      "stem": "Based on the texts, how would Williamson and colleagues (Text 2) most likely respond to the underlined claim in Text 1?",
+      "options": [
+        "By suggesting that whether a song becomes an earworm depends not only on the song’s own characteristics but also on factors that lie outside the song itself",
+        "By arguing that the circumstances in which a person hears or recalls a song, rather than the song’s musical features, chiefly determine whether it becomes an earworm",
+        "By proposing that the features Jakubowski and colleagues identified may matter mainly because songs with those features are more often played on the radio and in public places",
+        "By questioning whether people in states of diminished attention can reliably report which songs have become stuck in their heads"
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The underlined claim says that whether a song becomes an earworm is determined by the song’s own characteristics. Text 2 finds that earworms are set off by the listener’s situation: recent exposure, reminders such as a word or place, emotional states, and periods of low attention. None of these is a property of the song, so Williamson and colleagues would say the song’s features are not the whole story; factors outside the song also play a part. Text 2 never studies the songs’ features, so it cannot say those features matter less than the circumstances.",
+      "distractors": {
+        "B": {
+          "recipe": "D5 overstatement in the key's direction (rather than, chiefly)",
+          "why_wrong": "Text 2 classifies the circumstances in which earworms start; it never examines the songs’ musical features, so it gives no basis for ranking circumstances above features. Its findings show that outside factors also matter, not that they outweigh the song’s own traits."
+        },
+        "C": {
+          "recipe": "D3 twisted detail joining Text 1's features to Text 2's exposure trigger",
+          "why_wrong": "Text 2 lists hearing a song on the radio or in public places as a trigger, but it never says which kinds of songs are played there. Linking tempo and intervals to how often a song is played is a story neither text tells."
+        },
+        "D": {
+          "recipe": "D8 wrong target",
+          "why_wrong": "Text 2 treats diminished attention as one of the circumstances in which earworms arise, not as a reason to doubt people’s reports. Neither text raises the reliability of the reports."
+        }
+      },
+      "models": [
+        "592f94c2",
+        "e4e2aeb3"
+      ],
+      "band7_moves": [
+        "key phrased one level more abstract than Text 2 and without naming the second factor (factors outside the song itself), as in 592f94c2",
+        "overstatement in the key's direction (circumstances rather than features chiefly determine), the 592f94c2 A move: it mirrors the underlined claim with Text 2's cause swapped in, but Text 2 never weighs features",
+        "hedged twisted detail that reconciles the texts (features matter because such songs get more airplay), a link neither text makes",
+        "wrong-target distractor built from Text 2's own phrase"
+      ],
+      "word_count": 131,
+      "sources": [
+        {
+          "what": "Jakubowski, Finkel, Stewart and Müllensiefen, Dissecting an earworm: melodic features and song popularity predict involuntary musical imagery, Psychology of Aesthetics, Creativity, and the Arts (2017): earworm tunes had faster tempi and more common global melodic contours than matched non-earworm tunes",
+          "url": "https://research.gold.ac.uk/19405"
+        },
+        {
+          "what": "lead author: earworm songs have a fast tempo along with a common melodic shape and unusual intervals or repetitions",
+          "url": "https://www.apa.org/news/press/releases/2016/11/earworms"
+        },
+        {
+          "what": "Williamson et al., How do earworms start? Classifying the everyday circumstances of involuntary musical imagery, Psychology of Music 40(3) (2012)",
+          "url": "https://research.gold.ac.uk/id/eprint/7140"
+        },
+        {
+          "what": "triggers: recent exposure (music in public places, radio, someone humming), associations with words, people or situations, memories of places, mood and stress, low attention states such as boredom; just over 600 participants analyzed in detail",
+          "url": "https://bps.org.uk/research-digest/what-triggers-earworm-song-thats-stuck-your-head"
+        }
+      ],
+      "notes": "Subject: social science (psychology of music). Key letter A. Steps: 2 (identify what the claim says decides earworms, then see that Text 2 adds listener-side causes). Synthesis key: no (abstract restatement, as in 592f94c2). The underlined claim is Text 1's own inference, not attributed to Jakubowski's team. Section 6 checks: key 27 words; mean option length 25.8 words; mean share of distractor content words found in the passage 0.43 (band 7 mean 0.51, band 6 0.44); both texts together 132 words. Reviewer: key made abstract; it had named the listener's circumstances and state of mind, close to Text 2's own list. Hardening pass 2026-10-16: see hardened; key now 27 words, mean option length 25.5 words, passage 131 words (earlier section 6 figures in this note predate the pass).",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 7,
+        "fixes": [
+          "key rewritten one level more abstract (factors outside the song itself) instead of naming Text 2's categories",
+          "\"chiefly\" dropped from the underlined claim so the key contradicts it outright (blind solve: with chiefly, the key barely disagreed and B read as the cleaner rebuttal); options B and C rewritten: B an overstatement in the key's direction (circumstances rather than features chiefly determine), C a hedged twisted detail tying the features to airplay (hardening pass 2026-10-16); key lengthened (not only the song’s own characteristics but also factors outside it) so it is no longer far shorter than B and C"
+        ],
+        "status": "fixed"
+      },
+      "band7": {
+        "verdict": "band 7",
+        "why": "Matches 592f94c2: an abstract key that does not name the second factor, an overstatement distractor (no bearing) that shares the key's direction, a twisted detail joining Text 1's features to Text 2's triggers, and a wrong-target distractor built from Text 2's own phrase. Text 2 is plainer than the model's, so this sits at the easier edge of band 7."
+      },
+      "hardened": {
+        "what": "\"chiefly\" dropped from the underlined claim, so the key's \"also depends on factors outside the song\" now contradicts it outright and the overstatement no longer competes as the cleaner rebuttal. B and C replaced: B was \"no bearing\", an absolute easy to strike, and is now a rather-than claim that swaps the claim's cause for Text 2's; C now offers a hedged, plausible bridge between the texts (features matter through airplay).",
+        "tempting": [
+          "B: it is the mirror image of the underlined claim with Text 2's circumstances put in place of the song's features, so it reads as the natural rebuttal; only a reader who notices that Text 2 never studied the songs' features sees it cannot rank them"
+        ]
+      },
+      "band": 6,
+      "band_basis": "pilot gate: reads band 6 against official anchors after hardening; served as hard"
+    },
+    {
+      "id": "cross_text_connections.S1_refute_data.b7",
+      "template": "S1_refute_data",
+      "subtype": "Respond: target refuted by new data",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "Text 1\n\nWet-bulb temperature combines heat and humidity into a single measure of how effectively sweating can cool the human body. Climate scientists have widely treated a wet-bulb temperature of 35°C as the theoretical limit of human survivability, since beyond it evaporating sweat can no longer prevent the body from overheating. Analyzing weather station records from 1979 to 2017, Colin Raymond and colleagues counted more than 7,000 occurrences of wet-bulb temperatures above 31°C, the overwhelming majority of them below that limit.\n\nText 2\n\nTo test the limit directly, physiologists in W. Larry Kenney’s laboratory at Pennsylvania State University placed young, healthy volunteers in a climate-controlled environmental chamber and gradually intensified the heat and humidity until each participant’s core temperature began rising uncontrollably. In humid conditions, this threshold arrived at wet-bulb temperatures averaging approximately 31°C; no participant’s threshold reached 35°C, and the researchers expect the threshold to be lower still for older adults.",
+      "stem": "Based on the texts, how would Kenney’s team (Text 2) most likely respond to the findings of Raymond and colleagues, as presented in Text 1?",
+      "options": [
+        "By suggesting that the occurrences Raymond and colleagues counted, though probably tolerable for young, healthy people, may have exceeded what older adults can withstand",
+        "By suggesting that conditions beyond the 35°C limit may already have occurred far more often than Raymond and colleagues’ station records indicate",
+        "By agreeing that, because few of the occurrences Raymond and colleagues counted reached 35°C, the conditions they recorded have seldom been severe enough to overwhelm the body’s ability to cool itself",
+        "By suggesting that the occurrences Raymond and colleagues counted may include far more cases of conditions in which even young, healthy people overheat than the 35°C limit implies"
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "Text 1 treats 35°C as the survivability limit, the point beyond which sweating can no longer keep the body from overheating, and reports more than 7,000 occurrences above 31°C, nearly all of them below that limit. Text 2 finds that even young, healthy volunteers began to overheat uncontrollably at wet-bulb temperatures averaging about 31°C in humid conditions. Applying that lower threshold to Text 1’s count, Kenney’s team would likely say that far more of the counted occurrences than the 35°C limit implies may have reached conditions in which even young, healthy people overheat, a conclusion neither text states. Text 2 does not question the count itself; it changes the threshold against which the count is judged.",
+      "distractors": {
+        "A": {
+          "recipe": "D3 twisted detail (older adults)",
+          "why_wrong": "Text 2 says the threshold should be even lower for older adults, but its measured threshold of about 31°C applies to young, healthy volunteers. Occurrences above 31°C could therefore exceed what young people can manage too, so they are not probably tolerable for the young."
+        },
+        "B": {
+          "recipe": "D3 the key's derived claim with one detail moved (the count questioned instead of the limit)",
+          "why_wrong": "Text 2 does not question Raymond’s records or how often 35°C was exceeded. It lowers the threshold at which the body overheats, which changes how the counted occurrences should be judged, not how many there were."
+        },
+        "C": {
+          "recipe": "D2 reversal of the derived claim (Text 1's reading of its own count)",
+          "why_wrong": "This is the reading that the 35°C limit invites. Kenney’s volunteers lost control of their core temperature at about 31°C, so occurrences above 31°C may already overwhelm the body’s cooling, and the team would not judge Raymond’s count against 35°C."
+        }
+      },
+      "models": [
+        "3cfbf077"
+      ],
+      "band7_moves": [
+        "Text 2 moves a threshold (about 31°C instead of 35°C) and the key applies the new value to the case counted in Text 1 (as in 3cfbf077)",
+        "key states a consequence neither text states, abstractly and hedged (the counted occurrences may include far more overheating conditions than the 35°C limit implies)",
+        "B is the key's twin with one detail moved: it doubts Raymond's count of conditions beyond 35°C instead of the 35°C limit itself",
+        "C is Text 1's own reading of its count (few reached 35°C, so little danger), the reversal of the derived claim; A twists Text 2's older-adults remark"
+      ],
+      "word_count": 148,
+      "sources": [
+        {
+          "what": "Raymond, Matthews and Horton, The emergence of heat and humidity too severe for human tolerance, Science Advances 6(19) eaaw1838 (2020): 35°C wet-bulb as the upper physiological limit",
+          "url": "https://climatesignals.org/node/10017"
+        },
+        {
+          "what": "wet-bulb temperature represents how effectively a person sheds heat by sweating; around 35°C evaporation of sweat is no longer enough; over 7,000 past occurrences above 31°C and over 250 above 33°C at stations, 1979 to 2017",
+          "url": "https://www.climate.gov/news-features/featured-images/brief-periods-dangerous-humid-heat-arrive-decades-early"
+        },
+        {
+          "what": "Vecellio, Wolf, Cottle and Kenney, Evaluating the 35°C wet-bulb temperature adaptability threshold for young, healthy subjects (PSU HEAT Project), Journal of Applied Physiology 132(2), 2022: critical wet-bulb temperatures averaged 30.55°C in humid environments; no subject reached 35°C",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC8799385"
+        },
+        {
+          "what": "Penn State: about 31°C wet-bulb even for young, healthy subjects; volunteers in an environmental chamber until core temperature could not be maintained; the limit is likely lower for older populations",
+          "url": "https://psu.edu/news/research/story/humans-cant-endure-temperatures-and-humidities-high-previously-thought"
+        },
+        {
+          "what": "Raymond et al. abstract: 35°C wet-bulb marks the upper physiological limit; station data show some locations have already reported 35°C",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7209987/"
+        }
+      ],
+      "notes": "Subject: natural science (climate and physiology). Key letter D. Steps: 3 (take Text 1's 35°C limit and 31°C count, take Text 2's 31°C threshold, conclude the counted occurrences may already be dangerous). Synthesis key: yes. 'The overwhelming majority of them below that limit' rests on climate.gov's counts: over 7,000 above 31°C, over 250 above 33°C. Section 6 checks: key 27 words; mean option length 26.5 words; mean share of distractor content words found in the passage 0.62 (band 7 mean 0.51, band 6 0.44); both texts together 149 words. Reviewer: old B flatly contradicted Text 2 (35°C instead of 31°C); replaced by a partly right twisted detail. \"approached\" changed to \"reached\" (paper: no subject's critical wet-bulb temperature reached 35°C). Hardening pass 2026-10-16: see hardened; key now 28 words, mean option length 26.2 words, passage 148 words (earlier section 6 figures in this note predate the pass).",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 8,
+        "fixes": [
+          "\"no participant's threshold approached 35°C\" -> \"reached\" (Vecellio et al.: no subject reached the 35°C limit; humid mean 30.55°C)",
+          "\"gradually, systematically intensified\" trimmed to \"gradually intensified\"",
+          "option B rewritten: it flatly contradicted Text 2; now a partly right twisted detail with an invented reason",
+          "key reworded abstractly (the counted occurrences may include far more overheating conditions than the 35°C limit implies; it names Raymond’s count like the other options); option B rewritten as the key's twin with one detail moved (Raymond's count doubted instead of the limit); option C now Text 1's own reading of the count (reversal); A hedged (hardening pass 2026-10-16)"
+        ],
+        "status": "fixed"
+      },
+      "band7": {
+        "verdict": "band 7",
+        "why": "Follows 3cfbf077: Text 2 moves a threshold and the key applies the new value to the case counted in Text 1, a hedged consequence neither text states. With B rebuilt, two distractors are partly right (A keeps Text 2's older-adults remark, B keeps the derived claim but adds an invented reason) and C reverses the derived claim, so the student must compare 31°C and 35°C across the texts."
+      },
+      "hardened": {
+        "what": "Key reworded one level up (the counted occurrences may include far more overheating conditions than the 35°C limit implies) instead of echoing Text 2's core-temperature wording. B, once an invented dry-heat claim, is now the key's twin with one detail moved (the count questioned, not the limit); C, once a plain reversal, is now the reading of Raymond's count that Text 1 itself invites; A is hedged.",
+        "tempting": [
+          "B: it shares the key's frame word for word (may already have occurred far more often), names the 35°C limit and Raymond's records, and sounds like Kenney's challenge; only a reader who sees that Text 2 moves the threshold rather than doubting the count rejects it",
+          "A: it builds on Text 2’s own remark that the threshold is lower still for older adults and is hedged (probably, may); only a reader who notices that the measured threshold of about 31°C belongs to young, healthy volunteers rejects it"
+        ]
+      },
+      "band": 6,
+      "band_basis": "pilot gate: reads band 6 against official anchors after hardening; served as hard"
+    },
+    {
+      "id": "cross_text_connections.apply_model.b7",
+      "template": "apply_model",
+      "subtype": "Explain an experiment’s outcome using a model from the other text (new band-7 format)",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "Text 1\n\nEcologists have traditionally gauged a predator’s influence on prey populations by tallying the prey it kills. A more recent model holds that predators also operate through fear: prey that perceive a substantial risk of attack devote more time and energy to vigilance and concealment and correspondingly less to essential activities such as foraging and provisioning offspring, and these costs can depress survival and reproduction even when no prey are killed.\n\nText 2\n\nLiana Zanette and colleagues protected every song sparrow nest in their study, on several small islands off British Columbia, with electric fencing and netting, using continuously recording cameras to confirm that predators took no eggs or nestlings. Throughout a four-month breeding season, one group of sparrows heard recorded vocalizations and other sounds of their natural predators, while the other heard nonthreatening natural sounds. Parents in the first group made fewer feeding visits to their nestlings, and the group produced 40 percent fewer offspring than the second.",
+      "stem": "Based on the texts, which choice best explains the difference in the outcomes of the two groups in Zanette and colleagues’ study (Text 2) using the model presented in Text 1?",
+      "options": [
+        "Perceiving a high risk of attack, the sparrows that heard predator sounds spent more of their time gathering food to build up reserves against danger, which kept them away from their nests and left their young less well tended, whereas the sparrows that heard nonthreatening sounds had no reason to leave their nests so often or for so long.",
+        "The sparrows that heard predator sounds likely judged the danger of attack to be high and so shifted effort away from gathering food and tending their young toward watching for and hiding from predators, lowering their output of offspring, whereas the sparrows that heard nonthreatening sounds judged the danger to be low and paid far smaller costs.",
+        "Because the predator calls signaled that predators were actually nearby, the sparrows that heard them faced a greater danger of attack and so shifted effort from feeding their young toward watching for and hiding from predators, whereas the sparrows that heard nonthreatening sounds faced no such danger and paid smaller costs.",
+        "The predator sounds likely drowned out the begging calls of nestlings in the first group more than the nonthreatening sounds drowned out those in the second, so parents in the first group, hearing fewer calls for food, made fewer feeding visits and raised fewer young, whereas parents in the second group could hear and answer their young’s calls."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "Text 1’s model says that prey who perceive a high risk shift time and energy toward vigilance and concealment and away from activities such as foraging and provisioning offspring, which can lower reproduction even when nothing is killed. In Text 2 no eggs or nestlings were taken and every nest was protected, yet the sparrows that heard predator sounds fed their nestlings less often and produced 40 percent fewer offspring. The model explains the gap: those sparrows perceived greater risk and paid the costs of fear, while the other group did not.",
+      "distractors": {
+        "A": {
+          "recipe": "D2 model misapplied: the trade-off reversed, right outcome",
+          "why_wrong": "This starts from the model’s first step (perceived risk) but reverses its second: Text 1 says frightened prey spend less time and energy on foraging, not more, because they shift effort to vigilance and concealment. The outcome matches Text 2, but the explanation contradicts the model."
+        },
+        "C": {
+          "recipe": "D3 model applied with one detail moved (actual danger in place of perceived risk)",
+          "why_wrong": "This follows the model’s steps but rests them on real danger. The predator sounds were recordings played by the researchers, every nest was protected, and predators took nothing, so nothing shows that one group faced more actual danger; the model and the experiment both turn on perceived risk."
+        },
+        "D": {
+          "recipe": "D6 right outcome explained without the model (as 1917ba9a D)",
+          "why_wrong": "This fits the fewer feeding visits Text 2 reports, but it explains them without the model: it blames the sounds for masking the nestlings’ calls, not the parents’ perception of danger. The stem asks for the explanation Text 1’s model gives, and nothing in Text 2 suggests the predator sounds masked any calls."
+        }
+      },
+      "models": [
+        "1917ba9a"
+      ],
+      "band7_moves": [
+        "new band-7 format: apply a causal model in Text 1 to a two-condition experiment in Text 2",
+        "options pair the two conditions with whereas, as in 1917ba9a, and run about 50 to 60 words each",
+        "Text 2 reports a behavior (fewer feeding visits) that the key and two distractors all claim to explain, so the data alone pick none of them",
+        "C runs the model in full but on actual rather than perceived danger, which the recorded playbacks rule out; D explains the feeding data without the model (masked begging calls, as 1917ba9a D); A reverses the model's trade-off",
+        "key paraphrases the model (watching for and hiding from predators; gathering food and tending young) instead of echoing Text 1's nouns"
+      ],
+      "word_count": 156,
+      "sources": [
+        {
+          "what": "Zanette, White, Allen and Clinchy, Perceived predation risk reduces the number of offspring songbirds produce per year, Science 334: 1398 to 1401 (2011): direct predation eliminated; playbacks of predator calls and sounds; perception of predation risk alone reduced offspring produced per year by 40%",
+          "url": "https://ecoreserves.bc.ca/2011/12/05/perceived-predation-rick-reduces-the-number-of-odffspring-songbirds-produce-per-year/"
+        },
+        {
+          "what": "Portland Island and several other small islands in BC's southern Gulf Islands; every nest protected with electric fencing and seine netting; cameras monitored nests 24/7 to confirm predators did not kill eggs or nestlings; one group heard sounds of natural predators, the other non-threatening natural sounds, over the four-month breeding season; 40% fewer offspring",
+          "url": "https://www.uvic.ca/news/topics/2011+fear-of-predation-affects-animal-populations+media-release"
+        },
+        {
+          "what": "pairs that heard predator calls laid fewer eggs, fewer hatched, parents visited to feed chicks less often, fewer fledged",
+          "url": "https://denimandtweed.jbyoder.org/tag/song-sparrow/"
+        },
+        {
+          "what": "Science abstract: direct predation eliminated, playbacks of predator calls and sounds manipulated perceived risk, perception of risk alone reduced offspring per year by 40%",
+          "url": "https://doi.org/10.1126/science.1210908"
+        },
+        {
+          "what": "Zanette, White, Allen and Clinchy, Science 334: 1398 to 1401 (2011), full text: every nest in the experiment protected with electric fencing and seine netting; predator-playback parents made fewer feeding visits per hour during brood-rearing",
+          "url": "https://ecoreserves.bc.ca/wp-content/uploads/2012/03/Zanette_et_al_2011_Science_334_1398-1401.pdf"
+        }
+      ],
+      "notes": "Subject: natural science (ecology). Key letter B. Steps: 3 (read the model's mechanism, note that Text 2 removed killing, apply perceived risk and its costs to each group). Synthesis key: yes. Template choice: S1_solution (3 band-7 items) and S1_second_factor (2) lead; the remaining band-7 templates have one item each, and S1_refute_data and the band-7-only apply_model were taken from that tie. Section 6 checks: key 57 words; mean option length 46.8 words; mean share of distractor content words found in the passage 0.53 (band 7 mean 0.51, band 6 0.44); both texts together 147 words. Reviewer: old A, C and D each died on one fact (no predation, the 40 percent gap) and the key was the longest option; A and D now get the outcome right and fail on mechanism, and options are of similar length. Hardening pass 2026-10-16: see hardened; key now 57 words, mean option length 56.2 words, passage 156 words (earlier section 6 figures in this note predate the pass).",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 7,
+        "fixes": [
+          "option A rewritten: the model with its foraging trade-off reversed, right outcome",
+          "option D rewritten: the right outcome explained without the model (masked begging calls)",
+          "option C lengthened so the key is no longer the clear longest",
+          "Text 2 now states that every nest was protected and that parents in the predator group made fewer feeding visits (Zanette et al. 2011 full text added to sources); option C rewritten (the model run on actual rather than perceived danger, which the recorded playbacks rule out); option D reworded to account for the feeding data (hardening pass 2026-10-16)"
+        ],
+        "status": "fixed"
+      },
+      "band7": {
+        "verdict": "band 7",
+        "why": "Before the fix it read band 6: all three distractors died on one fact (predators took nothing; the 40 percent gap). Now it follows 1917ba9a: two distractors reach the right outcome, one by reversing the model's trade-off and one without the model at all, so the student must test each mechanism against Text 1; only C dies on Text 2's no-predation fact."
+      },
+      "hardened": {
+        "what": "Text 2 now says every nest was fenced and that parents in the predator group made fewer feeding visits (Zanette et al. 2011). C, once direct killing (ruled out by the cameras), now runs the model step by step but on actual danger instead of perceived risk. D now accounts for the reported feeding data as neatly as the key does.",
+        "tempting": [
+          "C: it matches the key clause for clause (danger, effort shifted from feeding to vigilance, smaller costs for the other group) and only swaps judged danger for real danger; a reader must notice that the calls were recordings and that the model is about perception"
+        ]
+      },
+      "band": 6,
+      "band_basis": "pilot gate: reads band 6 against official anchors after hardening; served as hard"
+    }
+  ]
+}

@@ -1,0 +1,1228 @@
+{
+  "skill": "Transitions",
+  "slug": "transitions",
+  "part": "w4b1",
+  "domain": "Expression of Ideas",
+  "plan": {
+    "templates": [
+      {
+        "code": "A1_addition",
+        "name": "Addition/similarity: a further item of the same kind"
+      },
+      {
+        "code": "C1_two_subject",
+        "name": "Contrast: two subjects, opposite values"
+      },
+      {
+        "code": "C2_belief_finding",
+        "name": "Contrast: established view or appearance, then a finding that breaks it"
+      },
+      {
+        "code": "C3_limiting_fact",
+        "name": "Contrast: positive claim, then a limiting fact about the same subject"
+      },
+      {
+        "code": "E1_consequence",
+        "name": "Cause/effect: condition, principle or evidence, then its consequence"
+      },
+      {
+        "code": "E2_motive_action",
+        "name": "Cause/effect: need or judgment, then the action it motivates"
+      },
+      {
+        "code": "K1_grant_turn",
+        "name": "Concession: grant, then the main claim resumes (but / Still)"
+      },
+      {
+        "code": "K2_qualification",
+        "name": "Concession: supported claim, then a fact that qualifies it"
+      },
+      {
+        "code": "P1_purpose_aptness",
+        "name": "Purpose and aptness: goal then deliberate act, or a fitting echo"
+      },
+      {
+        "code": "S1_spec_restate",
+        "name": "Specification/restatement: exact content or plain rewording"
+      },
+      {
+        "code": "T1_sequence_time",
+        "name": "Sequence/time: next step, earlier or later event, end of a long effort"
+      },
+      {
+        "code": "X1_example",
+        "name": "Example: general claim, then one named instance"
+      }
+    ]
+  },
+  "items": [
+    {
+      "id": "transitions.K1_grant_turn.hard.w4b1_01",
+      "template": "K1_grant_turn",
+      "subtype": "Concession: grant then turn",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Slack-key guitar is widely celebrated as one of the most distinctively Hawaiian musical traditions. ______ the guitar itself was an import, introduced by Mexican cowboys, or vaqueros, recruited in the 1830s to manage the islands’ expanding cattle herds. Still, slack key was a local innovation: Hawaiian players loosened, or “slacked,” the strings into open tunings of their own devising.",
+      "stem": "Which choice completes the text with the most logical transition?",
+      "options": [
+        "For instance,",
+        "Therefore,",
+        "Of course,",
+        "In addition,"
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The first sentence calls slack-key guitar “one of the most distinctively Hawaiian musical traditions.” The blank sentence admits a fact that seems to cut against that claim: the guitar itself was “an import,” introduced by Mexican cowboys. The next sentence returns to the claim with “Still,” so “Of course” fits: it introduces a point the writer grants before turning back to the main claim.",
+      "distractors": {
+        "A": {
+          "recipe": "wrong grain (example)",
+          "why_wrong": "The guitar’s arrival with Mexican cowboys is not an instance of slack key being distinctly Hawaiian; it is a point against that claim, which is why the next sentence has to answer it with “Still.”"
+        },
+        "B": {
+          "recipe": "unearned cause",
+          "why_wrong": "The music’s reputation as Hawaiian does not lead to the fact that the guitar came from elsewhere; the two facts pull in opposite directions."
+        },
+        "D": {
+          "recipe": "additive",
+          "why_wrong": "“In addition” would offer the guitar’s foreign origin as one more reason to call the music Hawaiian, but it is a reason to doubt that, as the turn with “Still” shows."
+        }
+      },
+      "models": [
+        "3.17",
+        "3.19"
+      ],
+      "word_count": 58,
+      "sources": [],
+      "notes": "Grant then turn, the turn opened by Still in the next sentence (3.19 shape), keyed Of course. K1 has no band-7 official items (spec/rw/band7/transitions.md section 5), so this is written as a strong band 6 and band_target is 6, not the 7 the plan asked for. Trap: For instance and In addition, for a reader who takes the blank sentence as support for the opening claim. No In fact, Indeed or Actually beside the concession key; no contrast decoy. Facts from general knowledge; not web-checked (Transitions, brief of 2026-10-16); no made-up finding attributed to a real person or organisation.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 0,
+        "facts_note": "Transitions: no fact check (WAVE.md); checked that no made-up finding is attributed to a real person or organisation (none: real subjects only, generic 'investigators' and 'laboratories'); subject not used elsewhere (grep of satbank/rw, waves, cb_api, round1/2).",
+        "options_check": "tools/rw_options.py: no second acceptable connective",
+        "fixes": [],
+        "status": "pass"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "K1_grant_turn has no band-7 official items (spec/rw/band7/transitions.md section 5), so it cannot be band 7; it is a strong band 6 on the 974b5a8c/f5959727 shape (Of course before Still, decoys from three other families, no In fact beside the concession key)."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "C",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "transitions.K2_qualification.hard.w4b1_02",
+      "template": "K2_qualification",
+      "subtype": "Concession: qualification",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Diamonds grown in laboratories have the same crystal structure and chemical makeup as diamonds mined from the earth, and even experienced jewelers cannot tell the two apart by eye. ______ gem-testing laboratories can usually identify a lab-grown stone, using instruments that detect growth patterns and traces of impurities that natural diamonds rarely share.",
+      "stem": "Which choice completes the text with the most logical transition?",
+      "options": [
+        "Granted,",
+        "Moreover,",
+        "Specifically,",
+        "Likewise,"
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The first sentence stresses how alike lab-grown and mined diamonds are: “even experienced jewelers cannot tell the two apart by eye.” The blank sentence limits that point without overturning it: with the right instruments, gem-testing laboratories “can usually identify a lab-grown stone.” “Granted” introduces a fact that qualifies the claim just made.",
+      "distractors": {
+        "B": {
+          "recipe": "additive",
+          "why_wrong": "“Moreover” would add a further point showing that the two kinds of diamond are alike, but the laboratories’ ability to identify lab-grown stones shows a difference between them."
+        },
+        "C": {
+          "recipe": "wrong grain (specification)",
+          "why_wrong": "The blank sentence does not spell out how the stones are alike; it names a way they can be told apart, an exception to the first sentence."
+        },
+        "D": {
+          "recipe": "false parallel",
+          "why_wrong": "Laboratories that can tell the stones apart are not doing the same thing as jewelers who cannot; their success is the opposite of the jewelers’ failure."
+        }
+      },
+      "models": [
+        "3.8",
+        "3.12",
+        "3.14"
+      ],
+      "word_count": 52,
+      "sources": [],
+      "notes": "Supported claim, then a fact that limits it (3.8 shape), keyed Granted rather than That said (8 of 10 live K2 keys are That said). Band 6 by plan. No cause decoy, since a reader could take the instruments as the laboratories’ response to the stones looking alike; no In fact or Indeed (second-sense rule); no contrast decoy. Facts from general knowledge; not web-checked (Transitions, brief of 2026-10-16); no made-up finding attributed to a real person or organisation.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 0,
+        "facts_note": "Transitions: no fact check (WAVE.md); checked that no made-up finding is attributed to a real person or organisation (none: real subjects only, generic 'investigators' and 'laboratories'); subject not used elsewhere (grep of satbank/rw, waves, cb_api, round1/2).",
+        "options_check": "tools/rw_options.py: no second acceptable connective",
+        "fixes": [],
+        "status": "pass"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "Band 6 by plan. Same option shape as official band-6 176edca6 (Granted as the one concessive among three continuation words) and the 9dc4e640 limiting-fact frame; no cause decoy and no In fact beside the concession key. 52 words against the models' median 57, within CB's hard range."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "A",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "transitions.S1_spec_restate.hard.w4b1_03",
+      "template": "S1_spec_restate",
+      "subtype": "Specification: frequency (more often)",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "Television footage typically depicts avalanches as immense walls of snow thundering down a mountainside unprompted, released by heavy snowfall or sudden warming. Investigators who reconstruct fatal avalanche accidents describe a less cinematic pattern; ______ the slide that buries a backcountry skier or snowmobiler is triggered not by the weather but by the victim or by another member of the victim’s party.",
+      "stem": "Which choice completes the text with the most logical transition?",
+      "options": [
+        "consequently,",
+        "more often,",
+        "furthermore,",
+        "that said,"
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "Television footage shows avalanches thundering down a mountainside “unprompted, released by heavy snowfall or sudden warming,” but investigators “describe a less cinematic pattern.” The clause after the blank gives that pattern: the slide that buries a skier or snowmobiler is triggered “by the victim or by another member of the victim’s party.” “More often” marks this as the usual case, compared with the natural releases the footage shows.",
+      "distractors": {
+        "A": {
+          "recipe": "unearned cause",
+          "why_wrong": "The investigators’ account does not make skiers trigger slides; the clause after the blank reports what the investigators find, not a result of their work."
+        },
+        "C": {
+          "recipe": "additive",
+          "why_wrong": "The clause after the blank is not a second point added to the investigators’ pattern; it is the pattern itself, the less cinematic way most fatal slides begin."
+        },
+        "D": {
+          "recipe": "false opposition (concession)",
+          "why_wrong": "A slide triggered by the victim does not qualify the “less cinematic pattern”; it is what makes the pattern less cinematic than the footage."
+        }
+      },
+      "models": [
+        "d3b7d7a3",
+        "4b7a84b0"
+      ],
+      "word_count": 60,
+      "sources": [],
+      "notes": "Band-7 S1 frequency form (spec/rw/band7/transitions.md section 5), architecture varied from d3b7d7a3 and w3b1_03: no study or year, no however clause, no interrupter after the blank; the popular picture is news footage and the challenge is an investigators’ account. Moves: key read off an implied comparison (more often than natural releases) with no rarely or exception cue; surface contrast (footage against investigators) pulls that said; furthermore pulls as a second finding; key outside the core 13; no sequence or summary decoy; decoy words differ from both band-7 models. Fact: most avalanche accidents are triggered by the victim or the victim’s party (avalanche-safety literature). Section 6 gate: key outside the core 13; no sequence or summary decoy; surface-contrast proxy passes (key not adversative, that said offered, “not ... but” in the blank’s own clause); register 5.47 chars per word (at least 5.3). Facts from general knowledge; not web-checked (Transitions, brief of 2026-10-16); no made-up finding attributed to a real person or organisation.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 0,
+        "facts_note": "Transitions: no fact check (WAVE.md); checked that no made-up finding is attributed to a real person or organisation (none: real subjects only, generic 'investigators' and 'laboratories'); subject not used elsewhere (grep of satbank/rw, waves, cb_api, round1/2).",
+        "options_check": "tools/rw_options.py: no second acceptable connective",
+        "fixes": [],
+        "status": "pass"
+      },
+      "band7": {
+        "verdict": "band 7",
+        "why": "Meets every point of the section-5 S1 frequency recipe and matches d3b7d7a3: a popular account (TV footage) challenged before the blank, semicolon, key more often read off an implied comparison, decoys consequently / furthermore / that said (cause, additive, false opposition), surface-contrast proxy passes ('not by the weather but by the victim' with a non-adversative key), key outside the core 13, no sequence or summary decoy, register 5.47; only one option is defensible."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "B",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "transitions.C1_two_subject.hard.w4b1_04",
+      "template": "C1_two_subject",
+      "subtype": "Contrast: two subjects, interrupter",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Pacific salmon such as sockeye and chinook are semelparous: after migrating from the ocean upriver to spawn, they reproduce once and die. Steelhead, ______ are iteroparous; these sea-run rainbow trout undertake the same migration, but some survive spawning, return to the ocean, and reproduce again in subsequent years.",
+      "stem": "Which choice completes the text with the most logical transition?",
+      "options": [
+        "for instance,",
+        "as such,",
+        "likewise,",
+        "in contrast,"
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The first sentence says Pacific salmon such as sockeye and chinook are semelparous: they “reproduce once and die.” The blank sentence describes a second kind of fish, steelhead, that are iteroparous: some “reproduce again in subsequent years.” “In contrast” marks steelhead as the second subject, with the opposite trait.",
+      "distractors": {
+        "A": {
+          "recipe": "wrong grain (example)",
+          "why_wrong": "Steelhead are not an instance of fish that spawn once and die; they are offered as fish that do the opposite."
+        },
+        "B": {
+          "recipe": "unearned cause",
+          "why_wrong": "Salmon dying after spawning is not a reason steelhead survive and spawn again; the two facts describe different fish."
+        },
+        "C": {
+          "recipe": "false parallel",
+          "why_wrong": "Steelhead “undertake the same migration,” but what the sentence says about them, that some survive to spawn again, is the opposite of what the first sentence says about salmon."
+        }
+      },
+      "models": [
+        "3.18",
+        "2.6"
+      ],
+      "word_count": 47,
+      "sources": [],
+      "notes": "Two subjects with opposite values, blank as an interrupter after the second subject (2.6 / 11df9b99 position), with both technical terms glossed. C1 has no band-7 official items (spec/rw/band7/transitions.md section 5), so this is a strong band 6 and band_target is 6, not the 7 the plan asked for. Trap: likewise, pulled by “the same migration” in the blank sentence. Facts from general knowledge; not web-checked (Transitions, brief of 2026-10-16); no made-up finding attributed to a real person or organisation.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 0,
+        "facts_note": "Transitions: no fact check (WAVE.md); checked that no made-up finding is attributed to a real person or organisation (none: real subjects only, generic 'investigators' and 'laboratories'); subject not used elsewhere (grep of satbank/rw, waves, cb_api, round1/2).",
+        "options_check": "tools/rw_options.py: no second acceptable connective",
+        "fixes": [],
+        "status": "pass"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "C1_two_subject has no band-7 official items (section 5), so it cannot be band 7; a strong band 6 on 11df9b99/edf30612: interrupter position, both technical terms glossed, likewise pulled by 'the same migration'. 47 words against its models' median 45."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "D",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "transitions.A1_addition.hard.w4b1_05",
+      "template": "A1_addition",
+      "subtype": "Addition: same referent, new feature",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "Mexican composer Carlos Chávez built his Sinfonía india (1936), a compact single-movement symphony, around melodies of Indigenous peoples of northern and western Mexico, among them Yaqui and Huichol songs. ______ in orchestrating the work, Chávez drew on the same traditions, calling for several Indigenous percussion instruments to be played alongside the orchestra’s own percussion section.",
+      "stem": "Which choice completes the text with the most logical transition?",
+      "options": [
+        "Specifically,",
+        "That said,",
+        "What’s more,",
+        "In other words,"
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The first sentence says Chávez built the Sinfonía india “around melodies of Indigenous peoples.” The blank sentence turns back to the same work and the same sources but adds a separate feature: “in orchestrating the work,” Chávez called for “several Indigenous percussion instruments.” “What’s more” introduces this second, additional way the symphony draws on Indigenous music.",
+      "distractors": {
+        "A": {
+          "recipe": "wrong grain (specification)",
+          "why_wrong": "The blank sentence does not give the exact content of the melodies the first sentence mentions; it turns from the melodies to the orchestration and names a different element of the work, the percussion instruments."
+        },
+        "B": {
+          "recipe": "false opposition (concession)",
+          "why_wrong": "The instruments do not qualify or cut against the use of Indigenous melodies; they point the same way."
+        },
+        "D": {
+          "recipe": "wrong grain (restatement)",
+          "why_wrong": "Although the blank sentence says Chávez “drew on the same traditions,” it does not reword the claim about the melodies; it adds new information about how he orchestrated the work."
+        }
+      },
+      "models": [
+        "3.20",
+        "8fbf206d"
+      ],
+      "word_count": 54,
+      "sources": [],
+      "notes": "Band-7 A1 recipe (spec/rw/band7/transitions.md section 5): B points back to the same work (“in orchestrating the work”) while adding a new feature, as in 7ce14583 (3.20) and 8fbf206d. Moves: same-referent trap for Specifically and In other words (B is about the same symphony and its Indigenous sources); That said pulls on orchestra against Indigenous instruments; key What’s more (live A1 hard keys were all Additionally); no cause decoy, since a reader could link Indigenous melodies to Indigenous instruments; no sequence or summary decoy. Section 6 gate: key outside the core 13; no sequence or summary decoy; surface-contrast proxy fails (That said offered, but no opposition word near the blank); register 5.53 chars per word (at least 5.3), so the combined gate passes on register. Facts from general knowledge; not web-checked (Transitions, brief of 2026-10-16); no made-up finding attributed to a real person or organisation.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 0,
+        "facts_note": "Transitions: no fact check (WAVE.md); checked that no made-up finding is attributed to a real person or organisation (none: real subjects only, generic 'investigators' and 'laboratories'); subject not used elsewhere (grep of satbank/rw, waves, cb_api, round1/2).",
+        "options_check": "tools/rw_options.py: no second acceptable connective",
+        "fixes": [
+          "hardened toward band 7 (pilot tell: Specifically and In other words were each killed at once by 'instruments are not melodies'): B now points back to the same sources ('drew on the same traditions') so it reads like a rewording or detail of A on first read, as in 8fbf206d; moved 'compact single-movement symphony' into an appositive so A no longer says how the melodies were reworked (removes a handle for Specifically); explanation and why_wrong A, D updated; 52 to 54 words, 5.40 chars per word"
+        ],
+        "status": "fixed"
+      },
+      "band7": {
+        "verdict": "band 7",
+        "why": "Matches the section-5 A1 recipe and 7ce14583/8fbf206d: same-referent B ('in orchestrating the work', 'drew on the same traditions') adds a new feature, so Specifically and In other words pull on first read and fail only once the reader sees instruments are a second element, not the melodies restated or detailed; That said pulls on Indigenous against the orchestra's own section; key outside the core 13; no sequence or summary decoy; register 5.40. Low edge of band 7: content is more concrete than the officials' abstract themes."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "C",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "transitions.C1_two_subject.medium.w4b1_06",
+      "template": "C1_two_subject",
+      "subtype": "Contrast: two subjects, interrupter",
+      "tier": "medium",
+      "passage": "Chinese painters working in the gongbi style construct each image from fine, meticulously controlled outlines, which they fill with translucent layers of color, sometimes over several months. Practitioners of the xieyi style, ______ work rapidly with loose, expressive brushstrokes, seeking to capture the spirit of a subject rather than its precise appearance.",
+      "stem": "Which choice completes the text with the most logical transition?",
+      "options": [
+        "by contrast,",
+        "that is,",
+        "as a result,",
+        "in addition,"
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The first sentence describes gongbi painters, who work slowly from “fine, meticulously controlled outlines.” The blank sentence describes a second group, xieyi painters, who “work rapidly with loose, expressive brushstrokes.” “By contrast” signals that the second style is the opposite of the first.",
+      "distractors": {
+        "B": {
+          "recipe": "wrong grain (restatement)",
+          "why_wrong": "The sentence about xieyi painters does not reword the description of gongbi; it describes a different style."
+        },
+        "C": {
+          "recipe": "unearned cause",
+          "why_wrong": "The slow, careful method of gongbi painters is not what makes xieyi painters work quickly; the two groups simply work in opposite ways."
+        },
+        "D": {
+          "recipe": "additive",
+          "why_wrong": "Xieyi is not one more example of the careful method just described; it departs from that method."
+        }
+      },
+      "models": [
+        "2.4",
+        "2.6",
+        "2.18"
+      ],
+      "word_count": 51,
+      "sources": [],
+      "notes": "Two subjects, opposite values, blank as an interrupter after the second subject (2.6 position, 2.4 parallel build). Decoys from three other families, none a parallel word. Facts from general knowledge; not web-checked (Transitions, brief of 2026-10-16); no made-up finding attributed to a real person or organisation.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 0,
+        "facts_note": "Transitions: no fact check (WAVE.md); checked that no made-up finding is attributed to a real person or organisation (none: real subjects only, generic 'investigators' and 'laboratories'); subject not used elsewhere (grep of satbank/rw, waves, cb_api, round1/2).",
+        "options_check": "tools/rw_options.py: no second acceptable connective",
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "transitions.A1_addition.medium.w4b1_07",
+      "template": "A1_addition",
+      "subtype": "Addition: a second harm",
+      "tier": "medium",
+      "passage": "The spotted lanternfly, an invasive planthopper, was first detected in Pennsylvania in 2014. It debilitates grapevines and numerous other plants by extracting their sap. ______ the insects excrete a sugary residue called honeydew, which promotes the growth of a black, sooty mold that coats foliage and interferes with photosynthesis.",
+      "stem": "Which choice completes the text with the most logical transition?",
+      "options": [
+        "In particular,",
+        "Instead,",
+        "Regardless,",
+        "Moreover,"
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The first sentence names one way the spotted lanternfly harms plants: by “extracting their sap.” The blank sentence names a second harm: the honeydew the insects excrete promotes a mold that “coats foliage and interferes with photosynthesis.” “Moreover” adds this further point to the first.",
+      "distractors": {
+        "A": {
+          "recipe": "wrong grain (specification)",
+          "why_wrong": "The honeydew and mold are not a particular case of extracting sap; they are a separate kind of damage."
+        },
+        "B": {
+          "recipe": "false opposition (contrast)",
+          "why_wrong": "The insects do not excrete honeydew in place of extracting sap; they do both, and both harm the plants."
+        },
+        "C": {
+          "recipe": "false opposition (dismissive)",
+          "why_wrong": "“Regardless” would treat the sap feeding as beside the point, but the blank sentence adds to it rather than setting it aside."
+        }
+      },
+      "models": [
+        "2.10",
+        "2.11"
+      ],
+      "word_count": 48,
+      "sources": [],
+      "notes": "Two harms of one pest, independent and pointing the same way (2.10 shape: two harms of wishcycling). No cause decoy, since honeydew is itself a by-product of sap feeding and Thus could be argued; no Meanwhile, which could read as at the same time. Facts from general knowledge; not web-checked (Transitions, brief of 2026-10-16); no made-up finding attributed to a real person or organisation.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 0,
+        "facts_note": "Transitions: no fact check (WAVE.md); checked that no made-up finding is attributed to a real person or organisation (none: real subjects only, generic 'investigators' and 'laboratories'); subject not used elsewhere (grep of satbank/rw, waves, cb_api, round1/2).",
+        "options_check": "tools/rw_options.py: no second acceptable connective",
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "transitions.A1_addition.medium.w4b1_08",
+      "template": "A1_addition",
+      "subtype": "Similarity: a parallel case (likewise)",
+      "tier": "medium",
+      "passage": "The hornet moth, widespread throughout Europe, cannot sting. Its transparent wings and yellow-and-black striped abdomen, however, make it resemble a hornet so convincingly that birds generally avoid it. ______ the wasp beetle, a stingless longhorn beetle common in European gardens, deters predators with conspicuous black and yellow bands and rapid, jerky movements.",
+      "stem": "Which choice completes the text with the most logical transition?",
+      "options": [
+        "Granted,",
+        "Likewise,",
+        "For example,",
+        "Hence,"
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The first sentence describes the hornet moth, a harmless insect that resembles a hornet “so convincingly that birds generally avoid it.” The blank sentence describes a second harmless insect, the wasp beetle, that also wards off predators by resembling a wasp. “Likewise” signals that the wasp beetle does the same thing as the hornet moth.",
+      "distractors": {
+        "A": {
+          "recipe": "false opposition (concession)",
+          "why_wrong": "Nothing in the blank sentence is conceded against the point about the hornet moth; the wasp beetle supports the same pattern."
+        },
+        "C": {
+          "recipe": "wrong grain (example)",
+          "why_wrong": "The wasp beetle is not an instance of the hornet moth; it is a different insect doing the same thing, a parallel case rather than an example."
+        },
+        "D": {
+          "recipe": "unearned cause",
+          "why_wrong": "The hornet moth’s disguise does not cause the wasp beetle’s; the two insects protect themselves the same way independently."
+        }
+      },
+      "models": [
+        "2.7"
+      ],
+      "word_count": 51,
+      "sources": [],
+      "notes": "Parallel case keyed Likewise (2.7 shape: a second member of the same set doing the same thing). No addition decoy (addition and similarity exclude each other). Facts from general knowledge; not web-checked (Transitions, brief of 2026-10-16); no made-up finding attributed to a real person or organisation.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 0,
+        "facts_note": "Transitions: no fact check (WAVE.md); checked that no made-up finding is attributed to a real person or organisation (none: real subjects only, generic 'investigators' and 'laboratories'); subject not used elsewhere (grep of satbank/rw, waves, cb_api, round1/2).",
+        "options_check": "tools/rw_options.py: no second acceptable connective",
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "transitions.S1_spec_restate.medium.w4b1_09",
+      "template": "S1_spec_restate",
+      "subtype": "Specification: exact content",
+      "tier": "medium",
+      "passage": "Hector Guimard designed the ornate entrances of the Paris Métro, the first of which opened in 1900. Like much Art Nouveau architecture, they reflect a fascination with organic, botanical forms. ______ their sinuous green cast-iron railings rise like the stalks of plants, and the illuminated lamps crowning each archway resemble drooping flower buds.",
+      "stem": "Which choice completes the text with the most logical transition?",
+      "options": [
+        "In addition,",
+        "However,",
+        "Specifically,",
+        "Previously,"
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The second sentence makes a general claim: the entrances reflect “a fascination with organic, botanical forms.” The blank sentence spells out exactly what those forms are: railings that “rise like the stalks of plants” and lamps that “resemble drooping flower buds.” “Specifically” introduces these precise details.",
+      "distractors": {
+        "A": {
+          "recipe": "additive",
+          "why_wrong": "The plant-like railings and bud-like lamps are not a separate point added to the first sentence; they are the natural forms the previous sentence refers to."
+        },
+        "B": {
+          "recipe": "false opposition (contrast)",
+          "why_wrong": "The details in the blank sentence agree with the sentence before it; nothing in them contrasts with forms taken from nature."
+        },
+        "D": {
+          "recipe": "wrong time",
+          "why_wrong": "The blank sentence does not describe an earlier state of the entrances; it describes how they look, the content of the claim just made."
+        }
+      },
+      "models": [
+        "2.12",
+        "2.3"
+      ],
+      "word_count": 52,
+      "sources": [],
+      "notes": "General claim, then its exact content (2.12 shape, varied: a design claim rather than a study). No example decoy (example and specification exclude each other); no cause decoy. Facts from general knowledge; not web-checked (Transitions, brief of 2026-10-16); no made-up finding attributed to a real person or organisation.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 0,
+        "facts_note": "Transitions: no fact check (WAVE.md); checked that no made-up finding is attributed to a real person or organisation (none: real subjects only, generic 'investigators' and 'laboratories'); subject not used elsewhere (grep of satbank/rw, waves, cb_api, round1/2).",
+        "options_check": "tools/rw_options.py: no second acceptable connective",
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "transitions.C2_belief_finding.medium.w4b1_10",
+      "template": "C2_belief_finding",
+      "subtype": "Contrast: belief then finding, interrupter",
+      "tier": "medium",
+      "passage": "The Uffington White Horse, a stylized figure carved into a chalk hillside in southern England, was traditionally attributed to Iron Age inhabitants of the region. Luminescence dating of sediments from the figure’s trenches in the 1990s, ______ revealed that the horse is considerably older, created during the late Bronze Age, approximately 3,000 years ago.",
+      "stem": "Which choice completes the text with the most logical transition?",
+      "options": [
+        "however,",
+        "for example,",
+        "consequently,",
+        "in addition,"
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The first sentence gives a long-held view: the horse “was traditionally attributed to Iron Age inhabitants of the region.” The blank sentence reports a finding that overturns that view: dating of the trench sediments revealed that the horse “is considerably older.” “However” signals the contrast between the assumption and the finding.",
+      "distractors": {
+        "B": {
+          "recipe": "wrong grain (example)",
+          "why_wrong": "The dating results are not an example of the old assumption; they are evidence against it."
+        },
+        "C": {
+          "recipe": "unearned cause",
+          "why_wrong": "The belief that Iron Age people made the horse did not lead the dating to show that it is older; the finding contradicts the assumption."
+        },
+        "D": {
+          "recipe": "additive",
+          "why_wrong": "The dating results do not add support to the Iron Age date; they replace it with an earlier one."
+        }
+      },
+      "models": [
+        "2.1",
+        "2.16"
+      ],
+      "word_count": 53,
+      "sources": [],
+      "notes": "Long-held view, then a finding that breaks it, with the blank as an interrupter after the subject noun phrase (2.16 position). Decoy words differ from 2.1’s (likewise, therefore, for example). Facts from general knowledge; not web-checked (Transitions, brief of 2026-10-16); no made-up finding attributed to a real person or organisation.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 0,
+        "facts_note": "Transitions: no fact check (WAVE.md); checked that no made-up finding is attributed to a real person or organisation (none: real subjects only, generic 'investigators' and 'laboratories'); subject not used elsewhere (grep of satbank/rw, waves, cb_api, round1/2).",
+        "options_check": "tools/rw_options.py: no second acceptable connective",
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "transitions.E1_consequence.medium.w4b1_11",
+      "template": "E1_consequence",
+      "subtype": "Cause/effect: consequence",
+      "tier": "medium",
+      "passage": "Arabic script is cursive, and most of its letters alter their appearance depending on their position within a word: one form appears at the beginning, another in the middle, and a third at the end. ______ typographers producing metal type for Arabic required several distinct pieces for most letters, and a complete typeface could comprise hundreds of characters.",
+      "stem": "Which choice completes the text with the most logical transition?",
+      "options": [
+        "Furthermore,",
+        "Hence,",
+        "Similarly,",
+        "Instead,"
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The first sentence says that most Arabic letters “alter their appearance depending on their position within a word”: one form at the beginning, another in the middle, and a third at the end. The blank sentence gives the consequence for printing: typographers “required several distinct pieces for most letters.” “Hence” signals that this follows from the fact just stated.",
+      "distractors": {
+        "A": {
+          "recipe": "additive",
+          "why_wrong": "The typographers’ need for extra type is not a separate fact added to the first sentence; it follows from the letters changing shape."
+        },
+        "C": {
+          "recipe": "false parallel",
+          "why_wrong": "Typographers needing several pieces of type is not a case like the letters changing shape; it is a result of it."
+        },
+        "D": {
+          "recipe": "false opposition (contrast)",
+          "why_wrong": "The blank sentence does not describe something done in place of what the first sentence says; it describes what the letters’ changing shapes made necessary."
+        }
+      },
+      "models": [
+        "2.9",
+        "2.14"
+      ],
+      "word_count": 57,
+      "sources": [],
+      "notes": "Condition, then its consequence (2.9 shape), keyed Hence. No example decoy, since the printers could be read as an illustration of the letters’ forms. Facts from general knowledge; not web-checked (Transitions, brief of 2026-10-16); no made-up finding attributed to a real person or organisation.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 0,
+        "facts_note": "Transitions: no fact check (WAVE.md); checked that no made-up finding is attributed to a real person or organisation (none: real subjects only, generic 'investigators' and 'laboratories'); subject not used elsewhere (grep of satbank/rw, waves, cb_api, round1/2).",
+        "options_check": "tools/rw_options.py: no second acceptable connective",
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "transitions.T1_sequence_time.medium.w4b1_12",
+      "template": "T1_sequence_time",
+      "subtype": "Time: earlier event (previously)",
+      "tier": "medium",
+      "passage": "In 1868, Serbia officially adopted the reformed Cyrillic alphabet devised by linguist Vuk Karadžić, whose guiding principle was strictly phonetic: every letter represents exactly one sound. ______ Serbian writers had used a spelling system inherited from Church Slavonic, which retained several obsolete letters for sounds that spoken Serbian had long since abandoned.",
+      "stem": "Which choice completes the text with the most logical transition?",
+      "options": [
+        "Similarly,",
+        "In sum,",
+        "As a result,",
+        "Previously,"
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The first sentence describes the alphabet Serbia adopted in 1868. The blank sentence describes the spelling system Serbian writers “had used” before then; the verb points back to an earlier time. “Previously” signals that the blank sentence describes what came before the 1868 reform.",
+      "distractors": {
+        "A": {
+          "recipe": "false parallel",
+          "why_wrong": "The old spelling system is not like the reformed alphabet; it is what the reform replaced."
+        },
+        "B": {
+          "recipe": "premature summary",
+          "why_wrong": "The blank sentence does not sum up the first sentence; it adds new information about an earlier system."
+        },
+        "C": {
+          "recipe": "unearned cause",
+          "why_wrong": "The 1868 reform could not have caused writers to use an older system before it; the blank sentence describes an earlier state, not a result."
+        }
+      },
+      "models": [
+        "2.2"
+      ],
+      "word_count": 51,
+      "sources": [],
+      "notes": "Reverse order keyed Previously (2.2 shape). No contrast decoy (2.2 offers However; the old and new systems differ, so a contrast word could be argued). Facts from general knowledge; not web-checked (Transitions, brief of 2026-10-16); no made-up finding attributed to a real person or organisation.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 0,
+        "facts_note": "Transitions: no fact check (WAVE.md); checked that no made-up finding is attributed to a real person or organisation (none: real subjects only, generic 'investigators' and 'laboratories'); subject not used elsewhere (grep of satbank/rw, waves, cb_api, round1/2).",
+        "options_check": "tools/rw_options.py: no second acceptable connective",
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "transitions.E2_motive_action.medium.w4b1_13",
+      "template": "E2_motive_action",
+      "subtype": "Cause/effect: motive then action (accordingly)",
+      "tier": "medium",
+      "passage": "After an earthquake devastated much of Lisbon in 1755, the Marquis of Pombal, who directed the city’s reconstruction, insisted that new buildings be able to withstand future tremors. ______ the apartment blocks of the rebuilt Baixa district were given an internal framework of crisscrossing timbers, called a gaiola, designed to flex rather than collapse during shaking.",
+      "stem": "Which choice completes the text with the most logical transition?",
+      "options": [
+        "By contrast,",
+        "Likewise,",
+        "Accordingly,",
+        "Nonetheless,"
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The first sentence says that Pombal “insisted that new buildings be able to withstand future tremors.” The blank sentence describes what was done to meet that demand: the district’s apartment blocks were given a timber framework “designed to flex rather than collapse during shaking.” “Accordingly” signals an action that follows from the demand.",
+      "distractors": {
+        "A": {
+          "recipe": "false opposition (contrast)",
+          "why_wrong": "The flexible timber frames do not contrast with Pombal’s demand; they carry it out."
+        },
+        "B": {
+          "recipe": "false parallel",
+          "why_wrong": "The timber frames are not a case similar to Pombal’s demand; they are the response to it."
+        },
+        "D": {
+          "recipe": "false opposition (concession)",
+          "why_wrong": "The frames were not built in spite of Pombal’s demand for earthquake-resistant buildings; they were built because of it."
+        }
+      },
+      "models": [
+        "2.17"
+      ],
+      "word_count": 55,
+      "sources": [],
+      "notes": "Judgment or demand, then the action it motivates, keyed Accordingly (2.17 shape). Decoy words differ from 2.17’s (In contrast, Meanwhile, Nevertheless); no purpose decoy (purpose and cause exclude each other); no example decoy, since the frames could be read as an instance of earthquake-resistant building. Facts from general knowledge; not web-checked (Transitions, brief of 2026-10-16); no made-up finding attributed to a real person or organisation.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 0,
+        "facts_note": "Transitions: no fact check (WAVE.md); checked that no made-up finding is attributed to a real person or organisation (none: real subjects only, generic 'investigators' and 'laboratories'); subject not used elsewhere (grep of satbank/rw, waves, cb_api, round1/2).",
+        "options_check": "tools/rw_options.py: no second acceptable connective",
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "transitions.P1_purpose_aptness.medium.w4b1_14",
+      "template": "P1_purpose_aptness",
+      "subtype": "Aptness: a fitting echo (fittingly)",
+      "tier": "medium",
+      "passage": "In 2015, the International Astronomical Union invited the public to propose names for several stars and the exoplanets orbiting them. A planetarium in Spain submitted the winning proposal for the star Mu Arae: Cervantes, honoring the author of Don Quixote. ______ the four planets orbiting the star were designated Quijote, Dulcinea, Rocinante, and Sancho, after characters in that celebrated novel.",
+      "stem": "Which choice completes the text with the most logical transition?",
+      "options": [
+        "Fittingly,",
+        "Regardless,",
+        "By contrast,",
+        "Previously,"
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The star Mu Arae was named Cervantes, “honoring the author of Don Quixote.” The blank sentence reports that the planets circling that star were named after characters in the same novel. “Fittingly” signals that these names suit the star’s name in an apt way: the author’s characters orbit the author.",
+      "distractors": {
+        "B": {
+          "recipe": "false opposition (dismissive)",
+          "why_wrong": "“Regardless” would mean the planets’ names have nothing to do with the star’s, but they come from the very novel the star’s name points to."
+        },
+        "C": {
+          "recipe": "false opposition (contrast)",
+          "why_wrong": "The planets’ names do not contrast with the star’s name; they come from the same book and match it."
+        },
+        "D": {
+          "recipe": "wrong time",
+          "why_wrong": "The planets were not named before the star; the blank sentence reports names given in the same contest."
+        }
+      },
+      "models": [
+        "2.5"
+      ],
+      "word_count": 59,
+      "sources": [],
+      "notes": "Aptness keyed Fittingly (2.5 shape: a name that echoes an earlier fact). No cause, similarity or addition decoy, since each could be argued for names given in one contest. Facts from general knowledge; not web-checked (Transitions, brief of 2026-10-16); no made-up finding attributed to a real person or organisation.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 0,
+        "facts_note": "Transitions: no fact check (WAVE.md); checked that no made-up finding is attributed to a real person or organisation (none: real subjects only, generic 'investigators' and 'laboratories'); subject not used elsewhere (grep of satbank/rw, waves, cb_api, round1/2).",
+        "options_check": "tools/rw_options.py: no second acceptable connective",
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "transitions.T1_sequence_time.easy.w4b1_15",
+      "template": "T1_sequence_time",
+      "subtype": "Sequence: next step",
+      "tier": "easy",
+      "passage": "The male village weaver, a bright yellow songbird of sub-Saharan Africa, constructs its nest in distinct stages. First, it knots strips of grass around a forked twig to form a sturdy ring. ______ it weaves outward from the ring to create a rounded chamber. Finally, it completes the entrance, a short passage that opens toward the ground.",
+      "stem": "Which choice completes the text with the most logical transition?",
+      "options": [
+        "In conclusion,",
+        "Next,",
+        "However,",
+        "Specifically,"
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The passage describes the steps the weaver follows to build its nest. “First,” it makes a ring of grass; after the blank, “Finally,” it completes the entrance. “Next” introduces the step that comes between them: weaving the ring into a rounded chamber.",
+      "distractors": {
+        "A": {
+          "recipe": "premature summary",
+          "why_wrong": "The blank sentence does not sum up the passage; it gives a middle step, and another step follows it."
+        },
+        "C": {
+          "recipe": "false opposition (contrast)",
+          "why_wrong": "Weaving a chamber from the ring does not contrast with making the ring; it continues the work."
+        },
+        "D": {
+          "recipe": "wrong grain (specification)",
+          "why_wrong": "The blank sentence does not spell out how the ring is made; it moves on to a new step."
+        }
+      },
+      "models": [
+        "1.8",
+        "1.22"
+      ],
+      "word_count": 56,
+      "sources": [],
+      "notes": "Procedure with First / ______ / Finally around the blank (1.8 shape), four sentences. Decoys from three other families, one of them an obvious easy-tier decoy (In conclusion). Facts from general knowledge; not web-checked (Transitions, brief of 2026-10-16); no made-up finding attributed to a real person or organisation.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 0,
+        "facts_note": "Transitions: no fact check (WAVE.md); checked that no made-up finding is attributed to a real person or organisation (none: real subjects only, generic 'investigators' and 'laboratories'); subject not used elsewhere (grep of satbank/rw, waves, cb_api, round1/2).",
+        "options_check": "tools/rw_options.py: no second acceptable connective",
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "transitions.T1_sequence_time.easy.w4b1_16",
+      "template": "T1_sequence_time",
+      "subtype": "Time: later event",
+      "tier": "easy",
+      "passage": "Between 1909 and 1915, Russian photographer Sergei Prokudin-Gorsky traveled across the Russian Empire documenting its people and landscapes. He produced color images by photographing each scene three times, through red, green, and blue filters. ______ in 1948, the US Library of Congress purchased his glass negatives, which are now freely available online.",
+      "stem": "Which choice completes the text with the most logical transition?",
+      "options": [
+        "However,",
+        "In other words,",
+        "Similarly,",
+        "Later,"
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The first sentence describes photographs taken “Between 1909 and 1915.” The blank sentence describes an event in 1948, decades afterward, when the Library of Congress purchased the negatives. “Later” signals this move forward in time.",
+      "distractors": {
+        "A": {
+          "recipe": "false opposition (contrast)",
+          "why_wrong": "The library purchasing the negatives does not contrast with the photographer’s work; it is a later event in the photographs’ history."
+        },
+        "B": {
+          "recipe": "wrong grain (restatement)",
+          "why_wrong": "The blank sentence does not reword the first sentence; it reports a new event."
+        },
+        "C": {
+          "recipe": "false parallel",
+          "why_wrong": "The 1948 purchase is not similar to taking the photographs; it is a different, later event."
+        }
+      },
+      "models": [
+        "1.18",
+        "1.12"
+      ],
+      "word_count": 51,
+      "sources": [],
+      "notes": "Dated events in order keyed Later (1.18 shape). No cause decoy, since the purchase could be read as a result of the photographs. Facts from general knowledge; not web-checked (Transitions, brief of 2026-10-16); no made-up finding attributed to a real person or organisation.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 0,
+        "facts_note": "Transitions: no fact check (WAVE.md); checked that no made-up finding is attributed to a real person or organisation (none: real subjects only, generic 'investigators' and 'laboratories'); subject not used elsewhere (grep of satbank/rw, waves, cb_api, round1/2).",
+        "options_check": "tools/rw_options.py: no second acceptable connective",
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "transitions.E1_consequence.easy.w4b1_17",
+      "template": "E1_consequence",
+      "subtype": "Cause/effect: consequence",
+      "tier": "easy",
+      "passage": "Painters once stored oil paint in pouches made from pig bladders, which were difficult to reseal and frequently burst. In 1841, American painter John Goffe Rand patented a collapsible tin tube that kept paint fresh and could be resealed after each use. ______ artists could conveniently carry premixed colors outdoors and paint directly from nature.",
+      "stem": "Which choice completes the text with the most logical transition?",
+      "options": [
+        "As a result,",
+        "In contrast,",
+        "For example,",
+        "Earlier,"
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The second sentence describes Rand’s 1841 invention, a tube that “kept paint fresh and could be resealed after each use.” The blank sentence gives the effect of that invention: artists “could conveniently carry premixed colors outdoors.” “As a result” signals that the second fact follows from the first.",
+      "distractors": {
+        "B": {
+          "recipe": "false opposition (contrast)",
+          "why_wrong": "Carrying paint outdoors does not contrast with the invention of the tube; the tube made it possible."
+        },
+        "C": {
+          "recipe": "wrong grain (example)",
+          "why_wrong": "Painting outdoors is not an example of a tin tube; it is what the tube allowed artists to do."
+        },
+        "D": {
+          "recipe": "wrong time",
+          "why_wrong": "Artists could not easily carry paint outdoors before the tube existed, when paint was kept in bladders that “frequently burst”; the blank sentence describes what came after."
+        }
+      },
+      "models": [
+        "1.5",
+        "1.3"
+      ],
+      "word_count": 54,
+      "sources": [],
+      "notes": "Change, then its consequence (1.5 shape: an invention removes an old limit). Rand’s 1841 tin paint tube patent. Facts from general knowledge; not web-checked (Transitions, brief of 2026-10-16); no made-up finding attributed to a real person or organisation.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 0,
+        "facts_note": "Transitions: no fact check (WAVE.md); checked that no made-up finding is attributed to a real person or organisation (none: real subjects only, generic 'investigators' and 'laboratories'); subject not used elsewhere (grep of satbank/rw, waves, cb_api, round1/2).",
+        "options_check": "tools/rw_options.py: no second acceptable connective",
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "transitions.E1_consequence.easy.w4b1_18",
+      "template": "E1_consequence",
+      "subtype": "Cause/effect: principle then application (thus)",
+      "tier": "easy",
+      "passage": "Ireland’s waterlogged peat bogs are highly acidic and contain very little oxygen. Under these conditions, the microorganisms responsible for decay can barely survive. ______ objects buried in the bogs can remain intact for centuries; farmers cutting peat have even unearthed wooden containers still filled with butter that was stored there long ago.",
+      "stem": "Which choice completes the text with the most logical transition?",
+      "options": [
+        "Nevertheless,",
+        "Similarly,",
+        "Thus,",
+        "Previously,"
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The first two sentences explain that in Ireland’s bogs “the microorganisms responsible for decay can barely survive.” The blank sentence gives the result: “objects buried in the bogs can remain intact for centuries.” “Thus” signals that this follows from the conditions just described.",
+      "distractors": {
+        "A": {
+          "recipe": "false opposition (concession)",
+          "why_wrong": "Objects lasting for centuries does not happen in spite of the bogs’ conditions; it happens because of them."
+        },
+        "B": {
+          "recipe": "false parallel",
+          "why_wrong": "The long-lasting objects are not a case like the bogs’ conditions; they are a result of those conditions."
+        },
+        "D": {
+          "recipe": "wrong time",
+          "why_wrong": "The blank sentence does not describe something that happened before the first sentence; it states what the bogs’ conditions lead to."
+        }
+      },
+      "models": [
+        "1.32",
+        "1.5"
+      ],
+      "word_count": 51,
+      "sources": [],
+      "notes": "Principle, then its application (1.32 shape), keyed Thus. Bog butter in Irish bogs. Facts from general knowledge; not web-checked (Transitions, brief of 2026-10-16); no made-up finding attributed to a real person or organisation.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 0,
+        "facts_note": "Transitions: no fact check (WAVE.md); checked that no made-up finding is attributed to a real person or organisation (none: real subjects only, generic 'investigators' and 'laboratories'); subject not used elsewhere (grep of satbank/rw, waves, cb_api, round1/2).",
+        "options_check": "tools/rw_options.py: no second acceptable connective",
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "transitions.X1_example.easy.w4b1_19",
+      "template": "X1_example",
+      "subtype": "Example: general claim then instance",
+      "tier": "easy",
+      "passage": "A number of countries now print their banknotes on thin polymer film rather than on paper, since polymer notes last considerably longer and are more difficult to counterfeit. ______ Australia, the first country to make the switch, had replaced all of its paper banknotes with polymer ones by 1996.",
+      "stem": "Which choice completes the text with the most logical transition?",
+      "options": [
+        "Meanwhile,",
+        "For example,",
+        "In conclusion,",
+        "However,"
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The first sentence makes a general claim: “A number of countries now print their banknotes on thin polymer film.” The blank sentence names one such country, Australia. “For example” introduces this instance of the general claim.",
+      "distractors": {
+        "A": {
+          "recipe": "wrong time",
+          "why_wrong": "The blank sentence does not describe something happening at the same time as the first sentence; it gives one case of what the first sentence describes."
+        },
+        "C": {
+          "recipe": "premature summary",
+          "why_wrong": "The blank sentence does not sum up the passage; it adds a specific case."
+        },
+        "D": {
+          "recipe": "false opposition (contrast)",
+          "why_wrong": "Australia’s switch to polymer notes does not contrast with the general claim; it fits it."
+        }
+      },
+      "models": [
+        "1.25",
+        "1.20"
+      ],
+      "word_count": 48,
+      "sources": [],
+      "notes": "General claim with a quantifier (“A number of countries”), then one named instance (1.25 shape). Facts from general knowledge; not web-checked (Transitions, brief of 2026-10-16); no made-up finding attributed to a real person or organisation.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 0,
+        "facts_note": "Transitions: no fact check (WAVE.md); checked that no made-up finding is attributed to a real person or organisation (none: real subjects only, generic 'investigators' and 'laboratories'); subject not used elsewhere (grep of satbank/rw, waves, cb_api, round1/2).",
+        "options_check": "tools/rw_options.py: no second acceptable connective",
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "transitions.C3_limiting_fact.easy.w4b1_20",
+      "template": "C3_limiting_fact",
+      "subtype": "Contrast: claim then limiting fact",
+      "tier": "easy",
+      "passage": "Cesário Verde is now regarded as one of the finest Portuguese poets of the nineteenth century. Critics particularly admire his vivid, closely observed depictions of city streets and country farms. ______ his poems attracted little attention during his lifetime, and his only book was not published until 1887, a year after his death.",
+      "stem": "Which choice completes the text with the most logical transition?",
+      "options": [
+        "Similarly,",
+        "For this reason,",
+        "In other words,",
+        "However,"
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The first sentence says Verde “is now regarded as one of the finest Portuguese poets” of his century. The blank sentence says that during his lifetime his poems “attracted little attention.” “However” signals this contrast between his reputation today and his neglect while he lived.",
+      "distractors": {
+        "A": {
+          "recipe": "false parallel",
+          "why_wrong": "Being ignored in his lifetime is not similar to being admired now; it is the opposite."
+        },
+        "B": {
+          "recipe": "unearned cause",
+          "why_wrong": "His high reputation today is not the reason his poems drew little attention while he lived."
+        },
+        "C": {
+          "recipe": "wrong grain (restatement)",
+          "why_wrong": "The blank sentence does not reword the first sentence; it says something that contrasts with it."
+        }
+      },
+      "models": [
+        "1.10",
+        "1.33"
+      ],
+      "word_count": 52,
+      "sources": [],
+      "notes": "Positive claim, then a limiting fact about the same subject (1.10 shape: famous now against neglected then, reversed in time). Facts from general knowledge; not web-checked (Transitions, brief of 2026-10-16); no made-up finding attributed to a real person or organisation.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 0,
+        "facts_note": "Transitions: no fact check (WAVE.md); checked that no made-up finding is attributed to a real person or organisation (none: real subjects only, generic 'investigators' and 'laboratories'); subject not used elsewhere (grep of satbank/rw, waves, cb_api, round1/2).",
+        "options_check": "tools/rw_options.py: no second acceptable connective",
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "transitions.C3_limiting_fact.easy.w4b1_21",
+      "template": "C3_limiting_fact",
+      "subtype": "Contrast: claim then limiting fact",
+      "tier": "easy",
+      "passage": "Alexander Borodin’s opera Prince Igor and his second string quartet are still widely performed, and he ranks among the most celebrated Russian composers of his era. ______ Borodin wrote relatively little music, since he worked full-time as a professor of chemistry and could compose only in his spare time.",
+      "stem": "Which choice completes the text with the most logical transition?",
+      "options": [
+        "However,",
+        "Thus,",
+        "For instance,",
+        "Likewise,"
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The first sentence says Borodin “ranks among the most celebrated Russian composers of his era.” The blank sentence gives a fact that limits that picture: he “wrote relatively little music.” “However” signals the contrast between his standing and the small amount he composed.",
+      "distractors": {
+        "B": {
+          "recipe": "unearned cause",
+          "why_wrong": "Borodin’s standing as a celebrated composer is not why he wrote little; the blank sentence gives a different reason, his work as a chemist."
+        },
+        "C": {
+          "recipe": "wrong grain (example)",
+          "why_wrong": "Writing little music is not an instance of being a leading composer; it limits that claim."
+        },
+        "D": {
+          "recipe": "false parallel",
+          "why_wrong": "The blank sentence does not describe something similar to Borodin’s standing; it points the other way."
+        }
+      },
+      "models": [
+        "1.23",
+        "1.33"
+      ],
+      "word_count": 48,
+      "sources": [],
+      "notes": "Positive claim, then a limiting fact about the same person (1.23 shape: much praised, then a fact that qualifies the picture). The limit is the amount he wrote, not neglect, so the frame differs from item 20. Facts from general knowledge; not web-checked (Transitions, brief of 2026-10-16); no made-up finding attributed to a real person or organisation.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 0,
+        "facts_note": "Transitions: no fact check (WAVE.md); checked that no made-up finding is attributed to a real person or organisation (none: real subjects only, generic 'investigators' and 'laboratories'); subject not used elsewhere (grep of satbank/rw, waves, cb_api, round1/2).",
+        "options_check": "tools/rw_options.py: no second acceptable connective",
+        "fixes": [
+          "reworded the opening sentence: it shared its frame with item 20 ('X is now regarded/remembered as one of the finest/leading N of the nineteenth century', same template and key), a template tell inside one batch; explanation quote and why_wrong B updated; 50 to 48 words, easy register lower (4.77 chars per word)"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "transitions.E2_motive_action.easy.w4b1_22",
+      "template": "E2_motive_action",
+      "subtype": "Cause/effect: need then action",
+      "tier": "easy",
+      "passage": "Ghadames, an oasis settlement in the Libyan Sahara, endures summer temperatures that frequently exceed 40 degrees Celsius. The midday sun there is especially punishing. ______ the town’s builders roofed over many of its narrow, winding lanes, transforming them into shaded passageways that remain comfortably cool even during the hottest part of the summer day.",
+      "stem": "Which choice completes the text with the most logical transition?",
+      "options": [
+        "Similarly,",
+        "For this reason,",
+        "On the contrary,",
+        "For instance,"
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The first two sentences describe the town’s punishing summer heat. The blank sentence describes what the builders did in response: they roofed over the lanes, creating “shaded passageways that remain comfortably cool.” “For this reason” signals that the heat led to this action.",
+      "distractors": {
+        "A": {
+          "recipe": "false parallel",
+          "why_wrong": "Roofing over the lanes is not a case similar to the heat; it is a response to it."
+        },
+        "C": {
+          "recipe": "false opposition (contrast)",
+          "why_wrong": "The covered lanes do not contradict the first sentence; they deal with the heat it describes."
+        },
+        "D": {
+          "recipe": "wrong grain (example)",
+          "why_wrong": "The roofed lanes are not an example of high temperatures; they are a way of escaping them."
+        }
+      },
+      "models": [
+        "1.9",
+        "1.16"
+      ],
+      "word_count": 53,
+      "sources": [],
+      "notes": "Need, then the action it motivates (1.16 shape), keyed For this reason. Ghadames covered lanes. Facts from general knowledge; not web-checked (Transitions, brief of 2026-10-16); no made-up finding attributed to a real person or organisation.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 0,
+        "facts_note": "Transitions: no fact check (WAVE.md); checked that no made-up finding is attributed to a real person or organisation (none: real subjects only, generic 'investigators' and 'laboratories'); subject not used elsewhere (grep of satbank/rw, waves, cb_api, round1/2).",
+        "options_check": "tools/rw_options.py: no second acceptable connective",
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "transitions.A1_addition.easy.w4b1_23",
+      "template": "A1_addition",
+      "subtype": "Addition: a second act by the same person",
+      "tier": "easy",
+      "passage": "In 1848, Savitribai Phule and her husband, Jyotirao Phule, opened a school for girls in Pune, India, at a time when very few Indian girls received any education, and Savitribai taught there herself, becoming one of the country’s first female teachers. ______ she wrote poetry, publishing her first collection, Kavya Phule, in 1854.",
+      "stem": "Which choice completes the text with the most logical transition?",
+      "options": [
+        "However,",
+        "For example,",
+        "In addition,",
+        "As a result,"
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The first sentence describes one of Savitribai Phule’s achievements: opening a school for girls and teaching there. The blank sentence describes another: she “wrote poetry” and published a collection in 1854. “In addition” adds this second accomplishment to the first.",
+      "distractors": {
+        "A": {
+          "recipe": "false opposition (contrast)",
+          "why_wrong": "Writing poetry does not contrast with opening a school; both are achievements of the same person."
+        },
+        "B": {
+          "recipe": "wrong grain (example)",
+          "why_wrong": "Writing poetry is not an example of opening a school or teaching; it is a separate activity."
+        },
+        "D": {
+          "recipe": "unearned cause",
+          "why_wrong": "Opening a school did not cause Phule to write poetry; the two are separate achievements."
+        }
+      },
+      "models": [
+        "1.7",
+        "1.30"
+      ],
+      "word_count": 52,
+      "sources": [],
+      "notes": "Two acts by the same person, keyed In addition (1.7 shape). Decoy words differ from 1.7’s (In other words, On the contrary, Today). Facts from general knowledge; not web-checked (Transitions, brief of 2026-10-16); no made-up finding attributed to a real person or organisation.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 0,
+        "facts_note": "Transitions: no fact check (WAVE.md); checked that no made-up finding is attributed to a real person or organisation (none: real subjects only, generic 'investigators' and 'laboratories'); subject not used elsewhere (grep of satbank/rw, waves, cb_api, round1/2).",
+        "options_check": "tools/rw_options.py: no second acceptable connective",
+        "fixes": [],
+        "status": "pass"
+      }
+    }
+  ],
+  "done": true,
+  "removed": []
+}

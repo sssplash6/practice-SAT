@@ -1,0 +1,1089 @@
+{
+  "skill": "Command of Evidence",
+  "slug": "command_of_evidence",
+  "part": "b",
+  "domain": "Information and Ideas",
+  "plan": {
+    "templates": [
+      {
+        "code": "T1_single",
+        "name": "Hypothetical finding supports or weakens a single claim (causal, comparison, existence, generalization, prediction)",
+        "official_tiers": {
+          "easy": [
+            "1.1",
+            "1.5",
+            "1.8",
+            "1.17",
+            "1.29",
+            "1.35",
+            "1.41",
+            "1.45"
+          ],
+          "medium": [
+            "2.1",
+            "2.4",
+            "2.6",
+            "2.7",
+            "2.16",
+            "2.21",
+            "2.33",
+            "2.38",
+            "2.43"
+          ],
+          "hard": [
+            "3.7",
+            "3.12",
+            "3.25",
+            "3.28",
+            "3.31",
+            "3.36",
+            "3.39",
+            "3.41",
+            "3.42",
+            "3.45",
+            "3.47"
+          ]
+        }
+      },
+      {
+        "code": "T1_compete",
+        "name": "Hypothetical finding discriminates between competing explanations (support or weaken)",
+        "official_tiers": {
+          "easy": [
+            "1.25"
+          ],
+          "medium": [
+            "2.9",
+            "2.30"
+          ],
+          "hard": [
+            "3.6",
+            "3.8",
+            "3.9",
+            "3.10",
+            "3.14",
+            "3.15",
+            "3.48"
+          ]
+        }
+      },
+      {
+        "code": "T2_lit_quote",
+        "name": "Quotation from a literary work illustrates a claim (single trait, two-part, contrast)",
+        "official_tiers": {
+          "easy": [
+            "1.11",
+            "1.16",
+            "1.36",
+            "1.39",
+            "1.42"
+          ],
+          "medium": [
+            "2.10",
+            "2.11",
+            "2.13",
+            "2.17",
+            "2.20",
+            "2.26",
+            "2.31",
+            "2.35",
+            "2.36",
+            "2.37"
+          ],
+          "hard": [
+            "3.11",
+            "3.17",
+            "3.34",
+            "3.35",
+            "3.37"
+          ]
+        }
+      },
+      {
+        "code": "T3_person_quote",
+        "name": "Quotation from a person (participant, respondent, historian, critic, article) supports or challenges a claim",
+        "official_tiers": {
+          "easy": [
+            "1.13",
+            "1.15",
+            "1.19",
+            "1.20",
+            "1.26",
+            "1.32"
+          ],
+          "medium": [
+            "2.23",
+            "2.29"
+          ],
+          "hard": [
+            "3.3",
+            "3.21",
+            "3.32",
+            "3.33"
+          ]
+        }
+      }
+    ],
+    "skipped": [],
+    "scope_note": "Part b covers the textual subtypes only (T1 finding, T2 literary quotation, T3 person quotation; report sections 8.2 to 8.5). Quantitative Q1/Q2 are part a."
+  },
+  "items": [
+    {
+      "id": "command_of_evidence.T1_single.easy",
+      "template": "T1_single",
+      "subtype": "Hypothetical finding supports a claim (single claim)",
+      "tier": "easy",
+      "passage": "Most plants that have lost the ability to photosynthesize produce minuscule seeds that are dispersed by wind. But Yoania amagiensis, an orchid that has also lost this ability, grows in the understory of dense Japanese forests, where little wind reaches the ground, and bears fleshy fruits. Biologist Kenji Suetsugu monitored the fruits at sites in Shizuoka Prefecture and observed that birds and mammals showed little interest in them. Suetsugu claims that camel crickets, wingless insects that forage on the forest floor, are the plant’s principal seed dispersers.",
+      "stem": "Which finding, if true, would most directly support Suetsugu’s claim?",
+      "options": [
+        "Camel crickets were most often found in parts of the forest where the soil was damp and covered with fallen leaves.",
+        "Camel crickets that had eaten the plant’s fruits produced droppings containing many undamaged seeds.",
+        "The fruits of Y. amagiensis remained on the plant for several weeks before eventually splitting open on the ground.",
+        "A field mouse that came upon the plant’s fruits sniffed at them briefly but did not eat any of them."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "Suetsugu claims that camel crickets are the main dispersers of the plant’s seeds. If crickets that ate the fruits left droppings full of undamaged seeds, the crickets were carrying the seeds away intact, which is what seed dispersal by an animal requires. The other choices describe where crickets live, how the fruits open, or an animal that ignored the fruits, so none shows crickets moving the seeds.",
+      "distractors": {
+        "A": {
+          "recipe": "off-target (cricket habitat, not the plant)",
+          "why_wrong": "Where the crickets are usually found says nothing about whether they eat the fruits or carry the seeds."
+        },
+        "C": {
+          "recipe": "off-target (how the fruit opens)",
+          "why_wrong": "Fruits splitting open on the ground does not show that crickets, or any animal, move the seeds."
+        },
+        "D": {
+          "recipe": "restates context (mammals ignore the fruits)",
+          "why_wrong": "It only repeats that mammals are not interested in the fruits; it gives no evidence that crickets disperse the seeds."
+        }
+      },
+      "models": [
+        "1.1",
+        "1.5",
+        "1.8",
+        "1.17",
+        "1.29",
+        "1.35",
+        "1.41",
+        "1.45"
+      ],
+      "word_count": 87,
+      "sources": [
+        {
+          "what": "Suetsugu, New Phytologist (online 2017, issue 2018), doi 10.1111/nph.14859: dust seeds of heterotrophic plants usually wind dispersed; Yoania amagiensis has fleshy, indehiscent fruits; grows in understorey of dense forests where wind is ineffective; camel crickets are the major seed disperser; seed viability through the digestive tract",
+          "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/search?query=DOI:10.1111/nph.14859&resultType=core&format=json"
+        },
+        {
+          "what": "Kobe University release: Suetsugu, plants in Fuji City, Shizuoka; birds and mammals showed no interest in the fruits; camel crickets regularly ate them and excreted intact seeds; a field mouse noticed the fruits but did not eat them",
+          "url": "https://www.kobe-u.ac.jp/en/news/article/2017_11_14_01/"
+        },
+        {
+          "what": "Yoania is an orchid genus (Orchidaceae)",
+          "url": "https://en.wikipedia.org/wiki/Yoania"
+        },
+        {
+          "what": "camel crickets (Rhaphidophoridae) are wingless",
+          "url": "https://en.wikipedia.org/wiki/Rhaphidophoridae"
+        },
+        {
+          "what": "abstract: dust seeds of most heterotrophic plants are wind dispersed; Yoania amagiensis has fleshy, indehiscent fruits and grows in the understorey of densely vegetated forests where wind is probably ineffective; camel crickets are the major seed disperser",
+          "url": "https://doi.org/10.1111/nph.14859"
+        }
+      ],
+      "notes": "Real study. Options are hypothetical findings; the key matches the reported result (intact seeds in cricket droppings), and the passage gives no numbers.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 6,
+        "fixes": [
+          "reworded the opening so it no longer reads as if Y. amagiensis itself had wind-dispersed seeds",
+          "replaced the participial opener ('Monitoring ..., biologist ... observed'), a frame shared with four other passages in the file, with a main clause"
+        ],
+        "status": "fixed"
+      },
+      "rewrite": "new subject (camel crickets disperse Yoania amagiensis seeds, Suetsugu) replacing the agrivoltaics study whose first sentence telegraphed the key; denser register",
+      "model_bands": [
+        4,
+        5,
+        3,
+        3,
+        3,
+        3,
+        2,
+        3
+      ]
+    },
+    {
+      "id": "command_of_evidence.T1_single.medium",
+      "template": "T1_single",
+      "subtype": "Hypothetical finding supports a claim (single claim, needs comparison group)",
+      "tier": "medium",
+      "passage": "Beginning in 2003, a national program in India funded the construction of latrines at government schools, many of which had previously lacked toilets of any kind. Economist Anjali Adukia examined administrative data from roughly 140,000 schools in 269 districts and found that the new latrines raised enrollment overall. Younger students of both sexes benefited whether a school’s latrine was shared or sex-specific. For girls of pubescent age, however, whose decisions about attending school may hinge on privacy and safety, Adukia concluded that a latrine substantially increases enrollment only if it is sex-specific.",
+      "stem": "Which finding, if true, would most directly support Adukia’s conclusion?",
+      "options": [
+        "At schools that built a single latrine for all students, enrollment of girls aged 6 to 10 rose by about as much as it did at schools that built separate latrines.",
+        "After latrines were built, more students at the schools took and passed the board examination given at the end of the middle grades.",
+        "Enrollment gains at schools that received latrines persisted for at least three years, even though the program did not fund their maintenance.",
+        "Enrollment of girls aged 11 to 14 rose sharply at schools that built separate latrines for girls and boys but changed little at schools that built one latrine for both."
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "Adukia concludes that for girls of pubescent age a latrine raises enrollment substantially only when it is sex-specific. Choice D compares girls of that age at schools with separate latrines and at schools with a shared latrine and finds a large gain only with separate latrines, which is exactly the pattern the conclusion predicts. Choice A is about younger girls, who the text says benefit whether the latrine is shared or sex-specific, and choices B and C concern exam results and how long the gains lasted.",
+      "distractors": {
+        "A": {
+          "recipe": "wrong subject / restates context (younger girls)",
+          "why_wrong": "It concerns girls aged 6 to 10, who the text already says benefit whether the latrine is shared or sex-specific; it says nothing about pubescent girls."
+        },
+        "B": {
+          "recipe": "off-target (achievement, not enrollment by latrine type)",
+          "why_wrong": "Exam results do not show whether the type of latrine matters for older girls' enrollment."
+        },
+        "C": {
+          "recipe": "off-target (persistence of gains)",
+          "why_wrong": "How long the gains lasted does not compare sex-specific with shared latrines for older girls."
+        }
+      },
+      "models": [
+        "2.1",
+        "2.4",
+        "2.6",
+        "2.7",
+        "2.16",
+        "2.21",
+        "2.33",
+        "2.38",
+        "2.43"
+      ],
+      "word_count": 92,
+      "sources": [
+        {
+          "what": "Adukia (guest post): School Sanitation and Hygiene Education program launched 2003; data on about 140,000 schools in 269 districts; unisex latrines mostly sufficient at younger ages; pubescent-age girls benefit little from unisex latrines and their enrollment rises substantially with sex-specific latrines; privacy and safety concerns may be central to older girls' decisions; effects persist three years later without maintenance funding; more students sit and pass the middle school board exam",
+          "url": "https://blogs.worldbank.org/en/impactevaluations/promoting-education-through-school-sanitation-guest-post-anjali-adukia"
+        },
+        {
+          "what": "Adukia, \"Sanitation and Education\", American Economic Journal: Applied Economics (2017): latrine construction increases enrollment of pubescent-age girls, predominantly when sex-specific",
+          "url": "https://chicagopolicyreview.org/2017/05/03/building-school-latrines-in-india-to-increase-school-enrollment/"
+        },
+        {
+          "what": "Adukia 2017, AEJ: Applied Economics 9(2), abstract: latrine construction substantially increases enrollment of pubescent-age girls, predominately when sex-specific; privacy and safety; any latrine benefits younger girls and boys",
+          "url": "https://doi.org/10.1257/app.20150083"
+        },
+        {
+          "what": "Adukia working paper: roughly half of Indian schools lacked basic sanitation facilities in 2002; latrine construction increased seven-fold in 2003; sample of 139 thousand schools in 269 districts; most schools government-run",
+          "url": "https://www.ccwd.uzh.ch/assets/pdf/conference-2017/adukia_paper.pdf"
+        }
+      ],
+      "notes": "Real study. Options are hypothetical findings; the key states the reported pattern without numbers. Ages 11 to 14 stand for the upper-primary (pubescent-age) group.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 6,
+        "fixes": [
+          "replaced the participial opener shared with other passages ('Analyzing ..., economist ... found') with a main clause",
+          "spelled out 'latrines of either type' as shared or sex-specific, so the comparison is defined before it is used",
+          "removed the stacked 'For girls ..., for whom ...' construction"
+        ],
+        "status": "fixed"
+      },
+      "replaced": "IKEA effect, Norton, Mochon and Ariely (duplicate of inferences.S1.easy)",
+      "rewrite": "new subject (Adukia, sex-specific school latrines in India) replacing the pop-psychology doorway study; mirror-pair distractors removed",
+      "model_bands": [
+        6,
+        4,
+        5,
+        5,
+        6,
+        5,
+        5,
+        3,
+        5
+      ]
+    },
+    {
+      "id": "command_of_evidence.T1_single.hard",
+      "template": "T1_single",
+      "subtype": "Hypothetical finding supports a claim (generalization across cases, needs the right comparison)",
+      "tier": "hard",
+      "passage": "Speakers typically slow their speech rate before complex, infrequent, or novel words, pausing more often or articulating more slowly while planning an utterance. In recordings of spontaneous speech in nine languages, among them Bora in the Amazon, Even in Siberia, and Chintang in the Himalayas, a team led by linguist Frank Seifart identified a robust cross-linguistic tendency for speech to slow more before nouns than before verbs. The researchers claim that this tendency reflects the role nouns play in discourse: because speakers generally employ a noun only when it conveys new or unexpected information, otherwise substituting a pronoun or leaving a known referent unnamed, nouns demand more planning than verbs do.",
+      "stem": "Which finding, if true, would most directly support the researchers’ claim?",
+      "options": [
+        "Within each language, the slowdown was much smaller before nouns referring to something the speaker had already mentioned than before nouns introducing something new.",
+        "When speakers of each language read aloud from a prepared script in which every word had already been chosen, they still slowed down noticeably more before nouns than before verbs.",
+        "Listeners who heard the recordings took longer to recognize nouns than to recognize verbs, regardless of which of the nine languages the recordings were made in.",
+        "In each of the nine languages, speech slowed down more before nouns consisting of many syllables than before nouns consisting of only one or two syllables."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The researchers say nouns slow speech because they usually carry new information, which takes extra planning. If the slowdown shrinks when a noun refers to something already mentioned, the newness of the information, not the noun itself, is driving the effect, as the conclusion requires. Choice B points to something about nouns that survives even when no planning is needed, choice C is about listeners rather than speakers, and choice D ties the slowdown to word length.",
+      "distractors": {
+        "B": {
+          "recipe": "opposite (slowdown persists with no planning of content)",
+          "why_wrong": "If speakers slow before nouns even when every word is chosen for them, planning new information cannot explain the effect, so this would weaken the conclusion."
+        },
+        "C": {
+          "recipe": "wrong subject (listeners, not speakers)",
+          "why_wrong": "How quickly listeners recognize nouns says nothing about why speakers slow down before producing them."
+        },
+        "D": {
+          "recipe": "off-target (word length, an intrinsic property)",
+          "why_wrong": "A length effect fits the complexity point in the first sentence but says nothing about whether nouns slow speech because they convey new information."
+        }
+      },
+      "models": [
+        "3.7",
+        "3.12",
+        "3.25",
+        "3.28",
+        "3.31",
+        "3.36",
+        "3.39",
+        "3.41",
+        "3.42",
+        "3.45",
+        "3.47"
+      ],
+      "word_count": 111,
+      "sources": [
+        {
+          "what": "Seifart, Strunk, Danielsen, Hartmann, Pakendorf, Wichmann, Witzlack-Makarevich, de Jong and Bickel 2018, PNAS 115(22): nine languages incl. Bora, Even, Chintang; slower articulation and more pauses before nouns than verbs; nouns used only for new or unexpected information, otherwise pronouns or gaps; nouns require more planning; speakers slow down before complex, infrequent or novel words",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC5984521/"
+        },
+        {
+          "what": "press release: nouns slow down speech across languages (University of Amsterdam)",
+          "url": "https://www.uva.nl/en/content/news/press-releases/2018/05/nouns-slow-down-speech.html"
+        },
+        {
+          "what": "full text (Europe PMC): robust cross-linguistic tendency for slower speech before nouns; nouns typically used only for new or unexpected information, otherwise replaced by pronouns or omitted; corpora from Bora (Amazonian rainforest), Even (Siberia), Chintang (Himalayas) among nine languages; speech spontaneously produced, not read out",
+          "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC5984521/fullTextXML"
+        }
+      ],
+      "notes": "Real study. Options are hypothetical findings; the study did not report a given-versus-new comparison, so the key is offered only as an if-true finding. English was a partial exception in the study; the passage says only \"a consistent tendency\".",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 5,
+        "fixes": [
+          "'consistent tendency' changed to 'robust cross-linguistic tendency' (the paper's wording; English was only a partial fit)",
+          "varied the opener ('Analyzing ..., linguist ... and colleagues identified' was a frame shared with other items) and the verb, with stem 'claim' to match"
+        ],
+        "status": "fixed"
+      },
+      "rewrite": "new subject (Seifart et al., nouns slow speech across nine languages) replacing the well-known Mehr song study; distractors no longer mirror each other; denser register",
+      "model_bands": [
+        6,
+        6,
+        6,
+        7,
+        6,
+        7,
+        7,
+        4,
+        7,
+        7,
+        7
+      ]
+    },
+    {
+      "id": "command_of_evidence.T1_compete.easy",
+      "template": "T1_compete",
+      "subtype": "Hypothetical finding supports one of several competing explanations",
+      "tier": "easy",
+      "passage": "In ancient Egypt, millions of African sacred ibises were mummified and buried in vast catacombs as offerings to Thoth, a god often depicted with an ibis’s head. Some ancient texts suggest that the birds were domesticated and bred in great numbers on temple farms. After analyzing DNA from ibis mummies found in six catacombs across Egypt, however, geneticist Sally Wasef and her colleagues concluded that most of the birds had instead been captured from wild flocks and tamed only briefly before being sacrificed.",
+      "stem": "Which finding, if true, would most directly support the researchers’ conclusion?",
+      "options": [
+        "Sacred ibises no longer breed in Egypt, although large wild colonies still nest in many parts of sub-Saharan Africa today.",
+        "Ibis mummies were often wrapped in strips of linen and then sealed inside clay jars before being placed in the catacombs.",
+        "The mummified ibises were about as genetically diverse as the wild populations of sacred ibises living in Africa today.",
+        "The number of ibis mummies found in a catacomb varied greatly from one site to another, even within the same region."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The researchers conclude that the ibises were mostly caught in the wild rather than bred on farms. Birds bred in captivity for generations come from a small stock and grow alike genetically, so mummies as genetically varied as today’s wild ibises point to wild-caught birds. The other choices describe modern ibis colonies, how the mummies were wrapped, or how many were in each catacomb, none of which shows where the birds came from.",
+      "distractors": {
+        "A": {
+          "recipe": "off-target (modern range; shares the word \"wild\")",
+          "why_wrong": "Where wild ibises live today says nothing about whether the mummified birds were wild or farmed."
+        },
+        "B": {
+          "recipe": "off-target (burial practice)",
+          "why_wrong": "How the mummies were wrapped and stored does not show where the birds came from."
+        },
+        "D": {
+          "recipe": "off-target (numbers per site)",
+          "why_wrong": "Differences in how many mummies each catacomb held do not distinguish wild-caught from farmed birds."
+        }
+      },
+      "models": [
+        "1.25"
+      ],
+      "word_count": 83,
+      "sources": [
+        {
+          "what": "Wasef et al. 2019, PLOS ONE 14(11) e0223964: DNA from 40 mummified sacred ibises from six Egyptian catacombs and 26 modern specimens; ancient texts suggest long-term farming; mummies' genetic diversity similar to modern wild populations; short-term taming of wild birds",
+          "url": "https://popular-archaeology.com/article/ancient-egyptians-gathered-birds-from-the-wild-for-sacrifice-and-mummification/"
+        },
+        {
+          "what": "article record (Griffith University repository)",
+          "url": "https://research-repository.griffith.edu.au/items/76f1ac75-fab1-4654-941d-6eb5167045ee"
+        },
+        {
+          "what": "Thoth often depicted with the head of an ibis",
+          "url": "https://en.wikipedia.org/wiki/Thoth"
+        },
+        {
+          "what": "full text (Europe PMC): DNA from 40 Sacred Ibis mummies from six Egyptian catacombs; millions sacrificed to Thoth as votive offerings; textual evidence suggests large-scale farms; diversity comparable to modern African populations; short-term taming of wild birds",
+          "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC6853290/fullTextXML"
+        }
+      ],
+      "notes": "Real study. The key states the reported result (diversity similar to wild populations); the other options are hypothetical. \"Millions\" follows the press coverage (\"many millions of birds\").",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 5,
+        "fixes": [],
+        "status": "pass"
+      },
+      "replaced": "zebra stripes and biting flies, Tim Caro (duplicate of central_ideas_and_details.T7.medium)",
+      "rewrite": "new subject (Wasef et al., wild-caught vs farmed sacred ibis mummies) replacing Stonehenge; no distractor built as the rival's neat prediction",
+      "model_bands": [
+        5
+      ]
+    },
+    {
+      "id": "command_of_evidence.T1_compete.medium",
+      "template": "T1_compete",
+      "subtype": "Hypothetical finding supports one of two competing accounts",
+      "tier": "medium",
+      "passage": "When sand avalanches down the steep slip face of certain desert dunes, it can emit a loud, sustained drone known as booming. The drone is dominated by a single frequency between about 70 and 105 hertz, which several physicists have attributed to the avalanche itself, arguing that it depends on grain diameter and on the shear rate within the flowing sand. Mechanical engineer Nathalie Vriend and colleagues recorded booming and conducted seismic surveys at dunes in California and Nevada. They contend instead that the frequency is fixed by the thickness of a surface layer of dry, loose sand overlying a substrate through which sound travels faster.",
+      "stem": "Which finding about the dunes, if true, would most directly support Vriend and colleagues’ claim?",
+      "options": [
+        "Dunes composed of finer sand grains boomed at noticeably higher frequencies than dunes composed of coarser grains did, whatever the season.",
+        "At a single dune, the booming frequency changed from season to season as the dry surface layer thickened or thinned, though the sand grains stayed the same size.",
+        "Sliding down a dune at twice the usual speed produced booming that was noticeably louder than the booming produced by a slower slide.",
+        "Booming could be produced only on slopes steep enough for the sand to avalanche, never on the gentler slopes of the same dunes."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "Vriend and colleagues tie the booming frequency to the thickness of the dry surface layer, not to the grains or the avalanche. If the frequency at one dune shifts as that layer thickens or thins while the grains stay the same, the layer, not grain size, is setting the frequency. Choice A is what the rival grain-size view predicts, choice C concerns loudness rather than frequency, and choice D fits both views, since both need an avalanche.",
+      "distractors": {
+        "A": {
+          "recipe": "opposite (the rival grain-size prediction)",
+          "why_wrong": "Frequency tracking grain size whatever the season would support the physicists who credit the avalanche and grain diameter."
+        },
+        "C": {
+          "recipe": "off-target (loudness, not frequency)",
+          "why_wrong": "It reports how loud the booming was, not its frequency, so it does not bear on what sets the frequency."
+        },
+        "D": {
+          "recipe": "consistent with both explanations",
+          "why_wrong": "Both explanations need an avalanche to start the sound, so this does not favor the surface-layer explanation."
+        }
+      },
+      "models": [
+        "2.9",
+        "2.30"
+      ],
+      "word_count": 106,
+      "sources": [
+        {
+          "what": "Vriend, Hunt, Clayton, Brennen, Brantley and Ruiz-Angulo 2007, \"Solving the mystery of booming sand dunes\", GRL 34 L16306: dominant frequency 70 to 105 Hz; earlier work (Andreotti, Douady, Bonneau) ties frequency to grain diameter and shear rate in the avalanche; frequency fixed by depth of a surficial layer of dry loose sand between regions of higher velocity; dunes at Dumont, Eureka, Kelso (CA) and Big Dune (NV); seismic refraction surveys; seasonal change in dune structure; booming never initiated below the angle of repose",
+          "url": "https://wpg.forestry.oregonstate.edu/sites/default/files/seminars/Vriend_et_al-2007-Geophysical_Research_Letters.pdf"
+        },
+        {
+          "what": "Vriend's Caltech PhD (2010) in mechanical engineering, advised by Melany Hunt",
+          "url": "https://thesis.library.caltech.edu/5891"
+        }
+      ],
+      "notes": "Real debate. Options are hypothetical findings; the key is the outcome the waveguide model predicts. \"Several physicists\" stands for Andreotti, Douady and colleagues without attributing wording to them.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 7,
+        "fixes": [
+          "replaced 'After [verb]ing ..., however, [title] [Name] and colleagues concluded that ... instead', the same skeleton as the ibis item, with two plain sentences; stem says 'claim' to match 'contend'",
+          "split the 35-word final sentence so medium-tier sentence length stays near official"
+        ],
+        "status": "fixed"
+      },
+      "replaced": "Rapa Nui rock gardens and population collapse, Davis et al. (duplicate of cross_text_connections.S1_rival_hypothesis.medium)",
+      "rewrite": "new subject (Vriend et al. vs. grain-size accounts of booming dunes) replacing the Little Ice Age study; no sun-vs-volcano mirror pair; denser register",
+      "model_bands": [
+        7,
+        5
+      ]
+    },
+    {
+      "id": "command_of_evidence.T1_compete.hard",
+      "template": "T1_compete",
+      "subtype": "Hypothetical finding weakens one of two competing explanations",
+      "tier": "hard",
+      "passage": "In regions worldwide, sedimentary strata deposited during the Cambrian period, which began about 539 million years ago, directly overlie crystalline basement rocks hundreds of millions to billions of years older, a gap in the geologic record termed the Great Unconformity. Geochronologist C. Brenhin Keller and colleagues have hypothesized that much of the missing rock was stripped away by continental ice sheets during the Cryogenian period (roughly 720 to 635 million years ago), when glaciers may have blanketed nearly the entire planet. Thermochronologist Rebecca Flowers and colleagues, by contrast, contend that erosion occurred diachronously, at different times in different regions, as a result of tectonic uplift.",
+      "stem": "Which finding, if true, would most directly weaken Keller and colleagues’ hypothesis?",
+      "options": [
+        "The thickness of rock missing at the unconformity is broadly similar on continents that were widely separated from one another during the Cryogenian period.",
+        "The Cryogenian glaciations ended abruptly, a transition recorded in distinctive carbonate rocks deposited directly on top of glacial sediments around the world.",
+        "In many regions, the basement rocks directly beneath the unconformity are granites that originally crystallized several kilometers below Earth’s surface.",
+        "Thermal histories of basement rocks beneath the unconformity at several sites show that the rocks had reached the surface before the Cryogenian began."
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "Keller and colleagues say Cryogenian ice sheets removed the missing rock. If basement rocks at several sites had already reached the surface before the Cryogenian began, the rock above them was gone before the glaciers arrived, so glaciation cannot be what removed it there. Choice A would instead favor one global event, and choices B and C fit either explanation.",
+      "distractors": {
+        "A": {
+          "recipe": "opposite (supports a single global cause)",
+          "why_wrong": "Similar erosion on widely separated continents is what one worldwide glaciation would produce, so it supports Keller's hypothesis."
+        },
+        "B": {
+          "recipe": "off-target (how the glaciations ended)",
+          "why_wrong": "How the ice ages ended says nothing about when the rock beneath the unconformity was eroded."
+        },
+        "C": {
+          "recipe": "consistent with both explanations",
+          "why_wrong": "Deep-formed granites had to be uncovered under either explanation; this does not show when or how the rock above them was removed."
+        }
+      },
+      "models": [
+        "3.6",
+        "3.8",
+        "3.9",
+        "3.10",
+        "3.14",
+        "3.15",
+        "3.48"
+      ],
+      "word_count": 105,
+      "sources": [
+        {
+          "what": "Keller et al. 2019, \"Neoproterozoic glacial origin of the Great Unconformity\", PNAS 116(4): erosion by Neoproterozoic snowball Earth glaciations, global average 3 to 5 km",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6347685"
+        },
+        {
+          "what": "Flowers, Macdonald, Siddoway and Havranek 2020, PNAS 117(19): most erosion below the Great Unconformity in Colorado occurred before the first Snowball Earth; multiple, regionally diachronous Great Unconformities of tectonic origin; Cryogenian about 717 to 635 Ma; Cambrian sandstone on 1.07 Ga Pikes Peak granite",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7229757"
+        },
+        {
+          "what": "Great Unconformity separates Phanerozoic rocks from rocks hundreds of millions to billions of years older; Keller (Dartmouth) and Flowers (CU Boulder, thermochronology) on the debate",
+          "url": "https://eos.org/articles/the-great-unconformity-or-great-unconformities"
+        },
+        {
+          "what": "Cambrian base 538.8 Ma; Cryogenian about 720 to 635 Ma (ICS chart)",
+          "url": "https://stratigraphy.org/chart"
+        }
+      ],
+      "notes": "Real debate. Options are hypothetical findings; the key generalises Flowers et al.'s Colorado result (basement at the surface before about 717 Ma) to \"several sites\" as an if-true finding.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 6,
+        "fixes": [
+          "Cryogenian start given as roughly 720 Ma (ICS chart) instead of 717 Ma, which is the start of the Sturtian glaciation, not of the period"
+        ],
+        "status": "fixed"
+      },
+      "rewrite": "new subject (Great Unconformity, Keller glacial vs Flowers tectonic) replacing the fairy-circle news feature; distractors varied (opposite, off-target, consistent with both)",
+      "model_bands": [
+        7,
+        6,
+        7,
+        6,
+        7,
+        6,
+        7
+      ]
+    },
+    {
+      "id": "command_of_evidence.T2_lit_quote.easy",
+      "template": "T2_lit_quote",
+      "subtype": "Literary quotation illustrates a claim (single trait)",
+      "tier": "easy",
+      "passage": "The Wonderful Adventures of Nils is a 1906 novel by Selma Lagerlöf, translated in 1907 by Velma Swanston Howard. In the novel, the narrator suggests that Nils’s parents, farmers in southern Sweden, have improved their situation through their own diligence: ______",
+      "stem": "Which quotation from The Wonderful Adventures of Nils most effectively illustrates the claim?",
+      "options": [
+        "“Things had turned out very well for them; and they would have gone to church that beautiful morning—satisfied and happy—if they hadn’t had their son to think of.”",
+        "“When they first moved there, the place couldn’t feed more than one pig and a pair of chickens; but they were uncommonly industrious and capable folk—and now they had both cows and geese.”",
+        "“His mother owned a great, heavy, iron-bound oak chest, which she permitted no one but herself to open. Here she treasured all the things she had inherited from her mother, and of these she was especially careful.”",
+        "“Father complained that he was dull and lazy; he had not cared to learn anything at school, and he was such an all-round good-for-nothing, that he could barely be made to tend geese.”"
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The claim is that the parents are better off because they worked hard. Choice B shows both: the farm once fed only “one pig and a pair of chickens,” but because the parents were “uncommonly industrious and capable,” they “now had both cows and geese.” Choice A says things turned out well but gives no reason, choice C is about inherited belongings, and choice D describes the son’s laziness.",
+      "distractors": {
+        "A": {
+          "recipe": "half-match (improvement without effort)",
+          "why_wrong": "It shows that things went well for the parents but not that their own hard work made it so."
+        },
+        "C": {
+          "recipe": "off-target (inherited heirlooms; lure \"careful\")",
+          "why_wrong": "It is about things the mother inherited and guards, not about the family improving its situation through work."
+        },
+        "D": {
+          "recipe": "wrong subject / keyword lure (the son; \"lazy\", \"geese\")",
+          "why_wrong": "It describes Nils's laziness, not his parents' diligence."
+        }
+      },
+      "models": [
+        "1.11",
+        "1.16",
+        "1.36",
+        "1.39",
+        "1.42"
+      ],
+      "word_count": 41,
+      "sources": [
+        {
+          "what": "novel text, Velma Swanston Howard translation (Project Gutenberg 10935), chapter \"The Boy\"; all four options copied exactly, \"--\" set as closed em dashes",
+          "url": "https://www.gutenberg.org/ebooks/10935"
+        },
+        {
+          "what": "first published in Swedish 1906 (book 1); first English translation The Wonderful Adventures of Nils, Doubleday, Page, 1907, translated by Velma Swanston Howard",
+          "url": "https://www.themorgan.org/printed-books/66047"
+        },
+        {
+          "what": "publication history (Swedish 1906 and 1907; English 1907)",
+          "url": "https://en.wikipedia.org/wiki/The_Wonderful_Adventures_of_Nils"
+        },
+        {
+          "what": "the family lives in West Vemminghög Township in Skåne, southern Sweden",
+          "url": "https://www.gutenberg.org/cache/epub/10935/pg10935.txt"
+        }
+      ],
+      "notes": "Not used in any official item (grep of all transcripts). Options trimmed at sentence boundaries; straight apostrophes curled.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 6,
+        "fixes": [],
+        "status": "pass"
+      },
+      "rewrite": "new work (Lagerlöf, Nils, Howard translation) replacing the much-anthologised Village Blacksmith; half-match and lure distractors from the same page",
+      "model_bands": [
+        1,
+        2,
+        3,
+        3,
+        3
+      ]
+    },
+    {
+      "id": "command_of_evidence.T2_lit_quote.medium",
+      "template": "T2_lit_quote",
+      "subtype": "Literary quotation illustrates a claim (two-part / contrast)",
+      "tier": "medium",
+      "passage": "“The Fat of the Land” is a 1919 short story by Anzia Yezierska. In the story, Hanneh Breineh, a Polish immigrant whose children have prospered in New York, is installed in an elegant apartment on Riverside Drive. Yezierska portrays Hanneh Breineh as discovering that her family’s newfound affluence cannot compensate for her isolation from her children: ______",
+      "stem": "Which quotation from “The Fat of the Land” most effectively illustrates the claim?",
+      "options": [
+        "“What have I from all my fine furs and feathers when my children are strangers to me? All the fur coats in the world can’t warm up the loneliness inside my heart.”",
+        "“For years she had been accustomed to hair mattresses and ample woolen blankets, so that though she covered herself with her fur coat, she was too cold to sleep.”",
+        "“Her son’s jest cut like a knife-thrust in her heart. She felt her heart ache with the pain that she was shut out from their successes.”",
+        "“‘Two pounds for a quarter, and not a penny more,’ said Hanneh Breineh, thrilling again with the rare sport of bargaining, which had been her chief joy in the good old days of poverty.”"
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The claim has two parts: Hanneh Breineh’s family now has money, and that money cannot make up for her distance from her children. In choice A she asks what her “fine furs and feathers” give her when “my children are strangers to me” and says no fur coat can “warm up the loneliness inside my heart,” so both parts are there. Choice B shows a fur coat failing to keep her warm but never mentions her children, choice C shows her hurt at being shut out but not her wealth, and choice D shows her pleasure in bargaining.",
+      "distractors": {
+        "B": {
+          "recipe": "half-match / keyword lure (fur coat that cannot warm her; no children)",
+          "why_wrong": "Her fur coat does not keep her warm, but the cold here is physical, and the quotation says nothing about her children."
+        },
+        "C": {
+          "recipe": "half-match (isolation only)",
+          "why_wrong": "It shows her pain at being shut out by her children but not the wealth that fails to make up for it."
+        },
+        "D": {
+          "recipe": "off-target (pleasure in bargaining, nostalgia)",
+          "why_wrong": "It shows her enjoying the bargaining of her poorer days, not her isolation from her children."
+        }
+      },
+      "models": [
+        "2.10",
+        "2.11",
+        "2.13",
+        "2.17",
+        "2.20",
+        "2.26",
+        "2.31",
+        "2.35",
+        "2.36",
+        "2.37"
+      ],
+      "word_count": 57,
+      "sources": [
+        {
+          "what": "story text in Hungry Hearts (Houghton Mifflin, 1920), Project Gutenberg 41232; all four options copied exactly",
+          "url": "https://www.gutenberg.org/ebooks/41232"
+        },
+        {
+          "what": "\"The Fat of the Land\" first published in The Century, reprinted in The Best Short Stories of 1919",
+          "url": "https://gutenberg.org/files/23445/23445-h/23445-h.htm"
+        },
+        {
+          "what": "Yezierska's break-out story, later collected in Hungry Hearts",
+          "url": "https://americanliterature.com/author/anzia-yezierska/short-story/the-fat-of-the-land"
+        }
+      ],
+      "notes": "Hanneh Breineh refers to her family's \"black life in Poland\"; the Riverside apartment is one \"to which Hanneh Breineh was removed by her socially ambitious children\". Not used in any official item (grep of all transcripts). Options trimmed at sentence boundaries. Claim reworded in verification so it no longer echoes the key (\"estranged\" / \"strangers\").",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 5,
+        "fixes": [
+          "claim reworded from 'surrounded by luxury yet estranged from her children' (the key echoed it: 'strangers to me') to wealth that cannot compensate for isolation; B becomes a closer half-match",
+          "'finds herself installed' changed to 'is installed'"
+        ],
+        "status": "fixed"
+      },
+      "rewrite": "new work (Yezierska, \"The Fat of the Land\") replacing the famous \"A White Heron\" whose key restated the claim; two half-matches and an off-target option",
+      "model_bands": [
+        5,
+        6,
+        5,
+        5,
+        5,
+        5,
+        5,
+        4,
+        4,
+        5
+      ]
+    },
+    {
+      "id": "command_of_evidence.T2_lit_quote.hard",
+      "template": "T2_lit_quote",
+      "subtype": "Literary quotation illustrates a claim (translated drama, two-part contrast)",
+      "tier": "hard",
+      "passage": "The Cherry Orchard is a 1904 play by Anton Chekhov, translated in 1916 by Julius West. In the play, Madame Ranevsky, whose indebted estate faces auction, acknowledges that her own extravagance contrasts with the thrift of others in her household: ______",
+      "stem": "Which quotation from The Cherry Orchard most effectively illustrates the claim?",
+      "options": [
+        "“I’ve always scattered money about without holding myself in, like a madwoman, and I married a man who made nothing but debts.”",
+        "“Grandmother sent fifteen thousand roubles from Yaroslav to buy the property in her name—she won’t trust us—and that wasn’t even enough to pay the interest.”",
+        "“What is to be done with such a fool as I am! At home I’ll give you everything I’ve got. Ermolai Alexeyevitch, lend me some more!”",
+        "“My poor Varya feeds everybody on milk soup to save money, in the kitchen the old people only get peas, and I spend recklessly.”"
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The claim needs Ranevsky to admit her own extravagance and to set it against other people’s thrift. In choice D she notes that Varya serves milk soup “to save money” and the old servants “only get peas,” then admits “I spend recklessly,” so both parts are there. Choices A and C admit her extravagance or foolishness but never mention anyone else saving money.",
+      "distractors": {
+        "A": {
+          "recipe": "half-match (owns her extravagance, no contrast with household thrift)",
+          "why_wrong": "She admits she has always wasted money, but the contrast is with her husband's debts, not with anyone in her household being careful."
+        },
+        "B": {
+          "recipe": "off-target (family finances and a relative's distrust)",
+          "why_wrong": "It is about the family's money troubles and the grandmother's distrust, not Ranevsky admitting her own spending."
+        },
+        "C": {
+          "recipe": "half-match / keyword lure (\"at home\")",
+          "why_wrong": "She calls herself a fool and keeps borrowing, but nothing shows others in the household economizing."
+        }
+      },
+      "models": [
+        "3.11",
+        "3.17",
+        "3.34",
+        "3.35",
+        "3.37"
+      ],
+      "word_count": 41,
+      "sources": [
+        {
+          "what": "play text in Julius West's translation (Plays by Anton Chekhov, Second Series); all options are Ranevsky's lines copied exactly, \"--\" set as closed em dashes",
+          "url": "https://www.gutenberg.org/ebooks/7986"
+        },
+        {
+          "what": "West translation first published 1916 (Duckworth)",
+          "url": "https://johnatkinsonbooks.co.uk/?p=119196"
+        },
+        {
+          "what": "premiere 1904",
+          "url": "https://en.wikipedia.org/wiki/The_Cherry_Orchard"
+        },
+        {
+          "what": "West translation dated 1916 (Scribner’s/Duckworth Second Series)",
+          "url": "https://ibiblio.org/eldritch/ac/chorch2.htm"
+        },
+        {
+          "what": "estate to be sold at auction to pay the debts (\"your cherry orchard is to be sold to pay your debts ... the whole estate will be up for auction\")",
+          "url": "https://www.gutenberg.org/ebooks/7986"
+        }
+      ],
+      "notes": "Option A drops the preceding sentence \"Oh, my sins....\" and option D drops \"I had a lot of money yesterday, but there’s very little to-day.\" (trims at sentence boundaries). Stage directions omitted.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 6,
+        "fixes": [],
+        "status": "pass"
+      },
+      "rewrite": "setup reworded for register (\"indebted estate faces auction\", \"acknowledges her own extravagance\"); excerpt options and key unchanged",
+      "model_bands": [
+        6,
+        6,
+        6,
+        6,
+        7
+      ]
+    },
+    {
+      "id": "command_of_evidence.T3_person_quote.easy",
+      "template": "T3_person_quote",
+      "subtype": "Quotation from a survey respondent illustrates a conclusion",
+      "tier": "easy",
+      "passage": "Since 2007, members of the public have classified galaxies by shape in telescope images for Galaxy Zoo, an online citizen science project. To learn why so many people give their free time to this task, M. Jordan Raddick of Johns Hopkins University and his collaborators surveyed nearly 11,000 of the project’s volunteers. The researchers concluded that the motive volunteers most often named as their primary one was a desire to contribute to original scientific research.",
+      "stem": "Which quotation from a survey respondent would best illustrate the researchers’ conclusion?",
+      "options": [
+        "“I could spend hours just looking at the images. Some of the spiral galaxies are so beautiful that I save them as the background on my computer.”",
+        "“Classifying galaxies has made me much more interested in science, and now I read articles about astronomy research whenever I can find them.”",
+        "“I like knowing that every galaxy I classify becomes part of a data set that astronomers are using to answer questions nobody has answered yet.”",
+        "“It amazes me that the light in some of these images left its galaxy long before there were any people on Earth to see it.”"
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The researchers found that volunteers most often take part because they want to contribute to original research. In choice C the volunteer values that each classification goes into data astronomers use to answer new questions, which is contributing to research. Choice B mentions science and research, but only as things the volunteer reads about, and choices A and D are about the beauty and the vastness of space.",
+      "distractors": {
+        "A": {
+          "recipe": "off-target (beauty of the images)",
+          "why_wrong": "Enjoying the images is a different motive from contributing to research."
+        },
+        "B": {
+          "recipe": "keyword lure (\"science\", \"research\"; learning, not contributing)",
+          "why_wrong": "The volunteer reads about research but does not say the classifications contribute to it."
+        },
+        "D": {
+          "recipe": "off-target (awe at the scale of the universe)",
+          "why_wrong": "Amazement at how old the light is says nothing about contributing to research."
+        }
+      },
+      "models": [
+        "1.13",
+        "1.15",
+        "1.19",
+        "1.20",
+        "1.26",
+        "1.32"
+      ],
+      "word_count": 75,
+      "sources": [
+        {
+          "what": "Raddick, Bracey, Gay, Lintott et al. 2013, \"Galaxy Zoo: Motivations of Citizen Scientists\", Astronomy Education Review: online survey of nearly 11,000 volunteers; Johns Hopkins University; primary motivation \"I am excited to contribute to original scientific research\" (nearly 40%); other categories include beauty, vastness, learning, science",
+          "url": "https://arxiv.org/abs/1303.6886"
+        },
+        {
+          "what": "Galaxy Zoo launched July 2007; volunteers classify galaxy shapes in Sloan Digital Sky Survey images",
+          "url": "https://en.wikipedia.org/wiki/Galaxy_Zoo"
+        },
+        {
+          "what": "arXiv abstract: online survey of nearly 11,000 Galaxy Zoo volunteers; primary motivation a desire to contribute to scientific research; co-authors from several institutions (Lintott, Oxford, among them)",
+          "url": "https://arxiv.org/abs/1303.6886"
+        }
+      ],
+      "notes": "Real survey; respondent quotations are written for the item and attributed to no real person, as in the official survey items.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [
+          "'Raddick and his colleagues at Johns Hopkins University' changed to 'M. Jordan Raddick of Johns Hopkins University and his collaborators' (co-authors include Oxford and other institutions)",
+          "opening sentence reworded ('posted online by the project' was awkward)"
+        ],
+        "status": "fixed"
+      },
+      "rewrite": "new subject (Raddick et al., Galaxy Zoo volunteer motivations) replacing the invented Repair Café survey; one keyword-lure distractor closer to the claim",
+      "model_bands": [
+        4,
+        4,
+        4,
+        4,
+        4,
+        3
+      ]
+    },
+    {
+      "id": "command_of_evidence.T3_person_quote.medium",
+      "template": "T3_person_quote",
+      "subtype": "Quotation from a historian supports a claim about influence",
+      "tier": "medium",
+      "passage": "Anmatyerr artist Emily Kam Kngwarray spent eleven years producing batiks, designs created by applying wax and dye to fabric, as a founding member of the Utopia Women’s Batik Group in Australia’s Northern Territory. In 1988, in her seventies, she turned to acrylic painting on canvas, and before her death in 1996 she completed more than 3,000 works. In an essay, a student contends that Kngwarray’s paintings extended a visual vocabulary she had established in her batiks rather than constituting a departure from it.",
+      "stem": "Which quotation from a work by an art historian would be the most effective evidence for the student to include in support of this claim?",
+      "options": [
+        "“Motifs that recur throughout Kngwarray’s canvases, such as emu tracks and the awely designs painted on women’s bodies for ceremonies, had already appeared in the textiles she made at Utopia.”",
+        "“Kngwarray said she gave up batik because the work, which involved boiling the fabric again and again to remove the wax, had become too much for her.”",
+        "“Kngwarray worked with her canvases laid flat on the ground, sitting on them and reaching across them with a long brush; one even bears the paw prints of a passing dog.”",
+        "“For years critics placed Kngwarray’s canvases in the tradition of Western abstraction, a reading that Indigenous curators have since challenged by linking her work to her Country, Alhalker.”"
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The student claims that Kngwarray’s paintings carried on the imagery she had developed in batik. Choice A says that motifs found throughout her canvases, such as emu tracks and awely designs, had already appeared in the textiles she made at Utopia, that is, in her batiks, which shows that continuity directly. Choice B mentions batik but only explains why she stopped making it, and choices C and D concern how she painted and how critics have classified her work.",
+      "distractors": {
+        "B": {
+          "recipe": "keyword lure (\"batik\"; reason for the switch)",
+          "why_wrong": "It explains why she gave up batik, not whether her paintings continued its imagery."
+        },
+        "C": {
+          "recipe": "off-target (working method)",
+          "why_wrong": "How she physically painted says nothing about whether her canvases drew on her batik designs."
+        },
+        "D": {
+          "recipe": "off-target (critical framing)",
+          "why_wrong": "It is about how critics and curators have classified her paintings, not about any link to her batiks."
+        }
+      },
+      "models": [
+        "2.23",
+        "2.29"
+      ],
+      "word_count": 83,
+      "sources": [
+        {
+          "what": "Anmatyerr; batiks made outdoors with wax; early batiks and paintings feature emus, whose three-toed footprints spread across the canvases and batiks; awely learned from her mother; c.1914-1996",
+          "url": "https://www.tate.org.uk/whats-on/tate-modern/emily-kam-kngwarray/exhibition-guide"
+        },
+        {
+          "what": "made batiks for 11 years before painting in acrylic on canvas; began painting at around 74; more than 3,000 works between 1988 and 1996; paintings read as awely body designs; batik on cotton",
+          "url": "https://www.fondationopale.ch/wp-content/uploads/2026/06/PK_EKK_EN.pdf"
+        },
+        {
+          "what": "NGA: founding member of the Utopia Women's Batik Group; first acrylic work 1988; NGA describes a batik with goannas and awely designs (search result text)",
+          "url": "https://nga.gov.au/exhibitions/emily-kam-kngwarray-paintings-from-utopia"
+        },
+        {
+          "what": "Utopia Women's Batik Group formed 1978 after a 1977 workshop; over 3,000 works in less than a decade; born around 1910; died 1996",
+          "url": "https://www.agsa.sa.gov.au/education/resources-educators/resources-educators/radical-textiles-education-resource/emily-kam-kngwarray/"
+        },
+        {
+          "what": "her own words: she quit batik because of the hard work and the repeated boiling of the fabric",
+          "url": "https://www.artnet.com/artists/emily-kame-kngwarreye/"
+        },
+        {
+          "what": "dealer on a painting with dog prints: \"The dog walked across it, and she couldn't have cared less\" (Smee, Washington Post, 2019, reprinted)",
+          "url": "https://www.theday.com/?p=133652"
+        },
+        {
+          "what": "method (canvas on the ground, seated, long brush); Western labels challenged by Indigenous curators; Country Alhalkere (cites ABC News 2024, AGNSW 2007)",
+          "url": "https://en.wikipedia.org/wiki/Emily_Kame_Kngwarreye"
+        }
+      ],
+      "notes": "Quotations are attributed only to an unnamed art historian and state verified facts. \"Emily Kam Kngwarray\", \"awely\" and \"Alhalker\" follow the spelling of the National Gallery of Australia and Tate; older sources use Kame Kngwarreye, awelye, Alhalkere. Her birth year is uncertain (c.1910 to c.1916), so the passage says only \"in her seventies\". Her batiks were on silk and cotton, so the passage says \"fabric\".",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 9,
+        "fixes": [
+          "'in her late seventies' changed to 'in her seventies' (birth year c.1910 to c.1916; Tate and Fondation Opale give c.1914, painting from about age 74)",
+          "'more than 3,000 canvases' changed to 'more than 3,000 works' (sources count works, not canvases)",
+          "batiks were on silk and cotton: 'wax and dye to silk' changed to 'to fabric', and key A now says 'the textiles she made at Utopia'",
+          "key A: goannas dropped (not confirmed as a recurring canvas motif); emu tracks and awely designs are confirmed in both media (Tate, Fondation Opale, NGA)",
+          "option B: dropped the unsourced 'as she grew older'; option D: Alhalker spelled as NGA and Tate spell it",
+          "after blind round 2: every option now in quotation marks, as the stem asks for a quotation"
+        ],
+        "status": "fixed"
+      },
+      "rewrite": "new subject (Emily Kam Kngwarray, batik to canvas) replacing Ruth Asawa; distractors are critical observations rather than biography facts arranged around the key",
+      "model_bands": [
+        5,
+        5
+      ]
+    },
+    {
+      "id": "command_of_evidence.T3_person_quote.hard",
+      "template": "T3_person_quote",
+      "subtype": "Quotation from a scholarly article supports historians' assertion about a cause",
+      "tier": "hard",
+      "passage": "In November 1918, the steamship Talune docked at Apia, the capital of New Zealand–administered Western Samoa, having sailed from Auckland, where an influenza epidemic was then raging. Although several people aboard had already fallen ill, port officials allowed the ship’s passengers ashore without imposing a quarantine, and within two months influenza had killed more than 7,500 Samoans, roughly a fifth of the territory’s population. Some historians assert that the scale of the catastrophe owed less to the virulence of the strain itself than to choices made by the territory’s colonial officials.",
+      "stem": "Which quotation from a scholarly article best supports the assertion of the historians mentioned in the text?",
+      "options": [
+        "“The strain of influenza circulating in 1918 was unusually lethal for young adults, a group that seasonal influenza rarely kills in large numbers.”",
+        "“Island populations in the Pacific that had been relatively isolated before 1918, and so had been exposed to fewer respiratory infections, generally suffered far higher death rates in the pandemic.”",
+        "“In nearby American Samoa, the naval governor barred travel from the neighboring islands and kept arriving passengers under observation; that territory recorded no influenza deaths.”",
+        "“New Zealand had governed Western Samoa only since August 1914, when its troops occupied the islands, which had until then been a German colony.”"
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The historians say Western Samoa’s losses came less from how deadly the virus was than from what its officials decided. Choice C shows that nearby American Samoa, facing the same epidemic, recorded no influenza deaths after its governor restricted travel and watched arriving passengers, which suggests that official decisions made the difference. Choice A stresses the strain’s deadliness, choice B points to how isolated island populations were rather than to anyone’s decisions, and choice D concerns when New Zealand took control.",
+      "distractors": {
+        "A": {
+          "recipe": "opposite (points to the virulence of the strain)",
+          "why_wrong": "Stressing how lethal the strain was supports the explanation the historians play down."
+        },
+        "B": {
+          "recipe": "off-target / rival cause (population isolation, not officials' decisions)",
+          "why_wrong": "It explains high death rates by how little earlier contact island populations had with respiratory infections, not by decisions made by Western Samoa's officials."
+        },
+        "D": {
+          "recipe": "off-target (background on New Zealand's rule)",
+          "why_wrong": "When New Zealand took over the islands does not show that its officials' decisions caused the death toll."
+        }
+      },
+      "models": [
+        "3.3",
+        "3.21",
+        "3.32",
+        "3.33"
+      ],
+      "word_count": 91,
+      "sources": [
+        {
+          "what": "Talune knowingly carried sick passengers from Auckland (sailed 30 October 1918); inept New Zealand administration; medical assistance offered from nearby American Samoa rejected",
+          "url": "https://navyhistory.au/wp-content/uploads/Occasional-Paper-52_The-RAN-and-the-1918-19-Influenza-Pandemic.pdf"
+        },
+        {
+          "what": "Te Ara, Robert Logan: November 1918, Talune from Auckland with obviously infected passengers, not quarantined; within three weeks some 7,542 Samoans (20 per cent) had died; Poyer quarantined vessels and avoided any outbreak; commission found Logan negligent",
+          "url": "https://web.archive.org/web/2023/https://teara.govt.nz/en/biographies/3l12/logan-robert"
+        },
+        {
+          "what": "McLeod et al. 2008, Emerging Infectious Diseases 14(3): American Samoa maritime quarantine from 23 November 1918 appeared to exclude the pandemic; Western Samoa lost 19 to 22 percent of its population",
+          "url": "https://wwwnc.cdc.gov/eid/article/14/3/07-0927_article"
+        },
+        {
+          "what": "Shanks, Hussell and Brundage 2012, Influenza Other Respir Viruses 6(6): more than one-fifth of Western Samoa but no residents of American Samoa died; island mortality varied 50-fold; less isolated islanders, with prior exposure to respiratory pathogens, had lower mortality",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4941698"
+        },
+        {
+          "what": "Talune arrival at Apia 7 November 1918; Poyer banned travel to or from the neighbouring islands",
+          "url": "https://en.wikipedia.org/wiki/SS_Talune"
+        },
+        {
+          "what": "New Zealand occupied German Samoa, 29 to 30 August 1914",
+          "url": "https://en.wikipedia.org/wiki/Occupation_of_German_Samoa"
+        },
+        {
+          "what": "1918 strain caused excess deaths among young adults (W-shaped mortality curve)",
+          "url": "https://wwwnc.cdc.gov/eid/article/18/2/10-2042_article"
+        }
+      ],
+      "notes": "\"Some historians\" is unattributed; the New Zealand administration's response is widely criticised (1919 commission, 2002 apology). Quotations are attributed to an unnamed scholarly article and state only verified facts. The arrival date (4 or 7 November in different NZ History pages) and the 60 km distance (Washington Post via Wikipedia) were dropped as not firmly verified; the toll is the 7,542 deaths to 31 December 1918 rather than the final estimate of about 8,500.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 9,
+        "fixes": [
+          "exact arrival date dropped (sources give 4 and 7 November); 'cursory medical inspection' replaced by 'without imposing a quarantine' (Te Ara)",
+          "toll restated as more than 7,500 within two months (7,542 by 31 December 1918); the 8,500 figure is the final estimate, not a two-month count",
+          "option B replaced: the Samoan family-gathering custom was sourced only to a Wikipedia sentence whose cited biography no longer says it; the new rival-cause option uses Shanks, Hussell and Brundage 2012",
+          "option C: unverified '60 kilometers away' changed to 'In nearby American Samoa'",
+          "after blind round 2: every option now in quotation marks, as the stem asks for a quotation"
+        ],
+        "status": "fixed"
+      },
+      "rewrite": "new subject (1918 influenza in Western vs American Samoa) replacing the 1858 Atlantic cable; key no longer pre-planted in the passage and no operation-vs-manufacture mirror pair",
+      "model_bands": [
+        7,
+        7,
+        6,
+        6
+      ]
+    }
+  ]
+}

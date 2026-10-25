@@ -1,0 +1,1337 @@
+{
+  "skill": "Words in Context",
+  "slug": "words_in_context",
+  "part": "w2b3",
+  "domain": "Craft and Structure",
+  "plan": {
+    "templates": [
+      {
+        "code": "B6",
+        "name": "Blank completion, phrase options (word + preposition, a/an + word)"
+      },
+      {
+        "code": "B1",
+        "name": "Blank completion, restatement clue"
+      },
+      {
+        "code": "B3",
+        "name": "Blank completion, contrast clue (including received view then finding)"
+      },
+      {
+        "code": "B5",
+        "name": "Blank completion, negated frame"
+      },
+      {
+        "code": "M1",
+        "name": "Most nearly mean, underlined word"
+      },
+      {
+        "code": "M2",
+        "name": "Most nearly mean, underlined phrase or phrase options"
+      },
+      {
+        "code": "B4",
+        "name": "Blank completion, example-pinned clue"
+      },
+      {
+        "code": "B2",
+        "name": "Blank completion, cause or consequence clue"
+      }
+    ]
+  },
+  "items": [
+    {
+      "id": "words_in_context.B6.hard.w2b3_01",
+      "template": "B6",
+      "subtype": "Blank completion: phrase options",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "Psychologists Michael Kardas and Ed O’Brien found that people who watched a demonstration video of dart throwing 20 times anticipated higher scores than did people who watched it once. When both groups threw darts, however, the frequent viewers scored no better: the confidence they had gained merely from watching had become ______ their actual skill.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "dissociated from",
+        "commensurate with",
+        "predicated on",
+        "deleterious to"
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "“Dissociated from” means disconnected from. The people who watched the video 20 times anticipated higher scores, but when they actually threw darts they scored no better than people who watched it once. Their extra confidence had come apart from their skill, which had not changed.",
+      "distractors": {
+        "B": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "“Commensurate with” means in proportion to. The frequent viewers’ confidence rose while their skill stayed the same, so the two were not in proportion."
+        },
+        "C": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "Confidence “predicated on” actual skill would be based on that skill. The text says the confidence came merely from watching, and the viewers’ skill did not improve, so it was not based on skill."
+        },
+        "D": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "“Deleterious to” means harmful to. The frequent viewers scored no better than the others, but the text never says they scored worse, so nothing suggests that their confidence harmed their skill."
+        }
+      },
+      "models": [
+        "5e57efec",
+        "3021d9ef",
+        "5a97d9cd"
+      ],
+      "band7_moves": [
+        "consequence is the only clue: equal scores despite higher predictions show that confidence and skill came apart",
+        "all four options past raw rank 20,000 (one frequency band); rarest distractor past 50,000",
+        "two reversals that tie confidence to skill in different ways (in proportion to, based on)"
+      ],
+      "word_count": 55,
+      "sources": [
+        {
+          "what": "Kardas and O’Brien (2018, Psychological Science): people who watched a dart-throwing demo video 20 times predicted higher scores than those who saw it once but scored no better",
+          "url": "https://www.psychologicalscience.org/?p=142437"
+        }
+      ],
+      "notes": "Subject: social science (psychology). Key letter A. Steps: 2 (higher predictions but equal scores, so confidence and skill came apart). Concessive frame: no (contrast with however). Raw freq.txt ranks after review: dissociated from 40,333; commensurate with 34,042; predicated on 51,936; deleterious to 41,092; 4 of 4 past 20,000; mean log 4.62. Review swapped the key from divorced from (7,742), the only common option, which a student could pick without knowing the other three. Simplified: the paper reports six experiments; only the dart study is described.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [
+          "key divorced from (raw rank 7,742) swapped for dissociated from (40,333): it was the only common option, two bands below the three distractors, so a student could pick it without knowing them"
+        ],
+        "status": "fixed"
+      },
+      "band7": {
+        "verdict": "band 7",
+        "why": "All four options past raw rank 20,000 after the key swap (40,333; 34,042; 51,936; 41,092), mean log 4.62, rarest distractor past 50,000; two steps (higher predictions but equal scores, so confidence and skill came apart), the consequence as the only clue, as in 5e57efec. No distractor fits loosely: the viewers scored no worse, so deleterious fails."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "A",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 7
+    },
+    {
+      "id": "words_in_context.B1.hard.w2b3_02",
+      "template": "B1",
+      "subtype": "Blank completion: restatement clue",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "Nearly all of Nasreen Mohamedi’s drawings are black-and-white abstractions, many consisting of little more than fields of faint parallel lines or geometric forms placed at the center of otherwise empty sheets. The drawings display a remarkable ______: as critic David Carrier observed, Mohamedi built surprisingly varied compositions from extremely restricted means.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "profusion",
+        "verisimilitude",
+        "economy",
+        "spontaneity"
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "Here “economy” means a careful, sparing use of resources. The drawings use only black and white, faint lines, and a few forms on otherwise empty sheets, and Carrier observed that Mohamedi built varied compositions from extremely restricted means. That is a remarkable economy: doing a great deal with very little.",
+      "distractors": {
+        "A": {
+          "recipe": "half the clue (HALF)",
+          "why_wrong": "“Profusion” means a great abundance. The compositions are varied, but the text stresses that they are made from extremely restricted means, so abundance does not describe the drawings."
+        },
+        "B": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "“Verisimilitude” is the appearance of being true to life. The drawings are abstract, so they make no attempt to look like real things."
+        },
+        "D": {
+          "recipe": "right field, wrong nuance (CONNOT)",
+          "why_wrong": "“Spontaneity” is acting on impulse. The text describes how little the drawings are made of, not how impulsively they were made, and Carrier’s point concerns restricted means."
+        }
+      },
+      "models": [
+        "93665100",
+        "5444db38",
+        "bce4d106"
+      ],
+      "band7_moves": [
+        "familiar word in a secondary sense (economy of means), as inertia and exploited in the band-7 B1 models",
+        "half-clue trap: profusion matches “varied” but not “extremely restricted means”",
+        "3 of 4 options past corrected rank 10,000; rarest distractor past 50,000"
+      ],
+      "word_count": 51,
+      "sources": [
+        {
+          "what": "David Carrier, review of the 2016 Mohamedi exhibition at the Met Breuer (Brooklyn Rail): nearly all works black-and-white and abstract; fields of parallel lines; forms in the center of otherwise empty sheets; faint drawing; varied compositions from extremely restricted means",
+          "url": "https://brooklynrail.org/2016/05/artseen/nasreen-mohamedi"
+        }
+      ],
+      "notes": "Subject: humanities and arts (drawing). Key letter C. Steps: 1 to 2 (restricted means plus varied compositions gives economy, in its secondary sense of sparing use, not money). Transferred-sense key: yes. Section 6 checks (corrected ranks): profusion 11,486; verisimilitude 56,266; economy 1,856; spontaneity 24,413; 3 of 4 past 10,000, 2 past 20,000; mean log 4.12; rarest distractor 56,266. Band-5 guard: clear. Mohamedi was born in what is now Pakistan and worked in India; nationality left out.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 5,
+        "fixes": [],
+        "status": "pass"
+      },
+      "band7": {
+        "verdict": "band 7",
+        "why": "3 of 4 options past rank 10,000, rarest distractor verisimilitude 56,266 (mean log 4.25). The key economy (6,139) is the commonest option, but it is used in its secondary sense (sparing use of means), so a student holding only the money sense rejects it, as with exploited in 5444db38; profusion is a half-clue trap on varied. Weakest of the band-7 items; no rarer key is safe (parsimony, austerity and restraint would each be a second defensible answer). Profusion and verisimilitude are also two of the three distractors of official b411eb09 (paucity of)."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "C",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 7
+    },
+    {
+      "id": "words_in_context.B3.hard.w2b3_03",
+      "template": "B3",
+      "subtype": "Blank completion: contrast clue",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "Because the high Arctic receives no sunlight during winter, the daily vertical migration that zooplankton elsewhere undertake in response to changing light was long considered ______ there in that season. Kim Last and colleagues, however, documented migrations continuing into the darkest part of the polar night, timed not by the 24-hour solar day but by the 24.8-hour lunar day.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "intensified",
+        "synchronized",
+        "inverted",
+        "precluded"
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "“Precluded” means made impossible. The first sentence gives the reason for the old view: a migration that responds to light seemed impossible where there is no sunlight in winter. “However” signals that Last and colleagues found otherwise: the migration continues into the darkest part of the polar night, timed by the moon instead of the sun.",
+      "distractors": {
+        "A": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "“Intensified” would mean the migration grew stronger in winter. The sun’s absence gives no reason to expect a light-driven migration to strengthen, and the finding introduced by “however” would not contrast with that view."
+        },
+        "B": {
+          "recipe": "reversal: wrong party (ANT)",
+          "why_wrong": "A migration timed by the moon, and so synchronized with it, is what Last and colleagues found. The blank describes the earlier view that the finding overturned, and the sun’s absence gives no reason to expect a synchronized migration."
+        },
+        "C": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Nothing in the text suggests that the migration was thought to run in the opposite direction in winter; the earlier view concerned whether a light-driven migration could happen at all without sunlight."
+        }
+      },
+      "models": [
+        "6c9f1727",
+        "22a41819",
+        "a5e747f0"
+      ],
+      "band7_moves": [
+        "blank on the received view, overturned by a finding introduced with however (B3 recipe)",
+        "wrong-party reversal: synchronized describes the finding, not the earlier view",
+        "key is a rare verb that carries the negation itself (precluded)",
+        "all four options past corrected rank 10,000"
+      ],
+      "word_count": 55,
+      "sources": [
+        {
+          "what": "Last et al. (2016, Current Biology): light-mediated migration historically considered non-existent in high-latitude winter without solar illumination; solar-day (24 h) to lunar-day (24.8 h) vertical migration in winter, mass sinking at full moon",
+          "url": "https://repository.library.noaa.gov/view/noaa/59482"
+        }
+      ],
+      "notes": "Subject: natural science (marine biology). Key letter D. Steps: 2 (the because-clause gives the reason for the received view; the however-clause shows the view was wrong, so the blank must say the migration could not happen). Received view in the blank and the finding’s trait (synchronized) offered as the wrong party, as in 22a41819 and e8fb0744. Concessive frame: no; contrast carried by however. Section 6 checks (corrected ranks): intensified 10,682; synchronized unseen (a modern word, less rare than its rank); inverted 19,314; precluded 22,820; 4 of 4 past 10,000, 2 past 20,000. Band-5 guard: clear.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [
+          "passage said migrations continued throughout the polar night; the source says only that they occur even in its darkest part, so changed to continuing into the darkest part of the polar night (explanation to match)"
+        ],
+        "status": "fixed"
+      },
+      "band7": {
+        "verdict": "band 7",
+        "why": "Received view in the blank, overturned by a however finding (B3 recipe, as 6c9f1727); synchronized is the trait of the finding offered as the wrong party. All four options past raw rank 10,000 (intensified 10,682; synchronized unseen, a modern word; inverted 19,314; precluded 22,820). Key is a rare verb that carries the negation itself."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "D",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 7
+    },
+    {
+      "id": "words_in_context.B5.hard.w2b3_04",
+      "template": "B5",
+      "subtype": "Blank completion: negated frame",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Inflection, the modification of a word’s form to mark grammatical categories such as tense, is unlikely to be ______ in a language spoken by many people over a wide area: analyzing more than 2,000 languages, Gary Lupyan and Rick Dale found that such languages tend to have simpler inflectional systems.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "streamlined",
+        "intricate",
+        "standardized",
+        "rudimentary"
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "“Intricate” means complex, with many interrelated parts. Lupyan and Dale found that languages spoken by many people over wide areas tend to have simpler inflectional systems, so inflection in such a language is unlikely to be intricate.",
+      "distractors": {
+        "A": {
+          "recipe": "reversal: negation flip (ANT)",
+          "why_wrong": "“Streamlined” means simplified. Saying that inflection is unlikely to be streamlined in these languages contradicts the finding that their inflection tends to be simpler."
+        },
+        "C": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "The text says nothing about whether inflection in these languages follows a fixed standard; the finding concerns how simple or complex it is."
+        },
+        "D": {
+          "recipe": "reversal: negation flip (ANT)",
+          "why_wrong": "“Rudimentary” means basic. The finding is that these languages tend to have simpler inflection, so saying inflection is unlikely to be rudimentary in them gets the finding backward."
+        }
+      },
+      "models": [
+        "3.13",
+        "3.21",
+        "3.14"
+      ],
+      "word_count": 50,
+      "sources": [
+        {
+          "what": "Lupyan and Dale (2010, PLoS ONE): 2,236 languages; languages with more speakers spread over larger areas have simpler inflectional morphology; Linguistic Niche Hypothesis, adult learners shape structure",
+          "url": "https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0008559"
+        }
+      ],
+      "notes": "Subject: social science (linguistics). Key letter B. Band 6 by the brief’s plan cell. Steps: 2 (the negated frame plus the antonym of the clue, simpler). Two negation-flip distractors (streamlined, rudimentary), the band-6 pattern of 3.13 and 3.21, and one unsupported word. Raw freq.txt ranks after review: streamlined unseen; intricate 11,420; standardized 39,997; rudimentary 22,834 (review swapped the key from elaborate, 5,039, two bands below the distractors). Simplified: 2,236 languages given as more than 2,000; the paper’s further measures (language contact, lexical strategies) and its explanation (adult learners) left out.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [
+          "key elaborate (5,039) swapped for intricate (11,420) so all four options sit within one frequency band of each other"
+        ],
+        "status": "fixed"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "Band 6 by the plan cell. Plain negated frame (unlikely to be) with two negation-flip distractors (streamlined, rudimentary) and one unsupported word, the band-6 B5 pattern of 3.13 and 3.21; after the key swap the options sit within one band of each other (11,420; unseen; 39,997; 22,834)."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "B",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "words_in_context.M1.hard.w2b3_05",
+      "template": "M1",
+      "subtype": "Most nearly mean: underlined word",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "The following text is from Rosa Nouchette Carey’s 1879 novel Heriot’s Choice.\n\nMiss Trelawny was nineteen now, and had passed through two London seasons with <u>indifferent</u> success, a fact somewhat surprising, as her attractions certainly were very great. Without being exactly beautiful, she yet gave an impression of beauty, and certain tints of colour and warm lights made her at times almost brilliant. In a crowded ballroom she was always the centre of observation; but one by one her partners dropped off, displeased and perplexed by the scarifying process to which they had been subjected.",
+      "stem": "As used in the text, what does the word “indifferent” most nearly mean?",
+      "options": [
+        "Unconcerned",
+        "Mediocre",
+        "Impartial",
+        "Unprecedented"
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The narrator calls the result of Miss Trelawny’s two seasons “somewhat surprising” because her attractions were very great, and adds that her dance partners kept dropping away. Her success was only middling, less than her attractions would lead one to expect, so “indifferent” most nearly means mediocre.",
+      "distractors": {
+        "A": {
+          "recipe": "another sense of the target (SENSE)",
+          "why_wrong": "“Indifferent” often means not caring, but here the word describes her success, not her attitude, and a success cannot be unconcerned."
+        },
+        "C": {
+          "recipe": "another sense of the target (SENSE)",
+          "why_wrong": "“Indifferent” can mean neutral, as an impartial judge is, but the passage is judging how successful her seasons were, not whether anyone took sides."
+        },
+        "D": {
+          "recipe": "right field, wrong nuance (CONNOT)",
+          "why_wrong": "The passage calls the outcome surprising, but since her attractions were great, only a disappointing result would surprise anyone; her partners “dropped off,” which also rules out unprecedented success."
+        }
+      },
+      "models": [
+        "6557f7fc",
+        "7f935017"
+      ],
+      "band7_moves": [
+        "common target in a secondary sense (indifferent = middling)",
+        "key a mid-frequency word (Mediocre), not a plain everyday synonym",
+        "two distractors are real senses of the target (unconcerned, impartial)",
+        "near miss built from the passage’s own word “surprising” (Unprecedented)"
+      ],
+      "word_count": 95,
+      "sources": [
+        {
+          "what": "Text of Heriot’s Choice (Rosa Nouchette Carey, 1879), copied from Project Gutenberg",
+          "url": "https://www.gutenberg.org/ebooks/35901"
+        }
+      ],
+      "notes": "Subject: literature. Key letter B. Excerpt copied exactly (one paragraph; British spellings colour and centre kept). Target indifferent is a common word in a secondary sense (middling). Steps: 2 (set aside the everyday sense; read “surprising, as her attractions were very great” and the partners dropping off as signs of a poor result). Transferred-sense key: yes. Option ranks (corrected): Unconcerned 14,465; Mediocre 33,294; Impartial 15,663; Unprecedented 6,673; mean log 4.18 (CB band-7 M1 items 3.88 and 3.84). Two real senses of the target plus one near miss built from the passage’s word “surprising”.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [],
+        "status": "pass"
+      },
+      "band7": {
+        "verdict": "band 7",
+        "why": "Common target in a secondary sense (indifferent success = middling), key a mid-frequency word (Mediocre 33,294), two distractors are real senses of the target (Unconcerned, Impartial), as the band-7 M1 models 6557f7fc and 7f935017. Options 14,344 to 33,294 raw, mean log 4.26, above both models. Indifferent carries the sense of mediocre: the narrator finds the result surprising because her attractions were very great, and her partners dropped off; no other option describes a success."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "B",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 7
+    },
+    {
+      "id": "words_in_context.B5.medium.w2b3_06",
+      "template": "B5",
+      "subtype": "Blank completion: negated frame",
+      "tier": "medium",
+      "passage": "Most young married men in Saudi Arabia privately endorse women’s employment outside the home, yet many apparently do not recognize how ______ that position is: economist Leonardo Bursztyn and colleagues found that roughly three-quarters of the men they surveyed underestimated the proportion of their peers who shared it.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "prevalent",
+        "controversial",
+        "longstanding",
+        "influential"
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "“Prevalent” means widespread. Most of these men endorse women’s employment outside the home, but about three-quarters of them underestimated the proportion of their peers who shared that position, so they do not recognize how widespread it is.",
+      "distractors": {
+        "B": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "Underestimating how many peers agree means the men think the position is more disputed than it really is, so saying they do not recognize how controversial it is gets the finding backward."
+        },
+        "C": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "The study concerns how many men hold the position, not how long it has been held."
+        },
+        "D": {
+          "recipe": "right field, wrong nuance (CONNOT)",
+          "why_wrong": "The text reports how common the men think the position is among their peers, not how much effect the view has, so “influential” goes beyond the finding."
+        }
+      },
+      "models": [
+        "2.14",
+        "2.11",
+        "2.10"
+      ],
+      "word_count": 48,
+      "sources": [
+        {
+          "what": "Bursztyn, González, Yanagizawa-Drott (2020, American Economic Review), UBS Center policy brief: the vast majority of young married Saudi men privately support women working outside the home; three quarters underestimated the share of others who agreed",
+          "url": "https://www.ubscenter.uzh.ch/en/publications/policy_briefs/trapped-by-misperceptions.html"
+        }
+      ],
+      "notes": "Subject: social science (economics). Key letter A. Negation: do not recognize how. Survey figures (about 87 percent agreed; average guess 63 percent) left out.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "words_in_context.B5.medium.w2b3_07",
+      "template": "B5",
+      "subtype": "Blank completion: negated frame",
+      "tier": "medium",
+      "passage": "In 1835, roughly 100 Cherokee leaders lacking any authority to represent their nation signed the Treaty of New Echota, relinquishing its remaining territory in the Southeast. A petition opposing the treaty, bearing more than 15,000 signatures representing almost the entire Cherokee Nation, makes any assertion that the treaty expressed the people’s will unlikely to ______ scrutiny.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "attract",
+        "precede",
+        "withstand",
+        "invite"
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "To withstand scrutiny is to hold up under close examination. The treaty was signed by about 100 leaders who lacked any authority to represent the nation, while a petition opposing it bore more than 15,000 signatures, almost the entire Cherokee Nation. That evidence contradicts any assertion that the treaty expressed the people’s will, so such an assertion is unlikely to hold up.",
+      "distractors": {
+        "A": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "An assertion contradicted by so much evidence would be likely to draw close examination, so saying it is unlikely to attract scrutiny reverses the point."
+        },
+        "B": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Whether the assertion comes before scrutiny has nothing to do with the petition; the point is whether the assertion holds up."
+        },
+        "D": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "An assertion that the petition contradicts would draw close examination, so saying it is unlikely to invite scrutiny gets the logic backward."
+        }
+      },
+      "models": [
+        "2.14",
+        "2.21",
+        "2.10"
+      ],
+      "word_count": 56,
+      "sources": [
+        {
+          "what": "NCpedia (Encyclopedia of North Carolina, 2006), Trail of Tears: in 1835 a small, unauthorized group of about 100 Cherokee leaders signed the Treaty of New Echota, giving away all remaining Cherokee territory in the Southeast; John Ross collected more than 15,000 signatures, representing almost the entire Cherokee Nation, on a petition asking the Senate to withhold ratification",
+          "url": "https://www.ncpedia.org/cherokee/trailoftears"
+        }
+      ],
+      "notes": "Subject: history. Key letter C. Negation: unlikely to. Rewritten in review: the earlier subject (the 1897 Hawaiian petition against annexation) was already claimed by central_ideas_and_details.T2.hard.w2b2_06. The petition’s organizer, John Ross, and its aim (that the Senate withhold ratification) are left out for length.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 5,
+        "fixes": [
+          "subject (1897 Hawaiian petition against annexation) duplicated central_ideas_and_details.T2.hard.w2b2_06, claimed first; passage rewritten on the 1835 Treaty of New Echota and the Cherokee petition against it (NCpedia), same options and key, explanation and why_wrong rewritten"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "words_in_context.B6.medium.w2b3_08",
+      "template": "B6",
+      "subtype": "Blank completion: phrase options",
+      "tier": "medium",
+      "passage": "Choreographer Pearl Primus, who also earned a doctorate in anthropology, created dances that were ______ her scholarship: many of her works developed from her anthropological research and travels in Africa and the Caribbean, and Impinyuza, for instance, originated in a period she spent in Rwanda.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "a critique of",
+        "incidental to",
+        "a precursor to",
+        "informed by"
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "Dances “informed by” her scholarship would draw on what she learned as a researcher. The text says that many of her works developed from her anthropological research and travels in Africa and the Caribbean and that Impinyuza originated in a period she spent in Rwanda.",
+      "distractors": {
+        "A": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Nothing in the text suggests that her dances found fault with her scholarship; they developed from it."
+        },
+        "B": {
+          "recipe": "right field, wrong nuance (CONNOT)",
+          "why_wrong": "Something “incidental to” her scholarship would be only loosely connected with it. The text presents her research as the source of many of her works, a central connection, not a minor one."
+        },
+        "C": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "A precursor comes before. Her works developed from her research and travels, so they followed from her scholarship rather than preceding it."
+        }
+      },
+      "models": [
+        "2.4",
+        "2.18",
+        "2.28"
+      ],
+      "word_count": 45,
+      "sources": [
+        {
+          "what": "Pearl Primus (encyclopedia.com, Contemporary Black Biography): doctorate in anthropology and educational sociology; dances grew out of her anthropological research and travels in Africa and the Caribbean; Impinyuza grew out of time spent in Rwanda",
+          "url": "https://www.encyclopedia.com/education/news-wires-white-papers-and-books/primus-pearl-1919"
+        }
+      ],
+      "notes": "Subject: humanities and arts (dance). Key letter D. Simplified: her doctorate was in anthropology and educational sociology.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "words_in_context.B1.medium.w2b3_09",
+      "template": "B1",
+      "subtype": "Blank completion: restatement clue",
+      "tier": "medium",
+      "passage": "Light Warlpiri, spoken by approximately 300 people in northern Australia, ______ elements of Warlpiri, Kriol, and English. Yet it is more than a combination: linguist Carmel O’Shannessy has identified an innovative verb form expressing present or past but not future time, a grammatical structure absent from all its source languages.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "eradicates",
+        "merges",
+        "transcribes",
+        "separates"
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "“Merges” means combines into one. Saying that Light Warlpiri is “more than a combination” of Warlpiri, Kriol, and English implies that it is at least such a combination, so the blank must say that the language combines elements of all three.",
+      "distractors": {
+        "A": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Nothing suggests that Light Warlpiri wipes out elements of the three languages; the text describes it as a combination of them."
+        },
+        "C": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "To transcribe is to write down speech. The text concerns how Light Warlpiri combines elements of other languages, not writing them down."
+        },
+        "D": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "A language that kept elements of Warlpiri, Kriol, and English apart would not be the combination the text describes."
+        }
+      },
+      "models": [
+        "2.9",
+        "2.23",
+        "2.16"
+      ],
+      "word_count": 49,
+      "sources": [
+        {
+          "what": "Light Warlpiri (NBC News / LiveScience, 2013): about 300 speakers in a remote Northern Territory community; mixes Warlpiri, Kriol and English; yu-m means “you” in present and past but not future; O’Shannessy: the structure does not exist in any source language",
+          "url": "https://www.nbcnews.com/news/all/new-mixed-language-discovered-northern-australia-flna6c10366601"
+        }
+      ],
+      "notes": "Subject: social science (linguistics). Key letter B. Restatement clue: “more than a combination”. The example form yu-m (“you” in present or past but not future time) was left out to keep the passage near the models’ length. Corrected ranks: eradicates 12,748; merges 20,866; transcribes 40,802; separates 2,576.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [
+          "innovative verb forms changed to an innovative verb form (the source describes one form, yu-m)"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "words_in_context.M2.medium.w2b3_10",
+      "template": "M2",
+      "subtype": "Most nearly mean: underlined phrase",
+      "tier": "medium",
+      "passage": "The following text is from Mrs. Humphry Ward’s 1906 novel Fenwick’s Career. Fenwick is a painter.\n\nSo he stammered something unintelligible about a “Westmoreland type,” and then hastily led the talk to some other schemes he had in mind. With the sense of having escaped a danger he found his tongue for the first time, and the power of expressing himself.\n\nMadame de Pastourelles listened attentively—<u>drew him out</u>, indeed—made him show himself to the best advantage.",
+      "stem": "As used in the text, what does the phrase “drew him out” most nearly mean?",
+      "options": [
+        "Encouraged him to speak",
+        "Pulled him aside",
+        "Kept him waiting",
+        "Sketched his portrait"
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "Just before this, Fenwick finds “his tongue for the first time” and the power of expressing himself. Madame de Pastourelles listens attentively and makes him “show himself to the best advantage,” so she is getting him to speak freely: “drew him out” most nearly means encouraged him to speak.",
+      "distractors": {
+        "B": {
+          "recipe": "another sense of the target (SENSE)",
+          "why_wrong": "To draw someone out can mean to pull them out of a place, but she is listening attentively to him where they are, not leading him anywhere."
+        },
+        "C": {
+          "recipe": "another sense of the target (SENSE)",
+          "why_wrong": "To draw something out can mean to drag it out, but nothing suggests she made him wait; she listened while he talked."
+        },
+        "D": {
+          "recipe": "topic echo (ASSOC)",
+          "why_wrong": "Fenwick is a painter, but “drew” here has nothing to do with drawing pictures; she is listening to him speak."
+        }
+      },
+      "models": [
+        "2.8",
+        "2.26",
+        "2.1"
+      ],
+      "word_count": 76,
+      "sources": [
+        {
+          "what": "Text of Fenwick’s Career (Mrs. Humphry Ward, 1906), copied from Project Gutenberg",
+          "url": "https://www.gutenberg.org/ebooks/12403"
+        }
+      ],
+      "notes": "Subject: literature. Key letter A. Excerpt copied exactly from two consecutive paragraphs (the second cut at a sentence end); the source’s single quotes changed to CB double quotes and its double hyphens to closed em dashes. Distractors: two other senses of draw out (pull out, prolong) and one topic echo (he is a painter).",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "words_in_context.B4.medium.w2b3_11",
+      "template": "B4",
+      "subtype": "Blank completion: example-pinned clue",
+      "tier": "medium",
+      "passage": "Ceramicist Magdalene Odundo’s sources of inspiration are notably ______. She constructs her vessels by hand, employing a version of a technique she first learned from women potters in Nigeria, and their forms incorporate influences ranging from Elizabethan costume and Pueblo pottery to Mangbetu headdresses and modernist sculpture.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "parochial",
+        "austere",
+        "ephemeral",
+        "eclectic"
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "“Eclectic” means drawn from many different sources. Odundo’s influences come from very different times, places, and art forms: Elizabethan costume, Pueblo pottery, Mangbetu headdresses, and modernist sculpture.",
+      "distractors": {
+        "A": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "“Parochial” means narrow, limited to one place. Influences as far apart as Elizabethan costume, Pueblo pottery, Mangbetu headdresses, and modernist sculpture are the opposite of narrow."
+        },
+        "B": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "“Austere” means severely plain. The text lists where her ideas come from and says nothing about plainness."
+        },
+        "C": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "“Ephemeral” means short-lived. Nothing suggests her sources are fleeting; several are long-standing traditions."
+        }
+      },
+      "models": [
+        "2.2"
+      ],
+      "word_count": 47,
+      "sources": [
+        {
+          "what": "Phillips, “Magdalene Odundo: Vessels with Attitude”: inspiration from sources as varied as Elizabethan costume, Pueblo pottery, Mangbetu headdresses or modernist sculpture; continues to use a version of the hand-building technique she first learned in Nigeria",
+          "url": "https://phillips.com/article/95063408/madgalene-odundo-vessels-with-attitude"
+        }
+      ],
+      "notes": "Subject: humanities and arts (ceramics). Key letter D. Example-pinned: the four influences instantiate the key.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "words_in_context.B1.easy.w2b3_12",
+      "template": "B1",
+      "subtype": "Blank completion: restatement clue",
+      "tier": "easy",
+      "passage": "Tracking bar-headed geese during their migration across the Himalayas, researchers led by Charles Bishop and Lucy Hawkes found that the birds’ flight paths ______ the landscape below. Rather than cruising at one steady altitude, the geese rose and fell with the terrain, repeatedly giving up hard-won height only to regain it later.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "mirror",
+        "ignore",
+        "disrupt",
+        "predict"
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "To mirror something is to follow its shape closely. The geese rose and fell with the terrain instead of cruising at one steady altitude, so their flight paths followed the shape of the landscape below.",
+      "distractors": {
+        "B": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "Cruising at one steady altitude whatever the mountains did would ignore the landscape; the text says the geese rose and fell with the terrain."
+        },
+        "C": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Nothing suggests that the geese disturbed the landscape below them."
+        },
+        "D": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "The text describes how the geese flew, not any forecasting of the landscape."
+        }
+      },
+      "models": [
+        "1.6",
+        "1.13",
+        "1.39"
+      ],
+      "word_count": 52,
+      "sources": [
+        {
+          "what": "Bishop et al. (2015, Science), Sci.News: bar-headed geese perform a roller coaster ride through the mountains, tracking the underlying terrain, repeatedly shedding hard-won altitude only to regain it later",
+          "url": "https://www.sci.news/biology/science-bar-headed-geese-flying-himalayas-02410.html"
+        }
+      ],
+      "notes": "Subject: natural science (animal physiology). Key letter A. Restatement clue: “rose and fell with the terrain”.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [
+          "the study was co-led by Charles Bishop and Lucy Hawkes; both named"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "words_in_context.B1.easy.w2b3_13",
+      "template": "B1",
+      "subtype": "Blank completion: restatement clue",
+      "tier": "easy",
+      "passage": "Between 1910 and 1940, an estimated 100,000 Chinese immigrants were detained at the Angel Island Immigration Station in California. Some of them ______ their discriminatory treatment by writing poems and carving them into the walls of their barracks; a state park ranger, Alexander Weiss, discovered the poems in 1970.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "celebrated",
+        "concealed",
+        "protested",
+        "forgot"
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "To protest something is to object to it. The detainees were held in barracks and treated in a discriminatory way, and writing poems and carving them into the barrack walls was one way they objected to that treatment.",
+      "distractors": {
+        "A": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "People do not celebrate discriminatory treatment; the poems were a response against it."
+        },
+        "B": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Carving poems on the barrack walls made the detainees’ experience visible rather than hiding their treatment."
+        },
+        "D": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Nothing suggests the detainees forgot how they were treated; they wrote about it."
+        }
+      },
+      "models": [
+        "1.6",
+        "1.13",
+        "1.39"
+      ],
+      "word_count": 49,
+      "sources": [
+        {
+          "what": "Smithsonian Folklife Festival blog: about 100,000 Chinese people detained at Angel Island, 1910 to 1940; detainees protested their discriminatory treatment by writing and carving poetry on barrack walls; park ranger Alexander Weiss discovered the poems in 1970",
+          "url": "https://festival.si.edu/blog/echoes-of-history-chinese-poetry-and-the-angel-island-immigration-station"
+        }
+      ],
+      "notes": "Subject: history. Key letter C.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "words_in_context.B1.easy.w2b3_14",
+      "template": "B1",
+      "subtype": "Blank completion: restatement clue",
+      "tier": "easy",
+      "passage": "Looking at pictures of puppies and kittens may make people more ______. In experiments led by psychologist Hiroshi Nittono, participants who viewed such images improved more on a task requiring fine motor dexterity than did those who viewed images of adult dogs and cats, performing the task more carefully.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "impatient",
+        "attentive",
+        "talkative",
+        "forgetful"
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "“Attentive” means paying close attention. After viewing pictures of puppies and kittens, participants improved more on a task requiring fine motor dexterity and performed it more carefully, which shows closer attention to what they were doing.",
+      "distractors": {
+        "A": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "Impatient people tend to rush, but these participants worked more carefully and improved."
+        },
+        "C": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "The text says nothing about how much the participants talked."
+        },
+        "D": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Nothing in the text concerns memory; the finding is about careful performance of a task."
+        }
+      },
+      "models": [
+        "1.23",
+        "1.6",
+        "1.39"
+      ],
+      "word_count": 49,
+      "sources": [
+        {
+          "what": "Nittono et al. (2012, PLoS ONE), The Power of Kawaii: performance on a fine motor dexterity task improved more after viewing baby animals (puppies, kittens) than adult animals; tasks requiring focused attention performed more carefully",
+          "url": "https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0046362"
+        }
+      ],
+      "notes": "Subject: social science (psychology). Key letter B.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "words_in_context.M1.easy.w2b3_15",
+      "template": "M1",
+      "subtype": "Most nearly mean: underlined word",
+      "tier": "easy",
+      "passage": "The following text is from William Dean Howells’s 1890 novel A Hazard of New Fortunes.\n\nBeaton lingered over his cigar; but no one else whom he knew came in, and he yielded to the threefold impulse of conscience, of curiosity, of inclination, in going to call at the Leightons’. He asked for the ladies, and the maid <u>showed</u> him into the parlor, where he found Mrs. Leighton and Miss Woodburn.",
+      "stem": "As used in the text, what does the word “showed” most nearly mean?",
+      "options": [
+        "Led",
+        "Proved",
+        "Taught",
+        "Revealed"
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "When Beaton calls at the Leightons’ house and asks for the ladies, the maid takes him into the parlor, where he finds them. In this context, “showed” most nearly means led.",
+      "distractors": {
+        "B": {
+          "recipe": "another sense of the target (SENSE)",
+          "why_wrong": "To show can mean to prove, as in showing that a claim is true, but the maid is not proving anything."
+        },
+        "C": {
+          "recipe": "another sense of the target (SENSE)",
+          "why_wrong": "To show someone can mean to teach them how to do something, but the maid is not teaching Beaton; she is taking him to the parlor."
+        },
+        "D": {
+          "recipe": "another sense of the target (SENSE)",
+          "why_wrong": "To show something can mean to reveal it, but the maid does not reveal Beaton; she brings him into the room."
+        }
+      },
+      "models": [
+        "1.45",
+        "1.54",
+        "1.36"
+      ],
+      "word_count": 70,
+      "sources": [
+        {
+          "what": "Text of A Hazard of New Fortunes (1890), in The Entire March Family Trilogy, copied from Project Gutenberg",
+          "url": "https://www.gutenberg.org/ebooks/3374"
+        }
+      ],
+      "notes": "Subject: literature. Key letter A. Excerpt copied exactly (one paragraph). All three distractors are other senses of show.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "words_in_context.M1.easy.w2b3_16",
+      "template": "M1",
+      "subtype": "Most nearly mean: underlined word",
+      "tier": "easy",
+      "passage": "The following text is from Mary E. Wilkins Freeman’s 1894 novel Pembroke. William and Barney are driving a sleigh past Mrs. Jim Sloane’s house when she waves for them to stop.\n\nWilliam pulled the horse up short, and the woman came plunging through the snow close to his side.\n\n“She’s in here,” she said, with a knowing smile. The faded fair hair blew over her eyes; she pushed it back with a coquettish gesture; there was a battered prettiness about her thin pink-and-white face, turning blue in the <u>sharp</u> wind.",
+      "stem": "As used in the text, what does the word “sharp” most nearly mean?",
+      "options": [
+        "Pointed",
+        "Clever",
+        "Loud",
+        "Cold"
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The scene takes place outdoors in deep snow, and the woman’s face is turning blue in the wind. A wind that turns a face blue is a cold one, so “sharp” most nearly means cold.",
+      "distractors": {
+        "A": {
+          "recipe": "another sense of the target (SENSE)",
+          "why_wrong": "A knife or a pencil can be sharp, meaning pointed, but a wind has no point."
+        },
+        "B": {
+          "recipe": "another sense of the target (SENSE)",
+          "why_wrong": "A sharp mind is a clever one, but a wind cannot be clever."
+        },
+        "C": {
+          "recipe": "another sense of the target (SENSE)",
+          "why_wrong": "A sharp sound can be sudden and loud, but the passage describes the wind’s effect on the woman’s face, not any noise."
+        }
+      },
+      "models": [
+        "1.14",
+        "1.36",
+        "1.19"
+      ],
+      "word_count": 90,
+      "sources": [
+        {
+          "what": "Text of Pembroke (Mary E. Wilkins Freeman, 1894), copied from Project Gutenberg",
+          "url": "https://www.gutenberg.org/ebooks/17428"
+        }
+      ],
+      "notes": "Subject: literature. Key letter D. Excerpt copied exactly (two consecutive paragraphs). The intro’s sleigh is the cutter of the novel.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "words_in_context.M1.easy.w2b3_17",
+      "template": "M1",
+      "subtype": "Most nearly mean: underlined word",
+      "tier": "easy",
+      "passage": "The following text is from Frank Norris’s 1914 novel Vandover and the Brute. Vandover has sketched the outlines of a large picture in charcoal.\n\nHe rapped the stretcher sharply with his knuckles; it responded sonorously like a drumhead, the vibration shaking the charcoal from the tracings, filling the air with a fine dust. The outlines grew <u>faint</u>, just perceptible enough to guide him in the second more detailed drawing.",
+      "stem": "As used in the text, what does the word “faint” most nearly mean?",
+      "options": [
+        "Dizzy",
+        "Timid",
+        "Dim",
+        "Remote"
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "Rapping the stretcher shakes the charcoal off the drawing, and the outlines are left “just perceptible enough” to guide him. Lines that can barely be seen are dim, so “faint” most nearly means dim.",
+      "distractors": {
+        "A": {
+          "recipe": "another sense of the target (SENSE)",
+          "why_wrong": "A person who feels faint may be dizzy, but the word here describes charcoal outlines, which cannot feel anything."
+        },
+        "B": {
+          "recipe": "another sense of the target (SENSE)",
+          "why_wrong": "“Faint” can describe a lack of courage, as in faint-hearted, but outlines on a canvas cannot be timid."
+        },
+        "D": {
+          "recipe": "another sense of the target (SENSE)",
+          "why_wrong": "A faint chance is a remote one, but the outlines are not unlikely or far away; they are barely visible."
+        }
+      },
+      "models": [
+        "1.45",
+        "1.54",
+        "1.1"
+      ],
+      "word_count": 69,
+      "sources": [
+        {
+          "what": "Text of Vandover and the Brute (Frank Norris, written 1894 to 1895, published 1914), copied from Project Gutenberg",
+          "url": "https://www.gutenberg.org/ebooks/14712"
+        }
+      ],
+      "notes": "Subject: literature. Key letter C. Excerpt copied exactly (one paragraph). The stretcher is the wooden frame of the canvas.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "words_in_context.B6.easy.w2b3_18",
+      "template": "B6",
+      "subtype": "Blank completion: phrase options",
+      "tier": "easy",
+      "passage": "In West Africa, the kora belongs exclusively to griot families, hereditary lineages of musicians, and has traditionally been transmitted from father to son. Sona Jobarteh, granddaughter of the Gambian musical icon Amadu Bansang Jobarteh, is ______ that tradition: she is the first female kora virtuoso to emerge from a griot family.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "a stranger to",
+        "an exception to",
+        "a critic of",
+        "a model for"
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "An exception to a tradition is a case that does not follow its usual pattern. The kora has traditionally passed from father to son, but Jobarteh, a woman from a griot family, became a kora virtuoso, the first woman from such a family to do so.",
+      "distractors": {
+        "A": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "Jobarteh comes from a griot family and her grandfather was a Gambian musical icon, so she is closely connected to the tradition, not unfamiliar with it."
+        },
+        "C": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "The text does not say that Jobarteh has criticized the tradition; it describes how her career departs from its usual pattern."
+        },
+        "D": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "A model for the tradition would be a typical example of it. A woman playing an instrument traditionally passed from father to son is not typical."
+        }
+      },
+      "models": [
+        "1.20",
+        "1.2",
+        "1.17"
+      ],
+      "word_count": 51,
+      "sources": [
+        {
+          "what": "Carleton College (2017): the kora belongs exclusively to griot families, a tradition handed down from father to son; Jobarteh is the first female kora virtuoso from a griot family; grandfather Amadu Bansang Jobarteh an icon of Gambian music",
+          "url": "https://www.carleton.edu/arts/news/world-renowned-gambian-musician-sona-jobarteh-to-appear-in-concert/"
+        }
+      ],
+      "notes": "Subject: humanities and arts (music). Key letter B.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "words_in_context.B6.easy.w2b3_19",
+      "template": "B6",
+      "subtype": "Blank completion: phrase options",
+      "tier": "easy",
+      "passage": "After sunset, when photosynthesis is impossible, plants depend on starch accumulated during daylight. Researchers at the John Innes Centre found that Arabidopsis plants regulate their rate of starch consumption so that it is ______ the length of the night: approximately 95 percent of the reserve is consumed by dawn, even when darkness arrives unexpectedly early.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "unaffected by",
+        "responsible for",
+        "in conflict with",
+        "tailored to"
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "A rate “tailored to” the length of the night is set to fit it. The plants consume their starch at a pace that uses up about 95 percent of it by dawn, even when darkness arrives early, so the rate is adjusted to the night’s length.",
+      "distractors": {
+        "A": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "The rate changes so that the starch runs out near dawn even when darkness arrives early, so it clearly depends on the length of the night."
+        },
+        "B": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "The plant’s rate of starch use cannot make the night longer or shorter; the text says the rate is adjusted to the night, not the reverse."
+        },
+        "C": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Nothing suggests a conflict; the rate is set so that the starch lasts exactly as long as the night does."
+        }
+      },
+      "models": [
+        "1.3",
+        "1.29",
+        "1.49"
+      ],
+      "word_count": 55,
+      "sources": [
+        {
+          "what": "John Innes Centre (ScienceDaily, 2013): plants depend on stored starch at night; leaf mechanisms measure the store and estimate time until dawn so that about 95% is used up by dawn, even if night comes unexpectedly early (Scialdone et al., eLife, Arabidopsis)",
+          "url": "https://sciencedaily.com/releases/2013/06/130624093524.htm"
+        }
+      ],
+      "notes": "Subject: natural science (plant biology). Key letter D. The finding that the plants divide the store by the time left was left out; the blank only needs the matching.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "words_in_context.B2.easy.w2b3_20",
+      "template": "B2",
+      "subtype": "Blank completion: cause or consequence clue",
+      "tier": "easy",
+      "passage": "Sea otters at Bennett Slough in California crack mussels by pounding them against points and ridges on rocks, leaving damage that differs from the damage humans cause. Because the discarded shells also show a distinctive diagonal fracture, these traces could help researchers ______ past sea otter activity in places the animals no longer inhabit.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "overlook",
+        "exaggerate",
+        "detect",
+        "disturb"
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "To detect something is to discover or identify it. Because otter damage on rocks differs from human damage and the shells break in a distinctive way, researchers could recognize these traces as signs that otters once fed in a place, even where otters no longer live.",
+      "distractors": {
+        "A": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "Distinctive traces would make past otter activity easier to notice, not easier to miss."
+        },
+        "B": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Nothing suggests that the traces would make past otter activity seem greater than it was."
+        },
+        "D": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "The traces are evidence left behind; nothing suggests they would disturb otter activity that happened in the past."
+        }
+      },
+      "models": [
+        "1.5",
+        "1.31",
+        "1.44"
+      ],
+      "word_count": 54,
+      "sources": [
+        {
+          "what": "Haslam et al. (2019, Scientific Reports), Sci.News: Bennett Slough otters strike mussels against points and ridges on rocks, a damage pattern unlike human use; shells show a diagonal fracture; could document past sea otter presence where otters no longer live",
+          "url": "https://www.sci.news/biology/wild-sea-otters-archaeological-traces-06998.html"
+        }
+      ],
+      "notes": "Subject: natural science (animal behavior and archaeology). Key letter C. Cause clue: Because the traces are distinctive.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "words_in_context.B4.easy.w2b3_21",
+      "template": "B4",
+      "subtype": "Blank completion: example-pinned clue",
+      "tier": "easy",
+      "passage": "Pianist Hazel Scott, who performed at New York’s Café Society as a teenager, often ______ classical music and jazz. At a December 1940 recording session, for example, she played pieces by Bach, Liszt, Rachmaninoff, and Chopin, usually beginning each as fairly straight classical music before breaking into swing.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "blended",
+        "separated",
+        "taught",
+        "criticized"
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "To blend is to mix together. In the example, Scott began classical pieces by Bach, Liszt, Rachmaninoff, and Chopin in a fairly straight classical style and then broke into swing, a jazz style, combining the two kinds of music in a single performance.",
+      "distractors": {
+        "B": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "Scott combined the two styles within the same pieces, so she did not keep them apart."
+        },
+        "C": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "The example describes Scott performing and recording, not teaching."
+        },
+        "D": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Nothing in the text suggests that Scott found fault with either kind of music; she played both."
+        }
+      },
+      "models": [
+        "1.18",
+        "1.34",
+        "1.46"
+      ],
+      "word_count": 48,
+      "sources": [
+        {
+          "what": "Syncopated Times review of Great Scott! Collected Recordings 1939–57: performing at Café Society as a teenager; December 1940 session with a composition apiece by Bach, Liszt, Rachmaninoff and Chopin, starting fairly straight before swinging",
+          "url": "https://syncopatedtimes.com/hazel-scott-great-scott-collected-recordings-1939-57/"
+        }
+      ],
+      "notes": "Subject: humanities and arts (music). Key letter A.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "words_in_context.B4.easy.w2b3_22",
+      "template": "B4",
+      "subtype": "Blank completion: example-pinned clue",
+      "tier": "easy",
+      "passage": "Filmmaker Oscar Micheaux was remarkably ______ in making his early films. He raised the money to produce The Homesteader (1918) by selling shares in his company to farmers around Sioux City, and on his productions he wrote the scenarios, supervised filming, and handled the bookkeeping himself.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "passive",
+        "careless",
+        "cautious",
+        "independent"
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "“Independent” means not relying on others. Micheaux raised his own money by selling shares to local farmers and did much of the work on his productions himself, from writing scenarios to keeping the books.",
+      "distractors": {
+        "A": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "Micheaux raised money, wrote, supervised, and kept the books, so he was the opposite of passive."
+        },
+        "B": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Nothing in the text suggests careless work; it lists the many tasks he took on."
+        },
+        "C": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "The examples show how much Micheaux did himself, not how carefully he avoided risks."
+        }
+      },
+      "models": [
+        "1.18",
+        "1.34",
+        "1.46"
+      ],
+      "word_count": 46,
+      "sources": [
+        {
+          "what": "Encyclopedia of the Great Plains, Oscar Micheaux: sold shares to farmers around Sioux City to produce The Homesteader (1918); wrote scenarios, supervised filming, handled the bookkeeping",
+          "url": "https://plainshumanities.unl.edu/encyclopedia/doc/egp.afam.031.html"
+        }
+      ],
+      "notes": "Subject: humanities and arts (film). Key letter D.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "words_in_context.B5.easy.w2b3_23",
+      "template": "B5",
+      "subtype": "Blank completion: negated frame",
+      "tier": "easy",
+      "passage": "Atlantic ghost crabs were known to make noise by rubbing ridges on their claws, but that is not the only way they ______ sound. A team led by Jennifer Taylor discovered that disturbed crabs also use the gastric mill, a three-pronged stomach structure that grinds food, to create a rasping noise.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "avoid",
+        "produce",
+        "detect",
+        "muffle"
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "To produce sound is to make it. The crabs make noise with ridges on their claws and also create a rasping noise with the gastric mill, so rubbing their claws is not the only way they produce sound.",
+      "distractors": {
+        "A": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Nothing suggests that the crabs try to avoid sound; both behaviors in the text make noise."
+        },
+        "C": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "The text is about the crabs making sounds, not hearing them."
+        },
+        "D": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "To muffle sound is to quiet it. Rubbing ridges and grinding the gastric mill both create noise rather than quieting it."
+        }
+      },
+      "models": [
+        "1.12",
+        "1.37",
+        "1.48"
+      ],
+      "word_count": 51,
+      "sources": [
+        {
+          "what": "Scripps Institution of Oceanography (2019): Atlantic ghost crabs use the gastric mill, a three-pronged structure that grinds food, to produce stridulation (rasp) sounds when disturbed; known ridges on claws also make noise (Taylor, deVries, Elias)",
+          "url": "https://scripps.ucsd.edu/news/scientists-discover-new-method-communication-crabs"
+        },
+        {
+          "what": "Taylor, deVries and Elias (2019, Proceedings of the Royal Society B) abstract: Ocypode quadrata has a stridulation apparatus on the claws but also produces a rasping sound with the gastric mill (grinding teeth of the foregut)",
+          "url": "https://doi.org/10.1098/rspb.2019.1161"
+        }
+      ],
+      "notes": "Subject: natural science (animal behavior). Key letter B. Negation: not the only way.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [
+          "passage says Atlantic ghost crabs make noise with claw ridges; the Scripps release says this only of crabs in general, so the Proc R Soc B abstract, which states it for Ocypode quadrata, added as a source"
+        ],
+        "status": "fixed"
+      }
+    }
+  ]
+}

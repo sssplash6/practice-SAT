@@ -1,0 +1,1407 @@
+{
+  "skill": "Central Ideas and Details",
+  "slug": "central_ideas_and_details",
+  "part": "w4b2",
+  "domain": "Information and Ideas",
+  "plan": {
+    "templates": [
+      {
+        "code": "T1",
+        "name": "Main idea, informational study report (incl. explainer and scholar-argument passages)"
+      },
+      {
+        "code": "T2",
+        "name": "Main idea, view then correction"
+      },
+      {
+        "code": "T3",
+        "name": "Main idea, profile"
+      },
+      {
+        "code": "T4_prose",
+        "name": "Main idea, literary prose"
+      },
+      {
+        "code": "T4_poem",
+        "name": "Main idea, poem"
+      },
+      {
+        "code": "T5",
+        "name": "Explicit detail"
+      },
+      {
+        "code": "T6",
+        "name": "Supported detail (one-step inference)"
+      }
+    ]
+  },
+  "items": [
+    {
+      "id": "central_ideas_and_details.T6.hard.w4b2_01",
+      "template": "T6",
+      "subtype": "Supported detail",
+      "tier": "hard",
+      "passage": "Orpiment, a yellow arsenic sulfide pigment found in many old paintings, degrades over time, altering a painting’s appearance. Its principal breakdown product was long assumed to be white arsenolite, yet a second family of arsenic compounds also turns up abundantly in old paint. Katrien Keune and colleagues exposed orpiment to light. Dry orpiment powder yielded only arsenolite. When the pigment was embedded in a binding medium, though, arsenolite formed only where light struck it, while the other compounds appeared throughout the medium; even in samples not artificially aged with light, those compounds formed within weeks.",
+      "stem": "What does the text most strongly suggest about the second family of arsenic compounds?",
+      "options": [
+        "They likely form only after arsenolite has broken down further, which is why they turn up so abundantly in old paint.",
+        "They likely form only where light reaches pigment that is embedded in a medium, unlike arsenolite, which also forms in dry powder.",
+        "Their formation likely depends more on the presence of a surrounding medium than on the pigment being struck by light.",
+        "They likely take years to form, which would explain why none of them appeared when dry orpiment powder was exposed to light."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The text says that “dry orpiment powder yielded only arsenolite,” but that when the pigment was in a binding medium, “the other compounds appeared throughout the medium,” not just “where light struck it,” and that “even in samples not artificially aged with light, those compounds formed.” Together these results suggest that the medium, rather than light, is what these compounds’ formation depends on.",
+      "distractors": {
+        "A": {
+          "recipe": "half-true compound (invented sequence)",
+          "why_wrong": "The compounds are abundant in old paint, but the text shows them forming throughout the medium, apart from the arsenolite that formed only where light struck; it never says they come from arsenolite."
+        },
+        "B": {
+          "recipe": "twisted detail (swapped property)",
+          "why_wrong": "Arsenolite does form in dry powder, but it is arsenolite, not the second family, that formed “only where light struck it”; the other compounds “appeared throughout the medium” and formed even “in samples not artificially aged with light.”"
+        },
+        "D": {
+          "recipe": "half-true compound (wrong cause)",
+          "why_wrong": "Dry orpiment powder did yield only arsenolite, but in a medium the other compounds “formed within weeks,” so slow formation cannot explain their absence from the powder."
+        }
+      },
+      "models": [
+        "3.5",
+        "3.7",
+        "3.18"
+      ],
+      "word_count": 95,
+      "sources": [
+        {
+          "what": "Broers, Janssens, Nelson Weker, Webb, Mehta, Meirer and Keune, JACS 2023, Two Pathways for the Degradation of Orpiment Pigment (As2S3) Found in Paintings: main product thought to be white arsenolite, but As(V) species also abundant; illuminated dry powder forms only As2O3; in a medium As2O3 forms only where light hits while As(V) species form elsewhere; without accelerated light aging As(V) species form and migrate within weeks; a medium is necessary",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC10141271/"
+        }
+      ],
+      "notes": "Natural science (heritage chemistry). Replaces the torrent-frog draft (lead: too close to b1 item 11). P1: dry powder gives only arsenolite; P2: in a medium the other compounds form throughout, even without light aging; unstated conclusion: the medium, not light, is what they need (the paper states the medium is necessary). As(V) species described as ‘a second family of arsenic compounds’.",
+      "band_target": 6,
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [
+          "hardened B (was a plain mirror of the key: light rather than medium) into a swapped-property near miss",
+          "hardened D (was killed by the one fact that dry powder yielded only arsenolite) into a wrong-cause option"
+        ],
+        "status": "fixed",
+        "band7": {
+          "verdict": "band 6",
+          "why": "Key needs two linked results (medium vs dry powder, formation away from light and without light aging); after fixes A and B are partly right and fail on one later link, D is half true. CID hard cells are capped at band 6 by the plan."
+        }
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "C",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "central_ideas_and_details.T6.hard.w4b2_02",
+      "template": "T6",
+      "subtype": "Supported detail",
+      "tier": "hard",
+      "passage": "As they travel, wood mice often pick up conspicuous objects such as leaves and twigs and drop them elsewhere. To investigate this behavior, zoologists Pavel Stopka and David Macdonald removed the natural objects from an arena and supplied white plastic discs instead. The mice carried the discs around repeatedly, often lingering near ones they had just moved, and their later movements were associated with the spots where they had placed discs. Moreover, every instance of disc carrying occurred in the context of exploratory behavior.",
+      "stem": "Based on the text, what purpose do the objects that wood mice move most likely serve?",
+      "options": [
+        "They likely act as markers that help a mouse keep its bearings while it investigates its surroundings.",
+        "They likely mark spots where a mouse has stored food, since the mice tend to linger near the objects after moving them.",
+        "They likely show other wood mice which areas have already been searched, since the objects are easy to see.",
+        "They likely make a mouse’s surroundings feel more familiar, since the mice move objects mostly in places they already know."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The text says that the mice’s “later movements were associated with the spots where they had placed discs” and that “every instance of disc carrying occurred in the context of exploratory behavior.” Together these facts suggest that the objects serve as markers that help a mouse find its way while it explores.",
+      "distractors": {
+        "B": {
+          "recipe": "half-true compound (invented function)",
+          "why_wrong": "The mice did linger near discs they had just moved, but the carrying always happened during exploration; the text never mentions food or storing it."
+        },
+        "C": {
+          "recipe": "half-true compound (invented audience)",
+          "why_wrong": "The objects are conspicuous, but the text links them only to the movements of the mouse that placed them; it says nothing about other mice using them."
+        },
+        "D": {
+          "recipe": "plausible but unsupported",
+          "why_wrong": "The text never says the mice move objects in places they already know; every instance of carrying “occurred in the context of exploratory behavior.”"
+        }
+      },
+      "models": [
+        "3.5",
+        "3.10",
+        "3.18"
+      ],
+      "word_count": 84,
+      "sources": [
+        {
+          "what": "Stopka and Macdonald, BMC Ecology 2003: wood mice redistribute conspicuous objects; given white plastic discs in an arena they repeatedly repositioned them, spent time near recently moved discs, and later movements were associated with disc locations; disc transport always occurred with exploratory behaviour; way-marking aids spatial navigation",
+          "url": "https://pubmed.ncbi.nlm.nih.gov/12697070/"
+        }
+      ],
+      "notes": "Natural science (animal behavior). P1: movements follow placed discs; P2: carrying happens only during exploration; unstated conclusion: the objects are way-marks for navigation (the paper’s conclusion, withheld from the passage). Species name left out of the passage to keep it plain.",
+      "band_target": 6,
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [
+          "key A: “investigates unfamiliar places” changed to “investigates its surroundings” (the text says exploration, not unfamiliar places)",
+          "D why_wrong rewritten to match"
+        ],
+        "status": "fixed",
+        "band7": {
+          "verdict": "band 6",
+          "why": "Key abstracts two premises (movement tied to placed discs, carrying only during exploration) into way-marking; B and C each start from a true detail (lingering, conspicuous objects) and fail on the function."
+        }
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "A",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "central_ideas_and_details.T6.hard.w4b2_03",
+      "template": "T6",
+      "subtype": "Supported detail",
+      "tier": "hard",
+      "passage": "Psychologist Jeffrey Wammes and colleagues conducted experiments in which participants either drew or wrote out each word on a list. On subsequent tests of free recall, the drawn words were remembered better. This advantage persisted even when the time allotted for each word was shortened, and the researchers showed that it could not be explained by deeper processing of the words’ meanings, by the formation of mental images of the words, or by the general tendency for pictures to be remembered better than written words.",
+      "stem": "Which statement about the memory benefit of drawing is best supported by the text?",
+      "options": [
+        "It likely results mainly from the extra time that drawing a word requires compared with simply writing that word out.",
+        "It is likely greatest for people who can easily form vivid mental images of the words they are asked to draw.",
+        "It likely reflects the fact that people generally recall images they have seen more easily than words they have read.",
+        "It likely arises at least partly from the act of producing a drawing, not only from picturing or viewing images."
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The text says that drawn words were remembered better than written ones and that this advantage “could not be explained by deeper processing of the words’ meanings, by the formation of mental images of the words, or by the general tendency for pictures to be remembered better than written words.” Since thinking about meaning, imagining, and seeing pictures do not account for the benefit, the act of making the drawing itself likely contributes to it.",
+      "distractors": {
+        "A": {
+          "recipe": "half-true compound (ruled-out cause)",
+          "why_wrong": "Drawing may take longer than writing, but the text says the advantage “persisted even when the time allotted for each word was shortened.”"
+        },
+        "B": {
+          "recipe": "invented comparison",
+          "why_wrong": "The text compares drawing with writing; it never compares people by how vividly they imagine, and it says imagery does not explain the effect."
+        },
+        "C": {
+          "recipe": "true but ruled out",
+          "why_wrong": "People may generally remember pictures better than written words, but the text says the drawing advantage “could not be explained by” this “general tendency.”"
+        }
+      },
+      "models": [
+        "3.5",
+        "3.7",
+        "3.10"
+      ],
+      "word_count": 85,
+      "sources": [
+        {
+          "what": "Wammes, Meade and Fernandes, QJEP 2016: seven free-recall experiments; drawn words recalled better than written; benefit not explained by depth of processing, visual imagery or picture superiority; persisted with reduced encoding time; proposed integration of semantic, visual and motor aspects",
+          "url": "https://pubmed.ncbi.nlm.nih.gov/26444654/"
+        }
+      ],
+      "notes": "Social science (cognitive psychology). P1: drawing beats writing; P2: meaning, imagery and picture viewing do not account for it; unstated conclusion: producing the drawing contributes (the paper proposes semantic, visual and motor integration). Coauthors left unnamed (a Fernandes is named in an official item).",
+      "band_target": 6,
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [
+          "C paraphrased away from the passage (was a verbatim echo of the ruled-out picture-superiority clause)"
+        ],
+        "status": "fixed",
+        "band7": {
+          "verdict": "band 6",
+          "why": "Elimination item like 3.10: the key is the inference left once time, meaning, imagery and picture superiority are ruled out; distractors are paraphrased ruled-out causes and an invented comparison. Strong band 6, not 7."
+        }
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "D",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "central_ideas_and_details.T1.hard.w4b2_04",
+      "template": "T1",
+      "subtype": "Main idea",
+      "tier": "hard",
+      "passage": "Since the nineteenth century, Western philosophical aesthetics has concentrated increasingly on the fine arts and on the experience of a spectator contemplating an object. Philosopher Yuriko Saito contends that this emphasis neglects the aesthetic responses pervading ordinary life, such as the care someone takes in arranging laundry on a line or the impression that a functioning appliance looks dated. Far from being trivial, she argues, such responses guide countless decisions—communities prohibit outdoor laundry as an eyesore, and consumers discard serviceable goods that are merely unfashionable—and thereby shape the quality of life and of the environment.",
+      "stem": "Which choice best states the main idea of the text?",
+      "options": [
+        "Saito contends that the aesthetic responses of ordinary life have shaped the fine arts more than philosophers since the nineteenth century have recognized.",
+        "Saito maintains that aesthetics should take seriously the responses people have to ordinary things, since those responses influence choices with real consequences.",
+        "Saito claims that people’s everyday aesthetic responses, such as finding an appliance dated, are usually mistaken and cause needless waste.",
+        "Saito suggests that people respond to everyday objects in much the same way that a spectator responds to a work of fine art."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The text says that Saito “contends that this emphasis neglects the aesthetic responses pervading ordinary life” and argues that such responses “guide countless decisions” and “thereby shape the quality of life and of the environment.” Choice B states both parts: aesthetics should attend to everyday responses because they have real effects.",
+      "distractors": {
+        "A": {
+          "recipe": "twisted detail (wrong effect)",
+          "why_wrong": "Saito does say that aesthetics since the nineteenth century has neglected everyday responses, but the text says those responses shape “the quality of life and of the environment,” not the fine arts."
+        },
+        "C": {
+          "recipe": "half-true compound (overstated)",
+          "why_wrong": "One example involves discarding goods, but the text never says Saito thinks everyday responses are usually mistaken; her point is that they matter."
+        },
+        "D": {
+          "recipe": "unsupported",
+          "why_wrong": "The text contrasts the spectator-centered focus of traditional aesthetics with everyday responses such as arranging laundry; it does not say the two are alike."
+        }
+      },
+      "models": [
+        "3.9",
+        "3.12",
+        "3.20"
+      ],
+      "word_count": 95,
+      "sources": [
+        {
+          "what": "Saito, Stanford Encyclopedia of Philosophy, Aesthetics of the Everyday (2015, rev.): discourse increasingly focused on the fine arts since the nineteenth century; traditional inquiry centers on a spectator’s experience; examples include outdoor laundry hanging; aesthetic responses guide choices with consequences, such as discarding outdated-looking products and banning outdoor laundry as an eyesore",
+          "url": "https://plato.stanford.edu/entries/aesthetics-of-everyday/"
+        }
+      ],
+      "notes": "Humanities (philosophy, scholar-argument T1 like 3.20). Main idea spread over sentences 2 and 3 (claim plus reason). SEP entry written by Saito (RISD).",
+      "band_target": 6,
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [
+          "replaced overstated A (stop studying the fine arts) with a twisted-detail option that borrows passage words and fails on the effect"
+        ],
+        "status": "fixed",
+        "band7": {
+          "verdict": "band 6",
+          "why": "Key carries claim plus reason in paraphrase (far from trivial becomes take seriously); A now borrows passage wording and fails on one link, C is half true; scholar-argument passage like 3.20."
+        }
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "B",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "central_ideas_and_details.T1.hard.w4b2_05",
+      "template": "T1",
+      "subtype": "Main idea",
+      "tier": "hard",
+      "passage": "Uptalk—a rising, questioning intonation used when making a statement—is more common among women than among men, though scholars dispute the reasons for this difference. Sociologist Thomas Linneman examined contestants’ responses on the game show Jeopardy! and found that uptalk varied with the interaction: men used it more when the other contestants were women and when correcting a woman’s incorrect response. Success, moreover, worked in opposite directions for the two sexes, with the most successful men using uptalk least and the most successful women using it most.",
+      "stem": "Which choice best states the main idea of the text?",
+      "options": [
+        "Linneman’s study suggests that how much people use uptalk depends on the social situation in ways that differ for men and women.",
+        "Linneman’s study shows that uptalk signals a lack of confidence, since contestants used it most when correcting incorrect responses.",
+        "Linneman found that successful contestants generally avoided uptalk, which suggests that the habit tends to hurt performance on Jeopardy!",
+        "Linneman’s study settles the question of why women use uptalk more than men do by showing that men adopt it only around women."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The text says that in Linneman’s study “uptalk varied with the interaction,” describing how men’s use changed depending on whether they were among or correcting women, and that “Success, moreover, worked in opposite directions for the two sexes.” Choice A captures this: uptalk use depends on the situation, and differently for men and women.",
+      "distractors": {
+        "B": {
+          "recipe": "plausible but unsupported",
+          "why_wrong": "The text never links uptalk to confidence; it reports only that men used uptalk more when correcting a woman, not that corrections in general drew the most uptalk."
+        },
+        "C": {
+          "recipe": "half-true compound (overgeneralized)",
+          "why_wrong": "The most successful men used uptalk least, but the most successful women used it most, so success did not generally go with avoiding uptalk."
+        },
+        "D": {
+          "recipe": "overstated",
+          "why_wrong": "The text says scholars dispute why women use uptalk more and that men used it more around women, not only around women; it does not say the study settled the question."
+        }
+      },
+      "models": [
+        "3.9",
+        "3.12",
+        "3.20"
+      ],
+      "word_count": 86,
+      "sources": [
+        {
+          "what": "Linneman, Gender in Jeopardy!, Gender & Society 2013 (online 2012): uptalk more frequent among women, reasons contested; men use uptalk more when surrounded by women contestants and when correcting a woman; the more successful a man the less uptalk, the more successful a woman the more uptalk",
+          "url": "https://doi.org/10.1177/0891243212464905"
+        }
+      ],
+      "notes": "Social science (sociolinguistics). Main idea joins sentences 2 and 3 (variation with interaction, opposite effects by sex). The paper’s 37 percent overall figure left out to keep numbers down.",
+      "band_target": 6,
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [],
+        "status": "pass",
+        "band7": {
+          "verdict": "band 6",
+          "why": "Key generalizes two findings (interaction, success) into situation-dependent use that differs by sex; C is half true (men only), D overstates. D is the easiest wrong option."
+        }
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "A",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "central_ideas_and_details.T2.hard.w4b2_06",
+      "template": "T2",
+      "subtype": "Main idea",
+      "tier": "hard",
+      "passage": "Archaeologists have long sought the origins of monumental architecture among societies that were becoming populous, sedentary, and territorial, and such building is often taken as a sign of emerging social rank. But Lothagam North Pillar Site, a communal cemetery near Lake Turkana in Kenya, was built about 5,000 years ago by eastern Africa’s first herders, a dispersed and mobile people. And according to Elisabeth Hildebrand and colleagues, the several hundred people buried there—men and women, young and old, most of them wearing ornaments—show no evidence of having been ranked by status.",
+      "stem": "Which choice best states the main idea of the text?",
+      "options": [
+        "Lothagam North suggests that eastern Africa’s first herders, though not ranked by status, built monuments only after they had settled in permanent communities.",
+        "Lothagam North shows that mobile herders could build monuments, but only because a few high-ranking leaders were able to direct the work of many people.",
+        "Lothagam North suggests that people could build monumental structures without being settled or divided into distinct social ranks.",
+        "Lothagam North reveals that monumental architecture appeared earlier among the herders of eastern Africa than among any settled society."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The text first notes that archaeologists have looked for monumental architecture’s origins among societies that were “becoming populous, sedentary, and territorial” and have linked it to “emerging social rank.” It then explains that Lothagam North was built by “a dispersed and mobile people” and that its burials “show no evidence of having been ranked by status.” Choice C states this revision.",
+      "distractors": {
+        "A": {
+          "recipe": "half-true compound (affirms the earlier view)",
+          "why_wrong": "The burials do show no ranking, but the text calls the builders “a dispersed and mobile people,” not settled ones."
+        },
+        "B": {
+          "recipe": "half-true compound (contradicts the finding)",
+          "why_wrong": "The builders were mobile herders, but the several hundred burials “show no evidence of having been ranked by status,” so the text gives no sign of high-ranking leaders."
+        },
+        "D": {
+          "recipe": "invented comparison",
+          "why_wrong": "The text dates the site to about 5,000 years ago but never compares its age with monuments built by settled societies."
+        }
+      },
+      "models": [
+        "3.4",
+        "3.6",
+        "3.21"
+      ],
+      "word_count": 91,
+      "sources": [
+        {
+          "what": "Hildebrand et al., PNAS 2018: archaeologists long sought monumentality’s origins among populous, sedentary, territorial societies; Lothagam North Pillar Site near Lake Turkana built about 5,000 years ago by eastern Africa’s first herders; several hundred burials of mixed ages and sexes with ornaments; burial placement and ornamentation do not suggest social hierarchy",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6130363/"
+        }
+      ],
+      "notes": "Archaeology. View (monuments among settled, ranked societies) then correction (mobile, unranked herders built one). The paper’s motive (strengthening social networks on a moving frontier) left out to keep the key on the revision.",
+      "band_target": 6,
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 5,
+        "fixes": [
+          "A and B rebuilt as half-true compounds (each now keeps one correct half of the key and fails on the other) instead of options killed by one stated fact"
+        ],
+        "status": "fixed",
+        "band7": {
+          "verdict": "band 6",
+          "why": "View then correction with a two-part key (not settled, not ranked); A and B now each carry one true half, D is an invented comparison."
+        }
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "C",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "central_ideas_and_details.T4_poem.hard.w4b2_07",
+      "template": "T4_poem",
+      "subtype": "Main idea",
+      "tier": "hard",
+      "passage": "The following text is Mary Elizabeth Coleridge’s 1908 poem “Egypt’s Might Is Tumbled Down.” Troy was an ancient city of legend, and Venice was once a powerful trading republic.\n\nEgypt’s might is tumbled down\nDown a-down the deeps of thought;\nGreece is fallen and Troy town,\nGlorious Rome hath lost her crown,\nVenice’ pride is nought.\n\nBut the dreams their children dreamed\nFleeting, unsubstantial, vain,\nShadowy as the shadows seemed,\nAiry nothing, as they deemed,\nThese remain.",
+      "stem": "Which choice best states the main idea of the text?",
+      "options": [
+        "The speaker laments that great civilizations have fallen and that even the dreams of their people now seem fleeting and vain.",
+        "The speaker argues that great civilizations fell because their people cared more about dreams than about worldly power.",
+        "The speaker contrasts the lasting glory of ancient civilizations with the shadowy dreams of the people who came after them.",
+        "The speaker suggests that the imaginings of past peoples, though once thought insubstantial, have outlasted their civilizations’ power."
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The first stanza lists powers that have fallen: “Egypt’s might is tumbled down,” “Greece is fallen,” and “Venice’ pride is nought.” The second stanza says that “the dreams their children dreamed,” which seemed “Airy nothing, as they deemed,” are what “remain.” So the poem’s main idea is that the dreams of those peoples, though once considered insubstantial, have lasted longer than the civilizations’ power.",
+      "distractors": {
+        "A": {
+          "recipe": "half-true compound (misses the turn)",
+          "why_wrong": "The civilizations have fallen, but the dreams are described as fleeting only in how they “seemed”; the poem ends by saying “These remain.”"
+        },
+        "B": {
+          "recipe": "invented cause",
+          "why_wrong": "The poem sets the dreams against the fallen power but never says the dreams caused the civilizations to fall."
+        },
+        "C": {
+          "recipe": "literal misreading",
+          "why_wrong": "The poem says the civilizations’ glory is gone (“Glorious Rome hath lost her crown”), and “their children” are the peoples of those civilizations, not later generations."
+        }
+      },
+      "models": [
+        "3.14"
+      ],
+      "word_count": 77,
+      "sources": [
+        {
+          "what": "Mary E. Coleridge, Poems (London: Elkin Mathews, 1908), no. CXXI, text checked against the 1918 printing (comma after deemed)",
+          "url": "https://archive.org/details/poemscol00coleuoft"
+        }
+      ],
+      "notes": "Literary (poem, public domain, published posthumously 1908). Copied exactly from the 1918 Elkin Mathews printing; untitled in the book, known by its first line. Context sentence glosses Troy and Venice (as 3.17 glosses terms). Coleridge not used in any official or own item (grep).",
+      "band_target": 6,
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 2,
+        "fixes": [],
+        "status": "pass",
+        "band7": {
+          "verdict": "band 6",
+          "why": "Poem with a turn in the last line; A is the near miss that stops before the turn, C a literal misreading, B an invented cause; key paraphrased."
+        }
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "D",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "central_ideas_and_details.T5.medium.w4b2_08",
+      "template": "T5",
+      "subtype": "Explicit detail",
+      "tier": "medium",
+      "passage": "Between the seventeenth and nineteenth centuries, Japanese artisans constructed karakuri, mechanical dolls designed for entertainment. One variety, intended for domestic use, served tea. When a host placed a cup of tea on the tray in the doll’s hands, the doll advanced in a straight line toward a guest and bowed its head. It halted when the guest lifted the cup, and once the empty cup was returned to the tray, the doll turned around and retraced its path. A coiled spring made of whalebone powered the doll, while cams and levers regulated its movements.",
+      "stem": "According to the text, what determines when the tea-serving doll starts and stops moving?",
+      "options": [
+        "How tightly the whalebone spring that powers the doll has been wound by its owner",
+        "Whether a cup has been placed on the doll’s tray or removed from it",
+        "When the doll bows its head upon reaching the end of its path",
+        "How far away from the host the guest who is being served is seated"
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The text says that when a host “placed a cup of tea on the tray in the doll’s hands, the doll advanced,” that “it halted when the guest lifted the cup,” and that it turned around once “the empty cup was returned to the tray.” So placing or removing the cup determines when the doll starts and stops.",
+      "distractors": {
+        "A": {
+          "recipe": "true but not the answer",
+          "why_wrong": "The whalebone spring powers the doll, but the text links starting and stopping to the cup being placed or lifted."
+        },
+        "C": {
+          "recipe": "twisted detail",
+          "why_wrong": "The bow is one of the doll’s actions; the text does not say it starts or stops the doll’s movement."
+        },
+        "D": {
+          "recipe": "plausible but unsupported",
+          "why_wrong": "The text never says that the distance between host and guest controls the doll."
+        }
+      },
+      "models": [
+        "2.14",
+        "2.16",
+        "2.23"
+      ],
+      "word_count": 94,
+      "sources": [
+        {
+          "what": "Wikipedia, Karakuri puppet: mechanized dolls of the 17th to 19th centuries; tea-serving doll moves when a cup is placed on its plate, stops when the cup is removed, turns around and returns when the cup is replaced; powered by a whalebone spring, cams and levers control its actions",
+          "url": "https://en.wikipedia.org/wiki/Karakuri_puppet"
+        }
+      ],
+      "notes": "Arts and technology (Edo-period automata). Explicit detail joining three adjacent sentences; the key abstracts placing and lifting the cup. Reviewer: 17th to 19th century dates confirmed on the Wikipedia page (made from the 17th century to the 19th century).",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "central_ideas_and_details.T5.medium.w4b2_09",
+      "template": "T5",
+      "subtype": "Explicit detail",
+      "tier": "medium",
+      "passage": "In 1937 the European firms that bought cocoa in the Gold Coast (now Ghana), led by Cadbury and the United Africa Company, agreed on common terms for their purchases, hoping to limit competition among themselves and reduce the influence of local brokers. Cocoa farmers, joined by many brokers and chiefs, responded by holding back their harvests and boycotting European goods, though the boycott exempted necessities such as sugar, kerosene, and matches. Sales of cocoa collapsed, and in 1938 a government commission recommended ending the buyers’ agreement.",
+      "stem": "What does the text indicate about the boycott of European goods?",
+      "options": [
+        "It was aimed mainly at the local brokers who bought cocoa from the farmers.",
+        "It applied only to goods sold by Cadbury and the United Africa Company.",
+        "It was the main reason the commission recommended ending the agreement.",
+        "It did not extend to certain goods that people regarded as essential."
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The text says that the farmers boycotted European goods, “though the boycott exempted necessities such as sugar, kerosene, and matches.” In other words, the boycott did not apply to certain essential goods.",
+      "distractors": {
+        "A": {
+          "recipe": "twisted detail",
+          "why_wrong": "The firms wanted to reduce the brokers’ influence, but the boycott targeted European goods, and the text says many brokers joined the farmers in it."
+        },
+        "B": {
+          "recipe": "twisted detail",
+          "why_wrong": "The text names Cadbury and the United Africa Company only as cocoa buyers; it says the boycott was of “European goods” in general, apart from certain necessities."
+        },
+        "C": {
+          "recipe": "invented cause",
+          "why_wrong": "The text says the commission recommended ending the agreement but never gives the commission’s reasons."
+        }
+      },
+      "models": [
+        "2.3",
+        "2.14",
+        "2.21"
+      ],
+      "word_count": 86,
+      "sources": [
+        {
+          "what": "Global Nonviolent Action Database (Swarthmore), Cocoa farmers in the Gold Coast successfully defend their livelihoods, 1937: Cadbury and the United Africa Company began the buying agreement to lessen competition and reduce brokers’ power; farmers, brokers and chiefs held up cocoa and boycotted European goods excluding sugar, kerosene, matches and tobacco; sales fell; Nowell Report (1938) recommended ending the agreement",
+          "url": "https://nvdatabase.swarthmore.edu/node/4767"
+        }
+      ],
+      "notes": "History (colonial West Africa, economic protest). The answer sits in the concession clause of sentence 2; distractors use nearby nouns (brokers, commission).",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [
+          "replaced B (boycott ended as soon as the commission formed): the source says the hold-up did end in February 1938 while the commission sat, so it was true outside the text"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "central_ideas_and_details.T5.medium.w4b2_10",
+      "template": "T5",
+      "subtype": "Explicit detail",
+      "tier": "medium",
+      "passage": "In 1902 Isabel González, a young woman from Puerto Rico, which the United States had acquired four years earlier, arrived in New York and was detained at Ellis Island. Immigration officials classified her as an alien likely to require public assistance and sought to exclude her. Her case eventually reached the US Supreme Court, which ruled in 1904 that under immigration law Puerto Ricans were not aliens and therefore could not be barred from entering. The Court did not, however, declare them US citizens, leaving them in an ambiguous status that González criticized in letters published in the New York Times.",
+      "stem": "According to the text, what did the Supreme Court decide in González’s case?",
+      "options": [
+        "Puerto Ricans could not be barred as aliens, though the Court did not call them citizens.",
+        "Puerto Ricans were US citizens and therefore could not be detained when they arrived at Ellis Island.",
+        "González could be excluded because officials believed she was likely to need public support.",
+        "Immigration officials had been correct to classify González as an alien but wrong to detain her at Ellis Island."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The text says the Court “ruled in 1904 that under immigration law Puerto Ricans were not aliens and therefore could not be barred from entering” but “did not, however, declare them US citizens.” Choice A states both parts of the decision.",
+      "distractors": {
+        "B": {
+          "recipe": "overstated",
+          "why_wrong": "The Court ruled that Puerto Ricans were not aliens, but the text says it “did not, however, declare them US citizens.”"
+        },
+        "C": {
+          "recipe": "contradicts the text",
+          "why_wrong": "This was the officials’ position; the Court ruled that Puerto Ricans could not be barred as aliens."
+        },
+        "D": {
+          "recipe": "twisted detail",
+          "why_wrong": "The Court rejected the classification itself, ruling that Puerto Ricans were not aliens under immigration law."
+        }
+      },
+      "models": [
+        "2.21",
+        "2.26",
+        "2.27"
+      ],
+      "word_count": 101,
+      "sources": [
+        {
+          "what": "Wikipedia, Isabel González: sailed from San Juan in August 1902, detained at Ellis Island as likely to become a public charge; Gonzales v. Williams (January 4, 1904) held she was not an alien under immigration law but did not declare her a citizen; she protested Puerto Ricans’ in-between status in letters to The New York Times",
+          "url": "https://en.wikipedia.org/wiki/Isabel_Gonz%C3%A1lez"
+        }
+      ],
+      "notes": "History (US law, Puerto Rico). Difference-type explicit detail: the key must carry both the ruling and its limit; B is the near miss.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 5,
+        "fixes": [
+          "“letters to newspapers” changed to “letters published in the New York Times” (source names that paper only)"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "central_ideas_and_details.T1.medium.w4b2_11",
+      "template": "T1",
+      "subtype": "Main idea",
+      "tier": "medium",
+      "passage": "Unlike most flowers, buttercups have petals that are glossy as well as yellow. Examining several buttercup species, Casper van der Kooi and colleagues found that the gloss originates in the petals’ outermost layer of cells, which is exceptionally flat and filled with pigment and therefore acts as a thin reflective film, while the matte yellow color arises as light scattered back by deeper layers passes through that pigmented layer. The gloss, the researchers suggest, may provide a conspicuous signal to insect pollinators and may also direct sunlight toward the center of the flower, warming its reproductive organs.",
+      "stem": "Which choice best states the main idea of the text?",
+      "options": [
+        "Researchers found that buttercups attract more insect pollinators than other yellow flowers do because of their mirror-like petals.",
+        "Buttercup petals owe both their gloss and their yellow color to light reflected from layers deep inside the petals.",
+        "Research suggests that the unusual shine of buttercup petals comes from the petals’ structure and may help the plants in more than one way.",
+        "Researchers have determined that buttercups need glossy petals to keep their reproductive organs warm enough to function."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The text explains that the gloss “originates in the petals’ outermost layer of cells,” which “acts as a thin reflective film,” and that the researchers suggest the gloss “may provide a conspicuous signal to insect pollinators and may also direct sunlight toward the center of the flower.” Choice C sums up both the cause of the shine and its possible benefits.",
+      "distractors": {
+        "A": {
+          "recipe": "invented comparison",
+          "why_wrong": "The text says the gloss may signal to pollinators but never compares how many pollinators buttercups attract with other yellow flowers."
+        },
+        "B": {
+          "recipe": "twisted detail",
+          "why_wrong": "Light scattered back by deeper layers helps produce the yellow color, but the gloss “originates in the petals’ outermost layer of cells.”"
+        },
+        "D": {
+          "recipe": "overstated",
+          "why_wrong": "The researchers only suggest that the gloss “may” warm the reproductive organs; they do not say the flowers need it."
+        }
+      },
+      "models": [
+        "2.12",
+        "2.18",
+        "2.22"
+      ],
+      "word_count": 97,
+      "sources": [
+        {
+          "what": "van der Kooi, Elzenga, Dijksterhuis and Stavenga, J. R. Soc. Interface 2017: buttercup gloss comes from a very flat, pigment-filled upper epidermis acting as a thin-film reflector, matte yellow from light backscattered by starch and mesophyll layers; gloss likely signals to pollinators and reflects sunlight to the flower centre to heat reproductive organs",
+          "url": "https://pubmed.ncbi.nlm.nih.gov/28228540/"
+        }
+      ],
+      "notes": "Natural science (plant optics). Main idea joins the finding (structure) and the suggested functions; key hedged as the passage is (may).",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "central_ideas_and_details.T1.medium.w4b2_12",
+      "template": "T1",
+      "subtype": "Main idea",
+      "tier": "medium",
+      "passage": "From 1830 until well after the Civil War, Black Americans held more than 600 state and national political conventions throughout North America. At these gatherings, writers, church leaders, newspaper editors, educators, and entrepreneurs developed political strategies and campaigned for civil rights. The records of the meetings were long scattered, but the Colored Conventions Project, founded in a graduate class at the University of Delaware, has collaborated with thousands of volunteers, scholars, and students to locate, transcribe, and archive them, making a decades-long history of Black political organizing accessible to researchers and the public.",
+      "stem": "Which choice best states the main idea of the text?",
+      "options": [
+        "Volunteers working on the Colored Conventions Project have found that Black political conventions began much earlier than historians had assumed.",
+        "A collaborative project is making the records of a long series of nineteenth-century meetings at which Black Americans organized for their rights widely accessible.",
+        "The Colored Conventions Project focuses on newspaper editors, who organized most of the conventions held after the Civil War.",
+        "Because the records of the conventions were long scattered, historians had concluded that the meetings had little effect on the era’s campaigns for civil rights."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The text describes the conventions Black Americans held “from 1830 until well after the Civil War” to campaign for civil rights and explains that the Colored Conventions Project has worked with “thousands of volunteers, scholars, and students to locate, transcribe, and archive” their records. Choice B states this main idea.",
+      "distractors": {
+        "A": {
+          "recipe": "plausible but unsupported",
+          "why_wrong": "The text gives 1830 as the start of the conventions but never says historians had assumed a later date."
+        },
+        "C": {
+          "recipe": "twisted detail",
+          "why_wrong": "Newspaper editors are listed among many kinds of participants; the text does not say they organized most conventions or that the project focuses on them."
+        },
+        "D": {
+          "recipe": "invented cause",
+          "why_wrong": "The text says the records were scattered but never says historians judged the conventions unimportant."
+        }
+      },
+      "models": [
+        "2.12",
+        "2.15",
+        "2.22"
+      ],
+      "word_count": 93,
+      "sources": [
+        {
+          "what": "Colored Conventions Project, About the Conventions and About pages: more than 600 state and national conventions from 1830 into the 1900s across North America; delegates included writers, organizers, church leaders, newspaper editors, educators and entrepreneurs; project founded in a graduate class at the University of Delaware, over 2,500 volunteers, scholars and students locate, transcribe and archive the record",
+          "url": "https://coloredconventions.org/about-conventions/"
+        }
+      ],
+      "notes": "History (nineteenth-century Black political organizing, digital archive). ‘Long scattered’ is a mild paraphrase of the project’s locate-and-archive aim.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "central_ideas_and_details.T3.medium.w4b2_13",
+      "template": "T3",
+      "subtype": "Main idea",
+      "tier": "medium",
+      "passage": "Born in Kyoto in 1866, Kamisaka Sekka worked within the Rinpa tradition, a school of Japanese decorative art distinguished by bold, stylized designs, which had become unfashionable by his era. In 1901 the Japanese government dispatched him to Glasgow, where he encountered European art nouveau and investigated what attracted Western audiences to Japanese design. Returning to Kyoto, he taught at a municipal school of arts and crafts, and his woodblock-printed volumes Momoyogusa (1909–1910) combine a mastery of Rinpa conventions with vivid, flat colors that many viewers find strikingly modern.",
+      "stem": "Which choice best states the main idea of the text?",
+      "options": [
+        "Sekka helped make the Rinpa style fashionable again by teaching it to art students during his time in Glasgow.",
+        "Sekka created Momoyogusa to show European audiences which features of Japanese design they found most appealing.",
+        "Sekka abandoned the Rinpa tradition after encountering art nouveau, turning instead to bright colors and modern forms.",
+        "Sekka combined a traditional Japanese style with influences from his encounter with European design."
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The text says that Sekka “worked within the Rinpa tradition,” encountered European art nouveau in Glasgow, and later produced books that “combine a mastery of Rinpa conventions with vivid, flat colors that many viewers find strikingly modern.” Choice D generalizes these details.",
+      "distractors": {
+        "A": {
+          "recipe": "twisted detail",
+          "why_wrong": "Sekka taught in Kyoto after returning from Glasgow; the text does not say he taught in Glasgow or made Rinpa fashionable again."
+        },
+        "B": {
+          "recipe": "twisted detail (wrong purpose)",
+          "why_wrong": "In Glasgow Sekka investigated what attracted Western audiences to Japanese design; the text gives no such purpose for Momoyogusa."
+        },
+        "C": {
+          "recipe": "contradicts the text",
+          "why_wrong": "Momoyogusa shows “a mastery of Rinpa conventions,” so Sekka did not abandon the tradition."
+        }
+      },
+      "models": [
+        "2.6",
+        "2.9"
+      ],
+      "word_count": 89,
+      "sources": [
+        {
+          "what": "Wikipedia, Kamisaka Sekka: born in Kyoto 1866; proponent of Rinpa, which had become unfashionable; sent to Glasgow in 1901, influenced by art nouveau and studied Western interest in Japonisme; taught at the Kyoto Municipal School of Arts and Crafts; Momoyogusa (A World of Things, 1909–1910) masters Rinpa style with an effect that is very Western and modern",
+          "url": "https://en.wikipedia.org/wiki/Kamisaka_Sekka"
+        }
+      ],
+      "notes": "Arts (Japanese design, prints). Profile: aim (Rinpa) plus examples (Glasgow, Momoyogusa); the key generalizes. Rinpa gloss is general knowledge.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "central_ideas_and_details.T3.medium.w4b2_14",
+      "template": "T3",
+      "subtype": "Main idea",
+      "tier": "medium",
+      "passage": "After studying art in New York, Lorenzo Homar returned to his native Puerto Rico in 1950. There he directed the graphics studio of a government community-education division and later established the printmaking workshop of the Institute of Puerto Rican Culture. Also a calligrapher, he designed posters that drew on the island’s Taíno, Spanish, and African heritage, and his teaching influenced generations of printmakers—so much so that he is often called the father of the Puerto Rican poster.",
+      "stem": "Which choice best states the main idea of the text?",
+      "options": [
+        "Homar was a leading figure in the development of poster art in Puerto Rico.",
+        "Homar’s posters were admired mainly for their printing technique, which he had mastered while studying art in New York.",
+        "Homar returned to Puerto Rico to make posters for the government, which limited the subjects he could depict.",
+        "Homar is best remembered for his calligraphy, which he considered more important than his posters."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The text describes Homar’s leadership of a graphics studio and a printmaking workshop, his posters drawing on Puerto Rico’s heritage, and his influence as a teacher, noting that “he is often called the father of the Puerto Rican poster.” Choice A generalizes these details.",
+      "distractors": {
+        "B": {
+          "recipe": "twisted detail",
+          "why_wrong": "The text mentions his studies in New York and his printmaking work but never links the two or says his posters were admired mainly for technique."
+        },
+        "C": {
+          "recipe": "plausible but unsupported",
+          "why_wrong": "The text says he directed a government studio but never says it limited his subjects."
+        },
+        "D": {
+          "recipe": "twisted detail",
+          "why_wrong": "The text says he was also a calligrapher but calls him the father of the Puerto Rican poster; it never ranks his calligraphy above his posters."
+        }
+      },
+      "models": [
+        "2.6",
+        "2.9"
+      ],
+      "word_count": 77,
+      "sources": [
+        {
+          "what": "Poster House, Puerto Rico in Print: The Posters of Lorenzo Homar: printmaker, poster designer, calligrapher; work reflects Taíno, Spanish and African cultures; few equal his influence as a teacher of poster design and printmaking; known as the father of the Puerto Rican poster",
+          "url": "https://posterhouse.org/exhibition/puerto-rico-in-print-the-posters-of-lorenzo-homar/"
+        },
+        {
+          "what": "Wikipedia, Lorenzo Homar: apprentice jewelry designer at Cartier in New York; returned to Puerto Rico in 1950; directed the graphics studio of DivEdCo; established the Graphic Arts Workshop of the Institute of Puerto Rican Culture; silkscreen from the 1960s",
+          "url": "https://en.wikipedia.org/wiki/Lorenzo_Homar"
+        }
+      ],
+      "notes": "Arts (printmaking, posters). DivEdCo (Division of Community Education) glossed as a government community-education division.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 5,
+        "fixes": [
+          "“lettered in his own calligraphy” and “screen-printed” removed (neither source says so); passage now says only that he was also a calligrapher (Poster House, Wikipedia)",
+          "B and D why_wrong updated"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "central_ideas_and_details.T4_prose.medium.w4b2_15",
+      "template": "T4_prose",
+      "subtype": "Main idea",
+      "tier": "medium",
+      "passage": "The following text is from Anatole France’s 1881 novel The Crime of Sylvestre Bonnard (translated by Lafcadio Hearn in 1890). The narrator, an elderly scholar, has been delivering an elaborate speech to his cat, Hamilcar.\n\nThe beginning of this discourse pleased Hamilcar, who accompanied it with a throat-sound like the song of a kettle on the fire. But as my voice waxed louder, Hamilcar notified me by lowering his ears and by wrinkling the striped skin of his brow that it was bad taste on my part so to declaim.\n\n“This old-book man,” evidently thought Hamilcar, “talks to no purpose at all, while our housekeeper never utters a word which is not full of good sense, full of significance—containing either the announcement of a meal or the promise of a whipping. One knows what she says. But this old man puts together a lot of sounds signifying nothing.”",
+      "stem": "Which choice best states the main idea of the text?",
+      "options": [
+        "The narrator is hurt to discover that his cat would rather spend time with the housekeeper than with him.",
+        "The narrator’s cat becomes frightened as the narrator’s voice grows louder and harsher.",
+        "The narrator imagines that his cat, though pleased at first, comes to find his speech pointless compared with the housekeeper’s practical words.",
+        "The narrator realizes that the housekeeper’s strict manner has made his cat impatient with any kind of talk."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "At first the speech “pleased Hamilcar,” but as the narrator grows louder the cat signals “that it was bad taste on my part so to declaim.” The narrator then imagines the cat thinking that he “talks to no purpose at all,” while the housekeeper’s words are “full of good sense” because they announce a meal or a whipping. Choice C states this main idea.",
+      "distractors": {
+        "A": {
+          "recipe": "tonal misreading",
+          "why_wrong": "The cat’s imagined comparison concerns the way the two people speak, not whose company it prefers, and nothing suggests the narrator is hurt."
+        },
+        "B": {
+          "recipe": "literal or tonal misreading",
+          "why_wrong": "The cat lowers its ears to show the narrator that his loud speech is in “bad taste,” not out of fear, and the voice is described as louder, not harsher."
+        },
+        "D": {
+          "recipe": "invented cause",
+          "why_wrong": "The cat values the housekeeper’s words because they are “full of significance”; the text never says her manner made it dislike talk."
+        }
+      },
+      "models": [
+        "2.4",
+        "2.11",
+        "2.17"
+      ],
+      "word_count": 148,
+      "sources": [
+        {
+          "what": "Anatole France, The Crime of Sylvestre Bonnard, Lafcadio Hearn translation (copyright 1890, Harper & Brothers); the archive.org scan is an International Collector’s Library reprint of that translation; Part I, December 24, 1849; excerpt matches this scan word for word",
+          "url": "https://archive.org/details/crimesylvestreb01frangoog"
+        },
+        {
+          "what": "Wikipedia, Lafcadio Hearn: translations include The Crime of Sylvestre Bonnard by Anatole France (1890)",
+          "url": "https://en.wikipedia.org/wiki/Lafcadio_Hearn"
+        }
+      ],
+      "notes": "Literary prose (translated French novel, public domain). Copied exactly from the 1890 Harper printing (later printings read ‘to so declaim’ and ‘signification’; Gutenberg drops the comma after ‘at all’). France and this novel appear in no official or own item (grep).",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [
+          "source entry corrected: the archive.org copy is a later reprint of the 1890 Hearn translation; added a page confirming Hearn as translator"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "central_ideas_and_details.T6.medium.w4b2_16",
+      "template": "T6",
+      "subtype": "Supported detail",
+      "tier": "medium",
+      "passage": "The following text is adapted from Fenton Johnson’s 1919 poem “The Banjo Player.” Kris Kringle is another name for Santa Claus.\n\nThere is music in me, the music of a peasant people.\nI wander through the levee, picking my banjo and singing my songs of the cabin and the field. Behind the railroad tracks the little children clap their hands and love me as they love Kris Kringle.\n\nBut I fear that I am a failure. Last night a woman called me a troubadour. What is a troubadour?",
+      "stem": "Based on the text, what is most likely true about the speaker’s fear that he is a failure?",
+      "options": [
+        "It stems from his wish to leave the levee and play for larger and wealthier audiences.",
+        "It does not seem to be shared by the people who hear him, who appear to delight in him and his music.",
+        "It is justified, since even the children who hear him think of him mainly as a figure of make-believe.",
+        "It reflects his belief that the songs of the cabin and the field are less worthy than other music."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The speaker says, “I fear that I am a failure,” yet he also says that the children “clap their hands and love me as they love Kris Kringle,” and that a woman has just called him a troubadour. These details suggest that the people who hear him take delight in him and his music, so his fear does not seem to be shared by them.",
+      "distractors": {
+        "A": {
+          "recipe": "plausible but unsupported",
+          "why_wrong": "The speaker never mentions wanting to leave the levee or to play for wealthier audiences."
+        },
+        "C": {
+          "recipe": "literal misreading",
+          "why_wrong": "The comparison to Kris Kringle shows how much the children love him, not that they see him as make-believe."
+        },
+        "D": {
+          "recipe": "contradicts the text",
+          "why_wrong": "The speaker opens with pride, “There is music in me, the music of a peasant people,” and never ranks his songs below other music."
+        }
+      },
+      "models": [
+        "2.24"
+      ],
+      "word_count": 88,
+      "sources": [
+        {
+          "what": "Fenton Johnson, The Banjo Player, published in Others (1919); text from James Weldon Johnson, ed., The Book of American Negro Poetry (1922), Project Gutenberg 11986",
+          "url": "https://www.gutenberg.org/ebooks/11986"
+        },
+        {
+          "what": "Lehigh African American Poetry digital anthology: Johnson published The Banjo Player among free verse poems in Others in 1919",
+          "url": "https://scalar.lehigh.edu/african-american-poetry-a-digital-anthology/fenton-johnson-poems-and-author-profile"
+        }
+      ],
+      "notes": "Literary (prose poem, public domain). Adapted at a sentence boundary: the sentence about the Last Chance Saloon is left out (alcohol setting); everything kept is copied exactly. P1: children love him; P2: a woman calls him a troubadour, a term of praise he does not know; conclusion: others do not share his fear. Kris Kringle glossed for clarity. Reviewer: cut checked against Gutenberg 11986; the omitted Last Chance Saloon sentence (welcome, food and drink, dimes of those who love honest music) only adds to the evidence for the key, so the cut keeps the meaning.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 2,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "central_ideas_and_details.T2.medium.w4b2_17",
+      "template": "T2",
+      "subtype": "Main idea",
+      "tier": "medium",
+      "passage": "When paleontologist Andrea Cau and colleagues described Halszkaraptor escuilliei, a small dinosaur from Mongolia, in 2017, they concluded that it had been amphibious, pointing to its extremely long neck, which it likely relied on to catch food, and to forelimbs that may have been suited to swimming. Halszkaraptor has since been reconstructed as a fish-eater. A 2024 analysis of its skull, however, found that its jaws were built for rapid rather than forceful bites; the researchers judged a fish diet unlikely and proposed that it fed on small invertebrates, perhaps in murky water.",
+      "stem": "Which choice best states the main idea of the text?",
+      "options": [
+        "A recent study confirmed that Halszkaraptor ate fish by showing that its jaws could snap shut rapidly in murky water.",
+        "Halszkaraptor’s long neck, once thought to help it catch food, turns out to have been poorly suited to life in the water.",
+        "Cau and colleagues’ conclusion that Halszkaraptor was amphibious has been rejected because its forelimbs were not suited to swimming.",
+        "Although Halszkaraptor has been pictured as a fish-eater, a recent study of its skull suggests that it more likely ate small invertebrates."
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The text says that Halszkaraptor “has since been reconstructed as a fish-eater” but that a 2024 skull analysis led researchers to judge “a fish diet unlikely” and to propose “that it fed on small invertebrates.” Choice D states this revision.",
+      "distractors": {
+        "A": {
+          "recipe": "contradicts the text",
+          "why_wrong": "The 2024 study found rapid bites but judged “a fish diet unlikely.”"
+        },
+        "B": {
+          "recipe": "plausible but unsupported",
+          "why_wrong": "The 2024 study concerns the skull and diet; the text never says the neck was poorly suited to water."
+        },
+        "C": {
+          "recipe": "revises the wrong thing",
+          "why_wrong": "The new study questions the animal’s diet, not whether it was amphibious, and it even suggests it may have fed in murky water; the forelimbs are not discussed."
+        }
+      },
+      "models": [
+        "2.7",
+        "2.8"
+      ],
+      "word_count": 93,
+      "sources": [
+        {
+          "what": "Tse, Miller and Pittman, BMC Ecology and Evolution 2024: Halszkaraptor escuilliei adapted for high bite speed; piscivorous reconstructions unlikely; suggests an invertivorous diet and possible adaptations for feeding in murky water",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC11020771/"
+        },
+        {
+          "what": "Cau et al., Nature 2017: Halszkaraptor escuilliei from Mongolia, amphibious ecomorphology, neck hyperelongation for food procurement, forelimb proportions that may support swimming",
+          "url": "https://pubmed.ncbi.nlm.nih.gov/29211712/"
+        }
+      ],
+      "notes": "Natural science (paleontology). View (fish-eating amphibious hunter) then correction (skull mechanics point to invertebrates). The 2024 authors left unnamed. A 2024 study is newer than most official ones but within reason.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "central_ideas_and_details.T5.easy.w4b2_18",
+      "template": "T5",
+      "subtype": "Explicit detail",
+      "tier": "easy",
+      "passage": "The following text is adapted from Frances Browne’s 1856 story collection Granny’s Wonderful Chair. Snowflower lives with her grandmother, Dame Frostyface, in a cottage that contains a great armchair.\n\nOn that chair Dame Frostyface sat spinning from morning till night, to keep herself and her granddaughter, while Snowflower gathered sticks for the fire, looked after the hens and the cat, and did whatever else her grandmother bade her. There was nobody in that part of the country could spin such fine yarn as Dame Frostyface, but she spun very slowly. Her wheel was as old as herself, and far more worn-out. So what the dame earned was very little, and their living was scanty.",
+      "stem": "According to the text, why does Dame Frostyface earn very little from her spinning?",
+      "options": [
+        "She spins slowly on a wheel that is old and worn-out.",
+        "The yarn she spins is not as fine as other people’s yarn.",
+        "She spends much of each day doing chores around the cottage.",
+        "She spins only in the evenings, after Snowflower has gathered sticks."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The text says that Dame Frostyface “spun very slowly” and that “her wheel was as old as herself, and far more worn-out,” and then concludes, “So what the dame earned was very little.”",
+      "distractors": {
+        "B": {
+          "recipe": "contradicts the text",
+          "why_wrong": "The text says “there was nobody in that part of the country could spin such fine yarn as Dame Frostyface.”"
+        },
+        "C": {
+          "recipe": "twisted detail",
+          "why_wrong": "Snowflower does the chores; Dame Frostyface spins “from morning till night.”"
+        },
+        "D": {
+          "recipe": "contradicts the text",
+          "why_wrong": "She spins “from morning till night,” not only in the evenings."
+        }
+      },
+      "models": [
+        "1.6",
+        "1.17"
+      ],
+      "word_count": 114,
+      "sources": [
+        {
+          "what": "Frances Browne, Granny’s Wonderful Chair, and Its Tales of Fairy Times (1856), Project Gutenberg 26018; text copied exactly with one sentence left out at a sentence boundary",
+          "url": "https://www.gutenberg.org/ebooks/26018"
+        }
+      ],
+      "notes": "Literary prose (Irish author, public domain). One sentence (‘Indeed, the wonder was that it did not fall to pieces.’) left out to keep the passage near the models’ length. Browne used in no official or own item (grep). Reviewer: cut checked against Gutenberg 26018; the omitted sentence only elaborates the worn wheel, so the meaning is kept.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 2,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "central_ideas_and_details.T5.easy.w4b2_19",
+      "template": "T5",
+      "subtype": "Explicit detail",
+      "tier": "easy",
+      "passage": "The Harwell computer, constructed at a British atomic research establishment, began operating in 1951. Even by the standards of its day, it was remarkably slow, requiring several seconds to multiply two numbers. However, it could be left running unattended for long periods, and its reliability, rather than its speed, was considered its principal strength. From 1957 to 1973 a technical college used it for teaching computing. Decades later, volunteers at England’s National Museum of Computing restored it, and in 2013 it was recognized as the world’s oldest working digital computer.",
+      "stem": "According to the text, what was the Harwell computer’s main strength?",
+      "options": [
+        "It could multiply numbers more quickly than other computers built at the time.",
+        "Its design was simple enough that students could easily repair it themselves.",
+        "It could operate reliably for long periods without supervision.",
+        "It was the first computer that a technical college ever used for teaching."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The text says that the computer “could be left running unattended for long periods” and that “its reliability, rather than its speed, was considered its principal strength.”",
+      "distractors": {
+        "A": {
+          "recipe": "contradicts the text",
+          "why_wrong": "The text says it was “remarkably slow, requiring several seconds to multiply two numbers.”"
+        },
+        "B": {
+          "recipe": "plausible but unsupported",
+          "why_wrong": "The text says a college used it for teaching but never says students repaired it."
+        },
+        "D": {
+          "recipe": "overstated",
+          "why_wrong": "A college used it to teach computing, but the text never says it was the first computer used this way."
+        }
+      },
+      "models": [
+        "1.5",
+        "1.13",
+        "1.19"
+      ],
+      "word_count": 90,
+      "sources": [
+        {
+          "what": "Wikipedia, Harwell computer: built at the Atomic Energy Research Establishment, Harwell, operational April 1951; multiplication took 5 to 10 seconds; could be left unattended for long periods; durability rather than speed its main feature; used to teach computing at Wolverhampton and Staffordshire Technical College 1957 to 1973; restored at The National Museum of Computing, completed 2012; Guinness oldest working digital computer 2013",
+          "url": "https://en.wikipedia.org/wiki/Harwell_computer"
+        },
+        {
+          "what": "The National Museum of Computing, news release 30 November 2012: the machine was rediscovered in 2008 by a team of volunteers from TNMOC, who planned its restoration; Delwyn Holroyd, a TNMOC volunteer, led the restoration team",
+          "url": "https://www.tnmoc.org/news-releases/2012/11/30/the-worlds-oldest-original-working-digital-computer"
+        }
+      ],
+      "notes": "Technology (history of computing). The museum is The National Museum of Computing at Bletchley Park.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 5,
+        "fixes": [
+          "added the TNMOC source that confirms the restorers were museum volunteers"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "central_ideas_and_details.T5.easy.w4b2_20",
+      "template": "T5",
+      "subtype": "Explicit detail",
+      "tier": "easy",
+      "passage": "The Honduran white bat, a tiny inhabitant of Central American rain forests, has white fur and a bright yellow nose and ears. Animals cannot manufacture carotenoids, the pigments responsible for many yellow, orange, and red colors in nature; they must obtain them from their diets. Scientists long assumed that mammals were incapable of depositing these pigments in their skin. But chemical analyses by Ismael Galván and colleagues revealed that the bat’s yellow skin is colored by lutein, a carotenoid the bat acquires from the fruit it eats.",
+      "stem": "According to the text, what gives the Honduran white bat’s skin its yellow color?",
+      "options": [
+        "It comes from a pigment that the bat’s own body produces.",
+        "It comes from a pigment that the bat gets from its food.",
+        "It comes from sunlight reflecting off the bat’s white fur onto its skin.",
+        "It comes from pollen that sticks to the bat’s face as it feeds."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The text says that “the bat’s yellow skin is colored by lutein, a carotenoid the bat acquires from the fruit it eats.”",
+      "distractors": {
+        "A": {
+          "recipe": "contradicts the text",
+          "why_wrong": "The text says that animals “cannot manufacture carotenoids” and “must obtain them from their diets.”"
+        },
+        "C": {
+          "recipe": "plausible but unsupported",
+          "why_wrong": "The text mentions the bat’s white fur but never says light reflecting off it causes the yellow color."
+        },
+        "D": {
+          "recipe": "plausible but unsupported",
+          "why_wrong": "The text never mentions pollen; the color comes from a pigment in the bat’s food."
+        }
+      },
+      "models": [
+        "1.5",
+        "1.13",
+        "1.19"
+      ],
+      "word_count": 87,
+      "sources": [
+        {
+          "what": "Galván et al., PNAS 2016: animals cannot synthesize carotenoids and must consume them; no mammal had been known to deposit carotenoids in skin or hair; the frugivorous Honduran white bat Ectophylla alba colors its skin bright yellow with lutein",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC5047184/"
+        }
+      ],
+      "notes": "Natural science (animal coloration). ‘Fruit it eats’ follows the paper’s frugivorous; the bat feeds mostly on figs (Chaverri and Chaverri 2022).",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "central_ideas_and_details.T1.easy.w4b2_21",
+      "template": "T1",
+      "subtype": "Main idea",
+      "tier": "easy",
+      "passage": "Male rock hyraxes, small mammals inhabiting rocky areas of Africa and the Middle East, perform elaborate songs composed of repeated sounds. Biologist Vlad Demartsev and his team compared recordings of these songs with long-term data identifying which males fathered offspring. Males that sang more frequently had more offspring that survived their first year. Additionally, males whose songs maintained a steady rhythm, with sounds spaced at nearly equal intervals, tended to have more surviving offspring.",
+      "stem": "Which choice best states the main idea of the text?",
+      "options": [
+        "Researchers found that female rock hyraxes strongly prefer to mate with the males that sing the longest songs.",
+        "Young male rock hyraxes learn to keep a steady rhythm in their songs by listening carefully to older males.",
+        "Rock hyraxes sing mainly to warn other members of their group that dangerous predators are approaching.",
+        "Researchers found that how often and how steadily male rock hyraxes sing is linked to their reproductive success."
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The text says that males “that sang more frequently had more offspring that survived their first year” and that males whose songs “maintained a steady rhythm” also “tended to have more surviving offspring.” Choice D joins these two findings.",
+      "distractors": {
+        "A": {
+          "recipe": "twisted detail",
+          "why_wrong": "The text links how often and how steadily males sing to their offspring; it never mentions song length or females’ preferences."
+        },
+        "B": {
+          "recipe": "plausible but unsupported",
+          "why_wrong": "The text never says how hyraxes learn to sing."
+        },
+        "C": {
+          "recipe": "plausible but unsupported",
+          "why_wrong": "The text never mentions predators or warnings."
+        }
+      },
+      "models": [
+        "1.7",
+        "1.8",
+        "1.10"
+      ],
+      "word_count": 74,
+      "sources": [
+        {
+          "what": "Demartsev et al., Journal of Animal Ecology 2023: male rock hyraxes that sing more often have more offspring surviving to one year; the ratio of isochronous (evenly spaced) transitions in songs is positively correlated with male reproductive success",
+          "url": "https://pubmed.ncbi.nlm.nih.gov/36097377/"
+        }
+      ],
+      "notes": "Natural science (animal song). ‘Raising young’ in the key paraphrases offspring surviving to one year; the passage keeps the paper’s correlational wording (tended to).",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "central_ideas_and_details.T1.easy.w4b2_22",
+      "template": "T1",
+      "subtype": "Main idea",
+      "tier": "easy",
+      "passage": "In 1983, as Argentina returned to democracy after years of military dictatorship, artist Marta Minujín constructed a large replica of the ancient Greek Parthenon in Buenos Aires and covered it with roughly 30,000 books, all of which the military government had prohibited. The installation remained standing for three weeks. Then it was dismantled, and the books, which could now be read legally, were distributed to the public.",
+      "stem": "Which choice best states the main idea of the text?",
+      "options": [
+        "Minujín created a temporary artwork from once-banned books to mark the end of censorship in Argentina.",
+        "Minujín wrote several of the books that Argentina’s military government had prohibited during the dictatorship.",
+        "Minujín’s replica of the Parthenon was intended to serve as a permanent public library for Buenos Aires.",
+        "Minujín constructed the replica to demonstrate how ancient Greek ideas had influenced the laws of Argentina."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The text explains that, as Argentina “returned to democracy,” Minujín covered a replica of the Parthenon with books that “the military government had prohibited” and that after three weeks the books, “which could now be read legally, were distributed to the public.” Choice A states this main idea.",
+      "distractors": {
+        "B": {
+          "recipe": "twisted detail",
+          "why_wrong": "The text says the books had been prohibited, but it never says Minujín wrote any of them."
+        },
+        "C": {
+          "recipe": "contradicts the text",
+          "why_wrong": "The installation “remained standing for three weeks” and was then dismantled."
+        },
+        "D": {
+          "recipe": "plausible but unsupported",
+          "why_wrong": "The text never mentions ancient Greek ideas or Argentina’s laws."
+        }
+      },
+      "models": [
+        "1.7",
+        "1.8",
+        "1.10"
+      ],
+      "word_count": 67,
+      "sources": [
+        {
+          "what": "Wikipedia, Marta Minujín: El Partenón de libros (1983) assembled about 30,000 books banned between 1976 and 1983; dismantled after three weeks, its newly unbanned titles distributed to the public",
+          "url": "https://en.wikipedia.org/wiki/Marta_Minuj%C3%ADn"
+        }
+      ],
+      "notes": "Arts (installation art, Argentina). Explainer-type T1; the key names the work’s meaning implied by its timing and ending.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "central_ideas_and_details.T3.easy.w4b2_23",
+      "template": "T3",
+      "subtype": "Main idea",
+      "tier": "easy",
+      "passage": "Moroccan painter Chaïbia Talal never received formal artistic training. Born in 1929 in a rural region, she said she was inspired to begin painting after a dream in which strangers presented her with art supplies. Initially, her work was poorly received in the Moroccan art world. But in 1965 her son introduced her to Pierre Gaudibert, director of a modern art museum in Paris, and the following year her paintings were exhibited in Casablanca and Paris. Numerous exhibitions across Europe followed.",
+      "stem": "Which choice best states the main idea of the text?",
+      "options": [
+        "Talal studied painting in Paris for several years before returning to Morocco to paint scenes from her dreams.",
+        "Talal’s son, who was also a painter, taught her to paint and arranged her first exhibitions in Paris.",
+        "Despite lacking training and early acceptance at home, Talal went on to exhibit her paintings internationally.",
+        "Talal was celebrated in Morocco for many years before audiences in Europe began to notice her work."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The text says Talal “never received formal artistic training” and that her work was initially “poorly received in the Moroccan art world,” but that after 1965 her paintings were exhibited in Casablanca and Paris and “numerous exhibitions across Europe followed.” Choice C sums up this story.",
+      "distractors": {
+        "A": {
+          "recipe": "contradicts the text",
+          "why_wrong": "The text says she “never received formal artistic training”; a dream inspired her to begin painting."
+        },
+        "B": {
+          "recipe": "twisted detail",
+          "why_wrong": "Her son introduced her to a museum director; the text never says he painted or taught her."
+        },
+        "D": {
+          "recipe": "contradicts the text",
+          "why_wrong": "Her work was initially “poorly received in the Moroccan art world.”"
+        }
+      },
+      "models": [
+        "1.3",
+        "1.12"
+      ],
+      "word_count": 81,
+      "sources": [
+        {
+          "what": "Wikipedia, Chaïbia Talal: born 1929 in Chtouka, self-taught; began painting after receiving art supplies from strangers in a dream; work not initially well received in the Moroccan art world; in 1965 her son introduced her to Pierre Gaudibert, director of the Musée d’Art Moderne de Paris; 1966 shows in Casablanca and Paris, later across Europe",
+          "url": "https://en.wikipedia.org/wiki/Cha%C3%AFbia_Talal"
+        }
+      ],
+      "notes": "Arts (painting, Morocco). Gaudibert directed the Musée d’Art Moderne de la Ville de Paris (simplified to a modern art museum in Paris).",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "central_ideas_and_details.T4_prose.easy.w4b2_24",
+      "template": "T4_prose",
+      "subtype": "Main idea",
+      "tier": "easy",
+      "passage": "The following text is from Sholem Aleichem’s short story “On the Fiddle” (translated from the Yiddish by Hannah Berman in 1922). Sheika is a fiddler in the narrator’s town.\n\nAnd Sheika and his little fiddle stood before my eyes always. At night I saw him in my dreams; and in the daytime I saw him in reality; and he never left my imagination. When no one was looking I used to imagine that I was Sheika, the little fiddler. I used to curve my left arm and move my fingers, and draw out my right hand, as if I were drawing the bow across the strings.",
+      "stem": "Which choice best states the main idea of the text?",
+      "options": [
+        "The narrator practices on a fiddle every day so that he can someday perform alongside Sheika.",
+        "The narrator is so taken with Sheika that he pretends to play the fiddle as Sheika does.",
+        "The narrator is troubled by dreams about Sheika that keep him from sleeping at night.",
+        "The narrator imitates Sheika’s way of playing in order to make the people around him laugh."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The narrator says that Sheika “never left my imagination” and that “when no one was looking I used to imagine that I was Sheika,” moving his arms “as if I were drawing the bow across the strings.” Choice B states this main idea.",
+      "distractors": {
+        "A": {
+          "recipe": "literal misreading",
+          "why_wrong": "The narrator only moves his arms “as if” he were playing; the text never says he has a fiddle to practice on."
+        },
+        "C": {
+          "recipe": "tonal misreading",
+          "why_wrong": "The narrator sees Sheika in his dreams, but nothing suggests the dreams trouble him or keep him awake."
+        },
+        "D": {
+          "recipe": "contradicts the text",
+          "why_wrong": "He imitates Sheika “when no one was looking,” not to entertain others."
+        }
+      },
+      "models": [
+        "1.1",
+        "1.14",
+        "1.16"
+      ],
+      "word_count": 106,
+      "sources": [
+        {
+          "what": "Sholem Aleichem, Jewish Children, translated by Hannah Berman (New York: Knopf, 1922), story On the Fiddle; Project Gutenberg 27001",
+          "url": "https://www.gutenberg.org/ebooks/27001"
+        }
+      ],
+      "notes": "Literary prose (Yiddish story in translation, public domain). Copied exactly. No original year given in the source line (the 1922 translation is dated instead, as CB does for some translations). Sholem Aleichem used in no official or own item (grep).",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 2,
+        "fixes": [],
+        "status": "pass"
+      }
+    }
+  ],
+  "done": true
+}

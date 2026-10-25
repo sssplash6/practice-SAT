@@ -1,0 +1,1615 @@
+{
+  "skill": "Command of Evidence",
+  "slug": "command_of_evidence",
+  "part": "w2b7",
+  "domain": "Information and Ideas",
+  "plan": {
+    "templates": [
+      {
+        "code": "T1_single",
+        "name": "Hypothetical finding supports or weakens a single claim (causal, comparison, existence, generalization, prediction)"
+      },
+      {
+        "code": "T1_compete",
+        "name": "Hypothetical finding discriminates between competing explanations (support or weaken)"
+      },
+      {
+        "code": "Q2_P8_multipart",
+        "name": "Data description: multi-part, interaction, or passage-plus-data claim"
+      },
+      {
+        "code": "T2_lit_quote",
+        "name": "Quotation from a literary work illustrates a claim (single trait, two-part, contrast)"
+      },
+      {
+        "code": "T3_person_quote",
+        "name": "Quotation from a person (participant, respondent, historian, critic, article) supports or challenges a claim"
+      },
+      {
+        "code": "Q1_P5_control",
+        "name": "Data completion: condition vs control"
+      },
+      {
+        "code": "Q2_P8_quantifier",
+        "name": "Data description: quantified claim (for each, all except one)"
+      },
+      {
+        "code": "Q2_P4_trend",
+        "name": "Data description: trend or change over time supports a conclusion"
+      },
+      {
+        "code": "Q1_P3_pairwise",
+        "name": "Data completion: pairwise comparison (one or two comparisons)"
+      },
+      {
+        "code": "Q1_P4_trend",
+        "name": "Data completion: change over time"
+      },
+      {
+        "code": "Q1_P1_lookup",
+        "name": "Data completion: lookup (one cell or bar, reverse lookup, filter)"
+      },
+      {
+        "code": "Q1_P2_extreme",
+        "name": "Data completion: extreme or rank (max/min, possibly after a filter)"
+      }
+    ]
+  },
+  "items": [
+    {
+      "id": "command_of_evidence.T1_single.hard.w2b7_01",
+      "template": "T1_single",
+      "subtype": "Hypothetical finding supports a claim (key supplies the missing premise: a cost of pungency)",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "In southeastern Bolivia, populations of the wild chili Capsicum chacoense differ dramatically: in some, nearly every plant produces capsaicinoids, the compounds that make chilies pungent, while in others most plants produce none. Biologist Joshua Tewksbury and colleagues found that a Fusarium fungus, the main cause of seed death before dispersal, enters the fruits through scars left by feeding insects, that capsaicinoids slow the fungus’s growth, and that pungent plants were most common where such scars were most frequent. Since pungency protects seeds, Tewksbury and colleagues propose that nonpungent plants persist because producing capsaicinoids also carries a cost, so that each population’s mix reflects a balance between that cost and the protection.",
+      "stem": "Which finding, if true, would most directly support the proposal by Tewksbury and colleagues about why nonpungent plants persist?",
+      "options": [
+        "Nonpungent plants’ seeds have thicker coats than pungent plants’ seeds, and thicker-coated seeds more often survive passage through the digestive tracts of the birds that disperse them.",
+        "Seeds from nonpungent plants are infected by the fungus about twice as often as seeds from pungent plants are, even on plants enclosed in cages that keep birds away.",
+        "Birds, which eat the fruits of the wild chili and disperse its seeds, consume the fruits of pungent and nonpungent plants at about the same rate.",
+        "In populations where insect feeding scars are rare, pungent plants produce just as many surviving seeds over a growing season as nonpungent plants do."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The text already establishes the benefit of pungency (capsaicinoids slow the fungus), so the proposal needs evidence of a cost: something nonpungent plants do better. If nonpungent plants make thicker seed coats and such seeds survive birds’ digestion more often, pungent plants pay for their protection with thinner, more vulnerable seed coats. Where the fungus is rare, that cost would favor nonpungent plants, which explains why they persist. Choice A supplies that missing cost.",
+      "distractors": {
+        "B": {
+          "recipe": "TRAP: true, but restates the benefit the text already gives",
+          "why_wrong": "This shows again that pungency protects seeds from the fungus, which the text has already established. It says nothing about a cost of pungency, so it cannot explain why nonpungent plants persist."
+        },
+        "C": {
+          "recipe": "TRAP: no-difference finding that removes a possible cost",
+          "why_wrong": "If birds eat pungent and nonpungent fruits equally, pungency costs the plant nothing in seed dispersal. That rules out one possible cost rather than supplying one, so it does not support the proposal."
+        },
+        "D": {
+          "recipe": "OPP: pungency costless where the fungus is rare",
+          "why_wrong": "If pungent plants do just as well as nonpungent plants even where the fungus is scarce, pungency would carry no cost, and nothing would favor nonpungent plants. This weakens the proposal."
+        }
+      },
+      "models": [
+        "3.45",
+        "3.47",
+        "3.36"
+      ],
+      "word_count": 111,
+      "sources": [
+        {
+          "what": "Tewksbury et al., PNAS 2008, Evolutionary ecology of pungency in wild chilies: Capsicum chacoense in Bolivia polymorphic for pungency; Fusarium the main cause of predispersal seed mortality, entering through hemipteran feeding scars; capsaicinoids inhibit Fusarium; scar density predicts proportion of pungent plants; ratio reflects a balance of benefits and costs (tradeoff with seed-coat thickness)",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC2575311/"
+        },
+        {
+          "what": "Tewksbury, Levey, Huizinga, Haak, Traveset, Ecology 2008, Costs and benefits of capsaicin-mediated control of gut retention in dispersers of wild chilies: seed coats of pungent C. chacoense 10-12% thinner, and longer gut retention harms pungent seeds (a cost of pungency)",
+          "url": "https://pubmed.ncbi.nlm.nih.gov/18376552/"
+        },
+        {
+          "what": "Haak, McGinnis, Levey, Tewksbury, Proc. R. Soc. B 2012, Why are not all chilies hot? A trade-off limits pungency: pungency costly under drought, which explains populations dominated by non-pungent plants",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3311884/"
+        }
+      ],
+      "notes": "Band 7 moves: the key supplies the premise the text withholds (a cost of pungency: seed coats, which the paper names as the tradeoff; the passage never mentions coats); fact the key depends on (benefit already shown) sits in the earlier sentence; TRAP B (restates benefit), TRAP C (no-difference, removes a cost), OPP D. No OFF. Stem 20 words naming the claimants.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 5,
+        "fixes": [
+          "added two sources for the cost proposal (Tewksbury et al., Ecology 2008, thinner seed coats in pungent plants; Haak, ..., Tewksbury, Proc. R. Soc. B 2012, trade-off limits pungency): the PNAS abstract confirms the fungus, scar and capsaicinoid findings but not the cost"
+        ],
+        "status": "fixed"
+      },
+      "band7": {
+        "verdict": "band 7",
+        "why": "The key supplies the premise the passage withholds (a cost of pungency, through seed coats the passage never mentions), with the benefit fact in an earlier sentence; B restates the stated benefit, C is a no-difference trap, D is the opposite (pungency costless); 111 words, 20-word stem naming the claimants, 3 steps. Models 3.45 and 3.36 have the same shape."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "A",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 7
+    },
+    {
+      "id": "command_of_evidence.T1_single.hard.w2b7_02",
+      "template": "T1_single",
+      "subtype": "Hypothetical finding supports a claim (who benefited: needs the illiteracy link)",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Until the mid-1990s, Brazilians voting for state legislators had to write a candidate’s name or number on a paper ballot that offered only written instructions, a considerable obstacle in a country where, in 1991, nearly a quarter of adults could not read or write a simple note. Electronic voting machines, which display candidates’ photographs and guide voters through each step, were then introduced gradually; in the 1998 election, because supplies were limited, only municipalities with more than 40,500 registered voters used them. Comparing municipalities just above and just below that cutoff, economist Thomas Fujiwara concluded that the machines mainly enfranchised less-educated citizens, whose votes had often gone uncounted.",
+      "stem": "Which finding, if true, would most directly support Fujiwara’s conclusion?",
+      "options": [
+        "Municipalities just above the cutoff had a much smaller share of blank or error-ridden ballots than municipalities just below the cutoff did in the same election.",
+        "The gap in the share of discarded ballots between municipalities just above and just below the cutoff was widest among municipalities where many adults could not read.",
+        "Turnout, the share of registered voters who actually voted, was about the same in municipalities just above the cutoff as in those just below it.",
+        "Within municipalities that used the machines, the increase in counted votes was concentrated in districts where most adults had completed secondary school or gone on to further study."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "Fujiwara’s conclusion has two parts: the machines got more votes counted, and the newly counted voters were mainly less educated. If the machines made the biggest difference in places where many adults could not read, the votes they rescued most likely belonged to people with little schooling, the very group paper ballots had shut out. Choice B gives that finding.",
+      "distractors": {
+        "A": {
+          "recipe": "TRAP: true but cannot show who benefited",
+          "why_wrong": "Fewer discarded ballots above the cutoff shows that the machines got more votes counted, but it would be true whether the rescued votes came from less-educated or well-educated voters, so it does not support the conclusion’s claim about who was enfranchised."
+        },
+        "C": {
+          "recipe": "OFF: turnout, not counted votes",
+          "why_wrong": "Equal turnout says that the machines did not change how many people went to vote. The conclusion concerns whose votes were counted, which turnout does not address."
+        },
+        "D": {
+          "recipe": "OPP: gains among the educated",
+          "why_wrong": "If the newly counted votes came mainly from districts of well-educated adults, the machines would not have mainly enfranchised less-educated citizens. This would weaken the conclusion."
+        }
+      },
+      "models": [
+        "3.41",
+        "3.42",
+        "3.12"
+      ],
+      "word_count": 108,
+      "sources": [
+        {
+          "what": "Fujiwara, Econometrica 2015, Voting Technology, Political Responsiveness, and Infant Health: paper ballots required writing a candidate’s name or number with only written instructions; 23% of adults unable to read or write a simple note (1991 census); machines use candidates’ photographs and guide voters; in 1998 only municipalities above 40,500 registered voters used them; electronic voting reduced residual votes and enfranchised mainly less educated citizens, with larger effects where illiteracy was higher",
+          "url": "https://www.princeton.edu/~fujiwara/papers/elecvote_site.pdf"
+        }
+      ],
+      "notes": "Band 6: the key needs the step from municipal illiteracy to less-educated voters, and the right comparison (the cutoff gap by illiteracy). TRAP A is the study’s headline result, true but silent on who; OFF C (turnout, which the paper finds unchanged); OPP D. The key echoes no wording of the conclusion.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 5,
+        "fixes": [],
+        "status": "pass"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "Two steps: municipal illiteracy is the bridge to less-educated voters; A is a true trap (the headline result, silent on who), C off-target, D opposite. No premise beyond the passage, so a strong band 6 as targeted."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "B",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "command_of_evidence.T1_compete.hard.w2b7_03",
+      "template": "T1_compete",
+      "subtype": "Hypothetical finding discriminates rival explanations (fishing vs inhospitable water; unfished species as the test)",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "On Cape Cod in Massachusetts, many salt marshes have been losing their vegetation, leaving stretches of exposed mud. Comparing deteriorating marshes with healthy ones, marine ecologists Andrew Altieri, Mark Bertness, and colleagues found that the deteriorating marshes supported far more Sesarma crabs, herbivores that consume marsh grass, and far fewer of the crabs’ predators, such as striped bass and blue crabs. One possible explanation is that the surrounding water has become inhospitable to fish and the other animals that prey on the crabs, driving those predators away. Altieri and colleagues, however, argue that intensive recreational fishing near the deteriorating marshes has depleted the predators, allowing the herbivorous crabs to proliferate.",
+      "stem": "Which finding from the researchers’ comparison of the marshes, if true, would most directly support Altieri and colleagues’ argument?",
+      "options": [
+        "Water samples collected near the deteriorating marshes contained higher levels of pollutants than water samples collected near the healthy marshes did.",
+        "Sesarma crabs tethered in the water at deteriorating marshes were less likely to be eaten than Sesarma crabs tethered in the water at healthy marshes were.",
+        "Several kinds of small fish that anglers neither catch nor use as bait were just as plentiful near the deteriorating marshes as near the healthy ones.",
+        "Grass at the deteriorating marshes had been damaged most heavily along the banks of tidal creeks, where Sesarma crabs dig their burrows."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "If the water itself had become inhospitable to fish and other predators, it would drive off fish in general, not just the ones people catch. Fish that anglers have no reason to take being just as common at deteriorating marshes as at healthy ones shows the water still supports marine life, so the missing predators are best explained by something that removes only the species anglers catch: recreational fishing. Choice C gives that finding.",
+      "distractors": {
+        "A": {
+          "recipe": "OPP: fits the rival (poor water quality)",
+          "why_wrong": "More pollution near the deteriorating marshes would make the rival explanation, that the water has driven marine animals away, more likely. It favors the alternative rather than the fishing argument."
+        },
+        "B": {
+          "recipe": "TRAP: predicted by both explanations",
+          "why_wrong": "Crabs would be eaten less often at deteriorating marshes under either explanation, since both agree that predators are scarce there. The finding cannot tell fishing apart from inhospitable water."
+        },
+        "D": {
+          "recipe": "OFF: a property of the grass damage, not of the predators",
+          "why_wrong": "Where the grass is damaged fits the idea that crabs cause the damage, which both explanations accept. It says nothing about why the crabs’ predators are missing."
+        }
+      },
+      "models": [
+        "3.8",
+        "3.9",
+        "3.14"
+      ],
+      "word_count": 110,
+      "sources": [
+        {
+          "what": "Brown University news (2012) on Altieri, Bertness et al., Ecology: Cape Cod marsh die-off; deteriorating marshes had many more Sesarma crabs and far fewer predators (striped bass, blue crabs, smooth dogfish); hostile-habitat alternative tested: non-target species did not differ between dying and healthy marshes, only fished species were reduced; tethered crabs less likely to be eaten at deteriorating marshes",
+          "url": "https://archive2.news.brown.edu/2007-2015/articles/2012/06/saltmarsh.html"
+        }
+      ],
+      "notes": "Band 7 compete: the key splits the rivals through an unstated route (species anglers do not take would be scarce if the water were at fault; the study’s own test). The rival is framed as a possibility, not attributed. OPP A (fits the rival), TRAP B (both predict it; the study’s tethering result), OFF D (irrelevant property of the damage). Stem 18 words naming the claimants.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 5,
+        "fixes": [],
+        "status": "pass"
+      },
+      "band7": {
+        "verdict": "band 7",
+        "why": "Rivals split by an unstated route (species anglers do not take would also be scarce if the water were at fault); inhospitable water predicts fewer unfished fish, fishing predicts no difference, and only C separates them. B is predicted by both (trap), A fits the rival, D is a property of the damage; 110 words, stem names the claimants."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "C",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 7
+    },
+    {
+      "id": "command_of_evidence.Q2_P8_multipart.hard.w2b7_04",
+      "template": "Q2_P8_multipart",
+      "subtype": "Data description, passage plus display (water saving in the text, fruit in the graph)",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "In arid regions, the shade cast by photovoltaic panels might be expected to reduce crop yields, but it may also protect plants from excessive heat and reduce transpiration, the evaporation of water from leaves. At the University of Arizona’s Biosphere 2 research facility, geographer Greg Barron-Gafford and colleagues cultivated chiltepin peppers, jalapeño peppers, and cherry tomatoes both beneath an array of photovoltaic panels and in an adjacent open-sky plot, irrigating the two plots identically. Jalapeño plants beneath the panels lost 65% less water through transpiration than jalapeño plants in the open plot did. Considering these results, a student concludes that cultivation beneath the panels benefited each of the three crops, although only some of them produced additional fruit.",
+      "stem": "Which choice best describes data from the graph that support the student’s conclusion?",
+      "options": [
+        "Chiltepin plants grown beneath the panels produced about three times as much fruit as chiltepin plants in the open plot, a larger increase than cherry tomato plants showed.",
+        "Of the three crops, jalapeño plants showed the smallest difference in fruit production between the plot beneath the panels and the open plot.",
+        "Jalapeño and cherry tomato plants beneath the panels each produced about twice as much fruit as those in the open plot.",
+        "Chiltepin and cherry tomato plants beneath the panels produced two to three times as much fruit as in the open plot, while jalapeño plants produced about the same amount."
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": {
+        "kind": "bar graph",
+        "title": "Fruit Production beneath Solar Panels Relative to an Open-Sky Plot",
+        "x_axis": "Crop",
+        "y_axis": "Fruit production beneath panels relative to open-sky plot (open-sky plot = 1)",
+        "description": "Single-series bar graph with three bars, each showing a crop’s fruit production beneath the panels as a multiple of its production in the open-sky plot (open-sky plot = 1); y-axis 0 to 3.5 in steps of 0.5. Chiltepin pepper: about 3. Cherry tomato: about 2. Jalapeño pepper: about 1, meaning about the same fruit production as in the open-sky plot.",
+        "data": [
+          {
+            "series": "Fruit production beneath panels (open-sky plot = 1)",
+            "points": [
+              [
+                "Chiltepin pepper",
+                3.0
+              ],
+              [
+                "Cherry tomato",
+                2.0
+              ],
+              [
+                "Jalapeño pepper",
+                1.0
+              ]
+            ]
+          }
+        ]
+      },
+      "explanation": "The conclusion has two parts: every crop benefited, but only some produced more fruit. The graph shows that chiltepin and cherry tomato plants produced about three and two times as much fruit beneath the panels, while jalapeño plants produced about the same amount. Combined with the text’s statement that the jalapeños beneath the panels lost 65% less water, this means the jalapeños also benefited, by matching their fruit output with far less water. Choice D gives the data for all three crops.",
+      "distractors": {
+        "A": {
+          "recipe": "PART: accurate, two crops only",
+          "why_wrong": "This comparison of chiltepin and tomato is accurate, but it leaves out the jalapeños, so it cannot show that every crop benefited or that some crops did not produce more fruit."
+        },
+        "B": {
+          "recipe": "IRREL: accurate but does not show the level",
+          "why_wrong": "It is true that the jalapeños showed the smallest difference, but this does not say whether their fruit production stayed level or fell, and it says nothing about whether the other crops benefited."
+        },
+        "C": {
+          "recipe": "INACC: misread bar",
+          "why_wrong": "The graph shows jalapeño production beneath the panels at about the same level as in the open plot, not about twice as much; only the cherry tomato bar is at about 2."
+        }
+      },
+      "models": [
+        "3.16",
+        "3.18",
+        "3.26"
+      ],
+      "word_count": 115,
+      "sources": [
+        {
+          "what": "University of Arizona news (2019), Agrivoltaics proves mutually beneficial: Barron-Gafford et al. at Biosphere 2 grew chiltepin, jalapeño and cherry tomato under PV panels and in an open-sky control with equal water; chiltepin fruit production three times greater and tomato twice as great under the panels; jalapeño fruit production similar but with 65% less transpirational water loss",
+          "url": "https://news.arizona.edu/news/agrivoltaics-proves-mutually-beneficial-across-food-water-energy-nexus"
+        }
+      ],
+      "notes": "Band 6 multipart: the key must be combined with a number given only in the text (65% less water for jalapeño) to reach ‘every crop benefited’. Graph values are the release’s ratios (three times, twice, similar), drawn as 3, 2 and 1 relative to the open plot. A and B accurate but incomplete, C one misread bar. Reviewer: the conclusion is a student’s, since neither the release nor the paper’s abstract says every crop benefited; the graph shows relative yields only (title and axis), never absolute ones.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 6,
+        "fixes": [
+          "conclusion moved from the researchers to a student: the UA release says only chiltepin and tomato yields rose and jalapeño matched with 65% less water, and the Nature abstract claims benefits for many crops, not each of the three",
+          "figure title, description and series now say the bars are fruit production relative to the open-sky plot (open-sky = 1), so the release’s three times, twice and similar are never read as absolute yields"
+        ],
+        "status": "fixed"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "Passage number (65% less water) must be combined with the graph to reach every crop benefited; two accurate partial readings and one misread bar; a strong band 6 as targeted."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "D",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "command_of_evidence.T2_lit_quote.hard.w2b7_05",
+      "template": "T2_lit_quote",
+      "subtype": "Literary quotation, two-part claim (deliberate defiance; punishment worse than expected)",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Prometheus Bound is a fifth-century BCE play attributed to Aeschylus; Elizabeth Barrett Browning’s translation of it was published in 1850. Chained to a mountainside as punishment for giving fire to humankind, the god Prometheus acknowledges that his defiance of Zeus was deliberate, yet he suggests that his punishment has proved more severe than he had anticipated: ______",
+      "stem": "Which quotation from Prometheus Bound most effectively illustrates the claim?",
+      "options": [
+        "“I know that Zeus is stern; / I know he metes his justice by his will; / And yet, his soul shall learn / More softness when once broken by this ill”",
+        "“By my choice, my choice, / I freely sinned—I will confess my sin— / And helping mortals, found my own despair. / I did not think indeed that I should pine / Beneath such pangs against such skyey rocks”",
+        "“I dared it! I drew mortals back to light, / From meditated ruin deep as hell! / For which wrong, I am bent down in these pangs / Dreadful to suffer, mournful to behold”",
+        "“And yet what word do I say? I have foreknown / Clearly all things that should be; nothing done / Comes sudden to my soul; and I must bear / What is ordained with patience, being aware / Necessity doth front the universe / With an invincible gesture.”"
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The claim has two parts: Prometheus admits he defied Zeus by choice, and he suggests his punishment is worse than he expected. In choice B he says he sinned “by my choice” and “freely,” and then that he “did not think” he would suffer such pangs on such high rocks, which covers both parts.",
+      "distractors": {
+        "A": {
+          "recipe": "OFF: a prediction about Zeus",
+          "why_wrong": "Here Prometheus describes Zeus’s harshness and predicts that Zeus will soften; he neither admits his own choice nor compares his punishment with what he expected."
+        },
+        "C": {
+          "recipe": "HALF: deliberate defiance and suffering, no surprise",
+          "why_wrong": "“I dared it!” shows that he acted deliberately, and he describes dreadful pangs, but nothing suggests that the pangs are worse than he had expected."
+        },
+        "D": {
+          "recipe": "HALF/OPP: foreknowledge with no surprise",
+          "why_wrong": "Prometheus says he foresaw everything and that “nothing done / Comes sudden” to him, which is the opposite of finding the punishment harsher than expected."
+        }
+      },
+      "models": [
+        "3.17",
+        "3.37",
+        "3.11"
+      ],
+      "word_count": 54,
+      "sources": [
+        {
+          "what": "Elizabeth Barrett Browning, Prometheus Bound, from the Greek of Aeschylus, in The Poetical Works of Elizabeth Barrett Browning, Volume 1 (Project Gutenberg #37452); all four quotations verified verbatim (double hyphens set as closed em dashes, italics on ‘I’ dropped)",
+          "url": "https://www.gutenberg.org/ebooks/37452"
+        },
+        {
+          "what": "Wikisource author page: Prometheus Bound translated from Aeschylus, first edition 1833, retranslated 1850 (published in the 1850 new edition of her Poems, whose order the Gutenberg Poetical Works volume follows)",
+          "url": "https://en.wikisource.org/wiki/Author:Elizabeth_Barrett_Barrett"
+        }
+      ],
+      "notes": "Verified by string match against the Gutenberg text. Browning made two translations, 1833 and the revised 1850 version collected in her Poetical Works; LibriVox records this Gutenberg text as the second translation. Two half-matches (C deliberate only, D foreknowledge without surprise) and one off-target (A), the official hard pattern.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 6,
+        "fixes": [
+          "“translated in 1850” reworded to “Browning’s translation of it was published in 1850”: the date is confirmed (first translation 1833, retranslation 1850 per Wikisource; the Gutenberg volume follows the 1850 Poems order), but the 1850 date is the publication",
+          "all four quotations verbatim with line breaks against Gutenberg #37452"
+        ],
+        "status": "fixed"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "Two-part claim with two half-matches (C deliberate only, D foreknowledge with no surprise) and an off-target A; the language is plain for a band-7 literary item, which rests on hard language and near emotions, so band 6 as targeted."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "B",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "command_of_evidence.T3_person_quote.hard.w2b7_06",
+      "template": "T3_person_quote",
+      "subtype": "Quotation from an art historian supports a claim (languages and pictures as one project)",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Argentine artist Xul Solar (1887–1963) invented two languages: neocriollo, a blend of Spanish and Portuguese, and panlengua, which he intended as a universal language linking mathematics, music, astrology, and the visual arts. Signs and words drawn from these languages appear throughout his watercolors and paintings. It would be easy to treat the languages as a private pastime with little bearing on the pictures they decorate, but in an essay, a student argues that for Xul Solar, inventing languages and making pictures were inseparable parts of a single project.",
+      "stem": "Which quotation from an art historian would best support the student’s argument?",
+      "options": [
+        "“For Xul Solar, a picture was meant to be read as well as seen: the scripts he invented were designed to be looked at, and many of his images are built, sign by sign, like sentences.”",
+        "“Although words in neocriollo appear in a number of Xul Solar’s pictures, they serve mainly as ornament; a viewer who knows nothing of his languages misses little, since the images speak through color and form.”",
+        "“Xul Solar spoke neocriollo with friends for decades and kept refining panlengua until his death, giving it a script of its own and a system of counting based on twelve rather than ten.”",
+        "“Xul Solar’s paintings are crowded with floating figures, stairways, and winding roads, imagery that reflects his lifelong interest in astrology and religious mysticism.”"
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The student argues that the languages and the pictures belonged to one project, not that the languages merely decorated the pictures. Choice A says that Xul Solar’s scripts were made to be seen and that his images were composed like sentences, so the writing and the picture-making served the same purpose. That directly supports the argument.",
+      "distractors": {
+        "B": {
+          "recipe": "OPP: sides with the view the text sets aside",
+          "why_wrong": "Calling the words mere ornament that a viewer can ignore treats the languages as separate from the pictures, which is the view the student argues against."
+        },
+        "C": {
+          "recipe": "TRAP: true about the languages, silent on the pictures",
+          "why_wrong": "This shows how seriously Xul Solar took his languages, but it never connects them to his painting, so it cannot show that the two were one project."
+        },
+        "D": {
+          "recipe": "HALF: about the paintings only",
+          "why_wrong": "This describes the imagery and interests behind the paintings without mentioning the invented languages at all."
+        }
+      },
+      "models": [
+        "3.33",
+        "3.32",
+        "3.3"
+      ],
+      "word_count": 88,
+      "sources": [
+        {
+          "what": "Xul Solar (1887–1963): invented neocriollo (a blend of Portuguese and Spanish, used in conversation) and panlengua (a world language linking mathematics, music, astrology and the visual arts), symbols from which figure in his paintings; watercolor his main medium; stairs and roads in paintings reflect his religious beliefs; astrology",
+          "url": "https://en.wikipedia.org/wiki/Xul_Solar"
+        }
+      ],
+      "notes": "Quotations are attributed to an unnamed art historian. Facts inside them kept to the source or generic (conversation in neocriollo, duodecimal counting and a script for panlengua, work on it to the end of his life are reported in secondary sources found while checking, among them the University of Pittsburgh Borges Center and the ABEI Journal article on Xul and Neo-Creole). The contrasting view is framed as an easy assumption, not attributed to real critics.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "Key paraphrases one project (read as well as seen, built like sentences); B sides with the rejected view, C is true of the languages but silent on the pictures, D is about the paintings only; quotations of about 30 words, not the 40 to 55-word argued quotations of band 7, so band 6 as targeted."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "A",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "command_of_evidence.Q1_P5_control.hard.w2b7_07",
+      "template": "Q1_P5_control",
+      "subtype": "Data completion, condition vs control with a filter from the passage (measures meant to reduce the urge to hunt)",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "Pet cats that roam outdoors kill substantial numbers of wild birds and small mammals. Conservation scientists Martina Cecchetti, Robbie McDonald, and colleagues compared households assigned various interventions with control households, recording the number of animals the cats brought home. Some interventions targeted a cat’s motivation to hunt: a high-meat, grain-free diet, 5 to 10 minutes of daily play with a toy, and a puzzle feeder requiring the cat to work for its food. Others, such as collar-mounted bells and brightly colored collar covers, were designed instead to impede hunting. Notably, not every intervention targeting the motivation to hunt had its intended effect: ______",
+      "stem": "Which choice most effectively uses data from the table to complete the statement?",
+      "options": [
+        "while collar covers reduced the number of birds that cats brought home by 42%, they produced no clear change in the number of mammals that the cats brought home.",
+        "households that switched to the high-meat food recorded a larger decrease in the number of animals their cats brought home than did households that added daily play with a toy.",
+        "although households that switched to the high-meat food or added daily play recorded decreases in the animals their cats brought home, those that introduced puzzle feeders recorded an increase of about a third.",
+        "although households that switched to the high-meat food recorded a 36% decrease in the number of animals their cats brought home, those that fitted bells to their cats’ collars recorded no clear change in that number."
+      ],
+      "answer_letter": "C",
+      "table": {
+        "title": "Change in Number of Animals That Cats Brought Home, Compared with Control Households",
+        "columns": [
+          "Measure",
+          "Change in animals brought home"
+        ],
+        "rows": [
+          [
+            "High-meat, grain-free food",
+            "36% decrease"
+          ],
+          [
+            "Daily play with a toy",
+            "25% decrease"
+          ],
+          [
+            "Puzzle feeder",
+            "33% increase"
+          ],
+          [
+            "Bell on collar",
+            "no clear change"
+          ],
+          [
+            "Brightly colored collar cover",
+            "42% decrease in birds; no clear change in mammals"
+          ]
+        ],
+        "note": null
+      },
+      "figure": null,
+      "explanation": "The text names three measures meant to reduce the desire to hunt: the high-meat food, daily play, and the puzzle feeder. The table shows decreases for the food (36%) and play (25%) but a 33% increase for the puzzle feeder, so one of those three measures had the opposite of its intended effect. Choice C reports exactly that contrast.",
+      "distractors": {
+        "A": {
+          "recipe": "IRREL: accurate, but a measure that makes hunting harder",
+          "why_wrong": "These readings of the table are accurate, but collar covers were meant to make hunting harder, not to reduce the desire to hunt, so their mixed result cannot show that a desire-reducing measure failed."
+        },
+        "B": {
+          "recipe": "PART: accurate comparison of two measures that both worked",
+          "why_wrong": "It is true that the food produced a larger decrease than play did, but both measures reduced the number of animals brought home, so this does not show any desire-reducing measure failing."
+        },
+        "D": {
+          "recipe": "IRREL: accurate, in the key’s frame, but bells impede hunting",
+          "why_wrong": "Both readings are accurate, but bells were designed to make hunting harder, not to reduce the desire to hunt, so their lack of effect does not show that a measure aimed at that desire failed."
+        }
+      },
+      "models": [
+        "3.38",
+        "3.4",
+        "3.46"
+      ],
+      "word_count": 103,
+      "sources": [
+        {
+          "what": "Cecchetti, Crowley, Goodwin, McDonald, Current Biology 2021, Provision of high meat content food and object play reduce predation of wild animals by domestic cats: high-meat grain-free food −36%, 5–10 min daily object play −25%, puzzle feeders +33% in animals captured and brought home relative to controls; Birdsbesafe collar covers −42% for birds, no discernible effect on mammals; bells no discernible effect",
+          "url": "https://pubmed.ncbi.nlm.nih.gov/33577746/"
+        }
+      ],
+      "notes": "Band 7 moves: the passage sets the filter (which measures aim at the desire to hunt) and a stated expectation that one of them defies; three operations (filter three rows from the text, read each sign, find the exception). Three accurate readings of the wrong cells: A and D the wrong kind of measure (collar covers; bells, in the key’s sentence frame), B a comparison within the measures that worked. Reviewer replaced the earlier D, a reversal that mirrored the key. Option mean about 30 words. ‘Brightly colored’ describes Birdsbesafe covers; the classification of measures follows the paper’s split between measures that reduce the tendency to hunt and devices that impede hunting.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 6,
+        "fixes": [
+          "replaced D, a reversed reading that mirrored the key’s play and puzzle-feeder pair (a band-7 pilot tell), with an accurate food-versus-bells contrast in the key’s frame, wrong only through the passage’s classification of bells as impeding hunting",
+          "trimmed A to collar covers so the two classification traps do not overlap"
+        ],
+        "status": "fixed"
+      },
+      "band7": {
+        "verdict": "band 7",
+        "why": "The passage sets the filter (motivation versus impediment) and the surprise the blank must show, as in model 3.38; the key needs three operations (filter three rows from the text, read each sign, find the exception); after the fix all three distractors are accurate readings of the wrong cells (A and D impediment devices, D in the key’s frame; B a comparison within measures that worked); options 29 to 36 words."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "C",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 7
+    },
+    {
+      "id": "command_of_evidence.Q2_P8_quantifier.hard.w2b7_08",
+      "template": "Q2_P8_quantifier",
+      "subtype": "Data description, all-but-one claim with signed values (closer to zero vs gain or loss)",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Every five years, the Food and Agriculture Organization of the United Nations (FAO) estimates the net change in forest area for each world region, combining losses from deforestation with gains from planting and natural expansion. According to its 2020 assessment, the global rate of net forest loss declined over the three decades from 1990 to 2020. Analyzing the FAO’s estimates for five regions, a student concludes that between 2000–2010 and 2010–2020, the magnitude of annual change in forest area diminished in all but one region, regardless of whether a particular region was gaining or losing forest.",
+      "stem": "Which choice best describes data from the table that support the student’s conclusion?",
+      "options": [
+        "Africa’s annual net loss of forest area grew in each decade, from 3.3 million hectares in 1990–2000 to 3.4 million and then 3.9 million hectares.",
+        "Every region except Africa and South America gained forest area in 2010–2020, and South America’s annual net loss fell to about half of its 2000–2010 level of 5.2 million hectares.",
+        "South America’s annual net loss of forest area fell from 5.2 million hectares in 2000–2010 to 2.6 million hectares in 2010–2020, about half its earlier level.",
+        "In every region except Africa, annual net change in forest area was closer to zero in 2010–2020 than in 2000–2010; Africa’s annual net loss grew from 3.4 to 3.9 million hectares."
+      ],
+      "answer_letter": "D",
+      "table": {
+        "title": "Annual Net Change in Forest Area by Region (million hectares per year)",
+        "columns": [
+          "Region",
+          "1990–2000",
+          "2000–2010",
+          "2010–2020"
+        ],
+        "rows": [
+          [
+            "Africa",
+            "−3.3",
+            "−3.4",
+            "−3.9"
+          ],
+          [
+            "Asia",
+            "0.2",
+            "2.4",
+            "1.2"
+          ],
+          [
+            "Europe",
+            "0.8",
+            "1.2",
+            "0.3"
+          ],
+          [
+            "North and Central America",
+            "−0.3",
+            "0.2",
+            "−0.1"
+          ],
+          [
+            "South America",
+            "−5.1",
+            "−5.2",
+            "−2.6"
+          ]
+        ],
+        "note": null
+      },
+      "figure": null,
+      "explanation": "The conclusion is about the size of each region’s change, gain or loss, in 2010–2020 compared with 2000–2010, with one exception. Asia (2.4 to 1.2), Europe (1.2 to 0.3), North and Central America (0.2 to −0.1), and South America (−5.2 to −2.6) all moved closer to zero, while only Africa moved further from it (−3.4 to −3.9). Choice D states this for every region.",
+      "distractors": {
+        "A": {
+          "recipe": "PART: accurate, the exception only",
+          "why_wrong": "Africa’s growing loss is accurate, but it covers only the one region that did not slow; it says nothing about whether the other four regions slowed."
+        },
+        "B": {
+          "recipe": "INACC: sign misread",
+          "why_wrong": "North and Central America had a net loss (−0.1), not a gain, in 2010–2020, so it is false that every region except Africa and South America gained forest."
+        },
+        "C": {
+          "recipe": "PART: accurate, one region",
+          "why_wrong": "South America’s slowdown is accurate, but one region cannot show that all but one of the five regions slowed."
+        }
+      },
+      "models": [
+        "3.20",
+        "3.23",
+        "3.24"
+      ],
+      "word_count": 96,
+      "sources": [
+        {
+          "what": "FAO, Global Forest Resources Assessment 2020: Key findings, chart ‘Annual forest area net change, by decade and region, 1990–2020’ (Asia 0.2, 2.4, 1.2; Europe 0.8, 1.2, 0.3; North and Central America −0.3, 0.2, −0.1; South America −5.1, −5.2, −2.6; Africa −3.3, −3.4, −3.9 million ha per year); net loss fell from 7.8 to 5.2 to 4.7 million ha per year; loss rose in Africa each decade, roughly halved in South America",
+          "url": "https://openknowledge.fao.org/3/ca9825en/ca9825en.pdf"
+        }
+      ],
+      "notes": "Oceania left out to keep the table at five rows (CB’s maximum); the conclusion is limited to the five regions shown. Sign-versus-strength trap (CB mechanic 14) in B; two accurate partial readings (A, C). Values read from the FAO chart labels and checked against the report’s text.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 15,
+        "fixes": [],
+        "status": "pass"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "Signed values: 0.2 to -0.1 must be read as a shrinking magnitude, and every region checked; B misreads one sign, A and C are accurate single-region partials; a strong band 6 as targeted."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "D",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "command_of_evidence.Q2_P4_trend.hard.w2b7_09",
+      "template": "Q2_P4_trend",
+      "subtype": "Data description, trend through a passage relation (number vs percentage when the population grows)",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Since 1891, the census in Wales has asked residents whether they can speak Welsh, reporting the results both as an absolute number of speakers and as a percentage of the population aged three and older. Because the population of Wales has grown over time, these two measures have not consistently moved in the same direction over the decades. Analyzing results from the four censuses conducted between 1991 and 2021, a student concludes that a census can record a smaller proportion of Welsh speakers than a previous census did even while recording a larger number of them.",
+      "stem": "Which choice best describes data from the table that support the student’s conclusion?",
+      "options": [
+        "Both the number of people able to speak Welsh and their share of the population aged three and older rose between the 1991 census and the 2001 census.",
+        "The share of the population able to speak Welsh was higher in 2011 than in 1991, while the number of people able to speak Welsh was lower in 2011 than it had been in 1991.",
+        "The 2021 census recorded the smallest share of Welsh speakers of the four censuses, about 17.8% of the population aged three and older.",
+        "The census recorded more people able to speak Welsh in 2021 than in 1991, even though the share of the population able to speak Welsh was lower in 2021 than in 1991."
+      ],
+      "answer_letter": "D",
+      "table": {
+        "title": "People Able to Speak Welsh in Wales, 1991–2021",
+        "columns": [
+          "Census",
+          "Number of people able to speak Welsh",
+          "Percentage of population aged 3 and older"
+        ],
+        "rows": [
+          [
+            "1991",
+            "508,100",
+            "18.7"
+          ],
+          [
+            "2001",
+            "582,400",
+            "20.8"
+          ],
+          [
+            "2011",
+            "562,000",
+            "19.0"
+          ],
+          [
+            "2021",
+            "538,300",
+            "17.8"
+          ]
+        ],
+        "note": null
+      },
+      "figure": null,
+      "explanation": "To support the conclusion, the data must show a later census with a lower percentage but a higher number than an earlier one. Comparing 1991 and 2021, the number rose from about 508,100 to 538,300 while the percentage fell from 18.7 to 17.8. Choice D describes that pair.",
+      "distractors": {
+        "A": {
+          "recipe": "IRREL: accurate, both measures moved together",
+          "why_wrong": "Between 1991 and 2001 the number and the share both rose, so this pair shows the two figures moving in the same direction, not a lower share with a higher number."
+        },
+        "B": {
+          "recipe": "INACC: number misread",
+          "why_wrong": "The number of Welsh speakers was higher in 2011 (562,000) than in 1991 (508,100), not lower."
+        },
+        "C": {
+          "recipe": "PART: accurate single value",
+          "why_wrong": "The 2021 share is indeed the smallest of the four, but this says nothing about the number of speakers, so it cannot show a lower share alongside a higher number."
+        }
+      },
+      "models": [
+        "3.40",
+        "3.13"
+      ],
+      "word_count": 96,
+      "sources": [
+        {
+          "what": "Welsh Language Commissioner: 2021 census, 538,300 people aged three or older (17.8%) could speak Welsh, the lowest percentage ever recorded in a census but not the lowest number of speakers",
+          "url": "https://www.welshlanguagecommissioner.wales/policy-and-research/research/2021-census"
+        },
+        {
+          "what": "1991 and 2001 figures (508,098, 18.7%; 582,368, 20.8%), Welsh Language Commissioner, A statistical overview of the Welsh language; 2011 figures (562,000, 19.0%), Welsh Government, Welsh language in Wales (Census 2021)",
+          "url": "https://www.welshlanguagecommissioner.wales/media/witfawoe/a-statistical-overview-of-the-welsh-language.pdf"
+        }
+      ],
+      "notes": "Numbers rounded to the nearest hundred. The trend matters only through the passage relation (a growing population lets share and number diverge); the key needs a non-adjacent pair checked on both columns. 2011 and 2021 from https://www.gov.wales/welsh-language-wales-census-2021-html.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 8,
+        "fixes": [],
+        "status": "pass",
+        "safety_note": "safety solve: 'from one census to the next' did not fit the table, where adjacent censuses move together; now 'over the decades'"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "A non-adjacent pair checked on both columns, read through the passage relation (a growing population lets number and share diverge); A irrelevant, B a misread number, C a partial single value; a strong band 6 as targeted."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "D",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "command_of_evidence.T2_lit_quote.medium.w2b7_10",
+      "template": "T2_lit_quote",
+      "subtype": "Literary quotation, contrast claim (withdrawn generally, animated with George)",
+      "tier": "medium",
+      "passage": "“Hands” is a short story from Sherwood Anderson’s 1919 collection Winesburg, Ohio. In the story, Wing Biddlebaum has lived in isolation on the outskirts of a small Ohio town for twenty years. Anderson characterizes Wing as someone who remains withdrawn around most people but who becomes animated and expressive in the company of George Willard, a young newspaper reporter: ______",
+      "stem": "Which quotation from “Hands” most effectively illustrates the claim?",
+      "options": [
+        "“Wing Biddlebaum, forever frightened and beset by a ghostly band of doubts, did not think of himself as in any way a part of the life of the town where he had lived for twenty years.”",
+        "“As for George Willard, he had many times wanted to ask about the hands. At times an almost overwhelming curiosity had taken hold of him.”",
+        "“With the young reporter at his side, he ventured in the light of day into Main Street or strode up and down on the rickety front porch of his own house, talking excitedly. The voice that had been low and trembling became shrill and loud.”",
+        "“In Winesburg the hands had attracted attention merely because of their activity. With them Wing Biddlebaum had picked as high as a hundred and forty quarts of strawberries in a day.”"
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The claim contrasts Wing’s usual withdrawal with the way he opens up around George Willard. Choice C shows both sides: with the young reporter beside him, Wing goes out in daylight and talks excitedly, and his usually “low and trembling” voice becomes “shrill and loud.”",
+      "distractors": {
+        "A": {
+          "recipe": "HALF: withdrawn only",
+          "why_wrong": "This shows Wing’s fear and isolation from the town, but it says nothing about how he behaves with George Willard."
+        },
+        "B": {
+          "recipe": "SUBJ: George’s feelings, not Wing’s",
+          "why_wrong": "This describes George’s curiosity about Wing’s hands rather than any change in Wing when the two are together."
+        },
+        "D": {
+          "recipe": "KEYWORD: the hands, not his manner",
+          "why_wrong": "This explains why the town noticed Wing’s hands; it shows neither his withdrawal nor his liveliness with George."
+        }
+      },
+      "models": [
+        "2.37",
+        "2.35",
+        "2.31"
+      ],
+      "word_count": 57,
+      "sources": [
+        {
+          "what": "Sherwood Anderson, Winesburg, Ohio (1919), story ‘Hands’ (Project Gutenberg #416); quotations verified verbatim",
+          "url": "https://www.gutenberg.org/ebooks/416"
+        },
+        {
+          "what": "“Hands” first appeared in The Masses in March 1916 and became the opening story of Winesburg, Ohio (1919)",
+          "url": "https://storyoftheweek.loa.org/2019/05/hands.html"
+        }
+      ],
+      "notes": "Medium two-part contrast; one half-match (A), one wrong-subject (B), one keyword lure (D). Quotations taken from the story’s opening pages, none from the later backstory.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 5,
+        "fixes": [
+          "“a 1919 short story” corrected: “Hands” first appeared in The Masses in 1916; now “a short story from Sherwood Anderson’s 1919 collection Winesburg, Ohio”",
+          "all four quotations verbatim against Gutenberg #416"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "command_of_evidence.T2_lit_quote.medium.w2b7_11",
+      "template": "T2_lit_quote",
+      "subtype": "Literary quotation, contrast over time (former dread, present calm)",
+      "tier": "medium",
+      "passage": "“The Marshes of Glynn” is an 1878 poem by Sidney Lanier. In the poem, the speaker emerges from a coastal forest and contemplates the immense marshland stretching toward the sea, contrasting the apprehension that its vastness once inspired in him with the tranquility he now experiences: ______",
+      "stem": "Which quotation from “The Marshes of Glynn” most effectively illustrates the claim?",
+      "options": [
+        "“Oh, what is abroad in the marsh and the terminal sea? / Somehow my soul seems suddenly free / From the weighing of fate and the sad discussion of sin, / By the length and the breadth and the sweep of the marshes of Glynn.”",
+        "“A league and a league of marsh-grass, waist-high, broad in the blade, / Green, and all of a height, and unflecked with a light or a shade, / Stretch leisurely off, in a pleasant plain, / To the terminal blue of the main.”",
+        "“O braided dusks of the oak and woven shades of the vine, / While the riotous noon-day sun of the June-day long did shine / Ye held me fast in your heart and I held you fast in mine”",
+        "“That the length and the breadth and the sweep of the marshes of Glynn / Will work me no fear like the fear they have wrought me of yore / When length was fatigue, and when breadth was but bitterness sore”"
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The claim contrasts the speaker’s earlier apprehension about the marshes’ vastness with his present tranquility. In choice D the speaker says that the marshes’ “length” and “breadth” will now cause him “no fear like the fear they have wrought me of yore,” when their size brought fatigue and bitterness. That covers both the past fear and the present tranquility.",
+      "distractors": {
+        "A": {
+          "recipe": "HALF: present freedom only",
+          "why_wrong": "The speaker feels suddenly free in front of the marshes, but nothing here says that their vastness once frightened him."
+        },
+        "B": {
+          "recipe": "OFF: description of the marsh",
+          "why_wrong": "These lines describe the marsh-grass stretching to the sea; they express neither fear nor calm."
+        },
+        "C": {
+          "recipe": "SUBJ: the forest, not the marsh",
+          "why_wrong": "The speaker addresses the shady oaks and vines of the woods, not the marshes, and mentions no change in his feelings."
+        }
+      },
+      "models": [
+        "2.26",
+        "2.36",
+        "2.13"
+      ],
+      "word_count": 47,
+      "sources": [
+        {
+          "what": "Sidney Lanier, ‘The Marshes of Glynn’ (dated Baltimore, 1878), in The Poems of Sidney Lanier (Project Gutenberg #579); quotations verified verbatim",
+          "url": "https://www.gutenberg.org/ebooks/579"
+        }
+      ],
+      "notes": "Medium contrast claim; A is the closest lure (freedom in the present without the former fear). Line breaks as in the source.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 5,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "command_of_evidence.T1_single.medium.w2b7_12",
+      "template": "T1_single",
+      "subtype": "Hypothetical finding supports a claim (signal directed at a partner)",
+      "tier": "medium",
+      "passage": "Some predatory reef fish hunt cooperatively with other species: a grouper that chases prey into a crevice, for example, may be joined by a moray eel slender enough to follow the prey inside. Biologists Alexander Vail, Andrea Manica, and Redouan Bshary observed that groupers and coral trout sometimes perform a distinctive headstand, orienting their bodies vertically and shaking their heads above prey concealed in a crevice. The researchers claim that this headstand is a signal intended for potential hunting partners rather than a hunting maneuver in its own right.",
+      "stem": "Which finding, if true, would most directly support the researchers’ claim?",
+      "options": [
+        "Prey fish concealed in crevices often darted into open water as soon as a grouper began a headstand above them, and the grouper then caught them without any partner’s help.",
+        "Groupers and coral trout performed headstands over hidden prey only when a moray eel or a wrasse was nearby, and they stopped once one of those partners arrived.",
+        "Moray eels that hunted alongside groupers caught more prey, on average, than moray eels that hunted alone did.",
+        "Groupers that performed headstands were, on average, larger than groupers of the same species that were never seen performing them."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "A signal meant for hunting partners should be given when a partner is there to receive it and should end once the partner has responded. If the fish performed headstands only with a moray eel or wrasse nearby and stopped when one arrived, the headstand is aimed at those partners. Choice B gives that finding.",
+      "distractors": {
+        "A": {
+          "recipe": "OPP: the headstand works as a hunting move",
+          "why_wrong": "If the headstand itself flushed the prey and the grouper caught it alone, the headstand would be a hunting maneuver rather than a signal to partners, which weakens the claim."
+        },
+        "C": {
+          "recipe": "SUBJ: the eels’ success, not the headstand",
+          "why_wrong": "This shows that cooperative hunting pays off for moray eels, but it says nothing about what the headstand is for."
+        },
+        "D": {
+          "recipe": "OFF: body size",
+          "why_wrong": "A size difference between groupers that do and do not perform headstands does not show whom the headstand is meant for."
+        }
+      },
+      "models": [
+        "2.7",
+        "2.6",
+        "2.21"
+      ],
+      "word_count": 89,
+      "sources": [
+        {
+          "what": "National Geographic (2013) on Vail, Manica and Bshary, Nature Communications: groupers and coral trout perform headstands with head shakes over hidden prey; used only when a moray or wrasse is nearby, continued until a partner arrives, then stopped; prey did not leave hiding before the signal; the gesture meets criteria for a referential signal",
+          "url": "https://www.nationalgeographic.com/science/article/groupers-use-gestures-to-recruit-morays-for-hunting-team-ups"
+        }
+      ],
+      "notes": "Medium: one inference (a signal needs a receiver present). OPP A is the rival reading the study ruled out; C and D on topic but off the claim.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "command_of_evidence.Q1_P3_pairwise.medium.w2b7_13",
+      "template": "Q1_P3_pairwise",
+      "subtype": "Data completion, two comparisons on one pair (wider but lower)",
+      "tier": "medium",
+      "passage": "Ottoman architect Mimar Sinan designed three great imperial mosques whose central domes dominate their surroundings: the Şehzade and Süleymaniye Mosques in Istanbul and the Selimiye Mosque in Edirne. Sinan himself described the Şehzade as a work of his apprenticeship and the Selimiye as the product of his mastery. Comparing the three mosques, a student observes that although each successive dome was wider than its predecessor, a wider dome was not necessarily a taller one: ______",
+      "stem": "Which choice most effectively uses data from the table to complete the statement?",
+      "options": [
+        "the Süleymaniye Mosque’s dome is both wider and taller than the Şehzade Mosque’s dome, by about 7.5 and 16 meters.",
+        "the Şehzade Mosque’s dome is narrower than the Süleymaniye Mosque’s dome but taller.",
+        "the Selimiye Mosque’s dome is wider than the Süleymaniye Mosque’s dome but about 11 meters lower.",
+        "the Selimiye Mosque’s dome is taller than the Süleymaniye Mosque’s dome but narrower."
+      ],
+      "answer_letter": "C",
+      "table": {
+        "title": "Domes of Three Imperial Mosques Designed by Mimar Sinan",
+        "columns": [
+          "Mosque",
+          "City",
+          "Year completed",
+          "Dome diameter (meters)",
+          "Dome height (meters)"
+        ],
+        "rows": [
+          [
+            "Şehzade",
+            "Istanbul",
+            "1548",
+            "19",
+            "37"
+          ],
+          [
+            "Süleymaniye",
+            "Istanbul",
+            "1557",
+            "26.5",
+            "53"
+          ],
+          [
+            "Selimiye",
+            "Edirne",
+            "1574",
+            "31.3",
+            "42"
+          ]
+        ],
+        "note": null
+      },
+      "figure": null,
+      "explanation": "To show that a wider dome was not necessarily taller, the student needs a pair in which the wider dome is the lower one. The Selimiye dome is wider than the Süleymaniye dome (31.3 meters versus 26.5) but lower (42 meters versus 53), a difference of about 11 meters. Choice C states this.",
+      "distractors": {
+        "A": {
+          "recipe": "CONTRA: accurate, but wider and taller together",
+          "why_wrong": "This is true, but a dome that is both wider and taller is the opposite of the example the student needs."
+        },
+        "B": {
+          "recipe": "INACC: height comparison reversed",
+          "why_wrong": "The Şehzade dome (37 meters) is lower than the Süleymaniye dome (53 meters), not taller."
+        },
+        "D": {
+          "recipe": "WDIR: both comparisons reversed",
+          "why_wrong": "The Selimiye dome is lower and wider than the Süleymaniye dome, not taller and narrower."
+        }
+      },
+      "models": [
+        "2.32",
+        "2.18",
+        "2.24"
+      ],
+      "word_count": 75,
+      "sources": [
+        {
+          "what": "Selimiye Mosque, Edirne: completed 1574, dome diameter 31.28 m, height about 42 m",
+          "url": "https://en.wikipedia.org/wiki/Selimiye_Mosque,_Edirne"
+        },
+        {
+          "what": "Süleymaniye Mosque: completed 1557, dome 53 m high, diameter 26.5 m",
+          "url": "https://en.wikipedia.org/wiki/S%C3%BCleymaniye_Mosque"
+        },
+        {
+          "what": "Şehzade Mosque: completed 1548, dome diameter 19 m, height 37 m; Sinan called it a work of his apprenticeship and the Selimiye the product of his master stage (Mimar Sinan article)",
+          "url": "https://en.wikipedia.org/wiki/%C5%9Eehzade_Mosque"
+        }
+      ],
+      "notes": "Selimiye diameter rounded to 31.3. One accurate distractor that contradicts the point (A), two reversed readings (B, D).",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 7,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "command_of_evidence.Q1_P4_trend.medium.w2b7_14",
+      "template": "Q1_P4_trend",
+      "subtype": "Data completion, change over time (a sharp drop after an event)",
+      "tier": "medium",
+      "passage": "Montserrat, a small Caribbean island that is a British overseas territory, has counted its residents in periodic censuses since the early twentieth century. In July 1995, the island’s Soufrière Hills volcano resumed erupting, and roughly two in every three residents eventually evacuated the island. Census figures reflect the eruption’s consequences: although Montserrat’s population changed relatively little for most of the twentieth century, it ______",
+      "stem": "Which choice most effectively uses data from the graph to complete the text?",
+      "options": [
+        "fell from about 11,300 in 1991 to about 4,500 in 2001.",
+        "fell from about 13,400 in 1960 to about 11,700 in 1980.",
+        "rose from about 4,500 in 2001 to about 11,300 in 2011.",
+        "fell from about 13,300 in 1946 to about 4,500 in 1991."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": {
+        "kind": "line graph",
+        "title": "Population of Montserrat, 1946–2011",
+        "x_axis": "Census year",
+        "y_axis": "Population",
+        "description": "One line at the census years 1946, 1960, 1970, 1980, 1991, 2001 and 2011; y-axis 0 to 14,000 in steps of 2,000. About 13,300 in 1946, 13,400 in 1960, 12,200 in 1970, 11,700 in 1980 and 11,300 in 1991, then a steep drop to about 4,500 in 2001 and about 4,900 in 2011.",
+        "data": [
+          {
+            "series": "Population",
+            "points": [
+              [
+                "1946",
+                13313
+              ],
+              [
+                "1960",
+                13378
+              ],
+              [
+                "1970",
+                12155
+              ],
+              [
+                "1980",
+                11685
+              ],
+              [
+                "1991",
+                11314
+              ],
+              [
+                "2001",
+                4491
+              ],
+              [
+                "2011",
+                4922
+              ]
+            ]
+          }
+        ]
+      },
+      "explanation": "The eruption began in 1995, between the 1991 and 2001 censuses, and the text says the population had changed little before then. The graph shows the population falling from about 11,300 in 1991 to about 4,500 in 2001, the drop that reflects the evacuation. Choice A completes the text with that change.",
+      "distractors": {
+        "B": {
+          "recipe": "IRREL: accurate, but a small change before the eruption",
+          "why_wrong": "This modest decline is accurate, but it happened decades before the 1995 eruption, so it cannot reflect the eruption’s consequences."
+        },
+        "C": {
+          "recipe": "INACC: 2011 value misread",
+          "why_wrong": "The population in 2011 was about 4,900, not about 11,300, so it did not rise back to its earlier level."
+        },
+        "D": {
+          "recipe": "INACC: misplaced value",
+          "why_wrong": "The population in 1991 was about 11,300; the value of about 4,500 belongs to 2001."
+        }
+      },
+      "models": [
+        "2.15",
+        "2.34",
+        "2.40"
+      ],
+      "word_count": 64,
+      "sources": [
+        {
+          "what": "Demographics of Montserrat: census population 1946 13,313; 1960 13,378; 1970 12,155; 1980 11,685; 1991 11,314; 2001 4,491; 2011 4,922 (census of 12 May 2011; the article’s main table labels it 2010); resumption of volcanic activity in July 1995 caused about two-thirds of the population to leave",
+          "url": "https://en.wikipedia.org/wiki/Demographics_of_Montserrat"
+        }
+      ],
+      "notes": "Graph values are the census counts. Options read off at the nearest hundred, as the text’s ‘about’ allows.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 8,
+        "fixes": [
+          "last census relabelled 2010 to 2011 (the 4,922 count is the census of 12 May 2011) in the title, description, data, option C and its explanation"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "command_of_evidence.Q2_P4_trend.medium.w2b7_15",
+      "template": "Q2_P4_trend",
+      "subtype": "Data description, trend supports a two-part conclusion (steep fall, then stays low)",
+      "tier": "medium",
+      "passage": "Dawson City, in Canada’s Yukon Territory, expanded explosively during the Klondike Gold Rush of the late 1890s, when prospectors from around the world converged on the region. Analyzing Canadian census figures, a student concludes that the town’s population declined precipitously during the first two decades of the twentieth century and subsequently remained far below its 1901 level for decades.",
+      "stem": "Which choice best describes data from the graph that support the student’s conclusion?",
+      "options": [
+        "From 1921 to 1951, the population of Dawson City was about 1,000 or fewer in every census.",
+        "The population of Dawson City fell from about 9,000 in 1901 to about 3,000 in 1911 and was about 1,000 or fewer in every census from 1921 to 1951.",
+        "The population of Dawson City fell to about 3,000 by 1921 and stayed near that level in every census through 1951.",
+        "The population of Dawson City fell by about 6,000 people between 1901 and 1911, its largest drop between any two consecutive censuses."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": {
+        "kind": "line graph",
+        "title": "Population of Dawson City, 1901–1951",
+        "x_axis": "Census year",
+        "y_axis": "Population",
+        "description": "One line at the census years 1901, 1911, 1921, 1931, 1941 and 1951; y-axis 0 to 10,000 in steps of 1,000. About 9,100 in 1901 and about 3,000 in 1911, then about 1,000 or fewer in every later census: 975 in 1921, 819 in 1931, 1,043 in 1941 and 783 in 1951.",
+        "data": [
+          {
+            "series": "Population",
+            "points": [
+              [
+                "1901",
+                9142
+              ],
+              [
+                "1911",
+                3013
+              ],
+              [
+                "1921",
+                975
+              ],
+              [
+                "1931",
+                819
+              ],
+              [
+                "1941",
+                1043
+              ],
+              [
+                "1951",
+                783
+              ]
+            ]
+          }
+        ]
+      },
+      "explanation": "The conclusion has two parts: a steep decline from 1901 to 1921, and a population that then stayed far below its 1901 level. Choice B gives both: the population fell from about 9,000 in 1901 to about 3,000 in 1911 and was about 1,000 or fewer in every census from 1921 through 1951, far below its 1901 level.",
+      "distractors": {
+        "A": {
+          "recipe": "HALF: accurate, later decades only",
+          "why_wrong": "This is accurate and shows the low later level, but it says nothing about the steep decline from 1901, the first part of the conclusion."
+        },
+        "C": {
+          "recipe": "INACC: misread level",
+          "why_wrong": "The graph shows the population at about 3,000 in 1911 and about 1,000 or fewer from 1921 on, not about 3,000 from 1921 through 1951."
+        },
+        "D": {
+          "recipe": "PART: accurate, first decade only",
+          "why_wrong": "The drop of about 6,000 between 1901 and 1911 is accurate, but it covers only the first part of the conclusion, not the decades afterward."
+        }
+      },
+      "models": [
+        "2.2",
+        "2.22",
+        "2.12"
+      ],
+      "word_count": 59,
+      "sources": [
+        {
+          "what": "Dawson City: federal census population (Statistics Canada) 1901 9,142; 1911 3,013; 1921 975; 1931 819; 1941 1,043; 1951 783; the town was the centre of the Klondike Gold Rush, which began in 1896",
+          "url": "https://en.wikipedia.org/wiki/Dawson_City"
+        }
+      ],
+      "notes": "Graph values are the census counts. Options rely only on differences of at least half a gridline (1,000 steps). Two accurate partial readings, one per half of the conclusion (A later decades, D first decade), and one misread level (C).",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 6,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "command_of_evidence.T3_person_quote.medium.w2b7_16",
+      "template": "T3_person_quote",
+      "subtype": "Quotation from a historian supports a claim (what the sculpture expressed)",
+      "tier": "medium",
+      "passage": "British-born sculptor Edna Manley immigrated to Jamaica in 1922 and became one of the island’s most influential artists. Her 1935 carving Negro Aroused depicts a Black man with his head lifted and his gaze directed upward. A student writing about the sculpture argues that it expressed a growing sense of pride and self-confidence among Black Jamaicans during a decade of rising cultural nationalism.",
+      "stem": "Which quotation from a work by an art historian would be the most effective evidence for the student to include in support of this claim?",
+      "options": [
+        "“Manley trained at art schools in London before settling in Jamaica, and the simplified, powerful forms of Negro Aroused recall the modern sculpture she had encountered in Britain.”",
+        "“Negro Aroused was purchased by public subscription in the late 1930s and became one of the first works in the collection that would later form the basis of the National Gallery of Jamaica.”",
+        "“To many Jamaicans in the 1930s, the upturned face of Negro Aroused embodied a newfound self-assurance among Black Jamaicans, who were beginning to imagine a nation of their own.”",
+        "“Manley later helped found the Jamaica School of Art, where she taught and passed her carving techniques on to a younger generation of artists.”"
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The student argues that the sculpture expressed Black Jamaicans’ growing pride and confidence in the 1930s. Choice C says that, for Jamaicans of that decade, the sculpture’s upturned face embodied a new self-assurance among Black Jamaicans, which matches the claim.",
+      "distractors": {
+        "A": {
+          "recipe": "OFF: the sculpture’s style and sources",
+          "why_wrong": "This explains where the sculpture’s forms may have come from, not what it expressed about Black Jamaicans in the 1930s."
+        },
+        "B": {
+          "recipe": "TRAP: shows the work was valued, not its meaning",
+          "why_wrong": "Public purchase shows that people valued the sculpture, but it does not say that the work expressed pride and self-confidence among Black Jamaicans."
+        },
+        "D": {
+          "recipe": "OFF: Manley’s later teaching",
+          "why_wrong": "This concerns Manley’s later influence on other artists, not the meaning of Negro Aroused."
+        }
+      },
+      "models": [
+        "2.29",
+        "2.23"
+      ],
+      "word_count": 63,
+      "sources": [
+        {
+          "what": "University of Florida Libraries exhibit About Face: Edna Manley (born Bournemouth, trained at St. Martin’s School of Art, moved to Jamaica 1922); Negro Aroused (1935), the head of an upward-looking black male, reflects the new found self-confidence of black Jamaicans and the spirit of cultural nationalism in 1930s Jamaica",
+          "url": "https://exhibits.uflib.ufl.edu/aboutface/artists_m.html"
+        }
+      ],
+      "notes": "Quotations attributed to an unnamed art historian; facts in them follow the source or Wikipedia (public subscription purchase for the Institute of Jamaica collection, which became the National Gallery’s basis; Jamaica School of Art co-founded 1950, where she taught).",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "command_of_evidence.Q1_P1_lookup.easy.w2b7_17",
+      "template": "Q1_P1_lookup",
+      "subtype": "Data completion, lookup (one named row)",
+      "tier": "easy",
+      "passage": "Uranus has five large, nearly spherical moons, which astronomers discovered over a span of more than 150 years. William Herschel identified the first two in 1787, and William Lassell detected two more in 1851. The fifth, Miranda, remained undiscovered until 1948, when Gerard Kuiper observed it from the McDonald Observatory in Texas. A student researching these moons notes that Miranda has a diameter of ______",
+      "stem": "Which choice most effectively uses data from the table to complete the statement?",
+      "options": [
+        "1,577 kilometers.",
+        "1,165 kilometers.",
+        "1,158 kilometers.",
+        "472 kilometers."
+      ],
+      "answer_letter": "D",
+      "table": {
+        "title": "Five Largest Moons of Uranus",
+        "columns": [
+          "Moon",
+          "Year discovered",
+          "Diameter (kilometers)"
+        ],
+        "rows": [
+          [
+            "Miranda",
+            "1948",
+            "472"
+          ],
+          [
+            "Ariel",
+            "1851",
+            "1,158"
+          ],
+          [
+            "Umbriel",
+            "1851",
+            "1,165"
+          ],
+          [
+            "Titania",
+            "1787",
+            "1,577"
+          ],
+          [
+            "Oberon",
+            "1787",
+            "1,523"
+          ]
+        ],
+        "note": null
+      },
+      "figure": null,
+      "explanation": "The table lists Miranda, the moon discovered in 1948, with a diameter of 472 kilometers. Choice D gives that value.",
+      "distractors": {
+        "A": {
+          "recipe": "wrong row (Titania)",
+          "why_wrong": "1,577 kilometers is the diameter of Titania, not Miranda."
+        },
+        "B": {
+          "recipe": "wrong row (Umbriel)",
+          "why_wrong": "1,165 kilometers is the diameter of Umbriel, not Miranda."
+        },
+        "C": {
+          "recipe": "wrong row (Ariel)",
+          "why_wrong": "1,158 kilometers is the diameter of Ariel, not Miranda."
+        }
+      },
+      "models": [
+        "1.37",
+        "1.43",
+        "1.30"
+      ],
+      "word_count": 65,
+      "sources": [
+        {
+          "what": "Moons of Uranus: Titania and Oberon discovered by Herschel in 1787, Ariel and Umbriel by Lassell in 1851, Miranda by Kuiper at McDonald Observatory in 1948; diameters Miranda 471.6 km, Ariel 1,157.8 km, Umbriel 1,164.8 km, Titania 1,576.8 km, Oberon 1,522.8 km",
+          "url": "https://en.wikipedia.org/wiki/Moons_of_Uranus"
+        }
+      ],
+      "notes": "Diameters rounded to the nearest kilometer. Value-only options, each another row’s value.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 8,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "command_of_evidence.T1_single.easy.w2b7_18",
+      "template": "T1_single",
+      "subtype": "Hypothetical finding supports a hypothesis (treatment vs control outcome)",
+      "tier": "easy",
+      "passage": "Sunlight can destroy many of the bacteria that make drinking water unsafe. In a trial involving Maasai families, researchers led by Ronán Conroy distributed clear plastic bottles to households. In some households, children’s drinking water was left in bottles on the roof of the house, exposed to full sunlight; in others, it was kept in bottles indoors. Conroy and his team hypothesized that drinking sunlight-treated water would protect young children from severe diarrheal illness.",
+      "stem": "Which finding, if true, would most directly support Conroy and his team’s hypothesis?",
+      "options": [
+        "Young children who drank water from bottles left on roofs had episodes of severe diarrhea less often than young children who drank water from bottles kept indoors.",
+        "Water in bottles left on roofs became noticeably warmer during the day than water in bottles that were kept indoors.",
+        "Many families in the trial continued leaving their water bottles in the sun after the researchers’ visits had ended.",
+        "Children in the trial preferred the taste of water from bottles kept indoors to the taste of water from bottles left in the sun."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The hypothesis is that sunlight-treated water protects young children from severe diarrheal illness. If children drinking water from the sunlit bottles had severe diarrhea less often than children drinking water kept indoors, the sunlight treatment would appear to protect them. Choice A gives that finding.",
+      "distractors": {
+        "B": {
+          "recipe": "OFF: water temperature",
+          "why_wrong": "Warmer water says nothing about whether the children became ill less often."
+        },
+        "C": {
+          "recipe": "OFF: continued use",
+          "why_wrong": "Families keeping up the practice shows that they found it worth doing, not that it protected children’s health."
+        },
+        "D": {
+          "recipe": "OFF: taste",
+          "why_wrong": "Which water the children preferred to drink does not show whether the treated water reduced illness."
+        }
+      },
+      "models": [
+        "1.1",
+        "1.8",
+        "1.41"
+      ],
+      "word_count": 74,
+      "sources": [
+        {
+          "what": "Conroy, Meegan, Joyce, McGuigan, Barnes, Arch Dis Child 1999: Maasai children under 6 randomised to drink water left in plastic bottles in sunlight on the roof of the house or kept indoors; lower risk of severe diarrhoeal disease (two-week prevalence 48.8% vs 58.1%); follows the 1996 Lancet trial",
+          "url": "https://pubmed.ncbi.nlm.nih.gov/10490440/"
+        }
+      ],
+      "notes": "Easy one-step operationalization; three off-target distractors on other variables (temperature, uptake, taste).",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "command_of_evidence.Q1_P2_extreme.easy.w2b7_19",
+      "template": "Q1_P2_extreme",
+      "subtype": "Data completion, extreme (minimum in one column)",
+      "tier": "easy",
+      "passage": "By the third century CE, eleven aqueducts carried water into the city of Rome from springs and rivers in the surrounding countryside. A student comparing five of these aqueducts notes that the oldest, the Aqua Appia, was also the shortest. Of the five, however, the aqueduct that delivered the least water each day was ______",
+      "stem": "Which choice most effectively uses data from the table to complete the statement?",
+      "options": [
+        "the Aqua Appia.",
+        "the Aqua Alexandrina.",
+        "the Aqua Virgo.",
+        "the Aqua Claudia."
+      ],
+      "answer_letter": "B",
+      "table": {
+        "title": "Five Aqueducts of Ancient Rome",
+        "columns": [
+          "Aqueduct",
+          "Year completed",
+          "Length (kilometers)",
+          "Daily capacity (cubic meters)"
+        ],
+        "rows": [
+          [
+            "Aqua Appia",
+            "312 BCE",
+            "16",
+            "73,000"
+          ],
+          [
+            "Aqua Marcia",
+            "140 BCE",
+            "91",
+            "187,600"
+          ],
+          [
+            "Aqua Virgo",
+            "19 BCE",
+            "21",
+            "100,160"
+          ],
+          [
+            "Aqua Claudia",
+            "52 CE",
+            "69",
+            "184,220"
+          ],
+          [
+            "Aqua Alexandrina",
+            "226 CE",
+            "22",
+            "21,160"
+          ]
+        ],
+        "note": null
+      },
+      "figure": null,
+      "explanation": "The daily capacity column shows that the Aqua Alexandrina delivered 21,160 cubic meters a day, the least of the five aqueducts. Choice B names it.",
+      "distractors": {
+        "A": {
+          "recipe": "wrong column (shortest, not least water)",
+          "why_wrong": "The Aqua Appia is the shortest of the five, but it delivered 73,000 cubic meters a day, more than the Aqua Alexandrina."
+        },
+        "C": {
+          "recipe": "wrong row",
+          "why_wrong": "The Aqua Virgo delivered 100,160 cubic meters a day, far more than the Aqua Alexandrina."
+        },
+        "D": {
+          "recipe": "wrong row (near the maximum)",
+          "why_wrong": "The Aqua Claudia delivered 184,220 cubic meters a day, among the most of the five."
+        }
+      },
+      "models": [
+        "1.9",
+        "1.23",
+        "1.18"
+      ],
+      "word_count": 55,
+      "sources": [
+        {
+          "what": "List of aqueducts in the city of Rome: year completed, length and daily capacity (Hodge 1992, Frontinus) for the eleven aqueducts, including Appia 312 BC 16 km 73,000 m³; Marcia 140 BC 91 km 187,600 m³; Virgo 19 BC 21 km 100,160 m³; Claudia AD 52 69 km 184,220 m³; Alexandrina AD 226 22 km 21,160 m³; eleven aqueducts by 226 AD",
+          "url": "https://en.wikipedia.org/wiki/List_of_aqueducts_in_the_city_of_Rome"
+        }
+      ],
+      "notes": "The passage’s ‘shortest’ remark sets up the wrong-column lure (A).",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 6,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "command_of_evidence.T3_person_quote.easy.w2b7_20",
+      "template": "T3_person_quote",
+      "subtype": "Quotation from a historian supports a claim (subject of an artist’s work)",
+      "tier": "easy",
+      "passage": "Pitseolak Ashoona (circa 1904–1983) was an Inuk artist from the Canadian Arctic who began creating art after her husband’s death and eventually worked in Cape Dorset, now called Kinngait. From 1960 onward she produced more than 7,000 images, many of them drawings in colored pencil and felt-tip pen. A museum curator claims that much of Pitseolak’s artwork preserves her recollections of traditional Inuit life before many outsiders arrived in the Arctic.",
+      "stem": "Which quotation from a work by an art historian would be the most effective evidence for the curator to include in support of this claim?",
+      "options": [
+        "“Pitseolak often drew camp life, hunting trips, and seasonal travel as she remembered them from her youth, before many outsiders had come to live in the North.”",
+        "“Pitseolak was inspired to begin drawing by the prints of her cousin Kiakshuk, an older artist who was already working at the graphic arts studio in Cape Dorset.”",
+        "“Of the more than 7,000 images Pitseolak created, only a few hundred were made into prints for the Cape Dorset collection.”",
+        "“In 1975, an arts grant allowed Pitseolak to experiment with acrylic paint on canvas, a medium that was new to her.”"
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The curator claims that Pitseolak’s work preserves her memories of Inuit life before many outsiders arrived. Choice A says that she drew camp life, hunting, and travel as she remembered them from her youth, before many outsiders came north, which directly supports the claim.",
+      "distractors": {
+        "B": {
+          "recipe": "OFF: how she began",
+          "why_wrong": "This explains what inspired Pitseolak to start drawing, not what her drawings show."
+        },
+        "C": {
+          "recipe": "OFF: how many works became prints",
+          "why_wrong": "The number of drawings made into prints says nothing about their subject."
+        },
+        "D": {
+          "recipe": "OFF: a later medium",
+          "why_wrong": "This describes a new medium Pitseolak tried, not the memories her work records."
+        }
+      },
+      "models": [
+        "1.15",
+        "1.19",
+        "1.20"
+      ],
+      "word_count": 71,
+      "sources": [
+        {
+          "what": "Pitseolak Ashoona (c. 1904–1983), Inuk artist in Cape Dorset (Kinngait): turned to art after her husband’s death, inspired by her cousin Kiakshuk at the Cape Dorset graphic studio; more than 7,000 images from 1960 onward, 233 made into prints; graphite, coloured pencil, felt-tip pens; acrylic on canvas after a 1975 grant; her art shows daily life, legends and life before contact, ‘the things we did long ago before there were many white men’",
+          "url": "https://en.wikipedia.org/wiki/Pitseolak_Ashoona"
+        }
+      ],
+      "notes": "Quotations attributed to an unnamed art historian; facts in them follow the source.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 6,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "command_of_evidence.T2_lit_quote.easy.w2b7_21",
+      "template": "T2_lit_quote",
+      "subtype": "Literary quotation, single-trait claim (regret)",
+      "tier": "easy",
+      "passage": "Old Mother West Wind is a 1910 collection of children’s stories by Thornton W. Burgess. In one story, a willful little breeze refuses to return home with his mother, Old Mother West Wind, and remains behind on the meadow to play. The narrator indicates that the little breeze quickly regrets his decision: ______",
+      "stem": "Which quotation from Old Mother West Wind most effectively illustrates the claim?",
+      "options": [
+        "“He danced ahead of Old Mother West Wind. He kissed the sleepy daisies. He shook the nodding buttercups.”",
+        "“Old Mother West Wind was tired—tired and just a wee bit cross—cross because she was tired.”",
+        "“Then away he sped across the Green Meadows to the Brown Pasture. And because he could go faster and because he went a shorter way he got there first.”",
+        "“The willful little Breeze began to wish that he was safe in Old Mother West Wind’s big bag with all the other Merry Little Breezes.”"
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The claim is that the little breeze soon regrets staying behind. In choice D he begins “to wish that he was safe” back in his mother’s bag with the other breezes, which shows that regret.",
+      "distractors": {
+        "A": {
+          "recipe": "OPP: carefree play before the regret",
+          "why_wrong": "This shows the breeze happily playing, before he feels any regret about staying behind."
+        },
+        "B": {
+          "recipe": "SUBJ: the mother’s mood",
+          "why_wrong": "This describes Old Mother West Wind’s tiredness, not the little breeze’s feelings."
+        },
+        "C": {
+          "recipe": "OFF: a later action",
+          "why_wrong": "This tells how quickly the breeze traveled across the meadows; it shows no regret."
+        }
+      },
+      "models": [
+        "1.11",
+        "1.39",
+        "1.42"
+      ],
+      "word_count": 53,
+      "sources": [
+        {
+          "what": "Thornton W. Burgess, Old Mother West Wind (1910), story ‘The Wilful Little Breeze’ (Project Gutenberg #2557); quotations verified verbatim (double hyphens set as closed em dashes)",
+          "url": "https://www.gutenberg.org/ebooks/2557"
+        }
+      ],
+      "notes": "Easy single-trait claim with plain-language quotations.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [],
+        "status": "pass"
+      }
+    }
+  ]
+}

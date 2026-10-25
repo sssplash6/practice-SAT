@@ -559,7 +559,8 @@ def check_topic(slug: str, per_template: int = 300, draws: int = 1200,
 def check_all(slugs: list[str] | None = None, per_template: int = 300,
               draws: int = 1200, quick: bool = False, verbose: bool = True) -> int:
     loaded = load_topics()
-    slugs = slugs or sorted(set(loaded) | set(BROKEN))
+    # the R&W bank's items are written, not generated: tools/check_rw.py is its gate
+    slugs = slugs or sorted(s for s in set(loaded) | set(BROKEN) if not s.startswith("rw_"))
     worst = 0
     for slug in slugs:
         results = check_topic(slug, per_template, draws, quick)

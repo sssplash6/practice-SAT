@@ -1,0 +1,1124 @@
+{
+  "skill": "Cross-Text Connections",
+  "slug": "cross_text_connections",
+  "part": "trial",
+  "domain": "Craft and Structure",
+  "tier": "hard",
+  "band_target": 7,
+  "plan": {
+    "templates": [
+      {
+        "code": "S1_refute_data",
+        "name": "Respond: target refuted by new data"
+      },
+      {
+        "code": "S1_framework_critique",
+        "name": "Respond: critique of the target's framework or standard"
+      },
+      {
+        "code": "S1_concede_rebut",
+        "name": "Respond: concede part of the target, rebut the rest (two-part options)"
+      },
+      {
+        "code": "S1_second_factor",
+        "name": "Respond: target is incomplete, a second cause or source"
+      },
+      {
+        "code": "S1_alt_explanation",
+        "name": "Respond: the behavior might be explained without the target's interpretation"
+      },
+      {
+        "code": "apply_model",
+        "name": "New: explain an experiment's outcome using the model in the other text"
+      }
+    ]
+  },
+  "source": "spec/rw/waves/TRIAL.md: stage 1 passages adapted from two real source paragraphs per item; stage 2 questions written by a separate agent",
+  "items": [
+    {
+      "id": "cross_text_connections.trial.hard.t_01",
+      "template": "S1_refute_data",
+      "tier": "hard",
+      "band_target": 7,
+      "models": [
+        "3cfbf077",
+        "5e4e082c"
+      ],
+      "passage": "Text 1\n\nThe Tully monster, a foot-long marine animal with a toothed proboscis and eyes perched at either end of a rigid crossbar, is known only from 300-million-year-old Illinois deposits and long defied classification, even by phylum. Analyzing roughly 2,000 specimens and chemically mapping the fossils’ interiors, Victoria McCoy and colleagues identified gills and a notochord, a stiffened supporting rod, concluding that the creature was a vertebrate related to lampreys.\n\nText 2\n\nGenerating color-coded three-dimensional surface maps of more than 150 Tully monster fossils and over 70 other fossils from the same site, and examining the proboscis with X-ray microtomography, Tomoyuki Mikami and colleagues found that the features earlier cited as vertebrate traits did not fit that interpretation. Moreover, the animal’s head shows segmentation continuous with its body, an arrangement unknown in any vertebrate lineage. Just what kind of animal it was remains undetermined.",
+      "stem": "Based on the texts, how would Mikami and colleagues (Text 2) most likely respond to McCoy and colleagues’ conclusion, as presented in Text 1?",
+      "options": [
+        "By granting that the gills and notochord McCoy and colleagues identified do mark the Tully monster as a vertebrate while cautioning that just how closely it is related to lampreys has not yet been determined",
+        "By arguing that what McCoy and colleagues identified as gills and a notochord were really parts of the segmented head, an arrangement that rules out a vertebrate",
+        "By arguing that the evidence McCoy and colleagues cited does not make the Tully monster a relative of lampreys, since its head shows a segmentation, continuous with its body, that no known vertebrate has",
+        "By proposing that the gills and notochord McCoy and colleagues identified belonged to the other animals preserved at the same Illinois site rather than to the Tully monster specimens"
+      ],
+      "answer_letter": "C",
+      "explanation": "Text 1 reports that McCoy and colleagues identified gills and a notochord in the Tully monster and concluded that it was a vertebrate related to lampreys. Text 2 reports that Mikami and colleagues found that the features earlier cited as vertebrate traits did not fit that interpretation, and that the animal’s head shows segmentation continuous with its body, “an arrangement unknown in any vertebrate lineage.” Lampreys are the vertebrates Text 1 places the animal beside, so Mikami and colleagues would most likely respond that the evidence McCoy’s team cited does not make the Tully monster a relative of lampreys, even though, as Text 2 adds, just what kind of animal it was remains undetermined. Choice C states this.",
+      "distractors": {
+        "A": {
+          "recipe": "D7 half right",
+          "why_wrong": "Text 2 does say that the animal’s classification remains undetermined, but it does not grant that the Tully monster was a vertebrate: the features earlier cited as vertebrate traits “did not fit that interpretation,” and its head segmentation is unknown in any vertebrate lineage."
+        },
+        "B": {
+          "recipe": "D3 twisted detail",
+          "why_wrong": "Text 2 makes two separate points: the features earlier cited as vertebrate traits did not fit that interpretation, and, “moreover,” the head shows segmentation continuous with the body. It never says what the supposed gills and notochord actually were, let alone that they were parts of the segmented head."
+        },
+        "D": {
+          "recipe": "D3 twisted detail",
+          "why_wrong": "Text 2 mentions over 70 other fossils from the same site only as part of Mikami and colleagues’ sample. It does not say that the features McCoy’s team identified came from other animals, only that they do not fit a vertebrate interpretation."
+        }
+      },
+      "source_text": "Text 1 source (https://news.yale.edu/2016/03/16/solving-mystery-tully-monster):\n\nThe Tully Monster, an oddly configured sea creature with teeth at the end of a narrow, trunk-like extension of its head and eyes that perch on either side of a long, rigid bar, has finally been identified.\n\nA Yale-led team of paleontologists has determined that the 300-million-year-old animal — which grew to only a foot long — was a vertebrate, with gills and a stiffened rod (or notochord) that supported its body. It is part of the same lineage as the modern lamprey.\n\nFor decades, the Tully Monster has been one of the great fossil enigmas: It was discovered in 1958, first described scientifically in 1966, yet never definitively identified even to the level of phylum (that is, to one of the major groups of animals). Officially known as Tullimonstrum gregarium, it is named after Francis Tully, the amateur fossil hunter who came across it in coal mining pits in northeastern Illinois.\n\nUsing the Field Museum’s collection of 2,000 Tully Monster specimens, the team analyzed the morphology and preservation of various features of the animal. Powerful, new analytical techniques also were brought to bear, such as synchrotron elemental mapping, which illuminates an animal’s physical features by mapping the chemistry within a fossil.\n\nThe researchers concluded that the Tully Monster had gills and a notochord, which functioned as a rudimentary spinal cord. Neither feature had been identified in the animal previously.\n\nSome key questions about Tully Monsters remain unanswered, however. No one knows when the animal first appeared on Earth or when it went extinct. Its existence in the fossil record is confined to the Illinois mining site, dating back 300 million years.\n\nText 2 source (https://www.s.u-tokyo.ac.jp/en/info/8399/):\n\nFor more than half a century, the Tully monster (Tullimonstrum gregarium), an enigmatic animal that lived about 300 million years ago, has confounded paleontologists, with its strange anatomy making it difficult to classify. Recently, a group of researchers proposed a hypothesis that Tullimonstrum was a vertebrate similar to cyclostomes (jawless fish like lamprey and hagfish). If it was, then the Tully monster would potentially fill a gap in the evolutionary history of early vertebrates. Studies so far have both supported and rejected this hypothesis. Now, using 3D imaging technology, a team in Japan believes it has found the answer after uncovering detailed characteristics of the Tully monster which strongly suggest that it was not a vertebrate. However, its exact classification and what type of invertebrate it was is still to be decided.\n\nDespite considerable effort, studies both supporting and rejecting this hypothesis have been published in recent years, and so a consensus had not been reached. However, new research by a team from the University of Tokyo and Nagoya University may have finally brought an end to the debate. “We believe that the mystery of it being an invertebrate or vertebrate has been solved,” said Tomoyuki Mikami, a doctoral student in the Graduate School of Science at the University of Tokyo at the time of the study and currently a researcher at the National Museum of Nature and Science. “Based on multiple lines of evidence, the vertebrate hypothesis of the Tully monster is untenable. The most important point is that the Tully monster had segmentation in its head region that extended from its body. This characteristic is not known in any vertebrate lineage, suggesting a nonvertebrate affinity.”\n\nThe team studied more than 150 fossilized Tully monsters and over 70 other varied animal fossils from Mazon Creek. With the aid of a 3D laser scanner, they created color-coded, three-dimensional maps of the fossils which showed the tiny irregularities which existed on their surface through color variation. X-ray micro-computed tomography (which uses X-rays to create cross sections of an object so that a 3D model can be created), was also used to look at its proboscis (an elongated organ located in the head). This 3D data showed that features previously used to identify the Tully monster as a vertebrate were not actually consistent with those of vertebrates.\n\nAlthough the researchers are confident from this study that the Tully monster was not a vertebrate, the next step of the investigation will be to answer what group of organisms it does belong to, possibly a nonvertebrate chordate (like a fishlike animal known as a lancelet) or some sort of protostome (a diverse group of animals containing, for example, insects, roundworms, earthworms and snails) with radically modified morphology.",
+      "sources": [
+        {
+          "what": "Yale News release, 16 March 2016: McCoy and colleagues (Nature) conclude the Tully monster was a vertebrate with gills and a notochord, in the lamprey lineage; 2,000 Field Museum specimens; synchrotron elemental mapping",
+          "url": "https://news.yale.edu/2016/03/16/solving-mystery-tully-monster"
+        },
+        {
+          "what": "University of Tokyo, Graduate School of Science research news, 2023: Mikami et al. (Palaeontology) 3D laser scans of more than 150 Tully monsters and over 70 other Mazon Creek fossils, X-ray micro-CT of the proboscis; head segmentation extending from the body unknown in vertebrates; vertebrate hypothesis untenable",
+          "url": "https://www.s.u-tokyo.ac.jp/en/info/8399/"
+        }
+      ],
+      "notes": "Area: natural science (paleontology). Relationship: Text 2 rejects Text 1’s classification with new imaging evidence (refutation by new data). Band-7 question: Based on the texts, how would Mikami and colleagues (Text 2) most likely respond to McCoy and colleagues’ conclusion in Text 1? Derivable key, stated in neither text: the structures McCoy’s team read as gills and a notochord do not make the Tully monster a vertebrate, since its head segmentation, continuous with the body, is absent from every vertebrate lineage, including the lampreys Text 1 places it beside. Needs Text 1’s last sentence and Text 2’s second sentence. Underline candidate: Text 1’s last clause (“and concluded that the animal was a vertebrate related to lampreys”). Source_text holds the paragraphs each text was adapted from; neither text shares a 6-word run with them (checked with Python, check_rw tokenization). Stage 2 (questions, written by a separate agent): key C; steps 3; synthesis check: needs Text 1’s last sentence (vertebrate related to lampreys) and Text 2’s first two sentences; neither text says the animal is no lamprey relative; distractors: A D7 half right, B D3 twisted detail, D D3 twisted detail; key 34 words, option mean 32.2 words; key 203 chars against longest distractor 207. Review (2026-10-16): B (chemical mapping cannot reveal gills) replaced by a D3 that conflates the cited features with the head segmentation, since the old B died on an invented method claim.",
+      "band7_moves": [
+        "synthesis key: Text 2’s “unknown in any vertebrate lineage” applied to the lamprey relationship that only Text 1 names",
+        "three steps: Text 1’s evidence and claim, Text 2’s rejection of that evidence plus a new trait, the consequence for the lamprey link",
+        "distractors: D7 half right (grants vertebrate status, keeps Text 2’s undetermined classification), two D3 twisted details (the cited features conflated with the head segmentation; the 70 other fossils)"
+      ],
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 8,
+        "facts_note": "McCoy is named in sources, not in the source_text excerpt (the Yale release names her as lead author); accepted. “Either end of a rigid crossbar” fairly renders “on either side of a long, rigid bar”.",
+        "fixes": [
+          "B (chemical mapping cannot reveal gills) replaced by a D3 that conflates the cited features with the head segmentation, since the old B died on an invented method claim."
+        ],
+        "topic_fame": "Tully monster: moderately known (Illinois state fossil, press in 2016 and 2023); the rebuttal study is obscure. Acceptable.",
+        "status": "fixed"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "The key is one step from Text 2’s own verdict (no vertebrate, so no lamprey relative); A grants what Text 2 denies outright and D invents a claim. The new B (cited features conflated with the head segments) needs a close reading of “moreover”, but the synthesis is thin."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "C",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "cross_text_connections.trial.hard.t_02",
+      "template": "S1_refute_data",
+      "tier": "hard",
+      "band_target": 7,
+      "models": [
+        "3cfbf077",
+        "5e4e082c"
+      ],
+      "passage": "Text 1\n\nIn 2005, Hubble images revealing a sharply bounded, off-center dust belt encircling the star Fomalhaut led astronomer Paul Kalas to suspect that an unseen planet was sculpting the belt’s inner edge. In 2008 he announced visible-light photographs of the object itself. Its displacement between exposures taken in 2004 and 2006, twenty-one months apart, corresponded precisely to the motion expected of a planet completing one orbit of Fomalhaut every 872 years.\n\nText 2\n\nReanalyzing all archival Hubble observations of Fomalhaut, András Gáspár and George Rieke determined that the object designated Fomalhaut b had faded continuously before disappearing entirely by 2014; it had also never exhibited a detectable infrared heat signature. Incorporating subsequent positions into trajectories plotted from the earlier data, they judged it likelier to be following an escape path than an elliptical orbit, as an expanding debris cloud from a recent collision would.",
+      "stem": "Based on the texts, how would Gáspár and Rieke (Text 2) most likely respond to Kalas’s account of the object’s motion in Text 1?",
+      "options": [
+        "By suggesting that a displacement observed over twenty-one months could fit an 872-year orbit without excluding an escape path, which later positions indicate the object was more likely following",
+        "By granting that the object travels on an elliptical orbit around Fomalhaut but arguing that its continuous fading, its disappearance by 2014, and its lack of any infrared heat signature show that it is not a planet",
+        "By claiming that the displacement Kalas measured reflected a shift in the dust belt’s inner edge between the two exposures rather than any movement of the object itself",
+        "By arguing that the displacement between the 2004 and 2006 exposures was already too great for an 872-year orbit, showing from the start that the object was on an escape path"
+      ],
+      "answer_letter": "A",
+      "explanation": "Text 1 says that the object’s displacement between exposures taken twenty-one months apart, in 2004 and 2006, corresponded precisely to the motion expected of a planet orbiting Fomalhaut every 872 years. Text 2 reports that Gáspár and Rieke, adding later positions to trajectories plotted from the earlier data, judged the object likelier to be following an escape path than an elliptical orbit. A short stretch of a path can match more than one trajectory, so Gáspár and Rieke would most likely respond that the early displacement fit the orbit without ruling out an escape path, which the later positions favor. Choice A states this.",
+      "distractors": {
+        "B": {
+          "recipe": "D7 half right",
+          "why_wrong": "Text 2 does report the fading and the missing infrared signature, but it does not grant an elliptical orbit: Gáspár and Rieke judged the object likelier to be following an escape path."
+        },
+        "C": {
+          "recipe": "D3 twisted detail",
+          "why_wrong": "The dust belt’s inner edge appears only in Text 1, as the feature that first led Kalas to suspect a planet. Text 2 never says the belt shifted, and it treats the object as moving, along an escape path."
+        },
+        "D": {
+          "recipe": "D2 reversal of the derived claim",
+          "why_wrong": "Text 1 says the displacement corresponded precisely to the motion of an 872-year orbit, and Text 2 does not dispute that. Gáspár and Rieke favored an escape path only after incorporating subsequent positions into trajectories plotted from the earlier data, so the early displacement alone did not rule out an orbit."
+        }
+      },
+      "source_text": "Text 1 source (https://newsarchive.berkeley.edu/news/media/releases/2008/11/13_exoplanet.shtml):\n\nBERKELEY — After eight years and repeated photographs of a nearby star in hopes of finding planets, University of California, Berkeley, astronomer Paul Kalas finally has his prize: the first visible-light snapshots of a planet outside our solar system.\n\nThe planet's existence was suspected in 2005, when images Kalas took with the Hubble Space Telescope's Advanced Camera for Surveys showed a sharply defined inner edge to the dust belt around Fomalhaut, in the southern constellation Piscus Austrinus (southern fish). The sharp edge and off-center belt suggested to Kalas that a planet in an elliptical orbit around the star was shaping the inner edge of the belt, much like Saturn's moons groom the edges of its rings.\n\nHe now has two photographs of the planet, taken in 2004 and 2006, which show that its movement over a 21-month period exactly fits what would be expected from a planet orbiting Fomalhaut every 872 years at a distance of 119 astronomical units, or 11 billion miles. One astronomical unit (AU) is the average distance between the Earth and the sun, or 93 million miles.\n\nText 2 source (https://www.newswise.com/articles/hubble-finds-evidence-of-a-massive-planetary-collision-around-another-star):\n\nOne interpretation is that, rather than being a full-sized planetary object, which was first photographed in 2004, it could be a vast, expanding cloud of dust produced in a collision between two large bodies orbiting the bright nearby star Fomalhaut. If so, this would be the first time evidence for the detection of the aftermath of such a catastrophic event has been found around another star. Potential follow-up observations might confirm this extraordinary conclusion.\n\nThe object, called Fomalhaut b, was first announced in 2008, based on data taken in 2004 and 2006. It was clearly visible in several years of Hubble observations that revealed it was a moving dot. Until then, evidence for exoplanets had mostly been inferred through indirect detection methods, such as subtle back-and-forth stellar wobbles, and shadows from planets passing in front of their stars.\n\nUnlike other directly imaged exoplanets, however, nagging puzzles arose with Fomalhaut b early on. The object was unusually bright in visible light, but did not have any detectable infrared heat signature. Astronomers conjectured that the added brightness came from a huge shell or ring of dust encircling the planet that may possibly have been collision-related. The orbit of Fomalhaut b also appeared unusual, possibly very eccentric.\n\n\"Our study, which analyzed all available archival Hubble data on Fomalhaut revealed several characteristics that together paint a picture that the planet-sized object may never have existed in the first place,\" said Gáspár.\n\nThe team emphasizes that the final nail in the coffin came when their data analysis of Hubble images taken in 2014 showed the object had vanished, to their disbelief. Adding to the mystery, earlier images showed the object to continuously fade over time, they say. \"Clearly, Fomalhaut b was doing things a bona fide planet should not be doing,\" said Gáspár.\n\nEqually confounding is that the team reports that the object is more likely on an escape path, rather than on an elliptical orbit, as expected for planets. This is based on the researchers adding later observations to the trajectory plots from earlier data. \"A recently created massive dust cloud, experiencing considerable radiative forces from the central star Fomalhaut, would be placed on such a trajectory,\" said Gáspár. \"Our model is naturally able to explain all independent observable parameters of the system: its expansion rate, its fading, and its trajectory.\"",
+      "sources": [
+        {
+          "what": "UC Berkeley news release, 13 November 2008: Kalas photographs Fomalhaut b; 2005 images of a sharply defined, offset inner edge of the dust belt; 2004 and 2006 images 21 months apart fit an 872-year orbit at 119 AU",
+          "url": "https://newsarchive.berkeley.edu/news/media/releases/2008/11/13_exoplanet.shtml"
+        },
+        {
+          "what": "NASA/STScI release, April 2020 (Gáspár and Rieke, PNAS), read at Newswise: object faded and vanished by 2014, no infrared heat signature, more likely on an escape path than an elliptical orbit once later observations were added; expanding dust cloud from a collision",
+          "url": "https://www.newswise.com/articles/hubble-finds-evidence-of-a-massive-planetary-collision-around-another-star"
+        }
+      ],
+      "notes": "Area: natural science (astronomy). Relationship: Text 2 refutes Text 1’s planet with a longer run of observations (refutation by new data). Band-7 question: Based on the texts, how would Gáspár and Rieke (Text 2) most likely respond to Kalas’s claim about the object’s motion? Derivable key: the twenty-one-month span between the 2004 and 2006 images was too short to tell an orbit from an outward escape path, which only the later positions revealed. Needs Text 1’s second sentence and Text 2’s second sentence. Distractor material: infrared signature, fading, the dust-belt edge. Source_text holds the paragraphs each text was adapted from; neither text shares a 6-word run with them (checked with Python, check_rw tokenization). Stage 2 (questions, written by a separate agent): key A; steps 3; synthesis check: needs Text 1’s last sentence (twenty-one months, 872-year orbit) and Text 2’s last sentence (later positions, escape path); neither text says the short span could not tell the two paths apart; distractors: B D7 half right, C D3 twisted detail, D D3 twisted detail; key 29 words, option mean 30.5 words; key 195 chars against longest distractor 215. Review (2026-10-16): D (images too faint) replaced by a reversal of the derived claim that also names the escape path, so the key is no longer the only option using Text 2’s finding.",
+      "band7_moves": [
+        "synthesis key: Text 1’s twenty-one-month span set against Text 2’s later positions; the key names a limit neither text states",
+        "three steps: what the early displacement matched, what the longer record showed, why the first did not settle the second",
+        "distractors: D7 half right (Text 2’s fading and infrared evidence with a conceded orbit), D3 twisted detail (the dust-belt edge), D2 reversal of the derived claim (the early displacement already ruled out an orbit)"
+      ],
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 8,
+        "facts_note": "Rieke is named in sources only; accepted. The missing infrared signature is an earlier-known puzzle that Text 2 folds into the same sentence as Gáspár and Rieke’s findings; minor, left.",
+        "fixes": [
+          "D (images too faint) replaced by a reversal of the derived claim that also names the escape path, so the key is no longer the only option using Text 2’s finding."
+        ],
+        "topic_fame": "Fomalhaut b: known to astronomy readers (first visible-light exoplanet image, 2020 “vanished planet” stories). Borderline.",
+        "status": "fixed"
+      },
+      "band7": {
+        "verdict": "band 7",
+        "why": "Synthesis key: a 21-month match cannot separate an orbit from an escape path, stated in neither text. With the new D, two options name the escape path and differ only on whether the early data alone settled it; B grants the orbit with Text 2’s true fading and infrared facts."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "A",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "cross_text_connections.trial.hard.t_03",
+      "template": "S1_refute_data",
+      "tier": "hard",
+      "band_target": 7,
+      "models": [
+        "3cfbf077",
+        "5e4e082c"
+      ],
+      "passage": "Text 1\n\nKonstantin Batygin and Mike Brown noticed that six of the most distant known objects beyond Neptune travel on elongated orbits pointing the same direction, although the outermost points of such orbits circulate at different rates. Brown put the odds of that alignment arising coincidentally at roughly 1 in 100; since the orbits are also similarly tilted, the odds fall to about 0.007 percent. An unseen planet, the researchers inferred, must be shaping them.\n\nText 2\n\nKevin Napier and colleagues examined fourteen extreme trans-Neptunian objects detected by three telescope surveys. Using each survey’s record of where it pointed, how faint an object it could detect, and which detections it followed up, they calculated the probability of the observed orientations if the objects’ parent population were spread evenly. Depending on the measure, it ranged from 17 to 94 percent; the sample, they concluded, offers no evidence of clustering.",
+      "stem": "Based on the texts, how would Napier and colleagues (Text 2) most likely respond to the probabilities Brown cites in Text 1?",
+      "options": [
+        "By arguing that his figures, drawn from only six objects, overstate the chance that the alignment arose by coincidence, a chance that a sample of fourteen objects would make smaller still",
+        "By contending that his odds should have rested on the orbits’ similar tilts alone, since the outermost points of such orbits circulate too quickly for their alignment to be measured reliably",
+        "By questioning whether the six objects Brown considered are truly the most distant known, given that the three telescope surveys together detected fourteen extreme trans-Neptunian objects",
+        "By suggesting that his figures likely understate how readily such an alignment could arise by chance, once the way telescope surveys find such objects is taken into account"
+      ],
+      "answer_letter": "D",
+      "explanation": "Text 1 reports Brown’s estimate that the six objects’ alignment had about a 1 in 100 chance of arising coincidentally, falling to about 0.007 percent once their similar tilts are counted, and the inference that a planet must be shaping the orbits. Text 2 reports that Napier and colleagues, taking into account where each survey pointed, how faint an object it could detect, and which detections it followed up, found that the observed orientations had a 17 to 94 percent probability even if the objects’ parent population were spread evenly, and so offered no evidence of clustering. Those odds are far higher than Brown’s, so Napier and colleagues would most likely say that his figures understate how readily such an alignment could arise by chance. Choice D states this.",
+      "distractors": {
+        "A": {
+          "recipe": "D2 reversal",
+          "why_wrong": "This reverses Text 2’s finding. Napier and colleagues calculated a 17 to 94 percent probability for the orientations they examined and found no evidence of clustering, so they would hold that Brown’s figures make a chance alignment look less likely, not more likely, than it is."
+        },
+        "B": {
+          "recipe": "D3 twisted detail",
+          "why_wrong": "Text 1 notes that the outermost points of such orbits circulate at different rates, which is why their alignment is striking; neither text says that this makes the alignment impossible to measure, and Text 2 says nothing about the objects’ tilts."
+        },
+        "C": {
+          "recipe": "D3 twisted detail",
+          "why_wrong": "Text 2 does examine fourteen extreme trans-Neptunian objects, but it does not compare their distances with those of Brown’s six or question whether his are the most distant; its point concerns how likely the orientations are, given how the surveys searched."
+        }
+      },
+      "source_text": "Text 1 source (https://www.caltech.edu/about/news/caltech-researchers-find-evidence-real-ninth-planet-49523):\n\nCaltech researchers have found evidence of a giant planet tracing a bizarre, highly elongated orbit in the outer solar system. The object, which the researchers have nicknamed Planet Nine, has a mass about 10 times that of Earth and orbits about 20 times farther from the sun on average than does Neptune (which orbits the sun at an average distance of 2.8 billion miles). In fact, it would take this new planet between 10,000 and 20,000 years to make just one full orbit around the sun.\n\nBatygin and Brown describe their work in the current issue of the Astronomical Journal and show how Planet Nine helps explain a number of mysterious features of the field of icy objects and debris beyond Neptune known as the Kuiper Belt.\n\nFairly quickly Batygin and Brown realized that the six most distant objects from Trujillo and Sheppard's original collection all follow elliptical orbits that point in the same direction in physical space. That is particularly surprising because the outermost points of their orbits move around the solar system, and they travel at different rates.\n\n\"It's almost like having six hands on a clock all moving at different rates, and when you happen to look up, they're all in exactly the same place,\" says Brown. The odds of having that happen are something like 1 in 100, he says. But on top of that, the orbits of the six objects are also all tilted in the same way—pointing about 30 degrees downward in the same direction relative to the plane of the eight known planets. The probability of that happening is about 0.007 percent. \"Basically it shouldn't happen randomly,\" Brown says. \"So we thought something else must be shaping these orbits.\"\n\nText 2 source (https://arxiv.org/abs/2102.05601):\n\nAbstract:The apparent clustering in longitude of perihelion $\\varpi$ and ascending node $\\Omega$ of extreme trans-Neptunian objects (ETNOs) has been attributed to the gravitational effects of an unseen 5-10 Earth-mass planet in the outer solar system. To investigate how selection bias may contribute to this clustering, we consider 14 ETNOs discovered by the Dark Energy Survey, the Outer Solar System Origins Survey, and the survey of Sheppard and Trujillo. Using each survey's published pointing history, depth, and TNO tracking selections, we calculate the joint probability that these objects are consistent with an underlying parent population with uniform distributions in $\\varpi$ and $\\Omega$. We find that the mean scaled longitude of perihelion and orbital poles of the detected ETNOs are consistent with a uniform population at a level between $17\\%$ and $94\\%$, and thus conclude that this sample provides no evidence for angular clustering.",
+      "sources": [
+        {
+          "what": "Caltech news release, 20 January 2016: Batygin and Brown, six distant Kuiper Belt objects with aligned elliptical orbits; odds about 1 in 100, with the shared tilt about 0.007 percent; a planet of about 10 Earth masses proposed",
+          "url": "https://www.caltech.edu/about/news/caltech-researchers-find-evidence-real-ninth-planet-49523"
+        },
+        {
+          "what": "Napier et al., No Evidence for Orbital Clustering in the Extreme Trans-Neptunian Objects (Planetary Science Journal 2021), arXiv abstract: 14 ETNOs from DES, OSSOS and Sheppard and Trujillo; survey pointing, depth and tracking used to test a uniform population; consistent at 17 to 94 percent",
+          "url": "https://arxiv.org/abs/2102.05601"
+        }
+      ],
+      "notes": "Area: natural science (astronomy). Relationship: Text 2 challenges the statistical basis of Text 1’s inference: the alignment may reflect where surveys looked (refutation by reanalysis; could also be framed as a critique of Text 1’s probability standard). Band-7 question: Based on the texts, how would Napier and colleagues (Text 2) most likely respond to the probabilities Brown cites in Text 1? Derivable key: the 1-in-100 and 0.007 percent figures treat the objects as if they had been found without regard to where and how deeply telescopes searched, so they overstate how unlikely the alignment is. Needs Text 1’s second sentence and Text 2’s second and third sentences. Underline candidate: Text 1’s second sentence. Source_text holds the paragraphs each text was adapted from; neither text shares a 6-word run with them (checked with Python, check_rw tokenization). Stage 2 (questions, written by a separate agent): key D; steps 3; synthesis check: needs Text 1’s second sentence (1 in 100, 0.007 percent) and Text 2’s second and third sentences (survey record, 17 to 94 percent); neither text says Brown’s odds are too low; distractors: A D2 reversal, B D3 twisted detail, C D3 twisted detail; key 33 words, option mean 30.2 words; key 196 chars against longest distractor 190. Review (2026-10-16): key reworded so it no longer repeats Text 2’s list of survey records (pointing, depth), which singled it out.",
+      "band7_moves": [
+        "synthesis key: Text 2’s 17 to 94 percent set against Text 1’s 1 in 100 and 0.007 percent; neither text compares them",
+        "three steps: what Brown’s odds measure, what the survey-aware calculation found, the verdict on Brown’s numbers",
+        "distractors: D2 reversal of the derived claim (built from six against fourteen), two D3 twisted details (circulating outermost points; fourteen objects as a distance question)"
+      ],
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 7,
+        "facts_note": "“Six of the most distant known objects” compresses “the six most distant objects from Trujillo and Sheppard’s collection”; acceptable. Napier named in sources.",
+        "fixes": [
+          "key reworded so it no longer repeats Text 2’s list of survey records (pointing, depth), which singled it out."
+        ],
+        "topic_fame": "Planet Nine: a viral subject since 2016, so a fame tell as the passage writer flagged; Napier and colleagues’ reply is obscure, but a reader meets a famous topic.",
+        "status": "fixed"
+      },
+      "band7": {
+        "verdict": "band 7",
+        "why": "The key sets 17 to 94 percent against 1 in 100, a comparison neither text makes; A reverses the direction with a six-against-fourteen lure that a student who has not worked out which odds are higher can accept. The reworded key no longer repeats Text 2’s method list."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "D",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "cross_text_connections.trial.hard.t_04",
+      "template": "S1_framework_critique",
+      "tier": "hard",
+      "band_target": 7,
+      "models": [
+        "96f3accc",
+        "5e4e082c"
+      ],
+      "passage": "Text 1\n\nSince wolves were reintroduced to Yellowstone National Park in the mid-1990s, the northern range’s elk have declined from more than 15,000 to about 6,000 and, according to William Ripple and colleagues, become increasingly fearful. Browsing pressure on young aspen has diminished accordingly: along four streams in the Lamar River basin, every one of the tallest aspen sprouts had been browsed in 1998, whereas fewer than 20 percent were browsed in 2010.\n\nText 2\n\nEarlier assessments of aspen recovery in Yellowstone, Elaine Brice and Dan MacNulty observe, typically measured only the five tallest young trees per stand, presuming that these predicted the entire stand’s trajectory. Yet such saplings often enjoy the best sunlight, moisture, and soil, and once their main stems exceed an adult elk’s shoulder height, they are less likely to be eaten. Sampling young aspen randomly, the researchers found substantially slower growth and, in places, no regeneration at all.",
+      "stem": "Based on the texts, Brice and MacNulty (Text 2) would most likely agree with which statement about the browsing figures reported in Text 1?",
+      "options": [
+        "They probably understate how far aspen have recovered, since randomly sampled sprouts, which grow where light and moisture are poorer, would be less attractive to elk than the tallest ones are.",
+        "They likely give an overly favorable picture of aspen recovery across entire stands, since the sprouts they track grow in the best conditions and are the likeliest to outgrow heavy browsing by elk.",
+        "They show that elk have stopped browsing aspen whose main stems exceed an adult elk’s shoulder height, a change that followed the elk’s growing fear of the reintroduced wolves.",
+        "They reflect a real easing of browsing pressure that, along with the decline in elk numbers, confirms that wolves have allowed aspen to regenerate throughout the Lamar River basin."
+      ],
+      "answer_letter": "B",
+      "explanation": "Text 1 reports that along four Lamar River streams every one of the tallest aspen sprouts had been browsed in 1998 but fewer than 20 percent were in 2010. Text 2 explains that earlier assessments measured only the tallest young trees, presuming they predicted the whole stand, yet those saplings tend to have the best sunlight, moisture, and soil and are less likely to be eaten once their stems pass an adult elk’s shoulder height; random sampling showed much slower growth and, in places, no regeneration. Brice and MacNulty would therefore most likely agree that figures based on the tallest sprouts give an overly favorable picture of recovery across entire stands. Choice B states this.",
+      "distractors": {
+        "A": {
+          "recipe": "D2 reversal",
+          "why_wrong": "This reverses Text 2’s argument. Brice and MacNulty found that randomly sampled young aspen grew substantially more slowly, and in places not at all, so they would say the tallest-sprout figures overstate recovery; Text 2 never says that sprouts in poorer conditions are less attractive to elk."
+        },
+        "C": {
+          "recipe": "D3 twisted detail",
+          "why_wrong": "Text 2 says that saplings taller than an adult elk’s shoulder are less likely to be eaten, but it presents this as a general fact about tall saplings, not as a recent change caused by the elk’s fear of wolves, which only Text 1 mentions."
+        },
+        "D": {
+          "recipe": "D2 wrong side (Text 1’s view)",
+          "why_wrong": "This restates the conclusion Text 1 draws, not Text 2’s view. Brice and MacNulty found substantially slower growth and, in places, no regeneration at all, so they would not agree that aspen have regenerated throughout the basin."
+        }
+      },
+      "source_text": "Text 1 source (https://news.oregonstate.edu/news/yellowstone-transformed-15-years-after-return-wolves):\n\nFor the first time in 70 years, the howl in the night is being heard and elk are afraid of wolf predation. As a result, their over-browsing of young aspen and willow trees has diminished. Trees and shrubs are recovering along streams. The habitat is improving for beaver and fish. Bears have more food. Hundreds of species of birds, mammals, fish and reptiles are once again finding their niche in a vibrant ecosystem.\n\nAlong four streams studied in the Lamar River basin, 100 percent of the tallest young aspen sprouts were being browsed in 1998, compared to less than 20 percent last year. Heavy browsing by elk on this favorite food had caused new aspen tree recruitment to essentially grind to a halt in the mid-to-late 1900s, when wolves were absent, but new trees are now growing again in places.\n\nSince their reintroduction in 1995-96, the wolf population generally increased until 2003, forcing changes in both elk numbers and behavior due to what researchers call the \"ecology of fear.\"\n\nThe northern range elk populations decreased from more than 15,000 individuals in the early 1990s to about 6,000 last year, and remaining elk now have different patterns of movement, vigilance, and other traits.\n\nBy 2006, some aspen trees had grown tall enough they were no longer susceptible to browsing by elk, and cottonwood and willow were also beginning to return in places.\n\nText 2 source (https://www.usu.edu/today/story/capturing-a-true-picture-of-wolves-in-yellowstone-reevaluating-aspen-recovery):\n\nPrevious research showed strong positive growth in young aspens in Yellowstone National Park as the elk populations decreased—a welcome result. But new research shows aspen recovery is not as robust as previously thought. (Photo courtesy of Lainie Brice)\n\nBut new research from Elaine Brice and Dan MacNulty, from Utah State University’s Department of Wildland Resources and Ecology Center, and Eric Larsen, from the University of Wisconsin Stevens Point’s Department of Geography and Geology, shows that the effect of wolves on the recovery of aspen has been exaggerated by how it was measured.\n\nPrevious studies evaluated aspen recovery in Yellowstone by measuring the five tallest young aspens within a stand. The reasoning was that the tallest young aspen trees represent a ‘leading edge’ indicator of the future recovery of the entire aspen population. But this is not the case. Sampling only the tallest young aspen estimated growth that was significantly faster than estimated by random sampling of all young aspen within the stand, according to the research.\n\nFor one, elk are picky about the aspen they consume. They tend to eat plants at shoulder height for which they don’t have to crane their necks. Once the leader stem (main trunk) of a young aspen grows past the shoulder height of adult elk, it is less likely to be eaten, said MacNulty.\n\nTaller aspens also thrive because they tend to have the best growing conditions (sunlight, moisture, soil quality). Measuring just the tallest young trees downplays the role of these other factors that have nothing to do with elk or wolf populations. And measuring just the tallest aspen also overlooks the aspen plants that completely fail and fall off the radar.\n\nRandom sampling from the research showed an absence of aspen regeneration in some places, a vital piece missing from the initial measurements.",
+      "sources": [
+        {
+          "what": "Oregon State University news release, 21 December 2011 (Ripple and Beschta, Biological Conservation): northern-range elk from more than 15,000 to about 6,000; along four Lamar River basin streams, 100 percent of the tallest young aspen sprouts browsed in 1998, under 20 percent last year",
+          "url": "https://news.oregonstate.edu/news/yellowstone-transformed-15-years-after-return-wolves"
+        },
+        {
+          "what": "Utah State University news release, November 2021 (Brice, Larsen and MacNulty): earlier studies measured the five tallest young aspens per stand; tallest-only sampling estimated growth significantly faster than random sampling; elk browse at shoulder height; random sampling found no regeneration in places",
+          "url": "https://www.usu.edu/today/story/capturing-a-true-picture-of-wolves-in-yellowstone-reevaluating-aspen-recovery"
+        }
+      ],
+      "notes": "Area: natural science (ecology). Relationship: Text 2 critiques the sampling method behind evidence like Text 1’s (critique of the target’s standard). Band-7 question: Based on the texts, how would Brice and MacNulty (Text 2) most likely respond to the browsing figures reported in Text 1? Derivable key: because the figures concern only the tallest sprouts, which grow in the best conditions and escape elk once past shoulder height, the fall from 100 to under 20 percent likely overstates how far browsing has eased across whole stands. Needs Text 1’s second sentence and Text 2’s first two sentences. Distractor material: the elk decline (which Text 2 does not dispute), random sampling, regeneration. Source_text holds the paragraphs each text was adapted from; neither text shares a 6-word run with them (checked with Python, check_rw tokenization). Stage 2 (questions, written by a separate agent): key B; steps 3; synthesis check: needs Text 1’s second sentence (tallest sprouts, 100 to under 20 percent) and Text 2’s first two sentences (tallest-tree sampling, best conditions, shoulder height); neither text says these figures overstate recovery; distractors: A D2 reversal, C D3 twisted detail, D D2 wrong side (Text 1’s view); key 32 words, option mean 30.2 words; key 191 chars against longest distractor 193. Review (2026-10-16): Text 2 said tall saplings are “rarely eaten”; the source says “less likely to be eaten”, so the passage now says “less likely to be eaten” and the key’s “beyond elk’s reach” became “outgrow heavy browsing”.",
+      "band7_moves": [
+        "agreement stem about Text 1’s figures (S1_framework_critique band-7 setting, model 96f3accc)",
+        "synthesis key: Text 2’s critique of tallest-tree sampling applied to Text 1’s specific browsing figures, which Text 2 never mentions",
+        "distractors: D2 reversal built on Text 2’s light and moisture, D3 twisted detail (shoulder height recast as a fear effect), a fair summary of Text 1’s view that Text 2 rejects"
+      ],
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 8,
+        "facts_note": "Ripple named in sources (Ripple and Beschta); “rarely eaten” overstated the source, fixed.",
+        "fixes": [
+          "Text 2 said tall saplings are “rarely eaten”; the source says “less likely to be eaten”, so the passage now says “less likely to be eaten” and the key’s “beyond elk’s reach” became “outgrow heavy browsing”."
+        ],
+        "topic_fame": "Yellowstone wolves and aspen: a textbook trophic-cascade story (the viral “How Wolves Change Rivers”), at least as famous as the three flagged subjects; the Brice and MacNulty sampling critique is obscure.",
+        "status": "fixed"
+      },
+      "band7": {
+        "verdict": "band 7",
+        "why": "The key applies Text 2’s tallest-tree critique to Text 1’s browsing figures, which Text 2 never mentions; A reverses the verdict using Text 2’s own light and moisture, C turns shoulder height into a fear effect. D (Text 1’s view) is easy. Weak band 7."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "B",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "cross_text_connections.trial.hard.t_05",
+      "template": "S1_alt_explanation",
+      "tier": "hard",
+      "band_target": 6,
+      "models": [
+        "5e4e082c",
+        "35e21b06"
+      ],
+      "passage": "Text 1\n\nMany researchers have held that neurons keep forming in the adult human hippocampus, a process linked to learning and memory. Analyzing hippocampal tissue from fetal development to old age, Shawn Sorrells and colleagues found that immature neurons in the dentate gyrus declined steeply during the first year after birth, with only isolated ones remaining at ages 7 and 13. Among adults aged 18 to 77, including seventeen individuals sampled after death, the team detected none.\n\nText 2\n\nMaría Llorens-Martín and colleagues had earlier shown that keeping human hippocampal tissue in fixative for long periods prevents the visualization of doublecortin, a protein that marks immature neurons. Because other researchers blamed instead the interval between death and preservation, the team varied both factors in mice. Fixation time proved the principal obstacle to detecting markers of newly formed neurons, although lengthy post-mortem delays further concealed certain especially sensitive markers.",
+      "stem": "Based on the texts, how would Llorens-Martín and colleagues (Text 2) most likely respond to Sorrells and colleagues’ results for adults, as described in Text 1?",
+      "options": [
+        "By suggesting that the absence of immature neurons in the adult samples might reflect how long the tissue had been kept in fixative rather than a true lack of newly formed neurons",
+        "By arguing that the interval between each adult’s death and the preservation of the tissue, rather than any feature of the adult brain, best explains why no immature neurons were found",
+        "By contending that Sorrells and colleagues’ results need confirmation in mice, whose hippocampal tissue, unlike human tissue, can be preserved immediately after death",
+        "By accepting that the steep childhood decline in immature neurons shows adult neurogenesis to be rare, while noting that doublecortin reveals such neurons when tissue is properly fixed"
+      ],
+      "answer_letter": "A",
+      "explanation": "Text 1 reports that Sorrells and colleagues detected no immature neurons in adults aged 18 to 77, including seventeen individuals whose tissue was sampled after death. Text 2 reports that Llorens-Martín and colleagues had shown that keeping human hippocampal tissue in fixative for long periods prevents the visualization of doublecortin, a marker of immature neurons, and that in mice fixation time proved the principal obstacle to detecting markers of new neurons. Llorens-Martín and colleagues would therefore most likely respond that the absence Sorrells and colleagues report might reflect how the tissue was preserved rather than a real absence of new neurons. Choice A states this.",
+      "distractors": {
+        "B": {
+          "recipe": "D3 twisted detail",
+          "why_wrong": "Text 2 mentions the interval between death and preservation as the factor other researchers blamed, then reports that fixation time proved the principal obstacle; post-mortem delay only further concealed certain especially sensitive markers. Llorens-Martín and colleagues would not call it the best explanation."
+        },
+        "C": {
+          "recipe": "D3 twisted detail",
+          "why_wrong": "Llorens-Martín and colleagues used mice to vary fixation time and post-mortem delay; Text 2 never suggests that Sorrells and colleagues’ results should be checked in mice or compares how quickly mouse and human tissue can be preserved."
+        },
+        "D": {
+          "recipe": "D7 half right",
+          "why_wrong": "Text 2 does imply that doublecortin can be seen in tissue that was not kept in fixative too long, but Llorens-Martín and colleagues do not accept that Sorrells and colleagues’ findings show adult neurogenesis to be rare; their work suggests the adult result may reflect how the tissue was preserved."
+        }
+      },
+      "source_text": "Text 1 source (https://doi.org/10.1038/nature25975):\n\nHuman hippocampal neurogenesis drops sharply in children to undetectable levels in adults | Nature 555 2018 | doi 10.1038/nature25975 | Shawn F. Sorrells, Mercedes F. Paredes, et al.\n\nNew neurons continue to be generated in the subgranular zone of the dentate gyrus of the adult mammalian hippocampus. This process has been linked to learning and memory, stress and exercise, and is thought to be altered in neurological disease. In humans, some studies have suggested that hundreds of new neurons are added to the adult dentate gyrus every day, whereas other studies find many fewer putative new neurons. Despite these discrepancies, it is generally believed that the adult human hippocampus continues to generate new neurons. Here we show that a defined population of progenitor cells does not coalesce in the subgranular zone during human fetal or postnatal development. We also find that the number of proliferating progenitors and young neurons in the dentate gyrus declines sharply during the first year of life and only a few isolated young neurons are observed by 7 and 13 years of age. In adult patients with epilepsy and healthy adults (18-77 years; n = 17 post-mortem samples from controls; n = 12 surgical resection samples from patients with epilepsy), young neurons were not detected in the dentate gyrus. In the monkey (Macaca mulatta) hippocampus, proliferation of neurons in the subgranular zone was found in early postnatal life, but this diminished during juvenile development as neurogenesis decreased. We conclude that recruitment of young neurons to the primate hippocampus decreases rapidly during the first years of life, and that neurogenesis in the dentate gyrus does not continue, or is extremely rare, in adult humans. The early decline in hippocampal neurogenesis raises questions about how the function of the dentate gyrus differs between humans and other species in which adult hippocampal neurogenesis is preserved.\n\nText 2 source (https://llorenslab.cbm.uam.es/wordpress/?p=497):\n\nProlonged fixation and post-mortem delay impede the study of adult neurogenesis in mice.\n\nGallardo-Caballero M, Rodríguez-Moreno CB, Álvarez-Méndez L, Terreros-Roncal J, Flor-García M, Moreno-Jiménez EP, Rábano A, Llorens-Martín M. (2023) Communications Biology Sep 23;6(1):978. doi: 10.1038/s42003-023-05367-z.\n\nAdult hippocampal neurogenesis (AHN) gives rise to new neurons throughout life. This phenomenon takes place in more than 120 mammalian species, including humans, yet its occurrence in the latter was questioned after one study proposed the putative absence of neurogenesis markers in the adult human hippocampus. In this regard, we showed that prolonged fixation impedes the visualization of Doublecortin+ immature neurons in this structure, whereas other authors have suggested that a dilated post-mortem delay (PMD) underlies these discrepancies. Nevertheless, the individual and/or additive contribution of fixation and the PMD to the detection (or lack thereof) of other AHN markers has not been studied to date. To address this pivotal question, we used a tightly controlled experimental design in mice, which allowed the dissection of the relative contribution of the aforementioned factors to the visualization of markers of individual AHN stages. Fixation time emerged as the most prominent factor globally impeding the study of this process in mice. Moreover, the visualization of other particularly sensitive epitopes was further prevented by prolonged PMD. These results are crucial to disambiguate current controversies related to the occurrence of AHN not only in humans but also in other mammalian species.",
+      "sources": [
+        {
+          "what": "Sorrells et al., Human hippocampal neurogenesis drops sharply in children to undetectable levels in adults, Nature 555 (2018), abstract: few isolated young neurons by 7 and 13 years; none detected in adults 18 to 77 (17 post-mortem controls, 12 surgical samples)",
+          "url": "https://doi.org/10.1038/nature25975"
+        },
+        {
+          "what": "Gallardo-Caballero, ..., Llorens-Martín, Prolonged fixation and post-mortem delay impede the study of adult neurogenesis in mice, Communications Biology 6:978 (2023), abstract as given on the Llorens-Martín lab publications page",
+          "url": "https://llorenslab.cbm.uam.es/wordpress/?p=497"
+        }
+      ],
+      "notes": "Area: natural science (neuroscience). Relationship: Text 2 supplies a methodological explanation that could account for Text 1’s null result without its conclusion (alternative explanation). Band-7 question: Based on the texts, how would Llorens-Martín and colleagues (Text 2) most likely respond to Sorrells and colleagues’ failure to detect young neurons in adult tissue? Derivable key: the absence may reflect how long the samples, at least the post-mortem ones, were kept in fixative rather than a true absence of new neurons. Needs Text 1’s last sentence (samples taken after death) and Text 2’s first and last sentences. Distractor material: post-mortem delay (Text 2 says it matters less), mice, the childhood decline. S1_alt_explanation has no band-7 official item; modelled on 5e4e082c (a method that reveals a later process undercuts the first team’s reading). Text 2 adapts a 2023 abstract whose last author is Llorens-Martín (first author Gallardo-Caballero), named as the lab’s head. Source_text holds the paragraphs each text was adapted from; neither text shares a 6-word run with them (checked with Python, check_rw tokenization). Stage 2 (questions, written by a separate agent): key A; steps 2; synthesis check: needs Text 1’s last sentence (no immature neurons in adults, post-mortem samples) and Text 2’s first and last sentences (fixation time the principal obstacle); the key restates Text 2’s method point as an alternative to Text 1’s reading; distractors: B D3 twisted detail, C D3 twisted detail, D D7 half right; key 32 words, option mean 28.5 words; key 179 chars against longest distractor 184. band_target set to 6: S1_alt_explanation has no band-7 official item, so this is written as a strong band 6.",
+      "band7_moves": [
+        "S1_alt_explanation has no band-7 official item: written as a strong band 6 on the model of 35e21b06 (the behavior explained without the target’s interpretation)",
+        "band-7 distractor closeness kept: D3 twisted detail on the post-mortem delay that Text 2 ranks second, D3 on Text 2’s mice, D7 half right with a true doublecortin clause"
+      ],
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 7,
+        "facts_note": "Text 2 adapts a 2023 abstract whose last author is Llorens-Martín; attribution to her lab is how the source presents it. Sample counts (17 post-mortem of 29 adults) match.",
+        "fixes": [],
+        "topic_fame": "Adult neurogenesis debate: known within neuroscience, not to general readers. Fits the official profile.",
+        "status": "pass"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "S1_alt_explanation has no band-7 official item, so it cannot be band 7; a strong band 6 as targeted (B ranks post-mortem delay first, against Text 2)."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "A",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "cross_text_connections.trial.hard.t_06",
+      "template": "S1_refute_data",
+      "tier": "hard",
+      "band_target": 7,
+      "models": [
+        "3cfbf077",
+        "5e4e082c"
+      ],
+      "passage": "Text 1\n\nBecause shark skeletons consist of cartilage, the extinct megalodon is known mostly from teeth, but a partial vertebral column discovered in Belgium enabled Jack Cooper and colleagues to construct a three-dimensional model of the animal. They enlarged scans of the vertebrae, attached a skull reconstructed from a scaled-up great white shark skull, and enveloped the skeleton in a scanned great white’s body, producing a shark weighing over 61 tonnes.\n\nText 2\n\nPhillip Sternes and colleagues revisited measurements of the partial megalodon vertebral column found in Belgium. Laid end to end, its vertebrae span 11.1 meters, yet the whole animal, head and tail included, had previously been estimated at only 9.2 meters by applying the relationship between vertebral width and total length in modern white sharks. Megalodon, the researchers infer, probably had a more elongated body than the white shark, though exactly how elongated remains uncertain.",
+      "stem": "Based on the texts, how would Sternes and colleagues (Text 2) most likely respond to the model described in Text 1?",
+      "options": [
+        "By objecting that the model’s skull, scaled up from a great white shark’s, is too small for an animal whose vertebrae span 11.1 meters, although the model’s body is suitably proportioned",
+        "By contending that the model probably makes megalodon too slender, since applying the white shark relationship between vertebral width and total length yields an estimate shorter than the vertebral column itself",
+        "By suggesting that giving the model a great white’s body probably made megalodon less elongated than it was, since the Belgian column alone exceeds what white shark proportions predict for the whole animal",
+        "By arguing that the model’s weight of over 61 tonnes must be too low, since the vertebral column shows that the animal was longer than the 9.2 meters estimated from white shark proportions"
+      ],
+      "answer_letter": "C",
+      "explanation": "Text 1 explains that Cooper and colleagues enlarged scans of the Belgian vertebrae, added a scaled-up great white skull, and enveloped the skeleton in a scanned great white’s body. Text 2 reports that the same vertebrae, laid end to end, span 11.1 meters, more than the 9.2 meters estimated for the whole animal by applying white shark proportions, and infers that megalodon probably had a more elongated body than the white shark. Since the model gives megalodon a white shark’s body, Sternes and colleagues would most likely respond that it probably makes the animal less elongated than it really was. Choice C states this.",
+      "distractors": {
+        "A": {
+          "recipe": "D3 twisted detail",
+          "why_wrong": "Text 2 says nothing about the skull; its finding concerns the body’s proportions, which it argues were probably more elongated than a white shark’s, so it would not call the model’s white shark body suitably proportioned."
+        },
+        "B": {
+          "recipe": "D2 reversal",
+          "why_wrong": "This reverses Text 2’s inference. The column exceeds the length that white shark proportions predict, so megalodon was probably more elongated than a white shark; a model with a white shark’s body would make it too stout, not too slender."
+        },
+        "D": {
+          "recipe": "D3 twisted detail",
+          "why_wrong": "Text 2 does not discuss the model’s mass. It finds that megalodon was probably more elongated than the white shark, a point about shape that does not show the 61-tonne figure to be too low."
+        }
+      },
+      "source_text": "Text 1 source (https://www.swansea.ac.uk/press-office/news-events/news/2022/08/new-3d-model-reveals-megalodon-weighed-more-than-61-tonnes-and-could-eat-whole-killer-whales.php):\n\nNew 3D model reveals megalodon weighed more than 61 tonnes and could eat whole killer whales\n\nThanks to a megalodon which was discovered in the 1860s, an international team of scientists, including some from Swansea University, have been able to create, what is to date, the most complete 3D reconstruction of a megalodon – the largest shark that ever lived.\n\nSharks possess a soft cartilaginous skeleton - their bones are closer to a human nose than they are to a femur – making it unlikely that their remains would fossilise, leaving scientists with little to look at other than dental remains to study the now extinct megalodon.\n\nYet against all odds, a sizeable portion of a megalodon’s vertebral column fossilised after the creature died in the Miocene oceans of Belgium at the age of 46 about 18 million years ago.\n\nJack Cooper, the study’s first author and a PhD student at Swansea University, explains “Shark teeth are common fossils because of their hard composition which allows them to remain well preserved. However, their skeletons are made of cartilage, so they rarely fossilise. The megalodon vertebral column from the Royal Belgian Institute of Natural Sciences is therefore a one-of-a-kind fossil which has enabled us to carry out this unique study and create the 3D model.”\n\nThe research team, which includes researchers from Switzerland, UK, USA, Australia and South Africa, first used 3D scans of the fossilised Belgian vertebrae to reconstruct the spinal column, scaling it up to real size. They then recreated the skull of a megalodon, using an existing 3D scan of the skull of a great white shark, which was scaled up and fitted with 3D scans of a megalodon dentition. The resulting skull was then attached to the vertebrae, producing a base model of megalodon’s skeleton. A 3D scan of the full body of a great white shark was used to add “flesh” around the megalodon skeleton, producing a full 3D model of its whole body.\n\nText 2 source (https://doi.org/10.26879/1345):\n\nPhillip C. Sternes, Patrick L. Jambura, Julia Türtscher, Jürgen Kriwet, Mikael Siversson, Iris Feichtinger, Gavin J.P. Naylor, Adam P. Summers, John G. Maisey, Taketeru Tomita, Joshua K. Moyer, Timothy E. Higham, João Paulo C.B. da Silva, Hugo Bornatowski, Douglas J. Long, Victor J. Perez, Alberto Collareta, Charlie Underwood, David J. Ward, Romain Vullo, Gerardo González-Barba, Harry M. Maisch IV, Michael L. Griffiths, Martin A. Becker, Jake J. Wood, and Kenshu Shimada\n\nThe megatooth shark, †Otodus megalodon, which likely reached at least 15 m in total length, is an iconic extinct shark represented primarily by its gigantic teeth in the Neogene fossil record. As one of the largest marine carnivores to ever exist, understanding the biology, evolution, and extinction of †O. megalodon is important because it had a significant impact on the ecology and evolution of marine ecosystems that shaped the present-day oceans. Some attempts inferring the body form of †O. megalodon have been carried out, but they are all speculative due to the lack of any complete skeleton. Here we highlight the fact that the previous total body length estimated from vertebral diameters of the extant white shark (Carcharodon carcharias) for an †O. megalodon individual represented by an incomplete vertebral column is much shorter than the sum of anteroposterior lengths of those fossil vertebrae. This factual evidence indicates that †O. megalodon had an elongated body relative to the body of the modern white shark. Although its exact body form remains unknown, this proposition represents the most parsimonious empirical evidence, which is a significant step towards deciphering the body form of †O. megalodon.\n\nSo, what did †O. megalodon actually look like? Despite their questionable reconstructions, we point out that Cooper et al.’s (2022) study is significant because it left an important clue about the body form of †O. megalodon. Their reconstructed vertebral column based on an associated vertebral set from the Miocene of Belgium was 11.1 m in length (Figure 1B) with the total length of their complete model measuring 15.9 m. The specimen is most certainly incomplete (Gottfried et al., 1996), missing an unknown number of vertebrae (see above). Yet, this specific †O. megalodon specimen was previously estimated to have come from an individual that measured 9.2 m TL (i.e., including the head and caudal fin) based on the quantitative relationship between the maximum vertebral width and TL measured from 16 extant white sharks that ranged 1.9-3.7 m TL (Gottfried et al., 1996; Shimada et al., 2021b). The vertebral centra of †O. megalodon are short, well mineralized and equipped with densely spaced radial lamellae (Leriche, 1926). This vertebral morphotype, which functionally adds architectural strength, is common within Lamniformes and characterizes both the extant white shark (Newbrey et al., 2015) and many other extinct apex predatory lamniform species (Shimada, 1997; Siverson, 1999; Amalfitano et al., 2022). Yet, the much longer vertebral column length measured by Cooper et al. (2022) (11.1 m) than the estimate based on the vertebral diameter sizes of the extant white shark (9.2 m TL) indicates that †O. megalodon had a more elongated body relative to the extant white shark (Figure 4).\n\nExactly how elongated †O. megalodon ’s body was relative to the extant white shark is uncertain at the present time (Figure 4) because the extent of missing vertebrae in the associated vertebral set (Figure 1B) is unknown (Cooper et al., 2022; this study). However, besides the aforementioned new palaeontological (Shimada et al., 2023) and neontological (at least Dolton et al., 2023a, at present) evidence, our interpretation is further supported by additional anatomical evidence. In modern lamnids, centrum growth correlates with girth rather than body length (Natanson et al., 2018). White sharks have a thicker vertebral column than shortfin mako (Isurus oxyrinchus) and porbeagle (Lamna nasus) sharks at a comparable body length (Gottfried et al., 1996; Natanson et al., 2002; Doño et al., 2015) but with a similar mass (Kohler et al., 1995). More compression-resistant vertebrae may compensate for the structural issues associated with the thinner columns in shortfin makos and porbeagles (Ingle et al., 2018). The maximum diameter of the †O. megalodon vertebrae from Belgium along with the original vertebral column length of 11.1+ m indicates a vertebral column not only much thinner in relative terms than that of a white shark but also more gracile than those of smaller-bodied lamnids with known vertebral size data (Gottfried et al., 1996; Natanson et al., 2002; Doño et al., 2015). If anything, the data from living lamnids indicate a robust vertebral column in a hypothetical lamnid-like shark the size of an †O. megalodon. Therefore, the remarkably slender vertebral column of the Belgian †O. megalodon specimen raises concerns about the accuracy of girthy, lamnid-like reconstructions of this species suggested by Cooper et al. (2020, 2022). We also note that the body cross-sectional geometry in Cooper et al.’s (2022) 3D body reconstruction of †O. megalodon is rather rectangular and distorted, but it is generally elliptical in extant sharks (Tomita et al., 2021), suggesting that it is more parsimonious to consider †O. megalodon to also have had an elliptical body cross-section.",
+      "sources": [
+        {
+          "what": "Swansea University news, August 2022 (Cooper et al., Science Advances): 3D model of megalodon from the Belgian vertebral column; skull from a scaled great white scan with megalodon dentition; full great white body scan used to add flesh; more than 61 tonnes",
+          "url": "https://www.swansea.ac.uk/press-office/news-events/news/2022/08/new-3d-model-reveals-megalodon-weighed-more-than-61-tonnes-and-could-eat-whole-killer-whales.php"
+        },
+        {
+          "what": "Sternes et al., White shark comparison reveals a slender body for the extinct megatooth shark, Palaeontologia Electronica 27(1):a7 (2024), abstract and discussion: the Belgian specimen (IRSNB P 9893) has a vertebral column of 11.1 m against a 9.2 m total length estimated from white shark vertebral width; more elongated body than the white shark, exact degree uncertain",
+          "url": "https://doi.org/10.26879/1345"
+        }
+      ],
+      "notes": "Area: natural science (paleontology). Relationship: Text 2’s measurement undercuts the body plan assumed by Text 1’s model (refutation by new data; the specimen is shared). Band-7 question: Based on the texts, how would Sternes and colleagues (Text 2) most likely respond to the model described in Text 1? Derivable key: by wrapping the Belgian vertebrae in a great white’s body, the model probably makes megalodon stouter than it was, since the column alone (11.1 meters) exceeds the whole-body length (9.2 meters) that white shark proportions predict for the same individual. Needs Text 1’s last sentence and Text 2’s second and third sentences. Distractor material: cartilage and teeth, the 61 tonnes (Text 2 says nothing about mass), skull reconstruction. Source_text holds the paragraphs each text was adapted from; neither text shares a 6-word run with them (checked with Python, check_rw tokenization). Stage 2 (questions, written by a separate agent): key C; steps 3; synthesis check: needs Text 1’s last sentence (vertebrae wrapped in a great white’s body) and Text 2’s second and third sentences (11.1 against 9.2 meters, more elongated); neither text says the model is wrongly shaped; distractors: A D3 twisted detail, B D2 reversal, D D3 twisted detail; key 33 words, option mean 32.0 words; key 205 chars against longest distractor 211. Review (2026-10-16): Text 2 said Sternes and colleagues “reexamined” the column; the source shows they reworked published measurements (the 11.1 m column is Cooper and colleagues’ figure), so it now says “revisited measurements of”.",
+      "band7_moves": [
+        "synthesis key: Text 2’s 11.1 against 9.2 meters applied to Text 1’s model, which Text 2 never mentions",
+        "three steps: what body plan the model assumes, what the column shows about that plan, the consequence for the model",
+        "distractors: D2 reversal of the derived claim (too slender), two D3 twisted details (the scaled-up skull; the 61 tonnes)"
+      ],
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 7,
+        "facts_note": "11.1 m, 9.2 m and the white-shark width relationship match; “reexamined” overstated what Sternes and colleagues did, fixed.",
+        "fixes": [
+          "Text 2 said Sternes and colleagues “reexamined” the column; the source shows they reworked published measurements (the 11.1 m column is Cooper and colleagues’ figure), so it now says “revisited measurements of”."
+        ],
+        "topic_fame": "Megalodon: a famous animal, though the body-shape dispute is obscure. Borderline.",
+        "status": "fixed"
+      },
+      "band7": {
+        "verdict": "band 7",
+        "why": "The key joins the model’s great white body to the 11.1 m column against the 9.2 m prediction; B keeps the right premise and reverses the conclusion (too slender), the band-7 reversal of a derived claim."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "C",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "cross_text_connections.trial.hard.t_07",
+      "template": "S1_concede_rebut",
+      "tier": "hard",
+      "band_target": 7,
+      "models": [
+        "d0198544"
+      ],
+      "passage": "Text 1\n\nTwo comparatively small tyrannosaur skeletons from Montana, nicknamed Jane and Petey, had prompted speculation that they belonged not to Tyrannosaurus rex but to a pygmy relative, Nanotyrannus. Examining thin sections of both animals’ leg bones, Holly Woodward and colleagues counted annual growth rings indicating ages of 13 and 15 and found both growing as fast as modern mammals and birds. The two, they concluded, were adolescent T. rex, not representatives of a pygmy species.\n\nText 2\n\nNanotyrannus was named from a single skull, and because skulls contain sinus cavities and similar irregularities, maturity is ordinarily assessed from long bones such as femora. Christopher Griffin and colleagues sectioned that specimen’s hyoid, a throat bone, after confirming in living reptiles and birds and in a Tyrannosaurus growth series that hyoids record growth as limb bones do. The skull’s owner, they found, had nearly stopped growing.",
+      "stem": "Based on the texts, how would Griffin and colleagues (Text 2) most likely respond to Woodward and colleagues’ conclusion in Text 1?",
+      "options": [
+        "By accepting that Jane and Petey were growing as fast as modern mammals and birds while doubting that annual growth rings in leg bones can reveal how old a tyrannosaur was",
+        "By arguing that Woodward and colleagues should have sectioned Jane’s and Petey’s hyoids, since leg bones record growth less faithfully than throat bones do",
+        "By agreeing that Nanotyrannus was most likely a young T. rex, since the hyoid of the skull on which it was named records growth as rapid as that of modern mammals and birds, like Jane’s and Petey’s leg bones",
+        "By suggesting that even if Jane and Petey were young T. rex, this would not rule out a pygmy species, since the skull on which the name Nanotyrannus rests came from an animal that had nearly stopped growing"
+      ],
+      "answer_letter": "D",
+      "explanation": "Text 1 reports that growth rings in Jane’s and Petey’s leg bones show two fast-growing animals aged 13 and 15, and that Woodward and colleagues concluded they were adolescent T. rex, not members of a pygmy species. Text 2 points out that Nanotyrannus was named from a single skull and reports that Griffin and colleagues, using that skull’s hyoid, found that its owner had nearly stopped growing. Whatever Jane and Petey were, the animal on which the name Nanotyrannus rests was nearly mature, not an adolescent, so Griffin and colleagues would most likely respond that Woodward and colleagues’ findings do not settle whether Nanotyrannus was a distinct species. Choice D states this.",
+      "distractors": {
+        "A": {
+          "recipe": "D7 half right",
+          "why_wrong": "Text 2 does not doubt growth rings in leg bones; it says that maturity is ordinarily assessed from long bones such as femora, and Griffin and colleagues confirmed that hyoids record growth as limb bones do."
+        },
+        "B": {
+          "recipe": "D3 twisted detail",
+          "why_wrong": "Text 2 uses the hyoid only because Nanotyrannus is known from a skull, which lacks the long bones ordinarily used; it reports that hyoids record growth as limb bones do, not more faithfully."
+        },
+        "C": {
+          "recipe": "D2 reversal",
+          "why_wrong": "This reverses Text 2’s finding. The hyoid showed that the skull’s owner had nearly stopped growing, which tells against its being a young T. rex; Text 2 does not compare its growth rate with Jane’s and Petey’s."
+        }
+      },
+      "source_text": "Text 1 source (https://www.newswise.com/articles/researchers-learn-more-about-teen-age-t-rex):\n\nIn the early 2000s, the fossil skeletons of two comparatively small T. rex were collected from Carter County, Montana, by Burpee Museum of Natural History in Rockford, Illinois. Nicknamed \"Jane\" and \"Petey,\" the tyrannosaurs would have been slightly taller than a draft horse and twice as long.\n\nThe team led by Holly Woodward, Ph.D., from Oklahoma State University Center for Health Sciences studied Jane and Petey to better understand T. rex life history.\n\nThe smaller size of Jane and Petey is what make them so incredibly important. Not only can scientists now study how the bones and proportions changed as T. rex matured, but they can also utilize paleohistology-- the study of fossil bone microstructure-- to learn about juvenile growth rates and ages. Woodward and her team removed thin slices from the leg bones of Jane and Petey and examined them at high magnification.\n\nThe team determined that the small T. rex were growing as fast as modern-day warm-blooded animals such as mammals and birds. Woodward and her colleagues also found that by counting the annual rings within the bone, much like counting tree rings, Jane and Petey were teenaged T.rex when they died; 13 and 15 years old, respectively.\n\nThere had been speculation that the two small skeletons weren't T. rex at all, but a smaller pygmy relative Nanotyrannus. Study of the bones using histology led the researchers to the conclusion that the skeletons were juvenile T. rex and not a new pygmy species.\n\nText 2 source (https://nhm.org/press/return-short-tyrant-king-new-paper-dinosaur-institute-researcher-shows-nanotyrannus-was-not):\n\nLos Angeles, CA (December 4, 2025)—For decades, paleontologists argued over the lone skull used to establish the distinct species Nanotyrannus. Was it truly a separate species or simply a juvenile Tyrannosaurus rex? A new paper published in Science has definitively shown that Nanotyrannus is, in fact, nearly fully grown and not an immature T. rex, at the same time revealing new insights into how these giant predators achieved such terrifying sizes so quickly.\n\nA multi-institutional team, including Dinosaur Institute Postdoctoral Fellow, Dr. Zach Morris, examined the much-debated Nanotyrannus holotype—the specimen used to name a new species—particularly its throat bone. The team examined the bone’s microscopic structure, comparing it to those of living birds, crocodilians, and extinct dinosaurs—including the Dino Hall’s singular T. rex growth series—to establish that Nanotyrannus, while smaller, was a fully grown and distinct predator in an ancient ecosystem more diverse than previously imagined. Slightly less than half the size of their massive adult cousins, Nanotyrannus competed with juvenile T. rex for prey in Late Cretaceous North America.\n\n“The identity of the holotype specimen was the key piece in this debate. Discovering that this small skull was actually fully grown shows definitively that it is different from Tyrannosaurus rex,” said Dr. Christopher Griffin, lead author and Assistant Professor of Geosciences at Princeton University.\n\nJust as cutting a tree and counting its growth reveals its age, cross-sectioning a dinosaur’s bones can reveal how mature it is. Researchers examine thin slices of fossil bone under a microscope, measuring the organization of the tissues to gauge the age of the animal in life and understand how quickly it grew. Researchers typically use long bones, such as femora or ribs, but these do not survive intact in every fossil specimen. The Nanotyrannus holotype is mostly a skull, and skulls are rife with sinus cavities and other irregularities that make them unsuitable for the technique. However, the hyoid—a throat bone that supports the tongue—of the specimen was potentially able to answer this question once and for all.\n\n“When we started this project, it was unclear whether the hyoid preserved a record of a dinosaur’s growth. To be honest, we mostly accepted the hypothesis that Nanotyrannus was a juvenile T. rex, so we expected the microscopic bone structure or histology of the holotype would show this animal was still growing quickly,” said co-author Dr. Morris. “What we did not expect was to see it was nearing maturity with clear evidence of the cessation of growth!”\n\nSince no one had previously demonstrated that hyoid bones preserve a useful record of an animal's growth, the team needed to prove that the throat bone could be a reliable gauge for maturity. To test its viability, Dr. Griffin brought together a team of experts to build a database comparing the hyoids of a range of species, from living lizards, crocodiles, and birds to extinct dinosaurs. “To show that hyoid microstructure would work to test maturity status in Nanotyrannus, we first had to compile strong support for this method across many groups of living reptiles and extinct dinosaurs,” said Dr. Griffin.\n\nDr. Morris oversaw the sampling and analysis of the juvenile and sub-adult “Thomas\" in NHM’s one-of-a-kind T. rex growth series. “The growth series in our Dino Hall was critical to demonstrating that the hyoid in Tyrannosaurus showed the same kind of growth record as long bones,” said Morris. “Having a growth series that had already been histologically analyzed meant that we could compare the growth record in the hyoid and the growth record in the long bones and see that they show consistent signals even in these uniquely giant predators.” Having the T. rex growth series available provided benchmarks to better understand and assess differences in growth between T. rex and Nanotyrannus.\n\n900 Exposition Blvd., Los Angeles, CA 90007",
+      "sources": [
+        {
+          "what": "Oklahoma State University Center for Health Sciences release, January 2020 (Woodward et al., Science Advances), read at Newswise: Jane and Petey, leg-bone histology, ages 13 and 15, growth as fast as mammals and birds, juvenile T. rex rather than pygmy Nanotyrannus",
+          "url": "https://www.newswise.com/articles/researchers-learn-more-about-teen-age-t-rex"
+        },
+        {
+          "what": "Natural History Museum of Los Angeles County press release, 4 December 2025 (Griffin et al., Science): Nanotyrannus holotype is mostly a skull; hyoid histology validated across living reptiles, birds and the T. rex growth series; holotype nearly fully grown, a distinct species",
+          "url": "https://nhm.org/press/return-short-tyrant-king-new-paper-dinosaur-institute-researcher-shows-nanotyrannus-was-not"
+        }
+      ],
+      "notes": "Area: natural science (paleontology). Relationship: Text 2 leaves Text 1’s findings on Jane and Petey standing but rejects the conclusion drawn from them about Nanotyrannus (concede, then rebut). Band-7 question: Based on the texts, how would Griffin and colleagues (Text 2) most likely respond to Woodward and colleagues’ conclusion? Derivable key: whatever the leg bones show about Jane and Petey, that evidence cannot settle the status of the skull on which Nanotyrannus was founded, and that skull came from an animal that had nearly finished growing, so the species may be real. Needs Text 1’s last two sentences and all of Text 2. Distractor material: growth rates like mammals and birds, hyoid method, Montana. Source_text holds the paragraphs each text was adapted from; neither text shares a 6-word run with them (checked with Python, check_rw tokenization). Stage 2 (questions, written by a separate agent): key D; steps 3; synthesis check: needs Text 1’s last two sentences (Jane and Petey adolescent T. rex, not a pygmy species) and Text 2’s first and last sentences (one skull, nearly stopped growing); neither text says Jane and Petey cannot settle Nanotyrannus; distractors: A D7 half right, B D3 twisted detail, C D2 reversal; key 38 words, option mean 33.0 words; key 206 chars against longest distractor 207.",
+      "band7_moves": [
+        "concede-rebut kept implicit: the key leaves Text 1’s findings on Jane and Petey standing and denies only what they are taken to show (d0198544 setting)",
+        "synthesis key: the gap between the specimens Text 1 studied and the specimen Text 2 studied, stated in neither text",
+        "distractors: D7 half right (true growth-rate clause, invented doubt about growth rings), D3 twisted detail (hyoids as more faithful), D2 reversal of Text 2’s finding"
+      ],
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 8,
+        "facts_note": "Ages 13 and 15, leg-bone sections, growth like mammals and birds, hyoid validated in living reptiles, birds and a T. rex growth series, near cessation of growth: all in the sources.",
+        "fixes": [],
+        "topic_fame": "Nanotyrannus: known to dinosaur readers, heavily covered in late 2025. Moderate.",
+        "status": "pass"
+      },
+      "band7": {
+        "verdict": "band 7",
+        "why": "The key rests on a gap neither text states: Jane and Petey are not the skull that names Nanotyrannus, and that skull was nearly mature. A and B twist Text 2’s method details, C reverses its finding."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "D",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "cross_text_connections.trial.hard.t_08",
+      "template": "S1_framework_critique",
+      "tier": "hard",
+      "band_target": 7,
+      "models": [
+        "96f3accc",
+        "5e4e082c"
+      ],
+      "passage": "Text 1\n\nBurial and deliberate mark-making were long thought to require a brain as large as a Neanderthal’s or a modern human’s. Yet John Hawks and colleagues report that Homo naledi, whose brain was roughly a third as large as ours, buried its dead in South Africa’s Rising Star cave system and engraved crosshatched lines nearby. Natural erosion of limestone, Hawks notes, leaves a distinctively intricate texture; these engravings are bold, apparently tool-made striations.\n\nText 2\n\nFor María Martinón-Torres and colleagues, the claim that Homo naledi, with a brain of roughly 450 to 600 cubic centimeters, buried its dead is unproven. Natural causes of the skeletal accumulations, such as a death trap, transport by water, or carnivores, have not been excluded, nor have the pits been shown to be intentionally excavated and filled. The engravings must likewise be demonstrated to be human-made and securely attributable to H. naledi.",
+      "stem": "Based on the texts, how would Martinón-Torres and colleagues (Text 2) most likely respond to Hawks’s observation about the engravings in Text 1?",
+      "options": [
+        "By arguing that the bold striations Hawks describes are more likely the work of carnivores or flowing water than of any tool, as are the skeletal accumulations in the cave",
+        "By suggesting that even if the marks’ boldness sets them apart from natural erosion, that would bear only on whether they are human-made, not on whether they can be securely credited to H. naledi",
+        "By noting that the skeletal accumulations in the Rising Star cave system might have resulted from a natural death trap rather than from the deliberate burial of the dead",
+        "By agreeing that the engravings were made with tools but objecting that a brain of roughly 450 to 600 cubic centimeters, about a third the size of ours, is too small to have produced deliberate marks of that kind"
+      ],
+      "answer_letter": "B",
+      "explanation": "Text 1 reports Hawks’s observation that natural erosion of limestone leaves an intricate texture, whereas the Rising Star engravings are bold, apparently tool-made striations. Text 2 sets two conditions for the engravings: they must be shown to be human-made and securely attributable to H. naledi. Hawks’s contrast with erosion addresses only the first condition, so Martinón-Torres and colleagues would most likely respond that, even granting it, the observation leaves open whether H. naledi made the marks. Choice B states this.",
+      "distractors": {
+        "A": {
+          "recipe": "D3 twisted detail",
+          "why_wrong": "Text 2 lists carnivores and transport by water as possible natural causes of the skeletal accumulations, not of the engravings; about the engravings it says only that they must be shown to be human-made and attributable to H. naledi."
+        },
+        "C": {
+          "recipe": "D8 right view, wrong target",
+          "why_wrong": "Text 2 does raise a death trap as an unexcluded cause of the skeletal accumulations, a fair summary of its view on burial. But the question asks how Martinón-Torres and colleagues would respond to Hawks’s observation about the engravings, which this choice does not address."
+        },
+        "D": {
+          "recipe": "D3 twisted detail",
+          "why_wrong": "Text 2 gives H. naledi’s brain size but does not say a small brain rules out engraving; it calls the claims unproven. Nor does it agree that the marks were made with tools; it says that this must be demonstrated."
+        }
+      },
+      "source_text": "Text 1 source (https://news.wisc.edu/archeologists-uncover-evidence-of-intentional-burial-cave-engravings-by-early-human-ancestor):\n\nAn entrance to the Dinaledi Chamber of the Rising Star Cave system, part of the Cradle of Humankind World Heritage Site near Johannesburg, South Africa. Newly found grave sites and wall engravings have led a team of archaeologists to reevaluate the meaning-making capacity of an early human ancestor, Homo naledi. Photo: Jeff Miller\n\nNew observations and excavations in South African caves have found that Homo naledi, an early human ancestor, intentionally buried their dead and made crosshatch engravings in the cave walls nearby.\n\nFossils of Homo naledi were first discovered in these caves 10 years ago by a team of researchers led by paleoanthropologist Lee Berger, now a National Geographic Explorer in Residence, with key participation by John Hawks of the University of Wisconsin–Madison and other UW–Madison researchers. Their new findings, published across three papers ahead of peer review by the journal eLife, are now the earliest evidence of mortuary and meaning-making behaviors in human ancestors.\n\nUntil now, scholars believed that the mental capacity behind complex cultural behaviors like burial and mark-making required a larger brain, like those of Neanderthals and Homo sapiens. And yet, Homo naledi’s brain was only about one-third the size of humans’.\n\nThe chambers where the burials and crosshatch markings were found are in the Dinaledi subsystem of the cave, about 50 meters from the main entrance where archaeologists shimmy in. The team found two burial sites, one near the entrance to the subsystem and another further back in another chamber. The engravings are situated on either side of a natural limestone column that leads to the furthest burial site.\n\nWhile limestone does erode and crack over time, Hawks says that those natural patterns tend to be easily recognized by their complex “elephant skin” texture. Instead, the artificial engravings are a few bold lines on a mostly flat surface, made of multiple striations that appear to have been made with a tool.\n\nText 2 source (https://www.ucl.ac.uk/human-evolution/news/2023/nov/no-scientific-evidence-homo-naledi-buried-their-dead-and-produced-rock-art):\n\nThe Rising Star Cave system has yielded a stunning concentration of hominin remains estimated to belong to more than 15 individuals representing all age groups, assigned to a new species, Homo naledi (Berger et al., 2015; Dirks et al., 2015). Previous publications (e.g., Dirks et al., 2015; Randolph-Quinney, 2015), as well as popular interviews with the team leaders have suggested that H. naledi was engaged in deliberate disposal of the dead. However, other researchers have cited geological, taphonomic and paleontological evidence to suggest that natural formation scenarios may account for skeletal accumulations, such as a natural death trap, water transport of bodies/body parts and carnivore activity (e.g., Val, 2016; Stiner, 2017; Egeland et al., 2018; Pettitt, 2022).\n\nIn June of 2023, the journal eLife hosted three reviewed pre-prints by the Rising Star research team claiming that the Dinaledi and Hill Antechamber skeletal remains indicate deliberate burial practices and the production of associated rock art (Berger et al., 2023a, 2023b; Fuentes et al., 2023)1. Both the reviewed and previously unreviewed pre-prints were accompanied by a strong media campaign that quickly spread the revolutionary idea that the small-brained (∼450–600 cc) hominins found deep in the Rising Star Cave system were capable of complex funerary behaviors equivalent to those attributed to larger-brained (∼1400 cc) hominin species, Homo sapiens and Homo neanderthalensis. The media hype that accompanied both the unreviewed and reviewed, though currently unmodified, pre-prints at the time of this writing, triggered strong public controversy and an immediate debate about ‘modern human behavior’ but also about the way in which scientific work is communicated and perceived by the public (e.g., Gibbons, 2023; Petraglia et al., 2023; Zimmer, 2023). Here we will examine the evidence for the alleged burials and the purported rock art presented in the three reviewed pre-prints together with a consideration of the open reviews published alongside them. The peer reviews were unanimous in considering the evidence inadequate in its present form. Despite this, these versions remain available and communicated to the press and social media without yet integrating any of the referee's comments.\n\nHere we argue that the evidence presented so far is not compelling enough to support the deliberate burial of the dead by H. naledi nor that they made the purported engravings. Substantial additional documentation and scientific analyses are needed before we can rule out that natural agents and post-depositional processes are responsible for the accumulation of bodies/body parts and to prove the intentional excavation and filling of pits by H. naledi. Moreover, detailed analyses are needed to demonstrate that the so-called ‘engravings’ are indeed human-made marks and that, like the purported evidence of fire use, they can be securely linked to H. naledi. Our commentary also offers a brief insight on the state of the field regarding the importance of responsible social communication and the challenges brought by new models of scientific publication.",
+      "sources": [
+        {
+          "what": "University of Wisconsin-Madison news release, June 2023 (Berger, Hawks et al., eLife reviewed preprints): Homo naledi buried its dead and engraved crosshatched lines; brain about one-third the size of humans’; natural limestone weathering has an elephant-skin texture, the engravings are bold lines that appear tool-made",
+          "url": "https://news.wisc.edu/archeologists-uncover-evidence-of-intentional-burial-cave-engravings-by-early-human-ancestor"
+        },
+        {
+          "what": "Martinón-Torres, Garate, Herries and Petraglia, No scientific evidence that Homo naledi buried their dead and produced rock art (Journal of Human Evolution, 2024), summary on UCL Human Evolution news, November 2023: natural death trap, water transport and carnivores not excluded; intentional pits unproven; engravings must be shown human-made and securely linked to H. naledi",
+          "url": "https://www.ucl.ac.uk/human-evolution/news/2023/nov/no-scientific-evidence-homo-naledi-buried-their-dead-and-produced-rock-art"
+        }
+      ],
+      "notes": "Area: natural science (paleoanthropology). Relationship: Text 2 sets a standard of evidence that Text 1’s arguments do not yet meet (critique of the target’s standard). Band-7 question: Based on the texts, how would Martinón-Torres and colleagues (Text 2) most likely respond to Hawks’s observation about the marks in Text 1? Derivable key: even if the marks differ from natural weathering, that would address only whether they are human-made, not whether H. naledi, rather than some other hominin, made them. Needs Text 1’s last sentence and Text 2’s last sentence. Underline candidate: Text 1’s last sentence. Source_text holds the paragraphs each text was adapted from; neither text shares a 6-word run with them (checked with Python, check_rw tokenization). Stage 2 (questions, written by a separate agent): key B; steps 3; synthesis check: needs Text 1’s last sentence (bold, apparently tool-made striations unlike erosion) and Text 2’s last sentence (human-made and securely attributable to H. naledi); neither text says the erosion contrast leaves authorship open; distractors: A D3 twisted detail, C D8 right view, wrong target, D D3 twisted detail; key 34 words, option mean 33.0 words; key 195 chars against longest distractor 212.",
+      "band7_moves": [
+        "synthesis key: sorts Text 2’s two conditions and finds that Hawks’s observation meets at most one; neither text states the gap",
+        "three steps: what Hawks’s contrast shows, what Text 2 requires, which requirement is left unmet",
+        "distractors: D3 twisted detail (Text 2’s natural causes moved from bones to marks), D8 a fair summary of Text 2’s burial view that answers a different target, D3 twisted detail (brain size as a bar)"
+      ],
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 7,
+        "facts_note": "Hawks is a co-author of the Berger-led papers and the release quotes him on the engravings; Martinón-Torres named in sources. 450 to 600 cc and both conditions on the engravings match.",
+        "fixes": [],
+        "topic_fame": "Homo naledi burials: widely reported in 2023 (documentary, magazine covers), a moderate fame tell as flagged; weaker than Planet Nine or Dunbar’s number.",
+        "status": "pass",
+        "flag_check": "C confirmed wrong: it fairly states Text 2’s doubt about burial but says nothing about Hawks’s observation on the engravings, the stem’s target; a strong student rejects it for that reason."
+      },
+      "band7": {
+        "verdict": "band 7",
+        "why": "The key sorts Text 2’s two conditions and sees that Hawks’s erosion contrast meets at most one. C is a fair statement of Text 2’s burial view aimed at the wrong target: a strong student rejects it because the stem asks about the engravings, so it is not a second answer. A moves water and carnivores from the bones to the marks."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "B",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "cross_text_connections.trial.hard.t_09",
+      "template": "S1_second_factor",
+      "tier": "hard",
+      "band_target": 7,
+      "models": [
+        "592f94c2",
+        "e4e2aeb3"
+      ],
+      "passage": "Text 1\n\nAccording to the social brain hypothesis, human social networks have a characteristic size, determined partly by cognitive limits and partly by the time relationships demand. Online platforms might relax the second constraint, but in two stratified UK surveys, Robin Dunbar found that Facebook networks resembled face-to-face ones both overall and in their innermost layers, suggesting a cognitive ceiling that even online communication cannot raise.\n\nText 2\n\nRobin Dunbar’s widely cited figure of about 150 stable relationships per person was extrapolated from a correlation between relative neocortex size and group size in nonhuman primates. Repeating that analysis with updated primate data and modern statistical methods, Patrik Lindenfors and colleagues obtained estimates whose 95 percent confidence intervals extended from 2 to 520 people. Human social networks, they add, vary widely and are shaped by culture, which can train people to keep up more relationships.",
+      "stem": "Based on the texts, how would Lindenfors and colleagues (Text 2) most likely respond to Dunbar’s interpretation of his survey results in Text 1?",
+      "options": [
+        "By suggesting that the resemblance between Facebook and face-to-face networks need not reveal a cognitive ceiling, since culture, not brain capacity alone, governs network size",
+        "By arguing that Dunbar’s surveys should have found Facebook networks of about 150 people, the figure his neocortex analysis predicted, rather than networks resembling face-to-face ones",
+        "By agreeing that online networks are capped by cognition but contending that the cap lies far above 150 relationships, as their upper estimate of 520 people indicates",
+        "By contending that online communication does not relax the time that relationships demand, so that the similar network sizes reflect limits on time rather than limits on cognition"
+      ],
+      "answer_letter": "A",
+      "explanation": "Text 1 reports that Dunbar found Facebook networks resembling face-to-face ones, which he took to suggest a cognitive ceiling that online communication cannot raise. Text 2 reports that Lindenfors and colleagues, repeating the analysis behind Dunbar’s figure of about 150 relationships, obtained estimates ranging from 2 to 520 people, and adds that network size varies widely and is shaped by culture, which can train people to keep up more relationships. If culture, not only a fixed cognitive limit, governs network size, then similar online and offline networks need not reveal a ceiling, so Lindenfors and colleagues would most likely respond in that way. Choice A states this.",
+      "distractors": {
+        "B": {
+          "recipe": "D3 twisted detail",
+          "why_wrong": "The figure of 150 appears only in Text 2, which doubts it; Lindenfors and colleagues would not hold that the surveys should have found networks of that size, and Text 2 does not discuss Dunbar’s survey numbers."
+        },
+        "C": {
+          "recipe": "D3 twisted detail",
+          "why_wrong": "The 2 to 520 range is a 95 percent confidence interval, which shows how imprecise the estimate is, not where a cap lies; Text 2 also stresses culture rather than agreeing that cognition caps online networks."
+        },
+        "D": {
+          "recipe": "D3 twisted detail",
+          "why_wrong": "The time that relationships demand is Text 1’s second constraint, and Text 1 says online platforms might relax it. Text 2 does not discuss time; the influence it adds is culture."
+        }
+      },
+      "source_text": "Text 1 source (https://doi.org/10.1098/rsos.150292):\n\nDo online social media cut through the constraints that limit the size of offline social networks? | Royal Society Open Science 3 2016 | doi 10.1098/rsos.150292 | R. I. M. Dunbar\n\nThe social brain hypothesis has suggested that natural social network sizes may have a characteristic size in humans. This is determined in part by cognitive constraints and in part by the time costs of servicing relationships. Online social networking offers the potential to break through the glass ceiling imposed by at least the second of these, potentially enabling us to maintain much larger social networks. This is tested using two separate UK surveys, each randomly stratified by age, gender and regional population size. The data show that the size and range of online egocentric social networks, indexed as the number of Facebook friends, is similar to that of offline face-to-face networks. For one sample, respondents also specified the number of individuals in the inner layers of their network (formally identified as support clique and sympathy group), and these were also similar in size to those observed in offline networks. This suggests that, as originally proposed by the social brain hypothesis, there is a cognitive constraint on the size of social networks that even the communication advantages of online media are unable to overcome. In practical terms, it may reflect the fact that real (as opposed to casual) relationships require at least occasional face-to-face interaction to maintain them.\n\nText 2 source (https://www.su.se/english/news/articles/2021-05-05-new-study-deconstructs-dunbars-number---yes-you-can-have-more-than-150-friends):\n\nAn individual human can maintain stable social relationships with about 150 people. This is the proposition known as ‘Dunbar’s number’ – that the architecture of the human brain sets an upper limit on our social lives. A new study from Stockholm University indicates that a cognitive limit on human group sizes cannot be derived in this manner.\n\nDunbar’s number is named after the British anthropologist Robin Dunbar, who proposed the theory in the 1990s. The number 150 is based on an extrapolation of the correlation between the relative size of the neocortex and group sizes in non-human primates. Some empirical studies have found support for this number, while other have reported other group sizes.\n\n“The theoretical foundation of Dunbar’s number is shaky. Other primates’ brains do not handle information exactly as human brains do, and primate sociality is primarily explained by other factors than the brain, such as what they eat and who their predators are. Furthermore, humans have a large variation in the size of their social networks,” says Patrik Lindenfors, Associate Professor of Zoological Ecology at Stockholm University and the Institute for Futures Studies, and one of the authors of the study.\n\nWhen the Swedish researchers repeated Dunbar’s analyses using modern statistical methods and updated data on primate brains, the results were simultaneously much larger and far lower than 150.\n\nThe average maximum group size often turned out to be lower than 150 persons. But the main problem was that the 95% confidence intervals for these estimates were between 2 and 520 people.\n\n“Are human social interactions genetically limited via the genes' influence on the brain’s architecture? New research on cultural evolution has revealed the importance of cultural inheritance for what humans do and how we think. Culture affects everything from size of social networks to whether we can play chess or if we like hiking. Just like someone can learn to remember an enormous number of decimals in the number pi, our brain can be trained in having more social contacts” says Johan Lind, deputy director of the Centre for Cultural Evolution at Stockholm University and co-author of the study.",
+      "sources": [
+        {
+          "what": "Dunbar, Do online social media cut through the constraints that limit the size of offline social networks?, Royal Society Open Science 3:150292 (2016), abstract: two UK surveys; Facebook network size and inner layers similar to offline networks; a cognitive constraint online media cannot overcome",
+          "url": "https://doi.org/10.1098/rsos.150292"
+        },
+        {
+          "what": "Stockholm University news release, 5 May 2021 (Lindenfors, Wartel and Lind, Biology Letters): 150 extrapolated from neocortex size and group size in nonhuman primates; reanalysis gives 95 percent confidence intervals of 2 to 520; culture shapes network size and the brain can be trained for more contacts",
+          "url": "https://www.su.se/english/news/articles/2021-05-05-new-study-deconstructs-dunbars-number---yes-you-can-have-more-than-150-friends"
+        }
+      ],
+      "notes": "Area: social science (anthropology, psychology). Relationship: Text 2 doubts the cognitive limit behind Text 1’s interpretation and names a second influence, culture (target incomplete, second factor). Band-7 question: Based on the texts, how would Lindenfors and colleagues (Text 2) most likely respond to Dunbar’s interpretation of his survey results? Derivable key: similar online and offline network sizes need not reveal a fixed cognitive ceiling, since the limit cannot be estimated with any precision and network size depends on culture, which may shape online and offline habits alike. Needs Text 1’s last sentence and Text 2’s last two sentences. Distractor material: the 150 figure (Text 1 never gives it), neocortex, time costs, Facebook. Source_text holds the paragraphs each text was adapted from; neither text shares a 6-word run with them (checked with Python, check_rw tokenization). Stage 2 (questions, written by a separate agent): key A; steps 3; synthesis check: needs Text 1’s last sentence (online and offline networks alike, so a cognitive ceiling) and Text 2’s last two sentences (2 to 520, culture); neither text says the resemblance fails to show a ceiling; distractors: B D3 twisted detail, C D3 twisted detail, D D3 twisted detail; key 31 words, option mean 28.0 words; key 214 chars against longest distractor 184. Review (2026-10-16): key reworded one level above Text 2 (culture, not brain capacity alone) instead of repeating “culture, which can train people”; it was also the longest option by 30 characters.",
+      "band7_moves": [
+        "key one level more abstract than Text 2 (592f94c2 setting): culture as a second factor applied to Text 1’s online evidence, which Text 2 never mentions",
+        "three steps: Dunbar’s inference, Text 2’s imprecise limit and cultural factor, the consequence for the online comparison",
+        "distractors: three D3 twisted details (150 as a prediction for the surveys; 520 as a cap; Text 1’s time constraint)"
+      ],
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 7,
+        "facts_note": "The culture and training sentence is said by co-author Johan Lind; attributing it to “Lindenfors and colleagues” matches the study’s authorship.",
+        "fixes": [
+          "key reworded one level above Text 2 (culture, not brain capacity alone) instead of repeating “culture, which can train people”; it was also the longest option by 30 characters."
+        ],
+        "topic_fame": "Dunbar’s number: the clearest fame tell in the file (a pop-science figure most well-read adults know); rightly flagged.",
+        "status": "fixed"
+      },
+      "band7": {
+        "verdict": "band 7",
+        "why": "The reworded key states one level above Text 2 (culture, not brain capacity alone) for Text 1’s online evidence, which Text 2 never mentions; C (520 read as a cap) and D (Text 1’s time constraint) reuse passage terms in claims neither text makes. B is weak. Weak band 7."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "A",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "cross_text_connections.trial.hard.t_10",
+      "template": "S1_refute_data",
+      "tier": "hard",
+      "band_target": 7,
+      "models": [
+        "3cfbf077",
+        "5e4e082c"
+      ],
+      "passage": "Text 1\n\nDaniel Everett has argued that Pirahã culture restricts communication to concrete matters within speakers’ immediate experience. This restriction, he maintains, explains a striking set of absences in their language: numbers and counting, terms for quantity, color terms, and embedding (placing one clause inside another). It also accounts, he contends, for an unusually small set of pronouns and a kinship system simpler than any other on record.\n\nText 2\n\nRelying largely on Daniel Everett’s own detailed descriptions of Pirahã from the 1980s, Andrew Nevins, David Pesetsky, and Cilene Rodrigues report strong syntactic and semantic evidence that the language does contain embedded clauses. They likewise find no evidence that it lacks quantifiers. Moreover, most Pirahã constructions that Everett discusses behave as they do in languages whose speakers face no comparable cultural restriction, so the proposed causal link between culture and grammar lacks support.",
+      "stem": "Based on the texts, how would Nevins, Pesetsky, and Rodrigues (Text 2) most likely respond to Everett’s explanation in Text 1?",
+      "options": [
+        "By granting that the cultural restriction explains the absence of embedding and quantity terms in Pirahã while doubting that it also explains the language’s unusually small set of pronouns and simple kinship system",
+        "By arguing that Pirahã’s small set of pronouns and simple kinship system, unlike its lack of embedding, also occur in languages whose speakers face no comparable cultural restriction",
+        "By arguing that some of the absences it is meant to explain may not exist, since Everett’s own earlier descriptions indicate that Pirahã has embedded clauses and give no sign that it lacks quantifiers",
+        "By maintaining that Everett’s descriptions from the 1980s are too old to show whether Pirahã culture still restricts communication to matters within speakers’ immediate experience"
+      ],
+      "answer_letter": "C",
+      "explanation": "Text 1 reports Everett’s claim that a cultural restriction to concrete, immediate matters explains a set of absences in Pirahã, among them embedding and terms for quantity. Text 2 reports that Nevins, Pesetsky, and Rodrigues, drawing largely on Everett’s own descriptions from the 1980s, found strong evidence that Pirahã does contain embedded clauses and no evidence that it lacks quantifiers, and that most constructions Everett discusses behave as they do in languages without such a restriction. They would therefore most likely respond that some of the absences Everett’s explanation is meant to account for may not exist. Choice C states this.",
+      "distractors": {
+        "A": {
+          "recipe": "D2 reversal",
+          "why_wrong": "Text 2 rejects exactly these two absences: it finds strong evidence that Pirahã contains embedded clauses and no evidence that it lacks quantifiers, so its authors would not grant that the restriction explains them."
+        },
+        "B": {
+          "recipe": "D3 twisted detail",
+          "why_wrong": "This choice treats the lack of embedding as real, but Text 2 reports strong evidence that Pirahã does contain embedded clauses; Text 2 also never singles out pronouns or kinship."
+        },
+        "D": {
+          "recipe": "D3 twisted detail",
+          "why_wrong": "Nevins, Pesetsky, and Rodrigues rely on the 1980s descriptions as evidence; Text 2 does not call them outdated or discuss whether the cultural restriction has changed."
+        }
+      },
+      "source_text": "Text 1 source (https://doi.org/10.1086/431525):\n\nCultural Constraints on Grammar and Cognition in Pirahã | Current Anthropology 46(4) 2005 | doi 10.1086/431525 | Daniel L. Everett\n\nThe Pirahã language challenges simplistic application of Hockett's nearly universally accepted design features of human language by showing that some of these features (interchangeability, displacement, and productivity) may be culturally constrained.In particular, Pirahã culture constrains communication to nonabstract subjects which fall within the immediate experience of interlocutors.This constraint explains a number of very surprising features of Pirahã grammar and culture: the absence of numbers of any kind or a concept of counting and of any terms for quantification, the absence of color terms, the absence of embedding, the simplest pronoun inventory known, the absence of \"relative tenses,\" the simplest kinship system yet documented, the absence of creation myths and fiction, the absence of any individual or collective memory of more than two generations past, the absence of drawing or other art and one of the simplest material cultures documented, and the fact that the Pirahã are monolingual after more than 200 years of regular contact with Brazilians and the Tupi-Guarani-speaking Kawahiv.\n\nText 2 source (https://doi.org/10.1353/lan.0.0107):\n\nPirahã exceptionality: A reassessment | Language 85(2) 2009 | doi 10.1353/lan.0.0107 | Andrew Nevins, David Pesetsky, Cilene Rodrigues\n\nEverett (2005) has claimed that the grammar of Pirahã is exceptional in displaying ‘inexplicable gaps’, that these gaps follow from a cultural principle restricting communication to ‘immediate experience’, and that this principle has ‘severe’ consequences for work on universal grammar. We argue against each of these claims. Relying on the available documentation and descriptions of the language, especially the rich material in Everett 1986, 1987b, we argue that many of the exceptional grammatical ‘gaps’ supposedly characteristic of Pirahã are misanalyzed by Everett (2005) and are neither gaps nor exceptional among the world's languages. We find no evidence, for example, that Pirahã lacks embedded clauses, and in fact find strong syntactic and semantic evidence in favor of their existence in Pirahã. Likewise, we find no evidence that Pirahã lacks quantifiers, as claimed by Everett (2005). Furthermore, most of the actual properties of the Pirahã constructions discussed by Everett (for example, the ban on prenominai possessor recursion and the behavior of WH-constructions) are familiar from languages whose speakers lack the cultural restrictions attributed to the Pirahã. Finally, following mostly Gonçalves (1993, 2000, 2001), we also question some of the empirical claims about Pirahã culture advanced by Everett in primary support of the ‘immediate experience’ restriction. We conclude that there is no evidence from Pirahã for the particular causal relation between culture and grammatical structure suggested by Everett.",
+      "sources": [
+        {
+          "what": "Everett, Cultural Constraints on Grammar and Cognition in Pirahã, Current Anthropology 46(4) (2005), abstract: culture constrains communication to immediate experience, explaining absent numbers, quantification terms, color terms, embedding, simplest pronoun inventory and kinship system",
+          "url": "https://doi.org/10.1086/431525"
+        },
+        {
+          "what": "Nevins, Pesetsky and Rodrigues, Pirahã exceptionality: A reassessment, Language 85(2) (2009), abstract: relying on Everett 1986 and 1987b, strong evidence for embedded clauses, no evidence the language lacks quantifiers; most properties familiar from languages without the cultural restriction; no evidence for the causal relation",
+          "url": "https://doi.org/10.1353/lan.0.0107"
+        }
+      ],
+      "notes": "Area: social science (linguistics, anthropology). Relationship: Text 2 disputes both the facts Text 1’s argument rests on and the causal link it draws (refutation by reanalysis of the data). Band-7 question: Based on the texts, how would Nevins, Pesetsky, and Rodrigues (Text 2) most likely respond to Everett’s explanation in Text 1? Derivable key: even the genuinely unusual features of Pirahã cannot be credited to the immediacy restriction, since comparable features arise in languages whose speakers have no such restriction, and some of the absences (embedding, quantity terms) are contradicted by Everett’s own earlier descriptions. Needs Text 1’s second sentence and both sentences of Text 2. Underline candidate: Text 1’s second sentence. Source_text holds the paragraphs each text was adapted from; neither text shares a 6-word run with them (checked with Python, check_rw tokenization). Stage 2 (questions, written by a separate agent): key C; steps 3; synthesis check: needs Text 1’s second sentence (the absences the restriction explains) and Text 2’s first two sentences (embedding, quantifiers, from Everett’s own descriptions); neither text says the explanation covers absences that may not exist; distractors: A D2 reversal, B D3 twisted detail, D D3 twisted detail; key 32 words, option mean 29.5 words; key 194 chars against longest distractor 214. Review (2026-10-16): key reworded: “it accounts in part for absences that may not exist” could be read as “it partly explains”.",
+      "band7_moves": [
+        "synthesis key: Text 2’s findings matched against Text 1’s list of explained absences; the mismatch is stated in neither text",
+        "three steps: what Everett’s explanation covers, which of those facts Text 2 disputes and on whose evidence, the consequence for the explanation",
+        "distractors: D2 reversal (grants the two absences Text 2 rejects), two D3 twisted details (Text 2’s comparison moved to pronouns and kinship; the 1980s descriptions as outdated)"
+      ],
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 7,
+        "facts_note": "NPR rely on “available documentation, especially Everett 1986, 1987b”; “relying largely on Everett’s own descriptions” is fair. Everett’s list matches.",
+        "fixes": [
+          "key reworded: “it accounts in part for absences that may not exist” could be read as “it partly explains”."
+        ],
+        "topic_fame": "Pirahã and Everett: well known from the recursion debate and popular books. Moderate tell.",
+        "status": "fixed"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "Text 2 itself says embedding exists and quantifiers are not missing, so the key is two steps; A grants exactly those absences and D invents an outdatedness claim, each dead on one fact. B (comparison moved to pronouns and kinship) is the only close option."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "C",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "cross_text_connections.trial.hard.t_11",
+      "template": "apply_model",
+      "tier": "hard",
+      "band_target": 7,
+      "models": [
+        "1917ba9a"
+      ],
+      "passage": "Text 1\n\nLegal realists hold that judges’ rulings reflect psychological, political, and social factors, not just laws and facts. Testing this position, Shai Danziger and colleagues analyzed consecutive parole decisions by experienced judges whose two daily food breaks divided each workday into three sessions. Within every session, the proportion of favorable rulings declined gradually from approximately 65 percent to nearly zero, then rebounded abruptly to roughly 65 percent following a break.\n\nText 2\n\nRevisiting the Israeli parole study in which favorable rulings decline across each session, Andreas Glöckner starts from the premise that favorable decisions take longer to reach than unfavorable ones. His simulations show that a judge who plans only minimally ahead, ending a session rather than starting a case expected to run long just before a break, would produce a decline in favorable rulings about as large as the observed one, even while deciding every case rationally.",
+      "stem": "Based on the texts, which choice best explains the pattern of favorable rulings within each session in Danziger and colleagues’ study (Text 1) using the account presented in Text 2?",
+      "options": [
+        "Judges who planned ahead ruled against applicants whose cases came up just before a break so that the session could end on time, whereas after a break they again had enough time to grant parole to applicants whose cases merited it.",
+        "Cases expected to run long, which were the most likely to end in favorable rulings, tended to be put off when a break was near, so late in a session judges mostly decided quicker unfavorable cases, whereas the first cases after a break included those that had been put off.",
+        "As each session wore on, judges grew tired and hungry and so increasingly fell back on denying parole, the simpler choice, whereas a food break restored their capacity to weigh each case on its merits and grant parole where it was warranted.",
+        "Because unfavorable decisions took longer to reach than favorable ones, judges avoided starting cases likely to be denied when a break was near, whereas after a break they turned first to the denials they had deferred, leaving favorable rulings for later."
+      ],
+      "answer_letter": "B",
+      "explanation": "Text 1 reports that within each session the share of favorable parole rulings fell from about 65 percent to nearly zero, then rebounded to about 65 percent after a food break. Text 2’s account starts from the premise that favorable decisions take longer to reach than unfavorable ones and shows that a judge who ends a session rather than start a case expected to run long just before a break would produce a decline of about the observed size while deciding every case rationally. On that account, the long, likely favorable cases are put off as a break approaches, leaving mostly quicker unfavorable rulings at the end of a session, and are taken up right after the break, when favorable rulings rebound. Choice B states this.",
+      "distractors": {
+        "A": {
+          "recipe": "D3 model misapplied",
+          "why_wrong": "Text 2’s judge decides every case rationally; time affects which case is started, not how a case is decided. This choice has judges denying parole to finish on time, the kind of extraneous influence Text 2’s account does without."
+        },
+        "C": {
+          "recipe": "D6 right outcome without the model",
+          "why_wrong": "This could describe the pattern, and it fits the legal realist view Text 1 tests, but it does not use Text 2’s account, which explains the pattern by the length of favorable cases and judges’ planning around breaks rather than by fatigue or hunger."
+        },
+        "D": {
+          "recipe": "D2 model reversed",
+          "why_wrong": "Text 2’s premise is that favorable decisions take longer than unfavorable ones, not the reverse; and this choice would place favorable rulings late in a session, the opposite of the decline Text 1 reports."
+        }
+      },
+      "source_text": "Text 1 source (https://doi.org/10.1073/pnas.1018033108):\n\nExtraneous factors in judicial decisions | PNAS 108(17) 2011 | doi 10.1073/pnas.1018033108 | Shai Danziger, Jonathan Levav, Liora Avnaim-Pesso\n\nAre judicial rulings based solely on laws and facts? Legal formalism holds that judges apply legal reasons to the facts of a case in a rational, mechanical, and deliberative manner. In contrast, legal realists argue that the rational application of legal reasons does not sufficiently explain the decisions of judges and that psychological, political, and social factors influence judicial rulings. We test the common caricature of realism that justice is \"what the judge ate for breakfast\" in sequential parole decisions made by experienced judges. We record the judges' two daily food breaks, which result in segmenting the deliberations of the day into three distinct \"decision sessions.\" We find that the percentage of favorable rulings drops gradually from ≈ 65% to nearly zero within each decision session and returns abruptly to ≈ 65% after a break. Our findings suggest that judicial rulings can be swayed by extraneous variables that should have no bearing on legal decisions.\n\nText 2 source (https://doi.org/10.1017/S1930297500004812):\n\nThe irrational hungry judge effect revisited: Simulations reveal that the magnitude of the effect is overestimated | Judgment and Decision Making 11(6) 2016 | doi 10.1017/S1930297500004812 | Andreas Glöckner\n\nAbstract Danziger, Levav and Avnaim-Pesso (2011) analyzed legal rulings of Israeli parole boards concerning the effect of serial order in which cases are presented within ruling sessions. They found that the probability of a favorable decision drops from about 65% to almost 0% from the first ruling to the last ruling within each session and that the rate of favorable rulings returns to 65% in a session following a food break. The authors argue that these findings provide support for extraneous factors influencing judicial decisions and cautiously speculate that the effect might be driven by mental depletion. A simulation shows that the observed influence of order can be alternatively explained by a statistical artifact resulting from favorable rulings taking longer than unfavorable ones. An effect of similar magnitude would be produced by a (hypothetical) rational judge who plans ahead minimally and ends a session instead of starting cases that he or she assumes will take longer directly before the break. One methodological detail further increased the magnitude of the artifact and generates it even without assuming any foresight concerning the upcoming case. Implications for this article are discussed and the increased application of simulations to identify nonobvious rational explanations is recommended.",
+      "sources": [
+        {
+          "what": "Danziger, Levav and Avnaim-Pesso, Extraneous factors in judicial decisions, PNAS 108(17) (2011), abstract: two daily food breaks create three decision sessions; favorable rulings fall from about 65 percent to nearly zero within each session and return to about 65 percent after a break",
+          "url": "https://doi.org/10.1073/pnas.1018033108"
+        },
+        {
+          "what": "Glöckner, The irrational hungry judge effect revisited: Simulations reveal that the magnitude of the effect is overestimated, Judgment and Decision Making 11(6) (2016), abstract: favorable rulings take longer; a minimally foresighted rational judge who ends a session instead of starting a long case before the break produces an effect of similar magnitude",
+          "url": "https://doi.org/10.1017/S1930297500004812"
+        }
+      ],
+      "notes": "Area: social science (law, psychology). Relationship: Text 2 offers a mechanism that reproduces Text 1’s pattern without any extraneous influence on judgment (a model applied to another study’s result). Band-7 question: Based on the texts, which choice best explains the pattern in favorable rulings that Danziger and colleagues observed (Text 1), using the account in Text 2? Derivable key: late in a session a judge would avoid starting cases likely to end favorably, since those take longer, and would take them up after the break, so favorable rulings would cluster just after breaks and thin out before them. Needs Text 1’s last sentence and all of Text 2; options can pair the two ends of a session with “whereas”. Distractors: right outcome without the model (judges grow tired or hungry), the model reversed (unfavorable cases take longer), the model misapplied (judges schedule breaks to follow favorable rulings). Layout is the reverse of the official apply_model item 1917ba9a (there the model is Text 1 and the result Text 2), so the stem must name the result in Text 1 and the account in Text 2 rather than copy 1917ba9a’s wording unchanged. Source_text holds the paragraphs each text was adapted from; neither text shares a 6-word run with them (checked with Python, check_rw tokenization). Stage 2 (questions, written by a separate agent): key B; steps 3; synthesis check: needs Text 1’s last sentence (decline within a session, rebound after a break) and all of Text 2 (favorable take longer, long cases not started before a break); neither text says the deferred cases explain the rebound; distractors: A D3 model misapplied, C D6 right outcome without the model, D D2 model reversed; key 50 words, option mean 43.5 words; key 273 chars against longest distractor 255. Review (2026-10-16): Text 2 opened “Reanalyzing the Israeli parole data”; the source is a simulation study, so it now opens “Revisiting the Israeli parole study”.",
+      "band7_moves": [
+        "apply_model with the layout reversed from 1917ba9a: the result is in Text 1 and the account in Text 2, so the stem names each by its text",
+        "synthesis key: derives both halves of Text 1’s pattern, including the rebound that Text 2 does not mention, from Text 2’s premise and planning rule",
+        "options pair the end of a session with the start of the next by “whereas”; distractors: the account misapplied (D3), the right outcome without the account (Text 1’s legal realist reading), the account reversed (D2)"
+      ],
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 6,
+        "facts_note": "65 percent to near zero, three sessions, favorable decisions longer, minimal planning: all match; “reanalyzing” fixed.",
+        "fixes": [
+          "Text 2 opened “Reanalyzing the Israeli parole data”; the source is a simulation study, so it now opens “Revisiting the Israeli parole study”."
+        ],
+        "topic_fame": "Hungry-judge effect: a famous pop-psychology result (Kahneman and many talks), as strong a tell as Dunbar’s number; Glöckner’s reply is obscure.",
+        "status": "fixed",
+        "flag_check": "C confirmed wrong: fatigue and hunger is the reading Text 1’s study tests, not the account in Text 2 the stem requires; a strong student rejects it for that reason. Stem inverts 1917ba9a’s layout (result in Text 1, account in Text 2) by necessity; wording otherwise official."
+      },
+      "band7": {
+        "verdict": "band 7",
+        "why": "Apply-model format: the key derives both the decline and the rebound (deferred long cases come first after a break) from Text 2’s premise, the rebound being stated nowhere. C is the depletion story, a fair reading of what Text 1 tests, but the stem requires Text 2’s account, so a strong student rejects it; A misapplies the account, D reverses its premise."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "B",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "cross_text_connections.trial.hard.t_12",
+      "template": "S1_concede_rebut",
+      "tier": "hard",
+      "band_target": 7,
+      "models": [
+        "d0198544"
+      ],
+      "passage": "Text 1\n\nExcavated in 1878, grave Bj.581 at Birka, Sweden, contained weapons, two horses, and an individual long presumed male but since identified through genomic analysis as female. Neil Price and colleagues emphasize the bag of gaming pieces in her lap and the board beside her: single pieces are common in Viking Age burials, but complete sets with iron-bound boards are rare and appear especially in military leaders’ graves, implying a possible command role.\n\nText 2\n\nJudith Jesch credits Price and colleagues’ reassessment of Bj.581 with sounder reasoning and more restrained claims than their initial publication. Nevertheless, she considers the connection they draw between the gaming equipment and military command unconvincing. Their own supplementary material, she observes, states only that the board “appears to be” iron-framed, phrasing that suggests the interpretation’s evidentiary foundation is insecure. More broadly, she concludes, the authors read too much into rather slim evidence.",
+      "stem": "Based on the texts, how would Jesch (Text 2) most likely respond to Price and colleagues’ reasoning about the gaming equipment, as presented in Text 1?",
+      "options": [
+        "By crediting the team with sounder reasoning and more restrained claims than in its initial publication while accepting that the gaming set points to a possible command role",
+        "By noting that the team’s supplementary material describes the gaming set only as appearing to be complete, so that it may not match the full sets found in military leaders’ graves",
+        "By arguing that single gaming pieces, being common in Viking Age burials, reveal nothing about rank, so the bag of pieces in the individual’s lap cannot indicate a command role",
+        "By suggesting that the comparison with leaders’ graves depends on the board being iron-bound, a feature the team’s own documentation asserts only tentatively, leaving the inference about command insecure"
+      ],
+      "answer_letter": "D",
+      "explanation": "Text 1 explains that Price and colleagues link the gaming set in grave Bj.581 to a possible command role because complete sets with iron-bound boards are rare and appear especially in military leaders’ graves. Text 2 reports that Jesch finds this link unconvincing, noting that the team’s own supplementary material says only that the board “appears to be” iron-framed. The comparison with leaders’ graves depends on that feature, so Jesch would most likely respond that the inference about command rests on a detail the team itself states only tentatively. Choice D states this.",
+      "distractors": {
+        "A": {
+          "recipe": "D7 half right",
+          "why_wrong": "The first half fairly reports Text 2’s praise for the reassessment, but Jesch does not accept the link between the gaming set and command; she calls it unconvincing."
+        },
+        "B": {
+          "recipe": "D3 twisted detail (one detail moved)",
+          "why_wrong": "Text 2’s quotation concerns the board’s framing: the supplementary material says only that the board “appears to be” iron-framed. Neither text questions whether the gaming set was complete."
+        },
+        "C": {
+          "recipe": "D3 twisted detail",
+          "why_wrong": "Text 1 itself says single pieces are common, and Price and colleagues rest their argument on the rarity of complete sets with iron-bound boards. Jesch’s objection targets the board’s uncertain iron framing, not the significance of single pieces."
+        }
+      },
+      "source_text": "Text 1 source (https://doi.org/10.15184/aqy.2018.258):\n\nThe warrior woman has long been part of the Viking image, with a pedigree that extends from the Valkyries of Old Norse prose and poetry to modern media entertainment. Until recently, however, actual Viking Age evidence for such individuals has been sparse. This article addresses research showing that the individual buried at Birka in an ‘archetypal’ high-status warrior grave—always assumed to be male since its excavation in 1878—is, in fact, biologically female. Publication, in 2017, of the genomic data led to unprecedented public debate about this individual. Here, the authors address in detail the interpretation of the burial, discussing source-critical issues and parallels.\n\nIn September 2017, the American Journal of Physical Anthropology published an article by the current authors entitled ‘A female Viking warrior confirmed by genomics’ (Hedenstierna-Jonson et al. Reference Hedenstierna-Jonson, Kjellström, Zachrisson, Krzewińska, Sobrado, Price, Günther, Jakobsson, Götherström and Storå2017). It presented the results of extensive ancient DNA analysis, following earlier osteological studies. These showed that the body interred in a richly appointed Viking Age burial on the island town of Birka, Sweden, was not biologically male—as had always been assumed—but female. This was significant because the grave, which was excavated in 1878, had long been seen, and repeatedly published, as a spectacular example of a high-status warrior burial—an identity with intriguing implications in the light of our new sex determination.\n\nOne of the burials investigated by Stolpe—designated Bj.581—was recognised even at the time as being of unusual character (Figure 2); Stolpe himself described it in his unpaginated report to the Royal Academy as “perhaps the most remarkable of all the graves in this field” (Reference Stolpe1879, translated by N. Price). In an underground wooden chamber, a body had been interred, dressed in clothing with details evoking the fashions of the Eurasian Steppe; two horses, one of which was bridled for riding, had been arranged on a platform at the chamber's edge (Figure 3). The deceased individual was surrounded by a large number of weapons; a bag of gaming pieces was placed in the person's lap and a gaming board was propped up beside them. The burial was located at the extreme perimeter of the grave-field, outside the hillfort's northern gate and adjacent to the road leading from the fortress into the town. Bj.581 is, in fact, the westernmost grave at Birka, situated high on the rocky promontory overlooking the lake and originally marked by a large boulder, which would have been visible from both the settlement and the water below.\n\nThe gaming pieces add an extra dimension (Figure 5). As individual objects, they are not uncommon in Viking Age burials, but rare as full sets with iron-bound boards (for a discussion of the Birka examples, see Selling Reference Selling1940). They particularly occur in relation to military leaders; for example, being present in most of the larger boat graves (Whittaker Reference Whittaker2006; Hall Reference Hall2016), where they are employed symbolically, such as boards laid out with pieces in play (e.g. in Valsgärde boat burial 7, Arwidsson Reference Arwidsson1977: pl. 45; and Ultuna, Ljungkvist Reference Ljungkvist2006: 214). The presence of a full gaming set and board in Bj.581, and their deliberate placement in direct proximity to the body, suggests a potential command role, in addition to the high status implied by the quality of the military equipment.\n\nText 2 source (https://oldnorse.org/portfolio/viking-warrior-women-judith-jesch-an-expert-in-viking-studies-examines-the-latest-evidence/):\n\nThis desire for female Vikings contributed to the viral reception a couple of years ago of the paper ‘A female Viking warrior confirmed by genomics’ (Hedenstierna-Jonson et al., 2017). Now, the same team has published a more extensive assessment of the grave in question (Price et al., 2019). Already in the title (‘Viking warrior women? Reassessing Birka chamber grave Bj. 581’), the authors recognize the need for judicious interpretation of the evidence, with the question mark inviting discussion and argument. They do not revisit the scientific conclusions of the earlier study but concentrate on the archaeological interpretation. Important matters, such as the processes by which the archaeologists identified the contents of the grave and by which they were led to do a genetic analysis, are better explained this time around. The authors also give more consideration to what it might mean to identify a body as both a ‘woman’ and ‘warrior’. The article thus improves on the previous study with a better-reasoned argument and by toning down the originally rather sensationalist claims.\n\nMany aspects of the new article will lead to further discussion. The authors often make too much of rather slim evidence. The strong link they make between the gaming board and pieces [found with the remains] and the ‘command’ status of the individual is still unconvincing. In the online supplementary material, they refer to “[w]hat appears to be an iron-framed gaming board”, suggesting that the evidential basis of their interpretation is insecure. The authors also make much of various “eastern” aspects of the burial but do not address the ways in which this might complicate their classification of it as ‘Viking’. But with fragmentary evidence from more than a thousand years ago, some well-informed speculation is useful for moving the discussion forward. It is to be hoped that the authors will welcome further discussion of their interpretations.",
+      "sources": [
+        {
+          "what": "Price et al., Viking warrior women? Reassessing Birka chamber grave Bj.581, Antiquity 93 (2019): bag of gaming pieces in the lap, board beside the body; gaming pieces common singly but rare as full sets with iron-bound boards, which occur especially with military leaders; potential command role",
+          "url": "https://doi.org/10.15184/aqy.2018.258"
+        },
+        {
+          "what": "Judith Jesch, Viking ‘warrior women’: Judith Jesch examines the latest evidence (History Extra, 2019), reprinted by Jules William Press: better-reasoned than the 2017 paper, but the gaming board and command link is unconvincing; the supplement refers to “what appears to be an iron-framed gaming board”",
+          "url": "https://oldnorse.org/portfolio/viking-warrior-women-judith-jesch-an-expert-in-viking-studies-examines-the-latest-evidence/"
+        }
+      ],
+      "notes": "Area: history (Viking Age archaeology). Relationship: Text 2 grants that the reassessment improves on earlier work but rejects its key inference (concede, then rebut). Band-7 question: Based on the texts, how would Jesch (Text 2) most likely respond to the reasoning about the gaming set in Text 1? Derivable key: the rarity argument depends on the set including an iron-bound board, a feature the team itself identifies only tentatively, so the inference to command is weakly grounded. Needs Text 1’s second sentence and Text 2’s third sentence. Distractor material: the female sex (Text 2 does not dispute it), weapons and horses, genomic analysis. Underline candidate: Text 1’s final clause. Source_text holds the paragraphs each text was adapted from; neither text shares a 6-word run with them (checked with Python, check_rw tokenization). Stage 2 (questions, written by a separate agent): key D; steps 3; synthesis check: needs Text 1’s second sentence (complete sets with iron-bound boards, leaders’ graves) and Text 2’s third sentence (“appears to be” iron-framed); neither text ties the tentative wording to the rarity comparison; distractors: A D7 half right, B D3 twisted detail, C D3 twisted detail; key 28 words, option mean 27.8 words; key 196 chars against longest distractor 176. Review (2026-10-16): B (genomic analysis, which Text 2 never raises) replaced by a D3 that moves Jesch’s “appears to be” from the iron framing to the completeness of the set; key reworded to name the dependence on the iron-bound board.",
+      "band7_moves": [
+        "concede-rebut with the concession in a distractor: A keeps Text 2’s praise and adds a concession Jesch never makes",
+        "synthesis key: Text 2’s “appears to be” linked to the iron-bound board on which Text 1’s rarity comparison rests",
+        "distractors: D7 half right (a fair summary of Text 2’s praise), D3 with one detail moved (the tentative wording shifted from the iron framing to the set’s completeness), D3 twisted detail (single pieces)"
+      ],
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 7,
+        "facts_note": "Price et al. 2019 and Jesch’s “appears to be” quotation match; Jesch’s “slim evidence” sentence was moved after the board point, which does not change her view.",
+        "fixes": [
+          "B (genomic analysis, which Text 2 never raises) replaced by a D3 that moves Jesch’s “appears to be” from the iron framing to the completeness of the set; key reworded to name the dependence on the iron-bound board."
+        ],
+        "topic_fame": "Birka warrior woman: viral in 2017. Moderate tell.",
+        "status": "fixed"
+      },
+      "band7": {
+        "verdict": "band 7",
+        "why": "The key links Jesch’s “appears to be” to the iron-bound boards on which Text 1’s leaders’-graves comparison rests; the new B moves the same tentative wording to the set’s completeness (the f3c45b4f one-detail move), A is Text 2’s praise with an invented concession. Weak band 7."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "D",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "cross_text_connections.trial.hard.t_13",
+      "template": "S1_refute_data",
+      "tier": "hard",
+      "band_target": 7,
+      "models": [
+        "3cfbf077",
+        "5e4e082c"
+      ],
+      "passage": "Text 1\n\nThe University of Michigan Library long presented a single manuscript sheet in its collection as Galileo’s own work. Its upper portion was described as his draft of a letter, dispatched in revised form on August 24, 1609, offering the Doge of Venice a newly constructed telescope for military purposes; its lower portion supposedly recorded Galileo’s earliest observations of Jupiter and four of its moons during several consecutive January evenings in 1610.\n\nText 2\n\nPrompted by historian Nick Wilding, the University of Michigan Library reexamined its Galileo manuscript and in 2022 accepted his conclusion that it is a twentieth-century forgery by Tobia Nicotra. The sheet’s watermark bears the initials of a papermaker in Bergamo, and no paper carrying that mark has been dated earlier than 1770. Furthermore, the sheet is untraceable before 1930, and the two Galileo documents against which an archbishop once authenticated it are themselves Nicotra forgeries.",
+      "stem": "Based on the texts, how would Wilding (Text 2) most likely respond to the description of the manuscript in Text 1?",
+      "options": [
+        "By noting that the sheet is unlikely to hold Galileo’s 1609 draft or 1610 observations, since paper bearing its watermark is not known to have been made until over 150 years later",
+        "By suggesting that the upper portion is an authentic draft of Galileo’s letter to the Doge but that the lower portion, recording the observations of Jupiter and its moons, was added by Tobia Nicotra before 1930",
+        "By maintaining that the watermark shows the sheet was made in Bergamo rather than Venice, so the letter it contains could not have been addressed to the Doge of Venice",
+        "By arguing that the archbishop who authenticated the sheet compared it with Galileo documents that were themselves produced after 1770 by a papermaker in Bergamo"
+      ],
+      "answer_letter": "A",
+      "explanation": "Text 1 reports that the library presented the sheet as Galileo’s own: a draft of a letter sent on August 24, 1609, and notes of his observations of Jupiter in January 1610. Text 2 reports Wilding’s finding, accepted by the library, that the sheet’s watermark belongs to a Bergamo papermaker whose paper is not known before 1770, more than 150 years after both dates. Wilding would therefore most likely respond that neither portion can be what Text 1 describes, since the paper itself appears to postdate Galileo’s letter and observations by well over a century. Choice A states this.",
+      "distractors": {
+        "B": {
+          "recipe": "D7 half right",
+          "why_wrong": "Text 2 does attribute a forgery to Nicotra, but the watermark evidence concerns the whole sheet: paper carrying that mark is not known before 1770, so the upper portion cannot be an authentic 1609 draft either."
+        },
+        "C": {
+          "recipe": "D3 twisted detail",
+          "why_wrong": "Text 2 uses the Bergamo watermark to date the paper, not to set Bergamo against Venice; where paper was made would not show to whom a letter was addressed."
+        },
+        "D": {
+          "recipe": "D3 twisted detail",
+          "why_wrong": "Text 2 says that the documents the archbishop relied on were themselves Nicotra forgeries; the papermaker in Bergamo and the 1770 date concern the watermark on the Michigan sheet, not those documents."
+        }
+      },
+      "source_text": "Text 1 source (https://web.archive.org/web/20111028174452/http://www.lib.umich.edu/special-collections-library/galileo-manuscript):\n\nDraft of a letter to Leonardo Donato, Doge of Venice, circa August, 1609.\n\nIn a 1597 letter to Johannes Kepler, Galileo wrote that he had come to agree with Copernicus many years before. He continued, however, to teach the celestial sphere and the Ptolemaic system in his academic lectures at the University of Padua. In 1609 he received a description of a telescope which had been developed the year before in the Dutch town of Middelburg by an optician, one Jan Lippershey. Applying his knowledge of optical science, Galileo built such a glass or telescope for himself, and in the draft letter shown above offers his new \"occhiale\" to the Doge of Venice for use in warfare. The final letter, revised from this draft, was sent on August 24, 1609. It is in the State Archives in Venice. The lower part of this sheet shows the use to which Galileo put this optical device: as he viewed the skies on successive evenings in January, 1610, he noted his first observations of the planet Jupiter and four of Jupiter's moons.\n\nText 2 source (https://www.lib.umich.edu/collections/collecting-areas/special-collections-and-archives/history-astronomy-and-mathematics/galileo-manuscript):\n\nAfter an internal investigation of the findings of Nick Wilding, professor of history at Georgia State University, the library has concluded that its \"Galileo manuscript\" is in fact a 20th-century forgery.\n\nThe top half of it contains the draft of a letter accompanying Galileo's official presentation of a recently built telescope to the Doge of Venice on August 24, 1609. The bottom half contains draft notes recording Galileo's telescopic observations of the moons of Jupiter from January 7–15, 1610.\n\nWilding concluded that our Galileo manuscript is a 20th-century fake executed by the well-known forger Tobia Nicotra. After our own experts studied his most compelling evidence — about the paper and provenance — and reexamined the manuscript, we agreed with his conclusion.\n\nThe watermark on the “Galileo manuscript” contains monograms for the paper maker's initials — \"AS\" — and site of production — \"BMO\" (Bergamo). No other BMO watermarked papers have been dated before 1770, after which they are quite common.\n\nThere is no trace of the document before 1930, despite the completion of the extremely thorough National Edition of Galileo's Works (1890-1909).\n\nThe document was accompanied at the Terry auction by a note from Archbishop Maffi, authenticating it by comparing it to two other Galileo documents in Pisa. While Maffi's letter of authentication is missing, those two alleged Galileo documents have been investigated and found to be forgeries donated by Tobia Nicotra. Nicotra was sentenced to two years in jail and a hefty fine in 1934 for forgery, including Galileo documents.",
+      "sources": [
+        {
+          "what": "University of Michigan Library, Galileo manuscript page as archived 28 October 2011: draft of a letter to the Doge, circa August 1609, final letter sent 24 August 1609; lower part records first observations of Jupiter and four moons in January 1610",
+          "url": "https://web.archive.org/web/20111028174452/http://www.lib.umich.edu/special-collections-library/galileo-manuscript"
+        },
+        {
+          "what": "University of Michigan Library, The Galileo Manuscript (2022 notice): after Nick Wilding’s findings, a 20th-century forgery by Tobia Nicotra; AS and BMO (Bergamo) watermark, no BMO paper dated before 1770; no trace before 1930; Maffi’s comparison documents are Nicotra forgeries",
+          "url": "https://www.lib.umich.edu/collections/collecting-areas/special-collections-and-archives/history-astronomy-and-mathematics/galileo-manuscript"
+        }
+      ],
+      "notes": "Area: history (history of science, manuscripts). Relationship: Text 2’s physical and provenance evidence refutes the attribution in Text 1 (refutation by new data, with a date to check against). Band-7 question: Based on the texts, how would Wilding and the library (Text 2) most likely respond to the description in Text 1? Derivable key: the sheet cannot be the 1609 draft, since its paper was probably made more than a century and a half after the letter was sent. Needs Text 1’s second sentence (1609, 1610) and Text 2’s second sentence (1770). Distractor material: the archbishop’s authentication, the 1930 first trace, Jupiter’s moons. Source_text holds the paragraphs each text was adapted from; neither text shares a 6-word run with them (checked with Python, check_rw tokenization). Stage 2 (questions, written by a separate agent): key A; steps 3; synthesis check: needs Text 1’s second sentence (1609, 1610) and Text 2’s second sentence (no such paper before 1770); neither text states the gap of more than 150 years; distractors: B D7 half right, C D3 twisted detail, D D3 twisted detail; key 32 words, option mean 30.8 words; key 179 chars against longest distractor 210.",
+      "band7_moves": [
+        "synthesis key: a date in Text 2 checked against the dates in Text 1 (3cfbf077 setting); the gap is computed, not stated",
+        "three steps: what Text 1 dates the sheet to, what the watermark dates the paper to, the consequence for both portions",
+        "distractors: D7 half right (Nicotra forgery limited to one portion), two D3 twisted details (Bergamo against Venice; the 1770 paper moved to the archbishop’s documents)"
+      ],
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 8,
+        "facts_note": "The 2022 date is from the sources entry (the library notice), not the excerpt; accepted. 1770, Bergamo, 1930 and the archbishop’s Nicotra forgeries match.",
+        "fixes": [],
+        "topic_fame": "Michigan Galileo forgery: 2022 news, modest reach. Fits.",
+        "status": "pass"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "Text 2 already states the conclusion (a twentieth-century forgery); the only derived step is the 160-year gap. B (only the lower half forged) is the one close option; C and D die on one fact each."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "A",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "cross_text_connections.trial.hard.t_14",
+      "template": "S1_refute_data",
+      "tier": "hard",
+      "band_target": 7,
+      "models": [
+        "3cfbf077",
+        "5e4e082c"
+      ],
+      "passage": "Text 1\n\nBecause calcite crusts that form over cave paintings must postdate them, uranium-thorium dating of such crusts gives minimum ages for the art beneath. Applying this technique to more than 60 tiny samples from La Pasiega, Maltravieso, and Ardales caves in Spain, Dirk Hoffmann and colleagues obtained ages exceeding 64,000 years, predating modern humans’ arrival in Europe by over 20,000 years. The paintings, they conclude, must therefore have been made by Neanderthals.\n\nText 2\n\nAt Nerja Cave in Spain, Edwige Pons-Branchu and colleagues found that uranium-thorium ages from carbonate layers covering rock art were inversely related to the layers’ uranium concentrations, and that some ages were plainly erroneous. Such behavior, they argue, could reflect uranium moving within the deposits, which would make apparent ages too old. The same inverse relationship, they add, appears in recently published measurements from the La Pasiega, Ardales, and Maltravieso caves.",
+      "stem": "Based on the texts, how would Pons-Branchu and colleagues (Text 2) most likely respond to Hoffmann and colleagues’ conclusion in Text 1?",
+      "options": [
+        "By conceding that some of the ages may be too old while holding that the error is too slight to place the paintings after modern humans’ arrival in Europe",
+        "By arguing that the ages from La Pasiega, Ardales, and Maltravieso are plainly erroneous, as some ages at Nerja Cave were, because the crusts in those caves contain less uranium than the layers at Nerja Cave",
+        "By suggesting that uranium moving within the crusts may have inflated the ages above 64,000 years, so the paintings need not predate modern humans’ arrival in Europe or be Neanderthal work",
+        "By proposing that uranium moving within the crusts may have made their ages too young, so the paintings could be even older than Hoffmann and colleagues estimate"
+      ],
+      "answer_letter": "C",
+      "explanation": "Text 1 reports that uranium-thorium dating of calcite crusts gave minimum ages above 64,000 years for paintings in three Spanish caves, more than 20,000 years before modern humans reached Europe, so Hoffmann and colleagues concluded that the painters must have been Neanderthals. Text 2 reports that at Nerja Cave ages from such layers fell as uranium concentration rose, a pattern that could reflect uranium moving within the deposits and making apparent ages too old, and that the same pattern appears in the published measurements from La Pasiega, Ardales, and Maltravieso. If those ages may be too old, the paintings need not predate modern humans’ arrival, so the attribution to Neanderthals is not secure. Choice C states this.",
+      "distractors": {
+        "A": {
+          "recipe": "D7 half right",
+          "why_wrong": "Text 2 does say the ages may be too old, but it gives no estimate of how far uranium movement might have pushed them up, so nothing in it supports calling the error too slight to matter. Its point leaves Hoffmann and colleagues’ timeline, and so their attribution, open rather than secure."
+        },
+        "B": {
+          "recipe": "D3 twisted detail",
+          "why_wrong": "Text 2 calls some Nerja ages plainly erroneous; for the three caves in Text 1 it reports only the same inverse relationship between age and uranium concentration. It does not compare those caves’ uranium levels with Nerja’s."
+        },
+        "D": {
+          "recipe": "D2 reversal",
+          "why_wrong": "This reverses Text 2’s mechanism, which would make apparent ages too old, not too young; by Text 2’s account, the paintings could be younger than Hoffmann and colleagues claim."
+        }
+      },
+      "source_text": "Text 1 source (https://www.mpg.de/11948095/neandertals-cave-art):\n\nAt least 70,000 years ago Homo sapiens used perforated marine shells and colour pigments. From around 40,000 years ago he created decorative items, jewellery and cave art in Europe. Using Uranium-Thorium dating an international team of researchers co-directed by Dirk Hoffmann of the Max Planck Institute for Evolutionary Anthropology in Leipzig, Germany, now demonstrates that more than 115,000 years ago Neanderthals produced symbolic objects, and that they created cave art more than 20,000 years before modern humans first arrived in Europe. The researchers conclude that our cousins’ cognitive abilities were equivalent to our own.\n\nMore than body and tool ornamentation, cave art is a particularly impressive example of symbolic behaviour. However, it has so far been attributed to modern humans only, and claims to a possible Neanderthal origin have been hampered by lack of precise dating. However, the creators of cave art can usually not be identified directly, but only indirectly by determining the age of the objects. “Dating cave art accurately and precisely, but without destroying it, has so far been difficult to accomplish”, says Hoffmann. “Thanks to recent technical developments we can now obtain a minimum age for cave art using Uranium-Thorium (U-Th) dating of carbonate crusts overlying the pigments”.\n\nThe researchers from Germany, UK, France and Spain analysed more than 60 carbonate samples that consisted of less than ten milligrams each from three different cave sites in Spain: La Pasiega in north-eastern Spain, Maltravieso in western Spain and Ardales in southern Spain. All three sites contain paintings mostly in red, sometimes in black, that show groups of animals, dots and geometric signs, hand stencils, hand prints and engravings.\n\n“Our dating results show that the cave art at these three sites in Spain is much older than previously thought”, says team member Alistair Pike from the University of Southampton. “With an age in excess of 64,000 years it predates the earliest traces of modern humans in Europe by more than 20,000 years. The cave art must thus have been created by Neanderthals.” This early cave art was created in red pigments and comprises lines, dots, discs and hand stencils. According to the researchers, their creation involved planning a light source, mixing pigments for colouring and choosing a proper location.\n\nText 2 source (https://doi.org/10.1016/j.jas.2020.105120):\n\nEdwige Pons-Branchu José Luis Sanchidrián Michel Fontugne Mª Ángeles Medina-Alcaide\n\nU/Th data obtained on CaCO3 layers covering rock art at Nerja Cave (Spain) evidence erroneous ages and an inverse relation between uranium concentration and apparent ages. This open system behavior could be due to a mechanism causing uranium mobility, resulting in apparent ages being too old with respect to their real age. This article also questions recently published U/Th data on samples from Ardales, Maltravieso and La Pasiega caves (Spain) where a few U/Th ages older than 40 ka BP, suggested that cave art could be attributed to Middle Palaeolithic population (Hoffmann et al., 2018). For these caves, U/Th data also display an inverse relation between U content and ages, indicating possible uranium mobility and erroneous ages.",
+      "sources": [
+        {
+          "what": "Max Planck Society news release, 22 February 2018 (Hoffmann et al., Science): U-Th dating of carbonate crusts over pigments gives minimum ages; more than 60 samples from La Pasiega, Maltravieso and Ardales; older than 64,000 years, more than 20,000 years before modern humans reached Europe; made by Neanderthals",
+          "url": "https://www.mpg.de/11948095/neandertals-cave-art"
+        },
+        {
+          "what": "Pons-Branchu et al., U-series dating at Nerja cave reveal open system. Questioning the Neanderthal origin of Spanish rock art, Journal of Archaeological Science 117 (2020), abstract: inverse relation between uranium concentration and apparent ages, uranium mobility making ages too old; same relation in Ardales, Maltravieso and La Pasiega data",
+          "url": "https://doi.org/10.1016/j.jas.2020.105120"
+        }
+      ],
+      "notes": "Area: arts (cave art, archaeology). Relationship: Text 2 gives a mechanism by which Text 1’s key numbers could be inflated (refutation of the dating that the attribution rests on). Band-7 question: Based on the texts, how would Pons-Branchu and colleagues (Text 2) most likely respond to Hoffmann and colleagues’ conclusion? Derivable key: because uranium mobility may have inflated the crusts’ ages, the paintings need not be older than modern humans’ arrival in Europe, so attributing them to Neanderthals is not secure. Needs Text 1’s last two sentences (64,000 years, 20,000 years before modern humans) and Text 2’s last two sentences. Underline candidate: Text 1’s last sentence. Source_text holds the paragraphs each text was adapted from; neither text shares a 6-word run with them (checked with Python, check_rw tokenization). Stage 2 (questions, written by a separate agent): key C; steps 3; synthesis check: needs Text 1’s last two sentences (64,000 years, 20,000 years before modern humans, so Neanderthals) and Text 2’s last two sentences (ages too old, same pattern in the three caves); neither text says the Neanderthal attribution is insecure; distractors: A D3 twisted detail, B D3 twisted detail, D D2 reversal; key 31 words, option mean 30.2 words; key 188 chars against longest distractor 207. Review (2026-10-16): A (crusts mixed into the art, invented) replaced by a half-right option that grants inflated ages but caps the error, so a student must see that Text 2 gives no size for it.",
+      "band7_moves": [
+        "synthesis key: Text 2’s mechanism carried through Text 1’s chain (ages, arrival of modern humans, authorship) to a conclusion neither text states",
+        "three steps: what the ages support, how Text 2 says they could be inflated and that this applies to these caves, the consequence for the attribution",
+        "distractors: D7 half right (concedes inflated ages, then limits the error without basis), D3 twisted detail (Nerja’s erroneous ages moved to the three caves), D2 reversal (ages too young)"
+      ],
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 7,
+        "facts_note": "“Plainly erroneous” intensifies the abstract’s “erroneous ages”; minor, left. 64,000 years, 20,000 years, three caves, inverse relation and too-old ages match.",
+        "fixes": [
+          "A (crusts mixed into the art, invented) replaced by a half-right option that grants inflated ages but caps the error, so a student must see that Text 2 gives no size for it."
+        ],
+        "topic_fame": "Neanderthal cave art: widely reported in 2018. Moderate tell.",
+        "status": "fixed"
+      },
+      "band7": {
+        "verdict": "band 7",
+        "why": "The key carries “too old” through Text 1’s chain (ages, arrival of modern humans, authorship) to a conclusion neither text states; the new A grants the inflation but caps it without basis, B moves Nerja’s erroneous ages to the three caves. D reverses the mechanism. Weak band 7."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "C",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "cross_text_connections.trial.hard.t_15",
+      "template": "S1_framework_critique",
+      "tier": "hard",
+      "band_target": 7,
+      "models": [
+        "96f3accc",
+        "5e4e082c"
+      ],
+      "passage": "Text 1\n\nLinne Mooney’s identification of the London scrivener Adam Pinkhurst as the copyist of the first Canterbury Tales manuscripts led her, with Estelle Stubbs, to investigate other scribes. Comparing handwriting in early literary manuscripts with that of clerks producing official records at London’s Guildhall, they concluded that civic clerks such as John Marchaunt, responsible for two of the four earliest Canterbury Tales manuscripts, connected Chaucer with his original audiences.\n\nText 2\n\nLawrence Warner maintains that the celebrated identification of Adam Pinkhurst as Chaucer’s personal scribe was mistaken and that the underlying problem concerns how medieval scribes’ hands have been identified. A decorative flourish (double slash, dot, double slash) had been cited as Pinkhurst’s signature and therefore as the decisive evidence connecting him to Chaucer. Warner, however, documents that motif in writing dating from 1291 to 1415, rendering the belief unfounded.",
+      "stem": "Based on the texts, how would Warner (Text 2) most likely respond to the approach Mooney and Stubbs take in Text 1?",
+      "options": [
+        "By arguing that John Marchaunt could not have copied two of the earliest Canterbury Tales manuscripts, since the decorative flourish found in them dates from as early as 1291",
+        "By suggesting that their attributions to clerks such as John Marchaunt may be as insecure as the Pinkhurst identification, since a widely shared feature can pass for one scribe’s mark",
+        "By agreeing that civic clerks connected Chaucer with his original audiences while rejecting only the claim that Adam Pinkhurst copied the first Canterbury Tales manuscripts",
+        "By contending that the handwriting in official Guildhall records is too uniform to be compared with that of literary manuscripts, which scribes marked with personal flourishes"
+      ],
+      "answer_letter": "B",
+      "explanation": "Text 1 reports that Mooney, after identifying Adam Pinkhurst as the copyist of the first Canterbury Tales manuscripts, worked with Stubbs to compare handwriting in literary manuscripts with that of Guildhall clerks and attributed two early Canterbury Tales manuscripts to the clerk John Marchaunt. Text 2 reports that Warner considers the Pinkhurst identification mistaken, places the underlying problem in how scribes’ hands have been identified, and shows that the flourish cited as Pinkhurst’s signature appears in writing from 1291 to 1415. Mooney and Stubbs’s attributions rest on the same kind of hand comparison, so Warner would most likely respond that they may be as insecure as the identification that prompted them. Choice B states this.",
+      "distractors": {
+        "A": {
+          "recipe": "D3 twisted detail",
+          "why_wrong": "The dates 1291 to 1415 describe the range of writing in which Warner found the flourish, which shows that many scribes used it; Text 2 neither places it in Marchaunt’s manuscripts nor dates any manuscript by it."
+        },
+        "C": {
+          "recipe": "D7 half right",
+          "why_wrong": "Warner does reject the Pinkhurst identification, but he says the underlying problem concerns how medieval scribes’ hands have been identified, a problem that reaches beyond Pinkhurst; he would not accept the attributions to civic clerks while rejecting only his."
+        },
+        "D": {
+          "recipe": "D2 reversal",
+          "why_wrong": "Warner’s evidence points the other way: a flourish once taken as one scribe’s personal signature turns up in writing across more than a century, so he would not treat such flourishes as personal marks. Text 2 says nothing about the uniformity of Guildhall records."
+        }
+      },
+      "source_text": "Text 1 source (https://www.york.ac.uk/news-and-events/news/2011/research/scribes/):\n\nScholars led by Professor Linne Mooney, Professor of Medieval English Palaeography in the Department of English and Related Literature and Centre for Medieval Studies at York, carried out research aimed at identifying the scribes who made the first copies of works by major authors of the 14th and early 15th centuries, including Geoffrey Chaucer and William Langland.\n\nProfessor Mooney said: “The clerks of the London Guildhall form the invisible link between medieval authors like Geoffrey Chaucer and their first audiences, the original owners of the medieval manuscripts we study today.”\n\nThe research began with Professor Mooney's discovery of the identity of Adam Pinkhurst, Scrivener of London, who wrote the first copies of works by Chaucer, including his Canterbury Tales.\n\nThe website includes a description of each manuscript, including details such as dating and dialect, detailed descriptions of each scribe's handwriting, and illustrations of a typical page written by each scribe. It also features illustrations of eight letter forms typical of each scribe's writing so that further identifications of work by them can be made.\n\nAs part of the project, Professor Mooney and fellow researcher Dr Estelle Stubbs discovered that scribes in the civic secretariat at the London Guildhall were responsible for some of the most significant early copies of English literary manuscripts. Professor Mooney and Dr Stubbs made the link by matching the handwriting of scribes copying important early English literary manuscripts with the hands of Guildhall clerks copying documents and custumals.\n\nThey include John Marchaunt, the Common Clerk of the City from 1399 to 1417, who copied two of the four earliest manuscripts of Chaucer's Canterbury Tales. He also copied all or parts of eight manuscripts of Gower's Confessio Amantis ('The Confession of the Lover') as well as manuscripts of works by William Langland and John Trevisa.\n\nText 2 source (https://blogs.kcl.ac.uk/english/2019/03/13/chaucers-own-scribe):\n\nHow did I end up writing a book arguing that the most exciting announcement ever in Chaucer studies — in medieval literary studies, perhaps even in English studies as a whole — was, to be blunt, wrong?\n\nWhen I first heard the news, ‘They found Chaucer’s own scribe!’, I was thrilled. This was Adelaide, South Australia. Winter 2004 there, summer up here. In the days before Facebook and Twitter, my first source of this amazing discovery was an undergrad who lurked on a medieval listserv. Soon enough in the New Chaucer Society’s newsletter I would learn about the ‘utterly persuasive disclosure of the identity of “Adam Scriveyn”‘, the addressee of an irritated seven-line poem called ‘Chaucer’s Words unto Adam His Own Scrivener’, ‘as Adam Pynkhurst’, whose entry into the Scriveners Company Common Paper in the 1390s looks rather similar to the most famous early copy of The Canterbury Tales, the ‘Ellesmere’ manuscript.\n\nThen came a few stages of writing, submitting, and dealing with readers’ reports that in effect said: look harder at the big picture. Read Scribes and the City (see Instagram screenshot above) way more closely. I had to do that a few times before I realized what was really going on. The story wasn’t just about Adam Pynkhurst but also about the Guildhall: Was it the cradle of English literature as that book and its attendant press releases claimed? More pressingly, it was about the ways in which scribes’ hands have been identified.\n\nThis is more effective than my written list of representative appearances of the ‘double-slash, dot, double-slash’ motif from 1291-1415. Either way, the point is that the belief that this decorative feature was ‘Pynkhurst’s signature’, cited as the key piece of evidence that he was Chaucer’s scribe, is without foundation. Another little thing: a generous colleague has told me that one idea I discuss at length (if to deny its plausibility), that Hoccleve was Chaucer’s first editor, had been mooted decades earlier than I had realized, in a venue I should have checked. Such things happen and I’m sure there are other errors awaiting discovery, and that years from now I’ll wonder at why I wrote this phrase, sentence, chapter instead of that?",
+      "sources": [
+        {
+          "what": "University of York news, 3 October 2011, Research reveals the cradle of English Literature: Mooney’s identification of Adam Pinkhurst; Mooney and Stubbs matched the handwriting of literary manuscripts to Guildhall clerks; John Marchaunt copied two of the four earliest Canterbury Tales manuscripts",
+          "url": "https://www.york.ac.uk/news-and-events/news/2011/research/scribes/"
+        },
+        {
+          "what": "Lawrence Warner, Chaucer’s Own Scribe? Adam Pynkhurst and the Production of Middle English Literature, King’s English blog (King’s College London), 13 March 2019: the identification was wrong; the issue is how scribes’ hands are identified; the double-slash, dot, double-slash motif, cited as Pynkhurst’s signature, appears from 1291 to 1415",
+          "url": "https://blogs.kcl.ac.uk/english/2019/03/13/chaucers-own-scribe"
+        }
+      ],
+      "notes": "Area: literature (Chaucer, manuscript studies). Relationship: Text 2 attacks the method of hand identification on which Text 1’s attributions rest (critique of the target’s standard). Warner spells the name Pynkhurst; the passage keeps one spelling. Band-7 question: Based on the texts, how would Warner (Text 2) most likely respond to Mooney and Stubbs’s method in Text 1? Derivable key: features that recur across many scribes over more than a century cannot by themselves tie a manuscript to one clerk, so attributions made by matching handwriting, such as those to Guildhall clerks, may be unreliable. Needs Text 1’s second sentence and Text 2’s last two sentences. Distractor material: Marchaunt’s two manuscripts, Chaucer’s audiences, Stubbs. Source_text holds the paragraphs each text was adapted from; neither text shares a 6-word run with them (checked with Python, check_rw tokenization). Stage 2 (questions, written by a separate agent): key B; steps 3; synthesis check: needs Text 1’s first two sentences (the Pinkhurst identification led to the clerk attributions, made by comparing hands) and Text 2’s first and last sentences (identification method the problem, motif from 1291 to 1415); neither text says the Marchaunt attributions are insecure; distractors: A D3 twisted detail, C D7 half right, D D2 reversal; key 34 words, option mean 28.5 words; key 213 chars against longest distractor 175. Review (2026-10-16): key shortened (it had been the longest option by 38 characters).",
+      "band7_moves": [
+        "synthesis key: Text 2’s critique of the Pinkhurst identification carried over to the Guildhall attributions that only Text 1 reports",
+        "three steps: how Text 1’s attributions were made and what prompted them, why Text 2 rejects the Pinkhurst evidence, the consequence for the later attributions",
+        "distractors: D3 twisted detail (the 1291 date), D7 half right (rejects Pinkhurst only), D2 reversal (flourishes as personal marks)"
+      ],
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 7,
+        "facts_note": "Pinkhurst (the passage keeps one spelling of Warner’s Pynkhurst), Marchaunt’s two of four, motif 1291 to 1415 and the method point all match.",
+        "fixes": [
+          "key shortened (it had been the longest option by 38 characters)."
+        ],
+        "topic_fame": "Chaucer’s scribe and the Guildhall clerks: obscure; the best fit to the official topic profile.",
+        "status": "fixed"
+      },
+      "band7": {
+        "verdict": "band 7",
+        "why": "The key carries Warner’s method critique to the Marchaunt attributions, which only Text 1 reports; C rejects only Pinkhurst (half right) and A misuses the 1291 date. D is weaker."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "B",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    }
+  ]
+}

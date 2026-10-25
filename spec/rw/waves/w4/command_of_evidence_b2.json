@@ -1,0 +1,1899 @@
+{
+  "skill": "Command of Evidence",
+  "slug": "command_of_evidence",
+  "part": "w4b2",
+  "domain": "Information and Ideas",
+  "plan": {
+    "templates": [
+      {
+        "code": "T1_single",
+        "name": "Hypothetical finding supports or weakens a single claim (causal, comparison, existence, generalization, prediction)"
+      },
+      {
+        "code": "T1_compete",
+        "name": "Hypothetical finding discriminates between competing explanations (support or weaken)"
+      },
+      {
+        "code": "T2_lit_quote",
+        "name": "Quotation from a literary work illustrates a claim (single trait, two-part, contrast)"
+      },
+      {
+        "code": "Q2_P8_multipart",
+        "name": "Data description: multi-part, interaction, or passage-plus-data claim"
+      },
+      {
+        "code": "T3_person_quote",
+        "name": "Quotation from a person (participant, respondent, historian, critic, article) supports or challenges a claim"
+      },
+      {
+        "code": "Q1_P5_control",
+        "name": "Data completion: condition vs control"
+      },
+      {
+        "code": "Q1_P3_pairwise",
+        "name": "Data completion: pairwise comparison (one or two comparisons)"
+      },
+      {
+        "code": "Q2_P4_trend",
+        "name": "Data description: trend or change over time supports a conclusion"
+      },
+      {
+        "code": "Q1_P4_trend",
+        "name": "Data completion: change over time"
+      },
+      {
+        "code": "Q2_P5_control",
+        "name": "Data description: condition vs control or group comparison supports a conclusion"
+      },
+      {
+        "code": "Q1_P1_lookup",
+        "name": "Data completion: lookup (one cell or bar, reverse lookup, filter)"
+      },
+      {
+        "code": "Q1_P2_extreme",
+        "name": "Data completion: extreme or rank (max/min, possibly after a filter)"
+      }
+    ]
+  },
+  "items": [
+    {
+      "id": "command_of_evidence.T1_single.hard.w4b2_01",
+      "template": "T1_single",
+      "subtype": "Hypothetical finding supports an indirect-effect claim (predator limits a prey's foraging range and so its effect on a forest); key needs a wolf-free comparison and the forest outcome",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Beavers are central place foragers: they leave the safety of their ponds to cut trees and shrubs on land, then haul the branches back to the water along established feeding trails. Tracking wolves and beavers in northern Minnesota, Thomas Gable and colleagues found that wolves ambush beavers beside these trails and kill them on longer trails more often than would be expected from how frequently beavers use such trails. Because beavers’ cutting reshapes the forest surrounding wetlands, the researchers argue that wolves, by constraining how far from water beavers forage, indirectly limit the extent of forest that beavers transform.",
+      "stem": "Which finding, if true, would most directly support the researchers’ argument?",
+      "options": [
+        "In years when beavers in the study area were abundant, wolves killed more beavers, on average, than in years when beavers were scarce, regardless of how long the beavers’ feeding trails were.",
+        "Beavers in the study area made more trips per night along long feeding trails than along short ones, and they also spent more time on land during each of those trips.",
+        "Around wetlands where wolves had long been absent, beavers’ feeding trails reached farther inland, and the strip of forest beavers cut was wider, than around similar wetlands with wolves.",
+        "Beavers whose feeding trails were often visited by wolves kept using those trails in later years, cutting trees at about the same distances from the water as before."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The researchers argue that wolves, “by constraining how far from water beavers forage, indirectly limit the extent of forest that beavers transform.” To support this, a finding has to show that where wolves are missing, beavers forage farther from water and change more of the forest. Choice C does both: without wolves, feeding trails reach farther inland and the strip of forest cut by beavers is wider than around similar wetlands with wolves.",
+      "distractors": {
+        "A": {
+          "recipe": "OFF: right animals, different variable (how many beavers are killed)",
+          "why_wrong": "This links wolf kills to how many beavers there are, not to how far beavers forage, and it says nothing about how much forest beavers alter."
+        },
+        "B": {
+          "recipe": "PART: explains why long trails are risky but stops before foraging distance and forest",
+          "why_wrong": "More trips and more time on land would explain why beavers on long trails are easy targets, but the finding does not show that wolves keep beavers closer to water or that this changes how much forest beavers cut."
+        },
+        "D": {
+          "recipe": "OPP: beavers do not shorten their foraging range under wolf pressure",
+          "why_wrong": "If beavers kept cutting trees just as far from the water despite wolf visits, wolves would not be limiting how far beavers forage, which weakens the argument."
+        }
+      },
+      "models": [
+        "3.25",
+        "3.31",
+        "3.12",
+        "3.7"
+      ],
+      "sources": [
+        {
+          "what": "Gable, Johnson-Bice, Homkes, Fieberg, Bump 2023, Proc. R. Soc. B 290: 20231377: wolves wait in ambush and kill beavers on longer feeding trails than expected from beaver availability; beavers are central place foragers; wolves constrain how far from water beavers forage, which limits the area of forest beavers alter; study in the Greater Voyageurs Ecosystem, Minnesota (full text)",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC10645084/"
+        }
+      ],
+      "notes": "Band 6: the key needs a wolf-free comparison group and both links of the argument (foraging distance and forest altered). B is accurate to the study (more trips and more time on land on long trails) but stops at vulnerability; A is off-target (kill numbers); D is the opposite. Rounded details: 'drag the wood back ... along well-worn feeding trails' is general description of beaver foraging.",
+      "word_count": 99,
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [],
+        "status": "pass"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "Plan cell 6. The key needs a wolf-free comparison group and both links of the argument (foraging distance, forest altered); B is true to the study but stops at vulnerability, D is the opposite, A off-target. One bridge, no missing premise, so a fair band 6."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "C",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "command_of_evidence.T1_single.hard.w4b2_02",
+      "template": "T1_single",
+      "subtype": "Hypothetical finding supports a no-harm conclusion from a case-control study; the key needs the change on the treated street measured against the change on the comparison street",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "Merchants frequently oppose replacing on-street parking with bike lanes, anticipating that they will lose customers who arrive by car. In 2016, the city of Toronto removed 136 parking spaces from a stretch of Bloor Street, a busy downtown retail corridor, and installed a pilot bike lane. To determine the lane’s effects, Daniel Arancibia and colleagues surveyed merchants and shoppers both on Bloor Street and on a comparable retail street that received no bike lane, before and during the pilot. Based on these surveys, the researchers concluded that the bike lane had no negative economic impact on businesses along Bloor Street.",
+      "stem": "Which finding from Arancibia and colleagues’ surveys, if true, would most directly support the researchers’ conclusion about the bike lane?",
+      "options": [
+        "From before the pilot to during it, average monthly customer spending rose by a larger percentage on Bloor Street than on the comparison street.",
+        "During the pilot, customers on Bloor Street spent more money per month, on average, than customers on the comparison street did.",
+        "From before the pilot to during it, merchants on the comparison street reported a larger increase in customers served than merchants on Bloor Street did.",
+        "During the pilot, shoppers on Bloor Street who arrived by bicycle spent less per visit, on average, but visited more often than shoppers who arrived by car."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The researchers surveyed “a comparable retail street that received no bike lane, before and during the pilot.” Business on any street can rise or fall for reasons that have nothing to do with a bike lane, so the change on that street shows roughly how Bloor Street would have fared without one. To show that the bike lane did no harm, then, Bloor Street’s change from before the pilot to during it must be compared with the comparison street’s change over the same period. If spending rose by a larger percentage on Bloor Street than on the street with no bike lane, Bloor Street did at least as well as it would have without the bike lane, so choice A supports the conclusion.",
+      "distractors": {
+        "B": {
+          "recipe": "TRAP: mismatched comparison (levels at one time, not changes)",
+          "why_wrong": "Comparing the two streets only during the pilot ignores where each started; Bloor Street may have had higher spending before the bike lane and still lost ground during the pilot, so this does not show the bike lane did no harm."
+        },
+        "C": {
+          "recipe": "OPP: Bloor Street lags the comparison street",
+          "why_wrong": "If the comparison street gained more customers than Bloor Street over the same period, Bloor Street did worse than it would likely have done without the bike lane, which suggests the bike lane may have hurt business."
+        },
+        "D": {
+          "recipe": "TRAP: looks like a test but cannot decide the overall effect",
+          "why_wrong": "Knowing that cyclists spend less per visit but visit more often does not say whether total spending on Bloor Street fell, held steady, or rose relative to what would have happened without the bike lane."
+        }
+      },
+      "models": [
+        "09775cbf",
+        "4a07be59",
+        "3.36",
+        "3.28"
+      ],
+      "sources": [
+        {
+          "what": "Arancibia et al. 2019, 'Measuring the Local Economic Impacts of Replacing On-Street Parking With Bike Lanes', Journal of the American Planning Association (article page; blocks scripts, abstract read through the OpenAlex record below)",
+          "url": "https://doi.org/10.1080/01944363.2019.1638816"
+        },
+        {
+          "what": "Arancibia, Farber, Savan, Verlinden, Smith Lea, Allen, Vernich 2019, Journal of the American Planning Association 85(4): 463-481 (abstract): in 2016 Toronto removed 136 on-street parking spots and installed a pilot bike lane on a stretch of Bloor Street, a downtown retail corridor; case-control and pre-post surveys of merchants and shoppers; no negative economic impacts; monthly customer spending and number of customers served both increased on Bloor Street during the pilot",
+          "url": "https://api.openalex.org/works/doi:10.1080/01944363.2019.1638816"
+        }
+      ],
+      "notes": "Band 7 moves (T1_single): the comparison must discriminate (a difference of differences, as in 09775cbf): the key compares the change on Bloor Street with the change on the comparison street; B is the mismatched-comparison TRAP (levels during the pilot only, as 09775cbf C and D), D is a TRAP that looks like a test but cannot decide, C is the OPP. The fact the key depends on (why a comparison street was surveyed) sits in an earlier sentence. Stem names the study and the conclusion. Source page is the OpenAlex record of the article's abstract (the publisher page blocks scripts; DOI 10.1080/01944363.2019.1638816). The comparison street (Danforth Avenue in the study) is left unnamed. Options are hypothetical findings.",
+      "word_count": 100,
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [
+          "removed the sentence explaining why a comparison street was surveyed (it handed the student the difference-of-differences logic); the key now needs that unstated premise",
+          "explanation and C why_wrong rewritten to match"
+        ],
+        "status": "fixed"
+      },
+      "band7": {
+        "verdict": "band 7",
+        "why": "After the fix: the student must supply why a no-lane comparison street matters (an unstated premise) and pick the change-against-change finding; B is a mismatched levels comparison, D looks like a test but cannot decide, C is the opposite. Stem names the study and the conclusion; passage 101 words."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "A",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 7
+    },
+    {
+      "id": "command_of_evidence.T1_compete.hard.w4b2_03",
+      "template": "T1_compete",
+      "subtype": "Hypothetical finding discriminates two production methods (open-air condensation vs oxygen-restricted distillation); key reaches the method through what the tar lacks",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "Birch tar, an adhesive that early humans used to attach stone points to handles, is the oldest known synthetic substance, and the earliest examples are associated with Neanderthals. Because producing tar was long assumed to require heating birch bark in a sealed, oxygen-deprived environment, Neanderthal tar was widely interpreted as evidence of sophisticated planning. In 2019, however, Patrick Schmidt and colleagues demonstrated that usable tar also accumulates on a stone positioned beside bark burning in open air, a process Neanderthals could easily have discovered accidentally. Later, comparing two pieces of Neanderthal tar from Königsaue, Germany, with tars produced by several Stone Age methods, Schmidt’s team concluded that the Königsaue tar was nonetheless manufactured with an oxygen-restricting technique.",
+      "stem": "Which finding from the comparison, if true, would most directly support Schmidt’s team’s conclusion about the Königsaue tar?",
+      "options": [
+        "Of all the reference tars, the ones scraped from stones beside bark burning in open air were the closest match to the overall chemical makeup of the Königsaue tar.",
+        "Both pieces of the Königsaue tar contained the chemical markers that distinguish tar made from birch bark from tars and resins made from other trees, such as pine.",
+        "The Königsaue tar had been molded around the base of a stone tool, and traces of the wooden handle it once secured were preserved on its surface.",
+        "The Königsaue tar contained almost none of the soot and charred bark particles that were abundant in every reference tar scraped from stones beside open fires."
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "Two methods are in question: tar that collects “on a stone positioned beside bark burning in open air” and tar made with “an oxygen-restricting technique.” If every tar made the open-air way was full of soot and charred bark but the Königsaue tar had almost none, the Königsaue tar cannot have been scraped from a stone beside an open fire, which leaves the oxygen-restricting technique. Choice D therefore supports the team’s conclusion.",
+      "distractors": {
+        "A": {
+          "recipe": "OPP: the rival method’s prediction",
+          "why_wrong": "If the open-air tars matched the Königsaue tar best, the Neanderthals there most likely used the simple open-air method, which weakens the team’s conclusion."
+        },
+        "B": {
+          "recipe": "TRAP: consistent with both methods",
+          "why_wrong": "Both methods start from birch bark, so either one would produce tar with birch markers; this shows what the tar was made from, not how it was made."
+        },
+        "C": {
+          "recipe": "TRAP: a property of use, the same under either method",
+          "why_wrong": "Traces of a tool and handle show that the tar was used for hafting, which tar made by either method could be; they do not show how much oxygen reached the bark when the tar was made."
+        }
+      },
+      "models": [
+        "3.9",
+        "3.14",
+        "2.9",
+        "3.6"
+      ],
+      "sources": [
+        {
+          "what": "Schmidt, Koch, Blessing, Karakostis, Harvati, Dresely, Charrié-Duhaut 2023, Archaeological and Anthropological Sciences 15: 84: birch tar is the oldest synthetic substance, earliest examples associated with Neanderthals; traditionally read as a proxy for cognition; recent work found tar can be produced with simple processes; chemical comparison of the two Königsaue pieces with a reference collection made with Stone Age techniques shows Neanderthals did not use the simplest method but distilled tar in an underground environment that restricted oxygen flow",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC10202989/"
+        },
+        {
+          "what": "Schmidt, Blessing, Rageot, Iovita, Pfleging, Nickel, Righetti, Tennie 2019, PNAS 116: 17707-17711: tar production had been assumed to require heating bark in anaerobic conditions; when birch bark burns close to an adjacent stone under aerobic conditions, birch tar is deposited and can be scraped off",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6731756/"
+        }
+      ],
+      "notes": "Band 7 moves (T1_compete): two named views (open-air condensation from Schmidt et al. 2019 PNAS, and the oxygen-restricting technique); the key reaches the conclusion by an unstated premise (open-air tars carry soot and charred bark, so their absence rules that method out); one OPP (A), two TRAPs consistent with both methods (B, birch markers; C, hafting traces). The 2019 open-air finding is summarized in the 2023 abstract ('birch tar can also be produced with simple processes'); 2019 paper: Schmidt et al., PNAS 116: 17707-17711 ('when birch bark burns close to a vertical to subvertical hard surface, such as an adjacent stone, birch tar is naturally deposited'). Options are hypothetical findings; soot content is not a reported result.",
+      "word_count": 119,
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 2,
+        "fixes": [
+          "added the 2019 PNAS source (PMC6731756) for the named open-air finding the key depends on"
+        ],
+        "status": "fixed"
+      },
+      "band7": {
+        "verdict": "band 7",
+        "why": "Discrimination check: the open-air account predicts soot and char like every open-air reference tar, so their absence (D) rules it out and leaves the oxygen-restricting method; B and C fit both methods, A fits the rival. The key reaches the conclusion through a premise the passage does not state."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "D",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 7
+    },
+    {
+      "id": "command_of_evidence.T1_compete.hard.w4b2_04",
+      "template": "T1_compete",
+      "subtype": "Hypothetical finding discriminates competing explanations of a crater (a pingo that grew in a drained lake and burst, vs a meteorite or deep methane); key reaches the pingo account through the site's history",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "A crater tens of meters wide that opened in the permafrost of Russia’s Yamal Peninsula prompted competing explanations, including a meteorite impact and an explosive release of methane migrating upward from natural gas deposits deep beneath the region. Sergey Buldovicz and colleagues argue instead that the crater formed when a pingo—an ice-cored mound of earth—burst. In their account, the pingo developed after a shallow lake dried out, allowing the unfrozen ground that had lain beneath the lake to freeze; as it froze, carbon dioxide dissolved in its water separated from solution, and pressure accumulated until the pingo exploded.",
+      "stem": "Which finding about the crater, if true, would most directly support Buldovicz and colleagues’ explanation?",
+      "options": [
+        "Air sampled near the bottom of the crater soon after it was found held far more methane than did air sampled above the surrounding tundra at the same time.",
+        "Satellite images of the site from the decades before the crater opened show a small body of water shrinking and vanishing, then a low hill rising in its place.",
+        "Blocks of frozen ground from the crater were thrown more than one hundred meters beyond its rim at the moment it formed.",
+        "The crater’s walls expose layers of frozen sand and silt cut through by large wedges of ice, a pattern that is common in permafrost throughout the surrounding region."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "Buldovicz and colleagues say the pingo “developed after a shallow lake dried out, allowing the unfrozen ground that had lain beneath the lake to freeze,” and that the pingo then burst. Images showing a small body of water disappearing from the site and a low hill (a pingo) then rising there would match that history step by step, while neither a meteorite impact nor methane rising from deep deposits depends on a lake having dried out at the site. Choice B therefore supports their explanation.",
+      "distractors": {
+        "A": {
+          "recipe": "OPP: fits the rival (deep methane) explanation",
+          "why_wrong": "A large amount of methane at the bottom of the crater would point to methane from deep gas deposits, the explanation Buldovicz and colleagues reject; their account involves carbon dioxide."
+        },
+        "C": {
+          "recipe": "TRAP: consistent with every explanation",
+          "why_wrong": "A meteorite impact, a methane blowout, and a bursting pingo would all throw debris far from the crater, so this does not favor one explanation over the others."
+        },
+        "D": {
+          "recipe": "OFF: a feature of the surrounding permafrost, not of how the crater formed",
+          "why_wrong": "Ice wedges that are common in permafrost throughout the region would be found in the crater walls however the crater formed, so they do not point to a pingo."
+        }
+      },
+      "models": [
+        "3.8",
+        "3.15",
+        "2.9"
+      ],
+      "sources": [
+        {
+          "what": "Buldovicz et al. 2018, Scientific Reports 8: 13534: the Yamal crater (a couple of tens of meters wide) aroused hypotheses including a meteorite impact or migration of deep gas; the authors explain it as the collapse of a large pingo that formed within a thaw lake when it shoaled and dried out, allowing the talik below it to freeze back; carbon dioxide dissolved in the pore water of the unfrozen core reached gas saturation, and the pingo exploded",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6131154/"
+        }
+      ],
+      "notes": "Band 6 (T1_compete with one bridge): the student must recognize that the shrinking water and the rising hill in B are the drained lake and the growing pingo of the authors' account, which the rivals do not need. The carbon dioxide option was removed so the key does not echo the passage. C is a TRAP consistent with all views; A fits the rival; D is irrelevant. Background (general knowledge): the Yamal Peninsula's deep natural gas deposits are mostly methane. Options are hypothetical findings, not reported results.",
+      "word_count": 98,
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [
+          "crater width set to \"tens of meters\" as the source gives it (was \"several tens\")",
+          "explanation no longer claims the rival accounts need no mound (gas-blowout accounts also involve a mound); it rests on the dried lake only"
+        ],
+        "status": "fixed"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "Plan cell 6. One bridge: the shrinking water and rising hill must be read as the dried lake and the growing pingo; C fits every explanation, A fits the rival, D is irrelevant."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "B",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "command_of_evidence.T2_lit_quote.hard.w4b2_05",
+      "template": "T2_lit_quote",
+      "subtype": "Literary quotation illustrates an indirect claim (reserve as a strategy grounded in a view of men); all four quotations are Cressida in neighboring states",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "Troilus and Cressida is a circa 1602 play by William Shakespeare. Though in love with the Trojan prince Troilus, Cressida conceals her feelings from him, a reticence that Shakespeare suggests is calculated, originating in her understanding of men: ______",
+      "stem": "Which quotation from Troilus and Cressida most effectively illustrates the claim?",
+      "options": [
+        "“I love you now; but till now not so much / But I might master it. In faith, I lie; / My thoughts were like unbridled children, grown / Too headstrong for their mother.”",
+        "“Yet hold I off. Women are angels, wooing: / Things won are done; joy’s soul lies in the doing. / That she belov’d knows naught that knows not this: / Men prize the thing ungain’d more than it is.”",
+        "“Perchance, my lord, I show more craft than love; / And fell so roundly to a large confession / To angle for your thoughts; but you are wise— / Or else you love not; for to be wise and love / Exceeds man’s might; that dwells with gods above.”",
+        "“Ah, poor our sex! this fault in us I find, / The error of our eye directs our mind. / What error leads must err; O, then conclude, / Minds sway’d by eyes are full of turpitude.”"
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The claim has three parts: Cressida holds back her feelings, she does so on purpose, and her reason is what she believes about men. In choice B she says “Yet hold I off” (she keeps her love back) and gives her reason as a rule about men: once a woman is won the pursuit is over, because “Men prize the thing ungain’d more than it is.” Her reserve is therefore a deliberate choice based on how she thinks men value what they have not yet won.",
+      "distractors": {
+        "A": {
+          "recipe": "HALF: about controlling her love, with no strategy or view of men",
+          "why_wrong": "Cressida says she once could “master” her love and then admits that her thoughts were too “headstrong” to control; the lines show a struggle she lost, not a calculated reserve based on how men behave."
+        },
+        "C": {
+          "recipe": "TRAP: names a strategy (“craft”), but for her confession, not her reserve",
+          "why_wrong": "Here Cressida wonders whether her “large confession” of love was crafty, a way “To angle for” Troilus’s thoughts. The craft she suspects lies in revealing her love, not in keeping it from him, and her remark that no man can be both wise and in love does not explain why she would hold back."
+        },
+        "D": {
+          "recipe": "LURE: a general rule about the sexes, but about women’s fickleness",
+          "why_wrong": "This is a maxim about women (“poor our sex”) whose minds follow their eyes, spoken as Cressida turns from Troilus to another man; it concerns her own inconstancy, not a reserve grounded in her understanding of men."
+        }
+      },
+      "models": [
+        "4ef17800",
+        "825dc766",
+        "66fd248a",
+        "3.17"
+      ],
+      "sources": [
+        {
+          "what": "Shakespeare, Troilus and Cressida (Project Gutenberg Complete Works, eBook 100): A from Act 3 scene 2, B from Act 1 scene 2 (Cressida's soliloquy), C from Act 3 scene 2, D from Act 5 scene 2; all spoken by Cressida",
+          "url": "https://www.gutenberg.org/cache/epub/100/pg100.txt"
+        },
+        {
+          "what": "date: probably written in 1602",
+          "url": "https://en.wikipedia.org/wiki/Troilus_and_Cressida"
+        }
+      ],
+      "notes": "Band 7 moves (spec/rw/band7/command_of_evidence.md 5, T2): pre-1929 drama, indirect claim ('suggests is calculated and rooted in'), all four options the same speaker in neighboring states (lost self-control, suspected craft, self-reproach about women). The hardest trap is C, which offers 'craft' and a remark about men but attaches the craft to her confession, the opposite of reserve. Quotations copied from Gutenberg 100 with its curly apostrophes; C is Cressida's full five-line speech. Troilus and Cressida checked absent from every official item and from claims.txt and satbank/rw.",
+      "word_count": 38,
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [],
+        "status": "pass"
+      },
+      "band7": {
+        "verdict": "band 7",
+        "why": "Pre-1929 drama, indirect claim with three parts (holds back, on purpose, because of what she believes about men); all four options are Cressida. C offers \"craft\" and a remark about men but attaches the craft to her confession; A is a lost struggle; D is a maxim about women. All four quotations match Gutenberg 100 exactly."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "B",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 7
+    },
+    {
+      "id": "command_of_evidence.Q2_P8_multipart.hard.w4b2_06",
+      "template": "Q2_P8_multipart",
+      "subtype": "Data description: a two-part claim read through a passage criterion (girls' rate above boys' signals disadvantage) across years; distractors are accurate readings of the wrong cells",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "Under natural circumstances, boys under the age of five die at somewhat higher rates than girls of the same age, largely because boys are biologically more vulnerable in early childhood. Demographers therefore regard an under-five mortality rate that is higher for girls than for boys as a strong indication that girls are disadvantaged, whether in nutrition, medical care, or other resources. Comparing mortality estimates for four South Asian countries, a demographer concluded that girls in India faced such a disadvantage in both 1990 and 2020, although the gap between girls’ and boys’ rates there narrowed considerably over that period.",
+      "stem": "Which choice best describes data from the table that support the demographer’s conclusion?",
+      "options": [
+        "In India, the under-five mortality rate for girls fell from about 132 deaths per 1,000 live births in 1990 to about 34 in 2020, a decline of roughly three-quarters.",
+        "In Pakistan, the under-five mortality rate for boys was about 9 deaths per 1,000 live births higher than the rate for girls in 1990 and about 11 deaths per 1,000 higher in 2020.",
+        "In 2020, the under-five mortality rate for girls in India was about 4 deaths per 1,000 live births higher than the rate for girls in Bangladesh and about 6 higher than the rate for girls in Nepal.",
+        "In India, the under-five mortality rate for girls was about 10 deaths per 1,000 live births higher than the rate for boys in 1990 but only about 1 death per 1,000 higher in 2020."
+      ],
+      "answer_letter": "D",
+      "table": {
+        "title": "Under-Five Mortality Rates in Four South Asian Countries (deaths per 1,000 live births)",
+        "columns": [
+          "Country",
+          "Girls, 1990",
+          "Boys, 1990",
+          "Girls, 2020",
+          "Boys, 2020"
+        ],
+        "rows": [
+          [
+            "Bangladesh",
+            "143.7",
+            "149.2",
+            "29.3",
+            "33.5"
+          ],
+          [
+            "India",
+            "131.9",
+            "122.3",
+            "33.5",
+            "32.5"
+          ],
+          [
+            "Nepal",
+            "136.9",
+            "139.9",
+            "27.3",
+            "31.7"
+          ],
+          [
+            "Pakistan",
+            "136.0",
+            "144.6",
+            "58.1",
+            "69.0"
+          ]
+        ],
+        "note": null
+      },
+      "figure": null,
+      "explanation": "The text says demographers regard a mortality rate “that is higher for girls than for boys as a strong indication that girls are disadvantaged.” The demographer’s conclusion has two parts: India’s girls faced that disadvantage in both 1990 and 2020, and the gap between girls’ and boys’ rates narrowed. The table shows India’s rate for girls above the rate for boys in 1990 (131.9 against 122.3, about 10 higher) and in 2020 (33.5 against 32.5, about 1 higher). Choice D gives both differences: girls’ rate was higher in each year, by a margin that shrank from about 10 to about 1.",
+      "distractors": {
+        "A": {
+          "recipe": "PART: accurate, girls only (no comparison with boys)",
+          "why_wrong": "This is accurate, but it never compares girls with boys, so it cannot show the disadvantage the text defines or the narrowing of the gap between the two rates."
+        },
+        "B": {
+          "recipe": "IRREL: accurate reading of the wrong country",
+          "why_wrong": "This is accurate for Pakistan, but the demographer’s conclusion is about India, and in Pakistan the rate for boys, not girls, was the higher one (about 9 and 11 deaths per 1,000 higher), the usual pattern."
+        },
+        "C": {
+          "recipe": "IRREL: accurate comparison on the wrong axis (girls across countries)",
+          "why_wrong": "This is accurate, but it compares girls in India with girls in Bangladesh and Nepal; the text’s criterion compares girls with boys in the same country, so it does not show a disadvantage for India’s girls or a change over time."
+        }
+      },
+      "models": [
+        "a7c52fa4",
+        "56f477fb",
+        "3.18"
+      ],
+      "sources": [
+        {
+          "what": "World Bank World Development Indicators via API: under-five mortality rate, female (SH.DYN.MORT.FE) and male (SH.DYN.MORT.MA), per 1,000 live births, 1990 and 2020: Bangladesh 143.7/149.2 and 29.3/33.5; India 131.9/122.3 and 33.5/32.5; Nepal 136.9/139.9 and 27.3/31.7; Pakistan 136.0/144.6 and 58.1/69.0",
+          "url": "https://api.worldbank.org/v2/country/IND;BGD;NPL;PAK/indicator/SH.DYN.MORT.FE?date=1990:2020&format=json"
+        },
+        {
+          "what": "Alkema et al. 2014, Lancet Global Health: under natural circumstances the ratio of male to female mortality up to age 5 is greater than one, but sex discrimination can change sex ratios",
+          "url": "https://pubmed.ncbi.nlm.nih.gov/25304419/"
+        }
+      ],
+      "notes": "Band 7 moves (Q2_P8): the display is read through the passage criterion (girls' rate above boys' = disadvantage) and the key combines two years and two series for one country; all three distractors are accurate readings of the wrong cells in the key's sentence frame. Checked in Python: A true (131.9 to 33.5, -74.6%); B true (gaps 8.6 and 10.9, boys higher); C true (33.5 > 29.3 and 27.3); D true (9.6 to 1.0); India is the only row with girls above boys. The demographer's conclusion is worded as a data statement (the gap narrowed), not as a claim that the disadvantage shrank relative to the expected ratio, which Alkema et al. report worsened for India. Values pulled from the World Bank API on 2026-10-20 (male series at /indicator/SH.DYN.MORT.MA).",
+      "word_count": 99,
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 2,
+        "fixes": [
+          "B, C and D recast in one numeric frame (differences in deaths per 1,000) so the key no longer restates the conclusion (\"in both 1990 and 2020\", \"shrank\"); every figure rechecked against the World Bank API",
+          "explanation and B, C why_wrong updated"
+        ],
+        "status": "fixed"
+      },
+      "band7": {
+        "verdict": "band 7",
+        "why": "After the fix: the student must apply the passage criterion (girls above boys = disadvantage) to two signed differences and see the narrowing; B is the same frame for the wrong country with the sexes reversed, C the same frame on the wrong axis, A girls only. Passage 99 words."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "D",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 7
+    },
+    {
+      "id": "command_of_evidence.T3_person_quote.hard.w4b2_07",
+      "template": "T3_person_quote",
+      "subtype": "Quotation from an art historian supports a claim made inside the text's rebuttal (Paris-period figurative work shares the abstractions' concerns)",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "In 1953 the painter Beauford Delaney left New York, where he had painted vivid scenes of city streets as well as portraits, and relocated to Paris, where he remained for the rest of his life. His work there shifted dramatically toward abstract studies of color and light, many of them saturated with an intense yellow. This transformation is sometimes treated as a clean break, with the Paris abstractions regarded as an achievement separate from his figurative painting. Such a view, however, overlooks the fact that the figurative works Delaney produced in Paris, such as his 1963 portrait of the writer James Baldwin, pursue the same concerns as his abstractions.",
+      "stem": "Which quotation from an art historian would most directly support the claim made in the text?",
+      "options": [
+        "“The portraits Delaney made of friends after he settled in Paris are often treated as mere likenesses, but in them each face emerges from the same dense yellows and restless strokes that fill his abstract canvases of those years; what absorbs him is how color seems to give off light.”",
+        "“Delaney’s move to Paris marks a decisive turn in his career: once he committed himself to abstraction, the crowded street scenes and portraits that had defined his New York years gave way to a body of work that has little in common with anything he had painted before.”",
+        "“Even Delaney’s New York street scenes, painted decades before his abstractions, reveal a fascination with how light falls on buildings and pavement, which suggests that the abstract work he produced in Paris grew out of concerns he had developed long before he ever left the United States for France.”",
+        "“Delaney’s portrait of Baldwin records a friendship that sustained the painter through years of poverty and illness in Paris; Baldwin, for his part, wrote that Delaney had been menaced by his circumstances more than any man he knew, and had transcended them more fully.”"
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The text claims that “the figurative works Delaney produced in Paris, such as his 1963 portrait of the writer James Baldwin, pursue the same concerns as his abstractions,” which are “abstract studies of color and light.” Choice A says that in the portraits Delaney made after he settled in Paris, each face emerges from “the same dense yellows and restless strokes that fill his abstract canvases of those years,” and that what absorbs him is “how color seems to give off light.” Portraits are figurative works, so the quotation shows Delaney’s Paris figurative work pursuing the concerns of his abstractions, which supports the claim.",
+      "distractors": {
+        "B": {
+          "recipe": "OPP: sides with the view the text rejects",
+          "why_wrong": "This quotation describes the Paris abstractions as having “little in common” with Delaney’s figurative painting, which is the “clean break” view that the text argues against."
+        },
+        "C": {
+          "recipe": "TRAP: a continuity argument, but through the New York works",
+          "why_wrong": "This links the abstractions to Delaney’s New York street scenes, not to the figurative works he made in Paris, so it argues a different continuity from the one the text claims."
+        },
+        "D": {
+          "recipe": "HALF: names the text’s own example (the Baldwin portrait) but its personal meaning rather than its artistic concerns",
+          "why_wrong": "This discusses the Baldwin portrait, the work the text names, but only as a record of friendship and hardship; it says nothing about color or light, so it does not show that the portrait pursues the same concerns as the abstractions."
+        }
+      },
+      "models": [
+        "ca9dc00f",
+        "3.21",
+        "3.3",
+        "eaf22802"
+      ],
+      "sources": [
+        {
+          "what": "Beauford Delaney: modernist painter; New York scenes of the urban landscape; moved to Paris in 1953 and stayed for the rest of his life; dramatic stylistic shift from figurative compositions of New York life to abstract expressionist studies of color and light; still made figurative works, including the 1963 pastel portrait of James Baldwin (National Portrait Gallery: 'a likeness based on memory and a study in light', with the Van Gogh-inspired yellow he often used after moving to Paris); Baldwin: 'menaced more than any other man I know by his social circumstances ... he has transcended both the inner and outer darkness'",
+          "url": "https://en.wikipedia.org/wiki/Beauford_Delaney"
+        }
+      ],
+      "notes": "Band 7 moves (T3): quotations of about 45 to 50 words that argue; the claim sits inside the text's rebuttal of a 'clean break' view (as in ca9dc00f). B sides with the rejected view (OPP); C is a reconciliation that argues continuity through the wrong works (TRAP); D is about the right work but the wrong concern (HALF). The art historian is unnamed and the quotations are invented, as WAVE.md allows; D's paraphrase of Baldwin follows his real words as quoted on the source page. The text's 'clean break' framing and the rebuttal are the passage's own argument, attributed to no real person.",
+      "word_count": 109,
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 2,
+        "fixes": [
+          "key A paraphrased away from the passage: it now speaks of the portraits Delaney made in Paris instead of naming the 1963 Baldwin portrait, so D (the named portrait, wrong concern) becomes a real lure",
+          "explanation and D recipe and why_wrong updated"
+        ],
+        "status": "fixed"
+      },
+      "band7": {
+        "verdict": "band 7",
+        "why": "Claim sits inside the rebuttal of the \"clean break\" view (as in ca9dc00f); after the fix the key needs the bridge portraits = figurative works made in Paris; B sides with the rejected view, C argues continuity through the New York works, D names the text's example but not its concerns. Quotations invented and unattributed; D's Baldwin paraphrase matches his words on the source page."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "A",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 7
+    },
+    {
+      "id": "command_of_evidence.Q1_P5_control.hard.w4b2_08",
+      "template": "Q1_P5_control",
+      "subtype": "Data completion: a result that contradicts the stated expectation (covered flowers can set fruit only from their own pollen; the most domesticated plants set the least)",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "Many domesticated crops are self-compatible: unlike many of their wild relatives, they can produce fruit using their own pollen. Lislie Solís-Montero and colleagues hypothesized that domestication had favored self-compatibility in tomatillo (Physalis philadelphica), a Mexican fruit crop whose commercial varieties, traditional landraces, and weedy wild forms grow close to one another. The team enclosed flowers on plants of all three types to exclude pollinators, so that any fruit could develop only if a flower pollinated itself, and later recorded several reproductive traits. Contrary to the researchers’ hypothesis, they found that ______",
+      "stem": "Which choice most effectively uses data from the table to complete the statement?",
+      "options": [
+        "commercial plants produced about 169 ovules per flower, on average, roughly three times as many as weedy plants, which produced the fewest ovules of the three types of plants.",
+        "seeds from the enclosed flowers of weedy plants germinated at a lower rate, about 22 percent, than seeds from the enclosed flowers of either commercial plants or landraces did.",
+        "only about 11 percent of the enclosed flowers on commercial plants set fruit, compared with about 43 percent on landraces and about 72 percent on weedy plants.",
+        "the share of enclosed flowers that set fruit increased with the degree of domestication, reaching its highest level, about 72 percent, among the commercial plants."
+      ],
+      "answer_letter": "C",
+      "table": {
+        "title": "Reproductive Traits of Three Types of Tomatillo Plants",
+        "columns": [
+          "Type of plant",
+          "Ovules per flower (average)",
+          "Enclosed flowers that set fruit (%)",
+          "Germination of seeds from enclosed flowers (%)"
+        ],
+        "rows": [
+          [
+            "Commercial variety",
+            "169",
+            "11",
+            "44"
+          ],
+          [
+            "Landrace",
+            "95",
+            "43",
+            "46"
+          ],
+          [
+            "Weedy wild form",
+            "57",
+            "72",
+            "22"
+          ]
+        ],
+        "note": null
+      },
+      "figure": null,
+      "explanation": "Because pollinators were kept away, an enclosed flower could set fruit “only if a flower pollinated itself,” so the share of enclosed flowers that set fruit shows how well each type of plant produces fruit from its own pollen. The researchers hypothesized that domestication had favored this ability, so they expected the commercial plants to do best. Instead, the table shows that only about 11 percent of enclosed flowers on commercial plants set fruit, against about 43 percent on landraces and about 72 percent on weedy plants. Choice C states this result, which contradicts the hypothesis.",
+      "distractors": {
+        "A": {
+          "recipe": "IRREL: accurate, but a trait unrelated to self-compatibility",
+          "why_wrong": "The ovule figures are accurate, but the number of ovules per flower does not show whether a plant can produce fruit from its own pollen, so it does not contradict the hypothesis."
+        },
+        "B": {
+          "recipe": "CONTRA: accurate, but it favors the domesticated plants",
+          "why_wrong": "The germination figures are accurate, but lower germination for weedy plants points the same way as the researchers’ expectation, not against it, and germination is not the measure of fruit set from a flower’s own pollen."
+        },
+        "D": {
+          "recipe": "WDIR: the relation applied backward (misplaced value)",
+          "why_wrong": "Fruit set decreased with domestication; about 72 percent is the value for weedy plants, while commercial plants set fruit from only about 11 percent of enclosed flowers."
+        }
+      },
+      "models": [
+        "9452092c",
+        "3.4",
+        "3.46"
+      ],
+      "sources": [
+        {
+          "what": "Solís-Montero, Aceves-Chong, Vega-Polanco, Vargas-Ponce 2021, Frontiers in Plant Science 12: 658406: many domesticated plants are self-compatible; hypothesis that artificial selection favors self-compatibility in cultivated P. philadelphica; weedy, landrace and commercial populations coexist in close proximity; contrary to expectations, fruit production by autonomous autogamy was higher in weedy plants; Table 3 fruit set under pollinator exclusion: commercial 11%, landraces 43%, weedy 72%; Table 2 mean ovules 169.3, 94.8, 56.5; Table 5 germination after pollinator exclusion 44%, 46%, 22%",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC8176284/"
+        }
+      ],
+      "notes": "Band 7 moves (Q1_P5 surprise, after 9452092c / 3.38): the passage gives only the expectation and the design relation (an enclosed flower can set fruit only from its own pollen), so the student must translate the fruit-set column into self-compatibility and see which group contradicts the hypothesis; options are compound clauses of 25 to 30 words. Checked against the table: A true (169/57 = 3.0; weedy fewest) but irrelevant; B true (22 lowest) but in the expected direction; C true; D false (fruit set falls with domestication; 72 is the weedy value). Ovules rounded to whole numbers; group means from the paper's tables.",
+      "word_count": 91,
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 2,
+        "fixes": [],
+        "status": "pass"
+      },
+      "band7": {
+        "verdict": "band 7",
+        "why": "Surprise against the stated expectation, as in 9452092c: the student must translate fruit set from enclosed flowers into self-compatibility; A and B are accurate readings of irrelevant measures (B points the expected way), D applies the relation backward. Options are 25 to 30 word compound clauses. Passage is 91 words, under the 100-word signal, which the template model (about 110) offsets only partly. Table values match the paper (11/43/72; ovules 169.3/94.8/56.5; germination 44/46/22)."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "C",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 7
+    },
+    {
+      "id": "command_of_evidence.Q1_P3_pairwise.hard.w4b2_09",
+      "template": "Q1_P3_pairwise",
+      "subtype": "Data completion: pairwise contrast with two conditions from the passage (same year, other country, women above men)",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Across North Africa, women’s participation in higher education has risen sharply since the 1990s, but the timing of that rise differed from country to country. Figures for the gross tertiary enrollment ratio—enrollment in universities and other postsecondary institutions divided by the number of people in the five-year age group following secondary school—show that women’s ratio surpassed men’s in Tunisia long before it even matched men’s in Morocco. In 2005, for instance, whereas the ratio for Moroccan women (10.5 percent) remained below that for Moroccan men (12.9 percent), the ratio for ______",
+      "stem": "Which choice most effectively uses data from the table to complete the example?",
+      "options": [
+        "Tunisian women was 34.0 percent, above the 27.0 percent for Tunisian men.",
+        "Tunisian women was 10.2 percent, below the 12.7 percent for Tunisian men.",
+        "Tunisian women was 41.5 percent, above the 25.4 percent for Tunisian men.",
+        "Moroccan women was 28.0 percent, below the 29.0 percent for Moroccan men."
+      ],
+      "answer_letter": "A",
+      "table": {
+        "title": "Gross Tertiary Enrollment Ratio (%) in Tunisia and Morocco, by Sex",
+        "columns": [
+          "Year",
+          "Tunisia, women",
+          "Tunisia, men",
+          "Morocco, women",
+          "Morocco, men"
+        ],
+        "rows": [
+          [
+            "1995",
+            "10.2",
+            "12.7",
+            "9.2",
+            "13.4"
+          ],
+          [
+            "2005",
+            "34.0",
+            "27.0",
+            "10.5",
+            "12.9"
+          ],
+          [
+            "2015",
+            "41.5",
+            "25.4",
+            "28.0",
+            "29.0"
+          ]
+        ],
+        "note": null
+      },
+      "figure": null,
+      "explanation": "The example must contrast Morocco in 2005, where women’s ratio “remained below that for Moroccan men,” with Tunisia in the same year, where women’s ratio had already surpassed men’s. The table shows that in 2005 the ratio for Tunisian women was 34.0 percent and the ratio for Tunisian men was 27.0 percent. Choice A completes the example.",
+      "distractors": {
+        "B": {
+          "recipe": "WGRP: right country, wrong year (1995), and no contrast",
+          "why_wrong": "These are Tunisia’s figures for 1995, not 2005, and in 1995 Tunisian women’s ratio was below men’s, so they do not contrast with Morocco."
+        },
+        "C": {
+          "recipe": "WGRP: right country and right relation, wrong year (2015)",
+          "why_wrong": "These are Tunisia’s figures for 2015; the example compares the two countries in 2005, when the ratio for Tunisian women was 34.0 percent and for men 27.0 percent."
+        },
+        "D": {
+          "recipe": "WGRP: Morocco again, in a later year",
+          "why_wrong": "These are Morocco’s figures for 2015, which show the same pattern as Morocco in 2005 (women below men) rather than the contrast the example needs."
+        }
+      },
+      "models": [
+        "3.29",
+        "3.30"
+      ],
+      "sources": [
+        {
+          "what": "World Bank World Development Indicators via API: school enrollment, tertiary, female (SE.TER.ENRR.FE) and male (SE.TER.ENRR.MA), % gross: Tunisia 1995 10.2/12.7, 2005 34.0/27.0, 2015 41.5/25.4; Morocco 1995 9.2/13.4, 2005 10.5/12.9, 2015 28.0/29.0",
+          "url": "https://api.worldbank.org/v2/country/TUN;MAR/indicator/SE.TER.ENRR.FE?date=1995:2020&format=json"
+        }
+      ],
+      "notes": "Band 6 (the plan cell is 6; Q1_P3 has no band-7 officials). Two conditions from the passage (the same year as the Moroccan figures, and the other country) must be applied before the cell is read, as in 3.29; C is the closest trap (the right relation from the wrong year). Checked against the table: only A gives Tunisia's 2005 values; women above men in Tunisia in 2005 and 2015, below in all three Moroccan years. Values pulled from the World Bank API on 2026-10-20 (male series at /indicator/SE.TER.ENRR.MA), one decimal as published. Definition of the gross ratio follows the World Bank's indicator description.",
+      "word_count": 88,
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [
+          "\"neighboring Morocco\" changed to \"Morocco\" (the two countries do not share a border); Moroccan women did pass men later (2019, World Bank)",
+          "Lead 2026-10-20: passage said women's ratio surpassed men's 'far earlier in Tunisia than in Morocco', presupposing a Moroccan crossover the table (ends 2015, 28.0 vs 29.0) does not show; now 'surpassed men's in Tunisia long before it even matched men's in Morocco'."
+        ],
+        "status": "fixed"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "Plan cell 6; Q1_P3 has no band-7 official items. Two conditions (same year, other country) before a cell read; C is the right relation from the wrong year."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "A",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "command_of_evidence.Q2_P4_trend.hard.w4b2_10",
+      "template": "Q2_P4_trend",
+      "subtype": "Data description: a trend that matters only through a passage relation (urban share rises only when urban population grows proportionally faster than total population)",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "The share of a country’s population living in urban areas, a standard measure of urbanization, rises only when the urban population grows proportionally faster than the population as a whole; when the two grow at the same rate, the share remains constant. Tajikistan, a largely mountainous country in Central Asia where most people have long lived in rural villages, became independent from the Soviet Union in 1991, and in the following decades its total population increased substantially. Comparing urban and national population figures for those decades, a geographer concluded that Tajikistan’s urbanization reversed during the 1990s and then stalled over the next twenty years.",
+      "stem": "Which choice best describes data from the table that support the geographer’s conclusion?",
+      "options": [
+        "Tajikistan’s urban population and its total population were both larger in 2020 than they had been in any of the earlier years shown in the table.",
+        "Tajikistan’s urban population declined slightly from 1990 to 2000, but it then grew by more than half, rising from about 1.7 million in 2000 to about 2.6 million in 2020.",
+        "From 1990 to 2000, Tajikistan’s urban population fell slightly as its total population grew, and from 2000 to 2020, the two populations each grew by a little over half.",
+        "Tajikistan’s urban population increased during every decade from 1990 to 2020, although in each of those decades it grew more slowly than the country’s total population did."
+      ],
+      "answer_letter": "C",
+      "table": {
+        "title": "Urban and Total Population of Tajikistan, 1990–2020",
+        "columns": [
+          "Year",
+          "Urban population (millions)",
+          "Total population (millions)"
+        ],
+        "rows": [
+          [
+            "1990",
+            "1.72",
+            "5.40"
+          ],
+          [
+            "2000",
+            "1.67",
+            "6.28"
+          ],
+          [
+            "2010",
+            "2.03",
+            "7.65"
+          ],
+          [
+            "2020",
+            "2.55",
+            "9.75"
+          ]
+        ],
+        "note": null
+      },
+      "figure": null,
+      "explanation": "The text says the urban share “rises only when the urban population grows proportionally faster than the population as a whole” and stays the same “when the two grow at the same rate.” From 1990 to 2000, the urban population fell (1.72 to 1.67 million) while the total grew (5.40 to 6.28 million), so the urban share fell: urbanization reversed. From 2000 to 2020, both grew by a little more than half (about 53 and 55 percent), so the share stayed almost the same: urbanization stalled. Choice C describes both parts.",
+      "distractors": {
+        "A": {
+          "recipe": "IRREL: accurate levels, no comparison of growth",
+          "why_wrong": "Both populations did peak in 2020, but reaching a high level says nothing about whether the urban population grew faster or slower than the total, which is what determines the urban share."
+        },
+        "B": {
+          "recipe": "PART: the urban series alone (proxy applied to one column)",
+          "why_wrong": "This is accurate, but it never compares the urban population with the total population; growth of more than half after 2000 would mean rising urbanization only if the total population had grown less, which the choice does not say."
+        },
+        "D": {
+          "recipe": "INACC: misreads the 1990s",
+          "why_wrong": "The urban population did not grow from 1990 to 2000; it fell from 1.72 to 1.67 million."
+        }
+      },
+      "models": [
+        "cca6fae9",
+        "da438257",
+        "3.13"
+      ],
+      "sources": [
+        {
+          "what": "World Bank World Development Indicators via API: urban population (SP.URB.TOTL) Tajikistan 1990 1,721,317; 2000 1,667,687; 2010 2,029,916; 2020 2,553,592; total population (SP.POP.TOTL) 1990 5,398,768; 2000 6,284,735; 2010 7,652,141; 2020 9,749,310; urban share (SP.URB.TOTL.IN.ZS) 31.9, 26.5, 26.5, 26.2 percent",
+          "url": "https://api.worldbank.org/v2/country/TJK/indicator/SP.URB.TOTL?date=1990:2020&format=json"
+        },
+        {
+          "what": "Tajikistan is covered by mountains of the Pamir range, and most of the country is over 3,000 m above sea level; the World Bank urban share above (about 26 to 32 percent, 1990-2020) shows most people living in rural areas",
+          "url": "https://en.wikipedia.org/wiki/Tajikistan"
+        }
+      ],
+      "notes": "Band 7 moves (Q2_P4): the trend matters only through the passage relation (the urban share, never shown, depends on relative growth of the two columns); key is a contrast in rates across two periods. Checked in Python on the table: A true but irrelevant (both peak in 2020); B true (1.72 to 1.67; 1.67 to 2.55 is +52.7%) but one series only; C true (total 5.40 to 6.28; 2000-2020 urban +52.7%, total +55.3%); D false (urban fell 1990-2000). Values pulled from the World Bank API on 2026-10-20, rounded to hundredths of a million; total population series also at /indicator/SP.POP.TOTL.",
+      "word_count": 104,
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [],
+        "status": "pass"
+      },
+      "band7": {
+        "verdict": "band 7",
+        "why": "The trend matters only through the passage relation (the share, never shown, depends on relative growth); the key gives a contrast in rates over two periods. B is accurate for one series, A accurate levels, D a misread decade."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "C",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 7
+    },
+    {
+      "id": "command_of_evidence.T2_lit_quote.medium.w4b2_11",
+      "template": "T2_lit_quote",
+      "subtype": "Literary quotation illustrates a two-part claim (the stage now seems artificial; the people of Cavendish Square seemed real)",
+      "tier": "medium",
+      "passage": "Trelawny of the “Wells” is an 1898 play by Arthur Wing Pinero. After a brief residence with her fiancé’s family in Cavendish Square, a fashionable district of London, the actress Rose Trelawny returns to the theater. Pinero suggests that Rose now considers the stage artificial and admires the people she encountered in Cavendish Square: ______",
+      "stem": "Which quotation from Trelawny of the “Wells” most effectively illustrates the claim?",
+      "options": [
+        "“I will make you a present of the belt, ’Vonia, if you will accept it. I bought it when I came back to the ‘Wells,’ thinking everything would go on as before. But—it’s of no use; they tell me I cannot act effectively any longer.”",
+        "“The truth is, it isn’t as nice as you’d think it. I suppose the Profession had its drawbacks—mother used to say so—but one could fly.”",
+        "“How badly I behaved in Cavendish Square! how unlike a young lady! What if the old folks were overbearing and tyrannical, Arthur could be gentle with them.”",
+        "“[The theater] isn’t the world we live in, merely a world—such a queer little one! I was less than a month in Cavendish Square, and very few people came there; but they were real people—real!”"
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The claim has two parts: Rose now finds the stage artificial, and she admires the people she met in Cavendish Square. In choice D she says the theater “isn’t the world we live in” but only “a queer little one,” and she says the few people she met in Cavendish Square were “real people,” a point she stresses by repeating “real.” Only this quotation shows both her new view of the theater and her admiration for the people of Cavendish Square.",
+      "distractors": {
+        "A": {
+          "recipe": "HALF: the theater part only (she can no longer act), with no view of Cavendish Square",
+          "why_wrong": "Rose says she can no longer act well, which shows that something has changed, but she does not call the stage artificial or say anything about the people she met in Cavendish Square."
+        },
+        "B": {
+          "recipe": "OPP: spoken during her stay, preferring the stage’s freedom",
+          "why_wrong": "Rose says life with the Gowers “isn’t as nice as you’d think” and that on the stage “one could fly,” which favors the theater over Cavendish Square, the reverse of the claim."
+        },
+        "C": {
+          "recipe": "HALF: Cavendish Square only, and the old people called “overbearing and tyrannical”",
+          "why_wrong": "Rose regrets her own behavior and praises Arthur’s gentleness, but she calls the older Gowers “overbearing and tyrannical” and says nothing about the stage being artificial."
+        }
+      },
+      "models": [
+        "2.26",
+        "2.20",
+        "2.36"
+      ],
+      "sources": [
+        {
+          "what": "Pinero, Trelawny of the “Wells” (Project Gutenberg eBook 47561): A, C and D from Act 3 (Rose at Mrs. Mossop’s lodgings after leaving the Gowers), B from Act 2 (in Cavendish Square); all spoken by Rose",
+          "url": "https://www.gutenberg.org/cache/epub/47561/pg47561.txt"
+        },
+        {
+          "what": "1898 comic play by Arthur Wing Pinero about an actress who tries to give up the stage for love",
+          "url": "https://en.wikipedia.org/wiki/Trelawny_of_the_%22Wells%22"
+        }
+      ],
+      "notes": "CB-style adaptation: Gutenberg's straight apostrophes curled; double hyphens set as closed em dashes; italics markers dropped; bracketed gloss [The theater] (D; source 'It', which refers to the stage world named in the previous sentence); A ends at 'any longer' (source has a trailing dash); B omits the stage direction [raising her arms] between 'but' and 'one could fly'. Gloss 'a wealthy part of London' added to the setup.",
+      "word_count": 55,
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "command_of_evidence.T1_single.medium.w4b2_12",
+      "template": "T1_single",
+      "subtype": "Hypothetical finding supports a claim about a cue that replaces gravity (light orients spiders in orbit); key needs the lights-on versus lights-off contrast",
+      "tier": "medium",
+      "passage": "On Earth, golden silk orb-weaver spiders construct asymmetric webs, with the central hub positioned near the top, and they wait for prey on the hub facing downward, behaviors thought to depend on gravity. To investigate, Samuel Zschokke and colleagues sent two juvenile orb-weavers to the International Space Station, where the spiders were photographed every five minutes for two months as the lamps in their enclosure switched on and off. The researchers concluded that in the absence of gravity, the direction of light can serve as an orientation guide for the spiders.",
+      "stem": "Which finding from the experiment, if true, would most directly support the researchers’ conclusion?",
+      "options": [
+        "The spiders on the space station spun webs that contained roughly the same amount of silk as webs spun by spiders of the same species in a matching enclosure on Earth.",
+        "While the lamps were on, the spiders on the space station built webs with the hub shifted toward the light and faced away from it, but while the lamps were off, they showed no consistent direction.",
+        "The spiders on the space station built new webs less often during their first few weeks in orbit than they did during their final few weeks there, once they had adjusted to their unfamiliar surroundings.",
+        "Spiders kept in a matching enclosure on Earth built webs with the hub near the top and faced downward on the hub regardless of whether the lamps in their enclosure were on or off."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The researchers concluded that “in the absence of gravity, the direction of light can serve as an orientation guide for the spiders.” If, without gravity, the spiders’ webs and resting direction lined up with the light when the lamps were on but had no consistent direction when the lamps were off, then light, not something else, was orienting them. Choice B describes that pattern.",
+      "distractors": {
+        "A": {
+          "recipe": "OFF: right spiders, different variable (amount of silk)",
+          "why_wrong": "How much silk the webs contained says nothing about which direction the spiders built their webs or faced, so it does not show that light guided their orientation."
+        },
+        "C": {
+          "recipe": "OFF: a change over time, not a response to light",
+          "why_wrong": "Building webs more often after an adjustment period shows the spiders adapting to orbit, but it does not link their orientation to the direction of light."
+        },
+        "D": {
+          "recipe": "SUBJ: the Earth spiders, which have gravity",
+          "why_wrong": "Spiders on Earth still have gravity to orient by, so their behavior with the lamps on or off does not show what guides spiders when gravity is absent."
+        }
+      },
+      "models": [
+        "2.21",
+        "2.6",
+        "2.7"
+      ],
+      "sources": [
+        {
+          "what": "Zschokke, Countryman, Cushing 2021 (online 2020), The Science of Nature 108: 1: two juvenile Trichonephila clavipes on the ISS and two Earth controls photographed every 5 minutes for 2 months; Trichonephila normally build asymmetric webs with the hub near the upper edge and face downward on the hub; webs built with the lights on were more asymmetric (hub near the lights), spiders faced away from the lights when on and had random orientation when off; conclusion: in the absence of gravity, the direction of light can serve as an orientation guide",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7716925/"
+        }
+      ],
+      "notes": "Medium T1: the key operationalizes the claim with the needed contrast (lights on against lights off, without gravity). D is the wrong-subject trap (Earth controls still have gravity). 'Golden silk orb-weaver' is the common name of Trichonephila clavipes. Key B is the actual reported pattern, stated as a finding.",
+      "word_count": 91,
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "command_of_evidence.T1_single.medium.w4b2_13",
+      "template": "T1_single",
+      "subtype": "Hypothetical finding supports a causal claim (disturbed nights disrupt a coordinated morning departure); key observes the outcome after the cause varies",
+      "tier": "medium",
+      "passage": "Jackdaws (Corvus monedula) spend winter nights in large communal roosts, and in the morning the birds typically depart together, a collective movement they coordinate through their calls. Monitoring roosts in areas that differed in their degree of urbanization, Hannah Broad and colleagues found that where background noise was louder, jackdaws took longer to settle in the evening and called more during the night. The researchers suggest that this nocturnal calling, a probable sign of disrupted sleep, interferes with the birds’ ability to coordinate their morning departures.",
+      "stem": "Which finding, if true, would most directly support the researchers’ suggestion?",
+      "options": [
+        "On mornings after nights with the most calling, the jackdaws left their roost in scattered groups over a longer period rather than departing together.",
+        "Jackdaws at roosts in the noisiest areas arrived at their roosts later in the evening, on average, than jackdaws at roosts in quieter, less urbanized areas did.",
+        "Roosts in more urbanized areas were occupied by more jackdaws, on average, than roosts in less urbanized areas were.",
+        "Jackdaws departed their roosts in a tightly synchronized group just as often after nights of heavy calling as after quiet nights."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The researchers suggest that nighttime calling “interferes with the birds’ ability to coordinate their morning departures.” If the jackdaws left in scattered groups over a longer period on the mornings after the noisiest nights, rather than departing together, then heavy calling at night would be linked to poorer coordination in the morning. Choice A describes that pattern.",
+      "distractors": {
+        "B": {
+          "recipe": "OFF: evening arrival, not morning coordination",
+          "why_wrong": "Arriving later in the evening says nothing about whether calling at night affects how well the birds coordinate their departures the next morning."
+        },
+        "C": {
+          "recipe": "OFF: roost size, a different variable",
+          "why_wrong": "The number of birds at a roost does not show any link between nighttime calling and the coordination of morning departures."
+        },
+        "D": {
+          "recipe": "OPP: no difference in coordination",
+          "why_wrong": "If departures were just as synchronized after heavy calling as after quiet nights, nighttime calling would not be interfering with coordination, which weakens the suggestion."
+        }
+      },
+      "models": [
+        "2.21",
+        "2.6",
+        "2.7"
+      ],
+      "sources": [
+        {
+          "what": "Broad, Dibnah, Smith, Thornton 2024, Phil. Trans. R. Soc. B 379: 20230185: wild jackdaws use vocalizations to coordinate collective movements at winter roosts; roosts in areas with differing degrees of urbanization; with higher background noise, jackdaws took longer to settle in the evening and called more during the night, suggesting sleep disruption; high overnight calling linked to disruption of vocal consensus decision-making and less cohesive group departures in the morning",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC11391286/"
+        }
+      ],
+      "notes": "Medium T1: the key observes the outcome (cohesion of the morning departure) varying with the cause (nighttime calling). D is the opposite; B and C are off-target variables. Key A states, as a finding, the link the study reports ('less cohesive group departures'). The passage gives no study region (not in the abstract).",
+      "word_count": 86,
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "command_of_evidence.Q1_P3_pairwise.medium.w4b2_14",
+      "template": "Q1_P3_pairwise",
+      "subtype": "Data completion: pairwise comparison that illustrates a stated relation (period depends on distance, not size)",
+      "tier": "medium",
+      "passage": "Saturn’s more than one hundred known moons range from small fragments of ice and rock to Titan, which is wider than the planet Mercury. A moon’s orbital period—the time required to complete one revolution around its planet—depends on the moon’s distance from that planet: the more distant the moon, the longer its orbital period. The moon’s own dimensions, by contrast, have essentially no influence on the duration of its orbit. This relationship helps explain why, among the five moons of Saturn shown in the table, ______",
+      "stem": "Which choice most effectively uses data from the table to complete the statement?",
+      "options": [
+        "Titan, by far the largest of the five moons, also has the longest orbital period, about 16 days.",
+        "Rhea and Iapetus, which are similar in size, also have similar orbital periods.",
+        "Enceladus, the smallest of the five moons, orbits closer to Saturn than Dione does.",
+        "Iapetus, though smaller than Titan, takes about five times as long as Titan to orbit Saturn."
+      ],
+      "answer_letter": "D",
+      "table": {
+        "title": "Five Moons of Saturn",
+        "columns": [
+          "Moon",
+          "Mean radius (km)",
+          "Average distance from Saturn (thousands of km)",
+          "Orbital period (days)"
+        ],
+        "rows": [
+          [
+            "Enceladus",
+            "252",
+            "238",
+            "1.4"
+          ],
+          [
+            "Dione",
+            "561",
+            "378",
+            "2.7"
+          ],
+          [
+            "Rhea",
+            "764",
+            "527",
+            "4.5"
+          ],
+          [
+            "Titan",
+            "2,575",
+            "1,222",
+            "15.9"
+          ],
+          [
+            "Iapetus",
+            "734",
+            "3,562",
+            "79.3"
+          ]
+        ],
+        "note": null
+      },
+      "figure": null,
+      "explanation": "The text says that a moon’s orbital period depends on its distance from the planet and that the moon’s own dimensions “have essentially no influence on the duration of its orbit.” The table shows that Iapetus (radius 734 km) is much smaller than Titan (2,575 km) but nearly three times as far from Saturn, and its orbital period (79.3 days) is about five times Titan’s (15.9 days). Choice D shows a smaller but more distant moon taking longer to orbit, as the relationship predicts.",
+      "distractors": {
+        "A": {
+          "recipe": "INACC: wrong extreme",
+          "why_wrong": "Titan is the largest moon, but Iapetus, not Titan, has the longest orbital period (79.3 days)."
+        },
+        "B": {
+          "recipe": "INACC: sameness offered where the data differ",
+          "why_wrong": "Rhea and Iapetus are similar in size (764 and 734 km), but their orbital periods are very different: 4.5 days and 79.3 days."
+        },
+        "C": {
+          "recipe": "IRREL: accurate, but says nothing about orbital period",
+          "why_wrong": "Enceladus is the smallest moon and is closer to Saturn than Dione, but this choice does not mention orbital periods, so it does not illustrate how period depends on distance rather than size."
+        }
+      },
+      "models": [
+        "2.18",
+        "2.27",
+        "2.24"
+      ],
+      "sources": [
+        {
+          "what": "Wikipedia infoboxes: semimajor axis, orbital period, mean radius: Enceladus 238,037 km, 1.370 d, 252.0 km; Dione 377,700 km, 2.737 d, 561.4 km; Rhea 527,040 km, 4.518 d, mean diameter 1,528 km; Titan 1,221,870 km, 15.945 d, 2,574.8 km; Iapetus 3,561,700 km, 79.331 d, 734.3 km (pages for each moon, linked from this list)",
+          "url": "https://en.wikipedia.org/wiki/Moons_of_Saturn"
+        },
+        {
+          "what": "Titan is larger (in diameter) than the planet Mercury; Saturn has well over a hundred confirmed moons",
+          "url": "https://en.wikipedia.org/wiki/Titan_(moon)"
+        }
+      ],
+      "notes": "Medium P3 in the 2.18 shape (a stated relation, then a comparison that it explains). Checked in Python: A false (Iapetus has the longest period); B false (4.5 against 79.3 days); C true but omits period; D true (734 < 2,575; 79.3 / 15.9 = 5.0). Distances and radii rounded to whole km; periods to one decimal. Physics background (Kepler's third law: a moon's period depends on its orbital distance and the planet's mass, not the moon's size) is general knowledge. Iapetus also appears (as the subject of its two-tone surface) in command_of_evidence.T1_compete.hard.w2b4_04; here it is one row of an orbital-period table, a different subject.",
+      "word_count": 87,
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 5,
+        "fixes": [],
+        "status": "pass",
+        "note": "Iapetus: not a repeat. Live w2b4_04 is about its two-tone surface (dust, ice migration); here it is one of five rows in an orbital-period table, and nothing from that item helps with or leaks into this one."
+      }
+    },
+    {
+      "id": "command_of_evidence.Q1_P4_trend.medium.w4b2_15",
+      "template": "Q1_P4_trend",
+      "subtype": "Data completion: change over time for a named line (from-to values read off a four-line graph)",
+      "tier": "medium",
+      "passage": "In 2010, fewer than one in ten people used the internet in many lower-income countries. Over the following decade, internet use expanded dramatically in some of these countries as mobile networks and affordable smartphones became widely available, although in others it increased far more gradually, leaving most of the population offline. Ghana, for instance, was among the countries where use expanded most quickly, going from ______",
+      "stem": "Which choice most effectively uses data from the graph to complete the example?",
+      "options": [
+        "about 16 percent of the population using the internet in 2010 to more than 70 percent in 2020.",
+        "less than 10 percent of the population using the internet in 2010 to about 25 percent in 2020.",
+        "less than 10 percent of the population using the internet in 2010 to more than 60 percent in 2020.",
+        "less than 1 percent of the population using the internet in 2010 to slightly more than 16 percent in 2020."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": {
+        "kind": "line graph",
+        "title": "Share of Population Using the Internet in Four Countries, 2000–2020",
+        "x_axis": "Year",
+        "y_axis": "Percentage of population",
+        "description": "Four lines at 2000, 2005, 2010, 2015 and 2020; y-axis 0 to 80 percent in steps of 10. Ghana: about 0, 2, 8, 23, 63. Kenya: about 0, 3, 7, 17, 25. Ethiopia: about 0, 0, 1, 14, 16. Uzbekistan: about 1, 3, 16, 43, 71.",
+        "data": [
+          {
+            "series": "Ghana",
+            "points": [
+              [
+                "2000",
+                0.2
+              ],
+              [
+                "2005",
+                1.8
+              ],
+              [
+                "2010",
+                7.8
+              ],
+              [
+                "2015",
+                23.0
+              ],
+              [
+                "2020",
+                62.5
+              ]
+            ]
+          },
+          {
+            "series": "Kenya",
+            "points": [
+              [
+                "2000",
+                0.3
+              ],
+              [
+                "2005",
+                3.1
+              ],
+              [
+                "2010",
+                7.2
+              ],
+              [
+                "2015",
+                16.6
+              ],
+              [
+                "2020",
+                24.7
+              ]
+            ]
+          },
+          {
+            "series": "Ethiopia",
+            "points": [
+              [
+                "2000",
+                0.0
+              ],
+              [
+                "2005",
+                0.2
+              ],
+              [
+                "2010",
+                0.8
+              ],
+              [
+                "2015",
+                13.9
+              ],
+              [
+                "2020",
+                16.1
+              ]
+            ]
+          },
+          {
+            "series": "Uzbekistan",
+            "points": [
+              [
+                "2000",
+                0.5
+              ],
+              [
+                "2005",
+                3.3
+              ],
+              [
+                "2010",
+                15.9
+              ],
+              [
+                "2015",
+                42.8
+              ],
+              [
+                "2020",
+                71.1
+              ]
+            ]
+          }
+        ]
+      },
+      "explanation": "The example must describe Ghana, a country where internet use “expanded dramatically” after 2010 from a starting point of fewer than one in ten people. The graph shows Ghana rising from about 8 percent in 2010 to about 63 percent in 2020, so choice C completes the example.",
+      "distractors": {
+        "A": {
+          "recipe": "WGRP: Uzbekistan’s line",
+          "why_wrong": "These values (about 16 percent to about 71 percent) belong to Uzbekistan; Ghana was below 10 percent in 2010."
+        },
+        "B": {
+          "recipe": "WGRP: Kenya’s line",
+          "why_wrong": "These values (about 7 percent to about 25 percent) belong to Kenya; Ghana reached about 63 percent in 2020."
+        },
+        "D": {
+          "recipe": "WGRP: Ethiopia’s line",
+          "why_wrong": "These values (about 1 percent to about 16 percent) belong to Ethiopia, not Ghana."
+        }
+      },
+      "models": [
+        "2.15",
+        "2.34",
+        "2.40"
+      ],
+      "sources": [
+        {
+          "what": "World Bank World Development Indicators via API: individuals using the Internet (IT.NET.USER.ZS, % of population), 2000, 2005, 2010, 2015, 2020: Ghana 0.2, 1.8, 7.8, 23.0, 62.5; Kenya 0.3, 3.1, 7.2, 16.6, 24.7; Ethiopia 0.0, 0.2, 0.8, 13.9, 16.1; Uzbekistan 0.5, 3.3, 15.9, 42.8, 71.1",
+          "url": "https://api.worldbank.org/v2/country/GHA;KEN;ETH;UZB/indicator/IT.NET.USER.ZS?date=2000:2020&format=json"
+        }
+      ],
+      "notes": "Medium P4 in the 2.15 shape (from-to values; each distractor is another line's pair). Checked against the data: only Ghana is below 10 in 2010 and above 60 in 2020; Kenya 7.2 to 24.7, Ethiopia 0.8 to 16.1, Uzbekistan 15.9 to 71.1. Values pulled from the World Bank API on 2026-10-20, one decimal. The mobile-network clause is general background and not needed for the answer.",
+      "word_count": 65,
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "command_of_evidence.Q2_P5_control.medium.w4b2_16",
+      "template": "Q2_P5_control",
+      "subtype": "Data description: group comparison (urban against rural residents in each of three countries) supports a conclusion",
+      "tier": "medium",
+      "passage": "Cooking over open fires fueled by wood, charcoal, or agricultural waste exposes households to indoor air pollution, which contributes to respiratory illness. Public health researchers therefore monitor what percentage of people in each country can use clean cooking fuels and technologies, such as liquefied petroleum gas or electric stoves. Comparing national estimates for 2020, a public health student concluded that in Guatemala, Honduras, and Nicaragua, residents of urban areas were substantially more likely than residents of rural areas to have access to them.",
+      "stem": "Which choice best describes data from the graph that support the student’s conclusion?",
+      "options": [
+        "In each of the three countries, the percentage of urban residents with access to clean cooking fuels was more than double the percentage of rural residents with access.",
+        "In Nicaragua, about 87 percent of urban residents had access to clean cooking fuels, a higher percentage than among urban residents in either Guatemala or Honduras.",
+        "Rural residents of Honduras were more likely to have access to clean cooking fuels than were rural residents of either Guatemala or Nicaragua.",
+        "In each of the three countries, at least half of rural residents had access to clean cooking fuels, although the percentage was even higher among the countries’ urban residents."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": {
+        "kind": "bar graph",
+        "title": "Access to Clean Cooking Fuels and Technologies in Three Countries, 2020",
+        "x_axis": "Country",
+        "y_axis": "Percentage of population with access",
+        "description": "Grouped bars for three countries, two bars each: urban residents and rural residents; y-axis 0 to 100 in steps of 20. Guatemala: urban about 69, rural about 16. Honduras: urban about 75, rural about 24. Nicaragua: urban about 87, rural about 14.",
+        "data": [
+          {
+            "series": "Urban residents",
+            "points": [
+              [
+                "Guatemala",
+                69
+              ],
+              [
+                "Honduras",
+                75
+              ],
+              [
+                "Nicaragua",
+                87
+              ]
+            ]
+          },
+          {
+            "series": "Rural residents",
+            "points": [
+              [
+                "Guatemala",
+                16
+              ],
+              [
+                "Honduras",
+                24
+              ],
+              [
+                "Nicaragua",
+                14
+              ]
+            ]
+          }
+        ]
+      },
+      "explanation": "The student concluded that in all three countries, residents of urban areas were “substantially more likely than residents of rural areas” to have access to clean cooking fuels. The graph shows urban and rural access of about 69 and 16 percent in Guatemala, 75 and 24 percent in Honduras, and 87 and 14 percent in Nicaragua; in each country the urban percentage is more than double the rural one. Choice A describes these data.",
+      "distractors": {
+        "B": {
+          "recipe": "IRREL: accurate, urban residents only",
+          "why_wrong": "This compares urban residents across countries but never compares urban with rural residents, which is what the conclusion is about."
+        },
+        "C": {
+          "recipe": "IRREL: accurate, rural residents only (wrong comparison axis)",
+          "why_wrong": "This compares rural residents in different countries; it does not show that urban residents in each country had far greater access than rural residents."
+        },
+        "D": {
+          "recipe": "INACC: threshold misread",
+          "why_wrong": "Rural access was far below half in every country (about 16, 24, and 14 percent)."
+        }
+      },
+      "models": [
+        "2.25",
+        "2.3",
+        "1.22"
+      ],
+      "sources": [
+        {
+          "what": "World Bank World Development Indicators via API, 2020: access to clean fuels and technologies for cooking, urban (EG.CFT.ACCS.UR.ZS) Guatemala 69, Honduras 75, Nicaragua 87; rural (EG.CFT.ACCS.RU.ZS) 16, 24, 14 (percent of population)",
+          "url": "https://api.worldbank.org/v2/country/GTM;HND;NIC/indicator/EG.CFT.ACCS.UR.ZS?date=2020&format=json"
+        }
+      ],
+      "notes": "Medium group comparison in the 2.25 shape (every group, condition against comparison group). Checked in Python: A true (ratios 4.3, 3.1, 6.2, so 'more than double' holds even at gridline readings such as 75 against 25); B true (87 is the highest urban value) but urban only; C true (24 is the highest rural value) but rural only; D false (no rural value reaches 50). Values pulled from the World Bank API on 2026-10-20 (rural series at /indicator/EG.CFT.ACCS.RU.ZS); published as whole numbers. Health background (smoke from solid fuels harms the lungs) is general knowledge.",
+      "word_count": 83,
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 6,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "command_of_evidence.Q1_P1_lookup.medium.w4b2_17",
+      "template": "Q1_P1_lookup",
+      "subtype": "Data completion: lookup of one cell in a two-way table (country by year)",
+      "tier": "medium",
+      "passage": "Since 2000, the percentage of seats in national legislatures held by women has increased substantially in many countries. Looking at figures for three countries, a political science student notes that in Bolivia the share roughly quadrupled between 2000 and 2020. The student also observes that in 2020, women in Mexico held ______",
+      "stem": "Which choice most effectively uses data from the table to complete the text?",
+      "options": [
+        "16.0 percent of the seats in the national legislature.",
+        "48.2 percent of the seats in the national legislature.",
+        "46.2 percent of the seats in the national legislature.",
+        "43.0 percent of the seats in the national legislature."
+      ],
+      "answer_letter": "B",
+      "table": {
+        "title": "Percentage of Seats in National Legislatures Held by Women",
+        "columns": [
+          "Year",
+          "Bolivia",
+          "Mexico",
+          "Senegal"
+        ],
+        "rows": [
+          [
+            "2000",
+            "11.5",
+            "16.0",
+            "12.1"
+          ],
+          [
+            "2020",
+            "46.2",
+            "48.2",
+            "43.0"
+          ]
+        ],
+        "note": null
+      },
+      "figure": null,
+      "explanation": "The text asks for the share of legislative seats held by women in Mexico in 2020. The table shows that this share was 48.2 percent, so choice B completes the text.",
+      "distractors": {
+        "A": {
+          "recipe": "WGRP: right country, wrong year",
+          "why_wrong": "16.0 percent is Mexico’s figure for 2000, not 2020."
+        },
+        "C": {
+          "recipe": "WGRP: right year, neighboring column (Bolivia)",
+          "why_wrong": "46.2 percent is Bolivia’s figure for 2020, not Mexico’s."
+        },
+        "D": {
+          "recipe": "WGRP: right year, another column (Senegal)",
+          "why_wrong": "43.0 percent is Senegal’s figure for 2020, not Mexico’s."
+        }
+      },
+      "models": [
+        "2.41",
+        "1.30"
+      ],
+      "sources": [
+        {
+          "what": "World Bank World Development Indicators via API: proportion of seats held by women in national parliaments (SG.GEN.PARL.ZS, %): Bolivia 2000 11.5, 2020 46.2; Mexico 16.0, 48.2; Senegal 12.1, 43.0",
+          "url": "https://api.worldbank.org/v2/country/BOL;MEX;SEN/indicator/SG.GEN.PARL.ZS?date=2000:2020&format=json"
+        }
+      ],
+      "notes": "Medium two-way lookup in the 2.41 shape: the passage names a country and a year, and each distractor is another cell (same country other year, same year other countries). Bolivia 46.2 / 11.5 = 4.0 ('roughly quadrupled'). Values pulled from the World Bank API on 2026-10-20, one decimal.",
+      "word_count": 51,
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "command_of_evidence.Q1_P1_lookup.easy.w4b2_18",
+      "template": "Q1_P1_lookup",
+      "subtype": "Data completion: reverse lookup (find the row by population, report its area)",
+      "tier": "easy",
+      "passage": "The Marquesas Islands, a group of volcanic islands about 1,370 kilometers northeast of Tahiti in French Polynesia, are divided into six communes, or municipalities. While researching the islands for a geography project, a student found the land area and population of five of these communes. The student notes that the commune with a population of 2,190 covers ______",
+      "stem": "Which choice most effectively uses data from the table to complete the statement?",
+      "options": [
+        "106 square kilometers.",
+        "388 square kilometers.",
+        "85 square kilometers.",
+        "327 square kilometers."
+      ],
+      "answer_letter": "D",
+      "table": {
+        "title": "Area and Population of Five Communes in the Marquesas Islands, 2012",
+        "columns": [
+          "Commune",
+          "Area (square kilometers)",
+          "Population"
+        ],
+        "rows": [
+          [
+            "Nuku Hiva",
+            "388",
+            "2,966"
+          ],
+          [
+            "Ua Pou",
+            "106",
+            "2,173"
+          ],
+          [
+            "Hiva Oa",
+            "327",
+            "2,190"
+          ],
+          [
+            "Fatu Hiva",
+            "85",
+            "611"
+          ],
+          [
+            "Tahuata",
+            "61",
+            "703"
+          ]
+        ],
+        "note": null
+      },
+      "figure": null,
+      "explanation": "The table shows that Hiva Oa is the commune with a population of 2,190. Its area is 327 square kilometers, so choice D completes the statement.",
+      "distractors": {
+        "A": {
+          "recipe": "WGRP: neighboring row with a similar population",
+          "why_wrong": "106 square kilometers is the area of Ua Pou, whose population is 2,173, not 2,190."
+        },
+        "B": {
+          "recipe": "WGRP: the largest commune",
+          "why_wrong": "388 square kilometers is the area of Nuku Hiva, whose population is 2,966."
+        },
+        "C": {
+          "recipe": "WGRP: another row",
+          "why_wrong": "85 square kilometers is the area of Fatu Hiva, whose population is 611."
+        }
+      },
+      "models": [
+        "1.37",
+        "1.30",
+        "1.44"
+      ],
+      "sources": [
+        {
+          "what": "Marquesas Islands: areas and populations of the six communes at the 2012 census (Nuku-Hiva 388 km2, 2,966; Ua-Pou 106, 2,173; Ua-Huka 83, 621; Hiva-Oa 327, 2,190; Tahuata 61, 703; Fatu-Hiva 85, 611); about 1,370 km northeast of Tahiti; volcanic islands in French Polynesia",
+          "url": "https://en.wikipedia.org/wiki/Marquesas_Islands"
+        }
+      ],
+      "notes": "Easy reverse lookup (CB 1.37 shape) with value-only options; Ua Huka left out (five rows). The near-equal populations of Ua Pou (2,173) and Hiva Oa (2,190) make A the closest trap. Every option is checked against the table: only Hiva Oa has 2,190.",
+      "word_count": 59,
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "command_of_evidence.T1_single.easy.w4b2_19",
+      "template": "T1_single",
+      "subtype": "Hypothetical finding supports an ability claim in one step (animals treat two facial expressions differently)",
+      "tier": "easy",
+      "passage": "Dogs and horses, which were domesticated to work closely with people, can respond to human facial expressions, but little is known about animals raised mainly for milk and meat. Christian Nawroth and colleagues investigated whether goats can tell human facial expressions apart. In each trial, a goat was released into an enclosure where two photographs of the same unfamiliar person, one smiling and one frowning angrily, hung on the opposite wall. The researchers concluded that goats can distinguish between happy and angry human faces.",
+      "stem": "Which finding, if true, would most directly support the researchers’ conclusion?",
+      "options": [
+        "Goats moved around the enclosure more slowly during their first trial than during later trials, once the setting had become familiar.",
+        "Goats that had often been handled by people approached the wall with the photographs sooner than goats that had rarely been handled.",
+        "Goats more often went first to the photograph of the smiling face than to the photograph of the angry face.",
+        "Goats spent about as much time near the photograph of the angry face as near the photograph of the smiling face."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The researchers concluded that goats “can distinguish between happy and angry human faces.” If goats more often went first to the smiling face than to the angry face, they treated the two expressions differently, so they must have been able to tell them apart. Choice C therefore supports the conclusion.",
+      "distractors": {
+        "A": {
+          "recipe": "OFF: a change across trials, not a response to the expressions",
+          "why_wrong": "How quickly goats moved around the enclosure in early and later trials says nothing about whether they could tell a smiling face from an angry one."
+        },
+        "B": {
+          "recipe": "OFF: a different variable (experience with people)",
+          "why_wrong": "This links how soon goats approached the photographs to how often they had been handled, not to which facial expression the photographs showed."
+        },
+        "D": {
+          "recipe": "OPP: no difference between the faces",
+          "why_wrong": "If goats treated the two faces the same way, there would be no sign that they could tell the expressions apart, so this would weaken the conclusion."
+        }
+      },
+      "models": [
+        "1.29",
+        "1.17",
+        "1.5",
+        "1.8"
+      ],
+      "sources": [
+        {
+          "what": "Nawroth, Albuquerque, Savalli, Single, McElligott 2018, Royal Society Open Science 5: 180491 (abstract read through Europe PMC): goats shown two images of the same unfamiliar person, happy and angry, on one wall of a test arena; goats preferred to interact first with happy faces; animals domesticated for production can discriminate human facial expressions; dogs and horses were domesticated to work closely with people",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6124102/"
+        }
+      ],
+      "notes": "Reviewer replacement (the writer's cuttlefish subject, Schnell et al. 2021, is official Words in Context item 710799ae). Easy one-step T1 as in 1.29: the key names the claim's own variable (treating the two expressions differently). The conclusion stays at the source's strength (can discriminate the expressions), not a claim that goats understand emotions. Options are hypothetical findings.",
+      "word_count": 84,
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [
+          "subject replaced: Schnell et al. 2021 cuttlefish self-control is official Words in Context item 710799ae; new subject Nawroth et al. 2018 goats and human facial expressions (abstract fetched through Europe PMC, PMC6124102), key kept at C; claims.txt WITHDRAWN line and new claim appended"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "command_of_evidence.Q1_P2_extreme.easy.w4b2_20",
+      "template": "Q1_P2_extreme",
+      "subtype": "Data completion: maximum in each of two columns (full 2x2 set of month combinations)",
+      "tier": "easy",
+      "passage": "Thimphu, the capital of Bhutan, occupies a Himalayan valley approximately 2,300 meters above sea level. Like much of South Asia, the city receives most of its annual precipitation during the summer monsoon. Using data from Bhutan’s National Center for Hydrology and Meteorology, a student determined that, of the four months shown in the table, the highest average rainfall and the highest average high temperature occurred in ______",
+      "stem": "Which choice most effectively uses data from the table to complete the statement?",
+      "options": [
+        "July for rainfall and August for temperature.",
+        "July for both rainfall and temperature.",
+        "August for both rainfall and temperature.",
+        "August for rainfall and July for temperature."
+      ],
+      "answer_letter": "A",
+      "table": {
+        "title": "Average Monthly Rainfall and High Temperature in Thimphu, Bhutan",
+        "columns": [
+          "Month",
+          "Average rainfall (millimeters)",
+          "Average high temperature (°C)"
+        ],
+        "rows": [
+          [
+            "June",
+            "97.7",
+            "26.7"
+          ],
+          [
+            "July",
+            "152.8",
+            "27.0"
+          ],
+          [
+            "August",
+            "120.8",
+            "27.3"
+          ],
+          [
+            "September",
+            "73.9",
+            "26.0"
+          ]
+        ],
+        "note": null
+      },
+      "figure": null,
+      "explanation": "The table shows that July had the highest average rainfall (152.8 millimeters) and August had the highest average high temperature (27.3°C). Choice A completes the statement.",
+      "distractors": {
+        "B": {
+          "recipe": "WDIR: right month for rainfall, wrong month for temperature",
+          "why_wrong": "July had the most rainfall, but its average high (27.0°C) is lower than August’s (27.3°C)."
+        },
+        "C": {
+          "recipe": "WDIR: right month for temperature, wrong month for rainfall",
+          "why_wrong": "August had the highest average high temperature, but its rainfall (120.8 mm) is less than July’s (152.8 mm)."
+        },
+        "D": {
+          "recipe": "WDIR: both months swapped",
+          "why_wrong": "This reverses the months: July, not August, had the most rainfall, and August, not July, had the highest average high temperature."
+        }
+      },
+      "models": [
+        "1.23",
+        "1.9",
+        "1.21"
+      ],
+      "sources": [
+        {
+          "what": "Thimphu climate table (National Center for Hydrology and Meteorology, Climate Data Book of Bhutan 2018): average rainfall Jun 97.7, Jul 152.8, Aug 120.8, Sep 73.9 mm; mean daily maximum Jun 26.7, Jul 27.0, Aug 27.3, Sep 26.0 °C; elevation 2,320 m; June to September give 73 percent of the yearly 609 mm",
+          "url": "https://en.wikipedia.org/wiki/Thimphu"
+        }
+      ],
+      "notes": "Easy P2 built as the full 2x2 set of month combinations (as in 1.23 and 1.3). Checked against the table: rainfall maximum July, temperature maximum August; each distractor gets one or both wrong. 'Most of its yearly rainfall' checked: June to September give 445 of 609 mm.",
+      "word_count": 67,
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "command_of_evidence.T2_lit_quote.easy.w4b2_21",
+      "template": "T2_lit_quote",
+      "subtype": "Literary quotation illustrates a single-trait claim (works with machinelike speed and precision)",
+      "tier": "easy",
+      "passage": "“The Romance of a Busy Broker” is a short story in O. Henry’s 1906 collection The Four Million. In the story, Harvey Maxwell, a New York stockbroker, has an especially busy day at his office. The narrator describes Maxwell as working with the speed and precision of a machine: ______",
+      "stem": "Which quotation from “The Romance of a Busy Broker” most effectively illustrates the claim?",
+      "options": [
+        "“Pitcher seized a moment to remark to the bookkeeper that the ‘old man’ seemed to get more absent-minded and forgetful every day of the world.”",
+        "“[Maxwell] was working like some high-geared, delicate, strong machine—strung to full tension, going at full speed, accurate, never hesitating, with the proper word and decision and act ready and prompt as clockwork.”",
+        "“On the Exchange there were hurricanes and landslides and snowstorms and glaciers and volcanoes, and those elemental disturbances were reproduced in miniature in the broker’s offices.”",
+        "“Maxwell stood by his desk with his hands full of telegrams and memoranda, with a fountain pen over his right ear and his hair hanging in disorderly strings over his forehead.”"
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The claim is that the narrator describes Maxwell as working with the speed and precision of a machine. Choice B compares Maxwell to a “high-geared, delicate, strong machine” that is “going at full speed” and is “accurate, never hesitating,” acting “prompt as clockwork.” That description shows both his speed and his precision.",
+      "distractors": {
+        "A": {
+          "recipe": "LURE: about Maxwell, but forgetfulness rather than precision",
+          "why_wrong": "A clerk calls Maxwell “absent-minded and forgetful,” which is the opposite of the precise, machinelike work the claim describes."
+        },
+        "C": {
+          "recipe": "OFF: the busy setting, not Maxwell",
+          "why_wrong": "This describes the turmoil on the stock exchange and in the office, not the way Maxwell himself works."
+        },
+        "D": {
+          "recipe": "OFF: Maxwell’s untidy appearance",
+          "why_wrong": "This describes how Maxwell looks during a pause in the rush, with papers in his hands and messy hair; it says nothing about speed or precision."
+        }
+      },
+      "models": [
+        "1.11",
+        "1.39",
+        "1.16"
+      ],
+      "sources": [
+        {
+          "what": "O. Henry, The Four Million (Project Gutenberg eBook 2776), story “The Romance of a Busy Broker”; all four quotations from the story",
+          "url": "https://www.gutenberg.org/cache/epub/2776/pg2776.txt"
+        },
+        {
+          "what": "The Four Million, O. Henry's collection first released April 10, 1906",
+          "url": "https://en.wikipedia.org/wiki/The_Four_Million"
+        }
+      ],
+      "notes": "Easy single-trait claim as in 1.11 (the key restates the trait in the text's own image). B starts with a bracketed name in place of 'the man' (source: 'Some of his own holdings were imperilled, and the man was working like ...'). The other machine image in the story ('The machine sitting at that desk was no longer a man') is kept out of the options. Gutenberg text is already curly; the nested quotation in A uses single curly quotes.",
+      "word_count": 49,
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "command_of_evidence.Q1_P4_trend.easy.w4b2_22",
+      "template": "Q1_P4_trend",
+      "subtype": "Data completion: change over time (an example of rapid growth in Africa from a four-line graph)",
+      "tier": "easy",
+      "passage": "Sesame, a plant grown for its oil-rich seeds, has long been cultivated mainly in Asia, where India and China have for decades been among the world’s largest producers. Because sesame tolerates drought and grows well on small plots, it suits many small family farms, and in the early twenty-first century its cultivation spread quickly in several African countries, where farmers increasingly grew the crop for sale to buyers overseas. For instance, sesame production in ______",
+      "stem": "Which choice most effectively uses data from the graph to complete the example?",
+      "options": [
+        "China decreased from 2000 to 2020.",
+        "India fell sharply from 2005 to 2010.",
+        "Burkina Faso rose sharply from 2000 to 2020.",
+        "Tanzania increased steadily from 2000 to 2020."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": {
+        "kind": "line graph",
+        "title": "Sesame Seed Production in Four Countries, 2000–2020",
+        "x_axis": "Year",
+        "y_axis": "Production (thousands of metric tons)",
+        "description": "Four lines at 2000, 2005, 2010, 2015 and 2020; y-axis 0 to 900 thousand metric tons in steps of 100. Burkina Faso: about 7, 25, 91, 235, 385. Tanzania: about 39, 104, 144, 680, 229. China: about 811, 625, 587, 450, 457. India: about 520, 641, 893, 850, 817.",
+        "data": [
+          {
+            "series": "Burkina Faso",
+            "points": [
+              [
+                "2000",
+                7
+              ],
+              [
+                "2005",
+                25
+              ],
+              [
+                "2010",
+                91
+              ],
+              [
+                "2015",
+                235
+              ],
+              [
+                "2020",
+                385
+              ]
+            ]
+          },
+          {
+            "series": "Tanzania",
+            "points": [
+              [
+                "2000",
+                39
+              ],
+              [
+                "2005",
+                104
+              ],
+              [
+                "2010",
+                144
+              ],
+              [
+                "2015",
+                680
+              ],
+              [
+                "2020",
+                229
+              ]
+            ]
+          },
+          {
+            "series": "China",
+            "points": [
+              [
+                "2000",
+                811
+              ],
+              [
+                "2005",
+                625
+              ],
+              [
+                "2010",
+                587
+              ],
+              [
+                "2015",
+                450
+              ],
+              [
+                "2020",
+                457
+              ]
+            ]
+          },
+          {
+            "series": "India",
+            "points": [
+              [
+                "2000",
+                520
+              ],
+              [
+                "2005",
+                641
+              ],
+              [
+                "2010",
+                893
+              ],
+              [
+                "2015",
+                850
+              ],
+              [
+                "2020",
+                817
+              ]
+            ]
+          }
+        ]
+      },
+      "explanation": "The text says that sesame cultivation “spread quickly in several African countries,” so the example must show production rising quickly in an African country. The graph shows that Burkina Faso’s production rose from about 7 thousand metric tons in 2000 to about 385 thousand metric tons in 2020, so choice C completes the example.",
+      "distractors": {
+        "A": {
+          "recipe": "CONTRA: true, but a decline in an Asian country",
+          "why_wrong": "China’s production did fall from 2000 to 2020, but China is in Asia, and a decline is not an example of rapid growth in Africa."
+        },
+        "B": {
+          "recipe": "INACC: wrong direction",
+          "why_wrong": "India’s production rose from about 641 to about 893 thousand metric tons between 2005 and 2010; it did not fall."
+        },
+        "D": {
+          "recipe": "INACC: misreads the shape of the line",
+          "why_wrong": "Tanzania’s production rose until 2015 but then dropped from about 680 to about 229 thousand metric tons, so it did not increase steadily from 2000 to 2020."
+        }
+      },
+      "models": [
+        "1.10",
+        "1.6"
+      ],
+      "sources": [
+        {
+          "what": "Sesame seed production (tonnes), FAO data via Our World in Data; values for 2000, 2005, 2010, 2015 and 2020 read from the grapher's CSV and rounded to thousands of metric tons: Burkina Faso 7,390 to 384,614; Tanzania 39,000 to 680,000 (2015) to 228,920; China 811,190 to 456,900; India 520,000 to 892,995 (2010) to 816,813",
+          "url": "https://ourworldindata.org/grapher/sesame-seed-production"
+        }
+      ],
+      "notes": "Easy P4 with short options as in 1.10. Checked against the data: C true (7 to 385, every interval up); A true but a decline in Asia (CONTRA); B false (641 to 893 is a rise); D false (680 to 229 after 2015). Drought tolerance and export sale are general background and not needed for the answer.",
+      "word_count": 74,
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [],
+        "status": "pass"
+      }
+    }
+  ],
+  "done": true
+}

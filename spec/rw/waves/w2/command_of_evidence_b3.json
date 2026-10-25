@@ -1,0 +1,1791 @@
+{
+  "skill": "Command of Evidence",
+  "slug": "command_of_evidence",
+  "part": "w2b3",
+  "domain": "Information and Ideas",
+  "plan": {
+    "templates": [
+      {
+        "code": "T1_single",
+        "name": "Hypothetical finding supports or weakens a single claim (causal, comparison, existence, generalization, prediction)"
+      },
+      {
+        "code": "T1_compete",
+        "name": "Hypothetical finding discriminates between competing explanations (support or weaken)"
+      },
+      {
+        "code": "T2_lit_quote",
+        "name": "Quotation from a literary work illustrates a claim (single trait, two-part, contrast)"
+      },
+      {
+        "code": "T3_person_quote",
+        "name": "Quotation from a person (participant, respondent, historian, critic, article) supports or challenges a claim"
+      },
+      {
+        "code": "Q1_P1_lookup",
+        "name": "Data completion: lookup (one cell or bar, reverse lookup, filter)"
+      },
+      {
+        "code": "Q1_P3_pairwise",
+        "name": "Data completion: pairwise comparison (one or two comparisons)"
+      },
+      {
+        "code": "Q1_P4_trend",
+        "name": "Data completion: change over time"
+      },
+      {
+        "code": "Q1_P5_control",
+        "name": "Data completion: condition vs control"
+      },
+      {
+        "code": "Q1_P67_criterion",
+        "name": "Data completion: passage criterion or presence/absence combined with the display"
+      },
+      {
+        "code": "Q2_P5_control",
+        "name": "Data description: condition vs control or group comparison supports a conclusion"
+      },
+      {
+        "code": "Q2_P8_multipart",
+        "name": "Data description: multi-part, interaction, or passage-plus-data claim"
+      }
+    ]
+  },
+  "items": [
+    {
+      "id": "command_of_evidence.T1_single.hard.w2b3_01",
+      "template": "T1_single",
+      "subtype": "Hypothetical finding supports a causal mechanism (the key supplies the premise that the cost grows with distance)",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "In 2006 the Indian state of Bihar began providing a bicycle to every girl who enrolled in secondary school, a level of education unavailable in many of the state’s villages, so that attendance often requires a lengthy journey on foot along roads that families may consider unsafe for adolescent girls. Comparing girls with boys, and Bihar with the neighboring state of Jharkhand, economists Karthik Muralidharan and Nishith Prakash found that the program substantially increased the share of girls of the appropriate age enrolled in secondary school. They conclude that the bicycles raised enrollment primarily by reducing the time and safety costs associated with traveling to school.",
+      "stem": "Which finding from Muralidharan and Prakash’s study, if true, would most directly support their conclusion?",
+      "options": [
+        "Girls’ secondary school enrollment rose more in Bihar than in Jharkhand after the program began, whereas boys’ enrollment changed by similar amounts in the two states.",
+        "Girls’ enrollment rose most in villages located far from the nearest secondary school and rose relatively little in villages that had a secondary school close by.",
+        "The program raised girls’ enrollment by about as much as cash payments of equal value, given to the families of schoolgirls elsewhere in South Asia, had raised it.",
+        "In villages far from the nearest secondary school, enrollment rose by similar amounts among girls and among boys after the program began."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The conclusion is about how the bicycles worked: by cutting the time and danger of the trip to school. Those costs are greatest for girls who live far from a secondary school, so if the bicycles worked that way, enrollment should have risen most where the nearest school was distant. Choice B reports exactly that pattern, with little change where a school was close by, which ties the program’s effect to the cost of the journey.",
+      "distractors": {
+        "A": {
+          "recipe": "TRAP: a test of the program's effect that cannot reveal its mechanism",
+          "why_wrong": "This comparison shows that the program raised girls’ enrollment, which the passage already reports, but it would be expected whatever the reason the bicycles helped, so it says nothing about time and safety costs."
+        },
+        "C": {
+          "recipe": "OPP: the bicycle worked like a gift of money",
+          "why_wrong": "If the bicycles raised enrollment only about as much as cash of equal value did, they would seem to work by adding to families’ resources, not specifically by shortening or securing the trip to school."
+        },
+        "D": {
+          "recipe": "TRAP: affects both groups equally (boys got no bicycles)",
+          "why_wrong": "Boys received no bicycles, so if their enrollment rose as much as girls’ did in distant villages, the rise there would point to some other change in those villages, such as better roads, rather than to the bicycles."
+        }
+      },
+      "models": [
+        "3.36",
+        "3.45",
+        "3.28"
+      ],
+      "word_count": 106,
+      "sources": [
+        {
+          "what": "Muralidharan and Prakash, NBER Working Paper 19305 (AEJ: Applied 2017), Bihar cycle program: triple difference with boys and Jharkhand, girls' age-appropriate secondary enrollment up about 30 percent; increases mostly in villages where the nearest secondary school was farther away, attributed to lower time and safety costs",
+          "url": "https://www.nber.org/papers/w19305"
+        }
+      ],
+      "notes": "Band 7 moves: the fact the key depends on (distance and unsafe roads) sits in the first sentence, not the claim; the claim names a mechanism, and the key supplies the observation that mechanism predicts (effect concentrated where the trip is long); TRAP A is the program's headline effect, consistent with any mechanism; OPP C makes the bicycle work like cash. The key is the source's own finding. Year 2006 is the program's launch (Mukhyamantri Balika Cycle Yojana). Review: OFF D (exam results) replaced by a TRAP that puts the distance pattern on both sexes, so the key also needs the comparison group.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 5,
+        "fixes": [
+          "confirmed 2006 launch, grade 9 girls, triple difference, enrollment gain and distance pattern (NBER w19305 PDF, p. 2 and 5)",
+          "D (OFF, exam results) replaced by a TRAP: enrollment rising equally among girls and boys in distant villages, which boys without bicycles make useless as support"
+        ],
+        "status": "fixed"
+      },
+      "band7": {
+        "verdict": "band 7",
+        "why": "passage 106 words, stem names the study; the key adds an unstated observation (effect concentrated where the trip is long) and the new D needs the comparison group (boys got no bicycles); TRAP A identification, TRAP D both groups, OPP C cash"
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "B",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 7
+    },
+    {
+      "id": "command_of_evidence.T1_single.hard.w2b3_02",
+      "template": "T1_single",
+      "subtype": "Hypothetical finding supports a claim over a rival reading (generalization vs memorization)",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Pathologists spend years learning to tell cancerous from benign tissue in magnified images of tissue samples. Richard Levenson and colleagues trained pigeons, birds with an outstanding visual memory, to peck one button when an image showed benign breast tissue and another when it showed malignant tissue, rewarding correct choices with food. Within about two weeks the birds were right on roughly 85 percent of the training images, and the researchers concluded that they had learned features that distinguish cancerous tissue rather than simply memorizing the images.",
+      "stem": "Which finding from the study, if true, would most directly support the researchers’ conclusion?",
+      "options": [
+        "Over the training period, the pigeons’ accuracy on the training images rose steadily from about 50 percent, the rate expected by chance, to about 85 percent.",
+        "On a separate task, the pigeons correctly sorted mammograms showing breast masses that they had seen during training but sorted unfamiliar mammograms no better than chance.",
+        "Pooling the choices of four pigeons into a single “vote” for each image classified the images more accurately than any one of the birds did by itself.",
+        "When shown images of tissue samples that they had never seen before, the pigeons classified them almost as accurately as they classified the training images."
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The researchers concluded that the pigeons had learned what malignant tissue looks like rather than memorizing particular pictures. Birds that had only memorized the training images would do no better than chance on new ones, so Choice D, in which the pigeons classify never-before-seen images almost as accurately as the training images, supports the conclusion that they learned general features of the tissue.",
+      "distractors": {
+        "A": {
+          "recipe": "TRAP: improvement on the training set, consistent with memorization",
+          "why_wrong": "Rising accuracy on the same training images is what memorizing those images would also produce, so it cannot show that the birds learned general features of cancerous tissue."
+        },
+        "B": {
+          "recipe": "SUBJ: a different task",
+          "why_wrong": "This finding concerns mammograms of breast masses, not the tissue images the conclusion is about, and it describes memorization rather than learning of general features."
+        },
+        "C": {
+          "recipe": "OFF: accuracy of pooled choices",
+          "why_wrong": "Combining several birds’ choices may raise accuracy, but that says nothing about whether each bird learned features of the tissue or memorized the images."
+        }
+      },
+      "models": [
+        "3.41",
+        "3.31",
+        "3.12"
+      ],
+      "word_count": 86,
+      "sources": [
+        {
+          "what": "Levenson, Krupinski, Navarro and Wasserman 2015, PLOS ONE 10(11): e0141357: pigeons trained with food reward to classify benign vs malignant breast histopathology images, about 85 percent within 15 days, generalized to novel images (85 vs 87 percent); flock-sourcing; mammogram masses apparently memorized",
+          "url": "https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0141357"
+        }
+      ],
+      "notes": "Band 6: the key must be the generalization test (novel images); A is the classic trap (training-set gains fit both readings). Distractor B is a true result of the same study on a different task. Fame risk: the study drew wide press in 2015.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 5,
+        "fixes": [
+          "'exceptional eyesight and visual memory' cut to 'an outstanding visual memory': the paper calls visual memory outstanding but says pigeon vision generally parallels humans' (PLOS ONE e0141357)",
+          "core confirmed: about 85% in 15 days, 87 vs 85% on familiar and novel images, mammogram masses memorized; fame risk kept, the item tests generalization, not the headline"
+        ],
+        "status": "fixed"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "target 6: generalization test against a training-set TRAP and a true same-study result on another task; key close to the claim's wording"
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "D",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "command_of_evidence.T1_compete.hard.w2b3_03",
+      "template": "T1_compete",
+      "subtype": "Hypothetical finding weakens one of two named explanations (sunk cost vs screening), through the study design",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "Whether health products in developing countries should be sold or distributed free depends partly on whether paying a higher price increases the likelihood that people will actually use them. One proposed mechanism is a sunk-cost effect: having paid substantially, purchasers feel obligated to use the product rather than waste their money. Another is screening: higher prices deter purchases by households that value the product less. To distinguish these, Nava Ashraf, James Berry, and Jesse Shapiro offered households in Lusaka, Zambia, a bottle of Clorin, a chlorine solution for purifying drinking water, at a randomly assigned price; households that agreed to purchase then received an unanticipated, randomly determined discount.",
+      "stem": "Which finding from Ashraf, Berry, and Shapiro’s study, if true, would most directly weaken the sunk-cost explanation?",
+      "options": [
+        "Among households that agreed to buy at the same offered price, those given large discounts were about as likely to have Clorin in their water later as those given small discounts.",
+        "Households that agreed to buy at higher offered prices were more likely to have Clorin in their drinking water two weeks later than households that agreed to buy at lower offered prices.",
+        "Households that used Clorin in their drinking water reported fewer cases of diarrhea among young children than households that did not use it.",
+        "Households that ended up paying close to the full price they had agreed to used Clorin more often than did households that agreed to the same price but then received a large discount."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "Because the discount came only after a household had agreed to buy, households that accepted the same offered price were equally willing to pay, so screening cannot make them differ; what differed was how much they actually paid. If the sunk-cost explanation were right, those that paid more (a small discount) should have used Clorin more often. Choice A reports no such difference, which weakens the sunk-cost explanation.",
+      "distractors": {
+        "B": {
+          "recipe": "TRAP: consistent with both explanations",
+          "why_wrong": "Households that agreed to higher prices both valued Clorin more (screening) and usually paid more (sunk cost), so this pattern fits either explanation and does not weaken the sunk-cost one."
+        },
+        "C": {
+          "recipe": "OFF: a health benefit of using the product",
+          "why_wrong": "Fewer illnesses among users concern the product’s effects, not why paying more might lead people to use it."
+        },
+        "D": {
+          "recipe": "OPP: the sunk-cost prediction",
+          "why_wrong": "Among households that agreed to the same price, more use by those that paid more is what a sunk-cost effect predicts, so this finding would support that explanation rather than weaken it."
+        }
+      },
+      "models": [
+        "3.9",
+        "3.48",
+        "3.14"
+      ],
+      "word_count": 108,
+      "sources": [
+        {
+          "what": "Ashraf, Berry and Shapiro, NBER Working Paper 13247 (AER 2010), Can Higher Prices Stimulate Product Use? Door-to-door sale of Clorin to about 1,000 households in Lusaka at a random offer price, then an unanticipated random discount; screening effect found, no consistent evidence of sunk-cost effects",
+          "url": "https://www.nber.org/papers/w13247"
+        }
+      ],
+      "notes": "Band 7 moves: weaken polarity; the key works through the design (offer price held fixed, discount varies), an unexpected route; TRAP B is the naive price-use correlation that fits both views; OPP D is the sunk-cost prediction; OFF C a property of the product. Discrimination check: screening predicts no difference among households at one offer price; sunk cost predicts more use with a smaller discount; the key splits them, B does not.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [
+          "stem names the study (Ashraf, Berry, and Shapiro), band-7 check 2",
+          "design confirmed in NBER w13247 PDF: Lusaka, Clorin, random offer price then unanticipated random discount; A weakens sunk cost and D (its mirror) supports it, exactly one fits"
+        ],
+        "status": "fixed"
+      },
+      "band7": {
+        "verdict": "band 7",
+        "why": "weaken polarity through the design (same offer price, discount varies); TRAP B fits both views, OPP D is the sunk-cost prediction; discrimination check passes"
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "A",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 7
+    },
+    {
+      "id": "command_of_evidence.T1_compete.hard.w2b3_04",
+      "template": "T1_compete",
+      "subtype": "Hypothetical finding supports one explanation over a named rival (procrastination vs unprofitability)",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Economists have often assumed that when farmers forgo an agricultural input such as fertilizer, it is because the input would not be profitable on their particular fields. Investigating maize farmers in western Kenya, a region where many farmers do not apply fertilizer to their crops at all, a team of economists proposed an alternative explanation: procrastination. Farmers who fully intend to purchase fertilizer for the following season, the team suggested, repeatedly postpone the minor inconvenience of acquiring it until the income generated by their harvest has already been spent on other necessities.",
+      "stem": "Which finding, if true, would most directly support the team’s explanation?",
+      "options": [
+        "Few farmers bought fertilizer when it was offered at the usual price with no delivery service, whether the offer came at harvest time or later in the season.",
+        "On many of the farmers’ fields, the additional maize produced by using fertilizer was worth less than the fertilizer itself cost.",
+        "Farmers offered free delivery of fertilizer just after harvest were far more likely to buy it than farmers who received the same offer a few months later.",
+        "Farmers who bought fertilizer were more likely than farmers who did not to own a mobile phone and to listen to farming programs on the radio."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "If farmers skipped fertilizer simply because it did not pay, the same offer should attract about the same number of buyers whenever it was made. If they procrastinate until their harvest money is gone, an offer made just after harvest, while they still have the money and before they can put the purchase off, should work much better than the same offer made months later. Choice C reports that pattern, supporting the team’s explanation.",
+      "distractors": {
+        "A": {
+          "recipe": "TRAP: consistent with both explanations",
+          "why_wrong": "Low purchases at the usual price would be expected whether fertilizer is unprofitable or farmers procrastinate, so this finding cannot favor the team’s explanation."
+        },
+        "B": {
+          "recipe": "OPP: the rival view",
+          "why_wrong": "A finding that fertilizer costs more than the extra maize is worth would support the older assumption that farmers skip it because it does not pay."
+        },
+        "D": {
+          "recipe": "OFF: characteristics of buyers",
+          "why_wrong": "Owning a phone or listening to farm radio concerns access to information, which neither explanation in the text addresses."
+        }
+      },
+      "models": [
+        "3.15",
+        "3.8",
+        "3.10"
+      ],
+      "word_count": 92,
+      "sources": [
+        {
+          "what": "Duflo, Kremer and Robinson, NBER Working Paper 15131 (AER 2011), Nudging Farmers to Use Fertilizer: western Kenya, many farmers do not take up profitable-looking fertilizer; present-biased farmers procrastinate; small time-limited discounts (free delivery just after harvest) raise use, later discounts have smaller effects",
+          "url": "https://www.nber.org/papers/w15131"
+        }
+      ],
+      "notes": "Band 6, support polarity, opening on the prior belief (item 03 opens on the policy question and asks to weaken). Researchers left unnamed on purpose (two are Nobel laureates and a famous name is a tell). Discrimination: unprofitability predicts no timing effect for an identical offer; procrastination predicts the harvest-time offer wins.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "target 6: timing of an identical offer splits the rivals; TRAP A fits both, OPP B is the rival"
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "C",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "command_of_evidence.Q2_P8_multipart.hard.w2b3_05",
+      "template": "Q2_P8_multipart",
+      "subtype": "Data description: interaction (size of the dose difference depends on the diet), a difference of differences",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "Cattle emit methane, a potent greenhouse gas, as microorganisms in their digestive systems ferment feed, but compounds in the red seaweed Asparagopsis taxiformis inhibit those microorganisms. Breanna Roque and colleagues supplemented the feed of 21 beef steers with no seaweed, a low dose, or a high dose twice as large over 147 days, during which the steers’ diet progressed in three stages from high-forage to low-forage, and they measured methane yield, the amount of methane produced per kilogram of feed consumed. A student examining the results concludes that on the low-forage diet, doubling the dose contributed comparatively little additional benefit.",
+      "stem": "Which choice best describes data from the table that support the student’s conclusion?",
+      "options": [
+        "On the low-forage diet, the low dose reduced methane yield by about 70%, which was more than twice the reduction that the same low dose had produced on the high-forage diet, about 33%.",
+        "On each of the three diets, the high dose reduced methane yield by more than the low dose did, and on two of the three diets its reduction was about 80%.",
+        "On the medium-forage diet, the high dose reduced methane yield by about 80%, roughly 35 percentage points more than the low dose reduced it on that diet.",
+        "On the low-forage diet, the high dose’s reduction in methane yield exceeded the low dose’s by a smaller margin than on either of the other two diets."
+      ],
+      "answer_letter": "D",
+      "table": {
+        "title": "Percent Reduction in Methane Yield Compared with Steers Fed No Seaweed",
+        "columns": [
+          "Diet stage",
+          "Low dose",
+          "High dose"
+        ],
+        "rows": [
+          [
+            "High-forage (days 1–63)",
+            "32.7",
+            "51.9"
+          ],
+          [
+            "Medium-forage (days 64–84)",
+            "44.6",
+            "79.7"
+          ],
+          [
+            "Low-forage (days 85–147)",
+            "69.8",
+            "80.0"
+          ]
+        ],
+        "note": null
+      },
+      "figure": null,
+      "explanation": "The extra benefit of doubling the dose is the gap between the high dose’s reduction and the low dose’s on the same diet, so the conclusion needs that gap to be smaller on the low-forage diet than on the others. The table bears this out: about 10 percentage points on the low-forage diet (80.0% against 69.8%), against about 19 on the high-forage diet (51.9% against 32.7%) and about 35 on the medium-forage diet (79.7% against 44.6%). Choice D states this comparison.",
+      "distractors": {
+        "A": {
+          "recipe": "IRREL: accurate, one dose across diets",
+          "why_wrong": "It is true that the low dose worked far better on the low-forage diet, but this compares one dose across diets and says nothing about how much doubling the dose added on that diet."
+        },
+        "B": {
+          "recipe": "IRREL: accurate, dose comparison without the size of the gap",
+          "why_wrong": "Both parts are accurate, but knowing that the high dose always did better, and reached about 80% twice, does not show that its advantage was smaller on the low-forage diet."
+        },
+        "C": {
+          "recipe": "PART: the gap on one other diet only",
+          "why_wrong": "The 35-point gap on the medium-forage diet is accurate, but without the much smaller gap on the low-forage diet it cannot show that doubling the dose added little there."
+        }
+      },
+      "models": [
+        "3.26",
+        "3.18",
+        "3.16"
+      ],
+      "word_count": 100,
+      "sources": [
+        {
+          "what": "Roque et al. 2021, PLOS ONE 16(3): e0247820: 21 Angus-Hereford steers, control, 0.25% and 0.5% Asparagopsis (organic matter basis), 147 days in high- (63 d), medium- (21 d) and low-forage (63 d) TMR phases; CH4 yield reductions 32.7/51.9, 44.6/79.7, 69.8/80.0 percent; interaction between TMR type and reduction",
+          "url": "https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0247820"
+        }
+      ],
+      "notes": "Band 7 moves: interaction (difference of differences across three diets); all three distractors are accurate comparisons of the wrong cells or quantities in the key's frame (IRREL x2, PART). Operations for the key: three subtractions and a comparison. The claim is a student's reading of the table; the source states only that the reduction depended on diet type. Review: key rewritten without numbers or the 'only ... compared with' echo, as in official 3.18; the student must read the claim's 'additional benefit' as the gap between doses and compute three gaps (about 10, 19 and 35 points) to verify it.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 5,
+        "fixes": [
+          "key D rewritten as a relation without numbers (the dose gap on the low-forage diet is smaller than on either other diet), the form of official 3.18, so the student computes all three gaps; explanation updated; all six percentages confirmed (PLOS ONE e0247820)"
+        ],
+        "status": "fixed"
+      },
+      "band7": {
+        "verdict": "band 7",
+        "why": "interaction: the student must translate 'additional benefit' into the gap between doses and compute three gaps (10, 19, 35 points) to verify a key stated without numbers; A, B and C are accurate readings of the wrong cells, all on the same table"
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "D",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 7
+    },
+    {
+      "id": "command_of_evidence.T2_lit_quote.hard.w2b3_06",
+      "template": "T2_lit_quote",
+      "subtype": "Literary quotation (drama): indirect claim, release from a long vigil, against near emotions (resignation, despair, dread)",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "Riders to the Sea is a 1904 play by J. M. Synge. After her son Bartley drowns, the last of her six sons to perish at sea, the elderly Maurya intimates that this final bereavement has also released her from a prolonged and fearful vigil: ______",
+      "stem": "Which quotation from Riders to the Sea most effectively illustrates the claim?",
+      "options": [
+        "“It’s little the like of him knows of the sea.... Bartley will be lost now, and let you call in Eamon and make me a good coffin out of the white boards, for I won’t live after them.”",
+        "“I’ll have no call now to be going down and getting Holy Water in the dark nights after Samhain, and I won’t care what way the sea is when the other women will be keening.”",
+        "“Michael has a clean burial in the far north, by the grace of the Almighty God. Bartley will have a fine coffin out of the white boards, and a deep grave surely. What more can we want than that?”",
+        "“If it was a hundred horses, or a thousand horses you had itself, what is the price of a thousand horses against a son where there is one son only?”"
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The claim is that Bartley’s death, besides being a loss, ends the anxious watching Maurya has long kept over her sons at sea. In Choice B she says she will no longer need to go out for Holy Water on dark nights and will not care what the sea is doing when other women mourn their drowned men, which shows that the fear that governed her life is over.",
+      "distractors": {
+        "A": {
+          "recipe": "near emotion: foreboding and despair",
+          "why_wrong": "Here Maurya predicts Bartley’s death and asks for her own coffin; the quotation expresses despair before the loss, not release after it."
+        },
+        "C": {
+          "recipe": "near emotion: resignation and consolation",
+          "why_wrong": "Maurya takes comfort in her sons’ proper burials, but the quotation says nothing about an end to her fearful waiting."
+        },
+        "D": {
+          "recipe": "opposite stance: dread that still governs her",
+          "why_wrong": "Pleading that Bartley not risk his life at sea shows the dread still ruling her, the opposite of being freed from it."
+        }
+      },
+      "models": [
+        "3.37",
+        "3.17",
+        "3.11"
+      ],
+      "word_count": 46,
+      "sources": [
+        {
+          "what": "J. M. Synge, Riders to the Sea (first performed 1904), Project Gutenberg eBook #994; all four quotations copied from it (the spaced four-dot ellipsis printed there, '. . . .', is closed up as '....')",
+          "url": "https://www.gutenberg.org/ebooks/994"
+        }
+      ],
+      "notes": "Band 7 moves: indirect verb (intimates); hard language (Samhain, keening, 'I’ll have no call'); distractors are the same speaker in nearby emotions (despair, resignation) and the opposite stance (dread). The line 'it’s a great rest I’ll have now' was left out because it would also fit the claim. Quotations string-matched against the Gutenberg text.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 5,
+        "fixes": [],
+        "status": "pass"
+      },
+      "band7": {
+        "verdict": "band 7",
+        "why": "indirect verb, archaic idiom (no call now, Samhain, keening); same speaker in despair and consolation plus the opposite stance, as in 3.37"
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "B",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 7
+    },
+    {
+      "id": "command_of_evidence.T3_person_quote.hard.w2b3_07",
+      "template": "T3_person_quote",
+      "subtype": "Quotation from a scholarly article supports historians' assertion (a reading of cause and result), against an opposing argument and true but off-claim scholarship",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "In December 1871, a delegation of nearly fifty Japanese officials and scholars led by Iwakura Tomomi, accompanied by students and attendants, sailed from Yokohama for San Francisco, beginning a voyage through the United States and Europe that would last almost two years. The Iwakura Mission set out to win recognition for Japan’s new imperial government, to begin renegotiating the unequal treaties that Western powers had imposed on Japan, and to study Western industrial, political, and educational institutions. Some historians assert that the mission’s failure to revise the treaties, though a setback, helped make the study of Western institutions its central achievement.",
+      "stem": "Which quotation from a scholarly article best supports the assertion of the historians mentioned in the text?",
+      "options": [
+        "“The mission’s itinerary of factories, shipyards, and schools had been drawn up in Tokyo before the envoys sailed, and its leaders treated the treaty talks as little more than a formality; the program of observation that followed would have unfolded in much the same way had the talks never taken place.”",
+        "“The envoys’ failure in Washington drew sharp criticism in Tokyo, where officials who had stayed behind charged that the mission had exceeded its mandate; the unequal treaties would remain in force for another two decades, until Japan finally secured their revision in the 1890s.”",
+        "“With their hopes for new treaties dashed in Washington, the envoys devoted the more than twelve months that remained of their journey to touring factories, schools, courts, and parliaments, gathering observations that would guide Japan’s reformers for decades.”",
+        "“Kume Kunitake’s five-volume account of the journey, published in 1878, recorded the envoys’ impressions of everything from railways to museums, and it remains one of historians’ richest sources for understanding how Japanese officials of the period viewed the West.”"
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The historians link two things: the failed treaty talks and the mission’s focus on studying Western institutions. Choice C connects them: once the envoys’ hopes for new treaties were dashed in Washington, they spent the rest of the journey, more than a year, touring factories, schools, courts, and parliaments and gathering observations that later guided Japan’s reformers.",
+      "distractors": {
+        "A": {
+          "recipe": "OPP: argues the treaty failure made no difference",
+          "why_wrong": "This quotation claims the program of study would have proceeded the same way without the failed talks, which denies the link the historians assert."
+        },
+        "B": {
+          "recipe": "HALF: the treaty failure and a different consequence",
+          "why_wrong": "This quotation describes what followed from the failed talks, criticism at home and a long wait for revision, but it says nothing about the mission’s study of Western institutions."
+        },
+        "D": {
+          "recipe": "TRAP: describes the record of the study, not its cause",
+          "why_wrong": "Kume’s account documents what the envoys observed, but the quotation says nothing about how the failed treaty talks shaped the mission’s focus."
+        }
+      },
+      "models": [
+        "3.3",
+        "3.32"
+      ],
+      "word_count": 101,
+      "sources": [
+        {
+          "what": "Iwakura Mission: left Yokohama 23 December 1871, returned 13 September 1873; 48 people in administrative and scholarly roles; aims of recognition, preliminary treaty renegotiation and study of Western systems; failed treaty talks in Washington; five girls including Tsuda Umeko stayed to study; Kume Kunitake's five-volume report, 1878; failed talks extended the US stay and drew criticism that members had exceeded their mandate; party left the US for Britain in August 1872",
+          "url": "https://en.wikipedia.org/wiki/Iwakura_Mission"
+        }
+      ],
+      "notes": "Band 7 moves: quotations of 40 to 55 words that argue; OPP sides against the asserted link; two TRAPs are true, on-topic facts (students, Kume's report, both from the source) that cannot support a causal link. The quotations are attributed to an unnamed scholarly article, as in official 3.3; no real historian is quoted. Review: B (Tsuda Umeko) replaced by a half-match on the failure side, so each side of the claim has a half-match (B failure, D study) beside the OPP A; key reworded so the link is implied by sequence rather than stated; passage taken over 100 words.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 5,
+        "fixes": [
+          "passage over 100 words (students and attendants, bound for San Francisco, both on the Wikipedia page)",
+          "B (Tsuda Umeko legacy) replaced by a half-match on the failure side (criticism for exceeding the mandate, from the source; revision only in the 1890s)",
+          "key C reworded so the sequence implies the link ('With their hopes for new treaties dashed in Washington ...') and no longer claims that no Western government would revise"
+        ],
+        "status": "fixed"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "hardened (half-match on each side of the claim plus OPP, key implies the link by sequence), but the key still names failure and study together; band-7 T3 models (3.3, 3.21) need an inference from an indirect fact or a challenge to an underlined claim"
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "C",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "command_of_evidence.Q2_P5_control.hard.w2b3_08",
+      "template": "Q2_P5_control",
+      "subtype": "Data description: condition vs control with a third condition that isolates the cause (paint vs pattern)",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Biting flies such as stable flies are costly pests of livestock, and farmers frequently rely on insecticides to control them. Because the distinctive stripes of zebras appear to deter biting flies, Tomoki Kojima and colleagues painted Japanese Black cows, which are uniformly black, with white stripes, with black stripes, or not at all, and subsequently counted the biting flies on each animal in photographs. Recognizing that the paint itself might have influenced the insects, the researchers concluded that the striped pattern, rather than the paint, was responsible for reducing the number of flies.",
+      "stem": "Which choice best describes data from the graph that support Kojima and colleagues’ conclusion?",
+      "options": [
+        "Cows painted with white stripes had far fewer biting flies on both their legs and their bodies than cows painted with black stripes did.",
+        "Cows painted with white stripes had fewer than half as many biting flies on their legs as did cows that had not been painted at all.",
+        "Cows painted with black stripes had somewhat fewer biting flies on their legs than did cows that had not been painted at all.",
+        "Cows painted with white stripes had more biting flies on their bodies than on their legs, unlike the cows in the other two treatment groups."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": {
+        "kind": "bar graph",
+        "title": "Average Number of Biting Flies on Cows, by Treatment",
+        "x_axis": "Treatment",
+        "y_axis": "Number of biting flies",
+        "description": "Grouped bar graph, two bars per treatment (on legs, on body); y-axis from 0 with gridlines every 20. No paint: about 87 flies on legs, about 42 on body. White stripes: about 40 on legs, about 15 on body. Black stripes: about 73 on legs, about 39 on body. The white-stripe bars are much shorter than the others; the no-paint and black-stripe bars are close, especially on the body.",
+        "data": [
+          {
+            "series": "On legs",
+            "points": [
+              [
+                "No paint",
+                86.7
+              ],
+              [
+                "White stripes",
+                40.2
+              ],
+              [
+                "Black stripes",
+                73.1
+              ]
+            ]
+          },
+          {
+            "series": "On body",
+            "points": [
+              [
+                "No paint",
+                42.1
+              ],
+              [
+                "White stripes",
+                15.3
+              ],
+              [
+                "Black stripes",
+                38.6
+              ]
+            ]
+          }
+        ]
+      },
+      "explanation": "Cows with white stripes and cows with black stripes were both painted, but only the white stripes produced a visible striped pattern on the all-black cows. The graph shows about 40 flies on the legs and 15 on the body for white-striped cows, against about 73 and 39 for black-striped cows, so the difference cannot come from the paint itself. Choice A describes this comparison.",
+      "distractors": {
+        "B": {
+          "recipe": "PART: condition vs unpainted control only",
+          "why_wrong": "The comparison is accurate (about 40 flies against about 87), but white-striped cows differed from unpainted cows in both pattern and paint, so it cannot show that the pattern rather than the paint mattered."
+        },
+        "C": {
+          "recipe": "IRREL/CONTRA: accurate, wrong pair of groups",
+          "why_wrong": "The black-striped cows did have somewhat fewer flies on their legs than unpainted cows, but this comparison concerns the paint alone and, if anything, suggests the paint had some effect."
+        },
+        "D": {
+          "recipe": "INACC: misread of the graph",
+          "why_wrong": "White-striped cows had more flies on their legs (about 40) than on their bodies (about 15), like the other cows, so this choice misreads the graph."
+        }
+      },
+      "models": [
+        "3.43",
+        "3.5",
+        "3.1"
+      ],
+      "word_count": 93,
+      "sources": [
+        {
+          "what": "Kojima et al. 2019, PLOS ONE 14(10): e0223447, Cows painted with zebra-like striping can avoid biting fly attack: six Japanese Black cows, black-and-white stripes (white lacquer), black stripes (black lacquer), no stripes; Table 1 biting flies on legs 86.7 / 40.2 / 73.1 and on body 42.1 / 15.3 / 38.6 (CONT / B&W / B); lacquer odor considered",
+          "url": "https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0223447"
+        }
+      ],
+      "notes": "Band 6 design wrinkle: a third condition (black stripes) controls for the paint. The body counts for unpainted (42.1) and black-striped cows (38.6) are too close to read apart on the graph, so no option rests on that gap; option C uses the leg bars (about 87 against 73), more than half a gridline apart. Fame risk: the study drew wide press in 2019.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 6,
+        "fixes": [],
+        "status": "pass"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "target 6: third condition (black stripes) isolates the paint; key is the right pair, B the accurate wrong pair"
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "A",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "command_of_evidence.Q1_P3_pairwise.hard.w2b3_09",
+      "template": "Q1_P3_pairwise",
+      "subtype": "Data completion: the comparison that illustrates an exception stated in the passage (right group, right sex, against a reference group)",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "At high altitude, where each breath delivers less oxygen, the human body usually responds by producing more hemoglobin, the protein in red blood cells that carries oxygen; this response has been documented both in lowlanders who travel to the mountains and in Andean peoples such as the Aymara, whose ancestors have lived at high altitude for millennia. Anthropologist Cynthia Beall and colleagues found, however, that Tibetan highlanders are an exception, with hemoglobin levels much like those of people living at sea level. For example, whereas Aymara men living at 3,800–4,065 meters averaged 19.2 grams of hemoglobin per deciliter of blood, ______",
+      "stem": "Which choice most effectively uses data from the table to complete the example?",
+      "options": [
+        "Aymara women living at the same altitudes averaged 17.8 grams per deciliter, more than 4 grams higher than the average for women in the US sea-level sample.",
+        "men in the US sea-level sample averaged 15.3 grams per deciliter, nearly 2 grams more than the 13.4 grams per deciliter averaged by women in that sample.",
+        "Tibetan men living at the same altitudes averaged only 15.6 grams per deciliter, just 0.3 gram more than the average for men in the US sea-level sample.",
+        "Tibetan women living at the same altitudes averaged 14.2 grams per deciliter, more than 3 grams less than the average for women in the US sea-level sample."
+      ],
+      "answer_letter": "C",
+      "table": {
+        "title": "Average Hemoglobin Concentration in Three Groups of Adults",
+        "columns": [
+          "Group",
+          "Men (grams per deciliter)",
+          "Women (grams per deciliter)"
+        ],
+        "rows": [
+          [
+            "Tibetans living at 3,800–4,065 meters",
+            "15.6",
+            "14.2"
+          ],
+          [
+            "Aymara living at 3,800–4,065 meters",
+            "19.2",
+            "17.8"
+          ],
+          [
+            "Comparable sample of US adults living near sea level",
+            "15.3",
+            "13.4"
+          ]
+        ],
+        "note": null
+      },
+      "figure": null,
+      "explanation": "The example must show Tibetans as the exception: at the same altitude as the Aymara, their hemoglobin should look like a sea-level value. The table shows Tibetan men averaging 15.6 grams per deciliter, far below the Aymara men’s 19.2 and only 0.3 gram above the 15.3 of men in the US sea-level sample, so Choice C completes the example.",
+      "distractors": {
+        "A": {
+          "recipe": "SUBJ: accurate, but about the Aymara",
+          "why_wrong": "The figures are accurate, but they describe Aymara women, who show the usual high-altitude response, so they cannot illustrate the Tibetan exception."
+        },
+        "B": {
+          "recipe": "IRREL: accurate comparison inside the reference group",
+          "why_wrong": "The difference between men and women at sea level is accurate but says nothing about Tibetans at high altitude."
+        },
+        "D": {
+          "recipe": "INACC: wrong direction of a comparison",
+          "why_wrong": "Tibetan women averaged 14.2, which is 0.8 gram more than the 13.4 of women in the US sea-level sample, not 3 grams less."
+        }
+      },
+      "models": [
+        "3.29",
+        "3.30"
+      ],
+      "word_count": 101,
+      "sources": [
+        {
+          "what": "Beall et al. 1998, American Journal of Physical Anthropology 106: 385-400: Tibetans and Aymara at 3,800-4,065 m; mean hemoglobin Tibetan males 15.6, females 14.2; Aymara males 19.2, females 17.8 g/dl; comparable US sea-level sample (NHANES III) males 15.3, females 13.4; elevated hemoglobin long reported in Andean natives with millennia of exposure and in sojourners",
+          "url": "https://www.case.edu/artsci/tibet/sites/default/files/2022-06/Hemoglobin%20Concentration%20of%20High-Altitude%20Tibetans%20and%20Bolivian%20Aymara.pdf"
+        }
+      ],
+      "notes": "Plan cell asks band 7, but Q1_P3 pairwise has no band-7 official items (spec/rw/band7/command_of_evidence.md section 5), so written as a strong band 6 per WAVE.md. Key needs two comparisons (Tibetan vs Aymara men, then vs sea-level men); distractors are accurate comparisons of the wrong group (A, B) and a sign error (D).",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [],
+        "status": "pass"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "Q1_P3 pairwise has no band-7 official items; strong band 6 with two comparisons and a sign-error distractor"
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "C",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "command_of_evidence.Q1_P67_criterion.hard.w2b3_10",
+      "template": "Q1_P67_criterion",
+      "subtype": "Data completion: two thresholds stated in the passage applied to the table (above one boundary, below the other)",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Between 1962 and 1968, pilots of the X-15, an experimental rocket-powered aircraft operated jointly by NASA and the US Air Force, exceeded an altitude of 50 miles, or 264,000 feet, on thirteen occasions. The Air Force designated 50 miles as the boundary of space and awarded astronaut wings to its pilots who surpassed it. The Fédération Aéronautique Internationale, which certifies aviation records, instead places the boundary at 100 kilometers, or approximately 328,000 feet, so a flight could qualify as reaching space according to one standard but not the other, as was the case with ______",
+      "stem": "Which choice most effectively uses data from the table to complete the statement?",
+      "options": [
+        "Robert White’s 1962 flight, which reached 314,750 feet, higher than the boundary the Air Force used but lower than the boundary used for aviation records.",
+        "Joseph Walker’s August 1963 flight, which reached 354,200 feet, higher than the boundary the Air Force used but lower than the boundary used for aviation records.",
+        "Joe Engle’s 1965 flight, which reached 266,500 feet, lower than the boundary the Air Force used but higher than the boundary used for aviation records.",
+        "William Dana’s 1966 flight, which reached 306,900 feet, higher than both the boundary the Air Force used and the boundary used for aviation records."
+      ],
+      "answer_letter": "A",
+      "table": {
+        "title": "Peak Altitudes of Five X-15 Flights",
+        "columns": [
+          "Date",
+          "Pilot",
+          "Peak altitude (feet)"
+        ],
+        "rows": [
+          [
+            "July 17, 1962",
+            "Robert White",
+            "314,750"
+          ],
+          [
+            "June 27, 1963",
+            "Robert Rushworth",
+            "285,000"
+          ],
+          [
+            "August 22, 1963",
+            "Joseph Walker",
+            "354,200"
+          ],
+          [
+            "October 14, 1965",
+            "Joe Engle",
+            "266,500"
+          ],
+          [
+            "November 1, 1966",
+            "William Dana",
+            "306,900"
+          ]
+        ],
+        "note": null
+      },
+      "figure": null,
+      "explanation": "A flight reached space by only one standard if it climbed above 264,000 feet but stayed below about 328,000 feet. Robert White’s 1962 flight reached 314,750 feet, which falls between the two boundaries, and Choice A describes it correctly.",
+      "distractors": {
+        "B": {
+          "recipe": "INACC: threshold misapplied",
+          "why_wrong": "Walker’s flight reached 354,200 feet, above about 328,000 feet, so it crossed both boundaries rather than only the Air Force’s."
+        },
+        "C": {
+          "recipe": "WDIR: the two boundaries reversed",
+          "why_wrong": "A flight cannot be below 264,000 feet yet above about 328,000 feet; in fact Engle’s 266,500 feet is just above the Air Force boundary and well below the other."
+        },
+        "D": {
+          "recipe": "INACC: threshold misapplied",
+          "why_wrong": "Dana’s 306,900 feet is below about 328,000 feet, so his flight did not cross the boundary used for aviation records."
+        }
+      },
+      "models": [
+        "3.27",
+        "3.22"
+      ],
+      "word_count": 95,
+      "sources": [
+        {
+          "what": "List of X-15 flights: 13 flights above 50 miles (264,000 ft), 1962-1968; White 17 July 1962 314,750 ft; Rushworth 27 June 1963 285,000 ft; Walker 22 August 1963 354,200 ft (above 100 km, FAI boundary); Engle 14 October 1965 266,500 ft; Dana 1 November 1966 306,900 ft; Air Force pilots awarded astronaut wings",
+          "url": "https://en.wikipedia.org/wiki/List_of_X-15_flights"
+        }
+      ],
+      "notes": "Band 6: two bounds from the passage applied to the table; several real flights fall between the bounds, so each option states its own reading and only one reading is accurate (C reverses the bounds, B and D misplace a value against 328,000 feet, and C's 266,500 sits within 1% of the lower bound). The Karman line is not named (an official Transitions item is about it). 100 km = 328,084 ft.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 8,
+        "fixes": [],
+        "status": "pass"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "target 6: two passage thresholds applied to the table, three options each misplace one value"
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "A",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "command_of_evidence.T2_lit_quote.medium.w2b3_11",
+      "template": "T2_lit_quote",
+      "subtype": "Literary quotation (poem): two-part claim, worn down yet energetic",
+      "tier": "medium",
+      "passage": "“The Ghetto” is a 1918 poem by Lola Ridge. In the poem, the speaker characterizes Sadie, a young garment worker in a crowded immigrant neighborhood of New York City, as physically worn down yet still animated by a restless energy: ______",
+      "stem": "Which quotation from “The Ghetto” most effectively illustrates the claim?",
+      "options": [
+        "“Or spits her fire out in some dim manger of a hall, / Or at a protest meeting on the Square, / Her lit eyes kindling the mob... / Or dances madly at a festival.”",
+        "“Sadie dresses in black. / She has black-wet hair full of cold lights / And a fine-drawn face, too white.”",
+        "“All day the power machines / Drone in her ears... / All day the fine dust flies / Till throats are parched and itch / And the heat—like a kept corpse— / Fouls to the last corner.”",
+        "“Each dawn finds her a little whiter, / Though up and keyed to the long day, / Alert, yet weary... like a bird / That all night long has beat about a light.”"
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The claim has two parts: Sadie is physically worn down, and she is still full of restless energy. Choice D shows both: each morning she is paler (“a little whiter”) and “weary,” yet she is “keyed to the long day” and “alert,” like a bird that has beaten about a light all night.",
+      "distractors": {
+        "A": {
+          "recipe": "HALF: energy only",
+          "why_wrong": "Sadie’s fiery speeches and wild dancing show her energy, but nothing in these lines shows that she is worn down."
+        },
+        "B": {
+          "recipe": "HALF: appearance only",
+          "why_wrong": "Her pale face may hint at fatigue, but the lines describe only how she looks and say nothing about her energy."
+        },
+        "C": {
+          "recipe": "HALF: the conditions of the work only",
+          "why_wrong": "These lines describe the noise, dust, and heat of the workshop, not Sadie’s own exhaustion or energy."
+        }
+      },
+      "models": [
+        "2.31",
+        "2.17",
+        "2.35"
+      ],
+      "word_count": 41,
+      "sources": [
+        {
+          "what": "Lola Ridge, The Ghetto, and Other Poems (1918), Project Gutenberg eBook #4332, section II of “The Ghetto” (Sadie, the speaker’s landlady’s daughter on Hester Street); quotations copied exactly (double hyphens as em dashes)",
+          "url": "https://www.gutenberg.org/ebooks/4332"
+        }
+      ],
+      "notes": "Two-part claim, half-match distractors (energy only, appearance only, workplace only), as in medium official items. All four quotations come from the Sadie passage of section II and were string-matched against the Gutenberg text.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 5,
+        "fixes": [
+          "claim 'physically depleted by her labor' changed to 'physically worn down': in the poem the 'whiter / weary' lines follow her nights, not the workday; explanation and A's why_wrong updated; all four quotations string-match Gutenberg #4332"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "command_of_evidence.T1_single.medium.w2b3_12",
+      "template": "T1_single",
+      "subtype": "Hypothetical finding supports a conclusion about origin (source of a material)",
+      "tier": "medium",
+      "passage": "Many of the Benin Bronzes, the sculptures and commemorative plaques cast in the Kingdom of Benin, in present-day Nigeria, were made from brass that European traders transported to West Africa from the late 1400s onward. The brass arrived in the form of manillas, horseshoe-shaped rings that functioned as currency. The geographic origin of their metal, however, has long been uncertain. After chemically analyzing manillas recovered from shipwrecks and other archaeological sites, Tobias Skowronek and colleagues concluded that the principal source of the brass in the Benin Bronzes was the Rhineland region of Germany, where brass was made with zinc and lead ores mined nearby.",
+      "stem": "Which finding, if true, would most directly support Skowronek and colleagues’ conclusion?",
+      "options": [
+        "In parts of West Africa, manillas were worn as jewelry and used in marriage payments as well as to buy goods.",
+        "The chemical signature of the lead in the Benin Bronzes matches that of manillas made with Rhineland ores but not that of manillas made with other ores.",
+        "Manillas made in England in the 1700s and 1800s have chemical signatures similar to those of other brass objects produced in England during the same period.",
+        "The chemical signature of the lead in the Benin Bronzes closely matches that of lead ores mined in West Africa."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The researchers concluded that the brass in the Benin Bronzes came mainly from the Rhineland. If the metal in the bronzes carries the same chemical signature as manillas made from Rhineland ores, and not that of manillas made from other ores, the bronzes were probably cast from Rhineland brass, so Choice B supports the conclusion.",
+      "distractors": {
+        "A": {
+          "recipe": "OFF: other uses of manillas",
+          "why_wrong": "How manillas were used in West Africa says nothing about where their metal came from."
+        },
+        "C": {
+          "recipe": "SUBJ: English manillas and English objects",
+          "why_wrong": "This finding concerns manillas and brass made in England, not the metal of the Benin Bronzes, so it cannot link the bronzes to the Rhineland."
+        },
+        "D": {
+          "recipe": "OPP: points to a different source",
+          "why_wrong": "A match with West African ores would suggest that the metal came from Africa rather than from the Rhineland, weakening the conclusion."
+        }
+      },
+      "models": [
+        "2.1",
+        "2.7",
+        "2.6"
+      ],
+      "word_count": 104,
+      "sources": [
+        {
+          "what": "Skowronek et al. 2023, PLOS ONE: German brass for Benin Bronzes: 67 manillas from shipwrecks and terrestrial sites analyzed (trace elements, lead isotopes) and compared with Benin Bronzes; Germany (Rhenish lead-zinc ores) identified as the principal source of manillas and of the Benin brass; not necessarily the only source",
+          "url": "https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0283415"
+        }
+      ],
+      "notes": "Passage says 'principal source', as the paper does (it notes the manillas need not be the only source). An official Boundaries item concerns the Kingdom of Benin (Oba Ewuare I); the subject here, the origin of the bronzes' brass, is different.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 5,
+        "fixes": [
+          "'from the 1500s onward' to 'from the late 1400s onward' and 'produced from local ores' to 'made with zinc and lead ores mined nearby': the paper dates the trade from the late 15th century and finds the copper came from several regions (PLOS ONE e0283415)"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "command_of_evidence.T1_single.medium.w2b3_13",
+      "template": "T1_single",
+      "subtype": "Hypothetical finding supports a claim about historical behavior (records of borrowing)",
+      "tier": "medium",
+      "passage": "Many librarians in the late nineteenth-century United States hoped that public libraries would steer readers away from popular novels and toward what they considered improving works of history, biography, and science. The circulation records of the public library in Muncie, Indiana, which document nearly every book that patrons borrowed between 1891 and 1902, are now searchable in a database called What Middletown Read. After examining the database, a student claims that Muncie’s library patrons largely disregarded such hopes.",
+      "stem": "Which finding, if true, would most directly support the student’s claim?",
+      "options": [
+        "In every year covered by the records, novels made up most of the books that patrons borrowed, and history, biography, and science made up only a small share.",
+        "During the years covered by the records, the library steadily added new works of history, biography, and science to its collection.",
+        "The share of borrowed books that were works of history, biography, or science rose in nearly every year from 1891 to 1902.",
+        "Public libraries in larger cities, such as Indianapolis and Chicago, lent more works of history and science each year than Muncie’s library did over the same period."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The student claims that Muncie’s readers did not follow librarians’ hopes that they would turn from popular novels to history, biography, and science. If novels made up most of what patrons borrowed every year and those improving works only a small share, as Choice A says, the patrons were reading what the librarians hoped to steer them away from.",
+      "distractors": {
+        "B": {
+          "recipe": "OFF: what the library bought, not what patrons borrowed",
+          "why_wrong": "Adding such books to the collection shows what the library offered, not what patrons chose to read."
+        },
+        "C": {
+          "recipe": "OPP: borrowing moved toward the librarians' hopes",
+          "why_wrong": "A rising share of history, biography, and science would suggest that patrons were following the librarians’ hopes, not disregarding them."
+        },
+        "D": {
+          "recipe": "SUBJ: other libraries, raw totals",
+          "why_wrong": "This compares other, larger libraries with Muncie’s in total numbers of books and says nothing about the choices of Muncie’s own patrons."
+        }
+      },
+      "models": [
+        "2.4",
+        "2.16",
+        "2.21"
+      ],
+      "word_count": 78,
+      "sources": [
+        {
+          "what": "What Middletown Read: database built on the Muncie (Indiana) Public Library circulation records, November 1891 to December 1902, documenting every book every patron borrowed (with a gap from May 1892 to November 1894); Muncie Public Library, Center for Middletown Studies and Ball State University Libraries",
+          "url": "https://middletownstudies.org/wmr/"
+        },
+        {
+          "what": "Review of Wayne A. Wiegand, Part of Our Lives: nineteenth-century librarians held fiction in contempt (Dewey, an 1890 Library Journal song urging history, science and biography over novels) and tried to encourage 'a better kind of reading'; fiction still made up most checkouts",
+          "url": "https://lareviewofbooks.org/article/human-google/"
+        }
+      ],
+      "notes": "The core claim (the database and what it records) is from the source; the student's claim and all four findings are hypothetical, as the stem allows. Passage says 'nearly every book' because of the 1892-1894 gap.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [
+          "librarians' hopes confirmed in Wiegand, Part of Our Lives (LARB review: Dewey, 1890 Library Journal song, 'a better kind of reading'); URL added to sources"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "command_of_evidence.Q1_P3_pairwise.medium.w2b3_14",
+      "template": "Q1_P3_pairwise",
+      "subtype": "Data completion: compound pairwise comparison (similar height, very different death rate)",
+      "tier": "medium",
+      "passage": "Fourteen mountains, all located in the Himalaya and Karakoram ranges of Asia, rise more than 8,000 meters above sea level. Eberhard Jurgalski, who keeps statistics on mountaineering, has compiled records of expeditions to these peaks through March 2012. The records reveal that even peaks of nearly identical elevation have differed considerably in the number of climbers who died on them relative to the number who successfully reached their summits: ______",
+      "stem": "Which choice most effectively uses data from the table to complete the statement?",
+      "options": [
+        "Cho Oyu, the tallest of the five peaks in the table, was climbed far more often than any of the others, with 3,138 ascents compared with only 191 for Annapurna I.",
+        "Nanga Parbat and Annapurna I, which differ in height by only about 35 meters, recorded similar numbers of deaths, 68 and 61, respectively.",
+        "Annapurna I and Gasherbrum I, which differ in height by only 11 meters, recorded about 32 and about 9 deaths per 100 ascents, respectively.",
+        "Gasherbrum I recorded more deaths per 100 ascents than Annapurna I did, even though the two peaks differ in height by only 11 meters."
+      ],
+      "answer_letter": "C",
+      "table": {
+        "title": "Ascents and Deaths on Five Peaks, 1950–March 2012",
+        "columns": [
+          "Peak",
+          "Height (meters)",
+          "Ascents",
+          "Deaths",
+          "Deaths per 100 ascents"
+        ],
+        "rows": [
+          [
+            "Cho Oyu",
+            "8,188",
+            "3,138",
+            "44",
+            "1.4"
+          ],
+          [
+            "Nanga Parbat",
+            "8,125",
+            "335",
+            "68",
+            "20.3"
+          ],
+          [
+            "Annapurna I",
+            "8,091",
+            "191",
+            "61",
+            "31.9"
+          ],
+          [
+            "Gasherbrum I",
+            "8,080",
+            "334",
+            "29",
+            "8.7"
+          ],
+          [
+            "Broad Peak",
+            "8,051",
+            "404",
+            "21",
+            "5.2"
+          ]
+        ],
+        "note": null
+      },
+      "figure": null,
+      "explanation": "The statement calls for two peaks of nearly the same height with very different numbers of deaths relative to ascents. Annapurna I (8,091 meters) and Gasherbrum I (8,080 meters) differ in height by only 11 meters, yet Annapurna I recorded 31.9 deaths per 100 ascents and Gasherbrum I only 8.7, so Choice C completes the statement.",
+      "distractors": {
+        "A": {
+          "recipe": "IRREL: accurate, wrong measure (ascents)",
+          "why_wrong": "The numbers of ascents are accurate, but they show how popular the peaks were, not how many climbers died relative to those who reached the summit."
+        },
+        "B": {
+          "recipe": "IRREL: accurate raw counts that show no great difference",
+          "why_wrong": "The death counts are accurate, but they are similar and are not compared with the number of ascents, so they do not show a large difference in danger."
+        },
+        "D": {
+          "recipe": "WDIR: comparison reversed",
+          "why_wrong": "Gasherbrum I recorded 8.7 deaths per 100 ascents, far fewer than Annapurna I’s 31.9, not more."
+        }
+      },
+      "models": [
+        "2.24",
+        "2.27",
+        "2.18"
+      ],
+      "word_count": 70,
+      "sources": [
+        {
+          "what": "Eight-thousander (estimated sample death rates, 1950 to March 2012, Eberhard Jurgalski's data via The Economist 2013): Cho Oyu 8,188 m, 3,138 ascents, 44 deaths, 1.4%; Nanga Parbat 8,125 m, 335, 68, 20.3%; Annapurna I 8,091 m, 191, 61, 31.9%; Gasherbrum I 8,080 m, 334, 29, 8.7%; Broad Peak 8,051 m, 404, 21, 5.2% (deaths/ascents recomputed and matching)",
+          "url": "https://en.wikipedia.org/wiki/Eight-thousander"
+        }
+      ],
+      "notes": "Deaths per 100 ascents equals the source's 'deaths as % of ascents' column (recomputed from deaths and ascents for every row used). No other pair in the options shows similar height with a very different rate; Broad Peak and Gasherbrum I (5.2 and 8.7) appear in no option.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 6,
+        "fixes": [
+          "'a chronicler of mountaineering' to 'who keeps statistics on mountaineering' (Wikipedia calls Jurgalski a mountaineering statistician); five rows confirmed"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "command_of_evidence.Q1_P5_control.medium.w2b3_15",
+      "template": "Q1_P5_control",
+      "subtype": "Data completion: condition vs control with a before-and-after measure",
+      "tier": "medium",
+      "passage": "Rumination, a habit of dwelling repetitively on negative thoughts about oneself, is associated with an elevated risk of depression. Gregory Bratman and colleagues asked urban residents to rate their tendency to ruminate before and after a 90-minute walk. Half of the participants walked through grassland dotted with oak trees; the other half walked along a busy multilane thoroughfare. The results suggest that the walk in nature, but not the walk along the thoroughfare, reduced rumination: ______",
+      "stem": "Which choice most effectively uses data from the table to complete the statement?",
+      "options": [
+        "before the walks, participants assigned to the grassland walk had an average score of about 35.4, more than 5 points higher than participants assigned to the road walk.",
+        "the average score of participants who walked through grassland fell from about 35.4 before the walk to about 33.1 after it, while that of participants who walked along the road barely changed.",
+        "after the walks, participants who had walked through grassland had a higher average score, about 33.1, than participants who had walked along the road, about 30.2.",
+        "the average score of participants who walked along the road rose from about 30.1 before the walk to about 33.1 after it."
+      ],
+      "answer_letter": "B",
+      "table": {
+        "title": "Average Rumination Scores",
+        "columns": [
+          "Walk",
+          "Before the walk",
+          "After the walk"
+        ],
+        "rows": [
+          [
+            "Grassland",
+            "35.4",
+            "33.1"
+          ],
+          [
+            "Busy road",
+            "30.1",
+            "30.2"
+          ]
+        ],
+        "note": "Higher scores indicate a greater tendency to ruminate."
+      },
+      "figure": null,
+      "explanation": "To show that the nature walk reduced rumination while the road walk did not, the data must show a drop from before to after for the grassland group and little change for the road group. The table shows the grassland walkers’ average falling from 35.4 to 33.1 and the road walkers’ average moving only from 30.1 to 30.2, so Choice B completes the statement.",
+      "distractors": {
+        "A": {
+          "recipe": "IRREL: accurate, baseline only",
+          "why_wrong": "This comparison is accurate, but it describes the groups before either walk, so it cannot show what the walks did."
+        },
+        "C": {
+          "recipe": "IRREL: accurate, levels across groups instead of change",
+          "why_wrong": "The grassland group did score higher after the walk, but it had started higher too; comparing levels across groups ignores how each group’s score changed."
+        },
+        "D": {
+          "recipe": "INACC: misplaced value",
+          "why_wrong": "The road walkers’ average went from 30.1 to 30.2; 33.1 is the grassland walkers’ score after their walk."
+        }
+      },
+      "models": [
+        "2.5",
+        "2.19",
+        "2.14"
+      ],
+      "word_count": 76,
+      "sources": [
+        {
+          "what": "Bratman, Hamilton, Hahn, Daily and Gross 2015, PNAS 112(28): 8567-8572: 38 urban residents randomly assigned to a 90-min walk in grassland with scattered oaks near Stanford or along El Camino Real; RRQ rumination nature 35.39 before, 33.06 after; urban 30.11 before, 30.16 after; decrease for the nature group only",
+          "url": "https://www.pnas.org/doi/10.1073/pnas.1510459112"
+        }
+      ],
+      "notes": "Medium P5 with a before-and-after wrinkle: the nature group started higher, so the level comparison after the walk (C) points the wrong way, and the baseline gap (A) is accurate but beside the point. Values rounded to one decimal. The PNAS page returns 403 to scripts; the article was read in the full-text PDF copy at https://www.pef.uni-lj.si/wp-content/uploads/2026/05/bratman-et-al-2015-nature-experience-reduces-rumination-and-subgenual-prefrontal-cortex-activation-1.pdf (Results section, p. 8569).",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "command_of_evidence.Q2_P8_multipart.medium.w2b3_16",
+      "template": "Q2_P8_multipart",
+      "subtype": "Data description: passage threshold applied to the table (some above, some below)",
+      "tier": "medium",
+      "passage": "Altitude sickness, whose symptoms include headache, nausea, and fatigue, typically occurs only above approximately 2,500 meters, and it most frequently affects people who ascend rapidly. Travelers arriving by air from near sea level in cities in the Andes or the East African highlands experience an exceptionally rapid ascent. Comparing several such cities, a student concludes that travelers flying into some, but not all, of the capitals in the table could be susceptible to altitude sickness immediately upon landing.",
+      "stem": "Which choice best describes data from the table that support the student’s conclusion?",
+      "options": [
+        "All five capitals in the table lie more than 2,000 meters above sea level, and the highest of them, La Paz, lies at 3,640 meters.",
+        "La Paz lies about 1,000 meters higher than Bogotá does, while Quito lies about 225 meters higher than Bogotá does.",
+        "Quito and Addis Ababa both lie above 2,500 meters, whereas Asmara, at 2,325 meters, lies below that elevation.",
+        "La Paz, Quito, and Bogotá all lie above 2,500 meters, whereas Addis Ababa and Asmara both lie below that elevation."
+      ],
+      "answer_letter": "D",
+      "table": {
+        "title": "Elevations of Five Capital Cities",
+        "columns": [
+          "City",
+          "Country",
+          "Elevation (meters)"
+        ],
+        "rows": [
+          [
+            "La Paz (seat of government)",
+            "Bolivia",
+            "3,640"
+          ],
+          [
+            "Quito",
+            "Ecuador",
+            "2,850"
+          ],
+          [
+            "Bogotá",
+            "Colombia",
+            "2,625"
+          ],
+          [
+            "Addis Ababa",
+            "Ethiopia",
+            "2,355"
+          ],
+          [
+            "Asmara",
+            "Eritrea",
+            "2,325"
+          ]
+        ],
+        "note": null
+      },
+      "figure": null,
+      "explanation": "Since altitude sickness typically occurs only above about 2,500 meters, the conclusion needs some capitals above that elevation and some below it. La Paz (3,640 meters), Quito (2,850), and Bogotá (2,625) lie above 2,500 meters, while Addis Ababa (2,355) and Asmara (2,325) lie below it, so Choice D supports the conclusion.",
+      "distractors": {
+        "A": {
+          "recipe": "IRREL: accurate, wrong threshold",
+          "why_wrong": "Both statements are accurate, but 2,000 meters is not the elevation at which altitude sickness typically begins, and the choice does not show that some capitals fall below 2,500 meters."
+        },
+        "B": {
+          "recipe": "IRREL: accurate differences between capitals",
+          "why_wrong": "The differences in elevation are accurate, but they do not show which capitals lie above or below 2,500 meters."
+        },
+        "C": {
+          "recipe": "INACC: near-miss threshold",
+          "why_wrong": "Addis Ababa lies at 2,355 meters, just below 2,500 meters, not above it."
+        }
+      },
+      "models": [
+        "2.8",
+        "2.42"
+      ],
+      "word_count": 78,
+      "sources": [
+        {
+          "what": "List of capital cities by elevation: La Paz 3,640 m; Quito 2,850 m; Bogota 2,625 m; Addis Ababa 2,355 m; Asmara 2,325 m",
+          "url": "https://en.wikipedia.org/wiki/List_of_capital_cities_by_elevation"
+        },
+        {
+          "what": "Altitude sickness typically occurs only above 2,500 metres (8,000 ft) and usually follows a rapid ascent",
+          "url": "https://en.wikipedia.org/wiki/Altitude_sickness"
+        }
+      ],
+      "notes": "Passage criterion (2,500 m) plus table, two-part key (some above, some below), as in official 2.8. Sucre, Bolivia's constitutional capital, is left out; La Paz is labelled as the seat of government. The second URL backs the threshold the passage states.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 6,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "command_of_evidence.Q1_P1_lookup.easy.w2b3_17",
+      "template": "Q1_P1_lookup",
+      "subtype": "Data completion: filter lookup (rows meeting a condition)",
+      "tier": "easy",
+      "passage": "Only a handful of tree species have produced individuals taller than 95 meters, roughly the height of a 30-story building. Because measuring such giants accurately is difficult, the records are periodically revised. A student compiling the tallest measured tree of several species notes that, of the record-holding trees in the table, the two located outside the United States are the ______",
+      "stem": "Which choice most effectively uses data from the table to complete the statement?",
+      "options": [
+        "coast redwood and the Sitka spruce.",
+        "South Tibetan cypress and the coast Douglas-fir.",
+        "South Tibetan cypress and the yellow meranti.",
+        "yellow meranti and the Sitka spruce."
+      ],
+      "answer_letter": "C",
+      "table": {
+        "title": "Tallest Measured Tree of Five Species",
+        "columns": [
+          "Species",
+          "Location",
+          "Height (meters)"
+        ],
+        "rows": [
+          [
+            "Coast redwood",
+            "California, United States",
+            "116.07"
+          ],
+          [
+            "South Tibetan cypress",
+            "Tibet, China",
+            "102.3"
+          ],
+          [
+            "Sitka spruce",
+            "California, United States",
+            "100.2"
+          ],
+          [
+            "Coast Douglas-fir",
+            "Oregon, United States",
+            "99.5"
+          ],
+          [
+            "Yellow meranti",
+            "Sabah, Malaysia",
+            "97.58"
+          ]
+        ],
+        "note": null
+      },
+      "figure": null,
+      "explanation": "The table’s location column shows that the South Tibetan cypress grows in Tibet, China, and the yellow meranti grows in Sabah, Malaysia. Every other tree in the table grows in California or Oregon, in the United States, so Choice C completes the statement.",
+      "distractors": {
+        "A": {
+          "recipe": "WGRP: two US trees",
+          "why_wrong": "Both the coast redwood and the Sitka spruce in the table grow in California, in the United States."
+        },
+        "B": {
+          "recipe": "WGRP: one correct row, one wrong row",
+          "why_wrong": "The South Tibetan cypress grows in China, but the coast Douglas-fir grows in Oregon, in the United States."
+        },
+        "D": {
+          "recipe": "WGRP: one correct row, one wrong row",
+          "why_wrong": "The yellow meranti grows in Malaysia, but the Sitka spruce grows in California, in the United States."
+        }
+      },
+      "models": [
+        "1.12",
+        "1.38",
+        "1.30"
+      ],
+      "word_count": 61,
+      "sources": [
+        {
+          "what": "List of tallest trees: coast redwood Hyperion 116.07 m, Redwood National Park, California; South Tibetan cypress 102.3 m, Yarlung Zangbo Grand Canyon, Tibet; Sitka spruce 100.2 m, Redwood National Park, California; coast Douglas-fir 99.5 m, Oregon; yellow meranti Menara 97.58 m, Danum Valley, Sabah",
+          "url": "https://en.wikipedia.org/wiki/List_of_tallest_trees"
+        }
+      ],
+      "notes": "Filter lookup (like 1.12, 1.40), a different frame from b1 and b2's single-cell lookups. Heights as the page lists them; Menara's figure is the page's average of uphill and downhill measurements.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 6,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "command_of_evidence.Q1_P1_lookup.easy.w2b3_18",
+      "template": "Q1_P1_lookup",
+      "subtype": "Data completion: reverse lookup (find the row by one value, report another column)",
+      "tier": "easy",
+      "passage": "Rail speed records are kept separately for different kinds of trains. A student researching these records finds that the record for a diesel train, 238 kilometers per hour, was set by ______",
+      "stem": "Which choice most effectively uses data from the table to complete the statement?",
+      "options": [
+        "a British Rail Class 43 train in the United Kingdom.",
+        "the steam locomotive Mallard in the United Kingdom.",
+        "a specially modified TGV train in France.",
+        "a CRH380B train in China."
+      ],
+      "answer_letter": "A",
+      "table": {
+        "title": "Speed Records for Four Kinds of Trains",
+        "columns": [
+          "Kind of train",
+          "Record speed (kilometers per hour)",
+          "Train",
+          "Country",
+          "Year"
+        ],
+        "rows": [
+          [
+            "Electric, modified for testing",
+            "574.8",
+            "TGV",
+            "France",
+            "2007"
+          ],
+          [
+            "Electric, unmodified",
+            "487.3",
+            "CRH380B",
+            "China",
+            "2010"
+          ],
+          [
+            "Diesel",
+            "238",
+            "British Rail Class 43",
+            "United Kingdom",
+            "1987"
+          ],
+          [
+            "Steam",
+            "202.6",
+            "Mallard",
+            "United Kingdom",
+            "1938"
+          ]
+        ],
+        "note": null
+      },
+      "figure": null,
+      "explanation": "The row for diesel trains in the table shows a record speed of 238 kilometers per hour, set by a British Rail Class 43 train in the United Kingdom, so Choice A completes the statement.",
+      "distractors": {
+        "B": {
+          "recipe": "WGRP: the steam row",
+          "why_wrong": "The Mallard holds the record for steam trains, 202.6 kilometers per hour, not the diesel record."
+        },
+        "C": {
+          "recipe": "WGRP: the modified electric row",
+          "why_wrong": "The modified TGV set the record for electric trains modified for testing, 574.8 kilometers per hour."
+        },
+        "D": {
+          "recipe": "WGRP: the unmodified electric row",
+          "why_wrong": "The CRH380B set the record for unmodified electric trains, 487.3 kilometers per hour."
+        }
+      },
+      "models": [
+        "1.37",
+        "1.40",
+        "1.12"
+      ],
+      "word_count": 32,
+      "sources": [
+        {
+          "what": "Land speed record for rail vehicles: conventional wheeled (electric) TGV POS set 4402, 574.8 km/h, 3 April 2007, France; unmodified production electric CRH380B, 487.3 km/h, 2010, China; diesel British Rail Class 43 (HST), 238 km/h, 1 November 1987, UK; steam LNER A4 Mallard, 202.6 km/h, 1938, UK",
+          "url": "https://en.wikipedia.org/wiki/Land_speed_record_for_rail_vehicles"
+        }
+      ],
+      "notes": "Reverse lookup, value-only frame avoided. Maglev is left out (an official Transitions item explains maglev trains). The Mallard figure is the record as listed; the page notes a later analysis suggesting a slightly lower sustained speed, which no option relies on.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "command_of_evidence.T1_single.easy.w2b3_19",
+      "template": "T1_single",
+      "subtype": "Hypothetical finding supports a student's hypothesis about readers (who bought an inexpensive product)",
+      "tier": "easy",
+      "passage": "Beginning in 1919, the Haldeman-Julius Publishing Company of Girard, Kansas, printed Little Blue Books, small paperbound booklets containing everything from classic literature to practical guides. The booklets sold for as little as five cents each, mostly by mail order, and hundreds of millions of copies were eventually sold. A student hypothesizes that the books’ low price made them especially popular among working people who could rarely afford ordinary books.",
+      "stem": "Which finding, if true, would most directly support the student’s hypothesis?",
+      "options": [
+        "Little Blue Books were also sold in drugstores and toy stores and from vending machines that the company installed.",
+        "Several well-known novelists later recalled that they had read Little Blue Books when they were young.",
+        "The company’s magazine advertisements listed its titles under topic headings so that more titles could fit on a page.",
+        "Most of the company’s mail orders came from factory workers, miners, and farmhands, many of whom owned few other books."
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The student’s hypothesis is that the low price drew working people who could seldom buy regular books. Choice D supports it directly: most orders came from laborers such as factory workers, miners, and farmhands, many of whom owned few other books.",
+      "distractors": {
+        "A": {
+          "recipe": "OFF: where the books were sold",
+          "why_wrong": "The places the books were sold say nothing about who bought them or whether the low price attracted working people."
+        },
+        "B": {
+          "recipe": "OFF: famous readers",
+          "why_wrong": "That some novelists read the books when young does not show that working people with little money were the main buyers."
+        },
+        "C": {
+          "recipe": "OFF: how the books were advertised",
+          "why_wrong": "The layout of the advertisements concerns the company’s marketing, not who bought the books."
+        }
+      },
+      "models": [
+        "1.5",
+        "1.29",
+        "1.45"
+      ],
+      "word_count": 69,
+      "sources": [
+        {
+          "what": "Little Blue Books: Haldeman-Julius Publishing Company, Girard, Kansas, from 1919; 1,914 titles; 300 to 500 million booklets sold; 5 cents a copy for many years; mail order the main channel, also drugstores, toy stores and the company's vending machines; aimed at working-class readers among others",
+          "url": "https://en.wikipedia.org/wiki/Little_Blue_Books"
+        }
+      ],
+      "notes": "Easy, modelled on 1.5 (a student's hypothesis about a real publication, a finding about who read it). The distractors restate true details from the source (sales outlets, famous readers, advertising) that do not bear on the hypothesis; the key is hypothetical.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 5,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "command_of_evidence.T3_person_quote.easy.w2b3_20",
+      "template": "T3_person_quote",
+      "subtype": "Quotation from a participant illustrates a claim (two parts: belonging, linked to leaving work)",
+      "tier": "easy",
+      "passage": "Men’s sheds are community workshops where members, mostly older men, gather to build, repair, and make things together. The first sheds opened in Australia in the 1990s, partly to improve the health of older men. Today there are hundreds in Australia alone, along with many in Ireland and the United Kingdom. After interviewing members of a local shed, a student claims that sheds give older men a sense of belonging that many lost after retirement.",
+      "stem": "Which quotation from a shed member would best illustrate the student’s claim?",
+      "options": [
+        "“I’ve learned more about woodworking here in one year than I did in my whole life before, and now I can repair almost anything that breaks around the house.”",
+        "“When I retired, I didn’t know where I fit in anymore. Here, the other fellows expect me on Tuesdays and Thursdays, and if I don’t turn up, someone phones to check on me.”",
+        "“Last spring our shed built benches for the primary school down the road, and the children painted them in bright colors.”",
+        "“My doctor told me to stay active after I retired, so I joined the shed to keep my hands busy and get out of the house.”"
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The student claims that sheds restore a sense of belonging that many men lost after retiring. In Choice B the member says he no longer knew where he fit in after retiring, and now the other members expect him and check on him if he is absent, which shows him belonging to the group again.",
+      "distractors": {
+        "A": {
+          "recipe": "OFF: skills learned",
+          "why_wrong": "This member describes gaining practical skills, not a sense of belonging."
+        },
+        "C": {
+          "recipe": "OFF: the shed's community projects",
+          "why_wrong": "Building benches for a school shows what the shed does for the town, not how members feel about belonging."
+        },
+        "D": {
+          "recipe": "HALF: retirement and activity, without belonging",
+          "why_wrong": "This member mentions retiring and wanting to stay active, but says nothing about feeling part of a group."
+        }
+      },
+      "models": [
+        "1.13",
+        "1.26",
+        "1.32"
+      ],
+      "word_count": 75,
+      "sources": [
+        {
+          "what": "Men's shed: community workshops for craftwork and social interaction; first shed 1993 (Goolwa, South Australia), first under the name 1998 (Tongala, Victoria); founded mainly to improve older Australian men's health; over 900 sheds in Australia and over 900 in the UK; also in Ireland; 2007 survey: 97% agreed 'I have a place where I belong'",
+          "url": "https://en.wikipedia.org/wiki/Men%27s_shed"
+        }
+      ],
+      "notes": "The student and the shed member are generic (official easy T3 items quote unnamed participants). 'Hundreds of them in Australia alone' understates the page's 'over 900'.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "command_of_evidence.Q1_P3_pairwise.easy.w2b3_21",
+      "template": "Q1_P3_pairwise",
+      "subtype": "Data completion: two comparisons between rows (similar height, very different area)",
+      "tier": "easy",
+      "passage": "The Galápagos Islands, which straddle the equator about 900 kilometers west of mainland Ecuador, are the summits of volcanoes rising from the floor of the Pacific Ocean. The two westernmost islands, Isabela and Fernandina, are geologically the youngest in the archipelago, and their volcanoes remain active. Erosion has had less time to wear them down. According to the table, Fernandina rises to a maximum elevation not far below Isabela’s, ______",
+      "stem": "Which choice most effectively uses data from the table to complete the statement?",
+      "options": [
+        "and it covers about the same area.",
+        "and it covers a larger area than Santa Cruz does.",
+        "but it covers only about one-seventh as much area.",
+        "but it covers a smaller area than San Cristóbal does."
+      ],
+      "answer_letter": "C",
+      "table": {
+        "title": "Area and Maximum Elevation of Four Galápagos Islands",
+        "columns": [
+          "Island",
+          "Area (square kilometers)",
+          "Maximum elevation (meters)"
+        ],
+        "rows": [
+          [
+            "Isabela",
+            "4,588",
+            "1,707"
+          ],
+          [
+            "Santa Cruz",
+            "986",
+            "864"
+          ],
+          [
+            "Fernandina",
+            "642",
+            "1,494"
+          ],
+          [
+            "San Cristóbal",
+            "547",
+            "896"
+          ]
+        ],
+        "note": null
+      },
+      "figure": null,
+      "explanation": "Fernandina rises to 1,494 meters, not far below Isabela’s 1,707 meters, but it covers 642 square kilometers, only about one-seventh of Isabela’s 4,588 square kilometers. Choice C completes the statement.",
+      "distractors": {
+        "A": {
+          "recipe": "INACC: sameness where the table shows a large difference",
+          "why_wrong": "Fernandina’s 642 square kilometers is far from Isabela’s 4,588 square kilometers."
+        },
+        "B": {
+          "recipe": "WDIR: comparison with another island reversed",
+          "why_wrong": "Fernandina (642 square kilometers) is smaller than Santa Cruz (986 square kilometers), not larger."
+        },
+        "D": {
+          "recipe": "WDIR: comparison with another island reversed",
+          "why_wrong": "Fernandina (642 square kilometers) is larger than San Cristóbal (547 square kilometers), not smaller."
+        }
+      },
+      "models": [
+        "1.7",
+        "1.4",
+        "1.3"
+      ],
+      "word_count": 70,
+      "sources": [
+        {
+          "what": "Galapagos Islands, table of islands: Isabela 4,588 km2, 1,707 m; Santa Cruz 986 km2, 864 m; Fernandina 642 km2, 1,494 m; San Cristobal 547 km2, 896 m; western islands youngest and volcanically active",
+          "url": "https://en.wikipedia.org/wiki/Gal%C3%A1pagos_Islands"
+        }
+      ],
+      "notes": "Frame follows 1.7 (a stated similarity, then the contrasting data point) rather than the two-comparison factorial b1 and b2 used for this cell. 642 / 4,588 = 0.14, about one-seventh. Other items in the bank mention the Galapagos (tortoise seed dispersal, an official Rhetorical Synthesis list of island birds); the subject here, the islands' size and height, is different.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 6,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "command_of_evidence.Q1_P4_trend.easy.w2b3_22",
+      "template": "Q1_P4_trend",
+      "subtype": "Data completion: change over time in one series of a multi-line graph",
+      "tier": "easy",
+      "passage": "Iceland saw the number of foreign visitors arriving through Keflavík, its main international airport, nearly double between 2015 and 2018, rising from about 1.3 million to about 2.3 million. Many came to see the country’s glaciers, waterfalls, and volcanic landscapes, and the supply of hotel rooms in the capital, Reykjavík, failed to keep pace. The growth was far from even across visitors’ home countries, however. Arrivals from some countries rose dramatically during this period; for example, the number of visitors from ______",
+      "stem": "Which choice most effectively uses data from the graph to complete the example?",
+      "options": [
+        "the United States nearly tripled from 2015 to 2018.",
+        "Germany more than doubled from 2015 to 2017.",
+        "Canada declined steadily from 2015 to 2019.",
+        "the United Kingdom fell each year from 2017 to 2019."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": {
+        "kind": "line graph",
+        "title": "Foreign Visitors Arriving at Keflavík Airport, by Citizenship, 2015–2019",
+        "x_axis": "Year",
+        "y_axis": "Visitors (thousands)",
+        "description": "Four lines at 2015, 2016, 2017, 2018 and 2019; y-axis from 0 with gridlines every 200 thousand. United States: about 243, 415, 576, 695, 464 thousand, the steepest rise, peaking in 2018. United Kingdom: about 241, 316, 323, 298, 262 thousand. Germany: about 103, 133, 156, 139, 132 thousand. Canada: about 47, 83, 103, 100, 70 thousand.",
+        "data": [
+          {
+            "series": "United States",
+            "points": [
+              [
+                "2015",
+                242.8
+              ],
+              [
+                "2016",
+                415.3
+              ],
+              [
+                "2017",
+                576.4
+              ],
+              [
+                "2018",
+                694.8
+              ],
+              [
+                "2019",
+                464.1
+              ]
+            ]
+          },
+          {
+            "series": "United Kingdom",
+            "points": [
+              [
+                "2015",
+                241.0
+              ],
+              [
+                "2016",
+                316.4
+              ],
+              [
+                "2017",
+                322.5
+              ],
+              [
+                "2018",
+                298.0
+              ],
+              [
+                "2019",
+                261.8
+              ]
+            ]
+          },
+          {
+            "series": "Germany",
+            "points": [
+              [
+                "2015",
+                103.4
+              ],
+              [
+                "2016",
+                132.8
+              ],
+              [
+                "2017",
+                155.8
+              ],
+              [
+                "2018",
+                139.2
+              ],
+              [
+                "2019",
+                132.2
+              ]
+            ]
+          },
+          {
+            "series": "Canada",
+            "points": [
+              [
+                "2015",
+                46.7
+              ],
+              [
+                "2016",
+                83.1
+              ],
+              [
+                "2017",
+                103.0
+              ],
+              [
+                "2018",
+                99.7
+              ],
+              [
+                "2019",
+                69.9
+              ]
+            ]
+          }
+        ]
+      },
+      "explanation": "The example needs a country whose visitors increased dramatically. The graph shows visitors from the United States rising from about 243,000 in 2015 to about 695,000 in 2018, nearly three times as many, so Choice A completes the example.",
+      "distractors": {
+        "B": {
+          "recipe": "INACC: overstated change",
+          "why_wrong": "Visitors from Germany rose from about 103,000 to about 156,000, an increase of about half, not more than double."
+        },
+        "C": {
+          "recipe": "INACC: wrong trend",
+          "why_wrong": "Visitors from Canada rose each year from 2015 to 2017 before falling, so they did not decline steadily."
+        },
+        "D": {
+          "recipe": "CONTRA: true, but a decline",
+          "why_wrong": "Visitors from the United Kingdom did fall in each year from 2017 to 2019, but a decline cannot illustrate dramatic growth."
+        }
+      },
+      "models": [
+        "1.10",
+        "1.6"
+      ],
+      "word_count": 82,
+      "sources": [
+        {
+          "what": "Tourism in Iceland, arrivals by country (foreign passengers through Keflavik airport, Statistics Iceland): United States 242,805 / 415,287 / 576,403 / 694,814 / 464,059 (2015-2019); United Kingdom 241,024 / 316,395 / 322,543 / 297,963 / 261,805; Germany 103,384 / 132,789 / 155,813 / 139,155 / 132,155; Canada 46,654 / 83,144 / 103,026 / 99,715 / 69,947; total foreign 1,261,938 (2015), 2,315,925 (2018); hotel rooms in Reykjavik rose 42% and 'have not kept pace with visitor numbers', short-term rentals plugged the gap",
+          "url": "https://en.wikipedia.org/wiki/Tourism_in_Iceland"
+        }
+      ],
+      "notes": "Four lines chosen to stay apart on the graph (China and Poland would cross at the bottom). 694.8 / 242.8 = 2.86, 'nearly tripled'; 155.8 / 103.4 = 1.51.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 6,
+        "fixes": [
+          "'hotels and tour companies multiplied' cut: the source says Reykjavik hotel rooms rose 42% and did not keep pace, so the passage now says that",
+          "unsourced 'fewer than 400,000 people' cut; total arrivals about 1.3 to 2.3 million added (source table) to reach the models' median length"
+        ],
+        "status": "fixed"
+      }
+    }
+  ]
+}
