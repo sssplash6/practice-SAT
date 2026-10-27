@@ -183,7 +183,7 @@ def main() -> int:
         r = c.get(f"/api/types/{tpl}/example", params={"want": "x"})
         assert r.status_code == 409, (r.status_code, r.text[:200])
         # an exact set on a small type: the hint's worked example is never an item the set still holds
-        ex_t = next(t for k, t in small if k == 3)
+        ex_t = next(t for k, t in small if k >= 3)          # the bank grows: smallest type with 3+ items
         pairs, texts = [], set()
         for s_ in range(60):
             it = generate(ex_t, s_)
