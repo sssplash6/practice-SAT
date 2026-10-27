@@ -1,599 +1,1817 @@
 {
- "skill": "Command of Evidence",
- "slug": "command_of_evidence",
- "part": "w5b4",
- "domain": "Information and Ideas",
- "plan": {
-  "templates": [
-   {
-    "code": "T1_single",
-    "name": "Hypothetical finding supports or weakens a single claim (causal, comparison, existence, generalization, prediction)"
-   },
-   {
-    "code": "T1_compete",
-    "name": "Hypothetical finding discriminates between competing explanations (support or weaken)"
-   },
-   {
-    "code": "T2_lit_quote",
-    "name": "Quotation from a literary work illustrates a claim (single trait, two-part, contrast)"
-   },
-   {
-    "code": "T3_person_quote",
-    "name": "Quotation from a person (participant, respondent, historian, critic, article) supports or challenges a claim"
-   }
+  "skill": "Command of Evidence",
+  "slug": "command_of_evidence",
+  "part": "w5b4",
+  "domain": "Information and Ideas",
+  "plan": {
+    "templates": [
+      {
+        "code": "T1_single",
+        "name": "Hypothetical finding supports or weakens a single claim (causal, comparison, existence, generalization, prediction)"
+      },
+      {
+        "code": "T1_compete",
+        "name": "Hypothetical finding discriminates between competing explanations (support or weaken)"
+      },
+      {
+        "code": "Q2_P8_multipart",
+        "name": "Data description: multi-part, interaction, or passage-plus-data claim"
+      },
+      {
+        "code": "T2_lit_quote",
+        "name": "Quotation from a literary work illustrates a claim (single trait, two-part, contrast)"
+      },
+      {
+        "code": "T3_person_quote",
+        "name": "Quotation from a person (participant, respondent, historian, critic, article) supports or challenges a claim"
+      },
+      {
+        "code": "Q2_P5_control",
+        "name": "Data description: condition vs control or group comparison supports a conclusion"
+      },
+      {
+        "code": "Q2_P8_quantifier",
+        "name": "Data description: quantified claim (for each, all except one)"
+      },
+      {
+        "code": "Q2_P4_trend",
+        "name": "Data description: trend or change over time supports a conclusion"
+      },
+      {
+        "code": "Q1_P3_pairwise",
+        "name": "Data completion: pairwise comparison (one or two comparisons)"
+      },
+      {
+        "code": "Q1_P4_trend",
+        "name": "Data completion: change over time"
+      },
+      {
+        "code": "Q1_P1_lookup",
+        "name": "Data completion: lookup (one cell or bar, reverse lookup, filter)"
+      }
+    ]
+  },
+  "done": true,
+  "items": [
+    {
+      "id": "command_of_evidence.T1_single.hard.w5b4_01",
+      "template": "T1_single",
+      "subtype": "Hypothetical finding supports a sex-ratio explanation (the key holds community size constant so that sex ratio is separated from urban life)",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "During World War II, Finland evacuated the entire population of its Karelia region and resettled the evacuees in communities throughout the rest of the country, communities that differed widely in size and in the ratio of women to men. Analyzing records of the evacuees’ lives, Jenni E. Pettay and colleagues found that young childless women tended to migrate to urban centers, where work was available to women and where women outnumbered men, and that in places with more women than men, women were less likely to begin having children. The researchers attribute this lower likelihood to the surplus of women itself, not merely to other features of urban life.",
+      "stem": "Which finding, if true, would most directly support the researchers’ conclusion?",
+      "options": [
+        "Evacuee women who moved to urban centers were more likely to hold paid jobs than evacuee women who remained in rural communities were.",
+        "In urban centers where men outnumbered women, evacuee women began having children no earlier than evacuee women in urban centers where women outnumbered men did.",
+        "Among communities of similar size, those in which women most outnumbered men were those in which evacuee women were least likely to have a first child.",
+        "Evacuee women resettled in rural communities were more likely to have children eventually than evacuee women resettled in urban centers were."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The researchers attribute the lower likelihood of starting a family “to the surplus of women itself, not merely to other features of urban life.” Because women outnumbered men mainly in urban centers, a comparison of towns with the countryside cannot separate the two. Choice C does: if, among communities of similar size, the ones with the largest surplus of women had the lowest chance of a first child, the sex ratio is linked to the outcome even when the kind of community is held about the same, so the surplus of women itself matters.",
+      "distractors": {
+        "A": {
+          "recipe": "TRAP: consistent with both explanations (a feature of urban life)",
+          "why_wrong": "That urban women more often held paid jobs is something the passage already suggests (“work was available to women”), and it points to a feature of urban life, not to the ratio of women to men, so it cannot show that the surplus of women was responsible."
+        },
+        "B": {
+          "recipe": "OPP: removes the sex-ratio difference",
+          "why_wrong": "If women in urban centers where men outnumbered women started families no earlier than women where women outnumbered men, the sex ratio would make no difference, which weakens the conclusion."
+        },
+        "D": {
+          "recipe": "TRAP: a mismatched comparison (rural against urban)",
+          "why_wrong": "A rural-urban difference is exactly what either explanation predicts, since urban centers had both more women than men and the other features of urban life; it cannot show which one mattered."
+        }
+      },
+      "models": [
+        "3.42",
+        "3.39",
+        "3.12",
+        "3.31"
+      ],
+      "word_count": 109,
+      "sources": [
+        {
+          "what": "Pettay, Lummaa, Lynch, Loehr 2021, Behavioral Ecology 32(4), Female-biased sex ratios in urban centers create a fertility trap in post-war Finland: the wartime displacement of an entire population to Finnish communities of varying sizes and sex ratios; young childless women migrated toward urban centers where work was available to women; where there were more females, women were less likely to start reproduction (abstract, Europe PMC)",
+          "url": "https://doi.org/10.1093/beheco/arab007"
+        }
+      ],
+      "notes": "Band 6. The key needs the right comparison group: the passage ties the surplus of women to urban centers, so the key holds community size constant. Distractors: A and D consistent with both the sex-ratio and the urban-life explanations, B the opposite. The abstract names sex ratio as the factor linked to lower reproduction; the passage says the researchers attribute it to the surplus of women and does not claim more. Karelia appears in a live Boundaries item (Kalevala rune singers), a different subject. Review: the paper models sex ratio with population size and town status held in the model and finds the sex-ratio link in towns, not rural areas, and says it cannot tell what drives the urban-rural difference, so the claim now says the surplus of women itself mattered, \"not merely\" other features of urban life, rather than ruling those features out.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [
+          "claim softened from “rather than to other features of urban life” to “itself, not merely to other features of urban life”: the paper (PMC8442939) holds town status and population size in its model and finds the sex-ratio link in towns, but says it cannot tell what drives the urban-rural difference; explanation quote updated"
+        ],
+        "status": "fixed"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "Planned band 6. Two steps: the passage ties the surplus of women to urban centers, so the key must hold community size constant to separate the two. A and D fit both explanations (TRAP), B is the opposite. No missing premise beyond the comparison group, so not band 7."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "C",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "command_of_evidence.T1_single.hard.w5b4_02",
+      "template": "T1_single",
+      "subtype": "Hypothetical finding supports a proposed mechanism (the key supplies where the prey already is, so the predator’s shift brings the two together)",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "In old fields (abandoned farmland), the spider Pisaurina mira hunts grasshoppers among the plants, while the common woodlouse, a small crustacean, feeds on decomposing plant matter on the ground; the two animals belong to separate food chains. Earlier work found that the spiders catch grasshoppers more successfully when woodlice are present, which led researchers to propose that woodlice cause the spider or the grasshopper to change its position in the vegetation in a way that brings predator and prey together more often. In cage experiments, Stefanie M. Guiliano and colleagues then found that the spiders moved higher in the vegetation when woodlice were present.",
+      "stem": "Which finding from Guiliano and colleagues’ experiments, if true, would most directly support the proposal that the spiders’ shift helps explain their greater success?",
+      "options": [
+        "Whether or not woodlice were present, the grasshoppers spent most of their time in the upper part of the vegetation.",
+        "When woodlice were present, the grasshoppers also moved higher in the vegetation, by about as much as the spiders did.",
+        "Spiders kept in cages with woodlice captured and ate some of the woodlice in addition to grasshoppers.",
+        "In cages kept warmer than usual, the spiders stayed low in the vegetation whether or not woodlice were present."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The proposal is that woodlice change an animal’s position “in a way that brings predator and prey together more often,” and the experiments found that the spiders “moved higher in the vegetation when woodlice were present.” That shift brings spiders closer to grasshoppers only if the grasshoppers are high in the vegetation and stay there. Choice A supplies that missing fact: if the grasshoppers spent most of their time in the upper vegetation whether or not woodlice were present, the spiders’ upward move would put them where their prey already was.",
+      "distractors": {
+        "B": {
+          "recipe": "OPP: prey moves with the predator, so overlap does not grow",
+          "why_wrong": "If the grasshoppers moved up as far as the spiders did, the distance between predator and prey would stay about the same, so the spiders’ shift would not bring them together more often."
+        },
+        "C": {
+          "recipe": "TRAP: a different route to success that cannot test the proposal",
+          "why_wrong": "Eating woodlice says nothing about where spiders and grasshoppers are in the vegetation; at most it suggests a different reason the spiders might do better, not the one proposed."
+        },
+        "D": {
+          "recipe": "TRAP: the wrong condition",
+          "why_wrong": "This concerns spiders under warmer conditions, where they did not shift at all; it gives no information about whether the upward shift that does occur with woodlice brings spiders closer to grasshoppers."
+        }
+      },
+      "models": [
+        "3.28",
+        "3.45",
+        "3.36",
+        "3.42",
+        "124fdcd7",
+        "44da37eb"
+      ],
+      "word_count": 104,
+      "sources": [
+        {
+          "what": "Guiliano, Karr, Sommer, Buchkowski 2020, PeerJ 8:e9184, Woodlice change the habitat use of spiders in a different food chain: previous work found woodlouse presence correlated with higher predation success by nursery web spiders on grasshoppers, suggesting that spider or grasshopper changes location in the vegetative canopy to increase overlap; spiders shift upward when woodlice are present; under warming, spiders stayed lower regardless of woodlice (abstract, Europe PMC)",
+          "url": "https://doi.org/10.7717/peerj.9184"
+        }
+      ],
+      "notes": "Band 7 moves: the key supplies the missing premise (where the grasshoppers are) that turns the observed shift into greater overlap; stem names the study and the proposal (24 words); passage 106 words with the needed fact (the observed upward shift) in an earlier sentence; distractors one OPP (B) and two TRAP (C another route, D the wrong condition, taken from the study's real warming result). The abstract reports the grasshopper survival effect as variable across years; the passage presents the overlap idea only as a proposal. Pisaurina mira (a nursery web spider) is a different genus and idea from live inferences.S2.hard.w5b1_01 (Pisaura mirabilis nuptial gifts); the passage avoids the common name.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [],
+        "status": "pass"
+      },
+      "band7": {
+        "verdict": "band 7",
+        "why": "Passage 104 words, stem 24 words naming the study and the proposal. Three steps: the key adds a fact the passage never states (the grasshoppers sit high in the vegetation with or without woodlice), which turns the observed upward shift into more overlap. B (prey shifts as far as the predator) engages the same variable and fails one link; C (another route to success) and D (the wrong condition, from the real warming result) are TRAPs. No wrong option is killed by one stated fact."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "A",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 7
+    },
+    {
+      "id": "command_of_evidence.T1_compete.hard.w5b4_03",
+      "template": "T1_compete",
+      "subtype": "Hypothetical finding discriminates intensive from extensive flock management (bone shape as the record of selective breeding)",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "In the sixth century CE, farmers in Byzantine settlements such as Shivta, in what is now Israel’s Negev Desert, kept large numbers of pigeons in dovecotes, and zooarchaeologist Nimrod Marom and colleagues have measured pigeon bones from the region to determine how these flocks were managed. Under intensive management, keepers confine birds and choose which ones breed, a practice that over generations tends to change the shape of a domestic animal’s skeleton; under extensive management, birds fly freely, forage for themselves, and pair off on their own. Marom and colleagues concluded that the Negev flocks were managed extensively.",
+      "stem": "Which finding about the pigeon bones, if true, would most directly support Marom and colleagues’ conclusion?",
+      "options": [
+        "Pigeon bones were recovered from several Byzantine villages in the Negev, not only from Shivta.",
+        "The proportions of the pigeons’ limb bones differed from those of wild rock pigeons in ways that resemble differences seen in breeds raised in captivity.",
+        "Most of the pigeon bones came from young birds, which suggests that the villagers ate squabs taken from the dovecotes.",
+        "The shapes of the pigeons’ bones fell within the range found in wild rock pigeons, the species from which domestic pigeons descend."
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The passage explains that intensive management, in which keepers “choose which ones breed,” tends “to change the shape of a domestic animal’s skeleton,” while extensively managed birds “pair off on their own.” If, as choice D says, the Negev pigeons’ bones had the shapes found in wild rock pigeons, the flocks show no sign of the selective breeding that intensive management would leave, which supports the conclusion that they were managed extensively.",
+      "distractors": {
+        "A": {
+          "recipe": "TRAP: consistent with both kinds of management",
+          "why_wrong": "Pigeons could have been kept at several villages under either kind of management, so where the bones were found says nothing about how the flocks were managed."
+        },
+        "B": {
+          "recipe": "OPP: the rival’s prediction",
+          "why_wrong": "Bones changed in the way captive breeds’ bones are changed would point to selective breeding, which the passage links to intensive management, so this finding would weaken the conclusion."
+        },
+        "C": {
+          "recipe": "TRAP: bears on how the birds were used, not how they were kept",
+          "why_wrong": "Eating young pigeons from the dovecotes is compatible with either kind of management; it concerns what the birds were for, not whether keepers chose which birds bred."
+        }
+      },
+      "models": [
+        "3.8",
+        "3.10",
+        "3.15",
+        "3.14",
+        "3.9"
+      ],
+      "word_count": 98,
+      "sources": [
+        {
+          "what": "Marom, Rosen, Tepper, Bar-Oz 2018, PLoS ONE 13(3): e0193206, Pigeons at the edge of the empire: metric data of 6th-century CE pigeons from the Negev test intensive management with directed selection for size or shape against extensive management with stabilizing selection; the Negev pigeons were like wild Columba livia in shape, supporting extensive management (abstract, Europe PMC)",
+          "url": "https://doi.org/10.1371/journal.pone.0193206"
+        }
+      ],
+      "notes": "Band 6. Two named management systems; the key is the observation only extensive management predicts, reached through the stated link between choosing breeders and skeletal shape. The real finding that the birds were small-sized is left out (the authors still read the result as extensive management), so no option turns on size. Shivta named as one of the Negev settlements; the paper's sites are Byzantine Negev settlements including Shivta.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "Planned band 6. Two steps (choosing breeders changes skeletal shape; a wild-like shape shows no such selection). B is the rival prediction and close to a mirror of the key, which narrows the choice to B or D; A and C fit both systems. A fair strong band 6."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "D",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "command_of_evidence.T1_compete.hard.w5b4_04",
+      "template": "T1_compete",
+      "subtype": "Hypothetical finding discriminates two effects of a price shock on conflict (the key supplies that seizable income rose while wages did not)",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "A change in the world price of a commodity could affect armed conflict in the places that produce it in two opposing ways. If a price rise increases local wages, joining an armed group becomes less attractive, so violence should decline (an opportunity cost effect); but if the rise mainly increases income that armed groups can take for themselves, fighting over that income should intensify (a rapacity effect). Studying Colombia’s long civil conflict, economists Oeindrila Dube and Juan F. Vargas found that when the world price of oil rose, violence increased more in Colombia’s oil-producing municipalities than in other places. They attribute this result to the rapacity effect.",
+      "stem": "Which finding from Dube and Vargas’s study, if true, would most directly support their explanation of the result involving oil prices?",
+      "options": [
+        "Within the oil-producing municipalities, the increase in violence was concentrated in districts far from oil fields and pipelines, where there was little oil income to capture.",
+        "As oil prices rose, the revenues collected by the governments of oil-producing municipalities increased substantially, while wages in those municipalities changed little.",
+        "Oil-producing municipalities experienced more violence than other municipalities did even in years when oil prices were low.",
+        "Most of the oil produced in Colombia during the period studied was sold abroad rather than used within the country."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The two effects make different predictions about where the extra money goes. The opportunity cost effect works through higher “local wages,” which should make violence “decline,” while the rapacity effect works through more “income that armed groups can take for themselves.” Violence rose in the oil-producing municipalities, and choice B shows why rapacity fits: the rise in oil prices swelled municipal revenues, a pool of income armed groups could try to capture, but left wages, the channel for the opposing effect, nearly unchanged.",
+      "distractors": {
+        "A": {
+          "recipe": "OPP: violence rises away from the income said to be fought over",
+          "why_wrong": "If the extra violence came mostly from districts with little oil income to capture, it would not be tied to the income that the rapacity effect says armed groups fight over, so this finding would weaken the explanation."
+        },
+        "C": {
+          "recipe": "TRAP: a level difference, consistent with either effect",
+          "why_wrong": "More violence in oil municipalities even when prices were low describes a standing difference between places; it says nothing about why violence rose there when prices rose, which is what the explanation concerns."
+        },
+        "D": {
+          "recipe": "OFF: a property of the oil, not of either effect",
+          "why_wrong": "Where the oil was sold explains why world prices matter to producers, but it applies equally under either effect and does not show whether the price rise added to wages or to income armed groups could take."
+        }
+      },
+      "models": [
+        "3.9",
+        "3.6",
+        "3.48",
+        "3.14",
+        "156ff681",
+        "dd1757fd"
+      ],
+      "word_count": 108,
+      "sources": [
+        {
+          "what": "Dube, Vargas 2013, Review of Economic Studies 80(4): 1384–1421, Commodity Price Shocks and Civil Conflict: Evidence from Colombia: opportunity cost effect (higher wages lower conflict) against rapacity effect (more contestable income raises violence); a rise in oil prices increased both municipal revenue and violence differentially in the oil region, consistent with a rapacity effect (abstract, IDEAS/RePEc)",
+          "url": "https://ideas.repec.org/a/oup/restud/v80y2013i4p1384-1421.html"
+        }
+      ],
+      "notes": "Band 7 moves: two named effects; the key supplies the premise the passage leaves out (the price rise added to seizable municipal revenue but not to wages), echoing the paper's actual result; stem names the study and whose explanation is tested (21 words); passage 108 words. Distractors: OPP (A, violence away from the seizable income), TRAP (C, a level difference that cannot explain a change), OFF (D, a property of oil true under both). The paper's coffee result is left out because live command_of_evidence.T1_compete.hard.w3b3_03 already turns on low coffee prices.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass"
+      },
+      "band7": {
+        "verdict": "band 7",
+        "why": "Passage 108 words, stem 21 words naming the study and whose explanation is tested. The key supplies the missing premise (the price rise swelled seizable municipal revenue while wages stayed flat) and splits the rivals: opportunity cost predicts rising wages, rapacity rising contestable income. C is a TRAP (a standing level difference fits either effect), A the OPP, D a property of oil true under both effects."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "B",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 7
+    },
+    {
+      "id": "command_of_evidence.Q2_P8_multipart.hard.w5b4_05",
+      "template": "Q2_P8_multipart",
+      "subtype": "Data description: two-part claim (a language that is by far the largest source of translations yet receives fewer than several others)",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Sociologists of translation often describe a language’s place in the international book trade by comparing two counts: how many translations have been made from books originally written in that language, and how many have been made into it from other languages. Drawing on UNESCO’s Index Translationum, an international bibliography of published book translations, a student concludes that English occupies a position unlike that of any other language in the table: it is the original language of an overwhelming share of translated books, yet more translations have been made into several other languages than into English.",
+      "stem": "Which choice best describes data from the table that support the student’s conclusion?",
+      "options": [
+        "More translations have been made into German than into any other language in the table, and more have been made into Spanish than into English.",
+        "Spanish is the original language of fewer translations than Russian is, but more than twice as many translations have been made into Spanish as into Russian.",
+        "English is the original language of more than five times as many translations as any other language shown, yet French, German, and Spanish have each received more translations than English has.",
+        "English is the original language of more translations than French, German, Russian, and Spanish combined, and Russian is the original language of nearly twice as many translations as Spanish is."
+      ],
+      "answer_letter": "C",
+      "table": {
+        "title": "Book Translations Recorded in UNESCO’s Index Translationum, by Language",
+        "columns": [
+          "Language",
+          "Translations from the language",
+          "Translations into the language"
+        ],
+        "rows": [
+          [
+            "English",
+            "1,266,110",
+            "164,509"
+          ],
+          [
+            "French",
+            "226,123",
+            "240,045"
+          ],
+          [
+            "German",
+            "208,240",
+            "301,935"
+          ],
+          [
+            "Russian",
+            "103,624",
+            "100,806"
+          ],
+          [
+            "Spanish",
+            "54,588",
+            "228,559"
+          ]
+        ],
+        "note": null
+      },
+      "figure": null,
+      "explanation": "The student’s conclusion has two parts: English is “the original language of an overwhelming share of translated books,” and “more translations have been made into several other languages than into English.” The table shows 1,266,110 translations from English, more than five times the next-highest figure (226,123 from French), while only 164,509 translations were made into English, fewer than into French (240,045), German (301,935), or Spanish (228,559). Choice C reports both facts.",
+      "distractors": {
+        "A": {
+          "recipe": "HALF: accurate, second part only",
+          "why_wrong": "It is true that German received the most translations and that Spanish received more than English, so English is outranked as a target language, but the choice says nothing about English as an original language, the first part of the conclusion."
+        },
+        "B": {
+          "recipe": "IRREL: accurate comparison of two other languages",
+          "why_wrong": "Spanish (54,588 from, 228,559 into) and Russian (103,624 from, 100,806 into) are described accurately, but the conclusion is about English, which this choice does not mention."
+        },
+        "D": {
+          "recipe": "HALF: accurate, first part only, padded with a true but irrelevant comparison",
+          "why_wrong": "English’s 1,266,110 translations do exceed the other four languages’ combined total of 592,575, and Russian’s figure is nearly twice Spanish’s, but nothing here shows that several languages received more translations than English did."
+        }
+      },
+      "models": [
+        "3.18",
+        "3.24",
+        "3.19",
+        "2.42"
+      ],
+      "word_count": 95,
+      "sources": [
+        {
+          "what": "UNESCO Index Translationum statistics as reproduced on Wikipedia: Top 10 Original language (English 1,266,110; French 226,123; German 208,240; Russian 103,624; Spanish 54,588) and Top 10 Target Language (German 301,935; French 240,045; Spanish 228,559; English 164,509; Russian 100,806); UNESCO’s own statistics page (unesco.org/xtrans) refused the fetch",
+          "url": "https://en.wikipedia.org/wiki/Index_Translationum"
+        }
+      ],
+      "notes": "Band 6. Social science (sociology of translation, publishing). Two-part claim; the key is the only option with both parts. A and D are each accurate halves (A the target side, D the source side), B is accurate but about other languages. No year attached to the counts (cumulative database totals). Counts copied exactly from the Wikipedia tables.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 10,
+        "fixes": [],
+        "status": "pass"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "Planned band 6. Two-part claim read across two columns and five rows (a ratio check for “more than five times” and three comparisons with English’s target count); A and D are accurate halves in the key’s frame, B accurate but about other languages."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "C",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "command_of_evidence.T2_lit_quote.hard.w5b4_06",
+      "template": "T2_lit_quote",
+      "subtype": "Literary quotation illustrates an indirect claim (a speaker who wishes heaven had punished him in time to spare another; early modern verse drama)",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Cymbeline is a circa 1610 play by William Shakespeare. Deceived into believing that his wife, Imogen, has been unfaithful, Posthumus orders his servant Pisanio to murder her. Later, clutching a bloodstained cloth that he interprets as evidence of her death, a remorseful Posthumus wishes that heaven had ended his life for his own misdeeds in time to spare Imogen: ______",
+      "stem": "Which quotation from Cymbeline most effectively illustrates the claim?",
+      "options": [
+        "“You married ones, / If each of you should take this course, how many / Must murder wives much better than themselves / For wrying but a little!”",
+        "“So I’ll fight / Against the part I come with; so I’ll die / For thee, O Imogen, even for whom my life / Is every breath a death.”",
+        "“Gods! if you / Should have ta’en vengeance on my faults, I never / Had liv’d to put on this; so had you saved / The noble Imogen to repent, and struck / Me, wretch more worth your vengeance.”",
+        "“O Pisanio! / Every good servant does not all commands; / No bond but to do just ones.”"
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The claim is that Posthumus “wishes that heaven had ended his life for his own misdeeds in time to spare Imogen.” In choice C he tells the gods that if they had “ta’en vengeance on my faults,” he would never have lived to put on the bloody cloth, and that they would thus have “saved / The noble Imogen” and struck him instead, “wretch more worth your vengeance.” The quotation states both parts of the wish: punishment for his own faults, and Imogen spared.",
+      "distractors": {
+        "A": {
+          "recipe": "HALF: the same speaker condemning himself, without the wish",
+          "why_wrong": "Posthumus condemns husbands who kill wives “much better than themselves” for small faults, which shows remorse, but he does not wish that heaven had punished him or spared Imogen."
+        },
+        "B": {
+          "recipe": "OFF: the same speaker in a nearby resolve (to die now, for her)",
+          "why_wrong": "Posthumus resolves to fight and die for Imogen from now on; this looks ahead to his own death rather than wishing that heaven had punished him in time to save her."
+        },
+        "D": {
+          "recipe": "OPP: the same speaker placing blame on another",
+          "why_wrong": "Here Posthumus reproaches Pisanio, saying that a good servant should obey only just commands; he faults the servant for carrying out the order rather than wishing that he himself had been punished."
+        }
+      },
+      "models": [
+        "3.11",
+        "3.17",
+        "3.34",
+        "3.35",
+        "3.37"
+      ],
+      "word_count": 60,
+      "sources": [
+        {
+          "what": "William Shakespeare, Cymbeline, Act 5, Scene 1 (Posthumus alone, with a bloody handkerchief); all four quotations checked as exact substrings of the Project Gutenberg Complete Works (modern spelling), line breaks rendered as “ / ”; Posthumus orders Pisanio to kill Imogen in Act 3 after Iachimo’s deception",
+          "url": "https://www.gutenberg.org/ebooks/100"
+        }
+      ],
+      "notes": "Band 6. All four options are Posthumus in one soliloquy, in neighboring states: self-condemnation (A), a resolve to die for her (B), blaming the servant (D), and the wish that the gods had punished him and spared her (C). Difficulty comes from early modern syntax (“so had you saved”); the claim paraphrases rather than echoing “vengeance.” Cymbeline appears in no official item of any skill and nowhere in our bank (Winter’s Tale avoided: official TSP item).",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [
+          "claim reworded from “had struck him down” to “had ended his life” so it no longer shares “struck” with the key; explanation quote updated"
+        ],
+        "status": "fixed"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "Planned band 6. All four options are Posthumus in one soliloquy in neighboring states (self-condemnation, resolve to die, blaming the servant); difficulty comes from early modern syntax (“so had you saved”). The key is still the only option that addresses the gods, so band 6."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "C",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "command_of_evidence.T3_person_quote.hard.w5b4_07",
+      "template": "T3_person_quote",
+      "subtype": "Quotation from an art historian supports a student’s qualification of a common view (abstraction as a record of the city, not a retreat from it)",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Jamaican-born artist Mavis Pusey (1928–2019) spent much of her working life in New York City, where in the late 1960s and 1970s she produced hard-edge abstract prints and paintings: crisp, interlocking planes of flat color in which no recognizable object appears. Because the works depict nothing directly, they are often discussed chiefly as exercises in form and color. A student argues, however, that Pusey’s abstraction was less a withdrawal from her surroundings than a way of recording them, since her compositions grew out of what she observed as the buildings of her city were demolished and rebuilt.",
+      "stem": "Which quotation from an art historian would best support the student’s argument?",
+      "options": [
+        "“What matters most in Pusey’s prints is how they work as pictures: the tension between her razor-sharp edges and her flat, unmodulated colors would be just as compelling if her shapes had come from nowhere at all.”",
+        "“Pusey’s shapes were not invented in a vacuum. The slabs, beams, and broken bars that crowd her compositions distill what she saw on New York’s streets, where old buildings were constantly coming down and new ones going up around her.”",
+        "“In Paris Mai Juin, made after she witnessed the student uprisings in Paris in 1968, Pusey showed that an abstract image could respond to a political upheaval without depicting a single protester.”",
+        "“Pusey trained at the Art Students League in New York, where a scholarship allowed her to study with the painter and printmaker Will Barnet while she supported herself with other work.”"
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The student argues that Pusey’s abstraction was “a way of recording” her surroundings, because her compositions “grew out of what she observed as the buildings of her city were demolished and rebuilt.” Choice B supports exactly this: the historian says that the “slabs, beams, and broken bars” in her works “distill what she saw on New York’s streets, where old buildings were constantly coming down and new ones going up.”",
+      "distractors": {
+        "A": {
+          "recipe": "OPP: sides with the view the student qualifies",
+          "why_wrong": "This historian values the prints purely as form and color and says the work would be just as compelling if her shapes “had come from nowhere at all,” the reading the student says is incomplete."
+        },
+        "C": {
+          "recipe": "HALF: abstraction responding to events, but not to the city’s rebuilding",
+          "why_wrong": "It shows Pusey’s abstraction responding to something she witnessed, but the event is a political uprising in Paris, not the demolition and rebuilding of buildings that the student says her compositions grew out of."
+        },
+        "D": {
+          "recipe": "OFF: biography of her training",
+          "why_wrong": "Where and with whom Pusey studied says nothing about whether her abstract compositions record the changing buildings she observed."
+        }
+      },
+      "models": [
+        "3.21",
+        "3.33",
+        "3.32",
+        "3.3"
+      ],
+      "word_count": 97,
+      "sources": [
+        {
+          "what": "Mavis Pusey (1928–2019), Jamaican-born American abstract printmaker and painter known for hard-edge nonrepresentational images drawn from urban construction and the changing landscape (Broken Construction at Noon, Decaying Construction, c. 1970); Paris Mai Juin (1968) inspired by the 1968 student riots she witnessed; studied at the Art Students League on a scholarship, with Will Barnet (Wikipedia, fetched 2026-10-27)",
+          "url": "https://en.wikipedia.org/wiki/Mavis_Pusey"
+        }
+      ],
+      "notes": "Band 6. The historian is unnamed and the quotations invented; every fact in them matches the source. The claim sits inside a qualification of a common view (as in 3.21, 3.33). Distractors: OPP (A, the view qualified), HALF (C, a true case of abstraction responding to events, but not the city’s rebuilding), OFF (D).",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 5,
+        "fixes": [
+          "“most of her working life” in New York changed to “much of”: the source has London, Paris and Virginia years and does not support “most”"
+        ],
+        "status": "fixed"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "Planned band 6. The claim sits inside a qualification of a common view; A sides with the view qualified (OPP), C is a true case of abstraction answering events but not the city (HALF), D is OFF. Quotations run about 30 to 40 words, under the band-7 argued quotations."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "B",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "command_of_evidence.Q2_P5_control.hard.w5b4_08",
+      "template": "Q2_P5_control",
+      "subtype": "Data description: two treatments each compared with a control isolate two separate benefits (shade, and a neighbor’s presence apart from its shade)",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Plants on green roofs must tolerate intense sunlight, high temperatures, and shallow soil that dries quickly. To determine whether taller plants could help low-growing ground covers withstand such conditions, ecologist Axton C. Aguiar and colleagues grew ground covers for 11 months in containers constructed to replicate a green roof. Each ground cover was grown alone, beside a taller shade plant, beside a shade plant trimmed so that it cast no shade, or beneath an artificial plant that reproduced the shade of a living one. The researchers concluded that a neighboring shade plant benefited the ground covers not only through its shade but also in some other way.",
+      "stem": "Which choice best describes data from the graph that support the researchers’ conclusion?",
+      "options": [
+        "For both species, ground covers beside a trimmed shade plant and those under artificial shade each had far more total biomass than ground covers grown alone.",
+        "For both species, ground covers under artificial shade had far more total biomass than ground covers grown alone, and the difference was larger for Viola hederacea.",
+        "For both species, ground covers beside a trimmed shade plant had about as much total biomass as ground covers under artificial shade did.",
+        "For both species, ground covers grown alone had more total biomass than those under artificial shade, though less than those beside a shade plant."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": {
+        "kind": "bar graph",
+        "title": "Mean Total Biomass of Two Ground Cover Species after 11 Months, by Treatment",
+        "x_axis": "Treatment",
+        "y_axis": "Mean total biomass (grams)",
+        "description": "Grouped bar graph, two bars per treatment (Dichondra repens, Viola hederacea); y-axis gridlines at 0, 5, 10 and 15 grams (the tallest bar rises just above 15). Alone: Dichondra repens about 2.2, Viola hederacea about 1.1. Shade plant: Dichondra repens about 15.3, Viola hederacea about 12.0. Trimmed shade plant: Dichondra repens about 6.9, Viola hederacea about 8.0. Artificial shade: Dichondra repens about 7.7, Viola hederacea about 7.7. For both species, the shade plant bar is tallest, the alone bar is shortest, and the trimmed shade plant and artificial shade bars are similar to each other and well above the alone bar.",
+        "data": [
+          {
+            "series": "Dichondra repens",
+            "points": [
+              [
+                "Alone",
+                2.2
+              ],
+              [
+                "Shade plant",
+                15.3
+              ],
+              [
+                "Trimmed shade plant",
+                6.9
+              ],
+              [
+                "Artificial shade",
+                7.7
+              ]
+            ]
+          },
+          {
+            "series": "Viola hederacea",
+            "points": [
+              [
+                "Alone",
+                1.1
+              ],
+              [
+                "Shade plant",
+                12.0
+              ],
+              [
+                "Trimmed shade plant",
+                8.0
+              ],
+              [
+                "Artificial shade",
+                7.7
+              ]
+            ]
+          }
+        ]
+      },
+      "explanation": "The researchers concluded that a shade plant helped the ground covers “not only through its shade but also in some other way.” Each part needs its own comparison with ground covers grown alone. Artificial shade gives shade without a living neighbor, and a trimmed shade plant gives a living neighbor without shade. The graph shows that for both species, ground covers under artificial shade (about 7.7 grams each) and beside a trimmed shade plant (about 6.9 and 8.0 grams) had far more biomass than those grown alone (about 2.2 and 1.1 grams), so each factor helped on its own, as choice A states.",
+      "distractors": {
+        "B": {
+          "recipe": "HALF: accurate, shade effect only",
+          "why_wrong": "Artificial shade did raise biomass well above the alone level for both species, more so for Viola hederacea, but this shows only that shade helps; nothing in the choice shows a benefit from the neighbor apart from its shade."
+        },
+        "C": {
+          "recipe": "TRAP: the two single-factor treatments compared with each other, never with the control",
+          "why_wrong": "Ground covers beside a trimmed shade plant (about 6.9 and 8.0 grams) and under artificial shade (about 7.7 grams) did end up with similar biomass, but comparing these two treatments with each other says nothing about whether either one helped; that requires a comparison with ground covers grown alone (about 2.2 and 1.1 grams)."
+        },
+        "D": {
+          "recipe": "INACC: misreads the alone bars",
+          "why_wrong": "Ground covers grown alone had the least biomass of any treatment for both species (about 2.2 and 1.1 grams), less than those under artificial shade (about 7.7 grams)."
+        }
+      },
+      "models": [
+        "3.43",
+        "3.5",
+        "3.1"
+      ],
+      "word_count": 107,
+      "sources": [
+        {
+          "what": "Aguiar, Robinson, French 2019, PLoS ONE 14(11): e0225078 (University of Wollongong): green roof mesocosms on a concrete slab, four treatments (shaded natural, shaded artificial, unshaded natural with a trimmed shade plant, unshaded alone), 11 months; natural shade highest biomass, alone lowest, artificial shade and trimmed neighbor similar moderate biomass; the authors infer a positive influence of shading and a further positive influence of growing with a shade plant not accounted for by shading. Total biomass values read off Fig 4 (approximate)",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6855490/"
+        }
+      ],
+      "notes": "Band 6. Life science (plant ecology). Condition vs control done twice: the key needs both single-factor treatments above the control for both species. B is accurate but gives only the shade benefit; C compares the two single-factor treatments with each other (similar, as the paper reports: same significance letter) without the control; D misreads the control. Values are read from the paper’s bar graph (Fig 4, total biomass) for the two ground covers where the paper’s pattern is clearest; the other two species (a succulent and a prostrate shrub) are left out, and the passage claims the benefit for these ground covers, not for every species. Review: the earlier C (untrimmed shade plant above artificial shade) was itself direct evidence of a benefit beyond shade, a second defensible answer, so it was replaced. Fig 4 checked: D. repens total U about 2.2, UN 6.9, SN 15.3, SA 7.7; V. hederacea U 1.1, UN 8.0, SN 12.0, SA 7.7; UN and SA share letter B for both.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 9,
+        "fixes": [
+          "blind answer A matched the key, but C was also defensible (a failure before the fix)",
+          "option C (untrimmed shade plant above artificial shade) was itself direct evidence of a benefit beyond shade, a second defensible answer next to A; replaced with a TRAP that compares the trimmed-plant and artificial-shade groups with each other (similar, same significance letter in Fig 4) without the control",
+          "Fig 4 total-biomass bars checked against the figure image: all eight values match",
+          "figure description: y-axis read as gridlines at 0, 5, 10 and 15 grams, as the renderer draws them, since one bar (15.3) passes the top gridline"
+        ],
+        "status": "fixed"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "Planned band 6. Two condition-versus-control comparisons for two species; after the fix B is an accurate half (shade only), C an accurate comparison that lacks the control (TRAP), D a misread. Four reads and a design inference, but no passage proxy, so band 6."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "A",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "command_of_evidence.Q2_P8_quantifier.hard.w5b4_09",
+      "template": "Q2_P8_quantifier",
+      "subtype": "Data description: “all except one” claim (one compound retained less than another under every cooking method but one)",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Broccoli is rich in glucosinolates, sulfur-containing compounds whose breakdown products are studied for possible health benefits. Two of the most abundant are glucoraphanin and glucobrassicin, which belong to different chemical families. Food scientists Gao-feng Yuan, Bo Sun, Jing Yuan, and Qiao-mei Wang cooked broccoli by five common household methods and measured how much of each compound remained. Analyzing their results, a student concludes that glucobrassicin generally withstood cooking less well than glucoraphanin did, although this was not true of every method.",
+      "stem": "Which choice best describes data from the table that support the student’s conclusion?",
+      "options": [
+        "Steaming left a greater percentage of both glucoraphanin and glucobrassicin than any of the other four cooking methods did.",
+        "Stir-frying left less than half of the raw level of each compound, while boiling left less than half of the raw level of glucobrassicin only.",
+        "Every method left a smaller percentage of glucobrassicin than of glucoraphanin, and the gap between the two compounds was largest after steaming.",
+        "Four of the five methods left a smaller percentage of glucobrassicin than of glucoraphanin, but microwaving left a larger one."
+      ],
+      "answer_letter": "D",
+      "table": {
+        "title": "Percentage of Raw Broccoli’s Glucosinolate Content Remaining after Cooking",
+        "columns": [
+          "Cooking method",
+          "Glucoraphanin remaining (%)",
+          "Glucobrassicin remaining (%)"
+        ],
+        "rows": [
+          [
+            "Boiling",
+            "61",
+            "37"
+          ],
+          [
+            "Steaming",
+            "94",
+            "59"
+          ],
+          [
+            "Microwaving",
+            "38",
+            "44"
+          ],
+          [
+            "Stir-frying",
+            "45",
+            "29"
+          ],
+          [
+            "Stir-frying, then boiling",
+            "48",
+            "34"
+          ]
+        ],
+        "note": null
+      },
+      "figure": null,
+      "explanation": "The student concludes that glucobrassicin “generally withstood cooking less well than glucoraphanin did, although this was not true of every method.” The table shows a smaller percentage of glucobrassicin than of glucoraphanin remaining after boiling (37 vs. 61), steaming (59 vs. 94), stir-frying (29 vs. 45), and stir-frying then boiling (34 vs. 48), but a larger percentage after microwaving (44 vs. 38). Choice D states both the general pattern and the exception.",
+      "distractors": {
+        "A": {
+          "recipe": "IRREL: accurate, compares methods rather than compounds",
+          "why_wrong": "Steaming did leave the most of both compounds (94 and 59 percent), but that compares cooking methods; it says nothing about which compound held up better."
+        },
+        "B": {
+          "recipe": "PART: accurate, cherry-picked methods",
+          "why_wrong": "Both statements are true (45 and 29 percent after stir-frying; 37 percent of glucobrassicin but 61 percent of glucoraphanin after boiling), but they cover only two methods and do not show that glucobrassicin fared worse under most methods while faring better under one."
+        },
+        "C": {
+          "recipe": "INACC: overgeneralizes past the exception",
+          "why_wrong": "Microwaving left more glucobrassicin (44 percent) than glucoraphanin (38 percent), so it is false that every method left less glucobrassicin; the steaming gap is the largest, but the first claim fails."
+        }
+      },
+      "models": [
+        "3.23",
+        "3.20",
+        "3.24"
+      ],
+      "word_count": 81,
+      "sources": [
+        {
+          "what": "Yuan, Sun, Yuan, Wang 2009, J Zhejiang Univ Sci B 10(8): 580–588, Effects of different cooking methods on health-promoting compounds of broccoli: five domestic methods (steaming, microwaving, boiling, stir-frying, stir-frying/boiling); Table 2 means in μmol/g DW, glucoraphanin raw 13.60, boiled 8.30, steamed 12.80, microwaved 5.10, stir-fried 6.10, stir-fried/boiled 6.50; glucobrassicin raw 4.10, boiled 1.52, steamed 2.40, microwaved 1.80, stir-fried 1.18, stir-fried/boiled 1.40; percentages computed and rounded to whole numbers",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC2722699/"
+        }
+      ],
+      "notes": "Band 6. Life science (food chemistry). Quantified claim with an exception, as in 3.23 (“all except one”). C is the near-miss that drops the exception; A and B are accurate but answer other questions. Percentages are the cooked mean divided by the raw mean (61.0, 94.1, 37.5, 44.9, 47.8; 37.1, 58.5, 43.9, 28.8, 34.1), rounded; 37.5 rounds to 38, which leaves the microwaving reversal unaffected. The conclusion is the student’s reading of the data, not the authors’ wording.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 12,
+        "fixes": [],
+        "status": "pass"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "Planned band 6. “All except one” quantifier as in 3.23: five row comparisons plus the exception; C drops the exception, A and B are accurate but answer other questions."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "D",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "command_of_evidence.Q2_P4_trend.hard.w5b4_10",
+      "template": "Q2_P4_trend",
+      "subtype": "Data description: timing of growth across countries (one country’s rapid growth begins only after another’s)",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Counts of articles published in scientific and technical journals, compiled by the US National Science Foundation, are a widely used though imperfect indicator of a country’s research activity. Reviewing these counts for four countries in the Middle East, a student observes that every one of them published substantially more articles in 2020 than in 2000. The student argues, however, that the countries’ periods of fastest growth did not coincide and, in particular, that Saudi Arabia’s rapid expansion began only after Iran’s was well underway.",
+      "stem": "Which choice best describes data from the table that support the student’s argument?",
+      "options": [
+        "Saudi Arabia and Iran published nearly the same number of articles in 2000, but by 2020 Iran was publishing more than three times as many articles as Saudi Arabia was.",
+        "Turkey published more articles than Iran did in both 2005 and 2010, but Iran published more articles than Turkey did in both 2015 and 2020.",
+        "Saudi Arabia’s output barely changed from 2000 to 2005, when Iran’s more than quadrupled, but its output then grew by at least 85 percent in each later five-year period.",
+        "Iran added more articles from 2015 to 2020 than in any earlier five-year period, whereas Saudi Arabia added the most from 2010 to 2015."
+      ],
+      "answer_letter": "C",
+      "table": {
+        "title": "Scientific and Technical Journal Articles Published in Four Countries, 2000–2020",
+        "columns": [
+          "Country",
+          "2000",
+          "2005",
+          "2010",
+          "2015",
+          "2020"
+        ],
+        "rows": [
+          [
+            "Egypt",
+            "2,683",
+            "3,604",
+            "6,487",
+            "9,538",
+            "17,901"
+          ],
+          [
+            "Iran",
+            "1,559",
+            "7,046",
+            "24,288",
+            "35,452",
+            "56,585"
+          ],
+          [
+            "Saudi Arabia",
+            "1,596",
+            "1,789",
+            "3,572",
+            "8,600",
+            "16,099"
+          ],
+          [
+            "Turkey",
+            "6,815",
+            "17,568",
+            "25,490",
+            "31,418",
+            "40,759"
+          ]
+        ],
+        "note": null
+      },
+      "figure": null,
+      "explanation": "The student argues that “Saudi Arabia’s rapid expansion began only after Iran’s was well underway.” Supporting this requires both timings. From 2000 to 2005, Iran’s output rose from 1,559 to 7,046 articles, more than four times as many, while Saudi Arabia’s barely changed (1,596 to 1,789); only then did Saudi Arabia’s output begin to climb quickly, growing by at least 85 percent in each later period (to 3,572 in 2010, 8,600 in 2015, and 16,099 in 2020). Choice C gives both parts: Iran surging early and Saudi Arabia surging only later.",
+      "distractors": {
+        "A": {
+          "recipe": "PART: accurate, endpoints only",
+          "why_wrong": "The two countries did start almost even (1,559 and 1,596) and Iran did end with more than three times as many articles (56,585 vs. 16,099), but comparing only 2000 and 2020 says nothing about when each country’s fastest growth occurred."
+        },
+        "B": {
+          "recipe": "IRREL: accurate, a different pair of countries",
+          "why_wrong": "Turkey did lead Iran in 2005 and 2010 and trail it in 2015 and 2020, but the argument concerns the timing of Saudi Arabia’s growth relative to Iran’s, and Saudi Arabia is not mentioned."
+        },
+        "D": {
+          "recipe": "INACC: right about Iran, wrong period for Saudi Arabia",
+          "why_wrong": "Iran did add the most articles from 2015 to 2020 (21,133), but so did Saudi Arabia (7,499, against 5,028 from 2010 to 2015), so the second part misreads the table."
+        }
+      },
+      "models": [
+        "3.13",
+        "3.40"
+      ],
+      "word_count": 84,
+      "sources": [
+        {
+          "what": "World Bank indicator IP.JRN.ARTC.SC, Scientific and technical journal articles (source: National Science Foundation, Science and Engineering Indicators; fractional counts), values for Egypt, Iran, Saudi Arabia and Turkiye in 2000, 2005, 2010, 2015 and 2020 fetched from the World Bank API on 2026-10-27 and rounded to whole articles",
+          "url": "https://data.worldbank.org/indicator/IP.JRN.ARTC.SC?locations=EG-IR-SA-TR"
+        }
+      ],
+      "notes": "Band 6. Social science (science policy, bibliometrics). Like 3.13, a student’s inference about country-specific timing read off multi-country series. The key combines an early comparison (Iran up 4.5 times, Saudi Arabia up 12 percent) with Saudi Arabia’s later doubling in each five-year step (2.00, 2.41 and 1.87 times); the wording avoids “quadrupled only from 2010” because 2005 to 2015 is also more than fourfold. A is the endpoint trap, B an accurate crossover in the wrong pair, D gets Iran right and Saudi Arabia’s peak period wrong (needs differences: 193, 1,783, 5,028, 7,499). Iran’s 2005 to 2010 rise (3.4 times) is also fast, so “well underway” holds. Values are fractional counts as published; Turkey is the World Bank’s Turkiye. Lead 2026-10-27: 'roughly doubled' (2.0x, 2.4x, 1.87x) changed to 'grew by at least 85 percent'.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 20,
+        "fixes": [],
+        "status": "pass"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "Planned band 6. Two growth rates over the first period and three later ratios; A is the endpoint trap, B an accurate crossover in the wrong pair, D right on Iran and wrong on Saudi Arabia’s peak period. No passage proxy, so band 6."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "C",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "command_of_evidence.T2_lit_quote.medium.w5b4_11",
+      "template": "T2_lit_quote",
+      "subtype": "Literary quotation illustrates a two-part claim (concern about timing and about how the timing will look to others)",
+      "tier": "medium",
+      "passage": "Under the Greenwood Tree is an 1872 novel by Thomas Hardy. The vicar of the village of Mellstock has decided to replace the church choir, which accompanies services on string instruments, with an organ. Reuben Dewy, who speaks for the choir, is concerned that the timing of its dismissal could make the musicians look bad to people in neighboring villages: ______",
+      "stem": "Which quotation from Under the Greenwood Tree most effectively illustrates the claim?",
+      "options": [
+        "“I hope you’ll excuse my common way, but I always like to look things in the face.”",
+        "“All we thought was, that for us old ancient singers to be choked off quiet at no time in particular, as now, in the Sundays after Easter, would seem rather mean in the eyes of other parishes, sir.”",
+        "“What I have been thinking…is that the quire ought to be gie’d a little time, and not done away wi’ till Christmas, as a fair thing between man and man.”",
+        "“Well then, Mr. Mayble, since death’s to be, we’ll die like men any day you name (excusing my common way).”"
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The claim has two parts: Reuben is concerned about the timing of the dismissal, and about how that timing could make the musicians look to people elsewhere. In choice B he objects to the choir being “choked off quiet at no time in particular, as now, in the Sundays after Easter,” and says this “would seem rather mean in the eyes of other parishes.” The quotation addresses both the timing and its effect on how the choir is seen.",
+      "distractors": {
+        "A": {
+          "recipe": "OFF: the speaker’s plainness of manner",
+          "why_wrong": "Reuben describes his own frank way of speaking; he says nothing about when the choir is to be dismissed or how that would look to other villages."
+        },
+        "C": {
+          "recipe": "HALF: timing, defended as fairness rather than appearance",
+          "why_wrong": "Reuben does ask that the choir be kept until Christmas, but he presents this as “a fair thing between man and man,” not as a matter of how the musicians will appear to neighboring parishes."
+        },
+        "D": {
+          "recipe": "OFF: dignified acceptance with no concern for timing",
+          "why_wrong": "Reuben says the choir will accept its end bravely on “any day you name,” which expresses resignation and shows no concern about when the dismissal happens or how it will look."
+        }
+      },
+      "models": [
+        "2.26",
+        "2.11",
+        "2.13",
+        "2.20",
+        "2.10"
+      ],
+      "word_count": 61,
+      "sources": [
+        {
+          "what": "Thomas Hardy, Under the Greenwood Tree; or, The Mellstock Quire (1872), Part the Second, Chapter IV, The Interview with the Vicar; all four quotations are the tranter Reuben Dewy’s, checked as exact substrings of the Gutenberg text (the narrator’s interruption in C replaced by an ellipsis, as CB does in 3.11)",
+          "url": "https://www.gutenberg.org/ebooks/2662"
+        }
+      ],
+      "notes": "Medium. Two-part claim (timing plus appearance to others); the half-match C has the timing (wait till Christmas) for a different reason (fairness); D is the same speaker resigned to any date. Dialect left as Hardy wrote it. Hardy appears once in the bank (The Woodlanders, a different work); Under the Greenwood Tree appears in no official item of any skill.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "command_of_evidence.T1_single.medium.w5b4_12",
+      "template": "T1_single",
+      "subtype": "Hypothetical finding supports a claim that one property of an object affects behavior toward it (exhibit visibility and visitor contact)",
+      "tier": "medium",
+      "passage": "Unlike people in most public buildings, museum visitors usually choose their own routes, so curators have an interest in knowing what draws visitors toward particular works. At the Broad Art Museum at Michigan State University, a building designed by the architect Zaha Hadid, Linda Nubani and colleagues observed the movements of 72 visitors through an exhibition and used a computational technique called visibility graph analysis to calculate, for each exhibit, how much of the surrounding floor space it could be seen from. The researchers claim that an exhibit’s visibility affects whether visitors approach it.",
+      "stem": "Which finding, if true, would most directly support the researchers’ claim?",
+      "options": [
+        "Visitors who arrived at the museum in groups spent more time in the exhibition, on average, than visitors who arrived alone did.",
+        "Exhibits that were larger or more brightly colored than the others were more often photographed by visitors.",
+        "Exhibits that could be seen from only a small part of the floor drew about as many visitors as exhibits that could be seen from most of the floor did.",
+        "Visitors more often stopped at exhibits that could be seen from a large share of the surrounding floor than at exhibits that could be seen from only a small share."
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The researchers claim that “an exhibit’s visibility affects whether visitors approach it,” where visibility was measured as how much of “the surrounding floor space it could be seen from.” Choice D links that measure to visitors’ behavior: exhibits visible from a large share of the floor drew visitors more often than exhibits visible from only a small share, which is the pattern the claim predicts.",
+      "distractors": {
+        "A": {
+          "recipe": "OFF: a property of visitors, not of exhibits",
+          "why_wrong": "Whether visitors came in groups concerns the visitors, not how visible each exhibit was, so it does not bear on the claim."
+        },
+        "B": {
+          "recipe": "OFF: a different property of exhibits and a different behavior",
+          "why_wrong": "Size and color are not the visibility the researchers measured, and being photographed is not the same as being approached."
+        },
+        "C": {
+          "recipe": "OPP: no difference by visibility",
+          "why_wrong": "If poorly visible and highly visible exhibits drew about equal numbers of visitors, visibility would make no difference, which weakens the claim."
+        }
+      },
+      "models": [
+        "2.6",
+        "2.7",
+        "2.21",
+        "2.33",
+        "2.1"
+      ],
+      "word_count": 94,
+      "sources": [
+        {
+          "what": "Nubani, Puryear, Kellom 2018, Behavioral Sciences 8(11): 100, Measuring the Effect of Visual Exposure and Saliency of Museum Exhibits on Visitors’ Level of Contact and Engagement: 72 visitors observed at the Broad Museum designed by Zaha Hadid; visibility graph analysis of each exhibit’s visibility exposure; the visibility area around each exhibit and its spatial position explained visitors’ contact with the piece (abstract, Europe PMC; the Hadid-designed Broad is the Eli and Edythe Broad Art Museum at Michigan State University)",
+          "url": "https://doi.org/10.3390/bs8110100"
+        }
+      ],
+      "notes": "Medium. A one-step operationalization: the key ties the measured variable (floor area an exhibit can be seen from) to approach. Authors Linda Nubani, Alyssa Puryear, Kristy Kellom (names checked on Crossref).",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "command_of_evidence.T1_single.medium.w5b4_13",
+      "template": "T1_single",
+      "subtype": "Hypothetical finding supports a comparative claim (an activity matters more for one language than for the other)",
+      "tier": "medium",
+      "passage": "In the Dutch province of Friesland, many children grow up speaking both Frisian, a minority language, and Dutch, the majority language. Earlier research had demonstrated that the amount of a language children hear at home matters more for a minority language than for a majority language, which children also encounter at school, in the media, and elsewhere. Studying 120 Frisian-Dutch bilingual children aged five and six, Evelyn Bosma and Elma Blom examined whether the same holds for particular activities at home, and they concluded that reading at home is especially important for the minority language.",
+      "stem": "Which finding, if true, would most directly support Bosma and Blom’s conclusion?",
+      "options": [
+        "Being read to in Frisian predicted children’s knowledge of both Frisian vocabulary and Frisian word endings, whereas being read to in Dutch predicted only their Dutch vocabulary.",
+        "Children who watched more television in Dutch than in Frisian at home tended to know more Dutch words than Frisian words.",
+        "Being read to in Dutch predicted children’s knowledge of Dutch vocabulary and word endings more strongly than being read to in Frisian predicted their knowledge of Frisian.",
+        "Children who heard Frisian at home for most of the day knew more Frisian words than children who heard Frisian at home less often did."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "Bosma and Blom concluded that “reading at home is especially important for the minority language.” To support this, a finding must show reading at home doing more for Frisian than for Dutch. Choice A does: reading in Frisian predicted two kinds of Frisian knowledge, vocabulary and word endings, while reading in Dutch predicted only one kind of Dutch knowledge.",
+      "distractors": {
+        "B": {
+          "recipe": "OFF: a different activity (television)",
+          "why_wrong": "The conclusion concerns reading, and this finding is about watching television; it also compares a child’s two languages rather than the effect of an activity on each."
+        },
+        "C": {
+          "recipe": "OPP: reading matters more for the majority language",
+          "why_wrong": "If reading in Dutch had the stronger effect, reading would be more important for the majority language, the reverse of the conclusion."
+        },
+        "D": {
+          "recipe": "GEN: restates the earlier finding about amount of input",
+          "why_wrong": "This concerns how much Frisian children hear, the point the passage says earlier research had already shown, not the effect of a particular activity such as reading."
+        }
+      },
+      "models": [
+        "2.6",
+        "2.7",
+        "2.16",
+        "2.1",
+        "2.21"
+      ],
+      "word_count": 95,
+      "sources": [
+        {
+          "what": "Bosma, Blom 2020, Journal of Child Language 47(2), Language activities in a minority-majority language context: book-reading at home is more important for Frisian than for Dutch: 120 Frisian-Dutch bilingual five- and six-year-olds; reading in Frisian predicted both Frisian vocabulary and morphology, reading in Dutch only Dutch vocabulary; earlier research showed home input quantity matters more for the minority language (abstract, Europe PMC)",
+          "url": "https://doi.org/10.1017/S0305000919000023"
+        }
+      ],
+      "notes": "Medium. The abstract's morphology is rendered as word endings (Frisian inflection), a simplification. Frisian appears nowhere else in the bank.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "command_of_evidence.Q1_P3_pairwise.medium.w5b4_14",
+      "template": "Q1_P3_pairwise",
+      "subtype": "Data completion: two comparisons on two measures (an edition with more articles but far fewer speakers)",
+      "tier": "medium",
+      "passage": "Wikipedia has editions in more than 300 languages, but an edition’s size is an unreliable indicator of how widely its language is spoken. Several editions expanded primarily through bots, programs that generate articles automatically; nearly all the articles in the Cebuano edition, for instance, were originally produced by programs such as Sverker Johansson’s Lsjbot. As a result, the Cebuano edition ______",
+      "stem": "Which choice most effectively uses data from the table to complete the statement?",
+      "options": [
+        "has fewer articles than the Swedish edition, even though many more people speak Cebuano than speak Swedish.",
+        "has more articles than the Japanese edition, even though Japanese has far more speakers than Cebuano does.",
+        "has more articles than the Spanish edition, and Cebuano also has more speakers than Spanish does.",
+        "has more articles than the Waray edition, and Cebuano also has more speakers than Waray does."
+      ],
+      "answer_letter": "B",
+      "table": {
+        "title": "Speakers of Five Languages and Articles in Their Wikipedia Editions",
+        "columns": [
+          "Language",
+          "Speakers (millions)",
+          "Wikipedia articles (millions)"
+        ],
+        "rows": [
+          [
+            "Cebuano",
+            "15.8",
+            "6.1"
+          ],
+          [
+            "Japanese",
+            "125.0",
+            "1.5"
+          ],
+          [
+            "Spanish",
+            "470.0",
+            "2.1"
+          ],
+          [
+            "Swedish",
+            "9.2",
+            "2.6"
+          ],
+          [
+            "Waray",
+            "2.6",
+            "1.3"
+          ]
+        ],
+        "note": "Speaker figures are estimates."
+      },
+      "figure": null,
+      "explanation": "The text claims that an edition’s size is “an unreliable indicator of how widely its language is spoken,” so the example must pair a larger edition with a less widely spoken language. The table shows that the Cebuano edition has about 6.1 million articles, more than the Japanese edition’s 1.5 million, even though Japanese has about 125.0 million speakers and Cebuano only about 15.8 million. Choice B gives that mismatch.",
+      "distractors": {
+        "A": {
+          "recipe": "INACC: wrong direction on articles",
+          "why_wrong": "The Cebuano edition has more articles than the Swedish edition (6.1 million vs. 2.6 million), not fewer."
+        },
+        "C": {
+          "recipe": "INACC: wrong direction on speakers",
+          "why_wrong": "The Cebuano edition does have more articles than the Spanish edition (6.1 million vs. 2.1 million), but Spanish has far more speakers (470.0 million vs. 15.8 million), not fewer."
+        },
+        "D": {
+          "recipe": "CONTRA: accurate but consistent with size tracking speakers",
+          "why_wrong": "Both comparisons are accurate (6.1 vs. 1.3 million articles; 15.8 vs. 2.6 million speakers), but here the larger edition belongs to the more widely spoken language, which does not show that size is a poor guide."
+        }
+      },
+      "models": [
+        "2.32",
+        "2.24",
+        "2.18",
+        "2.27"
+      ],
+      "word_count": 61,
+      "sources": [
+        {
+          "what": "Wikimedia Meta, List of Wikipedias by speakers per article (speaker estimates, L1 and L2, mainly from Ethnologue: Cebuano 15,810,000; Japanese 125,000,000; Spanish 470,000,000; Swedish 9,197,090; Waray 2,560,000) with live article counts; article counts confirmed from each edition’s siteinfo statistics on 2026-10-27 (ceb 6,116,100; ja 1,524,881; es 2,146,054; sv 2,629,404; war 1,267,051)",
+          "url": "https://meta.wikimedia.org/wiki/List_of_Wikipedias_by_speakers_per_article"
+        },
+        {
+          "what": "Cebuano Wikipedia: nearly all of its articles were initially created through automatic programs, most notably Sverker Johansson’s Lsjbot",
+          "url": "https://en.wikipedia.org/wiki/Cebuano_Wikipedia"
+        }
+      ],
+      "notes": "Medium. Technology and linguistics. Two comparisons, as in 2.32; the key is the only mismatch of size and speakers. A and C each flip one comparison; D is accurate but shows size and speakers agreeing (as 1.4’s sameness option). The key’s comparisons are robust to any published speaker estimate for Cebuano (estimates range up to about 28 million, still far below Japanese). No year given, since article counts drift; the Cebuano, Swedish and Waray editions have stayed near these sizes since bot creation stopped.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 7,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "command_of_evidence.Q1_P4_trend.medium.w5b4_15",
+      "template": "Q1_P4_trend",
+      "subtype": "Data completion: change over time in two series (a steep fall in one country and little change in another)",
+      "tier": "medium",
+      "passage": "Tuberculosis (TB), a bacterial infection that usually attacks the lungs, remains widespread in much of Southeast Asia. Estimates from the World Health Organization suggest, however, that progress against the disease since 2000 has been far from uniform across the region. A public health student analyzing these estimates observes that between 2000 and 2020, the estimated rate of new tuberculosis cases in ______",
+      "stem": "Which choice most effectively uses data from the graph to complete the statement?",
+      "options": [
+        "Cambodia fell by more than half, while the rate in the Philippines changed comparatively little.",
+        "the Philippines fell by more than half, while the rate in Cambodia changed comparatively little.",
+        "Vietnam fell by more than half, while the rate in Indonesia rose slightly over the same period.",
+        "each of the four countries fell by more than 100 cases per 100,000 people, with the steepest decline in Vietnam."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": {
+        "kind": "line graph",
+        "title": "Estimated New Tuberculosis Cases per 100,000 People in Four Southeast Asian Countries, 2000–2020",
+        "x_axis": "Year",
+        "y_axis": "New cases per 100,000 people",
+        "description": "Four lines at 2000, 2005, 2010, 2015 and 2020; y-axis gridlines every 200 from 0 to 800 (Cambodia’s 2000 point sits above the top gridline). Cambodia: about 853, 640, 442, 339, 285 (falls steeply throughout). Philippines: about 590, 539, 531, 550, 544 (nearly flat after 2005). Indonesia: about 370, 360, 342, 325, 306 (falls slowly). Vietnam: about 296, 266, 231, 199, 171 (falls steadily). Cambodia starts highest and ends below the Philippines and Indonesia.",
+        "data": [
+          {
+            "series": "Cambodia",
+            "points": [
+              [
+                2000,
+                853
+              ],
+              [
+                2005,
+                640
+              ],
+              [
+                2010,
+                442
+              ],
+              [
+                2015,
+                339
+              ],
+              [
+                2020,
+                285
+              ]
+            ]
+          },
+          {
+            "series": "Indonesia",
+            "points": [
+              [
+                2000,
+                370
+              ],
+              [
+                2005,
+                360
+              ],
+              [
+                2010,
+                342
+              ],
+              [
+                2015,
+                325
+              ],
+              [
+                2020,
+                306
+              ]
+            ]
+          },
+          {
+            "series": "Philippines",
+            "points": [
+              [
+                2000,
+                590
+              ],
+              [
+                2005,
+                539
+              ],
+              [
+                2010,
+                531
+              ],
+              [
+                2015,
+                550
+              ],
+              [
+                2020,
+                544
+              ]
+            ]
+          },
+          {
+            "series": "Vietnam",
+            "points": [
+              [
+                2000,
+                296
+              ],
+              [
+                2005,
+                266
+              ],
+              [
+                2010,
+                231
+              ],
+              [
+                2015,
+                199
+              ],
+              [
+                2020,
+                171
+              ]
+            ]
+          }
+        ]
+      },
+      "explanation": "The student’s point is that progress has been “far from uniform,” so the completion must show very different paths. The graph shows Cambodia’s rate falling from about 853 to about 285 new cases per 100,000 people between 2000 and 2020, a drop of more than half, while the Philippines’ rate went only from about 590 to about 544. Choice A describes this contrast accurately.",
+      "distractors": {
+        "B": {
+          "recipe": "WRONG GROUP: the two countries swapped",
+          "why_wrong": "It is Cambodia’s rate that fell by more than half (about 853 to 285); the Philippines’ rate changed little (about 590 to 544)."
+        },
+        "C": {
+          "recipe": "INACC: wrong size of fall and wrong direction",
+          "why_wrong": "Vietnam’s rate fell from about 296 to about 171, less than half, and Indonesia’s rate fell (about 370 to 306) rather than rising."
+        },
+        "D": {
+          "recipe": "INACC: false quantifier, contradicts the claim",
+          "why_wrong": "The rates in Indonesia (about 370 to 306) and the Philippines (about 590 to 544) fell by less than 100, and the steepest decline was Cambodia’s, not Vietnam’s; a uniform decline would also not illustrate uneven progress."
+        }
+      },
+      "models": [
+        "2.15",
+        "2.34",
+        "2.40"
+      ],
+      "word_count": 62,
+      "sources": [
+        {
+          "what": "World Bank indicator SH.TBS.INCD, Incidence of tuberculosis (per 100,000 people), WHO Global Tuberculosis Report estimates; Cambodia 853 (2000) to 285 (2020), Philippines 590 to 544, Indonesia 370 to 306, Viet Nam 296 to 171, fetched from the World Bank API on 2026-10-27",
+          "url": "https://data.worldbank.org/indicator/SH.TBS.INCD?locations=KH-ID-PH-VN"
+        }
+      ],
+      "notes": "Medium. Health and sociology (public health). Four-line graph as in 2.15; the key pairs a steep fall with near-flat change. B swaps the countries (2.15’s wrong-line trap), C misjudges Vietnam’s fall and Indonesia’s direction, D is a false quantifier that would also contradict the claim. The completion frame avoids 2.15’s “went from ______”.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 20,
+        "fixes": [
+          "figure description: y-axis read as gridlines every 200 from 0 to 800, as the renderer draws them, since Cambodia’s 2000 value (853) passes the top gridline"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "command_of_evidence.Q2_P8_multipart.medium.w5b4_16",
+      "template": "Q2_P8_multipart",
+      "subtype": "Data description: passage criterion plus data, two-part conclusion (hits beyond a stated limit, with accuracy falling over distance)",
+      "tier": "medium",
+      "passage": "An influential review of ethnographic accounts proposed that a hand-thrown spear is effective only within about 5 to 10 meters of its target. To test that limit, archaeologist Annemieke Milks and colleagues had six athletes experienced in the javelin throw hurl replicas of a roughly 300,000-year-old wooden spear discovered at Schöningen, Germany, at a hay-bale target. The team concluded that such spears could strike targets well beyond the proposed limit, although accuracy diminished as distance increased.",
+      "stem": "Which choice best describes data from the table that support the team’s conclusion?",
+      "options": [
+        "The athletes hit the target with more than half of their throws from 5 meters but with none of their throws from 25 meters.",
+        "The athletes hit the target with 25% of their throws from 10 meters and with the same percentage of their throws from 15 meters.",
+        "The athletes hit the target with 17% of their throws from 20 meters, a lower rate than they achieved from 5 meters.",
+        "The athletes missed the target more often than they hit it from every distance except 10 meters."
+      ],
+      "answer_letter": "C",
+      "table": {
+        "title": "Hits on a Target by Throwing Distance",
+        "columns": [
+          "Distance (meters)",
+          "Hits",
+          "Misses",
+          "Hits (%)"
+        ],
+        "rows": [
+          [
+            "5",
+            "7",
+            "5",
+            "58"
+          ],
+          [
+            "10",
+            "9",
+            "27",
+            "25"
+          ],
+          [
+            "15",
+            "6",
+            "18",
+            "25"
+          ],
+          [
+            "20",
+            "3",
+            "15",
+            "17"
+          ],
+          [
+            "25",
+            "0",
+            "18",
+            "0"
+          ]
+        ],
+        "note": "Throws from 10 meters include 18 made with the target turned upright."
+      },
+      "figure": null,
+      "explanation": "The team concluded that the spears “could strike targets well beyond the proposed limit” of about 5 to 10 meters, “although accuracy diminished as distance increased.” The table shows hits on 17 percent of throws from 20 meters, twice the upper end of the proposed limit, and that rate is lower than the 58 percent achieved from 5 meters. Choice C therefore supports both parts of the conclusion.",
+      "distractors": {
+        "A": {
+          "recipe": "HALF: accurate, the decline only",
+          "why_wrong": "The athletes did hit with 58 percent of throws from 5 meters and none from 25 meters, which shows accuracy falling, but neither distance shows a hit well beyond the 5-to-10-meter limit."
+        },
+        "B": {
+          "recipe": "HALF: accurate, no decline",
+          "why_wrong": "The hit rates from 10 and 15 meters were both 25 percent, but equal rates show no drop in accuracy, and 15 meters is only a little past the proposed limit."
+        },
+        "D": {
+          "recipe": "INACC: wrong exception",
+          "why_wrong": "The athletes hit more often than they missed only from 5 meters (7 hits, 5 misses); from 10 meters they missed far more often (27 misses, 9 hits)."
+        }
+      },
+      "models": [
+        "2.8",
+        "2.42"
+      ],
+      "word_count": 76,
+      "sources": [
+        {
+          "what": "Milks, Parker, Pope 2019, Scientific Reports 9: 820, External ballistics of Pleistocene hand-thrown spears: six male javelin athletes threw replicas of Schöningen Spear II (site about 300,000 BP) at a hay bale at 5 to 25 m; Table 2 hits and misses by distance (5 m 7/5, 58%; 10 m 9/27, 25%, including throws with the bale vertical; 15 m 6/18, 25%; 20 m 3/15, 17%; 25 m 0/18, 0%); the most influential ethnographic review proposed an effective distance limited to 5–10 m; hits up to 20 m with a drop in accuracy at each distance",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6347593/"
+        }
+      ],
+      "notes": "Medium. Archaeology and anthropology. Passage criterion plus data, as in 2.8 (a threshold stated in the prose); the key is the only option with a hit beyond the limit and a lower rate than at a shorter distance. A and B are accurate halves; D misplaces the one distance with more hits than misses. The note keeps the 10-meter row faithful to the paper (its 18 extra throws at an upright bale).",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 16,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "command_of_evidence.Q1_P1_lookup.easy.w5b4_17",
+      "template": "Q1_P1_lookup",
+      "subtype": "Data completion: lookup of one cell by row name (value-only options)",
+      "tier": "easy",
+      "passage": "The Japanese artist Utagawa Hiroshige (1797–1858) published many of his best-known woodblock prints in series, issuing a few sheets at a time over several years. The number in a series title, however, did not always correspond to the number of prints the series contained. A student researching Hiroshige finds, for example, that the series Famous Views of the Sixty-odd Provinces, which depicts landscapes throughout Japan, consists of ______",
+      "stem": "Which choice most effectively uses data from the table to complete the example?",
+      "options": [
+        "55 prints.",
+        "119 prints.",
+        "60 prints.",
+        "70 prints."
+      ],
+      "answer_letter": "D",
+      "table": {
+        "title": "Three Print Series by Utagawa Hiroshige",
+        "columns": [
+          "Series",
+          "Years published",
+          "Number of prints"
+        ],
+        "rows": [
+          [
+            "The Fifty-three Stations of the Tōkaidō",
+            "1833–1834",
+            "55"
+          ],
+          [
+            "Famous Views of the Sixty-odd Provinces",
+            "1853–1856",
+            "70"
+          ],
+          [
+            "One Hundred Famous Views of Edo",
+            "1856–1859",
+            "119"
+          ]
+        ],
+        "note": null
+      },
+      "figure": null,
+      "explanation": "The example concerns Famous Views of the Sixty-odd Provinces. According to the table, that series consists of 70 prints, so choice D completes the example.",
+      "distractors": {
+        "A": {
+          "recipe": "WRONG ROW",
+          "why_wrong": "55 prints is the number in The Fifty-three Stations of the Tōkaidō, not in Famous Views of the Sixty-odd Provinces."
+        },
+        "B": {
+          "recipe": "WRONG ROW",
+          "why_wrong": "119 prints is the number in One Hundred Famous Views of Edo, not in Famous Views of the Sixty-odd Provinces."
+        },
+        "C": {
+          "recipe": "OUTSIDE: number lifted from the series title",
+          "why_wrong": "60 is the number suggested by the title (“Sixty-odd”), not a figure in the table; the table gives 70 prints for this series."
+        }
+      },
+      "models": [
+        "1.43",
+        "1.44",
+        "1.30",
+        "1.38"
+      ],
+      "word_count": 68,
+      "sources": [
+        {
+          "what": "Famous Views of the Sixty-odd Provinces: a print for each of the 68 provinces plus Edo and a contents page, 70 prints, published 1853–56",
+          "url": "https://en.wikipedia.org/wiki/Famous_Views_of_the_Sixty-odd_Provinces"
+        },
+        {
+          "what": "The Fifty-three Stations of the Tōkaidō (Hōeidō edition 1833–1834): 55 prints in all, one per station plus the start and end points",
+          "url": "https://en.wikipedia.org/wiki/The_Fifty-three_Stations_of_the_T%C5%8Dkaid%C5%8D"
+        },
+        {
+          "what": "One Hundred Famous Views of Edo: a series of 119 prints, published 1856–59",
+          "url": "https://en.wikipedia.org/wiki/One_Hundred_Famous_Views_of_Edo"
+        }
+      ],
+      "notes": "Easy. Arts and humanities (Japanese printmaking). One-cell lookup by row name with value-only options, as in 1.43 and 1.44; two distractors are other rows’ values and one is the title’s own number (as 1.33 lifts numbers from elsewhere). Thirty-six Views of Mount Fuji (1858) was left out: its source page lists 36 views plus a contents sheet without giving a total. The key (70) is not the longest option (119 is). One Hundred Famous Views of Edo is counted as 119 as on its source page (118 views plus a print added by Hiroshige II; some catalogues say 118); the item never asks for that row. The word “ukiyo-e” is avoided (an official Rhetorical Synthesis item covers how ukiyo-e prints were made).",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 6,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "command_of_evidence.Q1_P1_lookup.easy.w5b4_18",
+      "template": "Q1_P1_lookup",
+      "subtype": "Data completion: reverse lookup (find the row with a given value, name it)",
+      "tier": "easy",
+      "passage": "In East Africa, much of the fruit harvested each year spoils before it can be sold, and drying is an inexpensive method of preserving it. At a research institute in Tanzania, Mohammed Ssemwanga, Edna Makule, and Siraj Kayondo dried mangoes and pineapples using five solar techniques, including a newly designed dryer, and recorded the mean air temperature each produced. The technique that reached a mean drying temperature of 32.6°C was ______",
+      "stem": "Which choice most effectively uses data from the table to complete the statement?",
+      "options": [
+        "the conventional solar dryer.",
+        "drying in open sun.",
+        "the improved solar dryer.",
+        "drying in shade under a white cloth."
+      ],
+      "answer_letter": "A",
+      "table": {
+        "title": "Mean Drying Air Temperature for Five Solar Drying Methods",
+        "columns": [
+          "Drying method",
+          "Mean drying air temperature (°C)"
+        ],
+        "rows": [
+          [
+            "Open sun",
+            "26.8"
+          ],
+          [
+            "Shade under a black cloth",
+            "26.7"
+          ],
+          [
+            "Shade under a white cloth",
+            "24.5"
+          ],
+          [
+            "Conventional solar dryer",
+            "32.6"
+          ],
+          [
+            "Improved solar dryer",
+            "40.3"
+          ]
+        ],
+        "note": null
+      },
+      "figure": null,
+      "explanation": "The statement asks which technique reached a mean drying temperature of 32.6°C. The table lists 32.6°C for the conventional solar dryer, so choice A completes the statement.",
+      "distractors": {
+        "B": {
+          "recipe": "WRONG ROW",
+          "why_wrong": "Drying in open sun had a mean temperature of 26.8°C, not 32.6°C."
+        },
+        "C": {
+          "recipe": "WRONG ROW (the highest value)",
+          "why_wrong": "The improved solar dryer had the highest mean temperature, 40.3°C, not 32.6°C."
+        },
+        "D": {
+          "recipe": "WRONG ROW (the lowest value)",
+          "why_wrong": "Drying in shade under a white cloth had the lowest mean temperature, 24.5°C, not 32.6°C."
+        }
+      },
+      "models": [
+        "1.37",
+        "1.40",
+        "1.24",
+        "1.12"
+      ],
+      "word_count": 71,
+      "sources": [
+        {
+          "what": "Ssemwanga, Makule, Kayondo 2020, Heliyon 6(6): e04163 (Nelson Mandela African Institution of Science and Technology, Tanzania): mangoes and pineapples dried by open sun drying, black-cloth shade, white-cloth shade, a conventional solar dryer and a newly improved solar dryer; mean drying air temperatures 26.8, 26.7, 24.5, 32.6 and 40.3 °C; high post-harvest fruit losses in East Africa",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7305395/"
+        }
+      ],
+      "notes": "Easy. Technology and engineering (food preservation). Reverse lookup, as in 1.37: find the row with 32.6 and name it. Distractors are other rows, including the highest and lowest values; the key is not the longest option. Only the temperatures are used from this paper.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 5,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "command_of_evidence.T1_single.easy.w5b4_19",
+      "template": "T1_single",
+      "subtype": "Hypothetical finding supports a claim that a behavior was learned socially",
+      "tier": "easy",
+      "passage": "Tool use has been documented in many vertebrate species but, until recently, not in pigs. Observing a family of critically endangered Visayan warty pigs (Sus cebifrons) at a Paris zoo, Meredith Root-Bernstein and colleagues saw two adult females, a mother and her daughter, use pieces of bark or sticks as digging implements while constructing nests. The researchers suggest that the daughter may have learned this behavior from her mother.",
+      "stem": "Which finding, if true, would most directly support the researchers’ suggestion?",
+      "options": [
+        "The pigs in the family often carried sticks and branches around their enclosure without digging with them.",
+        "The daughter began digging with bark only after she had been seen watching her mother do so.",
+        "Visayan warty pigs in the wild build nests out of grass and leaves before giving birth.",
+        "The adult male in the family tried to dig with a stick but did so less skillfully than the females did."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The researchers suggest that the daughter “may have learned this behavior from her mother.” If, as choice B says, the daughter began digging with bark only after she had been seen watching her mother dig that way, her use of the tool followed her observation of her mother, which is what learning from her mother would lead one to expect.",
+      "distractors": {
+        "A": {
+          "recipe": "OFF: other handling of sticks",
+          "why_wrong": "Carrying sticks around without digging says nothing about how the daughter came to dig with bark."
+        },
+        "C": {
+          "recipe": "OFF: nest material in the wild",
+          "why_wrong": "What wild pigs build their nests from does not show whether the daughter learned to dig with tools from her mother."
+        },
+        "D": {
+          "recipe": "SUBJ: a different pig",
+          "why_wrong": "This concerns the male’s skill, not whether the daughter learned the behavior from her mother."
+        }
+      },
+      "models": [
+        "1.29",
+        "1.8",
+        "1.5",
+        "1.35",
+        "1.45"
+      ],
+      "word_count": 69,
+      "sources": [
+        {
+          "what": "Root-Bernstein, Narayan, Cornier, Bourgeois 2019, Mammalian Biology 98, Context-specific tool use by Sus cebifrons: first report of tool use in pigs; two adult females used bark or sticks to dig during the final stage of nest building, an adult male attempted to; the authors suggest social learning through vertical (mother-daughter) transmission (abstract via Semantic Scholar)",
+          "url": "https://doi.org/10.1016/j.mambio.2019.08.003"
+        }
+      ],
+      "notes": "Easy. One-step operationalization (learning from her mother predicts the daughter’s tool use follows her watching the mother). The 2019 report drew some press; kept for an easy item. Sulawesi warty pig cave painting (live Boundaries item) is a different species and subject.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "command_of_evidence.T3_person_quote.easy.w5b4_20",
+      "template": "T3_person_quote",
+      "subtype": "Quotation from a historian supports a claim about how an artist’s interest began",
+      "tier": "easy",
+      "passage": "Norwegian artist Frida Hansen (1855–1931) became one of the leading tapestry weavers of her era, and in 1900 her tapestry The Milky Way won a gold medal at the World’s Fair in Paris. Hansen had not originally trained as a weaver, however; in her youth she had studied painting. A student researching Hansen’s career claims that her interest in weaving grew out of commercial work she undertook to support her family.",
+      "stem": "Which quotation from a work by a historian would be the most effective evidence for the student to include in support of this claim?",
+      "options": [
+        "“In 1895 Hansen traveled to Cologne to study medieval art and to Paris to study drawing, and what she saw abroad changed the direction of her work.”",
+        "“From 1926 until her death, Hansen worked on a large tapestry for Stavanger Cathedral, honoring Saint Olav.”",
+        "“Hansen insisted that a tapestry should have its own character instead of imitating a painting, a view she shared with the English designer William Morris.”",
+        "“When her husband’s business failed in 1888, Hansen opened an embroidery shop in her home to earn money, and repairing old tapestries there made her curious about how they had been woven.”"
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The student claims that Hansen’s interest in weaving “grew out of commercial work she undertook to support her family.” Choice D gives exactly that sequence: after her husband’s business failed, Hansen opened an embroidery shop “to earn money,” and the work of repairing old tapestries there made her curious about how they had been woven.",
+      "distractors": {
+        "A": {
+          "recipe": "OFF: later study abroad",
+          "why_wrong": "Hansen’s studies abroad in 1895 influenced her work, but they are not commercial work she undertook to support her family, and they came after she had begun weaving."
+        },
+        "B": {
+          "recipe": "OFF: her last project",
+          "why_wrong": "A tapestry she worked on at the end of her life says nothing about how her interest in weaving began."
+        },
+        "C": {
+          "recipe": "OFF: her ideas about tapestry",
+          "why_wrong": "Her view of what a tapestry should be and her agreement with Morris concern her artistic ideas, not the origin of her interest in weaving."
+        }
+      },
+      "models": [
+        "1.15",
+        "1.19",
+        "1.20",
+        "1.13",
+        "1.26"
+      ],
+      "word_count": 71,
+      "sources": [
+        {
+          "what": "Frida Hansen (1855–1931): studied painting as a young woman; after her husband’s firm went bankrupt in 1888 she started an embroidery business at home to earn an income, where repairing old tapestries made her interested in their techniques; gold medal at the 1900 Paris World’s Fair for Melkeveien (The Milky Way); studied in Cologne and Paris in 1895; textiles should not be woven paintings, a view shared with William Morris; St. Olav tapestry for Stavanger Cathedral 1926 until her death (Wikipedia, fetched 2026-10-27)",
+          "url": "https://en.wikipedia.org/wiki/Frida_Hansen"
+        }
+      ],
+      "notes": "Easy. The historian is unnamed and the quotations invented; each states a fact from the source. Hansen appears nowhere else in the bank.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 6,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "command_of_evidence.T2_lit_quote.easy.w5b4_21",
+      "template": "T2_lit_quote",
+      "subtype": "Literary quotation illustrates a single-trait claim (prose poem)",
+      "tier": "easy",
+      "passage": "“Vocation” is a 1913 poem by Rabindranath Tagore. In the poem, a schoolboy describes several working adults he observes over the course of an ordinary day, whose occupations seem to him free of the restrictions that govern his own life: ______",
+      "stem": "Which quotation from “Vocation” most effectively illustrates the claim?",
+      "options": [
+        "“He does what he likes with his spade, he soils his clothes with dust, nobody takes him to task if he gets baked in the sun or gets wet.”",
+        "“Every day I meet the hawker crying, ‘Bangles, crystal bangles!’”",
+        "“I can see through the gate of that house the gardener digging the ground.”",
+        "“The lane is dark and lonely, and the street-lamp stands like a giant with one red eye in its head.”"
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The claim is that the adults’ occupations seem to the boy “free of the restrictions that govern his own life.” Choice A shows this: the gardener “does what he likes with his spade,” gets his clothes dirty, and “nobody takes him to task” if he gets hot or wet, the kinds of things a child would be scolded for.",
+      "distractors": {
+        "B": {
+          "recipe": "LURE: names an adult the child admires, without the freedom",
+          "why_wrong": "The child mentions meeting the hawker and repeats his cry, but nothing in the line describes the hawker as free of rules."
+        },
+        "C": {
+          "recipe": "LURE: names the gardener, without the freedom",
+          "why_wrong": "The line only says the child sees the gardener digging; it does not show that the gardener’s work is free of rules."
+        },
+        "D": {
+          "recipe": "OFF: description of the setting",
+          "why_wrong": "This line describes the dark lane and the street-lamp at night, not the freedom of any adult’s work."
+        }
+      },
+      "models": [
+        "1.11",
+        "1.16",
+        "1.36",
+        "1.42",
+        "1.39"
+      ],
+      "word_count": 41,
+      "sources": [
+        {
+          "what": "Rabindranath Tagore, The Crescent Moon (1913), “Vocation”; quotations checked as exact substrings of the Gutenberg text (prose-poem line wraps joined)",
+          "url": "https://www.gutenberg.org/ebooks/6520"
+        }
+      ],
+      "notes": "Easy. Single-trait claim; the key is the only line that describes an adult's freedom, and the two lures name the hawker and the gardener without it. The Crescent Moon is Tagore's own English rendering; Tagore appears in the bank only with The Home and the World (WiC).",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "command_of_evidence.Q1_P3_pairwise.easy.w5b4_22",
+      "template": "Q1_P3_pairwise",
+      "subtype": "Data completion: two pairwise comparisons on two measures, full 2x2 option set",
+      "tier": "easy",
+      "passage": "The Aeolian Islands, a volcanic archipelago north of Sicily, include seven inhabited islands, two of which, Vulcano and Stromboli, remain active volcanoes. A geography student comparing the islands notices that an island’s area is not a reliable indicator of the elevation its summit reaches. Compared with Vulcano, for example, Stromboli has ______",
+      "stem": "Which choice most effectively uses data from the table to complete the comparison?",
+      "options": [
+        "a larger area and a taller peak.",
+        "a smaller area and a shorter peak.",
+        "a smaller area and a taller peak.",
+        "a larger area and a shorter peak."
+      ],
+      "answer_letter": "C",
+      "table": {
+        "title": "Area and Highest Elevation of Four Aeolian Islands",
+        "columns": [
+          "Island",
+          "Area (square kilometers)",
+          "Highest elevation (meters)"
+        ],
+        "rows": [
+          [
+            "Lipari",
+            "37.5",
+            "602"
+          ],
+          [
+            "Salina",
+            "26.8",
+            "962"
+          ],
+          [
+            "Vulcano",
+            "21.2",
+            "501"
+          ],
+          [
+            "Stromboli",
+            "12.6",
+            "924"
+          ]
+        ],
+        "note": null
+      },
+      "figure": null,
+      "explanation": "The table shows that Stromboli covers 12.6 square kilometers, less than Vulcano’s 21.2, but rises to 924 meters, higher than Vulcano’s 501. So compared with Vulcano, Stromboli has a smaller area and a taller peak, as choice C states.",
+      "distractors": {
+        "A": {
+          "recipe": "REVERSED: area wrong",
+          "why_wrong": "Stromboli’s peak is taller than Vulcano’s, but its area (12.6 square kilometers) is smaller than Vulcano’s (21.2), not larger."
+        },
+        "B": {
+          "recipe": "REVERSED: elevation wrong",
+          "why_wrong": "Stromboli’s area is smaller than Vulcano’s, but its highest point (924 meters) is higher than Vulcano’s (501 meters), not lower."
+        },
+        "D": {
+          "recipe": "REVERSED: both wrong",
+          "why_wrong": "Stromboli has both a smaller area and a taller peak than Vulcano, the opposite of this choice on each measure."
+        }
+      },
+      "models": [
+        "1.3",
+        "1.4",
+        "1.27"
+      ],
+      "word_count": 52,
+      "sources": [
+        {
+          "what": "Aeolian Islands: areas (Lipari 37.5, Salina 26.8, Vulcano 21.2, Stromboli 12.6 km2), Salina’s Monte Fossa delle Felci 962 m, two active volcanoes (Stromboli and Vulcano)",
+          "url": "https://en.wikipedia.org/wiki/Aeolian_Islands"
+        },
+        {
+          "what": "Stromboli: elevation 924 m",
+          "url": "https://en.wikipedia.org/wiki/Stromboli"
+        },
+        {
+          "what": "Vulcano: elevation 501 m",
+          "url": "https://en.wikipedia.org/wiki/Vulcano"
+        },
+        {
+          "what": "Lipari: Monte Chirica 602 m",
+          "url": "https://en.wikipedia.org/wiki/Lipari"
+        }
+      ],
+      "notes": "Easy. Earth science (geography, volcanoes). Full 2x2 factorial of two comparisons, as in 1.3; the key is not the longest option. Lipari and Salina are distractor rows only.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 8,
+        "fixes": [],
+        "status": "pass"
+      }
+    }
   ]
- },
- "done": false,
- "items": [
-  {
-   "id": "command_of_evidence.T1_single.hard.w5b4_01",
-   "template": "T1_single",
-   "subtype": "Hypothetical finding supports a sex-ratio explanation (the key holds community size constant so that sex ratio is separated from urban life)",
-   "tier": "hard",
-   "band_target": 6,
-   "passage": "During World War II, Finland evacuated the entire population of its Karelia region and resettled the evacuees in communities throughout the rest of the country, communities that differed widely in size and in the ratio of women to men. Analyzing records of the evacuees’ lives, Jenni E. Pettay and colleagues found that young childless women tended to migrate to urban centers, where work was available to women and where women outnumbered men, and that in places with more women than men, women were less likely to begin having children. The researchers attribute this lower likelihood to the surplus of women rather than to other features of urban life.",
-   "stem": "Which finding, if true, would most directly support the researchers’ conclusion?",
-   "options": [
-    "Evacuee women who moved to urban centers were more likely to hold paid jobs than evacuee women who remained in rural communities were.",
-    "In urban centers where men outnumbered women, evacuee women began having children no earlier than evacuee women in urban centers where women outnumbered men did.",
-    "Among communities of similar size, those in which women most outnumbered men were those in which evacuee women were least likely to have a first child.",
-    "Evacuee women resettled in rural communities were more likely to have children eventually than evacuee women resettled in urban centers were."
-   ],
-   "answer_letter": "C",
-   "table": null,
-   "figure": null,
-   "explanation": "The researchers attribute the lower likelihood of starting a family “to the surplus of women rather than to other features of urban life.” Because women outnumbered men mainly in urban centers, a comparison of towns with the countryside cannot separate the two. Choice C does: if, among communities of similar size, the ones with the largest surplus of women had the lowest chance of a first child, the sex ratio is linked to the outcome even when the kind of community is held about the same.",
-   "distractors": {
-    "A": {
-     "recipe": "TRAP: consistent with both explanations (a feature of urban life)",
-     "why_wrong": "That urban women more often held paid jobs is something the passage already suggests (“work was available to women”), and it points to a feature of urban life, not to the ratio of women to men, so it cannot show that the surplus of women was responsible."
-    },
-    "B": {
-     "recipe": "OPP: removes the sex-ratio difference",
-     "why_wrong": "If women in urban centers where men outnumbered women started families no earlier than women where women outnumbered men, the sex ratio would make no difference, which weakens the conclusion."
-    },
-    "D": {
-     "recipe": "TRAP: a mismatched comparison (rural against urban)",
-     "why_wrong": "A rural-urban difference is exactly what either explanation predicts, since urban centers had both more women than men and the other features of urban life; it cannot show which one mattered."
-    }
-   },
-   "models": [
-    "3.42",
-    "3.39",
-    "3.12",
-    "3.31"
-   ],
-   "word_count": 108,
-   "sources": [
-    {
-     "what": "Pettay, Lummaa, Lynch, Loehr 2021, Behavioral Ecology 32(4), Female-biased sex ratios in urban centers create a fertility trap in post-war Finland: the wartime displacement of an entire population to Finnish communities of varying sizes and sex ratios; young childless women migrated toward urban centers where work was available to women; where there were more females, women were less likely to start reproduction (abstract, Europe PMC)",
-     "url": "https://doi.org/10.1093/beheco/arab007"
-    }
-   ],
-   "notes": "Band 6. The key needs the right comparison group: the passage ties the surplus of women to urban centers, so the key holds community size constant. Distractors: A and D consistent with both the sex-ratio and the urban-life explanations, B the opposite. The abstract names sex ratio as the factor linked to lower reproduction; the passage says the researchers attribute it to the surplus of women and does not claim more. Karelia appears in a live Boundaries item (Kalevala rune singers), a different subject."
-  },
-  {
-   "id": "command_of_evidence.T1_single.hard.w5b4_02",
-   "template": "T1_single",
-   "subtype": "Hypothetical finding supports a proposed mechanism (the key supplies where the prey already is, so the predator’s shift brings the two together)",
-   "tier": "hard",
-   "band_target": 7,
-   "passage": "In old fields (abandoned farmland), the spider Pisaurina mira hunts grasshoppers among the plants, while the common woodlouse, a small crustacean, feeds on decomposing plant matter on the ground; the two animals belong to separate food chains. Earlier work found that the spiders catch grasshoppers more successfully when woodlice are present, which led researchers to propose that woodlice cause the spider or the grasshopper to change its position in the vegetation in a way that brings predator and prey together more often. In cage experiments, Stefanie M. Guiliano and colleagues then found that the spiders moved higher in the vegetation when woodlice were present.",
-   "stem": "Which finding from Guiliano and colleagues’ experiments, if true, would most directly support the proposal that the spiders’ shift helps explain their greater success?",
-   "options": [
-    "Whether or not woodlice were present, the grasshoppers spent most of their time in the upper part of the vegetation.",
-    "When woodlice were present, the grasshoppers also moved higher in the vegetation, by about as much as the spiders did.",
-    "Spiders kept in cages with woodlice captured and ate some of the woodlice in addition to grasshoppers.",
-    "In cages kept warmer than usual, the spiders stayed low in the vegetation whether or not woodlice were present."
-   ],
-   "answer_letter": "A",
-   "table": null,
-   "figure": null,
-   "explanation": "The proposal is that woodlice change an animal’s position “in a way that brings predator and prey together more often,” and the experiments found that the spiders “moved higher in the vegetation when woodlice were present.” That shift brings spiders closer to grasshoppers only if the grasshoppers are high in the vegetation and stay there. Choice A supplies that missing fact: if the grasshoppers spent most of their time in the upper vegetation whether or not woodlice were present, the spiders’ upward move would put them where their prey already was.",
-   "distractors": {
-    "B": {
-     "recipe": "OPP: prey moves with the predator, so overlap does not grow",
-     "why_wrong": "If the grasshoppers moved up as far as the spiders did, the distance between predator and prey would stay about the same, so the spiders’ shift would not bring them together more often."
-    },
-    "C": {
-     "recipe": "TRAP: a different route to success that cannot test the proposal",
-     "why_wrong": "Eating woodlice says nothing about where spiders and grasshoppers are in the vegetation; at most it suggests a different reason the spiders might do better, not the one proposed."
-    },
-    "D": {
-     "recipe": "TRAP: the wrong condition",
-     "why_wrong": "This concerns spiders under warmer conditions, where they did not shift at all; it gives no information about whether the upward shift that does occur with woodlice brings spiders closer to grasshoppers."
-    }
-   },
-   "models": [
-    "3.28",
-    "3.45",
-    "3.36",
-    "3.42",
-    "124fdcd7",
-    "44da37eb"
-   ],
-   "word_count": 104,
-   "sources": [
-    {
-     "what": "Guiliano, Karr, Sommer, Buchkowski 2020, PeerJ 8:e9184, Woodlice change the habitat use of spiders in a different food chain: previous work found woodlouse presence correlated with higher predation success by nursery web spiders on grasshoppers, suggesting that spider or grasshopper changes location in the vegetative canopy to increase overlap; spiders shift upward when woodlice are present; under warming, spiders stayed lower regardless of woodlice (abstract, Europe PMC)",
-     "url": "https://doi.org/10.7717/peerj.9184"
-    }
-   ],
-   "notes": "Band 7 moves: the key supplies the missing premise (where the grasshoppers are) that turns the observed shift into greater overlap; stem names the study and the proposal (24 words); passage 106 words with the needed fact (the observed upward shift) in an earlier sentence; distractors one OPP (B) and two TRAP (C another route, D the wrong condition, taken from the study's real warming result). The abstract reports the grasshopper survival effect as variable across years; the passage presents the overlap idea only as a proposal. Pisaurina mira (a nursery web spider) is a different genus and idea from live inferences.S2.hard.w5b1_01 (Pisaura mirabilis nuptial gifts); the passage avoids the common name."
-  },
-  {
-   "id": "command_of_evidence.T1_compete.hard.w5b4_03",
-   "template": "T1_compete",
-   "subtype": "Hypothetical finding discriminates intensive from extensive flock management (bone shape as the record of selective breeding)",
-   "tier": "hard",
-   "band_target": 6,
-   "passage": "In the sixth century CE, farmers in Byzantine settlements such as Shivta, in what is now Israel’s Negev Desert, kept large numbers of pigeons in dovecotes, and zooarchaeologist Nimrod Marom and colleagues have measured pigeon bones from the region to determine how these flocks were managed. Under intensive management, keepers confine birds and choose which ones breed, a practice that over generations tends to change the shape of a domestic animal’s skeleton; under extensive management, birds fly freely, forage for themselves, and pair off on their own. Marom and colleagues concluded that the Negev flocks were managed extensively.",
-   "stem": "Which finding about the pigeon bones, if true, would most directly support Marom and colleagues’ conclusion?",
-   "options": [
-    "Pigeon bones were recovered from several Byzantine villages in the Negev, not only from Shivta.",
-    "The proportions of the pigeons’ limb bones differed from those of wild rock pigeons in ways that resemble differences seen in breeds raised in captivity.",
-    "Most of the pigeon bones came from young birds, which suggests that the villagers ate squabs taken from the dovecotes.",
-    "The shapes of the pigeons’ bones fell within the range found in wild rock pigeons, the species from which domestic pigeons descend."
-   ],
-   "answer_letter": "D",
-   "table": null,
-   "figure": null,
-   "explanation": "The passage explains that intensive management, in which keepers “choose which ones breed,” tends “to change the shape of a domestic animal’s skeleton,” while extensively managed birds “pair off on their own.” If, as choice D says, the Negev pigeons’ bones had the shapes found in wild rock pigeons, the flocks show no sign of the selective breeding that intensive management would leave, which supports the conclusion that they were managed extensively.",
-   "distractors": {
-    "A": {
-     "recipe": "TRAP: consistent with both kinds of management",
-     "why_wrong": "Pigeons could have been kept at several villages under either kind of management, so where the bones were found says nothing about how the flocks were managed."
-    },
-    "B": {
-     "recipe": "OPP: the rival’s prediction",
-     "why_wrong": "Bones changed in the way captive breeds’ bones are changed would point to selective breeding, which the passage links to intensive management, so this finding would weaken the conclusion."
-    },
-    "C": {
-     "recipe": "TRAP: bears on how the birds were used, not how they were kept",
-     "why_wrong": "Eating young pigeons from the dovecotes is compatible with either kind of management; it concerns what the birds were for, not whether keepers chose which birds bred."
-    }
-   },
-   "models": [
-    "3.8",
-    "3.10",
-    "3.15",
-    "3.14",
-    "3.9"
-   ],
-   "word_count": 98,
-   "sources": [
-    {
-     "what": "Marom, Rosen, Tepper, Bar-Oz 2018, PLoS ONE 13(3): e0193206, Pigeons at the edge of the empire: metric data of 6th-century CE pigeons from the Negev test intensive management with directed selection for size or shape against extensive management with stabilizing selection; the Negev pigeons were like wild Columba livia in shape, supporting extensive management (abstract, Europe PMC)",
-     "url": "https://doi.org/10.1371/journal.pone.0193206"
-    }
-   ],
-   "notes": "Band 6. Two named management systems; the key is the observation only extensive management predicts, reached through the stated link between choosing breeders and skeletal shape. The real finding that the birds were small-sized is left out (the authors still read the result as extensive management), so no option turns on size. Shivta named as one of the Negev settlements; the paper's sites are Byzantine Negev settlements including Shivta."
-  },
-  {
-   "id": "command_of_evidence.T1_compete.hard.w5b4_04",
-   "template": "T1_compete",
-   "subtype": "Hypothetical finding discriminates two effects of a price shock on conflict (the key supplies that seizable income rose while wages did not)",
-   "tier": "hard",
-   "band_target": 7,
-   "passage": "A change in the world price of a commodity could affect armed conflict in the places that produce it in two opposing ways. If a price rise increases local wages, joining an armed group becomes less attractive, so violence should decline (an opportunity cost effect); but if the rise mainly increases income that armed groups can take for themselves, fighting over that income should intensify (a rapacity effect). Studying Colombia’s long civil conflict, economists Oeindrila Dube and Juan F. Vargas found that when the world price of oil rose, violence increased more in Colombia’s oil-producing municipalities than in other places. They attribute this result to the rapacity effect.",
-   "stem": "Which finding from Dube and Vargas’s study, if true, would most directly support their explanation of the result involving oil prices?",
-   "options": [
-    "Within the oil-producing municipalities, the increase in violence was concentrated in districts far from oil fields and pipelines, where there was little oil income to capture.",
-    "As oil prices rose, the revenues collected by the governments of oil-producing municipalities increased substantially, while wages in those municipalities changed little.",
-    "Oil-producing municipalities experienced more violence than other municipalities did even in years when oil prices were low.",
-    "Most of the oil produced in Colombia during the period studied was sold abroad rather than used within the country."
-   ],
-   "answer_letter": "B",
-   "table": null,
-   "figure": null,
-   "explanation": "The two effects make different predictions about where the extra money goes. The opportunity cost effect works through higher “local wages,” which should make violence “decline,” while the rapacity effect works through more “income that armed groups can take for themselves.” Violence rose in the oil-producing municipalities, and choice B shows why rapacity fits: the rise in oil prices swelled municipal revenues, a pool of income armed groups could try to capture, but left wages, the channel for the opposing effect, nearly unchanged.",
-   "distractors": {
-    "A": {
-     "recipe": "OPP: violence rises away from the income said to be fought over",
-     "why_wrong": "If the extra violence came mostly from districts with little oil income to capture, it would not be tied to the income that the rapacity effect says armed groups fight over, so this finding would weaken the explanation."
-    },
-    "C": {
-     "recipe": "TRAP: a level difference, consistent with either effect",
-     "why_wrong": "More violence in oil municipalities even when prices were low describes a standing difference between places; it says nothing about why violence rose there when prices rose, which is what the explanation concerns."
-    },
-    "D": {
-     "recipe": "OFF: a property of the oil, not of either effect",
-     "why_wrong": "Where the oil was sold explains why world prices matter to producers, but it applies equally under either effect and does not show whether the price rise added to wages or to income armed groups could take."
-    }
-   },
-   "models": [
-    "3.9",
-    "3.6",
-    "3.48",
-    "3.14",
-    "156ff681",
-    "dd1757fd"
-   ],
-   "word_count": 108,
-   "sources": [
-    {
-     "what": "Dube, Vargas 2013, Review of Economic Studies 80(4): 1384–1421, Commodity Price Shocks and Civil Conflict: Evidence from Colombia: opportunity cost effect (higher wages lower conflict) against rapacity effect (more contestable income raises violence); a rise in oil prices increased both municipal revenue and violence differentially in the oil region, consistent with a rapacity effect (abstract, IDEAS/RePEc)",
-     "url": "https://ideas.repec.org/a/oup/restud/v80y2013i4p1384-1421.html"
-    }
-   ],
-   "notes": "Band 7 moves: two named effects; the key supplies the premise the passage leaves out (the price rise added to seizable municipal revenue but not to wages), echoing the paper's actual result; stem names the study and whose explanation is tested (21 words); passage 108 words. Distractors: OPP (A, violence away from the seizable income), TRAP (C, a level difference that cannot explain a change), OFF (D, a property of oil true under both). The paper's coffee result is left out because live command_of_evidence.T1_compete.hard.w3b3_03 already turns on low coffee prices."
-  },
-  {
-   "id": "command_of_evidence.T2_lit_quote.hard.w5b4_06",
-   "template": "T2_lit_quote",
-   "subtype": "Literary quotation illustrates an indirect claim (a speaker who wishes heaven had punished him in time to spare another; early modern verse drama)",
-   "tier": "hard",
-   "band_target": 6,
-   "passage": "Cymbeline is a circa 1610 play by William Shakespeare. Deceived into believing that his wife, Imogen, has been unfaithful, Posthumus orders his servant Pisanio to kill her. Later, holding a bloodstained cloth that he takes as proof of her death, Posthumus wishes that heaven had struck him down for his own misdeeds in time to spare Imogen: ______",
-   "stem": "Which quotation from Cymbeline most effectively illustrates the claim?",
-   "options": [
-    "“You married ones, / If each of you should take this course, how many / Must murder wives much better than themselves / For wrying but a little!”",
-    "“So I’ll fight / Against the part I come with; so I’ll die / For thee, O Imogen, even for whom my life / Is every breath a death.”",
-    "“Gods! if you / Should have ta’en vengeance on my faults, I never / Had liv’d to put on this; so had you saved / The noble Imogen to repent, and struck / Me, wretch more worth your vengeance.”",
-    "“O Pisanio! / Every good servant does not all commands; / No bond but to do just ones.”"
-   ],
-   "answer_letter": "C",
-   "table": null,
-   "figure": null,
-   "explanation": "The claim is that Posthumus “wishes that heaven had struck him down for his own misdeeds in time to spare Imogen.” In choice C he tells the gods that if they had “ta’en vengeance on my faults,” he would never have lived to put on the bloody cloth, and that they would thus have “saved / The noble Imogen” and struck him instead, “wretch more worth your vengeance.” The quotation states both parts of the wish: punishment for his own faults, and Imogen spared.",
-   "distractors": {
-    "A": {
-     "recipe": "HALF: the same speaker condemning himself, without the wish",
-     "why_wrong": "Posthumus condemns husbands who kill wives “much better than themselves” for small faults, which shows remorse, but he does not wish that heaven had punished him or spared Imogen."
-    },
-    "B": {
-     "recipe": "OFF: the same speaker in a nearby resolve (to die now, for her)",
-     "why_wrong": "Posthumus resolves to fight and die for Imogen from now on; this looks ahead to his own death rather than wishing that heaven had punished him in time to save her."
-    },
-    "D": {
-     "recipe": "OPP: the same speaker placing blame on another",
-     "why_wrong": "Here Posthumus reproaches Pisanio, saying that a good servant should obey only just commands; he faults the servant for carrying out the order rather than wishing that he himself had been punished."
-    }
-   },
-   "models": [
-    "3.11",
-    "3.17",
-    "3.34",
-    "3.35",
-    "3.37"
-   ],
-   "word_count": 58,
-   "sources": [
-    {
-     "what": "William Shakespeare, Cymbeline, Act 5, Scene 1 (Posthumus alone, with a bloody handkerchief); all four quotations checked as exact substrings of the Project Gutenberg Complete Works (modern spelling), line breaks rendered as “ / ”; Posthumus orders Pisanio to kill Imogen in Act 3 after Iachimo’s deception",
-     "url": "https://www.gutenberg.org/ebooks/100"
-    }
-   ],
-   "notes": "Band 6. All four options are Posthumus in one soliloquy, in neighboring states: self-condemnation (A), a resolve to die for her (B), blaming the servant (D), and the wish that the gods had punished him and spared her (C). Difficulty comes from early modern syntax (“so had you saved”); the claim paraphrases rather than echoing “vengeance.” Cymbeline appears in no official item of any skill and nowhere in our bank (Winter’s Tale avoided: official TSP item)."
-  },
-  {
-   "id": "command_of_evidence.T3_person_quote.hard.w5b4_07",
-   "template": "T3_person_quote",
-   "subtype": "Quotation from an art historian supports a student’s qualification of a common view (abstraction as a record of the city, not a retreat from it)",
-   "tier": "hard",
-   "band_target": 6,
-   "passage": "Jamaican-born artist Mavis Pusey (1928–2019) spent most of her working life in New York City, where in the late 1960s and 1970s she produced hard-edge abstract prints and paintings: crisp, interlocking planes of flat color in which no recognizable object appears. Because the works depict nothing directly, they are often discussed chiefly as exercises in form and color. A student argues, however, that Pusey’s abstraction was less a withdrawal from her surroundings than a way of recording them, since her compositions grew out of what she observed as the buildings of her city were demolished and rebuilt.",
-   "stem": "Which quotation from an art historian would best support the student’s argument?",
-   "options": [
-    "“What matters most in Pusey’s prints is how they work as pictures: the tension between her razor-sharp edges and her flat, unmodulated colors would be just as compelling if her shapes had come from nowhere at all.”",
-    "“Pusey’s shapes were not invented in a vacuum. The slabs, beams, and broken bars that crowd her compositions distill what she saw on New York’s streets, where old buildings were constantly coming down and new ones going up around her.”",
-    "“In Paris Mai Juin, made after she witnessed the student uprisings in Paris in 1968, Pusey showed that an abstract image could respond to a political upheaval without depicting a single protester.”",
-    "“Pusey trained at the Art Students League in New York, where a scholarship allowed her to study with the painter and printmaker Will Barnet while she supported herself with other work.”"
-   ],
-   "answer_letter": "B",
-   "table": null,
-   "figure": null,
-   "explanation": "The student argues that Pusey’s abstraction was “a way of recording” her surroundings, because her compositions “grew out of what she observed as the buildings of her city were demolished and rebuilt.” Choice B supports exactly this: the historian says that the “slabs, beams, and broken bars” in her works “distill what she saw on New York’s streets, where old buildings were constantly coming down and new ones going up.”",
-   "distractors": {
-    "A": {
-     "recipe": "OPP: sides with the view the student qualifies",
-     "why_wrong": "This historian values the prints purely as form and color and says the work would be just as compelling if her shapes “had come from nowhere at all,” the reading the student says is incomplete."
-    },
-    "C": {
-     "recipe": "HALF: abstraction responding to events, but not to the city’s rebuilding",
-     "why_wrong": "It shows Pusey’s abstraction responding to something she witnessed, but the event is a political uprising in Paris, not the demolition and rebuilding of buildings that the student says her compositions grew out of."
-    },
-    "D": {
-     "recipe": "OFF: biography of her training",
-     "why_wrong": "Where and with whom Pusey studied says nothing about whether her abstract compositions record the changing buildings she observed."
-    }
-   },
-   "models": [
-    "3.21",
-    "3.33",
-    "3.32",
-    "3.3"
-   ],
-   "word_count": 97,
-   "sources": [
-    {
-     "what": "Mavis Pusey (1928–2019), Jamaican-born American abstract printmaker and painter known for hard-edge nonrepresentational images drawn from urban construction and the changing landscape (Broken Construction at Noon, Decaying Construction, c. 1970); Paris Mai Juin (1968) inspired by the 1968 student riots she witnessed; studied at the Art Students League on a scholarship, with Will Barnet (Wikipedia, fetched 2026-10-27)",
-     "url": "https://en.wikipedia.org/wiki/Mavis_Pusey"
-    }
-   ],
-   "notes": "Band 6. The historian is unnamed and the quotations invented; every fact in them matches the source. The claim sits inside a qualification of a common view (as in 3.21, 3.33). Distractors: OPP (A, the view qualified), HALF (C, a true case of abstraction responding to events, but not the city’s rebuilding), OFF (D)."
-  },
-  {
-   "id": "command_of_evidence.T2_lit_quote.medium.w5b4_11",
-   "template": "T2_lit_quote",
-   "subtype": "Literary quotation illustrates a two-part claim (concern about timing and about how the timing will look to others)",
-   "tier": "medium",
-   "passage": "Under the Greenwood Tree is an 1872 novel by Thomas Hardy. The vicar of the village of Mellstock has decided to replace the church choir, which accompanies services on string instruments, with an organ. Reuben Dewy, who speaks for the choir, is concerned that the timing of its dismissal could make the musicians look bad to people in neighboring villages: ______",
-   "stem": "Which quotation from Under the Greenwood Tree most effectively illustrates the claim?",
-   "options": [
-    "“I hope you’ll excuse my common way, but I always like to look things in the face.”",
-    "“All we thought was, that for us old ancient singers to be choked off quiet at no time in particular, as now, in the Sundays after Easter, would seem rather mean in the eyes of other parishes, sir.”",
-    "“What I have been thinking…is that the quire ought to be gie’d a little time, and not done away wi’ till Christmas, as a fair thing between man and man.”",
-    "“Well then, Mr. Mayble, since death’s to be, we’ll die like men any day you name (excusing my common way).”"
-   ],
-   "answer_letter": "B",
-   "table": null,
-   "figure": null,
-   "explanation": "The claim has two parts: Reuben is concerned about the timing of the dismissal, and about how that timing could make the musicians look to people elsewhere. In choice B he objects to the choir being “choked off quiet at no time in particular, as now, in the Sundays after Easter,” and says this “would seem rather mean in the eyes of other parishes.” The quotation addresses both the timing and its effect on how the choir is seen.",
-   "distractors": {
-    "A": {
-     "recipe": "OFF: the speaker’s plainness of manner",
-     "why_wrong": "Reuben describes his own frank way of speaking; he says nothing about when the choir is to be dismissed or how that would look to other villages."
-    },
-    "C": {
-     "recipe": "HALF: timing, defended as fairness rather than appearance",
-     "why_wrong": "Reuben does ask that the choir be kept until Christmas, but he presents this as “a fair thing between man and man,” not as a matter of how the musicians will appear to neighboring parishes."
-    },
-    "D": {
-     "recipe": "OFF: dignified acceptance with no concern for timing",
-     "why_wrong": "Reuben says the choir will accept its end bravely on “any day you name,” which expresses resignation and shows no concern about when the dismissal happens or how it will look."
-    }
-   },
-   "models": [
-    "2.26",
-    "2.11",
-    "2.13",
-    "2.20",
-    "2.10"
-   ],
-   "word_count": 61,
-   "sources": [
-    {
-     "what": "Thomas Hardy, Under the Greenwood Tree; or, The Mellstock Quire (1872), Part the Second, Chapter IV, The Interview with the Vicar; all four quotations are the tranter Reuben Dewy’s, checked as exact substrings of the Gutenberg text (the narrator’s interruption in C replaced by an ellipsis, as CB does in 3.11)",
-     "url": "https://www.gutenberg.org/ebooks/2662"
-    }
-   ],
-   "notes": "Medium. Two-part claim (timing plus appearance to others); the half-match C has the timing (wait till Christmas) for a different reason (fairness); D is the same speaker resigned to any date. Dialect left as Hardy wrote it. Hardy appears once in the bank (The Woodlanders, a different work); Under the Greenwood Tree appears in no official item of any skill."
-  },
-  {
-   "id": "command_of_evidence.T1_single.medium.w5b4_12",
-   "template": "T1_single",
-   "subtype": "Hypothetical finding supports a claim that one property of an object affects behavior toward it (exhibit visibility and visitor contact)",
-   "tier": "medium",
-   "passage": "Unlike people in most public buildings, museum visitors usually choose their own routes, so curators have an interest in knowing what draws visitors toward particular works. At the Broad Art Museum at Michigan State University, a building designed by the architect Zaha Hadid, Linda Nubani and colleagues observed the movements of 72 visitors through an exhibition and used a computational technique called visibility graph analysis to calculate, for each exhibit, how much of the surrounding floor space it could be seen from. The researchers claim that an exhibit’s visibility affects whether visitors approach it.",
-   "stem": "Which finding, if true, would most directly support the researchers’ claim?",
-   "options": [
-    "Visitors who arrived at the museum in groups spent more time in the exhibition, on average, than visitors who arrived alone did.",
-    "Exhibits that were larger or more brightly colored than the others were more often photographed by visitors.",
-    "Exhibits that could be seen from only a small part of the floor drew about as many visitors as exhibits that could be seen from most of the floor did.",
-    "Visitors more often stopped at exhibits that could be seen from a large share of the surrounding floor than at exhibits that could be seen from only a small share."
-   ],
-   "answer_letter": "D",
-   "table": null,
-   "figure": null,
-   "explanation": "The researchers claim that “an exhibit’s visibility affects whether visitors approach it,” where visibility was measured as how much of “the surrounding floor space it could be seen from.” Choice D links that measure to visitors’ behavior: exhibits visible from a large share of the floor drew visitors more often than exhibits visible from only a small share, which is the pattern the claim predicts.",
-   "distractors": {
-    "A": {
-     "recipe": "OFF: a property of visitors, not of exhibits",
-     "why_wrong": "Whether visitors came in groups concerns the visitors, not how visible each exhibit was, so it does not bear on the claim."
-    },
-    "B": {
-     "recipe": "OFF: a different property of exhibits and a different behavior",
-     "why_wrong": "Size and color are not the visibility the researchers measured, and being photographed is not the same as being approached."
-    },
-    "C": {
-     "recipe": "OPP: no difference by visibility",
-     "why_wrong": "If poorly visible and highly visible exhibits drew about equal numbers of visitors, visibility would make no difference, which weakens the claim."
-    }
-   },
-   "models": [
-    "2.6",
-    "2.7",
-    "2.21",
-    "2.33",
-    "2.1"
-   ],
-   "word_count": 94,
-   "sources": [
-    {
-     "what": "Nubani, Puryear, Kellom 2018, Behavioral Sciences 8(11): 100, Measuring the Effect of Visual Exposure and Saliency of Museum Exhibits on Visitors’ Level of Contact and Engagement: 72 visitors observed at the Broad Museum designed by Zaha Hadid; visibility graph analysis of each exhibit’s visibility exposure; the visibility area around each exhibit and its spatial position explained visitors’ contact with the piece (abstract, Europe PMC; the Hadid-designed Broad is the Eli and Edythe Broad Art Museum at Michigan State University)",
-     "url": "https://doi.org/10.3390/bs8110100"
-    }
-   ],
-   "notes": "Medium. A one-step operationalization: the key ties the measured variable (floor area an exhibit can be seen from) to approach. Authors Linda Nubani, Alyssa Puryear, Kristy Kellom (names checked on Crossref)."
-  },
-  {
-   "id": "command_of_evidence.T1_single.medium.w5b4_13",
-   "template": "T1_single",
-   "subtype": "Hypothetical finding supports a comparative claim (an activity matters more for one language than for the other)",
-   "tier": "medium",
-   "passage": "In the Dutch province of Friesland, many children grow up speaking both Frisian, a minority language, and Dutch, the majority language. Earlier research had shown that the amount of a language children hear at home matters more for a minority language than for a majority language, which children also encounter at school, in the media, and elsewhere. Studying 120 Frisian-Dutch bilingual children aged five and six, Evelyn Bosma and Elma Blom examined whether the same holds for particular activities at home, and they concluded that reading at home is especially important for the minority language.",
-   "stem": "Which finding, if true, would most directly support Bosma and Blom’s conclusion?",
-   "options": [
-    "Being read to in Frisian predicted children’s knowledge of both Frisian vocabulary and Frisian word endings, whereas being read to in Dutch predicted only their Dutch vocabulary.",
-    "Children who watched more television in Dutch than in Frisian at home tended to know more Dutch words than Frisian words.",
-    "Being read to in Dutch predicted children’s knowledge of Dutch vocabulary and word endings more strongly than being read to in Frisian predicted their knowledge of Frisian.",
-    "Children who heard Frisian at home for most of the day knew more Frisian words than children who heard Frisian at home less often did."
-   ],
-   "answer_letter": "A",
-   "table": null,
-   "figure": null,
-   "explanation": "Bosma and Blom concluded that “reading at home is especially important for the minority language.” To support this, a finding must show reading at home doing more for Frisian than for Dutch. Choice A does: reading in Frisian predicted two kinds of Frisian knowledge, vocabulary and word endings, while reading in Dutch predicted only one kind of Dutch knowledge.",
-   "distractors": {
-    "B": {
-     "recipe": "OFF: a different activity (television)",
-     "why_wrong": "The conclusion concerns reading, and this finding is about watching television; it also compares a child’s two languages rather than the effect of an activity on each."
-    },
-    "C": {
-     "recipe": "OPP: reading matters more for the majority language",
-     "why_wrong": "If reading in Dutch had the stronger effect, reading would be more important for the majority language, the reverse of the conclusion."
-    },
-    "D": {
-     "recipe": "GEN: restates the earlier finding about amount of input",
-     "why_wrong": "This concerns how much Frisian children hear, the point the passage says earlier research had already shown, not the effect of a particular activity such as reading."
-    }
-   },
-   "models": [
-    "2.6",
-    "2.7",
-    "2.16",
-    "2.1",
-    "2.21"
-   ],
-   "word_count": 95,
-   "sources": [
-    {
-     "what": "Bosma, Blom 2020, Journal of Child Language 47(2), Language activities in a minority-majority language context: book-reading at home is more important for Frisian than for Dutch: 120 Frisian-Dutch bilingual five- and six-year-olds; reading in Frisian predicted both Frisian vocabulary and morphology, reading in Dutch only Dutch vocabulary; earlier research showed home input quantity matters more for the minority language (abstract, Europe PMC)",
-     "url": "https://doi.org/10.1017/S0305000919000023"
-    }
-   ],
-   "notes": "Medium. The abstract's morphology is rendered as word endings (Frisian inflection), a simplification. Frisian appears nowhere else in the bank."
-  },
-  {
-   "id": "command_of_evidence.T1_single.easy.w5b4_19",
-   "template": "T1_single",
-   "subtype": "Hypothetical finding supports a claim that a behavior was learned socially",
-   "tier": "easy",
-   "passage": "Tool use has been reported in many kinds of vertebrates but, until recently, not in pigs. Observing a family of Visayan warty pigs (Sus cebifrons) at a zoo, Meredith Root-Bernstein and colleagues saw two adult females, a mother and her daughter, use pieces of bark or sticks to dig while building nests. The researchers suggest that the daughter may have learned this behavior from her mother.",
-   "stem": "Which finding, if true, would most directly support the researchers’ suggestion?",
-   "options": [
-    "The pigs in the family often carried sticks and branches around their enclosure without digging with them.",
-    "The daughter began digging with bark only after she had been seen watching her mother do so.",
-    "Visayan warty pigs in the wild build nests out of grass and leaves before giving birth.",
-    "The adult male in the family tried to dig with a stick but did so less skillfully than the females did."
-   ],
-   "answer_letter": "B",
-   "table": null,
-   "figure": null,
-   "explanation": "The researchers suggest that the daughter “may have learned this behavior from her mother.” If, as choice B says, the daughter began digging with bark only after she had been seen watching her mother dig that way, her use of the tool followed her observation of her mother, which is what learning from her mother would lead one to expect.",
-   "distractors": {
-    "A": {
-     "recipe": "OFF: other handling of sticks",
-     "why_wrong": "Carrying sticks around without digging says nothing about how the daughter came to dig with bark."
-    },
-    "C": {
-     "recipe": "OFF: nest material in the wild",
-     "why_wrong": "What wild pigs build their nests from does not show whether the daughter learned to dig with tools from her mother."
-    },
-    "D": {
-     "recipe": "SUBJ: a different pig",
-     "why_wrong": "This concerns the male’s skill, not whether the daughter learned the behavior from her mother."
-    }
-   },
-   "models": [
-    "1.29",
-    "1.8",
-    "1.5",
-    "1.35",
-    "1.45"
-   ],
-   "word_count": 66,
-   "sources": [
-    {
-     "what": "Root-Bernstein, Narayan, Cornier, Bourgeois 2019, Mammalian Biology 98, Context-specific tool use by Sus cebifrons: first report of tool use in pigs; two adult females used bark or sticks to dig during the final stage of nest building, an adult male attempted to; the authors suggest social learning through vertical (mother-daughter) transmission (abstract via Semantic Scholar)",
-     "url": "https://doi.org/10.1016/j.mambio.2019.08.003"
-    }
-   ],
-   "notes": "Easy. One-step operationalization (learning from her mother predicts the daughter’s tool use follows her watching the mother). The 2019 report drew some press; kept for an easy item. Sulawesi warty pig cave painting (live Boundaries item) is a different species and subject."
-  },
-  {
-   "id": "command_of_evidence.T3_person_quote.easy.w5b4_20",
-   "template": "T3_person_quote",
-   "subtype": "Quotation from a historian supports a claim about how an artist’s interest began",
-   "tier": "easy",
-   "passage": "Norwegian artist Frida Hansen (1855–1931) became one of the leading tapestry weavers of her time, and in 1900 her tapestry The Milky Way won a gold medal at the World’s Fair in Paris. Hansen had not trained to be a weaver, however; as a young woman she had studied painting. In a paper, a student claims that Hansen’s interest in weaving grew out of work she took up to support her family.",
-   "stem": "Which quotation from a work by a historian would be the most effective evidence for the student to include in support of this claim?",
-   "options": [
-    "“In 1895 Hansen traveled to Cologne to study medieval art and to Paris to study drawing, and what she saw abroad changed the direction of her work.”",
-    "“From 1926 until her death, Hansen worked on a large tapestry for Stavanger Cathedral, honoring Saint Olav.”",
-    "“Hansen insisted that a tapestry should have its own character instead of imitating a painting, a view she shared with the English designer William Morris.”",
-    "“When her husband’s business failed in 1888, Hansen opened an embroidery shop in her home to earn money, and repairing old tapestries there made her curious about how they had been woven.”"
-   ],
-   "answer_letter": "D",
-   "table": null,
-   "figure": null,
-   "explanation": "The student claims that Hansen’s interest in weaving “grew out of work she took up to support her family.” Choice D gives exactly that sequence: after her husband’s business failed, Hansen opened an embroidery shop “to earn money,” and the work of repairing old tapestries there made her curious about how they had been woven.",
-   "distractors": {
-    "A": {
-     "recipe": "OFF: later study abroad",
-     "why_wrong": "Hansen’s studies abroad in 1895 influenced her work, but they are not work she took up to support her family, and they came after she had begun weaving."
-    },
-    "B": {
-     "recipe": "OFF: her last project",
-     "why_wrong": "A tapestry she worked on at the end of her life says nothing about how her interest in weaving began."
-    },
-    "C": {
-     "recipe": "OFF: her ideas about tapestry",
-     "why_wrong": "Her view of what a tapestry should be and her agreement with Morris concern her artistic ideas, not the origin of her interest in weaving."
-    }
-   },
-   "models": [
-    "1.15",
-    "1.19",
-    "1.20",
-    "1.13",
-    "1.26"
-   ],
-   "word_count": 72,
-   "sources": [
-    {
-     "what": "Frida Hansen (1855–1931): studied painting as a young woman; after her husband’s firm went bankrupt in 1888 she started an embroidery business at home to earn an income, where repairing old tapestries made her interested in their techniques; gold medal at the 1900 Paris World’s Fair for Melkeveien (The Milky Way); studied in Cologne and Paris in 1895; textiles should not be woven paintings, a view shared with William Morris; St. Olav tapestry for Stavanger Cathedral 1926 until her death (Wikipedia, fetched 2026-10-27)",
-     "url": "https://en.wikipedia.org/wiki/Frida_Hansen"
-    }
-   ],
-   "notes": "Easy. The historian is unnamed and the quotations invented; each states a fact from the source. Hansen appears nowhere else in the bank."
-  },
-  {
-   "id": "command_of_evidence.T2_lit_quote.easy.w5b4_21",
-   "template": "T2_lit_quote",
-   "subtype": "Literary quotation illustrates a single-trait claim (prose poem)",
-   "tier": "easy",
-   "passage": "“Vocation” is a 1913 poem by Rabindranath Tagore. In the poem, a child who walks to and from school each day describes the adults he sees along the way, whose work seems to him free of the rules that govern his own life: ______",
-   "stem": "Which quotation from “Vocation” most effectively illustrates the claim?",
-   "options": [
-    "“He does what he likes with his spade, he soils his clothes with dust, nobody takes him to task if he gets baked in the sun or gets wet.”",
-    "“Every day I meet the hawker crying, ‘Bangles, crystal bangles!’”",
-    "“I can see through the gate of that house the gardener digging the ground.”",
-    "“The lane is dark and lonely, and the street-lamp stands like a giant with one red eye in its head.”"
-   ],
-   "answer_letter": "A",
-   "table": null,
-   "figure": null,
-   "explanation": "The claim is that the adults’ work seems to the child “free of the rules that govern his own life.” Choice A shows this: the gardener “does what he likes with his spade,” gets his clothes dirty, and “nobody takes him to task” if he gets hot or wet, the kinds of things a child would be scolded for.",
-   "distractors": {
-    "B": {
-     "recipe": "LURE: names an adult the child admires, without the freedom",
-     "why_wrong": "The child mentions meeting the hawker and repeats his cry, but nothing in the line describes the hawker as free of rules."
-    },
-    "C": {
-     "recipe": "LURE: names the gardener, without the freedom",
-     "why_wrong": "The line only says the child sees the gardener digging; it does not show that the gardener’s work is free of rules."
-    },
-    "D": {
-     "recipe": "OFF: description of the setting",
-     "why_wrong": "This line describes the dark lane and the street-lamp at night, not the freedom of any adult’s work."
-    }
-   },
-   "models": [
-    "1.11",
-    "1.16",
-    "1.36",
-    "1.42",
-    "1.39"
-   ],
-   "word_count": 44,
-   "sources": [
-    {
-     "what": "Rabindranath Tagore, The Crescent Moon (1913), “Vocation”; quotations checked as exact substrings of the Gutenberg text (prose-poem line wraps joined)",
-     "url": "https://www.gutenberg.org/ebooks/6520"
-    }
-   ],
-   "notes": "Easy. Single-trait claim; the key is the only line that describes an adult's freedom, and the two lures name the hawker and the gardener without it. The Crescent Moon is Tagore's own English rendering; Tagore appears in the bank only with The Home and the World (WiC)."
-  }
- ]
 }

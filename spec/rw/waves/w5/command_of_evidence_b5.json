@@ -1,0 +1,1984 @@
+{
+  "skill": "Command of Evidence",
+  "slug": "command_of_evidence",
+  "part": "w5b5",
+  "domain": "Information and Ideas",
+  "plan": {
+    "templates": [
+      {
+        "code": "T1_single",
+        "name": "Hypothetical finding supports or weakens a single claim (causal, comparison, existence, generalization, prediction)"
+      },
+      {
+        "code": "T1_compete",
+        "name": "Hypothetical finding discriminates between competing explanations (support or weaken)"
+      },
+      {
+        "code": "Q2_P8_multipart",
+        "name": "Data description: multi-part, interaction, or passage-plus-data claim"
+      },
+      {
+        "code": "T2_lit_quote",
+        "name": "Quotation from a literary work illustrates a claim (single trait, two-part, contrast)"
+      },
+      {
+        "code": "T3_person_quote",
+        "name": "Quotation from a person (participant, respondent, historian, critic, article) supports or challenges a claim"
+      },
+      {
+        "code": "Q1_P5_control",
+        "name": "Data completion: condition vs control"
+      },
+      {
+        "code": "Q2_P5_control",
+        "name": "Data description: condition vs control or group comparison supports a conclusion"
+      },
+      {
+        "code": "Q2_P8_quantifier",
+        "name": "Data description: quantified claim (for each, all except one)"
+      },
+      {
+        "code": "Q1_P2_extreme",
+        "name": "Data completion: extreme or rank (max/min, possibly after a filter)"
+      },
+      {
+        "code": "Q1_P3_pairwise",
+        "name": "Data completion: pairwise comparison (one or two comparisons)"
+      },
+      {
+        "code": "Q1_P4_trend",
+        "name": "Data completion: change over time"
+      },
+      {
+        "code": "Q1_P1_lookup",
+        "name": "Data completion: lookup (one cell or bar, reverse lookup, filter)"
+      }
+    ]
+  },
+  "done": true,
+  "items": [
+    {
+      "id": "command_of_evidence.T1_single.hard.w5b5_01",
+      "template": "T1_single",
+      "subtype": "Hypothetical finding supports a demand-side explanation of a price rebound (the key holds relative supply steady, ruling out the supply route)",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "Economic theory predicts that when one input becomes relatively abundant, inventors will direct their efforts toward technologies that exploit it more efficiently. During the American Civil War, which lasted from 1861 to 1865, British textile mills lost most of their supply of American cotton and turned instead to cotton from India. Economist W. Walker Hanlon found that British patents for machinery adapted to Indian cotton rose sharply in response, and that the price of Indian cotton relative to that of American cotton fell early in the war but later rebounded. Hanlon argues that the new machinery helps explain the rebound: by making Indian cotton more useful to mills, it increased demand for that cotton.",
+      "stem": "Which finding from Hanlon’s research, if true, would most directly support his explanation for the rebound in the relative price of Indian cotton?",
+      "options": [
+        "The rebound in the relative price of Indian cotton began only after American cotton returned to British markets and British imports of Indian cotton dropped sharply.",
+        "While the relative price of Indian cotton was rebounding, India’s share of British cotton imports stayed about as high as it had been when that price was lowest.",
+        "During the war, the prices that British mills paid for both American and Indian cotton rose to several times the levels they had been before the war.",
+        "Before the war, Indian cotton had generally sold in Britain for less than American cotton did, and many mills used it only when American cotton was scarce."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "Hanlon argues that the new machinery raised the relative price of Indian cotton because “it increased demand for that cotton.” A price can also rise because supply falls, so the explanation needs evidence that Indian cotton was not becoming scarcer during the rebound. Choice B supplies it: if India’s share of British cotton imports stayed as high as it had been when the relative price was lowest, the price rose while Indian cotton remained just as plentiful, which points to greater demand, the effect Hanlon credits to the machinery.",
+      "distractors": {
+        "A": {
+          "recipe": "OPP: the rival (supply) explanation",
+          "why_wrong": "If the rebound began only once American cotton returned and Indian imports dropped, the rise in Indian cotton’s relative price could simply reflect its becoming scarcer again, an explanation that needs no new machinery, so this finding would weaken Hanlon’s account."
+        },
+        "C": {
+          "recipe": "TRAP: a change that affects both kinds of cotton",
+          "why_wrong": "A rise in the prices of both kinds of cotton says nothing about the price of Indian cotton relative to American cotton, which is what rebounded, so it cannot show that the machinery raised demand for Indian cotton in particular."
+        },
+        "D": {
+          "recipe": "TRAP: price levels before the shock instead of the change after it",
+          "why_wrong": "This describes how Indian cotton was priced and used before the war; it cannot show why its relative price later rebounded, so it gives no evidence that the new machinery caused the rebound."
+        }
+      },
+      "models": [
+        "3.45",
+        "3.28",
+        "3.36",
+        "3.42",
+        "156ff681",
+        "4a07be59"
+      ],
+      "sources": [
+        {
+          "what": "Hanlon 2015, Econometrica 83(1): 67–100, Necessity Is the Mother of Invention: Input Supplies and Directed Technical Change: tests directed technical change using the shock to the British cotton textile industry caused by the US Civil War; patent data show the shock increased British innovation directed toward taking advantage of Indian cotton, which had become relatively more abundant; the relative price of Indian cotton first declined and then rebounded, consistent with strong induced bias (abstract, OpenAlex)",
+          "url": "https://doi.org/10.3982/ECTA10811"
+        }
+      ],
+      "notes": "Band 7 moves: the key supplies a premise the passage never states (relative supply held steady during the rebound), which rules out the supply route and leaves the demand route the claim names; stem names the study and whose explanation is tested (23 words); the theory sentence and the price facts sit in earlier sentences. Distractors: one OPP (A, the supply rival), two TRAP (C affects both cottons equally; D levels before the shock instead of the change). The paper reads the rebound as consistent with strong induced bias (technology raising the abundant input’s relative price); the passage says Hanlon argues the machinery “helps explain” it. No fiber-quality detail is stated because it was not confirmed from a fetched page.",
+      "word_count": 114,
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass"
+      },
+      "band7": {
+        "verdict": "band 7",
+        "why": "The key adds a premise the passage never states (Indian cotton stayed as plentiful while its price rose), which rules out the supply route that A offers; C and D are traps (a change to both cottons, levels before the shock). Passage 114 words, stem 23 words naming the study."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "B",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 7
+    },
+    {
+      "id": "command_of_evidence.T1_single.hard.w5b5_02",
+      "template": "T1_single",
+      "subtype": "Hypothetical finding supports a specificity claim (the key needs a second, control task on which the genotype groups do not differ)",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "According to the genetic-biasing hypothesis, a population whose members are genetically predisposed to perceive some feature of speech well will tend to adopt that feature in its language. In 2007, linguists Dan Dediu and D. Robert Ladd reported that populations in which a certain variant of the gene ASPM is common are less likely than other populations to speak tone languages, which use pitch to distinguish words. After testing more than 400 native speakers of Cantonese, a tone language, Patrick C. M. Wong and colleagues concluded that variation in ASPM is associated with how well individuals perceive lexical tones specifically, not with their perception of pitch in general.",
+      "stem": "Which finding, if true, would most directly support Wong and colleagues’ conclusion?",
+      "options": [
+        "Participants who had received more years of musical training tended to perform better on the lexical tone task than participants with less training did.",
+        "Participants who carried the variant scored lower on the lexical tone task than other participants did, and they had also received less musical training on average.",
+        "Across the populations Dediu and Ladd studied, those in which the variant is common remained less likely to speak tone languages even when geography was taken into account.",
+        "Participants who carried the variant scored lower than others on the lexical tone task, but the two groups scored about the same on a test of musical pitch."
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "Wong and colleagues concluded that ASPM variation is associated with how well individuals perceive “lexical tones specifically, not with their perception of pitch in general.” Supporting that requires two results: a difference between carriers and noncarriers on the tone task, and no such difference on a pitch test that does not involve speech. Choice D gives both, so the gene’s association is with tone perception in particular.",
+      "distractors": {
+        "A": {
+          "recipe": "OFF: a different variable (musical training, not the gene)",
+          "why_wrong": "This links tone perception to musical training and says nothing about ASPM, so it cannot show that the gene’s association is specific to lexical tones."
+        },
+        "B": {
+          "recipe": "TRAP: a confounded comparison",
+          "why_wrong": "If carriers also had less musical training, their lower tone scores could reflect training rather than the gene, and the finding still gives no evidence about pitch perception in general."
+        },
+        "C": {
+          "recipe": "GEN: restates the population-level pattern that prompted the study",
+          "why_wrong": "This concerns whole populations and the languages they speak, the pattern already reported in the text; it says nothing about how individual Cantonese speakers with different ASPM variants perceive tones as opposed to pitch in general."
+        }
+      },
+      "models": [
+        "3.42",
+        "3.39",
+        "3.41",
+        "3.12",
+        "4a07be59"
+      ],
+      "sources": [
+        {
+          "what": "Wong, Kang, Wong, So, Choy, Geng 2020, Science Advances 6(22): eaba5090, ASPM-lexical tone association in speakers of a tone language: Direct evidence for the genetic-biasing hypothesis of language evolution: the hypothesis that a population genetically predisposed to perceive a linguistic feature tends to adopt it; Dediu and Ladd found populations with a lower frequency of the derived ASPM allele more likely to speak a tone language; 426 native Cantonese speakers; rs41310927 associated with lexical tone perception (minor allele C contributing negatively), no association with musical pitch, rhythm or working memory; the association “seems to be specific and is unrelated to general auditory functions” (full text, Europe PMC PMC7253162)",
+          "url": "https://doi.org/10.1126/sciadv.aba5090"
+        }
+      ],
+      "notes": "Band 6: the key needs the right comparison (a non-speech pitch task on which carriers do not differ) to show specificity. Distractors: OFF (A, training, a real result of the study), TRAP (B, a confound with training), GEN (C, Dediu and Ladd’s population pattern). Dediu and Ladd 2007 is cited inside the paper; the passage states their finding as the paper does (lower frequency of the derived allele goes with tone languages). The key is close to the real result, which is allowed for a hypothetical finding.",
+      "word_count": 109,
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [],
+        "status": "pass"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "Planned at 6. The key is the standard control-task comparison (tone task differs, musical pitch does not), close to the claim's own wording; B is a confounded trap. A strong band 6."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "D",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "command_of_evidence.T1_compete.hard.w5b5_03",
+      "template": "T1_compete",
+      "subtype": "Hypothetical finding discriminates a depiction of a plant from a record of a trance vision (the key supplies how the flower looks as it opens)",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "Since the 1980s, many rock art researchers have argued that cave paintings often record geometric forms, such as spirals, zigzags, and grids, that people anywhere may see during trances, including trances induced by hallucinogenic plants. In Pinwheel Cave in California, archaeologist David W. Robinson and colleagues analyzed dozens of chewed wads of plant fiber that had been stuffed into crevices in the ceiling near a large red painting of a pinwheel. The wads proved to be Datura wrightii, a hallucinogenic plant that Native Californians historically used in rituals. Robinson and colleagues argue that rather than recording a trance vision, the pinwheel depicts the plant itself.",
+      "stem": "Which finding, if true, would most directly support Robinson and colleagues’ interpretation of the pinwheel painting?",
+      "options": [
+        "Samples of pigment taken from the pinwheel contain traces of Datura wrightii, suggesting that the plant was mixed into the paint itself.",
+        "Painted pinwheels closely resembling the one in the cave appear in rock art from regions of the world where Datura does not grow.",
+        "As a Datura wrightii bud opens at dusk, its white flower unfurls into five points that each curl to one side, so that it seems to turn.",
+        "A few of the chewed wads consist of Datura wrightii combined with fibers of other plants that people in the region also chewed."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "Two views compete: the pinwheel records one of the geometric forms “that people anywhere may see during trances,” or it “depicts the plant itself.” Evidence for the second view must tie the image to how Datura actually looks, not just to the use of Datura. Choice C does that: if the opening flower unfurls into points that curl to one side so that it “seems to turn,” the flower looks like a pinwheel, so the painting’s shape matches the plant itself rather than a form any trance might produce.",
+      "distractors": {
+        "A": {
+          "recipe": "TRAP: consistent with both views",
+          "why_wrong": "Datura in the paint would link the painting to the plant’s use, but people painting a trance vision could have used the plant just as easily, so this finding cannot show that the image depicts the plant rather than a vision."
+        },
+        "B": {
+          "recipe": "OPP: the rival’s prediction",
+          "why_wrong": "If the same pinwheel appears where Datura does not grow, it cannot be a picture of Datura there, which fits the view that it is a geometric form people anywhere may see in trance and so weakens Robinson and colleagues’ interpretation."
+        },
+        "D": {
+          "recipe": "OFF: an irrelevant property of the same objects",
+          "why_wrong": "What else was mixed into the wads says nothing about what the painting shows; it bears on how the plant was chewed, not on whether the pinwheel depicts it."
+        }
+      },
+      "models": [
+        "3.14",
+        "3.9",
+        "3.15",
+        "3.8",
+        "a44bbd6b",
+        "156ff681"
+      ],
+      "sources": [
+        {
+          "what": "Robinson, Brown, McMenemy et al. 2020, PNAS 117(49): 31026–31037, Datura quids at Pinwheel Cave, California, provide unambiguous confirmation of the ingestion of hallucinogens at a rock art site: the ASC model (debated since the late 1980s) holds that humans universally experience visual phases in trance replicated in rock art; quids in ceiling crevices identified as Datura wrightii and likely chewed; Native Californians documented to use Datura to enter trance states and in rituals; the large red pinwheel motif is “almost certainly a representation of the actual Datura flower,” whose corolla unfurls into five arms, opening at dusk (full text, Europe PMC PMC7733795)",
+          "url": "https://doi.org/10.1073/pnas.2014529117"
+        }
+      ],
+      "notes": "Band 7 moves: two named views; the key supplies a premise the passage never states (how the Datura flower looks as it opens), paraphrased away from “pinwheel” so the student must make the link; one TRAP that ties the painting to the plant’s use but fits both views (A), one OPP (B), one OFF (D). Stem names the claimant and the object (15 words). Discrimination: trance view predicts nothing about a match to one plant’s shape; depiction view predicts it. The paper’s own extra argument (the painting was retouched several times, so not one artist’s vision) is left out of the options because it could be read as support. The flower’s shape is described from the paper (five arms curving back, opening at dusk); the painting’s own arm count is not given there, so the passage does not state it.",
+      "word_count": 105,
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [],
+        "status": "pass"
+      },
+      "band7": {
+        "verdict": "band 7",
+        "why": "The key supplies how the flower looks as it opens, paraphrased away from pinwheel; A ties the painting to Datura but fits both views, B is the rival's prediction. Two named views split by the key only."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "C",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 7
+    },
+    {
+      "id": "command_of_evidence.T1_compete.hard.w5b5_04",
+      "template": "T1_compete",
+      "subtype": "Hypothetical finding discriminates private information from temporary trading pressure (lasting price moves against reversals)",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "In the eighteenth century, shares of several English companies were traded both in London and on the Amsterdam exchange. News from London reached Amsterdam only by sailboat, and bad weather often kept the boats in port for days. Economist Peter Koudijs found that Amsterdam prices moved sharply when a boat arrived but also fluctuated considerably while no boat had come. One possible explanation for these fluctuations is that some Amsterdam traders had private information about the companies’ prospects; another is that trades by uninformed investors who simply needed to buy or sell pushed prices away from the shares’ value for a short time.",
+      "stem": "Which finding, if true, would most directly support the first explanation rather than the second?",
+      "options": [
+        "Price changes in Amsterdam during periods with no boat arrivals tended to match the direction of the change in London prices reported by the next boat.",
+        "Price changes in Amsterdam during periods with no boat arrivals were usually reversed within a few days, before the next boat from London had arrived.",
+        "More shares changed hands in Amsterdam on days when a boat from London arrived than on days when bad weather had kept the boats in port.",
+        "Once news from London had arrived, the prices of the English shares in Amsterdam generally came close to the prices of the same shares in London."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The first explanation holds that some traders “had private information about the companies’ prospects,” while the second holds that uninformed trades moved prices “for a short time.” If some traders really knew something before the news arrived, prices should have moved early toward where the news would later take them. Choice A describes exactly that: price changes made while no boat had come matched the direction of the London prices that the next boat reported. Temporary pressure from uninformed trades would not predict the coming news.",
+      "distractors": {
+        "B": {
+          "recipe": "OPP: the rival’s prediction",
+          "why_wrong": "Price moves that reverse within days are what the second explanation predicts, since uninformed trading pushes prices away from value only “for a short time”; this finding would favor the second explanation, not the first."
+        },
+        "C": {
+          "recipe": "TRAP: consistent with both explanations",
+          "why_wrong": "Heavier trading when news arrived is expected whatever moves prices in the gaps between boats; it says nothing about whether the fluctuations without news came from informed or uninformed traders."
+        },
+        "D": {
+          "recipe": "OFF: concerns prices after the news, not the fluctuations before it",
+          "why_wrong": "This shows that Amsterdam prices caught up with London once news came, which neither explanation disputes; it gives no evidence about why prices fluctuated while no boat had arrived."
+        }
+      },
+      "models": [
+        "2.9",
+        "3.9",
+        "3.10",
+        "3.15",
+        "3.48",
+        "156ff681"
+      ],
+      "sources": [
+        {
+          "what": "Koudijs 2015, Journal of Finance 70(5), The Boats That Did Not Sail: Asset Price Volatility in a Natural Experiment: English shares traded on the Amsterdam exchange; news came on sailboats often delayed by adverse weather; prices responded strongly to boat arrivals but there was considerable volatility in the absence of news, largely from the revelation of long-lived private information and the transitory impact of uninformed liquidity trades (abstract, OpenAlex)",
+          "url": "https://doi.org/10.1111/jofi.12312"
+        }
+      ],
+      "notes": "Band 6. Two named explanations taken from the paper’s abstract (long-lived private information against transitory liquidity trades); the key is the observation only the first predicts (early moves that anticipate the news), the OPP is the reversal only the second predicts, the TRAP fits both. The paper finds both played a role; the passage presents them only as possible explanations and the stem asks which finding would favor the first.",
+      "word_count": 103,
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "Planned at 6. The key needs the anticipation inference (informed moves foreshadow the next boat's news); B is the rival's reversal, C fits both. A strong band 6."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "A",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "command_of_evidence.Q2_P8_multipart.hard.w5b5_05",
+      "template": "Q2_P8_multipart",
+      "subtype": "Data description: an interaction (which treatment does best reverses between habitats), read through the passage’s ranking of soil moisture",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "Prosopis juliflora, a tree native to the Americas, was introduced to the Caatinga dry forest of northeastern Brazil in the 1940s and has since spread extensively. Its seed pods are eaten by cattle and mules, which disperse the seeds in their dung. Ecologists compared the germination of P. juliflora seeds deposited on the soil surface, buried, or excreted by cattle or mules in three habitats: a flooding plain and an alluvial terrace, with relatively moist soils, and a plateau, with the driest soils. Because dung provides seeds with moisture and nutrients, a student concludes that dispersal by livestock offers seeds the greatest advantage over burial where soils are driest.",
+      "stem": "Which choice best describes data from the table that support the student’s conclusion?",
+      "options": [
+        "In each of the three habitats, seeds that had passed through cattle germinated at a higher rate than seeds that had passed through mules did.",
+        "Seeds that had passed through cattle germinated at a higher rate in the flooding plain than on the plateau, and the same was true of seeds that had been buried.",
+        "In the flooding plain, buried seeds germinated at a higher rate than seeds that had passed through either kind of livestock, while seeds left on the soil surface germinated at the lowest rate of the four.",
+        "On the plateau, seeds that had passed through either kind of livestock germinated at a higher rate than buried seeds did, whereas in the other two habitats buried seeds germinated at the highest rate."
+      ],
+      "answer_letter": "D",
+      "table": {
+        "title": "Germination of Prosopis juliflora Seeds by Habitat and Treatment",
+        "columns": [
+          "Seed treatment",
+          "Flooding plain (% germinated)",
+          "Terrace (% germinated)",
+          "Plateau (% germinated)"
+        ],
+        "rows": [
+          [
+            "On the soil surface",
+            "1.3",
+            "5.3",
+            "0.7"
+          ],
+          [
+            "Buried",
+            "47.4",
+            "33.4",
+            "1.6"
+          ],
+          [
+            "Passed through cattle",
+            "20.5",
+            "17.2",
+            "12.9"
+          ],
+          [
+            "Passed through mules",
+            "13.4",
+            "11.7",
+            "9.2"
+          ]
+        ],
+        "note": null
+      },
+      "figure": null,
+      "explanation": "The student concludes that dispersal by livestock “offers seeds the greatest advantage over burial where soils are driest,” and the text identifies the plateau as the habitat “with the driest soils.” Choice D shows exactly that pattern: on the plateau, seeds from cattle (12.9%) and mules (9.2%) germinated more often than buried seeds (1.6%), whereas in the flooding plain (47.4%) and on the terrace (33.4%), with their moister soils, buried seeds did best. So livestock beat burial only in the driest habitat.",
+      "distractors": {
+        "A": {
+          "recipe": "IRREL: accurate comparison of the wrong cells (cattle against mules)",
+          "why_wrong": "This is true (20.5 against 13.4, 17.2 against 11.7, 12.9 against 9.2), but it compares two kinds of livestock with each other and never with burial, and the gap is about the same in every habitat, so it says nothing about where livestock give the greatest advantage over burial."
+        },
+        "B": {
+          "recipe": "IRREL: accurate comparison across habitats within each treatment",
+          "why_wrong": "Both parts are true (20.5 against 12.9, 47.4 against 1.6), but they only show that each kind of seed did worse on the plateau; without comparing livestock seeds with buried seeds in the same habitat, the choice cannot show that livestock beat burial where soils are driest."
+        },
+        "C": {
+          "recipe": "PART: accurate, but only the moist habitat",
+          "why_wrong": "This is true of the flooding plain, but it describes only a habitat whose soils hold more moisture, where burial beat livestock; it gives no data from the plateau, the driest habitat, which is what the conclusion is about."
+        }
+      },
+      "models": [
+        "3.26",
+        "3.18",
+        "3.16",
+        "a7c52fa4",
+        "d5da74be"
+      ],
+      "sources": [
+        {
+          "what": "Nascimento, da Silva, Leal, Tavares, Serrão, Zanuncio, Tabarelli 2020, PeerJ 8:e9607, Seed germination and early seedling survival of the invasive species Prosopis juliflora depend on habitat and seed dispersal mode in the Caatinga dry forest: introduced in the early 1940s; four treatments (soil surface, buried, passed through cattle, passed through mules) in flooding plain, alluvial terrace and plateau; Table 1 germination means (%): surface 1.3 / 5.3 / 0.7, buried 47.4 / 33.4 / 1.6, cattle 20.5 / 17.2 / 12.9, mule 13.4 / 11.7 / 9.2; flooding plain and terrace soils held more moisture than the plateau; cattle manure a nutrient-rich, humid substrate",
+          "url": "https://doi.org/10.7717/peerj.9607"
+        }
+      ],
+      "notes": "Band 7 moves: interaction (the best treatment reverses between habitats), the habitat the claim names is given only through the passage’s moisture ranking (proxy: driest = plateau), and all three distractors are accurate readings of the wrong cells in the key’s frame (two IRREL, one PART). Operations: map driest to plateau, compare livestock with burial there, compare again in the other two habitats. Means only (the paper gives mean ± SD). The conclusion is given to a student, since the paper’s synthesis frames manure as a humid, nutrient-rich substrate without stating this exact contrast. Mule dung is drier than cattle dung (paper), so the passage says only that dung offers moisture and nutrients.",
+      "word_count": 109,
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [],
+        "status": "pass"
+      },
+      "band7": {
+        "verdict": "band 7",
+        "why": "An interaction (the best treatment reverses between habitats) read through the passage's moisture ranking (driest = plateau); all three distractors are accurate readings of the wrong cells."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "D",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 7
+    },
+    {
+      "id": "command_of_evidence.T2_lit_quote.hard.w5b5_06",
+      "template": "T2_lit_quote",
+      "subtype": "Literary quotation, two-part claim with an indirect verb (calm about the loss itself, pained by one consequence); distractors are the same speaker on his poverty, one calm without the pain, one pained without the calm",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "The Little Clay Cart is a Sanskrit play attributed to King Shudraka, translated in 1905 by Arthur William Ryder. Charudatta, impoverished by his own generosity, intimates that he regards the disappearance of his wealth with equanimity while nonetheless suffering from one of its consequences, saying, ______",
+      "stem": "Which quotation from The Little Clay Cart most effectively illustrates the claim?",
+      "options": [
+        "“My sorrow does not spring / From simple loss of gold; / For fortune is a fickle, changing thing, / Whose favors do not hold; / But he whose sometime wealth has taken wing, / Finds bosom-friends grow cold.”",
+        "“Far better death than sorrows sure and slow; / Some passing suffering from death may flow, / But poverty brings never-ending woe.”",
+        "“Stranger he must have been who made the breach, / His customed harvest in my house to reap; / He has not learned that vanished riches teach / A calm, untroubled sleep.”",
+        "“A poor man is a man ashamed; from shame / Springs want of dignity and worthy fame; / Such want gives rise to insults hard to bear; / Thence comes despondency; and thence, despair; / Despair breeds folly; death is folly’s fruit— / Ah! the lack of money is all evils root!”"
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The claim has two parts: Charudatta regards the disappearance of his wealth with equanimity, or calm, and he nonetheless suffers from one of its consequences. In choice A he says, “My sorrow does not spring / From simple loss of gold; / For fortune is a fickle, changing thing, / Whose favors do not hold.” Because riches by nature come and go, losing them is not what grieves him. What does grieve him is a consequence of that loss: a man whose wealth “has taken wing” finds that his “bosom-friends grow cold.” Only this quotation shows both the calm and the suffering.",
+      "distractors": {
+        "B": {
+          "recipe": "OPP: the same speaker treats poverty itself as the worst of ills",
+          "why_wrong": "Here Charudatta says, “Far better death than sorrows sure and slow,” because poverty “brings never-ending woe.” Far from regarding the disappearance of his wealth with equanimity, he presents poverty itself as an endless torment."
+        },
+        "C": {
+          "recipe": "HALF: calm about the vanished riches, with no suffering from a consequence",
+          "why_wrong": "Here Charudatta says that “vanished riches teach / A calm, untroubled sleep,” so he does regard the loss of his wealth calmly, but the only consequence he names is a peaceful one; nothing in the quotation shows him suffering from what the loss has brought."
+        },
+        "D": {
+          "recipe": "HALF plus OPP: consequences of poverty, but blamed on the lack of money itself",
+          "why_wrong": "This passage does describe consequences of poverty (shame, insults, despair), but it ends by calling “the lack of money” the root of all evils. That is the opposite of regarding the disappearance of wealth with equanimity."
+        }
+      },
+      "models": [
+        "825dc766",
+        "4ef17800",
+        "66fd248a",
+        "3.17",
+        "3.11"
+      ],
+      "sources": [
+        {
+          "what": "Shudraka (attrib.), The Little Clay Cart [Mrcchakatika], translated by Arthur William Ryder, Harvard Oriental Series vol. 9, Harvard University, 1905; Act I, stanzas 11, 13 and 14, and Act III, stanza 23 (Charudatta on the burglar who broke into his house) (Charudatta to Maitreya on his poverty; Maitreya: your wealth has been conveyed to them you love; footnote 44 on Charudatta's generosity after his wealth has vanished). Quotations copied verbatim (Gutenberg -- rendered as an em dash; line breaks as slashes).",
+          "url": "https://www.gutenberg.org/ebooks/21020"
+        }
+      ],
+      "notes": "Band 7 moves: claim with an indirect verb (intimates) and two components, calm about the loss itself and pain at one consequence; translated verse in older language; distractors are the same speaker on his poverty: OPP (B, poverty worse than death), HALF (C, Act III stanza 23, calm about vanished riches with no painful consequence; reviewer replaced Act I stanza 10, which like B and D failed only on the calm), HALF/OPP (D, painful consequences but blamed on the lack of money). Stanza 12 (guests pass me by) is left out on purpose: with its prose lead-in it would also fit. The key's first line is trimmed at a sentence boundary (the verse line begins Believe me, friend.).",
+      "word_count": 45,
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 5,
+        "fixes": [
+          "replaced distractor C (Act I stanza 10, grief at the fall) with Act III stanza 23 (vanished riches teach a calm sleep): before, all three wrong options failed on the calm alone; now C has the calm without the pain and D the pain without the calm",
+          "all four quotations checked verbatim against Gutenberg 21020 (Ryder 1905)"
+        ],
+        "status": "fixed"
+      },
+      "band7": {
+        "verdict": "band 7",
+        "why": "After the fix: indirect verb, two-part claim, older translated verse, and distractors from the same speaker that split the parts (C calm only, D pain only, B neither). Before, every wrong option failed on the calm alone, which read band 6."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "A",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 7
+    },
+    {
+      "id": "command_of_evidence.Q1_P5_control.hard.w5b5_07",
+      "template": "Q1_P5_control",
+      "subtype": "Data completion, condition vs control through a ratio: the fenced site laid slightly more eggs, so the key must compare eggs hatched with eggs laid at both sites",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "Hawaiian stilts (Himantopus mexicanus knudseni), endangered wading birds, nest on exposed ground, where introduced predators such as cats, rats, and mongooses consume their eggs. Dain Christensen and colleagues monitored stilt nests at two wetlands on Oʻahu: one enclosed by a newly constructed fence designed to exclude all mammals, and one where mammals were controlled only by trapping. Because stilts inside the fence also laid slightly larger clutches, a student wondered whether the fenced nests hatched more eggs merely because they contained more eggs initially, but the student concluded that the fence genuinely improved the eggs’ survival, since ______",
+      "stem": "Which choice most effectively uses data from the table to complete the statement?",
+      "options": [
+        "nests inside the fence held an average of 4.00 eggs, slightly more than the average of 3.67 eggs held by nests at the site where mammals were controlled only by trapping.",
+        "six of the 21 nests observed at the site with trapping only were lost to predators, and the nests there that survived hatched an average of only 1.29 eggs each.",
+        "nests inside the fence hatched an average of 3.33 of the 4.00 eggs laid in them, whereas nests at the site with trapping only hatched an average of just 1.29 of their 3.67 eggs.",
+        "nests inside the fence hatched an average of 3.33 eggs, fewer than the 4.00 eggs laid in them, a sign that the fence did not keep every egg in those nests safe from predators."
+      ],
+      "answer_letter": "C",
+      "table": {
+        "title": "Hawaiian Stilt Nests Observed at Two Wetlands on Oʻahu, 2019",
+        "columns": [
+          "Site",
+          "Nests observed",
+          "Average eggs laid per nest",
+          "Average eggs hatched per nest",
+          "Nests lost to predators"
+        ],
+        "rows": [
+          [
+            "Inside mammal-exclusion fence",
+            "9",
+            "4.00",
+            "3.33",
+            "0"
+          ],
+          [
+            "Trapping only (no fence)",
+            "21",
+            "3.67",
+            "1.29",
+            "6"
+          ]
+        ],
+        "note": null
+      },
+      "figure": null,
+      "explanation": "The student wanted to rule out the possibility that nests “hatched more eggs merely because they contained more eggs initially.” To do that, the number of eggs hatched must be compared with the number laid at each site. Choice C does this: fenced nests hatched an average of 3.33 of their 4.00 eggs (about 83%), whereas nests at the site with trapping only hatched 1.29 of their 3.67 eggs (about 35%). Because a far larger share of the eggs survived inside the fence, the difference in hatching cannot be explained by the slightly larger clutches alone.",
+      "distractors": {
+        "A": {
+          "recipe": "IRREL: accurate, but the clutch-size difference the conclusion sets aside",
+          "why_wrong": "This accurately compares the eggs laid per nest (4.00 against 3.67), but that is the difference the student wanted to rule out as an explanation; it says nothing about how many of those eggs survived."
+        },
+        "B": {
+          "recipe": "INACC plus PART: misreads an average over all nests as an average over surviving nests, one site only",
+          "why_wrong": "The 1.29 in the table is the average for all 21 observed nests at the trapping site, not only for the nests that survived, and the choice gives no data for the fenced site, so it cannot show that eggs survived better inside the fence."
+        },
+        "D": {
+          "recipe": "TRAP: accurate numbers, conclusion the table contradicts and the wrong direction for the claim",
+          "why_wrong": "The table shows that no nests inside the fence were lost to predators, so the gap between eggs laid and eggs hatched there is not evidence of predation; in any case, this choice looks only at the fenced site and argues against the fence rather than for it."
+        }
+      },
+      "models": [
+        "3.38",
+        "3.4",
+        "3.46"
+      ],
+      "sources": [
+        {
+          "what": "Christensen, Harmon, Wehr, Price 2021, PeerJ 9: e10722, Mammal-exclusion fencing improves the nesting success of an endangered native Hawaiian waterbird: Hawaiian Stilts (Ae'o; Himantopus mexicanus knudseni) nesting inside a mammal-exclusion fence vs a nearby wetland where trapping was the sole means of removing invasive mammals, Pearl Harbor NWR, O'ahu, 2019; results: eggs laid per nest 4.00 fenced vs 3.67 unfenced; eggs hatched per nest 3.33 vs 1.29; observed nests 9 vs 21; no fenced nests depredated, 6 of 21 unfenced nests depredated (three by a feral cat, two by rats, one unknown) (Europe PMC PMC7931714)",
+          "url": "https://doi.org/10.7717/peerj.10722"
+        }
+      ],
+      "notes": "Band 7 moves: the passage sets up a rival explanation (larger clutches) and the key must apply a ratio (hatched out of laid) at both sites, three operations; compound options of 25 to 35 words. Distractors: accurate but insufficient (A), a misreading of what the average covers (B), accurate numbers with a conclusion the table contradicts (D). The rival is raised by a student (reviewer change: the paper reports both differences and higher hatch rates inside the fence but never weighs the clutch-size explanation in these words). Hatching shares 0.83 vs 0.35.",
+      "word_count": 98,
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [
+          "the clutch-size rival is now raised by a student: the paper reports larger clutches and higher hatch rates inside the fence but never weighs that explanation, so the passage no longer puts that reasoning on the researchers"
+        ],
+        "status": "fixed"
+      },
+      "band7": {
+        "verdict": "band 7",
+        "why": "The passage raises a rival (larger clutches), so the key must compare hatched with laid at both sites; compound options of 26 to 31 words; three or more operations; two accurate but insufficient distractors."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "C",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 7
+    },
+    {
+      "id": "command_of_evidence.Q2_P5_control.hard.w5b5_08",
+      "template": "Q2_P5_control",
+      "subtype": "Data description, condition vs the right control: the prize groups received feedback plus a prize, so they must be compared with the feedback group, not with the campaign group or the untreated control",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "In a field experiment in Singapore, economist Lorenz Goette and colleagues randomly assigned about 900 households to a control group or one of four treatment groups. The campaign group received general messages urging water conservation, the feedback group received regular reports comparing each household’s water use with an efficiency benchmark, and two further groups received the same feedback reports along with a prize for households rated efficient: a $10 grocery voucher for one group and a chance at a $200 voucher in a lucky draw for the other. Estimating each group’s savings relative to the control group, the researchers concluded that adding a financial reward to feedback did little to increase the amount of water households saved.",
+      "stem": "Which choice best describes data from the graph that support the researchers’ conclusion?",
+      "options": [
+        "Households in the campaign group reduced their daily water use by an estimated 4.7 liters per person compared with households in the control group, more than any other group did.",
+        "Households that received a prize with their feedback reports reduced their water use by an estimated 3.9 to 4.1 liters per person per day, about as much as households that received the reports alone.",
+        "Households in both prize groups reduced their water use by less than households in the campaign group did, even though the campaign group received no feedback reports at all.",
+        "Households offered a $10 grocery voucher reduced their water use by slightly more than households offered a chance at a $200 voucher did, by an estimated 4.1 liters compared with 3.9 liters per person per day."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": {
+        "kind": "bar graph",
+        "title": "Estimated Reduction in Daily Water Use Compared with Control Households, by Treatment Group",
+        "x_axis": "Treatment group",
+        "y_axis": "Estimated reduction in water use (liters per person per day)",
+        "description": "Single-series bar graph with four bars; y-axis 0 to 5 in steps of 1. Campaign: about 4.7. Feedback: about 4.1. Feedback plus $10 voucher: about 4.1. Feedback plus lucky draw: about 3.9. The three feedback bars are nearly the same height; the campaign bar is slightly taller than the rest.",
+        "data": [
+          {
+            "series": "Reduction compared with control households",
+            "points": [
+              [
+                "Campaign",
+                4.68
+              ],
+              [
+                "Feedback",
+                4.11
+              ],
+              [
+                "Feedback plus $10 voucher",
+                4.12
+              ],
+              [
+                "Feedback plus lucky draw",
+                3.94
+              ]
+            ]
+          }
+        ]
+      },
+      "explanation": "The two prize groups received “the same feedback reports along with a prize,” so the effect of adding a financial reward is shown by comparing those groups with the feedback group, which received the reports alone. The graph shows that the voucher group (about 4.1 liters) and the lucky draw group (about 3.9 liters) reduced their daily water use by about the same amount as the feedback group (about 4.1 liters). Choice B describes this comparison, which supports the conclusion that the reward “did little to increase the amount of water households saved.”",
+      "distractors": {
+        "A": {
+          "recipe": "PART: one group against the untreated control",
+          "why_wrong": "This is accurate, but the campaign group received neither feedback nor a prize, so its savings say nothing about whether adding a reward to feedback made a difference."
+        },
+        "C": {
+          "recipe": "TRAP: accurate comparison with the wrong group (the campaign group differs in two ways)",
+          "why_wrong": "The prize groups did save slightly less than the campaign group, but the campaign group received no feedback, so it differs from the prize groups in more than the reward; the right comparison for judging the reward is the feedback group."
+        },
+        "D": {
+          "recipe": "IRREL: accurate comparison between the two kinds of prize",
+          "why_wrong": "This compares the two prize groups with each other; without the feedback group, it cannot show how much a reward added to the savings produced by feedback alone."
+        }
+      },
+      "models": [
+        "3.5",
+        "3.43",
+        "3.1"
+      ],
+      "sources": [
+        {
+          "what": "Goette, Leong, Qian, Zereyesus 2019, PLoS ONE 14(3): e0211891, Motivating household water conservation: A field experiment in Singapore: 899 households randomly assigned to control, campaign (Use Water Wisely message), feedback (own use vs an Efficient LPCD benchmark, labelled Efficient or not yet Efficient), rebate (feedback plus a $10 grocery voucher for Efficient households) and lucky draw (feedback plus a chance to win a $200 voucher); Model 2 treatment effects on liters per person per day vs control: campaign -4.68, feedback -4.11, rebate -4.12, lucky draw -3.94; F test of equal effects p = 0.99; abstract: no difference in treatment effect across groups (Europe PMC PMC6426227)",
+          "url": "https://doi.org/10.1371/journal.pone.0211891"
+        }
+      ],
+      "notes": "Band 7 moves: design wrinkle (the right control for the reward is the feedback group, given only in the passage's description of the groups), so a proxy step precedes the reading; all three distractors are accurate (PART, TRAP with a confounded comparison, IRREL). The bars are the paper's regression estimates over all periods (reductions relative to control, controlling for baseline use), shown as positive reductions; none of the differences among treatments is meaningful (p = 0.99). Reviewer: the passage, y-axis and three options now say the reductions are estimates (CB's estimate items say so in the text).",
+      "word_count": 117,
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [
+          "batch note: the bars are regression estimates (Table 3, Model 2); the passage now says the researchers estimated each group's savings relative to the control group, the y-axis reads Estimated reduction, and options A, B and D give the values as estimates",
+          "passage tightened to stay under 120 words; option B shortened so the key is not the longest option"
+        ],
+        "status": "fixed"
+      },
+      "band7": {
+        "verdict": "band 7",
+        "why": "Design wrinkle: the right comparison for the reward is the feedback group, given only in the passage; three accurate distractors (campaign against control, prize against campaign, prize against prize)."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "B",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 7
+    },
+    {
+      "id": "command_of_evidence.Q2_P8_quantifier.hard.w5b5_09",
+      "template": "Q2_P8_quantifier",
+      "subtype": "Data description, quantified claim (in every region, protected area outpaces its control): the key states it indirectly (smallest protected gain above largest control gain)",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "In 2006, Norway created small marine protected areas (MPAs) along its Skagerrak coast, where trapping European lobsters was banned. Because fishing selectively removes large lobsters, protection should allow the average size of lobsters in an MPA to increase; however, lobster size can also change with conditions affecting a whole stretch of coast, such as water temperature. Marine ecologist Even Moland and colleagues therefore paired each of three MPAs with a nearby control area that remained open to fishing and measured lobsters in all six areas before protection began and four years later. The researchers concluded that protection, rather than coastwide conditions, increased lobster size and that it did so in every region.",
+      "stem": "Which choice best describes data from the table that support Moland and colleagues’ conclusion?",
+      "options": [
+        "The smallest increase in mean length in any of the three MPAs (11.8%, at Kvernskjær) was nearly twice the largest increase in any of the three control areas (6.1%, at Bolærne).",
+        "The largest increase in mean length in any MPA (14.6%, at Flødevigen) was more than 100 times the smallest increase in any control area (0.1%, at Kvernskjær).",
+        "Across the three regions combined, mean length increased by 13.0% in the MPAs, which is five times the 2.6% increase in the control areas.",
+        "Mean length increased in every control area as well as in every MPA, and the largest increase among the control areas (6.1%) occurred at Bolærne."
+      ],
+      "answer_letter": "A",
+      "table": {
+        "title": "Increase in Mean Length of European Lobsters from 2006 to 2010",
+        "columns": [
+          "Region",
+          "Marine protected area (%)",
+          "Control area open to fishing (%)"
+        ],
+        "rows": [
+          [
+            "Flødevigen",
+            "14.6",
+            "1.6"
+          ],
+          [
+            "Bolærne",
+            "12.5",
+            "6.1"
+          ],
+          [
+            "Kvernskjær",
+            "11.8",
+            "0.1"
+          ],
+          [
+            "All three regions",
+            "13.0",
+            "2.6"
+          ]
+        ],
+        "note": null
+      },
+      "figure": null,
+      "explanation": "The conclusion has two parts: protection, “rather than coastwide conditions,” increased lobster size, which requires comparing each MPA with its control area, and it did so “in every region.” Choice A shows both. If even the smallest increase in an MPA (11.8%) was nearly twice the largest increase in any control area (6.1%), then in each of the three regions the lobsters in the MPA grew more than those in the nearby fished area, so the gain cannot be explained by conditions shared along the coast.",
+      "distractors": {
+        "B": {
+          "recipe": "TRAP: accurate, but the two extremes come from different regions",
+          "why_wrong": "Comparing the largest MPA increase with the smallest control increase pairs values from two different regions; it does not show that the MPA outpaced its own control area in each region."
+        },
+        "C": {
+          "recipe": "PART: the pooled comparison only",
+          "why_wrong": "The combined figures show a larger increase in MPAs overall, but a pooled difference could come from one or two regions alone, so this choice does not support the claim that protection increased size in every region."
+        },
+        "D": {
+          "recipe": "IRREL: accurate statement about the controls that never compares them with the MPAs",
+          "why_wrong": "This notes that lobsters grew larger in the control areas too and names the control area with the largest gain, but it never compares any control area with its MPA, so it cannot show that protection rather than coastwide conditions caused the increase."
+        }
+      },
+      "models": [
+        "56f477fb",
+        "3.20",
+        "3.23",
+        "3.24"
+      ],
+      "sources": [
+        {
+          "what": "Moland, Olsen, Knutsen, Garrigou, Espeland, Kleiven, Andre, Knutsen 2013, Proceedings of the Royal Society B 280: 20122679, Lobster and cod benefit from small-scale northern marine protected areas: inference from an empirical before-after control-impact study: MPAs established 2006 on the Norwegian Skagerrak coast with complete protection for shellfish; three MPA and control area pairs (Flodevigen, Bolaerne, Kvernskjaer); from 2006 (before designation) to 2010 mean body size (total length) increased by 14.6, 12.5 and 11.8 per cent in the MPAs and by 1.6, 6.1 and 0.1 per cent in the control areas; combined 13.0 vs 2.6 per cent (results text, Europe PMC PMC3574327)",
+          "url": "https://doi.org/10.1098/rspb.2012.2679"
+        }
+      ],
+      "notes": "Band 7 moves: quantified claim (every region) plus a control requirement set up in the passage (coastwide conditions); the key states the every-region pattern indirectly (min of one column above max of the other), as CB's band-7 Egoh key does; distractors are all accurate (TRAP mismatched pairs, PART pooled, IRREL). Operations: read six cells, find the minimum and maximum, infer every pair. Water temperature is offered only as an example of a coastwide condition. 11.8/6.1 = 1.93; 14.6/0.1 = 146; 13.0/2.6 = 5.0. Passage length follows the band-7 recipe (100 to 120 prose words), above the models' median of about 98 but below the band-7 Egoh model (about 130 with its table); kept.",
+      "word_count": 112,
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [
+          "Even Moland could be read as the adverb even: now Marine ecologist Even Moland",
+          "dropped the Latin name to hold the length; 112 words stays above the models' median of about 98 but within the band-7 recipe, and the band-7 Egoh model runs longer"
+        ],
+        "status": "fixed"
+      },
+      "band7": {
+        "verdict": "band 7",
+        "why": "Quantified every-region claim plus a control requirement; the key states it indirectly (smallest MPA gain above the largest control gain), as CB's band-7 Egoh key does; all distractors accurate."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "A",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 7
+    },
+    {
+      "id": "command_of_evidence.Q1_P2_extreme.hard.w5b5_10",
+      "template": "Q1_P2_extreme",
+      "subtype": "Data completion, extreme after a filter the passage defines (physical contact with the nucleus), with the earliest mission overall and the earliest sample collection as traps",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "A comet’s nucleus, a solid mass of ice and rock typically only a few kilometers across, is concealed within a coma, an enormous envelope of gas and dust that the nucleus releases as it approaches the Sun. Most spacecraft dispatched to comets have observed them only during flybys. A student investigating these missions counts a spacecraft as having reached a nucleus only if an instrument or probe it carried made physical contact with the nucleus’s surface. By that standard, the earliest mission in the table to reach a comet’s nucleus was ______",
+      "stem": "Which choice most effectively uses data from the table to complete the text?",
+      "options": [
+        "Giotto, which in 1986 came within about 600 kilometers of the nucleus of Halley.",
+        "Stardust, which in 2004 flew through the cloud around the nucleus of Wild 2 and collected dust.",
+        "Rosetta, which in 2014 released a probe that landed on the nucleus of Churyumov–Gerasimenko.",
+        "Deep Impact, which in 2005 released a probe that struck the nucleus of Tempel 1."
+      ],
+      "answer_letter": "D",
+      "table": {
+        "title": "Five Spacecraft Missions to Comets",
+        "columns": [
+          "Mission",
+          "Comet",
+          "Year of encounter",
+          "How the spacecraft studied the comet"
+        ],
+        "rows": [
+          [
+            "Stardust",
+            "Wild 2",
+            "2004",
+            "flew through the coma and collected dust"
+          ],
+          [
+            "Giotto",
+            "Halley",
+            "1986",
+            "flew past the nucleus, coming within about 600 kilometers"
+          ],
+          [
+            "Rosetta",
+            "Churyumov–Gerasimenko",
+            "2014",
+            "orbited the comet and released a probe that landed on the nucleus"
+          ],
+          [
+            "Deep Space 1",
+            "Borrelly",
+            "2001",
+            "flew past the nucleus"
+          ],
+          [
+            "Deep Impact",
+            "Tempel 1",
+            "2005",
+            "released a probe that struck the nucleus"
+          ]
+        ],
+        "note": null
+      },
+      "figure": null,
+      "explanation": "The student counts a mission as having reached a nucleus only if something it carried “made physical contact with the nucleus’s surface.” In the table, only two missions meet that standard: Deep Impact, which in 2005 released a probe that struck the nucleus of Tempel 1, and Rosetta, which in 2014 released a probe that landed on its comet’s nucleus. Of these two, Deep Impact came first, so it was the earliest mission in the table to reach a comet’s nucleus.",
+      "distractors": {
+        "A": {
+          "recipe": "TRAP: the earliest mission overall, which never made contact",
+          "why_wrong": "Giotto is the earliest mission in the table, but it only flew past Halley’s nucleus; nothing it carried touched the nucleus, so it does not meet the student’s standard."
+        },
+        "B": {
+          "recipe": "TRAP: the earliest mission to collect material, but from the coma, not the nucleus",
+          "why_wrong": "Stardust collected dust in 2004, a year before Deep Impact, but it gathered that dust while flying through the coma, which the text defines as “an enormous envelope of gas and dust” around the nucleus; nothing it carried touched the nucleus’s surface."
+        },
+        "C": {
+          "recipe": "WRONG EXTREME: meets the standard but is not the earliest",
+          "why_wrong": "Rosetta’s probe did land on a nucleus, so it meets the student’s standard, but it did so in 2014, nine years after Deep Impact’s probe struck Tempel 1."
+        }
+      },
+      "models": [
+        "3.44",
+        "626a1308"
+      ],
+      "sources": [
+        {
+          "what": "Wikipedia, List of missions to comets: Giotto (ESA) flyby of 1P/Halley; Deep Space 1 (NASA) flyby of 19P/Borrelly; Stardust (NASA) flyby of 81P/Wild with sample return; Deep Impact (NASA) flyby and impactor at 9P/Tempel, impact 4 July 2005; Rosetta (ESA) orbiter and Philae lander at 67P/Churyumov-Gerasimenko, orbit August 2014, Philae on the surface 12 November 2014. Mission pages: Giotto approached Halley's nucleus at 596 km on 13 March 1986; Stardust arrived at Wild 2 on 2 January 2004 and collected dust from its coma; Deep Space 1 encountered Borrelly in 2001.",
+          "url": "https://en.wikipedia.org/wiki/List_of_missions_to_comets"
+        }
+      ],
+      "notes": "Band 7 moves: filter defined only in the passage (physical contact with the nucleus) applied before the extreme, as in CB's Moses item (spectroscopy only, then earliest); traps are the earliest row overall (Giotto), the earliest material-collecting row (Stardust, which a student may read as contact), and the later row that does meet the filter (Rosetta). Rows are not in date order. Giotto's 596 km is given as about 600 kilometers. Reviewer cut the clause that said a coma-sampling mission never touches the nucleus (it ruled Stardust out by a stated fact); the student must now apply the coma definition. Passage now near the models' median.",
+      "word_count": 91,
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 5,
+        "fixes": [
+          "cut the clause saying a coma-sampling mission never touches the nucleus: it ruled Stardust out by a stated fact and ran the passage long; the student now applies the coma definition (107 to 91 words, near the models' median)",
+          "why_wrong B rewritten to quote the coma definition"
+        ],
+        "status": "fixed"
+      },
+      "band7": {
+        "verdict": "band 7",
+        "why": "After the fix: a filter defined only in the passage, then the earliest, as in CB's band-7 Moses item; Stardust must now be ruled out through the coma definition and Giotto is the earliest row overall. Before, the passage stated the Stardust exclusion outright."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "D",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 7
+    },
+    {
+      "id": "command_of_evidence.T2_lit_quote.medium.w5b5_11",
+      "template": "T2_lit_quote",
+      "subtype": "Literary quotation, two-part claim (once doubted the shared ideals, and traced them to art rather than life)",
+      "tier": "medium",
+      "band_target": null,
+      "passage": "Arms and the Man is an 1894 play by Bernard Shaw. Raina Petkoff, engaged to a celebrated cavalry officer, confides to her mother that she had previously suspected that the heroic ideals they shared originated in artistic works rather than in actual experience: ______",
+      "stem": "Which quotation from Arms and the Man most effectively illustrates the claim?",
+      "options": [
+        "“Our ideas of what Sergius would do—our patriotism—our heroic ideals. Oh, what faithless little creatures girls are!—I sometimes used to doubt whether they were anything but dreams.”",
+        "“[I]t came into my head...that perhaps we only had our heroic ideas because we are so fond of reading Byron and Pushkin, and because we were so delighted with the opera that season at Bucharest.”",
+        "“Oh, to think that it was all true—that Sergius is just as splendid and noble as he looks—that the world is really a glorious world for women who can see its glory and men who can act its romance!”",
+        "“What will he care for my poor little worship after the acclamations of a whole army of heroes? But no matter: I am so happy—so proud!”"
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The claim has two parts: Raina once doubted the heroic ideals she shared with her mother, and she suspected that those ideals “originated in artistic works rather than in actual experience.” In choice B she says that “perhaps we only had our heroic ideas because we are so fond of reading Byron and Pushkin” (two poets) and because they were “so delighted with the opera.” The word “perhaps” shows her doubt, and the poets and the opera are the artistic works she names as the ideals’ source.",
+      "distractors": {
+        "A": {
+          "recipe": "HALF: the doubt without the source in art",
+          "why_wrong": "Raina admits that she “used to doubt whether” the ideals “were anything but dreams,” so the quotation shows her doubt, but it says nothing about where the ideals came from, so it does not show that she traced them to works of art."
+        },
+        "C": {
+          "recipe": "LURE: shares the word romance but affirms the ideals",
+          "why_wrong": "Here Raina rejoices that the ideals were “all true”; she is celebrating them, not doubting them, and the word “romance” refers to the glory men can act out, not to any book, poem, or opera."
+        },
+        "D": {
+          "recipe": "OFF: joy and modesty about her worship of Sergius",
+          "why_wrong": "This quotation shows Raina’s happiness and pride at Sergius’s success and her modest view of her own “worship”; it shows neither doubt about the ideals nor any suspicion that they came from art."
+        }
+      },
+      "models": [
+        "2.26",
+        "2.10",
+        "2.35",
+        "2.11",
+        "2.13"
+      ],
+      "sources": [
+        {
+          "what": "Bernard Shaw, Arms and the Man (first performed 1894), Act I: Catherine brings news of the cavalry charge at Slivnitza led by Sergius, to whom Raina is betrothed; Raina's speeches about her heroic ideals, Byron, Pushkin and the opera at Bucharest. Quotations copied verbatim; the key is trimmed with an ellipsis (original: Well, it came into my head just as he was holding me in his arms and looking into my eyes, that perhaps...).",
+          "url": "https://www.gutenberg.org/ebooks/3618"
+        }
+      ],
+      "notes": "Medium two-part claim; half-match (A) and keyword lure (C) as in CB medium literary items. The key is paraphrased away from the claim: the claim says works of art, the key names two poets and an opera. Another Shaw work (Pygmalion) appears in an official Text Structure item; this play does not appear anywhere in the bank.",
+      "word_count": 43,
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [
+          "no change: Arms and the Man is a different play from the official Pygmalion item (Text Structure and Purpose) and no Sergius, Petkoff or Bluntschli text is in the bank; all four quotations verbatim (Gutenberg 3618)"
+        ],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "command_of_evidence.T1_single.medium.w5b5_12",
+      "template": "T1_single",
+      "subtype": "Hypothetical finding supports a proxy claim (dark eclipses reveal volcanic haze): the key pairs the darkness with the timing of ice-core sulfur",
+      "tier": "medium",
+      "band_target": null,
+      "passage": "Large volcanic eruptions can inject sulfur into the stratosphere, where it forms a reflective haze that may persist for many months and temporarily cool the climate. Polar ice cores preserve sulfur from medieval eruptions, but they rarely reveal exactly when an eruption occurred or how high its sulfur rose. Sébastien Guillet and colleagues therefore examined descriptions of total lunar eclipses, during which the Moon ordinarily glows a dim red, recorded in European, Middle Eastern, and East Asian sources from 1100 to 1300 CE. The team concluded that eclipses described as unusually dark indicate the presence of volcanic haze in the stratosphere.",
+      "stem": "Which finding, if true, would most directly support the team’s conclusion?",
+      "options": [
+        "The largest sulfur deposits in the polar ice cores date to several years before the eclipses that medieval observers described as unusually dark, rather than to the months just before them.",
+        "Observers in East Asia recorded the color and brightness of total lunar eclipses in considerably more detail than observers in Europe and the Middle East did.",
+        "Nearly every eclipse that observers described as making the Moon almost disappear took place within two years after one of the largest sulfur deposits in the ice cores.",
+        "Eclipses that observers described as bright copper-red took place in several of the years that followed the largest sulfur deposits in the ice cores."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The team concluded that “eclipses described as unusually dark indicate the presence of volcanic haze in the stratosphere.” The text explains that sulfur from a large eruption forms a haze that “may persist for many months.” If nearly every eclipse that made the Moon almost disappear came within two years after one of the largest sulfur deposits in the ice cores, the darkest eclipses would line up with the times when such a haze should have been present, which is what the conclusion predicts.",
+      "distractors": {
+        "A": {
+          "recipe": "TRAP: right comparison, wrong time window",
+          "why_wrong": "A haze “may persist for many months,” not for several years, so sulfur deposited several years before the dark eclipses would not explain them; this timing does not tie the darkness to volcanic haze."
+        },
+        "B": {
+          "recipe": "OFF: a difference between sources, not a link between darkness and eruptions",
+          "why_wrong": "How carefully different observers described eclipses says nothing about whether dark eclipses coincided with volcanic haze."
+        },
+        "D": {
+          "recipe": "IRREL: bright eclipses, consistent with the passage's caveat, say nothing about dark ones",
+          "why_wrong": "This says nothing about the eclipses described as unusually dark, which are what the conclusion concerns; a bright eclipse after a large sulfur deposit is consistent with the text’s caveat that ice cores do not show how high an eruption’s sulfur rose, so it cannot show that dark eclipses reveal stratospheric haze."
+        }
+      },
+      "models": [
+        "2.1",
+        "2.6",
+        "2.21",
+        "2.43",
+        "2.4"
+      ],
+      "sources": [
+        {
+          "what": "Guillet, Corona, Oppenheimer, Lavigne, Khodri, Ludlow, Sigl, Toohey, Atkins, Yang, Muranaka, Horikawa, Stoffel 2023, Nature 616: 90-95, Lunar eclipses illuminate timing and climate impact of medieval volcanism: contemporary reports of total lunar eclipses (European, Middle Eastern and East Asian sources, 1100-1300 CE) give a time series of stratospheric turbidity; the dark (Danjon L = 0) eclipses of 1110, 1172, 1229, 1258 (twice) and 1276 are contemporary with five of the seven largest ice-core sulfate signals, strongly suggesting the darkening was related to volcanic aerosols in the stratosphere; a dark eclipse is most probably seen 3 to 20 months after an eruption; some sulfur-rich eruptions affected only the troposphere (abstract and full text, Europe PMC PMC10076221)",
+          "url": "https://doi.org/10.1038/s41586-023-05751-z"
+        }
+      ],
+      "notes": "Medium: two linked steps (darkness tied to haze, haze tied to the timing of ice-core sulfur). The key is close to what the paper found, stated as a hypothetical. Ice cores are said only to rarely reveal when or how high, as in the paper's motivation (dating uncertainty; tropospheric vs stratospheric). Publication 2023, past the usual official range but within the handful CB allows.",
+      "word_count": 102,
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "command_of_evidence.T1_single.medium.w5b5_13",
+      "template": "T1_single",
+      "subtype": "Hypothetical finding supports a causal claim through a manipulation (trimmed feathers shed heat): the key needs the treated group to differ only when it is hot",
+      "tier": "medium",
+      "band_target": null,
+      "passage": "Feeding nestlings can require parent birds to make hundreds of foraging flights a day. That exertion generates heat, which the birds must dissipate to avoid overheating. Simon Tapper and colleagues hypothesized that in hot weather, female tree swallows (Tachycineta bicolor) provision their chicks less frequently than they otherwise would because they cannot dissipate heat quickly enough. In an experiment, the researchers trimmed the belly feathers of some breeding females, which allows more body heat to escape through the skin, left other females’ feathers intact, and monitored how often each female fed her chicks.",
+      "stem": "Which finding, if true, would most directly support Tapper and colleagues’ hypothesis?",
+      "options": [
+        "When air temperatures were 25°C or higher, females with trimmed feathers fed their chicks more often than other females did, but at lower temperatures the two groups fed their chicks at similar rates.",
+        "On hot afternoons, both groups of females fed their chicks less often than they did on cool mornings, and the drop in feeding was about the same size for females with trimmed feathers as for the other females.",
+        "Females with trimmed feathers spent more time sitting on their nests to warm their chicks on cold nights than other females did.",
+        "Chicks in the nests of females with trimmed feathers called for food more often than chicks in the other nests did."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The team hypothesized that in hot weather, females feed their chicks less often “because they cannot dissipate heat quickly enough.” Trimming the belly feathers lets more heat escape, so if overheating is what holds the birds back, trimmed females should keep feeding at a higher rate than other females when it is hot, but not when it is cool, since heat would not limit either group then. Choice A describes exactly that pattern.",
+      "distractors": {
+        "B": {
+          "recipe": "TRAP: a decline in both groups that does not depend on the treatment",
+          "why_wrong": "If trimmed and untrimmed females cut back by the same amount on hot afternoons, being able to shed more heat made no difference, which suggests that something other than overheating (such as fewer insects) caused the drop."
+        },
+        "C": {
+          "recipe": "OFF: brooding on cold nights instead of feeding in hot weather",
+          "why_wrong": "This concerns how long females warmed their chicks on cold nights, not how often they brought food in hot weather, so it does not bear on the hypothesis."
+        },
+        "D": {
+          "recipe": "OFF/SUBJ: the chicks’ begging rather than the mothers’ feeding",
+          "why_wrong": "How often chicks called for food does not show whether heat limits how often their mothers feed them; if anything, hungrier chicks in those nests would suggest the trimmed females fed less."
+        }
+      },
+      "models": [
+        "2.21",
+        "2.43",
+        "2.6",
+        "2.38",
+        "2.7"
+      ],
+      "sources": [
+        {
+          "what": "Tapper, Nocera, Burness 2020, Royal Society Open Science 7: 201589, Experimental evidence that hyperthermia limits offspring provisioning in a temperate-breeding bird: heat dissipation capacity of breeding female tree swallows (Tachycineta bicolor) experimentally increased by trimming ventral feathers; trimmed birds maintained higher feeding rates than controls at high ambient temperatures (25 C or above) while keeping lower body temperatures (abstract, Europe PMC PMC7657879)",
+          "url": "https://doi.org/10.1098/rsos.201589"
+        }
+      ],
+      "notes": "Medium: the student must see why the trimming matters (it removes the heat limit) and that the treated group should differ only in the heat. The key matches the paper's finding, written as a hypothetical. The insect explanation is never stated in the passage; B is wrong because the treatment makes no difference, a TRAP of the affects-both-equally kind.",
+      "word_count": 93,
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "command_of_evidence.Q1_P3_pairwise.medium.w5b5_14",
+      "template": "Q1_P3_pairwise",
+      "subtype": "Data completion, pairwise comparison of two measures for one entity, chosen through a stated history (birds vs mammals in New Zealand)",
+      "tier": "medium",
+      "band_target": null,
+      "passage": "Before humans colonized New Zealand in the thirteenth century, its only indigenous terrestrial mammals were several species of bats, and many of the birds that evolved there without mammalian predators nested on the ground or were flightless. Introduced predators such as rats, cats, and stoats have since driven numerous bird species toward extinction. Consistent with that history, data compiled by the International Union for Conservation of Nature indicate that in 2018, ______",
+      "stem": "Which choice most effectively uses data from the table to complete the statement?",
+      "options": [
+        "Madagascar had more than three times as many threatened mammal species (121) as threatened bird species (37).",
+        "the Philippines had more threatened bird species (93) than New Zealand did (69).",
+        "New Zealand had more threatened fish species (38) than threatened mammal species (9).",
+        "New Zealand had more than seven times as many threatened bird species (69) as threatened mammal species (9)."
+      ],
+      "answer_letter": "D",
+      "table": {
+        "title": "Number of Threatened Species in Four Island Countries, 2018",
+        "columns": [
+          "Country",
+          "Threatened bird species",
+          "Threatened mammal species",
+          "Threatened fish species"
+        ],
+        "rows": [
+          [
+            "Madagascar",
+            "37",
+            "121",
+            "111"
+          ],
+          [
+            "New Zealand",
+            "69",
+            "9",
+            "38"
+          ],
+          [
+            "Philippines",
+            "93",
+            "38",
+            "91"
+          ],
+          [
+            "Sri Lanka",
+            "16",
+            "30",
+            "57"
+          ]
+        ],
+        "note": null
+      },
+      "figure": null,
+      "explanation": "The text explains that New Zealand had almost no native land mammals and that introduced predators have “driven numerous bird species toward extinction.” A statement consistent with that history would show many more threatened birds than threatened mammals in New Zealand. Choice D does this: the table shows 69 threatened bird species in New Zealand but only 9 threatened mammal species, more than seven times as many.",
+      "distractors": {
+        "A": {
+          "recipe": "WGRP: the right comparison for a different country",
+          "why_wrong": "The numbers are accurate, but they describe Madagascar, not New Zealand, so they say nothing about the history the text describes."
+        },
+        "B": {
+          "recipe": "IRREL: compares two countries on one measure",
+          "why_wrong": "This is accurate, but comparing the number of threatened birds in the Philippines and New Zealand does not show anything about the balance between birds and mammals in New Zealand, which is what the history explains."
+        },
+        "C": {
+          "recipe": "WRONG MEASURE: fish instead of birds",
+          "why_wrong": "This is accurate, but the text’s history concerns New Zealand’s birds, not its fish, so a comparison of fish and mammals does not fit the statement."
+        }
+      },
+      "models": [
+        "2.18",
+        "2.24",
+        "2.27",
+        "2.28",
+        "2.32",
+        "2.39"
+      ],
+      "sources": [
+        {
+          "what": "World Bank, World Development Indicators, Bird species, threatened (EN.BIR.THRD.NO), Mammal species, threatened (EN.MAM.THRD.NO), Fish species, threatened (EN.FSH.THRD.NO), 2018 (source: IUCN Red List via UNEP-WCMC); Madagascar 37 / 121 / 111, New Zealand 69 / 9 / 38, Philippines 93 / 38 / 91, Sri Lanka 16 / 30 / 57 (API fetched)",
+          "url": "https://data.worldbank.org/indicator/EN.BIR.THRD.NO"
+        },
+        {
+          "what": "New Zealand's only native land mammals are bats; many native birds are flightless or ground-nesting; introduced rats, cats and stoats have driven declines; Polynesian settlement in the 13th century (Wikipedia, Fauna of New Zealand)",
+          "url": "https://en.wikipedia.org/wiki/Fauna_of_New_Zealand"
+        }
+      ],
+      "notes": "Medium pairwise item: the key is one comparison of two columns for the right row; distractors are accurate comparisons of the wrong row, the wrong pair of rows, or the wrong column (CB 2.18 style). 69/9 = 7.7; 121/37 = 3.3.",
+      "word_count": 71,
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [
+          "no change: all 12 cells match World Bank EN.BIR/MAM/FSH.THRD.NO 2018"
+        ],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "command_of_evidence.Q1_P4_trend.medium.w5b5_15",
+      "template": "Q1_P4_trend",
+      "subtype": "Data completion, change over time with endpoints read as about values, contrasted with a near-flat series",
+      "tier": "medium",
+      "band_target": null,
+      "passage": "Economists have long observed that as countries become wealthier, workers tend to spend fewer hours on the job each year, but this change has proceeded at strikingly different rates. Between 1990 and 2019, for example, average annual working hours per worker in the United States fluctuated relatively little, whereas in South Korea, whose economy industrialized rapidly in the late twentieth century, average annual working hours ______",
+      "stem": "Which choice most effectively uses data from the graph to complete the assertion?",
+      "options": [
+        "fell from about 2,050 in 1990 to about 1,700 in 2019, dropping below the level of annual working hours in the United States by 2019.",
+        "fell from about 2,700 in 1990 to about 2,000 in 2019, though they remained higher than in any of the other three countries.",
+        "fell steadily from 1990 to 2019, so that by 2019 they were lower than those in Germany.",
+        "rose from about 2,500 in 2000 to about 2,650 in 2019 after a decline during the 1990s."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": {
+        "kind": "line graph",
+        "title": "Average Annual Working Hours per Worker in Four Countries, 1990–2019",
+        "x_axis": "Year",
+        "y_axis": "Hours worked per year",
+        "description": "Four lines at 1990, 1995, 2000, 2005, 2010, 2015 and 2019; y-axis 0 to 2,500 in steps of 500, with the plot extending to about 2,900. South Korea: about 2,670, 2,650, 2,510, 2,350, 2,150, 2,080, 1,960. Japan: about 2,050, 1,900, 1,850, 1,820, 1,770, 1,750, 1,690. United States: about 1,840, 1,860, 1,890, 1,830, 1,770, 1,810, 1,800. Germany: about 1,580, 1,530, 1,470, 1,430, 1,430, 1,400, 1,370. South Korea is the highest line in every year and falls the most; the United States line is nearly flat.",
+        "data": [
+          {
+            "series": "South Korea",
+            "points": [
+              [
+                "1990",
+                2674
+              ],
+              [
+                "1995",
+                2645
+              ],
+              [
+                "2000",
+                2509
+              ],
+              [
+                "2005",
+                2348
+              ],
+              [
+                "2010",
+                2153
+              ],
+              [
+                "2015",
+                2077
+              ],
+              [
+                "2019",
+                1963
+              ]
+            ]
+          },
+          {
+            "series": "Japan",
+            "points": [
+              [
+                "1990",
+                2049
+              ],
+              [
+                "1995",
+                1899
+              ],
+              [
+                "2000",
+                1847
+              ],
+              [
+                "2005",
+                1819
+              ],
+              [
+                "2010",
+                1773
+              ],
+              [
+                "2015",
+                1752
+              ],
+              [
+                "2019",
+                1688
+              ]
+            ]
+          },
+          {
+            "series": "United States",
+            "points": [
+              [
+                "1990",
+                1836
+              ],
+              [
+                "1995",
+                1860
+              ],
+              [
+                "2000",
+                1888
+              ],
+              [
+                "2005",
+                1829
+              ],
+              [
+                "2010",
+                1773
+              ],
+              [
+                "2015",
+                1809
+              ],
+              [
+                "2019",
+                1797
+              ]
+            ]
+          },
+          {
+            "series": "Germany",
+            "points": [
+              [
+                "1990",
+                1583
+              ],
+              [
+                "1995",
+                1529
+              ],
+              [
+                "2000",
+                1465
+              ],
+              [
+                "2005",
+                1432
+              ],
+              [
+                "2010",
+                1425
+              ],
+              [
+                "2015",
+                1402
+              ],
+              [
+                "2019",
+                1372
+              ]
+            ]
+          }
+        ]
+      },
+      "explanation": "The text contrasts the United States, where working hours “fluctuated relatively little,” with South Korea, so the blank must describe a large change in South Korea’s hours. The graph shows that South Korea’s average annual working hours fell from about 2,700 in 1990 to about 2,000 in 2019, a drop of roughly 700 hours, and that South Korea’s line stays above the other three countries’ lines in every year. Choice B states both facts accurately.",
+      "distractors": {
+        "A": {
+          "recipe": "WGRP: Japan’s values attributed to South Korea",
+          "why_wrong": "These are Japan’s figures (about 2,050 in 1990 and about 1,700 in 2019, below the United States); South Korea’s hours were about 2,700 and 2,000 and stayed above those in the United States."
+        },
+        "C": {
+          "recipe": "INACC: wrong comparison with another series",
+          "why_wrong": "South Korea’s hours did fall, but in 2019 they were about 2,000, far above Germany’s, which were below 1,400."
+        },
+        "D": {
+          "recipe": "WDIR: reverses the direction of the change",
+          "why_wrong": "South Korea’s hours fell, not rose, after 2000, from about 2,500 to about 2,000."
+        }
+      },
+      "models": [
+        "2.15",
+        "2.34",
+        "2.40"
+      ],
+      "sources": [
+        {
+          "what": "Our World in Data, Annual working hours per worker (source: Penn World Table / Huberman and Minns, via OWID grapher CSV): South Korea 2674 (1990), 2509 (2000), 1963 (2019); Japan 2049, 1847, 1688; United States 1836, 1888, 1797; Germany 1583, 1465, 1372",
+          "url": "https://ourworldindata.org/grapher/annual-working-hours-per-worker"
+        }
+      ],
+      "notes": "Medium trend item modeled on 2.15 (endpoints as about values, one series contrasted with others). Figure values rounded from OWID; the y-axis is drawn with steps of 500, so the key uses about values. 1963 is given as about 2,000.",
+      "word_count": 65,
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [
+          "no change: values match the OWID grapher CSV"
+        ],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "command_of_evidence.Q2_P8_multipart.medium.w5b5_16",
+      "template": "Q2_P8_multipart",
+      "subtype": "Data description, two-part claim (the toy shifts choices, and not only for one toy): the key needs both days",
+      "tier": "medium",
+      "band_target": null,
+      "passage": "Fast-food restaurants frequently include a toy with children’s meals. To determine whether a toy could steer children toward smaller portions, Martin Reimann and colleagues offered elementary school students in Tucson, Arizona, a choice between a regular-sized meal (580 calories) and a smaller one (420 calories), with a toy included in only one of the two. Each child chose twice, on separate days, receiving a different toy each time. A student concludes that pairing a toy with the smaller meal made many children more likely to select it, regardless of the particular toy.",
+      "stem": "Which choice best describes data from the table that support the student’s conclusion?",
+      "options": [
+        "On the first day, 44% of children chose the smaller meal when it came with the toy, whereas only 3% did when the toy came with the regular-sized meal.",
+        "In both conditions and on both days, most children chose the regular-sized meal rather than the smaller one.",
+        "On both days, a far larger share of children chose the smaller meal when it came with the toy (44% and 36%) than when the toy came with the regular-sized meal (3% and 8%).",
+        "Among children offered the toy with the smaller meal, the share who chose that meal fell from 44% on the first day to 36% on the second day."
+      ],
+      "answer_letter": "C",
+      "table": {
+        "title": "Percentage of Children Who Chose the Smaller Meal",
+        "columns": [
+          "Condition",
+          "First day (%)",
+          "Second day (%)"
+        ],
+        "rows": [
+          [
+            "Toy included with regular-sized meal",
+            "3",
+            "8"
+          ],
+          [
+            "Toy included with smaller meal",
+            "44",
+            "36"
+          ]
+        ],
+        "note": null
+      },
+      "figure": null,
+      "explanation": "The conclusion has two parts: the toy made children more likely to choose the smaller meal, and it did so “regardless of the particular toy.” Because the toy was different on each day, the second part requires the same pattern on both days. Choice C shows that on both the first and second days, far more children chose the smaller meal when the toy came with it (44% and 36%) than when the toy came with the regular-sized meal (3% and 8%).",
+      "distractors": {
+        "A": {
+          "recipe": "PART: one day only",
+          "why_wrong": "This is accurate, but it describes only the first day, when children saw just one toy, so it cannot show that the effect held with a different toy."
+        },
+        "B": {
+          "recipe": "CONTRA/IRREL: an accurate pattern that does not compare the conditions",
+          "why_wrong": "It is true that fewer than half of the children chose the smaller meal in each case, but this says nothing about whether including the toy with the smaller meal raised the share who chose it."
+        },
+        "D": {
+          "recipe": "IRREL: a change within one condition",
+          "why_wrong": "This compares one condition across the two days rather than comparing the conditions with each other, so it does not show that the toy made children more likely to choose the smaller meal."
+        }
+      },
+      "models": [
+        "2.8",
+        "2.42"
+      ],
+      "sources": [
+        {
+          "what": "Reimann, Lane, van Wouwe 2017, PLoS ONE 12(1): e0169638, Can a Toy Encourage Lower Calorie Meal Bundle Selection in Children? A Field Experiment on the Reinforcing Effects of Toys on Food Choice: 109 children at two Tucson, Arizona, elementary schools chose between a smaller-sized (420 calorie) and a regular-sized (580 calorie) meal bundle, with a toy paired with one of them; two choices on different days (T1 and T2), the toys differed between T1 and T2; Table 1: chose the smaller bundle 3% (T1) and 8% (T2) with the toy on the regular bundle, 44% and 36% with the toy on the smaller bundle (Europe PMC PMC5235367)",
+          "url": "https://doi.org/10.1371/journal.pone.0169638"
+        }
+      ],
+      "notes": "Medium two-part claim; the conclusion is given to a student, since the paper does not frame the changed toys as a test of toy independence. Children took part in a summer program; meals came from a nearby fast-food restaurant.",
+      "word_count": 94,
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "command_of_evidence.Q1_P1_lookup.easy.w5b5_17",
+      "template": "Q1_P1_lookup",
+      "subtype": "Data completion, lookup of one named cell (fat content of the water scorpion), with the same row's other column as a lure",
+      "tier": "easy",
+      "band_target": null,
+      "passage": "In Assam, a state in northeastern India, aquatic insects are collected from the wild and sold in local markets as food. Mintu Sarmah and colleagues analyzed the nutritional content of five such species. All five proved rich in protein, but their fat content varied considerably; for example, the water scorpion contains only ______",
+      "stem": "Which choice most effectively uses data from the table to complete the example?",
+      "options": [
+        "8.90 grams of fat per 100 grams.",
+        "26.63 grams of fat per 100 grams.",
+        "54.75 grams of fat per 100 grams.",
+        "28.95 grams of fat per 100 grams."
+      ],
+      "answer_letter": "A",
+      "table": {
+        "title": "Protein and Fat in Five Edible Aquatic Insects from Assam, India",
+        "columns": [
+          "Insect",
+          "Protein (grams per 100 grams, dry weight)",
+          "Fat (grams per 100 grams, dry weight)"
+        ],
+        "rows": [
+          [
+            "Water bug",
+            "57.67",
+            "27.87"
+          ],
+          [
+            "Diving beetle",
+            "51.42",
+            "28.95"
+          ],
+          [
+            "Giant water bug",
+            "50.03",
+            "26.63"
+          ],
+          [
+            "Water scorpion",
+            "54.75",
+            "8.90"
+          ],
+          [
+            "Water stick insect",
+            "56.56",
+            "8.67"
+          ]
+        ],
+        "note": null
+      },
+      "figure": null,
+      "explanation": "The example must give the water scorpion’s fat content. In the table, the water scorpion row shows 8.90 grams of fat per 100 grams, which is far less than the water bug, diving beetle, and giant water bug contain, so it illustrates that the insects’ fat content “varied considerably.”",
+      "distractors": {
+        "B": {
+          "recipe": "WGRP: the giant water bug’s fat content",
+          "why_wrong": "26.63 grams is the fat content of the giant water bug, not the water scorpion."
+        },
+        "C": {
+          "recipe": "WRONG COLUMN: the water scorpion’s protein content",
+          "why_wrong": "54.75 grams is the water scorpion’s protein content, not its fat content."
+        },
+        "D": {
+          "recipe": "WGRP: the diving beetle’s fat content",
+          "why_wrong": "28.95 grams is the fat content of the diving beetle, not the water scorpion."
+        }
+      },
+      "models": [
+        "1.30",
+        "1.38",
+        "1.44",
+        "1.43"
+      ],
+      "sources": [
+        {
+          "what": "Sarmah, Bhattacharyya, Bhagawati, Sarmah 2022, Insects 13(11): 976, Nutritional Composition of Some Commonly Available Aquatic Edible Insects of Assam, India: aquatic insects are collected from the wild and sold in local markets in Manipur, Nagaland and Assam; Table 1 proximate composition (g/100 g dry weight), crude protein / crude fat: Diplonychus rusticus (water bug) 57.67 / 27.87, Cybister sp. (diving beetle) 51.42 / 28.95, Lethocerus indicus (giant water bug) 50.03 / 26.63, Laccotrephes sp. (water scorpion) 54.75 / 8.90, Ranatra sp. (water stick) 56.56 / 8.67 (Europe PMC PMC9695363)",
+          "url": "https://doi.org/10.3390/insects13110976"
+        }
+      ],
+      "notes": "Easy lookup with value-only options (CB 1.30, 1.38 style); one lure is the right row's other column. Means only (the paper gives mean plus or minus SD).",
+      "word_count": 52,
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "command_of_evidence.Q1_P1_lookup.easy.w5b5_18",
+      "template": "Q1_P1_lookup",
+      "subtype": "Data completion, reverse lookup (the Soviet rover that landed in 1973, then its distance)",
+      "tier": "easy",
+      "band_target": null,
+      "passage": "Since 1970, robotic rovers built by the Soviet Union, China, and India have explored the lunar surface, each one steered remotely by operators on Earth. A student comparing these vehicles notes that the Soviet rover that landed on the Moon in 1973 traveled ______",
+      "stem": "Which choice most effectively uses data from the table to complete the statement?",
+      "options": [
+        "10,500 meters.",
+        "39,000 meters.",
+        "115 meters.",
+        "101 meters."
+      ],
+      "answer_letter": "B",
+      "table": {
+        "title": "Four Rovers That Have Operated on the Moon",
+        "columns": [
+          "Rover",
+          "Country",
+          "Year landed",
+          "Distance traveled (meters)"
+        ],
+        "rows": [
+          [
+            "Lunokhod 1",
+            "Soviet Union",
+            "1970",
+            "10,500"
+          ],
+          [
+            "Lunokhod 2",
+            "Soviet Union",
+            "1973",
+            "39,000"
+          ],
+          [
+            "Yutu",
+            "China",
+            "2013",
+            "115"
+          ],
+          [
+            "Pragyan",
+            "India",
+            "2023",
+            "101"
+          ]
+        ],
+        "note": null
+      },
+      "figure": null,
+      "explanation": "The table shows two Soviet rovers. The one that landed in 1973 is Lunokhod 2, and the table shows that it traveled 39,000 meters.",
+      "distractors": {
+        "A": {
+          "recipe": "WGRP: the other Soviet rover",
+          "why_wrong": "10,500 meters is the distance traveled by Lunokhod 1, the Soviet rover that landed in 1970, not 1973."
+        },
+        "C": {
+          "recipe": "WGRP: a Chinese rover",
+          "why_wrong": "115 meters is the distance traveled by Yutu, a Chinese rover that landed in 2013."
+        },
+        "D": {
+          "recipe": "WGRP: an Indian rover",
+          "why_wrong": "101 meters is the distance traveled by Pragyan, an Indian rover that landed in 2023."
+        }
+      },
+      "models": [
+        "1.37",
+        "1.43",
+        "1.33",
+        "1.12"
+      ],
+      "sources": [
+        {
+          "what": "Wikipedia, List of rovers on extraterrestrial bodies, lunar rovers: Lunokhod 1 (Luna 17, USSR) landed 17 November 1970, 10.5 km; Lunokhod 2 (Luna 21, USSR) landed 15 January 1973, 39 km, farthest distance traveled on the Moon; Yutu (Chang'e 3, CNSA) landed 14 December 2013, 114.8 m; Pragyan (Chandrayaan-3, ISRO) landed 23 August 2023, 101.4 m. Yutu-2 is left out because its distance is given only as of a date while it was still operating.",
+          "url": "https://en.wikipedia.org/wiki/List_of_rovers_on_extraterrestrial_bodies"
+        }
+      ],
+      "notes": "Easy reverse lookup (CB 1.37, 1.43 style): the student must find the 1973 row among two Soviet rovers. Yutu's 114.8 m and Pragyan's 101.4 m are rounded to whole meters.",
+      "word_count": 43,
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "command_of_evidence.T1_single.easy.w5b5_19",
+      "template": "T1_single",
+      "subtype": "Hypothetical finding supports a causal claim (snails reduce slug damage): one-step operationalization with the right comparison",
+      "tier": "easy",
+      "band_target": null,
+      "passage": "The Spanish slug (Arion vulgaris), an invasive species, has spread across much of Europe in recent decades, damaging crops and ornamental plants. Daniel Dörler and colleagues grew lettuce in containers holding Spanish slugs alone, Roman snails (Helix pomatia) alone, or both species together. They were testing an idea popular among gardeners: that the presence of the Roman snail, a large native species, reduces the destruction Spanish slugs cause.",
+      "stem": "Which finding, if true, would most directly support the gardeners’ idea?",
+      "options": [
+        "Roman snails ate less lettuce for their body weight than Spanish slugs did when each species was kept alone in a container.",
+        "Spanish slugs ate more lettuce in containers that were watered every day than in containers that were watered only once every three days.",
+        "Roman snails ate almost none of the eggs laid by Spanish slugs when the snails were offered the eggs as food.",
+        "Spanish slugs that shared a container with Roman snails ate less lettuce for their body weight than slugs kept without snails did."
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The gardeners’ idea is that “the presence of the Roman snail, a large native species, reduces the destruction Spanish slugs cause.” If slugs that shared a container with Roman snails ate less lettuce for their body weight than slugs kept without snails, the snails’ presence would have reduced the slugs’ damage to the lettuce, which is exactly what the idea predicts.",
+      "distractors": {
+        "A": {
+          "recipe": "OFF: compares the two species instead of slugs with and without snails",
+          "why_wrong": "This shows only that snails eat less than slugs do; it says nothing about whether having snails around changes how much the slugs eat."
+        },
+        "B": {
+          "recipe": "OFF: a different variable (watering)",
+          "why_wrong": "How watering affects the slugs’ feeding has nothing to do with whether Roman snails reduce the damage slugs do."
+        },
+        "C": {
+          "recipe": "OPP: rules out one way snails could control slugs",
+          "why_wrong": "If the snails hardly ever ate slug eggs, they would not be reducing the number of slugs that way, so this would, if anything, weaken the gardeners’ idea."
+        }
+      },
+      "models": [
+        "1.1",
+        "1.29",
+        "1.45",
+        "1.5",
+        "1.8"
+      ],
+      "sources": [
+        {
+          "what": "Dorler, Dorn, Widhalm, Horacek, Heigl, Euteneuer et al. 2021, PeerJ 9: e11309, Experimental indications of gardeners' anecdotes that snails interfere with invasive slugs: the invasive Spanish slug (Arion vulgaris) has spread across Europe and outcompetes native slugs and snails; a popular anecdote suggests promoting Roman snails (Helix pomatia) because they control A. vulgaris; mesocosm experiment with lettuce, Arion only, Helix only and both; herbivory per body mass lower in mixed mesocosms than Arion-only ones; three of 200 Arion eggs eaten by Helix (abstract, Europe PMC PMC8121057)",
+          "url": "https://doi.org/10.7717/peerj.11309"
+        }
+      ],
+      "notes": "Easy one-step item. The key is close to the paper's result, stated as a hypothetical; C states the paper's real egg result and is wrong because it weakens. Dorler spelled Dörler in the passage.",
+      "word_count": 69,
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "command_of_evidence.T3_person_quote.easy.w5b5_20",
+      "template": "T3_person_quote",
+      "subtype": "Quotation from a historian supports a claim about influence (social work shaped the activities of the organization she organized)",
+      "tier": "easy",
+      "band_target": null,
+      "passage": "In the 1920s, Filipino teacher Josefa Llanes Escoda earned a master’s degree in social work in New York and then returned home to direct relief work in rural communities for the Red Cross in the Philippines. In 1939 she went to the United States for training in girl scouting, and in 1940 she organized the Girl Scouts of the Philippines. A history student claims that Escoda’s experience in social work shaped the activities of the new organization.",
+      "stem": "Which quotation from a work by a historian would be the most effective evidence for the student to include in support of this claim?",
+      "options": [
+        "“On the night before the 1937 vote that decided whether Filipino women would gain the right to vote, Escoda spoke on the radio in Ilocano, the language of her home province, urging listeners to support the measure.”",
+        "“When President Manuel L. Quezon signed its charter in May 1940, the Girl Scouts of the Philippines had about 1,000 members, and by December 1941 it had about 3,000.”",
+        "“When Japanese forces occupied the Philippines during World War II, members of the Girl Scouts of the Philippines raised funds for relief work and helped bring food, clothing, and medicine to prisoners of war.”",
+        "“While studying in New York, Escoda paid many of her expenses by working in offices and caring for children, and she gave paid lectures about the Philippines to American audiences.”"
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The student claims that Escoda’s experience in social work, which included directing “relief work in rural communities,” shaped the activities of the Girl Scouts of the Philippines. Choice C shows such an activity: during World War II, members of the organization “raised funds for relief work and helped bring food, clothing, and medicine to prisoners of war,” the same kind of relief work Escoda had directed as a social worker.",
+      "distractors": {
+        "A": {
+          "recipe": "OFF: her suffrage campaign, not the organization's activities",
+          "why_wrong": "This shows Escoda campaigning for women’s right to vote, but it says nothing about what the Girl Scouts of the Philippines did, so it cannot show that her social work shaped that organization’s activities."
+        },
+        "B": {
+          "recipe": "TRAP: about the organization, but its size rather than its activities",
+          "why_wrong": "This describes how many members the Girl Scouts of the Philippines had, not what those members did, so it gives no evidence that Escoda’s social work shaped the organization’s activities."
+        },
+        "D": {
+          "recipe": "OFF: her student jobs and lectures",
+          "why_wrong": "This describes how Escoda supported herself as a student in New York; it concerns neither her relief work nor the activities of the organization she later organized."
+        }
+      },
+      "models": [
+        "1.19",
+        "1.15",
+        "1.20",
+        "1.26"
+      ],
+      "sources": [
+        {
+          "what": "Wikipedia, Josefa Llanes Escoda: Filipino teacher and social worker; New York School of Social Work, master's degree in social work from Columbia University (1925); paid expenses with office work and baby-sitting and gave paid lectures about the Philippines; field secretary of the Philippine Chapter of the American Red Cross 1926 to 1929, managing civilian relief in rural communities; spoke in Ilocano on radio station KZRM on the eve of the 30 April 1937 women's suffrage plebiscite; trained in girl scouting in the United States in 1939; Quezon signed the Girl Scouts of the Philippines charter on 26 May 1940 (1,000 Girl Scouts), about 3,000 by December 1941; during the occupation the Girl Scouts provided funds for social work and relief to prisoners of war and, with the NFWC, clothing, food and medicine (page fetched). Historian quotations are invented, unattributed, and consistent with these facts.",
+          "url": "https://en.wikipedia.org/wiki/Josefa_Llanes_Escoda"
+        }
+      ],
+      "notes": "Reviewer replaced the subject: Jovita Idár, La Crónica and the League of Mexican Women are an official Transitions item (cb 2b5f4bdc). Easy T3: the key is the only quotation about what the organization's members did; B is about the organization but only its size. All four quotations come from an unnamed historian; no words are put in the mouth of Escoda or any named person, and her own wartime message is not used.",
+      "word_count": 77,
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 6,
+        "fixes": [
+          "replaced the subject: Jovita Idár, La Crónica and the League of Mexican Women are an official Transitions item (cb 2b5f4bdc); new subject Josefa Llanes Escoda and the Girl Scouts of the Philippines, checked on Wikipedia, claim appended and the old one withdrawn",
+          "all four quotations come from an unnamed historian; no words put in a named person's mouth",
+          "key letter C kept"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "command_of_evidence.T2_lit_quote.easy.w5b5_21",
+      "template": "T2_lit_quote",
+      "subtype": "Literary quotation, single trait (the Lithuanian is stubbornly determined)",
+      "tier": "easy",
+      "band_target": null,
+      "passage": "“If Not Higher” is a short story by I.L. Peretz, translated from Yiddish in 1906 by Helena Frank. The narrator presents a skeptical Lithuanian visitor as stubbornly determined to learn where the town’s Rebbe (religious leader) goes early on Friday mornings: ______",
+      "stem": "Which quotation from “If Not Higher” most effectively illustrates the claim?",
+      "options": [
+        "“He confessed afterwards, did the Lithuanian, that when he found himself alone with the Rebbe terror took hold of him.”",
+        "“But a Lithuanian is dogged. He quivers and quakes like a fish—but he does not budge.”",
+        "“The Rebbe keeps to the street side, and walks in the shadow of the houses.”",
+        "“Behind the town stands a little wood. The Rebbe, long life to him, enters it. He walks on thirty or forty paces, and then he stops beside a small tree.”"
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The claim is that the narrator presents the Lithuanian as stubbornly determined. In choice B the narrator calls him “dogged” and adds that although he “quivers and quakes like a fish,” he “does not budge.” The Lithuanian is frightened, yet he holds his ground, which shows his stubborn determination.",
+      "distractors": {
+        "A": {
+          "recipe": "HALF: his fear without his persistence",
+          "why_wrong": "This quotation shows that “terror took hold of” the Lithuanian, but it does not show him holding his ground in spite of that fear, so it does not show his determination."
+        },
+        "C": {
+          "recipe": "SUBJ: describes the Rebbe, not the Lithuanian",
+          "why_wrong": "This quotation describes how the Rebbe walks through the town; it says nothing about the Lithuanian."
+        },
+        "D": {
+          "recipe": "OFF: setting and the Rebbe’s actions",
+          "why_wrong": "This quotation describes the wood behind the town and where the Rebbe stops; it says nothing about the Lithuanian’s determination."
+        }
+      },
+      "models": [
+        "1.11",
+        "1.16",
+        "1.39"
+      ],
+      "sources": [
+        {
+          "what": "I.L. Peretz, Stories and Pictures, translated from the Yiddish by Helena Frank (Philadelphia: Jewish Publication Society of America, 1906), story I, If Not Higher. Quotations copied verbatim (Gutenberg -- rendered as an em dash). The preface dates the stories only broadly (written 1875 to 1900), so no year of first publication is given.",
+          "url": "https://www.gutenberg.org/ebooks/37242"
+        }
+      ],
+      "notes": "Easy single-trait claim. Left out on purpose: The Lithuanian trembles, but he persists, and Another in his place would have dozed... he learned a whole treatise of the Talmud by heart, which would also show determination.",
+      "word_count": 42,
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [
+          "the Rebbe vanishes early on Friday mornings in the story, not each morning: passage corrected",
+          "all four quotations verbatim (Gutenberg 37242)"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "command_of_evidence.Q1_P4_trend.easy.w5b5_22",
+      "template": "Q1_P4_trend",
+      "subtype": "Data completion, a sharp rise in one series among four (example of a stated trend)",
+      "tier": "easy",
+      "band_target": null,
+      "passage": "Since the late 2010s, Saudi Arabia has introduced a series of reforms affecting women, including lifting its longstanding ban on women driving in 2018. During the same period, the share of Saudi women in the labor force (the percentage of women aged 15 and older who are either employed or looking for work) increased considerably, as estimates from the International Labour Organization show. According to the graph, for instance, the labor force participation rate for women in Saudi Arabia ______",
+      "stem": "Which choice most effectively uses data from the graph to complete the example?",
+      "options": [
+        "rose from about 20% in 2017 to about 34% in 2022.",
+        "stayed at about 30% from 2015 to 2022.",
+        "fell from about 23% in 2016 to about 15% in 2022.",
+        "stayed below 17% in every year shown, from 2015 to 2022."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": {
+        "kind": "line graph",
+        "title": "Labor Force Participation Rate for Women in Four Countries, 2015–2022",
+        "x_axis": "Year",
+        "y_axis": "Women aged 15 and older in the labor force (%)",
+        "description": "Four lines at each year from 2015 to 2022; y-axis 0 to 30 percent in steps of 10, with the plot extending to about 38. Saudi Arabia: about 22, 23, 20, 22, 24, 29, 34, 34 (a sharp rise after 2017). Oman: about 30, 30, 31, 30, 30, 29, 30, 31 (nearly flat). Egypt: about 23, 23, 22, 18, 16, 15, 16, 15 (a decline). Jordan: about 14, 15, 17, 15, 14, 15, 14, 14 (nearly flat and lowest). Saudi Arabia rises above Oman in 2021.",
+        "data": [
+          {
+            "series": "Saudi Arabia",
+            "points": [
+              [
+                "2015",
+                21.6
+              ],
+              [
+                "2016",
+                22.9
+              ],
+              [
+                "2017",
+                19.9
+              ],
+              [
+                "2018",
+                21.8
+              ],
+              [
+                "2019",
+                24.4
+              ],
+              [
+                "2020",
+                29.3
+              ],
+              [
+                "2021",
+                34.2
+              ],
+              [
+                "2022",
+                34.1
+              ]
+            ]
+          },
+          {
+            "series": "Oman",
+            "points": [
+              [
+                "2015",
+                29.6
+              ],
+              [
+                "2016",
+                30.3
+              ],
+              [
+                "2017",
+                30.5
+              ],
+              [
+                "2018",
+                30.4
+              ],
+              [
+                "2019",
+                30.2
+              ],
+              [
+                "2020",
+                29.1
+              ],
+              [
+                "2021",
+                29.6
+              ],
+              [
+                "2022",
+                30.8
+              ]
+            ]
+          },
+          {
+            "series": "Egypt",
+            "points": [
+              [
+                "2015",
+                22.8
+              ],
+              [
+                "2016",
+                23.1
+              ],
+              [
+                "2017",
+                22.2
+              ],
+              [
+                "2018",
+                18.4
+              ],
+              [
+                "2019",
+                15.9
+              ],
+              [
+                "2020",
+                14.6
+              ],
+              [
+                "2021",
+                15.6
+              ],
+              [
+                "2022",
+                15.2
+              ]
+            ]
+          },
+          {
+            "series": "Jordan",
+            "points": [
+              [
+                "2015",
+                13.6
+              ],
+              [
+                "2016",
+                15.1
+              ],
+              [
+                "2017",
+                16.6
+              ],
+              [
+                "2018",
+                14.6
+              ],
+              [
+                "2019",
+                13.7
+              ],
+              [
+                "2020",
+                15.0
+              ],
+              [
+                "2021",
+                14.0
+              ],
+              [
+                "2022",
+                13.9
+              ]
+            ]
+          }
+        ]
+      },
+      "explanation": "The text says that the share of Saudi women in the labor force “increased considerably,” so the example must show a large increase for Saudi Arabia. The graph shows that Saudi Arabia’s rate rose from about 20% in 2017 to about 34% in 2022, as choice A states.",
+      "distractors": {
+        "B": {
+          "recipe": "WGRP: Oman’s nearly flat line",
+          "why_wrong": "The rate that stayed at about 30% is Oman’s; Saudi Arabia’s rate rose from about 20% to about 34%."
+        },
+        "C": {
+          "recipe": "WGRP: Egypt’s declining line",
+          "why_wrong": "The rate that fell from about 23% to about 15% is Egypt’s, and a decline would not illustrate an increase in any case."
+        },
+        "D": {
+          "recipe": "WGRP: Jordan’s low, flat line",
+          "why_wrong": "The rate that stayed below 17% is Jordan’s; Saudi Arabia’s rate was above 17% in every year shown."
+        }
+      },
+      "models": [
+        "1.6",
+        "1.10"
+      ],
+      "sources": [
+        {
+          "what": "World Bank, World Development Indicators, Labor force participation rate, female (% of female population ages 15+) (modeled ILO estimate), SL.TLF.CACT.FE.ZS, 2015-2022 (API fetched): Saudi Arabia 21.6, 22.9, 19.9, 21.8, 24.4, 29.3, 34.2, 34.1; Oman 29.6 ... 30.8; Egypt 22.8 ... 15.2; Jordan 13.6 ... 13.9",
+          "url": "https://data.worldbank.org/indicator/SL.TLF.CACT.FE.ZS"
+        },
+        {
+          "what": "Saudi Arabia lifted its ban on women driving on 24 June 2018 (Wikipedia, Women to drive movement)",
+          "url": "https://en.wikipedia.org/wiki/Women_to_drive_movement"
+        }
+      ],
+      "notes": "Easy trend item modeled on 1.10 (one series rises sharply among four; wrong options give the other series' patterns). The passage claims only that the two happened in the same period, not that one caused the other.",
+      "word_count": 79,
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [
+          "no change: series match World Bank SL.TLF.CACT.FE.ZS 2015 to 2022"
+        ],
+        "status": "pass"
+      }
+    }
+  ],
+  "removed": []
+}

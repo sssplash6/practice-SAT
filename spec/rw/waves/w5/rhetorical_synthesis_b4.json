@@ -1,0 +1,1250 @@
+{
+  "skill": "Rhetorical Synthesis",
+  "slug": "rhetorical_synthesis",
+  "part": "w5b4",
+  "domain": "Expression of Ideas",
+  "plan": {
+    "templates": [
+      {
+        "code": "EXPL",
+        "name": "Explain (cause, origin, advantage, mechanism, definition, significance)"
+      },
+      {
+        "code": "GEN",
+        "name": "Generalization, with or without support"
+      },
+      {
+        "code": "AUD_FAM",
+        "name": "Present or describe to an already familiar audience"
+      },
+      {
+        "code": "SPEC",
+        "name": "Specify or identify a single fact"
+      },
+      {
+        "code": "DIFF",
+        "name": "Difference"
+      },
+      {
+        "code": "AUD_NEW",
+        "name": "Introduce or describe to an unfamiliar or new audience"
+      },
+      {
+        "code": "EMPH",
+        "name": "Emphasize one attribute"
+      },
+      {
+        "code": "EXAMPLE",
+        "name": "Example, or explanation plus example"
+      },
+      {
+        "code": "STUDY",
+        "name": "Research study (aim, method, results)"
+      },
+      {
+        "code": "SIM",
+        "name": "Similarity"
+      },
+      {
+        "code": "RANK",
+        "name": "Order or relative degree"
+      },
+      {
+        "code": "QUOTE",
+        "name": "Quotation"
+      }
+    ]
+  },
+  "items": [
+    {
+      "id": "rhetorical_synthesis.EXPL.hard.w5b4_01",
+      "template": "EXPL",
+      "subtype": "Explain why (reason linking two bullets)",
+      "tier": "hard",
+      "passage": "While researching a topic, a student has taken the following notes:\n• In 1972, British computer scientist Karen Spärck Jones proposed a statistical method for ranking documents retrieved by searches.\n• Her method, inverse document frequency, weights each search term according to how many documents in a collection contain it.\n• A term appearing in nearly every document, such as “system” in engineering reports, does little to distinguish one document from another.\n• A term appearing in only a few documents is much more likely to identify the relevant ones.\n• Variations of her method remain central to modern search engines.",
+      "stem": "The student wants to explain why inverse document frequency gives rare search terms more weight than common ones. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "Proposed by British computer scientist Karen Spärck Jones in 1972, inverse document frequency weights each search term according to how many documents in a collection contain it.",
+        "Because a term such as “system” appears in only a few engineering reports, inverse document frequency gives it more weight, making relevant reports easier to identify.",
+        "A term such as “system” appears in nearly every engineering report, while other terms appear in only a few documents.",
+        "Inverse document frequency weights rare terms more heavily because they are far better than common terms at singling out the relevant documents."
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The goal asks why rare terms get more weight. The notes say a common term “does little to distinguish one document from another,” while a term appearing in only a few documents “is much more likely to identify the relevant ones.” Choice D gives that reason in its own words and links it to how the method weights rare terms.",
+      "distractors": {
+        "A": {
+          "recipe": "OG (what the method is and who proposed it)",
+          "why_wrong": "It says what inverse document frequency does and who proposed it but never explains why rare terms should count for more."
+        },
+        "B": {
+          "recipe": "FALSE (goal-shaped: misattaches the common-term example to rare terms)",
+          "why_wrong": "It has the shape of an explanation, but it misstates the notes: “system” is their example of a term appearing “in nearly every document,” one that “does little to distinguish one document from another,” not a rare term."
+        },
+        "C": {
+          "recipe": "LIST (both facts, no link to weighting)",
+          "why_wrong": "It sets common and rare terms side by side but never says why the difference matters for finding relevant documents or how the method weights them."
+        }
+      },
+      "models": [
+        "3.2",
+        "3.17",
+        "d4b07ce6"
+      ],
+      "word_count": 85,
+      "sources": [],
+      "notes": "Subject: technology (Karen Spärck Jones and inverse document frequency, 1972; well-known facts only, no invented details). Band 6: the goal states the weighting rule, and the key supplies the reason from two bullets; one goal-shaped FALSE (B reverses the weighting), one LIST in the manner of 3.2 C, one OG description.",
+      "band_target": 6,
+      "band7": {
+        "verdict": "band 6",
+        "why": "Planned band 6. Why-goal whose key derives the reason from bullets 3 and 4; after the fix one goal-shaped FALSE (B, caught only by checking bullet 3), one LIST (C, as 3.2 C) and one OG (A). One FALSE option is the band-6 count (band 7 wants two)."
+      },
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 0,
+        "facts": "Rhetorical Synthesis: no web check (WAVE.md); checked only that nothing made up is attributed to a real, named person or organisation (named people are real and credited only with their documented work; the stork study is unnamed and generic)",
+        "fixes": [
+          "B rebuilt: the old B said common terms get the most weight, which the goal itself rules out; the new B gives the right weighting and a reason but misattaches the common-term example (“system”) to rare terms, so it fails only against bullet 3",
+          "D paraphrased away from bullet 4 (far better at singling out the relevant documents)",
+          "explanation and B why_wrong rewritten to match"
+        ],
+        "status": "fixed"
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "D",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "rhetorical_synthesis.GEN.hard.w5b4_02",
+      "template": "GEN",
+      "subtype": "Make and support a generalization",
+      "tier": "hard",
+      "passage": "While researching a topic, a student has taken the following notes:\n• In the 1990s, legal scholar Michael Heller observed that many storefronts in Moscow remained unoccupied.\n• Meanwhile, makeshift metal kiosks on the sidewalks in front of them were stocked with merchandise.\n• Heller discovered that for each storefront, multiple government agencies held a right to block its use.\n• He called this situation a “tragedy of the anticommons.”\n• He later argued that biomedical research could be slowed similarly when numerous patent holders must each grant permission.",
+      "stem": "The student wants to make and support a generalization about the tragedy of the anticommons. Which choice most effectively uses relevant information from the notes to accomplish these goals?",
+      "options": [
+        "In the 1990s, many storefronts in Moscow remained unoccupied while metal kiosks in front of them were stocked with merchandise, since multiple agencies could block the use of each storefront.",
+        "In a tragedy of the anticommons, a resource can go unused because too many parties are able to block its use, as with Moscow’s unoccupied storefronts in the 1990s.",
+        "Heller argued that a tragedy of the anticommons could slow biomedical research when numerous patent holders must each grant permission.",
+        "A tragedy of the anticommons occurs when a resource is overused because no one is able to block its use, as the well-stocked kiosks of 1990s Moscow show."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "A generalization must cover the tragedy of the anticommons as a whole, and support must come from a case. The notes say that for each Moscow storefront “multiple government agencies held a right to block its use” and that the storefronts “remained unoccupied.” Choice B states the general pattern (a resource goes unused when too many parties can block it) and supports it with the storefronts.",
+      "distractors": {
+        "A": {
+          "recipe": "PART (support without the generalization)",
+          "why_wrong": "It describes the Moscow case accurately but makes no general claim about the tragedy of the anticommons."
+        },
+        "C": {
+          "recipe": "PART (one further case, no generalization or support)",
+          "why_wrong": "It reports Heller’s argument about one field, biomedical research, without making a general claim or supporting one with evidence from the notes."
+        },
+        "D": {
+          "recipe": "FALSE (goal-shaped: wrong pattern, wrong case)",
+          "why_wrong": "It has the shape of a supported generalization, but the notes describe resources left unused because several parties could block them, not resources overused because no one could; the kiosks were not the anticommons case."
+        }
+      },
+      "models": [
+        "3.12",
+        "0acc26b2",
+        "3.11"
+      ],
+      "word_count": 73,
+      "sources": [],
+      "notes": "Subject: social science (Michael Heller, “The Tragedy of the Anticommons,” Harvard Law Review 1998; Moscow storefronts and kiosks, and Heller and Eisenberg’s 1998 biomedical patents argument; well-known facts only). Band 6 make-and-support shape: one support-only and one claim-without-support option, plus a goal-shaped FALSE that swaps in the tragedy-of-the-commons pattern.",
+      "band_target": 6,
+      "band7": {
+        "verdict": "band 6",
+        "why": "Planned band 6. Make-and-support GEN as in 622a351d and 0acc26b2: support-only (A), a further case without the general claim (C), and a goal-shaped FALSE that swaps in the commons pattern (D); the generalization does not climb a level, so not band 7."
+      },
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 0,
+        "facts": "Rhetorical Synthesis: no web check (WAVE.md); checked only that nothing made up is attributed to a real, named person or organisation (named people are real and credited only with their documented work; the stork study is unnamed and generic)",
+        "fixes": [],
+        "status": "pass"
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "B",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "rhetorical_synthesis.AUD_FAM.hard.w5b4_03",
+      "template": "AUD_FAM",
+      "subtype": "Describe a work to an audience familiar with its technique",
+      "tier": "hard",
+      "passage": "While researching a topic, a student has taken the following notes:\n• In stop-motion animation, objects are moved slightly between photographed frames, so they seem to move when the film plays.\n• Władysław Starewicz was a Polish Russian filmmaker who began his career producing nature documentaries.\n• When live beetles became inactive under his intense studio lighting, he started animating preserved specimens instead.\n• His 1912 stop-motion film The Cameraman’s Revenge stars preserved insects.\n• In it, a grasshopper cameraman secretly films a beetle’s affair with a dragonfly, then screens the footage in a cinema.",
+      "stem": "The student wants to describe The Cameraman’s Revenge to an audience already familiar with stop-motion animation. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "Starewicz’s 1912 stop-motion film The Cameraman’s Revenge stars preserved insects, including a grasshopper cameraman who secretly films a beetle’s affair with a dragonfly.",
+        "In The Cameraman’s Revenge (1912), Starewicz moved preserved insects slightly between photographed frames so that they seemed to move, telling of a grasshopper who films a beetle’s affair.",
+        "Starewicz, a Polish Russian filmmaker, began animating preserved beetles when live ones became inactive under his intense studio lighting.",
+        "The Cameraman’s Revenge is a stop-motion film, meaning that its insect characters were moved slightly between photographed frames so they would seem to move when the film played."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "An audience familiar with stop-motion animation needs no explanation of the technique, only a description of the film. Choice A names the film and its year, notes that it “stars preserved insects,” and summarizes its story of a grasshopper cameraman who “secretly films a beetle’s affair with a dragonfly,” using the term stop-motion without defining it.",
+      "distractors": {
+        "B": {
+          "recipe": "AUD (complete, but re-explains the technique)",
+          "why_wrong": "It describes the film, but it also explains how stop-motion works (insects moved “slightly between photographed frames”), which this audience already knows."
+        },
+        "C": {
+          "recipe": "OG (how Starewicz began, not the film)",
+          "why_wrong": "It explains why Starewicz started animating preserved beetles but says nothing about The Cameraman’s Revenge."
+        },
+        "D": {
+          "recipe": "AUD (re-explains the technique, little on the film)",
+          "why_wrong": "It spends the sentence defining stop-motion for an audience that already knows it and gives almost nothing of the film’s content."
+        }
+      },
+      "models": [
+        "3.16",
+        "3.7",
+        "2.1"
+      ],
+      "word_count": 79,
+      "sources": [],
+      "notes": "Subject: arts (Władysław Starewicz, The Cameraman’s Revenge, 1912; well-known facts only). Planned band_target 7, written as band 6: band7/rhetorical_synthesis.md lists no band-7 AUD_FAM item (WAVE.md rule). Two AUD options, one complete and failing only by redefining the term (2.1 D pattern), one OG.",
+      "band_target": 6,
+      "band7": {
+        "verdict": "band 6",
+        "why": "AUD_FAM has no band-7 official item, so it cannot be band 7. Strong band 6 on 39ccb463: B is complete and fails only by re-explaining stop-motion, D re-explains it, C is off goal."
+      },
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 0,
+        "facts": "Rhetorical Synthesis: no web check (WAVE.md); checked only that nothing made up is attributed to a real, named person or organisation (named people are real and credited only with their documented work; the stork study is unnamed and generic)",
+        "fixes": [],
+        "status": "pass"
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "A",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "rhetorical_synthesis.SPEC.hard.w5b4_04",
+      "template": "SPEC",
+      "subtype": "Identify an accomplishment",
+      "tier": "hard",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Horticulturist Lue Gim Gong immigrated from southern China to the US as a teenager.\n• In Massachusetts, he lived with the family of his Sunday school teacher, Fannie Burlingame.\n• He later settled in DeLand, Florida, where Burlingame and her sister owned property.\n• In 1888, he crossbred two orange varieties, producing a sweet, frost-tolerant orange.\n• In 1911, the American Pomological Society awarded his orange its Wilder Medal, the first presented for a citrus fruit.",
+      "stem": "The student wants to identify an accomplishment of Lue Gim Gong. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "Having immigrated from southern China as a teenager, horticulturist Lue Gim Gong lived in Massachusetts with the family of his Sunday school teacher, Fannie Burlingame.",
+        "Lue Gim Gong settled in DeLand, Florida, where his Sunday school teacher, Fannie Burlingame, and her sister owned property.",
+        "Lue Gim Gong produced a sweet, frost-tolerant orange that in 1911 became the first citrus fruit to win the American Pomological Society’s Wilder Medal.",
+        "In 1911, Lue Gim Gong became the first horticulturist to receive the American Pomological Society’s Wilder Medal."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The notes say Lue crossbred two varieties, “producing a sweet, frost-tolerant orange,” and that the American Pomological Society awarded the orange “its Wilder Medal, the first presented for a citrus fruit.” Choice C identifies this accomplishment accurately.",
+      "distractors": {
+        "A": {
+          "recipe": "OG (early life)",
+          "why_wrong": "It gives facts about where and with whom Lue lived but no accomplishment."
+        },
+        "B": {
+          "recipe": "OG (move to Florida)",
+          "why_wrong": "It says where Lue settled and who owned property there, which is not an accomplishment."
+        },
+        "D": {
+          "recipe": "FALSE (scope shift: first citrus fruit becomes first horticulturist)",
+          "why_wrong": "It misstates the notes: the orange was the first citrus fruit to receive the medal, not Lue the first horticulturist to receive it."
+        }
+      },
+      "models": [
+        "3.19"
+      ],
+      "word_count": 72,
+      "sources": [],
+      "notes": "Subject: history and science (Lue Gim Gong, the “Citrus Wizard”; facts confirmed on Wikipedia, https://en.wikipedia.org/wiki/Lue_Gim_Gong, though no source is required for this skill). Planned band_target 7, written as band 6: band7/rhetorical_synthesis.md lists no band-7 SPEC item (WAVE.md rule). Built like 3.19: two OG background options and one goal-shaped FALSE with a scope shift (as in 3.23 A).",
+      "band_target": 6,
+      "band7": {
+        "verdict": "band 6",
+        "why": "SPEC has no band-7 official item, so it cannot be band 7. Built like 87d34a39 (3.19): two accurate background options and one goal-shaped FALSE with a scope shift (D, first citrus fruit becomes first horticulturist)."
+      },
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 0,
+        "facts": "Rhetorical Synthesis: no web check (WAVE.md); checked only that nothing made up is attributed to a real, named person or organisation (named people are real and credited only with their documented work; the stork study is unnamed and generic)",
+        "fixes": [],
+        "status": "pass"
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "C",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "rhetorical_synthesis.DIFF.medium.w5b4_05",
+      "template": "DIFF",
+      "subtype": "Difference between two behaviors",
+      "tier": "medium",
+      "passage": "While researching a topic, a student has taken the following notes:\n• A rod spinning upright in a liquid alters the shape of the liquid’s surface.\n• In water, the surface dips downward near the rod as the water is flung outward.\n• In certain polymer solutions, which contain extremely long molecules, the surface climbs up the rod.\n• This phenomenon is called the Weissenberg effect, after physicist Karl Weissenberg.\n• The long molecules stretch as they wrap around the rotating rod, squeezing the liquid toward it.",
+      "stem": "The student wants to emphasize a difference between how water and polymer solutions respond to a spinning rod. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "When a rod spins upright in them, water and polymer solutions do not respond in quite the same way.",
+        "While water dips downward near a spinning rod, certain polymer solutions climb up it.",
+        "In the Weissenberg effect, long molecules in certain polymer solutions stretch as they wrap around a rotating rod, squeezing the liquid toward it.",
+        "Both water and polymer solutions change the shape of their surfaces when a rod spins upright in them."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The notes say that in water “the surface dips downward near the rod,” while in certain polymer solutions “the surface climbs up the rod.” Choice B contrasts the two responses directly.",
+      "distractors": {
+        "A": {
+          "recipe": "VAGUE (says they differ without saying how)",
+          "why_wrong": "It claims the liquids respond differently but never says what either one does."
+        },
+        "C": {
+          "recipe": "PART (polymer solutions only)",
+          "why_wrong": "It explains what happens in polymer solutions but leaves water out, so there is no difference to emphasize."
+        },
+        "D": {
+          "recipe": "REL (a similarity)",
+          "why_wrong": "It states something the two liquids have in common rather than a difference."
+        }
+      },
+      "models": [
+        "2.11",
+        "2.41"
+      ],
+      "word_count": 71,
+      "sources": [],
+      "notes": "Subject: science (the Weissenberg effect, rod climbing in polymer fluids; textbook physics, no named study). Key is the shortest option.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 0,
+        "facts": "Rhetorical Synthesis: no web check (WAVE.md); checked only that nothing made up is attributed to a real, named person or organisation (named people are real and credited only with their documented work; the stork study is unnamed and generic)",
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.DIFF.medium.w5b4_06",
+      "template": "DIFF",
+      "subtype": "Contrast two regional techniques",
+      "tier": "medium",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Tatreez is a Palestinian embroidery tradition often used to decorate women’s dresses.\n• Styles vary by region, so a dress’s embroidery can show where its maker lived.\n• Dresses from Ramallah are usually decorated in cross-stitch, in which tiny X-shaped stitches form geometric patterns.\n• Dresses from Bethlehem are known for couching, in which silk or metallic cords are laid on the fabric and stitched down.\n• Couching lets embroiderers create curving floral designs.",
+      "stem": "The student wants to contrast the embroidery techniques typical of dresses from Ramallah and Bethlehem. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "Because tatreez styles vary from region to region, the embroidery on a Palestinian woman’s dress can show where its maker lived.",
+        "Bethlehem embroiderers use couching, laying silk or metallic cords on the fabric and stitching them down to create curving floral designs.",
+        "Dresses from both Ramallah and Bethlehem are decorated with tatreez, though each of the two cities has its own regional style.",
+        "Dresses from Ramallah are usually decorated in cross-stitch, whereas those from Bethlehem are known for couching."
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The notes say Ramallah dresses “are usually decorated in cross-stitch” and Bethlehem dresses “are known for couching.” Choice D sets the two techniques against each other with “whereas.”",
+      "distractors": {
+        "A": {
+          "recipe": "OG (general background on regional styles)",
+          "why_wrong": "It explains why regional styles matter but names neither city’s technique."
+        },
+        "B": {
+          "recipe": "PART (Bethlehem only)",
+          "why_wrong": "It describes couching in Bethlehem but says nothing about Ramallah, so nothing is contrasted."
+        },
+        "C": {
+          "recipe": "VAGUE (says the styles differ without saying how)",
+          "why_wrong": "It notes that each city has its own style but never names the techniques that differ."
+        }
+      },
+      "models": [
+        "2.10",
+        "2.19"
+      ],
+      "word_count": 70,
+      "sources": [],
+      "notes": "Subject: arts and culture (Palestinian tatreez; Ramallah cross-stitch and Bethlehem couching are standard descriptions in textile collections).",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 0,
+        "facts": "Rhetorical Synthesis: no web check (WAVE.md); checked only that nothing made up is attributed to a real, named person or organisation (named people are real and credited only with their documented work; the stork study is unnamed and generic)",
+        "fixes": [],
+        "status": "pass",
+        "note": "embroidery is a busy theme (about 13 claims) but no tatreez item exists"
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.DIFF.medium.w5b4_07",
+      "template": "DIFF",
+      "subtype": "Compare two styles on a named attribute",
+      "tier": "medium",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Hula is a Hawaiian dance form that tells stories through movement.\n• Hula kahiko, the older style, is performed to chanting accompanied by percussion instruments such as the ipu, a gourd drum.\n• Hula ʻauana, a newer style that developed under Western influence, is performed to songs played on instruments such as the ukulele and guitar.\n• Both styles are featured each year at the Merrie Monarch Festival in Hilo, Hawaii.",
+      "stem": "The student wants to compare the musical accompaniment of hula kahiko with that of hula ʻauana. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "Hula kahiko is performed to chanting and percussion, while hula ʻauana is performed to songs played on instruments such as the ukulele and guitar.",
+        "Hula ʻauana, which developed under Western influence, is performed to songs played on instruments such as the ukulele and guitar.",
+        "Both hula kahiko and hula ʻauana are featured each year at the Merrie Monarch Festival in Hilo, Hawaii.",
+        "Hula kahiko and hula ʻauana both tell stories through movement, but each is accompanied by a different kind of music."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The notes say hula kahiko “is performed to chanting accompanied by percussion instruments,” while hula ʻauana “is performed to songs played on instruments such as the ukulele and guitar.” Choice A compares the two kinds of accompaniment side by side.",
+      "distractors": {
+        "B": {
+          "recipe": "PART (one style only)",
+          "why_wrong": "It describes the accompaniment of hula ʻauana but leaves out hula kahiko."
+        },
+        "C": {
+          "recipe": "REL (similarity on another attribute)",
+          "why_wrong": "It points out where both styles are performed, not how their music differs."
+        },
+        "D": {
+          "recipe": "VAGUE (says the music differs without saying how)",
+          "why_wrong": "It says each style has a different kind of music but never says what that music is."
+        }
+      },
+      "models": [
+        "2.32",
+        "2.17"
+      ],
+      "word_count": 68,
+      "sources": [],
+      "notes": "Subject: arts and culture (hula kahiko and hula ʻauana; standard descriptions). “Compare” goal built on a contrast, as in 2.32 and 3.14.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 0,
+        "facts": "Rhetorical Synthesis: no web check (WAVE.md); checked only that nothing made up is attributed to a real, named person or organisation (named people are real and credited only with their documented work; the stork study is unnamed and generic)",
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.AUD_NEW.medium.w5b4_08",
+      "template": "AUD_NEW",
+      "subtype": "Describe to an audience unfamiliar with the object",
+      "tier": "medium",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Jean-Baptiste Vuillaume was a nineteenth-century French luthier, or maker of stringed instruments.\n• Around 1850, he constructed the octobass, a three-stringed bowed instrument about 11 feet tall.\n• Because of its enormous size, players cannot press its strings by hand and instead operate a system of levers and pedals.\n• Some of its lowest notes are too deep for most humans to hear.\n• One of Vuillaume’s original octobasses is exhibited at a museum in Paris.",
+      "stem": "The student wants to describe how the octobass is played to an audience unfamiliar with the instrument. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "Because players cannot press its strings by hand, the octobass is played by operating a system of levers and pedals.",
+        "Constructed around 1850 by French luthier Jean-Baptiste Vuillaume, one of the original octobasses is now exhibited at a museum in Paris.",
+        "A bowed instrument about 11 feet tall, the octobass is so large that players press its strings with levers and pedals rather than by hand.",
+        "Built by nineteenth-century French luthier Jean-Baptiste Vuillaume, the octobass is a bowed instrument whose lowest notes are too deep for most humans to hear."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "An audience unfamiliar with the octobass needs to learn what it is before learning how it is played. Choice C identifies it as a bowed instrument “about 11 feet tall” and explains that players “cannot press its strings by hand and instead operate a system of levers and pedals.”",
+      "distractors": {
+        "A": {
+          "recipe": "AUD (how it is played, but no identification)",
+          "why_wrong": "It explains how the octobass is played but never says what an octobass is, which this audience does not know."
+        },
+        "B": {
+          "recipe": "OG (maker and museum)",
+          "why_wrong": "It gives the instrument’s maker and where one is displayed, not how it is played."
+        },
+        "D": {
+          "recipe": "OG (introduces the instrument, not how it is played)",
+          "why_wrong": "It identifies the octobass, its maker and its low range but says nothing about how it is played."
+        }
+      },
+      "models": [
+        "2.34",
+        "2.36"
+      ],
+      "word_count": 72,
+      "sources": [],
+      "notes": "Subject: arts (the octobass, Jean-Baptiste Vuillaume, about 1850; well-known facts only, height rounded from 3.48 m).",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 0,
+        "facts": "Rhetorical Synthesis: no web check (WAVE.md); checked only that nothing made up is attributed to a real, named person or organisation (named people are real and credited only with their documented work; the stork study is unnamed and generic)",
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.AUD_NEW.medium.w5b4_09",
+      "template": "AUD_NEW",
+      "subtype": "Introduce a creation to an audience unfamiliar with its maker",
+      "tier": "medium",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Alan Emtage is a computer scientist from Barbados.\n• In 1990, while studying at McGill University in Montreal, he created a program called Archie.\n• Archie automatically compiled directories of files stored on publicly accessible servers, allowing users to search them by name.\n• Many historians of computing consider it the first internet search engine.\n• Its name derives from the word “archive” without the letter v.",
+      "stem": "The student wants to introduce Archie to an audience unfamiliar with Alan Emtage. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "Archie, the program Emtage created while studying at McGill University in 1990, is considered by many to be the first internet search engine.",
+        "The name of Alan Emtage’s program Archie derives from the word “archive” without the letter v.",
+        "Alan Emtage, a computer scientist from Barbados, studied at McGill University in Montreal.",
+        "In 1990, Barbadian computer scientist Alan Emtage created Archie, which many historians of computing consider the first internet search engine."
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "An audience unfamiliar with Emtage needs to learn who he is along with what Archie is. Choice D identifies Emtage as a “computer scientist from Barbados” and presents Archie as a program that many “consider the first internet search engine.”",
+      "distractors": {
+        "A": {
+          "recipe": "AUD (uses Emtage’s name without saying who he is)",
+          "why_wrong": "It introduces Archie, but it mentions Emtage as if the audience already knew him and never says who he is."
+        },
+        "B": {
+          "recipe": "OG (origin of the name)",
+          "why_wrong": "It explains where Archie’s name comes from, not who made Archie or what it was, and it does not identify Emtage."
+        },
+        "C": {
+          "recipe": "PART (the person without the program)",
+          "why_wrong": "It identifies Emtage but says nothing about Archie."
+        }
+      },
+      "models": [
+        "2.34",
+        "2.36"
+      ],
+      "word_count": 63,
+      "sources": [],
+      "notes": "Subject: technology and history (Alan Emtage, Archie, McGill University, 1990; well-known facts only).",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 0,
+        "facts": "Rhetorical Synthesis: no web check (WAVE.md); checked only that nothing made up is attributed to a real, named person or organisation (named people are real and credited only with their documented work; the stork study is unnamed and generic)",
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.EXPL.medium.w5b4_10",
+      "template": "EXPL",
+      "subtype": "Explain the source of an idea",
+      "tier": "medium",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Bette Nesmith Graham worked as an executive secretary at a Dallas bank in the early 1950s.\n• Errors made on electric typewriters were difficult to erase cleanly.\n• Graham, who also painted holiday decorations on the bank’s windows, knew that artists correct mistakes by painting over them.\n• She began concealing her typing errors with white paint and a small brush.\n• In 1956, she began selling the paint as Mistake Out, later renamed Liquid Paper.",
+      "stem": "The student wants to explain where Graham’s idea for her correction method came from. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "Knowing from her window painting that artists correct mistakes by painting over them, Graham began concealing her typing errors with white paint.",
+        "Errors made on electric typewriters were difficult to erase cleanly, a problem for secretaries such as Graham at a Dallas bank.",
+        "Graham, an executive secretary at a Dallas bank in the early 1950s, began selling her white paint as Mistake Out in 1956.",
+        "Mistake Out, a white paint that typists applied with a small brush to conceal their errors, was later renamed Liquid Paper."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The notes say Graham “painted holiday decorations on the bank’s windows” and “knew that artists correct mistakes by painting over them,” and that she then “began concealing her typing errors with white paint.” Choice A links her painting experience to her method, showing where the idea came from.",
+      "distractors": {
+        "B": {
+          "recipe": "PART (the problem, not the source of the solution)",
+          "why_wrong": "It describes the problem Graham faced but not where her idea for solving it came from."
+        },
+        "C": {
+          "recipe": "OG (job and sales)",
+          "why_wrong": "It gives Graham’s job and when she began selling her product, not the source of her idea."
+        },
+        "D": {
+          "recipe": "OG (the product and its later name)",
+          "why_wrong": "It describes the product and its renaming without saying how Graham thought of it."
+        }
+      },
+      "models": [
+        "2.15",
+        "2.31"
+      ],
+      "word_count": 72,
+      "sources": [],
+      "notes": "Subject: history and technology (Bette Nesmith Graham, Mistake Out, 1956, later Liquid Paper; well-known facts only).",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 0,
+        "facts": "Rhetorical Synthesis: no web check (WAVE.md); checked only that nothing made up is attributed to a real, named person or organisation (named people are real and credited only with their documented work; the stork study is unnamed and generic)",
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.EXPL.medium.w5b4_11",
+      "template": "EXPL",
+      "subtype": "Explain the origin of a name",
+      "tier": "medium",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Cobalt is a hard, silvery metal used in rechargeable batteries.\n• Its compounds have long been used to color glass and ceramics deep blue.\n• German miners often encountered ores that appeared valuable but released poisonous fumes when heated.\n• They blamed these ores on kobolds, mischievous goblins of German folklore, and named the ores after them.\n• In the 1730s, Swedish chemist Georg Brandt isolated a new metal from these ores, which took their name.",
+      "stem": "The student wants to explain the origin of cobalt’s name. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "In the 1730s, Swedish chemist Georg Brandt isolated cobalt, a hard, silvery metal now used in rechargeable batteries.",
+        "Cobalt is named after kobolds, the goblins that German miners blamed for ores that appeared valuable but released poisonous fumes.",
+        "German miners blamed goblins of their folklore for ores that appeared valuable but released poisonous fumes when heated.",
+        "Cobalt is a hard, silvery metal whose compounds have long been used to color glass and ceramics deep blue."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The notes say miners “blamed these ores on kobolds, mischievous goblins of German folklore, and named the ores after them,” and that the metal Brandt isolated from the ores “took their name.” Choice B explains that cobalt is named after these goblins and why the miners connected them with the ores.",
+      "distractors": {
+        "A": {
+          "recipe": "OG (who isolated the metal and its use)",
+          "why_wrong": "It says who isolated cobalt and what it is used for but not where its name came from."
+        },
+        "C": {
+          "recipe": "OG (both halves, no link to the name)",
+          "why_wrong": "It describes the miners’ belief but never connects the goblins to cobalt’s name."
+        },
+        "D": {
+          "recipe": "OG (properties and uses)",
+          "why_wrong": "It describes the metal and its compounds, which has nothing to do with the origin of its name."
+        }
+      },
+      "models": [
+        "2.13",
+        "2.7"
+      ],
+      "word_count": 72,
+      "sources": [],
+      "notes": "Subject: science and history (etymology of cobalt from German Kobold; Georg Brandt isolated the metal about 1735; standard textbook facts). C is the 1.6 C pattern: both facts present, the link missing.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 0,
+        "facts": "Rhetorical Synthesis: no web check (WAVE.md); checked only that nothing made up is attributed to a real, named person or organisation (named people are real and credited only with their documented work; the stork study is unnamed and generic)",
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.EMPH.medium.w5b4_12",
+      "template": "EMPH",
+      "subtype": "Emphasize speed",
+      "tier": "medium",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Raye Montague began working for the US Navy as a clerk typist in 1956.\n• She later became a computer systems analyst at the Naval Ship Engineering Center.\n• In 1971, the Navy allotted her department one month to produce a computer-generated ship design.\n• By modifying existing automated programs, Montague completed the initial draft of a new frigate in approximately 19 hours.\n• It was the first computer-generated draft of a US Navy ship.",
+      "stem": "The student wants to emphasize how quickly Montague completed the initial draft of the frigate. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "Raye Montague, who began working for the US Navy as a clerk typist in 1956, later became a computer systems analyst.",
+        "Montague’s initial draft of the frigate was the first computer-generated draft of a US Navy ship.",
+        "Although her department had been allotted a month, Montague completed the frigate’s initial draft in approximately 19 hours.",
+        "Montague completed the frigate’s initial draft by modifying existing automated programs at the Naval Ship Engineering Center."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The notes say the Navy “allotted her department one month” and that Montague completed the draft “in approximately 19 hours.” Choice C sets the short time she took against the month allowed, emphasizing her speed.",
+      "distractors": {
+        "A": {
+          "recipe": "OG (career)",
+          "why_wrong": "It traces Montague’s career but says nothing about how long the draft took."
+        },
+        "B": {
+          "recipe": "OG (uniqueness, not speed)",
+          "why_wrong": "It emphasizes that the draft was a first, not how quickly she produced it."
+        },
+        "D": {
+          "recipe": "OG (method)",
+          "why_wrong": "It explains how Montague produced the draft but not how fast she did it."
+        }
+      },
+      "models": [
+        "2.20",
+        "2.33"
+      ],
+      "word_count": 71,
+      "sources": [],
+      "notes": "Subject: history and technology (Raye Montague, Oliver Hazard Perry-class frigate draft, 1971; facts from Wikipedia, https://en.wikipedia.org/wiki/Raye_Montague, though no source is required for this skill).",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 0,
+        "facts": "Rhetorical Synthesis: no web check (WAVE.md); checked only that nothing made up is attributed to a real, named person or organisation (named people are real and credited only with their documented work; the stork study is unnamed and generic)",
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.EXAMPLE.medium.w5b4_13",
+      "template": "EXAMPLE",
+      "subtype": "Explanation and example",
+      "tier": "medium",
+      "passage": "While researching a topic, a student has taken the following notes:\n• In dim light, the eye relies on cells called rods, which are sensitive to blue and green wavelengths but barely register red.\n• Consequently, as illumination fades, red objects darken before blue or green ones, a shift known as the Purkinje effect.\n• The effect is named for Czech physiologist Jan Evangelista Purkyně, who first described it.\n• At dusk, a red rose can appear nearly black while its green leaves remain clearly visible.",
+      "stem": "The student wants to provide an explanation and an example of the Purkinje effect. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "At dusk, a red rose can appear nearly black while its green leaves remain clearly visible.",
+        "The Purkinje effect is named for Czech physiologist Jan Evangelista Purkyně, who first described it.",
+        "Because the rods the eye relies on in dim light barely register red, red objects darken before blue or green ones as illumination fades.",
+        "In the Purkinje effect, red objects darken before blue or green ones as illumination fades, so a red rose can appear nearly black at dusk."
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The notes say that “as illumination fades, red objects darken before blue or green ones, a shift known as the Purkinje effect,” and that at dusk “a red rose can appear nearly black.” Choice D explains the effect and gives the rose as an example.",
+      "distractors": {
+        "A": {
+          "recipe": "PART (example only)",
+          "why_wrong": "It gives the example of the rose but never names or explains the Purkinje effect."
+        },
+        "B": {
+          "recipe": "OG (origin of the name)",
+          "why_wrong": "It says whom the effect is named for, which neither explains the effect nor gives an example."
+        },
+        "C": {
+          "recipe": "PART (explanation only)",
+          "why_wrong": "It explains why red objects darken in fading light but gives no example and does not name the effect."
+        }
+      },
+      "models": [
+        "2.16",
+        "2.25"
+      ],
+      "word_count": 71,
+      "sources": [],
+      "notes": "Subject: science (the Purkinje effect, rods and cones; textbook facts, no year given for Purkyně’s description).",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 0,
+        "facts": "Rhetorical Synthesis: no web check (WAVE.md); checked only that nothing made up is attributed to a real, named person or organisation (named people are real and credited only with their documented work; the stork study is unnamed and generic)",
+        "fixes": [
+          "explanation quote matched to the notes (the bullet opens with a capital “At dusk”)"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.STUDY.medium.w5b4_14",
+      "template": "STUDY",
+      "subtype": "Aim and methodology",
+      "tier": "medium",
+      "passage": "While researching a topic, a student has taken the following notes:\n• White storks have traditionally migrated from Europe to sub-Saharan Africa each autumn.\n• In recent decades, many storks breeding in Portugal and Spain have stopped migrating and instead remain there year-round.\n• Ecologists investigated whether food scavenged from open landfills was allowing these storks to stay.\n• They attached GPS trackers to storks nesting near landfills and to storks nesting farther away, then followed the birds through the winter.\n• Storks nesting near landfills were considerably more likely to remain in Portugal and Spain until spring.",
+      "stem": "The student wants to present the study’s aim and methodology. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "To learn whether landfill food was allowing white storks to stop migrating, ecologists tracked storks nesting near landfills and storks nesting farther away through the winter.",
+        "Storks nesting near landfills were considerably more likely than storks nesting farther away to stay through the winter.",
+        "Ecologists wanted to learn whether food scavenged from open landfills was the reason many white storks in Portugal and Spain had stopped migrating.",
+        "Using GPS trackers, the ecologists followed white storks in Portugal and Spain, some nesting near open landfills and others nesting farther away."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The ecologists investigated “whether food scavenged from open landfills was allowing these storks to stay,” and they “attached GPS trackers to storks nesting near landfills and to storks nesting farther away, then followed the birds through the winter.” Choice A presents both the aim and the method.",
+      "distractors": {
+        "B": {
+          "recipe": "OG (results instead of aim and method)",
+          "why_wrong": "It reports what the study found rather than what it set out to learn and how."
+        },
+        "C": {
+          "recipe": "PART (aim only)",
+          "why_wrong": "It states the aim but not how the researchers pursued it."
+        },
+        "D": {
+          "recipe": "PART (method only)",
+          "why_wrong": "It describes the tracking but not what the researchers wanted to find out."
+        }
+      },
+      "models": [
+        "2.21",
+        "2.5"
+      ],
+      "word_count": 82,
+      "sources": [],
+      "notes": "Subject: science (white storks in Iberia that now winter near landfills; a known pattern, written as a generic study with an unnamed team and no figures, so nothing is attributed to a real paper).",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 0,
+        "facts": "Rhetorical Synthesis: no web check (WAVE.md); checked only that nothing made up is attributed to a real, named person or organisation (named people are real and credited only with their documented work; the stork study is unnamed and generic)",
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.AUD_FAM.medium.w5b4_15",
+      "template": "AUD_FAM",
+      "subtype": "Describe a role to an audience familiar with the organization",
+      "tier": "medium",
+      "passage": "While researching a topic, a student has taken the following notes:\n• The Pinkerton National Detective Agency was a private investigation firm based in Chicago.\n• In 1856, the agency hired Kate Warne, the first known female detective in the US.\n• In 1861, its agents uncovered a conspiracy to assassinate Abraham Lincoln in Baltimore on his way to his inauguration.\n• Warne helped Lincoln travel through the city safely by posing as the sister of an invalid on an overnight train.\n• The invalid was Lincoln in disguise.",
+      "stem": "The student wants to describe Warne’s role in protecting Lincoln to an audience already familiar with the Pinkerton National Detective Agency. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "Kate Warne, an agent of the Pinkerton National Detective Agency, a private investigation firm based in Chicago, protected Lincoln in 1861 by posing as his sister.",
+        "Hired by the Pinkerton agency in 1856, Kate Warne was the first known female detective in the US.",
+        "In 1861, Pinkerton detective Kate Warne helped Lincoln pass safely through Baltimore by posing as the sister of an invalid, who was Lincoln in disguise.",
+        "A private investigation firm based in Chicago, the Pinkerton National Detective Agency uncovered a conspiracy in 1861 to assassinate Lincoln in Baltimore."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "An audience familiar with the agency does not need it explained. Choice C calls Warne a “Pinkerton detective” without describing the firm and explains her role: “posing as the sister of an invalid” who was “Lincoln in disguise.”",
+      "distractors": {
+        "A": {
+          "recipe": "AUD (re-explains the agency)",
+          "why_wrong": "It describes Warne’s role but also explains what the Pinkerton agency was, which this audience already knows."
+        },
+        "B": {
+          "recipe": "OG (her hiring)",
+          "why_wrong": "It gives a fact about Warne’s career but nothing about how she protected Lincoln."
+        },
+        "D": {
+          "recipe": "AUD and PART (explains the agency, leaves out Warne)",
+          "why_wrong": "It explains the agency to an audience that knows it and never mentions Warne’s role."
+        }
+      },
+      "models": [
+        "2.1",
+        "2.18"
+      ],
+      "word_count": 73,
+      "sources": [],
+      "notes": "Subject: history (Kate Warne and the 1861 Baltimore Plot; well-known facts only).",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 0,
+        "facts": "Rhetorical Synthesis: no web check (WAVE.md); checked only that nothing made up is attributed to a real, named person or organisation (named people are real and credited only with their documented work; the stork study is unnamed and generic)",
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.SIM.medium.w5b4_16",
+      "template": "SIM",
+      "subtype": "Similarity between two principles",
+      "tier": "medium",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Designers of websites and apps often apply principles from experimental psychology.\n• Fitts’s law was proposed by psychologist Paul Fitts in 1954.\n• It predicts the time a person needs to point at a target, based on the target’s size and distance.\n• Hick’s law was developed by psychologists William Hick and Ray Hyman.\n• It predicts the time a person needs to make a decision, based on the number of available alternatives.",
+      "stem": "The student wants to emphasize a similarity between Fitts’s law and Hick’s law. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "Fitts’s law bases its predictions on a target’s size and distance, whereas Hick’s law bases its predictions on the number of available alternatives.",
+        "Fitts’s law and Hick’s law both predict the time a person needs to complete an action, whether pointing at a target or making a decision.",
+        "Proposed by psychologist Paul Fitts in 1954, Fitts’s law predicts the time a person needs to point at a target.",
+        "Designers of websites and apps often apply principles from experimental psychology, such as Hick’s law, developed by William Hick and Ray Hyman."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The notes say each law “predicts the time a person needs,” one “to point at a target” and the other “to make a decision.” Choice B names both laws and the trait they share with “both.”",
+      "distractors": {
+        "A": {
+          "recipe": "REL (a difference)",
+          "why_wrong": "It contrasts what the two laws base their predictions on instead of stating what they have in common."
+        },
+        "C": {
+          "recipe": "PART (one law only)",
+          "why_wrong": "It describes only Fitts’s law, so no similarity is shown."
+        },
+        "D": {
+          "recipe": "OG (designers’ use, one law)",
+          "why_wrong": "It gives background on designers and names Hick’s law alone, so it draws no comparison."
+        }
+      },
+      "models": [
+        "2.24",
+        "2.46"
+      ],
+      "word_count": 69,
+      "sources": [],
+      "notes": "Subject: science and technology (Fitts’s law, 1954; Hick-Hyman law, 1952 and 1953; standard facts). Only one shared trait offered: no option claims both are psychology principles or from the 1950s.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 0,
+        "facts": "Rhetorical Synthesis: no web check (WAVE.md); checked only that nothing made up is attributed to a real, named person or organisation (named people are real and credited only with their documented work; the stork study is unnamed and generic)",
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.RANK.medium.w5b4_17",
+      "template": "RANK",
+      "subtype": "Relative size of two features",
+      "tier": "medium",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Miranda, one of the moons of Uranus, is less than 500 kilometers in diameter.\n• In 1986, the Voyager 2 spacecraft photographed an enormous cliff on Miranda called Verona Rupes.\n• Estimates of the cliff’s height range from 5 to 20 kilometers.\n• Some astronomers think it may be the tallest cliff in the solar system.\n• Mount Thor in Canada has Earth’s greatest vertical cliff drop, 1.25 kilometers.",
+      "stem": "The student wants to compare the height of Verona Rupes with that of the cliff at Mount Thor. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "In 1986, Voyager 2 photographed Verona Rupes, a cliff that some astronomers think may be the tallest in the solar system.",
+        "Mount Thor in Canada has Earth’s greatest vertical cliff drop, which measures 1.25 kilometers.",
+        "Although Miranda is less than 500 kilometers in diameter, it has a cliff estimated to be 5 to 20 kilometers tall.",
+        "Verona Rupes is at least four times as tall as the cliff at Mount Thor, which has the greatest vertical drop on Earth."
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The notes say estimates of Verona Rupes’s height “range from 5 to 20 kilometers” and give Mount Thor’s cliff drop as “1.25 kilometers.” Even the lowest estimate is four times 1.25 kilometers, so Choice D states the comparison correctly.",
+      "distractors": {
+        "A": {
+          "recipe": "OG (emphasizes the cliff’s height, no comparison with Mount Thor)",
+          "why_wrong": "It stresses how tall Verona Rupes may be but never compares it with Mount Thor."
+        },
+        "B": {
+          "recipe": "PART (one cliff only)",
+          "why_wrong": "It gives Mount Thor’s height but says nothing about Verona Rupes."
+        },
+        "C": {
+          "recipe": "REL (wrong dimension: the cliff against its moon)",
+          "why_wrong": "It compares the cliff with the size of Miranda, not with the cliff at Mount Thor."
+        }
+      },
+      "models": [
+        "2.44",
+        "2.27"
+      ],
+      "word_count": 65,
+      "sources": [],
+      "notes": "Subject: science (Verona Rupes on Miranda, Voyager 2, 1986; height estimates 5 to 20 km per Wikipedia, https://en.wikipedia.org/wiki/Verona_Rupes; Mount Thor, about 1,250 m vertical drop). The key derives “at least four times” from the lowest estimate, as 2.44 derives “years after.”",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 0,
+        "facts": "Rhetorical Synthesis: no web check (WAVE.md); checked only that nothing made up is attributed to a real, named person or organisation (named people are real and credited only with their documented work; the stork study is unnamed and generic)",
+        "fixes": [
+          "dropped “about” before 1.25 kilometers in the notes and in B, so “at least four times” (5 against 1.25) holds exactly; explanation quote updated"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.GEN.medium.w5b4_18",
+      "template": "GEN",
+      "subtype": "Make a generalization (no support asked)",
+      "tier": "medium",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Kelvin-Helmholtz waves form when one layer of fluid moves faster than an adjacent layer, causing the boundary between them to curl.\n• They are named for nineteenth-century physicists Lord Kelvin and Hermann von Helmholtz.\n• In Earth’s atmosphere, they can appear as rows of clouds resembling breaking ocean waves.\n• In the ocean, they develop where layers of water with different densities flow past each other.\n• In 2011, a NASA spacecraft recorded them in the Sun’s outer atmosphere.",
+      "stem": "The student wants to make a generalization about where Kelvin-Helmholtz waves have been observed. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "In 2011, a NASA spacecraft recorded Kelvin-Helmholtz waves in the Sun’s outer atmosphere.",
+        "In the atmosphere, Kelvin-Helmholtz waves can resemble breaking ocean waves, whereas in the ocean they develop between layers of water with different densities.",
+        "Kelvin-Helmholtz waves have been observed in a wide range of settings, from Earth’s atmosphere and oceans to the outer atmosphere of the Sun.",
+        "Named for physicists Lord Kelvin and Hermann von Helmholtz, these waves form when one layer of fluid moves faster than an adjacent layer."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The notes place these waves in “Earth’s atmosphere,” in “the ocean,” and in “the Sun’s outer atmosphere.” Choice C draws a general claim from these cases: the waves appear in a wide range of settings.",
+      "distractors": {
+        "A": {
+          "recipe": "PART (one case, no generalization)",
+          "why_wrong": "It gives a single place where the waves were recorded rather than a general claim about where they occur."
+        },
+        "B": {
+          "recipe": "OG (contrast of two cases)",
+          "why_wrong": "It contrasts how the waves look in two settings instead of generalizing about where they have been observed."
+        },
+        "D": {
+          "recipe": "OG (name and cause, not where)",
+          "why_wrong": "It explains the waves’ name and how they form, not where they have been observed."
+        }
+      },
+      "models": [
+        "2.12"
+      ],
+      "word_count": 75,
+      "sources": [],
+      "notes": "Subject: science (Kelvin-Helmholtz instability in clouds, the ocean and the solar corona, the last seen by NASA’s Solar Dynamics Observatory in 2011; textbook facts). Goal names “where” so that the formation sentence in D is not a rival generalization.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 0,
+        "facts": "Rhetorical Synthesis: no web check (WAVE.md); checked only that nothing made up is attributed to a real, named person or organisation (named people are real and credited only with their documented work; the stork study is unnamed and generic)",
+        "fixes": [
+          "bullet 4 now says “In the ocean” (was “Underwater”) so the key’s “oceans” rests on the notes; B and the explanation quote updated"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.QUOTE.medium.w5b4_19",
+      "template": "QUOTE",
+      "subtype": "Explain an idea using a quotation",
+      "tier": "medium",
+      "passage": "While researching a topic, a student has taken the following notes:\n• In 1955, British historian C. Northcote Parkinson published a satirical essay in The Economist.\n• It opened with what became known as Parkinson’s law: “work expands so as to fill the time available for its completion.”\n• As an illustration, Parkinson described an elderly woman who spends an entire day writing and sending a single postcard to her niece.\n• A later commentator called the law “a joke that keeps coming true.”\n• The law is frequently cited in discussions of bureaucratic inefficiency.",
+      "stem": "The student wants to use a quotation from Parkinson to explain the idea behind Parkinson’s law. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "In a 1955 essay, Parkinson wrote that “work expands so as to fill the time available for its completion,” an idea now known as Parkinson’s law.",
+        "Parkinson’s law holds that a task tends to take as long as the time people are given to finish it.",
+        "Parkinson’s law, which one commentator called “a joke that keeps coming true,” is frequently cited in discussions of bureaucratic inefficiency.",
+        "To illustrate his law, Parkinson described an elderly woman who spends an entire day writing and sending a single postcard."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The goal calls for Parkinson’s own words that state the idea behind his law. Choice A quotes them: “work expands so as to fill the time available for its completion.”",
+      "distractors": {
+        "B": {
+          "recipe": "NOQ (paraphrase, no quotation)",
+          "why_wrong": "It explains the idea in its own words but uses no quotation from Parkinson."
+        },
+        "C": {
+          "recipe": "NOQ (a quotation from someone else that does another job)",
+          "why_wrong": "Its quotation comes from a later commentator, not Parkinson, and it comments on the law rather than explaining its idea."
+        },
+        "D": {
+          "recipe": "OG (the illustration, no quotation)",
+          "why_wrong": "It describes Parkinson’s example without quoting him or stating the idea the example illustrates."
+        }
+      },
+      "models": [
+        "2.9",
+        "2.29"
+      ],
+      "word_count": 79,
+      "sources": [],
+      "notes": "Subject: social science (C. Northcote Parkinson, “Parkinson’s Law,” The Economist, November 1955; the opening sentence and the elderly-lady postcard example are in the essay). The commentator’s line is an unnamed, invented quotation, as WAVE.md allows; nothing invented is put in Parkinson’s mouth.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 1,
+        "facts": "Rhetorical Synthesis: no web check (WAVE.md); checked only that nothing made up is attributed to a real, named person or organisation (named people are real and credited only with their documented work; the stork study is unnamed and generic); the Parkinson line is genuine (Wikipedia, Parkinson’s law: “Work expands so as to fill the time available for its completion”), the commentator is unnamed and invented",
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.SPEC.easy.w5b4_20",
+      "template": "SPEC",
+      "subtype": "Specify a location",
+      "tier": "easy",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Formed in 1937, the International Sweethearts of Rhythm was an all-woman swing band.\n• The band originated at the Piney Woods Country Life School in Mississippi.\n• It initially performed to raise money for the school.\n• Its musicians came from a variety of racial and ethnic backgrounds.\n• In 1945, the band toured Europe, entertaining American troops.\n• Trumpeter Ernestine “Tiny” Davis was among its most celebrated soloists.",
+      "stem": "The student wants to specify where the International Sweethearts of Rhythm originated. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "In 1945, the International Sweethearts of Rhythm toured Europe, entertaining American troops.",
+        "The International Sweethearts of Rhythm originated at the Piney Woods Country Life School in Mississippi.",
+        "The International Sweethearts of Rhythm, an all-woman swing band, initially performed to raise money for a school.",
+        "Trumpeter Ernestine “Tiny” Davis was among the most celebrated soloists of the International Sweethearts of Rhythm."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The notes say the band “originated at the Piney Woods Country Life School in Mississippi.” Choice B gives that location.",
+      "distractors": {
+        "A": {
+          "recipe": "OG (a later tour)",
+          "why_wrong": "It says where the band toured in 1945, not where it originated."
+        },
+        "C": {
+          "recipe": "OG (purpose)",
+          "why_wrong": "It explains why the band first performed and mentions a school without naming it or saying where the band originated."
+        },
+        "D": {
+          "recipe": "OG (a member)",
+          "why_wrong": "It names one of the band’s soloists, not the place where the band originated."
+        }
+      },
+      "models": [
+        "1.9",
+        "1.5"
+      ],
+      "word_count": 64,
+      "sources": [],
+      "notes": "Subject: arts and history (International Sweethearts of Rhythm, Piney Woods Country Life School, 1937; well-known facts only).",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 0,
+        "facts": "Rhetorical Synthesis: no web check (WAVE.md); checked only that nothing made up is attributed to a real, named person or organisation (named people are real and credited only with their documented work; the stork study is unnamed and generic)",
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.EMPH.easy.w5b4_21",
+      "template": "EMPH",
+      "subtype": "Emphasize speed of growth",
+      "tier": "easy",
+      "passage": "While researching a topic, a student has taken the following notes:\n• The empress tree (Paulownia tomentosa) is native to central and western China.\n• In spring, it produces clusters of fragrant purple flowers.\n• Its tiny seeds have wings, so they are easily carried by the wind.\n• A young empress tree can grow as much as four meters in a single year.\n• Its lightweight wood is used to make furniture and musical instruments.",
+      "stem": "The student wants to emphasize how quickly the empress tree can grow. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "Native to central and western China, the empress tree produces clusters of fragrant purple flowers in spring.",
+        "The empress tree’s tiny seeds have wings, so they are easily carried by the wind.",
+        "In a single year, a young empress tree can grow as much as four meters.",
+        "The lightweight wood of the empress tree is used to make furniture and musical instruments."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The notes say a young empress tree “can grow as much as four meters in a single year.” Choice C uses that figure to emphasize how quickly the tree can grow.",
+      "distractors": {
+        "A": {
+          "recipe": "OG (native range and flowers)",
+          "why_wrong": "It gives where the tree is native and what its flowers are like, not how quickly it grows."
+        },
+        "B": {
+          "recipe": "OG (how its seeds spread)",
+          "why_wrong": "It explains how the tree’s seeds are spread, which says nothing about how quickly the tree grows."
+        },
+        "D": {
+          "recipe": "OG (uses of the wood)",
+          "why_wrong": "It describes what the tree’s wood is used for, not how fast the tree grows."
+        }
+      },
+      "models": [
+        "1.7",
+        "1.16"
+      ],
+      "word_count": 60,
+      "sources": [],
+      "notes": "Subject: science (botany: the empress tree, Paulownia tomentosa: native range, spring flowers, winged wind-borne seeds, growth of up to about four meters a year in young trees; well-known facts, no named study). Replaced by the reviewer: the first subject, Hurrian Hymn No. 6 as the oldest nearly complete melody, twinned the live Seikilos epitaph item (boundaries.S1_period.hard.w5b2_03, the oldest complete composition); a second choice, the Yanghai trousers as the oldest known trousers, twinned the live Tarkhan Dress item (rhetorical_synthesis__w3, the oldest known woven garment). Three OG distractors, as in 1.7; the tree’s naming for Anna Pavlovna was left out because a live DESC item (w3b1_23, Victoria amazonica) is a plant “named in honor of” a royal.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 0,
+        "facts": "Rhetorical Synthesis: no web check (WAVE.md); checked only that nothing made up is attributed to a real, named person or organisation (named people are real and credited only with their documented work; the stork study is unnamed and generic)",
+        "fixes": [
+          "subject replaced: Hurrian Hymn No. 6 (“the oldest known melody that survives nearly complete”) twinned the live Seikilos epitaph item boundaries.S1_period.hard.w5b2_03 (“the oldest complete musical composition yet discovered”), the wave-4 concept-duplicate case; the new item emphasizes the empress tree’s growth rate (same template, tier, key letter and three-OG shape); claimed in claims.txt"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.SIM.easy.w5b4_22",
+      "template": "SIM",
+      "subtype": "Similarity between two vehicles",
+      "tier": "easy",
+      "passage": "While researching a topic, a student has taken the following notes:\n• A hovercraft is an amphibious vehicle that travels on a cushion of air trapped beneath it by a flexible skirt.\n• British engineer Christopher Cockerell patented the design in 1955.\n• An ekranoplan is a winged vehicle that travels on a cushion of air compressed between its wings and the water’s surface.\n• The largest ekranoplans were constructed in the Soviet Union during the 1960s.",
+      "stem": "The student wants to emphasize a similarity between hovercraft and ekranoplans. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "Patented by British engineer Christopher Cockerell in 1955, the hovercraft travels on a cushion of air trapped beneath it by a flexible skirt.",
+        "A hovercraft’s cushion of air is trapped by a flexible skirt, whereas an ekranoplan’s is compressed between its wings and the water.",
+        "The hovercraft was patented in 1955, and the largest ekranoplans were constructed during the 1960s.",
+        "Hovercraft and ekranoplans are both vehicles that travel on a cushion of air."
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The notes say a hovercraft “travels on a cushion of air” and that an ekranoplan also “travels on a cushion of air.” Choice D names both vehicles and the trait they share.",
+      "distractors": {
+        "A": {
+          "recipe": "PART (one vehicle only)",
+          "why_wrong": "It describes only the hovercraft, so no similarity is shown."
+        },
+        "B": {
+          "recipe": "REL (a difference)",
+          "why_wrong": "It contrasts how the two vehicles trap air instead of stating what they have in common."
+        },
+        "C": {
+          "recipe": "LIST (two dates, no shared trait)",
+          "why_wrong": "It gives a date for each vehicle but states nothing the two share."
+        }
+      },
+      "models": [
+        "1.11",
+        "1.22"
+      ],
+      "word_count": 62,
+      "sources": [],
+      "notes": "Subject: technology (hovercraft, Christopher Cockerell’s 1955 patent; Soviet ekranoplans of the 1960s; well-known facts). Only one shared trait in the notes; the ekranoplan’s designer is left out so “both invented by engineers” is not a second similarity.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 0,
+        "facts": "Rhetorical Synthesis: no web check (WAVE.md); checked only that nothing made up is attributed to a real, named person or organisation (named people are real and credited only with their documented work; the stork study is unnamed and generic)",
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.DIFF.easy.w5b4_23",
+      "template": "DIFF",
+      "subtype": "Difference between two objects",
+      "tier": "easy",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Calculating instruments known as abacuses have beads that slide along rods.\n• Beads above a horizontal dividing bar represent five, and beads below it represent one.\n• The Chinese suanpan has two beads above the bar and five below it on each rod.\n• The Japanese soroban, which developed from the suanpan, has one bead above the bar and four below it.",
+      "stem": "The student wants to emphasize a difference between the suanpan and the soroban. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "The suanpan has two beads above the bar and five below on each rod, whereas the soroban has one above and four below.",
+        "The suanpan and the soroban are both calculating instruments with beads that slide along rods.",
+        "The Japanese soroban, which developed from the Chinese suanpan, has one bead above the dividing bar and four below it.",
+        "On an abacus, beads above a horizontal dividing bar represent five, and beads below it represent one."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The notes say the suanpan “has two beads above the bar and five below it on each rod,” while the soroban “has one bead above the bar and four below it.” Choice A contrasts the two with “whereas.”",
+      "distractors": {
+        "B": {
+          "recipe": "REL (a similarity)",
+          "why_wrong": "It states what the two tools have in common, not how they differ."
+        },
+        "C": {
+          "recipe": "PART (one tool only)",
+          "why_wrong": "It gives the soroban’s beads but not the suanpan’s, so nothing is contrasted."
+        },
+        "D": {
+          "recipe": "OG (how an abacus works)",
+          "why_wrong": "It explains what the beads represent on any abacus, not a difference between these two."
+        }
+      },
+      "models": [
+        "1.2",
+        "1.13"
+      ],
+      "word_count": 59,
+      "sources": [],
+      "notes": "Subject: history and culture (Chinese suanpan, 2 and 5 beads, and modern Japanese soroban, 1 and 4 beads; standard facts).",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 0,
+        "facts": "Rhetorical Synthesis: no web check (WAVE.md); checked only that nothing made up is attributed to a real, named person or organisation (named people are real and credited only with their documented work; the stork study is unnamed and generic)",
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.AUD_NEW.easy.w5b4_24",
+      "template": "AUD_NEW",
+      "subtype": "Introduce a person to an unfamiliar audience",
+      "tier": "easy",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Melba Liston (1926–1999) was an American jazz trombonist and arranger.\n• She was among the earliest women to play trombone in major big bands.\n• In the 1950s, she toured with bandleader Dizzy Gillespie.\n• Her most celebrated work came through a decades-long collaboration with pianist Randy Weston.\n• She arranged the music for his 1960 album Uhuru Afrika, which celebrated African independence.",
+      "stem": "The student wants to introduce Liston to an audience unfamiliar with the musician. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "Liston arranged the music for Randy Weston’s 1960 album Uhuru Afrika, which celebrated African independence.",
+        "American jazz trombonist and arranger Melba Liston did her most celebrated work in a decades-long collaboration with pianist Randy Weston.",
+        "In the 1950s, Liston toured with bandleader Dizzy Gillespie.",
+        "Randy Weston’s 1960 album Uhuru Afrika celebrated African independence."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "An unfamiliar audience needs to know who Liston was. Choice B identifies her as an “American jazz trombonist and arranger” and adds where her “most celebrated work” came from.",
+      "distractors": {
+        "A": {
+          "recipe": "AUD (one detail, no identification)",
+          "why_wrong": "It describes one album Liston arranged but never says who she was."
+        },
+        "C": {
+          "recipe": "AUD (one detail, no identification)",
+          "why_wrong": "It mentions one tour without explaining who Liston was."
+        },
+        "D": {
+          "recipe": "OG (the album, not Liston)",
+          "why_wrong": "It describes Weston’s album and does not mention Liston at all."
+        }
+      },
+      "models": [
+        "1.12"
+      ],
+      "word_count": 59,
+      "sources": [],
+      "notes": "Subject: arts (Melba Liston, Randy Weston, Uhuru Afrika, 1960; well-known facts only).",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 0,
+        "facts": "Rhetorical Synthesis: no web check (WAVE.md); checked only that nothing made up is attributed to a real, named person or organisation (named people are real and credited only with their documented work; the stork study is unnamed and generic)",
+        "fixes": [],
+        "status": "pass"
+      }
+    }
+  ],
+  "done": true
+}

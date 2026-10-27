@@ -3462,6 +3462,1078 @@
         "status": "pass",
         "facts": "OpenAlex summary of Lawrence et al. 2013: 1990s radar-bright polar deposits; MESSENGER confirms water ice in permanently shadowed regions"
       }
+    },
+    {
+      "id": "inferences.S2.hard.w5b4_01",
+      "template": "S2",
+      "subtype": "T3 consequence: a library that weeds print copies because a scan exists loses unrecorded readers' marks",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Many nineteenth-century volumes in university libraries have been digitized, and because digital repositories typically scan only one copy of a book, preferably a clean one, the remaining print copies can appear redundant. Literary scholar Andrew Stauffer’s Book Traces project, however, has documented that circulating copies of such books frequently preserve evidence left by their original owners—inscriptions, marginal annotations, pressed flowers, correspondence tucked between pages—that no catalog records, so it can be discovered only by examining each volume individually. A library that withdraws its older print copies on the grounds that a digitized version is available therefore risks ______",
+      "stem": "Which choice most logically completes the text?",
+      "options": [
+        "making the texts of those books harder for readers to obtain, since many of the editions involved have not yet been scanned.",
+        "giving up copies whose owners’ marks are already preserved in the digital versions, since those versions reproduce the copies on its shelves.",
+        "losing records of how individual readers engaged with books, records that the library may not even know its copies hold.",
+        "discarding owners’ marks in many of those copies, even though its catalog would have let it locate and set aside the marked ones."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "Digital repositories “typically scan only one copy of a book, preferably a clean one,” so a scan does not carry the owners’ marks found in other copies, and that evidence is something “that no catalog records, so it can be discovered only by examining each volume individually.” A library that withdraws copies because “a digitized version is available” may therefore discard readers’ traces without ever learning they were there, as C says.",
+      "distractors": {
+        "A": {
+          "recipe": "reversal of a premise (REV)",
+          "why_wrong": "The library in question withdraws copies “on the grounds that a digitized version is available,” so the texts stay available; the risk the text points to concerns the owners’ marks, not access to the books’ contents."
+        },
+        "B": {
+          "recipe": "swap (MIX)",
+          "why_wrong": "Digital repositories “typically scan only one copy of a book, preferably a clean one,” so the scans do not reproduce the marks in the other copies on the shelves; B turns the relation between the scan and the shelf copies around."
+        },
+        "D": {
+          "recipe": "half the evidence (PART)",
+          "why_wrong": "The library would indeed be discarding owners’ marks, but that evidence is something “that no catalog records, so it can be discovered only by examining each volume individually”; the catalog could not have shown the library which copies were marked."
+        }
+      },
+      "models": [
+        "3.12",
+        "3.28",
+        "3.33"
+      ],
+      "word_count": 98,
+      "sources": [
+        {
+          "what": "Book Traces (NINES, University of Virginia, directed by Andrew Stauffer) looks for inscriptions, marginalia, pressed flowers and other inserted items in pre-1923 circulating library books; digital libraries typically scan only one edition and prefer clean copies; urgency before older volumes are moved off library shelves",
+          "url": "https://as.virginia.edu/node/815"
+        }
+      ],
+      "notes": "Area: humanities (book history). S2 hard, T3 risk frame (3.12, 3.28 models). Two links: the scan is one clean copy (so other copies' marks are not in it), and the marks are uncatalogued (so the library cannot know what it discards). A true-first-part options: A (removal on scan grounds) fails because the text stays available; B fails on the single clean copy; D is an off-text comparison. Little-known subject; no bank item on Book Traces or marginalia (grep).",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [
+          "passage: “a single clean copy of each edition” changed to “only one copy of a book, preferably a clean one” to match the source (“scan only one edition and prefer clean copies”); explanation and B quote updated",
+          "D (off-text comparison with twentieth-century books, ruled out at once) replaced by a near miss that keeps the discarded marks and fails on the catalog (“no catalog records”); re-solved cold: C only"
+        ],
+        "status": "fixed",
+        "facts": "as.virginia.edu/node/815 (UVA news on Book Traces): Stauffer’s project looks for inscriptions, marginalia and inserts in pre-1923 library copies; “digital libraries typically scan only one edition and prefer clean copies”; unique attributes “cannot be located by any electronic catalog. Each book has to be opened and examined.” Subject check: no Book Traces or marginalia item in the bank (official Boundaries marginalia item is about Whitman, different)"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "After the fix: two links (the scan is one clean copy, the marks are uncatalogued) and the key paraphrased (“records that the library may not even know its copies hold”). A misreads the grounds for withdrawal, B reverses the scan relation, D keeps the discarded marks and fails only on the catalog link."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "C",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "inferences.S2.hard.w5b4_02",
+      "template": "S2",
+      "subtype": "T3 consequence: only small seeds dispersed after large-gaped birds vanish, so seed size shifts down",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "The jussara palm (Euterpe edulis) of Brazil’s Atlantic Forest relies on fruit-eating birds to disperse its seeds away from the parent tree, and seed size varies considerably among individual palms; the largest seeds can be swallowed only by birds with wide gapes, such as toucans. In many forest fragments, hunting and habitat destruction eliminated these large birds decades ago, leaving narrower-gaped species as the palm’s only dispersers. Comparing 22 palm populations, ecologist Mauro Galetti and colleagues reasoned that if dispersal in such fragments now systematically favored certain palms over others, the populations there would by now be expected to ______",
+      "stem": "Which choice most logically completes the text?",
+      "options": [
+        "bear smaller seeds, on average, than jussara palms growing in forests where wide-gaped birds are still present.",
+        "bear larger seeds than palms in forests with wide-gaped birds, since seeds left near the parent tree would need more stored food to survive.",
+        "be dispersed mainly by narrow-gaped birds whose gapes had widened over time to handle the palm’s largest seeds.",
+        "bear seeds of the same sizes as palms elsewhere but in far smaller numbers, since most of their seeds would go undispersed."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "Only wide-gaped birds can swallow the largest seeds, and in the fragments only “narrower-gaped species” remain, so only the smaller seeds are still carried away from the parent tree. Palms that bear smaller seeds would thus leave more offspring, and over the decades the populations there would come to bear smaller seeds on average, as A says.",
+      "distractors": {
+        "B": {
+          "recipe": "rival mechanism (CAUSE)",
+          "why_wrong": "The text says the palm relies on birds “to disperse its seeds away from the parent tree”; the palms favored in the fragments are those whose seeds the remaining birds can still swallow, which means smaller seeds, not larger ones."
+        },
+        "C": {
+          "recipe": "swap (MIX)",
+          "why_wrong": "The reasoning concerns which palms are favored, not changes in the birds; the text gives no reason to think the birds’ gapes changed, and it is the palms whose offspring would shift."
+        },
+        "D": {
+          "recipe": "half the evidence (PART)",
+          "why_wrong": "Narrow-gaped birds still swallow smaller seeds, so seeds are not mostly left undispersed; and if dispersal “systematically favored certain palms over others,” the palms in the fragments would differ from those elsewhere rather than keep the same seed sizes."
+        }
+      },
+      "models": [
+        "3.16",
+        "3.18",
+        "3.33"
+      ],
+      "word_count": 100,
+      "sources": [
+        {
+          "what": "Galetti et al. 2013, Science: functional extinction of large-gape seed dispersers in the Brazilian Atlantic forest is associated with smaller seeds in a keystone palm; 22 palm populations; areas without large avian frugivores for several decades have smaller seeds (Europe PMC abstract, doi 10.1126/science.1233774)",
+          "url": "https://doi.org/10.1126/science.1233774"
+        }
+      ],
+      "notes": "Area: natural science (ecology, evolution). S2 hard: dispersal principle (only wide gapes swallow the largest seeds) applied to defaunated fragments; key is the selection consequence. Toucans named as large-gaped dispersers per press coverage of the study; the narrow-gaped dispersers left unnamed. Distractors: CAUSE (larger seeds to survive undispersed), MIX (birds evolve instead of palms), PART (fewer seeds, same sizes).",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [],
+        "status": "pass",
+        "facts": "Europe PMC abstract of doi 10.1126/science.1233774 (Galetti et al. 2013, Science): among 22 palm populations, areas deprived of large-gape avian frugivores for several decades have smaller seeds; human-driven fragmentation; change within about 100 years. The passage frames the result as the team’s expectation, weaker than the source, so it stays within it. “Toucans” is from the paper body, not the abstract (roundable detail). Subject check: frugivore items in the bank are on other species (Cantabrian thrushes, Omao, crocodilians)"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "Two steps (only narrow-gaped birds remain, so dispersal now favors small-seeded palms, so populations shift to smaller seeds); the key’s “smaller seeds” is not passage wording. B is a plausible rival mechanism, C moves the change to the birds, D keeps the dispersal loss but ignores “favored certain palms over others.”"
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "A",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "inferences.S2.hard.w5b4_03",
+      "template": "S2",
+      "subtype": "T3 consequence: a committee whose shared reports favor one candidate repeats the hidden-profile error",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "In a hidden-profile task, each member of a group receives some information that all members share and some that no other member possesses, and the optimal decision becomes apparent only when the unshared information is pooled. A 2012 meta-analysis of 65 studies employing such tasks, by Li Lu, Y. Connie Yuan, and Poppy Lauretta McLeod, found that groups mentioned considerably more shared than unshared information during discussion and were far less likely than fully informed groups to reach the optimal decision. A hiring committee whose members all read identical reports praising one candidate, while each member individually read a different report praising a second candidate, would therefore likely ______",
+      "stem": "Which choice most logically completes the text?",
+      "options": [
+        "choose the second candidate, since the reports that each member read alone would stand out to the others as new information.",
+        "fail to settle on either candidate, since each member would hold information that the rest of the committee lacked.",
+        "spend most of its discussion on the second candidate, whose merits would be unfamiliar to most of the members.",
+        "favor the first candidate even if the full set of reports, taken together, made a stronger case for the second."
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The committee’s situation is a hidden profile: what favors the first candidate is shared, while what favors the second is spread across reports that “each member individually read.” Groups in such tasks “mentioned considerably more shared than unshared information” and were “far less likely” to reach the optimal decision, so the committee would likely lean toward the first candidate even if all the reports together favored the second, as D says.",
+      "distractors": {
+        "A": {
+          "recipe": "reversal (REV)",
+          "why_wrong": "The meta-analysis found that groups “mentioned considerably more shared than unshared information,” so the reports each member read alone would tend to stay out of the discussion rather than stand out and win the committee over."
+        },
+        "B": {
+          "recipe": "overreach (EXT)",
+          "why_wrong": "The finding is that hidden-profile groups were less likely “to reach the optimal decision,” not that they failed to choose at all; nothing suggests the committee would be unable to decide."
+        },
+        "C": {
+          "recipe": "reversal (REV)",
+          "why_wrong": "Discussion in these tasks centers on shared information, which here concerns the first candidate; the analysis gives no reason to expect most of the discussion to turn to the second candidate."
+        }
+      },
+      "models": [
+        "3.4",
+        "3.12",
+        "3.34"
+      ],
+      "word_count": 109,
+      "sources": [
+        {
+          "what": "Lu, Yuan, McLeod 2012, Personality and Social Psychology Review: meta-analysis of 65 hidden-profile studies (3,189 groups); groups mentioned two standard deviations more common than unique information; hidden-profile groups were eight times less likely to find the solution than groups with full information (Europe PMC abstract)",
+          "url": "https://doi.org/10.1177/1088868311417243"
+        }
+      ],
+      "notes": "Area: social science (group decision making). S2 hard: the meta-analytic finding (principle) applied to a hiring committee whose case must first be recognised as a hidden profile; the key states the counterintuitive outcome with a conditional. Remedy-style lead-in rejected: 'if each member read all reports' would also have been defensible. Distractors: REV (unshared reports win), EXT (no decision), REV (discussion shifts to the second candidate).",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [
+          "“praising another” changed to “praising a second candidate” so the options’ “the second candidate” has a clear referent"
+        ],
+        "status": "fixed",
+        "facts": "Europe PMC abstract of doi 10.1177/1088868311417243 (Lu, Yuan, McLeod 2012): 65 studies, groups mentioned two SD more common than unique information; hidden-profile groups eight times less likely to find the solution than fully informed groups"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "The student must first recognise the committee as a hidden profile (shared case for one, scattered case for the other) and then apply both findings; the key adds the counterintuitive conditional. A and C reverse the discussion bias, B is a plausible deadlock reading."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "D",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "inferences.S2.hard.w5b4_04",
+      "template": "S2",
+      "subtype": "T3 consequence: short-lived tablets baked only by the final fire record only about the palace's final year",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "The Mycenaean palace at Pylos, in southwestern Greece, recorded its administrative accounts on clay tablets inscribed in the Linear B script. The tablets were never deliberately fired: scribes allowed them to dry in the sun, used them as temporary records, and apparently discarded them once their contents had been transferred elsewhere; recurring terms meaning “this year” and “last year” indicate that the tablets were kept no longer than about a year. The approximately 1,000 surviving tablets were preserved because the conflagration that destroyed the palace around 1180 BCE baked them. Historians reconstructing the palace’s economy from these tablets are therefore working with documents that ______",
+      "stem": "Which choice most logically completes the text?",
+      "options": [
+        "reflect the scribes’ own judgments about which accounts were important enough to keep permanently.",
+        "probably show the palace as it was during roughly its final year rather than how it changed over time.",
+        "span much of the palace’s history, since tablets inscribed in many different years would all have been hardened by the same fire.",
+        "were most likely copied from older, more permanent records that the fire did not reach."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The tablets were “temporary records” that scribes “apparently discarded” once their contents were moved elsewhere, and recurring terms for “this year” and “last year” “indicate that the tablets were kept no longer than about a year.” Since only the tablets present when the palace burned were baked by “the conflagration that destroyed the palace,” the surviving tablets probably cover only about the palace’s final year, as B says.",
+      "distractors": {
+        "A": {
+          "recipe": "rival mechanism (CAUSE)",
+          "why_wrong": "The tablets “were never deliberately fired” and survived only because the conflagration baked them, so their survival reflects what happened to be in the palace when it burned, not scribes’ choices about what to keep."
+        },
+        "C": {
+          "recipe": "half the evidence (PART)",
+          "why_wrong": "It is true that one fire baked all the surviving tablets, but scribes “apparently discarded” tablets once their contents were transferred, so tablets from many earlier years would no longer have been there to be baked."
+        },
+        "D": {
+          "recipe": "swap (MIX)",
+          "why_wrong": "The text describes the tablets’ contents being “transferred elsewhere,” that is, the tablets were the source rather than copies; it says nothing of older records from which they were copied."
+        }
+      },
+      "models": [
+        "3.13",
+        "3.18",
+        "3.28"
+      ],
+      "word_count": 105,
+      "sources": [
+        {
+          "what": "PY Ta 641 (Wikipedia): Linear B tablets were short-term aides-memoire, not intentionally fired but left to dry in the sun, normally discarded after their information was transferred; frequent words for 'this year' and 'last year' indicate retention for at most a year; surviving tablets were accidentally burned when the palace was destroyed, within months of their creation",
+          "url": "https://en.wikipedia.org/wiki/PY_Ta_641"
+        }
+      ],
+      "notes": "Area: history and archaeology. S2 hard: the item hinges on the less-known layer (tablets kept about a year at most, so the fire preserved only about the final year), not on the familiar fact that fire baked the tablets. Tablet count (about 1,000) per the Palace of Nestor article; date given as around 1200 BCE (sources give c. 1200 to 1180). Distractors: CAUSE (scribes chose what survived), PART (one fire baked tablets of many years), MIX (tablets as copies).",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [
+          "destruction date changed from “around 1200 BCE” to “around 1180 BCE” to match the cited page"
+        ],
+        "status": "fixed",
+        "facts": "en.wikipedia.org/wiki/PY_Ta_641: Linear B tablets were short-term aides-memoire, retained at most a year (za-we-te “this year”, pe-ru-si-nu-wo “last year”), normally discarded after transfer, left to dry in the sun, accidentally fired when the palace burned around 1180 BCE. “Approximately 1,000” tablets is a rounded detail not on that page. Subject check: Pylos items in the bank are the Griffin Warrior grave (Boundaries) and Linear A vs B (RS), other concepts"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "Two steps (kept a year at most, survived only by the final fire, so a snapshot of the last year); the key is paraphrased. C keeps the true point that one fire baked everything and fails on the discarding, A gives a rival reason for survival, D reverses the direction of copying."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "B",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "inferences.S6.hard.w5b4_05",
+      "template": "S6",
+      "subtype": "X but not Y: decorated webs draw more wasp attacks but fewer of them strike the spider",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Spiders of the species Cyclosa mulmeinensis decorate their webs with the remains of consumed prey and other debris that, from a distance, resembles the spider itself. To determine whether such decorations protect the spider, I-Min Tso and Ling Tseng of Tunghai University in Taiwan analyzed approximately 950 hours of video recorded at webs in the field. Heavily decorated webs attracted more attacks by predatory wasps than sparsely decorated ones did (22 versus 12), yet the wasps targeted the spider in only 7 of the attacks on heavily decorated webs, compared with 9 on sparsely decorated ones. These results suggest that extensive decoration ______",
+      "stem": "Which choice most logically completes the text?",
+      "options": [
+        "may make a web a more frequent target for wasps while lowering the chance that the spider itself is hit.",
+        "draws wasps toward the debris and away from the web as a whole, so that heavily decorated webs are attacked less often.",
+        "puts a spider at greater risk than sparse decoration does, since it nearly doubles how often wasps attack the web.",
+        "protects a spider mainly because the wasps would rather feed on the prey remains than on the spider."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "Heavily decorated webs attracted more attacks, “22 versus 12,” but the wasps targeted the spider in “only 7” of those attacks, against 9 on sparsely decorated webs, so a smaller share, and even a smaller number, of attacks reached the spider. Since the debris “resembles the spider itself,” decoration appears to draw wasps to a web while diverting their strikes, as A says.",
+      "distractors": {
+        "B": {
+          "recipe": "reversal (REV)",
+          "why_wrong": "Heavily decorated webs attracted more wasp attacks, not fewer (“22 versus 12”), so the decorations did not keep wasps away from the web."
+        },
+        "C": {
+          "recipe": "half the evidence (PART)",
+          "why_wrong": "It is true that attacks nearly doubled, but the wasps targeted the spider in only 7 attacks on heavily decorated webs against 9 on sparsely decorated ones, so heavy decoration did not leave the spider at greater risk."
+        },
+        "D": {
+          "recipe": "rival mechanism (CAUSE)",
+          "why_wrong": "The text points to resemblance (the debris “resembles the spider itself”), and the study says nothing about wasps preferring to eat the prey remains."
+        }
+      },
+      "models": [
+        "3.20",
+        "3.25",
+        "3.29"
+      ],
+      "word_count": 103,
+      "sources": [
+        {
+          "what": "Science News, July 2009, 'Web decorating with garbage': I-Min Tso and Ling Tseng of Tunghai University, Cyclosa mulmeinensis, about 950 hours of video; heavily decorated webs drew 22 wasp attacks vs 12 on sparsely decorated webs; the spider was targeted in 7 of 22 vs 9 of 12 (published as 'A risky defence by a spider using conspicuous decoys resembling itself in appearance', Animal Behaviour 2009)",
+          "url": "https://www.sciencenews.org/?p=4880"
+        }
+      ],
+      "notes": "Area: natural science (animal behaviour). S6 hard: X (more attacks on the web) but not Y (more strikes on the spider), so Z (decoys deflect attacks at a cost in attention). The counts are as reported in Science News. Distractors: REV (fewer attacks), PART (true first clause on doubled attacks, fails on strikes), CAUSE (wasps prefer carcasses). No bank item on Cyclosa or web decorations as decoys (grep).",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [],
+        "status": "pass",
+        "facts": "sciencenews.org/article/web-decorating-garbage (2009): Tso and colleagues, Cyclosa mulmeinensis, about 950 hours of video; 22 wasp attacks on heavily decorated webs vs 12 on sparse ones; wasps went after the spider in 7 of 22 vs 9 of 12. Subject check: the live CTC web-decoration item (w4b1_14) is about silk decorations, prey capture and bird collisions, a different hypothesis and species"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "The key needs the ratio step (7 of 22 vs 9 of 12) set against the raw attack counts. C keeps the true doubling of attacks and fails on the spider’s risk, B reverses the attack counts, D offers a rival mechanism the data never test."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "A",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "inferences.S9.hard.w5b4_06",
+      "template": "S9",
+      "subtype": "T2 belief: experts' reports of searching vs gaze fixed on the familiar solution",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "When the first solution that comes to mind prevents a person from finding a better one, psychologists call the phenomenon the Einstellung effect. Merim Bilalić, Peter McLeod, and Fernand Gobet presented expert chess players with positions in which a familiar checkmating sequence was available but a shorter, less familiar sequence also existed. After identifying the familiar solution, the players reported that they were searching for a better one. Eye-tracking records, however, showed that their gaze kept returning to the squares relevant to the solution they had already found. These results suggest that the players ______",
+      "stem": "Which choice most logically completes the text?",
+      "options": [
+        "knew that their gaze kept returning to the familiar solution but could not bring themselves to look at other squares.",
+        "could never have found the shorter solution, since expertise keeps players from considering unfamiliar moves.",
+        "believed they were considering alternatives even while their attention stayed tied to the answer they already had.",
+        "had noticed the shorter solution but preferred the familiar one because they trusted it more."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "After finding the familiar solution, the players “reported that they were searching for a better one,” yet their gaze “kept returning to the squares relevant to the solution they had already found.” The players thus thought they were looking for alternatives while their attention stayed on the answer they already had, as C says.",
+      "distractors": {
+        "A": {
+          "recipe": "half the evidence (PART)",
+          "why_wrong": "The gaze records do show the players’ eyes “kept returning” to the familiar solution, but nothing indicates the players knew it: they “reported that they were searching for a better one,” and the eye-tracking contradicted that report."
+        },
+        "B": {
+          "recipe": "overreach (EXT)",
+          "why_wrong": "The study shows the first solution steering experts’ attention in these positions; it gives no basis for saying the shorter solution could never be found or that expertise blocks unfamiliar moves in general."
+        },
+        "D": {
+          "recipe": "rival mechanism (CAUSE)",
+          "why_wrong": "Nothing indicates the players saw the shorter solution: they reported still “searching for a better one,” and their gaze stayed on the squares of the solution they had already found."
+        }
+      },
+      "models": [
+        "3.6",
+        "3.7",
+        "3.19"
+      ],
+      "word_count": 95,
+      "sources": [
+        {
+          "what": "Bilalić, McLeod, Gobet 2008, Cognition: Einstellung (set) effect; having found one solution, expert chess players reported that they were looking for a better one, but their eye movements showed they continued to look at features related to the solution they had already thought of (Europe PMC abstract)",
+          "url": "https://doi.org/10.1016/j.cognition.2008.05.005"
+        }
+      ],
+      "notes": "Area: social science (cognitive psychology). S9 hard kept on target T2: the behaviour (gaze) set against the report reveals what the players believed. Distractors: REV (rechecking, contradicts the report), EXT (expertise always blocks), CAUSE (saw the shorter mate but trusted the familiar). Chess appears in two bank items on other subjects (PM2.5 and chess errors; shogi drops); different concepts. The study's positions (smothered mate vs shorter mate) are left general.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [
+          "key C paraphrased away from the passage (“the solution they had already found” to “the answer they already had”); explanation updated",
+          "A (rechecking, contradicted at once by the players’ report) replaced by a near miss that keeps the gaze records and fails on awareness; re-solved cold: C only"
+        ],
+        "status": "fixed",
+        "facts": "Europe PMC abstract of doi 10.1016/j.cognition.2008.05.005 (Bilalić, McLeod, Gobet 2008): having found one solution, expert chess players reported looking for a better one, but their eye movements stayed on features related to the solution already found. Subject check: chess items in the bank are PM2.5 and chess errors and shogi drops, other concepts"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "After the fix: the key joins the report and the gaze records in new wording, A keeps the gaze fact and fails on what the players knew, B overreaches to “never”, D is a rival motive. Two linked steps, no option dies to the first fact read."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "C",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "inferences.S7.hard.w5b4_08",
+      "template": "S7",
+      "subtype": "T1 conditional: pea roots favor the variable pot at a low mean and the constant pot at a high mean",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Risk sensitivity theory was originally developed to explain animals’ foraging decisions. It predicts that an organism choosing between a constant resource supply and a fluctuating one with an identical average should prefer fluctuation when the constant option is insufficient for its needs and constancy when that option is adequate. Efrat Dener, Alex Kacelnik, and Hagai Shemesh tested this prediction on pea plants whose roots were divided between two pots, one maintaining a constant nutrient concentration and the other a concentration fluctuating around the same mean. The plants allocated more root growth to the fluctuating pot when that mean was low and to the constant pot when it was high, suggesting that ______",
+      "stem": "Which choice most logically completes the text?",
+      "options": [
+        "pea plants favor a variable nutrient supply over a steady one as long as the two supplies share the same average concentration.",
+        "pea plants, as the theory predicts, may seek or avoid variability depending on how rich their conditions are.",
+        "pea plants grow more roots overall when nutrient levels are low than when they are high, wherever those nutrients are located.",
+        "pea plants respond to variable nutrient supplies more consistently than animals respond to variable food supplies."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "At a low mean the plants allocated more root growth “to the fluctuating pot,” and at a high mean “to the constant pot,” which is the switch the theory, “originally developed to explain animals’ foraging decisions,” predicts: prefer fluctuation when the constant option is “insufficient” and constancy when it is “adequate.” The plants thus seem to seek or avoid variability according to how rich their conditions are, as B says.",
+      "distractors": {
+        "A": {
+          "recipe": "half the evidence (PART)",
+          "why_wrong": "The pots always shared the same mean, yet the plants favored the fluctuating pot only “when that mean was low”; when it was high, they grew more roots in the constant pot."
+        },
+        "C": {
+          "recipe": "wrong variable (VAR)",
+          "why_wrong": "The study measured where the plants “allocated more root growth,” the fluctuating pot or the constant one, not how much root they grew in total at different nutrient levels."
+        },
+        "D": {
+          "recipe": "unsupported comparison (CMP)",
+          "why_wrong": "The text mentions animals only as the theory’s original subject; it reports no measurements of animals, so it gives no basis for comparing how consistently plants and animals respond."
+        }
+      },
+      "models": [
+        "3.14",
+        "3.15"
+      ],
+      "word_count": 112,
+      "sources": [
+        {
+          "what": "Dener, Kacelnik, Shemesh 2016, Current Biology, 'Pea Plants Show Risk Sensitivity': split-root pea plants favor variability when mean nutrient levels are low and the opposite when they are high, supporting the most widespread risk sensitivity theory prediction (Europe PMC abstract)",
+          "url": "https://doi.org/10.1016/j.cub.2016.05.008"
+        }
+      ],
+      "notes": "Area: natural science (plant behaviour). S7 hard: two cases with opposite outcomes lead to a 'depending on' key (3.14 pattern), tied to the theory's prediction. The paper's own caveat (nitrogen effects may produce the pattern without risk adaptation) is why the key says 'may'. Distractors: PART (ignores the mean condition), VAR (total root growth), CMP (animals).",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [],
+        "status": "pass",
+        "facts": "Europe PMC abstract of doi 10.1016/j.cub.2016.05.008 (Dener, Kacelnik, Shemesh 2016): split-root pea plants favor variability when mean nutrient levels are low and the opposite when high, supporting the main risk sensitivity prediction; the authors note other mechanisms may produce it, hence the key’s “may”"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "At the low edge of band 6: the student must tie the two outcomes to the theory’s condition (the richness of the constant option). A drops the mean condition, C names a variable not measured, D compares with animals never measured."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "B",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "inferences.S11.hard.w5b4_09",
+      "template": "S11",
+      "subtype": "T3 consequence of revision: altered case notes undermine the book as a record of children's words",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Psychiatrist Fredric Wertham’s 1954 book Seduction of the Innocent argued that comic books fostered juvenile delinquency, supporting the claim with case histories of young patients that often quoted the children directly. Because the book cited no sources, these accounts went largely unexamined until Wertham’s papers became available in 2010. Comparing his clinical notes with the published cases, information scientist Carol Tilley found that Wertham had revised children’s ages, distorted their statements, and attributed one boy’s remarks to several patients. Historians who have treated the book as a record of how children of the 1950s talked about comics may therefore ______",
+      "stem": "Which choice most logically completes the text?",
+      "options": [
+        "have overlooked that the children Wertham described never existed, since he based none of his cases on actual patients.",
+        "have relied on remarks that Wertham reworded or credited to the wrong children.",
+        "still be on firm ground, since Tilley’s comparison found problems mainly in the ages Wertham reported rather than in the children’s words.",
+        "have underestimated how many of Wertham’s young patients described comics in the ways that his book reports."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The book’s case histories “often quoted the children directly,” but Tilley found that Wertham “distorted their statements” and “attributed one boy’s remarks to several patients.” Historians who used those quotations as a record of how children talked about comics may thus have relied on words that were changed or assigned to the wrong child, as B says.",
+      "distractors": {
+        "A": {
+          "recipe": "overreach (EXT)",
+          "why_wrong": "Tilley compared the book with Wertham’s “clinical notes” on real patients and found the cases altered, not invented; nothing suggests the children never existed."
+        },
+        "C": {
+          "recipe": "half the evidence (PART)",
+          "why_wrong": "Wertham did revise “children’s ages,” but Tilley also found that he “distorted their statements,” so the children’s words are exactly what is in doubt."
+        },
+        "D": {
+          "recipe": "reversal (REV)",
+          "why_wrong": "Wertham “attributed one boy’s remarks to several patients,” which makes such remarks look more common than they were; historians relying on the book would be more likely to overestimate than to underestimate how many children talked this way."
+        }
+      },
+      "models": [
+        "3.10",
+        "3.24",
+        "3.26"
+      ],
+      "word_count": 100,
+      "sources": [
+        {
+          "what": "Carol Tilley, 'Seducing the Innocent: Fredric Wertham and the Falsifications That Helped Condemn Comics', Information & Culture 2012, as reported by CBLDF: Wertham revised children's ages, distorted their quotes, omitted other causal factors, and attributed quotes from a single source to five different patients; papers made available by the Library of Congress in 2010",
+          "url": "https://cbldf.org/2013/02/researcher-proves-wertham-fabricated-evidence-against-comics/"
+        }
+      ],
+      "notes": "Area: humanities and social science (history of comics, research ethics). S11 hard: the received view (the book's cases as evidence of children's words) is revised by the counterevidence, and the key draws the consequence for historians who used it. Not an anachronism or forgery item. Tilley's article is not freely online; the CBLDF summary and the University of Illinois iSchool news release (2013) report the findings. Distractors: EXT (invented children), PART (only ages), EXT (no influence at all).",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [
+          "D (comics had no influence, off the point) replaced by a reversal that needs a step: misattributing one boy’s remarks to several patients makes them look more common, so historians would overestimate, not underestimate; re-solved cold: B only"
+        ],
+        "status": "fixed",
+        "facts": "cbldf.org (2013) report of Tilley 2012, Information & Culture: Wertham revised children’s ages, distorted their quotes and attributed quotes from a single boy to five patients; papers made available by the Library of Congress in 2010; the book lacks citations"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "After the fix: A overreaches to invented patients, C keeps the true point about ages and fails on the words, D runs the misattribution the wrong way. The key paraphrases (“reworded or credited to the wrong children”) and needs the step from altered cases to historians’ evidence."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "B",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "inferences.S11.medium.w5b4_10",
+      "template": "S11",
+      "subtype": "T1 in a doubt frame: wearable trackers and smaller weight loss",
+      "tier": "medium",
+      "band_target": null,
+      "passage": "Wearable activity trackers are often marketed on the premise that monitoring one’s daily movement facilitates weight loss. In a trial led by researcher John Jakicic, 471 young adults followed an identical low-calorie diet, exercise regimen, and group counseling program for six months; afterward, half began recording their diet and activity on a website, while the other half received a wearable device, with an accompanying website, that tracked their activity automatically. After 24 months, participants with devices had lost an average of 3.5 kilograms, compared with 5.9 kilograms for those without, a result that undermines the assumption that ______",
+      "stem": "Which choice most logically completes the text?",
+      "options": [
+        "providing a device that monitors physical activity makes a weight-loss program more effective.",
+        "young adults who follow a low-calorie diet and an exercise plan can lose weight over a two-year period.",
+        "recording diet and activity on a website is less effective than attending group counseling sessions.",
+        "people are more likely to keep using wearable devices than to keep recording information on a website."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "Both groups followed “an identical” program for six months, and the only difference afterward was that one half “received a wearable device” to track activity. That half lost less weight, “3.5 kilograms, compared with 5.9 kilograms,” which undercuts the assumption that adding such a device improves a weight-loss program, as A says.",
+      "distractors": {
+        "B": {
+          "recipe": "polarity trap (POL)",
+          "why_wrong": "Both groups did lose weight over the 24 months, so the trial supports this idea rather than undermining it."
+        },
+        "C": {
+          "recipe": "wrong variable (VAR)",
+          "why_wrong": "All participants followed the same “group counseling program,” so the trial did not compare website recording with counseling."
+        },
+        "D": {
+          "recipe": "off-topic claim (OUT)",
+          "why_wrong": "The text reports weight loss, not how long participants kept using their devices or the website, so it says nothing about this."
+        }
+      },
+      "models": [
+        "2.2",
+        "2.4",
+        "2.13",
+        "2.15"
+      ],
+      "word_count": 98,
+      "sources": [
+        {
+          "what": "Jakicic et al. 2016, JAMA, IDEA randomized clinical trial: 471 adults aged 18 to 35, low-calorie diet, activity and group counseling; at 6 months the enhanced group got a wearable device and web interface, the standard group website self-monitoring; 24-month weight loss 3.5 kg vs 5.9 kg (Europe PMC abstract)",
+          "url": "https://doi.org/10.1001/jama.2016.12858"
+        }
+      ],
+      "notes": "Area: social science (health behaviour). S11 medium with a negative frame ('undermines the assumption that', varied from 2.4's wording): a marketed assumption, then a trial that runs against it. Distractors: POL (a supported idea offered in a doubt frame), VAR (counseling never varied), OUT (device use over time).",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [],
+        "status": "pass",
+        "facts": "Europe PMC abstract of doi 10.1001/jama.2016.12858 (Jakicic et al. 2016, IDEA trial): 471 participants, low-calorie diet, activity and group counseling; at 6 months website self-monitoring vs a wearable device with web interface; the device group lost less weight over 24 months (3.5 vs 5.9 kg as given in the source note)"
+      }
+    },
+    {
+      "id": "inferences.S2.medium.w5b4_11",
+      "template": "S2",
+      "subtype": "T3 consequence: retyping by readers compounds errors along a chain of copies",
+      "tier": "medium",
+      "band_target": null,
+      "passage": "In the Soviet Union, writings that could not pass the censors often circulated as samizdat (“self-published”) texts, reproduced by individual readers rather than by printing presses, since printed material could be traced to its source. Typically, a reader with access to a typewriter would produce several copies simultaneously, interleaving the sheets with carbon paper, and distribute them to trusted acquaintances, some of whom would type additional copies from the one they had received; the resulting pages were frequently blurry and riddled with typographical errors. Consequently, a text that reached a reader only after being retyped repeatedly was likely to ______",
+      "stem": "Which choice most logically completes the text?",
+      "options": [
+        "be easier to read than earlier copies, since each new typist could correct the mistakes made by the one before.",
+        "have been printed on a press once enough readers had asked for copies of it.",
+        "be impossible to connect to any earlier copy, since samizdat texts could not be traced to their source.",
+        "differ more from the original wording than copies made after only one or two retypings."
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "Each reader who made new copies typed from a copy that someone else had typed, and the pages were “riddled with typographical errors.” A text retyped repeatedly would therefore carry the errors of every earlier typing plus new ones, so it would likely differ more from the original, as D says.",
+      "distractors": {
+        "A": {
+          "recipe": "rival mechanism (CAUSE)",
+          "why_wrong": "The text says the pages were “riddled with typographical errors” and never mentions typists correcting earlier mistakes, so it gives no reason to expect later copies to be cleaner."
+        },
+        "B": {
+          "recipe": "reversal (REV)",
+          "why_wrong": "Samizdat texts were reproduced “by individual readers rather than by printing presses,” because “printed material could be traced to its source,” so popularity would not lead to printing."
+        },
+        "C": {
+          "recipe": "detail echo (ECHO)",
+          "why_wrong": "The point about tracing concerns printed material and its source, not whether one typed copy can be connected to another; the text says nothing about matching copies."
+        }
+      },
+      "models": [
+        "2.3",
+        "2.12",
+        "2.22"
+      ],
+      "word_count": 100,
+      "sources": [
+        {
+          "what": "Samizdat (Wikipedia): censored texts reproduced by individuals and passed from reader to reader; manual reproduction because printed texts could be traced to the source; typewriters; multiple copies made simultaneously on carbon paper or tissue paper; pages often blurry with numerous typographical errors",
+          "url": "https://en.wikipedia.org/wiki/Samizdat"
+        },
+        {
+          "what": "Macalester College Russian Studies, “Samizdat: Reproduction of Censored Literature”: texts circulated with the expectation that those who obtained them would “retype [the literature] with multiple carbon copies for further readers” (Downing); reliance on typewriters made mistakes part of the process",
+          "url": "https://www.macalester.edu/russian/?p=141"
+        }
+      ],
+      "notes": "Area: history. S2 medium: the copying practice (principle) applied to a text far down the chain. The accumulation of errors is the student's inference, not a claim the passage states. Distractors: CAUSE (corrections), REV (printing), ECHO (tracing).",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [
+          "added a second source that states the step the item hinges on, recipients retyping copies for further readers (Macalester page quoting Downing); the Wikipedia page confirms carbon copies, traceability of print and blurry, error-ridden pages but not the chain"
+        ],
+        "status": "fixed",
+        "facts": "en.wikipedia.org/wiki/Samizdat: reproduced by individuals and passed reader to reader because printed texts could be traced; multiple carbon copies at once; “often blurry and wrinkled pages with numerous typographical errors”. macalester.edu/russian/?p=141: those who obtained copies were expected to “retype [the literature] with multiple carbon copies for further readers”"
+      }
+    },
+    {
+      "id": "inferences.S5.medium.w5b4_12",
+      "template": "S5",
+      "subtype": "T5 evidential status: an astronomical date match vs references that may be poetic convention",
+      "tier": "medium",
+      "band_target": null,
+      "passage": "In Homer’s Odyssey, a seer declares on the day of Odysseus’s return that the sun has vanished from the sky, a line that ancient commentators such as Plutarch interpreted as describing a total solar eclipse. Systematically examining every date from 1250 to 1115 BCE, Constantino Baikouzis and Marcelo Magnasco determined that only April 16, 1178 BCE, when an eclipse was visible over the Ionian Islands, was consistent with the epic’s other astronomical references, to Venus, a new moon, the constellation Boötes, and the Pleiades. Such references, however, could be poetic conventions rather than records of observation. Therefore, the correspondence ______",
+      "stem": "Which choice most logically completes the text?",
+      "options": [
+        "indicates that the poem’s author worked from astronomical records kept in the 1170s BCE.",
+        "shows that the seer’s words refer to Venus and the new moon rather than to an eclipse.",
+        "does not establish that the Odyssey preserves a memory of an eclipse that people actually witnessed.",
+        "rules out every other year in that span as the time when the events of the Odyssey could have taken place."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The date is “consistent with the epic’s other astronomical references,” but those references “could be poetic conventions rather than records of observation.” If they are conventions, their fit with April 16, 1178 BCE could be chance, so the correspondence cannot settle whether the poem records an eclipse people saw, as C says.",
+      "distractors": {
+        "A": {
+          "recipe": "overreach (EXT)",
+          "why_wrong": "The text raises the possibility that the references are not observations at all, so it gives no basis for saying the author used records from the 1170s BCE."
+        },
+        "B": {
+          "recipe": "swap (MIX)",
+          "why_wrong": "Venus and the new moon are the poem’s “other astronomical references”; the seer’s words about the vanished sun are a separate line, and the correspondence does not reassign them."
+        },
+        "D": {
+          "recipe": "overreach (EXT)",
+          "why_wrong": "Within that span only one date was consistent with the references, but that would rule out other years only if the references record real observations, which the text says may not be so."
+        }
+      },
+      "models": [
+        "2.11",
+        "2.18",
+        "2.20"
+      ],
+      "word_count": 100,
+      "sources": [
+        {
+          "what": "Baikouzis, Magnasco 2008, PNAS, 'Is an eclipse described in the Odyssey?': Plutarch and Heraclitus read Theoclymenus's prophecy as a total solar eclipse; the 16 April 1178 BCE eclipse was total over the Ionian Islands; search of 1250 to 1115 BCE for dates matching references to Bootes and the Pleiades, Venus and the new moon found a single close match, 16 April 1178 BCE; skepticism remains (Europe PMC abstract)",
+          "url": "https://doi.org/10.1073/pnas.0803317105"
+        }
+      ],
+      "notes": "Area: humanities (literature) and astronomy. S5 medium: evidence for P (date match) plus a rival (poetic convention) gives a hedged key; option shapes varied away from official 2.18's frames. The paper's conjectural Mercury reference is left out. Fame: the 2008 paper drew press coverage; kept because the item turns on evidential status, which background knowledge does not supply.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [],
+        "status": "pass",
+        "facts": "Europe PMC abstract of doi 10.1073/pnas.0803317105 (Baikouzis, Magnasco 2008): Plutarch and Heraclitus read Theoclymenus’s prophecy as a total eclipse; exhaustive search of 1250 to 1115 BCE using Boötes and the Pleiades, Venus and the new moon found a single close match, 16 April 1178 BCE; skepticism remains. Fame call: the 2008 paper had wide press coverage but is not a classroom subject, and a student who recalls the headline is pulled toward A or D, which the passage’s caveat refutes; kept"
+      }
+    },
+    {
+      "id": "inferences.S8.medium.w5b4_13",
+      "template": "S8",
+      "subtype": "T1 link: film shot rhythms converge on the 1/f pattern of attention",
+      "tier": "medium",
+      "band_target": null,
+      "passage": "Fluctuations in people’s reaction times across repeated tasks follow a statistical pattern known as 1/f, in which longer and shorter stretches nest within one another, and psychologists interpret this pattern as reflecting how attention waxes and wanes. James Cutting, Jordan DeLong, and Christine Nothelfer divided 150 Hollywood films released between 1935 and 2005 into their individual shots and measured each shot’s duration. Over those 70 years, the durations of neighboring shots became increasingly similar, and the overall pattern of shot durations within films moved progressively closer to 1/f. These findings suggest that ______",
+      "stem": "Which choice most logically completes the text?",
+      "options": [
+        "viewers’ attention spans shortened after 1935, which led filmmakers to rely on shorter and shorter shots.",
+        "the rhythm of shots in Hollywood films may have come to resemble the way viewers’ attention naturally rises and falls.",
+        "Hollywood directors began measuring audiences’ reaction times to decide how long shots should last.",
+        "Hollywood films hold viewers’ attention better than films made in other countries do."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The 1/f pattern in reaction times is taken as “reflecting how attention waxes and wanes,” and over 70 years the pattern of shot durations “moved progressively closer to 1/f.” The films’ rhythm thus came to resemble the rhythm of attention, as B says.",
+      "distractors": {
+        "A": {
+          "recipe": "rival mechanism (CAUSE)",
+          "why_wrong": "The study tracked how shot durations were patterned, not whether shots got shorter, and it says nothing about viewers’ attention spans changing."
+        },
+        "C": {
+          "recipe": "rival mechanism (CAUSE)",
+          "why_wrong": "Reaction times come from psychology research, not from filmmakers; nothing in the text suggests directors measured audiences or set shot lengths on purpose."
+        },
+        "D": {
+          "recipe": "unsupported comparison (CMP)",
+          "why_wrong": "Only Hollywood films were analyzed, so the text gives no basis for comparing them with films from other countries."
+        }
+      },
+      "models": [
+        "2.19",
+        "2.21"
+      ],
+      "word_count": 93,
+      "sources": [
+        {
+          "what": "Cutting, DeLong, Nothelfer 2010, Psychological Science, 'Attention and the evolution of Hollywood film': reaction times show 1/f patterns reflecting changes in attention; 150 films 1935 to 2005 parsed into shots; shots became more correlated in length with their neighbors and power spectra approached 1/f; may help harness attention (Europe PMC abstract)",
+          "url": "https://doi.org/10.1177/0956797610361679"
+        }
+      ],
+      "notes": "Area: humanities (film). S8 medium: two patterns that line up (attention and shot rhythm) lead to a link. Distractors: CAUSE (shrinking attention spans, a popular belief the study does not test), CAUSE (deliberate measurement), CMP (other countries).",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [],
+        "status": "pass",
+        "facts": "Europe PMC abstract of doi 10.1177/0956797610361679 (Cutting, DeLong, Nothelfer 2010): reaction-time 1/f patterns reflect changes in attention; 150 films 1935 to 2005; neighbouring shots more correlated in length and spectra approaching 1/f"
+      }
+    },
+    {
+      "id": "inferences.S9.medium.w5b4_14",
+      "template": "S9",
+      "subtype": "T2 motive: a rare tree chosen for nests has the stiffest, strongest branches",
+      "tier": "medium",
+      "band_target": null,
+      "passage": "Each evening, chimpanzees build a sleeping platform, or nest, by bending and interweaving branches high in a tree. At Uganda’s Toro-Semliki Wildlife Reserve, the tree Cynometra alexandri accounts for only about 10% of the trees in the gallery forest where the chimpanzees range, yet anthropologists David Samson and Kevin Hunt found that it held about 74% of the 1,844 nests they sampled. Measuring branches of the seven tree species most commonly used, the researchers determined that C. alexandri branches were the stiffest and strongest, with leaves spaced closely along them. The chimpanzees’ preference therefore suggests that they ______",
+      "stem": "Which choice most logically completes the text?",
+      "options": [
+        "build most of their nests in whichever tree species is most common where they forage.",
+        "favor C. alexandri chiefly because its dense foliage hides sleeping chimpanzees from predators.",
+        "cannot construct a stable nest in any tree species other than C. alexandri.",
+        "select trees at least partly for how firm and stable a bed their branches will make."
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "C. alexandri makes up “only about 10% of the trees” yet held “about 74%” of the nests, so the chimpanzees seek it out, and its branches were “the stiffest and strongest” of the species tested. Since nests are made by “bending and interweaving branches,” the preference suggests that the chimpanzees choose trees for the firm, stable beds their branches make, as D says.",
+      "distractors": {
+        "A": {
+          "recipe": "reversal (REV)",
+          "why_wrong": "C. alexandri is a small share of the forest’s trees, “only about 10%,” yet held most of the nests, so the chimpanzees were not simply using the most common tree."
+        },
+        "B": {
+          "recipe": "rival mechanism (CAUSE)",
+          "why_wrong": "The researchers measured how stiff and strong the branches were; the text says nothing about predators or about how well leaves conceal the nests."
+        },
+        "C": {
+          "recipe": "overreach (EXT)",
+          "why_wrong": "About a quarter of the nests were in other trees, and the researchers tested seven species “most commonly used,” so chimpanzees clearly do build nests in other species."
+        }
+      },
+      "models": [
+        "2.9",
+        "2.1"
+      ],
+      "word_count": 98,
+      "sources": [
+        {
+          "what": "Samson, Hunt 2014, PLOS ONE: at Semliki, Cynometra alexandri is 9.6% of trees in the gallery forest but was selected for 73.6% of 1,844 night beds; of seven commonly used species it was the stiffest with the greatest bending strength and the smallest internode distance; chimpanzees choose it for firm, stable, resilient platforms (Europe PMC abstract)",
+          "url": "https://doi.org/10.1371/journal.pone.0095361"
+        }
+      ],
+      "notes": "Area: natural science (primate behaviour). S9 medium: behaviour (nest tree choice) plus context (branch mechanics) reveals the motive. 'Leaves spaced closely' renders the smallest internode distance; figures rounded (9.6% to about 10%, 73.6% to about 74%). Distractors: REV (most common tree), CAUSE (concealment), EXT (only this tree).",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [],
+        "status": "pass",
+        "facts": "Europe PMC abstract of doi 10.1371/journal.pone.0095361 (Samson, Hunt 2014): at Toro-Semliki, Uganda, C. alexandri is 9.6% of gallery-forest trees but 73.6% of 1,844 night beds; of the seven most used species it was stiffest, strongest and had the smallest internode distance"
+      }
+    },
+    {
+      "id": "inferences.S3.medium.w5b4_15",
+      "template": "S3",
+      "subtype": "T1 via rule: dwellings beneath a dated ash layer predate the traditional settlement date",
+      "tier": "medium",
+      "band_target": null,
+      "passage": "Medieval Icelandic chronicles date the settlement of Iceland to approximately 874, when the Norwegian chieftain Ingólfr Arnarson reportedly established his farm where Reykjavík now stands. Across much of Iceland, a thin layer of volcanic ash, which ice-core analysis dates to an eruption around 871, lies within the soil; archaeologists call it the Settlement Layer. During excavations in Reykjavík in the 1970s, researchers uncovered the remains of dwellings beneath this layer. Since anything lying beneath a deposit of volcanic ash must have been in place before the ash fell, these findings suggest that ______",
+      "stem": "Which choice most logically completes the text?",
+      "options": [
+        "people were probably living in Iceland a few years before the date that the medieval chronicles give.",
+        "the eruption that left the Settlement Layer most likely occurred after Ingólfr Arnarson arrived in Iceland.",
+        "Ingólfr Arnarson was probably not a real person, since dwellings in Reykjavík predate his arrival.",
+        "Iceland’s first settlers chose the site of Reykjavík because the volcanic ash there had enriched the soil."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The dwellings lay “beneath this layer,” so they were in place before the ash fell, and the ash dates to “an eruption around 871.” People were therefore living in Iceland before about 871, earlier than the date of “approximately 874” in the medieval chronicles, as A says.",
+      "distractors": {
+        "B": {
+          "recipe": "reversal (REV)",
+          "why_wrong": "Ice-core analysis dates the eruption to “around 871,” a date that does not depend on the dwellings or the chronicles and falls before the traditional date of 874; the dwellings show only that people were there before the ash fell, so they give no reason to move the eruption after Ingólfr’s arrival."
+        },
+        "C": {
+          "recipe": "overreach (EXT)",
+          "why_wrong": "Finding earlier dwellings suggests that settlement began before 874, not that Ingólfr never existed; people could have arrived before him."
+        },
+        "D": {
+          "recipe": "off-topic claim (OUT)",
+          "why_wrong": "The dwellings lie beneath the ash, so they were built before it fell; the text says nothing about ash enriching the soil or about why settlers chose the site."
+        }
+      },
+      "models": [
+        "2.5",
+        "2.16"
+      ],
+      "word_count": 93,
+      "sources": [
+        {
+          "what": "Settlement of Iceland (Wikipedia): settlement traditionally begins with Ingolfr Arnarson around 874; the Settlement Layer of tephra was left by an eruption dated through ice-core analysis to about 871; dwellings excavated in Reykjavik in 1971 to 73 were found below the Settlement Layer and thus must date to before 870",
+          "url": "https://en.wikipedia.org/wiki/Settlement_of_Iceland"
+        }
+      ],
+      "notes": "Area: history and archaeology. S3 medium: stratigraphic rule (below the ash means earlier) plus a dated layer rejects the traditional date as the start of settlement. The source notes doubts about the ice-core date, so the key is hedged ('probably', 'a few years'). Distractors: REV (eruption later), EXT (Ingolfr not real), OUT (soil).",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [
+          "B why_wrong now says the 871 date comes from ice cores, independent of the dwellings and the chronicles"
+        ],
+        "status": "fixed",
+        "facts": "en.wikipedia.org/wiki/Settlement_of_Iceland: settlement traditionally dated to 874 with Ingólfr Arnarson; the Settlement Layer of tephra dated by ice cores to about 871; dwellings excavated in Reykjavík in 1971 to 73 lay below the layer and so predate 870"
+      }
+    },
+    {
+      "id": "inferences.S4.medium.w5b4_16",
+      "template": "S4",
+      "subtype": "T4 elimination: two of three possible sources of iron-60 in Antarctic snow are excluded",
+      "tier": "medium",
+      "band_target": null,
+      "passage": "Iron-60, a radioactive form of iron, is forged in exploding stars, and any that was present when Earth formed has long since decayed. When physicists Dominik Koll, Gunther Korschinek, and colleagues analyzed 500 kilograms of Antarctic snow that had fallen within the previous 20 years, they detected five atoms of iron-60. Such atoms could in principle reach Antarctic snow in three ways: from nuclear weapons tests or reactor accidents, from cosmic rays striking material in space, or from interstellar dust through which the solar system is currently passing. Because the team’s analyses excluded the first two possibilities, the researchers concluded that the iron-60 ______",
+      "stem": "Which choice most logically completes the text?",
+      "options": [
+        "had been released slowly from Antarctic rock that formed at the same time as Earth itself.",
+        "came from a star that exploded during the 20 years before the snow fell.",
+        "most likely originated in material that the solar system is now encountering as it moves through space.",
+        "probably reached the snow through nuclear tests conducted in or near Antarctica."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The text lists three possible sources and says the analyses “excluded the first two,” nuclear tests or accidents and cosmic rays. That leaves “interstellar dust through which the solar system is currently passing,” which C restates.",
+      "distractors": {
+        "A": {
+          "recipe": "reversal (REV)",
+          "why_wrong": "Any iron-60 “present when Earth formed has long since decayed,” so it could not still be coming out of rock formed with the planet."
+        },
+        "B": {
+          "recipe": "swap (MIX)",
+          "why_wrong": "The 20 years is the age of the snow, not of the iron-60’s source; the conclusion points to dust the solar system is passing through, not to a star that exploded during those years."
+        },
+        "D": {
+          "recipe": "reversal (REV)",
+          "why_wrong": "Nuclear weapons tests and reactor accidents are among the sources the analyses “excluded.”"
+        }
+      },
+      "models": [
+        "2.17"
+      ],
+      "word_count": 104,
+      "sources": [
+        {
+          "what": "Technical University of Munich press release, 2019: Koll, Korschinek and colleagues analyzed 500 kg of snow from Kohnen Station, Antarctica, no older than 20 years, and found five iron-60 atoms; iron-60 has no natural terrestrial sources and comes from supernovae; analyses ruled out cosmic radiation, nuclear weapons tests or reactor accidents; most likely from the interstellar neighborhood, a cloud the solar system is passing through (Physical Review Letters 123, 072701)",
+          "url": "https://www.tum.de/en/about-tum/news/press-releases/details/35654"
+        }
+      ],
+      "notes": "Area: natural science (astrophysics). S4 medium: three candidates, two excluded, the survivor hedged ('most likely'), as in 2.17. Distractors: REV (primordial iron), MIX (snow age as source age), REV (an excluded source).",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [],
+        "status": "pass",
+        "facts": "tum.de press release 35654 (2019): 500 kg of Antarctic snow from Kohnen Station; Koll and Korschinek found five iron-60 atoms; “Our analyses allowed us to rule out cosmic radiation, nuclear weapons tests or reactor accidents”; no natural terrestrial source; most likely from the interstellar neighbourhood"
+      }
+    },
+    {
+      "id": "inferences.S1.easy.w5b4_17",
+      "template": "S1",
+      "subtype": "T1 conclusion: experiential gifts strengthen relationships more than material gifts",
+      "tier": "easy",
+      "band_target": null,
+      "passage": "When choosing a present for a friend or relative, people often decide between an object the recipient can keep, such as a sweater, and an experience, such as concert tickets or a cooking class. Marketing researchers Cindy Chan and Cassie Mogilner wanted to know which type of gift does more to bring people closer. In their studies, some people received gifts they could keep while others received experiences, and the recipients then rated how strong their bond with the giver felt. People who received experiences reported bigger gains in closeness than people who received objects did, even when they enjoyed the experience without the giver. These findings suggest that ______",
+      "stem": "Which choice most logically completes the text?",
+      "options": [
+        "people should stop giving gifts that recipients can keep, such as sweaters.",
+        "giving someone an experience may do more to strengthen a relationship than giving an object.",
+        "experiential gifts strengthen relationships only when the giver and the recipient enjoy them together.",
+        "expensive gifts do more to strengthen relationships than inexpensive gifts do."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "Recipients of experiences “reported bigger gains in closeness than people who received objects did,” so an experience may strengthen a relationship more than an object does, as B says.",
+      "distractors": {
+        "A": {
+          "recipe": "recommendation (REC)",
+          "why_wrong": "The study compared how much two kinds of gifts strengthened relationships; it does not show that material gifts do no good or that people should stop giving them."
+        },
+        "C": {
+          "recipe": "reversal (REV)",
+          "why_wrong": "The text says the result held “even when they enjoyed the experience without the giver.”"
+        },
+        "D": {
+          "recipe": "wrong variable (VAR)",
+          "why_wrong": "The study compared material and experiential gifts, not gifts of different prices."
+        }
+      },
+      "models": [
+        "1.1",
+        "1.4",
+        "1.14"
+      ],
+      "word_count": 110,
+      "sources": [
+        {
+          "what": "Stanford Lifestyle Medicine summary of Chan and Mogilner (Journal of Consumer Research 2017): four studies assigned participants to experiential or material gift conditions; receiving an experiential gift created greater strength in a relationship, whether experienced with the giver present or not; driven by stronger emotion",
+          "url": "https://lifestylemedicine.stanford.edu/blog/the-health-benefits-of-giving-experiences/"
+        }
+      ],
+      "notes": "Area: social science (consumer psychology). S1 easy: gift type varied, relationship rating compared. Kept to the recipients' side (not the giver mispredicting, a saturated theme). Distractors: REC, REV, VAR, the easy-tier mix.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [],
+        "status": "pass",
+        "facts": "lifestylemedicine.stanford.edu summary of Chan and Mogilner (JCR 2017): four studies; experiential gifts produce a greater increase in relationship strength than material gifts, whether or not the recipient experiences the gift with the giver present. Subject check: the live Mogilner WiC item is a different study (giving time)"
+      }
+    },
+    {
+      "id": "inferences.S2.easy.w5b4_18",
+      "template": "S2",
+      "subtype": "T6 function: signed blocks make a group quilt a record of its makers",
+      "tier": "easy",
+      "band_target": null,
+      "passage": "Album quilts first became fashionable in Baltimore, Maryland, in the 1840s. Unlike quilts sewn by a single person, many album quilts were group projects: each square block was made by a different person, and the blocks were then sewn together. Around this time, a newly available ink that did not wash out allowed quilters to write directly on fabric, and makers often signed their names on the blocks they contributed, sometimes adding a short poem. Families frequently preserved these quilts for generations. Because of the signed blocks, a surviving album quilt can reveal ______",
+      "stem": "Which choice most logically completes the text?",
+      "options": [
+        "who worked together to make it, even long after it was finished.",
+        "how the ink that the quilters used to write on fabric was manufactured.",
+        "that quilts made by groups were more valuable than quilts made by one person.",
+        "which poems were the most popular in Baltimore during the 1840s."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "Each block “was made by a different person,” and makers “often signed their names on the blocks they contributed.” A surviving quilt therefore carries the names of the people who made it together, as A says.",
+      "distractors": {
+        "B": {
+          "recipe": "detail echo (ECHO)",
+          "why_wrong": "The text mentions the ink only as what “allowed quilters to write directly on fabric”; the signatures show who made the blocks, not how the ink was made."
+        },
+        "C": {
+          "recipe": "unsupported comparison (CMP)",
+          "why_wrong": "The text never compares the value of group quilts with quilts made by one person."
+        },
+        "D": {
+          "recipe": "overreach (EXT)",
+          "why_wrong": "Some makers added “a short poem,” but a quilt’s blocks could not show which poems were most popular in the whole city."
+        }
+      },
+      "models": [
+        "1.3",
+        "1.15"
+      ],
+      "word_count": 94,
+      "sources": [
+        {
+          "what": "Baltimore Album quilt (Wikipedia): originated in Baltimore, Maryland, in the 1840s; many included blocks each made by a different person; most were signed; the discovery of an indelible ink made it possible to ink poetry and sayings along with a signature on each block; many were preserved as family heirlooms",
+          "url": "https://en.wikipedia.org/wiki/Baltimore_album_quilt"
+        }
+      ],
+      "notes": "Area: humanities and history (textile arts). S2 easy: the signing practice (principle) applied to a surviving quilt; T6 function frame, as in 1.11. Distractors: ECHO, CMP, EXT. No bank item on album or signature quilts (grep).",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [],
+        "status": "pass",
+        "facts": "en.wikipedia.org/wiki/Baltimore_album_quilts: originated in Baltimore in the 1840s; most were signed; indelible ink allowed poetry and sayings with a signature on each block; many had blocks each made by a different person; preserved as family heirlooms. Subject check: about eight quilt items in the bank (Gee’s Bend, Harriet Powers, kantha, tivaevae, sashiko and others), none on album or signature quilts"
+      }
+    },
+    {
+      "id": "inferences.S11.easy.w5b4_19",
+      "template": "S11",
+      "subtype": "T1 revision: a dinosaur in a mammal's stomach revises the picture of tiny Mesozoic mammals",
+      "tier": "easy",
+      "band_target": null,
+      "passage": "Mammals lived alongside dinosaurs for millions of years, but scientists have long pictured these early mammals as small animals about the size of shrews or rats. Most were thought to eat insects and to avoid dinosaurs, perhaps by being active mainly at night. In 2005, paleontologist Yaoming Hu and his team described fossils of Repenomamus, a mammal that lived in what is now northeastern China about 125 million years ago. One species, R. robustus, was about the size of an opossum, and a newly identified species was even bigger. Inside the stomach region of one R. robustus skeleton, the researchers discovered the bones of a young dinosaur called Psittacosaurus. These fossils suggest that ______",
+      "stem": "Which choice most logically completes the text?",
+      "options": [
+        "dinosaurs mostly avoided the areas where large mammals such as Repenomamus lived.",
+        "most mammals that lived alongside dinosaurs were larger than the dinosaurs.",
+        "some mammals of that time were large enough to eat young dinosaurs.",
+        "Psittacosaurus mainly hunted small mammals such as shrews and rats."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "Repenomamus was “about the size of an opossum” or bigger, and one skeleton had “the bones of a young dinosaur” in its stomach region. So some mammals of that time were big enough to eat young dinosaurs, as C says.",
+      "distractors": {
+        "A": {
+          "recipe": "off-topic claim (OUT)",
+          "why_wrong": "The text says nothing about where dinosaurs lived or whether they avoided mammals."
+        },
+        "B": {
+          "recipe": "overreach (EXT)",
+          "why_wrong": "The fossils show that some mammals were larger than once thought, not that most mammals were larger than dinosaurs; the dinosaur in the stomach was a young one."
+        },
+        "D": {
+          "recipe": "reversal (REV)",
+          "why_wrong": "The Psittacosaurus was found inside the mammal’s stomach, so the mammal ate the dinosaur, not the other way around."
+        }
+      },
+      "models": [
+        "1.13"
+      ],
+      "word_count": 114,
+      "sources": [
+        {
+          "what": "Hu, Meng, Wang, Li 2005, Nature, 'Large Mesozoic mammals fed on young dinosaurs': Mesozoic mammals commonly portrayed as shrew- or rat-sized insectivores; Repenomamus robustus adult the size of a Virginia opossum; new species 50% larger in skull length; stomach contents of R. robustus include a juvenile Psittacosaurus (Europe PMC abstract)",
+          "url": "https://doi.org/10.1038/nature03102"
+        }
+      ],
+      "notes": "Area: natural science (paleontology). S11 easy: received picture (small insect-eaters) revised by the fossils. Age given as about 125 million years (Lower Cretaceous, Liaoning). Psittacosaurus appears in one bank item on countershading; a different concept. Distractors: OUT, EXT, REV.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [],
+        "status": "pass",
+        "facts": "Europe PMC abstract of doi 10.1038/nature03102 (Hu, Meng, Wang, Li 2005): Mesozoic mammals portrayed as shrew- or rat-sized, mainly insectivorous, probably nocturnal; R. robustus the size of a Virginia opossum; a new species 50% larger; a juvenile Psittacosaurus in the stomach. Subject check: official WiC f83f0aab shares the received view (Mesozoic mammals not all small insectivores) with different evidence (Luo, a gliding herbivore); the live Psittacosaurus CID item is on countershading; kept"
+      }
     }
   ]
 }

@@ -1,0 +1,1338 @@
+{
+  "skill": "Words in Context",
+  "slug": "words_in_context",
+  "part": "w5b7",
+  "domain": "Craft and Structure",
+  "plan": {
+    "templates": [
+      {
+        "code": "B1",
+        "name": "Blank completion, restatement clue"
+      },
+      {
+        "code": "B2",
+        "name": "Blank completion, cause or consequence clue"
+      },
+      {
+        "code": "B3",
+        "name": "Blank completion, contrast clue (including received view then finding)"
+      },
+      {
+        "code": "B4",
+        "name": "Blank completion, example-pinned clue"
+      },
+      {
+        "code": "B5",
+        "name": "Blank completion, negated frame"
+      },
+      {
+        "code": "B6",
+        "name": "Blank completion, phrase options (word + preposition, a/an + word)"
+      },
+      {
+        "code": "M1",
+        "name": "Most nearly mean, underlined word"
+      },
+      {
+        "code": "M2",
+        "name": "Most nearly mean, underlined phrase or phrase options"
+      }
+    ]
+  },
+  "items": [
+    {
+      "id": "words_in_context.B6.hard.w5b7_01",
+      "template": "B6",
+      "subtype": "Blank completion: phrase options",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "Researchers Kyle Barron, Edward Kung, and Davide Proserpio found that the expansion of Airbnb raised residential rents across the United States, apparently because some landlords reallocated housing from long-term leases to short-term rentals. That effect, however, was ______ high rates of owner occupancy, since residents who occupy the homes they own are less inclined to make such a reallocation.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "conflated with",
+        "amplified by",
+        "nullified by",
+        "attenuated by"
+      ],
+      "answer_letter": "D",
+      "explanation": "Attenuated by means weakened by. The text says rents rose “because some landlords reallocated housing from long-term leases to short-term rentals” and that “residents who occupy the homes they own are less inclined to make such a reallocation.” Where many residents own their homes, fewer homes leave the long-term market, so the rise in rents is smaller: the effect is attenuated by high rates of owner occupancy.",
+      "distractors": {
+        "A": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Conflated with means confused with. The text does not say that anyone mistook the effect on rents for the rate of owner occupancy; it explains how owner occupancy changes the size of the effect."
+        },
+        "B": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "Amplified by would mean that high owner occupancy made the rise in rents larger. But owner-occupiers “are less inclined to make such a reallocation,” so fewer homes leave the long-term market and the effect shrinks."
+        },
+        "C": {
+          "recipe": "near miss: right direction, too strong (CONNOT)",
+          "why_wrong": "Nullified by means canceled out by. Owner-occupiers are only “less inclined” to shift their homes to short-term rentals, not certain never to, and some homes in any area belong to landlords, so high rates of owner occupancy weaken the effect rather than erase it."
+        }
+      },
+      "models": [
+        "5e57efec",
+        "5a97d9cd",
+        "3021d9ef"
+      ],
+      "sources": [
+        {
+          "what": "Barron, Kung and Proserpio, The Effect of Home-Sharing on House Prices and Rents: Evidence from Airbnb (Marketing Science 2021), abstract: Airbnb raises house prices and rents; the effect is stronger in zip codes with a lower share of owner-occupiers, consistent with non-owner-occupiers being more likely to reallocate homes from the long- to the short-term rental market",
+          "url": "https://tech.cornell.edu/events/seminar-cornell-tech-davide-proserpio"
+        },
+        {
+          "what": "the study itself, Marketing Science 40(1), 2021 (Crossref abstract: Airbnb has a positive impact on house prices and rents)",
+          "url": "https://doi.org/10.1287/mksc.2020.1227"
+        }
+      ],
+      "notes": "Subject: social science (economics). Key letter D. Band-7 moves: rare phrase heads throughout; the clue is a mechanism (owner-occupiers less inclined to reallocate), so the student must turn it into a smaller effect (two steps); near miss nullified by fails only on degree (less inclined, not never); amplified by is the reversal. Raw freq.txt ranks (rarest content word): conflated with absent; amplified by 40,907; nullified by 33,783; attenuated by 18,327. All four past 10,000, three past 20,000. Key not the longest option.",
+      "word_count": 58,
+      "table": null,
+      "figure": null,
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [],
+        "status": "pass",
+        "facts": "Crossref (10.1287/mksc.2020.1227): Barron, Kung, Proserpio, Airbnb raises house prices and rents; Cornell Tech seminar page carries the paper abstract: effect stronger where the owner-occupier share is lower, non-owner-occupiers more likely to reallocate homes to short-term rental"
+      },
+      "band7": {
+        "verdict": "band 7",
+        "why": "Raw ranks attenuated by 18,327; nullified by 33,783; amplified by 40,907; conflated with unseen: 4 of 4 past 10,000, 3 past 20,000, mean log 4.85, rarest distractor unseen (checks 1 to 3 pass). Two steps: a mechanism (owner-occupiers less inclined to reallocate) must become a smaller effect; nullified by is a near synonym failing on degree only; key paraphrased, not echoed. Matches models 5e57efec, 5a97d9cd, 3021d9ef."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "D",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 7
+    },
+    {
+      "id": "words_in_context.B1.hard.w5b7_02",
+      "template": "B1",
+      "subtype": "Blank completion: restatement clue",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Austral parakeets consume large numbers of seeds of the endangered monkey puzzle tree (Araucaria araucana). Yet ecologist Karina Speziale and colleagues found that the birds may also ______ the tree’s regeneration where people harvest the seeds: human collectors disregard seeds that parakeets have left partially eaten, and in laboratory tests those seeds germinated faster than intact ones.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "bolster",
+        "jeopardize",
+        "mimic",
+        "dictate"
+      ],
+      "answer_letter": "A",
+      "explanation": "Bolster means support or strengthen. “Human collectors disregard seeds that parakeets have left partially eaten,” so those seeds escape the harvest, and “those seeds germinated faster than intact ones.” Together these facts mean that the birds’ feeding can help new trees get started where people collect the seeds, so the parakeets may bolster the tree’s regeneration.",
+      "distractors": {
+        "B": {
+          "recipe": "reversal, true of the first clause only (ANT)",
+          "why_wrong": "The parakeets do “consume large numbers of seeds,” which could threaten the tree, but “Yet ... may also” introduces a benefit: partially eaten seeds escape the collectors and germinate “faster than intact ones.”"
+        },
+        "C": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Mimic means imitate. The birds do not copy the tree’s regeneration; the text describes how their feeding affects which seeds survive and germinate."
+        },
+        "D": {
+          "recipe": "near miss: right direction, too strong (CONNOT)",
+          "why_wrong": "Dictate means control or determine. The text says only that the birds “may also” affect regeneration by leaving some seeds partly eaten; it does not suggest that they decide how the tree regenerates."
+        }
+      },
+      "models": [
+        "3.4",
+        "3.16",
+        "79fe7550"
+      ],
+      "sources": [
+        {
+          "what": "Speziale, Lambertucci, Gleiser, Tella, Hiraldo and Aizen 2018, Royal Society Open Science, abstract: Austral parakeets and human collectors exploit seeds of the endangered Araucaria araucana; many seeds under trees were only partly eaten and were avoided by human collectors; these germinated faster than intact seeds in the laboratory; an overlooked mutualism that may enhance regeneration",
+          "url": "https://pubmed.ncbi.nlm.nih.gov/29410848/"
+        }
+      ],
+      "notes": "Subject: natural science (ecology). Key letter A. Band 6 as planned: plain key reached in two linked steps (seeds escape collectors, and they sprout faster), paraphrased away from the passage (no help or enhance in the text); the reversal jeopardize is true of the first clause; dictate is partly right but too strong. Raw freq.txt ranks: bolster 23,904; jeopardize 39,728; mimic 19,528; dictate 13,205. Key not the longest option.",
+      "word_count": 56,
+      "table": null,
+      "figure": null,
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [],
+        "status": "pass",
+        "facts": "PubMed 29410848: partly eaten seeds avoided by collectors, germinate faster, may enhance regeneration"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "Target 6 by plan and it meets it. Raw ranks bolster 23,904; jeopardize 39,728; mimic 19,528; dictate 13,205. Plain key reached in two linked steps (seeds escape the collectors, then sprout faster); reversal jeopardize is true of the first clause; key not in the passage's words."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "A",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "words_in_context.B5.hard.w5b7_03",
+      "template": "B5",
+      "subtype": "Blank completion: negated frame",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Lucille Clifton, recipient of the 2000 National Book Award for Poetry, typically wrote brief poems with minimal capitalization and punctuation. Yet the poems are by no means ______: one reviewer characterized Clifton’s work as “a poetry so pared down that its spaces take on substance, become a shaping presence as much as the words themselves.”",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "spare",
+        "accessible",
+        "slight",
+        "derivative"
+      ],
+      "answer_letter": "C",
+      "explanation": "Slight means small and lacking weight or importance. The text grants that Clifton wrote “brief poems with minimal capitalization and punctuation,” which might suggest slightness, but “Yet ... by no means” rejects that impression, and the reviewer says that even the poems’ “spaces take on substance” and “become a shaping presence.” So the poems are by no means slight.",
+      "distractors": {
+        "A": {
+          "recipe": "reversal under the negation (ANT, negation flip)",
+          "why_wrong": "Spare means lean and economical, which is just what “brief poems with minimal capitalization and punctuation” and “so pared down” describe. Saying the poems are by no means spare would contradict the text."
+        },
+        "B": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "The text says nothing about how easy or hard the poems are to understand; the reviewer’s point is that what the poems leave out carries weight."
+        },
+        "D": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Derivative means imitative of others’ work. The text does not compare Clifton with other poets, so it gives no basis for saying her poems are original rather than imitative."
+        }
+      },
+      "models": [
+        "3.13",
+        "3.14",
+        "e7d37666"
+      ],
+      "sources": [
+        {
+          "what": "Wikipedia, Lucille Clifton: 2000 National Book Award for Poetry (Blessing the Boats); short line length; poems lacking capitalization and punctuation; Peggy Rosenthal’s Christian Century review: what is missing is capitalization, punctuation, long and plentiful lines, “a poetry so pared down that its spaces take on substance, become a shaping presence as much as the words themselves”",
+          "url": "https://en.wikipedia.org/wiki/Lucille_Clifton"
+        }
+      ],
+      "notes": "Subject: humanities (poetry). Key letter C. Band 6 as planned: concessive Yet plus a plain negated frame (by no means), with a negation-flip reversal (spare) that matches the first sentence; the key is a common word used for weight rather than size. The reviewer (Peggy Rosenthal) is quoted word for word but left unnamed. Raw freq.txt ranks: spare 1,693; accessible 15,210; slight 1,022; derivative 31,569. Key not the longest option.",
+      "word_count": 55,
+      "table": null,
+      "figure": null,
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass",
+        "facts": "Wikipedia: 2000 National Book Award for Poetry; Rosenthal quotation matches word for word (reviewer left unnamed)"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "Target 6 by plan and it meets it. Plain negated frame (by no means) with a negation-flip reversal (spare), the band-6 pattern of e7d37666; the key slight is used for weight, not size, and must be held against 'brief poems'. Raw ranks spare 1,693; slight 1,022; accessible 15,210; derivative 31,569."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "C",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "words_in_context.B3.hard.w5b7_04",
+      "template": "B3",
+      "subtype": "Blank completion: contrast clue",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "Ancient Greek texts typically portray the armies that defended Greek cities as ______, unified by a shared “Greekness.” But when Katherine Reinberger and colleagues analyzed strontium and oxygen isotopes in the tooth enamel of soldiers buried after the 480 BCE Battle of Himera, in Sicily, they found that many originated in regions beyond the island, suggesting that the city’s defenders included foreign mercenaries.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "cosmopolitan",
+        "monolithic",
+        "beleaguered",
+        "indomitable"
+      ],
+      "answer_letter": "B",
+      "explanation": "Monolithic means forming a single, uniform whole. The texts portray the armies as “unified by a shared ‘Greekness,’” and “But” signals that the isotope evidence challenges that picture: many soldiers “originated in regions beyond the island,” and the defenders likely “included foreign mercenaries.” The view being challenged, then, is that the armies were monolithic.",
+      "distractors": {
+        "A": {
+          "recipe": "reversal: the trait of the finding, not of the challenged view (ANT)",
+          "why_wrong": "Cosmopolitan means drawn from many parts of the world. That describes what the isotopes revealed, soldiers from “regions beyond the island” and “foreign mercenaries,” not the picture in the ancient texts that “But” sets against it."
+        },
+        "C": {
+          "recipe": "plausible but unsupported, true of the setting (UNSUP)",
+          "why_wrong": "Beleaguered means under attack or hard pressed. Soldiers buried after a battle had certainly been under attack, but the texts’ picture is of armies “unified by a shared ‘Greekness,’” and the isotope evidence challenges where the soldiers came from, not whether they were hard pressed."
+        },
+        "D": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Indomitable means impossible to defeat. The text never concerns whether the armies could be beaten; the contrast is between a shared “Greekness” and soldiers from “regions beyond the island.”"
+        }
+      },
+      "models": [
+        "e8fb0744",
+        "22a41819",
+        "6c9f1727"
+      ],
+      "sources": [
+        {
+          "what": "Reinberger, Reitsema, Kyle, Vassallo, Kamenov and Krigbaum 2021, PLoS ONE, abstract: strontium and oxygen isotopes in tooth enamel of 62 Greek soldiers from the Battles of Himera; many 480 BCE non-locals came from regions beyond Sicily, suggesting hired foreign mercenaries; Greek forces were heterogeneous rather than culturally similar groups unified by “Greekness,” as promoted in ancient texts",
+          "url": "https://pubmed.ncbi.nlm.nih.gov/33979334/"
+        }
+      ],
+      "notes": "Subject: social science (archaeology). Key letter B. Band-7 moves: received view then finding, with the blank on the view being challenged; the reversal cosmopolitan is the finding’s trait (wrong party, as commonplace in e8fb0744); beleaguered is true of soldiers buried after a battle; all four options past rank 10,000. Raw freq.txt ranks: cosmopolitan 18,176; monolithic 53,536; beleaguered 20,631; indomitable 12,797. Key not the longest option.",
+      "word_count": 63,
+      "table": null,
+      "figure": null,
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 5,
+        "fixes": [],
+        "status": "pass",
+        "facts": "PubMed 33979334: tooth enamel Sr and O isotopes, many 480 BCE non-locals from beyond Sicily, foreign mercenaries, against the unified Greekness of ancient texts"
+      },
+      "band7": {
+        "verdict": "band 7",
+        "why": "Raw ranks monolithic 53,536; beleaguered 20,631; cosmopolitan 18,176; indomitable 12,797: 4 of 4 past 10,000, key past 50,000, mean log 4.35; rarest distractor under 50,000 (check 2 fails) but the combined gate passes on key rank. Received view then finding, blank on the challenged view, the finding's trait (cosmopolitan) as a wrong-party reversal, as in e8fb0744; key in a transferred sense. The appositive 'unified by a shared Greekness' glosses the key, so the logic is one step: a vocabulary-carried band 7 (band7 spec section 2, point 3). Left as is: dropping the appositive would weaken the case against indomitable and beleaguered."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "B",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 7
+    },
+    {
+      "id": "words_in_context.B2.hard.w5b7_05",
+      "template": "B2",
+      "subtype": "Blank completion: cause or consequence clue",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "In an online experiment conducted by Damon Centola and colleagues, groups that had established a name for a pictured face abandoned it for a rival name only once a committed minority promoting the alternative constituted about 25 percent of the group. The findings suggest that an entrenched social convention may be more ______ than it appears, since a single additional dissenter can be sufficient to overturn it.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "inviolable",
+        "capricious",
+        "precarious",
+        "deleterious"
+      ],
+      "answer_letter": "C",
+      "explanation": "Precarious means insecure and liable to fall. The “since” clause gives the reason: “a single additional dissenter can be sufficient to overturn” a convention, because groups kept their name until the committed minority “constituted about 25 percent of the group” and then abandoned it. A convention whose survival can turn on one person is more precarious than it appears.",
+      "distractors": {
+        "A": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "Inviolable means unable to be broken or overturned, the opposite of a convention that “a single additional dissenter can be sufficient to overturn.”"
+        },
+        "B": {
+          "recipe": "near miss: right field, wrong feature (CONNOT)",
+          "why_wrong": "Capricious means changing suddenly and without reason. The convention does not change on a whim: it holds until the minority “constituted about 25 percent of the group,” a definite cause. The point is how easily it could fall, not that it shifts unpredictably."
+        },
+        "D": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Deleterious means harmful. The text does not say whether conventions do harm; it describes how easily a committed minority can overturn one."
+        }
+      },
+      "models": [
+        "571cf537",
+        "0e033f9b",
+        "a756aa95"
+      ],
+      "sources": [
+        {
+          "what": "Scientific American, The 25% Revolution: Centola’s 2018 Science experiment; online groups agreed on a name for a face, then committed confederates pushed a new name; below 25 percent the norm held (about 6 percent converted), at 25 percent and slightly above 72 to 100 percent converted; a group of 20 with four contrarians saw nothing happen, with five complete conversion",
+          "url": "https://www.scientificamerican.com/article/the-25-revolution-how-big-does-a-minority-have-to-be-to-reshape-society/"
+        },
+        {
+          "what": "the study itself: Centola, Becker, Brackbill and Baronchelli 2018, Science, Experimental evidence for tipping points in social convention, abstract: once minority groups reached the critical mass they were consistently able to overturn the established behavior",
+          "url": "https://pubmed.ncbi.nlm.nih.gov/29880688/"
+        }
+      ],
+      "notes": "Subject: social science (sociology). Key letter C. Band-7 moves: the cause sits in a since clause and the key is an evaluative word (as tenuous and prudent in the models); the student must connect a 25 percent threshold to one extra person deciding the outcome (two steps); near miss capricious fails only on the cause feature (sudden change without reason). Raw freq.txt ranks: inviolable 30,929; capricious 11,198; precarious 13,764; deleterious 41,092. All four past 10,000, two past 20,000. Key not the longest option.",
+      "word_count": 66,
+      "table": null,
+      "figure": null,
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [],
+        "status": "pass",
+        "facts": "Scientific American: face-naming groups, 25 percent tipping point, four contrarians in 20 nothing, five complete conversion (one extra person); PubMed 29880688 confirms the Science paper"
+      },
+      "band7": {
+        "verdict": "band 7",
+        "why": "Raw ranks precarious 13,764; capricious 11,198; inviolable 30,929; deleterious 41,092: 4 of 4 past 10,000, 2 past 20,000, mean log 4.32; rarest distractor under 50,000 (check 2 fails), combined gate passes on 3 of 4 past 10,000. Cause in a since clause keyed to an evaluative word, the shape of 0e033f9b (prudent) and 571cf537 (tenuous); the student links a 25 percent threshold to one extra person deciding the outcome; capricious fails on one feature (a whim against a definite cause). Borderline: the since clause is close to a gloss of the key."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "C",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 7
+    },
+    {
+      "id": "words_in_context.B5.medium.w5b7_06",
+      "template": "B5",
+      "subtype": "Blank completion: negated frame",
+      "tier": "medium",
+      "passage": "Unlike most flying animals, the stingless bee Scaptotrigona depilis does not ______ as it approaches its landing site, a narrow wax tube at the entrance to its nest. Instead, Pierre Tichit and colleagues observed, the bee speeds up immediately before touchdown, a counterintuitive maneuver that, according to their simulations, may minimize midair collisions when entrance traffic is heavy.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "decelerate",
+        "falter",
+        "veer",
+        "plummet"
+      ],
+      "answer_letter": "A",
+      "explanation": "Decelerate means slow down. The text says that the bee, “unlike most flying animals,” does not do this as it lands; “instead,” it “speeds up immediately before touchdown.” The word set against speeding up must mean slowing down, so the bee does not decelerate.",
+      "distractors": {
+        "B": {
+          "recipe": "near miss: right field, wrong feature (CONNOT)",
+          "why_wrong": "Falter means lose strength or hesitate. “Unlike most flying animals” points to something most flyers do as they land, and “Instead” pairs the blank with “speeds up,” so the missing word must concern slowing down, not wavering."
+        },
+        "C": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Veer means change direction suddenly. The text is about the bee’s speed, “speeds up,” not its direction."
+        },
+        "D": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Plummet means drop steeply. The text says nothing about the bee falling; it contrasts what most flyers do on landing with the bee’s speeding up."
+        }
+      },
+      "models": [
+        "2.10",
+        "2.13",
+        "2.14"
+      ],
+      "sources": [
+        {
+          "what": "Tichit, Alves-dos-Santos, Dacke and Baird 2020, Proceedings of the Royal Society B, abstract: Scaptotrigona depilis lands on a narrow wax entrance tube; rather than decelerating before touchdown as most animals do, it accelerates; a traffic simulation suggests this minimizes mid-air collisions when the entrance is small and traffic is high",
+          "url": "https://pubmed.ncbi.nlm.nih.gov/32070252/"
+        }
+      ],
+      "notes": "Subject: natural science (animal behavior). Key letter A. Negated frame (does not) with the clue in the next sentence (Instead ... speeds up); one near miss (falter), two unsupported motion verbs; no accelerate, to avoid a mirror pair. Raw freq.txt ranks: decelerate absent; falter 14,177; veer 44,391; plummet 36,800. Key is the longest option.",
+      "word_count": 57,
+      "table": null,
+      "figure": null,
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [],
+        "status": "pass",
+        "facts": "PubMed 32070252: S. depilis accelerates rather than decelerating before touchdown on its wax tube; simulation, fewer mid-air collisions at high traffic"
+      }
+    },
+    {
+      "id": "words_in_context.B6.medium.w5b7_07",
+      "template": "B6",
+      "subtype": "Blank completion: phrase options",
+      "tier": "medium",
+      "passage": "In 1982, at the IRCAM research institute in Paris, Finnish composer Kaija Saariaho began conducting computer analyses of the sound spectra of individual notes produced by different instruments. Rather than treating this research as ______ her composing, she allowed it to transform her music: it marked a turning point away from strict serialism and toward spectralism.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "integral to",
+        "analogous to",
+        "contemporaneous with",
+        "peripheral to"
+      ],
+      "answer_letter": "D",
+      "explanation": "Peripheral to means on the edge of, not central to. “Rather than” sets up a contrast with what Saariaho actually did: “she allowed it to transform her music,” so that the research “marked a turning point” in her style. The treatment she rejected, then, was regarding the research as peripheral to her composing.",
+      "distractors": {
+        "A": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "Integral to means essential to, which is how she in fact treated the research, allowing “it to transform her music.” “Rather than” calls for the opposite."
+        },
+        "B": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Analogous to means similar to. The text does not compare the research with her composing, and treating the two as similar is not the opposite of allowing the research “to transform her music,” which is what “Rather than” requires."
+        },
+        "C": {
+          "recipe": "plausible but unsupported, true of the timing (UNSUP)",
+          "why_wrong": "Contemporaneous with means happening at the same time as. The research may well have overlapped with her composing, but that is not the opposite of allowing it “to transform her music,” which is what “Rather than” requires."
+        }
+      },
+      "models": [
+        "2.7",
+        "2.18",
+        "2.15"
+      ],
+      "sources": [
+        {
+          "what": "Wikipedia, Kaija Saariaho: Finnish composer; in 1982 began work at IRCAM on computer analyses of the sound spectrum of individual notes produced by different instruments; the research marked a turning point in her music away from strict serialism towards spectralism",
+          "url": "https://en.wikipedia.org/wiki/Kaija_Saariaho"
+        }
+      ],
+      "notes": "Subject: humanities (music). Key letter D. Contrast with Rather than (2.15-style two-sided reading is not needed); reversal integral to, two unsupported phrases of the same register, one of them true of the timing. Raw freq.txt ranks: integral to 30,924; analogous to 31,480; contemporaneous with 38,886; peripheral to absent. Key not the longest option.",
+      "word_count": 55,
+      "table": null,
+      "figure": null,
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [
+          "option B 'contingent on' replaced by 'analogous to': 'treating this research as contingent on [dependent on] her composing' reads as the reverse direction of influence from 'allowed it to transform her music', a second defensible contrast under 'Rather than'; analogous to is a plainly different relation of the same register (raw rank 31,480). Key D peripheral to unchanged (blind solve D)"
+        ],
+        "status": "fixed",
+        "facts": "Wikipedia: 1982 IRCAM computer analyses of the sound spectra of single notes; turning point from strict serialism to spectralism"
+      }
+    },
+    {
+      "id": "words_in_context.B1.medium.w5b7_08",
+      "template": "B1",
+      "subtype": "Blank completion: restatement clue",
+      "tier": "medium",
+      "passage": "Positive mood may influence a person’s propensity to gamble, and A. Ross Otto and colleagues found that even ______ good fortune appears to have this effect: New York City residents purchased more lottery tickets after local sports teams performed better than expected and on sunny days following a succession of cloudy ones, circumstances entirely unrelated to anyone’s probability of winning.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "foreseen",
+        "incidental",
+        "illusory",
+        "hard-won"
+      ],
+      "answer_letter": "B",
+      "explanation": "Incidental here means happening by chance, apart from the matter at hand. After the colon, the text gives the examples, local teams that “performed better than expected” and sunny days after cloudy ones, and calls them “circumstances entirely unrelated to anyone’s probability of winning.” Good fortune that has nothing to do with the lottery is incidental good fortune.",
+      "distractors": {
+        "A": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "Foreseen means known beforehand. The teams “performed better than expected,” and the sun came out after “a succession of cloudy ones,” so the good fortune was unexpected."
+        },
+        "C": {
+          "recipe": "near miss: wrong feature (CONNOT)",
+          "why_wrong": "Illusory means not real. The teams really did perform better than expected and the sun really came out; the point is that these events were unrelated to the lottery, not that they were imaginary."
+        },
+        "D": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Hard-won means gained through great effort. Residents did nothing to earn a team’s success or a sunny day."
+        }
+      },
+      "models": [
+        "2.5",
+        "2.27",
+        "2.23"
+      ],
+      "sources": [
+        {
+          "what": "Otto, Fleming and Glimcher 2016, Psychological Science, abstract: positive mood can affect a person’s tendency to gamble; in New York City lottery data, people gambled more when local sports teams performed better than expected or a sunny day followed a streak of cloudy days; unexpected but incidental positive outcomes influence risk taking",
+          "url": "https://pubmed.ncbi.nlm.nih.gov/26796614/"
+        }
+      ],
+      "notes": "Subject: social science (psychology, economics). Key letter B. Restatement after a colon and in a closing appositive (circumstances entirely unrelated); one reversal, one near miss (illusory), one unsupported. Raw freq.txt ranks: foreseen 8,161; incidental 19,860; illusory 39,058; hard-won (hard, won) common. Key is the longest option.",
+      "word_count": 59,
+      "table": null,
+      "figure": null,
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [],
+        "status": "pass",
+        "facts": "PubMed 26796614: NYC lottery, sports teams better than expected and sun after cloudy streak, incidental outcomes"
+      }
+    },
+    {
+      "id": "words_in_context.B2.medium.w5b7_09",
+      "template": "B2",
+      "subtype": "Blank completion: cause or consequence clue",
+      "tier": "medium",
+      "passage": "Bat wings are expansive and lack insulating fur, and Andrea Rummel and colleagues found that in flying fruit bats, forearm muscles operated at temperatures approximately 12°C below the body’s core temperature. Because cold muscle tends to contract more slowly, such a chill could ______ the wings’ performance, prompting the question of how bats sustain effective flight.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "enhance",
+        "standardize",
+        "hamper",
+        "halt"
+      ],
+      "answer_letter": "C",
+      "explanation": "Hamper means hinder or hold back. The “Because” clause gives the reason: “cold muscle tends to contract more slowly,” and the bats’ forearm muscles “operated at temperatures approximately 12°C below the body’s core temperature.” Slower muscles would make the wings work less well, so the chill could hamper their performance, which is why the text asks “how bats sustain effective flight.”",
+      "distractors": {
+        "A": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "Enhance means improve. Muscle that contracts “more slowly” would not improve the wings’ performance."
+        },
+        "B": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Standardize means make uniform. The text concerns how well the wings work when their muscles are cold, not making anything alike."
+        },
+        "D": {
+          "recipe": "near miss: right direction, too strong (CONNOT)",
+          "why_wrong": "Halt means stop completely. Muscle that contracts “more slowly” still works, and the text describes “flying fruit bats” with chilled forearms, so the chill could weaken the wings’ performance but not stop it."
+        }
+      },
+      "models": [
+        "2.17",
+        "2.22",
+        "2.25"
+      ],
+      "sources": [
+        {
+          "what": "Rummel, Swartz and Marsh 2019, Biology Letters, abstract: bat wings have large surfaces lacking insulating fur; in Carollia perspicillata, forearm muscles were about 12°C cooler than rectal temperature during wind tunnel flights; low temperatures are expected to slow contractile properties, inviting study of how bats maintain locomotor performance",
+          "url": "https://pubmed.ncbi.nlm.nih.gov/31506035/"
+        }
+      ],
+      "notes": "Subject: natural science (physiology). Key letter C. Cause in a Because clause, consequence in the blank; reversal enhance, near miss halt (degree), one unsupported verb. Raw freq.txt ranks: enhance 16,188; standardize absent; hamper 16,565; halt 5,307. Key not the longest option.",
+      "word_count": 55,
+      "table": null,
+      "figure": null,
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [],
+        "status": "pass",
+        "facts": "PubMed 31506035: no insulating fur, forearm muscles about 12 C below core in flight, low temperature slows contraction"
+      }
+    },
+    {
+      "id": "words_in_context.M2.medium.w5b7_10",
+      "template": "M2",
+      "subtype": "Most nearly mean: underlined phrase",
+      "tier": "medium",
+      "passage": "The following text is from Bolesław Prus’s 1897 novel Pharaoh (translated by Jeremiah Curtin in 1902). Ramses, an Egyptian prince, is hunting waterfowl with a bow in the marshland bordering the Nile.\n\nThe arrow made a low whistle, and the stricken bird, fluttering its wings, <u>gave out</u> cries so painful that there was a movement in the whole swampy region. Clouds of geese, ducks, and storks rose in the air, and making a great circle above their dying comrade, dropped down to other places.",
+      "stem": "As used in the text, what does the phrase “gave out” most nearly mean?",
+      "options": [
+        "Let out",
+        "Handed out",
+        "Stopped making",
+        "Made known"
+      ],
+      "answer_letter": "A",
+      "explanation": "The wounded bird “gave out cries so painful” that birds across “the whole swampy region” stirred and flew up. Giving out cries here means uttering them, so “gave out” most nearly means let out.",
+      "distractors": {
+        "B": {
+          "recipe": "another sense of the target (SENSE)",
+          "why_wrong": "“Give out” can mean distribute, as in giving out leaflets, but a bird does not hand cries to others; it utters them."
+        },
+        "C": {
+          "recipe": "another sense of the target (SENSE)",
+          "why_wrong": "“Give out” can mean fail or stop, as when strength gives out, but the cries were loud and “painful” enough to cause “a movement in the whole swampy region,” so the bird was making them, not stopping."
+        },
+        "D": {
+          "recipe": "another sense of the target (SENSE)",
+          "why_wrong": "“Give out” can mean announce, as in giving out news, but the bird is not making information public; it is crying out in pain."
+        }
+      },
+      "models": [
+        "2.8",
+        "2.26",
+        "1.30"
+      ],
+      "sources": [
+        {
+          "what": "Project Gutenberg, The Pharaoh and the Priest, Jeremiah Curtin’s 1902 translation (Little, Brown), chapter XVI, text copied exactly",
+          "url": "https://www.gutenberg.org/ebooks/23646"
+        },
+        {
+          "what": "Wikipedia, Pharaoh (Prus novel): serialized 1895 to 1896, published in book form in 1897; Curtin’s translation published by Little, Brown in 1902",
+          "url": "https://en.wikipedia.org/wiki/Pharaoh_(Prus_novel)"
+        }
+      ],
+      "notes": "Subject: literature (novel in translation). Key letter A. Phrase target with paraphrase options, every distractor a real sense of give out (distribute, fail, announce), as in 2.8 and 2.26. Excerpt 52 words, copied exactly; context line added. Raw freq.txt ranks (rarest content word): Let out 166; Handed out 1,490; Stopped making 586; Made known 349. Key not the longest option.",
+      "word_count": 84,
+      "table": null,
+      "figure": null,
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass",
+        "facts": "Gutenberg 23646 (Curtin 1902): excerpt matches exactly"
+      }
+    },
+    {
+      "id": "words_in_context.B1.easy.w5b7_11",
+      "template": "B1",
+      "subtype": "Blank completion: restatement clue",
+      "tier": "easy",
+      "passage": "At Tell es-Safi/Gath in Israel, archaeologist Haskel Greenfield and colleagues examined a domesticated donkey buried beneath a house floor roughly 4,700 years ago. Distinctive wear on two of its teeth suggests that people used a bit, a mouthpiece connected to reins, to ______ the animal. This represents the earliest known evidence of bit use on a donkey in the Near East.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "feed",
+        "control",
+        "free",
+        "measure"
+      ],
+      "answer_letter": "B",
+      "explanation": "Control means direct or restrain. The text defines a bit as “a mouthpiece connected to reins,” the equipment a rider or driver pulls on to steer and restrain an animal. Wear from a bit therefore shows that people used one to control the donkey.",
+      "distractors": {
+        "A": {
+          "recipe": "topic echo (ASSOC)",
+          "why_wrong": "A bit sits in the mouth, but the text calls it “a mouthpiece connected to reins,” a tool for steering, not for giving the animal food."
+        },
+        "C": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "A mouthpiece connected to reins holds an animal in check rather than setting it loose."
+        },
+        "D": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Nothing in the text suggests that the bit was used to gauge the donkey’s size or weight."
+        }
+      },
+      "models": [
+        "1.13",
+        "1.51",
+        "1.21"
+      ],
+      "sources": [
+        {
+          "what": "Greenfield, Shai, Greenfield, Arnold, Brown, Eliyahu-Behar and Maeir 2018, PLoS ONE, abstract: a sacrificed domestic donkey buried beneath the floor of an Early Bronze Age IIIB house (c. 2800 to 2600 BCE) at Tell es-Safi/Gath, Israel, shows bit wear on both lower second premolars, suggesting a bit was used to control the animal; the earliest evidence for bit use on donkeys in the Near East",
+          "url": "https://pubmed.ncbi.nlm.nih.gov/29768439/"
+        }
+      ],
+      "notes": "Subject: social science (archaeology). Key letter B. Restatement through a gloss (a mouthpiece connected to reins); one topic echo, one reversal, one unsupported. About 4,700 years ago rounds c. 2800 to 2600 BCE. Raw freq.txt ranks: feed 4,098; control 1,634; free 569; measure 2,003. Key is the longest option.",
+      "word_count": 60,
+      "table": null,
+      "figure": null,
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 5,
+        "fixes": [],
+        "status": "pass",
+        "facts": "PubMed 29768439: EB IIIB donkey under a house floor at Tell es-Safi/Gath, bit wear on both LPM2, bit used to control it, earliest in the Near East"
+      }
+    },
+    {
+      "id": "words_in_context.B1.easy.w5b7_12",
+      "template": "B1",
+      "subtype": "Blank completion: restatement clue",
+      "tier": "easy",
+      "passage": "Researchers at Swansea University in Wales trained European shore crabs to navigate a complicated maze, using food as motivation. Two weeks after training concluded, the crabs were returned to the maze without any food, and every individual reached the end in under eight minutes, clearly ______ the route it had learned. Untrained crabs required considerably longer.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "avoiding",
+        "altering",
+        "blocking",
+        "recalling"
+      ],
+      "answer_letter": "D",
+      "explanation": "Recalling means remembering. “Two weeks after training concluded,” with no food in the maze to guide them, the crabs “reached the end in under eight minutes,” while “untrained crabs required considerably longer.” The trained crabs were recalling “the route it had learned.”",
+      "distractors": {
+        "A": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "The crabs “reached the end in under eight minutes,” which means they followed the learned route rather than steering clear of it."
+        },
+        "B": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Nothing suggests that the crabs changed the route; they quickly completed the same route “it had learned.”"
+        },
+        "C": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "The crabs did not obstruct the route; they traveled along it to the end of the maze."
+        }
+      },
+      "models": [
+        "1.27",
+        "1.53",
+        "1.33"
+      ],
+      "sources": [
+        {
+          "what": "Davies, Gagen, Bull and Pope 2019, Biology Letters (Swansea University), abstract: European shore crabs (Carcinus maenas) learned a complex maze over four weeks with food as a motivator; returned two weeks later without food, all reached the end in under 8 minutes; naive crabs took far longer",
+          "url": "https://pubmed.ncbi.nlm.nih.gov/31640528/"
+        }
+      ],
+      "notes": "Subject: natural science (animal behavior). Key letter D. Restatement from the result (fast return without food, after a two-week gap) and a contrast with untrained crabs. Raw freq.txt ranks: avoiding 7,473; altering 18,778; blocking 19,700; recalling 7,722. Key is the longest option (tied).",
+      "word_count": 55,
+      "table": null,
+      "figure": null,
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 5,
+        "fixes": [],
+        "status": "pass",
+        "facts": "PubMed 31640528: Swansea, shore crabs, food-motivated maze, two weeks later without food all under 8 min, naive crabs far longer"
+      }
+    },
+    {
+      "id": "words_in_context.B1.easy.w5b7_13",
+      "template": "B1",
+      "subtype": "Blank completion: restatement clue",
+      "tier": "easy",
+      "passage": "Ho-Chunk artist Truman Lowe often constructed sculptures from willow saplings that he collected on Wisconsin farms, stripped of bark, and sanded until the wood appeared almost white. Many of these works ______ water: installations such as Water Mound evoke rivers, shorelines, streambeds, and sandbars.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "absorb",
+        "resist",
+        "portray",
+        "contaminate"
+      ],
+      "answer_letter": "C",
+      "explanation": "Portray means depict or represent. After the colon, the text explains that works “such as Water Mound evoke rivers, shorelines, streambeds, and sandbars.” Sculptures that call up these watery places portray water.",
+      "distractors": {
+        "A": {
+          "recipe": "topic echo (ASSOC)",
+          "why_wrong": "Wood can soak up water, but the text describes what the works evoke, “rivers, shorelines, streambeds, and sandbars,” not what their material does."
+        },
+        "B": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "The text says nothing about the sculptures being waterproof; it describes their subject."
+        },
+        "D": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Nothing suggests that the works pollute water; they evoke it."
+        }
+      },
+      "models": [
+        "1.10",
+        "1.39",
+        "1.11"
+      ],
+      "sources": [
+        {
+          "what": "Wikipedia, Truman Lowe: Ho-Chunk sculptor (1944 to 2019); gathered willow saplings from Wisconsin farms, peeled the bark and sanded them to bring out the white; water, including rivers, shorelines, streambeds and sandbars, as a subject (Water Mound, Ottawa)",
+          "url": "https://en.wikipedia.org/wiki/Truman_Lowe"
+        }
+      ],
+      "notes": "Subject: humanities (sculpture). Key letter C. Restatement after a colon (evoke); one topic echo (absorb), two unsupported. Raw freq.txt ranks: absorb 13,402; resist 3,187; portray 27,518; contaminate 42,697. Key not the longest option.",
+      "word_count": 43,
+      "table": null,
+      "figure": null,
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [],
+        "status": "pass",
+        "facts": "Wikipedia: Ho-Chunk, willow saplings from Wisconsin farms peeled and sanded white; shorelines, streambeds, Water Mound represents sandbars"
+      }
+    },
+    {
+      "id": "words_in_context.B1.easy.w5b7_14",
+      "template": "B1",
+      "subtype": "Blank completion: restatement clue",
+      "tier": "easy",
+      "passage": "Labor organizer Lucy Parsons, who in 1905 cofounded the Industrial Workers of the World, attracted enormous audiences: following the 1886 Haymarket trial in Chicago, she addressed more than 200,000 people during a seven-week lecture tour. Chicago police, however, regarded her as so ______ that they repeatedly attempted to prevent her from speaking publicly.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "threatening",
+        "harmless",
+        "dull",
+        "forgetful"
+      ],
+      "answer_letter": "A",
+      "explanation": "Threatening means likely to cause harm or trouble. The police “repeatedly attempted to prevent her from speaking publicly,” something they would do only if they saw her as a danger. So they regarded her as threatening.",
+      "distractors": {
+        "B": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "Police would not have “repeatedly attempted to prevent her from speaking publicly” if they thought she posed no risk."
+        },
+        "C": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Parsons “attracted enormous audiences,” and boredom would not explain the police’s efforts to stop her from speaking."
+        },
+        "D": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Nothing in the text concerns Parsons’s memory."
+        }
+      },
+      "models": [
+        "1.42",
+        "1.15",
+        "1.39"
+      ],
+      "sources": [
+        {
+          "what": "Wikipedia, Lucy Parsons: a founding member of the Industrial Workers of the World (1905); after the Haymarket trial (1886) she made a seven-week lecture tour and addressed more than 200,000 people; Chicago police regarded her as a dangerous political figure and attempted many times to stop her from speaking publicly",
+          "url": "https://en.wikipedia.org/wiki/Lucy_Parsons"
+        }
+      ],
+      "notes": "Subject: history (US labor movement). Key letter A. Restatement through a consequence the police acted on; one reversal, two unsupported. Raw freq.txt ranks: threatening 4,018; harmless 5,229; dull 1,090; forgetful 10,605. Key is the longest option.",
+      "word_count": 52,
+      "table": null,
+      "figure": null,
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass",
+        "facts": "Wikipedia: IWW 1905, seven-week tour after Haymarket trial to more than 200,000 people, Chicago police tried many times to stop her speaking"
+      }
+    },
+    {
+      "id": "words_in_context.M1.easy.w5b7_15",
+      "template": "M1",
+      "subtype": "Most nearly mean: underlined word",
+      "tier": "easy",
+      "passage": "The following text is from Stewart Edward White’s 1902 novel The Blazed Trail. Harry Thorpe is employed at a logging camp in the Michigan wilderness.\n\nOn Sundays Thorpe fell into the habit of accompanying old Jackson Hines on his hunting expeditions. The ancient had been <u>raised</u> in the woods. He seemed to know by instinct the haunts and habits of all the wild animals, just as he seemed to know by instinct when one of his horses was likely to be troubled by the colic.",
+      "stem": "As used in the text, what does the word “raised” most nearly mean?",
+      "options": [
+        "Lifted",
+        "Brought up",
+        "Built",
+        "Collected"
+      ],
+      "answer_letter": "B",
+      "explanation": "The text says that old Jackson Hines “had been raised in the woods” and that he “seemed to know by instinct the haunts and habits of all the wild animals.” Someone who knows the woods by instinct grew up there, so “raised” most nearly means brought up.",
+      "distractors": {
+        "A": {
+          "recipe": "another sense of the target (SENSE)",
+          "why_wrong": "“Raised” can mean lifted, as in raising a hand, but Hines was not physically lifted; the sentence explains where he grew up."
+        },
+        "C": {
+          "recipe": "another sense of the target (SENSE)",
+          "why_wrong": "“Raised” can mean built, as in raising a barn, but it is a person, “the ancient,” who “had been raised,” not a structure."
+        },
+        "D": {
+          "recipe": "another sense of the target (SENSE)",
+          "why_wrong": "“Raised” can mean gathered, as in raising money, but Hines himself was not gathered; the text explains his lifelong knowledge of the woods."
+        }
+      },
+      "models": [
+        "1.4",
+        "1.56",
+        "1.19"
+      ],
+      "sources": [
+        {
+          "what": "Project Gutenberg, The Blazed Trail by Stewart Edward White (1902), text copied exactly",
+          "url": "https://www.gutenberg.org/ebooks/3413"
+        }
+      ],
+      "notes": "Subject: literature (novel). Key letter B. Common word in a non-physical sense, three other senses of raise as distractors (lift, build, gather). Excerpt 59 words, copied exactly; context line added. Raw freq.txt ranks: Lifted 832; Brought up 271; Built 1,425; Collected 4,450. Key is the longest option.",
+      "word_count": 85,
+      "table": null,
+      "figure": null,
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 2,
+        "fixes": [],
+        "status": "pass",
+        "facts": "Gutenberg 3413: excerpt matches exactly"
+      }
+    },
+    {
+      "id": "words_in_context.M1.easy.w5b7_16",
+      "template": "M1",
+      "subtype": "Most nearly mean: underlined word",
+      "tier": "easy",
+      "passage": "The following text is from Compton Mackenzie’s 1913 novel Sinister Street. Young Michael Fane is listening as the family’s cook questions his nurse about Michael’s mother, Mrs. Fane.\n\n“Isn’t Mrs. Fane coming at all, then?” enquired Cook.\n\n“For a few minutes—for a few minutes,” said Nurse quickly, and Michael would not have been so very suspicious had he not <u>observed</u> the nodding of her head long after there was any need to nod it.",
+      "stem": "As used in the text, what does the word “observed” most nearly mean?",
+      "options": [
+        "Obeyed",
+        "Celebrated",
+        "Remarked on",
+        "Noticed"
+      ],
+      "answer_letter": "D",
+      "explanation": "Michael grows “suspicious” because of something he sees: Nurse kept nodding “long after there was any need to nod it.” Seeing this is what makes him doubt her quick answer, so “observed” most nearly means noticed.",
+      "distractors": {
+        "A": {
+          "recipe": "another sense of the target (SENSE)",
+          "why_wrong": "“Observe” can mean obey, as in observing a rule, but a nod is not a rule for Michael to follow; he simply sees it."
+        },
+        "B": {
+          "recipe": "another sense of the target (SENSE)",
+          "why_wrong": "“Observe” can mean celebrate, as in observing a holiday, which makes no sense for “the nodding of her head.”"
+        },
+        "C": {
+          "recipe": "another sense of the target (SENSE)",
+          "why_wrong": "“Observe” can mean remark, as in observing that it is late, but Michael says nothing about the nodding; it is what he sees that makes him “so very suspicious.”"
+        }
+      },
+      "models": [
+        "1.14",
+        "1.55",
+        "1.40"
+      ],
+      "sources": [
+        {
+          "what": "Project Gutenberg, Sinister Street, vol. 1, by Compton Mackenzie (prefatory note dated August 1913), text copied exactly",
+          "url": "https://www.gutenberg.org/ebooks/33797"
+        }
+      ],
+      "notes": "Subject: literature (novel). Key letter D. Common word, three other senses of observe as distractors (obey, celebrate, remark). Excerpt 44 words, copied exactly, with CB-style closed em dash as printed; context line added. Raw freq.txt ranks: Obeyed 2,667; Celebrated 5,437; Remarked on 1,168; Noticed 988. Key not the longest option.",
+      "word_count": 74,
+      "table": null,
+      "figure": null,
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 2,
+        "fixes": [],
+        "status": "pass",
+        "facts": "Gutenberg 33797: excerpt matches exactly"
+      }
+    },
+    {
+      "id": "words_in_context.M1.easy.w5b7_17",
+      "template": "M1",
+      "subtype": "Most nearly mean: underlined word",
+      "tier": "easy",
+      "passage": "The following text is from Emerson Hough’s 1922 novel The Covered Wagon. A wagon train of emigrant families is traveling west across the Great Plains toward Oregon.\n\nShouts and cheers arose as the word passed back that the sand hills known as the Coasts of the Platte were in sight. Some mothers told their children they were now almost to Oregon. The whips cracked more loudly, the tired teams, tongues lolling, quickened their pace as they <u>struck</u> the down-grade gap leading through the sand ridges.",
+      "stem": "As used in the text, what does the word “struck” most nearly mean?",
+      "options": [
+        "Attacked",
+        "Impressed",
+        "Reached",
+        "Removed"
+      ],
+      "answer_letter": "C",
+      "explanation": "As the travelers near “the sand hills,” “the tired teams ... quickened their pace as they struck the down-grade gap leading through the sand ridges.” The teams are arriving at a stretch of the route, so “struck” most nearly means reached.",
+      "distractors": {
+        "A": {
+          "recipe": "another sense of the target (SENSE)",
+          "why_wrong": "“Strike” can mean hit or attack, but the teams are traveling into “the down-grade gap,” not assaulting it."
+        },
+        "B": {
+          "recipe": "another sense of the target (SENSE)",
+          "why_wrong": "“Strike” can mean impress, as when a view strikes someone, but the sentence describes the teams’ movement, not anyone’s reaction."
+        },
+        "D": {
+          "recipe": "another sense of the target (SENSE)",
+          "why_wrong": "“Strike” can mean take down, as in striking a tent, but the teams are moving into the gap, not taking it away."
+        }
+      },
+      "models": [
+        "1.30",
+        "1.19",
+        "1.4"
+      ],
+      "sources": [
+        {
+          "what": "Project Gutenberg, The Covered Wagon by Emerson Hough (1922), text copied exactly",
+          "url": "https://www.gutenberg.org/ebooks/13384"
+        }
+      ],
+      "notes": "Subject: literature (novel). Key letter C. Common word in a sense other than its first one (strike = come upon), three other senses as distractors (hit, impress, take down). Excerpt 58 words, copied exactly; context line added. Raw freq.txt ranks: Attacked 4,864; Impressed 2,907; Reached 513; Removed 2,025. Key not the longest option.",
+      "word_count": 85,
+      "table": null,
+      "figure": null,
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 2,
+        "fixes": [],
+        "status": "pass",
+        "facts": "Gutenberg 13384: excerpt matches exactly"
+      }
+    },
+    {
+      "id": "words_in_context.B6.easy.w5b7_18",
+      "template": "B6",
+      "subtype": "Blank completion: phrase options",
+      "tier": "easy",
+      "passage": "Saxophonist Jim Pepper, who was of Kaw and Muscogee (Creek) heritage, combined jazz with traditional Native American music, a style he called “American Indian jazz.” His best-known composition, “Witchi Tai To,” released in 1969, is ______ a peyote song of the Native American Church that Pepper had originally learned from his grandfather.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "based on",
+        "unrelated to",
+        "replaced by",
+        "hidden from"
+      ],
+      "answer_letter": "A",
+      "explanation": "Based on means built from as a starting point. Pepper “combined jazz with traditional Native American music,” and his best-known composition is tied to “a peyote song of the Native American Church that Pepper had originally learned from his grandfather.” The composition is based on that song.",
+      "distractors": {
+        "B": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "Pepper “combined jazz with traditional Native American music,” and the text ties his best-known composition to a song he “had originally learned from his grandfather,” so the two are related."
+        },
+        "C": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Nothing suggests that the 1969 composition was later replaced by the church song; the church song came first, learned from Pepper’s grandfather."
+        },
+        "D": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "The text gives no hint that the composition was kept secret from anyone; it was “released in 1969.”"
+        }
+      },
+      "models": [
+        "1.29",
+        "1.49",
+        "1.52"
+      ],
+      "sources": [
+        {
+          "what": "Wikipedia, Jim Pepper: jazz saxophonist of Kaw and Muscogee (Creek) heritage who blended jazz with Native American music, which he called American Indian jazz; Witchi Tai To (1969) is based on a peyote song of the Native American Church that he learned from his grandfather",
+          "url": "https://en.wikipedia.org/wiki/Jim_Pepper"
+        }
+      ],
+      "notes": "Subject: humanities (music). Key letter A. Phrase options (verb or adjective + preposition); the clue is the description of Pepper’s blending and the song’s source. Raw freq.txt ranks (rarest content word): based on 4,092; unrelated to 40,068; replaced by 5,119; hidden from 1,267. Key not the longest option.",
+      "word_count": 51,
+      "table": null,
+      "figure": null,
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [],
+        "status": "pass",
+        "facts": "Wikipedia: Kaw and Muscogee (Creek), American Indian jazz, Witchi Tai To (1969) derived from a peyote song learned from his grandfather"
+      }
+    },
+    {
+      "id": "words_in_context.B6.easy.w5b7_19",
+      "template": "B6",
+      "subtype": "Blank completion: phrase options",
+      "tier": "easy",
+      "passage": "Opossums have generally been regarded as solitary animals whose interactions are limited mostly to mating and, for mothers, caring for young in the pouch. But in a 2015 study, Diego Astúa and colleagues documented thirteen white-eared opossums resting peacefully together in a single communal den, suggesting that opossums are more ______ one another than researchers once believed.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "afraid of",
+        "tolerant of",
+        "unaware of",
+        "similar to"
+      ],
+      "answer_letter": "B",
+      "explanation": "Tolerant of means willing to accept the presence of. Opossums were thought to be “solitary,” but the researchers found “thirteen white-eared opossums resting peacefully together in a single communal den.” Animals that share a den peacefully are more tolerant of one another than was believed.",
+      "distractors": {
+        "A": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "Thirteen opossums “resting peacefully together” shows the opposite of fear of one another."
+        },
+        "C": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Animals resting together “in a single communal den” are certainly aware of one another; the finding concerns how they behave together."
+        },
+        "D": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "The text is about how opossums interact, not about whether they resemble one another."
+        }
+      },
+      "models": [
+        "1.3",
+        "1.43",
+        "1.17"
+      ],
+      "sources": [
+        {
+          "what": "Astúa, Carvalho, Maia, Magalhães and Loretto 2015, Biology Letters, abstract: didelphid opossums are considered solitary, with interactions usually limited to mating or mother and pouch young; 13 Didelphis albiventris of three age classes were recorded resting without agonistic interactions in a communal den",
+          "url": "https://pubmed.ncbi.nlm.nih.gov/26085500/"
+        }
+      ],
+      "notes": "Subject: natural science (zoology). Key letter B. Phrase options (adjective + preposition); contrast between the received view (solitary) and the den observation pins the key. Raw freq.txt ranks: afraid of 468; tolerant of 12,995; unaware of 8,556; similar to 2,906. Key is the longest option.",
+      "word_count": 56,
+      "table": null,
+      "figure": null,
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass",
+        "facts": "PubMed 26085500: opossums considered solitary; 13 D. albiventris resting without agonistic interactions in a communal den"
+      }
+    },
+    {
+      "id": "words_in_context.B4.easy.w5b7_20",
+      "template": "B4",
+      "subtype": "Blank completion: example-pinned clue",
+      "tier": "easy",
+      "passage": "Lawrence Paul Yuxweluptun, an artist of Coast Salish and Okanagan descent, combines the curving shapes of Northwest Coast design with dreamlike Surrealist imagery. Many of his paintings are openly ______. Works such as Red Man Watching White Man Trying to Fix Hole in the Sky (1990) and Scorched Earth, Clear-cut Logging on Native Sovereign Land (1991), for example, address environmental destruction and Indigenous land rights.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "nostalgic",
+        "decorative",
+        "secretive",
+        "political"
+      ],
+      "answer_letter": "D",
+      "explanation": "Political here means concerned with public issues and power. The examples, Red Man Watching White Man Trying to Fix Hole in the Sky and Scorched Earth, Clear-cut Logging on Native Sovereign Land, “address environmental destruction and Indigenous land rights,” public issues of exactly this kind. So many of the paintings are openly political.",
+      "distractors": {
+        "A": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Nostalgic means longing for the past, but the examples take up present problems, “environmental destruction and Indigenous land rights.”"
+        },
+        "B": {
+          "recipe": "plausible but unsupported, true of the style (UNSUP)",
+          "why_wrong": "The paintings do use “the curving shapes of Northwest Coast design,” but the examples show them making pointed statements about public issues, not serving mainly as ornament."
+        },
+        "C": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "“Openly” and titles that state their subjects plainly are the opposite of secretive."
+        }
+      },
+      "models": [
+        "1.7",
+        "1.46",
+        "1.34"
+      ],
+      "sources": [
+        {
+          "what": "Wikipedia, Lawrence Paul Yuxweluptun: Tsartlip/Syilx artist (father Cowichan, a Coast Salish nation; mother Syilx, of the Okanagan Nation Alliance); combines Northwest Coast formline design with Surrealist imagery; addresses environmentalism and First Nations land rights; works include Red Man Watching White Man Trying to Fix Hole in the Sky (1990) and Scorched Earth, Clear-cut Logging on Native Sovereign Land (1991)",
+          "url": "https://en.wikipedia.org/wiki/Lawrence_Paul_Yuxweluptun"
+        }
+      ],
+      "notes": "Subject: humanities (painting). Key letter D. Example-pinned: two titled works and what they address instantiate the category; titles would be italic in print. One reversal (secretive, against openly), one unsupported word true of the style (decorative), one unsupported. Raw freq.txt ranks: nostalgic absent; decorative 16,047; secretive 24,019; political 2,260. Key not the longest option.",
+      "word_count": 65,
+      "table": null,
+      "figure": null,
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [],
+        "status": "pass",
+        "facts": "Wikipedia (incl. infobox): Cowichan (Coast Salish) father, Syilx (Okanagan) mother; formline design and Surrealism; both titled works and years"
+      }
+    },
+    {
+      "id": "words_in_context.B2.easy.w5b7_21",
+      "template": "B2",
+      "subtype": "Blank completion: cause or consequence clue",
+      "tier": "easy",
+      "passage": "In 2019, paleontologist Trevor Worthy and colleagues described two partial leg bones belonging to an extinct parrot from New Zealand. Because the fossils were so large, the team estimated that the bird had been ______: at approximately 7 kilograms, it would have weighed twice as much as the kakapo, the heaviest parrot living today.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "massive",
+        "ancient",
+        "fragile",
+        "colorful"
+      ],
+      "answer_letter": "A",
+      "explanation": "Massive means very large and heavy. The estimate follows from the size of the bones: “Because the fossils were so large,” the team concluded that the bird weighed “approximately 7 kilograms,” “twice as much as the kakapo, the heaviest parrot living today.” So they estimated that the bird had been massive.",
+      "distractors": {
+        "B": {
+          "recipe": "plausible but unsupported, true of the fossil (UNSUP)",
+          "why_wrong": "The parrot is extinct and known from fossils, but the size of its bones shows how heavy it was, not how old it was."
+        },
+        "C": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "Large bones from a bird of “approximately 7 kilograms” suggest a heavy, sturdy animal, not a delicate one."
+        },
+        "D": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Leg bones reveal nothing about the color of a bird’s feathers."
+        }
+      },
+      "models": [
+        "1.5",
+        "1.44",
+        "1.35"
+      ],
+      "sources": [
+        {
+          "what": "Worthy, Hand, Archer, Scofield and De Pietri 2019, Biology Letters, abstract: two incomplete tibiotarsi from the Early Miocene St Bathans Fauna of New Zealand belong to a giant parrot with an estimated mass of 7 kg, double that of the heaviest known parrot, the kakapo",
+          "url": "https://pubmed.ncbi.nlm.nih.gov/31387471/"
+        }
+      ],
+      "notes": "Subject: natural science (paleontology). Key letter A. Cause in a Because clause (large fossils), consequence in the blank, restated after the colon (7 kilograms, twice the kakapo). Raw freq.txt ranks: massive 4,510; ancient 1,340; fragile 9,404; colorful 70,399 (the American spelling is rare in the old corpus). Key not the longest option.",
+      "word_count": 54,
+      "table": null,
+      "figure": null,
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [],
+        "status": "pass",
+        "facts": "PubMed 31387471: two incomplete tibiotarsi, about 7 kg, double the kakapo"
+      }
+    },
+    {
+      "id": "words_in_context.B2.easy.w5b7_22",
+      "template": "B2",
+      "subtype": "Blank completion: cause or consequence clue",
+      "tier": "easy",
+      "passage": "After Hawaii’s monarchy was overthrown in January 1893, Princess Kaʻiulani, the heir to the throne, traveled to the United States to ______ the overthrow. Arriving in New York on March 1, she issued public statements to journalists and subsequently met with President Grover Cleveland at the White House, hoping that the Hawaiian Kingdom would be restored.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "celebrate",
+        "investigate",
+        "protest",
+        "finance"
+      ],
+      "answer_letter": "C",
+      "explanation": "Protest means object to publicly. Kaʻiulani went to the United States “hoping that the Hawaiian Kingdom would be restored,” and to that end she “issued public statements to journalists and subsequently met with President Grover Cleveland at the White House.” Speaking out publicly to undo the overthrow is protesting it.",
+      "distractors": {
+        "A": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "She was “hoping that the Hawaiian Kingdom would be restored,” so she was not celebrating the monarchy’s fall."
+        },
+        "B": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "The text describes her making statements and meeting the president to get the kingdom back, not looking into how the overthrow happened."
+        },
+        "D": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Nothing suggests that she paid for the overthrow, which would make no sense given her hope that the kingdom “would be restored.”"
+        }
+      },
+      "models": [
+        "1.31",
+        "1.47",
+        "1.16"
+      ],
+      "sources": [
+        {
+          "what": "Wikipedia, Princess Kaʻiulani: heir to the throne; after the January 1893 overthrow she arrived in New York on March 1, 1893, read a statement to the press, and was received by President Grover Cleveland on March 13; she sought to denounce the overthrow and press for restoration of the Hawaiian Kingdom",
+          "url": "https://en.wikipedia.org/wiki/Princess_Ka%CA%BBiulani"
+        }
+      ],
+      "notes": "Subject: history (Hawaii). Key letter C. Purpose clause in the blank, explained by the actions and the hope that follow. Raw freq.txt ranks: celebrate 13,604; investigate 10,890; protest 2,749; finance 9,838. Key not the longest option.",
+      "word_count": 55,
+      "table": null,
+      "figure": null,
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 5,
+        "fixes": [],
+        "status": "pass",
+        "facts": "Wikipedia: arrived New York March 1, 1893, statement to the press, received by Cleveland, urged restoration and denounced the overthrow"
+      }
+    },
+    {
+      "id": "words_in_context.B5.easy.w5b7_23",
+      "template": "B5",
+      "subtype": "Blank completion: negated frame",
+      "tier": "easy",
+      "passage": "In 1948, Austrian painter Maria Lassnig coined the term “body consciousness” to describe her approach. Instead of depicting how her body looked, she painted only the parts of it that she could physically feel while working, so the figures in her self-portraits are often far from ______: some are missing body parts, and many appear in unnatural colors.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "warped",
+        "lifelike",
+        "private",
+        "famous"
+      ],
+      "answer_letter": "B",
+      "explanation": "Lifelike means true to how something actually looks. Lassnig did not depict “how her body looked”; she painted “only the parts of it that she could physically feel,” so her figures “are missing body parts” and “appear in unnatural colors.” Such figures are far from lifelike.",
+      "distractors": {
+        "A": {
+          "recipe": "reversal under the negation (ANT, negation flip)",
+          "why_wrong": "Figures that “are missing body parts” and “appear in unnatural colors” are warped, so saying they are far from warped contradicts the text."
+        },
+        "C": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Self-portraits built from what the painter could “physically feel” are, if anything, intensely personal; nothing suggests they are far from private."
+        },
+        "D": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "The text says nothing about how well known the self-portraits are; it explains how Lassnig painted them."
+        }
+      },
+      "models": [
+        "1.24",
+        "1.12",
+        "1.37"
+      ],
+      "sources": [
+        {
+          "what": "Wikipedia, Maria Lassnig: Austrian painter; coined the term body consciousness in 1948; painted only the parts of her body she felt while working, so self-portraits show missing body parts or unnatural colours",
+          "url": "https://en.wikipedia.org/wiki/Maria_Lassnig"
+        }
+      ],
+      "notes": "Subject: humanities (painting). Key letter B. Negated frame far from, with the clue after the colon (missing body parts, unnatural colors) and before (painted what she felt, not how she looked); one negation-flip reversal (warped), two unsupported. Raw freq.txt ranks: warped 16,171; lifelike 31,667; private 1,063; famous 2,092. Key is the longest option.",
+      "word_count": 58,
+      "table": null,
+      "figure": null,
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [],
+        "status": "pass",
+        "facts": "Wikipedia: body consciousness coined 1948, painted only parts she felt, missing body parts, unnatural colours"
+      }
+    }
+  ],
+  "done": true
+}

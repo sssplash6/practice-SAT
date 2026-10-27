@@ -1,0 +1,1734 @@
+{
+  "skill": "Command of Evidence",
+  "slug": "command_of_evidence",
+  "part": "w5b6",
+  "domain": "Information and Ideas",
+  "plan": {
+    "templates": [
+      {
+        "code": "T1_single",
+        "name": "Hypothetical finding supports or weakens a single claim (causal, comparison, existence, generalization, prediction)"
+      },
+      {
+        "code": "T1_compete",
+        "name": "Hypothetical finding discriminates between competing explanations (support or weaken)"
+      },
+      {
+        "code": "T2_lit_quote",
+        "name": "Quotation from a literary work illustrates a claim (single trait, two-part, contrast)"
+      },
+      {
+        "code": "T3_person_quote",
+        "name": "Quotation from a person (participant, respondent, historian, critic, article) supports or challenges a claim"
+      },
+      {
+        "code": "Q1_P1_lookup",
+        "name": "Data completion: lookup (one cell or bar, reverse lookup, filter)"
+      },
+      {
+        "code": "Q1_P2_extreme",
+        "name": "Data completion: extreme or rank (max/min, possibly after a filter)"
+      },
+      {
+        "code": "Q1_P3_pairwise",
+        "name": "Data completion: pairwise comparison (one or two comparisons)"
+      },
+      {
+        "code": "Q1_P5_control",
+        "name": "Data completion: condition vs control"
+      },
+      {
+        "code": "Q2_P4_trend",
+        "name": "Data description: trend or change over time supports a conclusion"
+      },
+      {
+        "code": "Q2_P5_control",
+        "name": "Data description: condition vs control or group comparison supports a conclusion"
+      },
+      {
+        "code": "Q2_P8_multipart",
+        "name": "Data description: multi-part, interaction, or passage-plus-data claim"
+      }
+    ]
+  },
+  "done": true,
+  "items": [
+    {
+      "id": "command_of_evidence.T1_single.hard.w5b6_01",
+      "template": "T1_single",
+      "subtype": "Hypothetical finding supports a causal claim once a selection explanation is set aside (peer interest and career plans)",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Students often say that a class feels different when their classmates are excited about the material. Physics education researcher Zahra Hazari and colleagues call a high school science class in which students perceive strong interest in the subject among their peers an “interest quorum.” Because students who already plan scientific careers may be especially likely to seek out such classes, a link between quorums and career plans could simply reflect who enrolls. Analyzing a national survey of students’ experiences in high school biology, chemistry, and physics, Hazari’s team nevertheless hypothesized that being part of an interest quorum itself makes students more likely to intend to pursue careers in science, technology, engineering, or mathematics (STEM).",
+      "stem": "Which finding, if true, would most directly support Hazari and colleagues’ hypothesis?",
+      "options": [
+        "Students who had planned STEM careers before entering high school were more likely than other students to describe their science classmates as highly interested in the subject.",
+        "Students who described their physics classmates as highly interested in the subject tended to earn somewhat higher physics grades than students who did not describe their classmates that way.",
+        "Among students with no interest in STEM careers at the start of high school, those who then took a class with an interest quorum more often came to intend STEM careers than those who did not.",
+        "Students in classes with an interest quorum reported STEM career intentions at similar rates regardless of whether they rated their science teachers as excellent or merely adequate."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "Hazari’s team hypothesized that “being part of an interest quorum itself makes students more likely to intend to pursue careers” in STEM, even though “students who already plan scientific careers may be especially likely to seek out such classes.” Looking only at students who had no interest in STEM careers when high school began sets that explanation aside, since these students were not already planning such careers. If those who then took a class with an interest quorum more often came to intend STEM careers, as choice C says, the quorum itself appears to have made the difference.",
+      "distractors": {
+        "A": {
+          "recipe": "OPP: fits the selection explanation the passage raises",
+          "why_wrong": "It shows that students who already planned STEM careers tended to perceive interested classmates, which is what the explanation based on who enrolls would predict; it gives no sign that the quorum changed anyone’s plans."
+        },
+        "B": {
+          "recipe": "OFF: a different outcome (grades, not career intentions)",
+          "why_wrong": "The hypothesis concerns career intentions; a link between perceived classmate interest and grades says nothing about whether quorums make students more likely to plan STEM careers."
+        },
+        "D": {
+          "recipe": "TRAP: no comparison with students outside an interest quorum",
+          "why_wrong": "It compares students within interest quorums by teacher rating, so it cannot show that being in a quorum raises STEM intentions relative to not being in one."
+        }
+      },
+      "models": [
+        "3.25",
+        "3.41",
+        "3.42",
+        "3.12"
+      ],
+      "sources": [
+        {
+          "what": "Hazari, Potvin, Cribbs, Godwin, Scott, Klotz 2017, Science Advances 3(8): e1700046, Interest in STEM is contagious for students in biology, chemistry, and physics classes: an interest quorum is a science class where students perceive a high level of interest from their classmates; hypothesis that students who experience one are more likely to choose STEM careers; national survey of students’ experiences in high school science; effect holds after controlling for previous STEM career interest and other competing explanations",
+          "url": "https://pubmed.ncbi.nlm.nih.gov/28808678/"
+        }
+      ],
+      "notes": "Band 6 (plan). Education. Two linked steps: the passage raises a selection explanation (students already headed for STEM join such classes), and the key removes it by restricting to students with no prior STEM interest. A fits the selection view, B is a different outcome (the paper's smaller grade effect), D compares within quorum classes only. The key paraphrases the claim (intend STEM careers) without its wording. Blind solve by the writer, key hidden: C, no second defensible option found.",
+      "band7_moves": [],
+      "word_count": 114,
+      "band7": {
+        "verdict": "band 6",
+        "why": "Planned band 6. Two linked steps: the passage raises a selection explanation (students already headed for STEM join such classes) and the key sets it aside by restricting to students with no prior STEM interest; A fits selection (OPP), D is a TRAP (no comparison outside quorum classes), B is OFF (grades)."
+      },
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass",
+        "facts_note": "PubMed abstract (E-utilities): interest quorum defined, national survey of high school biology, chemistry and physics, hypothesis on STEM career choice, effect holds after controlling for prior STEM career interest."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "C",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "command_of_evidence.T1_single.hard.w5b6_02",
+      "template": "T1_single",
+      "subtype": "Hypothetical finding supplies the missing premise for a causal claim (depopulation and the spread of surface fires)",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "Surface fires, which burn through the grasses, needles, and fallen branches on a forest floor, can spread widely only where such material forms a continuous layer of fuel. In the ponderosa pine forests of New Mexico’s Jemez Mountains, ancestral Jemez communities once occupied large masonry villages. Combining archaeological surveys with tree-ring dates for the final occupation of 18 village sites, archaeologist Matthew Liebmann, tree-ring scientist Thomas Swetnam, and colleagues estimated that the region’s population declined by 87 percent after European colonization, with most of the decline occurring nearly a century after initial contact. Fire scars in the region’s old trees show that extensive surface fires became more frequent after about 1640, and the researchers argue that the depopulation caused this change.",
+      "stem": "Which finding, if true, would most directly support the argument made by Liebmann and colleagues about the increase in extensive fires?",
+      "options": [
+        "Before the population decline, villagers routinely gathered dead wood for their hearths and cleared patches of ground for fields across much of the forest surrounding their villages.",
+        "Extensive surface fires also became more frequent after 1640 in distant mountain ranges that were never home to large villages, during a period of unusually dry springs across the entire region.",
+        "In the years after 1640, extensive fires in the Jemez Mountains were most common in summers that followed wet springs, which promote the growth of grasses that later dry out.",
+        "Most of the population loss in the Jemez Mountains during the 1600s is thought to have resulted from disease rather than from violent conflict with colonists."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The passage explains that surface fires “can spread widely only where such material forms a continuous layer of fuel.” Choice A supplies the link the argument needs: if villagers gathered “dead wood for their hearths and cleared patches of ground” across much of the surrounding forest, they would have broken up that continuous layer and kept fires small. Once the population fell by 87 percent, that activity would have largely stopped, letting fuel build up and fires spread, which explains why extensive fires “became more frequent after about 1640.”",
+      "distractors": {
+        "B": {
+          "recipe": "OPP: points to a regional climate cause instead",
+          "why_wrong": "If the same increase occurred in mountains that never had large villages, and during dry springs, the change looks driven by climate rather than by the loss of people, which weakens the argument."
+        },
+        "C": {
+          "recipe": "TRAP: explains which years burned, not why fires became more frequent",
+          "why_wrong": "A link between wet springs and the timing of individual fires after 1640 says nothing about whether the loss of people is what made extensive fires more common than before."
+        },
+        "D": {
+          "recipe": "TRAP: bears on how the population was lost, not on the fires",
+          "why_wrong": "Whether the people died mainly of disease or in conflict, the forests lost the villagers who had used them either way, so the cause of the decline cannot show that depopulation is what made extensive fires more common."
+        }
+      },
+      "models": [
+        "3.25",
+        "3.45",
+        "3.28",
+        "44da37eb"
+      ],
+      "sources": [
+        {
+          "what": "Liebmann, Farella, Roos, Stack, Martini, Swetnam 2016, PNAS 113(6): E696-E704, Native American depopulation, reforestation, and fire regimes in the Southwest United States, 1492-1900 CE: Jemez Province of New Mexico; archaeology, LiDAR and dendrochronology of 18 sites; indigenous population declined by 87% following European colonization, nearly a century after initial contact; depopulation triggered an increase in the frequency of extensive surface fires between 1640 and 1900",
+          "url": "https://pubmed.ncbi.nlm.nih.gov/26811459/"
+        }
+      ],
+      "notes": "Band 7. History and fire ecology. The needed fact (surface fires spread only through continuous fuel) sits in the first sentence; the key supplies the unstated premise (villagers' wood gathering and clearing broke up that fuel), which links the depopulation to the fire increase. B is the rival (climate) prediction, C and D are TRAPs that engage the claim's variables (fire timing, how the population was lost) but cannot decide it. The fuel-gathering premise is hypothetical, as CB band-7 keys are. The 1640 date and 87 percent figure are from the abstract. Blind solve by the writer, key hidden: A, no second defensible option found.",
+      "band7_moves": [
+        "key supplies an unstated premise (villagers broke up continuous fuel)",
+        "the needed fact (fires need continuous fuel) sits in the first sentence, far from the claim",
+        "two TRAP distractors (fire timing within the later period; migration vs death)",
+        "stem names the claimants and the claim, 20 words"
+      ],
+      "word_count": 121,
+      "band7": {
+        "verdict": "band 7",
+        "why": "Passage 121 words, stem 20 words naming the claimants. The key supplies the unstated premise (villagers' wood gathering and clearing broke up the continuous fuel the first sentence requires), now worded away from the passage's 'fallen branches'; B is OPP (regional climate), C and D are TRAPs (fire timing within the later period; disease versus conflict)."
+      },
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [
+          "key A reworded from 'fallen wood for fuel' to 'dead wood for their hearths' so it no longer echoes the passage's 'fallen branches'",
+          "option D said the Jemez who left moved 'elsewhere in the region', which contradicted the passage's 87 percent regional decline and so died on one stated fact; now disease versus conflict, a TRAP on how the population was lost"
+        ],
+        "status": "fixed",
+        "facts_note": "PNAS abstract: 18 sites, dendrochronological dates of terminal occupation, 87 percent decline nearly a century after contact, depopulation triggered more frequent extensive surface fires 1640-1900."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "A",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "command_of_evidence.T1_compete.hard.w5b6_03",
+      "template": "T1_compete",
+      "subtype": "Hypothetical finding from a multiple-worlds experiment discriminates between a core-values account and an opinion-cascade account of partisan alignment",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Why do Americans’ positions on seemingly unrelated issues line up so closely with their political party? Many scholars attribute such alignments to deep differences in the core values held by members of each party. Sociologist Michael Macy and colleagues proposed instead that early, essentially arbitrary shifts in opinion can trigger cascades in which party members follow their fellow partisans, so that an issue might just as easily have become associated with the other party. The team then randomly assigned thousands of participants to ten parallel “worlds” and asked them to rate statements on emerging political and cultural issues; in most of the worlds, participants could see which party’s members had so far been more likely to agree with each statement.",
+      "stem": "Which finding from the experiment, if true, would most directly support Macy and colleagues’ explanation?",
+      "options": [
+        "In the worlds where participants could not see how others had responded, Democrats and Republicans disagreed about the statements as sharply as they did in the other worlds.",
+        "By the end of the experiment, Democrats and Republicans in the worlds where earlier responses were visible disagreed with each other about most of the statements.",
+        "Participants in the different worlds were similar to one another in age, education, and region of residence, as well as in how strongly they identified with their party.",
+        "Statements that ended up being favored mainly by Democrats in some worlds ended up being favored mainly by Republicans in others."
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "If parties’ positions follow from core values, the same party should come to favor a given statement in every world, since members of each party hold the same values wherever they are assigned. Macy and colleagues’ explanation instead holds that an issue “might just as easily have become associated with the other party,” depending on early shifts within each world. Choice D reports exactly that: the party that came to favor a statement differed from world to world, which the cascade explanation predicts and the core-values explanation does not.",
+      "distractors": {
+        "A": {
+          "recipe": "OPP: fits the core-values explanation",
+          "why_wrong": "If partisans divided just as sharply when they could not see one another’s responses, the alignments would not depend on members following their fellow partisans, which is what the core-values explanation, not Macy and colleagues’ explanation, would lead one to expect."
+        },
+        "B": {
+          "recipe": "TRAP: predicted by both explanations",
+          "why_wrong": "Partisan disagreement on most statements is expected whether it arises from core values or from cascades, so it does not show that the alignments depended on chance shifts within each world."
+        },
+        "C": {
+          "recipe": "OFF: a feature of the design, not a result",
+          "why_wrong": "That the worlds were similar in makeup is a condition for a fair comparison, but it reports nothing about how positions became aligned with parties."
+        }
+      },
+      "models": [
+        "3.10",
+        "3.15",
+        "3.8",
+        "3.9"
+      ],
+      "sources": [
+        {
+          "what": "Macy, Deri, Ruch, Tong 2019, Science Advances 5(8): eaax0754, Opinion cascades and the unpredictability of partisan polarization: two multiple worlds experiments (n = 4,581) test an alternative to explanations based on ideological divisions and core values; positions adopted by Republicans and opposed by Democrats in one world had the opposite outcome in other parallel worlds; full text (PMC6713491): participants randomly assigned to 10 parallel worlds, in 8 (influence condition) they could see which party was more likely to agree with an item",
+          "url": "https://pubmed.ncbi.nlm.nih.gov/31489373/"
+        }
+      ],
+      "notes": "Band 6 (plan). Sociology and political science. The student must work out what each account predicts across worlds: core values predict the same alignment everywhere, cascades predict alignments that vary. A is the core-values prediction (sharp divisions even without visible responses; replaced in review, it was the exact negation of the key), B fits both (partisan disagreement in itself), C is a design feature. The key reports the study's own result, worded as a hypothetical. Blind solve by the writer, key hidden: D, no second defensible option found.",
+      "band7_moves": [],
+      "word_count": 120,
+      "band7": {
+        "verdict": "band 6",
+        "why": "Planned band 6. Core values predict the same alignment in every world and divisions without visible responses; cascades predict alignments that flip between worlds. D splits them, A (now an OPP on the no-influence worlds instead of a mirror of the key) fits core values, B fits both, C is a design feature. The key restates the passage's 'might just as easily' idea, so it stays band 6."
+      },
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [
+          "option A (the same party favored each statement in nearly every world) was the exact negation of the key, a mirror; replaced with an OPP on the worlds without visible responses (sharp divisions there fit core values)"
+        ],
+        "status": "fixed",
+        "facts_note": "Science Advances abstract and the writer's PMC note: multiple-worlds experiments, positions adopted by one party in one world had the opposite outcome in parallel worlds; ten worlds, most with influence."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "D",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "command_of_evidence.Q2_P8_multipart.hard.w5b6_04",
+      "template": "Q2_P8_multipart",
+      "subtype": "Data description: interaction across a 4 x 2 table read through a passage relation (the traditional amendment is ashes)",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "In southwestern Madagascar, traditional slash-and-burn farming removes every tree from a patch of forest and burns the debris, leaving ashes that fertilize the soil for a few seasons; once yields decline, the field is abandoned and more forest is cleared. Near the Kirindy forest, researchers investigated whether fields abandoned 30 years earlier could be cultivated again. They grew corn with one of four soil amendments (none, ashes, compost, or compost and ashes combined) in plots that were either fully cleared or left with half of their tree cover. Measuring both the corn’s yield and the nitrogen it absorbed, the researchers concluded that partial tree cover diminished the benefit of the compost-based amendments but not that of the traditional amendment.",
+      "stem": "Which choice best describes data from the table that support the researchers’ conclusion?",
+      "options": [
+        "In both fully cleared plots and plots with half of their tree cover, corn grown with compost and ashes combined absorbed more nitrogen than corn grown with any other amendment.",
+        "Corn grown with compost, whether alone or combined with ashes, absorbed less nitrogen in plots with half of their tree cover than in fully cleared plots, whereas corn grown with ashes alone absorbed more.",
+        "In plots with half of their tree cover, corn grown with compost alone absorbed less nitrogen than corn grown with no amendment, whereas corn grown with ashes alone absorbed about twice as much as unamended corn.",
+        "Corn grown with no amendment absorbed somewhat more nitrogen in plots with half of their tree cover than in fully cleared plots, and the same was true of corn grown with ashes alone."
+      ],
+      "answer_letter": "B",
+      "table": {
+        "title": "Nitrogen Uptake by Corn under Four Soil Amendments",
+        "columns": [
+          "Soil amendment",
+          "Nitrogen uptake in fully cleared plots (kilograms per hectare)",
+          "Nitrogen uptake in plots with half of tree cover (kilograms per hectare)"
+        ],
+        "rows": [
+          [
+            "None",
+            "6.1",
+            "8.3"
+          ],
+          [
+            "Ashes",
+            "9.4",
+            "17.5"
+          ],
+          [
+            "Compost",
+            "18.1",
+            "5.8"
+          ],
+          [
+            "Compost and ashes",
+            "55.6",
+            "25.9"
+          ]
+        ],
+        "note": null
+      },
+      "figure": null,
+      "explanation": "The passage says traditional slash-and-burn farming leaves “ashes that fertilize the soil,” so the “traditional amendment” is ashes alone, while the “compost-based amendments” are compost and compost with ashes. Choice B compares each of these across the two kinds of plots: corn given compost absorbed less nitrogen with half of the tree cover left (5.8 against 18.1 kilograms per hectare), as did corn given compost and ashes (25.9 against 55.6), whereas corn given ashes alone absorbed more (17.5 against 9.4). That pattern is exactly the one the researchers’ conclusion describes.",
+      "distractors": {
+        "A": {
+          "recipe": "IRREL: accurate ranking of amendments, not the effect of tree cover",
+          "why_wrong": "It is true that compost and ashes combined gave the most uptake in both kinds of plots, but it does not show how leaving trees changed each amendment’s benefit."
+        },
+        "C": {
+          "recipe": "IRREL: accurate comparisons with the control, all within one kind of plot",
+          "why_wrong": "Both comparisons are accurate (5.8 against 8.3, and 17.5 against 8.3 kilograms per hectare), but they stay within plots with half of their tree cover; without the fully cleared plots they cannot show that leaving trees diminished compost’s benefit, and they leave out compost combined with ashes."
+        },
+        "D": {
+          "recipe": "HALF: accurate for the traditional amendment, silent on compost",
+          "why_wrong": "It is true for ashes and for no amendment, but it leaves out the compost-based amendments, whose reduced uptake under partial tree cover is the other half of the conclusion."
+        }
+      },
+      "models": [
+        "3.26",
+        "3.18",
+        "3.16",
+        "3.2"
+      ],
+      "sources": [
+        {
+          "what": "Gay-des-Combes, Sanz Carrillo, Robroek, Jassey, Mills, Arif, Falquet, Frossard, Buttler 2017, Ecology and Evolution 7(14): 5378-5388, Tropical soils degraded by slash-and-burn cultivation can be recultivated when amended with ashes and compost: south-western Madagascar, 30-year-old abandoned fields, corn grown with no amendment, compost, ashes (as in traditional slash-and-burn) or compost + ashes, under 0% tree cover (traditional) or 50% tree cover (selective slash-and-burn); Kirindy forest site; Table of plant uptake, N uptake (kg/ha) shaded / sunny: Compost 5.77 / 18.13, CoAs 25.93 / 55.62, Ash 17.49 / 9.40, Control 8.30 / 6.12; yield reduced on shaded plots for all amendments except ashes",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC5528233/"
+        }
+      ],
+      "notes": "Band 7. Agriculture and soil ecology. Proxy: the passage defines the traditional amendment (ashes) and the compost-based ones, which the student must map onto the table rows. The key needs four cell comparisons (two rows reduced, one raised). All three distractors are accurate readings of the wrong cells (A ranks amendments, C compares with the control within shaded plots, in the key's frame, D covers only the traditional half). Values are the paper's means rounded to one decimal; the authors base the shade finding on yield ('reduced on shaded plots ... for all soil amendments, except ashes') and report the same pattern in nitrogen uptake, so the passage says they measured both. Python check: compost 18.1 > 5.8, compost and ashes 55.6 > 25.9, ashes 9.4 < 17.5; 5.8 < 8.3; 17.5 / 8.3 = 2.1. Blind solve by the writer, key hidden: B, no second defensible option found.",
+      "band7_moves": [
+        "proxy: the passage defines which row is the traditional amendment",
+        "key needs four cell comparisons across two columns",
+        "three accurate but insufficient distractors (ranking, within-column cross-cell, half of the claim)",
+        "passage over 100 words"
+      ],
+      "word_count": 119,
+      "band7": {
+        "verdict": "band 7",
+        "why": "Passage 118 words. Proxy: the passage defines the traditional amendment as ashes and the compost-based ones, which must be mapped onto the rows; the key needs three cross-column comparisons over six cells. All three distractors are accurate readings of the wrong cells: A ranks amendments, C (rebuilt) compares each amendment with the control inside shaded plots in the key's frame, D covers only the traditional half."
+      },
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 5,
+        "fixes": [
+          "the passage credited the conclusion to the nitrogen data alone; the paper bases its shade finding on yield ('reduced on shaded plots ... for all soil amendments, except ashes') and reports the same pattern in N uptake, so the passage now says they measured both yield and nitrogen",
+          "option C rebuilt as accurate comparisons with the control inside shaded plots, in the key's frame (band-7 Q2_P8 recipe), replacing a within-column comparison of two amendments; explanation unchanged"
+        ],
+        "status": "fixed",
+        "facts_note": "PMC full text: Kirindy, 30-year-old abandoned fields, four amendments, 0 and 50 percent tree cover, Table 2 N uptake (compost 18.13 / 5.77, CoAs 55.62 / 25.93, ash 9.40 / 17.49, control 6.12 / 8.30)."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "B",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "command_of_evidence.T2_lit_quote.hard.w5b6_05",
+      "template": "T2_lit_quote",
+      "subtype": "Literary quotation illustrates an indirect claim (an incidental wedding-day detail has become painful to recall; poem)",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "“A Lynmouth Widow” is a 1914 poem by Amelia Josephine Burr. Remembering her wedding in Lynmouth, a fishing village on England’s southwestern coast, the widowed speaker suggests that a seemingly incidental detail of the celebration has become bound up with her grief: ______",
+      "stem": "Which quotation from “A Lynmouth Widow” most effectively illustrates the claim?",
+      "options": [
+        "“He was straight and strong, and his eyes were blue / As the summer meeting of sky and sea, / And the ruddy cliffs had a colder hue / Than flushed his cheek when he married me.”",
+        "“We passed the porch where the swallows breed, / We left the little brown church behind, / And I leaned on his arm, though I had no need, / Only to feel him so strong and kind.”",
+        "“One thing I never can quite forget; / It grips my throat when I try to pray— / The keen salt smell of a drying net / That hung on the churchyard wall that day.”",
+        "“He would have taken a long, long grave— / A long, long grave, for he stood so tall . . .”"
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The claim has two parts: a detail of the wedding day that was incidental, and the grief that the detail now carries for the speaker. In choice C, the speaker says “One thing I never can quite forget” is “The keen salt smell of a drying net / That hung on the churchyard wall that day,” a passing sight at her wedding, and that the memory “grips my throat when I try to pray.” The net, a reminder of the sea and the fishing life, has become bound up with her loss.",
+      "distractors": {
+        "A": {
+          "recipe": "opposite stance: an admiring memory of the wedding day",
+          "why_wrong": "The speaker recalls her husband’s looks on the day “he married me” with admiration; nothing in the lines ties the memory to grief, and his appearance is the center of the memory, not an incidental detail."
+        },
+        "B": {
+          "recipe": "HALF: incidental wedding-day details without any pain",
+          "why_wrong": "The porch, the swallows, and the little church are passing details of the wedding day, but the speaker recalls them tenderly, “to feel him so strong and kind,” with no sign of grief."
+        },
+        "D": {
+          "recipe": "nearby emotion: grief without the wedding-day detail",
+          "why_wrong": "The lines express grief, since he “would have taken a long, long grave,” but they concern the husband’s death and his height, not a detail of the wedding day that her grief has attached to."
+        }
+      },
+      "models": [
+        "3.17",
+        "3.37",
+        "3.11",
+        "3.34"
+      ],
+      "sources": [
+        {
+          "what": "Amelia Josephine Burr, In Deep Places: A Book of Verse (New York: George H. Doran, 1914), pp. 50-51, A Lynmouth Widow; quotations follow the poem as reprinted in Jessie B. Rittenhouse, ed., The Second Book of Modern Verse (1919), Project Gutenberg #1166, with double hyphens set as em dashes",
+          "url": "https://archive.org/details/indeepplacesabo00burrgoog"
+        },
+        {
+          "what": "text used for the quotations",
+          "url": "https://www.gutenberg.org/cache/epub/1166/pg1166.txt"
+        }
+      ],
+      "notes": "Band 7. Literature (poem). The claim uses an indirect verb and two components (incidental detail of the wedding day; bound up with her grief, reworded in review from 'painful to recall', which the key's 'never can quite forget' echoed). A and B are the same day in an opposite, happy stance (B is the half-match: incidental details, no pain); D is the near emotion (grief, no wedding detail). The final stanza (the crash of a wave and the smell of the nets) would also fit and is deliberately not offered; D stops before it. Burr and the poem appear nowhere else in the bank or the official items. Blind solve by the writer, key hidden: C.",
+      "band7_moves": [
+        "indirect claim verb (suggests ... has become painful to recall)",
+        "near-emotion distractor (grief) and opposite-stance distractors from the same speaker",
+        "key needs the incidental detail and the pain together"
+      ],
+      "word_count": 43,
+      "band7": {
+        "verdict": "band 6",
+        "why": "Indirect claim with a near emotion (D, grief without the wedding detail) and two opposite-stance stanzas (A, B), but the key states both parts fairly openly ('never can quite forget', 'grips my throat', 'that day'), and the poem's only other close lines (the last two, the nets again) would be a second answer. Strong band 6, not 7."
+      },
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 5,
+        "fixes": [
+          "claim reworded from 'has become painful to recall', which the key's 'never can quite forget' echoed, to 'has become bound up with her grief'; explanation and the three why_wrong texts updated"
+        ],
+        "status": "fixed",
+        "facts_note": "All four quotations match the 1919 anthology (Gutenberg 1166) and the 1914 In Deep Places text on archive.org (pp. 50-51); 1914 and the author confirmed from archive.org metadata."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "C",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "command_of_evidence.T3_person_quote.hard.w5b6_06",
+      "template": "T3_person_quote",
+      "subtype": "Quotation from an art historian supports a claim made inside a qualification of a common view (drawings as composed memories, not street records)",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "Born into slavery on an Alabama plantation around 1853, Bill Traylor spent most of his life as a farm laborer and sharecropper before relocating to Montgomery, where in 1939, at roughly 85 years of age, he began producing drawings on discarded cardboard. Working on the city’s sidewalks, he completed nearly 1,500 depictions of people and animals within three years. Admirers have frequently characterized these flat, boldly outlined figures as spontaneous documentation of the street life passing before him. A student contends that this interpretation, though it does justice to the drawings’ immediacy, neglects how deliberately Traylor constructed scenes from recollections of rural life in the South.",
+      "stem": "Which quotation from an art historian would most directly support the student’s argument?",
+      "options": [
+        "“Traylor drew the same few episodes again and again—a man chasing another with a raised stick, a farmer behind a plow mule—shifting each figure’s position from one version to the next. Nothing on the sidewalk held still for such reworking; these were scenes he had carried from his decades in the cotton fields.”",
+        "“Few of Traylor’s figures could have been invented. The women in wide hats, the men with canes, and the dogs that trot beside them belong unmistakably to Monroe Street in 1940, and his sheets of cardboard preserve that busy block with an eyewitness’s fidelity that no photograph of the period matches.”",
+        "“Traylor did not simply copy what passed him. He planned each sheet, ruling the outline of a figure before filling it in and turning the cardboard until a body fit its ragged edges. The hats, canes, and quarrels of the people on his block were composed with care, not dashed off as they happened.”",
+        "“Memories of the plantation run all through Traylor’s work: mules, plows, and men at hard labor appear beside the hats and canes of Montgomery. He seems to have set down whatever rose to mind as he sat on the sidewalk, one image after another, as quickly and freely as it came to him.”"
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The student contends that the common interpretation “neglects how deliberately Traylor constructed scenes from recollections of rural life in the South.” Choice A supports both parts of that argument. Traylor reworked the same few episodes, “shifting each figure’s position from one version to the next,” which shows deliberate construction rather than spontaneous recording, and the historian traces those episodes not to the sidewalk but to “his decades in the cotton fields,” that is, to his memories of rural life.",
+      "distractors": {
+        "B": {
+          "recipe": "OPP: sides with the view the student qualifies",
+          "why_wrong": "It treats the drawings as faithful eyewitness records of “Monroe Street in 1940,” which is the view of the drawings as records of street life that the student says is incomplete."
+        },
+        "C": {
+          "recipe": "HALF: deliberate construction, but of street scenes",
+          "why_wrong": "It argues that Traylor composed his drawings with care, but it places their subjects among “the people on his block,” so it gives no support to the claim that he built his scenes from memories of rural life."
+        },
+        "D": {
+          "recipe": "HALF: rural memories, but set down spontaneously",
+          "why_wrong": "It finds memories of plantation life in the drawings, but it describes Traylor setting down images “as quickly and freely” as they came to him, which fits the view of the drawings as spontaneous rather than the claim that he constructed them deliberately."
+        }
+      },
+      "models": [
+        "3.21",
+        "3.33",
+        "ca9dc00f",
+        "3.32"
+      ],
+      "sources": [
+        {
+          "what": "Wikipedia, Bill Traylor: born into slavery in Alabama about 1853; sharecropper after emancipation; after moving to Montgomery he began drawing in 1939 at about 85 with a pencil and scraps of cardboard to document his recollections and observations; from 1939 to 1942, working on the sidewalks of Montgomery (camped on Monroe Street), he produced nearly 1,500 pieces; Smithsonian retrospective Between Worlds (2018-2019)",
+          "url": "https://en.wikipedia.org/wiki/Bill_Traylor"
+        }
+      ],
+      "notes": "Band 7. Arts (self-taught art). The claim sits inside the student's qualification of a common view; the quotations argue, about 50 to 55 words each, and are invented for unnamed art historians (no real critic is quoted). Rebuilt in review: the key had echoed the claim ('deliberate', 'rural scenes', 'a life remembered'); it now gives evidence (episodes redrawn with figures moved, scenes carried from the cotton fields) from which the student infers both parts. B sides with the qualified view (OPP); C is deliberate construction of street scenes and D is rural memory set down spontaneously (each a HALF meeting one requirement). Motifs (a chase with a raised stick, a plow mule, ruled outlines, odd-shaped cardboard) are typical of Traylor but appear only inside invented quotations. Reviewer blind solve: A.",
+      "band7_moves": [
+        "claim sits inside a qualification of a common view",
+        "quotations of about 50 words that argue",
+        "OPP sides with the qualified view; TRAP praises the conceded part; HALF supplies memory without the drawings"
+      ],
+      "word_count": 106,
+      "band7": {
+        "verdict": "band 7",
+        "why": "Passage 106 words; the claim sits inside a qualification of a common view; quotations of 50 to 55 words that argue. The key is paraphrased away from the claim, so deliberateness (figures moved between versions) and rural memory (the cotton fields) must both be inferred; B is OPP, C and D each meet exactly one of the two requirements."
+      },
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [
+          "key A echoed the claim ('deliberate', 'rural scenes', 'a life remembered'); rewritten as evidence to interpret (episodes redrawn with figures moved, scenes carried from the cotton fields)",
+          "C (modernist simplification by instinct) and D (his long life) were each killed by one obvious fact; replaced with two halves, deliberate construction of street scenes (C) and rural memory set down spontaneously (D); explanation, distractors and notes updated"
+        ],
+        "status": "fixed",
+        "facts_note": "Wikipedia: born into slavery about 1853, sharecropper, began drawing in Montgomery in 1939 at about 85 on scraps of cardboard, nearly 1,500 works 1939-1942 on the sidewalks. Quotations are invented for unnamed historians."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "A",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "command_of_evidence.Q1_P5_control.hard.w5b6_07",
+      "template": "Q1_P5_control",
+      "subtype": "Data completion: the exception to a pattern across three conditions (unmown vs mown meadow vs shrub plantings)",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "In the German town of Riedstadt, the municipality has replaced many roadside plantings of nonnative shrubs with meadows of native wildflowers, which are mown in summer and again in late winter. To determine how the conversion affected insects and other arthropods, ecologist Karsten Mody and colleagues vacuumed every arthropod from one-square-meter samples taken in surviving shrub plantings and in the meadows, some of which contained patches that had been left unmown when the rest was cut. Every group shown was more abundant in meadow patches than in shrub plantings. For most groups, unmown patches held even more arthropods than mown ones did, but this pattern was not universal: ______",
+      "stem": "Which choice most effectively uses data from the table to complete the statement?",
+      "options": [
+        "spiders averaged about 19 per square meter in mown patches and about 29 in unmown patches, compared with only about 11 in shrub plantings.",
+        "ants averaged about 31 per square meter in mown patches, roughly six times the average of about 5 per square meter in shrub plantings.",
+        "true bugs averaged about 66 per square meter in unmown patches, more than twice the average of about 25 per square meter in mown patches.",
+        "ants averaged about 27 per square meter in unmown patches, slightly fewer than the average of about 31 per square meter in mown patches."
+      ],
+      "answer_letter": "D",
+      "table": {
+        "title": "Mean Number of Arthropods per Square Meter in Roadside Vegetation in Riedstadt, Germany",
+        "columns": [
+          "Arthropod group",
+          "Shrub plantings",
+          "Mown meadow patches",
+          "Unmown meadow patches"
+        ],
+        "rows": [
+          [
+            "Spiders",
+            "11.1",
+            "19.2",
+            "29.2"
+          ],
+          [
+            "Leafhoppers",
+            "4.7",
+            "21.3",
+            "41.4"
+          ],
+          [
+            "True bugs",
+            "2.7",
+            "25.2",
+            "65.8"
+          ],
+          [
+            "Ants",
+            "5.1",
+            "30.9",
+            "27.4"
+          ]
+        ],
+        "note": null
+      },
+      "figure": null,
+      "explanation": "The statement calls for a group that breaks the pattern, “not universal,” in which “unmown patches held even more arthropods than mown ones did.” According to the table, spiders, leafhoppers, and true bugs were all more numerous in unmown patches, but ants were not: they averaged about 27 per square meter in unmown patches and about 31 in mown patches. Choice D reports this exception.",
+      "distractors": {
+        "A": {
+          "recipe": "IRREL: accurate, but follows the pattern rather than breaking it",
+          "why_wrong": "The spider figures are accurate, but spiders were more numerous in unmown patches than in mown ones, so they fit the usual pattern instead of providing the exception."
+        },
+        "B": {
+          "recipe": "IRREL: accurate comparison of the wrong pair of conditions",
+          "why_wrong": "The ant figures are accurate, but they compare mown patches with shrub plantings, which shows the meadow benefit, not how unmown patches compared with mown ones."
+        },
+        "C": {
+          "recipe": "IRREL: accurate, but the group that fits the pattern most strongly",
+          "why_wrong": "True bugs were indeed more than twice as numerous in unmown patches, which is the usual pattern, not an exception to it."
+        }
+      },
+      "models": [
+        "3.38",
+        "3.46",
+        "3.4"
+      ],
+      "sources": [
+        {
+          "what": "Mody, Lerch, Müller, Simons, Blüthgen, Harnisch 2020, PLoS ONE 15(6): e0234327, Flower power in the city: Replacing roadside shrubs by wildflower meadows increases insect numbers and reduces maintenance costs: Riedstadt municipality (Magistrat der Stadt Riedstadt); meadows mown in summer and late winter; Table 2, suction (biocenometer) samples of 1 m2 in year 2, mean numbers per sample, woody / mown meadow / unmown meadow: Araneae 11.10 / 19.22 / 29.22, Auchenorrhyncha 4.70 / 21.33 / 41.44, Heteroptera 2.70 / 25.22 / 65.78, Formicidae 5.10 / 30.89 / 27.44; mown and unmown comparison made in meadow plots containing both",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7282654/"
+        }
+      ],
+      "notes": "Band 6 (plan). Urban ecology. All four options are accurate readings; only D names the exception the statement asks for, so the student must test each group against the mown-versus-unmown pattern (CB 3.38 surprise, 3.46 difference by condition). B is the tempting trap: the same group, the wrong pair of columns. Common names stand in for the orders (Araneae spiders, Auchenorrhyncha leafhoppers and relatives, Heteroptera true bugs, Formicidae ants). Python check: unmown > mown for spiders, leafhoppers, true bugs; ants 27.4 < 30.9; 30.9 / 5.1 = 6.1; 65.8 / 25.2 = 2.6. Blind solve by the writer, key hidden: D.",
+      "band7_moves": [],
+      "word_count": 109,
+      "band7": {
+        "verdict": "band 6",
+        "why": "Planned band 6. All four options are accurate readings; the student must test each group against the mown-versus-unmown pattern, and B is the same group on the wrong pair of columns. One-filter exception search, a strong band 6."
+      },
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [],
+        "status": "pass",
+        "facts_note": "PMC full text: Riedstadt municipality co-author, roadside shrubs replaced by native wildflower meadows, mown in summer and late winter, suction samples, unmown spots 63 percent more arthropods."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "D",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "command_of_evidence.Q2_P5_control.hard.w5b6_08",
+      "template": "Q2_P5_control",
+      "subtype": "Data description: compares the size of two factors' effects on two measures (hives vs wildflower strips)",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Many farms in the eastern United States plant strips of wildflowers along field edges to provide pollen and nectar for wild bees, which help pollinate crops such as strawberries and squash. Many farmers also keep hives of managed honey bees, which may compete with wild bees for those same floral resources. To compare the two strategies, researcher Gina Angelella and colleagues systematically surveyed wild bees on 21 farms in the Mid-Atlantic region, some with wildflower strips, some with honey bee hives, some with both, and some with neither. The researchers concluded that whether a farm kept honey bee hives mattered considerably more for its wild bee community than whether it had planted wildflower strips.",
+      "stem": "Which choice best describes data from the table that support the researchers’ conclusion?",
+      "options": [
+        "Farms with and without hives differed by about 22 wild bees and about 2 wild bee species, on average, whereas farms with and without wildflower strips differed by only about 3 bees and 1 species.",
+        "Farms with wildflower strips averaged about 38 wild bees and 8 wild bee species, both higher than the averages of about 34 bees and 7 species for farms without wildflower strips.",
+        "Farms with hives averaged fewer wild bee species than farms without wildflower strips did, about 7 species compared with slightly more than 7 species.",
+        "Farms without hives averaged about twice as many wild bees as farms with hives did, but they averaged slightly fewer wild bee species than farms with hives did."
+      ],
+      "answer_letter": "A",
+      "table": {
+        "title": "Wild Bees on 21 Mid-Atlantic Farms by Farm Feature",
+        "columns": [
+          "Farm feature",
+          "Mean wild bees per farm, feature present",
+          "Mean wild bees per farm, feature absent",
+          "Mean wild bee species per farm, feature present",
+          "Mean wild bee species per farm, feature absent"
+        ],
+        "rows": [
+          [
+            "Honey bee hives",
+            "24.0",
+            "46.3",
+            "6.9",
+            "8.7"
+          ],
+          [
+            "Wildflower strips",
+            "37.8",
+            "34.5",
+            "8.4",
+            "7.4"
+          ]
+        ],
+        "note": null
+      },
+      "figure": null,
+      "explanation": "The conclusion compares two practices: hives “mattered considerably more” for wild bees than wildflower strips did. So the data must set the difference that hives make beside the difference that strips make. According to the table, farms without hives averaged 46.3 wild bees and 8.7 species against 24.0 and 6.9 on farms with hives, a gap of about 22 bees and 2 species, while farms with and without strips differed by only about 3 bees (37.8 against 34.5) and 1 species (8.4 against 7.4). Choice A reports both comparisons.",
+      "distractors": {
+        "B": {
+          "recipe": "PART: accurate, but only one of the two practices",
+          "why_wrong": "The figures for wildflower strips are accurate, but without the corresponding figures for hives they cannot show which practice mattered more."
+        },
+        "C": {
+          "recipe": "IRREL: accurate comparison across the wrong cells",
+          "why_wrong": "It compares farms with hives with farms without strips; those groups differ in two ways at once, so the comparison says nothing about the separate effect of either practice."
+        },
+        "D": {
+          "recipe": "INACC: the second clause misreads the species columns",
+          "why_wrong": "Farms without hives did have about twice as many wild bees (46.3 against 24.0), but they also averaged more species (8.7 against 6.9), not fewer."
+        }
+      },
+      "models": [
+        "3.43",
+        "3.5",
+        "3.1",
+        "2.25"
+      ],
+      "sources": [
+        {
+          "what": "Angelella, McCullough, O'Rourke 2021, Scientific Reports 11: 3202, Honey bee hives decrease wild bee abundance, species richness, and fruit count on farms regardless of wildflower strips: 21 farms in the Mid-Atlantic US with or without wildflower strips and honey bee hives; wild bee abundance per farm + hives 24.00 / - hives 46.31, species richness 6.94 / 8.69; + wf strips 37.82 / - wf strips 34.47 abundance, 8.36 / 7.42 richness; strips did not significantly change wild bee measures; corresponding author Gina.Angelella@usda.gov",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7865060/"
+        }
+      ],
+      "notes": "Band 6 (plan). Agricultural ecology. Design wrinkle: two factors and two measures; the key must compare the size of the hive difference with the size of the strip difference on both measures. B is accurate for one factor only, C crosses factors (a confounded comparison), D has one false clause. Values are the paper's means per farm, rounded to one decimal. Python check: 46.3 - 24.0 = 22.3, 8.7 - 6.9 = 1.8, 37.8 - 34.5 = 3.3, 8.4 - 7.4 = 1.0; 6.9 < 7.4. Blind solve by the writer, key hidden: A.",
+      "band7_moves": [],
+      "word_count": 114,
+      "band7": {
+        "verdict": "band 6",
+        "why": "Planned band 6. Two factors and two measures with a design wrinkle; the key sets the size of the hive difference beside the strip difference on both measures; B is one factor only, C a confounded cross-factor comparison, D has one false clause."
+      },
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [],
+        "status": "pass",
+        "facts_note": "PMC abstract: 21 Mid-Atlantic farms, wild bee populations did not differ with strips, abundance down 48 percent and richness 20 percent with hives regardless of strips."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "A",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "command_of_evidence.Q1_P3_pairwise.hard.w5b6_09",
+      "template": "Q1_P3_pairwise",
+      "subtype": "Data completion: two pairwise comparisons whose order reverses between periods (most typical speed range)",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Between 2016 and 2018, the City of Edinburgh, Scotland, introduced a speed limit of 20 miles per hour on most of its streets. Skeptics predicted that motorists would largely disregard the change. To evaluate its effectiveness, public health researchers at the University of Edinburgh analyzed traffic speeds recorded on 66 streets throughout a full week before the lower limit took effect and throughout a full week about one year afterward, categorizing the observations into four speed ranges. Although most recorded speeds continued to exceed the new limit, the data suggest that the limit altered which range of speeds was most typical on these streets: ______",
+      "stem": "Which choice most effectively uses data from the table to complete the statement?",
+      "options": [
+        "the share of observations above 30 miles per hour fell by more than half after the limit took effect, while the share below 20 miles per hour rose by about five percentage points.",
+        "before the limit took effect, speeds of 25–30 miles per hour were recorded more often than speeds of 20–24 miles per hour, whereas afterward the reverse was true.",
+        "speeds of 20–24 miles per hour were recorded more often than speeds in any other range both before and after the limit took effect, though more often afterward.",
+        "speeds of 25–30 miles per hour remained the most frequently recorded range after the limit took effect, although they were recorded less often than before."
+      ],
+      "answer_letter": "B",
+      "table": {
+        "title": "Share of Speed Observations in Four Ranges on 66 Edinburgh Streets",
+        "columns": [
+          "Speed range (miles per hour)",
+          "Before 20 mph limit (%)",
+          "After 20 mph limit (%)"
+        ],
+        "rows": [
+          [
+            "below 20",
+            "19.2",
+            "24.5"
+          ],
+          [
+            "20–24",
+            "35.5",
+            "44.4"
+          ],
+          [
+            "25–30",
+            "38.1",
+            "28.0"
+          ],
+          [
+            "above 30",
+            "7.2",
+            "3.1"
+          ]
+        ],
+        "note": null
+      },
+      "figure": null,
+      "explanation": "The statement says the limit “altered which range of speeds was most typical on these streets,” so the completion must show that the most common range before the limit was not the most common afterward. According to the table, 25–30 miles per hour was the most common range before (38.1% against 35.5% for 20–24), but 20–24 was the most common afterward (44.4% against 28.0%). Choice B reports this reversal.",
+      "distractors": {
+        "A": {
+          "recipe": "IRREL: accurate changes in the two least common ranges",
+          "why_wrong": "The share above 30 did fall by more than half (7.2% to 3.1%) and the share below 20 did rise by about five points (19.2% to 24.5%), but neither range was ever the most typical, so these changes do not show which range was most typical."
+        },
+        "C": {
+          "recipe": "INACC: the order before the limit is misread",
+          "why_wrong": "Before the limit, 25–30 miles per hour (38.1%) was recorded more often than 20–24 (35.5%), so 20–24 was not the most common range both before and after."
+        },
+        "D": {
+          "recipe": "INACC: the order after the limit is misread",
+          "why_wrong": "After the limit, 25–30 miles per hour (28.0%) was recorded less often than 20–24 (44.4%), so it was no longer the most common range."
+        }
+      },
+      "models": [
+        "3.30",
+        "3.29",
+        "2.32",
+        "2.28"
+      ],
+      "sources": [
+        {
+          "what": "Nightingale, Williams, Hunter, Woodcock, Turner, Cleland, Baker, Kelly, Cope, Kee, Milton, Foster, Jepson, Kelly 2021, PLoS ONE 16(12): e0261383, Evaluating the citywide Edinburgh 20mph speed limit intervention effects on traffic speed and volume: phased citywide 20mph limits 2016-2018; City of Edinburgh Council speed data for one full week before and 12 months after on 66 streets; speed bin table (n = 12,672 observations), before / after %: <20mph 19.2 / 24.5, 20-24mph 35.5 / 44.4, 25-30mph 38.1 / 28.0, >30mph 7.2 / 3.1",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC8719778/"
+        }
+      ],
+      "notes": "Band 6 (the plan asked for 7, but Q1_P3_pairwise has no band-7 official item; written as a strong band 6). Transportation and public health. Two comparisons whose order reverses between periods (CB 3.30). A is accurate but about the two least common ranges; C and D each misread one period. Values from the paper's speed-bin table; 'most recorded speeds still exceeded the new limit' checks against 75.5% at or above 20 after. Python check: before 38.1 > 35.5, after 44.4 > 28.0; 3.1 / 7.2 = 0.43; 24.5 - 19.2 = 5.3. Blind solve by the writer, key hidden: B.",
+      "band7_moves": [],
+      "word_count": 105,
+      "band7": {
+        "verdict": "band 6",
+        "why": "Q1_P3_pairwise has no band-7 official item, so it cannot be band 7; a strong band 6: two pairwise comparisons whose order reverses between periods, A accurate on the two least common ranges, C and D each misread one period."
+      },
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [],
+        "status": "pass",
+        "facts_note": "PMC full text Table 4: speed bins before / after 19.2 / 24.5, 35.5 / 44.4, 38.1 / 28.0, 7.2 / 3.1; 66 streets, one full week before and 12 months after, phased 2016-2018."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "B",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "command_of_evidence.T2_lit_quote.medium.w5b6_10",
+      "template": "T2_lit_quote",
+      "subtype": "Literary quotation illustrates a two-part claim (objects made by people also made by a divine Spirit; poem)",
+      "tier": "medium",
+      "band_target": null,
+      "passage": "“The Monk in the Kitchen” is a 1910 poem by Anna Hempstead Branch. Performing his household chores, the speaker, a monk, suggests that ordinary kitchen implements, though manufactured by human hands, also embody the craftsmanship of a divine creator: ______",
+      "stem": "Which quotation from “The Monk in the Kitchen” most effectively illustrates the claim?",
+      "options": [
+        "“Order is a lovely thing; / On disarray it lays its wing, / Teaching simplicity to sing.”",
+        "“Brazen pan and iron pot, / Yellow brick and gray flag-stone / That my feet have trod upon— / Ye seem to me / Vessels of bright mystery.”",
+        "“And I use you, as I can, / Wonderful uses, made for man, / Iron pot and brazen pan.”",
+        "“For ye do bear a shape, and so / Though ye were made by man, I know / An inner Spirit also made / And ye his breathings have obeyed.”"
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The claim has two parts: the objects were produced by human hands, and they also bear the work of a divine creator. Choice D contains both: the speaker tells the objects “Though ye were made by man, I know / An inner Spirit also made” them, and that they have obeyed “his breathings.”",
+      "distractors": {
+        "A": {
+          "recipe": "OFF: praises order, not the objects or their making",
+          "why_wrong": "The lines celebrate order and simplicity in general; they do not mention the kitchen objects or who made them."
+        },
+        "B": {
+          "recipe": "HALF: the objects seem mysterious, with no makers named",
+          "why_wrong": "The speaker finds the pots, bricks, and flagstones “Vessels of bright mystery,” but the lines say nothing about their being made by people or by a divine creator."
+        },
+        "C": {
+          "recipe": "HALF and keyword lure: “made for man” in place of made by man and by God",
+          "why_wrong": "The lines say the pots have uses “made for man,” which concerns their purpose, not the human and divine work that produced them."
+        }
+      },
+      "models": [
+        "2.26",
+        "2.36",
+        "2.17",
+        "2.31"
+      ],
+      "sources": [
+        {
+          "what": "Anna Hempstead Branch, Rose of the Wind and Other Poems (Boston: Houghton Mifflin, 1910), The Monk in the Kitchen, pp. 136-138; quotations copied from this edition (gray flag-stone)",
+          "url": "https://archive.org/details/roseofthewindand00branrich"
+        }
+      ],
+      "notes": "Medium. Literature (poem). Two-part claim (made by man; also made by a divine Spirit): B is the half that finds the objects mysterious, C the half and lure (made for man), A off target. Text from the 1910 first edition (the 1919 anthology has grey for gray). Branch and the poem appear nowhere else in the bank or the official items. Blind solve by the writer, key hidden: D.",
+      "band7_moves": [],
+      "word_count": 40,
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 5,
+        "fixes": [],
+        "status": "pass",
+        "facts_note": "All four quotations match the 1910 Rose of the Wind text on archive.org (gray flag-stone, em dash after 'upon'); 1910 and author confirmed."
+      }
+    },
+    {
+      "id": "command_of_evidence.T2_lit_quote.medium.w5b6_11",
+      "template": "T2_lit_quote",
+      "subtype": "Literary quotation illustrates a two-part claim (an old woman's pleasure in solitude and the speaker's resolve to share it; poem)",
+      "tier": "medium",
+      "band_target": null,
+      "passage": "“Muy Vieja Mexicana” is a 1919 poem by Alice Corbin. Observing an elderly woman in New Mexico who spends her nights smoking beside a fire, the speaker imagines that the woman finds contentment in her solitary existence and resolves to experience her own old age similarly: ______",
+      "stem": "Which quotation from “Muy Vieja Mexicana” most effectively illustrates the claim?",
+      "options": [
+        "“I’ve seen her pass with eyes upon the road— / An old bent woman in a bronze-black shawl, / With skin as dried and wrinkled as a mummy’s,”",
+        "“When it’s all over and there’s none to care, / I mean to be like her and take my share / Of comfort when the long day’s done,”",
+        "“It’s good to smoke and none to say / What’s to be done on the coming day, / No mouths to feed or coat to mend, / And none to call till the last long end.”",
+        "“And I have fancied from the girls about / What she was at their age, what they will be / When they are old as she.”"
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The claim has two parts: the woman finds contentment in her solitary existence, and the speaker resolves to spend her own old age the same way. In choice B, the speaker says “I mean to be like her and take my share / Of comfort when the long day’s done,” which states the resolve and shows that the speaker sees the woman’s solitary nights as a comfort she wants for herself.",
+      "distractors": {
+        "A": {
+          "recipe": "OFF: physical description",
+          "why_wrong": "The lines describe the woman’s appearance, her “bronze-black shawl” and wrinkled skin, without suggesting pleasure or any resolve by the speaker."
+        },
+        "C": {
+          "recipe": "HALF: the woman’s pleasure without the speaker’s resolve",
+          "why_wrong": "The lines give the pleasure the speaker imagines the woman takes in having “none to say / What’s to be done,” but they say nothing about the speaker’s plans for her own old age."
+        },
+        "D": {
+          "recipe": "keyword lure: the speaker imagines old age, but for the village girls",
+          "why_wrong": "The speaker wonders what the girls nearby “will be / When they are old as she,” which concerns other people’s futures, not the speaker’s resolve to live as the woman does."
+        }
+      },
+      "models": [
+        "2.35",
+        "2.37",
+        "2.10",
+        "2.13"
+      ],
+      "sources": [
+        {
+          "what": "Alice Corbin, Muy Vieja Mexicana, Poetry 13 (1919); listed on archive.org as jstor-20571954",
+          "url": "https://archive.org/details/jstor-20571954"
+        },
+        {
+          "what": "text used for the quotations: Jessie B. Rittenhouse, ed., The Second Book of Modern Verse (1919), Project Gutenberg #1166, double hyphens set as em dashes",
+          "url": "https://www.gutenberg.org/cache/epub/1166/pg1166.txt"
+        }
+      ],
+      "notes": "Medium. Literature (poem). Two-part claim (the woman's pleasure in solitude; the speaker's resolve): C is the half with the woman's pleasure only, D a lure (the speaker imagining old age for the girls), A description. The year is the poem's appearance in Poetry, volume 13 (1919); it was collected in Red Earth (1920). Corbin and the poem appear nowhere else in the bank or the official items. Blind solve by the writer, key hidden: B.",
+      "band7_moves": [],
+      "word_count": 47,
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 5,
+        "fixes": [],
+        "status": "pass",
+        "facts_note": "All four quotations match the 1919 anthology text (Gutenberg 1166); Poetry vol. 13, 1919 confirmed from archive.org metadata."
+      }
+    },
+    {
+      "id": "command_of_evidence.T1_single.medium.w5b6_12",
+      "template": "T1_single",
+      "subtype": "Hypothetical finding supports a claim about individual differences (voice pitch in infancy and childhood)",
+      "tier": "medium",
+      "band_target": null,
+      "passage": "Voice pitch is determined by the frequency at which the vocal folds vibrate, and it varies considerably among individuals of the same sex. A longitudinal study of men has found that a person’s pitch relative to that of other people remains stable throughout adulthood and may be established even before puberty. Florence Levrero, David Reby, and colleagues hypothesized that these individual differences emerge far earlier, appearing in the cries of infants who have not yet learned to talk. To investigate, the team recorded the cries of 15 infants at four months of age and recorded the same children again several years later.",
+      "stem": "Which finding, if true, would most directly support the team’s hypothesis?",
+      "options": [
+        "The children whose cries were higher in pitch than other infants’ cries at four months tended to have higher-pitched voices than the other children at age five.",
+        "The cries of the girls in the study were, on average, about the same in pitch as the cries of the boys in the study when the infants were four months old.",
+        "Each infant’s cries rose noticeably in pitch when the infant was hungry or uncomfortable and dropped again as the infant grew calmer.",
+        "At age five, the children’s speaking voices were, on average, considerably lower in pitch than their cries had been at four months of age."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The team hypothesized that individual differences in voice pitch are present far earlier, “appearing in the cries of infants who have not yet learned to talk.” If so, babies who cry at a higher pitch than others should grow into children who speak at a higher pitch than others. Choice A reports exactly that link between the same children’s relative pitch at four months and at age five.",
+      "distractors": {
+        "B": {
+          "recipe": "OFF: a difference between the sexes, not among individuals",
+          "why_wrong": "Whether girls and boys cried at similar pitches says nothing about whether each child’s pitch relative to others carries over from infancy to childhood."
+        },
+        "C": {
+          "recipe": "OFF: changes within one infant by mood",
+          "why_wrong": "Pitch rising and falling with an infant’s comfort describes variation within each baby, not stable differences between babies."
+        },
+        "D": {
+          "recipe": "TRAP: an average change rather than individual differences",
+          "why_wrong": "A drop in the group’s average pitch is expected as children grow and could occur whether or not the babies who cried highest became the children who spoke highest."
+        }
+      },
+      "models": [
+        "2.1",
+        "2.4",
+        "2.6",
+        "2.38"
+      ],
+      "sources": [
+        {
+          "what": "Levrero, Mathevon, Pisanski, Gustafsson, Reby 2018, Biology Letters 14(7): 20180065, The pitch of babies' cries predicts their voice pitch at age 5: hypothesis that inter-individual differences in F0 are already present in the cries of pre-verbal babies; longitudinal study of 15 children; F0 of cries at 4 months predicted F0 of speech at 5 years; earlier work found differences stable in men during adulthood and possibly set before puberty",
+          "url": "https://pubmed.ncbi.nlm.nih.gov/29997184/"
+        }
+      ],
+      "notes": "Medium. Psychology and physiology. The key needs the comparison across individuals (relative pitch kept from infancy to age five) rather than any pitch measure; D is the tempting average-change trap, B and C are other kinds of variation. The passage does not say what was measured at the later recording, so the key does not echo it. Blind solve by the writer, key hidden: A.",
+      "band7_moves": [],
+      "word_count": 102,
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [
+          "'Longitudinal studies of men have found' overstated the single study the paper cites (Fouquet et al. 2016); now 'A longitudinal study of men has found'"
+        ],
+        "status": "fixed",
+        "facts_note": "Biology Letters abstract: hypothesis that inter-individual F0 differences are present in pre-verbal cries, 15 children, cries at 4 months predict speech F0 at 5 years."
+      }
+    },
+    {
+      "id": "command_of_evidence.T1_single.medium.w5b6_13",
+      "template": "T1_single",
+      "subtype": "Hypothetical finding supports a predicted association between daily and seasonal timing (chronotype and migration)",
+      "tier": "medium",
+      "band_target": null,
+      "passage": "Within a population of animals, individuals often differ in their chronotype, a consistent tendency to start daily activity earlier or later than others. Because the lengthening days of spring trigger seasonal behaviors through the same internal clock that governs daily rhythms, biologists have proposed that individuals with early chronotypes should also begin their seasonal activities early. Heather Watts and colleagues at Washington State University tested this idea in captive pine siskins, small songbirds that, when ready to migrate, display what is called migratory restlessness: hopping and fluttering through the night. The team predicted that the individual birds’ chronotypes would be related to the timing of their migratory restlessness.",
+      "stem": "Which finding, if true, would most directly support the team’s prediction?",
+      "options": [
+        "The siskins that began displaying migratory restlessness early in the spring also tended to stop displaying it earlier in the summer than the other birds did.",
+        "All of the siskins began displaying migratory restlessness within a few days of one another once days reached a particular length.",
+        "The siskins whose activity consistently started earliest each day were among the first birds to begin displaying migratory restlessness in the spring.",
+        "Siskins kept under a day length that never changed did not display migratory restlessness at any time during the year."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The team predicted that “the individual birds’ chronotypes would be related to the timing of their migratory restlessness,” in line with the proposal that individuals with early chronotypes “should also begin their seasonal activities early.” Choice C reports that the birds whose activity consistently started earliest each day were among the first to begin migratory restlessness, which is the predicted relationship.",
+      "distractors": {
+        "A": {
+          "recipe": "OFF: links the start and end of the season, not chronotype",
+          "why_wrong": "A link between when restlessness began and when it ended says nothing about the birds’ daily timing, so it does not bear on chronotype."
+        },
+        "B": {
+          "recipe": "TRAP: no variation for chronotype to explain",
+          "why_wrong": "If all the birds began within a few days of one another, there would be little difference in seasonal timing for chronotype to account for, so the finding gives no support to the prediction."
+        },
+        "D": {
+          "recipe": "OFF: the role of changing day length, not individual chronotype",
+          "why_wrong": "It shows that changing day length triggers restlessness, which the passage already assumes, but it does not relate any bird’s daily timing to its seasonal timing."
+        }
+      },
+      "models": [
+        "2.6",
+        "2.7",
+        "2.43",
+        "2.33"
+      ],
+      "sources": [
+        {
+          "what": "Rittenhouse, Robart, Watts 2019, Biology Letters 15(8): 20190453, Variation in chronotype is associated with migratory timing in a songbird: hypothesis that chronotypes underpin differences in timing of seasonal events triggered by increasing daylength, predicting advanced chronotypes express events earlier; captive pine siskins (Spinus pinus); repeatable chronotypes in timing of nocturnal activity; chronotype significantly associated with onset date of migratory behaviour; School of Biological Sciences, Washington State University",
+          "url": "https://pubmed.ncbi.nlm.nih.gov/31455169/"
+        }
+      ],
+      "notes": "Medium. Animal behavior. Association claim: the key ties each bird's daily timing to its seasonal timing; B is a no-variation trap, A and D concern other links (season start and end; day length). Migratory restlessness glossed as hopping and fluttering at night (Zugunruhe). Blind solve by the writer, key hidden: C.",
+      "band7_moves": [],
+      "word_count": 108,
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass",
+        "facts_note": "Biology Letters abstract: captive pine siskins, Washington State University, repeatable chronotypes, chronotype associated with onset date of migratory behaviour."
+      }
+    },
+    {
+      "id": "command_of_evidence.Q2_P4_trend.medium.w5b6_14",
+      "template": "Q2_P4_trend",
+      "subtype": "Data description: change across three periods supports a conclusion about the cause of a decline (lake water balance)",
+      "tier": "medium",
+      "band_target": null,
+      "passage": "Bosten Lake, a large freshwater lake in an arid basin in China’s Xinjiang region, receives most of its water from the Kaidu River, which descends from the Tian Shan mountains. Using a water balance model, researchers compared three periods between 1961 and 2015, during which the volume of water stored in the lake declined, then increased, then declined again. Beginning in the early 2000s, an ecological water conveyance project released additional water from the lake to restore deteriorating ecosystems downstream. The researchers concluded that by increasing the lake’s outflow, this project contributed to the most recent decline.",
+      "stem": "Which choice best describes data from the table that support the researchers’ conclusion?",
+      "options": [
+        "Average annual river inflow was greatest from 1988 to 2002, the only period in which the amount of water stored in the lake increased.",
+        "Average annual outflow was greater from 1988 to 2002 than from 1961 to 1987, yet the lake gained stored water from 1988 to 2002.",
+        "Average annual river inflow was lower from 2003 to 2015 than it had been during the previous period, from 1988 to 2002.",
+        "Average annual outflow was higher from 2003 to 2015, when the lake lost stored water, than in either of the two earlier periods."
+      ],
+      "answer_letter": "D",
+      "table": {
+        "title": "Average Annual Water Flows for Bosten Lake in Three Periods",
+        "columns": [
+          "Period",
+          "River inflow (cubic kilometers per year)",
+          "Outflow (cubic kilometers per year)",
+          "Change in stored water (cubic kilometers per year)"
+        ],
+        "rows": [
+          [
+            "1961–1987",
+            "1.93",
+            "1.15",
+            "−0.12"
+          ],
+          [
+            "1988–2002",
+            "2.71",
+            "1.55",
+            "+0.31"
+          ],
+          [
+            "2003–2015",
+            "2.18",
+            "1.83",
+            "−0.48"
+          ]
+        ],
+        "note": "Evaporation from the lake and other smaller flows are not shown."
+      },
+      "figure": null,
+      "explanation": "The researchers concluded that by increasing the lake’s outflow, the conveyance project “contributed to the most recent decline.” According to the table, average annual outflow from 2003 to 2015 (1.83 cubic kilometers per year) was higher than in either earlier period (1.15 and 1.55), and that is the period in which the lake lost stored water (0.48 cubic kilometers per year). Choice D reports this: outflow peaked during the decline that followed the start of the project.",
+      "distractors": {
+        "A": {
+          "recipe": "IRREL: accurate, but about inflow during the period of increase",
+          "why_wrong": "River inflow did peak from 1988 to 2002, when stored water rose, but this concerns inflow during the earlier increase and says nothing about outflow during the most recent decline."
+        },
+        "B": {
+          "recipe": "IRREL: an accurate rise in outflow, but in a period when the lake gained water",
+          "why_wrong": "Outflow did rise from the first period to the second (1.15 to 1.55 cubic kilometers per year), but the lake gained water then, before the conveyance project began, so this says nothing about outflow during the most recent decline."
+        },
+        "C": {
+          "recipe": "IRREL: accurate, but about inflow rather than outflow",
+          "why_wrong": "River inflow did fall from 2.71 to 2.18 cubic kilometers per year, but that concerns how much water entered the lake, not the increase in outflow to which the researchers attributed part of the decline."
+        }
+      },
+      "models": [
+        "2.22",
+        "2.2",
+        "2.12"
+      ],
+      "sources": [
+        {
+          "what": "Yao, Chen, Zhao, Yu 2018, Scientific Reports 8: 9118, Hydroclimatic changes of Lake Bosten in Northwest China during the last decades: largest inland freshwater lake in China; water balance model; decrease 1961-1987, rapid increase 1988-2002, drastic decrease 2003-2012 (recent increase 2013-2016); during 2003-2012 the ecological water conveyance project (EWCP, implemented 2000) significantly increased the lake's outflow, while decreased precipitation raised drought frequency; Kaidu River about 95% of lake input; Table 1, three phases 1961-1987 / 1988-2002 / 2003-2015 (km3/yr): change in storage -0.12 / 0.31 / -0.48, runoff R_in 1.41 / 1.98 / 1.59 plus glacier melt G 0.52 / 0.73 / 0.59 (river inflow here = R_in + G = 1.93 / 2.71 / 2.18, as the text gives surface input; lake input 2.7 and 2.1 in the last two phases), outflow R_out 1.15 / 1.55 / 1.83",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6002481/"
+        }
+      ],
+      "notes": "Medium. Earth science and water management. Rebuilt in review: the draft's conclusion ('increased outflow rather than ... a shortage of river inflow') went past the paper, which links the decline to the project's higher outflow together with drier conditions, and its 'river inflow' column held only precipitation runoff (glacier melt is a separate row), so outflow only seemed to exceed inflow. Now the conclusion is the paper's (the project's added outflow contributed), river inflow is R_in + G, and the key is outflow at its highest in the period of decline. B is an outflow rise in the wrong period; A and C concern inflow. 'Largest freshwater lake in China' dropped (the paper says largest inland freshwater lake; Poyang is larger). Python check: 1.83 > 1.55 > 1.15; inflow max 2.71 in 1988-2002; 2.18 < 2.71. Reviewer blind solve of the rebuilt item: D.",
+      "band7_moves": [],
+      "word_count": 97,
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 5,
+        "fixes": [
+          "conclusion 'increased outflow rather than ... a shortage of river inflow' went past the paper, which ties the 2003-2012 decline to the conveyance project's higher outflow together with lower precipitation; now 'by increasing the lake's outflow, this project contributed to the most recent decline'",
+          "the 'river inflow' column held only Table 1's precipitation runoff R_in (glacier melt G is a separate row), so outflow only seemed to exceed inflow and the key rested on the label; river inflow is now R_in + G (1.93 / 2.71 / 2.18, the paper's lake input), and the key is outflow at its highest in the period of decline",
+          "option B (size of the decline) replaced by an accurate outflow rise in the wrong period; explanation and distractors rewritten",
+          "'the largest freshwater lake in China' removed (the paper says largest inland freshwater lake; Poyang Lake is larger); 'divided the lake's history ... into three periods' now 'compared three periods between 1961 and 2015' (the paper has four epochs to 2016, three in its balance table)",
+          "rebuilt item blind-solved again: D, no second defensible option",
+          "table note added that evaporation and smaller flows are not shown, so inflow above outflow beside a loss of stored water reads correctly"
+        ],
+        "status": "fixed",
+        "facts_note": "PMC full text: Table 1 water balance by phase, abstract on the EWCP raising outflow 2003-2012 and decreased precipitation, Kaidu River about 95 percent of input."
+      }
+    },
+    {
+      "id": "command_of_evidence.Q1_P5_control.medium.w5b6_15",
+      "template": "Q1_P5_control",
+      "subtype": "Data completion: treatment vs control at the same time point (line graph, four years)",
+      "tier": "medium",
+      "band_target": null,
+      "passage": "After a 2013 wildfire burned part of a fragment of coastal sage scrub at the Robert J. Bernard Field Station in Claremont, California, ecologists investigated whether removing non-native vegetation would accelerate the recovery of native shrubs. From 2014 to 2017, volunteers hand-weeded non-native grasses and other herbaceous plants from removal plots every winter, while control plots were left untouched. Non-native plants rapidly recolonized the control plots, and although weeding never eliminated them from the removal plots, it consistently kept their cover below that in the control plots: for example, ______",
+      "stem": "Which choice most effectively uses data from the graph to complete the example?",
+      "options": [
+        "in 2017, non-native cover was about 36% in the control plots and about 49% in the removal plots.",
+        "non-native cover in the removal plots rose from about 2% in 2014 to about 36% in 2017.",
+        "in 2016, non-native cover was about 60% in the control plots but only about 32% in the removal plots.",
+        "in 2015, non-native cover was about 49% in the control plots and about 60% in the removal plots."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": {
+        "kind": "line graph",
+        "title": "Non-native Plant Cover in Control and Removal Plots after a 2013 Fire",
+        "x_axis": "Year",
+        "y_axis": "Non-native plant cover (%)",
+        "description": "Two lines over the years 2014, 2015, 2016 and 2017; y-axis 0 to 70 percent in steps of 10. Control plots (solid line): about 18% in 2014, 49% in 2015, 60% in 2016 and 49% in 2017. Removal plots (dashed line): about 2% in 2014, 14% in 2015, 32% in 2016 and 36% in 2017. The removal line stays below the control line in every year.",
+        "data": [
+          {
+            "series": "Control plots",
+            "points": [
+              [
+                "2014",
+                18.0
+              ],
+              [
+                "2015",
+                49.4
+              ],
+              [
+                "2016",
+                60.2
+              ],
+              [
+                "2017",
+                48.7
+              ]
+            ]
+          },
+          {
+            "series": "Removal plots",
+            "points": [
+              [
+                "2014",
+                1.9
+              ],
+              [
+                "2015",
+                13.5
+              ],
+              [
+                "2016",
+                32.2
+              ],
+              [
+                "2017",
+                35.6
+              ]
+            ]
+          }
+        ]
+      },
+      "explanation": "The example must show non-native cover lower in the removal plots than in the control plots in the same year. In 2016, according to the graph, cover was about 60% in the control plots and about 32% in the removal plots. Choice C reports this comparison, an example of weeding keeping cover “below that in the control plots.”",
+      "distractors": {
+        "A": {
+          "recipe": "WDIR: the two plots’ 2017 values swapped",
+          "why_wrong": "In 2017 the control plots had about 49% cover and the removal plots about 36%, not the reverse."
+        },
+        "B": {
+          "recipe": "IRREL: an accurate trend within the removal plots only",
+          "why_wrong": "The rise in the removal plots is accurate, but it makes no comparison with the control plots, which is what the example requires."
+        },
+        "D": {
+          "recipe": "INACC: the removal value is misread",
+          "why_wrong": "In 2015 the removal plots had about 14% cover, not 60%; the 60% figure belongs to the control plots in 2016."
+        }
+      },
+      "models": [
+        "2.5",
+        "2.14",
+        "2.19"
+      ],
+      "sources": [
+        {
+          "what": "Thomson, Meyer, Whitcomb 2021, PLoS ONE 16(7): e0254398, Non-native plant removal and high rainfall years promote post-fire recovery of Artemisia californica in southern California sage scrub: Robert J. Bernard Field Station, Claremont; first growing season after fire 2013-2014; non-native grasses and forbs hand weeded from removal plots spring 2014-2017 (mid-January to late March) by volunteers; Table 1 total foliar cover of non-native grasses and forbs (%), control / removal: 2014 18.0 / 1.9, 2015 49.4 / 13.5, 2016 60.2 / 32.2, 2017 48.7 / 35.6",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC8297819/"
+        }
+      ],
+      "notes": "Medium. Ecology. Condition versus control at one time point (CB 2.5). A swaps the two plots, B is an accurate within-group trend, D misplaces a value. The paper's table is drawn as a line graph; the paper also reports a separate column for filaree (Erodium), left out here. Weeding ran mid-January to late March each year (winter into early spring). Python check: removal below control in all four years. Blind solve by the writer, key hidden: C.",
+      "band7_moves": [],
+      "word_count": 90,
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass",
+        "facts_note": "PMC abstract: Bernard Field Station sage scrub fragment after fire, experimental non-native removal for the first 4 years, non-natives rapidly recolonized control plots, removal cut cover by nearly 60 percent."
+      }
+    },
+    {
+      "id": "command_of_evidence.T1_compete.medium.w5b6_16",
+      "template": "T1_compete",
+      "subtype": "Hypothetical finding discriminates between a universal and a learned account of the major-happy, minor-sad association (listeners with differing exposure to Western music)",
+      "tier": "medium",
+      "band_target": null,
+      "passage": "Listeners raised on Western music tend to hear chords in a major key as happy and chords in a minor key as sad. Some researchers have proposed that this association is universal, arising from acoustic properties of the chords themselves; others argue that listeners acquire it through exposure to Western music. Eline Smit, Andrew Milne, and colleagues tested listeners in Sydney, Australia, and in several remote villages in Papua New Guinea that have similar traditional music but differing exposure to Western-style music. From each pair of short chord sequences they heard, one major and one minor, participants chose the one that made them happier. The researchers concluded that the association is strongly tied to listeners’ exposure to Western-style music.",
+      "stem": "Which finding, if true, would most directly support Smit and colleagues’ conclusion?",
+      "options": [
+        "In every village tested, including the one with the least exposure to Western-style music, participants chose the major sequence as the happier one more often than the minor sequence.",
+        "Participants in the village with the least exposure to Western-style music chose the minor sequence as the happier one about as often as they chose the major sequence.",
+        "Listeners in Sydney, who hear Western music every day, chose the major sequence as the happier one far more often than they chose the minor sequence.",
+        "Within each village, men and women chose the major sequence as the happier one at about the same rate."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "Smit and colleagues concluded that the association “is strongly tied to listeners’ exposure to Western-style music.” If the link between major chords and happiness were universal, even listeners who had rarely heard Western-style music should prefer the major sequence. If, as choice B says, participants in the village with the least exposure chose the two sequences about equally often, the association appears only where listeners could have learned it, which supports the researchers’ conclusion.",
+      "distractors": {
+        "A": {
+          "recipe": "OPP: the universal account's prediction",
+          "why_wrong": "If even the villagers with the least exposure to Western-style music preferred the major sequence, the association would not depend on exposure, which fits the view that it is universal and weakens the researchers’ conclusion."
+        },
+        "C": {
+          "recipe": "TRAP: predicted by both accounts",
+          "why_wrong": "Listeners who hear Western music every day would prefer the major sequence whether the association is universal or learned, so this finding cannot show that it depends on exposure."
+        },
+        "D": {
+          "recipe": "OFF: a comparison of men and women",
+          "why_wrong": "Neither account predicts a difference between men and women, so similar rates for the two say nothing about whether the association depends on exposure to Western-style music."
+        }
+      },
+      "models": [
+        "2.9",
+        "2.30",
+        "1.25",
+        "3.15"
+      ],
+      "sources": [
+        {
+          "what": "Smit, Milne, Sarvasy, Dean 2022, PLoS ONE 17(6): e0269597, Emotional responses in Papua New Guinea show negligible evidence for a universal effect of major versus minor music: remote cloud forest region of Papua New Guinea (Towet and other villages, Uruwa River Valley), several communities with similar traditional music but differing exposure to Western-influenced tonal music; 170 participants chose which of paired major and minor cadences and melodies made them happier; repeated with non-musicians and musicians in Sydney; for cadences, major reported happier in every community except the one with minimal exposure to Western-like music; valence of major and minor strongly associated with exposure to Western-influenced music, though universality cannot be excluded",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC9242494/"
+        }
+      ],
+      "notes": "Medium. Psychology of music. Replaced in review: the draft (birds vs bats as coffee pest control, Karp et al. 2013) keyed on day-versus-night netting, the design of the live TSP cacao item w3b1_25, and the batch was heavy on ecology. Two named accounts: universal predicts a major preference even with minimal exposure, learned predicts none there; the key reports the paper's cadence result as a hypothetical. A is the universal prediction (OPP), C fits both (Sydney), D off target. The passage says 'strongly tied to exposure', as the paper does, not that universality is ruled out. Reviewer blind solve: B.",
+      "band7_moves": [],
+      "word_count": 119,
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [
+          "replaced: the coffee berry borer item (Karp et al. 2013) keyed on day-versus-night netting of birds and bats, the design of the live TSP cacao item text_structure_and_purpose.P_study.easy.w3b1_25, and the batch was heavy on ecology; new subject is major versus minor chords in Papua New Guinea (Smit, Milne et al. 2022), same template, tier and key letter",
+          "Karp claim withdrawn and the new subject claimed in claims.txt (appended)",
+          "new item blind-solved: B, no second defensible option"
+        ],
+        "status": "fixed",
+        "facts_note": "PMC full text and abstract: remote Papua New Guinea villages with similar traditional music and differing exposure, paired major and minor cadences, happier choice, repeated in Sydney, no major preference only in the minimal-exposure community, 'cannot exclude' universality (the passage says 'strongly tied')."
+      }
+    },
+    {
+      "id": "command_of_evidence.Q1_P1_lookup.easy.w5b6_17",
+      "template": "Q1_P1_lookup",
+      "subtype": "Data completion: one-cell lookup (value-only options)",
+      "tier": "easy",
+      "band_target": null,
+      "passage": "Every winter, volunteers in the Audubon Christmas Bird Count record all the birds they observe within assigned count circles. Using 36 years of these records, a team of researchers examined where western and Clark’s grebes spend the winter. These closely related diving birds are usually associated with coastal waters. Many, however, spend the winter inland: according to the table, the mean count for the Interior California/Nevada region was ______",
+      "stem": "Which choice most effectively uses data from the table to complete the statement?",
+      "options": [
+        "481.",
+        "24.",
+        "661.",
+        "934."
+      ],
+      "answer_letter": "A",
+      "table": {
+        "title": "Western and Clark’s Grebes in Five Wintering Regions",
+        "columns": [
+          "Wintering region",
+          "Number of count circles",
+          "Mean count"
+        ],
+        "rows": [
+          [
+            "Salish Sea",
+            "34",
+            "934"
+          ],
+          [
+            "Outer Washington/Oregon Coast",
+            "9",
+            "132"
+          ],
+          [
+            "Northern California Coast",
+            "26",
+            "660"
+          ],
+          [
+            "Southern California Coast",
+            "25",
+            "661"
+          ],
+          [
+            "Interior California/Nevada",
+            "24",
+            "481"
+          ]
+        ],
+        "note": null
+      },
+      "figure": null,
+      "explanation": "According to the table, the mean count for the Interior California/Nevada region was 481. Choice A completes the statement with that value.",
+      "distractors": {
+        "B": {
+          "recipe": "WGRP: the right row, the wrong column",
+          "why_wrong": "24 is the number of count circles in the Interior California/Nevada region, not its mean count."
+        },
+        "C": {
+          "recipe": "WGRP: another region’s value",
+          "why_wrong": "661 is the mean count for the Southern California Coast region."
+        },
+        "D": {
+          "recipe": "WGRP: another region’s value",
+          "why_wrong": "934 is the mean count for the Salish Sea region."
+        }
+      },
+      "models": [
+        "1.38",
+        "1.43",
+        "1.44",
+        "1.30"
+      ],
+      "sources": [
+        {
+          "what": "Wilson, Anderson, Wilson, Bertram, Arcese 2013, PLoS ONE 8(6): e65408, Citizen Science Reveals an Extensive Shift in the Winter Distribution of Migratory Western Grebes: 36 years of Audubon Christmas Bird Count data, western and Clark's grebes (Aechmophorus), 1975-2010; Table 1, number of CBC circles and mean count by wintering region: Salish Sea 34 / 934, Outer Washington/Oregon Coast 9 / 132, Northern California Coast 26 / 660, Southern California Coast 25 / 661, Interior California/Nevada 24 / 481",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3686804/"
+        }
+      ],
+      "notes": "Easy. Ecology (citizen science). One-cell lookup with value-only options (CB 1.38, 1.43): B is the same row's other column, C and D other regions. Five of the paper's eight regions shown. Blind solve by the writer, key hidden: A.",
+      "band7_moves": [],
+      "word_count": 69,
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass",
+        "facts_note": "PMC abstract: 36 years of Christmas Bird Count data, western and Clark's grebes, 1975-2010; table values from the writer's Table 1 note."
+      }
+    },
+    {
+      "id": "command_of_evidence.T1_single.easy.w5b6_18",
+      "template": "T1_single",
+      "subtype": "Hypothetical finding supports a hypothesis about behavior (birds hold back blinks in flight)",
+      "tier": "easy",
+      "band_target": null,
+      "passage": "Birds, like humans, must blink periodically to keep their eyes moist and clean. During each blink, however, a bird is momentarily unable to see. Because flying safely requires constant monitoring of the surroundings, biologist Jessica Yorzinski of Texas A&M University hypothesized that birds strategically suppress their blinking while airborne. To test this hypothesis, she filmed captive great-tailed grackles before, during, and after short flights in an open space.",
+      "stem": "Which finding, if true, would most directly support Yorzinski’s hypothesis?",
+      "options": [
+        "The grackles blinked more often when they were kept in brightly lit spaces than when they were kept in dimly lit ones.",
+        "Grackles that flew longer distances took more time to come to a complete stop after landing than grackles that flew shorter distances.",
+        "The grackles spent about the same amount of time blinking before their flights as they spent blinking after their flights.",
+        "The grackles spent less time blinking while flying than while perched before and after flying."
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "Yorzinski hypothesized that “birds strategically suppress their blinking while airborne.” If so, the grackles should blink less during flight than when they are not flying. Choice D reports exactly that: the birds spent less time blinking while flying than while perched before and after their flights.",
+      "distractors": {
+        "A": {
+          "recipe": "OFF: light level, not flight",
+          "why_wrong": "Blinking more in bright light than in dim light concerns lighting conditions and says nothing about blinking during flight."
+        },
+        "B": {
+          "recipe": "OFF: landing time, not blinking",
+          "why_wrong": "How long the birds took to stop after landing has nothing to do with how often they blinked."
+        },
+        "C": {
+          "recipe": "TRAP: compares two times when the birds were not flying",
+          "why_wrong": "Similar blinking before and after flights leaves out the flight itself, so it cannot show that the birds held back their blinks in the air."
+        }
+      },
+      "models": [
+        "1.1",
+        "1.5",
+        "1.8",
+        "1.29"
+      ],
+      "sources": [
+        {
+          "what": "Yorzinski 2020, Biology Letters 16(12): 20200786, A songbird inhibits blinking behaviour in flight: tested the hypothesis that birds strategically inhibit blinks in flight; blinks of captive great-tailed grackles recorded before, during and after short flights in an open environment; least blinking in flight, most at impact; similar before and after flight; Department of Ecology and Conservation Biology, Texas A&M University",
+          "url": "https://pubmed.ncbi.nlm.nih.gov/33321068/"
+        }
+      ],
+      "notes": "Easy. Animal behavior. One-step operationalization (less blinking in flight than on the perch). C is the study's own before-and-after result, offered as a trap because it leaves out flight; A and B are off target. Blind solve by the writer, key hidden: D.",
+      "band7_moves": [],
+      "word_count": 68,
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass",
+        "facts_note": "Biology Letters abstract: hypothesis that birds strategically inhibit blinks in flight, captive great-tailed grackles filmed before, during and after short flights, Texas A&M."
+      }
+    },
+    {
+      "id": "command_of_evidence.T1_single.easy.w5b6_19",
+      "template": "T1_single",
+      "subtype": "Hypothetical finding supports a causal conclusion (lighted windows and fatal bird collisions)",
+      "tier": "easy",
+      "band_target": null,
+      "passage": "Each spring and fall, millions of birds migrate at night across North America. Many die by colliding with brightly illuminated buildings. Since 1978, staff from Chicago’s Field Museum have collected birds killed in collisions at McCormick Place, a large convention center on the shore of Lake Michigan. Using about two decades of these records along with migration and weather data, ecologist Benjamin Van Doren and colleagues concluded that the amount of light shining from a building’s windows strongly affects how many birds die there.",
+      "stem": "Which finding, if true, would most directly support Van Doren and colleagues’ conclusion?",
+      "options": [
+        "More birds were killed in collisions at McCormick Place on nights in the spring than on nights in the fall.",
+        "Most of the birds found dead at McCormick Place belonged to species that migrate at night rather than during the day.",
+        "On nights when similar numbers of birds were migrating, fewer birds died at McCormick Place when fewer of its windows were lit.",
+        "More birds died at McCormick Place on nights when large numbers of birds were migrating than on nights when few birds were migrating."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "Van Doren and colleagues concluded that “the amount of light shining from a building’s windows strongly affects how many birds die there.” Choice C compares nights with similar numbers of migrating birds and finds fewer deaths when fewer windows were lit, so the difference in deaths can be traced to the amount of light.",
+      "distractors": {
+        "A": {
+          "recipe": "OFF: season, not light",
+          "why_wrong": "A difference between spring and fall says nothing about the effect of the building’s lights."
+        },
+        "B": {
+          "recipe": "OFF: restates who is at risk",
+          "why_wrong": "That the dead birds were mostly night migrants fits the passage’s opening but does not show that the amount of window light affects how many die."
+        },
+        "D": {
+          "recipe": "TRAP: a different cause of deaths (migration size)",
+          "why_wrong": "It links deaths to the number of birds migrating, not to how much light the windows gave off, so it does not support the conclusion about light."
+        }
+      },
+      "models": [
+        "1.17",
+        "1.41",
+        "1.35",
+        "1.45"
+      ],
+      "sources": [
+        {
+          "what": "Van Doren, Willard, Hennen, Horton, Stuber, Sheldon, Sivakumar, Wang, Farnsworth, Winger 2021, PNAS 118(24): e2101666118, Drivers of fatal bird collisions in an urban center: two decades of collision surveys at a large urban building in Chicago (McCormick Place, surveyed by the Field Museum); nocturnal migration magnitude, building light output and wind are the most important predictors; halving lighted window area decreases collisions 11-fold in spring and 6-fold in fall; full text (PMC8214683): McCormick Place Lakeside Center, Field Museum personnel have surveyed the building daily at dawn since 1978, lighting status of each window bay recorded since 2000; 21-year dataset",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC8214683/"
+        }
+      ],
+      "notes": "Easy. Ecology and urban design. The key holds migration constant and varies light; D is the other predictor the study found (migration size), A and B are off target. Building, Field Museum surveys since 1978 and the window-lighting records come from the full text. Blind solve by the writer, key hidden: C.",
+      "band7_moves": [],
+      "word_count": 84,
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass",
+        "facts_note": "PNAS abstract and PMC: two decades of collision surveys at a large Chicago building, migration magnitude and building light output the main predictors, halving lit window area cuts collisions."
+      }
+    },
+    {
+      "id": "command_of_evidence.Q1_P2_extreme.easy.w5b6_20",
+      "template": "Q1_P2_extreme",
+      "subtype": "Data completion: maximum in one column, with the other column's maximum as a lure",
+      "tier": "easy",
+      "band_target": null,
+      "passage": "Boats visiting coral reefs often drop anchors that break corals and scrape the seafloor. To measure this damage, researchers from the University of Rhode Island surveyed 24 reef sites in the British Virgin Islands that experience different amounts of anchoring. At each site, they recorded the percentage of the seafloor covered by corals, algae, and other organisms. At the most heavily anchored sites, the group covering the largest share of the seafloor was ______",
+      "stem": "Which choice most effectively uses data from the table to complete the statement?",
+      "options": [
+        "soft branching coral.",
+        "fleshy algae.",
+        "hard coral.",
+        "dead coral."
+      ],
+      "answer_letter": "B",
+      "table": {
+        "title": "Seafloor Cover at Reef Sites with Low and High Levels of Anchoring",
+        "columns": [
+          "Group",
+          "Cover at low-anchoring sites (%)",
+          "Cover at high-anchoring sites (%)"
+        ],
+        "rows": [
+          [
+            "Hard coral",
+            "17.1",
+            "9.9"
+          ],
+          [
+            "Soft branching coral",
+            "18.6",
+            "13.2"
+          ],
+          [
+            "Sea fans",
+            "12.8",
+            "5.0"
+          ],
+          [
+            "Fleshy algae",
+            "12.9",
+            "20.7"
+          ],
+          [
+            "Dead coral",
+            "2.6",
+            "6.5"
+          ]
+        ],
+        "note": null
+      },
+      "figure": null,
+      "explanation": "According to the table, at high-anchoring sites fleshy algae covered 20.7% of the seafloor, more than any other group shown (soft branching coral 13.2%, hard coral 9.9%, dead coral 6.5%, sea fans 5.0%). Choice B completes the statement with that group.",
+      "distractors": {
+        "A": {
+          "recipe": "WGRP: the maximum in the other column",
+          "why_wrong": "Soft branching coral covered the largest share at low-anchoring sites (18.6%), but at high-anchoring sites it covered only 13.2%, less than fleshy algae."
+        },
+        "C": {
+          "recipe": "WGRP: a group that declined with anchoring",
+          "why_wrong": "Hard coral covered only 9.9% of the seafloor at high-anchoring sites."
+        },
+        "D": {
+          "recipe": "WGRP: the group that increased most, not the largest",
+          "why_wrong": "Dead coral more than doubled with heavy anchoring, but it still covered only 6.5% of the seafloor at high-anchoring sites."
+        }
+      },
+      "models": [
+        "1.9",
+        "1.21",
+        "1.31",
+        "1.18"
+      ],
+      "sources": [
+        {
+          "what": "Flynn, Forrester 2019, PeerJ 7: e7010, Boat anchoring contributes substantially to coral reef degradation in the British Virgin Islands: survey of 24 sites with varying anchoring activity; Table 1 mean percent cover, low / medium / high anchoring sites: hard coral 17.05 / 16.06 / 9.91, sea fan 12.78 / 4.71 / 5.00, soft branching coral 18.58 / 19.15 / 13.20, fleshy algae 12.85 / 14.79 / 20.74, dead coral 2.57 / 2.80 / 6.47; authors at Kingston, Rhode Island (University of Rhode Island)",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6535217/"
+        }
+      ],
+      "notes": "Easy. Marine ecology. Maximum in one column (CB 1.9, 1.21): A is the other column's maximum, D the largest increase, C a declining group. Five of the paper's eleven groups shown, medium-anchoring sites left out, values rounded to one decimal. Blind solve by the writer, key hidden: B.",
+      "band7_moves": [],
+      "word_count": 74,
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass",
+        "facts_note": "PeerJ abstract: 24 BVI sites with varying anchoring, hard coral and sea fan cover reduced at highly anchored sites; University of Rhode Island authors."
+      }
+    },
+    {
+      "id": "command_of_evidence.T2_lit_quote.easy.w5b6_21",
+      "template": "T2_lit_quote",
+      "subtype": "Literary quotation illustrates a single-trait claim (a habit explained by the terrain; poem)",
+      "tier": "easy",
+      "band_target": null,
+      "passage": "“Men of Harlan” is a 1917 poem by William Aspinwall Bradley. The speaker, a resident of Kentucky’s level farm country, describes the mountain men from Harlan County who occasionally ride through the speaker’s village. In the poem, the speaker explains that the Harlan men travel in single file because of the landscape they come from: ______",
+      "stem": "Which quotation from “Men of Harlan” most effectively illustrates the claim?",
+      "options": [
+        "“And there no two can ride abreast, but each alone must go, / Picking his way as best he may, with careful steps and slow,”",
+        "“Here in the level country, where the creeks run straight and wide, / Six men upon their pacing nags may travel side by side.”",
+        "“And the children, when they see them, stop their play and stand and cry, / ‘Here come the men of Harlan, men of Harlan, riding by!’”",
+        "“With dangling stirrup, jangling spur, and loosely hanging rein, / They do not ride, like our folks here, in twos and threes abreast,”"
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The speaker says that in Harlan “there no two can ride abreast, but each alone must go, / Picking his way as best he may, with careful steps and slow.” Because the mountain trails there allow only one rider at a time, the men have learned to ride one behind another, which explains why they ride in single file.",
+      "distractors": {
+        "B": {
+          "recipe": "wrong subject: the speaker’s own level country",
+          "why_wrong": "These lines describe how riders travel in the speaker’s flat country, not the land the Harlan men come from or why they ride in single file."
+        },
+        "C": {
+          "recipe": "OFF: the children’s reaction",
+          "why_wrong": "The lines show how the village children greet the riders; they give no reason for the way the men ride."
+        },
+        "D": {
+          "recipe": "HALF: the habit without its cause",
+          "why_wrong": "The lines note that the Harlan men do not ride “in twos and threes abreast,” but they do not connect that habit to the land the men come from."
+        }
+      },
+      "models": [
+        "1.11",
+        "1.16",
+        "1.39",
+        "1.42"
+      ],
+      "sources": [
+        {
+          "what": "William Aspinwall Bradley, Old Christmas, and Other Kentucky Tales in Verse (Boston: Houghton Mifflin, 1917), Men of Harlan, p. 90",
+          "url": "https://archive.org/details/oldchristmasand00bradgoog"
+        },
+        {
+          "what": "text used for the quotations: Jessie B. Rittenhouse, ed., The Second Book of Modern Verse (1919), Project Gutenberg #1166, double hyphens set as em dashes",
+          "url": "https://www.gutenberg.org/cache/epub/1166/pg1166.txt"
+        }
+      ],
+      "notes": "Easy. Literature (poem). Single-trait claim (the cause of a habit): D states the habit without its cause, B is the speaker's own country, C off target. Quotations follow the 1919 anthology reprint, which matches the 1917 book apart from minor punctuation elsewhere in the poem. Bradley and the poem appear nowhere else in the bank or the official items. Blind solve by the writer, key hidden: A.",
+      "band7_moves": [],
+      "word_count": 56,
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 5,
+        "fixes": [],
+        "status": "pass",
+        "facts_note": "All four quotations match the 1919 anthology text (Gutenberg 1166); the 1917 Old Christmas text (archive.org) has the same words with minor punctuation differences; 1917 and author confirmed."
+      }
+    },
+    {
+      "id": "command_of_evidence.Q2_P5_control.easy.w5b6_22",
+      "template": "Q2_P5_control",
+      "subtype": "Data description: two treatments vs a control in two seasons",
+      "tier": "easy",
+      "band_target": null,
+      "passage": "In southern China, farmers commonly harvest two rice crops annually, an early crop and a late crop. After the late harvest, fields are often left bare throughout the winter. At Hunan Agricultural University, Huabin Zheng and colleagues compared such fields with experimental fields sown with winter cover crops, some of which were also grazed by chickens. The researchers concluded that leaving a field bare over the winter resulted in lower rice yields than planting cover crops did, regardless of whether chickens grazed the cover crops.",
+      "stem": "Which choice best describes data from the table that support the researchers’ conclusion?",
+      "options": [
+        "Fields with cover crops and chickens produced more rice in the late season than they did in the early season.",
+        "In the early season, fields with cover crops alone produced slightly less rice than fields with cover crops and chickens did.",
+        "In both seasons, fields left bare over the winter produced less rice than either type of field with cover crops did.",
+        "In the late season, fields left bare over the winter produced more rice than they had produced in the early season."
+      ],
+      "answer_letter": "C",
+      "table": {
+        "title": "Rice Yields after Three Winter Treatments",
+        "columns": [
+          "Winter treatment",
+          "Early-season rice yield (tonnes per hectare)",
+          "Late-season rice yield (tonnes per hectare)"
+        ],
+        "rows": [
+          [
+            "Cover crops grazed by chickens",
+            "6.3",
+            "7.1"
+          ],
+          [
+            "Cover crops alone",
+            "6.1",
+            "6.8"
+          ],
+          [
+            "Bare field",
+            "5.6",
+            "6.1"
+          ]
+        ],
+        "note": null
+      },
+      "figure": null,
+      "explanation": "The researchers concluded that bare fields gave lower rice yields than fields with cover crops, “regardless of whether chickens grazed the cover crops.” According to the table, bare fields yielded 5.6 tonnes per hectare in the early season and 6.1 in the late season, less than both cover-crop treatments in each season (6.3 and 6.1 early; 7.1 and 6.8 late). Choice C reports this comparison.",
+      "distractors": {
+        "A": {
+          "recipe": "IRREL: accurate change across seasons within one treatment",
+          "why_wrong": "The yield of the grazed cover-crop fields did rise from the early to the late season, but this says nothing about how bare fields compared with fields that had cover crops."
+        },
+        "B": {
+          "recipe": "IRREL: accurate comparison of the two cover-crop treatments",
+          "why_wrong": "It compares the two kinds of cover-crop fields with each other and leaves out the bare fields, which are the subject of the conclusion."
+        },
+        "D": {
+          "recipe": "IRREL: accurate change across seasons for the bare fields",
+          "why_wrong": "The bare fields did produce more in the late season, but the conclusion concerns how they compared with the cover-crop fields, not how their own yield changed between seasons."
+        }
+      },
+      "models": [
+        "1.28",
+        "1.22"
+      ],
+      "sources": [
+        {
+          "what": "Zheng, Zhou, Wei, Tang, Zou, Tang, Xu 2020, Scientific Reports 10: 12607, Cover crops and chicken grazing in a winter fallow field improve soil carbon and nitrogen contents and decrease methane emissions: College of Agronomy, Hunan Agricultural University, Changsha; treatments cover crops with chicken grazing (+C), cover crops without chickens (-C), bare fallow field (CK); early and late rice; Table 3 yield (t/ha) early / late: +C 6.3 / 7.1, -C 6.1 / 6.8, CK 5.6 / 6.1",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7387562/"
+        }
+      ],
+      "notes": "Easy. Agriculture. Two treatments against a control (CB 1.28, 1.22): the key compares the bare fields with both cover-crop treatments; the three distractors are accurate but compare the wrong things (across seasons within a treatment, or the two treatments with each other). Yields from the paper's yield table. Python check: 5.6 < 6.1 < 6.3; 6.1 < 6.8 < 7.1. Blind solve by the writer, key hidden: C.",
+      "band7_moves": [],
+      "word_count": 85,
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass",
+        "facts_note": "Scientific Reports abstract and full text: Hunan Agricultural University, cover crops with chicken grazing, cover crops alone and bare fallow before double-cropped rice; yield higher with cover crops."
+      }
+    }
+  ]
+}

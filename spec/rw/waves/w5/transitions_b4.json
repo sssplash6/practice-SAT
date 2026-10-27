@@ -1,0 +1,1128 @@
+{
+  "skill": "Transitions",
+  "slug": "transitions",
+  "part": "w5b4",
+  "domain": "Expression of Ideas",
+  "plan": {
+    "templates": [
+      {
+        "code": "A1_addition",
+        "name": "Addition/similarity: a further item of the same kind"
+      },
+      {
+        "code": "C1_two_subject",
+        "name": "Contrast: two subjects, opposite values"
+      },
+      {
+        "code": "C2_belief_finding",
+        "name": "Contrast: established view or appearance, then a finding that breaks it"
+      },
+      {
+        "code": "C3_limiting_fact",
+        "name": "Contrast: positive claim, then a limiting fact about the same subject"
+      },
+      {
+        "code": "E1_consequence",
+        "name": "Cause/effect: condition, principle or evidence, then its consequence"
+      },
+      {
+        "code": "E2_motive_action",
+        "name": "Cause/effect: need or judgment, then the action it motivates"
+      },
+      {
+        "code": "K2_qualification",
+        "name": "Concession: supported claim, then a fact that qualifies it"
+      },
+      {
+        "code": "M1_emphasis",
+        "name": "Emphasis: stronger same-direction fact (content-contrast trap at hard)"
+      },
+      {
+        "code": "S1_spec_restate",
+        "name": "Specification/restatement: exact content or plain rewording"
+      },
+      {
+        "code": "T1_sequence_time",
+        "name": "Sequence/time: next step, earlier or later event, end of a long effort"
+      },
+      {
+        "code": "U1_culmination_alt",
+        "name": "Culmination, alternative and place (ultimately, alternatively, there)"
+      },
+      {
+        "code": "X1_example",
+        "name": "Example: general claim, then one named instance"
+      }
+    ],
+    "skipped": []
+  },
+  "items": [
+    {
+      "id": "transitions.K2_qualification.hard.w5b4_01",
+      "template": "K2_qualification",
+      "subtype": "Concession: qualification",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "Direct air capture facilities extract carbon dioxide from ambient air using chemical sorbents, and many decarbonization scenarios assume that such facilities will collectively remove hundreds of millions of metric tons of the gas annually by midcentury. The underlying chemistry has been demonstrated repeatedly; ______ the largest facility operating in 2022 was designed to capture roughly 4,000 metric tons per year.",
+      "stem": "Which choice completes the text with the most logical transition?",
+      "options": [
+        "as a result,",
+        "specifically,",
+        "in addition,",
+        "that said,"
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The text says that the chemistry “has been demonstrated repeatedly” and that many scenarios expect such facilities to remove “hundreds of millions of metric tons of the gas annually by midcentury.” The clause after the blank grants a fact that limits that picture: the largest facility in 2022 “was designed to capture roughly 4,000 metric tons per year,” a tiny fraction of the expected amount. “That said” fits, since it introduces a qualification of the point just made without overturning it.",
+      "distractors": {
+        "A": {
+          "recipe": "unearned cause",
+          "why_wrong": "The repeated demonstrations of the chemistry did not cause the largest facility to be so small; the small capacity limits the promise rather than following from it."
+        },
+        "B": {
+          "recipe": "wrong grain (specification)",
+          "why_wrong": "The facility’s capacity is not a more exact statement of how the chemistry has been demonstrated; it is a separate fact that cuts against the expectation of large-scale removal."
+        },
+        "C": {
+          "recipe": "additive",
+          "why_wrong": "The capacity figure is not a further point in support of the technology; set beside “hundreds of millions of metric tons,” it shows how far the technology is from that goal."
+        }
+      },
+      "models": [
+        "3.12",
+        "3.8"
+      ],
+      "word_count": 60,
+      "sources": [],
+      "notes": "K2 band 7 on the ecb31049 move (supported expectation, then a record that cuts against it), rebuilt so the skeleton differs from the fusion model: two sentences, the blank after a semicolon, no “only” or “never” to flag the turn, so the student must weigh 4,000 tons against hundreds of millions. Decoys: unearned cause, specification, additive (none of the model's three words reused as a set); no contrast decoy, no In fact or Indeed. Facts kept general: the largest plant running in 2022 (Orca, not named, no site given) was rated at about 4,000 t CO2 a year; net-zero scenarios such as the IEA's expect hundreds of millions of tonnes a year of direct air capture by 2050. Transitions: no web check (WAVE.md, 2026-10-16); real subject described from general knowledge, no researcher named, no made-up finding attributed to a real person or organisation.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      },
+      "band7": {
+        "verdict": "band 7",
+        "why": "K2 band-7 recipe (ecb31049): a supported claim, then a capacity figure that cuts against the scale assumed in sentence 1, with no turn word (no only, never, but); the student must set 4,000 tons against hundreds of millions. Decoys match the recipe (as a result, in addition, specifically); specifically pulls because the facility reads as a case of the demonstrated chemistry. Key outside the core 13, 6.02 chars per word, blank after a semicolon."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "D",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 7
+    },
+    {
+      "id": "transitions.S1_spec_restate.hard.w5b4_02",
+      "template": "S1_spec_restate",
+      "subtype": "Restatement",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Chilean poet Vicente Huidobro founded creacionismo (creationism), a movement holding that a poem should be a new creation rather than an imitation of nature; ______ the poet’s job is to invent what the world does not contain, not to describe what it already does. In “Arte poética” (1916), he urges poets not to sing of the rose but to make it bloom in the poem.",
+      "stem": "Which choice completes the text with the most logical transition?",
+      "options": [
+        "nevertheless,",
+        "that is,",
+        "similarly,",
+        "in addition,"
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "Before the blank, the text gives creacionismo’s central claim in abstract terms: “a poem should be a new creation rather than an imitation of nature.” The clause after the blank says the same thing in plainer words: “the poet’s job is to invent what the world does not contain, not to describe what it already does.” “That is” fits, since it introduces a rewording of the previous claim.",
+      "distractors": {
+        "A": {
+          "recipe": "false opposition",
+          "why_wrong": "The clause after the blank does not hold despite the movement’s claim; it restates that claim, so there is no tension for “nevertheless” to mark."
+        },
+        "C": {
+          "recipe": "false parallel",
+          "why_wrong": "The clause is not a second, parallel idea or case; it is the same claim about the movement put another way."
+        },
+        "D": {
+          "recipe": "additive",
+          "why_wrong": "The clause does not add a further belief of the movement; inventing rather than describing is what being “a new creation rather than an imitation of nature” means."
+        }
+      },
+      "models": [
+        "3.1",
+        "3.5"
+      ],
+      "word_count": 65,
+      "sources": [],
+      "notes": "Restating an abstract claim after a semicolon (3.5 in other words, 3.1 that is), with a following sentence that illustrates the claim. Band 6 per plan. Trap: the clause's own turn (“not to describe”) invites nevertheless; additive and parallel decoys as in e3edc138. No causal decoy, since a restatement read as a consequence could look defensible. Facts: Huidobro launched creacionismo around 1916; “Arte poética” (El espejo de agua, 1916) has the lines telling poets not to sing the rose but to make it flower in the poem (paraphrased, not quoted). Transitions: no web check (WAVE.md, 2026-10-16); real subject described from general knowledge, no researcher named, no made-up finding attributed to a real person or organisation.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "Planned band 6. Restatement after a semicolon as in band-6 e3edc138 (That is): the mirrored “rather than an imitation” / “not to describe” wording makes the relation plain once read, so it is not band 7 (S1 band 7 needs the more-often frequency form); nevertheless pulls on the clause’s own “not”, in addition on the second clause read as a further tenet."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "B",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "transitions.U1_culmination_alt.hard.w5b4_03",
+      "template": "U1_culmination_alt",
+      "subtype": "Alternative",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "Most central banks try to steer their economies chiefly by adjusting a benchmark interest rate, raising it to restrain inflation and lowering it to stimulate borrowing and spending. The Monetary Authority of Singapore, ______ manages the value of the Singapore dollar against a basket of its trading partners’ currencies, making the exchange rate its principal policy instrument.",
+      "stem": "Which choice completes the text with the most logical transition?",
+      "options": [
+        "for example,",
+        "in particular,",
+        "alternatively,",
+        "similarly,"
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The first sentence describes how “Most central banks” steer their economies: “chiefly by adjusting a benchmark interest rate.” The second sentence names one central bank that relies on a different tool: it “manages the value of the Singapore dollar,” “making the exchange rate its principal policy instrument.” “Alternatively” fits, since it introduces another way of doing the same job.",
+      "distractors": {
+        "A": {
+          "recipe": "wrong grain (example)",
+          "why_wrong": "The Monetary Authority of Singapore is not an example of a central bank that steers by an interest rate; the text says it relies on the exchange rate instead."
+        },
+        "B": {
+          "recipe": "wrong grain (specification)",
+          "why_wrong": "The sentence does not single out a particular case of the interest-rate approach; it describes a bank that does something else."
+        },
+        "D": {
+          "recipe": "false parallel",
+          "why_wrong": "Singapore’s approach is not like the one in the first sentence; it replaces the interest rate with the exchange rate."
+        }
+      },
+      "models": [
+        "3.16",
+        "e225cf02"
+      ],
+      "word_count": 57,
+      "sources": [],
+      "notes": "U1 band 7 on e225cf02: a general pattern, then one named member that acts differently, with only instance-type and parallel decoys (for example, in particular, similarly) and no contrast word on offer, so a student who sees “The Monetary Authority of Singapore” as a case of “most central banks” is caught. Facts: MAS has used the trade-weighted exchange rate (S$NEER), managed within a band, as its main monetary policy tool since 1981. Transitions: no web check (WAVE.md, 2026-10-16); real subject described from general knowledge, no researcher named, no made-up finding attributed to a real person or organisation.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [
+          "hardened: cut “rather than an interest rate” from the last clause, which stated the contrast outright and pre-empted the instance decoys (e225cf02 never states it); the student now has to see that an exchange rate is a different instrument from an interest rate; explanation requoted"
+        ],
+        "status": "fixed"
+      },
+      "band7": {
+        "verdict": "band 7",
+        "why": "After the fix, built as e225cf02: a general pattern (“Most central banks”), then one named member that acts differently, with only instance and parallel decoys (in particular, for example, similarly) and no contrast word on offer; “exchange rate” echoing “interest rate” invites in particular. As drafted it read band 6, since “rather than an interest rate” stated the contrast outright."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "C",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 7
+    },
+    {
+      "id": "transitions.M1_emphasis.hard.w5b4_04",
+      "template": "M1_emphasis",
+      "subtype": "Emphasis",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Professional sumo wrestlers in Japan are not divided by weight: a wrestler of 110 kilograms can be paired with one weighing twice as much, because bouts are arranged by rank alone. This indifference to size sets sumo apart from other major combat sports; ______ boxing, judo, and freestyle wrestling all sort competitors into weight classes so that opponents are of similar size.",
+      "stem": "Which choice completes the text with the most logical transition?",
+      "options": [
+        "indeed,",
+        "that said,",
+        "as a result,",
+        "likewise,"
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The text claims that sumo’s “indifference to size sets sumo apart from other major combat sports.” The clause after the blank supports that claim by showing what the other sports do: “boxing, judo, and freestyle wrestling all sort competitors into weight classes.” “Indeed” fits, since it introduces a fact that confirms and strengthens the previous point.",
+      "distractors": {
+        "B": {
+          "recipe": "false opposition",
+          "why_wrong": "The weight classes of other sports do not qualify the claim that sumo is set apart; they are the reason sumo stands out, so they support the claim."
+        },
+        "C": {
+          "recipe": "unearned cause",
+          "why_wrong": "Sumo’s indifference to size did not lead boxing, judo, and wrestling to adopt weight classes; those sports are described for comparison, not as a result."
+        },
+        "D": {
+          "recipe": "false parallel",
+          "why_wrong": "The other sports do not do what sumo does; they sort competitors by weight, which is the opposite of sumo’s practice."
+        }
+      },
+      "models": [
+        "3.10",
+        "3.6"
+      ],
+      "word_count": 62,
+      "sources": [],
+      "notes": "Content-contrast emphasis (47e238be, a266d876, 00e0170f): A says sumo stands apart, B describes the other sports doing the opposite, so a reader reacting to the surface contrast picks that said. Planned as band 6 (make_plan), written on the band-7 frame but with a fresh decoy set (not nevertheless / in addition / consequently). Facts: professional (ozumo) bouts are set by rank and division, with no weight classes (amateur sumo does have them, hence “professional”); boxing, judo and freestyle wrestling use weight categories. Transitions: no web check (WAVE.md, 2026-10-16); real subject described from general knowledge, no researcher named, no made-up finding attributed to a real person or organisation.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "Planned band 6, on the band-7 M1 frame (47e238be, a266d876): that said pulls on the surface contrast between sumo and the weight-class sports. It stays band 6 because “sets sumo apart from other major combat sports” announces the comparison, likewise and as a result fall at once, and the register is plain (4.93 chars per word against the band-7 5.3)."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "A",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "transitions.C1_two_subject.medium.w5b4_05",
+      "template": "C1_two_subject",
+      "subtype": "Contrast: two subjects",
+      "tier": "medium",
+      "passage": "Haiku and senryū, two forms of Japanese poetry, share the same structure: three phrases of five, seven, and five sound units. A traditional haiku centers on the natural world and includes a kigo, a word that signals the season. A senryū, ______ takes human nature as its subject, often with a satirical edge, and needs no seasonal word.",
+      "stem": "Which choice completes the text with the most logical transition?",
+      "options": [
+        "for example,",
+        "similarly,",
+        "in contrast,",
+        "therefore,"
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The text first says that a traditional haiku “centers on the natural world and includes a kigo.” The blank sentence describes senryū as the opposite on both counts: a senryū “takes human nature as its subject” and “needs no seasonal word.” “In contrast” fits, since it marks the difference between the two forms.",
+      "distractors": {
+        "A": {
+          "recipe": "wrong grain (example)",
+          "why_wrong": "Senryū is not an example of haiku or of poems about the natural world; it is described as differing from haiku."
+        },
+        "B": {
+          "recipe": "false parallel",
+          "why_wrong": "Although the two forms share a structure, the blank sentence is about how senryū differ from haiku in subject and in the seasonal word, not how they resemble them."
+        },
+        "D": {
+          "recipe": "unearned cause",
+          "why_wrong": "Haiku’s focus on nature does not cause senryū to take human nature as its subject; the two forms are simply compared."
+        }
+      },
+      "models": [
+        "2.4",
+        "2.6"
+      ],
+      "word_count": 58,
+      "sources": [],
+      "notes": "Two subjects, opposite values, interrupter after the second subject (2.6, 2.4). Trap: similarly, set up by “share the same structure.” Facts: both forms use 5-7-5 sound units (on); haiku traditionally carry a kigo and treat nature, senryu treat human foibles, often satirically, without a season word. Transitions: no web check (WAVE.md, 2026-10-16); real subject described from general knowledge, no researcher named, no made-up finding attributed to a real person or organisation.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [
+          "“Senryū, ______ take ... their ... need” made “A senryū, ______ takes ... its ... needs”, parallel with “A traditional haiku centers” (the plural read as an agreement slip); explanation and why_wrong A and D to match"
+        ],
+        "status": "fixed",
+        "note": "Fourth haiku subject in the bank (Shiki naming, on versus syllables, an official haiku-like Tranströmer item) and round 1 RS had a Bashō haiku; kept because senryū against haiku is a different premise and the RS writer withdrew the same claim for this item."
+      }
+    },
+    {
+      "id": "transitions.C1_two_subject.medium.w5b4_06",
+      "template": "C1_two_subject",
+      "subtype": "Contrast: two subjects",
+      "tier": "medium",
+      "passage": "African elephants have the longest pregnancies of any living mammal: a calf develops inside its mother for about 22 months. The Virginia opossum, ______ gives birth after only 12 or 13 days, and its newborns, each about the size of a honeybee, finish developing in their mother’s pouch.",
+      "stem": "Which choice completes the text with the most logical transition?",
+      "options": [
+        "by comparison,",
+        "for example,",
+        "likewise,",
+        "as a result,"
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The text says that an elephant calf develops inside its mother “for about 22 months.” The blank sentence gives a very different figure for another animal: the Virginia opossum “gives birth after only 12 or 13 days.” “By comparison” fits, since it sets the opossum’s short pregnancy against the elephant’s long one.",
+      "distractors": {
+        "B": {
+          "recipe": "wrong grain (example)",
+          "why_wrong": "The opossum is not an example of an animal with a long pregnancy; its pregnancy is one of the shortest, the opposite of the elephant’s."
+        },
+        "C": {
+          "recipe": "false parallel",
+          "why_wrong": "The opossum’s pregnancy is not like the elephant’s; it lasts days rather than months."
+        },
+        "D": {
+          "recipe": "unearned cause",
+          "why_wrong": "The length of an elephant’s pregnancy has no effect on how soon an opossum gives birth; the two animals are being compared."
+        }
+      },
+      "models": [
+        "2.18"
+      ],
+      "word_count": 48,
+      "sources": [],
+      "notes": "Numbers on one attribute for two subjects, so by comparison (1.14, 2.18), blank as an interrupter after the second subject. Facts: African elephant gestation about 22 months, the longest of living mammals; Virginia opossum about 12 to 13 days, newborns honeybee-sized, development continues in the pouch. Transitions: no web check (WAVE.md, 2026-10-16); real subject described from general knowledge, no researcher named, no made-up finding attributed to a real person or organisation.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "transitions.A1_addition.medium.w5b4_07",
+      "template": "A1_addition",
+      "subtype": "Similarity: a parallel case (likewise)",
+      "tier": "medium",
+      "passage": "Since 1901, Wuppertal’s Schwebebahn has transported passengers in cars suspended beneath an overhead steel track, allowing its trains to glide above the Wupper River rather than along conventional rails. ______ the Chiba Urban Monorail, operating in Japan since 1988, suspends its cars beneath an elevated rail, and it is currently the world’s longest suspended monorail.",
+      "stem": "Which choice completes the text with the most logical transition?",
+      "options": [
+        "In contrast,",
+        "Likewise,",
+        "For instance,",
+        "Accordingly,"
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The first sentence describes a railway in Germany whose cars are “suspended beneath an overhead steel track.” The blank sentence describes a second railway, in Japan, that does the same thing: it “suspends its cars beneath an elevated rail.” “Likewise” fits, since it introduces a parallel case of the same design.",
+      "distractors": {
+        "A": {
+          "recipe": "false opposition",
+          "why_wrong": "The Chiba line does not differ from the Schwebebahn; both hang their cars from an overhead rail."
+        },
+        "C": {
+          "recipe": "wrong grain (example)",
+          "why_wrong": "The Chiba line is not an instance of the Schwebebahn; it is a separate system in another country that works the same way."
+        },
+        "D": {
+          "recipe": "unearned cause",
+          "why_wrong": "Nothing in the text says the Wuppertal railway led to the Chiba line; the two are simply set side by side as similar systems."
+        }
+      },
+      "models": [
+        "2.7"
+      ],
+      "word_count": 55,
+      "sources": [],
+      "notes": "Parallel case keyed Likewise (2.7: a second member of the same set doing the same thing). No addition decoy (report 7b: similarity keys never have one), and no concession word that could be read as despite most rail lines. Facts: Wuppertal Schwebebahn opened 1901 and runs largely above the Wupper; Chiba Urban Monorail opened 1988 and is listed as the longest suspended monorail system. Transitions: no web check (WAVE.md, 2026-10-16); real subject described from general knowledge, no researcher named, no made-up finding attributed to a real person or organisation.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "transitions.S1_spec_restate.medium.w5b4_08",
+      "template": "S1_spec_restate",
+      "subtype": "Specification: exact content of a general statement",
+      "tier": "medium",
+      "passage": "Chefs select plates primarily for their appearance, but tableware color may also influence how food tastes. In a 2012 experiment, researchers determined that plate color measurably altered the perceived sweetness of a dessert. ______ participants rated strawberry mousse presented on white plates about 10 percent sweeter than identical mousse presented on black plates.",
+      "stem": "Which choice completes the text with the most logical transition?",
+      "options": [
+        "On the other hand,",
+        "Similarly,",
+        "In addition,",
+        "Specifically,"
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The second sentence states the finding in general terms: “plate color measurably altered the perceived sweetness of a dessert.” The blank sentence gives the exact result behind that statement: mousse “presented on white plates” was rated “about 10 percent sweeter” than “identical mousse presented on black plates.” “Specifically” fits, since it introduces the precise content of the general claim.",
+      "distractors": {
+        "A": {
+          "recipe": "false opposition",
+          "why_wrong": "The ratings do not contrast with the finding; they are the finding itself, stated precisely."
+        },
+        "B": {
+          "recipe": "false parallel",
+          "why_wrong": "The ratings are not a second, similar result; they are the same result about plate color given in detail."
+        },
+        "C": {
+          "recipe": "additive",
+          "why_wrong": "The sentence does not add a separate finding; the difference in sweetness ratings is how plate color “altered the perceived sweetness of a dessert.”"
+        }
+      },
+      "models": [
+        "2.12",
+        "2.3"
+      ],
+      "word_count": 53,
+      "sources": [],
+      "notes": "General finding, then its exact content (2.12 kind, but on a finding rather than a study design). No cause decoy (a reader could take the finding as the reason for the ratings), no example or emphasis word. Facts: the 2012 strawberry mousse study (Food Quality and Preference) found the mousse about 10 percent sweeter and more intense on white plates than on black; the researchers are not named. Transitions: no web check (WAVE.md, 2026-10-16); real subject described from general knowledge, no researcher named, no made-up finding attributed to a real person or organisation.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [
+          "plainer: “approximately” to “about” (6.29 to 6.12 chars per word); further plaining (served for presented) drops the medium tier below check_rw’s CB floor, and 6.12 sits inside CB’s medium range (up to 6.50); explanation requoted"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "transitions.S1_spec_restate.medium.w5b4_09",
+      "template": "S1_spec_restate",
+      "subtype": "Restatement of a technical term",
+      "tier": "medium",
+      "passage": "When typographers praise a page’s “color,” they are referring not to ink but to the overall density of tone that a block of text presents from a distance, and skilled typesetters strive for even color. ______ the lines of type should merge into a uniform gray, without patches appearing noticeably darker or lighter than the surrounding text.",
+      "stem": "Which choice completes the text with the most logical transition?",
+      "options": [
+        "Similarly,",
+        "On the other hand,",
+        "In other words,",
+        "Meanwhile,"
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The text explains that “color” in typography refers to “the overall density of tone that a block of text presents from a distance” and that typesetters “strive for even color.” The blank sentence says the same thing in plainer terms: the type should “merge into a uniform gray, without patches appearing noticeably darker or lighter.” “In other words” fits, since it introduces a rewording of the previous point.",
+      "distractors": {
+        "A": {
+          "recipe": "false parallel",
+          "why_wrong": "The sentence does not describe a second, similar goal; a uniform gray is what an even color is."
+        },
+        "B": {
+          "recipe": "false opposition",
+          "why_wrong": "Nothing in the sentence contrasts with the aim of an even color; it restates that aim."
+        },
+        "D": {
+          "recipe": "phantom time",
+          "why_wrong": "The sentence does not describe something happening at the same time as the typesetters’ work; it explains what an even color means."
+        }
+      },
+      "models": [
+        "2.15"
+      ],
+      "word_count": 57,
+      "sources": [],
+      "notes": "A technical term reworded (2.15 that is, here sentence-initial In other words). No specification or example decoy, since a rewording of even color could be read as either. Facts: typographic color is the overall density or tone of set text; even color, without dark or light patches, is the usual aim of good typesetting. Transitions: no web check (WAVE.md, 2026-10-16); real subject described from general knowledge, no researcher named, no made-up finding attributed to a real person or organisation.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "transitions.C2_belief_finding.medium.w5b4_10",
+      "template": "C2_belief_finding",
+      "subtype": "Contrast: appearance, then expert view (interrupter)",
+      "tier": "medium",
+      "passage": "Cultured pearls, produced by implanting a polished shell bead inside an oyster, are virtually indistinguishable from natural pearls by sight alone, since both are coated with lustrous layers of nacre. Gemologists, ______ can differentiate the two using X-ray imaging, which reveals a cultured pearl’s implanted bead as a sharply defined nucleus.",
+      "stem": "Which choice completes the text with the most logical transition?",
+      "options": [
+        "for instance,",
+        "in other words,",
+        "accordingly,",
+        "though,"
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The first sentence says that cultured pearls “are virtually indistinguishable from natural pearls by sight alone.” The second sentence turns from appearance to what experts can do: gemologists “can differentiate the two using X-ray imaging.” “Though” fits, since it marks this contrast between how the pearls look and what specialists can detect.",
+      "distractors": {
+        "A": {
+          "recipe": "wrong grain (example)",
+          "why_wrong": "Gemologists are not an example of people who cannot tell the pearls apart; they are the ones who can."
+        },
+        "B": {
+          "recipe": "wrong grain (restatement)",
+          "why_wrong": "The sentence does not reword the claim that the pearls look alike; it says experts can tell them apart, which cuts against that claim."
+        },
+        "C": {
+          "recipe": "unearned cause",
+          "why_wrong": "The pearls’ similar appearance is not the reason gemologists can distinguish them; X-ray imaging is, and it works in spite of the resemblance."
+        }
+      },
+      "models": [
+        "2.16",
+        "2.1"
+      ],
+      "word_count": 51,
+      "sources": [],
+      "notes": "Appearance, then expert reality, with though as an interrupter after the subject (2.16 move, new architecture: process clause first, X-ray as the method). No other contrast or concession word on the card. Facts: bead-nucleated cultured pearls have a shell bead inserted with mantle tissue; nacre covers both kinds; X-radiography shows the bead and its boundary, the standard way to separate cultured from natural pearls. Transitions: no web check (WAVE.md, 2026-10-16); real subject described from general knowledge, no researcher named, no made-up finding attributed to a real person or organisation.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "transitions.E1_consequence.medium.w5b4_11",
+      "template": "E1_consequence",
+      "subtype": "Cause/effect: condition, then its consequence",
+      "tier": "medium",
+      "passage": "Thick layers of salt lie buried along the shores of the Dead Sea. As the lake’s level has dropped by roughly a meter annually, fresh groundwater has infiltrated sediments formerly saturated with brine, dissolving those salt layers and leaving cavities underground. ______ thousands of sinkholes have opened near the shoreline, some large enough to swallow sections of highway.",
+      "stem": "Which choice completes the text with the most logical transition?",
+      "options": [
+        "On the other hand,",
+        "Consequently,",
+        "Similarly,",
+        "Previously,"
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The text explains that fresh groundwater has been “dissolving those salt layers and leaving cavities underground.” The blank sentence gives the result of those cavities at the surface: “thousands of sinkholes have opened near the shoreline.” “Consequently” fits, since it introduces an effect of the process just described.",
+      "distractors": {
+        "A": {
+          "recipe": "false opposition",
+          "why_wrong": "The sinkholes do not contrast with the dissolving salt; they follow from the cavities it leaves."
+        },
+        "C": {
+          "recipe": "false parallel",
+          "why_wrong": "The sinkholes are not a separate process like the dissolving of salt; they are its outcome."
+        },
+        "D": {
+          "recipe": "phantom time",
+          "why_wrong": "The sinkholes did not open before the salt dissolved; they opened after the cavities formed underground."
+        }
+      },
+      "models": [
+        "2.14",
+        "2.9"
+      ],
+      "word_count": 58,
+      "sources": [],
+      "notes": "Mechanism, then its consequence (2.9 kind). Facts: the Dead Sea has fallen about a meter a year; fresh groundwater dissolves buried salt layers as the brine retreats, and thousands of sinkholes have formed along both shores, damaging roads and buildings. Not written on the lowest-point fact. Transitions: no web check (WAVE.md, 2026-10-16); real subject described from general knowledge, no researcher named, no made-up finding attributed to a real person or organisation.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "transitions.T1_sequence_time.medium.w5b4_12",
+      "template": "T1_sequence_time",
+      "subtype": "Time: an earlier state (previously)",
+      "tier": "medium",
+      "passage": "Since May 2019, the kilogram has been defined in terms of the Planck constant, a fundamental quantity in physics, allowing suitably equipped laboratories to reproduce the unit precisely. ______ the kilogram had been defined as the mass of a platinum-iridium cylinder stored near Paris since 1889, to which every official standard of mass was ultimately traceable.",
+      "stem": "Which choice completes the text with the most logical transition?",
+      "options": [
+        "Previously,",
+        "For instance,",
+        "In other words,",
+        "Consequently,"
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The first sentence describes how the kilogram has been defined since May 2019: “in terms of the Planck constant.” The blank sentence moves back to the definition that came before it: the kilogram “had been defined as the mass of a platinum-iridium cylinder stored near Paris since 1889.” “Previously” fits, since it signals a state of affairs that existed before the one just described.",
+      "distractors": {
+        "B": {
+          "recipe": "wrong grain (example)",
+          "why_wrong": "The cylinder is not an example of the definition based on the Planck constant; it is the older definition that this one replaced."
+        },
+        "C": {
+          "recipe": "wrong grain (restatement)",
+          "why_wrong": "The sentence does not reword the 2019 definition; it describes a different, earlier one."
+        },
+        "D": {
+          "recipe": "unearned cause",
+          "why_wrong": "The 2019 definition could not have caused a definition that was already in place in 1889; “had been defined” places the cylinder earlier."
+        }
+      },
+      "models": [
+        "2.2"
+      ],
+      "word_count": 56,
+      "sources": [],
+      "notes": "Reverse order keyed Previously (2.2 shape), but the earlier state is a definition, not an overturned assumption, and there is no however on the card (a contrast reading of old and new would be arguable). Facts: the SI redefinition based on the Planck constant took effect on 20 May 2019; from 1889 the kilogram was the mass of the International Prototype Kilogram, a platinum-iridium cylinder kept at the BIPM in Sevres, near Paris. Transitions: no web check (WAVE.md, 2026-10-16); real subject described from general knowledge, no researcher named, no made-up finding attributed to a real person or organisation.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "transitions.U1_culmination_alt.medium.w5b4_13",
+      "template": "U1_culmination_alt",
+      "subtype": "Place: what happened at the place just named",
+      "tier": "medium",
+      "passage": "Because stars near the south celestial pole never rise above the European horizon, seventeenth-century astronomers possessed only rough charts of them. In 1677, the young English astronomer Edmond Halley installed a telescope on St. Helena, a remote island in the South Atlantic. ______ despite persistent cloud cover, he measured the positions of 341 southern stars.",
+      "stem": "Which choice completes the text with the most logical transition?",
+      "options": [
+        "Previously,",
+        "There,",
+        "For example,",
+        "Similarly,"
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The second sentence says that Halley “installed a telescope on St. Helena, a remote island in the South Atlantic.” The blank sentence tells what he accomplished at that location: “he measured the positions of 341 southern stars.” “There” fits, since it refers back to St. Helena, the place just named.",
+      "distractors": {
+        "A": {
+          "recipe": "phantom time",
+          "why_wrong": "Halley did not measure the stars before he set up his telescope on St. Helena; the measurements were made after he arrived."
+        },
+        "C": {
+          "recipe": "wrong grain (example)",
+          "why_wrong": "Measuring 341 stars is not an example of installing a telescope; it is what Halley did with the telescope once it was in place."
+        },
+        "D": {
+          "recipe": "false parallel",
+          "why_wrong": "The measurements are not a second, similar act alongside installing the telescope; they are the work carried out at the place where it was installed."
+        }
+      },
+      "models": [
+        "2.8"
+      ],
+      "word_count": 55,
+      "sources": [],
+      "notes": "Place key (2.8): the blank sentence tells what happened at the place just named. No cause decoy (setting up a telescope and then measuring could be read as consequence). Facts: Halley sailed to St Helena in 1676, observed there in 1677 despite poor weather, and published his catalog of 341 southern stars (Catalogus Stellarum Australium) in 1678. The passage does not mention the comet. Transitions: no web check (WAVE.md, 2026-10-16); real subject described from general knowledge, no researcher named, no made-up finding attributed to a real person or organisation.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "transitions.T1_sequence_time.easy.w5b4_14",
+      "template": "T1_sequence_time",
+      "subtype": "Time: a later event",
+      "tier": "easy",
+      "passage": "On November 4, 1966, the Arno River overflowed its banks in Florence, Italy, filling churches, museums, and libraries with water and thick mud. ______ thousands of volunteers, many of them students from abroad, traveled to the city to rescue damaged paintings, books, and manuscripts. Florentines called these helpers angeli del fango, or “mud angels.”",
+      "stem": "Which choice completes the text with the most logical transition?",
+      "options": [
+        "On the contrary,",
+        "For example,",
+        "Similarly,",
+        "Afterward,"
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The first sentence describes the flood of “November 4, 1966,” which filled buildings “with water and thick mud.” The blank sentence describes what happened next: volunteers “traveled to the city to rescue damaged paintings, books, and manuscripts.” “Afterward” fits, since the volunteers’ work followed the flood.",
+      "distractors": {
+        "A": {
+          "recipe": "false opposition",
+          "why_wrong": "The arrival of volunteers does not deny or correct the account of the flood; it is what came after it."
+        },
+        "B": {
+          "recipe": "wrong grain (example)",
+          "why_wrong": "The volunteers’ work is not an example of the flood or of its damage; it is a response that came later."
+        },
+        "C": {
+          "recipe": "false parallel",
+          "why_wrong": "Traveling to Florence to rescue artworks is not similar to a river overflowing; it is a later event caused by the disaster."
+        }
+      },
+      "models": [
+        "1.31",
+        "1.12"
+      ],
+      "word_count": 54,
+      "sources": [],
+      "notes": "Event, then what followed (1.31 Afterward). Facts: the Arno flooded Florence on 4 November 1966; volunteers from Italy and abroad, many of them students, came to rescue books and artworks and were called angeli del fango. Transitions: no web check (WAVE.md, 2026-10-16); real subject described from general knowledge, no researcher named, no made-up finding attributed to a real person or organisation.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "transitions.T1_sequence_time.easy.w5b4_15",
+      "template": "T1_sequence_time",
+      "subtype": "Sequence: next step of a process",
+      "tier": "easy",
+      "passage": "Meteorologists study the upper atmosphere with weather balloons. First, they inflate a large balloon and attach a radiosonde, a small box of instruments. ______ they release the balloon, and as it rises, the radiosonde sends temperature and humidity readings to the ground. Finally, high in the thin air, the balloon bursts, and the radiosonde drifts down on a parachute.",
+      "stem": "Which choice completes the text with the most logical transition?",
+      "options": [
+        "For example,",
+        "In contrast,",
+        "Then,",
+        "Similarly,"
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The text gives the steps of a weather balloon launch. “First,” meteorologists “inflate a large balloon and attach a radiosonde,” and at the end “the balloon bursts.” The blank sentence gives the step between these: “they release the balloon.” “Then” fits, since it introduces the next step in the process.",
+      "distractors": {
+        "A": {
+          "recipe": "wrong grain (example)",
+          "why_wrong": "Releasing the balloon is not an example of inflating it or attaching the radiosonde; it is the next step in the launch."
+        },
+        "B": {
+          "recipe": "false opposition",
+          "why_wrong": "Releasing the balloon does not contrast with preparing it; it follows the preparation in order."
+        },
+        "D": {
+          "recipe": "false parallel",
+          "why_wrong": "Releasing the balloon is not a step like inflating it; it is a different, later step."
+        }
+      },
+      "models": [
+        "1.8",
+        "1.22"
+      ],
+      "word_count": 59,
+      "sources": [],
+      "notes": "Replaced in review: the sand mandala draft twinned the live Tibetan thangka stages item (boundaries.S5_series.hard.w3b4_10). Procedure with First before the blank and Finally after (1.8 frame, 1.22), keyed Then; decoys example, contrast and parallel, none a time or cause word that could fit. Facts: radiosondes carried by balloons report temperature, humidity and pressure as they rise, and drift down by parachute after the balloon bursts high in the atmosphere; the gas is not named (stations use helium or hydrogen). Transitions: no web check (WAVE.md, 2026-10-16); real subject described from general knowledge, no researcher named, no made-up finding attributed to a real person or organisation.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [
+          "subject replaced: sand mandala stages twinned the live Tibetan thangka stages item boundaries.S5_series.hard.w3b4_10 (concept duplicate); new subject weather balloon launch steps, grepped in claims, satbank/rw, cb_api, waves and round1/round2, claimed in claims.txt (mandala claim withdrawn); options, explanation, distractors and notes rewritten, key letter kept C"
+        ],
+        "status": "fixed",
+        "note": "Blind answer C (Then) was given on the original mandala draft; the replacement keeps key C, re-solved: Then is the only option that fits a next step between First and Finally."
+      }
+    },
+    {
+      "id": "transitions.X1_example.easy.w5b4_16",
+      "template": "X1_example",
+      "subtype": "Example: a general claim, then one named instance",
+      "tier": "easy",
+      "passage": "Beginning in the late 1950s, Chinese French painter Zao Wou-Ki abandoned descriptive titles for his abstract canvases, instead identifying each one by the dates of its creation. ______ one of his most celebrated works, an enormous painting that occupied him for five months, is titled simply Juin-Octobre 1985 (June–October 1985).",
+      "stem": "Which choice completes the text with the most logical transition?",
+      "options": [
+        "Nevertheless,",
+        "For example,",
+        "Similarly,",
+        "In other words,"
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The first sentence states a general practice: Zao gave up descriptive titles, “instead identifying each one by the dates of its creation.” The blank sentence gives one named painting that follows this practice: it “is titled simply Juin-Octobre 1985 (June–October 1985).” “For example” fits, since the sentence offers an instance of the general claim.",
+      "distractors": {
+        "A": {
+          "recipe": "false opposition",
+          "why_wrong": "The painting’s title does not go against Zao’s practice; it follows it."
+        },
+        "C": {
+          "recipe": "false parallel",
+          "why_wrong": "The sentence does not describe a second, similar practice; it gives one case of the practice just described."
+        },
+        "D": {
+          "recipe": "wrong grain (restatement)",
+          "why_wrong": "The sentence does not restate the general practice; it names one particular painting and its title."
+        }
+      },
+      "models": [
+        "1.28",
+        "1.2"
+      ],
+      "word_count": 50,
+      "sources": [],
+      "notes": "General practice, then one named work. Facts: Zao Wou-Ki (1920-2013), born in China, settled in Paris in 1948 and became a French citizen; from the late 1950s his paintings carry the date of completion as their title; Juin-Octobre 1985 is among his best-known works. Transitions: no web check (WAVE.md, 2026-10-16); real subject described from general knowledge, no researcher named, no made-up finding attributed to a real person or organisation.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "transitions.X1_example.easy.w5b4_17",
+      "template": "X1_example",
+      "subtype": "Example: general claim, then one named instance",
+      "tier": "easy",
+      "passage": "Many birds are named for their distinctive calls. ______ the morepork, a small brown owl found throughout New Zealand, received its English name from European settlers, who thought its two-note call resembled the words “more pork.” The owl’s Māori name, ruru, likewise imitates the call.",
+      "stem": "Which choice completes the text with the most logical transition?",
+      "options": [
+        "For this reason,",
+        "However,",
+        "Firstly,",
+        "For instance,"
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The first sentence makes a general claim: “Many birds are named for their distinctive calls.” The blank sentence gives one named bird whose name comes from its call: the morepork, named by settlers who thought its call “resembled the words ‘more pork.’” “For instance” fits, since the sentence offers an instance of the general claim.",
+      "distractors": {
+        "A": {
+          "recipe": "unearned cause",
+          "why_wrong": "The morepork was not named because many other birds are named for their calls; it is one case of that pattern."
+        },
+        "B": {
+          "recipe": "false opposition",
+          "why_wrong": "The morepork does not go against the general claim; its name comes from its call, as the claim says."
+        },
+        "C": {
+          "recipe": "phantom sequence",
+          "why_wrong": "The text is not listing steps or points in order, so there is nothing for “firstly” to begin."
+        }
+      },
+      "models": [
+        "1.25",
+        "1.20"
+      ],
+      "word_count": 45,
+      "sources": [],
+      "notes": "General claim, then one named instance (1.25 kind), with a follow-up sentence. Facts: the morepork (Ninox novaeseelandiae) is named for its two-note call; its Maori name ruru also imitates the call. Transitions: no web check (WAVE.md, 2026-10-16); real subject described from general knowledge, no researcher named, no made-up finding attributed to a real person or organisation.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "transitions.E1_consequence.easy.w5b4_18",
+      "template": "E1_consequence",
+      "subtype": "Cause/effect: condition, then its consequence",
+      "tier": "easy",
+      "passage": "Every winter, builders in the Swedish village of Jukkasjärvi construct the Icehotel from blocks of ice harvested from the frozen Torne River. Each spring, rising temperatures melt the structure, and its water returns to the river. ______ the hotel must be rebuilt annually, with entirely new rooms designed by invited artists.",
+      "stem": "Which choice completes the text with the most logical transition?",
+      "options": [
+        "As a result,",
+        "In comparison,",
+        "For instance,",
+        "Earlier,"
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The second sentence says that “rising temperatures melt the structure” each spring. The blank sentence gives the result of that melting: “the hotel must be rebuilt annually.” “As a result” fits, since it introduces a consequence of what the previous sentence describes.",
+      "distractors": {
+        "B": {
+          "recipe": "false opposition",
+          "why_wrong": "The sentence does not compare the hotel with anything; it states what follows from the hotel’s melting."
+        },
+        "C": {
+          "recipe": "wrong grain (example)",
+          "why_wrong": "Rebuilding the hotel is not an example of its melting; it is what the melting makes necessary."
+        },
+        "D": {
+          "recipe": "phantom time",
+          "why_wrong": "The hotel is rebuilt after it melts, not before, so “earlier” gets the order wrong."
+        }
+      },
+      "models": [
+        "1.5",
+        "1.27"
+      ],
+      "word_count": 51,
+      "sources": [],
+      "notes": "Condition, then its consequence (1.5 kind). Facts: the Icehotel at Jukkasjarvi has been built each winter since 1989 from Torne River ice, melts back into the river in spring, and is redesigned each year by invited artists (a smaller year-round ice building added in 2016 is not part of the claim). Transitions: no web check (WAVE.md, 2026-10-16); real subject described from general knowledge, no researcher named, no made-up finding attributed to a real person or organisation.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "transitions.E1_consequence.easy.w5b4_19",
+      "template": "E1_consequence",
+      "subtype": "Consequence of a physical feature",
+      "tier": "easy",
+      "passage": "Fes el-Bali, the old city of Fez, Morocco, preserves a street plan dating from the ninth century. Many of its winding alleys are less than two meters wide. ______ automobiles cannot enter most of the city, and merchandise ranging from leather hides to gas cylinders is transported through its streets by donkeys, mules, and handcarts.",
+      "stem": "Which choice completes the text with the most logical transition?",
+      "options": [
+        "Nevertheless,",
+        "Similarly,",
+        "Thus,",
+        "For example,"
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The first sentence says that many of the old city’s “winding alleys are less than two meters wide.” The blank sentence gives a result of those narrow streets: “automobiles cannot enter most of the city,” so goods are moved by animals and handcarts. “Thus” fits, since it introduces a consequence of the previous point.",
+      "distractors": {
+        "A": {
+          "recipe": "false opposition",
+          "why_wrong": "That automobiles cannot enter does not hold in spite of the narrow alleys; it follows from them."
+        },
+        "B": {
+          "recipe": "false parallel",
+          "why_wrong": "Keeping automobiles out is not a second feature like the narrow alleys; it is their result."
+        },
+        "D": {
+          "recipe": "wrong grain (example)",
+          "why_wrong": "The absence of automobiles is not an instance of the street plan or of narrow alleys; it is an effect of them."
+        }
+      },
+      "models": [
+        "1.27",
+        "1.3"
+      ],
+      "word_count": 55,
+      "sources": [],
+      "notes": "Physical condition, then its consequence, framed on medieval street width (not a car ban, unlike the Pontevedra policy item). Facts: Fes el-Bali, founded in the 9th century and a World Heritage site, keeps its medieval street plan; many alleys are very narrow, cars cannot enter most of it, and donkeys, mules and handcarts carry goods. Transitions: no web check (WAVE.md, 2026-10-16); real subject described from general knowledge, no researcher named, no made-up finding attributed to a real person or organisation.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass",
+        "note": "Third Fez item (Bou Inania Madrasa, al-Qarawiyyin library); kept because the street plan and donkey transport are a different subject."
+      }
+    },
+    {
+      "id": "transitions.C3_limiting_fact.easy.w5b4_20",
+      "template": "C3_limiting_fact",
+      "subtype": "Contrast: positive claim, then a limiting fact",
+      "tier": "easy",
+      "passage": "Huon pine, a conifer native to the rainforests of western Tasmania, has long been prized by boatbuilders. Its wood contains a natural oil that protects it from decay and insects, so vessels constructed from it can last for generations. ______ the tree grows extremely slowly, and one large enough to harvest may be centuries old.",
+      "stem": "Which choice completes the text with the most logical transition?",
+      "options": [
+        "Likewise,",
+        "However,",
+        "For this reason,",
+        "In other words,"
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The text praises Huon pine: its wood is “prized by boatbuilders” and boats made from it “can last for generations.” The blank sentence gives a fact that limits the wood’s usefulness: “the tree grows extremely slowly,” so a harvestable tree “may be centuries old.” “However” fits, since it introduces a drawback that contrasts with the praise.",
+      "distractors": {
+        "A": {
+          "recipe": "false parallel",
+          "why_wrong": "The slow growth is not a second advantage like the wood’s resistance to decay; it is a drawback."
+        },
+        "C": {
+          "recipe": "unearned cause",
+          "why_wrong": "The wood’s oil and long life in boats do not make the tree grow slowly; the slow growth is a separate fact that limits supply."
+        },
+        "D": {
+          "recipe": "wrong grain (restatement)",
+          "why_wrong": "The sentence does not reword the praise of the wood; it adds a new fact that cuts against it."
+        }
+      },
+      "models": [
+        "1.33",
+        "1.10"
+      ],
+      "word_count": 55,
+      "sources": [],
+      "notes": "Positive claim, then a limiting fact about the same subject (1.33 kind). Facts: Huon pine (Lagarostrobos franklinii) is endemic to western and southwestern Tasmania; its oil (methyl eugenol) resists rot and insects and made it the favored boatbuilding timber from the 19th century; it grows very slowly and lives for many centuries. Transitions: no web check (WAVE.md, 2026-10-16); real subject described from general knowledge, no researcher named, no made-up finding attributed to a real person or organisation.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "transitions.E2_motive_action.easy.w5b4_21",
+      "template": "E2_motive_action",
+      "subtype": "Cause/effect: need, then the action it motivates",
+      "tier": "easy",
+      "passage": "Kamikatsu, a mountain town in Japan, once burned most of its garbage. Around 2000, however, the town was forced to close its incinerators because they violated new limits on toxic emissions, and constructing a replacement would have been prohibitively expensive. ______ in 2003 Kamikatsu committed to becoming a zero-waste community, requiring residents to sort discarded items into dozens of recycling categories.",
+      "stem": "Which choice completes the text with the most logical transition?",
+      "options": [
+        "On the other hand,",
+        "For example,",
+        "Previously,",
+        "For this reason,"
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The first sentence explains the town’s problem: it “was forced to close its incinerators,” and a replacement “would have been prohibitively expensive.” The blank sentence describes the step the town took in response: it “committed to becoming a zero-waste community.” “For this reason” fits, since the town’s problem is what led to that decision.",
+      "distractors": {
+        "A": {
+          "recipe": "false opposition",
+          "why_wrong": "The zero-waste plan does not contrast with the town’s problem; it is the response to it."
+        },
+        "B": {
+          "recipe": "wrong grain (example)",
+          "why_wrong": "The zero-waste commitment is not an example of closing incinerators or of their cost; it is what the town did because of them."
+        },
+        "C": {
+          "recipe": "phantom time",
+          "why_wrong": "The commitment came in 2003, after the incinerators closed around 2000, not before."
+        }
+      },
+      "models": [
+        "1.9",
+        "1.16"
+      ],
+      "word_count": 61,
+      "sources": [],
+      "notes": "Need, then the action it motivates (1.9 kind). No concession decoy (a reader could take the plan as going ahead despite the cost). Facts: Kamikatsu, Tokushima Prefecture, closed its small incinerators around 2000 when they failed new dioxin standards and in 2003 made Japan's first zero-waste declaration, with residents sorting waste into dozens of categories (now 45). Transitions: no web check (WAVE.md, 2026-10-16); real subject described from general knowledge, no researcher named, no made-up finding attributed to a real person or organisation.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "transitions.A1_addition.easy.w5b4_22",
+      "template": "A1_addition",
+      "subtype": "Addition: a second activity of the same person",
+      "tier": "easy",
+      "passage": "Otagaki Rengetsu, a Buddhist nun who lived in Kyoto during the nineteenth century, became one of the most admired poets of her era, celebrated for her waka, poems of thirty-one syllables. ______ she supported herself as a potter, shaping teapots, cups, and bowls by hand and inscribing her poems into the clay before firing it.",
+      "stem": "Which choice completes the text with the most logical transition?",
+      "options": [
+        "In addition,",
+        "On the contrary,",
+        "For this reason,",
+        "In other words,"
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The first sentence describes Rengetsu as one of the most admired poets of her time. The blank sentence adds a second activity of the same person: “she supported herself as a potter.” “In addition” fits, since it introduces a further accomplishment alongside her poetry.",
+      "distractors": {
+        "B": {
+          "recipe": "false opposition",
+          "why_wrong": "Working as a potter does not deny or correct the claim that she was an admired poet; she did both."
+        },
+        "C": {
+          "recipe": "unearned cause",
+          "why_wrong": "Being an admired poet did not cause Rengetsu to support herself as a potter; the two are separate activities."
+        },
+        "D": {
+          "recipe": "wrong grain (restatement)",
+          "why_wrong": "Making pottery is not a rewording of writing poems; it is a different activity."
+        }
+      },
+      "models": [
+        "1.7",
+        "1.30"
+      ],
+      "word_count": 55,
+      "sources": [],
+      "notes": "Two activities of one person (1.7 kind). Facts: Otagaki Rengetsu (1791-1875), a Buddhist nun in Kyoto, was a celebrated waka poet who supported herself by making pottery by hand and inscribing her poems on it before firing. Transitions: no web check (WAVE.md, 2026-10-16); real subject described from general knowledge, no researcher named, no made-up finding attributed to a real person or organisation.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      }
+    }
+  ],
+  "done": true
+}

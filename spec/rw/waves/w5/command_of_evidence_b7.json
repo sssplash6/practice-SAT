@@ -1,0 +1,1634 @@
+{
+  "skill": "Command of Evidence",
+  "slug": "command_of_evidence",
+  "part": "w5b7",
+  "domain": "Information and Ideas",
+  "plan": {
+    "templates": [
+      {
+        "code": "T1_single",
+        "name": "Hypothetical finding supports or weakens a single claim (causal, comparison, existence, generalization, prediction)"
+      },
+      {
+        "code": "T1_compete",
+        "name": "Hypothetical finding discriminates between competing explanations (support or weaken)"
+      },
+      {
+        "code": "Q2_P8_multipart",
+        "name": "Data description: multi-part, interaction, or passage-plus-data claim"
+      },
+      {
+        "code": "T2_lit_quote",
+        "name": "Quotation from a literary work illustrates a claim (single trait, two-part, contrast)"
+      },
+      {
+        "code": "T3_person_quote",
+        "name": "Quotation from a person (participant, respondent, historian, critic, article) supports or challenges a claim"
+      },
+      {
+        "code": "Q1_P5_control",
+        "name": "Data completion: condition vs control"
+      },
+      {
+        "code": "Q2_P5_control",
+        "name": "Data description: condition vs control or group comparison supports a conclusion"
+      },
+      {
+        "code": "Q1_P3_pairwise",
+        "name": "Data completion: pairwise comparison (one or two comparisons)"
+      },
+      {
+        "code": "Q2_P4_trend",
+        "name": "Data description: trend or change over time supports a conclusion"
+      },
+      {
+        "code": "Q1_P1_lookup",
+        "name": "Data completion: lookup (one cell or bar, reverse lookup, filter)"
+      },
+      {
+        "code": "Q1_P2_extreme",
+        "name": "Data completion: extreme or rank (max/min, possibly after a filter)"
+      }
+    ]
+  },
+  "items": [
+    {
+      "id": "command_of_evidence.T1_single.hard.w5b7_01",
+      "template": "T1_single",
+      "subtype": "Hypothetical finding supports an attribution against rival suspects (the covering inks track the writer's own changing ink supply, which dates the censoring)",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "In 1791 and 1792, during the French Revolution, Queen Marie-Antoinette exchanged secret letters with the Swedish count Axel von Fersen, who preserved her letters along with copies he made of correspondence between them. At some point, someone heavily inked over certain passages. Historians long suspected Fersen’s great-nephew, who published the correspondence in the nineteenth century, or another relative protecting the family’s reputation. Using X-ray fluorescence spectroscopy, which identifies the chemical elements present in ink, Anne Michelin and colleagues recovered several of the concealed passages. Because the chemical composition of handmade ink varied considerably from batch to batch, the team also compared the inks in the letters, and they concluded that the person responsible for blacking out the passages was most likely Fersen himself.",
+      "stem": "Which finding from the analysis, if true, would most directly support Michelin and colleagues’ conclusion?",
+      "options": [
+        "The blacked-out passages appear only in letters kept among Fersen’s own papers, which remained in his family’s possession for generations after his death in 1810.",
+        "Both the ink covering the passages and the ink of the letters themselves are iron-gall inks, a type in common use throughout the eighteenth and nineteenth centuries.",
+        "The covering ink varies from letter to letter, each time matching an ink Fersen used for his own letters in the weeks after the covered letter was written.",
+        "The recovered passages express the writers’ affection for each other far more openly than do the passages left legible, which concern mostly political events."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "Michelin and colleagues concluded that “the person responsible for blacking out the passages was most likely Fersen himself,” not a relative working in the nineteenth century. The text also notes that “the chemical composition of handmade ink varied considerably from batch to batch,” so an ink can show roughly when it was used. Choice C supplies the missing link: the covering ink changes from letter to letter, each time matching an ink Fersen himself was using in the weeks after that letter. That pattern fits someone who blacked out passages soon after each letter, with Fersen’s own ink at hand, rather than a later relative going through the whole collection decades afterward.",
+      "distractors": {
+        "A": {
+          "recipe": "TRAP: access shared by every suspect",
+          "why_wrong": "The papers stayed with Fersen’s family, so his great-nephew and other relatives had the same access to these letters that Fersen did; where the letters were kept cannot show which of them did the blacking out."
+        },
+        "B": {
+          "recipe": "TRAP: consistent with every suspect",
+          "why_wrong": "If iron-gall ink was in common use throughout both centuries, finding it in the covering ink fits Fersen and his nineteenth-century relatives equally well, so it cannot decide who the censor was."
+        },
+        "D": {
+          "recipe": "TRAP: a motive shared by every suspect",
+          "why_wrong": "Hiding open expressions of affection is a motive Fersen and a relative guarding the family’s reputation would share, so the content of the passages does not show which of them blacked them out."
+        }
+      },
+      "models": [
+        "3.45",
+        "3.42",
+        "3.36",
+        "3.28",
+        "44da37eb",
+        "4a07be59"
+      ],
+      "sources": [
+        {
+          "what": "Michelin, Pottier, Andraud 2021, Science Advances, eabg4266, 2D macro-XRF to reveal redacted sections of French queen Marie-Antoinette secret correspondence with Swedish count Axel von Fersen: secret correspondence during the French Revolution; an unidentified censor redacted sections; Fersen archived drafts of the letters he sent; common hypothesis that the redaction was carried out in the second half of the 19th century by Fersen's great-nephew, Baron Klinckowström, or another family member before publication to preserve their reputation; all inks metal-gall; redaction inks match subsets of Fersen's writing inks; in letter 1_1_8 a text added above the redacted line in Fersen's hand has an ink of the same composition as the redaction ink ('the letter of the 28th made my happiness' became 'the letter of the 28th reached me'); Fersen would thus be the author of the redactions",
+          "url": "https://doi.org/10.1126/sciadv.abg4266"
+        }
+      ],
+      "notes": "Band 7. History (and analytical chemistry). Reviewer rebuilt the options: the key now supplies the dating premise (covering inks track Fersen's changing ink supply letter by letter, as the paper reports: redaction inks match the posterior subsets of his writing inks), with the batch-variation fact placed earlier in the passage; all three wrong options are TRAPs that look like evidence but fit every suspect. Conclusion softened to 'most likely', as the paper hedges ('AF would thus be the author'). Fame: Marie-Antoinette is famous, but who redacted the letters and how inks date it are not background knowledge.",
+      "word_count": 123,
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [
+          "passage: 'concluded that the person responsible ... was Fersen himself' softened to '... was most likely Fersen himself' (source: 'AF would thus be the author of the redactions', 'If our hypothesis is validated')",
+          "passage: added that handmade ink varied from batch to batch and that the team compared the inks (source: ink composition 'changed quite often' Aug to Dec 1791)",
+          "options rebuilt for band 7: draft key named Fersen's handwriting outright and draft A (ink matching the great-nephew's notes) mirrored it; key now the letter-by-letter match to Fersen's later inks (the paper's main argument), A replaced by an access TRAP",
+          "note: the draft key was visible in my first file inspection before the blind pass; the blind answer was still worked from the item text",
+          "options A and C are reviewer-written (B lightly reworded, D kept), so 'agreed' covers the draft only; the rebuild was checked option by option against the paper, not blind-solved by a second reader"
+        ],
+        "status": "fixed",
+        "band7": {
+          "verdict": "band 7",
+          "why": "Key adds the premise the passage omits (each covering ink matches Fersen's own ink of the following weeks, which dates the censoring to 1791-92 and rules out a later relative), built on the batch-variation fact given two sentences earlier; three TRAPs (access, ink type, motive) each look like evidence and fit every suspect; stem 15 words names the study; passage 115 words."
+        }
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "C",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "command_of_evidence.T1_single.hard.w5b7_02",
+      "template": "T1_single",
+      "subtype": "Hypothetical finding supports a proposed use of artifacts (the pattern of heat damage locates the objects at the edge of a fire)",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "About fifty engraved limestone plaquettes, small slabs bearing images of horses, ibex, reindeer, and other animals, were excavated in the nineteenth century from Montastruc, a rock shelter in southern France occupied during the Magdalenian period of the Late Paleolithic. Many of these plaquettes show pink discoloration and cracking caused by heat, damage that could have resulted from accidental burning or from reuse of the stones in hearths or for cooking. Andy Needham and colleagues instead propose that the plaquettes were deliberately positioned beside small fires in darkness, where the flickering light would have made the engraved animals appear to move.",
+      "stem": "Which finding, if true, would most directly support Needham and colleagues’ proposal?",
+      "options": [
+        "On most heat-damaged plaquettes, the discoloration is concentrated along one edge and the adjacent part of the face, as on replica plaquettes arranged around a small fire.",
+        "Horses are the animal most often engraved on the Montastruc plaquettes, appearing on far more of the slabs than any other species does.",
+        "On several plaquettes, the cracks and discoloration caused by heat run across the engraved lines, indicating that those slabs were heated after they were engraved.",
+        "Replica plaquettes used as boiling stones or built into the walls of a hearth developed heat discoloration across most of their surfaces, just as many of the Montastruc plaquettes did."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "Needham and colleagues propose that the plaquettes were “deliberately positioned beside small fires,” not burned by accident or reused in hearths or for cooking. Choice A supports this: damage concentrated on one edge and the neighboring part of the face matches replicas placed around the edge of a small fire, the position the proposal describes, rather than slabs heated all over inside a fire.",
+      "distractors": {
+        "B": {
+          "recipe": "OFF: a true property of the engravings unrelated to how the slabs were heated",
+          "why_wrong": "Which animal appears most often says nothing about where the plaquettes were placed or why they were heated."
+        },
+        "C": {
+          "recipe": "TRAP: consistent with every explanation",
+          "why_wrong": "Heating after engraving fits all three accounts: an engraved slab could be burned by accident, reused in a hearth or for cooking, or set beside a fire for display, so this finding cannot single out Needham and colleagues’ proposal."
+        },
+        "D": {
+          "recipe": "OPP: the rival use's prediction",
+          "why_wrong": "If boiling stones and hearth stones show the same damage as the Montastruc plaquettes, the damage fits the reuse explanation the proposal rejects."
+        }
+      },
+      "models": [
+        "3.12",
+        "3.7",
+        "3.31",
+        "3.47"
+      ],
+      "sources": [
+        {
+          "what": "Needham, Wisher, Langley, Amy, Little 2022, PLoS ONE e0266146, Art by firelight? Using experimental and digital techniques to explore Magdalenian engraved plaquette use at Montastruc (France): 50 limestone plaquettes excavated by Peccadeau de l'Isle from the Magdalenian rockshelter of Montastruc; heating after engraving in some cases, with bands of pink discolouration (rubefaction), cracking and thermal fractures; hypotheses of incidental taphonomic heating, functional use (hearth construction, boiling stones) and non-functional use related to the engravings; experiments with replicas, including replicas placed in a circular formation around a small central fire, whose edge and proximate-face discolouration matches some Montastruc plaquettes; conclusion that the plaquettes were likely positioned near hearths in low light, with roving firelight making engraved forms appear dynamic; animals depicted include horses (40), ibex (7), reindeer (7), red deer (6)",
+          "url": "https://doi.org/10.1371/journal.pone.0266146"
+        }
+      ],
+      "notes": "Band 6 (plan). Archaeology and art. The key is the paper's own reasoning in hypothetical form: the location of the damage, read through the replica experiment, places the slabs at a fire's edge. C (reviewer) is the paper's true finding of heating after engraving, a TRAP that fits every account, D is the rival's prediction, B is off-target but true (horses 40 of about 75 depicted animals). Blind solve by the writer, key hidden: A.",
+      "word_count": 100,
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [
+          "passage: 'More than fifty' to 'About fifty' (source: 50 plaquettes)",
+          "C: was an OPP killed by one stated fact (heated before engraving); now a TRAP, heating after engraving, which the paper reports and which fits every account"
+        ],
+        "status": "fixed",
+        "band7": {
+          "verdict": "band 6",
+          "why": "Planned band 6. The key needs a bridge (damage confined to one edge and face, read through the replica ring, puts the slab beside a fire rather than in or under one); C is a TRAP that fits every account, D the rival's prediction, B off-target; passage about 100 words."
+        }
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "A",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "command_of_evidence.T1_compete.hard.w5b7_03",
+      "template": "T1_compete",
+      "subtype": "Hypothetical finding weakens one of two explanations by reversing its causal order",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "Over the first several centuries CE, wheeled carts and wagons all but disappeared from much of the Middle East, and goods once hauled on wheels came to be transported by pack camels instead. One possible explanation for this transformation is that the paved roads constructed under Roman rule deteriorated, leaving carts unable to travel efficiently. In his 1975 book The Camel and the Wheel, however, historian Richard W. Bulliet argued that the change was fundamentally economic: camels, which require no paved surface, transported goods more cheaply than ox-drawn carts did, so merchants abandoned the more expensive option.",
+      "stem": "Which finding, if true, would most directly weaken the possible explanation involving the region’s roads?",
+      "options": [
+        "In districts where the old Roman roads continued to be repaired, carts remained in common use for considerably longer than they did elsewhere.",
+        "As carts became rare in the region, the number of camels raised by herders there increased sharply.",
+        "Merchants in the region paid tolls at city gates on goods carried by camel just as they did on goods carried by cart.",
+        "In many districts, the paved roads were left unrepaired only after the carts that had once traveled on them had already been replaced by camels."
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The roads explanation holds that deteriorating roads left carts “unable to travel efficiently,” so the decay of the roads must have come first and driven carts out. Choice D reverses that order: if roads went unrepaired only after camels had already replaced the carts that used them, the decay could not have caused the change; it looks instead like a result of it, consistent with Bulliet’s economic account.",
+      "distractors": {
+        "A": {
+          "recipe": "OPP: the roads explanation's own prediction",
+          "why_wrong": "If carts lasted longest where roads were kept in repair, the condition of the roads would seem to matter, which supports the roads explanation rather than weakening it."
+        },
+        "B": {
+          "recipe": "TRAP: consistent with both explanations",
+          "why_wrong": "Both explanations expect camels to take over as carts disappeared, so a rise in camel numbers cannot count against either one."
+        },
+        "C": {
+          "recipe": "OFF: an irrelevant feature of trade in the region",
+          "why_wrong": "Tolls charged on both kinds of transport say nothing about the condition of the roads or whether their decay drove carts out of use."
+        }
+      },
+      "models": [
+        "3.9",
+        "3.48",
+        "3.14",
+        "2.9",
+        "156ff681",
+        "0d7f4966"
+      ],
+      "sources": [
+        {
+          "what": "Report on Richard W. Bulliet's Harvard research for The Camel and the Wheel: camels replaced wheeled vehicles across the Middle East beginning around the time of Christ, most of the region converted by the end of the fifth century AD; 'It was economics'; oxen required more food and carts needed scarce wood; camel transportation about 20 percent cheaper than wheeled transportation; eventually carts, wagons, and chariots, even many roads, disappeared (roads presented as a result of the shift)",
+          "url": "https://www.churchofjesuschrist.org/study/ensign/1973/12/discovery/no-wheels-get-a-camel"
+        },
+        {
+          "what": "Columbia University Press page for Bulliet, The Camel and the Wheel (first published by Harvard University Press, 1975): the book asks why, for many centuries, the wheel was abandoned in the Middle East in favor of the camel",
+          "url": "https://cup.columbia.edu/book/the-camel-and-the-wheel/9780231072359"
+        }
+      ],
+      "notes": "Band 7. History (economic history). The key supplies an unstated premise (a cause must precede its effect), the reverse-causation route; A is the rival's prediction (OPP), B fits both explanations (TRAP), C is an irrelevant property of the region's trade. The road-decay explanation is presented unattributed ('one possible explanation'), since no fetched source names its holders; the source is a 1973 Ensign report on Bulliet's research before the book (the book: Harvard University Press, 1975), which presents road loss as a result of the shift. Stem 13 words. Blind solve by the writer, key hidden: D.",
+      "word_count": 97,
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [
+          "sources: added the Columbia University Press page for the book; the 1973 Ensign report confirms the core claim (Bulliet: 'It was economics', camels about 20 percent cheaper, roads disappearing after the carts)",
+          "passage: 'carried' to 'transported' (register: hard passages ran plainer than official)"
+        ],
+        "status": "fixed",
+        "band7": {
+          "verdict": "band 7",
+          "why": "Key supplies the unstated premise that a cause must come first (roads decayed only after carts were gone, the reverse-causation route); discrimination: the roads view predicts decay before cart loss, Bulliet's view allows decay after, and D splits them while B (more camels) fits both; A is the roads view's own prediction; stem 15 words names the explanation tested."
+        }
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "D",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "command_of_evidence.Q2_P8_multipart.hard.w5b7_04",
+      "template": "Q2_P8_multipart",
+      "subtype": "Data description: a two-group, two-condition comparison on the one muscle the conclusion concerns",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "On a saddle quern, an early grain-grinding implement, a person pushes a handstone back and forth across a flat lower stone; on the later rotary quern, the person rotates an upper stone around a spindle. Some skeletal studies have interpreted a pronounced attachment site for the biceps brachii, an upper-arm muscle, as evidence of habitual saddle quern use. After recording muscle activity in female rowers and nonathletic women grinding grain on both kinds of quern, Michal Struška and colleagues concluded that this skeletal marker is not specifically indicative of saddle quern grinding.",
+      "stem": "Which choice best describes data from the table that support the team’s conclusion?",
+      "options": [
+        "On both kinds of quern, the athletes’ average biceps brachii activation was lower than the average biceps brachii activation of the nonathletes.",
+        "For both athletes and nonathletes, average biceps brachii activation was more than twice as high during rotary quern grinding as during saddle quern grinding.",
+        "For both athletes and nonathletes, average anterior deltoid activation was higher during rotary quern grinding than during saddle quern grinding.",
+        "For athletes, average biceps brachii activation was higher during saddle quern grinding than during rotary quern grinding, whereas for nonathletes the reverse was true."
+      ],
+      "answer_letter": "B",
+      "table": {
+        "title": "Average Muscle Activation during Grain Grinding (% of maximum)",
+        "columns": [
+          "Muscle",
+          "Saddle quern: athletes",
+          "Saddle quern: nonathletes",
+          "Rotary quern: athletes",
+          "Rotary quern: nonathletes"
+        ],
+        "rows": [
+          [
+            "Biceps brachii",
+            "3.2",
+            "4.9",
+            "8.3",
+            "15.4"
+          ],
+          [
+            "Anterior deltoid",
+            "5.4",
+            "6.7",
+            "18.4",
+            "21.7"
+          ],
+          [
+            "Triceps brachii (lateral head)",
+            "23.1",
+            "17.0",
+            "25.2",
+            "35.4"
+          ],
+          [
+            "Pectoralis major",
+            "7.0",
+            "12.3",
+            "16.5",
+            "21.3"
+          ]
+        ],
+        "note": "Athletes were female rowers. Rotary quern values are for turning clockwise."
+      },
+      "figure": null,
+      "explanation": "The team concluded that a pronounced biceps brachii attachment “is not specifically indicative of saddle quern grinding.” That conclusion is supported if the biceps works at least as hard during rotary grinding, so the rotary quern could produce the same marker. Choice B shows this for both groups: biceps activation was 3.2 and 4.9 percent on the saddle quern but 8.3 and 15.4 percent on the rotary quern, more than twice as high in each case.",
+      "distractors": {
+        "A": {
+          "recipe": "IRREL: accurate comparison across the wrong dimension (athletes vs nonathletes)",
+          "why_wrong": "It is true that the athletes’ biceps values (3.2, 8.3) were lower than the nonathletes’ (4.9, 15.4), but the conclusion is about which quern works the biceps, not about which group of grinders did."
+        },
+        "C": {
+          "recipe": "IRREL: accurate comparison of the wrong muscle",
+          "why_wrong": "The anterior deltoid values do rise on the rotary quern, but the skeletal marker in question is the attachment site of the biceps brachii, so data about the deltoid do not bear on it."
+        },
+        "D": {
+          "recipe": "INACC: false reading",
+          "why_wrong": "For athletes, biceps activation was lower on the saddle quern (3.2) than on the rotary quern (8.3), not higher, so the claimed contrast between the groups does not exist."
+        }
+      },
+      "models": [
+        "3.18",
+        "3.26",
+        "3.2",
+        "3.16",
+        "3.19"
+      ],
+      "sources": [
+        {
+          "what": "Struška, Hora, Rocek, Sládek 2021, PLoS ONE e0243669, Influence of upper limb training and analyzed muscles on estimate of physical activity during cereal grinding using saddle quern and rotary quern: 10 female rowers and 25 female nonathletes ground grain on a Neolithic saddle quern and a replica rotary quern (Charles University, Prague); Table 2 mean EMG (%MVC), saddle / rotary clockwise, athletes and nonathletes: biceps 3.2, 4.9 / 8.3, 15.4; anterior deltoid 5.4, 6.7 / 18.4, 21.7; triceps lateral 23.1, 17.0 / 25.2, 35.4; pectoralis major 7.0, 12.3 / 16.5, 21.3; abstract and discussion: results question the assumption that skeletal indicators of high biceps brachii involvement (radial tuberosity) are specifically indicative of saddle quern grinding",
+          "url": "https://doi.org/10.1371/journal.pone.0243669"
+        }
+      ],
+      "notes": "Band 6 (plan). Archaeology and physiology. Multipart: the key holds for two groups and compares across conditions on the one muscle the conclusion concerns; A and C are accurate comparisons of the wrong cells in the key's frame, D a false reading. No option says the biceps was the least active muscle on the saddle quern (the paper's other argument), which would have been a second defensible answer. Four of the eight muscles shown; rotary values for clockwise turning (anticlockwise biceps values were higher still, 22.8 and 28.2). Blind solve by the writer, key hidden: B.",
+      "word_count": 92,
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass",
+        "band7": {
+          "verdict": "band 6",
+          "why": "Planned band 6. Multipart: the key must hold for both groups and compare across querns on the one muscle the conclusion concerns; A and C are accurate comparisons of the wrong cells in the key's frame (group, muscle), D a false reading. Values and the conclusion confirmed in the PMC full text (Table 2; 'specifically indicative of saddle quern grinding')."
+        }
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "B",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "command_of_evidence.T2_lit_quote.hard.w5b7_05",
+      "template": "T2_lit_quote",
+      "subtype": "Literary quotation: a two-part claim about a character after his rise (obligation to companions of his youth), older language",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "The Shoemaker’s Holiday is a 1600 play by Thomas Dekker. In the play, Simon Eyre, a London shoemaker, rises to become the city’s Lord Mayor. Dekker portrays Eyre’s advancement as leaving his sense of obligation to the companions of his youth undiminished: ______",
+      "stem": "Which quotation from The Shoemaker’s Holiday most effectively illustrates the claim?",
+      "options": [
+        "“By the Lord of Ludgate, it’s a mad life to be a lord mayor; it’s a stirring life, a fine life, a velvet life, a careful life.”",
+        "“I promised the mad Cappadocians, when we all served at the Conduit together, that if ever I came to be mayor of London, I would feast them all, and I’ll do’t, I’ll do’t, by the life of Pharaoh; by this beard, Sim Eyre will be no flincher.”",
+        "“I beseech your grace, pardon my rude behaviour; I am a handicraftsman, yet my heart is without craft; I would be sorry at my soul, that my boldness should offend my king.”",
+        "“Soft, the king this day comes to dine with me, to see my new buildings; his majesty is welcome, he shall have good cheer, delicate cheer, princely cheer.”"
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The claim has two parts: Eyre has risen to high office, and he still feels bound to the “companions of his youth.” In choice B, Eyre recalls a promise made to the men he “served at the Conduit together” with, that “if ever I came to be mayor of London, I would feast them all,” and insists that he will keep it (“Sim Eyre will be no flincher”). Only this quotation joins his new office to an obligation to his old companions.",
+      "distractors": {
+        "A": {
+          "recipe": "HALF: the new office only",
+          "why_wrong": "Eyre describes what it is like to be lord mayor, but says nothing about anyone he owes anything to from his earlier life."
+        },
+        "C": {
+          "recipe": "LURE: his humble trade, not his old companions",
+          "why_wrong": "Eyre calls himself a “handicraftsman” and apologizes to the king for his boldness; the quotation concerns his manners before the king, not a debt to the friends of his youth."
+        },
+        "D": {
+          "recipe": "OFF: hospitality to the king",
+          "why_wrong": "Eyre plans a fine dinner for the visiting king, a duty of his office, not an obligation to former companions."
+        }
+      },
+      "models": [
+        "3.11",
+        "3.17",
+        "3.34",
+        "3.37"
+      ],
+      "sources": [
+        {
+          "what": "Thomas Dekker, The Shoemaker's Holiday (1600), Mermaid Series edition (ed. Ernest Rhys), Project Gutenberg ebook 45357: Act V speeches of Simon Eyre as lord mayor ('I promised the mad Cappadocians...', 'it's a mad life to be a lord mayor...', 'Soft, the king this day comes to dine with me...', 'I beseech your grace, pardon my rude behaviour...'); all four quotations matched verbatim against the text",
+          "url": "https://www.gutenberg.org/ebooks/45357"
+        }
+      ],
+      "notes": "Band 6 (plan). Literature (Elizabethan comedy). Two-part claim (rise to office and continuing obligation to old companions) in older language, as in CB 3.11 (Trollope) and 3.37 (Lear). A is the office half only, C a lure on his humble trade, D another duty of the office. Avoided the Leadenhall petition for 'his brethren' shoemakers, which would also show loyalty to fellow tradesmen. Gutenberg text, modernized spelling as printed there; quotations copied exactly. Dekker appears in no official item of any skill and nowhere in our bank (grep). Blind solve by the writer, key hidden: B.",
+      "word_count": 43,
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [],
+        "status": "pass",
+        "notes": [
+          "all four quotations matched verbatim against Gutenberg 45357 (Act V, Eyre as lord mayor)"
+        ],
+        "band7": {
+          "verdict": "band 6",
+          "why": "Planned band 6. Two-part claim (new office, undiminished obligation to old companions) in older language; C is a lure on his humble trade that a student can read as loyalty to his origins; the nearby line about his 'fellow prentices' (a second fit) is correctly left out."
+        }
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "B",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "command_of_evidence.T3_person_quote.hard.w5b7_06",
+      "template": "T3_person_quote",
+      "subtype": "Quotation from a historian supports a two-part assertion (value from skill and from record keeping)",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "The Washoe basket weaver Louisa Keyser, known as Dat So La Lee, completed about 120 baskets between 1895 and her death in 1925, most of them sold through a clothing store in Carson City, Nevada, belonging to Abe and Amy Cohn. The Cohns supplied her with food, lodging, and medical treatment, and they documented every basket she produced. Her baskets have since sold for extraordinary sums. A student asserts that the value collectors have placed on Keyser’s baskets reflects not only her skill as a weaver but also the Cohns’ record keeping.",
+      "stem": "Which quotation from a work by a historian best supports the student’s assertion?",
+      "options": [
+        "“Keyser’s stitches were so fine and so regular that collectors learned to recognize her baskets at a glance; it was this mastery of technique, more than anything said about her, that drew buyers to her work.”",
+        "“In exchange for her baskets, the Cohns provided Keyser with a house, meals, and medical treatment, an arrangement that allowed her to devote most of her working hours to weaving.”",
+        "“Much of what the Cohns wrote about Keyser’s early life has turned out to be exaggerated or invented, and historians now treat their accounts of her past with considerable caution.”",
+        "“Since the Cohns recorded every basket Keyser made, buyers could be sure that a basket was hers, an assurance most other Washoe baskets lacked and one that helped her work command higher prices.”"
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The student asserts that the value of Keyser’s baskets reflects “not only her skill as a weaver but also the Cohns’ record keeping.” Choice D ties the record keeping directly to value: because the Cohns recorded every basket, buyers could be sure a basket was hers, an assurance that “helped her work command higher prices.”",
+      "distractors": {
+        "A": {
+          "recipe": "OPP: value from skill alone",
+          "why_wrong": "This credits her technique “more than anything said about her,” which supports her skill as the source of value but plays down the Cohns’ part, the half of the assertion that needs support."
+        },
+        "B": {
+          "recipe": "OFF: the Cohns' support of Keyser, not of her baskets' value",
+          "why_wrong": "This explains how the arrangement gave Keyser time to weave, but it does not connect the Cohns’ records to what collectors would pay."
+        },
+        "C": {
+          "recipe": "TRAP: about the Cohns' writings, but their reliability, not value",
+          "why_wrong": "This concerns how far historians can trust what the Cohns wrote about Keyser’s past; it says nothing about how their records affected the value of her baskets."
+        }
+      },
+      "models": [
+        "3.3",
+        "3.32",
+        "3.33",
+        "04cbeca3"
+      ],
+      "sources": [
+        {
+          "what": "Dat So La Lee (Louisa Keyser), Washoe basket weaver from northwestern Nevada, c. 1829 to 1925; Amy and Abram Cohn, owners of the Emporium Company men's clothing store in Carson City, met her around 1895, sold her baskets, documented every basket she made from 1895 to 1925 (about 120), and provided food, lodging and healthcare; scholars found almost everything the Cohns wrote about her was exaggeration or fabrication; a basket sold for $1.2 million in 2007",
+          "url": "https://en.wikipedia.org/wiki/Dat_So_La_Lee"
+        }
+      ],
+      "notes": "Band 6 (plan). Arts (Indigenous basketry, art market). Two-part assertion inside a 'not only... but also' frame; A sides with the skill-only view, C uses the Cohns' writings but on reliability (a true finding, from the source), B is the arrangement. The historians' quotations are unattributed and hypothetical, as in CB 3.3; their factual content stays within the source. Blind solve by the writer, key hidden: D.",
+      "word_count": 92,
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [
+          "D: 'an assurance lacking for most other Washoe baskets that helped her work command higher prices' attached 'that helped' to 'baskets'; restructured so both clauses attach to the assurance",
+          "passage: three plainer words swapped ('made', 'owned by', 'care') to bring the hard tier's register up to CB's; meaning unchanged"
+        ],
+        "status": "fixed",
+        "band7": {
+          "verdict": "band 6",
+          "why": "Planned band 6. Two-part assertion in a 'not only ... but also' frame; the key ties the records to price through buyers' certainty; C uses the Cohns' writings but on reliability, A sides with skill alone. Facts within the source (Wikipedia: about 120 documented baskets, food, lodging and healthcare, documentation promoted her work)."
+        }
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "D",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "command_of_evidence.Q1_P5_control.hard.w5b7_07",
+      "template": "Q1_P5_control",
+      "subtype": "Data completion: condition vs control read through a passage relation (loss depends on runoff volume and concentration)",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "On steep farmland in Cabo Verde, intense rains wash soil and nutrients downhill. In 2012, Isaurinda Baptista and colleagues compared traditionally farmed plots with plots receiving combinations of manure, a wetting agent, pigeon-pea hedges, and a mulch of cut grass, measuring both the runoff from each plot and its concentration of nitrate, an essential nitrogen nutrient. Because the nitrate a plot loses in runoff depends on both quantities, a treatment can reduce that loss by decreasing runoff, by lowering the concentration, or both. At one site, the treatment that included mulch worked primarily by decreasing runoff: ______",
+      "stem": "Which choice most effectively uses data from the table to complete the statement?",
+      "options": [
+        "runoff from the plots with the mulch was less than a tenth of the runoff from the traditional plots, while the nitrate concentration in their runoff was only about one-fifth lower.",
+        "the nitrate concentration in runoff from the plots with manure and a wetting agent was about half that from the traditional plots, while their runoff was only about 10% lower.",
+        "runoff from the plots with the mulch had a lower nitrate concentration than runoff from any of the other plots, though the amount of their runoff was close to that from the other treated plots.",
+        "the plots with the mulch produced less runoff than any of the other plots did, and the plots with hedges and green manure produced less runoff than the plots with manure and a wetting agent did."
+      ],
+      "answer_letter": "A",
+      "table": {
+        "title": "Runoff and Nitrate at Órgãos Pequenos, Cabo Verde, 2012",
+        "columns": [
+          "Treatment",
+          "Runoff (liters per square meter)",
+          "Nitrate in runoff (milligrams per liter)"
+        ],
+        "rows": [
+          [
+            "Traditional practice",
+            "16.4",
+            "4.83"
+          ],
+          [
+            "Manure and wetting agent",
+            "14.8",
+            "2.51"
+          ],
+          [
+            "Pigeon-pea hedges, green manure, and wetting agent",
+            "11.3",
+            "2.69"
+          ],
+          [
+            "Grass mulch, pigeon-pea hedges, and green manure",
+            "0.75",
+            "3.85"
+          ]
+        ],
+        "note": null
+      },
+      "figure": null,
+      "explanation": "The text explains that nitrate lost in runoff “depends on both quantities,” the amount of runoff and its nitrate concentration, and claims that the mulch treatment “worked primarily by decreasing runoff.” To show this, the data must pair a large drop in runoff with only a small drop in concentration. Choice A does: runoff fell from 16.4 to 0.75 liters per square meter, less than a tenth, while the concentration fell only from 4.83 to 3.85 milligrams per liter, about one-fifth.",
+      "distractors": {
+        "B": {
+          "recipe": "WGRP: accurate reading of the wrong treatment",
+          "why_wrong": "The figures for manure and a wetting agent are accurate (2.51 against 4.83, and 14.8 against 16.4), but they describe a different treatment, and one that worked mainly by lowering concentration, not the mulch treatment the statement is about."
+        },
+        "C": {
+          "recipe": "WDIR/INACC: the relation applied the wrong way, and false readings",
+          "why_wrong": "The mulch plots’ concentration (3.85) was higher than that of the other two treatments (2.51 and 2.69), and their runoff (0.75) was far below the others’; a lower concentration would in any case point to the second way, not to reducing runoff."
+        },
+        "D": {
+          "recipe": "HALF: accurate runoff comparisons with no concentration comparison",
+          "why_wrong": "Both comparisons are accurate, but showing that the mulch plots had the least runoff does not show that the treatment worked mainly through runoff rather than concentration; the statement needs the concentration comparison as well."
+        }
+      },
+      "models": [
+        "3.38",
+        "3.4",
+        "3.46",
+        "9452092c"
+      ],
+      "sources": [
+        {
+          "what": "Baptista, Ritsema, Geissen 2015, PLoS ONE e0134244, Effect of Integrated Water-Nutrient Management Strategies on Soil Erosion Mediated Nutrient Loss and Crop Productivity in Cabo Verde Drylands: 2012 field trials in the Ribeira Seca watershed, Santiago, main agricultural island; site III Órgãos Pequenos; T0 traditional practice, T1 animal manure + soil surfactant, T2 pigeon-pea hedges + green manure + surfactant, T3 grass mulch + pigeon-pea hedges + green manure; Table 5 site III runoff 16.4, 14.8, 11.3, 0.75 L m-2 and NO3-N in runoff 4.83, 2.51, 2.69, 3.85 mg L-1; abstract: T3 reduced soil loss, runoff and nutrient losses to nearly 100%; losses of NO3-N highly correlated with amounts of runoff",
+          "url": "https://doi.org/10.1371/journal.pone.0134244"
+        }
+      ],
+      "notes": "Band 7. Earth and agricultural science. The passage states the relation the display must be read through (loss depends on runoff volume and concentration), as in the band-7 Q1_P67/P5 recipe; the key needs four reads and two ratio judgments. B is the other treatment that shows the opposite route (accurate, wrong cells), C applies the relation the wrong way with false readings, D is the half that omits concentration. 'Soil surfactant' rendered as 'wetting agent' (what a surfactant does in soil). Nitrate concentrations did not differ significantly among treatments in the paper; the item uses only the reported means. Mean option length 30 words. Blind solve by the writer, key hidden: A.",
+      "word_count": 97,
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [],
+        "status": "pass",
+        "band7": {
+          "verdict": "band 7",
+          "why": "Proxy: the stated relation (loss depends on runoff and concentration) must be applied to the table; key needs four reads and two ratio judgments (0.75/16.4 under a tenth, 3.85/4.83 about a fifth lower); D is an accurate HALF, B accurate but the wrong treatment, C the relation turned the wrong way; options 25 to 35 words; passage about 100 words."
+        }
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "A",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "command_of_evidence.Q2_P5_control.hard.w5b7_08",
+      "template": "Q2_P5_control",
+      "subtype": "Data description: condition vs control with a design wrinkle (a soapy-water control separates the extract from the soap mixed into it)",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "Many smallholder farmers in sub-Saharan Africa protect common bean crops with synthetic insecticides, which are expensive and can harm beneficial insects. In northern Tanzania, Prisila Mkenda and colleagues instead treated bean plants with water extracts prepared from the leaves of four weeds that grow abundantly in field margins, adding a small amount of soap to every extract. To separate any effect of the soap from that of the weeds, the researchers also sprayed some plants with soapy water alone and others with plain water, leaving additional plants untreated. Considering the team’s measurements, a student concludes that the extracts’ effectiveness against aphids, a destructive pest of beans, did not depend on the soap the extracts contained.",
+      "stem": "Which choice best describes data from the table that support the student’s conclusion?",
+      "options": [
+        "Plants sprayed with extracts made at a 1% leaf concentration had slightly lower aphid abundance and noticeably higher grain yields than plants sprayed with extracts made at a 10% concentration.",
+        "Plants sprayed with either weed extract had less than half the aphid abundance of unsprayed plants and produced more than 1,600 kilograms of grain per hectare.",
+        "Plants sprayed with soapy water had no fewer aphids than unsprayed plants, whereas plants sprayed with either extract had less than half the aphid abundance of those given soapy water.",
+        "Plants sprayed with soapy water had lower aphid abundance than plants sprayed with plain water did, though not as low as plants sprayed with either weed extract."
+      ],
+      "answer_letter": "C",
+      "table": {
+        "title": "Aphids and Grain Yield on Common Bean Plants under Five Spray Treatments",
+        "columns": [
+          "Treatment",
+          "Aphid abundance (index, 0–5)",
+          "Plants with aphids (%)",
+          "Grain yield (kilograms per hectare)"
+        ],
+        "rows": [
+          [
+            "Unsprayed",
+            "2.87",
+            "30.3",
+            "1,193"
+          ],
+          [
+            "Plain water",
+            "2.65",
+            "26.8",
+            "1,206"
+          ],
+          [
+            "Soapy water",
+            "3.10",
+            "29.0",
+            "1,208"
+          ],
+          [
+            "Weed extracts, 1% leaf concentration",
+            "1.29",
+            "12.4",
+            "1,777"
+          ],
+          [
+            "Weed extracts, 10% leaf concentration",
+            "1.40",
+            "12.2",
+            "1,657"
+          ]
+        ],
+        "note": "Extract values are averages for the four weed species. All extracts contained the same small amount of soap (0.1%)."
+      },
+      "figure": null,
+      "explanation": "The student concludes that “the extracts’ effectiveness against aphids … did not depend on the soap the extracts contained.” Every extract contained soap, so the soap could explain the effect only if soap alone reduced aphids. Choice C rules that out with the right pair of comparisons: plants sprayed with soapy water had 3.10 on the aphid index, no lower than the 2.87 of unsprayed plants, while plants sprayed with the extracts had 1.29 and 1.40, less than half of 3.10. The extracts worked and soapy water did not, so the effect came from the weeds.",
+      "distractors": {
+        "A": {
+          "recipe": "IRREL: accurate comparison on the wrong variable (extract concentration)",
+          "why_wrong": "The table does show 1.29 against 1.40 and 1,777 against 1,657 kilograms, but comparing the two extract concentrations says nothing about whether soap caused the drop in aphids, since both extracts contained the same soap."
+        },
+        "B": {
+          "recipe": "PART: accurate, but against the unsprayed control only",
+          "why_wrong": "Extracts did roughly halve the aphid index relative to unsprayed plants (1.40 against 2.87), but because the extracts contained soap, this comparison cannot separate the weeds from the soap; the soapy-water control is needed."
+        },
+        "D": {
+          "recipe": "INACC: false reading of the soapy-water row",
+          "why_wrong": "Plants sprayed with soapy water had a higher aphid index (3.10) than plants sprayed with plain water (2.65), not a lower one; and if it were true, it would suggest the soap did reduce aphids, the opposite of the conclusion."
+        }
+      },
+      "models": [
+        "3.5",
+        "3.43",
+        "3.1",
+        "be19faa1",
+        "d5da74be"
+      ],
+      "sources": [
+        {
+          "what": "Mkenda, Mwanauta, Stevenson, Ndakidemi, Mtei, Belmain 2015, PLoS ONE e0143530, Extracts from Field Margin Weeds Provide Economically Viable and Environmentally Benign Pest Control Compared to Synthetic Pesticides: water extracts of Tithonia diversifolia, Tephrosia vogelii, Vernonia amygdalina and Lippia javanica (northern Tanzania) on common bean, 1% and 10% w/v, 0.1% soap added during or after extraction; negative controls water + soap, water only, untreated; Table 2: aphid abundance index untreated 2.87, water + soap 3.10, water only 2.65, 1% 1.29, 10% 1.40; aphid incidence 30.25, 29.00, 26.75, 12.38, 12.19%; grain yield 1193.21, 1207.50, 1205.69, 1776.64, 1656.97 kg/ha; no statistical difference among the three negative controls",
+          "url": "https://doi.org/10.1371/journal.pone.0143530"
+        }
+      ],
+      "notes": "Band 7. Agriculture (pest control). Design wrinkle as in the band-7 Q2_P5 recipe: a soapy-water condition that separates the active ingredient from the carrier it is mixed into. The key needs two comparisons (soapy water vs unsprayed, extracts vs soapy water). A and B are accurate readings of the wrong cells; D is a false reading that would also point the other way. The extract rows are the paper's Table 2 averages over the four weed species (and over soap timing); the 0-to-5 aphid index is the paper's categorical scale. Arithmetic checked: 1.40/3.10 = 0.45, 1.29/3.10 = 0.42, 1.40/2.87 = 0.49. Blind solve by the writer, key hidden: C.",
+      "word_count": 115,
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 5,
+        "fixes": [
+          "soap amount: '1% soap' to 'a small amount of soap' in the passage and '0.1%' in the table note (source methods: 'adding 0.1% soap', negative control 'water + 0.1% soap')",
+          "conclusion reassigned from 'the team' to a student considering the team's measurements: the paper reports no difference among the three negative controls and pools them, but never states the conclusion in these words; stem and explanation updated"
+        ],
+        "status": "fixed",
+        "band7": {
+          "verdict": "band 7",
+          "why": "Design wrinkle (a soapy-water control separating the weeds from the soap they are mixed with); the key needs two comparisons (soapy water vs unsprayed, extracts vs soapy water); B is accurate but against the unsprayed control only (PART), A accurate on the wrong variable, D a false reading; passage over 100 words."
+        }
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "C",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "command_of_evidence.Q1_P3_pairwise.hard.w5b7_09",
+      "template": "Q1_P3_pairwise",
+      "subtype": "Data completion: two comparisons for one group, with measures defined in the passage",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "For centuries, black rats and goats introduced to the Caribbean island of Redonda devastated its vegetation, and the rats preyed on the island’s endemic ground lizard, Pholidoscelis atratus. In 2017, during the eradication of both invaders, Colin M. Donihue and colleagues measured each lizard’s flight initiation distance (the distance separating a lizard from an approaching observer when the lizard began its retreat) and the distance the lizard subsequently fled, repeating these measurements a year later. By 2018 the lizards were tolerating a closer approach before fleeing, yet once they fled, they traveled considerably farther: for example, ______",
+      "stem": "Which choice most effectively uses data from the table to complete the example?",
+      "options": [
+        "females’ average flight initiation distance fell from 176 to 114, while their average final distance from the observer fell from 218 to 177.",
+        "males’ average flight initiation distance fell from 226 to 168, while the average distance they fled fell from 130 to 75.",
+        "males’ average flight initiation distance rose from 168 to 226, while the average distance they fled rose from 75 to 130.",
+        "females’ average flight initiation distance fell from 176 to 114, while the average distance they fled rose from 60 to 102."
+      ],
+      "answer_letter": "D",
+      "table": {
+        "title": "Average Escape Distances of Redonda Ground Lizards, 2017 and 2018",
+        "columns": [
+          "Measure",
+          "Males, 2017",
+          "Males, 2018",
+          "Females, 2017",
+          "Females, 2018"
+        ],
+        "rows": [
+          [
+            "Flight initiation distance",
+            "226",
+            "168",
+            "176",
+            "114"
+          ],
+          [
+            "Distance fled",
+            "75",
+            "130",
+            "60",
+            "102"
+          ],
+          [
+            "Final distance from observer",
+            "276",
+            "249",
+            "218",
+            "177"
+          ]
+        ],
+        "note": null
+      },
+      "figure": null,
+      "explanation": "The example must show both parts of the claim for the same lizards: a shorter flight initiation distance (the lizards were “tolerating a closer approach before fleeing”) and a longer distance fled (“they traveled considerably farther”). Choice D does: females’ flight initiation distance fell from 176 to 114, and the distance they fled rose from 60 to 102.",
+      "distractors": {
+        "A": {
+          "recipe": "IRREL: accurate first half, second half on the wrong measure",
+          "why_wrong": "Both figures are accurate, but the final distance from the observer is not the distance fled; its fall from 218 to 177 does not show that the lizards ran farther."
+        },
+        "B": {
+          "recipe": "WDIR: second comparison reversed",
+          "why_wrong": "Males’ flight initiation distance did fall from 226 to 168, but the distance they fled rose from 75 to 130; it did not fall."
+        },
+        "C": {
+          "recipe": "WDIR: first comparison reversed (years swapped)",
+          "why_wrong": "Males’ flight initiation distance fell from 226 in 2017 to 168 in 2018; it did not rise, so this would show the lizards becoming warier."
+        }
+      },
+      "models": [
+        "3.29",
+        "3.30"
+      ],
+      "sources": [
+        {
+          "what": "Donihue, Daltry, Challenger, Herrel 2021, Integrative Zoology (published online 2021), Population increase and changes in behavior and morphology in the Critically Endangered Redonda ground lizard (Pholidoscelis atratus) following the successful removal of alien rats and goats: rats and goats removed in 2017; rats observed preying on the lizards; flight initiation distance, distance fled and final distance measured in March 2017 and March 2018; Table 1 males 2017/2018 and females 2017/2018: flight initiation distance 226/168 and 176/114, total flight distance 75/130 and 60/102, final resting distance 276/249 and 218/177; flight initiation distance decreased and lizards fled significantly further in 2018",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC9290887/"
+        }
+      ],
+      "notes": "Band 6 (plan). Ecology and animal behavior. Two comparisons in one option, with the measures defined only in the passage (CB 3.29, 3.30). The paper's Table 1 and methods give no unit for the escape distances, so the reviewer removed the inferred 'centimeters' from the title and options (values as reported). 'For centuries' simplifies 'some time after its discovery by Europeans in the late 1500s'. Blind solve by the writer, key hidden: D.",
+      "word_count": 97,
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [
+          "units: the paper reports the escape distances without a unit (Table 1, methods); removed the inferred 'centimeters' from the table title, options and explanations",
+          "passage: flight initiation distance definition reworded away from live inferences w3b2_19 ('how close an approaching person can get before an animal flees')"
+        ],
+        "status": "fixed",
+        "band7": {
+          "verdict": "band 6",
+          "why": "Q1_P3_pairwise has no band-7 official items, so a strong band 6 at most: two comparisons for one group with the measures defined only in the passage; A is accurate on the wrong measure (final distance), B and C reverse one comparison."
+        }
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "D",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "command_of_evidence.T2_lit_quote.medium.w5b7_10",
+      "template": "T2_lit_quote",
+      "subtype": "Literary quotation: a two-part claim (her comfort depends on his refusal to yield)",
+      "tier": "medium",
+      "band_target": null,
+      "passage": "Strife is a 1909 play by John Galsworthy. When his daughter urges him to show compassion for his company’s striking workers, the company’s chairman, John Anthony, suggests that the comfortable life she enjoys depends on people like him refusing to yield to such workers: ______",
+      "stem": "Which quotation from Strife most effectively illustrates the claim?",
+      "options": [
+        "“In a few years you and your children would be down in the condition they’re in, but for those who have the eyes to see things as they are and the backbone to stand up for themselves.”",
+        "“What do you know about necessity? Read your novels, play your music, talk your talk, but don’t try and tell me what’s at the bottom of a struggle like this.”",
+        "“Give way to the men once and there’ll be no end to it.”",
+        "“The men have been treated justly, they have had fair wages, we have always been ready to listen to complaints.”"
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The claim is that Anthony tells his daughter her “comfortable life” depends on people like him “refusing to yield” to the workers. In choice A, he says that she and her children “would be down in the condition they’re in,” that is, as badly off as the strikers, “but for those who have … the backbone to stand up for themselves.” Her comfort, he suggests, rests on such firmness.",
+      "distractors": {
+        "B": {
+          "recipe": "HALF: mentions her comfortable pursuits, but only to dismiss her understanding",
+          "why_wrong": "Anthony mocks her novels and music, but he says only that she does not understand the struggle, not that her comfort depends on men like him standing firm."
+        },
+        "C": {
+          "recipe": "HALF: refusal to yield, without her comfort",
+          "why_wrong": "This explains why Anthony will not yield, but it says nothing about his daughter or the life she enjoys."
+        },
+        "D": {
+          "recipe": "OFF: a defense of how the workers were treated",
+          "why_wrong": "Anthony defends the company’s fairness to the workers; the quotation does not connect his firmness to his daughter’s comfort."
+        }
+      },
+      "models": [
+        "2.11",
+        "2.26",
+        "2.36",
+        "2.13"
+      ],
+      "sources": [
+        {
+          "what": "John Galsworthy, Strife: A Drama in Three Acts (1909), Project Gutenberg ebook 2908: Act II scene between Anthony and his daughter Enid ('In a few years you and your children would be down in the condition they're in...', 'What do you know about necessity?...'), Act I ('Give way to the men once and there'll be no end to it.') and Act III speech to the board ('The men have been treated justly...'); quotations matched verbatim, straight quotes set as curly",
+          "url": "https://www.gutenberg.org/ebooks/2908"
+        }
+      ],
+      "notes": "Medium. Literature (Edwardian drama). Two-part claim (her comfort; his refusal to yield as its basis); B and C are the two halves, D off-target. Left out Anthony's nearby lines 'What sort of mercy do you suppose you'd get if no one stood between you and the continual demands of labour?' and 'your comforts would be going all the time', either of which would also illustrate the claim. Galsworthy's The Man of Property is used in WiC (different work); Strife appears nowhere in the bank. Blind solve by the writer, key hidden: A.",
+      "word_count": 45,
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [],
+        "status": "pass",
+        "notes": [
+          "quotations matched verbatim against Gutenberg 2908 (Anthony to Enid, Act II)"
+        ]
+      }
+    },
+    {
+      "id": "command_of_evidence.T2_lit_quote.medium.w5b7_11",
+      "template": "T2_lit_quote",
+      "subtype": "Literary quotation: a contrast claim (success, yet a sense of not having lived)",
+      "tier": "medium",
+      "band_target": null,
+      "passage": "“The Gentleman from San Francisco” is a 1915 short story by Ivan Bunin, translated by D. H. Lawrence and S. S. Koteliansky. In the story, Bunin suggests that despite the considerable professional success of the title character, a wealthy American, the man feels he has not yet genuinely lived: ______",
+      "stem": "Which quotation from “The Gentleman from San Francisco” most effectively illustrates the claim?",
+      "options": [
+        "“The gentleman from San Francisco—nobody either in Capri or Naples ever remembered his name—was setting out with his wife and daughter for the Old World, to spend there two years of pleasure.”",
+        "“Men of his class usually began their enjoyments with a trip to Europe, India, Egypt. He decided to do the same.”",
+        "“Up to the present he had not lived, but only existed; quite well, it is true, yet with all his hopes on the future.”",
+        "“Now at last he realized that a great deal had been accomplished, and that he had almost reached the level of those whom he had taken as his ideals, so he made up his mind to pause for a breathing space.”"
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The claim pairs the man’s “considerable professional success” with his sense that “he has not yet genuinely lived.” Choice C contains both: until now “he had not lived, but only existed,” and he had existed “quite well, it is true,” that is, comfortably and successfully, while putting all his hopes on the future.",
+      "distractors": {
+        "A": {
+          "recipe": "OFF: his anonymity and the trip",
+          "why_wrong": "This tells us that no one remembered the man’s name and that he is setting out to enjoy himself, but not that he feels he has not yet lived."
+        },
+        "B": {
+          "recipe": "OFF: following the habits of his class",
+          "why_wrong": "This shows the man imitating others of his class in choosing a trip, not any sense that his life so far has not been real living."
+        },
+        "D": {
+          "recipe": "HALF: success without the sense of not having lived",
+          "why_wrong": "This conveys his success, that “a great deal had been accomplished,” but says only that he decided to rest, not that he feels he has not yet lived."
+        }
+      },
+      "models": [
+        "2.20",
+        "2.10",
+        "2.31",
+        "2.35"
+      ],
+      "sources": [
+        {
+          "what": "Ivan Bunin, The Gentleman from San Francisco, and Other Stories (Hogarth Press, 1922; title story translated by D. H. Lawrence and S. S. Koteliansky), Project Gutenberg ebook 44998: opening paragraphs of the title story; all four quotations matched verbatim ('--' set as a closed em dash)",
+          "url": "https://www.gutenberg.org/ebooks/44998"
+        }
+      ],
+      "notes": "Medium. Literature (Russian short story in translation, with the translator line CB uses for translated works). Contrast claim: the key alone has both the success ('quite well, it is true') and the sense of not having lived; D is the success half. Avoided the sentence about rewarding himself 'for all his years of toil', which a student could read as deferred living, and the sentence about the workers in his factories. Bunin's The Village is used in WiC (different work). Story date 1915 (first published that year in Russian). Blind solve by the writer, key hidden: C.",
+      "word_count": 50,
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [],
+        "status": "pass",
+        "notes": [
+          "quotations matched verbatim against Gutenberg 44998"
+        ]
+      }
+    },
+    {
+      "id": "command_of_evidence.T1_single.medium.w5b7_12",
+      "template": "T1_single",
+      "subtype": "Hypothetical finding supports a claim that an object can serve a function",
+      "tier": "medium",
+      "band_target": null,
+      "passage": "Aboriginal Australians have long used wooden boomerangs for hunting, but such objects often served several purposes. Having found evidence that some hardwood boomerangs were used as retouchers, tools for striking the edges of stone tools to sharpen or reshape them, archaeologist Eva Francesca Martellotta and colleagues tested the idea experimentally. They used replica hardwood boomerangs to retouch stone flakes and then examined both the flakes and the boomerangs under a microscope. The researchers claim that boomerangs can function effectively as retouchers.",
+      "stem": "Which finding, if true, would most directly support the researchers’ claim?",
+      "options": [
+        "Replica boomerangs made of hardwood flew farther when thrown than replica boomerangs made of softer woods did.",
+        "Stone flakes struck with the replica boomerangs gained sharp, regular edges like those made with bone or stone retouchers.",
+        "Retouchers made of bone have been recovered from many Paleolithic sites in Europe, often alongside stone tools.",
+        "The replica boomerangs split apart after only a few blows, well before the edges of any of the stone flakes had been reshaped."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The researchers claim that “boomerangs can function effectively as retouchers,” tools that sharpen or reshape the edges of stone tools. Choice B shows exactly that: flakes struck with the replica boomerangs ended up with sharp, regular edges like those that dedicated retouchers produce.",
+      "distractors": {
+        "A": {
+          "recipe": "OFF: the boomerangs' other function",
+          "why_wrong": "How far hardwood boomerangs fly concerns their use as throwing weapons, not whether they can retouch stone tools."
+        },
+        "C": {
+          "recipe": "SUBJ: the right function, the wrong objects",
+          "why_wrong": "Finds of bone retouchers in Europe say nothing about whether boomerangs can do the same job."
+        },
+        "D": {
+          "recipe": "OPP: the boomerangs fail at the task",
+          "why_wrong": "If the boomerangs broke before reshaping any edge, they would be poor retouchers, which weakens the claim."
+        }
+      },
+      "models": [
+        "2.21",
+        "2.38",
+        "2.1",
+        "2.7"
+      ],
+      "sources": [
+        {
+          "what": "Martellotta, Perston, Craft, Wilkins, Langley 2022, PLoS ONE e0273118, Beyond the main function: An experimental study of the use of hardwood boomerangs in retouching activities: previous works presented evidence for the use of hardwood boomerangs for retouching purposes in Australian Aboriginal communities; experimental protocol demonstrates how boomerangs can function as retouchers; use-wear on the boomerang surface comparable to traces on Palaeolithic and experimental bone retouchers; microscopic lithic chips embedded in the retouchers' surfaces; multipurpose Indigenous tools",
+          "url": "https://doi.org/10.1371/journal.pone.0273118"
+        }
+      ],
+      "notes": "Medium. Archaeology. One-step operationalization (the claimed function observed directly); A is the object's other function (OFF), C a wrong-subject distractor, D the opposite outcome. Blind solve by the writer, key hidden: B.",
+      "word_count": 81,
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass",
+        "notes": [
+          "core claim confirmed in the PLoS ONE abstract"
+        ]
+      }
+    },
+    {
+      "id": "command_of_evidence.Q1_P3_pairwise.medium.w5b7_13",
+      "template": "Q1_P3_pairwise",
+      "subtype": "Data completion: one pairwise comparison that must involve the group the claim is about",
+      "tier": "medium",
+      "band_target": null,
+      "passage": "Honey bee colonies in northern Europe survive the winter on honey stored during the summer, so colonies that deplete their reserves slowly are more likely to last until spring. Researchers in southwestern Sweden weighed colonies of four types of honey bee over one winter, including the native dark bee. The differences were small, but the results offered some indication that the native bees consumed their reserves more conservatively than the others did: on average, ______",
+      "stem": "Which choice most effectively uses data from the table to complete the statement?",
+      "options": [
+        "dark bee colonies lost 35.1 grams per day, while Italian bee colonies lost 45.4 grams per day.",
+        "Carniolan bee colonies lost 37.6 grams per day, while Buckfast bee colonies lost 38.3 grams per day.",
+        "dark bee colonies lost 38.3 grams per day, while Carniolan bee colonies lost 35.1 grams per day.",
+        "Italian bee colonies lost 35.1 grams per day, while dark bee colonies lost 45.4 grams per day."
+      ],
+      "answer_letter": "A",
+      "table": {
+        "title": "Daily Weight Loss of Honey Bee Colonies in Winter",
+        "columns": [
+          "Type of honey bee",
+          "Average daily weight loss per colony (grams)"
+        ],
+        "rows": [
+          [
+            "Dark bee",
+            "35.1"
+          ],
+          [
+            "Carniolan bee",
+            "37.6"
+          ],
+          [
+            "Buckfast bee",
+            "38.3"
+          ],
+          [
+            "Italian bee",
+            "45.4"
+          ]
+        ],
+        "note": null
+      },
+      "figure": null,
+      "explanation": "The statement claims that “the native bees consumed their reserves more conservatively than the others did,” so the example must show native dark bee colonies losing weight more slowly than colonies of another type. According to the table, dark bee colonies lost 35.1 grams per day and Italian bee colonies lost 45.4 grams per day, which is what choice A says.",
+      "distractors": {
+        "B": {
+          "recipe": "IRREL: accurate comparison of two other types",
+          "why_wrong": "The values for Carniolan (37.6) and Buckfast (38.3) bees are accurate, but neither is the native dark bee, so the comparison says nothing about how the native bees used their reserves."
+        },
+        "C": {
+          "recipe": "WGRP: misplaced values",
+          "why_wrong": "It gives the dark bee the Buckfast value (38.3) and the Carniolan bee the dark bee’s value (35.1); in the table, dark bee colonies lost less, not more, than Carniolan colonies."
+        },
+        "D": {
+          "recipe": "WDIR: values swapped between the two types",
+          "why_wrong": "It reverses the table: Italian bee colonies lost 45.4 grams per day and dark bee colonies lost 35.1, not the other way around."
+        }
+      },
+      "models": [
+        "2.18",
+        "2.27",
+        "2.24",
+        "2.32"
+      ],
+      "sources": [
+        {
+          "what": "Norrström, Niklasson, Leidenberger 2021, PLoS ONE e0258398, Winter weight loss of different subspecies of honey bee Apis mellifera colonies (Linnaeus, 1758) in southwestern Sweden: 32 colonies in two apiaries, winter 2019-2020; native A. m. mellifera, Italian A. m. ligustica, Carniolan A. m. carnica and the Buckfast hybrid; Table 2 daily weight loss per subspecies 0.0351 (mellifera), 0.0376 (carnica), 0.0383 (Buckfast), 0.0454 (ligustica) kg/day; weight losses differed only marginally between subspecies, with indications that A. m. mellifera had a more conservative resource consumption",
+          "url": "https://doi.org/10.1371/journal.pone.0258398"
+        }
+      ],
+      "notes": "Medium. Life science (apiculture). One pairwise comparison (CB 2.27, 2.18): the key is the only true option that involves the native bee; B is true but about two other types. The passage hedges as the paper does ('some indication', small differences). Daily losses converted from kilograms to grams. Authors left unnamed (first names not confirmed). Blind solve by the writer, key hidden: A.",
+      "word_count": 75,
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [
+          "A: 'on average, dark bee colonies lost an average of 35.1 grams' repeated 'average' after the passage's 'on average,'; now matches the other options' form"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "command_of_evidence.Q1_P5_control.medium.w5b7_15",
+      "template": "Q1_P5_control",
+      "subtype": "Data completion: treated vs untreated for two varieties (the cost of a treatment)",
+      "tier": "medium",
+      "band_target": null,
+      "passage": "Growers sometimes enclose developing fruit in protective bags to shield it from insects, sunburn, and other damage. In a commercial orchard in southeastern Spain, Pilar Legua and colleagues bagged the fruit on some trees of two pomegranate varieties, MR-Mix and Purple Queen, while leaving the fruit on comparable trees unbagged. The bagged fruit showed less cracking and less damage from a moth whose larvae feed on pomegranates, but this protection appears to have come at a cost: ______",
+      "stem": "Which choice most effectively uses data from the table to complete the statement?",
+      "options": [
+        "for both varieties, bagged fruit had a smaller diameter but a greater average weight than unbagged fruit.",
+        "for both varieties, bagged fruit weighed less on average than unbagged fruit, by about 40 grams for MR-Mix and by more than 50 grams for Purple Queen.",
+        "bagged fruit of the MR-Mix variety weighed less on average than unbagged MR-Mix fruit, but bagged Purple Queen fruit weighed more than unbagged Purple Queen fruit.",
+        "unbagged MR-Mix fruit weighed about 20 grams more on average than unbagged Purple Queen fruit."
+      ],
+      "answer_letter": "B",
+      "table": {
+        "title": "Average Size of Bagged and Unbagged Pomegranates at Harvest",
+        "columns": [
+          "Variety",
+          "Fruit bagged?",
+          "Fruit weight (grams)",
+          "Fruit diameter (millimeters)"
+        ],
+        "rows": [
+          [
+            "MR-Mix",
+            "no",
+            "342.7",
+            "86.8"
+          ],
+          [
+            "MR-Mix",
+            "yes",
+            "301.6",
+            "82.9"
+          ],
+          [
+            "Purple Queen",
+            "no",
+            "320.5",
+            "84.7"
+          ],
+          [
+            "Purple Queen",
+            "yes",
+            "267.0",
+            "79.2"
+          ]
+        ],
+        "note": null
+      },
+      "figure": null,
+      "explanation": "The statement says that bagging’s protection “appears to have come at a cost,” so the completion must show bagged fruit doing worse than unbagged fruit in some way. Choice B does: bagged MR-Mix fruit averaged 301.6 grams against 342.7 grams unbagged (about 40 grams less), and bagged Purple Queen fruit averaged 267.0 grams against 320.5 grams (more than 50 grams less). Smaller fruit is a cost of bagging.",
+      "distractors": {
+        "A": {
+          "recipe": "INACC: half false (weight reversed)",
+          "why_wrong": "Bagged fruit did have a smaller diameter, but it weighed less, not more, than unbagged fruit for both varieties (301.6 against 342.7, 267.0 against 320.5)."
+        },
+        "C": {
+          "recipe": "INACC: false for one variety",
+          "why_wrong": "The MR-Mix half is accurate, but bagged Purple Queen fruit weighed less (267.0 grams) than unbagged Purple Queen fruit (320.5 grams), not more."
+        },
+        "D": {
+          "recipe": "IRREL: accurate comparison of varieties, not of bagged vs unbagged fruit",
+          "why_wrong": "Unbagged MR-Mix fruit did weigh about 22 grams more than unbagged Purple Queen fruit, but that difference between varieties says nothing about any cost of bagging."
+        }
+      },
+      "models": [
+        "2.5",
+        "2.14",
+        "2.19"
+      ],
+      "sources": [
+        {
+          "what": "Legua, Martínez-Nicolás, Guirao, Hernández, Núñez-Gómez, Melgarejo 2022, Food Chemistry: Molecular Sciences, article 100112, Influence of fruit bagging technique on the morphometric and biochemical characteristics of two pomegranate varieties (Punica granatum L.): commercial plantation in Ojós, Murcia, southeastern Spain; varieties MR-Mix and Purple Queen; Table 1 fruit weight without/with bagging 342.65/301.63 g (MR-Mix) and 320.51/267.04 g (Purple Queen), equatorial diameter 86.77/82.89 and 84.68/79.23 mm; bagging significantly affected weight and size; cracked fruits and Cryptoblabes gnidiella damage higher for non-bagged fruits",
+          "url": "https://doi.org/10.1016/j.fochms.2022.100112"
+        }
+      ],
+      "notes": "Medium. Agriculture (horticulture). Treated vs untreated for two groups (CB 2.14, 2.5): the key covers both varieties; C is true for one variety only, A half false, D an accurate comparison on the wrong axis (variety). Cracking and moth damage stated in prose from the paper (Table 2's count unit is not given, so it is left out of the table). Blind solve by the writer, key hidden: B.",
+      "word_count": 78,
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [
+          "B: 'about 50 grams for Purple Queen' to 'more than 50 grams' (320.5 minus 267.0 is 53.5); explanation to match"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "command_of_evidence.T1_compete.medium.w5b7_16",
+      "template": "T1_compete",
+      "subtype": "Hypothetical finding supports a new explanation over the usual one (the usual one requires chlorine)",
+      "tier": "medium",
+      "band_target": null,
+      "passage": "Cinnabar, a mineral form of mercury sulfide, was ground by painters for centuries into a brilliant red pigment, but in many artworks the color has darkened after prolonged exposure to light. This darkening has commonly been attributed to the formation of black mercury compounds or metallic mercury in chemical reactions that require chlorine, an element that can reach paintings from their surroundings. After analyzing cinnabar pigment and tempera paints that had been artificially aged under ultraviolet light, Kerstin Elert and colleagues argued instead that cinnabar can darken without any chlorine at all.",
+      "stem": "Which finding, if true, would most directly support Elert and colleagues’ argument?",
+      "options": [
+        "Darkened areas of the cinnabar paint contained metallic mercury that was absent from areas of the paint that had stayed red.",
+        "Samples of cinnabar paint darkened under ultraviolet light only after they had been exposed to compounds containing chlorine.",
+        "Samples of cinnabar paint that had been prepared and stored so that no chlorine could reach them still darkened under ultraviolet light.",
+        "Painters often combined powdered cinnabar with egg yolk or other binders to make tempera paint."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The usual explanation holds that darkening requires chlorine, while Elert and colleagues argue that cinnabar “can darken without any chlorine at all.” Choice C reports darkening in samples that no chlorine could reach, which the usual explanation cannot account for and the new argument predicts.",
+      "distractors": {
+        "A": {
+          "recipe": "TRAP: consistent with both explanations",
+          "why_wrong": "Both accounts involve metallic mercury forming in the darkened paint, so finding it there does not show whether chlorine was needed."
+        },
+        "B": {
+          "recipe": "OPP: the usual explanation's prediction",
+          "why_wrong": "If samples darkened only after exposure to chlorine, chlorine would appear necessary, which supports the usual explanation rather than Elert and colleagues’ argument."
+        },
+        "D": {
+          "recipe": "OFF: a fact about how the paint was made",
+          "why_wrong": "How painters mixed tempera says nothing about whether chlorine is needed for cinnabar to darken."
+        }
+      },
+      "models": [
+        "2.9",
+        "2.30",
+        "3.8",
+        "3.15"
+      ],
+      "sources": [
+        {
+          "what": "Elert, Pérez Mendoza, Cardell 2021, Communications Chemistry, Direct evidence for metallic mercury causing photo-induced darkening of red cinnabar tempera paints: darkening has commonly been related to metallic mercury (Hg0) formation in the presence of chlorides; based on UV-aged cinnabar pigment and tempera paint, darkening is caused by oxidation of cinnabar to mercury sulfates and subsequent reduction to Hg0 without the involvement of chlorides",
+          "url": "https://doi.org/10.1038/s42004-021-00610-2"
+        }
+      ],
+      "notes": "Medium. Chemistry and art conservation. Two explanations; the key is the observation only the new one predicts (darkening with chlorine excluded). A fits both (both involve metallic mercury), B is the usual explanation's prediction, D is off-target. The usual account is simplified to 'black mercury compounds or metallic mercury' formed with chlorine (the paper: Hg0 formation in the presence of chlorides; chlorine-containing compounds have also been proposed). Blind solve by the writer, key hidden: C.",
+      "word_count": 92,
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass",
+        "notes": [
+          "core claim confirmed in the Communications Chemistry abstract"
+        ]
+      }
+    },
+    {
+      "id": "command_of_evidence.Q1_P1_lookup.easy.w5b7_17",
+      "template": "Q1_P1_lookup",
+      "subtype": "Data completion: one-cell lookup with value-only options",
+      "tier": "easy",
+      "band_target": null,
+      "passage": "Capercaillie and black grouse, large birds of European forests, are hunted by many predators, which also kill one another. Reviewing decades of published research, Cristian N. Waggershauser and colleagues determined how many other kinds of grouse predators each predator had been reported to kill, and how many had killed it. The least weasel, a small mammal, was frequently a victim: according to the table, it was reported killed by ______",
+      "stem": "Which choice most effectively uses data from the table to complete the statement?",
+      "options": [
+        "8 other kinds of predators.",
+        "none of the other kinds of predators.",
+        "9 other kinds of predators.",
+        "4 other kinds of predators."
+      ],
+      "answer_letter": "A",
+      "table": {
+        "title": "Lethal Interactions among Predators of European Forest Grouse",
+        "columns": [
+          "Predator",
+          "Kinds of predators it was reported to kill",
+          "Kinds of predators reported to kill it"
+        ],
+        "rows": [
+          [
+            "Eagle owl",
+            "9",
+            "0"
+          ],
+          [
+            "Northern goshawk",
+            "6",
+            "2"
+          ],
+          [
+            "Pine marten",
+            "5",
+            "4"
+          ],
+          [
+            "Least weasel",
+            "0",
+            "8"
+          ],
+          [
+            "Eurasian lynx",
+            "2",
+            "0"
+          ]
+        ],
+        "note": "Counts leave out interactions known only from single anecdotal reports."
+      },
+      "figure": null,
+      "explanation": "The statement asks how many kinds of predators were reported to kill the least weasel. In the table’s least weasel row, the column for kinds of predators reported to kill it shows 8, so choice A is correct.",
+      "distractors": {
+        "B": {
+          "recipe": "WGRP: the other column of the same row",
+          "why_wrong": "The least weasel was reported to kill none of the other kinds of predators (0 in the table); the statement asks instead how many kinds were reported to kill it."
+        },
+        "C": {
+          "recipe": "WGRP: another row's value",
+          "why_wrong": "9 is the number of kinds of predators the eagle owl was reported to kill."
+        },
+        "D": {
+          "recipe": "WGRP: another row's value",
+          "why_wrong": "4 is the number of kinds of predators reported to kill the pine marten."
+        }
+      },
+      "models": [
+        "1.30",
+        "1.33",
+        "1.38",
+        "1.43",
+        "1.44"
+      ],
+      "sources": [
+        {
+          "what": "Waggershauser, Ruffino, Kortland, Lambin 2021, Ecology and Evolution, Lethal interactions among forest-grouse predators are numerous, motivated by hunger and carcasses, and their impacts determined by the demographic value of the victims: systematic literature review of lethal interactions among forest-grouse predators in Europe, 44 pairwise interactions among 12 taxa; Table 1 number of focal taxa each predator kills / is victim to (anecdotal counts in parentheses): eagle owl 9(1)/0(1), northern goshawk 6(1)/2(1), pine marten 5(2)/4(1), least weasel 0/8(2), Eurasian lynx 2(1)/0",
+          "url": "https://doi.org/10.1002/ece3.7574"
+        }
+      ],
+      "notes": "Easy. Life science (ecology). One-cell lookup with value-only options (CB 1.30, 1.33): each distractor is another cell (same row's other column, two other rows). Five of the review's twelve taxa shown; parenthesized anecdotal counts left out, as the note says. Capercaillie and black grouse are the forest grouse the review concerns. Blind solve by the writer, key hidden: A.",
+      "word_count": 70,
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass",
+        "notes": [
+          "core claim confirmed in the Ecology and Evolution abstract"
+        ]
+      }
+    },
+    {
+      "id": "command_of_evidence.T1_single.easy.w5b7_18",
+      "template": "T1_single",
+      "subtype": "Hypothetical finding supports a claim about behavior (the claim's variable observed directly)",
+      "tier": "easy",
+      "band_target": null,
+      "passage": "Most bats in cold climates hibernate through the winter, but the length of their active season varies with local conditions. Zoologist Karl Frafjord used an ultrasound recorder to monitor soprano pipistrelles, small insect-eating bats, in a valley in southwestern Norway, where nights are very short in summer and very long in autumn. Frafjord claims that the bats adjusted their nightly activity to the changing length of the night.",
+      "stem": "Which finding, if true, would most directly support Frafjord’s claim?",
+      "options": [
+        "Song flights by male bats were recorded mostly in August and September.",
+        "A bat box in the valley was used by groups of bats in late summer and by hibernating bats in winter.",
+        "The bats were recorded flying in every month of the year, though only rarely in the coldest months, from December to March.",
+        "In June the bats flew only in the brief hours of darkness, but in October they flew through much more of the night."
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "Frafjord claims that the bats “adjusted their nightly activity to the changing length of the night.” Choice D shows this: in June, when nights are short, the bats flew only in the brief hours of darkness, while in October, when nights are longer, they flew through much more of the night.",
+      "distractors": {
+        "A": {
+          "recipe": "OFF: a seasonal pattern in another behavior",
+          "why_wrong": "When males sang tells which months were busiest for song flights, not how the bats’ activity within a night changed with night length."
+        },
+        "B": {
+          "recipe": "OFF: a fact about roosting",
+          "why_wrong": "How a bat box was used says nothing about the hours of the night when the bats flew."
+        },
+        "C": {
+          "recipe": "OFF: the active season, not nightly activity",
+          "why_wrong": "This concerns which months the bats were active, not whether their activity on a given night matched how long that night lasted."
+        }
+      },
+      "models": [
+        "1.29",
+        "1.41",
+        "1.45",
+        "1.5"
+      ],
+      "sources": [
+        {
+          "what": "Frafjord 2021, BMC Zoology, Activity patterns of the soprano pipistrelle Pipistrellus pygmaeus throughout the year in southern Norway: ultrasound recorder in Frafjord, a small valley in south-western Norway, April 2018 to June 2019; recorded flying in all months but very few in December-March; regular activity late April or early May to late October; social calls (male song flights) mostly August and September; the species adjusted its activity to the changing night length, closely following sunset and sunrise; a bat box used for harems in late summer and autumn and for winter hibernation",
+          "url": "https://doi.org/10.1186/s40850-021-00065-x"
+        }
+      ],
+      "notes": "Easy. Life science (animal behavior). One-step operationalization: the key observes the claim's variable (timing within the night against night length). All three distractors are true results of the study that answer a different question (OFF), as in CB 1.1 and 1.29. Blind solve by the writer, key hidden: D.",
+      "word_count": 68,
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass",
+        "notes": [
+          "core claim confirmed in the PMC full text ('adjusted its activity to the changing night length'); third pipistrelle item in the bank but a different finding"
+        ]
+      }
+    },
+    {
+      "id": "command_of_evidence.T3_person_quote.easy.w5b7_19",
+      "template": "T3_person_quote",
+      "subtype": "Quotation from an art historian supports a claim about an artist's method (study of real animals, not only of pictures)",
+      "tier": "easy",
+      "band_target": null,
+      "passage": "Trained first by her father, a landscape painter, the French artist Rosa Bonheur (1822–1899) became one of the most celebrated animal painters of the nineteenth century. One of her best-known works, The Horse Fair, completed in 1855, depicts a horse market in Paris on a canvas nearly five meters wide. A curator claims that the lifelike animals in Bonheur’s paintings reflect her close study of the bodies of real animals.",
+      "stem": "Which quotation from a work by an art historian would be the most effective evidence for the curator to include in support of this claim?",
+      "options": [
+        "“At fourteen, Bonheur began copying paintings in the Louvre, among them works by Peter Paul Rubens and by the Dutch painter Paulus Potter, who painted farm animals.”",
+        "“Bonheur dissected animals at a veterinary school and studied their anatomy in the slaughterhouses of Paris, making detailed drawings she later used while painting.”",
+        "“When The Horse Fair was first shown at the Paris Salon, it stirred debate among critics and collectors, which helped Bonheur make a name for herself beyond France.”",
+        "“In 1856 Bonheur traveled to England and Scotland, where she met Queen Victoria and the critic John Ruskin.”"
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The curator claims that “the lifelike animals in Bonheur’s paintings reflect her close study of the bodies of real animals.” Choice B supports this: Bonheur dissected animals and studied their anatomy in slaughterhouses, and she later used the drawings she made there “while painting.”",
+      "distractors": {
+        "A": {
+          "recipe": "HALF: close study, but of pictures rather than animals",
+          "why_wrong": "Copying paintings in the Louvre is careful study, but of other artists’ pictures, not of the bodies of real animals, which is what the claim concerns."
+        },
+        "C": {
+          "recipe": "OFF: the painting's reception",
+          "why_wrong": "The debate over The Horse Fair concerns how the painting was received, not how Bonheur learned to paint animals convincingly."
+        },
+        "D": {
+          "recipe": "OFF: her travels and acquaintances",
+          "why_wrong": "Meeting Queen Victoria and John Ruskin says nothing about how Bonheur studied the animals she painted."
+        }
+      },
+      "models": [
+        "1.15",
+        "1.19",
+        "1.20",
+        "1.26"
+      ],
+      "sources": [
+        {
+          "what": "Rosa Bonheur (1822-1899), French painter and animalier; her father, the landscape and portrait painter Oscar-Raymond Bonheur, undertook her training; copied paintings at the Louvre from age fourteen (Poussin, Rubens, Paulus Potter, Karel Dujardin and others); studied animal anatomy and osteology in the abattoirs of Paris and dissected animals at the Ecole nationale veterinaire d'Alfort, preparing detailed studies she later used as references for her paintings and sculptures; The Horse Fair, started 1851, completed 1855, 8 by 16 feet (2.4 by 4.9 m), a horse market in Paris, now in the Metropolitan Museum of Art; first shown at the 1853 Salon, where it sparked debate among critics and collectors and helped her enter the international art world; 1856 trip to England and Scotland, met Queen Victoria and John Ruskin",
+          "url": "https://en.wikipedia.org/wiki/Rosa_Bonheur"
+        }
+      ],
+      "notes": "Easy. Arts (painting). Reviewer replacement for the Chiura Obata draft, whose subject (the 1930 Yosemite prints, sumi-e) is two official items (FSS 3595a991, RS bc930940). Single claim with a half-match (A: close study, but of paintings) and two true facts unrelated to her method (C, D), as in CB 1.15 and 1.19. The historians' quotations are unattributed; their facts stay within the source (Paulus Potter as a painter of farm animals is general knowledge). Bonheur appears nowhere in the bank, claims or official items (grep). Lead 2026-10-27: C's '1853' (true Salon date) dropped, it read as a clash with the passage's 'completed in 1855'.",
+      "word_count": 70,
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 6,
+        "fixes": [
+          "replaced: Chiura Obata's 1930 Yosemite woodblock prints are the subject of official items FSS 3595a991 and RS bc930940 (missed by the writer's grep); new subject Rosa Bonheur, claimed in claims.txt",
+          "reviewer-written replacement, so the blind solve is not independent; each option checked against the source"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "command_of_evidence.Q1_P2_extreme.easy.w5b7_20",
+      "template": "Q1_P2_extreme",
+      "subtype": "Data completion: maximum in one column (the other column's maximum is a different row)",
+      "tier": "easy",
+      "band_target": null,
+      "passage": "Some fish can travel short distances over land. Zoologist Alexander N. Kuznetsov filmed four kinds of these fish from South Vietnam moving across wet clay, recording each specimen’s length and mass. The Asian swamp eel, which crawls by undulating like a snake, included the longest individual studied. The heaviest individual, however, was a ______",
+      "stem": "Which choice most effectively uses data from the table to complete the statement?",
+      "options": [
+        "climbing perch.",
+        "catfish of the genus Clarias.",
+        "striped snakehead.",
+        "Asian swamp eel."
+      ],
+      "answer_letter": "C",
+      "table": {
+        "title": "Largest Fish Studied Moving on Land",
+        "columns": [
+          "Species",
+          "Greatest body length (centimeters)",
+          "Greatest body mass (grams)"
+        ],
+        "rows": [
+          [
+            "Climbing perch",
+            "12",
+            "27"
+          ],
+          [
+            "Striped snakehead",
+            "60",
+            "2,050"
+          ],
+          [
+            "Catfish of the genus Clarias",
+            "45.5",
+            "845"
+          ],
+          [
+            "Asian swamp eel",
+            "66",
+            "435"
+          ]
+        ],
+        "note": "The climbing perch mass is the average for four fish of the same length."
+      },
+      "figure": null,
+      "explanation": "The statement asks which species included the heaviest individual. In the column for greatest body mass, the largest value is 2,050 grams, for the striped snakehead, so choice C is correct.",
+      "distractors": {
+        "A": {
+          "recipe": "wrong extreme (the minimum)",
+          "why_wrong": "The climbing perch had the smallest mass in the table, 27 grams."
+        },
+        "B": {
+          "recipe": "second-largest value",
+          "why_wrong": "The Clarias catfish’s greatest mass, 845 grams, is less than the striped snakehead’s 2,050 grams."
+        },
+        "D": {
+          "recipe": "maximum of the other column",
+          "why_wrong": "The Asian swamp eel had the greatest length (66 centimeters), but its greatest mass was only 435 grams; the text says the heaviest fish was a different species."
+        }
+      },
+      "models": [
+        "1.9",
+        "1.21",
+        "1.23",
+        "1.34"
+      ],
+      "sources": [
+        {
+          "what": "Kuznetsov 2022, Integrative Zoology (published online 2021), How big can a walking fish be? A theoretical inference based on observations on four land-dwelling fish genera of South Vietnam: terrestrial locomotion of Anabas, Channa, Clarias and Monopterus on wet clay; eel-shaped Monopterus crawls by serpentine or sidewinding undulations; Channa is the heaviest fish walking out of water today; Table 1 body lengths and masses: Anabas testudineus 0.12 m (average mass 0.0265 kg), Channa striata up to 0.6 m and 2.05 kg, Clarias batrachus et gariepinus up to 0.455 m and 0.845 kg, Monopterus albus up to 0.66 m and 0.435 kg",
+          "url": "https://doi.org/10.1111/1749-4877.12599"
+        }
+      ],
+      "notes": "Easy. Life science (animal locomotion). Maximum in one column with name-only options (CB 1.21, 1.9); the longest fish (swamp eel) is not the heaviest, so the passage's 'however' and the second column make one trap. 'Clarias catfish' because the paper pools two Clarias species. Blind solve by the writer, key hidden: C.",
+      "word_count": 54,
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [
+          "passage: 'four such species' to 'four kinds of these fish' (the paper studies four genera and pools two Clarias species)"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "command_of_evidence.T2_lit_quote.easy.w5b7_21",
+      "template": "T2_lit_quote",
+      "subtype": "Literary quotation: a single-trait claim (care in his duties)",
+      "tier": "easy",
+      "band_target": null,
+      "passage": "“Rodman the Keeper” is an 1877 short story by Constance Fenimore Woolson. In the story, Woolson portrays John Rodman, superintendent of a national cemetery after the Civil War, as performing his responsibilities with meticulous care: ______",
+      "stem": "Which quotation from “Rodman the Keeper” most effectively illustrates the claim?",
+      "options": [
+        "“The little cottage behind him was empty of life save himself alone.”",
+        "“This still evening in early February he looked out over the level waste.”",
+        "“That regiment, a weak, scarred two hundred, came back a year later with lagging step and colors tattered and scorched, and the girls could not wave their handkerchiefs, wet and sodden with tears.”",
+        "“Infinite pains and labor went into these records of the dead; one hair’s-breadth error, and the whole page was replaced by a new one.”"
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The claim is that Rodman performs his responsibilities “with meticulous care.” Choice D shows this: “Infinite pains and labor” went into his records of the dead, and even “one hair’s-breadth error” made him replace the whole page.",
+      "distractors": {
+        "A": {
+          "recipe": "OFF: his solitude",
+          "why_wrong": "This describes Rodman living alone in his cottage, not the care he takes with his work."
+        },
+        "B": {
+          "recipe": "OFF: the setting",
+          "why_wrong": "This describes the evening and the landscape Rodman looks at, not how he performs his duties."
+        },
+        "C": {
+          "recipe": "OFF: a memory of the war",
+          "why_wrong": "This recalls the return of Rodman’s regiment during the war, not his work as keeper of the cemetery."
+        }
+      },
+      "models": [
+        "1.11",
+        "1.16",
+        "1.36",
+        "1.39",
+        "1.42"
+      ],
+      "sources": [
+        {
+          "what": "Constance Fenimore Woolson, Rodman the Keeper: Southern Sketches (Harper, 1880), Project Gutenberg ebook 33813: opening pages of the title story; all four quotations matched verbatim (straight apostrophe set as curly)",
+          "url": "https://www.gutenberg.org/ebooks/33813"
+        },
+        {
+          "what": "the story first appeared in the March 1877 Atlantic Monthly; John Rodman, a Union veteran, keeper of a national cemetery in the South",
+          "url": "https://www.nybooks.com/articles/2020/07/23/constance-fenimore-woolson-sketches-solitude/"
+        }
+      ],
+      "notes": "Easy. Literature (American short story). Single-trait claim with three off-target distractors from the same opening pages (solitude, setting, war memory), as in CB 1.11. Woolson's East Angels is used in WiC (different work). Blind solve by the writer, key hidden: D.",
+      "word_count": 36,
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [],
+        "status": "pass",
+        "notes": [
+          "quotations matched verbatim against Gutenberg 33813"
+        ]
+      }
+    },
+    {
+      "id": "command_of_evidence.T1_compete.easy.w5b7_22",
+      "template": "T1_compete",
+      "subtype": "Hypothetical finding supports one of two explanations for a trait",
+      "tier": "easy",
+      "band_target": null,
+      "passage": "Male three-spine sticklebacks turn red during the breeding season, a trait usually explained by sexual selection: females prefer brightly colored males. But both sexes also have reddish spines when they are not breeding. According to the social selection hypothesis, these spines evolved as signals of status that help fish win competitions for resources such as food, not as signals to potential mates. Karl Kristian Kroken and colleagues designed an experiment to test this hypothesis.",
+      "stem": "Which finding, if true, would most directly support the social selection hypothesis?",
+      "options": [
+        "Outside the breeding season, sticklebacks avoided feeding near a model fish with red spines but not near an identical model with gray spines.",
+        "During the breeding season, female sticklebacks consistently spent more time near males with bright red coloring than near males whose coloring was dull.",
+        "Sticklebacks that were given food rich in carotenoids, the pigments responsible for red coloring, developed redder spines.",
+        "Sticklebacks have more difficulty detecting red objects under green light than under white light."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The social selection hypothesis holds that red spines are “signals of status that help fish win competitions for resources such as food.” Choice A supports it: outside the breeding season, when mating plays no role, fish kept away from food near a model with red spines but not near one with gray spines, so the red spines affected a contest over food.",
+      "distractors": {
+        "B": {
+          "recipe": "the rival explanation's evidence",
+          "why_wrong": "Females preferring brightly colored males during breeding fits the sexual selection explanation, not the idea that red spines signal status in contests over food."
+        },
+        "C": {
+          "recipe": "OFF: how the color is produced",
+          "why_wrong": "Where the red pigment comes from says nothing about what the red spines signal to other fish."
+        },
+        "D": {
+          "recipe": "OFF: a fact about vision",
+          "why_wrong": "How well sticklebacks see red under different lights does not show whether red spines help them win competitions."
+        }
+      },
+      "models": [
+        "1.25",
+        "1.8",
+        "1.35"
+      ],
+      "sources": [
+        {
+          "what": "Kroken, Sæthre, Nicolaisen, Egeland, Nordeide 2021, Ecology and Evolution, Carotenoids-based reddish pelvic spines in nonreproducing female and male sticklebacks (Gasterosteus aculeatus): signalling social dominance?: social selection hypothesis, conspicuous traits as badges of status associated with boldness or aggression toward conspecifics in conflicts about ecological resources; wild nonreproducing sticklebacks presented with pairs of dummies with gray or red pelvic spines under white or green light (green light impedes detection of red); first food piece eaten near which dummy; results did not support the social selection predictions",
+          "url": "https://doi.org/10.1002/ece3.7892"
+        }
+      ],
+      "notes": "Easy. Life science (evolution and behavior). Two explanations; the key is a hypothetical finding the social selection hypothesis predicts. Kroken and colleagues appear only as testers of the hypothesis (their experiment did not support it), so the passage claims nothing about their result. The breeding-color sentence is general background (male nuptial coloration). Blind solve by the writer, key hidden: A.",
+      "word_count": 74,
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass",
+        "notes": [
+          "core claim confirmed in the abstract; live w2b5_03 is also sticklebacks in CoE but on armor plates, a different trait"
+        ]
+      }
+    }
+  ],
+  "done": true,
+  "removed": [
+    {
+      "id": "command_of_evidence.Q2_P4_trend.medium.w5b7_14",
+      "reason": "Concept twin. The draft (Indonesia, World Bank access to clean cooking fuels, urban vs rural) used the same indicator and split as live command_of_evidence w4b2_16. A reviewer replacement (fixed broadband per 100 people, China catching up with South Korea after 2014) turned out to twin staged w4b7_15 (Myanmar mobile subscriptions catching up with neighbors, same template and tier), and further World Bank series in this skill are saturated, so the cell is left empty. Claims withdrawn in claims.txt."
+    }
+  ]
+}

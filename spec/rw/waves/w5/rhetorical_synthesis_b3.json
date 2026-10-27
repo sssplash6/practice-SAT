@@ -1,1021 +1,1281 @@
 {
- "skill": "Rhetorical Synthesis",
- "slug": "rhetorical_synthesis",
- "part": "w5b3",
- "domain": "Expression of Ideas",
- "plan": {
-  "templates": [
-   {
-    "code": "EXPL",
-    "name": "Explain (cause, origin, advantage, mechanism, definition, significance)"
-   },
-   {
-    "code": "GEN",
-    "name": "Generalization, with or without support"
-   },
-   {
-    "code": "OVERVIEW",
-    "name": "Overview or summary"
-   },
-   {
-    "code": "RANK",
-    "name": "Order or relative degree"
-   },
-   {
-    "code": "NARR",
-    "name": "Begin a narrative"
-   },
-   {
-    "code": "DIFF",
-    "name": "Difference"
-   },
-   {
-    "code": "AUD_NEW",
-    "name": "Introduce or describe to an unfamiliar or new audience"
-   },
-   {
-    "code": "EMPH",
-    "name": "Emphasize one attribute"
-   },
-   {
-    "code": "EXAMPLE",
-    "name": "Example, or explanation plus example"
-   },
-   {
-    "code": "STUDY",
-    "name": "Research study (aim, method, results)"
-   },
-   {
-    "code": "AUD_FAM",
-    "name": "Present or describe to an already familiar audience"
-   },
-   {
-    "code": "QUOTE",
-    "name": "Quotation"
-   },
-   {
-    "code": "DESC",
-    "name": "Describe"
-   },
-   {
-    "code": "SIM",
-    "name": "Similarity"
-   }
-  ]
- },
- "items": [
-  {
-   "id": "rhetorical_synthesis.EXPL.hard.w5b3_01",
-   "template": "EXPL",
-   "subtype": "Explain how (mechanism chain across bullets)",
-   "tier": "hard",
-   "passage": "While researching a topic, a student has taken the following notes:\n• The Bom Jesus funicular, a cable railway in Braga, Portugal, has transported passengers up a steep hillside to a pilgrimage sanctuary since 1882.\n• It operates without an engine, powered entirely by water.\n• Its two cars are attached to opposite ends of a single cable that passes around a pulley at the summit.\n• Underneath each car is a ballast tank for water.\n• Before each departure, the upper car’s tank is filled until that car outweighs the lower one, and gravity draws it downhill.",
-   "stem": "The student wants to explain how the Bom Jesus funicular moves passengers uphill without an engine. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
-   "options": [
-    "Built in Braga, Portugal, in 1882, the Bom Jesus funicular is a cable railway whose two cars are attached to opposite ends of a single cable.",
-    "Water flowing down through the ballast tanks of both cars turns the pulley at the summit, which winds in the cable and lifts the lower car up the hillside.",
-    "Once its tank is filled, the upper car outweighs the lower one and descends, pulling their shared cable around the summit pulley and hauling the lower car uphill.",
-    "Filling the upper car’s ballast tank makes that car heavier than the lower one, so it rolls downhill by itself while the lower car remains at the bottom until the next departure."
-   ],
-   "answer_letter": "C",
-   "table": null,
-   "figure": null,
-   "explanation": "The goal is to explain how the funicular moves passengers uphill without an engine. The notes say the cars are “attached to opposite ends of a single cable that passes around a pulley at the summit” and that “the upper car’s tank is filled until that car outweighs the lower one, and gravity draws it downhill.” Choice C links these facts: the heavier upper car descends, and because the cars share one cable, its descent hauls the lower car up.",
-   "distractors": {
-    "A": {
-     "recipe": "OG (what the funicular is, not how it works)",
-     "why_wrong": "It identifies the funicular and its cable but never explains what makes the cars move, so it does not show how passengers are carried uphill."
-    },
-    "B": {
-     "recipe": "FALSE (goal-shaped: wrong mechanism)",
-     "why_wrong": "It explains a mechanism, but the notes never say water flows through the tanks or turns the pulley; the water simply makes the upper car heavier, and the pulley is only what the cable “passes around.”"
-    },
-    "D": {
-     "recipe": "FALSE (goal-shaped: true first link, cable link dropped)",
-     "why_wrong": "Its first part is accurate, but the cars are fastened to “opposite ends of a single cable,” so they move together; the descending car pulls the lower one up rather than leaving it waiting at the bottom."
-    }
-   },
-   "models": [
-    "8fe4f4ab",
-    "ee51ad04",
-    "3fa48bf3"
-   ],
-   "word_count": 82,
-   "sources": [],
-   "notes": "Subject: technology (the Elevador do Bom Jesus in Braga, a real water-counterbalanced funicular, 1882; only well-known facts used, no invented names). Band 7 moves: how-goal over a three-bullet chain (shared cable, water tank, upper car outweighs lower); the key states the unstated link (the descending car hauls the other up); two goal-shaped FALSE options (B a water-wheel mechanism the notes never give, D drops the shared-cable link) and one OG description, as in ee51ad04.",
-   "band_target": 7
+  "skill": "Rhetorical Synthesis",
+  "slug": "rhetorical_synthesis",
+  "part": "w5b3",
+  "domain": "Expression of Ideas",
+  "plan": {
+    "templates": [
+      {
+        "code": "EXPL",
+        "name": "Explain (cause, origin, advantage, mechanism, definition, significance)"
+      },
+      {
+        "code": "GEN",
+        "name": "Generalization, with or without support"
+      },
+      {
+        "code": "OVERVIEW",
+        "name": "Overview or summary"
+      },
+      {
+        "code": "RANK",
+        "name": "Order or relative degree"
+      },
+      {
+        "code": "NARR",
+        "name": "Begin a narrative"
+      },
+      {
+        "code": "DIFF",
+        "name": "Difference"
+      },
+      {
+        "code": "AUD_NEW",
+        "name": "Introduce or describe to an unfamiliar or new audience"
+      },
+      {
+        "code": "EMPH",
+        "name": "Emphasize one attribute"
+      },
+      {
+        "code": "EXAMPLE",
+        "name": "Example, or explanation plus example"
+      },
+      {
+        "code": "STUDY",
+        "name": "Research study (aim, method, results)"
+      },
+      {
+        "code": "AUD_FAM",
+        "name": "Present or describe to an already familiar audience"
+      },
+      {
+        "code": "QUOTE",
+        "name": "Quotation"
+      },
+      {
+        "code": "DESC",
+        "name": "Describe"
+      },
+      {
+        "code": "SIM",
+        "name": "Similarity"
+      }
+    ]
   },
-  {
-   "id": "rhetorical_synthesis.GEN.hard.w5b3_02",
-   "template": "GEN",
-   "subtype": "Make a generalization (one level up from the cases)",
-   "tier": "hard",
-   "passage": "While researching a topic, a student has taken the following notes:\n• Marchetti’s constant is named for Italian physicist Cesare Marchetti, who described it in 1994.\n• It holds that, on average, people have consistently spent about an hour a day commuting.\n• Before mechanized transportation, most commuters walked, and cities seldom extended more than a few kilometers across.\n• Horse-drawn streetcars, then commuter railways and automobiles, enabled people to travel considerably farther in the same amount of time.\n• As these faster modes spread, cities expanded outward, yet average daily travel time remained roughly constant.",
-   "stem": "The student wants to make a generalization about how faster transportation has affected commuting. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
-   "options": [
-    "Faster forms of transportation have tended to lengthen the distances people commute rather than to shorten the time they spend commuting.",
-    "Each faster form of transportation, from horse-drawn streetcars to automobiles, has allowed commuters to spend less of their day traveling to work.",
-    "Faster transportation has kept cities from growing, because people have been unwilling to spend more than about an hour a day commuting.",
-    "According to Marchetti’s constant, described in 1994, people have consistently spent about an hour a day traveling to and from work."
-   ],
-   "answer_letter": "A",
-   "table": null,
-   "figure": null,
-   "explanation": "The goal is a generalization about how faster transportation has affected commuting. The notes say faster modes “enabled people to travel considerably farther in the same amount of time” and that “average daily travel time remained roughly constant.” Choice A states the general pattern that follows: faster transportation has increased commuting distance, not reduced commuting time.",
-   "distractors": {
-    "B": {
-     "recipe": "FALSE (goal-shaped generalization that misstates the notes)",
-     "why_wrong": "It makes a general claim about faster transportation, but the notes say “average daily travel time remained roughly constant,” so commuters did not come to spend less of the day traveling."
+  "items": [
+    {
+      "id": "rhetorical_synthesis.EXPL.hard.w5b3_01",
+      "template": "EXPL",
+      "subtype": "Explain how (mechanism chain across bullets)",
+      "tier": "hard",
+      "passage": "While researching a topic, a student has taken the following notes:\n• The Bom Jesus funicular, a cable railway in Braga, Portugal, has transported passengers up a steep hillside to a pilgrimage sanctuary since 1882.\n• It operates without an engine, powered entirely by water.\n• Its two cars are attached to opposite ends of a single cable that passes around a pulley at the summit.\n• Underneath each car is a ballast tank for water.\n• Before each departure, the upper car’s tank is filled until that car outweighs the lower one, and gravity draws it downhill.",
+      "stem": "The student wants to explain how the Bom Jesus funicular moves passengers uphill without an engine. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "Built in Braga, Portugal, in 1882, the Bom Jesus funicular is a cable railway whose two cars are attached to opposite ends of a single cable.",
+        "Water flowing down through the ballast tanks of both cars turns the pulley at the summit, which winds in the cable and lifts the lower car up the hillside.",
+        "Once its tank is filled, the upper car outweighs the lower one and descends, pulling their shared cable around the summit pulley and hauling the lower car uphill.",
+        "Filling the upper car’s ballast tank makes that car heavier than the lower one, so it rolls downhill by itself while the lower car remains at the bottom until the next departure."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The goal is to explain how the funicular moves passengers uphill without an engine. The notes say the cars are “attached to opposite ends of a single cable that passes around a pulley at the summit” and that “the upper car’s tank is filled until that car outweighs the lower one, and gravity draws it downhill.” Choice C links these facts: the heavier upper car descends, and because the cars share one cable, its descent hauls the lower car up.",
+      "distractors": {
+        "A": {
+          "recipe": "OG (what the funicular is, not how it works)",
+          "why_wrong": "It identifies the funicular and its cable but never explains what makes the cars move, so it does not show how passengers are carried uphill."
+        },
+        "B": {
+          "recipe": "FALSE (goal-shaped: wrong mechanism)",
+          "why_wrong": "It explains a mechanism, but the notes never say water flows through the tanks or turns the pulley; the water simply makes the upper car heavier, and the pulley is only what the cable “passes around.”"
+        },
+        "D": {
+          "recipe": "FALSE (goal-shaped: true first link, cable link dropped)",
+          "why_wrong": "Its first part is accurate, but the cars are fastened to “opposite ends of a single cable,” so they move together; the descending car pulls the lower one up rather than leaving it waiting at the bottom."
+        }
+      },
+      "models": [
+        "8fe4f4ab",
+        "ee51ad04",
+        "3fa48bf3"
+      ],
+      "word_count": 82,
+      "sources": [],
+      "notes": "Subject: technology (the Elevador do Bom Jesus in Braga, a real water-counterbalanced funicular, 1882; only well-known facts used, no invented names). Band 7 moves: how-goal over a three-bullet chain (shared cable, water tank, upper car outweighs lower); the key states the unstated link (the descending car hauls the other up); two goal-shaped FALSE options (B a water-wheel mechanism the notes never give, D drops the shared-cable link) and one OG description, as in ee51ad04.",
+      "band_target": 7,
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 0,
+        "facts": "no web check (WAVE.md, Rhetorical Synthesis); checked only that no made-up finding is attributed to a real person or organisation",
+        "fixes": [],
+        "status": "pass"
+      },
+      "band7": {
+        "verdict": "band 7",
+        "why": "Key states a link the notes never state (the descending car hauls the other up through the shared cable). Two goal-shaped FALSE options: B gives a plausible water-wheel mechanism the notes never support, D gets the first link right and then strands the lower car, which only the shared-cable bullet rules out; A is an accurate off-goal description. Notes 15.3% rare words."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "C",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
     },
-    "C": {
-     "recipe": "FALSE (goal-shaped generalization that misstates the notes)",
-     "why_wrong": "It makes a general claim linking faster transportation and commuting, but the notes say that as faster modes spread, “cities expanded outward,” not that they stopped growing."
+    {
+      "id": "rhetorical_synthesis.GEN.hard.w5b3_02",
+      "template": "GEN",
+      "subtype": "Make a generalization (one level up from the cases)",
+      "tier": "hard",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Marchetti’s constant is named for Italian physicist Cesare Marchetti, who described it in 1994.\n• It holds that, on average, people have consistently spent about an hour a day commuting.\n• Before mechanized transportation, most commuters walked, and cities seldom extended more than a few kilometers across.\n• Horse-drawn streetcars, then commuter railways and automobiles, enabled people to travel considerably farther in the same amount of time.\n• As these faster modes spread, cities expanded outward, yet average daily travel time remained roughly constant.",
+      "stem": "The student wants to make a generalization about how faster transportation has affected commuting. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "Faster forms of transportation have tended to lengthen the distances people commute rather than to shorten the time they spend commuting.",
+        "Each faster form of transportation, from horse-drawn streetcars to automobiles, has allowed commuters to spend less of their day traveling to work.",
+        "Faster transportation has kept cities from growing, because people have been unwilling to spend more than about an hour a day commuting.",
+        "According to Marchetti’s constant, described in 1994, people have consistently spent about an hour a day traveling to and from work."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The goal is a generalization about how faster transportation has affected commuting. The notes say faster modes “enabled people to travel considerably farther in the same amount of time” and that “average daily travel time remained roughly constant.” Choice A states the general pattern that follows: faster transportation has increased commuting distance, not reduced commuting time.",
+      "distractors": {
+        "B": {
+          "recipe": "FALSE (goal-shaped generalization that misstates the notes)",
+          "why_wrong": "It makes a general claim about faster transportation, but the notes say “average daily travel time remained roughly constant,” so commuters did not come to spend less of the day traveling."
+        },
+        "C": {
+          "recipe": "FALSE (goal-shaped generalization that misstates the notes)",
+          "why_wrong": "It makes a general claim linking faster transportation and commuting, but the notes say that as faster modes spread, “cities expanded outward,” not that they stopped growing."
+        },
+        "D": {
+          "recipe": "PART (the constant without the effect of faster transportation)",
+          "why_wrong": "It states Marchetti’s observation about daily travel time but says nothing about what faster transportation changed, so it does not generalize about its effect."
+        }
+      },
+      "models": [
+        "3b02e88a",
+        "7f5715e4",
+        "2c61e0b9"
+      ],
+      "word_count": 80,
+      "sources": [],
+      "notes": "Subject: social science (Marchetti’s constant, Cesare Marchetti 1994, a real and documented observation; no figures beyond the one hour and “a few kilometers”). Band 7 moves: the generalization climbs a level (the effect of faster transportation on commuting) and is derived from two bullets (“much farther in the same amount of time” plus “remained roughly constant”), the key adding “rather than”; two goal-shaped FALSE generalizations that fail on different stated facts (B says commuting time fell, C says cities stopped growing) and one PART that states the constant alone (D), the 7f5715e4 mix with a second FALSE.",
+      "band_target": 7,
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 0,
+        "facts": "no web check (WAVE.md, Rhetorical Synthesis); checked only that no made-up finding is attributed to a real person or organisation",
+        "fixes": [],
+        "status": "pass"
+      },
+      "band7": {
+        "verdict": "band 7",
+        "why": "The generalization climbs a level and is derived from two bullets (farther in the same time, plus time constant), with the key adding “rather than.” B and C are goal-shaped generalizations each false on a different stated fact, B also appealing to the common belief that faster travel saves time; D states the constant alone."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "A",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
     },
-    "D": {
-     "recipe": "PART (the constant without the effect of faster transportation)",
-     "why_wrong": "It states Marchetti’s observation about daily travel time but says nothing about what faster transportation changed, so it does not generalize about its effect."
+    {
+      "id": "rhetorical_synthesis.OVERVIEW.hard.w5b3_03",
+      "template": "OVERVIEW",
+      "subtype": "Overview of a process",
+      "tier": "hard",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Large sulfur deposits lie deep underground along the US Gulf Coast, frequently beneath treacherous layers of quicksand.\n• In the 1890s, chemist Herman Frasch developed a method of extracting the sulfur without excavating mines.\n• In the Frasch process, three concentric pipes are drilled down into a deposit.\n• Superheated water pumped down the outermost pipe melts the surrounding sulfur.\n• Compressed air injected through the innermost pipe then forces the molten sulfur upward through the middle pipe.\n• Most sulfur is now recovered as a by-product of petroleum refining.",
+      "stem": "The student wants to provide an overview of the Frasch process. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "In the Frasch process, superheated water pumped down the innermost pipe melts the sulfur, and compressed air then forces it up through the outermost pipe.",
+        "Developed by chemist Herman Frasch in the 1890s, the Frasch process made it possible to extract sulfur lying beneath quicksand along the US Gulf Coast.",
+        "In the Frasch process, superheated water melts sulfur inside mines excavated beneath the quicksand, and the molten sulfur is then pumped upward through concentric pipes.",
+        "In the Frasch process, superheated water melts sulfur deep underground, and compressed air then pushes the molten sulfur to the surface through concentric pipes."
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "An overview of the process should cover how the sulfur is reached, melted and brought up. The notes say “three concentric pipes are drilled down into a deposit,” “Superheated water pumped down the outermost pipe melts the surrounding sulfur,” and “Compressed air injected through the innermost pipe then forces the molten sulfur upward through the middle pipe.” Choice D summarizes all three stages in one sentence.",
+      "distractors": {
+        "A": {
+          "recipe": "FALSE (goal-shaped: pipes swapped)",
+          "why_wrong": "It has the shape of an overview, but it misplaces the pipes: the notes say the water is pumped down “the outermost pipe,” the air is injected “through the innermost pipe,” and the sulfur rises “through the middle pipe.”"
+        },
+        "B": {
+          "recipe": "OG (origin and purpose, not the process)",
+          "why_wrong": "It tells who devised the process, when, and where it was used, but it gives none of the steps, so it is not an overview of the process itself."
+        },
+        "C": {
+          "recipe": "FALSE (goal-shaped: one stated fact reversed)",
+          "why_wrong": "It covers melting and pumping, but the notes say Frasch’s method extracts the sulfur “without excavating mines,” so describing mines excavated beneath the quicksand misstates the process."
+        }
+      },
+      "models": [
+        "964c6055",
+        "1.21",
+        "3.8"
+      ],
+      "word_count": 85,
+      "sources": [],
+      "notes": "Subject: chemistry and industry (the Frasch process, Herman Frasch, 1890s; standard textbook chemistry, no invented names or figures). Band 7 moves: overview over a three-stage process; two goal-shaped FALSE overviews (A swaps the pipes the water and the sulfur travel through, C adds mines the notes rule out) and one OG on origin; key compresses three bullets. Shares the 964c6055 shape (one sentence spanning the arc) with the 1.21 process topic.",
+      "band_target": 7,
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 0,
+        "facts": "no web check (WAVE.md, Rhetorical Synthesis); checked only that no made-up finding is attributed to a real person or organisation",
+        "fixes": [
+          "option A rewritten: it now misplaces the pipes (water down the innermost, sulfur up the outermost) instead of making air melt the sulfur, a swap common sense alone ruled out; the student must now trace the three pipe bullets"
+        ],
+        "status": "fixed"
+      },
+      "band7": {
+        "verdict": "band 7",
+        "why": "After the fix, two goal-shaped FALSE overviews need bullet tracing: A misplaces the pipes, C adds mines that a separate bullet rules out; B is the origin-only option of 1773fa73. The key compresses three bullets. The Frasch process appears in some chemistry courses, but nothing outside the notes is needed and background knowledge does not pick out the pipe swap."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "D",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "rhetorical_synthesis.RANK.hard.w5b3_04",
+      "template": "RANK",
+      "subtype": "Relative degree on two measures that point opposite ways",
+      "tier": "hard",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Olympus Mons and Alba Mons are shield volcanoes on Mars, broad mountains built up by successive flows of fluid lava.\n• Olympus Mons, one of the tallest volcanoes in the solar system, rises about 22 kilometers above the surrounding plains.\n• Its base measures roughly 600 kilometers across.\n• Alba Mons reaches a height of only about 7 kilometers.\n• Its lava flows extend at least 1,350 kilometers from its summit.",
+      "stem": "The student wants to emphasize the relative sizes of the two volcanoes. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "Olympus Mons rises about 22 kilometers above the surrounding plains and measures roughly 600 kilometers across, and Alba Mons is about 7 kilometers high.",
+        "Although Olympus Mons is roughly three times as tall as Alba Mons, Alba Mons, whose lava flows reach at least 1,350 kilometers, covers a far wider area.",
+        "Olympus Mons, which rises about three times as high as Alba Mons, also covers more ground, with a base that measures roughly 600 kilometers across.",
+        "Alba Mons is only about a third as tall as Olympus Mons, but with a base that measures roughly 600 kilometers across, it covers a far wider area."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The goal is to emphasize how the two volcanoes compare in size. The notes give two measures that point opposite ways: Olympus Mons “rises about 22 kilometers” while Alba Mons reaches “only about 7 kilometers,” but Alba Mons’s lava flows “extend at least 1,350 kilometers from its summit,” far beyond Olympus Mons’s base of “roughly 600 kilometers across.” Choice B states both relations: Olympus Mons is taller, and Alba Mons covers a far wider area.",
+      "distractors": {
+        "A": {
+          "recipe": "LIST (both volcanoes’ figures, no relation)",
+          "why_wrong": "It lists measurements for each volcano but never compares them, and it leaves out how far Alba Mons spreads, so it does not emphasize their relative sizes."
+        },
+        "C": {
+          "recipe": "FALSE (goal-shaped: misreads the second measure)",
+          "why_wrong": "It compares the volcanoes, but it wrongly says Olympus Mons covers more ground; Alba Mons’s flows reach “at least 1,350 kilometers from its summit,” well beyond a 600-kilometer base."
+        },
+        "D": {
+          "recipe": "FALSE (goal-shaped: figure attached to the wrong volcano)",
+          "why_wrong": "It makes the right comparison, but it gives Alba Mons a base “roughly 600 kilometers across,” a figure the notes give for Olympus Mons; for Alba Mons the notes give only how far its lava flows extend."
+        }
+      },
+      "models": [
+        "5fa51c86",
+        "2.37"
+      ],
+      "word_count": 67,
+      "sources": [],
+      "notes": "Subject: astronomy and planetary geology (Olympus Mons and Alba Mons on Mars; heights and Alba Mons’s 1,350-kilometer flow extent are standard published figures, rounded). Band 7 moves: two measures pointing opposite ways as in 5fa51c86 (Hanoi larger, Ulaanbaatar a larger share); key derives “about three times as tall” and “covers far more ground” from the figures; two goal-shaped FALSE comparisons (C misreads the area, D attaches Olympus Mons’s 600-kilometer base to Alba Mons) and one LIST (A).",
+      "band_target": 7,
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 0,
+        "facts": "no web check (WAVE.md, Rhetorical Synthesis); checked only that no made-up finding is attributed to a real person or organisation",
+        "fixes": [
+          "option D changed from an off-goal similarity (ruled out on sight) to a goal-shaped FALSE comparison that attaches Olympus Mons’s 600-kilometer base to Alba Mons, giving the item the band-7 mix of two FALSE distractors"
+        ],
+        "status": "fixed"
+      },
+      "band7": {
+        "verdict": "band 7",
+        "why": "Two measures pointing opposite ways as in 5fa51c86; the key derives “roughly three times as tall” and “far wider area” (1,350 km from the summit against a 600 km base). After the fix, two goal-shaped FALSE comparisons (C says Olympus Mons covers more ground, D attaches Olympus Mons’s base figure to Alba Mons) and one LIST (A)."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "B",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "rhetorical_synthesis.NARR.hard.w5b3_05",
+      "template": "NARR",
+      "subtype": "Begin a narrative (chronological start)",
+      "tier": "hard",
+      "passage": "While researching a topic, a student has taken the following notes:\n• In 1841, fourteen-year-old Manjiro and four other Japanese fishermen were shipwrecked on Torishima, an uninhabited island south of Japan’s main islands.\n• Months later, the crew of an American whaling vessel rescued the stranded castaways.\n• The ship’s captain took Manjiro to Massachusetts, where the boy studied English and navigation.\n• Manjiro returned to Japan in 1851 and subsequently served the government of the shogun, Japan’s military ruler, as an interpreter.\n• Before Manjiro, very few Japanese people had ever visited the United States.",
+      "stem": "The student wants to begin a narrative about Manjiro’s journey to the United States. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "Manjiro would not return to Japan until 1851, ten years after he had first left it, and would later serve as an interpreter for the shogun’s government.",
+        "Manjiro, a fourteen-year-old Japanese fisherman, left Japan in 1841 aboard an American whaling ship that was soon wrecked on the uninhabited island of Torishima.",
+        "In 1841, a fourteen-year-old Japanese fisherman named Manjiro was stranded with four companions on Torishima, an uninhabited island, after their boat was wrecked.",
+        "Manjiro, whom the captain of an American whaling vessel took to Massachusetts, was among the very few Japanese people to have visited the United States."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "A narrative should begin at the start of the story and introduce its main character. Choice C does both: it introduces Manjiro as a “fourteen-year-old” Japanese fisherman and opens in 1841, when he and “four other Japanese fishermen were shipwrecked on Torishima, an uninhabited island south of Japan’s main islands.” His rescue, his years in Massachusetts and his return can follow from this opening.",
+      "distractors": {
+        "A": {
+          "recipe": "OG (jumps to the end of the story)",
+          "why_wrong": "It tells when Manjiro returned to Japan and what he did afterward, so it starts the story at its end rather than at the shipwreck that began his journey."
+        },
+        "B": {
+          "recipe": "FALSE (goal-shaped: the wrecked boat and the rescuing ship swapped)",
+          "why_wrong": "It opens in 1841 as a narrative should, but it misstates the notes: Manjiro was one of the “Japanese fishermen” who were shipwrecked, and the American whaling vessel was the one whose crew “rescued the stranded castaways,” not the one that was wrecked."
+        },
+        "D": {
+          "recipe": "OG (summary of significance)",
+          "why_wrong": "It sums up where Manjiro ended up and why that was notable instead of starting the sequence of events, so it reads as a conclusion, not an opening."
+        }
+      },
+      "models": [
+        "af88c47a",
+        "3.5"
+      ],
+      "word_count": 80,
+      "sources": [],
+      "notes": "Subject: history (Nakahama Manjiro, the Japanese castaway rescued by the American whaler John Howland in 1841, taken to Massachusetts by its captain, back in Japan in 1851, later an interpreter for the shogunate; facts as on his Wikipedia page, ship and captain left unnamed). Replaces the drafted Ralph Lazo item: Lazo’s voluntary entry into a 1942 incarceration camp repeats the live Isamu Noguchi item (text_structure_and_purpose.F_example.hard.w3b3_04), and Manzanar is also the setting of the live Toyo Miyatake item. Band 7 moves: key at the chronological start with the character introduced; a goal-shaped FALSE opening that swaps the wrecked boat and the rescuing whaler (B); a jump to the end (A) and a surname-first summary of significance (D), as in af88c47a.",
+      "band_target": 7,
+      "rewrite": "New subject (Manjiro, 1841 shipwreck and voyage to the United States) replacing Ralph Lazo at Manzanar, a concept already live (Noguchi enters Poston voluntarily, TSP w3b3_04) in a setting already live (Miyatake at Manzanar, CID w2b3_23).",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 1,
+        "facts": "RS: no web check required; Manjiro is a real person, so his biography was confirmed on Wikipedia (John Manjiro) and nothing invented is attributed to him",
+        "fixes": [
+          "subject swap: Ralph Lazo replaced by Manjiro (Lazo’s voluntary entry into a 1942 camp clones the live Isamu Noguchi item, TSP w3b3_04, and Manzanar is the setting of the live Toyo Miyatake item, CID w2b3_23); notes, stem, options, explanation and distractors rewritten, key kept at C; Manjiro’s facts checked against Wikipedia (1841 wreck on Torishima at 14, American whaler rescue, Massachusetts, English and navigation, 1851 return, interpreter); claims.txt updated"
+        ],
+        "status": "fixed"
+      },
+      "band7": {
+        "verdict": "band 7",
+        "why": "New subject. Key begins at the chronological start and introduces the character, as af88c47a. B is a goal-shaped opening that swaps the wrecked boat and the rescuing whaler, caught only by tracing bullets 1 and 2; A jumps to the end; D is a surname-first summary that names the destination and significance, the af88c47a C pattern."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "C",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "rhetorical_synthesis.DIFF.medium.w5b3_06",
+      "template": "DIFF",
+      "subtype": "Contrast two items on the named attribute",
+      "tier": "medium",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Pietra dura and scagliola are decorative techniques that flourished in Italy during the 1500s and 1600s.\n• Pietra dura artisans cut thin slices of colored stone, such as marble and lapis lazuli, and fit them together into elaborate images.\n• Scagliola artisans combine powdered gypsum, animal glue, and pigments into a paste.\n• Once hardened and polished, the paste convincingly imitates inlaid stone.\n• Both techniques were frequently used to decorate tabletops.",
+      "stem": "The student wants to emphasize a difference between the materials used in the two techniques. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "Pietra dura and scagliola, two decorative techniques that flourished in Italy, were both frequently used to decorate tabletops.",
+        "Whereas pietra dura uses slices of real stone, scagliola uses a paste of gypsum, glue, and pigments that only imitates stone.",
+        "Scagliola artisans combine powdered gypsum, animal glue, and pigments into a paste that, once hardened and polished, convincingly imitates inlaid stone.",
+        "Though they were used for similar purposes, pietra dura and scagliola were made with very different materials."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The goal is to contrast the materials of the two techniques. The notes say pietra dura artisans “cut thin slices of colored stone,” while scagliola artisans “combine powdered gypsum, animal glue, and pigments into a paste” that “convincingly imitates inlaid stone.” Choice B sets these materials side by side with “Whereas.”",
+      "distractors": {
+        "A": {
+          "recipe": "REL (a similarity instead of a difference)",
+          "why_wrong": "It points out what the techniques share, their Italian origin and their use on tabletops, rather than how their materials differ."
+        },
+        "C": {
+          "recipe": "PART (one technique only)",
+          "why_wrong": "It describes only the materials of scagliola and never mentions pietra dura, so no difference between the two is stated."
+        },
+        "D": {
+          "recipe": "VAGUE (says the materials differ without saying how)",
+          "why_wrong": "It asserts that the materials were “very different” but never says what either technique is made from."
+        }
+      },
+      "models": [
+        "2.10",
+        "2.17",
+        "2.41"
+      ],
+      "word_count": 68,
+      "sources": [],
+      "notes": "Subject: arts (pietra dura and scagliola, two real Italian decorative techniques; general, well-known facts only, no names). Distractor mix as in the bank’s medium DIFF items: REL, PART, VAGUE.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 0,
+        "facts": "no web check (WAVE.md, Rhetorical Synthesis); checked only that no made-up finding is attributed to a real person or organisation",
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.DIFF.medium.w5b3_07",
+      "template": "DIFF",
+      "subtype": "Contrast two items on the named attribute",
+      "tier": "medium",
+      "passage": "While researching a topic, a student has taken the following notes:\n• The camera obscura and the magic lantern are early optical devices that project images.\n• A camera obscura is a darkened chamber or box with a small opening in one wall.\n• Light entering through the opening casts an inverted image of the surrounding scene onto the opposite wall.\n• A magic lantern uses a lamp and a lens to project illustrations painted on glass slides.",
+      "stem": "The student wants to contrast the images that the two devices project. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "Both the camera obscura and the magic lantern are early optical devices that project images onto a surface by means of an opening or a lens.",
+        "A magic lantern, an early optical device with a lamp and a lens, projects illustrations painted on glass slides onto a surface.",
+        "In a camera obscura, light entering through a small opening casts an inverted image of the surrounding scene onto the opposite wall.",
+        "While a camera obscura projects a live image of its surroundings, a magic lantern projects illustrations painted on glass slides."
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The goal is to contrast the images the devices project. The notes say a camera obscura casts “an inverted image of the surrounding scene,” while a magic lantern projects “illustrations painted on glass slides.” Choice D contrasts these two kinds of image with “While.”",
+      "distractors": {
+        "A": {
+          "recipe": "REL (a similarity instead of a contrast)",
+          "why_wrong": "It states what the two devices have in common, projecting images, rather than how their images differ."
+        },
+        "B": {
+          "recipe": "PART (one device only)",
+          "why_wrong": "It describes only the magic lantern, so it does not contrast its images with those of a camera obscura."
+        },
+        "C": {
+          "recipe": "PART (one device only)",
+          "why_wrong": "It describes only the image a camera obscura produces and never mentions the magic lantern."
+        }
+      },
+      "models": [
+        "1.13",
+        "2.17",
+        "2.11"
+      ],
+      "word_count": 63,
+      "sources": [],
+      "notes": "Subject: arts and technology (the camera obscura and the magic lantern, standard facts, no names). Key adds “live,” a light paraphrase of “the surrounding scene.”",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 0,
+        "facts": "no web check (WAVE.md, Rhetorical Synthesis); checked only that no made-up finding is attributed to a real person or organisation",
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.AUD_NEW.medium.w5b3_08",
+      "template": "AUD_NEW",
+      "subtype": "Describe a work to an audience unfamiliar with the person",
+      "tier": "medium",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Ira Aldridge (1807–1867) was an African American actor born in New York City.\n• Finding few opportunities in the United States, he relocated to England in 1824.\n• In 1833, he performed the title role in Othello at the Theatre Royal, Covent Garden, one of London’s principal theaters.\n• He subsequently toured Europe for many years, appearing in cities such as Berlin and Saint Petersburg.",
+      "stem": "The student wants to describe Aldridge’s 1833 London performance to an audience unfamiliar with Ira Aldridge. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "In 1833, African American actor Ira Aldridge performed the title role in Othello at the Theatre Royal, Covent Garden, one of London’s principal theaters.",
+        "In 1833, Aldridge performed the title role in Othello at the Theatre Royal, Covent Garden, one of London’s principal theaters.",
+        "Born in New York City in 1807, Ira Aldridge was an African American actor who relocated to England in 1824.",
+        "During his years of touring Europe, African American actor Ira Aldridge appeared in cities such as Berlin and Saint Petersburg."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "An audience unfamiliar with Aldridge needs to learn who he was before reading about the performance. Choice A identifies him as an “African American actor” and then describes the 1833 performance: he “performed the title role in Othello at the Theatre Royal, Covent Garden, one of London’s principal theaters.”",
+      "distractors": {
+        "B": {
+          "recipe": "AUD (detail without identifying the actor)",
+          "why_wrong": "It describes the performance but refers to “Aldridge” without saying who he was, which an unfamiliar audience would need."
+        },
+        "C": {
+          "recipe": "OG (introduces the actor, not the performance)",
+          "why_wrong": "It tells who Aldridge was and when he moved to England but says nothing about his 1833 London performance."
+        },
+        "D": {
+          "recipe": "OG (a different part of his career)",
+          "why_wrong": "It identifies Aldridge but describes his later European tours rather than the 1833 London performance."
+        }
+      },
+      "models": [
+        "2.34",
+        "2.36"
+      ],
+      "word_count": 62,
+      "sources": [],
+      "notes": "Subject: arts and theater history (Ira Aldridge, a real actor; facts are standard: born New York 1807, England 1824, Othello at Covent Garden 1833, later European tours). Shakespeare is not named because he appears in an official item; the play title alone is used.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 0,
+        "facts": "no web check (WAVE.md, Rhetorical Synthesis); checked only that no made-up finding is attributed to a real person or organisation",
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.AUD_NEW.medium.w5b3_09",
+      "template": "AUD_NEW",
+      "subtype": "Describe a place to an audience unfamiliar with the concept",
+      "tier": "medium",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Eskers are long, winding ridges of sand and gravel.\n• They consist of sediment deposited by meltwater streams that once flowed through tunnels beneath glaciers.\n• The Uppsala esker extends north to south through the Swedish city of Uppsala and far beyond it.\n• Uppsala Castle, constructed in the 1500s, stands on top of the ridge.\n• Groundwater stored in the esker’s gravel supplies much of the city’s drinking water.",
+      "stem": "The student wants to describe the Uppsala esker to an audience unfamiliar with eskers. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "The Uppsala esker, which extends north to south through the city, holds groundwater in its gravel that supplies much of Uppsala’s drinking water.",
+        "Eskers are long, winding ridges of sand and gravel that consist of sediment deposited by meltwater streams flowing through tunnels beneath glaciers.",
+        "The Uppsala esker, a long, winding ridge of sand and gravel left by glacial meltwater, extends through the Swedish city of Uppsala.",
+        "Uppsala Castle, constructed in the 1500s, stands on top of the esker that extends through the Swedish city of Uppsala."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "An audience unfamiliar with eskers needs to know what one is. Choice C explains that eskers are “long, winding ridges of sand and gravel” left by meltwater and then describes the Uppsala esker, which “extends north to south through the Swedish city of Uppsala.”",
+      "distractors": {
+        "A": {
+          "recipe": "AUD (uses the term without explaining it)",
+          "why_wrong": "It describes the Uppsala esker’s groundwater but never says what an esker is, which this audience would need."
+        },
+        "B": {
+          "recipe": "PART (the concept only)",
+          "why_wrong": "It explains what eskers are in general but never describes the Uppsala esker."
+        },
+        "D": {
+          "recipe": "AUD and OG (the castle, with the term unexplained)",
+          "why_wrong": "It is about the castle that stands on the esker, and it uses “esker” without explaining it."
+        }
+      },
+      "models": [
+        "2.36",
+        "2.43",
+        "2.34"
+      ],
+      "word_count": 66,
+      "sources": [],
+      "notes": "Subject: geology (the Uppsala esker, Uppsalaåsen, Sweden; Uppsala Castle sits on it and its gravel holds the groundwater the city draws on; general facts, no figures).",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 0,
+        "facts": "no web check (WAVE.md, Rhetorical Synthesis); checked only that no made-up finding is attributed to a real person or organisation",
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.EXPL.medium.w5b3_10",
+      "template": "EXPL",
+      "subtype": "Explain the origin of a name",
+      "tier": "medium",
+      "passage": "While researching a topic, a student has taken the following notes:\n• A paternoster is an elevator consisting of a chain of open compartments that moves continuously.\n• Passengers step in and out as the compartments pass each floor.\n• Its name comes from Pater Noster (“Our Father”), the Latin opening words of a Christian prayer.\n• The looping chain resembles a string of rosary beads, which are traditionally used to count repetitions of that prayer.",
+      "stem": "The student wants to explain the origin of the paternoster’s name. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "A paternoster is an elevator consisting of a chain of open compartments that moves continuously, allowing passengers to step in and out at each floor.",
+        "Because its compartments move slowly and without stopping, a paternoster allows passengers to travel between floors without waiting.",
+        "The looping chain of open compartments in a paternoster resembles a string of rosary beads.",
+        "The paternoster is named for the opening words of a Christian prayer because its looping chain resembles the rosary beads traditionally used to count that prayer."
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The goal is to explain where the name comes from. The notes say the name “comes from Pater Noster (“Our Father”), the Latin opening words of a Christian prayer,” and that the chain “resembles a string of rosary beads, which are traditionally used to count repetitions of that prayer.” Choice D gives both the source of the name and the resemblance that links the elevator to it.",
+      "distractors": {
+        "A": {
+          "recipe": "OG (what the elevator is)",
+          "why_wrong": "It describes how a paternoster is built and used but says nothing about where its name comes from."
+        },
+        "B": {
+          "recipe": "OG (explains the wrong thing)",
+          "why_wrong": "It explains why passengers need not wait for a paternoster, not why it has that name."
+        },
+        "C": {
+          "recipe": "PART (the resemblance without the name)",
+          "why_wrong": "It notes that the chain resembles rosary beads but never connects this to the name or the prayer it comes from."
+        }
+      },
+      "models": [
+        "1.6",
+        "2.13"
+      ],
+      "word_count": 61,
+      "sources": [],
+      "notes": "Subject: technology (paternoster elevators; standard facts about the name and the rosary resemblance).",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 0,
+        "facts": "no web check (WAVE.md, Rhetorical Synthesis); checked only that no made-up finding is attributed to a real person or organisation",
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.EXPL.medium.w5b3_11",
+      "template": "EXPL",
+      "subtype": "Explain an advantage",
+      "tier": "medium",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Microbiologists of the early 1880s cultivated bacteria on gelatin, a jellylike substance.\n• Gelatin melts at warm temperatures, and certain bacteria digest it.\n• Fanny Hesse, who assisted her husband in a laboratory in Germany, suggested substituting agar.\n• Agar, a seaweed extract she used in jellies at home, remains solid when warm and resists digestion by most bacteria.\n• Agar is still a standard material for cultivating bacteria today.",
+      "stem": "The student wants to explain an advantage of agar over gelatin for growing bacteria. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "Fanny Hesse, who assisted her husband in a laboratory in Germany, suggested that microbiologists substitute agar for gelatin.",
+        "Unlike gelatin, which melts at warm temperatures and can be digested by bacteria, agar remains solid, providing bacteria with a stable surface for growth.",
+        "Gelatin, which microbiologists once used for cultivating bacteria, melts at warm temperatures and can be digested by certain bacteria.",
+        "A seaweed extract that Fanny Hesse had used in jellies at home, agar is still a standard material that laboratories rely on for cultivating bacteria today."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The goal is to explain an advantage of agar over gelatin. The notes say “Gelatin melts at warm temperatures, and certain bacteria digest it,” while agar “remains solid when warm and resists digestion by most bacteria.” Choice B contrasts the two and states the advantage that follows: agar stays solid.",
+      "distractors": {
+        "A": {
+          "recipe": "OG (who suggested agar, not why it is better)",
+          "why_wrong": "It tells who proposed agar but gives no reason agar works better than gelatin."
+        },
+        "C": {
+          "recipe": "PART (the problem without the solution)",
+          "why_wrong": "It explains gelatin’s weaknesses but never mentions agar, so it does not state agar’s advantage."
+        },
+        "D": {
+          "recipe": "OG (origin and later use)",
+          "why_wrong": "It says where Hesse got agar and that it is still used, but not what makes it better than gelatin."
+        }
+      },
+      "models": [
+        "2.3",
+        "2.31"
+      ],
+      "word_count": 66,
+      "sources": [],
+      "notes": "Subject: science history (Fanny Hesse and agar, early 1880s, a well-documented episode; her husband Walther Hesse is left unnamed, as is Robert Koch).",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 0,
+        "facts": "no web check (WAVE.md, Rhetorical Synthesis); checked only that no made-up finding is attributed to a real person or organisation",
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.EMPH.medium.w5b3_12",
+      "template": "EMPH",
+      "subtype": "Emphasize uniqueness or significance",
+      "tier": "medium",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Tlingit activist Elizabeth Peratrovich (1911–1958) campaigned for civil rights in Alaska.\n• During the 1940s, some Alaska businesses displayed signs refusing service to Alaska Natives.\n• In 1945, Peratrovich testified before the territorial senate in support of legislation prohibiting such discrimination.\n• The bill passed, becoming the Alaska Equal Rights Act of 1945.\n• It is frequently cited as the first anti-discrimination law in the United States.\n• Alaska now commemorates Elizabeth Peratrovich Day each February 16.",
+      "stem": "The student wants to emphasize how groundbreaking the Alaska Equal Rights Act was. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "Passed after Peratrovich testified in its support, the Alaska Equal Rights Act of 1945 is frequently cited as the first anti-discrimination law in the United States.",
+        "In 1945, Tlingit activist Elizabeth Peratrovich testified before the territorial senate in support of legislation prohibiting discrimination against Alaska Natives.",
+        "During the 1940s, before the Alaska Equal Rights Act passed, some Alaska businesses displayed signs refusing service to Alaska Natives.",
+        "Each February 16, Alaska commemorates Elizabeth Peratrovich Day in honor of the Tlingit activist whose testimony supported the Equal Rights Act of 1945."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "To show how groundbreaking the act was, the sentence needs the fact that sets it apart. The notes say the act “is frequently cited as the first anti-discrimination law in the United States,” and Choice A states exactly that.",
+      "distractors": {
+        "B": {
+          "recipe": "OG (Peratrovich’s testimony)",
+          "why_wrong": "It describes Peratrovich’s role in supporting the bill but does not show what made the law groundbreaking."
+        },
+        "C": {
+          "recipe": "OG (the conditions before the law)",
+          "why_wrong": "It describes the discrimination the law addressed, not what made the law itself new."
+        },
+        "D": {
+          "recipe": "OG (how Peratrovich is honored)",
+          "why_wrong": "It emphasizes how Alaska honors Peratrovich, not the historic nature of the law."
+        }
+      },
+      "models": [
+        "2.33",
+        "2.20",
+        "2.14"
+      ],
+      "word_count": 72,
+      "sources": [],
+      "notes": "Subject: US history (Elizabeth Peratrovich and the Alaska Equal Rights Act of 1945; the “first” claim is kept hedged as sources state it).",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 0,
+        "facts": "no web check (WAVE.md, Rhetorical Synthesis); checked only that no made-up finding is attributed to a real person or organisation",
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.EMPH.medium.w5b3_13",
+      "template": "EMPH",
+      "subtype": "Emphasize a quantity (derived total)",
+      "tier": "medium",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Ida Pfeiffer (1797–1858) was an Austrian travel writer.\n• She began traveling in her forties, after her two sons had grown up.\n• Between 1846 and 1855, she completed two journeys around the world, frequently traveling alone.\n• Altogether, she covered approximately 32,000 kilometers by land and 240,000 kilometers by sea.\n• Her accounts of these journeys were translated into several languages and widely read.",
+      "stem": "The student wants to emphasize the total distance Pfeiffer traveled. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "Austrian travel writer Ida Pfeiffer did not begin traveling until she was in her forties, after both of her sons had grown up.",
+        "Ida Pfeiffer’s accounts of her journeys around the world were translated into several languages and widely read.",
+        "Ida Pfeiffer traveled a remarkable 272,000 kilometers altogether, approximately 32,000 by land and 240,000 by sea.",
+        "Between 1846 and 1855, Ida Pfeiffer completed two journeys around the world, frequently traveling alone."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The goal is to emphasize the total distance. The notes say Pfeiffer “covered approximately 32,000 kilometers by land and 240,000 kilometers by sea.” Choice C adds these to give the total, 272,000 kilometers, and stresses it with “a remarkable.”",
+      "distractors": {
+        "A": {
+          "recipe": "OG (when she began traveling)",
+          "why_wrong": "It emphasizes how late in life Pfeiffer began traveling, not how far she went."
+        },
+        "B": {
+          "recipe": "OG (her books)",
+          "why_wrong": "It is about the reach of her books, not the distance she traveled."
+        },
+        "D": {
+          "recipe": "OG (the journeys, not the distance)",
+          "why_wrong": "It names her two journeys and that she often traveled alone but gives no distance at all, let alone the total."
+        }
+      },
+      "models": [
+        "2.33",
+        "2.40",
+        "1.15"
+      ],
+      "word_count": 61,
+      "sources": [],
+      "notes": "Subject: history and travel writing (Ida Pfeiffer; the land and sea distances are the figures commonly given for her journeys). Key states a derived total, a medium-tier move.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 0,
+        "facts": "no web check (WAVE.md, Rhetorical Synthesis); checked only that no made-up finding is attributed to a real person or organisation",
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.EXAMPLE.medium.w5b3_14",
+      "template": "EXAMPLE",
+      "subtype": "Explanation and an example",
+      "tier": "medium",
+      "passage": "While researching a topic, a student has taken the following notes:\n• A tombolo is a narrow strip of sand or gravel that connects an island to the mainland.\n• It forms when waves bend around an island and deposit sediment in the sheltered water behind it.\n• Monte Argentario, formerly an island off the coast of Tuscany, Italy, is now connected to the mainland by two tombolos.\n• The town of Orbetello occupies a third, shorter strip of land in the lagoon between them.",
+      "stem": "The student wants to provide an explanation and an example of a tombolo. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "A tombolo is a narrow strip of sand or gravel that forms when waves bend around an island and deposit sediment in the sheltered water behind it.",
+        "Monte Argentario, formerly an island off the coast of Tuscany, Italy, is now connected to the mainland by two tombolos.",
+        "The town of Orbetello, in Tuscany, occupies a strip of land in the lagoon between Monte Argentario’s two tombolos.",
+        "Monte Argentario, a former island off Tuscany, Italy, is joined to the mainland by two tombolos, narrow strips of sand or gravel that link an island to the mainland."
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The goal has two parts: explain what a tombolo is and give an example. Choice D does both. It explains that a tombolo is a “narrow strip of sand or gravel that connects an island to the mainland” and gives Monte Argentario, which “is now connected to the mainland by two tombolos,” as the example.",
+      "distractors": {
+        "A": {
+          "recipe": "PART (explanation without an example)",
+          "why_wrong": "It explains what a tombolo is and how it forms but names no example."
+        },
+        "B": {
+          "recipe": "PART (example without an explanation)",
+          "why_wrong": "It names Monte Argentario’s tombolos but never explains what a tombolo is."
+        },
+        "C": {
+          "recipe": "OG (a nearby town)",
+          "why_wrong": "It locates Orbetello between the tombolos but neither explains what a tombolo is nor presents one as an example."
+        }
+      },
+      "models": [
+        "2.16",
+        "1.19",
+        "3.4"
+      ],
+      "word_count": 70,
+      "sources": [],
+      "notes": "Subject: geology and geography (tombolos; Monte Argentario’s two tombolos and Orbetello between them are standard facts).",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 0,
+        "facts": "no web check (WAVE.md, Rhetorical Synthesis); checked only that no made-up finding is attributed to a real person or organisation",
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.STUDY.medium.w5b3_15",
+      "template": "STUDY",
+      "subtype": "Present the study’s findings (slot swap distractors)",
+      "tier": "medium",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Rodents such as voles can damage crops by eating seeds, roots, and young plants.\n• Many farmers control rodents with poisons, which can also harm other wildlife.\n• A research team examined whether barn owls, which hunt rodents, could reduce this damage.\n• The team installed owl nest boxes on some farms but not on others.\n• Three years later, farms with nest boxes had fewer rodents and less crop damage than farms without them.",
+      "stem": "The student wants to present the study’s findings. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "The researchers examined whether barn owls could reduce the damage that rodents such as voles cause to farmers’ crops.",
+        "Farms with owl nest boxes not only had fewer rodents but also suffered less crop damage than farms without them.",
+        "The researchers installed nest boxes for barn owls on some farms but not on others.",
+        "Rodents such as voles damage crops, and the poisons many farmers use against them can also harm other wildlife."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The goal is to present the findings. The notes report that “farms with nest boxes had fewer rodents and less crop damage than farms without them.” Choice B presents both findings.",
+      "distractors": {
+        "A": {
+          "recipe": "OG (the aim)",
+          "why_wrong": "It states what the researchers wanted to find out, not what they found."
+        },
+        "C": {
+          "recipe": "OG (the method)",
+          "why_wrong": "It describes how the study was set up, not its results."
+        },
+        "D": {
+          "recipe": "OG (the background)",
+          "why_wrong": "It describes the problem that led to the study, not the study’s findings."
+        }
+      },
+      "models": [
+        "2.5",
+        "2.2",
+        "2.21"
+      ],
+      "word_count": 71,
+      "sources": [],
+      "notes": "Subject: agriculture and ecology (barn owls as rodent control on farms; the team, place and study are unnamed and generic, with no figures, per WAVE.md). Replaces the drafted livestock guardian dogs, a concept already live (command_of_evidence.T3_person_quote.easy.w2b5_20). Distractors are the three study-slot swaps (background, aim, method), the 2.5 pattern.",
+      "rewrite": "New subject (barn owl nest boxes against crop-damaging rodents, generic study) replacing livestock guardian dogs in Central Asia, a concept already live (CoE w2b5_20, guarding dogs on Namibian farms).",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 0,
+        "facts": "no web check (WAVE.md, Rhetorical Synthesis); checked only that no made-up finding is attributed to a real person or organisation",
+        "fixes": [
+          "subject swap: livestock guardian dogs (concept live in CoE w2b5_20, guarding dogs on Namibian farms) replaced by barn owl nest boxes against rodents, an unnamed generic study; notes, options, explanation and distractors rewritten, key kept at B; claims.txt updated"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.AUD_FAM.medium.w5b3_16",
+      "template": "AUD_FAM",
+      "subtype": "Describe to an audience already familiar with the concept",
+      "tier": "medium",
+      "passage": "While researching a topic, a student has taken the following notes:\n• A slide rule is a calculating instrument with sliding scales marked in logarithms.\n• By aligning its scales, a user can quickly multiply and divide numbers.\n• Engineers relied on slide rules until electronic pocket calculators became widespread in the 1970s.\n• The Pickett N600-ES is a compact aluminum slide rule, approximately six inches long.\n• Astronauts carried N600-ES slide rules on NASA’s Apollo missions as backups for onboard computers.",
+      "stem": "The student wants to describe the N600-ES to an audience already familiar with slide rules. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "Approximately six inches long and made of aluminum, the Pickett N600-ES slide rule was carried on NASA’s Apollo missions as a backup for onboard computers.",
+        "The Pickett N600-ES is a compact aluminum slide rule, a calculating instrument with sliding scales that users align to multiply and divide numbers.",
+        "A compact aluminum slide rule, the N600-ES allowed Apollo astronauts to multiply and divide numbers by aligning its sliding scales marked in logarithms.",
+        "Engineers relied on slide rules such as the Pickett N600-ES until electronic pocket calculators became widespread in the 1970s."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "An audience familiar with slide rules does not need them explained. Choice A uses the term without defining it and spends its words on what is specific to the N600-ES: it is “approximately six inches long,” made of aluminum, and astronauts carried it “on NASA’s Apollo missions as backups for onboard computers.”",
+      "distractors": {
+        "B": {
+          "recipe": "AUD (explains what the audience already knows)",
+          "why_wrong": "It explains what a slide rule is and how it works, which this audience already knows, and leaves out the Apollo missions."
+        },
+        "C": {
+          "recipe": "AUD (re-explains the familiar concept)",
+          "why_wrong": "It includes details about the N600-ES but spends much of the sentence explaining how slide rules work, which this audience already knows."
+        },
+        "D": {
+          "recipe": "OG (slide rules in general)",
+          "why_wrong": "It is about how long engineers used slide rules in general, not about the N600-ES itself."
+        }
+      },
+      "models": [
+        "2.1",
+        "2.18"
+      ],
+      "word_count": 66,
+      "sources": [],
+      "notes": "Subject: technology (the Pickett N600-ES, a real six-inch aluminum slide rule carried on Apollo missions). C is the 2.1 D test: otherwise complete but re-explains the familiar concept.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 0,
+        "facts": "no web check (WAVE.md, Rhetorical Synthesis); checked only that no made-up finding is attributed to a real person or organisation",
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.RANK.medium.w5b3_17",
+      "template": "RANK",
+      "subtype": "Order of two events",
+      "tier": "medium",
+      "passage": "While researching a topic, a student has taken the following notes:\n• The first automobiles had no mechanism for clearing rain or snow from the windshield.\n• In 1903, Alabama inventor Mary Anderson patented a windshield wiper operated by a lever inside the vehicle.\n• The lever moved a rubber blade back and forth across the glass.\n• In 1917, Charlotte Bridgwood, president of a New York manufacturing company, patented an automatic wiper.\n• Her design used an electric motor to move rollers across the windshield.",
+      "stem": "The student wants to emphasize the order in which the two inventors patented their wipers. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "Mary Anderson’s windshield wiper used a lever inside the vehicle to move a rubber blade back and forth across the glass.",
+        "While Mary Anderson’s wiper was operated manually with a lever, Charlotte Bridgwood’s automatic wiper used an electric motor.",
+        "Charlotte Bridgwood patented an automatic wiper fourteen years after Mary Anderson patented a manually operated one.",
+        "Before the inventions of Mary Anderson and Charlotte Bridgwood, the first automobiles had no mechanism for clearing rain or snow from the windshield."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The goal is to emphasize which inventor patented a wiper first. The notes date Anderson’s patent to 1903 and Bridgwood’s to 1917. Choice C makes the order explicit by saying Bridgwood patented hers “fourteen years after” Anderson did.",
+      "distractors": {
+        "A": {
+          "recipe": "PART (one inventor only)",
+          "why_wrong": "It describes how Anderson’s wiper worked but never mentions Bridgwood, so it shows no order."
+        },
+        "B": {
+          "recipe": "REL (contrasts the wrong dimension)",
+          "why_wrong": "It contrasts how the two wipers worked, not when the two inventors patented them."
+        },
+        "D": {
+          "recipe": "OG (background before both inventions)",
+          "why_wrong": "It describes the problem both inventions addressed but does not say which inventor came first."
+        }
+      },
+      "models": [
+        "2.44",
+        "2.27"
+      ],
+      "word_count": 70,
+      "sources": [],
+      "notes": "Subject: technology history (Mary Anderson, 1903 hand-operated wiper patent; Charlotte Bridgwood, 1917 automatic electric wiper patent). Key derives “fourteen years after” and drops the dates, as in 2.44.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 0,
+        "facts": "no web check (WAVE.md, Rhetorical Synthesis); checked only that no made-up finding is attributed to a real person or organisation",
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.GEN.medium.w5b3_18",
+      "template": "GEN",
+      "subtype": "Make a generalization (no support asked)",
+      "tier": "medium",
+      "passage": "While researching a topic, a student has taken the following notes:\n• People once relied on many different units of length.\n• The cubit, used in ancient Egypt, was the length of a forearm.\n• The fathom, used by sailors to measure water depth, was the span of a person’s outstretched arms.\n• The hand, still used to measure horses, equals four inches, approximately the width of a palm.\n• The meter, introduced in France in the 1790s, was based on measurements of Earth.",
+      "stem": "The student wants to make a generalization about traditional units of length. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "Examples of traditional units of length include the cubit, the fathom, and the hand, which is still used to measure horses.",
+        "While the cubit was based on the length of a forearm, the meter, introduced in France in the 1790s, was based on measurements of Earth.",
+        "Sailors once measured the depth of water in fathoms, a unit equal to the span of a person’s outstretched arms.",
+        "Many traditional units of length were based on the dimensions of the human body."
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "A generalization makes a broad claim that covers the specific cases. The notes describe the cubit as “the length of a forearm,” the fathom as “the span of a person’s outstretched arms,” and the hand as “approximately the width of a palm.” Choice D draws the pattern from these cases: many traditional units were based on the human body.",
+      "distractors": {
+        "A": {
+          "recipe": "PART (examples without a generalization)",
+          "why_wrong": "It lists three traditional units but does not state what they have in common."
+        },
+        "B": {
+          "recipe": "OG (a contrast of two units)",
+          "why_wrong": "It contrasts one traditional unit with the modern meter instead of making a claim about traditional units in general."
+        },
+        "C": {
+          "recipe": "OG (one specific unit)",
+          "why_wrong": "It describes a single unit, the fathom, rather than making a general claim."
+        }
+      },
+      "models": [
+        "2.12",
+        "3.20"
+      ],
+      "word_count": 68,
+      "sources": [],
+      "notes": "Subject: social science and history (traditional units of length; standard facts). Key is the shortest option, as 2.12’s key is short.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 0,
+        "facts": "no web check (WAVE.md, Rhetorical Synthesis); checked only that no made-up finding is attributed to a real person or organisation",
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.QUOTE.medium.w5b3_19",
+      "template": "QUOTE",
+      "subtype": "Use a quotation that carries the goal",
+      "tier": "medium",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Robert Smalls (1839–1915) was born enslaved in Beaufort, South Carolina.\n• In 1862, he commandeered a Confederate ship in Charleston Harbor and delivered it to the Union navy.\n• He later served several terms as a member of Congress.\n• At South Carolina’s 1895 constitutional convention, he opposed provisions designed to prevent Black citizens from voting.\n• There he declared that his race “needs no special defense” and that “all they need is an equal chance in the battle of life.”",
+      "stem": "The student wants to use a quotation from Smalls to present what he believed Black citizens needed. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "At South Carolina’s 1895 constitutional convention, Robert Smalls argued that Black citizens needed nothing more than a fair opportunity to succeed in life.",
+        "Opposing provisions designed to prevent Black citizens from voting, Smalls declared that “all they need is an equal chance in the battle of life.”",
+        "Robert Smalls, who was born enslaved, told the 1895 convention that his race “needs no special defense.”",
+        "In 1862, Robert Smalls commandeered a Confederate ship in Charleston Harbor and delivered it to the Union navy."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The goal calls for a quotation that says what Smalls believed Black citizens needed. Choice B quotes the words that do this: “all they need is an equal chance in the battle of life.”",
+      "distractors": {
+        "A": {
+          "recipe": "NOQ (paraphrase, no quotation)",
+          "why_wrong": "It conveys a similar idea in the student’s own words, but the goal asks for a quotation from Smalls."
+        },
+        "C": {
+          "recipe": "NOQ (a quotation doing another job)",
+          "why_wrong": "It quotes Smalls, but the words “needs no special defense” say what his race did not need rather than what it needed."
+        },
+        "D": {
+          "recipe": "OG (his 1862 escape)",
+          "why_wrong": "It describes an event from Smalls’s life and includes no quotation about what Black citizens needed."
+        }
+      },
+      "models": [
+        "2.9",
+        "2.29"
+      ],
+      "word_count": 77,
+      "sources": [],
+      "notes": "Subject: US history (Robert Smalls; the two quoted phrases are from his 1895 convention speech as it is usually quoted, and only those exact phrases are used).",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 1,
+        "facts": "RS: no web check required, but the batch note asked for the quotations: both phrases (“needs no special defense,” “all they need is an equal chance in the battle of life”) match the passage usually cited from Smalls’s speech at South Carolina’s 1895 constitutional convention (Wikipedia, Robert Smalls, citing the convention journal, p. 476)",
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.DESC.medium.w5b3_20",
+      "template": "DESC",
+      "subtype": "Describe how an object behaves",
+      "tier": "medium",
+      "passage": "While researching a topic, a student has taken the following notes:\n• In 2006, Hungarian mathematicians Gábor Domokos and Péter Várkonyi constructed the first gömböc.\n• A gömböc is a convex shape made of a single uniform material, with no weights concealed inside.\n• Placed on a flat surface in any orientation, it rocks until it settles in the same upright position.\n• Mathematician Vladimir Arnold had proposed in 1995 that such a shape could exist.",
+      "stem": "The student wants to describe how a gömböc behaves on a flat surface. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "Whatever orientation it is placed in on a flat surface, a gömböc rocks until it settles in the same upright position.",
+        "A gömböc is a convex shape made of a single uniform material, with no weights concealed inside it to help keep it steady.",
+        "In 2006, mathematicians Gábor Domokos and Péter Várkonyi constructed the first gömböc, a shape that Vladimir Arnold had proposed in 1995.",
+        "A gömböc, a convex shape made of a single uniform material, behaves in an unusual way whenever it is set on a flat surface."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The goal is to describe the gömböc’s behavior on a flat surface. The notes say that “Placed on a flat surface in any orientation, it rocks until it settles in the same upright position.” Choice A describes exactly that behavior.",
+      "distractors": {
+        "B": {
+          "recipe": "OG (what it is made of)",
+          "why_wrong": "It describes the gömböc’s shape and material but not how it behaves on a flat surface."
+        },
+        "C": {
+          "recipe": "OG (its history)",
+          "why_wrong": "It tells who built the first gömböc and who proposed it, not how it behaves."
+        },
+        "D": {
+          "recipe": "VAGUE (says it behaves unusually without saying how)",
+          "why_wrong": "It says the gömböc behaves “in an unusual way” but never describes the behavior."
+        }
+      },
+      "models": [
+        "2.4",
+        "1.18"
+      ],
+      "word_count": 61,
+      "sources": [],
+      "notes": "Subject: mathematics (the gömböc, Domokos and Várkonyi 2006, Arnold’s 1995 conjecture; standard facts). Key is the shortest option.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 0,
+        "facts": "no web check (WAVE.md, Rhetorical Synthesis); checked only that no made-up finding is attributed to a real person or organisation",
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.EMPH.easy.w5b3_21",
+      "template": "EMPH",
+      "subtype": "Emphasize one attribute (length)",
+      "tier": "easy",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Located in northeastern Iran, the Great Wall of Gorgan is an ancient defensive wall.\n• It was constructed by the Sasanian Empire, probably in the 400s or 500s CE.\n• It stretches approximately 195 kilometers (121 miles) inland from the Caspian Sea.\n• More than thirty fortresses were built along it.\n• Because of its red bricks, it is sometimes called the “Red Snake.”",
+      "stem": "The student wants to emphasize how long the Great Wall of Gorgan is. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "The Great Wall of Gorgan stretches a full 195 kilometers (121 miles) inland from the Caspian Sea.",
+        "The Great Wall of Gorgan was constructed by the Sasanian Empire, probably in the 400s or 500s CE.",
+        "Because of its red bricks, the ancient defensive wall in northeastern Iran is sometimes called the “Red Snake.”",
+        "The Great Wall of Gorgan is an ancient defensive wall in northeastern Iran with fortresses built along it."
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The goal is to emphasize the wall’s length. The notes say it “stretches approximately 195 kilometers (121 miles) inland from the Caspian Sea.” Choice A gives that length and stresses it with “a full.”",
+      "distractors": {
+        "B": {
+          "recipe": "OG (who built it and when)",
+          "why_wrong": "It gives the wall’s builders and date, not its length."
+        },
+        "C": {
+          "recipe": "OG (its nickname)",
+          "why_wrong": "It explains the wall’s nickname, not how long it is."
+        },
+        "D": {
+          "recipe": "OG (what and where)",
+          "why_wrong": "It identifies the wall and its location but gives no sense of its length."
+        }
+      },
+      "models": [
+        "1.15",
+        "1.7",
+        "1.16"
+      ],
+      "word_count": 60,
+      "sources": [],
+      "notes": "Subject: history (the Great Wall of Gorgan, Sasanian, about 195 km; standard facts).",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 0,
+        "facts": "no web check (WAVE.md, Rhetorical Synthesis); checked only that no made-up finding is attributed to a real person or organisation",
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.SIM.easy.w5b3_22",
+      "template": "SIM",
+      "subtype": "Similarity between two items",
+      "tier": "easy",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Roquefort and Cabrales are blue cheeses, named for the blue-green mold that grows inside them.\n• Roquefort, from southern France, is made from sheep’s milk.\n• It ripens in natural limestone caves near the village of Roquefort-sur-Soulzon.\n• Cabrales, from northern Spain, is traditionally made from cow’s milk.\n• It ripens in natural limestone caves in the Picos de Europa mountains.",
+      "stem": "The student wants to emphasize a similarity in how the two cheeses are ripened. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "Roquefort is made from sheep’s milk, whereas Cabrales is traditionally made from cow’s milk.",
+        "Cabrales, a blue cheese from northern Spain, ripens in natural limestone caves in the Picos de Europa mountains.",
+        "Roquefort, a sheep’s milk cheese from southern France, ripens in limestone caves near the village of Roquefort-sur-Soulzon.",
+        "Roquefort and Cabrales are both ripened in natural limestone caves, one in France and the other in Spain."
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The goal is a similarity in how the cheeses are ripened. The notes say Roquefort “ripens in natural limestone caves near the village of Roquefort-sur-Soulzon” and Cabrales “ripens in natural limestone caves in the Picos de Europa mountains.” Choice D states this shared trait with “both.”",
+      "distractors": {
+        "A": {
+          "recipe": "REL (a difference instead of a similarity)",
+          "why_wrong": "It contrasts the milk used for the two cheeses rather than showing how they are ripened alike."
+        },
+        "B": {
+          "recipe": "PART (one cheese only)",
+          "why_wrong": "It describes how Cabrales is ripened but never mentions Roquefort."
+        },
+        "C": {
+          "recipe": "PART (one cheese only)",
+          "why_wrong": "It describes how Roquefort is ripened but never mentions Cabrales."
+        }
+      },
+      "models": [
+        "1.22",
+        "1.11",
+        "2.30"
+      ],
+      "word_count": 57,
+      "sources": [],
+      "notes": "Subject: culture and food (Roquefort and Cabrales, two real cave-ripened blue cheeses; standard facts). The goal names the attribute (ripening) so the shared blue-cheese category cannot serve as a second similarity.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 0,
+        "facts": "no web check (WAVE.md, Rhetorical Synthesis); checked only that no made-up finding is attributed to a real person or organisation",
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.DIFF.easy.w5b3_23",
+      "template": "DIFF",
+      "subtype": "Difference between two items",
+      "tier": "easy",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Adobe and rammed earth are two traditional techniques for constructing walls from soil.\n• Adobe builders shape a mixture of mud and straw into rectangular bricks.\n• The bricks are hardened in sunlight before being stacked into walls.\n• Rammed earth builders place damp soil between temporary wooden forms.\n• They compress the soil firmly, layer by layer, until it forms a solid, durable wall.",
+      "stem": "The student wants to emphasize a difference between how adobe walls and rammed earth walls are built. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "Both adobe and rammed earth are traditional techniques for constructing walls from soil.",
+        "Rammed earth builders place damp soil between temporary wooden forms and compress it, layer by layer.",
+        "Adobe walls are built by stacking bricks hardened in sunlight, while rammed earth walls are made by compressing damp soil between wooden forms.",
+        "Adobe and rammed earth are two techniques for building with soil that produce walls in quite different ways."
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The goal is a difference in how the two kinds of walls are built. The notes say adobe bricks “are hardened in sunlight before being stacked into walls,” while rammed earth builders “place damp soil between temporary wooden forms” and “compress the soil firmly.” Choice C contrasts the two methods with “while.”",
+      "distractors": {
+        "A": {
+          "recipe": "REL (a similarity instead of a difference)",
+          "why_wrong": "It states what the two methods have in common rather than how they differ."
+        },
+        "B": {
+          "recipe": "PART (one method only)",
+          "why_wrong": "It describes only how rammed earth walls are built, so no difference is stated."
+        },
+        "D": {
+          "recipe": "VAGUE (says they differ without saying how)",
+          "why_wrong": "It says the methods produce walls “in quite different ways” but never says what either way is."
+        }
+      },
+      "models": [
+        "1.13",
+        "1.2"
+      ],
+      "word_count": 61,
+      "sources": [],
+      "notes": "Subject: architecture (adobe and rammed earth walls; standard descriptions, no names or figures). Replaces the drafted frazil and pancake ice, too close to the live fast-ice and pack-ice contrast (rhetorical_synthesis.DIFF.medium.w3b4_07). The key is the longest option, which keeps the batch near CB’s key-longest rate.",
+      "rewrite": "New subject (adobe bricks vs rammed earth walls) replacing frazil vs pancake ice, a second two-kinds-of-sea-ice contrast beside the live RS DIFF w3b4_07 (fast ice vs pack ice).",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 0,
+        "facts": "no web check (WAVE.md, Rhetorical Synthesis); checked only that no made-up finding is attributed to a real person or organisation",
+        "fixes": [
+          "subject swap: frazil vs pancake ice (a second kinds-of-sea-ice DIFF beside live RS w3b4_07, fast ice vs pack ice) replaced by adobe vs rammed earth; notes, stem, options, explanation and distractors rewritten, key kept at C; claims.txt updated"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "rhetorical_synthesis.OVERVIEW.easy.w5b3_24",
+      "template": "OVERVIEW",
+      "subtype": "Overview of a process",
+      "tier": "easy",
+      "passage": "While researching a topic, a student has taken the following notes:\n• Pemmican is a food first prepared by Indigenous nations of the Great Plains, such as the Cree.\n• To make it, people dried thin strips of bison meat over a fire or in the sun.\n• They then pounded the dried meat into a coarse powder.\n• The powder was combined with melted fat and occasionally with dried berries.\n• Stored in rawhide containers, pemmican could remain edible for years.",
+      "stem": "The student wants to provide an overview of how pemmican was made. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+      "options": [
+        "Indigenous nations of the Great Plains dried thin strips of bison meat over a fire or in the sun.",
+        "Pemmican was made by drying thin strips of bison meat, pounding them into powder, and combining the powder with melted fat.",
+        "Stored in rawhide containers, pemmican, a food first prepared by Indigenous nations of the Great Plains, could remain edible for years.",
+        "Pemmican was first prepared by Indigenous nations of the Great Plains, such as the Cree, who occasionally added dried berries to it."
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "An overview of how pemmican was made should touch every stage. The notes say people “dried thin strips of bison meat,” “pounded the dried meat into a coarse powder,” and “The powder was combined with melted fat.” Choice B covers all three steps in order.",
+      "distractors": {
+        "A": {
+          "recipe": "PART (first step only)",
+          "why_wrong": "It describes only the drying of the meat and leaves out the pounding and mixing."
+        },
+        "C": {
+          "recipe": "OG (storage)",
+          "why_wrong": "It explains how pemmican was stored and how long it kept, not how it was made."
+        },
+        "D": {
+          "recipe": "OG (who made it, one ingredient)",
+          "why_wrong": "It names who first made pemmican and one optional ingredient but does not describe the process."
+        }
+      },
+      "models": [
+        "1.21"
+      ],
+      "word_count": 66,
+      "sources": [],
+      "notes": "Subject: history and culture (pemmican of the Plains peoples; standard description).",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 0,
+        "facts": "no web check (WAVE.md, Rhetorical Synthesis); checked only that no made-up finding is attributed to a real person or organisation",
+        "fixes": [],
+        "status": "pass"
+      }
     }
-   },
-   "models": [
-    "3b02e88a",
-    "7f5715e4",
-    "2c61e0b9"
-   ],
-   "word_count": 80,
-   "sources": [],
-   "notes": "Subject: social science (Marchetti’s constant, Cesare Marchetti 1994, a real and documented observation; no figures beyond the one hour and “a few kilometers”). Band 7 moves: the generalization climbs a level (the effect of faster transportation on commuting) and is derived from two bullets (“much farther in the same amount of time” plus “remained roughly constant”), the key adding “rather than”; two goal-shaped FALSE generalizations that fail on different stated facts (B says commuting time fell, C says cities stopped growing) and one PART that states the constant alone (D), the 7f5715e4 mix with a second FALSE.",
-   "band_target": 7
-  },
-  {
-   "id": "rhetorical_synthesis.OVERVIEW.hard.w5b3_03",
-   "template": "OVERVIEW",
-   "subtype": "Overview of a process",
-   "tier": "hard",
-   "passage": "While researching a topic, a student has taken the following notes:\n• Large sulfur deposits lie deep underground along the US Gulf Coast, frequently beneath treacherous layers of quicksand.\n• In the 1890s, chemist Herman Frasch developed a method of extracting the sulfur without excavating mines.\n• In the Frasch process, three concentric pipes are drilled down into a deposit.\n• Superheated water pumped down the outermost pipe melts the surrounding sulfur.\n• Compressed air injected through the innermost pipe then forces the molten sulfur upward through the middle pipe.\n• Most sulfur is now recovered as a by-product of petroleum refining.",
-   "stem": "The student wants to provide an overview of the Frasch process. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
-   "options": [
-    "In the Frasch process, compressed air injected through the outer pipe melts the underground sulfur, which superheated water then carries upward to the surface.",
-    "Developed by chemist Herman Frasch in the 1890s, the Frasch process made it possible to extract sulfur lying beneath quicksand along the US Gulf Coast.",
-    "In the Frasch process, superheated water melts sulfur inside mines excavated beneath the quicksand, and the molten sulfur is then pumped upward through concentric pipes.",
-    "In the Frasch process, superheated water melts sulfur deep underground, and compressed air then pushes the molten sulfur to the surface through concentric pipes."
-   ],
-   "answer_letter": "D",
-   "table": null,
-   "figure": null,
-   "explanation": "An overview of the process should cover how the sulfur is reached, melted and brought up. The notes say “three concentric pipes are drilled down into a deposit,” “Superheated water pumped down the outermost pipe melts the surrounding sulfur,” and “Compressed air injected through the innermost pipe then forces the molten sulfur upward through the middle pipe.” Choice D summarizes all three stages in one sentence.",
-   "distractors": {
-    "A": {
-     "recipe": "FALSE (goal-shaped: agents swapped)",
-     "why_wrong": "It has the shape of an overview, but it reverses the two roles: in the notes the superheated water melts the sulfur and the compressed air forces it up, not the other way around."
-    },
-    "B": {
-     "recipe": "OG (origin and purpose, not the process)",
-     "why_wrong": "It tells who devised the process, when, and where it was used, but it gives none of the steps, so it is not an overview of the process itself."
-    },
-    "C": {
-     "recipe": "FALSE (goal-shaped: one stated fact reversed)",
-     "why_wrong": "It covers melting and pumping, but the notes say Frasch’s method extracts the sulfur “without excavating mines,” so describing mines excavated beneath the quicksand misstates the process."
-    }
-   },
-   "models": [
-    "964c6055",
-    "1.21",
-    "3.8"
-   ],
-   "word_count": 85,
-   "sources": [],
-   "notes": "Subject: chemistry and industry (the Frasch process, Herman Frasch, 1890s; standard textbook chemistry, no invented names or figures). Band 7 moves: overview over a three-stage process; two goal-shaped FALSE overviews (A swaps the water and air roles, C adds mines the notes rule out) and one OG on origin; key compresses three bullets. Shares the 964c6055 shape (one sentence spanning the arc) with the 1.21 process topic.",
-   "band_target": 7
-  },
-  {
-   "id": "rhetorical_synthesis.RANK.hard.w5b3_04",
-   "template": "RANK",
-   "subtype": "Relative degree on two measures that point opposite ways",
-   "tier": "hard",
-   "passage": "While researching a topic, a student has taken the following notes:\n• Olympus Mons and Alba Mons are shield volcanoes on Mars, broad mountains built up by successive flows of fluid lava.\n• Olympus Mons, one of the tallest volcanoes in the solar system, rises about 22 kilometers above the surrounding plains.\n• Its base measures roughly 600 kilometers across.\n• Alba Mons reaches a height of only about 7 kilometers.\n• Its lava flows extend at least 1,350 kilometers from its summit.",
-   "stem": "The student wants to emphasize the relative sizes of the two volcanoes. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
-   "options": [
-    "Olympus Mons rises about 22 kilometers above the surrounding plains and measures roughly 600 kilometers across, and Alba Mons is about 7 kilometers high.",
-    "Although Olympus Mons is roughly three times as tall as Alba Mons, Alba Mons, whose lava flows reach at least 1,350 kilometers, covers a far wider area.",
-    "Olympus Mons, which rises about three times as high as Alba Mons, also covers more ground, with a base that measures roughly 600 kilometers across.",
-    "Like Olympus Mons, one of the tallest volcanoes in the solar system, Alba Mons is a broad shield volcano that was built up over time by successive flows of fluid lava."
-   ],
-   "answer_letter": "B",
-   "table": null,
-   "figure": null,
-   "explanation": "The goal is to emphasize how the two volcanoes compare in size. The notes give two measures that point opposite ways: Olympus Mons “rises about 22 kilometers” while Alba Mons reaches “only about 7 kilometers,” but Alba Mons’s lava flows “extend at least 1,350 kilometers from its summit,” far beyond Olympus Mons’s base of “roughly 600 kilometers across.” Choice B states both relations: Olympus Mons is taller, and Alba Mons covers a far wider area.",
-   "distractors": {
-    "A": {
-     "recipe": "LIST (both volcanoes’ figures, no relation)",
-     "why_wrong": "It lists measurements for each volcano but never compares them, and it leaves out how far Alba Mons spreads, so it does not emphasize their relative sizes."
-    },
-    "C": {
-     "recipe": "FALSE (goal-shaped: misreads the second measure)",
-     "why_wrong": "It compares the volcanoes, but it wrongly says Olympus Mons covers more ground; Alba Mons’s flows reach “at least 1,350 kilometers from its summit,” well beyond a 600-kilometer base."
-    },
-    "D": {
-     "recipe": "OG (a similarity, not relative size)",
-     "why_wrong": "It notes what the two volcanoes have in common, that both are shield volcanoes built by lava flows; it does not compare their sizes."
-    }
-   },
-   "models": [
-    "5fa51c86",
-    "2.37"
-   ],
-   "word_count": 67,
-   "sources": [],
-   "notes": "Subject: astronomy and planetary geology (Olympus Mons and Alba Mons on Mars; heights and Alba Mons’s 1,350-kilometer flow extent are standard published figures, rounded). Band 7 moves: two measures pointing opposite ways as in 5fa51c86 (Hanoi larger, Ulaanbaatar a larger share); key derives “about three times as tall” and “covers far more ground” from the figures; one goal-shaped FALSE comparison (C), one LIST (A) and one OG similarity (D).",
-   "band_target": 7
-  },
-  {
-   "id": "rhetorical_synthesis.NARR.hard.w5b3_05",
-   "template": "NARR",
-   "subtype": "Begin a narrative (chronological start)",
-   "tier": "hard",
-   "passage": "While researching a topic, a student has taken the following notes:\n• Ralph Lazo (1924–1992) was a Mexican American student at Belmont High School in Los Angeles.\n• Many of his closest companions were Japanese American classmates.\n• In 1942, the US government forcibly removed more than 100,000 Japanese Americans from the West Coast to incarceration camps.\n• Lazo, then seventeen, voluntarily accompanied his friends to the Manzanar camp, becoming one of very few people without Japanese ancestry to do so.\n• He remained at Manzanar for approximately two years, until he was drafted into the US Army in 1944.",
-   "stem": "The student wants to begin a narrative about Lazo’s time at Manzanar. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
-   "options": [
-    "Ralph Lazo would remain at the Manzanar camp for approximately two years, leaving only when he was finally drafted into the US Army in 1944.",
-    "In 1942, seventeen-year-old Ralph Lazo, a Japanese American student at Belmont High School, was removed with his classmates to the Manzanar camp.",
-    "In 1942, when his closest friends were forcibly removed to incarceration camps, Ralph Lazo was a seventeen-year-old Mexican American student in Los Angeles.",
-    "Lazo, who voluntarily accompanied his Japanese American friends to Manzanar in 1942, became one of very few people without Japanese ancestry to live in the camp."
-   ],
-   "answer_letter": "C",
-   "table": null,
-   "figure": null,
-   "explanation": "A narrative should begin at the start of the story and introduce its main character. Choice C does both: it introduces Lazo as “a Mexican American student” and opens in 1942, when the government “forcibly removed more than 100,000 Japanese Americans from the West Coast to incarceration camps,” including his “Japanese American classmates.” The rest of the story, his choice to go to Manzanar and his two years there, can follow from this opening.",
-   "distractors": {
-    "A": {
-     "recipe": "OG (jumps to the end of the story)",
-     "why_wrong": "It describes how Lazo’s time at Manzanar ended, so it starts the narrative at its conclusion rather than its beginning."
-    },
-    "B": {
-     "recipe": "FALSE (goal-shaped: narrative opening that misstates the notes)",
-     "why_wrong": "It opens the story in 1942 as a narrative should, but the notes say Lazo was “a Mexican American student” who “voluntarily accompanied his friends” to Manzanar, not a Japanese American who was removed there."
-    },
-    "D": {
-     "recipe": "OG (summary of significance)",
-     "why_wrong": "It sums up what made Lazo’s choice remarkable instead of starting the sequence of events, so it reads as a conclusion, not an opening."
-    }
-   },
-   "models": [
-    "af88c47a",
-    "3.5"
-   ],
-   "word_count": 84,
-   "sources": [],
-   "notes": "Subject: US history (Ralph Lazo, a real person; only well-documented facts: Belmont High School, went to Manzanar in 1942 at seventeen, drafted in 1944). Note: Manzanar is also the setting of a live Central Ideas item (Toyo Miyatake, w2); different person and story. Band 7 moves: band-6 NARR shape (jump to outcome, summary) plus a goal-shaped FALSE opening (B misstates Lazo’s identity and choice); key paraphrased and reordered (“when his closest friends were forcibly removed”).",
-   "band_target": 7
-  },
-  {
-   "id": "rhetorical_synthesis.DIFF.medium.w5b3_06",
-   "template": "DIFF",
-   "subtype": "Contrast two items on the named attribute",
-   "tier": "medium",
-   "passage": "While researching a topic, a student has taken the following notes:\n• Pietra dura and scagliola are decorative techniques that flourished in Italy during the 1500s and 1600s.\n• Pietra dura artisans cut thin slices of colored stone, such as marble and lapis lazuli, and fit them together into elaborate images.\n• Scagliola artisans combine powdered gypsum, animal glue, and pigments into a paste.\n• Once hardened and polished, the paste convincingly imitates inlaid stone.\n• Both techniques were frequently used to decorate tabletops.",
-   "stem": "The student wants to emphasize a difference between the materials used in the two techniques. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
-   "options": [
-    "Pietra dura and scagliola, two decorative techniques that flourished in Italy, were both frequently used to decorate tabletops.",
-    "Whereas pietra dura uses slices of real stone, scagliola uses a paste of gypsum, glue, and pigments that only imitates stone.",
-    "Scagliola artisans combine powdered gypsum, animal glue, and pigments into a paste that, once hardened and polished, convincingly imitates inlaid stone.",
-    "Though they were used for similar purposes, pietra dura and scagliola were made with very different materials."
-   ],
-   "answer_letter": "B",
-   "table": null,
-   "figure": null,
-   "explanation": "The goal is to contrast the materials of the two techniques. The notes say pietra dura artisans “cut thin slices of colored stone,” while scagliola artisans “combine powdered gypsum, animal glue, and pigments into a paste” that “convincingly imitates inlaid stone.” Choice B sets these materials side by side with “Whereas.”",
-   "distractors": {
-    "A": {
-     "recipe": "REL (a similarity instead of a difference)",
-     "why_wrong": "It points out what the techniques share, their Italian origin and their use on tabletops, rather than how their materials differ."
-    },
-    "C": {
-     "recipe": "PART (one technique only)",
-     "why_wrong": "It describes only the materials of scagliola and never mentions pietra dura, so no difference between the two is stated."
-    },
-    "D": {
-     "recipe": "VAGUE (says the materials differ without saying how)",
-     "why_wrong": "It asserts that the materials were “very different” but never says what either technique is made from."
-    }
-   },
-   "models": [
-    "2.10",
-    "2.17",
-    "2.41"
-   ],
-   "word_count": 68,
-   "sources": [],
-   "notes": "Subject: arts (pietra dura and scagliola, two real Italian decorative techniques; general, well-known facts only, no names). Distractor mix as in the bank’s medium DIFF items: REL, PART, VAGUE."
-  },
-  {
-   "id": "rhetorical_synthesis.DIFF.medium.w5b3_07",
-   "template": "DIFF",
-   "subtype": "Contrast two items on the named attribute",
-   "tier": "medium",
-   "passage": "While researching a topic, a student has taken the following notes:\n• The camera obscura and the magic lantern are early optical devices that project images.\n• A camera obscura is a darkened chamber or box with a small opening in one wall.\n• Light entering through the opening casts an inverted image of the surrounding scene onto the opposite wall.\n• A magic lantern uses a lamp and a lens to project illustrations painted on glass slides.",
-   "stem": "The student wants to contrast the images that the two devices project. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
-   "options": [
-    "Both the camera obscura and the magic lantern are early optical devices that project images onto a surface by means of an opening or a lens.",
-    "A magic lantern, an early optical device with a lamp and a lens, projects illustrations painted on glass slides onto a surface.",
-    "In a camera obscura, light entering through a small opening casts an inverted image of the surrounding scene onto the opposite wall.",
-    "While a camera obscura projects a live image of its surroundings, a magic lantern projects illustrations painted on glass slides."
-   ],
-   "answer_letter": "D",
-   "table": null,
-   "figure": null,
-   "explanation": "The goal is to contrast the images the devices project. The notes say a camera obscura casts “an inverted image of the surrounding scene,” while a magic lantern projects “illustrations painted on glass slides.” Choice D contrasts these two kinds of image with “While.”",
-   "distractors": {
-    "A": {
-     "recipe": "REL (a similarity instead of a contrast)",
-     "why_wrong": "It states what the two devices have in common, projecting images, rather than how their images differ."
-    },
-    "B": {
-     "recipe": "PART (one device only)",
-     "why_wrong": "It describes only the magic lantern, so it does not contrast its images with those of a camera obscura."
-    },
-    "C": {
-     "recipe": "PART (one device only)",
-     "why_wrong": "It describes only the image a camera obscura produces and never mentions the magic lantern."
-    }
-   },
-   "models": [
-    "1.13",
-    "2.17",
-    "2.11"
-   ],
-   "word_count": 63,
-   "sources": [],
-   "notes": "Subject: arts and technology (the camera obscura and the magic lantern, standard facts, no names). Key adds “live,” a light paraphrase of “the surrounding scene.”"
-  },
-  {
-   "id": "rhetorical_synthesis.AUD_NEW.medium.w5b3_08",
-   "template": "AUD_NEW",
-   "subtype": "Describe a work to an audience unfamiliar with the person",
-   "tier": "medium",
-   "passage": "While researching a topic, a student has taken the following notes:\n• Ira Aldridge (1807–1867) was an African American actor born in New York City.\n• Finding few opportunities in the United States, he relocated to England in 1824.\n• In 1833, he performed the title role in Othello at the Theatre Royal, Covent Garden, one of London’s principal theaters.\n• He subsequently toured Europe for many years, appearing in cities such as Berlin and Saint Petersburg.",
-   "stem": "The student wants to describe Aldridge’s 1833 London performance to an audience unfamiliar with Ira Aldridge. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
-   "options": [
-    "In 1833, African American actor Ira Aldridge performed the title role in Othello at the Theatre Royal, Covent Garden, one of London’s principal theaters.",
-    "In 1833, Aldridge performed the title role in Othello at the Theatre Royal, Covent Garden, one of London’s principal theaters.",
-    "Born in New York City in 1807, Ira Aldridge was an African American actor who relocated to England in 1824.",
-    "During his years of touring Europe, African American actor Ira Aldridge appeared in cities such as Berlin and Saint Petersburg."
-   ],
-   "answer_letter": "A",
-   "table": null,
-   "figure": null,
-   "explanation": "An audience unfamiliar with Aldridge needs to learn who he was before reading about the performance. Choice A identifies him as an “African American actor” and then describes the 1833 performance: he “performed the title role in Othello at the Theatre Royal, Covent Garden, one of London’s principal theaters.”",
-   "distractors": {
-    "B": {
-     "recipe": "AUD (detail without identifying the actor)",
-     "why_wrong": "It describes the performance but refers to “Aldridge” without saying who he was, which an unfamiliar audience would need."
-    },
-    "C": {
-     "recipe": "OG (introduces the actor, not the performance)",
-     "why_wrong": "It tells who Aldridge was and when he moved to England but says nothing about his 1833 London performance."
-    },
-    "D": {
-     "recipe": "OG (a different part of his career)",
-     "why_wrong": "It identifies Aldridge but describes his later European tours rather than the 1833 London performance."
-    }
-   },
-   "models": [
-    "2.34",
-    "2.36"
-   ],
-   "word_count": 62,
-   "sources": [],
-   "notes": "Subject: arts and theater history (Ira Aldridge, a real actor; facts are standard: born New York 1807, England 1824, Othello at Covent Garden 1833, later European tours). Shakespeare is not named because he appears in an official item; the play title alone is used."
-  },
-  {
-   "id": "rhetorical_synthesis.AUD_NEW.medium.w5b3_09",
-   "template": "AUD_NEW",
-   "subtype": "Describe a place to an audience unfamiliar with the concept",
-   "tier": "medium",
-   "passage": "While researching a topic, a student has taken the following notes:\n• Eskers are long, winding ridges of sand and gravel.\n• They consist of sediment deposited by meltwater streams that once flowed through tunnels beneath glaciers.\n• The Uppsala esker extends north to south through the Swedish city of Uppsala and far beyond it.\n• Uppsala Castle, constructed in the 1500s, stands on top of the ridge.\n• Groundwater stored in the esker’s gravel supplies much of the city’s drinking water.",
-   "stem": "The student wants to describe the Uppsala esker to an audience unfamiliar with eskers. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
-   "options": [
-    "The Uppsala esker, which extends north to south through the city, holds groundwater in its gravel that supplies much of Uppsala’s drinking water.",
-    "Eskers are long, winding ridges of sand and gravel that consist of sediment deposited by meltwater streams flowing through tunnels beneath glaciers.",
-    "The Uppsala esker, a long, winding ridge of sand and gravel left by glacial meltwater, extends through the Swedish city of Uppsala.",
-    "Uppsala Castle, constructed in the 1500s, stands on top of the esker that extends through the Swedish city of Uppsala."
-   ],
-   "answer_letter": "C",
-   "table": null,
-   "figure": null,
-   "explanation": "An audience unfamiliar with eskers needs to know what one is. Choice C explains that eskers are “long, winding ridges of sand and gravel” left by meltwater and then describes the Uppsala esker, which “extends north to south through the Swedish city of Uppsala.”",
-   "distractors": {
-    "A": {
-     "recipe": "AUD (uses the term without explaining it)",
-     "why_wrong": "It describes the Uppsala esker’s groundwater but never says what an esker is, which this audience would need."
-    },
-    "B": {
-     "recipe": "PART (the concept only)",
-     "why_wrong": "It explains what eskers are in general but never describes the Uppsala esker."
-    },
-    "D": {
-     "recipe": "AUD and OG (the castle, with the term unexplained)",
-     "why_wrong": "It is about the castle that stands on the esker, and it uses “esker” without explaining it."
-    }
-   },
-   "models": [
-    "2.36",
-    "2.43",
-    "2.34"
-   ],
-   "word_count": 66,
-   "sources": [],
-   "notes": "Subject: geology (the Uppsala esker, Uppsalaåsen, Sweden; Uppsala Castle sits on it and its gravel holds the groundwater the city draws on; general facts, no figures)."
-  },
-  {
-   "id": "rhetorical_synthesis.EXPL.medium.w5b3_10",
-   "template": "EXPL",
-   "subtype": "Explain the origin of a name",
-   "tier": "medium",
-   "passage": "While researching a topic, a student has taken the following notes:\n• A paternoster is an elevator consisting of a chain of open compartments that moves continuously.\n• Passengers step in and out as the compartments pass each floor.\n• Its name comes from Pater Noster (“Our Father”), the Latin opening words of a Christian prayer.\n• The looping chain resembles a string of rosary beads, which are traditionally used to count repetitions of that prayer.",
-   "stem": "The student wants to explain the origin of the paternoster’s name. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
-   "options": [
-    "A paternoster is an elevator consisting of a chain of open compartments that moves continuously, allowing passengers to step in and out at each floor.",
-    "Because its compartments move slowly and without stopping, a paternoster allows passengers to travel between floors without waiting.",
-    "The looping chain of open compartments in a paternoster resembles a string of rosary beads.",
-    "The paternoster is named for the opening words of a Christian prayer because its looping chain resembles the rosary beads traditionally used to count that prayer."
-   ],
-   "answer_letter": "D",
-   "table": null,
-   "figure": null,
-   "explanation": "The goal is to explain where the name comes from. The notes say the name “comes from Pater Noster (“Our Father”), the Latin opening words of a Christian prayer,” and that the chain “resembles a string of rosary beads, which are traditionally used to count repetitions of that prayer.” Choice D gives both the source of the name and the resemblance that links the elevator to it.",
-   "distractors": {
-    "A": {
-     "recipe": "OG (what the elevator is)",
-     "why_wrong": "It describes how a paternoster is built and used but says nothing about where its name comes from."
-    },
-    "B": {
-     "recipe": "OG (explains the wrong thing)",
-     "why_wrong": "It explains why passengers need not wait for a paternoster, not why it has that name."
-    },
-    "C": {
-     "recipe": "PART (the resemblance without the name)",
-     "why_wrong": "It notes that the chain resembles rosary beads but never connects this to the name or the prayer it comes from."
-    }
-   },
-   "models": [
-    "1.6",
-    "2.13"
-   ],
-   "word_count": 61,
-   "sources": [],
-   "notes": "Subject: technology (paternoster elevators; standard facts about the name and the rosary resemblance)."
-  },
-  {
-   "id": "rhetorical_synthesis.EXPL.medium.w5b3_11",
-   "template": "EXPL",
-   "subtype": "Explain an advantage",
-   "tier": "medium",
-   "passage": "While researching a topic, a student has taken the following notes:\n• Microbiologists of the early 1880s cultivated bacteria on gelatin, a jellylike substance.\n• Gelatin melts at warm temperatures, and certain bacteria digest it.\n• Fanny Hesse, who assisted her husband in a laboratory in Germany, suggested substituting agar.\n• Agar, a seaweed extract she used in jellies at home, remains solid when warm and resists digestion by most bacteria.\n• Agar is still a standard material for cultivating bacteria today.",
-   "stem": "The student wants to explain an advantage of agar over gelatin for growing bacteria. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
-   "options": [
-    "Fanny Hesse, who assisted her husband in a laboratory in Germany, suggested that microbiologists substitute agar for gelatin.",
-    "Unlike gelatin, which melts at warm temperatures and can be digested by bacteria, agar remains solid, providing bacteria with a stable surface for growth.",
-    "Gelatin, which microbiologists once used for cultivating bacteria, melts at warm temperatures and can be digested by certain bacteria.",
-    "A seaweed extract that Fanny Hesse had used in jellies at home, agar is still a standard material that laboratories rely on for cultivating bacteria today."
-   ],
-   "answer_letter": "B",
-   "table": null,
-   "figure": null,
-   "explanation": "The goal is to explain an advantage of agar over gelatin. The notes say “Gelatin melts at warm temperatures, and certain bacteria digest it,” while agar “remains solid when warm and resists digestion by most bacteria.” Choice B contrasts the two and states the advantage that follows: agar stays solid.",
-   "distractors": {
-    "A": {
-     "recipe": "OG (who suggested agar, not why it is better)",
-     "why_wrong": "It tells who proposed agar but gives no reason agar works better than gelatin."
-    },
-    "C": {
-     "recipe": "PART (the problem without the solution)",
-     "why_wrong": "It explains gelatin’s weaknesses but never mentions agar, so it does not state agar’s advantage."
-    },
-    "D": {
-     "recipe": "OG (origin and later use)",
-     "why_wrong": "It says where Hesse got agar and that it is still used, but not what makes it better than gelatin."
-    }
-   },
-   "models": [
-    "2.3",
-    "2.31"
-   ],
-   "word_count": 66,
-   "sources": [],
-   "notes": "Subject: science history (Fanny Hesse and agar, early 1880s, a well-documented episode; her husband Walther Hesse is left unnamed, as is Robert Koch)."
-  },
-  {
-   "id": "rhetorical_synthesis.EMPH.medium.w5b3_12",
-   "template": "EMPH",
-   "subtype": "Emphasize uniqueness or significance",
-   "tier": "medium",
-   "passage": "While researching a topic, a student has taken the following notes:\n• Tlingit activist Elizabeth Peratrovich (1911–1958) campaigned for civil rights in Alaska.\n• During the 1940s, some Alaska businesses displayed signs refusing service to Alaska Natives.\n• In 1945, Peratrovich testified before the territorial senate in support of legislation prohibiting such discrimination.\n• The bill passed, becoming the Alaska Equal Rights Act of 1945.\n• It is frequently cited as the first anti-discrimination law in the United States.\n• Alaska now commemorates Elizabeth Peratrovich Day each February 16.",
-   "stem": "The student wants to emphasize how groundbreaking the Alaska Equal Rights Act was. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
-   "options": [
-    "Passed after Peratrovich testified in its support, the Alaska Equal Rights Act of 1945 is frequently cited as the first anti-discrimination law in the United States.",
-    "In 1945, Tlingit activist Elizabeth Peratrovich testified before the territorial senate in support of legislation prohibiting discrimination against Alaska Natives.",
-    "During the 1940s, before the Alaska Equal Rights Act passed, some Alaska businesses displayed signs refusing service to Alaska Natives.",
-    "Each February 16, Alaska commemorates Elizabeth Peratrovich Day in honor of the Tlingit activist whose testimony supported the Equal Rights Act of 1945."
-   ],
-   "answer_letter": "A",
-   "table": null,
-   "figure": null,
-   "explanation": "To show how groundbreaking the act was, the sentence needs the fact that sets it apart. The notes say the act “is frequently cited as the first anti-discrimination law in the United States,” and Choice A states exactly that.",
-   "distractors": {
-    "B": {
-     "recipe": "OG (Peratrovich’s testimony)",
-     "why_wrong": "It describes Peratrovich’s role in supporting the bill but does not show what made the law groundbreaking."
-    },
-    "C": {
-     "recipe": "OG (the conditions before the law)",
-     "why_wrong": "It describes the discrimination the law addressed, not what made the law itself new."
-    },
-    "D": {
-     "recipe": "OG (how Peratrovich is honored)",
-     "why_wrong": "It emphasizes how Alaska honors Peratrovich, not the historic nature of the law."
-    }
-   },
-   "models": [
-    "2.33",
-    "2.20",
-    "2.14"
-   ],
-   "word_count": 72,
-   "sources": [],
-   "notes": "Subject: US history (Elizabeth Peratrovich and the Alaska Equal Rights Act of 1945; the “first” claim is kept hedged as sources state it)."
-  },
-  {
-   "id": "rhetorical_synthesis.EMPH.medium.w5b3_13",
-   "template": "EMPH",
-   "subtype": "Emphasize a quantity (derived total)",
-   "tier": "medium",
-   "passage": "While researching a topic, a student has taken the following notes:\n• Ida Pfeiffer (1797–1858) was an Austrian travel writer.\n• She began traveling in her forties, after her two sons had grown up.\n• Between 1846 and 1855, she completed two journeys around the world, frequently traveling alone.\n• Altogether, she covered approximately 32,000 kilometers by land and 240,000 kilometers by sea.\n• Her accounts of these journeys were translated into several languages and widely read.",
-   "stem": "The student wants to emphasize the total distance Pfeiffer traveled. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
-   "options": [
-    "Austrian travel writer Ida Pfeiffer did not begin traveling until she was in her forties, after both of her sons had grown up.",
-    "Ida Pfeiffer’s accounts of her journeys around the world were translated into several languages and widely read.",
-    "Ida Pfeiffer traveled a remarkable 272,000 kilometers altogether, approximately 32,000 by land and 240,000 by sea.",
-    "Between 1846 and 1855, Ida Pfeiffer completed two journeys around the world, frequently traveling alone."
-   ],
-   "answer_letter": "C",
-   "table": null,
-   "figure": null,
-   "explanation": "The goal is to emphasize the total distance. The notes say Pfeiffer “covered approximately 32,000 kilometers by land and 240,000 kilometers by sea.” Choice C adds these to give the total, 272,000 kilometers, and stresses it with “a remarkable.”",
-   "distractors": {
-    "A": {
-     "recipe": "OG (when she began traveling)",
-     "why_wrong": "It emphasizes how late in life Pfeiffer began traveling, not how far she went."
-    },
-    "B": {
-     "recipe": "OG (her books)",
-     "why_wrong": "It is about the reach of her books, not the distance she traveled."
-    },
-    "D": {
-     "recipe": "OG (the journeys, not the distance)",
-     "why_wrong": "It names her two journeys and that she often traveled alone but gives no distance at all, let alone the total."
-    }
-   },
-   "models": [
-    "2.33",
-    "2.40",
-    "1.15"
-   ],
-   "word_count": 61,
-   "sources": [],
-   "notes": "Subject: history and travel writing (Ida Pfeiffer; the land and sea distances are the figures commonly given for her journeys). Key states a derived total, a medium-tier move."
-  },
-  {
-   "id": "rhetorical_synthesis.EXAMPLE.medium.w5b3_14",
-   "template": "EXAMPLE",
-   "subtype": "Explanation and an example",
-   "tier": "medium",
-   "passage": "While researching a topic, a student has taken the following notes:\n• A tombolo is a narrow strip of sand or gravel that connects an island to the mainland.\n• It forms when waves bend around an island and deposit sediment in the sheltered water behind it.\n• Monte Argentario, formerly an island off the coast of Tuscany, Italy, is now connected to the mainland by two tombolos.\n• The town of Orbetello occupies a third, shorter strip of land in the lagoon between them.",
-   "stem": "The student wants to provide an explanation and an example of a tombolo. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
-   "options": [
-    "A tombolo is a narrow strip of sand or gravel that forms when waves bend around an island and deposit sediment in the sheltered water behind it.",
-    "Monte Argentario, formerly an island off the coast of Tuscany, Italy, is now connected to the mainland by two tombolos.",
-    "The town of Orbetello, in Tuscany, occupies a strip of land in the lagoon between Monte Argentario’s two tombolos.",
-    "Monte Argentario, a former island off Tuscany, Italy, is joined to the mainland by two tombolos, narrow strips of sand or gravel that link an island to the mainland."
-   ],
-   "answer_letter": "D",
-   "table": null,
-   "figure": null,
-   "explanation": "The goal has two parts: explain what a tombolo is and give an example. Choice D does both. It explains that a tombolo is a “narrow strip of sand or gravel that connects an island to the mainland” and gives Monte Argentario, which “is now connected to the mainland by two tombolos,” as the example.",
-   "distractors": {
-    "A": {
-     "recipe": "PART (explanation without an example)",
-     "why_wrong": "It explains what a tombolo is and how it forms but names no example."
-    },
-    "B": {
-     "recipe": "PART (example without an explanation)",
-     "why_wrong": "It names Monte Argentario’s tombolos but never explains what a tombolo is."
-    },
-    "C": {
-     "recipe": "OG (a nearby town)",
-     "why_wrong": "It locates Orbetello between the tombolos but neither explains what a tombolo is nor presents one as an example."
-    }
-   },
-   "models": [
-    "2.16",
-    "1.19",
-    "3.4"
-   ],
-   "word_count": 70,
-   "sources": [],
-   "notes": "Subject: geology and geography (tombolos; Monte Argentario’s two tombolos and Orbetello between them are standard facts)."
-  },
-  {
-   "id": "rhetorical_synthesis.STUDY.medium.w5b3_15",
-   "template": "STUDY",
-   "subtype": "Present the study’s findings (slot swap distractors)",
-   "tier": "medium",
-   "passage": "While researching a topic, a student has taken the following notes:\n• Herders in Central Asia frequently lose sheep and goats to wolves and snow leopards.\n• Some herders retaliate by killing the predators.\n• A research team examined whether livestock guardian dogs, raised to live alongside herds, could reduce these losses.\n• The team provided guardian dog puppies to some herding families but not to others.\n• Two years later, families with dogs had lost far fewer animals and killed fewer predators than families without dogs.",
-   "stem": "The student wants to present the study’s findings. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
-   "options": [
-    "The researchers examined whether livestock guardian dogs could reduce the number of sheep and goats that herders lose to predators.",
-    "Herding families given guardian dogs not only lost far fewer animals to predators but also killed fewer predators than families without dogs.",
-    "The researchers provided guardian dog puppies to some herding families in Central Asia but not to others.",
-    "Herders in Central Asia frequently lose sheep and goats to wolves and snow leopards, and some retaliate by killing the predators."
-   ],
-   "answer_letter": "B",
-   "table": null,
-   "figure": null,
-   "explanation": "The goal is to present the findings. The notes report that “families with dogs had lost far fewer animals and killed fewer predators than families without dogs.” Choice B presents both findings.",
-   "distractors": {
-    "A": {
-     "recipe": "OG (the aim)",
-     "why_wrong": "It states what the researchers wanted to find out, not what they found."
-    },
-    "C": {
-     "recipe": "OG (the method)",
-     "why_wrong": "It describes how the study was set up, not its results."
-    },
-    "D": {
-     "recipe": "OG (the background)",
-     "why_wrong": "It describes the problem that led to the study, not the study’s findings."
-    }
-   },
-   "models": [
-    "2.5",
-    "2.2",
-    "2.21"
-   ],
-   "word_count": 71,
-   "sources": [],
-   "notes": "Subject: ecology and conservation (livestock guardian dogs; the team is unnamed and the study is generic, with no figures, per WAVE.md). Distractors are the three study-slot swaps (background, aim, method), the 2.5 pattern."
-  },
-  {
-   "id": "rhetorical_synthesis.AUD_FAM.medium.w5b3_16",
-   "template": "AUD_FAM",
-   "subtype": "Describe to an audience already familiar with the concept",
-   "tier": "medium",
-   "passage": "While researching a topic, a student has taken the following notes:\n• A slide rule is a calculating instrument with sliding scales marked in logarithms.\n• By aligning its scales, a user can quickly multiply and divide numbers.\n• Engineers relied on slide rules until electronic pocket calculators became widespread in the 1970s.\n• The Pickett N600-ES is a compact aluminum slide rule, approximately six inches long.\n• Astronauts carried N600-ES slide rules on NASA’s Apollo missions as backups for onboard computers.",
-   "stem": "The student wants to describe the N600-ES to an audience already familiar with slide rules. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
-   "options": [
-    "Approximately six inches long and made of aluminum, the Pickett N600-ES slide rule was carried on NASA’s Apollo missions as a backup for onboard computers.",
-    "The Pickett N600-ES is a compact aluminum slide rule, a calculating instrument with sliding scales that users align to multiply and divide numbers.",
-    "A compact aluminum slide rule, the N600-ES allowed Apollo astronauts to multiply and divide numbers by aligning its sliding scales marked in logarithms.",
-    "Engineers relied on slide rules such as the Pickett N600-ES until electronic pocket calculators became widespread in the 1970s."
-   ],
-   "answer_letter": "A",
-   "table": null,
-   "figure": null,
-   "explanation": "An audience familiar with slide rules does not need them explained. Choice A uses the term without defining it and spends its words on what is specific to the N600-ES: it is “approximately six inches long,” made of aluminum, and astronauts carried it “on NASA’s Apollo missions as backups for onboard computers.”",
-   "distractors": {
-    "B": {
-     "recipe": "AUD (explains what the audience already knows)",
-     "why_wrong": "It explains what a slide rule is and how it works, which this audience already knows, and leaves out the Apollo missions."
-    },
-    "C": {
-     "recipe": "AUD (re-explains the familiar concept)",
-     "why_wrong": "It includes details about the N600-ES but spends much of the sentence explaining how slide rules work, which this audience already knows."
-    },
-    "D": {
-     "recipe": "OG (slide rules in general)",
-     "why_wrong": "It is about how long engineers used slide rules in general, not about the N600-ES itself."
-    }
-   },
-   "models": [
-    "2.1",
-    "2.18"
-   ],
-   "word_count": 66,
-   "sources": [],
-   "notes": "Subject: technology (the Pickett N600-ES, a real six-inch aluminum slide rule carried on Apollo missions). C is the 2.1 D test: otherwise complete but re-explains the familiar concept."
-  },
-  {
-   "id": "rhetorical_synthesis.RANK.medium.w5b3_17",
-   "template": "RANK",
-   "subtype": "Order of two events",
-   "tier": "medium",
-   "passage": "While researching a topic, a student has taken the following notes:\n• The first automobiles had no mechanism for clearing rain or snow from the windshield.\n• In 1903, Alabama inventor Mary Anderson patented a windshield wiper operated by a lever inside the vehicle.\n• The lever moved a rubber blade back and forth across the glass.\n• In 1917, Charlotte Bridgwood, president of a New York manufacturing company, patented an automatic wiper.\n• Her design used an electric motor to move rollers across the windshield.",
-   "stem": "The student wants to emphasize the order in which the two inventors patented their wipers. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
-   "options": [
-    "Mary Anderson’s windshield wiper used a lever inside the vehicle to move a rubber blade back and forth across the glass.",
-    "While Mary Anderson’s wiper was operated manually with a lever, Charlotte Bridgwood’s automatic wiper used an electric motor.",
-    "Charlotte Bridgwood patented an automatic wiper fourteen years after Mary Anderson patented a manually operated one.",
-    "Before the inventions of Mary Anderson and Charlotte Bridgwood, the first automobiles had no mechanism for clearing rain or snow from the windshield."
-   ],
-   "answer_letter": "C",
-   "table": null,
-   "figure": null,
-   "explanation": "The goal is to emphasize which inventor patented a wiper first. The notes date Anderson’s patent to 1903 and Bridgwood’s to 1917. Choice C makes the order explicit by saying Bridgwood patented hers “fourteen years after” Anderson did.",
-   "distractors": {
-    "A": {
-     "recipe": "PART (one inventor only)",
-     "why_wrong": "It describes how Anderson’s wiper worked but never mentions Bridgwood, so it shows no order."
-    },
-    "B": {
-     "recipe": "REL (contrasts the wrong dimension)",
-     "why_wrong": "It contrasts how the two wipers worked, not when the two inventors patented them."
-    },
-    "D": {
-     "recipe": "OG (background before both inventions)",
-     "why_wrong": "It describes the problem both inventions addressed but does not say which inventor came first."
-    }
-   },
-   "models": [
-    "2.44",
-    "2.27"
-   ],
-   "word_count": 70,
-   "sources": [],
-   "notes": "Subject: technology history (Mary Anderson, 1903 hand-operated wiper patent; Charlotte Bridgwood, 1917 automatic electric wiper patent). Key derives “fourteen years after” and drops the dates, as in 2.44."
-  },
-  {
-   "id": "rhetorical_synthesis.GEN.medium.w5b3_18",
-   "template": "GEN",
-   "subtype": "Make a generalization (no support asked)",
-   "tier": "medium",
-   "passage": "While researching a topic, a student has taken the following notes:\n• People once relied on many different units of length.\n• The cubit, used in ancient Egypt, was the length of a forearm.\n• The fathom, used by sailors to measure water depth, was the span of a person’s outstretched arms.\n• The hand, still used to measure horses, equals four inches, approximately the width of a palm.\n• The meter, introduced in France in the 1790s, was based on measurements of Earth.",
-   "stem": "The student wants to make a generalization about traditional units of length. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
-   "options": [
-    "Examples of traditional units of length include the cubit, the fathom, and the hand, which is still used to measure horses.",
-    "While the cubit was based on the length of a forearm, the meter, introduced in France in the 1790s, was based on measurements of Earth.",
-    "Sailors once measured the depth of water in fathoms, a unit equal to the span of a person’s outstretched arms.",
-    "Many traditional units of length were based on the dimensions of the human body."
-   ],
-   "answer_letter": "D",
-   "table": null,
-   "figure": null,
-   "explanation": "A generalization makes a broad claim that covers the specific cases. The notes describe the cubit as “the length of a forearm,” the fathom as “the span of a person’s outstretched arms,” and the hand as “approximately the width of a palm.” Choice D draws the pattern from these cases: many traditional units were based on the human body.",
-   "distractors": {
-    "A": {
-     "recipe": "PART (examples without a generalization)",
-     "why_wrong": "It lists three traditional units but does not state what they have in common."
-    },
-    "B": {
-     "recipe": "OG (a contrast of two units)",
-     "why_wrong": "It contrasts one traditional unit with the modern meter instead of making a claim about traditional units in general."
-    },
-    "C": {
-     "recipe": "OG (one specific unit)",
-     "why_wrong": "It describes a single unit, the fathom, rather than making a general claim."
-    }
-   },
-   "models": [
-    "2.12",
-    "3.20"
-   ],
-   "word_count": 68,
-   "sources": [],
-   "notes": "Subject: social science and history (traditional units of length; standard facts). Key is the shortest option, as 2.12’s key is short."
-  },
-  {
-   "id": "rhetorical_synthesis.QUOTE.medium.w5b3_19",
-   "template": "QUOTE",
-   "subtype": "Use a quotation that carries the goal",
-   "tier": "medium",
-   "passage": "While researching a topic, a student has taken the following notes:\n• Robert Smalls (1839–1915) was born enslaved in Beaufort, South Carolina.\n• In 1862, he commandeered a Confederate ship in Charleston Harbor and delivered it to the Union navy.\n• He later served several terms as a member of Congress.\n• At South Carolina’s 1895 constitutional convention, he opposed provisions designed to prevent Black citizens from voting.\n• There he declared that his race “needs no special defense” and that “all they need is an equal chance in the battle of life.”",
-   "stem": "The student wants to use a quotation from Smalls to present what he believed Black citizens needed. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
-   "options": [
-    "At South Carolina’s 1895 constitutional convention, Robert Smalls argued that Black citizens needed nothing more than a fair opportunity to succeed in life.",
-    "Opposing provisions designed to prevent Black citizens from voting, Smalls declared that “all they need is an equal chance in the battle of life.”",
-    "Robert Smalls, who was born enslaved, told the 1895 convention that his race “needs no special defense.”",
-    "In 1862, Robert Smalls commandeered a Confederate ship in Charleston Harbor and delivered it to the Union navy."
-   ],
-   "answer_letter": "B",
-   "table": null,
-   "figure": null,
-   "explanation": "The goal calls for a quotation that says what Smalls believed Black citizens needed. Choice B quotes the words that do this: “all they need is an equal chance in the battle of life.”",
-   "distractors": {
-    "A": {
-     "recipe": "NOQ (paraphrase, no quotation)",
-     "why_wrong": "It conveys a similar idea in the student’s own words, but the goal asks for a quotation from Smalls."
-    },
-    "C": {
-     "recipe": "NOQ (a quotation doing another job)",
-     "why_wrong": "It quotes Smalls, but the words “needs no special defense” say what his race did not need rather than what it needed."
-    },
-    "D": {
-     "recipe": "OG (his 1862 escape)",
-     "why_wrong": "It describes an event from Smalls’s life and includes no quotation about what Black citizens needed."
-    }
-   },
-   "models": [
-    "2.9",
-    "2.29"
-   ],
-   "word_count": 77,
-   "sources": [],
-   "notes": "Subject: US history (Robert Smalls; the two quoted phrases are from his 1895 convention speech as it is usually quoted, and only those exact phrases are used)."
-  },
-  {
-   "id": "rhetorical_synthesis.DESC.medium.w5b3_20",
-   "template": "DESC",
-   "subtype": "Describe how an object behaves",
-   "tier": "medium",
-   "passage": "While researching a topic, a student has taken the following notes:\n• In 2006, Hungarian mathematicians Gábor Domokos and Péter Várkonyi constructed the first gömböc.\n• A gömböc is a convex shape made of a single uniform material, with no weights concealed inside.\n• Placed on a flat surface in any orientation, it rocks until it settles in the same upright position.\n• Mathematician Vladimir Arnold had proposed in 1995 that such a shape could exist.",
-   "stem": "The student wants to describe how a gömböc behaves on a flat surface. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
-   "options": [
-    "Whatever orientation it is placed in on a flat surface, a gömböc rocks until it settles in the same upright position.",
-    "A gömböc is a convex shape made of a single uniform material, with no weights concealed inside it to help keep it steady.",
-    "In 2006, mathematicians Gábor Domokos and Péter Várkonyi constructed the first gömböc, a shape that Vladimir Arnold had proposed in 1995.",
-    "A gömböc, a convex shape made of a single uniform material, behaves in an unusual way whenever it is set on a flat surface."
-   ],
-   "answer_letter": "A",
-   "table": null,
-   "figure": null,
-   "explanation": "The goal is to describe the gömböc’s behavior on a flat surface. The notes say that “Placed on a flat surface in any orientation, it rocks until it settles in the same upright position.” Choice A describes exactly that behavior.",
-   "distractors": {
-    "B": {
-     "recipe": "OG (what it is made of)",
-     "why_wrong": "It describes the gömböc’s shape and material but not how it behaves on a flat surface."
-    },
-    "C": {
-     "recipe": "OG (its history)",
-     "why_wrong": "It tells who built the first gömböc and who proposed it, not how it behaves."
-    },
-    "D": {
-     "recipe": "VAGUE (says it behaves unusually without saying how)",
-     "why_wrong": "It says the gömböc behaves “in an unusual way” but never describes the behavior."
-    }
-   },
-   "models": [
-    "2.4",
-    "1.18"
-   ],
-   "word_count": 61,
-   "sources": [],
-   "notes": "Subject: mathematics (the gömböc, Domokos and Várkonyi 2006, Arnold’s 1995 conjecture; standard facts). Key is the shortest option."
-  },
-  {
-   "id": "rhetorical_synthesis.EMPH.easy.w5b3_21",
-   "template": "EMPH",
-   "subtype": "Emphasize one attribute (length)",
-   "tier": "easy",
-   "passage": "While researching a topic, a student has taken the following notes:\n• Located in northeastern Iran, the Great Wall of Gorgan is an ancient defensive wall.\n• It was constructed by the Sasanian Empire, probably in the 400s or 500s CE.\n• It stretches approximately 195 kilometers (121 miles) inland from the Caspian Sea.\n• More than thirty fortresses were built along it.\n• Because of its red bricks, it is sometimes called the “Red Snake.”",
-   "stem": "The student wants to emphasize how long the Great Wall of Gorgan is. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
-   "options": [
-    "The Great Wall of Gorgan stretches a full 195 kilometers (121 miles) inland from the Caspian Sea.",
-    "The Great Wall of Gorgan was constructed by the Sasanian Empire, probably in the 400s or 500s CE.",
-    "Because of its red bricks, the ancient defensive wall in northeastern Iran is sometimes called the “Red Snake.”",
-    "The Great Wall of Gorgan is an ancient defensive wall in northeastern Iran with fortresses built along it."
-   ],
-   "answer_letter": "A",
-   "table": null,
-   "figure": null,
-   "explanation": "The goal is to emphasize the wall’s length. The notes say it “stretches approximately 195 kilometers (121 miles) inland from the Caspian Sea.” Choice A gives that length and stresses it with “a full.”",
-   "distractors": {
-    "B": {
-     "recipe": "OG (who built it and when)",
-     "why_wrong": "It gives the wall’s builders and date, not its length."
-    },
-    "C": {
-     "recipe": "OG (its nickname)",
-     "why_wrong": "It explains the wall’s nickname, not how long it is."
-    },
-    "D": {
-     "recipe": "OG (what and where)",
-     "why_wrong": "It identifies the wall and its location but gives no sense of its length."
-    }
-   },
-   "models": [
-    "1.15",
-    "1.7",
-    "1.16"
-   ],
-   "word_count": 60,
-   "sources": [],
-   "notes": "Subject: history (the Great Wall of Gorgan, Sasanian, about 195 km; standard facts)."
-  },
-  {
-   "id": "rhetorical_synthesis.SIM.easy.w5b3_22",
-   "template": "SIM",
-   "subtype": "Similarity between two items",
-   "tier": "easy",
-   "passage": "While researching a topic, a student has taken the following notes:\n• Roquefort and Cabrales are blue cheeses, named for the blue-green mold that grows inside them.\n• Roquefort, from southern France, is made from sheep’s milk.\n• It ripens in natural limestone caves near the village of Roquefort-sur-Soulzon.\n• Cabrales, from northern Spain, is traditionally made from cow’s milk.\n• It ripens in natural limestone caves in the Picos de Europa mountains.",
-   "stem": "The student wants to emphasize a similarity in how the two cheeses are ripened. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
-   "options": [
-    "Roquefort is made from sheep’s milk, whereas Cabrales is traditionally made from cow’s milk.",
-    "Cabrales, a blue cheese from northern Spain, ripens in natural limestone caves in the Picos de Europa mountains.",
-    "Roquefort, a sheep’s milk cheese from southern France, ripens in limestone caves near the village of Roquefort-sur-Soulzon.",
-    "Roquefort and Cabrales are both ripened in natural limestone caves, one in France and the other in Spain."
-   ],
-   "answer_letter": "D",
-   "table": null,
-   "figure": null,
-   "explanation": "The goal is a similarity in how the cheeses are ripened. The notes say Roquefort “ripens in natural limestone caves near the village of Roquefort-sur-Soulzon” and Cabrales “ripens in natural limestone caves in the Picos de Europa mountains.” Choice D states this shared trait with “both.”",
-   "distractors": {
-    "A": {
-     "recipe": "REL (a difference instead of a similarity)",
-     "why_wrong": "It contrasts the milk used for the two cheeses rather than showing how they are ripened alike."
-    },
-    "B": {
-     "recipe": "PART (one cheese only)",
-     "why_wrong": "It describes how Cabrales is ripened but never mentions Roquefort."
-    },
-    "C": {
-     "recipe": "PART (one cheese only)",
-     "why_wrong": "It describes how Roquefort is ripened but never mentions Cabrales."
-    }
-   },
-   "models": [
-    "1.22",
-    "1.11",
-    "2.30"
-   ],
-   "word_count": 57,
-   "sources": [],
-   "notes": "Subject: culture and food (Roquefort and Cabrales, two real cave-ripened blue cheeses; standard facts). The goal names the attribute (ripening) so the shared blue-cheese category cannot serve as a second similarity."
-  },
-  {
-   "id": "rhetorical_synthesis.DIFF.easy.w5b3_23",
-   "template": "DIFF",
-   "subtype": "Difference between two items",
-   "tier": "easy",
-   "passage": "While researching a topic, a student has taken the following notes:\n• Seawater that begins to freeze in turbulent conditions can form several distinct kinds of ice.\n• Frazil ice consists of tiny, needle-shaped ice crystals.\n• The crystals float loosely in the water.\n• Pancake ice consists of rounded pieces of ice up to approximately 3 meters across.\n• The pieces develop raised edges from colliding with one another in the waves.",
-   "stem": "The student wants to emphasize a difference between frazil ice and pancake ice. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
-   "options": [
-    "Both frazil ice and pancake ice can form when seawater begins to freeze in turbulent conditions.",
-    "Pancake ice consists of rounded pieces up to approximately 3 meters across, with edges raised by colliding in the waves.",
-    "Frazil ice consists of tiny, loose crystals, while pancake ice consists of rounded pieces up to approximately 3 meters across.",
-    "Frazil ice and pancake ice are two kinds of sea ice that look quite different from each other."
-   ],
-   "answer_letter": "C",
-   "table": null,
-   "figure": null,
-   "explanation": "The goal is a difference between the two kinds of ice. The notes say frazil ice “consists of tiny, needle-shaped ice crystals” that “float loosely,” while pancake ice “consists of rounded pieces of ice up to approximately 3 meters across.” Choice C contrasts the two with “while.”",
-   "distractors": {
-    "A": {
-     "recipe": "REL (a similarity instead of a difference)",
-     "why_wrong": "It states what the two kinds of ice have in common rather than how they differ."
-    },
-    "B": {
-     "recipe": "PART (one kind only)",
-     "why_wrong": "It describes only pancake ice, so no difference is stated."
-    },
-    "D": {
-     "recipe": "VAGUE (says they differ without saying how)",
-     "why_wrong": "It says the two look “quite different” but gives no detail about either."
-    }
-   },
-   "models": [
-    "1.13",
-    "1.2"
-   ],
-   "word_count": 57,
-   "sources": [],
-   "notes": "Subject: earth science (frazil and pancake sea ice; standard descriptions, pancake ice size rounded)."
-  },
-  {
-   "id": "rhetorical_synthesis.OVERVIEW.easy.w5b3_24",
-   "template": "OVERVIEW",
-   "subtype": "Overview of a process",
-   "tier": "easy",
-   "passage": "While researching a topic, a student has taken the following notes:\n• Pemmican is a food first prepared by Indigenous nations of the Great Plains, such as the Cree.\n• To make it, people dried thin strips of bison meat over a fire or in the sun.\n• They then pounded the dried meat into a coarse powder.\n• The powder was combined with melted fat and occasionally with dried berries.\n• Stored in rawhide containers, pemmican could remain edible for years.",
-   "stem": "The student wants to provide an overview of how pemmican was made. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
-   "options": [
-    "Indigenous nations of the Great Plains dried thin strips of bison meat over a fire or in the sun.",
-    "Pemmican was made by drying thin strips of bison meat, pounding them into powder, and combining the powder with melted fat.",
-    "Stored in rawhide containers, pemmican, a food first prepared by Indigenous nations of the Great Plains, could remain edible for years.",
-    "Pemmican was first prepared by Indigenous nations of the Great Plains, such as the Cree, who occasionally added dried berries to it."
-   ],
-   "answer_letter": "B",
-   "table": null,
-   "figure": null,
-   "explanation": "An overview of how pemmican was made should touch every stage. The notes say people “dried thin strips of bison meat,” “pounded the dried meat into a coarse powder,” and “The powder was combined with melted fat.” Choice B covers all three steps in order.",
-   "distractors": {
-    "A": {
-     "recipe": "PART (first step only)",
-     "why_wrong": "It describes only the drying of the meat and leaves out the pounding and mixing."
-    },
-    "C": {
-     "recipe": "OG (storage)",
-     "why_wrong": "It explains how pemmican was stored and how long it kept, not how it was made."
-    },
-    "D": {
-     "recipe": "OG (who made it, one ingredient)",
-     "why_wrong": "It names who first made pemmican and one optional ingredient but does not describe the process."
-    }
-   },
-   "models": [
-    "1.21"
-   ],
-   "word_count": 66,
-   "sources": [],
-   "notes": "Subject: history and culture (pemmican of the Plains peoples; standard description)."
-  }
- ],
- "done": true
+  ],
+  "done": true
 }

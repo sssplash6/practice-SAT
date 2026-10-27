@@ -1,0 +1,1396 @@
+{
+  "skill": "Words in Context",
+  "slug": "words_in_context",
+  "part": "w5b4",
+  "domain": "Craft and Structure",
+  "plan": {
+    "templates": [
+      {
+        "code": "B1",
+        "name": "Blank completion, restatement clue"
+      },
+      {
+        "code": "B2",
+        "name": "Blank completion, cause or consequence clue"
+      },
+      {
+        "code": "B3",
+        "name": "Blank completion, contrast clue (including received view then finding)"
+      },
+      {
+        "code": "B4",
+        "name": "Blank completion, example-pinned clue"
+      },
+      {
+        "code": "B5",
+        "name": "Blank completion, negated frame"
+      },
+      {
+        "code": "B6",
+        "name": "Blank completion, phrase options (word + preposition, a/an + word)"
+      },
+      {
+        "code": "M1",
+        "name": "Most nearly mean, underlined word"
+      },
+      {
+        "code": "M2",
+        "name": "Most nearly mean, underlined phrase or phrase options"
+      }
+    ]
+  },
+  "done": true,
+  "items": [
+    {
+      "id": "words_in_context.B6.hard.w5b4_01",
+      "template": "B6",
+      "subtype": "Blank completion: phrase options",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Reading Braille activates the visual cortex in people blind from an early age. When Leonardo Cohen and colleagues briefly disrupted that region with magnetic stimulation, blind participants made errors identifying Braille letters, whereas the same stimulation had no effect on sighted participants’ sense of touch. For these blind readers, then, perceiving letters by touch appears to be ______ a brain region that, in sighted people, serves vision.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "impervious to",
+        "conducive to",
+        "contingent on",
+        "inimical to"
+      ],
+      "answer_letter": "C",
+      "explanation": "Contingent on means dependent on. When Cohen’s team disrupted the visual cortex, blind participants “made errors identifying Braille letters,” while the same stimulation “had no effect on sighted participants’ sense of touch.” Because interfering with the region impaired the blind readers’ perception of letters by touch, that perception appears to depend on, or be contingent on, the region.",
+      "distractors": {
+        "A": {
+          "recipe": "reversal: the trait of the other side of the contrast (ANT)",
+          "why_wrong": "Impervious to means unaffected by. That describes the sighted participants, whose sense of touch the stimulation did not affect; the blind readers, by contrast, “made errors identifying Braille letters” when the region was disrupted."
+        },
+        "B": {
+          "recipe": "near miss: right kind of link, wrong direction (CONNOT)",
+          "why_wrong": "Conducive to means tending to bring about. Reading Braille does activate the visual cortex, but the experiment shows the link running the other way: the blind readers’ touch perception depends on the region, since disrupting it caused errors. Touch perception does not bring about a brain region."
+        },
+        "D": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Inimical to means harmful to. Nothing suggests that perceiving letters by touch harms the visual cortex; it was disrupting the region that harmed the blind participants’ reading of Braille."
+        }
+      },
+      "models": [
+        "4fa7e50e",
+        "7b4dde72",
+        "5dce6cab",
+        "3.2"
+      ],
+      "sources": [
+        {
+          "what": "Cohen, Celnik, Pascual-Leone et al. 1997, Nature 389:180, PubMed abstract: the primary visual cortex of people blind from an early age is activated by Braille reading; transcranial magnetic stimulation of the occipital (visual) cortex induced errors in identifying Braille and embossed Roman letters in early-blind subjects but had no effect on tactile performance in normal-sighted subjects; the visual cortex is recruited to a role in somatosensory processing",
+          "url": "https://pubmed.ncbi.nlm.nih.gov/9296495/"
+        }
+      ],
+      "notes": "Subject: natural science (neuroscience). Key letter C. Band 6 (plan). Review replaced the Munduruku number item (concept duplicate of live words_in_context.B1.hard.w3b6_02, Mundurucu geometry from the same research group). Two steps: set the blind and sighted results side by side, then turn “disrupting the region caused errors” into dependence; the key paraphrases the abstract’s “recruited to a role” away from the passage. Reversal impervious to is the sighted participants’ trait (wrong party); near miss conducive to keeps a link but reverses its direction, tempting because Braille reading “activates” the region; unsupported inimical to. Cross-modal plasticity appears in no live or official item (grep visual cortex, occipital, Braille; the Molyneux item in cross_text w4 concerns touch-to-sight transfer after surgery). Raw freq.txt ranks: impervious 20,091; conducive 24,104; contingent 17,762; inimical 27,949. Key ties impervious to as the longest option.",
+      "word_count": 67,
+      "table": null,
+      "figure": null,
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [
+          "replaced the subject: Munduruku number words was a concept duplicate of live words_in_context.B1.hard.w3b6_02 (Mundurucu geometry, same Pica/Izard/Dehaene group); new passage on early-blind Braille readers and visual-cortex stimulation (Cohen et al. 1997, PubMed 9296495), same template, key letter and option set; claims withdrawn and added"
+        ],
+        "status": "fixed"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "Planned band 6. Two-step dissociation (blind against sighted results, then disruption read as dependence), a wrong-party reversal and a direction near miss, all options past rank 17,000, key paraphrased away from the passage: a fair band 6."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "C",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "words_in_context.B1.hard.w5b4_02",
+      "template": "B1",
+      "subtype": "Blank completion: restatement clue",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "Unlike dogs and cats, humans do not orient their ears toward sounds that attract their attention. Yet when Daniel Strauss and colleagues recorded electrical activity in the muscles surrounding the outer ear, activity increased on the side of whichever sound a listener was attending to, suggesting that the system that once directed our ancestors’ ears is ______, a “neural fossil” persisting for about 25 million years.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "dormant",
+        "vestigial",
+        "nascent",
+        "compensatory"
+      ],
+      "answer_letter": "B",
+      "explanation": "Vestigial describes a part or system that remains after it has lost most or all of its original function. Humans “do not orient their ears toward sounds,” yet in the muscles around the ear “activity increased on the side of whichever sound a listener was attending to,” and the system that “once directed our ancestors’ ears” is described as a “neural fossil” that has persisted “for about 25 million years.” A system that still stirs but no longer turns the ears is vestigial.",
+      "distractors": {
+        "A": {
+          "recipe": "near miss: inactive rather than reduced (CONNOT)",
+          "why_wrong": "Dormant means inactive for the time being but able to become active again. The text shows the system is not inactive: in the muscles around the ear, “activity increased on the side of whichever sound a listener was attending to.” Nor does anything suggest the system will one day turn people’s ears again; it is a leftover, a “neural fossil.”"
+        },
+        "C": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "Nascent means just beginning to develop. The text calls the system a “neural fossil” that “once directed our ancestors’ ears” and has persisted “for about 25 million years,” so it is old and reduced, not newly emerging."
+        },
+        "D": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Compensatory means making up for a loss. The text does not say the muscles’ activity makes up for anything, such as the inability to point the ears; it presents the activity as a remnant of an old system."
+        }
+      },
+      "models": [
+        "93665100",
+        "bce4d106",
+        "1eeb9bb8"
+      ],
+      "sources": [
+        {
+          "what": "Strauss et al. 2020, eLife 9:e54536, PubMed abstract: unlike dogs and cats, people do not point their ears; humans may have retained a vestigial pinna-orienting system that has persisted as a neural fossil for about 25 million years; ear-muscle EMG activity was larger at the ear on the side of the attended stimulus",
+          "url": "https://pubmed.ncbi.nlm.nih.gov/32618268/"
+        }
+      ],
+      "notes": "Subject: natural science (human biology, neuroscience). Key letter B. Replaces the withdrawn Megaponera claim (concept duplicate of official TSP item 3e63fce0). Band-7 moves (spec/rw/band7/words_in_context.md section 5, B1): a rare key the clue restates only figuratively (“neural fossil”, “once directed our ancestors’ ears”), as plethora restates ubiquity in bce4d106; a near-synonym distractor failing on one feature (dormant: inactive and able to revive, but the muscles are active); reversal nascent; unsupported compensatory. Raw freq.txt ranks: dormant 16,629; vestigial absent; nascent 32,859; compensatory 56,846. All four past 10,000, three past 20,000, rarest distractor past 50,000. Key not the longest option.",
+      "word_count": 66,
+      "table": null,
+      "figure": null,
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "Rarity checks pass (all four options past rank 10,000, vestigial unseen, compensatory past 50,000) and dormant is a good one-feature near synonym, but human ear muscles are a stock biology-class example of a vestigial structure and the quoted “neural fossil” glosses the key in one step, so a student who took biology answers from the topic. Option changes cannot close that path without making a second option defensible (rudimentary, latent), so it stays a strong band 6."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "B",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "words_in_context.B5.hard.w5b4_03",
+      "template": "B5",
+      "subtype": "Blank completion: negated frame",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "Many English words that begin with gl-, such as glow, glint, and glimmer, relate to light or vision, but such clusters could be mere accidents of the vocabulary, with no psychological reality for speakers. Benjamin Bergen’s 2004 priming experiment made these sound-meaning pairings, called phonaesthemes, seem less ______: words sharing a phonaestheme accelerated recognition of one another much as words sharing a prefix do.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "euphonious",
+        "onomatopoeic",
+        "ephemeral",
+        "fortuitous"
+      ],
+      "answer_letter": "D",
+      "explanation": "Fortuitous here means happening by chance. The text raises the possibility that clusters such as glow, glint, and glimmer “could be mere accidents of the vocabulary, with no psychological reality for speakers.” Bergen’s result, that “words sharing a phonaestheme accelerated recognition of one another much as words sharing a prefix do,” shows that speakers do register these pairings, so it made them seem less like accidents: less fortuitous.",
+      "distractors": {
+        "A": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Euphonious means pleasing to the ear. The text says nothing about whether gl- words sound pleasant; the doubt it raises is whether the pairings are “mere accidents of the vocabulary,” and Bergen’s result answers that doubt, not a question about how the words sound."
+        },
+        "B": {
+          "recipe": "near miss: another kind of sound-meaning link (CONNOT)",
+          "why_wrong": "Onomatopoeic describes words that imitate the sounds they name, a different way that sound can be tied to meaning. The text never suggests that gl- imitates a sound, and the experiment tested whether speakers register the pairings, not whether the words imitate anything."
+        },
+        "C": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Ephemeral means lasting only a short time. The text says nothing about how long phonaesthemes last; the doubt it raises is whether they are “mere accidents of the vocabulary.”"
+        }
+      },
+      "models": [
+        "d7807ec8",
+        "d3ca5d59",
+        "6017ae31"
+      ],
+      "sources": [
+        {
+          "what": "Bergen 2004, The Psychological Reality of Phonaesthemes, Language 80(2), abstract via Crossref: psychological reality of English phonaesthemes such as gl- (light and vision) demonstrated through a priming experiment; despite being noncompositional they showed priming effects much like compositional morphemes, not explained by semantic or phonological priming alone or combined",
+          "url": "https://api.crossref.org/works/10.1353/lan.2004.0056"
+        }
+      ],
+      "notes": "Subject: social science (linguistics, psycholinguistics). Key letter D. Band-7 moves (section 5, B5): the negation hides in a comparative (“seem less ______”, as in d7807ec8), not “unlikely to be”; the key is a familiar word in its primary but less popular sense (fortuitous as happening by chance, not lucky), the transferred-sense move; the clue sits in a different register (“mere accidents of the vocabulary”). Review replaced systematic, the word the result supports if the reader skips “less” (a negation flip, a band-6 recipe), with euphonious, a rare unsupported word from the sound field; near miss onomatopoeic names another kind of sound-meaning link. The frame would also accept arbitrary, spurious, illusory or coincidental, so none is offered. The other sound-symbolism item in the bank (Pokémon names, w4) uses a different phenomenon. Raw freq.txt ranks: euphonious 53,041; onomatopoeic absent; ephemeral 21,660; fortuitous 29,566. All four past 20,000, rarest distractor absent. Key not the longest option.",
+      "word_count": 64,
+      "table": null,
+      "figure": null,
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [
+          "replaced distractor A systematic (negation flip under “seem less”) with euphonious (rank 53,041) so all four options sit past rank 20,000; new why_wrong and notes"
+        ],
+        "status": "fixed"
+      },
+      "band7": {
+        "verdict": "band 7",
+        "why": "Negation hidden in a comparative (seem less ______, as in d7807ec8), key fortuitous in its chance sense against the popular lucky, clue in another register; after review all four options are past rank 20,000 with no negation flip, and onomatopoeic is a near miss failing on one feature."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "D",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 7
+    },
+    {
+      "id": "words_in_context.B3.hard.w5b4_04",
+      "template": "B3",
+      "subtype": "Blank completion: contrast clue",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Europe’s craft guilds, which regulated trades for centuries, have often been described as having a ______ influence on the economies around them. In The European Guilds (2019), however, economic historian Sheilagh Ogilvie concludes that although guilds provided some training and quality control, they persisted mainly because they benefited powerful members and allied elites, not because they delivered broad benefits to society.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "salutary",
+        "pernicious",
+        "capricious",
+        "parochial"
+      ],
+      "answer_letter": "A",
+      "explanation": "Salutary means beneficial. The text contrasts the common description of guilds with Ogilvie’s conclusion, introduced by “however,” that they persisted because they benefited “powerful members and allied elites, not because they delivered broad benefits to society.” For that conclusion to challenge the usual description, guilds must often have been described as having a beneficial, or salutary, influence on the economies around them.",
+      "distractors": {
+        "B": {
+          "recipe": "reversal: the challenger’s view (ANT, wrong party)",
+          "why_wrong": "Pernicious means harmful. That is closer to Ogilvie’s own conclusion, which the text introduces with “however” as a challenge to how guilds “have often been described”; the blank belongs to the view she argues against."
+        },
+        "C": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Capricious means unpredictable. Neither the usual description of guilds nor Ogilvie’s conclusion concerns how predictable their influence was; the contrast is over whom guilds benefited."
+        },
+        "D": {
+          "recipe": "near miss: describes the narrow benefits of the finding (CONNOT, wrong party)",
+          "why_wrong": "Parochial means narrow in scope. Benefits confined to “powerful members and allied elites” are what Ogilvie argues, against the usual description, so a parochial influence belongs to her side of the contrast, not to the view the text says she challenges."
+        }
+      },
+      "models": [
+        "b35e2fdc",
+        "3.1",
+        "3.10"
+      ],
+      "sources": [
+        {
+          "what": "Wikipedia, Sheilagh Ogilvie: while guilds did provide some training and quality control, Ogilvie argues their overall impact was economically harmful and that they persisted mainly because they benefited powerful guild members and allied elites rather than delivering broad benefits to society, in The European Guilds: An Economic Analysis (2019)",
+          "url": "https://en.wikipedia.org/wiki/Sheilagh_Ogilvie"
+        }
+      ],
+      "notes": "Subject: social science (economic history). Key letter A. Band 6 (plan; B3 band 7 recipe partly used): received view then finding, with the blank on the received view and its direction left implicit (the neutral “have often been described as having” gives no polarity; only the contrast with Ogilvie’s conclusion fixes it). Two wrong-party distractors from the finding’s side (pernicious, parochial), one unsupported. Raw freq.txt ranks: salutary 23,342; pernicious 21,825; capricious 11,198; parochial 22,657. Key not the longest option.",
+      "word_count": 61,
+      "table": null,
+      "figure": null,
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "Planned band 6. Received view then finding with the blank on the view and its direction left implicit, two wrong-party distractors from the finding’s side, all options past rank 11,000."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "A",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "words_in_context.M1.hard.w5b4_05",
+      "template": "M1",
+      "subtype": "Most nearly mean: underlined word",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "The following text is from Vernon Lee’s 1890 short story collection Hauntings. The narrator is describing a portrait.\n\nAgainst a background of harsh, dark blue, there stands out the figure of the Duchess (for it is Medea, the real Medea, a thousand times more real, individual, and powerful than in the other portraits), seated stiffly in a high-backed chair, <u>sustained</u>, as it were, almost rigid, by the stiff brocade of skirts and stomacher, stiffer for plaques of embroidered silver flowers and rows of seed pearl.",
+      "stem": "As used in the text, what does the word “sustained” most nearly mean?",
+      "options": [
+        "Prolonged",
+        "Comforted",
+        "Confirmed",
+        "Propped"
+      ],
+      "answer_letter": "D",
+      "explanation": "As used in the text, “sustained” most nearly means propped. The Duchess is “seated stiffly in a high-backed chair” and held “almost rigid” by “the stiff brocade of skirts and stomacher, stiffer for plaques of embroidered silver flowers and rows of seed pearl.” The heavy, stiff dress holds her body upright, so she is propped by it.",
+      "distractors": {
+        "A": {
+          "recipe": "another sense of the target (SENSE)",
+          "why_wrong": "Sustained can mean kept up over time, as in a sustained effort, but the text describes how the Duchess sits in a painting, held “almost rigid” by her stiff dress, not anything that lasts a long time."
+        },
+        "B": {
+          "recipe": "another sense of the target, fits “by” loosely (SENSE)",
+          "why_wrong": "A person can be sustained, or comforted, by hope or by friends, and “by the stiff brocade” might suggest that sense, but stiff cloth that holds the Duchess “almost rigid” supports her body; it does not ease her feelings."
+        },
+        "C": {
+          "recipe": "another sense of the target (SENSE)",
+          "why_wrong": "Sustained can mean confirmed, as when a judge sustains an objection, but nothing in the text is being judged or upheld; the word describes how the stiff dress holds the seated figure."
+        }
+      },
+      "models": [
+        "9b22bf7b",
+        "3.3",
+        "3.15"
+      ],
+      "sources": [
+        {
+          "what": "Project Gutenberg, Vernon Lee, Hauntings (1890), story “Amour Dure” (text copied exactly)",
+          "url": "https://www.gutenberg.org/ebooks/9956"
+        },
+        {
+          "what": "Wikipedia, Vernon Lee: her best-known stories were collected in Hauntings (1890)",
+          "url": "https://en.wikipedia.org/wiki/Vernon_Lee"
+        }
+      ],
+      "notes": "Subject: literature (short story collection, 1890; story “Amour Dure”). Key letter D. Band 6 (plan). Dense period prose in one long sentence; a common target (sustained, rank 4,000s) in its physical sense, which students rarely meet against the everyday senses kept up, comforted (sustained by hope) and upheld; “as it were” and “by the stiff brocade” keep the figurative senses tempting, and the repeated “stiffly / stiff / stiffer / rigid” decides it. Raw freq.txt ranks: Prolonged 5,313; Comforted 5,253; Confirmed 5,199; Propped 9,686. Vernon Lee and Hauntings appear in no official item (grep). Key not the longest option.",
+      "word_count": 85,
+      "table": null,
+      "figure": null,
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass"
+      },
+      "band7": {
+        "verdict": "band 6",
+        "why": "Planned band 6. Dense 1890 prose with a common target in its physical sense against three real senses; the repeated stiff and rigid wording decides it on a careful read."
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "D",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "words_in_context.B5.medium.w5b4_06",
+      "template": "B5",
+      "subtype": "Blank completion: negated frame",
+      "tier": "medium",
+      "passage": "Large earthquakes are seldom ______ events. Most are followed by aftershocks near the fault that slipped, and some set off earthquakes much farther away: after the magnitude 7.3 Landers earthquake struck Southern California in 1992, seismologist David Hill and colleagues documented a sudden increase in earthquake activity across much of the western United States, at distances of up to 1,250 kilometers from the main shock.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "isolated",
+        "sudden",
+        "shallow",
+        "consequential"
+      ],
+      "answer_letter": "A",
+      "explanation": "Isolated means occurring alone. The text says that most large earthquakes “are followed by aftershocks near the fault that slipped” and that some “set off earthquakes much farther away,” as the Landers earthquake did “at distances of up to 1,250 kilometers from the main shock.” Because large earthquakes lead to other earthquakes, they are seldom isolated.",
+      "distractors": {
+        "B": {
+          "recipe": "topic echo (ASSOC)",
+          "why_wrong": "The text uses “sudden” for the increase in earthquake activity that followed the Landers earthquake, but nothing suggests that large earthquakes themselves seldom strike suddenly; the point is that they lead to other earthquakes."
+        },
+        "C": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Shallow means not far below the surface. The text never discusses how deep earthquakes begin; it explains that large earthquakes are followed by others."
+        },
+        "D": {
+          "recipe": "reversal under the negation (ANT)",
+          "why_wrong": "Consequential means having important effects. The text shows that large earthquakes do have major effects: they are followed by aftershocks and can “set off earthquakes much farther away,” so saying they are seldom consequential would contradict it."
+        }
+      },
+      "models": [
+        "2.10",
+        "2.14",
+        "2.11"
+      ],
+      "sources": [
+        {
+          "what": "Hill et al. 1993, Science 260:1617, PubMed abstract: the magnitude 7.3 Landers earthquake of 28 June 1992 triggered a remarkably sudden and widespread increase in earthquake activity across much of the western United States, at distances up to 1250 kilometers from the mainshock",
+          "url": "https://pubmed.ncbi.nlm.nih.gov/17810202/"
+        }
+      ],
+      "notes": "Subject: natural science (seismology). Key letter A. Review replaced the dry-spaghetti fracture item (topic fame: Feynman anecdote, 2006 Ig Nobel, popular-science trivia). Negated frame (“seldom ______”) with the clue in the next sentence, as in 2.14: aftershocks (general knowledge) and the Landers case of remote triggering. One reversal under the negation (consequential), one topic echo of the passage’s “sudden”, one unsupported (shallow). Remote triggering appears in no live or official item (grep Landers, triggered seismicity, dynamic triggering). Raw freq.txt ranks: isolated 7,655; sudden 525; shallow 5,089; consequential 34,533. Key not the longest option.",
+      "word_count": 65,
+      "table": null,
+      "figure": null,
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [
+          "replaced the subject on a fame call: dry spaghetti breaking into three or four pieces is popular-science trivia (Feynman anecdote, 2006 Ig Nobel); new passage on the 1992 Landers earthquake and remote triggering (Hill et al. 1993, PubMed 17810202), same template and key letter, new options sudden and shallow; claims withdrawn and added"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "words_in_context.B5.medium.w5b4_07",
+      "template": "B5",
+      "subtype": "Blank completion: negated frame",
+      "tier": "medium",
+      "passage": "Until 1987, marine biologists did not consider any glass sponge reefs, enormous formations constructed by sponges with siliceous skeletons, to be ______: such reefs were believed to have vanished worldwide when the Jurassic period ended, roughly 145 million years ago. That year, however, living examples were discovered in Hecate Strait, which separates the Canadian mainland from the archipelago of Haida Gwaii.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "fossilized",
+        "venomous",
+        "extant",
+        "migratory"
+      ],
+      "answer_letter": "C",
+      "explanation": "Extant means still in existence. The text says such reefs “were believed to have vanished worldwide when the Jurassic period ended” and that “living examples were discovered” only in 1987. Before that discovery, then, marine biologists did not consider any of the reefs to be extant.",
+      "distractors": {
+        "A": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "Fossilized describes the remains of organisms that died long ago, which is how scientists thought of these reefs before 1987. Saying they did not consider any reefs to be fossilized reverses the point: the surprise in 1987 was that “living examples were discovered.”"
+        },
+        "B": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Venomous means able to inject venom. Nothing in the text concerns venom; the question it raises is whether the reefs still existed."
+        },
+        "D": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Migratory means moving from place to place. The text says nothing about movement; the 1987 discovery showed that living reefs still existed, not that they travel."
+        }
+      },
+      "models": [
+        "2.13",
+        "2.10",
+        "2.14"
+      ],
+      "sources": [
+        {
+          "what": "Wikipedia, Hecate Strait and Queen Charlotte Sound Glass Sponge Reefs Marine Protected Area: prior to their discovery in 1987, glass sponge reefs were believed to have been extinct worldwide since the end of the Jurassic period",
+          "url": "https://en.wikipedia.org/wiki/Hecate_Strait_and_Queen_Charlotte_Sound_Glass_Sponge_Reefs_Marine_Protected_Area"
+        }
+      ],
+      "notes": "Subject: natural science (marine biology). Key letter C. Negated frame (“did not consider any ... to be ______”) with the clue after the colon and in the next sentence. Hecate Strait lies between mainland British Columbia and Haida Gwaii (Wikipedia, Hecate Strait). The Jurassic ended about 145 million years ago (general knowledge, rounded). Distinct from the live Venus flower basket item (boundaries w1b5_19), which concerns one sponge and its shrimp. Raw freq.txt ranks: fossilized 66,568; venomous 17,465; extant 24,918; migratory 39,787. Key not the longest option.",
+      "word_count": 61,
+      "table": null,
+      "figure": null,
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "words_in_context.B6.medium.w5b4_08",
+      "template": "B6",
+      "subtype": "Blank completion: phrase options",
+      "tier": "medium",
+      "passage": "From 1641 to 1858, Dutch merchants, the only Westerners permitted to trade with Japan during that period, were confined to Dejima, a small artificial island off Nagasaki. The trading post consequently became ______ rangaku, or “Dutch learning”: Japanese scholars learned the Dutch language and examined thousands of imported Dutch publications in order to comprehend Western science, medicine, and technology.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "an obstacle to",
+        "a conduit for",
+        "a beneficiary of",
+        "a pretext for"
+      ],
+      "answer_letter": "B",
+      "explanation": "A conduit for is a channel through which something passes. Because the Dutch were “the only Westerners permitted to trade with Japan during that period” and were confined to Dejima, the “imported Dutch publications” reached Japanese scholars through the island, and the scholars examined them “to comprehend Western science, medicine, and technology.” Dejima was thus a channel, or conduit, for Dutch learning.",
+      "distractors": {
+        "A": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "An obstacle to would mean that Dejima blocked rangaku, but the text says Japanese scholars examined the “imported Dutch publications” that came through the outpost, so Dejima made Dutch learning possible."
+        },
+        "C": {
+          "recipe": "direction reversal (ANT)",
+          "why_wrong": "A beneficiary of would mean that the trading post gained from rangaku. The text describes the reverse flow: Western knowledge passed through Dejima to Japanese scholars."
+        },
+        "D": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "A pretext for is a false reason given for an action. Nothing suggests that Dejima served as an excuse for rangaku; it was the actual source of the publications the scholars examined."
+        }
+      },
+      "models": [
+        "2.4",
+        "2.18",
+        "2.28"
+      ],
+      "sources": [
+        {
+          "what": "Wikipedia, Dejima: artificial island off Nagasaki, Dutch trading post 1641 to 1858; until the mid-19th century the Dutch were the only Westerners with access to Japanese markets; Dejima played a key role in rangaku (Dutch learning), an effort to learn Dutch to understand Western science, medicine and technology; the Dutch sold more than 10,000 foreign books to the Japanese",
+          "url": "https://en.wikipedia.org/wiki/Dejima"
+        }
+      ],
+      "notes": "Subject: history (Edo Japan). Key letter B. Phrase options with a/an + noun + preposition, each carrying its own article (as in 2.4). Clue after a colon restates the key; direction reversal (beneficiary of, as in 2.18) and plain reversal (obstacle to). Raw freq.txt ranks: obstacle 8,054; conduit 34,529; beneficiary 38,180; pretext 8,295. Nagasaki appears in two live items (CID w2, transitions) on other subjects. Key not the longest option.",
+      "word_count": 59,
+      "table": null,
+      "figure": null,
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "words_in_context.B1.medium.w5b4_09",
+      "template": "B1",
+      "subtype": "Blank completion: restatement clue",
+      "tier": "medium",
+      "passage": "Ammi Phillips, a nineteenth-century American portraitist credited with more than eight hundred paintings, pursued a notably ______ career. Over roughly five decades, he obtained commissions from patrons throughout Connecticut, Massachusetts, and New York, and his household occupied a different residence in every census that recorded it.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "sedentary",
+        "reclusive",
+        "lucrative",
+        "itinerant"
+      ],
+      "answer_letter": "D",
+      "explanation": "Itinerant means traveling from place to place. The text says that over roughly five decades Phillips “obtained commissions from patrons throughout Connecticut, Massachusetts, and New York” and that “his household occupied a different residence in every census that recorded it.” Such constant moving from place to place in search of work describes an itinerant career.",
+      "distractors": {
+        "A": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "Sedentary means staying in one place, the opposite of a career in which Phillips’s “household occupied a different residence in every census that recorded it.”"
+        },
+        "B": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Reclusive means avoiding the company of others. Phillips “obtained commissions from patrons” in three states, and the text gives no sign that he withdrew from people."
+        },
+        "C": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Lucrative means producing a great deal of money. The text mentions how many paintings he is credited with and how often he moved, but it says nothing about how much he earned."
+        }
+      },
+      "models": [
+        "2.23",
+        "2.16",
+        "2.27"
+      ],
+      "sources": [
+        {
+          "what": "Wikipedia, Ammi Phillips: prolific American itinerant portrait painter active from the mid 1810s to the early 1860s in Connecticut, Massachusetts and New York; attributed over eight hundred paintings; reported living in a different residence in every recorded census",
+          "url": "https://en.wikipedia.org/wiki/Ammi_Phillips"
+        }
+      ],
+      "notes": "Subject: humanities (American folk art). Key letter D. Replaces the withdrawn Waldfogel claim. Restatement in the next sentence, two clues (sitters in three states, a new address in every census). Raw freq.txt ranks: sedentary 35,765; reclusive absent; lucrative 23,461; itinerant 28,473. Key not the longest option.",
+      "word_count": 46,
+      "table": null,
+      "figure": null,
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "words_in_context.M2.medium.w5b4_10",
+      "template": "M2",
+      "subtype": "Most nearly mean: underlined phrase",
+      "tier": "medium",
+      "passage": "The following text is from Rosamond Lehmann’s 1927 novel Dusty Answer. Judith Earle has slipped out of her family’s house into the garden late on a moonlit night.\n\nAll the colours were drained away; only the white spring flowers in the border shone up with a glimmer as of phosphorus, and the budding tree-tops were <u>picked out</u>, line by cold line, in a thin and silvery wash of light.",
+      "stem": "As used in the text, what does the phrase “picked out” most nearly mean?",
+      "options": [
+        "Chosen from a group",
+        "Made to stand out",
+        "Pulled loose",
+        "Played note by note"
+      ],
+      "answer_letter": "B",
+      "explanation": "As used in the text, “picked out” most nearly means made to stand out. The text says that “All the colours were drained away” in the moonlight, the white flowers “shone up with a glimmer,” and the tree-tops were picked out “line by cold line, in a thin and silvery wash of light.” The moonlight makes the outlines of the tree-tops stand out against the dark.",
+      "distractors": {
+        "A": {
+          "recipe": "another sense of the target (SENSE)",
+          "why_wrong": "Picked out can mean chosen, as when someone picks out a gift, but no one in the text is choosing anything; the moonlight is showing the tree-tops “line by cold line.”"
+        },
+        "C": {
+          "recipe": "another sense of the target (SENSE)",
+          "why_wrong": "Picked out can mean pulled loose, as when a splinter is picked out of a finger, but the tree-tops are not removed: they are shown “in a thin and silvery wash of light.”"
+        },
+        "D": {
+          "recipe": "another sense of the target (SENSE)",
+          "why_wrong": "A tune can be picked out note by note, and “line by cold line” has a similar rhythm, but the text describes how the tree-tops look in moonlight, not music."
+        }
+      },
+      "models": [
+        "2.1",
+        "2.8",
+        "2.26"
+      ],
+      "sources": [
+        {
+          "what": "Project Gutenberg, Rosamond Lehmann, Dusty Answer (1927), Part I, chapter 1 (text copied exactly)",
+          "url": "https://www.gutenberg.org/ebooks/72642"
+        },
+        {
+          "what": "Wikipedia, Dusty Answer: Lehmann’s first novel, published 1927; protagonist Judith Earle grew up in a large riverbank house",
+          "url": "https://en.wikipedia.org/wiki/Dusty_Answer"
+        }
+      ],
+      "notes": "Subject: literature (novel, 1927; public domain in the US since 2023, on Gutenberg). Key letter B. Underlined phrasal verb with four short definition options, all real senses of pick out (as in 2.8, where every distractor is another sense). Context sentence added to the source line to reach the cell length. Lehmann and Dusty Answer appear in no official item (grep). Key not the longest option.",
+      "word_count": 69,
+      "table": null,
+      "figure": null,
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "words_in_context.B3.medium.w5b4_11",
+      "template": "B3",
+      "subtype": "Blank completion: contrast clue",
+      "tier": "medium",
+      "passage": "The word parchment derives from Pergamon, an ancient city that dominated the commerce in writing skins, and Pliny the Elder recorded a legend that parchment was invented there as a substitute for papyrus. That legend, however, is almost certainly ______: according to Herodotus, writing on animal skins was already commonplace in the fifth century BCE, long before Pergamon’s ascendancy.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "verifiable",
+        "allegorical",
+        "apocryphal",
+        "facetious"
+      ],
+      "answer_letter": "C",
+      "explanation": "Apocryphal describes a story that is widely told but probably untrue. The text says that, “according to Herodotus, writing on animal skins was already commonplace in the fifth century BCE, long before Pergamon’s ascendancy,” so parchment cannot first have been invented in Pergamon, and the legend Pliny recorded is almost certainly apocryphal.",
+      "distractors": {
+        "A": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "Verifiable means able to be shown true. The evidence the text gives (writing on skins was “already commonplace” long before Pergamon’s ascendancy) shows the story to be false, and “however” introduces a judgment against the story, not in its favor."
+        },
+        "B": {
+          "recipe": "near miss: a story with another kind of truth (CONNOT)",
+          "why_wrong": "An allegorical story uses characters and events to stand for ideas. The text does not suggest the story has a symbolic meaning; it gives evidence that the story is simply wrong about where parchment began."
+        },
+        "D": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Facetious means meant as a joke. Nothing suggests that Pliny or anyone else told the story in jest; the text’s objection is that the story is wrong about where parchment began."
+        }
+      },
+      "models": [
+        "2.12"
+      ],
+      "sources": [
+        {
+          "what": "Wikipedia, Parchment: the word derives from Pergamon, which dominated the parchment trade; the legend that parchment was invented there to replace papyrus, from Pliny the Elder, is almost assuredly false because parchment was in use long before; Herodotus mentions writing on skins as common in the 5th century BC",
+          "url": "https://en.wikipedia.org/wiki/Parchment"
+        }
+      ],
+      "notes": "Subject: history (ancient writing materials). Key letter C. Contrast after “however”: the received story, then the evidence against it, with the blank judging the story. Parchment appears in several live items, none about the Pergamon legend or the origin of the word (grep for Pergam, papyrus with parchment: no hits). Raw freq.txt ranks: verifiable absent; allegorical 21,873; apocryphal 39,430; facetious 16,000s. Key ties verifiable as the longest option.",
+      "word_count": 59,
+      "table": null,
+      "figure": null,
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "words_in_context.B1.easy.w5b4_12",
+      "template": "B1",
+      "subtype": "Blank completion: restatement clue",
+      "tier": "easy",
+      "passage": "Czech filmmaker Karel Zeman’s 1958 film Invention for Destruction ______ the look of the engravings that illustrated the original editions of Jules Verne’s novels. Zeman adored Verne, and according to his daughter, he felt that using the illustrations’ own techniques could only produce a good retelling of Verne’s story.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "imitates",
+        "mocks",
+        "rejects",
+        "explains"
+      ],
+      "answer_letter": "A",
+      "explanation": "Imitates means copies. According to his daughter, Zeman “felt that using the illustrations’ own techniques could only produce a good retelling of Verne’s story,” so his film copies the look of the engravings in Verne’s books.",
+      "distractors": {
+        "B": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Mocks means makes fun of. Zeman “adored Verne” and wanted to use the illustrations’ techniques; nothing suggests he ridiculed them."
+        },
+        "C": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "Rejects is the opposite of what the text describes: Zeman chose to use “the illustrations’ own techniques.”"
+        },
+        "D": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "The text says the film uses the engravings’ techniques, not that it explains how the engravings were made or what they show."
+        }
+      },
+      "models": [
+        "1.6",
+        "1.11",
+        "1.21"
+      ],
+      "sources": [
+        {
+          "what": "Wikipedia, Invention for Destruction: Zeman’s 1958 film faithfully recreates the style of the Victorian line engravings (Riou, Benett) in the original editions of Verne’s novels; his daughter Ludmila recalls that he adored Verne and felt it can only be a good retelling to use the same techniques",
+          "url": "https://en.wikipedia.org/wiki/Invention_for_Destruction"
+        }
+      ],
+      "notes": "Subject: humanities (film). Key letter A. Restatement in the next sentence. Raw freq.txt ranks: imitates 45,935 (the -s form; imitate is common); mocks, rejects and explains are common. Key ties explains as the longest option.",
+      "word_count": 49,
+      "table": null,
+      "figure": null,
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "words_in_context.B1.easy.w5b4_13",
+      "template": "B1",
+      "subtype": "Blank completion: restatement clue",
+      "tier": "easy",
+      "passage": "The Bread and Puppet Theater, founded in New York City in 1963, is known for its ______ toward audiences. At every performance, the company distributes its own freshly baked bread, offered free of charge, to cultivate a sense of community, reflecting its principle that art should be as basic to life as bread.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "hostility",
+        "loyalty",
+        "formality",
+        "generosity"
+      ],
+      "answer_letter": "D",
+      "explanation": "Generosity means a willingness to give freely. The text says, “At every performance, the company distributes its own freshly baked bread, offered free of charge,” which shows generosity toward audiences.",
+      "distractors": {
+        "A": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "Giving audiences free bread “to cultivate a sense of community” is friendly, the opposite of hostility."
+        },
+        "B": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Loyalty means faithful support of someone over time. The text describes the theater giving bread to audiences, not standing by them."
+        },
+        "C": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Formality means strict attention to rules or ceremony. The text says nothing about formal rules; sharing bread “to cultivate a sense of community” suggests warmth."
+        }
+      },
+      "models": [
+        "1.53",
+        "1.11",
+        "1.6"
+      ],
+      "sources": [
+        {
+          "what": "Wikipedia, Bread and Puppet Theater: founded by Peter and Elka Schumann in 1963 in New York City; the name comes from its practice of sharing its own fresh bread, served for free, with the audience of each performance to create community, and from its principle that art should be as basic as bread to life",
+          "url": "https://en.wikipedia.org/wiki/Bread_and_Puppet_Theater"
+        }
+      ],
+      "notes": "Subject: humanities (theater). Key letter D. Restatement in the next sentence. Puppets appear in several live items, none about this theater (grep). Raw freq.txt ranks: hostility 5,000s; loyalty 2,000s; formality 9,000s; generosity 4,060. Key is the longest option.",
+      "word_count": 53,
+      "table": null,
+      "figure": null,
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "words_in_context.B1.easy.w5b4_14",
+      "template": "B1",
+      "subtype": "Blank completion: restatement clue",
+      "tier": "easy",
+      "passage": "Brooklyn-based sculptor Ursula von Rydingsvard ______ her towering works from many separate pieces: she cuts individual cedar beams into shape and glues them together, producing intricate surfaces that resemble a jigsaw puzzle. Although her sculptures are abstract, their forms often echo features of the natural landscape.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "borrows",
+        "separates",
+        "builds",
+        "decorates"
+      ],
+      "answer_letter": "C",
+      "explanation": "Builds means makes by putting parts together. The text says von Rydingsvard “cuts individual cedar beams into shape and glues them together,” so she builds her works from many separate pieces.",
+      "distractors": {
+        "A": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Nothing suggests she takes her works from someone else; she makes them herself by cutting cedar beams and gluing “them together.”"
+        },
+        "B": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "Separates is the reverse of what she does: she joins the beams, gluing “them together.”"
+        },
+        "D": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "The text describes how the sculptures are made out of beams, not how she adds ornament to them; the cedar pieces form the works themselves."
+        }
+      },
+      "models": [
+        "1.11",
+        "1.21",
+        "1.51"
+      ],
+      "sources": [
+        {
+          "what": "Art21, Ursula von Rydingsvard: builds towering cedar structures from individual beams shaped by sharp cuts and glued together into puzzle-like surfaces; abstract work that takes visual cues from the landscape",
+          "url": "https://art21.org/artist/ursula-von-rydingsvard/"
+        },
+        {
+          "what": "Wikipedia, Ursula von Rydingsvard: sculptor who lives and works in Brooklyn, best known for large-scale works primarily in cedar",
+          "url": "https://en.wikipedia.org/wiki/Ursula_von_Rydingsvard"
+        }
+      ],
+      "notes": "Subject: humanities (sculpture). Key letter C. Restatement after a colon. Raw freq.txt ranks: borrows, separates, builds and decorates all common (builds the commonest). Key not the longest option. Review reworded the passage away from the Art21 sentence it tracked (“takes visual cues from the landscape” was verbatim).",
+      "word_count": 46,
+      "table": null,
+      "figure": null,
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 2,
+        "fixes": [
+          "reworded the passage, which tracked the Art21 sentence nearly word for word (“takes visual cues from the landscape” verbatim); clue and key unchanged; explanation quote updated"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "words_in_context.M1.easy.w5b4_15",
+      "template": "M1",
+      "subtype": "Most nearly mean: underlined word",
+      "tier": "easy",
+      "passage": "The following text is from Louis Hémon’s 1913 novel Maria Chapdelaine (translated by W. H. Blake in 1921). Legare and Esdras are clearing tree stumps from a field on a farm in Quebec, Canada.\n\nThey first cut the roots spreading on the surface, then <u>drove</u> a lever well home, and, chests against the bar, threw all their weight upon it.",
+      "stem": "As used in the text, what does the word “drove” most nearly mean?",
+      "options": [
+        "Steered",
+        "Pushed",
+        "Herded",
+        "Motivated"
+      ],
+      "answer_letter": "B",
+      "explanation": "As used in the text, “drove” most nearly means pushed. After cutting the surface roots, the men “drove a lever well home,” pushing it deep under the stump, and then, “chests against the bar, threw all their weight upon it” to pry the stump loose.",
+      "distractors": {
+        "A": {
+          "recipe": "another sense of the target (SENSE)",
+          "why_wrong": "A driver steers a car or wagon, but a lever is not steered; the men push it under the stump before leaning “all their weight upon it.”"
+        },
+        "C": {
+          "recipe": "another sense of the target (SENSE)",
+          "why_wrong": "Drove can mean herded, as in driving cattle, but the text describes a tool, a lever, not animals."
+        },
+        "D": {
+          "recipe": "another sense of the target (SENSE)",
+          "why_wrong": "Drove can mean motivated, as when ambition drives a person, but a lever cannot be motivated; the men are forcing it into place."
+        }
+      },
+      "models": [
+        "1.19",
+        "1.56",
+        "1.4"
+      ],
+      "sources": [
+        {
+          "what": "Project Gutenberg, Louis Hémon, Maria Chapdelaine, translated by W. H. Blake (text copied exactly)",
+          "url": "https://www.gutenberg.org/ebooks/4383"
+        },
+        {
+          "what": "Wikipedia, Maria Chapdelaine: written by Louis Hémon in 1913 in Quebec; W. H. Blake translation published 1921 (French Wikipedia: first published in 1913 as a serial in Le Temps)",
+          "url": "https://en.wikipedia.org/wiki/Maria_Chapdelaine"
+        }
+      ],
+      "notes": "Subject: literature (novel, 1913, in a 1921 translation). Key letter B. A common verb (drove) in a concrete physical sense, with three other everyday senses as distractors (as in 1.19, drew: Pulled, Drained, Inspired, Sketched). Hémon and Maria Chapdelaine appear in no official item (grep). Key not the longest option.",
+      "word_count": 60,
+      "table": null,
+      "figure": null,
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "words_in_context.M1.easy.w5b4_16",
+      "template": "M1",
+      "subtype": "Most nearly mean: underlined word",
+      "tier": "easy",
+      "passage": "The following text is from Frank Swinnerton’s 1917 novel Nocturne. Jenny is walking home one evening through the dark side streets of her neighborhood.\n\nThe houses were all in darkness, because evening meals were laid in the kitchens: the front rooms were all <u>kept</u> for Sunday use, excepting when the Emeralds and Edwins and Geralds and Dorises were practising upon their mothers’ pianos. Then you could hear a din! But not now.",
+      "stem": "As used in the text, what does the word “kept” most nearly mean?",
+      "options": [
+        "Reserved",
+        "Obeyed",
+        "Delayed",
+        "Raised"
+      ],
+      "answer_letter": "A",
+      "explanation": "As used in the text, “kept” most nearly means reserved. The houses are dark because meals are eaten in the kitchens, and “the front rooms were all kept for Sunday use,” used on other days only when the children “were practising upon their mothers’ pianos.” The rooms are set aside, or reserved, for Sundays.",
+      "distractors": {
+        "B": {
+          "recipe": "another sense of the target (SENSE)",
+          "why_wrong": "A person can keep a rule or a promise by obeying it, but rooms cannot be obeyed; the text says what the rooms are set aside for."
+        },
+        "C": {
+          "recipe": "another sense of the target (SENSE)",
+          "why_wrong": "Kept can mean delayed, as in “What kept you?”, but nothing in the text is being held up; the front rooms are saved “for Sunday use.”"
+        },
+        "D": {
+          "recipe": "another sense of the target (SENSE)",
+          "why_wrong": "People keep chickens or bees by raising them, but rooms are not raised; the text explains when the front rooms are used."
+        }
+      },
+      "models": [
+        "1.54",
+        "1.56",
+        "1.45"
+      ],
+      "sources": [
+        {
+          "what": "Project Gutenberg, Frank Swinnerton, Nocturne (1917), chapter 1 (text copied exactly)",
+          "url": "https://www.gutenberg.org/ebooks/15177"
+        },
+        {
+          "what": "Wikipedia, Frank Swinnerton: Nocturne, 1917",
+          "url": "https://en.wikipedia.org/wiki/Frank_Swinnerton"
+        }
+      ],
+      "notes": "Subject: literature (novel, 1917). Key letter A. The excerpt differs from the claim’s description (claims.txt records the work, Nocturne); the passage is copied exactly from chapter 1. A common verb with three other senses as distractors. Swinnerton and Nocturne appear in no official item (grep). Key is the longest option.",
+      "word_count": 72,
+      "table": null,
+      "figure": null,
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "words_in_context.M1.easy.w5b4_17",
+      "template": "M1",
+      "subtype": "Most nearly mean: underlined word",
+      "tier": "easy",
+      "passage": "The following text is from George Douglas Brown’s 1901 novel The House with the Green Shutters. Mrs. Gourlay has been sitting alone in her kitchen.\n\nIn the evening, Janet, who had been in bed all the afternoon, came down and lit the lamp for her mother. It was a large lamp which Gourlay had bought, and it <u>shed</u> a rich light through the room.",
+      "stem": "As used in the text, what does the word “shed” most nearly mean?",
+      "options": [
+        "Removed",
+        "Lost",
+        "Spread",
+        "Stored"
+      ],
+      "answer_letter": "C",
+      "explanation": "As used in the text, “shed” most nearly means spread. Once Janet has lit it, the large lamp “shed a rich light through the room”: it spread its light throughout the room.",
+      "distractors": {
+        "A": {
+          "recipe": "another sense of the target (SENSE)",
+          "why_wrong": "People shed coats by taking them off, but the lamp is not removing anything; it is giving light “through the room.”"
+        },
+        "B": {
+          "recipe": "another sense of the target (SENSE)",
+          "why_wrong": "Trees shed leaves and animals shed fur, losing them, but a lamp that has just been lit is not losing its light; it fills the room with it."
+        },
+        "D": {
+          "recipe": "topic echo of the noun shed (ASSOC)",
+          "why_wrong": "A shed is a building for storing things, but here “shed” is a verb describing what the lamp does with its light: it sends it “through the room.”"
+        }
+      },
+      "models": [
+        "1.56",
+        "1.4",
+        "1.54"
+      ],
+      "sources": [
+        {
+          "what": "Project Gutenberg, George Douglas Brown, The House with the Green Shutters (text copied exactly)",
+          "url": "https://www.gutenberg.org/ebooks/25876"
+        },
+        {
+          "what": "Wikipedia, The House with the Green Shutters: novel by George Douglas Brown, first published 1901",
+          "url": "https://en.wikipedia.org/wiki/The_House_with_the_Green_Shutters"
+        }
+      ],
+      "notes": "Subject: literature (novel, 1901). Key letter C. A common verb in its light sense (shed a light), against two other verb senses and the noun. George Douglas Brown appears in no official item (grep). Key not the longest option.",
+      "word_count": 64,
+      "table": null,
+      "figure": null,
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "words_in_context.M1.easy.w5b4_18",
+      "template": "M1",
+      "subtype": "Most nearly mean: underlined word",
+      "tier": "easy",
+      "passage": "The following text is from Mary Gaunt’s 1895 short story “The Yanyilla Steeplechase.” The narrator and a boy named Ben are riding through the hills near Yanyilla, a large farm in Australia, searching for some cows that have wandered off.\n\nThen we turned a shoulder of the hill, and there were the four wanderers making straight for us. There was something else besides, a tent <u>pitched</u> on a nice green patch of grass, and a horse feeding out of a bucket close beside it.",
+      "stem": "As used in the text, what does the word “pitched” most nearly mean?",
+      "options": [
+        "Thrown",
+        "Tilted",
+        "Offered",
+        "Set up"
+      ],
+      "answer_letter": "D",
+      "explanation": "As used in the text, “pitched” most nearly means set up. The narrator sees “a tent pitched on a nice green patch of grass,” with “a horse feeding out of a bucket close beside it”: someone has set up the tent there and is camping.",
+      "distractors": {
+        "A": {
+          "recipe": "another sense of the target (SENSE)",
+          "why_wrong": "A ball can be pitched, or thrown, but a tent standing “on a nice green patch of grass” with a horse beside it has been put up, not thrown."
+        },
+        "B": {
+          "recipe": "another sense of the target (SENSE)",
+          "why_wrong": "Pitched can describe something sloping or tilted, like a pitched roof, but the text tells where the tent stands, not its angle."
+        },
+        "C": {
+          "recipe": "another sense of the target (SENSE)",
+          "why_wrong": "An idea can be pitched, or offered, to someone, but the tent is a shelter standing on the grass, not something being proposed."
+        }
+      },
+      "models": [
+        "1.1",
+        "1.14",
+        "1.45"
+      ],
+      "sources": [
+        {
+          "what": "Project Gutenberg, Mary Gaunt, The Moving Finger (Methuen, 1895), story “The Yanyilla Steeplechase” (text copied exactly)",
+          "url": "https://www.gutenberg.org/ebooks/21335"
+        },
+        {
+          "what": "Wikipedia, Mary Gaunt: Australian novelist and short-story writer",
+          "url": "https://en.wikipedia.org/wiki/Mary_Gaunt"
+        }
+      ],
+      "notes": "Subject: literature (short story, 1895). Key letter D. Yanyilla is a station (the story’s word) in the Australian bush; the context line calls it a large farm. A common verb with three other senses as distractors (thrown, sloped, proposed). Gaunt appears in no official item (grep). Key not the longest option.",
+      "word_count": 84,
+      "table": null,
+      "figure": null,
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "words_in_context.B6.easy.w5b4_19",
+      "template": "B6",
+      "subtype": "Blank completion: phrase options",
+      "tier": "easy",
+      "passage": "In maggot therapy, physicians place live, disinfected maggots of the common green bottle fly in chronic skin wounds that resist healing. The treatment is effective because the maggots are ______ dead tissue: they consume it, removing it from the wound through a cleaning process known as debridement.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "attracted to",
+        "harmed by",
+        "afraid of",
+        "covered in"
+      ],
+      "answer_letter": "A",
+      "explanation": "Attracted to means drawn toward. The text says the maggots “consume” dead tissue, “removing it from the wound through a cleaning process known as debridement.” Creatures that seek out and eat dead tissue are attracted to it, which is why the treatment is effective.",
+      "distractors": {
+        "B": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Nothing suggests that dead tissue harms the maggots; they “consume it.”"
+        },
+        "C": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "Maggots that “consume” dead tissue are drawn to it, the opposite of being afraid of it."
+        },
+        "D": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "The text says the maggots eat dead tissue, “removing it from the wound,” not that they are covered in it."
+        }
+      },
+      "models": [
+        "1.2",
+        "1.3",
+        "1.43"
+      ],
+      "sources": [
+        {
+          "what": "Wikipedia, Maggot therapy: live, disinfected maggots placed in non-healing wounds to clean out necrotic tissue (debridement); the species used most commonly is Lucilia sericata, the common green bottle fly; those flies’ larvae feed on dead tissue",
+          "url": "https://en.wikipedia.org/wiki/Maggot_therapy"
+        }
+      ],
+      "notes": "Subject: natural science (medicine). Key letter A. Adjective + preposition options, restatement after a colon. The FDA clearance is left out (the source gives 2003 in one place and January 2004 in another, and an FDA run of words matched a live item). Raw freq.txt ranks: attracted 5,000s; harmed 10,000s; afraid and covered common. Key is the longest option.",
+      "word_count": 47,
+      "table": null,
+      "figure": null,
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "words_in_context.B4.easy.w5b4_20",
+      "template": "B4",
+      "subtype": "Blank completion: example-pinned clue",
+      "tier": "easy",
+      "passage": "Artist Mona Hatoum frequently ______ familiar domestic objects. Her sculpture Grater Divide (2002), for example, enlarges a common kitchen grater into a room divider nearly seven feet tall, and T42 (1993–1998) consists of two teacups fused together at the rim.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "repairs",
+        "transforms",
+        "collects",
+        "avoids"
+      ],
+      "answer_letter": "B",
+      "explanation": "Transforms means changes in form or nature. The text’s examples show Hatoum changing everyday things: Grater Divide “enlarges a common kitchen grater into a room divider nearly seven feet tall,” and T42 “consists of two teacups fused together at the rim.”",
+      "distractors": {
+        "A": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Nothing in the examples is fixed; a grater enlarged into a room divider and two teacups fused at the rim have been changed, not repaired."
+        },
+        "C": {
+          "recipe": "topic echo (ASSOC)",
+          "why_wrong": "Hatoum works with domestic objects, but the examples show her changing them (she “enlarges a common kitchen grater into a room divider”), not gathering them."
+        },
+        "D": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "Both works are made from familiar domestic objects, so she uses them rather than avoiding them."
+        }
+      },
+      "models": [
+        "1.7",
+        "1.22",
+        "1.25"
+      ],
+      "sources": [
+        {
+          "what": "Wikipedia, Mona Hatoum: Grater Divide (2002) transforms a common kitchen grater into an 80 in (about 6.7 ft) divider; T42 (1993–98) is a pair of teacups fused together at the rim; from the late 1980s she focused on common domestic objects",
+          "url": "https://en.wikipedia.org/wiki/Mona_Hatoum"
+        }
+      ],
+      "notes": "Subject: humanities (art). Key letter B. Example-pinned: two works instantiate the key. Raw freq.txt ranks: repairs, collects and avoids common; transforms 44,342 (the -s form; transform is common). Key is the longest option.",
+      "word_count": 40,
+      "table": null,
+      "figure": null,
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "words_in_context.B4.easy.w5b4_21",
+      "template": "B4",
+      "subtype": "Blank completion: example-pinned clue",
+      "tier": "easy",
+      "passage": "Critics have found Theresa Hak Kyung Cha’s 1982 book Dictee difficult to classify because it is so ______. The book incorporates autobiography, history, fiction, and poetry, and its pages juxtapose text with uncaptioned photographs, letters, and a still from a silent French film about Joan of Arc.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "repetitive",
+        "brief",
+        "uniform",
+        "varied"
+      ],
+      "answer_letter": "D",
+      "explanation": "Varied means made up of many different kinds. The text lists what Dictee contains: it “incorporates autobiography, history, fiction, and poetry, and its pages juxtapose text with uncaptioned photographs, letters, and a still from a silent French film.” A book that mixes so many forms is varied, which makes it difficult to classify.",
+      "distractors": {
+        "A": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Repetitive means saying or doing the same thing again and again. The text stresses the many different forms the book combines, not repetition."
+        },
+        "B": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "The text says nothing about the book’s length; it explains the difficulty of classifying it by listing the many forms it mixes."
+        },
+        "C": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "Uniform means the same throughout, the opposite of a book that “incorporates autobiography, history, fiction, and poetry” and adds photographs and letters."
+        }
+      },
+      "models": [
+        "1.34",
+        "1.7",
+        "1.46"
+      ],
+      "sources": [
+        {
+          "what": "Wikipedia, Dictee: 1982 book by Theresa Hak Kyung Cha; critics contend it is difficult to define by genre; composed of autobiography, fiction, history and poetry; includes uncaptioned photographs, letters and a still from the silent French film The Passion of Joan of Arc",
+          "url": "https://en.wikipedia.org/wiki/Dictee"
+        }
+      ],
+      "notes": "Subject: humanities (literature, criticism). Key letter D. Example-pinned: the list in the second sentence instantiates the key. Raw freq.txt ranks: repetitive absent; brief, uniform common; varied 5,463. Key not the longest option.",
+      "word_count": 47,
+      "table": null,
+      "figure": null,
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 4,
+        "fixes": [
+          "source URL /wiki/Dict%C3%A9e redirects to Dictation (exercise); now /wiki/Dictee, which states the genre mix, uncaptioned photographs, letters and the Joan of Arc film still"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "words_in_context.B2.easy.w5b4_22",
+      "template": "B2",
+      "subtype": "Blank completion: cause or consequence clue",
+      "tier": "easy",
+      "passage": "Moqui marbles are small spheres of sandstone cemented by iron oxide minerals such as hematite, found in the Navajo Sandstone of southern Utah. Because they closely resemble the hematite-rich spheres that NASA’s Opportunity rover photographed on Mars, geologist Marjorie Chan and colleagues studied the Utah concretions to ______ the conditions under which the Martian spheres may have formed.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "change",
+        "ignore",
+        "infer",
+        "create"
+      ],
+      "answer_letter": "C",
+      "explanation": "Infer means to work out from evidence. Because the Utah concretions “closely resemble” the spheres on Mars, studying how the Utah ones formed lets geologists work out, or infer, “the conditions under which the Martian spheres may have formed.”",
+      "distractors": {
+        "A": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Studying rocks in Utah cannot change the conditions on Mars long ago; the resemblance makes the Utah concretions useful as evidence about those conditions."
+        },
+        "B": {
+          "recipe": "reversal (ANT)",
+          "why_wrong": "The geologists studied the Utah concretions precisely because they resemble the Martian spheres, so they were trying to learn about those conditions, not ignore them."
+        },
+        "D": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Geologists studying rocks in Utah do not create conditions on Mars; the text describes using a resemblance to learn about how the Martian spheres formed."
+        }
+      },
+      "models": [
+        "1.47",
+        "1.44",
+        "1.31"
+      ],
+      "sources": [
+        {
+          "what": "Chan et al. 2004, Nature 429:731, PubMed abstract: haematite-rich spheres at the Opportunity landing site resemble haematite-cemented concretions in the Navajo Sandstone of southern Utah; their character allows the authors to infer host-rock properties and fluid processes needed for similar features on Mars",
+          "url": "https://pubmed.ncbi.nlm.nih.gov/15201902/"
+        },
+        {
+          "what": "Wikipedia, Moqui marbles: iron oxide concretions in the Navajo Sandstone, regarded as terrestrial analogues of the hematite spherules Opportunity found on Mars",
+          "url": "https://en.wikipedia.org/wiki/Moqui_marbles"
+        }
+      ],
+      "notes": "Subject: natural science (geology, planetary science). Key letter C. Cause clue (“Because they closely resemble ...”). Concretions appear in two live items on other subjects (Moeraki Boulders, a dinosaur heart); hematite appears in one live item about ochre (grep). Raw freq.txt ranks: change, ignore, create common; infer 8,000s. Key not the longest option.",
+      "word_count": 58,
+      "table": null,
+      "figure": null,
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "words_in_context.B5.easy.w5b4_23",
+      "template": "B5",
+      "subtype": "Blank completion: negated frame",
+      "tier": "easy",
+      "passage": "Composer Laurie Spiegel called her 1986 software Music Mouse an “intelligent instrument” because it has built-in knowledge of the conventions governing chords and scales. As a result, people playing it with a computer mouse don’t have to ______ those conventions themselves: the program handles them automatically, freeing players to focus on other aspects of the music.",
+      "stem": "Which choice completes the text with the most logical and precise word or phrase?",
+      "options": [
+        "manage",
+        "admire",
+        "record",
+        "forget"
+      ],
+      "answer_letter": "A",
+      "explanation": "Manage means take charge of or deal with. The text says that Music Mouse “has built-in knowledge of the conventions governing chords and scales” and that “the program handles them automatically.” Because the software deals with those conventions, players don’t have to manage them themselves.",
+      "distractors": {
+        "B": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "The text is about who deals with the conventions of chords and scales, the player or the program; it says nothing about whether players admire those conventions."
+        },
+        "C": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Nothing in the text concerns recording; the point is that “the program handles” the conventions so players need not."
+        },
+        "D": {
+          "recipe": "plausible but unsupported (UNSUP)",
+          "why_wrong": "Players would not otherwise need to forget the conventions; the text says the program takes over the work of handling them, “freeing players to focus on other aspects of the music.”"
+        }
+      },
+      "models": [
+        "1.48",
+        "1.28",
+        "1.12"
+      ],
+      "sources": [
+        {
+          "what": "Wikipedia, Music Mouse: Laurie Spiegel’s 1986 software, an intelligent instrument; the name refers to its built-in knowledge of chord and scale convention, and automating these processes lets the user focus on other aspects of the music in real time",
+          "url": "https://en.wikipedia.org/wiki/Music_Mouse"
+        }
+      ],
+      "notes": "Subject: humanities (music, software). Key letter A. Negated frame (“don’t have to ______”), clue after a colon. Raw freq.txt ranks: manage 2,250; admire, record, forget common. Appreciate was dropped as a distractor (its sense understand fully would fit). Key not the longest option.",
+      "word_count": 56,
+      "table": null,
+      "figure": null,
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "words_in_context.M2.easy.w5b4_24",
+      "template": "M2",
+      "subtype": "Most nearly mean: underlined phrase",
+      "tier": "easy",
+      "passage": "The following text is from Louis Stone’s 1911 novel Jonah. Chook sells vegetables door to door in Sydney, Australia.\n\nMeanwhile, lower down the street, Chook was slowly working his way from house to house, hawking a load of vegetables. In the distance he remarked the load of furniture, and resolved to call before a rival could step in and <u>get their custom</u>. As he praised the quality of the peas to a customer, he found time to observe that the unloading went on very slowly.",
+      "stem": "As used in the text, what does the phrase “get their custom” most nearly mean?",
+      "options": [
+        "Learn their traditions",
+        "Win their business",
+        "Copy their habits",
+        "Collect their taxes"
+      ],
+      "answer_letter": "B",
+      "explanation": "As used in the text, “get their custom” most nearly means win their business. Chook is “hawking a load of vegetables,” and when he sees a load of furniture arriving, he decides to call on the newcomers “before a rival could step in”: he wants them to buy their vegetables from him.",
+      "distractors": {
+        "A": {
+          "recipe": "another sense of the target (SENSE)",
+          "why_wrong": "A custom can be a tradition, but Chook is a vegetable seller worried about “a rival,” so he wants the newcomers as customers, not their traditions."
+        },
+        "C": {
+          "recipe": "another sense of the target (SENSE)",
+          "why_wrong": "A custom can be a habit, but nothing suggests Chook wants to copy the newcomers’ habits; he wants to sell to them before “a rival could step in.”"
+        },
+        "D": {
+          "recipe": "another sense of the target (SENSE)",
+          "why_wrong": "Customs can be taxes paid on goods, but Chook is a vegetable seller, not a tax collector; he is hoping to sell to the new family."
+        }
+      },
+      "models": [
+        "1.30"
+      ],
+      "sources": [
+        {
+          "what": "Project Gutenberg, Louis Stone, Jonah (1911) (text copied exactly)",
+          "url": "https://www.gutenberg.org/ebooks/3678"
+        },
+        {
+          "what": "Wikipedia, Louis Stone: Jonah published in London in 1911; set among the larrikins of Waterloo and Paddy’s Market, Sydney",
+          "url": "https://en.wikipedia.org/wiki/Louis_Stone"
+        }
+      ],
+      "notes": "Subject: literature (novel, 1911). Key letter B. The excerpt differs from the claim’s description (claims.txt records the work, Jonah); the passage is copied exactly from the chapter in which the Partridges move house. An underlined phrase whose noun (custom) is used in its business sense, with three other senses as paraphrase options sharing a frame (as in 2.8). Louis Stone and Jonah appear in no official item (grep). Key not the longest option.",
+      "word_count": 85,
+      "table": null,
+      "figure": null,
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 3,
+        "fixes": [],
+        "status": "pass"
+      }
+    }
+  ]
+}

@@ -118,3 +118,95 @@ server/checks/rw_bank.py` passes. R&W bank 4,233 locally (494 w5 live, 22 of 48 
 - Registry: copy `spec/rw/waves/scripts/reg.py` into the new scratchpad (it keeps running.json beside itself), cap 20 agents.
 - Wave 4 leftovers are unchanged (see the PAUSED section of spec/rw/waves/w4/RUNBOOK.md); run them only if the
   user asks.
+- 16:19 COMMITTED and pushed (b9cd45d, 86b4083, d6d9284). RESUMED wave 5: 6 reviewers (CoE b2, b3, WiC b3, TSP b3, RS b3, Trn b3) and 13 writers (Inf b4, CoE b4 to b5, WiC b4, b5, TSP b4, b5, RS b4, b5, Trn b4, Bnd b4, b5, FSS b3); 7 queued in queue_held.
+- 16:37 rhetorical_synthesis_b3 reviewed (19 pass, 5 fixed; 05 Lazo repeated live Noguchi voluntary-camp item, now Manjiro; 15 guardian dogs and 23 sea ice replaced as twins; all 5 hard band 7) -> safety + gate1, gate2 queued.
+- 16:39 PROMOTED rhetorical_synthesis_b3 (gate {"band6": 0.75, "band7": 0.72, "ours": 0.77, "rule": "six"}; safety 0 flagged).
+- 16:41 rw_bank check failed after the RS b3 promote: its fixture wanted a type with exactly 3 items and none is left; server/checks/rw_bank.py now takes the smallest type with 3+ (passes; not yet committed). transitions_b3 reviewed (19 pass, 4 fixed; 02 solitary-bee twin, 03 Invisible Cities, 07 Sacred Cenote, 08 pigeon treadmill replaced; 02, 04 band 7) -> solves.
+- 16:43 PROMOTED transitions_b3 (gate {"band6": 0.57, "band7": 0.37, "ours": 0.56, "rule": "six"}; safety 0 flagged). Writer form_structure_and_sense_b4 launched.
+- 16:43 PROMOTED transitions_b3 (above). command_of_evidence_b2 reviewed (18 pass, 4 fixed; 10 pollinator-exclusion twin replaced by rare earth abundance; 03, 04, 08 band 7) -> solves.
+- 16:45 PROMOTED command_of_evidence_b2 (gate {"band6": 0.8, "band7": 0.79, "ours": 0.77, "rule": "review"}; safety 0 flagged). words_in_context_b3 reviewed (19 pass, 5 fixed; 04 Kaptchuk open-label placebo was official CoE a95075c5, now de Araujo sweet-blind mice; 05 Cather now Austen Persuasion; 01, 02, 04, 05 band 7) -> safety. Writers command_of_evidence_b6, words_in_context_b6 launched.
+- 16:46 PROMOTED words_in_context_b3 (review; safety 0 flagged).
+- 16:46 writer form_structure_and_sense_b5 launched (FSS fully started).
+- 16:47 command_of_evidence_b3 reviewed (10 pass, 10 fixed, 2 removed: 03 pottery residues (saturated) and 22 early computers (round-1 subject); 08 student conclusion narrowed; 01, 05, 07, 08, 10 band 7; 06, 09 band 6 under target 7) -> safety + gate1, gate2 queued. Two cells (T1_compete hard, Q1_P3 easy) left for a top-up.
+- 16:47 text_structure_and_purpose_b3 reviewed (12 pass, 8 fixed; 03 1918 flu replaced by Augustine/Ambrose silent reading (Knox 1968); 05 hibernation clone replaced by Nigeria oil vs Botswana diamonds; 01, 02, 03 band 7) -> solves queued. CoE b3 gate2 launched.
+- 16:49 PROMOTED command_of_evidence_b3 20/20 (gate {"band6": 0.82, "band7": 0.8, "ours": 0.8, "rule": "review"}; safety 0 flagged). Writer command_of_evidence_b7 launched.
+- 16:50 PROMOTED text_structure_and_purpose_b3 (gate {"band6": 0.83, "band7": 0.75, "ours": 0.84, "rule": "six"}; safety 0 flagged).
+- 16:50 writers words_in_context_b7, b8 launched: every w5 batch now has an agent or is promoted. Queue empty. w5 live 627, bank 4,366.
+
+## PAUSED again 2026-10-27 (user: "pause and save every bit of progress") - how to resume
+
+All 20 agents stopped (every stop confirmed); none running. Every wave and bank JSON file parses; the bank check
+(`SATF_EMAIL_ONLY=0 PYTHONPATH=. python3 server/checks/rw_bank.py`) passes. R&W bank 4,366 locally (627 w5 live,
+28 of 48 batches promoted). Prod still 3,433. Commits up to d6d9284 are pushed; everything after (the 6 batches
+promoted since, claims.txt, WAVE.md themes, this log, server/checks/rw_bank.py fixture fix) is not committed.
+
+- **Nothing written waits for review.** All 20 remaining batches are writers, every one stopped mid-run:
+  - partly written (the writer prompt continues the file): command_of_evidence_b4 (12/22), command_of_evidence_b5
+    (5/22), transitions_b4 (6/22), boundaries_b4 (11/25); command_of_evidence_b6 has a file with 0 items.
+  - no items saved yet (claims.txt may already hold their `.w5bN_` subjects, which the prompt tells them to reuse):
+    inferences_b4, command_of_evidence_b7, words_in_context_b4 to b8, text_structure_and_purpose_b4, b5,
+    rhetorical_synthesis_b4, b5, boundaries_b5, form_structure_and_sense_b3 to b5.
+- Removed by reviewers so far (top up at the end if the 5,000 count needs it): CoE b1 05, CoE b3 03 and 22, Inf b4 07 (lead: bomb-pulse twin of a live S3 item), CoE b7 14 (Q2_P4 medium).
+- Resume: copy `spec/rw/waves/scripts/reg.py` into the new scratchpad, launch writers with `writer_prompt.txt`
+  (scratch path replaced), cap 20, then review and solve as above. `queue_held.txt` is empty (every batch above is
+  simply relaunched as a writer).
+- 19:56 RESUMED (user 'resume'): 19 writers launched, form_structure_and_sense_b5 queued.
+- 20:22 boundaries_b4 written (25, done; the 11 earlier hard items were reworded to lift register) -> reviewer.
+- 20:25 transitions_b4 written (22, done; 8 inherited claims withdrawn as twins/famous) -> reviewer.
+- 20:26 rhetorical_synthesis_b4 written (24, done; AUD_FAM and SPEC hard band 6, no band-7 officials) -> reviewer.
+- 20:28 form_structure_and_sense_b3 written (24, done; Bontecou and Lukyanov withdrawn as twins) -> reviewer.
+- 20:31 boundaries_b4 reviewed (23 pass, 2 fixed; 5 band 7; 03 ', though' meaning trap kept as CB f78997cf) -> safety + gate1, gate2 queued.
+- 20:31 rhetorical_synthesis_b5 written (23, done; 3 inherited claims replaced) -> reviewer (break the rating-scale cluster; check named Karmarkar and Bollinger finding).
+- 20:32 boundaries_b4 safety flagged 03 (Xenoturbella): D 'all, though' called defensible as a conjunction; lead: D makes the DNA-source clause a concession, but that clause is the reason, so D fails on meaning (CB band-7 f78997cf shape; same call as w4b1_04, w4b5_04). Override on finish.
+- 20:32 Bnd b4 gate2 and writer form_structure_and_sense_b5 launched; queue empty.
+- 20:33 form_structure_and_sense_b4 (24) and words_in_context_b4 (24; Megaponera and Waldfogel replaced) written -> reviewers.
+- 20:34 PROMOTED boundaries_b4 25/25 (gate {"band6": 0.79, "band7": 0.42, "ours": 0.58, "rule": "review"}); 03 lead_override recorded.
+- 20:35 command_of_evidence_b4 written (22, done; five kept passages reworded for register; writer ran one read-only git status by mistake, nothing changed) -> reviewer.
+- 20:36 boundaries_b5 written (25, done; bluefin auction withdrawn, Wason task kept for a fame call) -> reviewer.
+- 20:42 transitions_b4 reviewed (18 pass, 4 fixed; 15 sand mandala twin of live thangka item, now weather balloon launch; 01, 03 band 7) -> safety + gate1, gate2 queued.
+- 20:43 form_structure_and_sense_b3 reviewed (22 pass, 2 fixed; 02 B defensible, rebuilt; 12 Burushaski twin of live Zulu noun classes, now Trans-Australian Railway straight) and rhetorical_synthesis_b4 reviewed (19 pass, 5 fixed; 21 Hurrian Hymn twin of live Seikilos, now empress tree) -> solves (RS b4 queued).
+- 20:44 words_in_context_b5 written (24, done) -> reviewer queued; RS b4 safety launched.
+- 20:44 PROMOTED transitions_b4 (gate {"band6": 0.64, "band7": 0.33, "ours": 0.44, "rule": "review"}; safety 0 flagged); Transitions done for w5. WiC b5 reviewer launched.
+- 20:45 PROMOTED form_structure_and_sense_b3 (gate {"band6": 0.84, "band7": 0.71, "ours": 0.77, "rule": "review"}) and rhetorical_synthesis_b4 (six, no gate); safeties 0 flagged.
+- 20:48 form_structure_and_sense_b4 reviewed (12 pass, 12 fixed; 08 'they' ambiguity fixed; 02 rebuilt to band 7) -> solves. Kim Whanki also used by WiC w5b8_08 (claimed later): told the WiC b8 writer to replace it.
+- 20:50 PROMOTED form_structure_and_sense_b4 (gate {"band6": 0.8, "band7": 0.7, "ours": 0.77, "rule": "six"}; safety 0 flagged; gate doubt g018 Kim Whanki dangling modifier checked, key B sound).
+- 20:50 rhetorical_synthesis_b5 reviewed (18 pass, 5 fixed; Karmarkar and Bollinger finding confirmed, data claim narrowed to one store; 15 Colon Classification and 23 VEI replaced; 01, 02, 04 band 7) -> solves.
+- 20:50 text_structure_and_purpose_b5 written (20, done; Paris schoolyards twin withdrawn) -> reviewer.
+- 20:51 PROMOTED rhetorical_synthesis_b5 (gate {"band6": 0.77, "band7": 0.82, "ours": 0.86, "rule": "six"}; safety 0 flagged); Rhetorical Synthesis done for w5.
+- 20:52 command_of_evidence_b4 reviewed (17 pass, 5 fixed; 08 had a second defensible option, rebuilt; 01 'rather than' overclaim narrowed; 02, 04 band 7) -> solves.
+- 20:53 command_of_evidence_b6 written (22, done; Q1_P3 hard band 6, no band-7 officials) -> reviewer.
+- 20:54 PROMOTED command_of_evidence_b4 (gate {"band6": 0.83, "band7": 0.79, "ours": 0.7, "rule": "review"}; safety 0 flagged; lead changed 10's key 'roughly doubled' to 'grew by at least 85 percent'). words_in_context_b6 written (23, done) -> reviewer.
+- 20:55 inferences_b4 written (19, done; Inferences fully written) -> reviewer.
+- 20:55 boundaries_b5 reviewed (18 pass, 7 fixed; 11 Wason task famous, now Baker-baker paradox; 15 Proto-Sinaitic (script cluster) now Coade stone; 5 band 7) -> solves.
+- 20:56 words_in_context_b8 written (23, done; Kim Whanki and Lake Hillier swapped out) -> reviewer.
+- 20:58 PROMOTED boundaries_b5 (gate {"band6": 0.82, "band7": 0.43, "ours": 0.49, "rule": "review"}; safety 0 flagged; lead checked gate doubts g025 Fermi bubbles fronted appositive (key B) and g009 Shosoin colon (key D)); Boundaries done for w5. command_of_evidence_b7 written (22, done) -> reviewer.
+- 20:58 words_in_context_b4 reviewed (19 pass, 5 fixed; 06 spaghetti fracture famous, now Landers triggered quakes; 01 Munduruku twin of live w3b6_02, now Braille readers; 02 reads band 6 under target 7) -> safety. text_structure_and_purpose_b4 written (20, done) -> reviewer.
+- 20:59 PROMOTED words_in_context_b4 (rule review, no gate; safety 0 flagged).
+- 21:02 words_in_context_b7 written (23, done; WiC fully written) -> reviewer.
+- 21:06 words_in_context_b5 reviewed (23 pass, 1 fixed: 11 Chokwe sand stories too close to live FSS w1b5_11, reviewer wrote konbini item; lead added it as a one-item blind check in extra/) -> safety. Anolis added to WAVE.md saturated themes.
+- 21:07 PROMOTED words_in_context_b5 (rule review, no gate; safety 0 flagged; replacement 11 blind-solved to its key).
+- 21:10 words_in_context_b6 reviewed (20 pass, 3 fixed; 12 pig joystick overclaim 'demonstrating ... understood' narrowed to the paper; 08 Adams source swapped to AIC page; 02, 03 band 7) -> safety.
+- 21:10 command_of_evidence_b5 written (22, done; 17 new + 5 kept hard) -> reviewer (asked to check 20's invented quotations are not put on a named person).
+- 21:11 PROMOTED words_in_context_b6 (rule review, no gate; safety 0 flagged).
+- 21:13 inferences_b4 reviewed (12 pass, 7 fixed; all 9 hard band 6 as planned). Lead removed 07 (ivory bomb-pulse dating: same carbon-14 setup as live inferences.S3.medium Hendriks, same template); kept 19 Repenomamus (overlap only with an official WiC item, different skill) -> safety (18 items). Quilts added to saturated themes.
+- 21:14 PROMOTED inferences_b4 (rule six, no gate; safety 0 flagged); Inferences done for w5.
+- 21:18 text_structure_and_purpose_b5 reviewed (11 pass, 9 fixed; 01 stick insect through bird guts twin of live Bnd w1b1_06, now Iliamna Lake seals; 01-03 band 7) -> solves.
+- 21:18 words_in_context_b7 reviewed (22 pass, 1 fixed: 07 distractor 'contingent on' had a second reading, now 'analogous to'; 01, 04, 05 band 7) -> safety, plus 07 as a one-item blind check.
+- 21:18 form_structure_and_sense_b5 written (24, done; 5 subjects swapped pre-review) -> reviewer. All 48 w5 batches now written.
+- 21:19 PROMOTED text_structure_and_purpose_b5 (gate {"band6": 0.83, "band7": 0.8, "ours": 0.87, "rule": "six"}; safety 0 flagged; gate doubts were official anchors without underlines). command_of_evidence_b6 reviewed (14 pass, 8 fixed; 14 Bosten Lake rebuilt from Table 1, conclusion overreached; 16 bird/bat netting twin of live TSP w3b1_25, now PNG chords; 02, 04, 06 band 7) -> solves.
+- 21:20 PROMOTED words_in_context_b7 (rule review, no gate; safety 0 flagged; 07 blind-solved to its key).
+- 21:20 PROMOTED command_of_evidence_b6 (gate {"band6": 0.84, "band7": 0.8, "ours": 0.83, "rule": "six"}; safety 0 flagged).
+- 21:27 text_structure_and_purpose_b4 reviewed (16 pass, 4 fixed; 13 Corrothers 'The Negro Singer' judged unsuitable and a same-poet cluster, now Lazarus 'Echoes'; 04 band 7) -> solves, plus 13 as a one-item blind check.
+- 21:28 command_of_evidence_b7 reviewed (11 pass, 10 fixed, 1 removed: 14 Indonesia clean cooking twin of live w4b2_16; 19 Obata repeated two official items, now Rosa Bonheur; 01 Fersen overstated, rebuilt to band 7; 08 soap 1% -> 0.1%; 01, 03, 07, 08 band 7) -> solves, plus 19 as a one-item blind check.
+- 21:29 PROMOTED text_structure_and_purpose_b4 (gate {"band6": 0.84, "band7": 0.8, "ours": 0.86, "rule": "six"}; safety 0 flagged; 13 Lazarus blind-solved to its key; gate doubts all official anchors); Text Structure done for w5.
+- 21:30 PROMOTED command_of_evidence_b7 (gate {"band6": 0.83, "band7": 0.76, "ours": 0.84, "rule": "six"}; safety 0 flagged; 19 Bonheur blind-solved to its key, lead dropped C's 1853 Salon date that read as a clash with 1855).
+- 21:32 words_in_context_b8 reviewed (7 pass, 16 fixed; overclaims narrowed in 09 orchid bees, 05 zombie flies, 18 Lozen, 04 Bemis, 11 Hyecho; 06 Sosa and 12 palm-leaf swapped to social/natural science; 02, 03 band 7; reviewer ran one read-only git status, nothing changed) -> safety, plus 06/09/12/16 as a blind check.
+- 21:33 command_of_evidence_b5 reviewed (13 pass, 9 fixed; 20 Jovita Idar repeated official Transitions 2b5f4bdc, now Josefa Llanes Escoda, quotations unnamed; 06, 10 hardened; 01, 03, 05-10 band 7; reviewer ran one read-only git show, tree checked unchanged) -> solves, plus 20 as a one-item blind check.
+- 21:35 PROMOTED words_in_context_b8 (rule review, no gate; safety 0 flagged; 06, 09, 12, 16 blind-solved to their keys); WiC done for w5.
+- 21:35 PROMOTED command_of_evidence_b5 (gate {"band6": 0.82, "band7": 0.81, "ours": 0.75, "rule": "review"}; safety 0 flagged; 20 Escoda blind-solved to its key); CoE done for w5.
+- 21:40 form_structure_and_sense_b5 reviewed (4 pass, 20 fixed; concept twins replaced: 09 Apocalypse Tapestry (official Bayeux) -> porcupine quills, 10 Anangu sand stories (live Chokwe sona) -> Lanzarote pit vineyards, 12 Stolzl (third Bauhaus weaver) -> Ohno kanban; 18 tubeworm sentence rewritten; 01, 06 band 7) -> solves, plus 09/10/12/18 as a blind check.
+- 21:42 PROMOTED form_structure_and_sense_b5 (gate {"band6": 0.84, "band7": 0.69, "ours": 0.73, "rule": "review"}; safety 0 flagged; 09, 10, 12, 18 blind-solved to their keys). WAVE 5 COMPLETE: 48 of 48 batches promoted.
+
+## DONE 2026-10-27 late night
+
+All 48 batches promoted: 1,080 w5 items live in satbank/rw/<skill>__w5.json; R&W bank 4,819 locally, `tools/check_rw.py` 0 problems, `server/checks/rw_bank.py` passes. Prod still 3,433 (not deployed). Removed cells, if a top-up is wanted: CoE b1 05, CoE b3 03 and 22, Inf b4 07, CoE b7 14. Wave 4 still has 8 paused batches (182 items; see w4/RUNBOOK.md PAUSED) that are needed to reach 5,000.

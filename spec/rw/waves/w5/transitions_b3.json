@@ -1,960 +1,1178 @@
 {
- "skill": "Transitions",
- "slug": "transitions",
- "part": "w5b3",
- "domain": "Expression of Ideas",
- "plan": {
-  "templates": [
-   {
-    "code": "A1_addition",
-    "name": "Addition/similarity: a further item of the same kind"
-   },
-   {
-    "code": "C1_two_subject",
-    "name": "Contrast: two subjects, opposite values"
-   },
-   {
-    "code": "C2_belief_finding",
-    "name": "Contrast: established view or appearance, then a finding that breaks it"
-   },
-   {
-    "code": "C3_limiting_fact",
-    "name": "Contrast: positive claim, then a limiting fact about the same subject"
-   },
-   {
-    "code": "E1_consequence",
-    "name": "Cause/effect: condition, principle or evidence, then its consequence"
-   },
-   {
-    "code": "K1_grant_turn",
-    "name": "Concession: grant, then the main claim resumes (but / Still)"
-   },
-   {
-    "code": "M1_emphasis",
-    "name": "Emphasis: stronger same-direction fact (content-contrast trap at hard)"
-   },
-   {
-    "code": "S1_spec_restate",
-    "name": "Specification/restatement: exact content or plain rewording"
-   },
-   {
-    "code": "T1_sequence_time",
-    "name": "Sequence/time: next step, earlier or later event, end of a long effort"
-   },
-   {
-    "code": "U1_culmination_alt",
-    "name": "Culmination, alternative and place (ultimately, alternatively, there)"
-   },
-   {
-    "code": "X1_example",
-    "name": "Example: general claim, then one named instance"
-   }
-  ],
-  "skipped": []
- },
- "done": true,
- "items": [
-  {
-   "id": "transitions.K1_grant_turn.hard.w5b3_01",
-   "template": "K1_grant_turn",
-   "subtype": "Concession: grant then turn",
-   "tier": "hard",
-   "band_target": 6,
-   "passage": "Aviation historians rank the de Havilland Comet, which in 1952 became the first jet airliner to enter commercial service, among the most influential aircraft ever built. ______ the original model’s career was brief: in 1954, two Comets broke apart in midair, and the fleet was grounded. Still, the investigation into those disasters reshaped the way later jetliners were engineered and tested.",
-   "stem": "Which choice completes the text with the most logical transition?",
-   "options": [
-    "For example,",
-    "Moreover,",
-    "Granted,",
-    "Thus,"
-   ],
-   "answer_letter": "C",
-   "table": null,
-   "figure": null,
-   "explanation": "The first sentence makes the main claim: historians rank the Comet “among the most influential aircraft ever built.” The blank sentence grants a fact that seems to cut against that claim: “the original model’s career was brief,” since two Comets “broke apart in midair, and the fleet was grounded.” The next sentence returns to the main claim with “Still,” noting that the investigation “reshaped the way later jetliners were engineered and tested.” “Granted” fits, since it introduces a point the writer concedes before restating the main claim.",
-   "distractors": {
-    "A": {
-     "recipe": "wrong grain (example)",
-     "why_wrong": "The brief career and the grounding are not an instance of the Comet’s influence; they cut against that claim, which is why the next sentence opens with “Still.”"
-    },
-    "B": {
-     "recipe": "additive",
-     "why_wrong": "The crashes are not a further point in support of the claim that the Comet was influential; they are a setback the writer concedes before turning back to that claim."
-    },
-    "D": {
-     "recipe": "unearned cause",
-     "why_wrong": "The Comet’s standing among historians did not cause the original model’s career to be brief; the brief career is a concession, not a consequence."
-    }
-   },
-   "models": [
-    "3.17",
-    "3.19"
-   ],
-   "word_count": 60,
-   "sources": [],
-   "notes": "Grant then turn on the 3.19 / f5959727 shape (claim, concession in the blank sentence, Still resumes), keyed Granted (live K1 keys lean on Of course). K1 has no band-7 official items (spec/rw/band7/transitions.md section 5), so it is written as a strong band 6 and band_target is 6, not the 7 the plan asked for. No contrast decoy (contrast and concession exclude each other) and no In fact, Indeed or Actually. Trap: Moreover for a reader who takes the crash history as more detail about the plane's significance. Facts kept general: Comet 1 entered service 1952, two midair breakups in 1954 (Elba, Naples), fleet grounded; the inquiry's fatigue findings shaped later design. Transitions: no web check (WAVE.md, 2026-10-16); real subject described from general knowledge, no researcher named, no made-up finding attributed to a real person or organisation."
+  "skill": "Transitions",
+  "slug": "transitions",
+  "part": "w5b3",
+  "domain": "Expression of Ideas",
+  "plan": {
+    "templates": [
+      {
+        "code": "A1_addition",
+        "name": "Addition/similarity: a further item of the same kind"
+      },
+      {
+        "code": "C1_two_subject",
+        "name": "Contrast: two subjects, opposite values"
+      },
+      {
+        "code": "C2_belief_finding",
+        "name": "Contrast: established view or appearance, then a finding that breaks it"
+      },
+      {
+        "code": "C3_limiting_fact",
+        "name": "Contrast: positive claim, then a limiting fact about the same subject"
+      },
+      {
+        "code": "E1_consequence",
+        "name": "Cause/effect: condition, principle or evidence, then its consequence"
+      },
+      {
+        "code": "K1_grant_turn",
+        "name": "Concession: grant, then the main claim resumes (but / Still)"
+      },
+      {
+        "code": "M1_emphasis",
+        "name": "Emphasis: stronger same-direction fact (content-contrast trap at hard)"
+      },
+      {
+        "code": "S1_spec_restate",
+        "name": "Specification/restatement: exact content or plain rewording"
+      },
+      {
+        "code": "T1_sequence_time",
+        "name": "Sequence/time: next step, earlier or later event, end of a long effort"
+      },
+      {
+        "code": "U1_culmination_alt",
+        "name": "Culmination, alternative and place (ultimately, alternatively, there)"
+      },
+      {
+        "code": "X1_example",
+        "name": "Example: general claim, then one named instance"
+      }
+    ],
+    "skipped": []
   },
-  {
-   "id": "transitions.S1_spec_restate.hard.w5b3_02",
-   "template": "S1_spec_restate",
-   "subtype": "Specification / restatement",
-   "tier": "hard",
-   "band_target": 7,
-   "passage": "The honeybee, with its egg-laying queen, its thousands of sterile workers, and its communal wax combs, has shaped popular conceptions of bees. Among the roughly 20,000 described bee species, however, such elaborate colonies are exceptional. ______ an individual female constructs a nest by herself, provisioning each brood cell with pollen and nectar before sealing an egg inside and abandoning it.",
-   "stem": "Which choice completes the text with the most logical transition?",
-   "options": [
-    "More often,",
-    "That said,",
-    "Consequently,",
-    "In addition,"
-   ],
-   "answer_letter": "A",
-   "table": null,
-   "figure": null,
-   "explanation": "The first sentence describes the popular picture of bees: colonies with a queen and thousands of workers. The second sentence says that among bee species, “such elaborate colonies are exceptional.” The blank sentence then describes what usually happens instead: “an individual female constructs a nest by herself.” “More often” fits, since it introduces the case that occurs more frequently than the exceptional one just mentioned.",
-   "distractors": {
-    "B": {
-     "recipe": "false opposition (concession)",
-     "why_wrong": "The solitary female does not qualify or cut against the claim that colonies are “exceptional”; she is the common case that makes colonies the exception."
+  "done": true,
+  "items": [
+    {
+      "id": "transitions.K1_grant_turn.hard.w5b3_01",
+      "template": "K1_grant_turn",
+      "subtype": "Concession: grant then turn",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "Aviation historians rank the de Havilland Comet, which in 1952 became the first jet airliner to enter commercial service, among the most influential aircraft ever built. ______ the original model’s career was brief: in 1954, two Comets broke apart in midair, and the fleet was grounded. Still, the investigation into those disasters reshaped the way later jetliners were engineered and tested.",
+      "stem": "Which choice completes the text with the most logical transition?",
+      "options": [
+        "For example,",
+        "Moreover,",
+        "Granted,",
+        "Thus,"
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The first sentence makes the main claim: historians rank the Comet “among the most influential aircraft ever built.” The blank sentence grants a fact that seems to cut against that claim: “the original model’s career was brief,” since two Comets “broke apart in midair, and the fleet was grounded.” The next sentence returns to the main claim with “Still,” noting that the investigation “reshaped the way later jetliners were engineered and tested.” “Granted” fits, since it introduces a point the writer concedes before restating the main claim.",
+      "distractors": {
+        "A": {
+          "recipe": "wrong grain (example)",
+          "why_wrong": "The brief career and the grounding are not an instance of the Comet’s influence; they cut against that claim, which is why the next sentence opens with “Still.”"
+        },
+        "B": {
+          "recipe": "additive",
+          "why_wrong": "The crashes are not a further point in support of the claim that the Comet was influential; they are a setback the writer concedes before turning back to that claim."
+        },
+        "D": {
+          "recipe": "unearned cause",
+          "why_wrong": "The Comet’s standing among historians did not cause the original model’s career to be brief; the brief career is a concession, not a consequence."
+        }
+      },
+      "models": [
+        "3.17",
+        "3.19"
+      ],
+      "word_count": 60,
+      "sources": [],
+      "notes": "Grant then turn on the 3.19 / f5959727 shape (claim, concession in the blank sentence, Still resumes), keyed Granted (live K1 keys lean on Of course). K1 has no band-7 official items (spec/rw/band7/transitions.md section 5), so it is written as a strong band 6 and band_target is 6, not the 7 the plan asked for. No contrast decoy (contrast and concession exclude each other) and no In fact, Indeed or Actually. Trap: Moreover for a reader who takes the crash history as more detail about the plane's significance. Facts kept general: Comet 1 entered service 1952, two midair breakups in 1954 (Elba, Naples), fleet grounded; the inquiry's fatigue findings shaped later design. Transitions: no web check (WAVE.md, 2026-10-16); real subject described from general knowledge, no researcher named, no made-up finding attributed to a real person or organisation.",
+      "band7": {
+        "verdict": "band 6",
+        "why": "K1_grant_turn has no band-7 official items (band7/transitions.md section 5), so band 6 is the ceiling; a strong one: Granted is outside the core keys, the concession sits in the blank sentence and is resumed by Still as in 3.19, and Moreover pulls a reader who takes the crashes as more history of the plane."
+      },
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "C",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
     },
-    "C": {
-     "recipe": "unearned cause",
-     "why_wrong": "The rarity of colonies is not the reason that a female nests by herself; solitary nesting is the more common pattern, not a result of the colonies being rare."
+    {
+      "id": "transitions.S1_spec_restate.hard.w5b3_02",
+      "template": "S1_spec_restate",
+      "subtype": "Specification / restatement",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "Popular accounts of viruses tend to emphasize pathogens such as influenza and measles, which infect humans. Surveys of viral diversity in oceans, soils, and sediments, however, complicate that picture; ______ viruses attack not animals or plants but bacteria, and these bacteriophages, as they are called, are thought to be the most abundant biological entities on Earth.",
+      "stem": "Which choice completes the text with the most logical transition?",
+      "options": [
+        "more often,",
+        "that said,",
+        "consequently,",
+        "in addition,"
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The first sentence describes the popular picture of viruses: accounts that “emphasize pathogens such as influenza and measles, which infect humans.” The second sentence says that surveys of viral diversity “complicate that picture,” and the clause after the blank explains how: “viruses attack not animals or plants but bacteria,” and these viruses “are thought to be the most abundant biological entities on Earth.” “More often” fits, since it introduces the case that is more common than the one popular accounts focus on.",
+      "distractors": {
+        "B": {
+          "recipe": "false opposition (concession)",
+          "why_wrong": "The clause about bacteria does not grant a point in favor of the popular picture after the surveys complicate it; it explains how the surveys complicate that picture."
+        },
+        "C": {
+          "recipe": "unearned cause",
+          "why_wrong": "The surveys did not cause viruses to attack bacteria; they revealed that most viruses do, which is how they complicate the popular picture."
+        },
+        "D": {
+          "recipe": "additive",
+          "why_wrong": "The clause is not a further point placed beside the claim that the surveys complicate the popular picture; it says what the more common case actually is, as its “not animals or plants but bacteria” shows."
+        }
+      },
+      "models": [
+        "d3b7d7a3",
+        "4b7a84b0"
+      ],
+      "word_count": 56,
+      "sources": [],
+      "notes": "Frequency form of S1 on the d3b7d7a3 move (band 7): a popular account, a sentence saying surveys complicate it with no frequency word, then the more common case after a semicolon, keyed more often; 4b7a84b0 (band 6) is the plainer shape this avoids. Surface contrast: however and complicate before the blank and the not ... but turn after it pull that said; consequently pulls a reader who reads the clause as an effect of the surveys. No interrupter after the blank, so it does not repeat the '; ______ researchers found,' skeleton of live more often items. Real general fact (most viruses on Earth are bacteriophages, the most abundant biological entities); adjacent only by name to the live phage-therapy item boundaries w3b3_23. Reviewer rewrite: the bee subject was a concept duplicate of live rhetorical_synthesis w5b2_06. Transitions: no web check (WAVE.md, 2026-10-16); no researcher named, no made-up finding attributed to a real person or organisation.",
+      "band7": {
+        "verdict": "band 7",
+        "why": "Matches section 5 for S1: the sentence before the blank only says surveys complicate the popular picture (no exceptional, rarely or most), so more often has to be inferred, as in d3b7d7a3. Key outside the core 13; no sequence or summary decoy; a false-opposition decoy (that said) pulled by however, complicate and the not ... but turn; register 5.38 chars per word; 56 words, blank after a semicolon."
+      },
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [
+          "replaced the bee subject (concept duplicate of live rhetorical_synthesis.DIFF.medium.w5b2_06, same solitary-female nest premise) with bacteriophages; rewrote options, explanation, distractors and notes",
+          "hardened to band 7: the sentence before the blank no longer says colonies are exceptional, so more often must be inferred from complicate that picture, as in d3b7d7a3",
+          "blind solve was on the original draft; the rewrite keeps the key letter and was re-solved: one defensible answer"
+        ],
+        "status": "fixed"
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "A",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
     },
-    "D": {
-     "recipe": "additive",
-     "why_wrong": "The solitary nest is not a separate point added to the claim about colonies; it is the usual case that the exceptional colonies are being set against."
+    {
+      "id": "transitions.U1_culmination_alt.hard.w5b3_03",
+      "template": "U1_culmination_alt",
+      "subtype": "Culmination",
+      "tier": "hard",
+      "band_target": 6,
+      "passage": "The Swedish Academy’s dictionary, a historical record of the Swedish language citing texts as old as 1521, has been published volume by volume, in alphabetical order. The first volume, covering only part of the letter A, appeared in the 1890s; as the editors progressed through the alphabet, the intervals between volumes lengthened. ______ in 2023, the thirty-ninth and final volume was published.",
+      "stem": "Which choice completes the text with the most logical transition?",
+      "options": [
+        "Additionally,",
+        "Hence,",
+        "For example,",
+        "Ultimately,"
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The text describes a long project: the dictionary “has been published volume by volume, in alphabetical order,” the first volume “appeared in the 1890s,” and “the intervals between volumes lengthened” as the editors “progressed through the alphabet.” The blank sentence gives the project’s end: “in 2023, the thirty-ninth and final volume was published.” “Ultimately” fits, since it introduces the final outcome of this long effort.",
+      "distractors": {
+        "A": {
+          "recipe": "additive",
+          "why_wrong": "The final volume is not one more detail of the same kind as the lengthening intervals; it is the point at which the whole project was completed."
+        },
+        "B": {
+          "recipe": "unearned cause",
+          "why_wrong": "The lengthening intervals between volumes did not cause the final volume to be published; they describe how slowly the work went before it ended."
+        },
+        "C": {
+          "recipe": "wrong grain (example)",
+          "why_wrong": "The publication of the final volume is not an instance of the intervals growing longer; it is the end of the long series of volumes."
+        }
+      },
+      "models": [
+        "3.4",
+        "332e75bf"
+      ],
+      "word_count": 62,
+      "sources": [],
+      "notes": "Culmination after a long effort (the U1 culmination move of 332e75bf and 3.4: a drawn-out process, then the outcome it finally reaches), keyed Ultimately. Band 6 by plan. No adversative decoy (a slow project that nevertheless finished would read as acceptable), no sequence word (Finally, Eventually, Later would fit the dates), and nothing before the blank that causes the completion, so Hence stays wrong. Facts kept to the Wikipedia page on Svenska Akademiens ordbok: historical dictionary with citations back to 1521, 39 volumes in alphabetical order, first volume A to anlopning (1898; the infobox gives 1893, so the passage says the 1890s), gaps between volumes grew later, last volume 2023. Distinct from the six dictionary claims (none is about a long multivolume project reaching its end). Reviewer rewrite: Invisible Cities and its Venice reveal were a fame tell. Transitions: no web check (WAVE.md, 2026-10-16); real subject, no made-up finding attributed to a real person or organisation.",
+      "band7": {
+        "verdict": "band 6",
+        "why": "Planned band 6 and kept there: a culmination after a long effort with decoys a hurried reader can attach (Additionally as one more fact, Hence from the slow pace, For example from the dated volumes) and no adversative on offer. The content after the blank is plain, so it does not reach the band-7 move of 332e75bf, whose B reframes the whole passage."
+      },
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 1,
+        "fixes": [
+          "replaced Invisible Cities (fame tell: a well-known novel and its well-known Venice reveal) with the Swedish Academy dictionary's completion in 2023; facts kept to the Wikipedia page; rewrote explanation, distractors and notes",
+          "blind solve was on the original draft; the rewrite keeps the key letter and was re-solved: one defensible answer"
+        ],
+        "status": "fixed"
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "D",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "transitions.M1_emphasis.hard.w5b3_04",
+      "template": "M1_emphasis",
+      "subtype": "Emphasis",
+      "tier": "hard",
+      "band_target": 7,
+      "passage": "Ethiopia, where arabica coffee originated, grows more of the crop than any other country in Africa. Its role in the international coffee trade is more modest than that ranking might suggest, however; ______ roughly half of each year’s harvest is consumed domestically, much of it prepared in elaborate household ceremonies that involve roasting, grinding, and brewing the beans.",
+      "stem": "Which choice completes the text with the most logical transition?",
+      "options": [
+        "nevertheless,",
+        "indeed,",
+        "in addition,",
+        "to that end,"
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The text says that Ethiopia’s “role in the international coffee trade is more modest than that ranking might suggest.” The clause after the blank gives a fact that strengthens this point: “roughly half of each year’s harvest is consumed domestically,” so a large share of the crop never enters international trade. “Indeed” fits, since it introduces information that reinforces the preceding claim.",
+      "distractors": {
+        "A": {
+          "recipe": "false opposition (concession)",
+          "why_wrong": "Domestic use of half the harvest does not hold true in spite of Ethiopia’s modest role in the coffee trade; it helps explain that modest role."
+        },
+        "C": {
+          "recipe": "additive",
+          "why_wrong": "The domestic consumption is not a separate point added alongside the claim about trade; it is the evidence that shows why Ethiopia’s role in trade is modest."
+        },
+        "D": {
+          "recipe": "purpose",
+          "why_wrong": "Ethiopians do not drink their coffee in order to keep the country’s role in trade modest; the clause supports the claim rather than describing a step taken toward a goal."
+        }
+      },
+      "models": [
+        "3.6",
+        "3.10",
+        "a266d876"
+      ],
+      "word_count": 57,
+      "sources": [],
+      "notes": "Band-7 emphasis on the 'unrealized' variant (3.6 / 00e0170f maglev) with the semicolon placement of 3.10 / 47e238be: a claim that X is smaller than expected, then a stronger same-direction fact keyed indeed. Surface contrast: the clause after the blank holds its own turn (consumed domestically rather than exported), so nevertheless pulls a reader who reacts to the however and the change of subject. No consequently decoy (reverse causation could make it defensible); to that end as in 3.6. Real general facts: Ethiopia is Africa's largest coffee producer and drinks about half its crop. Transitions: no web check (WAVE.md, 2026-10-16); real subject described from general knowledge, no researcher named, no made-up finding attributed to a real person or organisation.",
+      "band7": {
+        "verdict": "band 7",
+        "why": "The M1 band-7 recipe of 3.10 and a266d876: a claim that X is smaller than its ranking suggests, a semicolon, then a stronger same-direction fact keyed indeed, with the nevertheless / in addition decoys of the models (to that end as in 3.6). Surface contrast from the however before the blank and the consumed domestically turn after it; register 5.35 chars per word; 58 words."
+      },
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      },
+      "safety": {
+        "agreed": true,
+        "answer": "B",
+        "also_defensible": [],
+        "unfair": ""
+      },
+      "band": 6
+    },
+    {
+      "id": "transitions.C1_two_subject.medium.w5b3_05",
+      "template": "C1_two_subject",
+      "subtype": "Contrast: two subjects",
+      "tier": "medium",
+      "passage": "On the Galápagos Islands, blue-footed boobies, seabirds named for their brilliantly colored feet, lay their eggs directly on exposed ground, in a shallow depression often encircled by accumulated droppings. Red-footed boobies, ______ construct platforms of interwoven twigs high in mangroves and other shrubs.",
+      "stem": "Which choice completes the text with the most logical transition?",
+      "options": [
+        "similarly,",
+        "by contrast,",
+        "for example,",
+        "therefore,"
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The text says that blue-footed boobies “lay their eggs directly on exposed ground,” in “a shallow depression.” The sentence with the blank describes a second species that does the opposite: red-footed boobies “construct platforms of interwoven twigs high in mangroves and other shrubs.” “By contrast” fits, since it introduces a second subject whose nesting habits differ from those of the first.",
+      "distractors": {
+        "A": {
+          "recipe": "false parallel",
+          "why_wrong": "Red-footed boobies do not nest the way blue-footed boobies do; one lays its eggs on exposed ground, and the other builds platforms of twigs in shrubs."
+        },
+        "C": {
+          "recipe": "wrong grain (example)",
+          "why_wrong": "Red-footed boobies are not an example of birds that lay their eggs on exposed ground; they are a contrasting case."
+        },
+        "D": {
+          "recipe": "unearned cause",
+          "why_wrong": "The blue-footed boobies’ ground nests do not cause red-footed boobies to nest in trees; the text simply compares the two species."
+        }
+      },
+      "models": [
+        "2.4",
+        "2.6",
+        "2.18"
+      ],
+      "word_count": 42,
+      "sources": [],
+      "notes": "Two subjects, one attribute (nest site), opposite values, with the connective as an interrupter after the second subject (2.6 / 11df9b99 position). The first species is introduced on its own, not as one of 'several species', so for example cannot be read as introducing an instance. Real natural history (blue-footed boobies nest on bare ground in a ring of guano; red-footed boobies build twig nests in mangroves and other shrubs). Transitions: no web check (WAVE.md, 2026-10-16); real subject described from general knowledge, no researcher named, no made-up finding attributed to a real person or organisation.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "transitions.C1_two_subject.medium.w5b3_06",
+      "template": "C1_two_subject",
+      "subtype": "Contrast: two subjects",
+      "tier": "medium",
+      "passage": "In the early 1960s, the BBC held a monopoly on British radio. Agreements with record companies and musicians’ unions also restricted how much recorded music it could broadcast. ______ Radio Caroline, transmitting from a ship anchored in international waters off the English coast, played pop records almost continuously.",
+      "stem": "Which choice completes the text with the most logical transition?",
+      "options": [
+        "Likewise,",
+        "In other words,",
+        "For instance,",
+        "In contrast,"
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The second sentence says that agreements “restricted how much recorded music” the BBC “could broadcast.” The blank sentence describes a station that did the opposite: Radio Caroline “played pop records almost continuously.” “In contrast” fits, since it introduces a second station whose programming differed sharply from the BBC’s.",
+      "distractors": {
+        "A": {
+          "recipe": "false parallel",
+          "why_wrong": "Radio Caroline did not restrict recorded music the way the BBC did; it played pop records almost continuously."
+        },
+        "B": {
+          "recipe": "wrong grain (restatement)",
+          "why_wrong": "The sentence about Radio Caroline does not restate the point about the BBC’s limits; it describes a different station with different programming."
+        },
+        "C": {
+          "recipe": "wrong grain (example)",
+          "why_wrong": "Radio Caroline is not an example of the BBC’s monopoly or of its limits on recorded music; it is a station that worked outside them."
+        }
+      },
+      "models": [
+        "2.4",
+        "2.18",
+        "1.17"
+      ],
+      "word_count": 47,
+      "sources": [],
+      "notes": "Two subjects with opposite values, blank sentence-initial (2.18 / cf11282b position), history and media. No causal decoy: Caroline was founded in part because of the BBC's limits, so As a result or Accordingly could read as acceptable. Real history: BBC radio monopoly until 1973, needle-time agreements limiting recorded music, Radio Caroline from 1964 on a ship off the English coast. Transitions: no web check (WAVE.md, 2026-10-16); real subject described from general knowledge, no researcher named, no made-up finding attributed to a real person or organisation.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "transitions.A1_addition.medium.w5b3_07",
+      "template": "A1_addition",
+      "subtype": "Addition",
+      "tier": "medium",
+      "passage": "Across East Africa, the kanga, a rectangle of vividly printed cotton, functions as a wrap skirt, a head covering, or a sling for carrying an infant. ______ the cloth communicates: most kangas display a printed Swahili proverb, and a woman may deliberately select one that expresses a sentiment she would prefer not to voice directly.",
+      "stem": "Which choice completes the text with the most logical transition?",
+      "options": [
+        "Additionally,",
+        "Nevertheless,",
+        "That is,",
+        "Specifically,"
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The first sentence presents the practical uses of the kanga: it “functions as a wrap skirt, a head covering, or a sling for carrying an infant.” The blank sentence adds a separate role: “the cloth communicates,” since “most kangas display a printed Swahili proverb” that a woman may choose to express “a sentiment she would prefer not to voice directly.” “Additionally” fits, since it introduces a further function of the cloth.",
+      "distractors": {
+        "B": {
+          "recipe": "false opposition (concession)",
+          "why_wrong": "The kanga’s role in communication does not hold in spite of its use as clothing or a sling; the two roles do not conflict."
+        },
+        "C": {
+          "recipe": "wrong grain (restatement)",
+          "why_wrong": "Carrying a printed proverb is not a rewording of the kanga’s uses as a skirt, head covering, or sling; it is a new point."
+        },
+        "D": {
+          "recipe": "wrong grain (specification)",
+          "why_wrong": "The printed proverbs do not spell out how the kanga works as a skirt, head covering, or sling; they show a different role."
+        }
+      },
+      "models": [
+        "2.10",
+        "2.11"
+      ],
+      "word_count": 55,
+      "sources": [],
+      "notes": "Two roles of one thing on the 2.11 / 39d1a519 and 2.10 / eea351c4 pattern: practical uses, then a second, communicative role. No similarity decoy (excluded beside an addition key), no causal or contrast decoy. The second role is a different kind of use (a message, not a way of wearing the cloth), so That is and Specifically cannot read it as spelling out the first. Real material culture (kanga, or khanga, printed cotton cloth of the Swahili coast whose border text, a saying, is chosen to send messages). Reviewer rewrite: the Sacred Cenote at Chichen Itza was a fame tell. Transitions: no web check (WAVE.md, 2026-10-16); real subject described from general knowledge, no researcher named, no made-up finding attributed to a real person or organisation.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [
+          "replaced the Maya cenotes and the Sacred Cenote at Chichen Itza (fame tell) with the East African kanga; rewrote explanation, distractors and notes",
+          "blind solve was on the original draft; the rewrite keeps the key letter and was re-solved: one defensible answer"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "transitions.S1_spec_restate.medium.w5b3_08",
+      "template": "S1_spec_restate",
+      "subtype": "Specification / restatement",
+      "tier": "medium",
+      "passage": "In a 2017 study, researchers in South Korea investigated whether proximity to a park influences how much older adults walk. ______ they distributed pedometers to several hundred Daejeon residents aged 65 or older and compared the daily step counts of participants living within 500 meters of a park with those of participants living farther away.",
+      "stem": "Which choice completes the text with the most logical transition?",
+      "options": [
+        "Thus,",
+        "Additionally,",
+        "Specifically,",
+        "However,"
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The first sentence says in general terms what the researchers studied: “whether proximity to a park influences how much older adults walk.” The blank sentence gives the exact details of that study: “they distributed pedometers” and “compared the daily step counts of participants living within 500 meters of a park with those of participants living farther away.” “Specifically” fits, since it introduces precise details about the general statement that came before it.",
+      "distractors": {
+        "A": {
+          "recipe": "unearned cause",
+          "why_wrong": "Distributing pedometers and comparing step counts is not a result of the researchers’ investigation; it is how the investigation was carried out."
+        },
+        "B": {
+          "recipe": "additive",
+          "why_wrong": "The pedometer comparison is not a second project carried out in addition to the investigation; it is the investigation itself, described in detail."
+        },
+        "D": {
+          "recipe": "false opposition",
+          "why_wrong": "The pedometer comparison does not contrast with the statement that the researchers investigated parks and walking; it describes that investigation."
+        }
+      },
+      "models": [
+        "2.12",
+        "2.3"
+      ],
+      "word_count": 55,
+      "sources": [],
+      "notes": "General statement of a study, then its exact content (2.12 / 9e3a215b: investigated a relationship, then exactly which variables were compared), same decoy relations as 2.12. No example decoy (example and specification exclude each other). Invented, plainly generic study: an unnamed team, a real city, method only and no finding, so nothing is attributed to a real person or organisation. Reviewer rewrite: the 1978 pigeon treadmill experiment was popular-science trivia. Transitions: no web check (WAVE.md, 2026-10-16); no researcher named.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [
+          "replaced the 1978 pigeon treadmill experiment (popular-science trivia) with an unnamed 2017 study in Daejeon on park proximity and walking, on the 2.12 shape; rewrote explanation, distractors and notes",
+          "blind solve was on the original draft; the rewrite keeps the key letter and was re-solved: one defensible answer"
+        ],
+        "status": "fixed"
+      }
+    },
+    {
+      "id": "transitions.S1_spec_restate.medium.w5b3_09",
+      "template": "S1_spec_restate",
+      "subtype": "Specification / restatement",
+      "tier": "medium",
+      "passage": "Glaciologists classify some glaciers, including many in Alaska, Svalbard, and the Karakoram mountains of Asia, as surge-type glaciers. ______ these glaciers alternate between long quiescent phases, often lasting decades, in which they barely move and brief episodes of dramatically accelerated flow. During a surge, a glacier can advance tens of meters in a single day.",
+      "stem": "Which choice completes the text with the most logical transition?",
+      "options": [
+        "Regardless,",
+        "Moreover,",
+        "As a result,",
+        "That is,"
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The first sentence uses a technical term: some glaciers are classified “as surge-type glaciers.” The blank sentence explains in plain language what that term means: “these glaciers alternate between long quiescent phases” and “brief episodes of dramatically accelerated flow.” “That is” fits, since it introduces a clarification of the term just used.",
+      "distractors": {
+        "A": {
+          "recipe": "false opposition (dismissive)",
+          "why_wrong": "The blank sentence does not say that the glaciers behave this way whatever their classification; it explains what the classification means."
+        },
+        "B": {
+          "recipe": "additive",
+          "why_wrong": "The description of quiescent phases and surges is not a further fact added to the classification; it is what the classification means."
+        },
+        "C": {
+          "recipe": "unearned cause",
+          "why_wrong": "Glaciers do not alternate between quiescent phases and surges because glaciologists classify them as surge-type; they are classified that way because they behave like this."
+        }
+      },
+      "models": [
+        "2.15",
+        "3.1"
+      ],
+      "word_count": 54,
+      "sources": [],
+      "notes": "Restatement of a technical term in plain words (2.15 / 7c3f0145 defines cognate replacement; 3.1 unpacks a classification), blank sentence-initial rather than after an em dash as in 2.15. No specifically or for example on offer, since a definition can also read as specification. Real glaciology (surge-type glaciers cluster in Alaska-Yukon, Svalbard and the Karakoram; surges reach tens of meters a day). Transitions: no web check (WAVE.md, 2026-10-16); real subject described from general knowledge, no researcher named, no made-up finding attributed to a real person or organisation.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "transitions.C2_belief_finding.medium.w5b3_10",
+      "template": "C2_belief_finding",
+      "subtype": "Contrast: appearance, then reality",
+      "tier": "medium",
+      "passage": "The common chiffchaff and the willow warbler, two small songbirds of European woodlands, are so alike in their olive-green plumage that even experienced birders struggle to tell them apart by sight. Their songs, ______ are unmistakable: the chiffchaff, as its name suggests, repeats two simple notes over and over.",
+      "stem": "Which choice completes the text with the most logical transition?",
+      "options": [
+        "though,",
+        "for example,",
+        "hence,",
+        "likewise,"
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The first sentence says that the two birds look so alike that “even experienced birders struggle to tell them apart by sight.” The blank sentence says the opposite about their songs: they “are unmistakable.” “Though” fits, since it signals that this information about the songs contrasts with the difficulty of telling the birds apart by appearance.",
+      "distractors": {
+        "B": {
+          "recipe": "wrong grain (example)",
+          "why_wrong": "The songs are not an example of the birds’ similar plumage or of birders’ trouble telling them apart; the songs are what make the birds easy to tell apart."
+        },
+        "C": {
+          "recipe": "unearned cause",
+          "why_wrong": "The birds’ similar plumage does not cause their songs to be unmistakable."
+        },
+        "D": {
+          "recipe": "false parallel",
+          "why_wrong": "The songs are not alike in the way the plumage is; the two birds sing very different songs."
+        }
+      },
+      "models": [
+        "2.16",
+        "2.1"
+      ],
+      "word_count": 48,
+      "sources": [],
+      "notes": "Appearance, then the expert reality, with though as an interrupter after the subject (2.16 / f8c4591b shape; here the second subject is the songs rather than the experts). No other contrast word on offer (however or by contrast would also fit). Decoys varied from 2.16's (for example, in addition, therefore), and the second sentence describes one song rather than closing on an 'X does A, while Y does B' pair. Real natural history: chiffchaff and willow warbler are near-identical in plumage and told apart by song. Transitions: no web check (WAVE.md, 2026-10-16); real subject described from general knowledge, no researcher named, no made-up finding attributed to a real person or organisation.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "transitions.E1_consequence.medium.w5b3_11",
+      "template": "E1_consequence",
+      "subtype": "Cause / effect",
+      "tier": "medium",
+      "passage": "California’s Mono Lake contains tufa towers, limestone columns that formed underwater where calcium-rich springs mixed with the lake’s alkaline water. In 1941, Los Angeles began diverting streams that fed the lake, and its level fell by about 14 meters over the following four decades. ______ dozens of towers now stand exposed along the shoreline, some rising several meters above the ground.",
+      "stem": "Which choice completes the text with the most logical transition?",
+      "options": [
+        "Similarly,",
+        "Nevertheless,",
+        "Hence,",
+        "In other words,"
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The text explains that the tufa towers “formed underwater” and that, after Los Angeles began diverting streams that fed the lake, its level “fell by about 14 meters.” The blank sentence gives the result of this drop: “dozens of towers now stand exposed along the shoreline.” “Hence” fits, since it introduces a consequence of the preceding information.",
+      "distractors": {
+        "A": {
+          "recipe": "false parallel",
+          "why_wrong": "The exposed towers are not a case similar to the falling lake level; they are a result of it."
+        },
+        "B": {
+          "recipe": "false opposition (concession)",
+          "why_wrong": "The towers do not stand exposed in spite of the drop in the lake’s level; they stand exposed because of it."
+        },
+        "D": {
+          "recipe": "wrong grain (restatement)",
+          "why_wrong": "That the towers stand exposed is not a rewording of the statement that the lake’s level fell; it is an effect of that drop."
+        }
+      },
+      "models": [
+        "2.14",
+        "1.5"
+      ],
+      "word_count": 60,
+      "sources": [],
+      "notes": "Condition, then its consequence keyed Hence (2.14 / 17e49403; 1.5 / 04ad68ca: a change removes a constraint, then the result). The first sentence's 'formed underwater' is the fact the consequence needs. Real: Los Angeles diversions of Mono Basin streams from 1941, lake down about 45 feet by 1982, tufa towers left standing above the water. Replaces a Spirit and Opportunity draft (textbook fame, and adjacent to the claimed RS item on Mars rover power). Transitions: no web check (WAVE.md, 2026-10-16); real subject described from general knowledge, no researcher named, no made-up finding attributed to a real person or organisation.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "transitions.T1_sequence_time.medium.w5b3_12",
+      "template": "T1_sequence_time",
+      "subtype": "Sequence / time",
+      "tier": "medium",
+      "passage": "In a 2006 referendum, Montenegrin voters approved independence for their small, mountainous Balkan republic, barely clearing the 55 percent threshold required for approval. ______ Montenegro had been politically united with neighboring Serbia for nearly ninety years, first within Yugoslavia and later, from 2003, in a loose confederation known simply as Serbia and Montenegro.",
+      "stem": "Which choice completes the text with the most logical transition?",
+      "options": [
+        "Likewise,",
+        "Previously,",
+        "Therefore,",
+        "Specifically,"
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The first sentence describes an event in 2006: Montenegrin voters “approved independence.” The blank sentence describes an earlier period: Montenegro “had been politically united with neighboring Serbia for nearly ninety years.” “Previously” fits, since it signals that the information in the blank sentence comes before the event in the previous sentence.",
+      "distractors": {
+        "A": {
+          "recipe": "false parallel",
+          "why_wrong": "Montenegro’s long union with Serbia is not similar to its vote for independence; it is the situation that the vote ended."
+        },
+        "C": {
+          "recipe": "unearned cause",
+          "why_wrong": "The 2006 vote did not cause Montenegro to have been joined with Serbia; the union came first."
+        },
+        "D": {
+          "recipe": "wrong grain (specification)",
+          "why_wrong": "The union with Serbia does not give the exact details of the 2006 referendum; it describes the period before it."
+        }
+      },
+      "models": [
+        "2.2",
+        "2.13"
+      ],
+      "word_count": 52,
+      "sources": [],
+      "notes": "Reverse chronology keyed Previously (2.2 / a819d8b6), carried by the past perfect and the dates. No However on offer: independence against a long union could support a contrast reading. Real history (May 2006 referendum, 55.5 percent yes against a 55 percent threshold; union with Serbia from 1918, state union from 2003). Transitions: no web check (WAVE.md, 2026-10-16); real subject described from general knowledge, no researcher named, no made-up finding attributed to a real person or organisation.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "transitions.U1_culmination_alt.medium.w5b3_13",
+      "template": "U1_culmination_alt",
+      "subtype": "Place",
+      "tier": "medium",
+      "passage": "When an airline cannot reunite a suitcase with its owner after months of searching, it may sell the bag to the Unclaimed Baggage Center, a business in Scottsboro, Alabama. ______ employees sort through the incoming luggage, laundering clothing and testing electronics. The salvageable items are then sold in an enormous store that attracts shoppers from across the country.",
+      "stem": "Which choice completes the text with the most logical transition?",
+      "options": [
+        "There,",
+        "Conversely,",
+        "For example,",
+        "In sum,"
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The first sentence names a place: the Unclaimed Baggage Center, “a business in Scottsboro, Alabama.” The blank sentence describes what happens at that place: “employees sort through the incoming luggage.” “There” fits, since it refers back to the business just mentioned as the location of this work.",
+      "distractors": {
+        "B": {
+          "recipe": "false opposition",
+          "why_wrong": "Sorting and selling the items does not contrast with the airlines’ sale of the suitcases to the center; it is what the center does with them."
+        },
+        "C": {
+          "recipe": "wrong grain (example)",
+          "why_wrong": "The employees’ sorting is not an instance of airlines failing to reunite suitcases with their owners; it describes the work done at the center."
+        },
+        "D": {
+          "recipe": "premature summary",
+          "why_wrong": "The blank sentence does not sum up the earlier information; it adds new details about the work done at the center."
+        }
+      },
+      "models": [
+        "2.8"
+      ],
+      "word_count": 57,
+      "sources": [],
+      "notes": "Place on the 2.8 / 388b45aa shape (items sent to a named place, then 'There,' and the work done at it). No Then, Next or Afterward (the sale to the center comes first, so a sequence word would fit) and no In particular or Specifically. Real business (Unclaimed Baggage, Scottsboro, buys unclaimed airline luggage and resells it in a large store). Transitions: no web check (WAVE.md, 2026-10-16); real subject described from general knowledge, no researcher named, no made-up finding attributed to a real person or organisation.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "transitions.T1_sequence_time.easy.w5b3_14",
+      "template": "T1_sequence_time",
+      "subtype": "Sequence / time",
+      "tier": "easy",
+      "passage": "Russian matryoshka dolls, wooden figures that nest one inside another, are manufactured from the inside out. First, a craftsperson turns the smallest doll, the only one that cannot be separated into halves, on a woodworking lathe. ______ she carves the two hollow halves of a slightly larger doll so that the first fits snugly inside. The process is repeated until the set is complete.",
+      "stem": "Which choice completes the text with the most logical transition?",
+      "options": [
+        "For instance,",
+        "Conversely,",
+        "Next,",
+        "Regardless,"
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The text describes the steps for making matryoshka dolls. “First,” a craftsperson turns the smallest doll on a lathe; in the blank sentence, she “carves the two hollow halves of a slightly larger doll so that the first fits snugly inside.” “Next” fits, since it introduces the step that follows the first one in the process.",
+      "distractors": {
+        "A": {
+          "recipe": "wrong grain (example)",
+          "why_wrong": "Carving the larger doll is not an example of turning the smallest doll; it is the following step."
+        },
+        "B": {
+          "recipe": "false opposition",
+          "why_wrong": "Carving the larger doll does not contrast with turning the smallest one; it continues the same process."
+        },
+        "D": {
+          "recipe": "false opposition (dismissive)",
+          "why_wrong": "Carving the larger doll depends on the first doll, which must fit “snugly inside”; it does not happen without regard to that step."
+        }
+      },
+      "models": [
+        "1.8",
+        "1.22"
+      ],
+      "word_count": 63,
+      "sources": [],
+      "notes": "Procedure with First before the blank (1.8 / 47547d07, 1.22 / b5a399f1). Decoys varied from 1.8's (by contrast, similarly, for example). Real craft (the smallest, solid doll is turned first and each larger one is made to fit around it). Transitions: no web check (WAVE.md, 2026-10-16); real subject described from general knowledge, no researcher named, no made-up finding attributed to a real person or organisation.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "transitions.T1_sequence_time.easy.w5b3_15",
+      "template": "T1_sequence_time",
+      "subtype": "Sequence / time",
+      "tier": "easy",
+      "passage": "Borobudur, a vast Buddhist temple built in central Java around 800 CE, lay half buried under volcanic ash and jungle for centuries. In 1814, a team sent by the island’s British governor began clearing away the vegetation. ______ between 1907 and 1911, Dutch engineer Theodoor van Erp led the monument’s first major restoration.",
+      "stem": "Which choice completes the text with the most logical transition?",
+      "options": [
+        "Nevertheless,",
+        "For instance,",
+        "In conclusion,",
+        "Later,"
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The text gives events in time order. “In 1814,” a team began clearing the vegetation from Borobudur; the blank sentence describes an event nearly a century later: “between 1907 and 1911,” Theodoor van Erp led the first major restoration. “Later” fits, since it signals that this event came after the one before it.",
+      "distractors": {
+        "A": {
+          "recipe": "false opposition (concession)",
+          "why_wrong": "The restoration does not happen in spite of the clearing in 1814; it continues the effort to recover the temple."
+        },
+        "B": {
+          "recipe": "wrong grain (example)",
+          "why_wrong": "The restoration of 1907 to 1911 is not an example of the 1814 clearing; it is a separate, later event."
+        },
+        "C": {
+          "recipe": "premature summary",
+          "why_wrong": "The blank sentence does not sum up the text; it adds a new event."
+        }
+      },
+      "models": [
+        "1.18",
+        "1.12"
+      ],
+      "word_count": 52,
+      "sources": [],
+      "notes": "Dated events in order keyed Later (1.18 / 4154a7a3). No causal or similarity decoy (the clearing could be said to lead to, or resemble, the restoration). Real history (Raffles's 1814 survey under H. C. Cornelius; Van Erp restoration 1907 to 1911). Transitions: no web check (WAVE.md, 2026-10-16); real subject described from general knowledge, no researcher named, no made-up finding attributed to a real person or organisation.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "transitions.X1_example.easy.w5b3_16",
+      "template": "X1_example",
+      "subtype": "Example",
+      "tier": "easy",
+      "passage": "At many railway stations in Japan, a short melody plays over the loudspeakers just before a train’s doors close. Some stations have selected melodies with particular local significance. ______ Takadanobaba Station in Tokyo, near the studio founded by Osamu Tezuka, the creator of Astro Boy, plays that character’s theme song.",
+      "stem": "Which choice completes the text with the most logical transition?",
+      "options": [
+        "However,",
+        "For example,",
+        "In other words,",
+        "Finally,"
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The second sentence makes a general claim: “Some stations have selected melodies with particular local significance.” The blank sentence gives one specific case: Takadanobaba Station, near Tezuka’s studio, “plays that character’s theme song.” “For example” fits, since it introduces an instance of the general claim.",
+      "distractors": {
+        "A": {
+          "recipe": "false opposition",
+          "why_wrong": "Takadanobaba’s choice of melody does not contrast with the claim that some stations have selected melodies with particular local significance; it is one of those stations."
+        },
+        "C": {
+          "recipe": "wrong grain (restatement)",
+          "why_wrong": "The sentence about Takadanobaba does not reword the general claim; it names one particular station."
+        },
+        "D": {
+          "recipe": "phantom sequence",
+          "why_wrong": "The text does not list steps or events in order, so there is no last item for “finally” to introduce."
+        }
+      },
+      "models": [
+        "1.25",
+        "1.37"
+      ],
+      "word_count": 49,
+      "sources": [],
+      "notes": "General claim with 'some', then one named instance (1.25 / e965fd73, 1.37 / fc5e83cc). No causal decoy (a general trend could be read as causing the station's choice). Real: JR Takadanobaba plays the Astro Boy theme as its departure melody; Tezuka Productions is based nearby. Transitions: no web check (WAVE.md, 2026-10-16); real subject described from general knowledge, no researcher named, no made-up finding attributed to a real person or organisation.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "transitions.X1_example.easy.w5b3_17",
+      "template": "X1_example",
+      "subtype": "Example",
+      "tier": "easy",
+      "passage": "Many styles of Japanese ceramics are named for the towns or regions where they have traditionally been produced. ______ Arita ware, a delicate white porcelain often decorated with cobalt-blue designs, takes its name from Arita, a town on the island of Kyushu where potters have worked since the early seventeenth century.",
+      "stem": "Which choice completes the text with the most logical transition?",
+      "options": [
+        "For instance,",
+        "Instead,",
+        "In conclusion,",
+        "Meanwhile,"
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The first sentence says that many styles of Japanese ceramics “are named for the towns or regions where they have traditionally been produced.” The blank sentence gives one instance: Arita ware “takes its name from Arita, a town on the island of Kyushu.” “For instance” fits, since it introduces an example of the general claim.",
+      "distractors": {
+        "B": {
+          "recipe": "false opposition",
+          "why_wrong": "Arita ware is not named in some other way than the first sentence describes; it is named for its town, just as the general claim says."
+        },
+        "C": {
+          "recipe": "premature summary",
+          "why_wrong": "The blank sentence does not sum up the text; it gives a specific case."
+        },
+        "D": {
+          "recipe": "wrong time",
+          "why_wrong": "The sentence does not describe something happening at the same time as another event; it gives an example."
+        }
+      },
+      "models": [
+        "1.26",
+        "1.25"
+      ],
+      "word_count": 50,
+      "sources": [],
+      "notes": "General claim with 'many', then one named instance, keyed For instance (1.26 / d10e46a2). No Thus (a general rule then its case can read as principle and application, 1.32). Models 1.26 and 1.25 (1.2 dropped: its 58 words set the median above this passage). Real: Arita porcelain, made in Arita, Saga Prefecture, Kyushu, from the early 1600s. Transitions: no web check (WAVE.md, 2026-10-16); real subject described from general knowledge, no researcher named, no made-up finding attributed to a real person or organisation.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "transitions.E1_consequence.easy.w5b3_18",
+      "template": "E1_consequence",
+      "subtype": "Cause / effect",
+      "tier": "easy",
+      "passage": "Xuan paper, the soft paper traditionally used for Chinese ink painting, is highly absorbent. It soaks up ink the instant a brush touches its surface. ______ a painter cannot erase or paint over a stroke once it is made, so artists often practice a composition many times before producing a final version.",
+      "stem": "Which choice completes the text with the most logical transition?",
+      "options": [
+        "On the contrary,",
+        "Similarly,",
+        "Previously,",
+        "As a result,"
+      ],
+      "answer_letter": "D",
+      "table": null,
+      "figure": null,
+      "explanation": "The text explains that xuan paper is “highly absorbent” and “soaks up ink the instant a brush touches its surface.” The blank sentence gives a consequence of this fact: “a painter cannot erase or paint over a stroke once it is made.” “As a result” fits, since it introduces an effect of what the previous sentence describes.",
+      "distractors": {
+        "A": {
+          "recipe": "false opposition",
+          "why_wrong": "That strokes cannot be corrected does not contradict the paper’s absorbency; it follows from it."
+        },
+        "B": {
+          "recipe": "false parallel",
+          "why_wrong": "The painter’s inability to correct strokes is not a case similar to the paper’s absorbency; it is an effect of it."
+        },
+        "C": {
+          "recipe": "wrong time",
+          "why_wrong": "The blank sentence does not describe something that happened before the paper absorbs ink; it describes what follows from that absorbency."
+        }
+      },
+      "models": [
+        "1.5",
+        "1.36"
+      ],
+      "word_count": 51,
+      "sources": [],
+      "notes": "Condition, then its consequence (1.5 / 04ad68ca, 1.36 / 49ecf985). No example or restatement decoy (the uncorrectable stroke could be read as an illustration of absorbency). Real general fact about xuan (rice) paper. Replaces an Apollo bootprints draft (popular-science trivia). Transitions: no web check (WAVE.md, 2026-10-16); real subject described from general knowledge, no researcher named, no made-up finding attributed to a real person or organisation.",
+      "review": {
+        "blind_answer": "D",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "transitions.E1_consequence.easy.w5b3_19",
+      "template": "E1_consequence",
+      "subtype": "Cause / effect",
+      "tier": "easy",
+      "passage": "Monaco, a principality on the Mediterranean coast, covers only about two square kilometers, making it the second-smallest country in the world. ______ Monaco has repeatedly expanded into the sea: its Fontvieille district, for example, was constructed in the 1970s and 1980s on land reclaimed from the water.",
+      "stem": "Which choice completes the text with the most logical transition?",
+      "options": [
+        "On the other hand,",
+        "In other words,",
+        "Consequently,",
+        "Earlier,"
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The first sentence says that Monaco “covers only about two square kilometers.” The blank sentence describes what has followed from this lack of space: “Monaco has repeatedly expanded into the sea.” “Consequently” fits, since it introduces a result of the country’s small size.",
+      "distractors": {
+        "A": {
+          "recipe": "false opposition",
+          "why_wrong": "Expanding into the sea does not contrast with Monaco’s small size; it is a response to it."
+        },
+        "B": {
+          "recipe": "wrong grain (restatement)",
+          "why_wrong": "Expanding into the sea is not a rewording of the fact that Monaco is small; it is a new point that follows from it."
+        },
+        "D": {
+          "recipe": "wrong time",
+          "why_wrong": "The text does not place Monaco’s expansion before the fact of its small size; the expansion is a response to that size."
+        }
+      },
+      "models": [
+        "1.3",
+        "1.15"
+      ],
+      "word_count": 46,
+      "sources": [],
+      "notes": "Condition, then its consequence keyed Consequently (1.3 / 01c8c433). No example decoy, since the blank sentence itself contains 'for example'. Real: Monaco about 2 square kilometers, second smallest after Vatican City; Fontvieille built on reclaimed land in the 1970s and 1980s. Transitions: no web check (WAVE.md, 2026-10-16); real subject described from general knowledge, no researcher named, no made-up finding attributed to a real person or organisation.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "transitions.C3_limiting_fact.easy.w5b3_20",
+      "template": "C3_limiting_fact",
+      "subtype": "Contrast: limiting fact",
+      "tier": "easy",
+      "passage": "Edith Södergran, a Finnish poet who wrote in Swedish, is now celebrated as one of the first modernist poets in the Nordic countries, admired for her startling imagery and unrhymed free verse. ______ when her first collection, Dikter, appeared in 1916, most critics dismissed it, and she received little recognition before her death in 1923.",
+      "stem": "Which choice completes the text with the most logical transition?",
+      "options": [
+        "Thus,",
+        "However,",
+        "Specifically,",
+        "Moreover,"
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The first sentence says that Södergran “is now celebrated as one of the first modernist poets in the Nordic countries.” The blank sentence gives a fact that limits this picture: when her first collection appeared, “most critics dismissed it.” “However” fits, since it introduces information that contrasts with the praise in the previous sentence.",
+      "distractors": {
+        "A": {
+          "recipe": "unearned cause",
+          "why_wrong": "Södergran’s present reputation did not cause critics to dismiss her first collection in 1916."
+        },
+        "C": {
+          "recipe": "wrong grain (specification)",
+          "why_wrong": "The critics’ dismissal does not spell out why Södergran is celebrated today; it contrasts with that praise."
+        },
+        "D": {
+          "recipe": "additive",
+          "why_wrong": "The critics’ dismissal is not a further point in support of the praise; it points the other way."
+        }
+      },
+      "models": [
+        "1.10",
+        "1.23"
+      ],
+      "word_count": 54,
+      "sources": [],
+      "notes": "Positive claim about one subject, then a limiting fact about the same subject (1.10 / 0ee64efc in reverse: neglected then, celebrated now). Literature, about a writer's reception, no excerpt. Real: Sodergran (1892 to 1923), Finland-Swedish modernist; Dikter (1916) met with critics' scorn. Transitions: no web check (WAVE.md, 2026-10-16); real subject described from general knowledge, no researcher named, no made-up finding attributed to a real person or organisation.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "transitions.C1_two_subject.easy.w5b3_21",
+      "template": "C1_two_subject",
+      "subtype": "Contrast: two subjects",
+      "tier": "easy",
+      "passage": "The Urdu poet Mirza Ghalib (1797–1869) is renowned for his ghazals, compact lyric poems so dense with allusions and layered meanings that scholars still debate how to interpret them. ______ his letters to friends are informal, affectionate, and playful, written in the relaxed, conversational Urdu of everyday speech.",
+      "stem": "Which choice completes the text with the most logical transition?",
+      "options": [
+        "By contrast,",
+        "Similarly,",
+        "For instance,",
+        "Therefore,"
+      ],
+      "answer_letter": "A",
+      "table": null,
+      "figure": null,
+      "explanation": "The first sentence describes Ghalib’s ghazals as “so dense with allusions and layered meanings that scholars still debate how to interpret them.” The blank sentence describes another kind of writing by Ghalib that is the opposite: “his letters to friends are informal, affectionate, and playful.” “By contrast” fits, since it introduces a second subject that differs from the first.",
+      "distractors": {
+        "B": {
+          "recipe": "false parallel",
+          "why_wrong": "The letters are not dense like the ghazals; they are informal and playful."
+        },
+        "C": {
+          "recipe": "wrong grain (example)",
+          "why_wrong": "The letters are not an example of Ghalib’s dense ghazals; they are a different kind of writing."
+        },
+        "D": {
+          "recipe": "unearned cause",
+          "why_wrong": "The difficulty of the ghazals does not cause the letters to be informal."
+        }
+      },
+      "models": [
+        "1.17",
+        "1.14"
+      ],
+      "word_count": 47,
+      "sources": [],
+      "notes": "Two subjects (one writer's poems and letters), opposite values on one attribute (difficulty), sentence-initial blank as in 1.17 / 90117366. Literature, about the works, no excerpt. Real: Ghalib's ghazals are famously difficult; his Urdu letters are prized for their conversational ease. Transitions: no web check (WAVE.md, 2026-10-16); real subject described from general knowledge, no researcher named, no made-up finding attributed to a real person or organisation.",
+      "review": {
+        "blind_answer": "A",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "transitions.A1_addition.easy.w5b3_22",
+      "template": "A1_addition",
+      "subtype": "Addition",
+      "tier": "easy",
+      "passage": "Cuban dancer Alicia Alonso became one of the twentieth century’s most celebrated ballerinas. She was admired above all for her performances in the title role of Giselle. ______ in 1948 she founded a ballet company in Havana that later became the National Ballet of Cuba, which has trained generations of dancers.",
+      "stem": "Which choice completes the text with the most logical transition?",
+      "options": [
+        "On the contrary,",
+        "That is,",
+        "In addition,",
+        "Regardless,"
+      ],
+      "answer_letter": "C",
+      "table": null,
+      "figure": null,
+      "explanation": "The first sentence describes one of Alonso’s achievements: she became “one of the twentieth century’s most celebrated ballerinas.” The blank sentence describes another: “in 1948 she founded a ballet company in Havana.” “In addition” fits, since it introduces a second achievement that adds to the first.",
+      "distractors": {
+        "A": {
+          "recipe": "false opposition",
+          "why_wrong": "Founding a ballet company does not contradict Alonso’s fame as a dancer; it is another of her achievements."
+        },
+        "B": {
+          "recipe": "wrong grain (restatement)",
+          "why_wrong": "Founding a company is not a rewording of the information about her performances; it is a different achievement."
+        },
+        "D": {
+          "recipe": "false opposition (dismissive)",
+          "why_wrong": "The sentence does not say that Alonso founded the company without regard to her career as a dancer; it simply adds a second achievement."
+        }
+      },
+      "models": [
+        "1.7",
+        "1.30"
+      ],
+      "word_count": 50,
+      "sources": [],
+      "notes": "Two acts by the same person (1.7 / 1b219d14, 1.30 / 660d50dc). No time decoy (the 1948 date could make Later read as acceptable) and no similarity decoy. Real: Alonso (1920 to 2019), famed Giselle; Ballet Alicia Alonso founded in Havana in 1948, later the Ballet Nacional de Cuba. Replaces a Garrett Morgan draft (the 1920s three-light signal is official WiC 0d402146). Transitions: no web check (WAVE.md, 2026-10-16); real subject described from general knowledge, no researcher named, no made-up finding attributed to a real person or organisation.",
+      "review": {
+        "blind_answer": "C",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      }
+    },
+    {
+      "id": "transitions.M1_emphasis.easy.w5b3_23",
+      "template": "M1_emphasis",
+      "subtype": "Emphasis",
+      "tier": "easy",
+      "passage": "The Chocolate Hills of Bohol, an island in the Philippines, are named for their grass, which turns brown during the dry season. Visitors are frequently astonished by how numerous the hills are. ______ geologists have counted more than 1,200 of them, concentrated in an area of roughly 50 square kilometers.",
+      "stem": "Which choice completes the text with the most logical transition?",
+      "options": [
+        "However,",
+        "In fact,",
+        "Secondly,",
+        "Instead,"
+      ],
+      "answer_letter": "B",
+      "table": null,
+      "figure": null,
+      "explanation": "The second sentence says that visitors “are frequently astonished by how numerous the hills are.” The blank sentence gives a stronger, more exact fact in the same direction: geologists “have counted more than 1,200 of them.” “In fact” fits, since it introduces information that emphasizes the previous point.",
+      "distractors": {
+        "A": {
+          "recipe": "false opposition",
+          "why_wrong": "The count of more than 1,200 hills does not contrast with the visitors’ astonishment; it confirms it."
+        },
+        "C": {
+          "recipe": "phantom sequence",
+          "why_wrong": "The text is not listing points in order, so there is no second item for “secondly” to introduce."
+        },
+        "D": {
+          "recipe": "false opposition",
+          "why_wrong": "The count does not replace the visitors’ impression with something different; it supports that impression."
+        }
+      },
+      "models": [
+        "1.6"
+      ],
+      "word_count": 49,
+      "sources": [],
+      "notes": "Claim, then a stronger same-direction fact keyed In fact (1.6 / fc2bcc79). However and Instead form a contrast synonym pair. Real: Bohol's Chocolate Hills, 1,260 to 1,776 counted, over about 50 square kilometers. Transitions: no web check (WAVE.md, 2026-10-16); real subject described from general knowledge, no researcher named, no made-up finding attributed to a real person or organisation.",
+      "review": {
+        "blind_answer": "B",
+        "agreed": true,
+        "facts_checked": 0,
+        "fixes": [],
+        "status": "pass"
+      }
     }
-   },
-   "models": [
-    "d3b7d7a3",
-    "4b7a84b0"
-   ],
-   "word_count": 59,
-   "sources": [],
-   "notes": "Frequency form of S1 (d3b7d7a3 band 7, 4b7a84b0 band 6): a popular picture, a sentence saying that picture is the exception, then the usual case keyed More often. Band 7 move: surface contrast with a non-adversative key (the lone female looks like a turn away from the honeybee picture, so That said pulls a reader who links the blank sentence to the first sentence rather than the second). Blank opens a sentence rather than following a semicolon, to avoid the '; ______ researchers found,' skeleton already used by five live More often items. Decoy set varied from the model's (for this reason, additionally, nevertheless). Real general fact (most of the roughly 20,000 bee species are solitary nesters). Transitions: no web check (WAVE.md, 2026-10-16); real subject described from general knowledge, no researcher named, no made-up finding attributed to a real person or organisation."
-  },
-  {
-   "id": "transitions.U1_culmination_alt.hard.w5b3_03",
-   "template": "U1_culmination_alt",
-   "subtype": "Culmination",
-   "tier": "hard",
-   "band_target": 6,
-   "passage": "In Italo Calvino’s Invisible Cities (1972), Marco Polo entertains the emperor Kublai Khan with descriptions of fifty-five imaginary cities, from one elevated on stilts to another suspended over an abyss by ropes and chains. Each seems stranger and more remote than the last. ______ Polo acknowledges that every description has, in some way, concerned a single city: his native Venice.",
-   "stem": "Which choice completes the text with the most logical transition?",
-   "options": [
-    "Additionally,",
-    "Hence,",
-    "For example,",
-    "Ultimately,"
-   ],
-   "answer_letter": "D",
-   "table": null,
-   "figure": null,
-   "explanation": "The text describes Polo’s accounts of “fifty-five imaginary cities,” each of which “seems stranger and more remote than the last.” The blank sentence reveals what all of these accounts finally come down to: “every description has, in some way, concerned a single city: his native Venice.” “Ultimately” fits, since it introduces the final, underlying point behind the surface variety of the cities.",
-   "distractors": {
-    "A": {
-     "recipe": "additive",
-     "why_wrong": "Polo’s admission is not one more city or one more detail added to the list; it reveals what the whole list has been about."
-    },
-    "B": {
-     "recipe": "unearned cause",
-     "why_wrong": "The cities’ seeming stranger and more remote is not the reason they are all about Venice; the admission recasts the descriptions rather than following from them."
-    },
-    "C": {
-     "recipe": "wrong grain (example)",
-     "why_wrong": "The admission is not an instance of a city that seems “stranger and more remote than the last”; it is a statement about all of the cities at once."
-    }
-   },
-   "models": [
-    "3.4",
-    "332e75bf"
-   ],
-   "word_count": 59,
-   "sources": [],
-   "notes": "Culmination on the 3.4 / 6e0c60da shape (and 332e75bf, band 7) (a surface impression, then what in the end matters), here about a work of literature. Band 6 by plan. No adversative decoy, since the turn from strange, remote cities to Polo's own Venice would let However or Nevertheless read as acceptable; Finally and Eventually also left out. Real book: Baucis on stilts and Octavia hung over an abyss by ropes and chains; Polo's line 'Every time I describe a city I am saying something about Venice' paraphrased, not quoted. Transitions: no web check (WAVE.md, 2026-10-16); real subject described from general knowledge, no researcher named, no made-up finding attributed to a real person or organisation."
-  },
-  {
-   "id": "transitions.M1_emphasis.hard.w5b3_04",
-   "template": "M1_emphasis",
-   "subtype": "Emphasis",
-   "tier": "hard",
-   "band_target": 7,
-   "passage": "Ethiopia, where arabica coffee originated, grows more of the crop than any other country in Africa. Its role in the international coffee trade is more modest than that ranking might suggest, however; ______ roughly half of each year’s harvest is consumed domestically, much of it prepared in elaborate household ceremonies that involve roasting, grinding, and brewing the beans.",
-   "stem": "Which choice completes the text with the most logical transition?",
-   "options": [
-    "nevertheless,",
-    "indeed,",
-    "in addition,",
-    "to that end,"
-   ],
-   "answer_letter": "B",
-   "table": null,
-   "figure": null,
-   "explanation": "The text says that Ethiopia’s “role in the international coffee trade is more modest than that ranking might suggest.” The clause after the blank gives a fact that strengthens this point: “roughly half of each year’s harvest is consumed domestically,” so a large share of the crop never enters international trade. “Indeed” fits, since it introduces information that reinforces the preceding claim.",
-   "distractors": {
-    "A": {
-     "recipe": "false opposition (concession)",
-     "why_wrong": "Domestic use of half the harvest does not hold true in spite of Ethiopia’s modest role in the coffee trade; it helps explain that modest role."
-    },
-    "C": {
-     "recipe": "additive",
-     "why_wrong": "The domestic consumption is not a separate point added alongside the claim about trade; it is the evidence that shows why Ethiopia’s role in trade is modest."
-    },
-    "D": {
-     "recipe": "purpose",
-     "why_wrong": "Ethiopians do not drink their coffee in order to keep the country’s role in trade modest; the clause supports the claim rather than describing a step taken toward a goal."
-    }
-   },
-   "models": [
-    "3.6",
-    "3.10",
-    "a266d876"
-   ],
-   "word_count": 57,
-   "sources": [],
-   "notes": "Band-7 emphasis on the 'unrealized' variant (3.6 / 00e0170f maglev) with the semicolon placement of 3.10 / 47e238be: a claim that X is smaller than expected, then a stronger same-direction fact keyed indeed. Surface contrast: the clause after the blank holds its own turn (consumed domestically rather than exported), so nevertheless pulls a reader who reacts to the however and the change of subject. No consequently decoy (reverse causation could make it defensible); to that end as in 3.6. Real general facts: Ethiopia is Africa's largest coffee producer and drinks about half its crop. Transitions: no web check (WAVE.md, 2026-10-16); real subject described from general knowledge, no researcher named, no made-up finding attributed to a real person or organisation."
-  },
-  {
-   "id": "transitions.C1_two_subject.medium.w5b3_05",
-   "template": "C1_two_subject",
-   "subtype": "Contrast: two subjects",
-   "tier": "medium",
-   "passage": "On the Galápagos Islands, blue-footed boobies, seabirds named for their brilliantly colored feet, lay their eggs directly on exposed ground, in a shallow depression often encircled by accumulated droppings. Red-footed boobies, ______ construct platforms of interwoven twigs high in mangroves and other shrubs.",
-   "stem": "Which choice completes the text with the most logical transition?",
-   "options": [
-    "similarly,",
-    "by contrast,",
-    "for example,",
-    "therefore,"
-   ],
-   "answer_letter": "B",
-   "table": null,
-   "figure": null,
-   "explanation": "The text says that blue-footed boobies “lay their eggs directly on exposed ground,” in “a shallow depression.” The sentence with the blank describes a second species that does the opposite: red-footed boobies “construct platforms of interwoven twigs high in mangroves and other shrubs.” “By contrast” fits, since it introduces a second subject whose nesting habits differ from those of the first.",
-   "distractors": {
-    "A": {
-     "recipe": "false parallel",
-     "why_wrong": "Red-footed boobies do not nest the way blue-footed boobies do; one lays its eggs on exposed ground, and the other builds platforms of twigs in shrubs."
-    },
-    "C": {
-     "recipe": "wrong grain (example)",
-     "why_wrong": "Red-footed boobies are not an example of birds that lay their eggs on exposed ground; they are a contrasting case."
-    },
-    "D": {
-     "recipe": "unearned cause",
-     "why_wrong": "The blue-footed boobies’ ground nests do not cause red-footed boobies to nest in trees; the text simply compares the two species."
-    }
-   },
-   "models": [
-    "2.4",
-    "2.6",
-    "2.18"
-   ],
-   "word_count": 42,
-   "sources": [],
-   "notes": "Two subjects, one attribute (nest site), opposite values, with the connective as an interrupter after the second subject (2.6 / 11df9b99 position). The first species is introduced on its own, not as one of 'several species', so for example cannot be read as introducing an instance. Real natural history (blue-footed boobies nest on bare ground in a ring of guano; red-footed boobies build twig nests in mangroves and other shrubs). Transitions: no web check (WAVE.md, 2026-10-16); real subject described from general knowledge, no researcher named, no made-up finding attributed to a real person or organisation."
-  },
-  {
-   "id": "transitions.C1_two_subject.medium.w5b3_06",
-   "template": "C1_two_subject",
-   "subtype": "Contrast: two subjects",
-   "tier": "medium",
-   "passage": "In the early 1960s, the BBC held a monopoly on British radio. Agreements with record companies and musicians’ unions also restricted how much recorded music it could broadcast. ______ Radio Caroline, transmitting from a ship anchored in international waters off the English coast, played pop records almost continuously.",
-   "stem": "Which choice completes the text with the most logical transition?",
-   "options": [
-    "Likewise,",
-    "In other words,",
-    "For instance,",
-    "In contrast,"
-   ],
-   "answer_letter": "D",
-   "table": null,
-   "figure": null,
-   "explanation": "The second sentence says that agreements “restricted how much recorded music” the BBC “could broadcast.” The blank sentence describes a station that did the opposite: Radio Caroline “played pop records almost continuously.” “In contrast” fits, since it introduces a second station whose programming differed sharply from the BBC’s.",
-   "distractors": {
-    "A": {
-     "recipe": "false parallel",
-     "why_wrong": "Radio Caroline did not restrict recorded music the way the BBC did; it played pop records almost continuously."
-    },
-    "B": {
-     "recipe": "wrong grain (restatement)",
-     "why_wrong": "The sentence about Radio Caroline does not restate the point about the BBC’s limits; it describes a different station with different programming."
-    },
-    "C": {
-     "recipe": "wrong grain (example)",
-     "why_wrong": "Radio Caroline is not an example of the BBC’s monopoly or of its limits on recorded music; it is a station that worked outside them."
-    }
-   },
-   "models": [
-    "2.4",
-    "2.18",
-    "1.17"
-   ],
-   "word_count": 47,
-   "sources": [],
-   "notes": "Two subjects with opposite values, blank sentence-initial (2.18 / cf11282b position), history and media. No causal decoy: Caroline was founded in part because of the BBC's limits, so As a result or Accordingly could read as acceptable. Real history: BBC radio monopoly until 1973, needle-time agreements limiting recorded music, Radio Caroline from 1964 on a ship off the English coast. Transitions: no web check (WAVE.md, 2026-10-16); real subject described from general knowledge, no researcher named, no made-up finding attributed to a real person or organisation."
-  },
-  {
-   "id": "transitions.A1_addition.medium.w5b3_07",
-   "template": "A1_addition",
-   "subtype": "Addition",
-   "tier": "medium",
-   "passage": "The Yucatán Peninsula has almost no surface rivers or lakes, so for the ancient Maya who lived there, cenotes—sinkholes that expose underground water—were an indispensable source of drinking water. ______ some cenotes held religious significance: archaeologists have recovered jade, gold, pottery, and human remains, apparently deposited as offerings, from the Sacred Cenote at Chichén Itzá.",
-   "stem": "Which choice completes the text with the most logical transition?",
-   "options": [
-    "Additionally,",
-    "Nevertheless,",
-    "That is,",
-    "Specifically,"
-   ],
-   "answer_letter": "A",
-   "table": null,
-   "figure": null,
-   "explanation": "The first sentence presents one role that cenotes played for the ancient Maya: they “were an indispensable source of drinking water.” The blank sentence adds a second, separate role: “some cenotes held religious significance,” as the offerings recovered from the Sacred Cenote show. “Additionally” fits, since it introduces a further point about why cenotes mattered.",
-   "distractors": {
-    "B": {
-     "recipe": "false opposition (concession)",
-     "why_wrong": "The religious role of some cenotes does not hold in spite of their use as a water source; the two roles do not conflict."
-    },
-    "C": {
-     "recipe": "wrong grain (restatement)",
-     "why_wrong": "The religious role does not reword the claim that cenotes supplied drinking water; it is a new point."
-    },
-    "D": {
-     "recipe": "wrong grain (specification)",
-     "why_wrong": "The offerings at Chichén Itzá do not spell out how cenotes supplied drinking water; they show a different role."
-    }
-   },
-   "models": [
-    "2.10",
-    "2.11"
-   ],
-   "word_count": 54,
-   "sources": [],
-   "notes": "Two members of one list (two roles of the same thing) on the 2.11 / 39d1a519 and 2.10 / eea351c4 pattern. No similarity decoy (excluded beside an addition key) and no causal or contrast decoy: water's importance is one scholarly explanation of why cenotes were sacred, and practical against sacred could support By contrast. Real archaeology (Sacred Cenote dredged and dived from the 1900s; jade, gold, pottery and human remains recovered). Transitions: no web check (WAVE.md, 2026-10-16); real subject described from general knowledge, no researcher named, no made-up finding attributed to a real person or organisation."
-  },
-  {
-   "id": "transitions.S1_spec_restate.medium.w5b3_08",
-   "template": "S1_spec_restate",
-   "subtype": "Specification / restatement",
-   "tier": "medium",
-   "passage": "Biologists long hypothesized that pigeons bob their heads while walking in order to stabilize their visual field. In a 1978 experiment, a researcher in Canada tested this hypothesis. ______ he trained pigeons to walk on a treadmill, where their surroundings remained stationary relative to their eyes, and observed that the birds stopped bobbing.",
-   "stem": "Which choice completes the text with the most logical transition?",
-   "options": [
-    "Thus,",
-    "Additionally,",
-    "Specifically,",
-    "However,"
-   ],
-   "answer_letter": "C",
-   "table": null,
-   "figure": null,
-   "explanation": "The second sentence says that a researcher “tested this hypothesis.” The blank sentence explains exactly how the test was done: “he trained pigeons to walk on a treadmill, where their surroundings remained stationary relative to their eyes.” “Specifically” fits, since it introduces the precise details of the general statement that came before it.",
-   "distractors": {
-    "A": {
-     "recipe": "unearned cause",
-     "why_wrong": "Putting pigeons on a treadmill is not a result of the researcher’s testing the hypothesis; it is the test itself."
-    },
-    "B": {
-     "recipe": "additive",
-     "why_wrong": "The treadmill experiment is not a second step taken in addition to testing the hypothesis; it is how the hypothesis was tested."
-    },
-    "D": {
-     "recipe": "false opposition",
-     "why_wrong": "The treadmill experiment does not contrast with the statement that the researcher tested the idea; it describes that test."
-    }
-   },
-   "models": [
-    "2.12",
-    "2.3"
-   ],
-   "word_count": 52,
-   "sources": [],
-   "notes": "General statement, then its exact content (2.12 / 9e3a215b: investigated a relationship, then exactly which variables). No example decoy (example and specification exclude each other). Real experiment (1978 treadmill study of pigeon head-bobbing at a Canadian university), researcher left unnamed. Transitions: no web check (WAVE.md, 2026-10-16); real subject described from general knowledge, no researcher named, no made-up finding attributed to a real person or organisation."
-  },
-  {
-   "id": "transitions.S1_spec_restate.medium.w5b3_09",
-   "template": "S1_spec_restate",
-   "subtype": "Specification / restatement",
-   "tier": "medium",
-   "passage": "Glaciologists classify some glaciers, including many in Alaska, Svalbard, and the Karakoram mountains of Asia, as surge-type glaciers. ______ these glaciers alternate between long quiescent phases, often lasting decades, in which they barely move and brief episodes of dramatically accelerated flow. During a surge, a glacier can advance tens of meters in a single day.",
-   "stem": "Which choice completes the text with the most logical transition?",
-   "options": [
-    "Regardless,",
-    "Moreover,",
-    "As a result,",
-    "That is,"
-   ],
-   "answer_letter": "D",
-   "table": null,
-   "figure": null,
-   "explanation": "The first sentence uses a technical term: some glaciers are classified “as surge-type glaciers.” The blank sentence explains in plain language what that term means: “these glaciers alternate between long quiescent phases” and “brief episodes of dramatically accelerated flow.” “That is” fits, since it introduces a clarification of the term just used.",
-   "distractors": {
-    "A": {
-     "recipe": "false opposition (dismissive)",
-     "why_wrong": "The blank sentence does not say that the glaciers behave this way whatever their classification; it explains what the classification means."
-    },
-    "B": {
-     "recipe": "additive",
-     "why_wrong": "The description of quiescent phases and surges is not a further fact added to the classification; it is what the classification means."
-    },
-    "C": {
-     "recipe": "unearned cause",
-     "why_wrong": "Glaciers do not alternate between quiescent phases and surges because glaciologists classify them as surge-type; they are classified that way because they behave like this."
-    }
-   },
-   "models": [
-    "2.15",
-    "3.1"
-   ],
-   "word_count": 54,
-   "sources": [],
-   "notes": "Restatement of a technical term in plain words (2.15 / 7c3f0145 defines cognate replacement; 3.1 unpacks a classification), blank sentence-initial rather than after an em dash as in 2.15. No specifically or for example on offer, since a definition can also read as specification. Real glaciology (surge-type glaciers cluster in Alaska-Yukon, Svalbard and the Karakoram; surges reach tens of meters a day). Transitions: no web check (WAVE.md, 2026-10-16); real subject described from general knowledge, no researcher named, no made-up finding attributed to a real person or organisation."
-  },
-  {
-   "id": "transitions.C2_belief_finding.medium.w5b3_10",
-   "template": "C2_belief_finding",
-   "subtype": "Contrast: appearance, then reality",
-   "tier": "medium",
-   "passage": "The common chiffchaff and the willow warbler, two small songbirds of European woodlands, are so alike in their olive-green plumage that even experienced birders struggle to tell them apart by sight. Their songs, ______ are unmistakable: the chiffchaff, as its name suggests, repeats two simple notes over and over.",
-   "stem": "Which choice completes the text with the most logical transition?",
-   "options": [
-    "though,",
-    "for example,",
-    "hence,",
-    "likewise,"
-   ],
-   "answer_letter": "A",
-   "table": null,
-   "figure": null,
-   "explanation": "The first sentence says that the two birds look so alike that “even experienced birders struggle to tell them apart by sight.” The blank sentence says the opposite about their songs: they “are unmistakable.” “Though” fits, since it signals that this information about the songs contrasts with the difficulty of telling the birds apart by appearance.",
-   "distractors": {
-    "B": {
-     "recipe": "wrong grain (example)",
-     "why_wrong": "The songs are not an example of the birds’ similar plumage or of birders’ trouble telling them apart; the songs are what make the birds easy to tell apart."
-    },
-    "C": {
-     "recipe": "unearned cause",
-     "why_wrong": "The birds’ similar plumage does not cause their songs to be unmistakable."
-    },
-    "D": {
-     "recipe": "false parallel",
-     "why_wrong": "The songs are not alike in the way the plumage is; the two birds sing very different songs."
-    }
-   },
-   "models": [
-    "2.16",
-    "2.1"
-   ],
-   "word_count": 48,
-   "sources": [],
-   "notes": "Appearance, then the expert reality, with though as an interrupter after the subject (2.16 / f8c4591b shape; here the second subject is the songs rather than the experts). No other contrast word on offer (however or by contrast would also fit). Decoys varied from 2.16's (for example, in addition, therefore), and the second sentence describes one song rather than closing on an 'X does A, while Y does B' pair. Real natural history: chiffchaff and willow warbler are near-identical in plumage and told apart by song. Transitions: no web check (WAVE.md, 2026-10-16); real subject described from general knowledge, no researcher named, no made-up finding attributed to a real person or organisation."
-  },
-  {
-   "id": "transitions.E1_consequence.medium.w5b3_11",
-   "template": "E1_consequence",
-   "subtype": "Cause / effect",
-   "tier": "medium",
-   "passage": "California’s Mono Lake contains tufa towers, limestone columns that formed underwater where calcium-rich springs mixed with the lake’s alkaline water. In 1941, Los Angeles began diverting streams that fed the lake, and its level fell by about 14 meters over the following four decades. ______ dozens of towers now stand exposed along the shoreline, some rising several meters above the ground.",
-   "stem": "Which choice completes the text with the most logical transition?",
-   "options": [
-    "Similarly,",
-    "Nevertheless,",
-    "Hence,",
-    "In other words,"
-   ],
-   "answer_letter": "C",
-   "table": null,
-   "figure": null,
-   "explanation": "The text explains that the tufa towers “formed underwater” and that, after Los Angeles began diverting streams that fed the lake, its level “fell by about 14 meters.” The blank sentence gives the result of this drop: “dozens of towers now stand exposed along the shoreline.” “Hence” fits, since it introduces a consequence of the preceding information.",
-   "distractors": {
-    "A": {
-     "recipe": "false parallel",
-     "why_wrong": "The exposed towers are not a case similar to the falling lake level; they are a result of it."
-    },
-    "B": {
-     "recipe": "false opposition (concession)",
-     "why_wrong": "The towers do not stand exposed in spite of the drop in the lake’s level; they stand exposed because of it."
-    },
-    "D": {
-     "recipe": "wrong grain (restatement)",
-     "why_wrong": "That the towers stand exposed is not a rewording of the statement that the lake’s level fell; it is an effect of that drop."
-    }
-   },
-   "models": [
-    "2.14",
-    "1.5"
-   ],
-   "word_count": 60,
-   "sources": [],
-   "notes": "Condition, then its consequence keyed Hence (2.14 / 17e49403; 1.5 / 04ad68ca: a change removes a constraint, then the result). The first sentence's 'formed underwater' is the fact the consequence needs. Real: Los Angeles diversions of Mono Basin streams from 1941, lake down about 45 feet by 1982, tufa towers left standing above the water. Replaces a Spirit and Opportunity draft (textbook fame, and adjacent to the claimed RS item on Mars rover power). Transitions: no web check (WAVE.md, 2026-10-16); real subject described from general knowledge, no researcher named, no made-up finding attributed to a real person or organisation."
-  },
-  {
-   "id": "transitions.T1_sequence_time.medium.w5b3_12",
-   "template": "T1_sequence_time",
-   "subtype": "Sequence / time",
-   "tier": "medium",
-   "passage": "In a 2006 referendum, Montenegrin voters approved independence for their small, mountainous Balkan republic, barely clearing the 55 percent threshold required for approval. ______ Montenegro had been politically united with neighboring Serbia for nearly ninety years, first within Yugoslavia and later, from 2003, in a loose confederation known simply as Serbia and Montenegro.",
-   "stem": "Which choice completes the text with the most logical transition?",
-   "options": [
-    "Likewise,",
-    "Previously,",
-    "Therefore,",
-    "Specifically,"
-   ],
-   "answer_letter": "B",
-   "table": null,
-   "figure": null,
-   "explanation": "The first sentence describes an event in 2006: Montenegrin voters “approved independence.” The blank sentence describes an earlier period: Montenegro “had been politically united with neighboring Serbia for nearly ninety years.” “Previously” fits, since it signals that the information in the blank sentence comes before the event in the previous sentence.",
-   "distractors": {
-    "A": {
-     "recipe": "false parallel",
-     "why_wrong": "Montenegro’s long union with Serbia is not similar to its vote for independence; it is the situation that the vote ended."
-    },
-    "C": {
-     "recipe": "unearned cause",
-     "why_wrong": "The 2006 vote did not cause Montenegro to have been joined with Serbia; the union came first."
-    },
-    "D": {
-     "recipe": "wrong grain (specification)",
-     "why_wrong": "The union with Serbia does not give the exact details of the 2006 referendum; it describes the period before it."
-    }
-   },
-   "models": [
-    "2.2",
-    "2.13"
-   ],
-   "word_count": 52,
-   "sources": [],
-   "notes": "Reverse chronology keyed Previously (2.2 / a819d8b6), carried by the past perfect and the dates. No However on offer: independence against a long union could support a contrast reading. Real history (May 2006 referendum, 55.5 percent yes against a 55 percent threshold; union with Serbia from 1918, state union from 2003). Transitions: no web check (WAVE.md, 2026-10-16); real subject described from general knowledge, no researcher named, no made-up finding attributed to a real person or organisation."
-  },
-  {
-   "id": "transitions.U1_culmination_alt.medium.w5b3_13",
-   "template": "U1_culmination_alt",
-   "subtype": "Place",
-   "tier": "medium",
-   "passage": "When an airline cannot reunite a suitcase with its owner after months of searching, it may sell the bag to the Unclaimed Baggage Center, a business in Scottsboro, Alabama. ______ employees sort through the incoming luggage, laundering clothing and testing electronics. The salvageable items are then sold in an enormous store that attracts shoppers from across the country.",
-   "stem": "Which choice completes the text with the most logical transition?",
-   "options": [
-    "There,",
-    "Conversely,",
-    "For example,",
-    "In sum,"
-   ],
-   "answer_letter": "A",
-   "table": null,
-   "figure": null,
-   "explanation": "The first sentence names a place: the Unclaimed Baggage Center, “a business in Scottsboro, Alabama.” The blank sentence describes what happens at that place: “employees sort through the incoming luggage.” “There” fits, since it refers back to the business just mentioned as the location of this work.",
-   "distractors": {
-    "B": {
-     "recipe": "false opposition",
-     "why_wrong": "Sorting and selling the items does not contrast with the airlines’ sale of the suitcases to the center; it is what the center does with them."
-    },
-    "C": {
-     "recipe": "wrong grain (example)",
-     "why_wrong": "The employees’ sorting is not an instance of airlines failing to reunite suitcases with their owners; it describes the work done at the center."
-    },
-    "D": {
-     "recipe": "premature summary",
-     "why_wrong": "The blank sentence does not sum up the earlier information; it adds new details about the work done at the center."
-    }
-   },
-   "models": [
-    "2.8"
-   ],
-   "word_count": 57,
-   "sources": [],
-   "notes": "Place on the 2.8 / 388b45aa shape (items sent to a named place, then 'There,' and the work done at it). No Then, Next or Afterward (the sale to the center comes first, so a sequence word would fit) and no In particular or Specifically. Real business (Unclaimed Baggage, Scottsboro, buys unclaimed airline luggage and resells it in a large store). Transitions: no web check (WAVE.md, 2026-10-16); real subject described from general knowledge, no researcher named, no made-up finding attributed to a real person or organisation."
-  },
-  {
-   "id": "transitions.T1_sequence_time.easy.w5b3_14",
-   "template": "T1_sequence_time",
-   "subtype": "Sequence / time",
-   "tier": "easy",
-   "passage": "Russian matryoshka dolls, wooden figures that nest one inside another, are manufactured from the inside out. First, a craftsperson turns the smallest doll, the only one that cannot be separated into halves, on a woodworking lathe. ______ she carves the two hollow halves of a slightly larger doll so that the first fits snugly inside. The process is repeated until the set is complete.",
-   "stem": "Which choice completes the text with the most logical transition?",
-   "options": [
-    "For instance,",
-    "Conversely,",
-    "Next,",
-    "Regardless,"
-   ],
-   "answer_letter": "C",
-   "table": null,
-   "figure": null,
-   "explanation": "The text describes the steps for making matryoshka dolls. “First,” a craftsperson turns the smallest doll on a lathe; in the blank sentence, she “carves the two hollow halves of a slightly larger doll so that the first fits snugly inside.” “Next” fits, since it introduces the step that follows the first one in the process.",
-   "distractors": {
-    "A": {
-     "recipe": "wrong grain (example)",
-     "why_wrong": "Carving the larger doll is not an example of turning the smallest doll; it is the following step."
-    },
-    "B": {
-     "recipe": "false opposition",
-     "why_wrong": "Carving the larger doll does not contrast with turning the smallest one; it continues the same process."
-    },
-    "D": {
-     "recipe": "false opposition (dismissive)",
-     "why_wrong": "Carving the larger doll depends on the first doll, which must fit “snugly inside”; it does not happen without regard to that step."
-    }
-   },
-   "models": [
-    "1.8",
-    "1.22"
-   ],
-   "word_count": 63,
-   "sources": [],
-   "notes": "Procedure with First before the blank (1.8 / 47547d07, 1.22 / b5a399f1). Decoys varied from 1.8's (by contrast, similarly, for example). Real craft (the smallest, solid doll is turned first and each larger one is made to fit around it). Transitions: no web check (WAVE.md, 2026-10-16); real subject described from general knowledge, no researcher named, no made-up finding attributed to a real person or organisation."
-  },
-  {
-   "id": "transitions.T1_sequence_time.easy.w5b3_15",
-   "template": "T1_sequence_time",
-   "subtype": "Sequence / time",
-   "tier": "easy",
-   "passage": "Borobudur, a vast Buddhist temple built in central Java around 800 CE, lay half buried under volcanic ash and jungle for centuries. In 1814, a team sent by the island’s British governor began clearing away the vegetation. ______ between 1907 and 1911, Dutch engineer Theodoor van Erp led the monument’s first major restoration.",
-   "stem": "Which choice completes the text with the most logical transition?",
-   "options": [
-    "Nevertheless,",
-    "For instance,",
-    "In conclusion,",
-    "Later,"
-   ],
-   "answer_letter": "D",
-   "table": null,
-   "figure": null,
-   "explanation": "The text gives events in time order. “In 1814,” a team began clearing the vegetation from Borobudur; the blank sentence describes an event nearly a century later: “between 1907 and 1911,” Theodoor van Erp led the first major restoration. “Later” fits, since it signals that this event came after the one before it.",
-   "distractors": {
-    "A": {
-     "recipe": "false opposition (concession)",
-     "why_wrong": "The restoration does not happen in spite of the clearing in 1814; it continues the effort to recover the temple."
-    },
-    "B": {
-     "recipe": "wrong grain (example)",
-     "why_wrong": "The restoration of 1907 to 1911 is not an example of the 1814 clearing; it is a separate, later event."
-    },
-    "C": {
-     "recipe": "premature summary",
-     "why_wrong": "The blank sentence does not sum up the text; it adds a new event."
-    }
-   },
-   "models": [
-    "1.18",
-    "1.12"
-   ],
-   "word_count": 52,
-   "sources": [],
-   "notes": "Dated events in order keyed Later (1.18 / 4154a7a3). No causal or similarity decoy (the clearing could be said to lead to, or resemble, the restoration). Real history (Raffles's 1814 survey under H. C. Cornelius; Van Erp restoration 1907 to 1911). Transitions: no web check (WAVE.md, 2026-10-16); real subject described from general knowledge, no researcher named, no made-up finding attributed to a real person or organisation."
-  },
-  {
-   "id": "transitions.X1_example.easy.w5b3_16",
-   "template": "X1_example",
-   "subtype": "Example",
-   "tier": "easy",
-   "passage": "At many railway stations in Japan, a short melody plays over the loudspeakers just before a train’s doors close. Some stations have selected melodies with particular local significance. ______ Takadanobaba Station in Tokyo, near the studio founded by Osamu Tezuka, the creator of Astro Boy, plays that character’s theme song.",
-   "stem": "Which choice completes the text with the most logical transition?",
-   "options": [
-    "However,",
-    "For example,",
-    "In other words,",
-    "Finally,"
-   ],
-   "answer_letter": "B",
-   "table": null,
-   "figure": null,
-   "explanation": "The second sentence makes a general claim: “Some stations have selected melodies with particular local significance.” The blank sentence gives one specific case: Takadanobaba Station, near Tezuka’s studio, “plays that character’s theme song.” “For example” fits, since it introduces an instance of the general claim.",
-   "distractors": {
-    "A": {
-     "recipe": "false opposition",
-     "why_wrong": "Takadanobaba’s choice of melody does not contrast with the claim that some stations have selected melodies with particular local significance; it is one of those stations."
-    },
-    "C": {
-     "recipe": "wrong grain (restatement)",
-     "why_wrong": "The sentence about Takadanobaba does not reword the general claim; it names one particular station."
-    },
-    "D": {
-     "recipe": "phantom sequence",
-     "why_wrong": "The text does not list steps or events in order, so there is no last item for “finally” to introduce."
-    }
-   },
-   "models": [
-    "1.25",
-    "1.37"
-   ],
-   "word_count": 49,
-   "sources": [],
-   "notes": "General claim with 'some', then one named instance (1.25 / e965fd73, 1.37 / fc5e83cc). No causal decoy (a general trend could be read as causing the station's choice). Real: JR Takadanobaba plays the Astro Boy theme as its departure melody; Tezuka Productions is based nearby. Transitions: no web check (WAVE.md, 2026-10-16); real subject described from general knowledge, no researcher named, no made-up finding attributed to a real person or organisation."
-  },
-  {
-   "id": "transitions.X1_example.easy.w5b3_17",
-   "template": "X1_example",
-   "subtype": "Example",
-   "tier": "easy",
-   "passage": "Many styles of Japanese ceramics are named for the towns or regions where they have traditionally been produced. ______ Arita ware, a delicate white porcelain often decorated with cobalt-blue designs, takes its name from Arita, a town on the island of Kyushu where potters have worked since the early seventeenth century.",
-   "stem": "Which choice completes the text with the most logical transition?",
-   "options": [
-    "For instance,",
-    "Instead,",
-    "In conclusion,",
-    "Meanwhile,"
-   ],
-   "answer_letter": "A",
-   "table": null,
-   "figure": null,
-   "explanation": "The first sentence says that many styles of Japanese ceramics “are named for the towns or regions where they have traditionally been produced.” The blank sentence gives one instance: Arita ware “takes its name from Arita, a town on the island of Kyushu.” “For instance” fits, since it introduces an example of the general claim.",
-   "distractors": {
-    "B": {
-     "recipe": "false opposition",
-     "why_wrong": "Arita ware is not named in some other way than the first sentence describes; it is named for its town, just as the general claim says."
-    },
-    "C": {
-     "recipe": "premature summary",
-     "why_wrong": "The blank sentence does not sum up the text; it gives a specific case."
-    },
-    "D": {
-     "recipe": "wrong time",
-     "why_wrong": "The sentence does not describe something happening at the same time as another event; it gives an example."
-    }
-   },
-   "models": [
-    "1.26",
-    "1.25"
-   ],
-   "word_count": 50,
-   "sources": [],
-   "notes": "General claim with 'many', then one named instance, keyed For instance (1.26 / d10e46a2). No Thus (a general rule then its case can read as principle and application, 1.32). Models 1.26 and 1.25 (1.2 dropped: its 58 words set the median above this passage). Real: Arita porcelain, made in Arita, Saga Prefecture, Kyushu, from the early 1600s. Transitions: no web check (WAVE.md, 2026-10-16); real subject described from general knowledge, no researcher named, no made-up finding attributed to a real person or organisation."
-  },
-  {
-   "id": "transitions.E1_consequence.easy.w5b3_18",
-   "template": "E1_consequence",
-   "subtype": "Cause / effect",
-   "tier": "easy",
-   "passage": "Xuan paper, the soft paper traditionally used for Chinese ink painting, is highly absorbent. It soaks up ink the instant a brush touches its surface. ______ a painter cannot erase or paint over a stroke once it is made, so artists often practice a composition many times before producing a final version.",
-   "stem": "Which choice completes the text with the most logical transition?",
-   "options": [
-    "On the contrary,",
-    "Similarly,",
-    "Previously,",
-    "As a result,"
-   ],
-   "answer_letter": "D",
-   "table": null,
-   "figure": null,
-   "explanation": "The text explains that xuan paper is “highly absorbent” and “soaks up ink the instant a brush touches its surface.” The blank sentence gives a consequence of this fact: “a painter cannot erase or paint over a stroke once it is made.” “As a result” fits, since it introduces an effect of what the previous sentence describes.",
-   "distractors": {
-    "A": {
-     "recipe": "false opposition",
-     "why_wrong": "That strokes cannot be corrected does not contradict the paper’s absorbency; it follows from it."
-    },
-    "B": {
-     "recipe": "false parallel",
-     "why_wrong": "The painter’s inability to correct strokes is not a case similar to the paper’s absorbency; it is an effect of it."
-    },
-    "C": {
-     "recipe": "wrong time",
-     "why_wrong": "The blank sentence does not describe something that happened before the paper absorbs ink; it describes what follows from that absorbency."
-    }
-   },
-   "models": [
-    "1.5",
-    "1.36"
-   ],
-   "word_count": 51,
-   "sources": [],
-   "notes": "Condition, then its consequence (1.5 / 04ad68ca, 1.36 / 49ecf985). No example or restatement decoy (the uncorrectable stroke could be read as an illustration of absorbency). Real general fact about xuan (rice) paper. Replaces an Apollo bootprints draft (popular-science trivia). Transitions: no web check (WAVE.md, 2026-10-16); real subject described from general knowledge, no researcher named, no made-up finding attributed to a real person or organisation."
-  },
-  {
-   "id": "transitions.E1_consequence.easy.w5b3_19",
-   "template": "E1_consequence",
-   "subtype": "Cause / effect",
-   "tier": "easy",
-   "passage": "Monaco, a principality on the Mediterranean coast, covers only about two square kilometers, making it the second-smallest country in the world. ______ Monaco has repeatedly expanded into the sea: its Fontvieille district, for example, was constructed in the 1970s and 1980s on land reclaimed from the water.",
-   "stem": "Which choice completes the text with the most logical transition?",
-   "options": [
-    "On the other hand,",
-    "In other words,",
-    "Consequently,",
-    "Earlier,"
-   ],
-   "answer_letter": "C",
-   "table": null,
-   "figure": null,
-   "explanation": "The first sentence says that Monaco “covers only about two square kilometers.” The blank sentence describes what has followed from this lack of space: “Monaco has repeatedly expanded into the sea.” “Consequently” fits, since it introduces a result of the country’s small size.",
-   "distractors": {
-    "A": {
-     "recipe": "false opposition",
-     "why_wrong": "Expanding into the sea does not contrast with Monaco’s small size; it is a response to it."
-    },
-    "B": {
-     "recipe": "wrong grain (restatement)",
-     "why_wrong": "Expanding into the sea is not a rewording of the fact that Monaco is small; it is a new point that follows from it."
-    },
-    "D": {
-     "recipe": "wrong time",
-     "why_wrong": "The text does not place Monaco’s expansion before the fact of its small size; the expansion is a response to that size."
-    }
-   },
-   "models": [
-    "1.3",
-    "1.15"
-   ],
-   "word_count": 46,
-   "sources": [],
-   "notes": "Condition, then its consequence keyed Consequently (1.3 / 01c8c433). No example decoy, since the blank sentence itself contains 'for example'. Real: Monaco about 2 square kilometers, second smallest after Vatican City; Fontvieille built on reclaimed land in the 1970s and 1980s. Transitions: no web check (WAVE.md, 2026-10-16); real subject described from general knowledge, no researcher named, no made-up finding attributed to a real person or organisation."
-  },
-  {
-   "id": "transitions.C3_limiting_fact.easy.w5b3_20",
-   "template": "C3_limiting_fact",
-   "subtype": "Contrast: limiting fact",
-   "tier": "easy",
-   "passage": "Edith Södergran, a Finnish poet who wrote in Swedish, is now celebrated as one of the first modernist poets in the Nordic countries, admired for her startling imagery and unrhymed free verse. ______ when her first collection, Dikter, appeared in 1916, most critics dismissed it, and she received little recognition before her death in 1923.",
-   "stem": "Which choice completes the text with the most logical transition?",
-   "options": [
-    "Thus,",
-    "However,",
-    "Specifically,",
-    "Moreover,"
-   ],
-   "answer_letter": "B",
-   "table": null,
-   "figure": null,
-   "explanation": "The first sentence says that Södergran “is now celebrated as one of the first modernist poets in the Nordic countries.” The blank sentence gives a fact that limits this picture: when her first collection appeared, “most critics dismissed it.” “However” fits, since it introduces information that contrasts with the praise in the previous sentence.",
-   "distractors": {
-    "A": {
-     "recipe": "unearned cause",
-     "why_wrong": "Södergran’s present reputation did not cause critics to dismiss her first collection in 1916."
-    },
-    "C": {
-     "recipe": "wrong grain (specification)",
-     "why_wrong": "The critics’ dismissal does not spell out why Södergran is celebrated today; it contrasts with that praise."
-    },
-    "D": {
-     "recipe": "additive",
-     "why_wrong": "The critics’ dismissal is not a further point in support of the praise; it points the other way."
-    }
-   },
-   "models": [
-    "1.10",
-    "1.23"
-   ],
-   "word_count": 54,
-   "sources": [],
-   "notes": "Positive claim about one subject, then a limiting fact about the same subject (1.10 / 0ee64efc in reverse: neglected then, celebrated now). Literature, about a writer's reception, no excerpt. Real: Sodergran (1892 to 1923), Finland-Swedish modernist; Dikter (1916) met with critics' scorn. Transitions: no web check (WAVE.md, 2026-10-16); real subject described from general knowledge, no researcher named, no made-up finding attributed to a real person or organisation."
-  },
-  {
-   "id": "transitions.C1_two_subject.easy.w5b3_21",
-   "template": "C1_two_subject",
-   "subtype": "Contrast: two subjects",
-   "tier": "easy",
-   "passage": "The Urdu poet Mirza Ghalib (1797–1869) is renowned for his ghazals, compact lyric poems so dense with allusions and layered meanings that scholars still debate how to interpret them. ______ his letters to friends are informal, affectionate, and playful, written in the relaxed, conversational Urdu of everyday speech.",
-   "stem": "Which choice completes the text with the most logical transition?",
-   "options": [
-    "By contrast,",
-    "Similarly,",
-    "For instance,",
-    "Therefore,"
-   ],
-   "answer_letter": "A",
-   "table": null,
-   "figure": null,
-   "explanation": "The first sentence describes Ghalib’s ghazals as “so dense with allusions and layered meanings that scholars still debate how to interpret them.” The blank sentence describes another kind of writing by Ghalib that is the opposite: “his letters to friends are informal, affectionate, and playful.” “By contrast” fits, since it introduces a second subject that differs from the first.",
-   "distractors": {
-    "B": {
-     "recipe": "false parallel",
-     "why_wrong": "The letters are not dense like the ghazals; they are informal and playful."
-    },
-    "C": {
-     "recipe": "wrong grain (example)",
-     "why_wrong": "The letters are not an example of Ghalib’s dense ghazals; they are a different kind of writing."
-    },
-    "D": {
-     "recipe": "unearned cause",
-     "why_wrong": "The difficulty of the ghazals does not cause the letters to be informal."
-    }
-   },
-   "models": [
-    "1.17",
-    "1.14"
-   ],
-   "word_count": 47,
-   "sources": [],
-   "notes": "Two subjects (one writer's poems and letters), opposite values on one attribute (difficulty), sentence-initial blank as in 1.17 / 90117366. Literature, about the works, no excerpt. Real: Ghalib's ghazals are famously difficult; his Urdu letters are prized for their conversational ease. Transitions: no web check (WAVE.md, 2026-10-16); real subject described from general knowledge, no researcher named, no made-up finding attributed to a real person or organisation."
-  },
-  {
-   "id": "transitions.A1_addition.easy.w5b3_22",
-   "template": "A1_addition",
-   "subtype": "Addition",
-   "tier": "easy",
-   "passage": "Cuban dancer Alicia Alonso became one of the twentieth century’s most celebrated ballerinas. She was admired above all for her performances in the title role of Giselle. ______ in 1948 she founded a ballet company in Havana that later became the National Ballet of Cuba, which has trained generations of dancers.",
-   "stem": "Which choice completes the text with the most logical transition?",
-   "options": [
-    "On the contrary,",
-    "That is,",
-    "In addition,",
-    "Regardless,"
-   ],
-   "answer_letter": "C",
-   "table": null,
-   "figure": null,
-   "explanation": "The first sentence describes one of Alonso’s achievements: she became “one of the twentieth century’s most celebrated ballerinas.” The blank sentence describes another: “in 1948 she founded a ballet company in Havana.” “In addition” fits, since it introduces a second achievement that adds to the first.",
-   "distractors": {
-    "A": {
-     "recipe": "false opposition",
-     "why_wrong": "Founding a ballet company does not contradict Alonso’s fame as a dancer; it is another of her achievements."
-    },
-    "B": {
-     "recipe": "wrong grain (restatement)",
-     "why_wrong": "Founding a company is not a rewording of the information about her performances; it is a different achievement."
-    },
-    "D": {
-     "recipe": "false opposition (dismissive)",
-     "why_wrong": "The sentence does not say that Alonso founded the company without regard to her career as a dancer; it simply adds a second achievement."
-    }
-   },
-   "models": [
-    "1.7",
-    "1.30"
-   ],
-   "word_count": 50,
-   "sources": [],
-   "notes": "Two acts by the same person (1.7 / 1b219d14, 1.30 / 660d50dc). No time decoy (the 1948 date could make Later read as acceptable) and no similarity decoy. Real: Alonso (1920 to 2019), famed Giselle; Ballet Alicia Alonso founded in Havana in 1948, later the Ballet Nacional de Cuba. Replaces a Garrett Morgan draft (the 1920s three-light signal is official WiC 0d402146). Transitions: no web check (WAVE.md, 2026-10-16); real subject described from general knowledge, no researcher named, no made-up finding attributed to a real person or organisation."
-  },
-  {
-   "id": "transitions.M1_emphasis.easy.w5b3_23",
-   "template": "M1_emphasis",
-   "subtype": "Emphasis",
-   "tier": "easy",
-   "passage": "The Chocolate Hills of Bohol, an island in the Philippines, are named for their grass, which turns brown during the dry season. Visitors are frequently astonished by how numerous the hills are. ______ geologists have counted more than 1,200 of them, concentrated in an area of roughly 50 square kilometers.",
-   "stem": "Which choice completes the text with the most logical transition?",
-   "options": [
-    "However,",
-    "In fact,",
-    "Secondly,",
-    "Instead,"
-   ],
-   "answer_letter": "B",
-   "table": null,
-   "figure": null,
-   "explanation": "The second sentence says that visitors “are frequently astonished by how numerous the hills are.” The blank sentence gives a stronger, more exact fact in the same direction: geologists “have counted more than 1,200 of them.” “In fact” fits, since it introduces information that emphasizes the previous point.",
-   "distractors": {
-    "A": {
-     "recipe": "false opposition",
-     "why_wrong": "The count of more than 1,200 hills does not contrast with the visitors’ astonishment; it confirms it."
-    },
-    "C": {
-     "recipe": "phantom sequence",
-     "why_wrong": "The text is not listing points in order, so there is no second item for “secondly” to introduce."
-    },
-    "D": {
-     "recipe": "false opposition",
-     "why_wrong": "The count does not replace the visitors’ impression with something different; it supports that impression."
-    }
-   },
-   "models": [
-    "1.6"
-   ],
-   "word_count": 49,
-   "sources": [],
-   "notes": "Claim, then a stronger same-direction fact keyed In fact (1.6 / fc2bcc79). However and Instead form a contrast synonym pair. Real: Bohol's Chocolate Hills, 1,260 to 1,776 counted, over about 50 square kilometers. Transitions: no web check (WAVE.md, 2026-10-16); real subject described from general knowledge, no researcher named, no made-up finding attributed to a real person or organisation."
-  }
- ]
+  ]
 }
