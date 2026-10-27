@@ -42,7 +42,7 @@ def register(p: str) -> tuple[float, float, float]:
     """Mean word length, share of words of 9+ letters (names and sentence starts
     left out) and words per sentence: the official passages are denser than plain prose."""
     t = [x for x in re.findall(r"[A-Za-z’']+", re.sub(r"</?u>", " ", p)) if not x[0].isupper()]
-    s = [x for x in re.split(r"(?<=[.!?”])\s+(?=[A-Z“])", p.replace("\n", " ")) if x.strip()]
+    s = [x for x in re.split(r"(?<=[.!?”])\s+(?=[A-Z“])", re.sub(r"</?u>", "", p).replace("\n", " ")) if x.strip()]
     if not t:
         return 0.0, 0.0, 0.0
     return statistics.mean(map(len, t)), sum(len(x) >= 9 for x in t) / len(t), len(p.split()) / max(1, len(s))

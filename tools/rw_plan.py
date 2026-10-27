@@ -8,6 +8,7 @@ Quotas per wave are what still has to be written, spread evenly over the waves l
 
     python3 tools/rw_plan.py              # targets, items so far, wave 1 quotas
     python3 tools/rw_plan.py 2 --json     # wave 2 quotas as JSON for the wave brief
+    python3 tools/rw_plan.py 5 --pending w4   # counts w4's unpromoted planned cells as written
 """
 
 from __future__ import annotations
@@ -15,6 +16,7 @@ from __future__ import annotations
 import glob
 import json
 import os
+import subprocess
 import sys
 from collections import Counter, defaultdict
 
@@ -66,9 +68,25 @@ def bank() -> tuple[dict, Counter]:
     return official, have
 
 
-def wave(n: int) -> dict[str, dict[str, dict[str, int]]]:
+def pending(w: str) -> Counter:
+    """Planned cells of wave w's batches that are not promoted yet, so the next wave can be planned while w finishes."""
+    st = json.loads(subprocess.run(["python3", "spec/rw/waves/scripts/wave_status.py", "--json"], cwd=ROOT,
+                                   env={**os.environ, "WAVE": w}, capture_output=True, text=True, check=True).stdout)
+    open_ = {r["batch"] for r in st if r["stage"] != "promoted"}
+    out = Counter()
+    for s, batches in json.load(open(os.path.join(ROOT, "spec/rw/waves", w, "plan.json"))).items():
+        for b, cells in batches.items():
+            if f"{s}_{b}" in open_:
+                for c in cells:
+                    out[(s, c["template"], c["tier"])] += c["count"]
+    return out
+
+
+def wave(n: int, pend: str | None = None) -> dict[str, dict[str, dict[str, int]]]:
     """skill -> tier -> template -> items to write in wave n (1-based)."""
     official, have = bank()
+    if pend:
+        have += pending(pend)
     out = {}
     for s, tiers in targets().items():
         out[s] = {}
@@ -89,7 +107,8 @@ def demo() -> None:
 if __name__ == "__main__":
     demo()
     n = int(sys.argv[1]) if len(sys.argv) > 1 and sys.argv[1].isdigit() else 1
-    w = wave(n)
+    pend = sys.argv[sys.argv.index("--pending") + 1] if "--pending" in sys.argv else None
+    w = wave(n, pend)
     if "--json" in sys.argv:
         print(json.dumps(w, indent=1))
         sys.exit()
